@@ -57,9 +57,8 @@ void LihunCard::onEffect(const CardEffectStruct &effect) const{
     room->broadcastSkillInvoke("lihun", 1);
 
     DummyCard *dummy_card = new DummyCard;
-    foreach(const Card *cd, effect.to->getHandcards()){
+    foreach (const Card *cd, effect.to->getHandcards())
         dummy_card->addSubcard(cd);
-    }
     if (!effect.to->isKongcheng()) {
         CardMoveReason reason(CardMoveReason::S_REASON_TRANSFER, effect.from->objectName(),
                               effect.to->objectName(), "lihun", QString());
@@ -299,8 +298,9 @@ public:
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             foreach (int _card_id, move->card_ids)
                 doManjuan(sp_pangtong, _card_id);
-        } else
+        } else {
             doManjuan(sp_pangtong, card_id);
+        }
         return event != CardsMoving;
     }
 };
@@ -464,7 +464,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if(!damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
+        if (!damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
             return false;
 
         LogMessage log;
@@ -662,9 +662,9 @@ public:
                 return true;
         } else if (player->tag["TanhuInvoke"].value<PlayerStar>() != NULL) {
             if (event == EventPhaseChanging) {
-            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to != Player::NotActive)
-                return false;
+                PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+                if (change.to != Player::NotActive)
+                    return false;
             }
             if (event == Death) {
                 DeathStruct death = data.value<DeathStruct>();
@@ -739,7 +739,7 @@ public:
                 room->acquireSkill(player, "keji");
             }
         } else if (player->getPhase() == Player::RoundStart && lvmeng && lvmeng->getMark("@wen") > 0
-                  && !lvmeng->isNude() && lvmeng->askForSkillInvoke(objectName())) {
+                   && !lvmeng->isNude() && lvmeng->askForSkillInvoke(objectName())) {
             room->askForDiscard(lvmeng, "mouduan", 1, 1, false, true);
             if (lvmeng->getHandcardNum() > 2) {
                 room->broadcastSkillInvoke(objectName());
@@ -1045,7 +1045,6 @@ public:
     }
 };
 
-
 class Yanxiao: public PhaseChangeSkill {
 public:
     Yanxiao(): PhaseChangeSkill("yanxiao") {
@@ -1062,9 +1061,8 @@ public:
         log.type = "$YanxiaoGot";
         log.from = target;
 
-        foreach (const Card *delayed_trick, target->getJudgingArea()) {
-            move.card_ids << delayed_trick->getId();
-        }
+        foreach (const Card *delayed_trick, target->getJudgingArea())
+            move.card_ids << delayed_trick->getEffectiveId();
         log.card_str = Card::IdsToStrings(move.card_ids).join("+");
         target->getRoom()->sendLog(log);
 
@@ -1085,10 +1083,9 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *daqiao, QVariant &data) const{
         if (event == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
-
             if (damage.card && damage.card->isKindOf("Slash")
-               && !damage.chain && !damage.transfer && !damage.to->isKongcheng()
-               && daqiao->askForSkillInvoke(objectName(), data)) {
+                && !damage.chain && !damage.transfer && !damage.to->isKongcheng()
+                && daqiao->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName(), 1);
                 LogMessage log;
                 log.type = "#Anxian";
@@ -1102,7 +1099,7 @@ public:
             }
         } else if (event == TargetConfirming) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if(!use.to.contains(daqiao) || daqiao->isKongcheng())
+            if (!use.to.contains(daqiao) || daqiao->isKongcheng())
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
@@ -1195,7 +1192,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *ganning, QVariant &) const{
         if (ganning->getPhase() == Player::Finish && ganning->getPile("brocade").length() >= 3
-           && ganning->askForSkillInvoke(objectName())) {
+            && ganning->askForSkillInvoke(objectName())) {
             QList<int> brocade = ganning->getPile("brocade");
             room->broadcastSkillInvoke(objectName());
 
@@ -1752,7 +1749,7 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash") && player->getPhase() == Player::Play)
+        if (use.card->isKindOf("Slash") && player->getPhase() == Player::Play && !player->hasFlag("ForbidFuluan"))
             room->setPlayerFlag(player, "ForbidFuluan");
         return false;
     }
@@ -1922,7 +1919,7 @@ public:
         if (move->from != liuxie)
             return false;
         if (move->to_place == Player::DiscardPile
-           && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
             if (liuxie->askForSkillInvoke(objectName())) {
                 int i = 0;
                 foreach (int card_id, move->card_ids) {
@@ -1999,7 +1996,7 @@ public:
         case TargetConfirmed: {
                 CardUseStruct use = data.value<CardUseStruct>();
                 if (!use.card->isKindOf("Peach") || use.from == NULL || use.from->getKingdom() != "wu"
-                   || liuxie == use.from || !liuxie->hasFlag("dying"))
+                    || liuxie == use.from || !liuxie->hasFlag("dying"))
                     return false;
 
                 QVariant data_for_ai = "jiuyuan";
@@ -2238,3 +2235,4 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
 }
 
 ADD_PACKAGE(BGMDIY)
+// FORMATTED

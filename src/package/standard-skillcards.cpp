@@ -8,8 +8,6 @@
 ZhihengCard::ZhihengCard(){
     target_fixed = true;
     mute = true;
-    will_throw = false; // of course we throw these cards, for the display of log we have to use this hack
-    handling_method = Card::MethodDiscard;
 }
 
 void ZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
@@ -17,7 +15,6 @@ void ZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
         room->broadcastSkillInvoke("zhiheng");
     else
         room->broadcastSkillInvoke("jilve", 4);
-    room->throwCard(this, source);
     if(source->isAlive())
         room->drawCards(source, subcards.length());
 }

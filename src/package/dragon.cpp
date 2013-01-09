@@ -33,7 +33,7 @@ public:
     }
 };
 
-class DrMashu: public DistanceSkill{
+class DrMashu: public DistanceSkill {
 public:
     DrMashu(): DistanceSkill("drmashu") {
     }
@@ -47,10 +47,8 @@ public:
     }
 };
 
-DrZhihengCard::DrZhihengCard(){
+DrZhihengCard::DrZhihengCard() {
     mute = true;
-    will_throw = false;
-    handling_method = Card::MethodDiscard;
 }
 
 bool DrZhihengCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -62,12 +60,10 @@ bool DrZhihengCard::targetsFeasible(const QList<const Player *> &targets, const 
 }
 
 void DrZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    if (subcardsLength() > 0)
-        room->throwCard(this, source);
-    if(source->isAlive() && source->getHp() > source->getHandcardNum()) {
+    if (source->isAlive() && source->getHp() > source->getHandcardNum()) {
         room->broadcastSkillInvoke("zhiheng");
         room->drawCards(source, source->getHp() - source->getHandcardNum());
-     }
+    }
 }
 
 class DrZhihengViewAsSkill: public ViewAsSkill {
@@ -109,7 +105,7 @@ public:
     }
 };
 
-DrJiuyuanCard::DrJiuyuanCard(){
+DrJiuyuanCard::DrJiuyuanCard() {
     will_throw = false;
     handling_method = Card::MethodNone;
     m_skillName = "drjiuyuanv";
@@ -118,17 +114,17 @@ DrJiuyuanCard::DrJiuyuanCard(){
 
 void DrJiuyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *sunquan = targets.first();
-    if(sunquan->hasLordSkill("drjiuyuan")){
+    if (sunquan->hasLordSkill("drjiuyuan")) {
         room->setPlayerFlag(sunquan, "DrJiuyuanInvoked");
         sunquan->obtainCard(this, false);
         QList<ServerPlayer *> sunquans;
         QList<ServerPlayer *> players = room->getOtherPlayers(source);
-        foreach(ServerPlayer *p, players){
+        foreach (ServerPlayer *p, players) {
             if(p->hasLordSkill("drjiuyuan") && !p->hasFlag("DrJiuyuanInvoked")){
                 sunquans << p;
             }
         }
-        if(sunquans.empty())
+        if (sunquans.empty())
             room->setPlayerFlag(source, "ForbidDrJiuyuan");
     }
 }
@@ -137,9 +133,9 @@ bool DrJiuyuanCard::targetFilter(const QList<const Player *> &targets, const Pla
     return targets.isEmpty() && to_select->hasLordSkill("drjiuyuan") && !to_select->hasFlag("DrJiuyuanInvoked");
 }
 
-class DrJiuyuanViewAsSkill: public OneCardViewAsSkill{
+class DrJiuyuanViewAsSkill: public OneCardViewAsSkill {
 public:
-    DrJiuyuanViewAsSkill():OneCardViewAsSkill("drjiuyuanv"){
+    DrJiuyuanViewAsSkill(): OneCardViewAsSkill("drjiuyuanv") {
         attached_lord_skill = true;
     }
 
@@ -159,9 +155,9 @@ public:
     }
 };
 
-class DrJiuyuan: public TriggerSkill{
+class DrJiuyuan: public TriggerSkill {
 public:
-    DrJiuyuan():TriggerSkill("drjiuyuan$"){
+    DrJiuyuan():TriggerSkill("drjiuyuan$") {
         events << GameStart << EventPhaseChanging;
     }
 
@@ -170,30 +166,29 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if(event == GameStart && player->isLord()){
+        if (event == GameStart && player->isLord()) {
             QList<ServerPlayer *> lords;
-            foreach(ServerPlayer *p, room->getAlivePlayers())
-                if(p->hasLordSkill(objectName()))
+            foreach (ServerPlayer *p, room->getAlivePlayers())
+                if (p->hasLordSkill(objectName()))
                     lords << p;
 
-            foreach(ServerPlayer *lord, lords){
+            foreach (ServerPlayer *lord, lords) {
                 QList<ServerPlayer *> players = room->getOtherPlayers(lord);
-                foreach(ServerPlayer *p, players){
-                    if(!p->hasSkill("drjiuyuanv"))
+                foreach (ServerPlayer *p, players) {
+                    if (!p->hasSkill("drjiuyuanv"))
                         room->attachSkillToPlayer(p, "drjiuyuanv");
                 }
             }
-        }
-        else if(event == EventPhaseChanging){
+        } else if(event == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
             if (phase_change.from != Player::Play)
                   return false;
-            if(player->hasFlag("ForbidDrJiuyuan")){
+            if (player->hasFlag("ForbidDrJiuyuan")) {
                 room->setPlayerFlag(player, "-ForbidDrJiuyuan");
             }
             QList<ServerPlayer *> players = room->getOtherPlayers(player);
-            foreach(ServerPlayer *p, players){
-                if(p->hasFlag("DrJiuyuanInvoked")){
+            foreach (ServerPlayer *p, players) {
+                if (p->hasFlag("DrJiuyuanInvoked")) {
                     room->setPlayerFlag(p, "-DrJiuyuanInvoked");
                 }
             }
@@ -221,7 +216,7 @@ void DrJiedaoCard::onEffect(const CardEffectStruct &effect) const{
     move1.to_place = Player::PlaceEquip;
     move1.reason = CardMoveReason(CardMoveReason::S_REASON_ROB, effect.from->objectName());
     exchangeMove.push_back(move1);
-    if(effect.from->getWeapon() != NULL) {
+    if (effect.from->getWeapon() != NULL) {
         CardsMoveStruct move2;
         move2.card_ids << effect.from->getWeapon()->getEffectiveId();
         move2.to = NULL;
@@ -278,7 +273,7 @@ public:
             move1.to_place = Player::PlaceEquip;
             move1.reason = CardMoveReason(CardMoveReason::S_REASON_GOTCARD, player->objectName());
             exchangeMove.push_back(move1);
-            if(target->getWeapon() != NULL) {
+            if (target->getWeapon() != NULL) {
                 CardsMoveStruct move2;
                 move2.card_ids << target->getWeapon()->getEffectiveId();
                 move2.to = NULL;
@@ -308,7 +303,7 @@ public:
         if (event == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             bool can_invoke = false;
-            if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player){
+            if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
                 can_invoke = true;
                 int count = 1;
                 int mark_n = player->getMark("double_jink" + use.card->toString());
@@ -439,3 +434,4 @@ DragonPackage::DragonPackage():Package("dragon")
 }
 
 ADD_PACKAGE(Dragon)
+// FORMATTED

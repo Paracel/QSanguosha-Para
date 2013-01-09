@@ -586,7 +586,7 @@
     <message>
         <location filename="../../src/ui/clientlogbox.cpp" line="120"/>
         <source>%from use skill [%1], and the cost is %2</source>
-        <translation>%from 发动了“%1”，所用的牌为 %2</translation>
+        <translation>%from 发动“%1”弃置了 %2</translation>
     </message>
     <message>
         <location filename="../../src/ui/clientlogbox.cpp" line="124"/>

@@ -1,0 +1,97 @@
+#ifndef SPPACKAGE_H
+#define SPPACKAGE_H
+
+#include "package.h"
+#include "card.h"
+#include "standard.h"
+
+class SPPackage: public Package{
+    Q_OBJECT
+
+public:
+    SPPackage();
+};
+
+class Yongsi: public TriggerSkill {
+    Q_OBJECT
+
+public:
+    Yongsi();
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *yuanshu, QVariant &data) const;
+
+protected:
+    virtual int getKingdoms(ServerPlayer *yuanshu) const;
+};
+
+class WeidiCard: public SkillCard{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE WeidiCard();
+
+    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
+};
+
+class YuanhuCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE YuanhuCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
+    virtual void onEffect(const CardEffectStruct &effect) const;
+};
+
+class XuejiCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE XuejiCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+class BifaCard: public SkillCard{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE BifaCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+class SongciCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE SongciCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void onEffect(const CardEffectStruct &effect) const;
+};
+
+class SPCardPackage: public Package{
+    Q_OBJECT
+
+public:
+    SPCardPackage();
+};
+
+class SPMoonSpear:public Weapon{
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE SPMoonSpear(Card::Suit suit = Diamond, int number = 12);
+};
+
+class HegemonySPPackage: public Package{
+    Q_OBJECT
+
+public:
+    HegemonySPPackage();
+};
+
+#endif // SPPACKAGE_H

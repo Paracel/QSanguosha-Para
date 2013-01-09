@@ -85,5 +85,5 @@ public:
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
 };
 
-#endi
+#endif
 // FORMATTED

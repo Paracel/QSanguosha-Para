@@ -6,23 +6,21 @@
 #include "ai.h"
 #include "maneuvering.h"
 
-HongyuanCard::HongyuanCard(){
+HongyuanCard::HongyuanCard() {
     mute = true;
 }
 
 bool HongyuanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if(to_select == Self)
-        return false;
-    return targets.length() < 2;
+    return to_select != Self && targets.length() < 2;
 }
 
 void HongyuanCard::onEffect(const CardEffectStruct &effect) const{
    effect.to->drawCards(1);
 }
 
-class HongyuanViewAsSkill: public ZeroCardViewAsSkill{
+class HongyuanViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    HongyuanViewAsSkill():ZeroCardViewAsSkill("hongyuan"){
+    HongyuanViewAsSkill():ZeroCardViewAsSkill("hongyuan") {
     }
 
     virtual const Card *viewAs() const{
@@ -39,9 +37,9 @@ protected:
     }
 };
 
-class Hongyuan:public DrawCardsSkill{
+class Hongyuan: public DrawCardsSkill {
 public:
-    Hongyuan():DrawCardsSkill("hongyuan"){
+    Hongyuan(): DrawCardsSkill("hongyuan") {
         frequency = NotFrequent;
         view_as_skill = new HongyuanViewAsSkill;
     }
@@ -50,8 +48,8 @@ public:
         Room *room = zhugejin->getRoom();
 
         QStringList names;
-        foreach(ServerPlayer *other, room->getOtherPlayers(zhugejin)){
-            if(AI::GetRelation3v3(zhugejin, other) == AI::Friend)
+        foreach (ServerPlayer *other, room->getOtherPlayers(zhugejin)) {
+            if (AI::GetRelation3v3(zhugejin, other) == AI::Friend)
                 names << other->getGeneralName();
         }
         return names;
@@ -59,33 +57,33 @@ public:
 
     virtual int getDrawNum(ServerPlayer *zhugejin, int n) const{
         Room *room = zhugejin->getRoom();             
-        if(room->askForSkillInvoke(zhugejin, objectName())){
+        if (room->askForSkillInvoke(zhugejin, objectName())) {
             room->broadcastSkillInvoke(objectName());
             zhugejin->setFlags("hongyuan");
-            if(ServerInfo.GameMode == "06_3v3"){
+            if (ServerInfo.GameMode == "06_3v3") {
                 QStringList names = getTeammateNames(zhugejin);
                 room->setTag("HongyuanTargets", QVariant::fromValue(names));
             }
             return n - 1;
-        }else
+        } else
             return n;
     }
 };
 
-class HongyuanDraw: public TriggerSkill{
+class HongyuanDraw: public TriggerSkill {
 public:
-    HongyuanDraw():TriggerSkill("#hongyuan"){
+    HongyuanDraw(): TriggerSkill("#hongyuan") {
         events << AfterDrawNCards;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        if(!player->hasFlag("hongyuan"))
+        if (!player->hasFlag("hongyuan"))
             return false;
         player->setFlags("-hongyuan");
 
         QStringList names = room->getTag("HongyuanTargets").toStringList();
         room->removeTag("HongyuanTargets");
-        if(!names.isEmpty())
+        if (!names.isEmpty())
             foreach(QString name, names)
                 room->findPlayer(name)->drawCards(1);
         else
@@ -94,19 +92,18 @@ public:
     }
 };
 
-HuanshiCard::HuanshiCard(){
+HuanshiCard::HuanshiCard() {
     target_fixed = true;
     will_throw = false;
     handling_method = Card::MethodResponse;
 }
 
-void HuanshiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-
+void HuanshiCard::use(Room *, ServerPlayer *, QList<ServerPlayer *> &) const{
 }
 
-class HuanshiViewAsSkill:public OneCardViewAsSkill{
+class HuanshiViewAsSkill: public OneCardViewAsSkill {
 public:
-    HuanshiViewAsSkill():OneCardViewAsSkill("huanshi"){
+    HuanshiViewAsSkill(): OneCardViewAsSkill("huanshi") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -130,11 +127,10 @@ public:
     }
 };
 
-class Huanshi: public TriggerSkill{
+class Huanshi: public TriggerSkill {
 public:
-    Huanshi():TriggerSkill("huanshi"){
+    Huanshi(): TriggerSkill("huanshi") {
         view_as_skill = new HuanshiViewAsSkill;
-
         events << AskForRetrial;
     }
 
@@ -143,8 +139,8 @@ public:
 
         QList<ServerPlayer *> teammates;
         teammates << zhugejin;
-        foreach(ServerPlayer *other, room->getOtherPlayers(zhugejin)){
-            if(AI::GetRelation3v3(zhugejin, other) == AI::Friend)
+        foreach (ServerPlayer *other, room->getOtherPlayers(zhugejin)) {
+            if (AI::GetRelation3v3(zhugejin, other) == AI::Friend)
                 teammates << other;
         }
         return teammates;
@@ -158,29 +154,28 @@ public:
         JudgeStar judge = data.value<JudgeStar>();
 
         bool can_invoke = false;
-        if(ServerInfo.GameMode == "06_3v3"){
-            foreach(ServerPlayer *teammate, getTeammates(player)){
-                if(teammate->objectName() == judge->who->objectName()){
+        if (ServerInfo.GameMode == "06_3v3") {
+            foreach (ServerPlayer *teammate, getTeammates(player)) {
+                if (teammate->objectName() == judge->who->objectName()) {
                     can_invoke = true;
                     break;
                 }
             }
-        }else 
-            if ((judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept") && !player->isNude())
+         }else if ((judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept")
+                   && !player->isNude())
                 can_invoke = true;
 
-        if(!can_invoke)
+        if (!can_invoke)
             return false;
 
         QStringList prompt_list;
         prompt_list << "@huanshi-card" << judge->who->objectName()
-                << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
+                    << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
 
         player->tag["Judge"] = data;
         const Card *card = room->askForCard(player, "@huanshi", prompt, data, Card::MethodResponse, judge->who, true);
-
-        if (card != NULL){
+        if (card != NULL) {
             room->broadcastSkillInvoke(objectName());
             room->retrial(card, player, judge, objectName());
         }
@@ -189,31 +184,32 @@ public:
     }
 };
 
-class Mingzhe: public TriggerSkill{
+class Mingzhe: public TriggerSkill {
 public:
-    Mingzhe():TriggerSkill("mingzhe"){
+    Mingzhe(): TriggerSkill("mingzhe") {
         events << CardsMoveOneTime;
         frequency = Frequent;
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
-        if(player->getPhase() != Player::NotActive)
+        if (player->getPhase() != Player::NotActive)
             return false;
 
         CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if(move->from != player)
+        if (move->from != player)
             return false;
 
         CardMoveReason reason = move->reason;
 
-        if((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_USE
-                || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
-                || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE){
+        if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_USE
+            || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
+            || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE){
             const Card *card;
             int i = 0;
             foreach(int card_id, move->card_ids){
                 card = Sanguosha->getCard(card_id);
-                if(card->isRed() && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip)
+                if (card->isRed() && (move->from_places[i] == Player::PlaceHand
+                                      || move->from_places[i] == Player::PlaceEquip)
                     && player->askForSkillInvoke(objectName(), data)){
                     room->broadcastSkillInvoke(objectName());
                     player->drawCards(1);
@@ -226,7 +222,7 @@ public:
 };
 
 New3v3CardPackage::New3v3CardPackage()
-    :Package("New3v3Card")
+    : Package("New3v3Card")
 {
     QList<Card *> cards;
     cards << new SupplyShortage(Card::Spade, 1)
@@ -248,7 +244,6 @@ Special3v3Package::Special3v3Package():Package("Special3v3")
     zhugejin->addSkill(new HongyuanDraw);
     zhugejin->addSkill(new Huanshi);
     zhugejin->addSkill(new Mingzhe);
-
     related_skills.insertMulti("hongyuan", "#hongyuan");
 
     addMetaObject<HuanshiCard>();
@@ -256,3 +251,4 @@ Special3v3Package::Special3v3Package():Package("Special3v3")
 }
 
 ADD_PACKAGE(Special3v3)
+// FORMATTED

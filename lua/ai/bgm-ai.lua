@@ -759,7 +759,7 @@ end
 sgs.ai_skill_playerchosen.junwei = function(self, targets)
 	local tos = {}
 	for _, target in sgs.qlist(targets) do
-		if not self:isFriend(target) and not (self:isEquip("SilverLion", target) and target:getCards("e"):length() == 1)then
+		if self:isEnemy(target) and not (self:isEquip("SilverLion", target) and target:getCards("e"):length() == 1)then
 			table.insert(tos, target)
 		end
 	end 

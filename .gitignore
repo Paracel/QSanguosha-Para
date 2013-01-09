@@ -22,3 +22,7 @@ builds/vs2010/Win32/
 Bin/
 builds-backup/
 backdrop-backup/
+QSanguosha.sdf
+QSanguosha.suo
+*.vcxproj.user
+buids/vs2010/ipch

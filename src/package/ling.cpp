@@ -5,7 +5,7 @@
 #include "client.h"
 #include "engine.h"
 
-LuoyiCard::LuoyiCard(){
+LuoyiCard::LuoyiCard() {
     target_fixed = true;
 }
 
@@ -15,8 +15,7 @@ void LuoyiCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) const
 
 class NeoLuoyi: public OneCardViewAsSkill{
 public:
-    NeoLuoyi():OneCardViewAsSkill("neoluoyi"){
-
+    NeoLuoyi(): OneCardViewAsSkill("neoluoyi") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -65,7 +64,7 @@ public:
     }
 };
 
-NeoFanjianCard::NeoFanjianCard(){
+NeoFanjianCard::NeoFanjianCard() {
     mute = true;
     will_throw = false;
     handling_method = Card::MethodNone;
@@ -91,7 +90,7 @@ void NeoFanjianCard::onEffect(const CardEffectStruct &effect) const{
     target->obtainCard(this);
     room->showCard(target, card_id);
 
-    if(card->getSuit() != suit){
+    if (card->getSuit() != suit) {
         DamageStruct damage;
         damage.card = NULL;
         damage.from = zhouyu;
@@ -101,9 +100,9 @@ void NeoFanjianCard::onEffect(const CardEffectStruct &effect) const{
     }
 }
 
-class NeoFanjian:public OneCardViewAsSkill{
+class NeoFanjian: public OneCardViewAsSkill {
 public:
-    NeoFanjian():OneCardViewAsSkill("neofanjian"){
+    NeoFanjian(): OneCardViewAsSkill("neofanjian") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -121,17 +120,18 @@ public:
     }
 };
 
-class Yishi: public TriggerSkill{
+class Yishi: public TriggerSkill {
 public:
-    Yishi():TriggerSkill("yishi"){
+    Yishi(): TriggerSkill("yishi") {
         events << DamageCaused;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
 
-        if(damage.card && damage.card->isKindOf("Slash") && damage.card->getSuit() == Card::Heart &&
-           !damage.chain && !damage.transfer && !damage.to->isAllNude() && player->askForSkillInvoke(objectName(), data)){
+        if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSuit() == Card::Heart
+            && !damage.chain && !damage.transfer && !damage.to->isAllNude()
+            && player->askForSkillInvoke(objectName(), data)){
 
             room->broadcastSkillInvoke(objectName(), 1);
             LogMessage log;
@@ -141,9 +141,9 @@ public:
             log.to << damage.to;
             room->sendLog(log);
             int card_id = room->askForCardChosen(player, damage.to, "hej", objectName());
-            if(room->getCardPlace(card_id) == Player::PlaceDelayedTrick)
+            if (room->getCardPlace(card_id) == Player::PlaceDelayedTrick)
                 room->broadcastSkillInvoke(objectName(), 2);
-            else if(room->getCardPlace(card_id) == Player::PlaceEquip)
+            else if (room->getCardPlace(card_id) == Player::PlaceEquip)
                 room->broadcastSkillInvoke(objectName(), 3);
             else
                 room->broadcastSkillInvoke(objectName(), 4);
@@ -155,16 +155,16 @@ public:
     }
 };
 
-class Zhulou:public PhaseChangeSkill{
+class Zhulou: public PhaseChangeSkill {
 public:
-    Zhulou():PhaseChangeSkill("zhulou"){
+    Zhulou(): PhaseChangeSkill("zhulou") {
     }
 
     virtual bool onPhaseChange(ServerPlayer *gongsun) const{
         Room *room = gongsun->getRoom();
-        if(gongsun->getPhase() == Player::Finish && gongsun->askForSkillInvoke(objectName())){
+        if (gongsun->getPhase() == Player::Finish && gongsun->askForSkillInvoke(objectName())) {
             gongsun->drawCards(2);
-            room->broadcastSkillInvoke("zhulou", qrand() % 2 + 1);
+            room->broadcastSkillInvoke("zhulou");
             if(!room->askForCard(gongsun, ".Weapon", "@zhulou-discard", QVariant()))
                 room->loseHp(gongsun);
         }
@@ -172,14 +172,13 @@ public:
     }
 };
 
-class Tannang: public DistanceSkill{
+class Tannang: public DistanceSkill {
 public:
-    Tannang():DistanceSkill("tannang")
-    {
+    Tannang(): DistanceSkill("tannang") {
     }
 
     virtual int getCorrect(const Player *from, const Player *to) const{
-        if(from->hasSkill(objectName()))
+        if (from->hasSkill(objectName()))
             return -from->getLostHp();
         else
             return 0;
@@ -198,10 +197,9 @@ public:
     }
 };
 
-class NeoGanglie:public MasochismSkill{
+class NeoGanglie: public MasochismSkill {
 public:
-    NeoGanglie():MasochismSkill("neoganglie"){
-
+    NeoGanglie(): MasochismSkill("neoganglie") {
     }
 
     virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
@@ -209,7 +207,7 @@ public:
         Room *room = xiahou->getRoom();
         QVariant source = QVariant::fromValue(from);
 
-        if(from && from->isAlive() && room->askForSkillInvoke(xiahou, "neoganglie", source)){
+        if (from && from->isAlive() && room->askForSkillInvoke(xiahou, "neoganglie", source)) {
             room->broadcastSkillInvoke("ganglie");
 
             JudgeStruct judge;
@@ -219,33 +217,32 @@ public:
             judge.who = xiahou;
 
             room->judge(judge);
-            if(judge.isGood()){
+            if (judge.isGood()) {
                 QStringList choicelist;
                 choicelist << "damage";
                 if (from->getHandcardNum() > 1)
                     choicelist << "throw";
                 QString choice = room->askForChoice(xiahou, "neoganglie", choicelist.join("+"));
-                if(choice == "damage"){
+                if (choice == "damage") {
                     DamageStruct damage;
                     damage.from = xiahou;
                     damage.to = from;
 
                     room->damage(damage);
-                }
-                else
+                } else
                      room->askForDiscard(from, objectName(), 2, 2);
             }
         }
     }
 };
 
-class Fenji: public MaxCardsSkill{
+class Fenji: public MaxCardsSkill {
 public:
-    Fenji():MaxCardsSkill("fenji"){
+    Fenji(): MaxCardsSkill("fenji") {
     }
 
     virtual int getExtra(const Player *target) const{
-        if(target->hasSkill(objectName()))
+        if (target->hasSkill(objectName()))
             return target->getPile("buqu").length();
         else
             return 0;
@@ -253,7 +250,7 @@ public:
 };
 
 LingPackage::LingPackage()
-    :Package("ling")
+    : Package("ling")
 {
     General * neo_xiahoudun = new General(this, "neo_xiahoudun", "wei");
     neo_xiahoudun->addSkill(new NeoGanglie);
@@ -299,3 +296,4 @@ LingPackage::LingPackage()
 }
 
 ADD_PACKAGE(Ling)
+// FORMATTED

@@ -1,5 +1,4 @@
 #include "hegemony.h"
-
 #include "skill.h"
 #include "client.h"
 #include "engine.h"
@@ -74,7 +73,7 @@ public:
         Room *room = ganfuren->getRoom();
         if (ganfuren->getPhase() != Player::Start || ganfuren->isKongcheng())
             return false;
-        //==================================
+        // As the cost, if one of her handcards cannot be throwed, the skill is unable to invoke
         foreach (const Card *card, ganfuren->getHandcards()) {
             if (ganfuren->isJilei(card))
                 return false;
@@ -261,13 +260,13 @@ public:
         if (move->from != kongrong)
             return false;
         if (move->to_place == Player::DiscardPile
-           && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
 
             int i = 0;
             QList<int> lirang_card;
             foreach (int card_id, move->card_ids) {
                 if (room->getCardPlace(card_id) == Player::DiscardPile
-                   && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip)) {
+                    && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip)) {
                         lirang_card << card_id;
                 }
                 i++;
@@ -531,9 +530,9 @@ public:
         events << CardFinished;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
-        if (player->getMark("@arise") < 1 && player->getMark("xiongyi") > 0){
-            if (player->getMark("xiongyi") <= (room->getAlivePlayers().length()) / 2){
+    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &) const{
+        if (player->getMark("@arise") < 1 && player->getMark("xiongyi") > 0) {
+            if (player->getMark("xiongyi") <= (room->getAlivePlayers().length()) / 2) {
                 RecoverStruct recover;
                 recover.who = player;
                 room->recover(player, recover);
@@ -761,7 +760,9 @@ public:
     }
 };
 
-HegemonyPackage::HegemonyPackage(): Package("hegemony") {
+HegemonyPackage::HegemonyPackage()
+    : Package("hegemony")
+{
     General *yuejin = new General(this, "yuejin", "wei");
     yuejin->addSkill(new Xiaoguo);
 
@@ -847,3 +848,4 @@ HegemonyPackage::HegemonyPackage(): Package("hegemony") {
 }
 
 ADD_PACKAGE(Hegemony)
+// FORMATTED

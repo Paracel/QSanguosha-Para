@@ -1,5 +1,5 @@
-#ifndef WIND_H
-#define WIND_H
+#ifndef _WIND_H
+#define _WIND_H
 
 #include "package.h"
 #include "card.h"
@@ -9,8 +9,7 @@
 #include <QButtonGroup>
 #include <QDialog>
 
-
-class GuidaoCard: public SkillCard{
+class GuidaoCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -19,7 +18,7 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
-class LeijiCard: public SkillCard{
+class LeijiCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -29,7 +28,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class HuangtianCard: public SkillCard{
+class HuangtianCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -39,7 +38,7 @@ public:
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
 };
 
-class ShensuCard: public SkillCard{
+class ShensuCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -49,7 +48,7 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
-class TianxiangCard: public SkillCard{
+class TianxiangCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -58,7 +57,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class GuhuoCard: public SkillCard{
+class GuhuoCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -73,7 +72,7 @@ public:
     virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const;
 };
 
-class GuhuoDialog: public QDialog{
+class GuhuoDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -108,11 +107,12 @@ protected:
     virtual int getJushouDrawNum(ServerPlayer *caoren) const;
 };
 
-class WindPackage: public Package{
+class WindPackage: public Package {
     Q_OBJECT
 
 public:
     WindPackage();
 };
 
-#endif // WIND_H
+#endif
+// FORMATTED

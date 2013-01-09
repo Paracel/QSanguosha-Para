@@ -5,42 +5,42 @@
 #include "card.h"
 #include "standard.h"
 
-class NostalgiaPackage: public Package{
+class NostalgiaPackage: public Package {
     Q_OBJECT
 
 public:
     NostalgiaPackage();
 };
 
-class MoonSpear:public Weapon{
+class MoonSpear: public Weapon {
     Q_OBJECT
 
 public:
     Q_INVOKABLE MoonSpear(Card::Suit suit = Diamond, int number = 12);
 };
 
-class NostalGeneralPackage: public Package{
+class NostalGeneralPackage: public Package {
     Q_OBJECT
 
 public:
     NostalGeneralPackage();
 };
 
-class NostalYJCMPackage: public Package{
+class NostalYJCMPackage: public Package {
     Q_OBJECT
 
 public:
     NostalYJCMPackage();
 };
 
-class NostalYJCM2012Package: public Package{
+class NostalYJCM2012Package: public Package {
     Q_OBJECT
 
 public:
     NostalYJCM2012Package();
 };
 
-class NosJujianCard: public SkillCard{
+class NosJujianCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -49,7 +49,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class NosXuanhuoCard: public SkillCard{
+class NosXuanhuoCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -58,7 +58,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class NosFanjianCard: public SkillCard{
+class NosFanjianCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -85,4 +85,5 @@ public:
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
 };
 
-#endif // _NOSTALGIA_H
+#endi
+// FORMATTED

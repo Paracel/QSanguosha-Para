@@ -1,11 +1,11 @@
-#ifndef SPECIAL3V3_H
-#define SPECIAL3V3_H
+#ifndef _SPECIAL3V3_H
+#define _SPECIAL3V3_H
 
 #include "package.h"
 #include "card.h"
 #include "skill.h"
 
-class HongyuanCard: public SkillCard{
+class HongyuanCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -15,7 +15,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class HuanshiCard: public SkillCard{
+class HuanshiCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -24,18 +24,19 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
-class Special3v3Package : public Package{
+class Special3v3Package: public Package {
     Q_OBJECT
 
 public:
     Special3v3Package();
 };
 
-class New3v3CardPackage: public Package{
+class New3v3CardPackage: public Package {
     Q_OBJECT
 
 public:
     New3v3CardPackage();
 };
 
-#endif // SPECIAL3V3_H
+#endif
+// FORMATTED

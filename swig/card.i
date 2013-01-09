@@ -41,7 +41,7 @@ public:
 		WeaponLocation,
 		ArmorLocation,
 		DefensiveHorseLocation,
-		OffensiveHorseLocation,
+		OffensiveHorseLocation
 	};
 
 	EquipCard(Suit suit, int number): Card(suit, number, true) { handling_method = MethodUse; }

@@ -1,11 +1,11 @@
-#ifndef SPPACKAGE_H
-#define SPPACKAGE_H
+#ifndef _SP_H
+#define _SP_H
 
 #include "package.h"
 #include "card.h"
 #include "standard.h"
 
-class SPPackage: public Package{
+class SPPackage: public Package {
     Q_OBJECT
 
 public:
@@ -23,7 +23,7 @@ protected:
     virtual int getKingdoms(ServerPlayer *yuanshu) const;
 };
 
-class WeidiCard: public SkillCard{
+class WeidiCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -53,7 +53,7 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
-class BifaCard: public SkillCard{
+class BifaCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -73,25 +73,26 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class SPCardPackage: public Package{
+class SPCardPackage: public Package {
     Q_OBJECT
 
 public:
     SPCardPackage();
 };
 
-class SPMoonSpear:public Weapon{
+class SPMoonSpear: public Weapon {
     Q_OBJECT
 
 public:
     Q_INVOKABLE SPMoonSpear(Card::Suit suit = Diamond, int number = 12);
 };
 
-class HegemonySPPackage: public Package{
+class HegemonySPPackage: public Package {
     Q_OBJECT
 
 public:
     HegemonySPPackage();
 };
 
-#endif // SPPACKAGE_H
+#endif
+// FORMATTED

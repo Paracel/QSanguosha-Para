@@ -3,10 +3,10 @@
 #include "engine.h"
 #include "room.h"
 
-class CoupleScenarioRule: public ScenarioRule{
+class CoupleScenarioRule: public ScenarioRule {
 public:
     CoupleScenarioRule(Scenario *scenario)
-        :ScenarioRule(scenario)
+        : ScenarioRule(scenario)
     {
         events << GameStart << GameOverJudge << BuryVictim;
     }
@@ -14,74 +14,72 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         const CoupleScenario *scenario = qobject_cast<const CoupleScenario *>(parent());
 
-        switch(event){
-        case GameStart:{
-            foreach (ServerPlayer *player, room->getPlayers())
-            {
-                if(player->isLord()){
-                    scenario->marryAll(room);
-                    room->setTag("SkipNormalDeathProcess", true);
-                }else if(player->getGeneralName() == "lvbu"){
-                    if(player->askForSkillInvoke("reselect"))
-                        room->changeHero(player, "dongzhuo", true);
-                }else if(player->getGeneralName() == "zhugeliang"){
-                    if(player->askForSkillInvoke("reselect"))
-                        room->changeHero(player, "wolong", true);
-                }else if(player->getGeneralName() == "caopi"){
-                    if(player->askForSkillInvoke("reselect"))
-                        room->changeHero(player, "caozhi", true);
-                }else if(player->getGeneralName() == "ganfuren"){
-                    if(player->askForSkillInvoke("reselect"))
-                        room->changeHero(player, "sp_sunshangxiang", true);
+        switch (event) {
+        case GameStart: {
+                foreach (ServerPlayer *player, room->getPlayers()) {
+                    if (player->isLord()) {
+                        scenario->marryAll(room);
+                        room->setTag("SkipNormalDeathProcess", true);
+                    } else if(player->getGeneralName() == "lvbu") {
+                        if (player->askForSkillInvoke("reselect"))
+                            room->changeHero(player, "dongzhuo", true);
+                    } else if (player->getGeneralName() == "zhugeliang") {
+                        if (player->askForSkillInvoke("reselect"))
+                            room->changeHero(player, "wolong", true);
+                    }else if(player->getGeneralName() == "caopi"){
+                        if (player->askForSkillInvoke("reselect"))
+                            room->changeHero(player, "caozhi", true);
+                    }else if(player->getGeneralName() == "ganfuren"){
+                        if (player->askForSkillInvoke("reselect"))
+                            room->changeHero(player, "sp_sunshangxiang", true);
+                    }
                 }
+                break;
             }
-            break;
-            }
-
-        case GameOverJudge:{
-                if(player->isLord()){
+        case GameOverJudge: {
+                if (player->isLord()) {
                     scenario->marryAll(room);
-                }else if(player->isMale()){
+                } else if(player->isMale()) {
                     ServerPlayer *loyalist = NULL;
-                    foreach(ServerPlayer *player, room->getAlivePlayers()){
-                        if(player->getRoleEnum() == Player::Loyalist){
+                    foreach (ServerPlayer *player, room->getAlivePlayers()) {
+                        if (player->getRoleEnum() == Player::Loyalist) {
                             loyalist = player;
                             break;
                         }
                     }
                     ServerPlayer *widow = scenario->getSpouse(player);
-                    if(widow && widow->isAlive() && widow->isFemale() && room->getLord()->isAlive() && loyalist == NULL)
+                    if (widow && widow->isAlive() && widow->isFemale() && room->getLord()->isAlive() && loyalist == NULL)
                         scenario->remarry(room->getLord(), widow);
-                }else if(player->getRoleEnum() == Player::Loyalist){
+                } else if (player->getRoleEnum() == Player::Loyalist) {
                     room->setPlayerProperty(player, "role", "renegade");
 
                     QList<ServerPlayer *> players = room->getAllPlayers();
                     QList<ServerPlayer *> widows;
                     foreach(ServerPlayer *player, players){
-                        if(scenario->isWidow(player))
+                        if (scenario->isWidow(player))
                             widows << player;
                     }
 
                     ServerPlayer *new_wife = room->askForPlayerChosen(room->getLord(), widows, "remarry");
-                    if(new_wife){
+                    if (new_wife) {
                         scenario->remarry(room->getLord(), new_wife);
                     }
                 }
 
                 QList<ServerPlayer *> players = room->getAlivePlayers();
-                if(players.length() == 1){
+                if (players.length() == 1) {
                     ServerPlayer *survivor = players.first();
                     ServerPlayer *spouse = scenario->getSpouse(survivor);
-                    if(spouse)
+                    if (spouse)
                         room->gameOver(QString("%1+%2").arg(survivor->objectName()).arg(spouse->objectName()));
                     else
                         room->gameOver(survivor->objectName());
 
                     return true;
-                }else if(players.length() == 2){
+                } else if (players.length() == 2) {
                     ServerPlayer *first = players.at(0);
                     ServerPlayer *second = players.at(1);
-                    if(scenario->getSpouse(first) == second){
+                    if (scenario->getSpouse(first) == second) {
                         room->gameOver(QString("%1+%2").arg(first->objectName()).arg(second->objectName()));
                         return true;
                     }
@@ -90,23 +88,21 @@ public:
                 return true;
             }
 
-        case BuryVictim:{
+        case BuryVictim: {
                 DeathStruct death = data.value<DeathStruct>();
                 player->bury();
                 // reward and punishment
-                if(death.damage && death.damage->from){
+                if (death.damage && death.damage->from) {
                     ServerPlayer *killer = death.damage->from;
-
-                    if(killer == player)
+                    if (killer == player)
                         return false;
 
-                    if(scenario->getSpouse(killer) == player)
+                    if (scenario->getSpouse(killer) == player)
                         killer->throwAllHandCardsAndEquips();
                     else
                         killer->drawCards(3);
                 }
             }
-
         default:
             break;
         }
@@ -116,7 +112,7 @@ public:
 };
 
 CoupleScenario::CoupleScenario()
-    :Scenario("couple")
+    : Scenario("couple")
 {
     lord = "caocao";
     renegades << "lvbu" << "diaochan";
@@ -133,6 +129,7 @@ CoupleScenario::CoupleScenario()
     map["sunjian"] = "wuguotai";
     map["sunce"] = "daqiao";
     map["sunquan"] = "bulianshi";
+    //map["liuxie"] = "fuhuanghou"
 
     full_map = map;
     full_map["dongzhuo"] = "diaochan";
@@ -141,13 +138,13 @@ CoupleScenario::CoupleScenario()
 }
 
 void CoupleScenario::marryAll(Room *room) const{
-    foreach(QString husband_name, full_map.keys()){
+    foreach (QString husband_name, full_map.keys()) {
         ServerPlayer *husband = room->findPlayer(husband_name, true);
-        if(husband == NULL)
+        if (husband == NULL)
             continue;
 
         QString wife_name = map.value(husband_name, QString());
-        if(!wife_name.isNull()){
+        if (!wife_name.isNull()) {
             ServerPlayer *wife = room->findPlayer(wife_name, true);
             marry(husband, wife);
         }
@@ -155,14 +152,14 @@ void CoupleScenario::marryAll(Room *room) const{
 }
 
 void CoupleScenario::setSpouse(ServerPlayer *player, ServerPlayer *spouse) const{
-    if(spouse)
+    if (spouse)
         player->tag["spouse"] = QVariant::fromValue(spouse);
     else
         player->tag.remove("spouse");
 }
 
 void CoupleScenario::marry(ServerPlayer *husband, ServerPlayer *wife) const{
-    if(getSpouse(husband) == wife)
+    if (getSpouse(husband) == wife)
         return;
 
     LogMessage log;
@@ -187,7 +184,7 @@ void CoupleScenario::remarry(ServerPlayer *enkemann, ServerPlayer *widow) const{
     room->sendLog(log);
 
     ServerPlayer *ex_wife = getSpouse(enkemann);
-    if(ex_wife){
+    if (ex_wife) {
         setSpouse(ex_wife, NULL);
         LogMessage log;
         log.type = "#Divorse";
@@ -205,7 +202,7 @@ ServerPlayer *CoupleScenario::getSpouse(const ServerPlayer *player) const{
 }
 
 bool CoupleScenario::isWidow(ServerPlayer *player) const{
-    if(player->isMale())
+    if (player->isMale())
         return false;
 
     ServerPlayer *spouse = getSpouse(player);
@@ -220,7 +217,7 @@ void CoupleScenario::assign(QStringList &generals, QStringList &roles) const{
     husbands = husbands.mid(0, 4);
 
     QStringList others;
-    foreach(QString husband, husbands)
+    foreach (QString husband, husbands)
         others << husband << map.value(husband);
 
     generals << others;
@@ -255,4 +252,4 @@ AI::Relation CoupleScenario::relationTo(const ServerPlayer *a, const ServerPlaye
 
     return AI::Enemy;
 }
-
+// FORMATTED

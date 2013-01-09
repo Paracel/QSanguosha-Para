@@ -1,6 +1,6 @@
 
-setPile:36,35,33,3,1,0,89,22,140,132,53,21,116,96
-general:guojia role:rebel starter:true maxhp:3 hp:1 draw:0 equip:63 hand:95,110,123 
-general:dongzhuo role:lord maxhp:9 hp:9 hand:73,74,75 
-general:lvbu role:rebel maxhp:4 hp:1 equip:60 hand:137 
-extraOptions:gameOverIfExtraCardDrawn:rebel
+setPile:19,17,15,13,12,11,10,9,45,50,49,48,47,46,8,7,53,83,82
+general:guanyu role:renegade starter:true maxhp:4 hp:1 endedByPile:rebel singleTurn:rebel draw:0 equip:60 hand:80,81 
+general:zhenji role:loyalist maxhp:3 hp:1 draw:0 equip:62 
+general:caocao role:lord maxhp:5 hp:3 draw:0 equip:61 
+

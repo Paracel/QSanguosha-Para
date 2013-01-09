@@ -535,11 +535,19 @@ function SmartAI:useCardPeach(card, use)
 		return
 	end
 
-	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp() < 1) or peaches > self.player:getHp() then
+	if peaches > self.player:getHp() then mustusepeach = true end	
+
+	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp()<1) or peaches > self.player:getHp() then
 		use.card = card
 		return 
 	end
 	
+	if self.player:hasSkill("jiuchi") and self:getCardsNum("Analeptic") > 0 and self:getOverflow() <=0 and #self.friends_noself>0 then
+		return
+	end
+
+	if self.player:getHp() > getBestHp(self.player) then return end
+    
 	local lord= self.room:getLord()
 	if self:isFriend(lord) and lord:getHp() <= 2 and not lord:hasSkill("buqu") then 
 		if self.player:isLord() then use.card = card end
@@ -825,7 +833,7 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 	if self:hasSkills("guidao", self.enemies) and self:getFinalRetrial(sgs.hujiasource) == 2 then
 		return false
 	end	
-    if self:getDamagedEffects(self.player) then return false end
+	if self:getDamagedEffects(self.player) or self.player:getHp()>getBestHp(self.player) then return false end
 	return true
 end
 
@@ -892,7 +900,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	local attacker = target
 	if menghuo and aoe:isKindOf("SavageAssault") then attacker = menghuo end
 
-	if self:getDamagedEffects(self.player,attacker) then return "." end
+	if self:getDamagedEffects(self.player,attacker) or self.player:getHp() > getBestHp(self.player) then return "." end
 
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
@@ -1016,7 +1024,7 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
-	if self:getDamagedEffects(self.player,target) then return "." end
+	if self:getDamagedEffects(self.player,target) or self.player:getHp()>getBestHp(self.player) then return "." end
 	if self:isFriend(target) and target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
 	if self.player:getMark("@fenyong") > 0 and not target:hasSkill("jueqing") then return "." end
 	if (not self:isFriend(target) and self:getCardsNum("Slash")*2 >= target:getHandcardNum())
@@ -1426,7 +1434,7 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
-	if target and target2 and self.getDamagedEffects(target2,self.player) then
+	if target and target2 and (self.getDamagedEffects(target2,self.player) or target2:getHp()>getBestHp(target2)) then
 		for _, slash in ipairs(self:getCards("Slash")) do
             if self:slashIsEffective(slash, target2) and self:isFriend(target2) then 
                 return slash:toString()

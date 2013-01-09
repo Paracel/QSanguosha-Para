@@ -39,11 +39,14 @@ end
 sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 	local targetlist=sgs.QList2Table(targets)
 	local target
+	local lord
 	for _, player in ipairs(targetlist) do
+		if player:isLord() then lord = player end
 		if self:isEnemy(player) and (not target or target:getHp() < player:getHp()) then
 			target = player
 		end
 	end
+	if self.role == "rebel" and lord then return lord end
 	if target then return target end
 	self:sort(targetlist, "hp")
 	if self.player:getRole() == "loyalist" and targetlist[1]:isLord() then return targetlist[2] end

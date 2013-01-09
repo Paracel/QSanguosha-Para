@@ -425,8 +425,8 @@ sgs.ai_need_damaged.yiji = function (self, attacker)
 
 	self:sort(self.friends, "hp")
 
-	if self.friends[1]:objectName()==self.player:objectName() and self.player:isWeak() and self:getCardsNum("Peach")==0 then return false end
-	if #self.friends>1 and self.friends[2]:isWeak() then return true end	
+	if self.friends[1]:objectName()==self.player:objectName() and self:isWeak() and self:getCardsNum("Peach")==0 then return false end
+	if #self.friends>1 and self:isWeak(self.friends[2]) then return true end	
 	
 	return self.player:getHp()>2 and sgs.turncount>2 and #self.friends>1
 end
@@ -1167,36 +1167,97 @@ jieyin_skill.getTurnUseCard=function(self)
     return sgs.Card_Parse(card_str)
 end
 
+function SmartAI:getWoundedFriend(maleOnly)
+	self:sort(self.friends, "hp")
+	local list1 ={}  -- need help
+	local list2 ={}	 -- do not need help
+	local addToList=function(p,index)
+		if ( (not maleOnly) or (maleOnly and p:isMale()) ) and p:isWounded() then	
+			table.insert(index ==1 and list1 or list2, p)
+		end
+	end
+
+	local getCmpHp=function(p)
+		local hp = p:getHp()
+		if p:isLord() and self:isWeak(p) then hp = hp - 10 end
+		if p:objectName()==self.player:objectName() and self:isWeak(p) and p:hasSkill("qingnang") then hp = hp - 5 end
+		return hp
+	end
+
+
+	local cmp = function (a ,b)
+		if getCmpHp(a) == getCmpHp(b) then
+			return sgs.getDefenseSlash(a) < sgs.getDefenseSlash(b)
+		else
+			return getCmpHp(a) < getCmpHp(b)
+		end
+	end
+
+	for _, friend in ipairs(self.friends_noself) do
+		if friend:isLord() then
+			if friend:getMark("hunzi")==0 and friend:getMark("@waked")==0 and friend:hasSkill("hunzi") 
+					and self:getEnemyNumBySeat(self.player,friend) <= (friend:getHp()>=2 and 1 or 0) then
+				addToList(friend,2)
+			elseif friend:getHp()>=getBestHp(friend) then
+				addToList(friend,2)
+			elseif not sgs.isLordHealthy() then
+				addToList(friend,1)
+			end
+		else
+			if friend:getHp()>=getBestHp(friend) then
+				addToList(friend,2)
+			else
+				addToList(friend,1)
+			end
+		end
+	end
+	table.sort(list1, cmp)
+	table.sort(list2, cmp)
+	return list1, list2
+end
+
 sgs.ai_skill_use_func.JieyinCard=function(card,use,self)
-    self:sort(self.friends_noself, "hp")
-    local lord = self.room:getLord()
-	-- Sun Ce lord
-	if self:isFriend(lord) and lord:getMark("hunzi") == 0 and lord:hasSkill("hunzi") then
-		if self:getEnemyNumBySeat(self.player,lord) <= (lord:getHp() >= 2 and 1 or 0) then return end
- 	end
-    if self:isFriend(lord) and not sgs.isLordHealthy() and lord:isMale() and lord:isWounded() then
-        use.card=card
-        if use.to then use.to:append(lord) end
-        return
-    end
-    for _, friend in ipairs(self.friends_noself) do
-        if friend:isMale() and friend:isWounded() and
-            not (friend:hasSkill("longhun") and friend:getCards("he"):length()>2 ) and
-            not (friend:hasSkill("hunzi") and friend:getMark("hunzi") == 0 and (friend:getSeat() - self.player:getSeat()) % (global_room:alivePlayerCount()) < 3) then 
-            use.card=card
-            if use.to then use.to:append(friend) end
-            return
-        end
-    end
-    if self.player:isMale() and self.player:isWounded() then
+    local arr1,arr2 = self:getWoundedFriend(true)
+	local target = nil
+	
+	repeat
+		if #arr1>0 and (self:isWeak(arr1[1]) or self:isWeak() or self:getOverflow()>=1) then 
+			target=arr1[1] 
+			break
+		end
+		if #arr2>0 and self:isWeak() then 
+			target=arr2[1] 
+			break
+		end
+	until true
+
+	if not target and self:isWeak() and self:getOverflow()>=2 and self:isLord() then
+		local others = self.room:getOtherPlayers(self.player)
+		for _, other in sgs.qlist(others) do
+			if other:isWounded() and other:isMale() then
+				if (sgs.ai_chaofeng[other:getGeneralName()] or 0)<=2 and not self:hasSkills(sgs.masochism_skill, other) then
+					target = other
+					self.player:setFlags("jieyin_isenemy_"..other:objectName())
+					break
+				end
+			end
+		end
+	end
+    
+    if target then
         use.card = card
-        if use.to then use.to:append(self.player) end
+        if use.to then use.to:append(target) end
         return
     end
 end
 
 sgs.ai_use_priority.JieyinCard = 2.5
-sgs.ai_card_intention.JieyinCard = -80
+
+sgs.ai_card_intention.JieyinCard = function(card, from, to)
+	if not from:hasFlag("jieyin_isenemy_"..to[1]:objectName()) then 
+		sgs.updateIntention(from, to, -80) 
+	end
+end
 
 sgs.dynamic_value.benefit.JieyinCard = true
 
@@ -1239,30 +1300,17 @@ qingnang_skill.getTurnUseCard=function(self)
 end
 
 sgs.ai_skill_use_func.QingnangCard=function(card,use,self)
-    self:sort(self.friends, "defense")
-	-- Sun Ce lord
-	local lord= self.room:getLord()
- 	if self:isFriend(lord) and lord:getMark("hunzi") == 0 and lord:hasSkill("hunzi") and self:getCardsNum("Peach") >= 2 then return end
-    if self.player:isWounded() and self:getOverflow()>1 then 
-        use.card=card
-        if use.to then use.to:append(self.player) end
-        return
-    end
-    local lord = self.room:getLord()
-    if self:isFriend(lord) and not sgs.isLordHealthy()  and lord:isWounded() then
-        use.card=card
-        if use.to then use.to:append(lord) end
-        return
-    end	
-    for _, friend in ipairs(self.friends) do
-        if friend:isWounded() and
-            not (friend:hasSkill("longhun") and self:getAllPeachNum() > 0) and
-            not (friend:hasSkill("hunzi") and friend:getMark("hunzi") == 0 and self:getAllPeachNum() > 1) then
-            use.card=card
-            if use.to then use.to:append(friend) end
-            return
-        end
-    end
+
+	local arr1,arr2 = self:getWoundedFriend()
+	local target = nil
+	
+	if #arr1>0 and (self:isWeak(arr1[1]) or self:getOverflow()>=1) then target=arr1[1] end
+
+	if target and use.to then
+		use.card=card
+		use.to:append(target) 
+		return
+	end    
 end
 
 sgs.ai_use_priority.QingnangCard = 4.2

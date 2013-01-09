@@ -60,7 +60,7 @@ public:
         OffensiveHorseLocation = 3
     };
 
-    EquipCard(Suit suit, int number):Card(suit, number, true) { handling_method = Card::MethodUse;}
+    EquipCard(Suit suit, int number):Card(suit, number, true) { handling_method = MethodUse; }
 
     virtual QString getType() const;
     virtual CardType getTypeId() const;

@@ -9,32 +9,32 @@
 #include "room.h"
 #include "ai.h"
 
-class GH_Tuxi:public DrawCardsSkill{
+class GH_Tuxi: public DrawCardsSkill {
 public:
-    GH_Tuxi():DrawCardsSkill("gh_tuxi"){
+    GH_Tuxi(): DrawCardsSkill("gh_tuxi") {
     }
 
     virtual int getDrawNum(ServerPlayer *zhangliao, int n) const{
         Room *room = zhangliao->getRoom();
         bool can_invoke = false;
         QList<ServerPlayer *> targets;
-        foreach(ServerPlayer *p, room->getOtherPlayers(zhangliao))
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
             if (!p->isKongcheng())
                 targets << p;
         if (!targets.isEmpty())
             can_invoke = true;
 
-        if(can_invoke && room->askForSkillInvoke(zhangliao, objectName())){
+        if (can_invoke && room->askForSkillInvoke(zhangliao, objectName())) {
             zhangliao->setFlags("gh_tuxi");
             return n - 1;
-        }else
+        } else
             return n;
     }
 };
 
-class GH_TuxiAct: public TriggerSkill{
+class GH_TuxiAct: public TriggerSkill {
 public:
-    GH_TuxiAct(): TriggerSkill("#gh_tuxi"){
+    GH_TuxiAct(): TriggerSkill("#gh_tuxi") {
         events << AfterDrawNCards;
     }
 
@@ -47,7 +47,7 @@ public:
         zhangliao->setFlags("-gh_tuxi");
 
         QList<ServerPlayer *> targets;
-        foreach(ServerPlayer *p, room->getOtherPlayers(zhangliao))
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
             if (!p->isKongcheng())
                 targets << p;
         if (targets.isEmpty())
@@ -64,7 +64,7 @@ public:
 };
 
 GreenHandPackage::GreenHandPackage()
-    :Package("GreenHand")
+    : Package("GreenHand")
 {
     General *gh_zhangliao = new General(this, "gh_zhangliao", "wei");
     gh_zhangliao->addSkill(new GH_Tuxi);
@@ -81,7 +81,7 @@ Broadsword::Broadsword(Suit suit, int number)
 }
 
 GreenHandCardPackage::GreenHandCardPackage()
-    :Package("GreenHandCard")
+    : Package("GreenHandCard")
 {
     QList<Card *> cards;
     cards << new Duel(Card::Spade, 1)
@@ -140,12 +140,11 @@ GreenHandCardPackage::GreenHandCardPackage()
           << new Peach(Card::Diamond, 12)
           << new Slash(Card::Diamond, 13);
 
-
-    foreach(Card *card, cards)
+    foreach (Card *card, cards)
         card->setParent(this);
 
     type = CardPack;
 }
 
 ADD_PACKAGE(GreenHandCard)
-
+// FORMATTED

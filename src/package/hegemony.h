@@ -1,9 +1,9 @@
-#ifndef HEGEMONY_H
-#define HEGEMONY_H
+#ifndef _HEGEMONY_H
+#define _HEGEMONY_H
 
 #include "standard.h"
 
-class HegemonyPackage: public Package{
+class HegemonyPackage: public Package {
     Q_OBJECT
 
 public:
@@ -62,4 +62,5 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-#endif // HEGEMONY_H
+#endif
+// FORMATTED

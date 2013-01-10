@@ -194,15 +194,10 @@ sgs.ai_card_intention.LeijiCard = 80
 function sgs.ai_slash_prohibit.leiji(self, to, card)
 	if self:isFriend(to) then return false end
 	local hcard = to:getHandcardNum()
-	if self.player:hasSkill("liegong") and (hcard>=self.player:getHp() or hcard<=self.player:getAttackRange()) then return false end
+	if self.player:hasSkill("liegong") and (hcard >= self.player:getHp() or hcard <= self.player:getAttackRange()) then return false end
 
-	if getCardsNum("Jink", to) >= 1 or getKnownCard(to, "Jink", true) >= 1 then return true end
-	if self:isEquip("EightDiagram", to) then
-		local equips = to:getEquips()
-		for _, equip in sgs.qlist(equips) do
-			if equip:getSuitString() == "spade" then return true end
-		end
-	end
+	if getKnownCard(to, "Jink", true) >= 1 or (self:hasSuit("spade", true, to) >= 1 and hcard >= 2) then return true end
+	if self:isEquip("EightDiagram", to) then return true end
 end
 
 function sgs.ai_cardneed.leiji(to, card, self)
@@ -252,7 +247,7 @@ sgs.ai_skill_use_func.HuangtianCard=function(card,use,self)
 	end
 	
 	if #targets == 0 then return end
-	if self:needBear() then return "." end
+	if self:needBear() or self:getCardsNum("Jink", self.player, "h") <= 1 then return "." end
 	use.card=card
 	self:sort(targets, "defense")
 	if use.to then

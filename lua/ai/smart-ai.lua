@@ -3524,8 +3524,21 @@ function SmartAI:getSuitNum(suit_strings, include_equip, player)
 	local n = 0
 	local flag = "h"
 	if include_equip then flag = "he" end
-	local allcards = player:getCards(flag)
-	for _, card in sgs.qlist(allcards) do
+	local allcards
+	local current= self.room:getCurrent()
+ 	if player:objectName() == current:objectName() then
+		allcards = sgs.QList2Table(player:getCards(flag))
+ 	else
+		allcards = include_equip and sgs.QList2Table(player:getEquips()) or {}
+		local handcards = sgs.QList2Table(player:getHandcards())
+		local flag=string.format("%s_%s_%s","visible",current:objectName(),player:objectName())
+		for i= 1, #handcards, 1 do
+			if handcards[i]:hasFlag("visible") or handcards[i]:hasFlag(flag) then
+				table.insert(allcards,handcards[i])
+			end
+		end
+	end
+	for _, card in ipairs(allcards) do
 		for _, suit_string in ipairs(suit_strings:split("|")) do
 			if card:getSuitString() == suit_string then
 				n = n + 1

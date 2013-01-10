@@ -588,7 +588,7 @@ sgs.ai_card_intention.Peach = -120
 
 sgs.ai_use_value.Peach = 6
 sgs.ai_keep_value.Peach = 5
-sgs.ai_use_priority.Peach = 4.1
+sgs.ai_use_priority.Peach = 2.5
 
 sgs.ai_use_value.Jink = 8.9
 sgs.ai_keep_value.Jink = 4

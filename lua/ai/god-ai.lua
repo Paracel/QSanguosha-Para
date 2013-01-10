@@ -606,10 +606,152 @@ shenfen_skill.getTurnUseCard=function(self)
 	return sgs.Card_Parse("@ShenfenCard=.")
 end
 
+function SmartAI:getSaveNum(isFriend)
+	local num = 0
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if (isFriend and self:isFriend(player)) or (not isFriend and self:isEnemy(player)) then
+			if not self.player:hasSkill("wansha") or player:objectName() == self.player:objectName() then
+				if player:hasSkill("jijiu") then
+					num = num + self:getSuitNum("heart", true, player)
+					num = num + self:getSuitNum("diamond", true, player)
+					num = num + player:getHandcardNum() * 0.4
+				end
+				if player:hasSkill("nosjiefan") and getCardsNum("Slash", player) > 0 then
+					if self:isFriend(player) or self:getCardsNum("Jink") == 0 then num = num + getCardsNum("Slash", player) end
+				end
+				num = num + getCardsNum("Peach", player)
+			end
+			if player:hasSkill("buyi") and not player:isKongcheng() then num = num + 0.3 end
+			if player:hasSkill("chunlao") and not player:getPile("wine"):isEmpty() then num = num + player:getPile("wine"):length() end
+		end
+	end
+	return num
+end
+
+function SmartAI:canSaveSelf(player)
+	if player:hasSkill("buqu") and player:getPile("buqu"):length() < 5 then return true end
+	if getCardsNum("Analeptic", player) > 0 then return true end
+	if player:hasSkill("jiushi") and player:faceUp() then return true end
+	if player:hasSkill("jiuchi") then
+		for _, c in sgs.qlist(player:getHandcards()) do
+			if c:getSuit() == sgs.Card_Spade then return true end
+		end
+	end
+	return false
+end
+	
+local function getShenfenUseValueOf_HE_Cards(self, to)
+	local value = 0
+	-- value of handcards
+	local value_h = 0
+	local hcard = to:getHandcardNum()
+	if to:hasSkill("lianying") then
+		hcard = hcard - 0.9
+	elseif self:hasSkills("shangshi|nosshangshi", to) then
+		hcard = hcard - 0.9 * to:getLostHp()
+	end
+	value_h = (hcard > 4) and 16 / hcard or hcard
+	if to:hasSkill("tuntian") then value = value * 0.95 end
+	if (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getHp() > 2 and to:getMark("zhiji") == 0)) and not to:isKongcheng() then value_h = value_h * 0.7 end
+	if self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", to) then value_h = value_h * 0.95 end
+	value = value + value_h
+	
+	-- value of equips
+	local value_e = 0
+	local equip_num = to:getEquips():length()
+	if to:hasArmorEffect("silver_lion") and to:isWounded() then equip_num = equip_num - 1.1 end
+	value_e = equip_num * 1.1
+	if to:hasSkill("xiaoji") then value_e = value_e * 0.7 end
+	if to:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
+	if self:hasSkills("bazhen|yizhong", to) and to:getArmor() then value_e = value_e - 1 end
+	value = value + value_e
+
+	return value
+end
+
+local function getDangerousShenGuanYu(self)
+	local most = -100
+	local target
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		local nm_mark = player:getMark("@nightmare")
+		if player:objectName() == self.player:objectName() then nm_mark = nm_mark + 1 end
+		if nm_mark > 0 and nm_mark > most or (nm_mark == most and self:isEnemy(player)) then
+			most = nm_mark
+			target = player
+		end
+	end
+	if target and self:isEnemy(target) then return true end
+	return false
+end
+
 sgs.ai_skill_use_func.ShenfenCard=function(card,use,self)
-	if self:isFriend(self.room:getLord()) and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
-	-- We need a much more complicated strategy!!!
-	use.card = card
+	if (self.role == "loyalist" or self.role == "renegade") and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
+	local benefit = 0
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if self:isFriend(player) then benefit = benefit - getShenfenUseValueOf_HE_Cards(self, player) end
+		if self:isFriend(player) then benefit = benefit + getShenfenUseValueOf_HE_Cards(self, player) end
+	end
+	local friend_save_num = self:getSaveNum(true)
+	local enemy_save_num = self:getSaveNum(false)
+	local others = 0
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if self:damageIsEffective(player, sgs.DamageStruct_Normal) then
+			others = others + 1
+			local value_d = 3.5 / math.max(player:getHp(), 1)
+			if player:getHp() <= 1 then
+				if player:hasSkill("wuhun") then
+					local can_use = getDangerousShenGuanYu(self)
+					if not can_use then return else value_d = value_d * 0.1 end
+				end
+				if self:canSaveSelf(player) then 
+					value = value * 0.9 
+				elseif self:isFriend(player) and friend_save_num > 0 then
+					friend_save_num = friend_save_num - 1
+					value_d = value_d * 0.9
+				elseif self:isEnemy(player) and enemy_save_num > 0 then
+					enemy_save_num = enemy_save_num - 1
+					value_d = value_d * 0.9
+				end
+			end
+			if player:hasSkill("fankui") then value_d = value_d * 0.8 end
+			if player:hasSkill("guixin") then 
+				if not player:faceUp() then
+					value_d = value_d * 0.4
+				else
+					value_d = value_d * 0.8 * (1.05 - self.room:alivePlayerCount() / 15)
+				end
+			end
+			if self:getDamagedEffects(player, self.player) or getBestHp(player) == player:getHp() - 1 then value_d = value_d * 0.8 end
+			if self:isFriend(player) then benefit = benefit - value_d end
+			if self:isEnemy(player) then benefit = benefit + value_d end
+		end
+	end
+	if not self.player:faceUp() or self:hasSkills("jushou|neojushou|kuiwei", self.player) then
+		benefit = benefit + 1
+	else
+		local help_friend = false
+		for _, friend in ipairs(self.friends_noself) do
+			if self:hasSkills("fangzhu|jilve", friend) then
+				help_friend = true
+				benefit = benefit + 1
+				break
+			end
+		end
+		if not help_friend then benefit = benefit - 0.5 end
+	end
+	if self.player:getKingdom() == "qun" then
+		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			if player:hasLordSkill("baonue") and self:isFriend(player) then
+				benefit = benefit + 0.2 * self.room:alivePlayerCount()
+				break
+			end
+		end
+	end
+	benefit = benefit + (others - 7) * 0.05
+	self.room:writeToConsole("ShenfenBenefit " .. benefit)
+	if benefit > 0 then
+		use.card = card
+	end
 end
 
 sgs.ai_use_value.ShenfenCard = 8

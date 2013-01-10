@@ -20,7 +20,12 @@ sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
 					target = friend
 					break
 				end
-				if (friend:hasSkill("jushou") or friend:hasSkill("kuiwei")) and friend:getPhase() == sgs.Player_Play then
+				if friend:faceUp() and friend:hasSkill("shenfen") and friend:getPhase() == sgs.Player_Play 
+					and (not friend:hasUsed("ShenfenCard") and friend:getMark("@wrath") >= 6 or friend:hasFlag("ShenfenUsing")) then
+					target = friend
+					break
+				end
+				if self:hasSkills("jushou|neojushou|kuiwei", friend) and friend:getPhase() == sgs.Player_Play then
 					target = friend
 					break
 				end
@@ -448,6 +453,10 @@ end
 sgs.ai_skill_invoke.baonue = function(self, data)
 	for _,p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if p:hasLordSkill("baonue") and self:isFriend(p) and not p:hasFlag("baonue_used") and p:isAlive() then
+			if p:getLostHp() == 0 then
+				local zhangjiao = self.room:findPlayerBySkillName("guidao")
+				if zhangjiao and self:isFriend(zhangjiao) then return true else return false end
+			end
 			return true
 		end
 	end

@@ -95,15 +95,27 @@ sgs.ai_chat_func[sgs.Dying] = function(self, player, data)
 end
 
 sgs.ai_chat_func[sgs.EventPhaseStart] = function(self, player, data)
-	local chat = {
+	local chat_jink = {
 				"有货，可以来搞一下",
 				"我有X张【闪】",
 				"没闪, 忠内不要乱来",
 				"求杀",
 			}
-	if player:getPhase() == sgs.Player_Finish and player:getHandcardNum() >= 4 and player:hasSkill("leiji") and os.time() % 100 < 40 then
-		local index =1+ (os.time() % #chat)
-		player:speak(chat[index])
+
+	local chat_watch = {
+				"大家一起围观一下主公",
+				"不要一下弄死了，慢慢来",
+				"速度，一人一下，弄死",
+				"主公，你投降吧，免受皮肉之苦啊，投降给全尸",
+			}
+	if player:getPhase()== sgs.Player_Finish and not player:isKongcheng() and player:hasSkill("leiji") and os.time() % 10 < 4 then
+		local index = 1 + (os.time() % #chat_jink)
+		player:speak(chat_jink[index])
+	end
+	if player:getPhase() == sgs.Player_Start and self.role == "rebel" and sgs.current_mode_players["renegade"] == 0 
+		and sgs.current_mode_players["loyalist"]==0  and sgs.current_mode_players["rebel"]>=2 and os.time() % 10 < 4 then
+		local index = 1 + (os.time() % #chat_watch)
+		player:speak(chat_watch[index])
 	end
 end
 

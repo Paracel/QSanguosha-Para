@@ -123,122 +123,123 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                 general = room->askForGeneral(sp,available);
             }
             room->changeHero(sp, general, false, false, false, false);
-        }
-        general = this->players[i]["general2"];
-        if (!general.isEmpty()) {
-            if (general == "select") {
-                QStringList available, all;
-                all = Sanguosha->getRandomGenerals(Sanguosha->getGeneralCount());
-                qShuffle(all);
-                for (int k = 0; k < 5; k++) {
-                    if (sp->getGeneral2()) {
-                        foreach (const Skill* skill, sp->getGeneral2()->getSkillList())
-                            sp->loseSkill(skill->objectName());
-                    }
-                    room->setPlayerProperty(sp, "general2", QVariant());
-                    QString choice = sp->findReasonable(all);
-                    available << choice;
-                    all.removeOne(choice);
-                }
-                general = room->askForGeneral(sp,available);
+
+            general = this->players[i]["general2"];
+            if (!general.isEmpty()) {
+                if (general == "select") {
+                    QStringList available, all;
+                    all = Sanguosha->getRandomGenerals(Sanguosha->getGeneralCount());
+                    qShuffle(all);
+                    for (int k = 0; k < 5; k++) {
+                        if (sp->getGeneral2()) {
+                            foreach (const Skill* skill, sp->getGeneral2()->getSkillList())
+                                sp->loseSkill(skill->objectName());
+                        }
+                        room->setPlayerProperty(sp, "general2", QVariant());
+                        QString choice = sp->findReasonable(all);
+                        available << choice;
+                        all.removeOne(choice);
+                     }
+                     general = room->askForGeneral(sp,available);
+                 }
+                 if(general == sp->getGeneralName()) general = this->players.at(i)["general3"];
+                 room->changeHero(sp, general, false, false, true, false);
             }
-            if(general == sp->getGeneralName()) general = this->players.at(i)["general3"];
-            room->changeHero(sp, general, false, false, true, false);
-        }
 
-        room->setPlayerProperty(sp, "kingdom", sp->getGeneral()->getKingdom());
+            room->setPlayerProperty(sp, "kingdom", sp->getGeneral()->getKingdom());
 
-        QString str = this->players.at(i)["maxhp"];
-        if (str == QString()) str = QString::number(sp->getGeneralMaxHp());
-        room->setPlayerProperty(sp, "maxhp", str.toInt());
+            QString str = this->players.at(i)["maxhp"];
+            if (str == QString()) str = QString::number(sp->getGeneralMaxHp());
+            room->setPlayerProperty(sp, "maxhp", str.toInt());
 
-        str = this->players.at(i)["hpadj"];
-        if (str != QString())
-            room->setPlayerProperty(sp,"maxhp",sp->getMaxHp()+str.toInt());
-        str = QString::number(sp->getMaxHp());
+            str = this->players.at(i)["hpadj"];
+            if (str != QString())
+                room->setPlayerProperty(sp,"maxhp",sp->getMaxHp()+str.toInt());
+            str = QString::number(sp->getMaxHp());
 
-        QString str2 = this->players.at(i)["hp"];
-        if(str2 != QString()) str = str2;
-        room->setPlayerProperty(sp, "hp", str.toInt());
+            QString str2 = this->players.at(i)["hp"];
+            if(str2 != QString()) str = str2;
+            room->setPlayerProperty(sp, "hp", str.toInt());
 
-        str = this->players.at(i)["equip"];
-        QStringList equips = str.split(",");
-        foreach (QString equip,equips) {
-            bool ok;
-            equip.toInt(&ok);
-            if (!ok)
-                room->installEquip(sp, equip);
-            else
-                room->moveCardTo(Sanguosha->getCard(equip.toInt()), NULL, sp,
-                                 Player::PlaceEquip, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
-        }
+            str = this->players.at(i)["equip"];
+            QStringList equips = str.split(",");
+            foreach (QString equip,equips) {
+                bool ok;
+                equip.toInt(&ok);
+                if (!ok)
+                    room->installEquip(sp, equip);
+                else
+                    room->moveCardTo(Sanguosha->getCard(equip.toInt()), NULL, sp,
+                                    Player::PlaceEquip, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
+            }
 
-        str = this->players.at(i)["judge"];
-        if (str != QString()) {
-            QStringList judges = str.split(",");
-            foreach(QString judge,judges)
-                room->moveCardTo(Sanguosha->getCard(judge.toInt()),NULL,sp,Player::PlaceDelayedTrick, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
-        }
+            str = this->players.at(i)["judge"];
+            if (str != QString()) {
+                QStringList judges = str.split(",");
+                foreach(QString judge,judges)
+                    room->moveCardTo(Sanguosha->getCard(judge.toInt()),NULL,sp,Player::PlaceDelayedTrick, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
+            }
 
-        str = this->players.at(i)["hand"];
-        if (str != QString()) {
-            QStringList hands = str.split(",");
+            str = this->players.at(i)["hand"];
+            if (str != QString()) {
+                QStringList hands = str.split(",");
+                room->setPlayerFlag(sp, "NoManjuan");
+                foreach(QString hand, hands)
+                    room->obtainCard(sp, hand.toInt());
+                room->setPlayerFlag(sp, "-NoManjuan");
+            }
+
+            QVariant v;
+            foreach (const TriggerSkill *skill, sp->getTriggerSkills()) {
+                if (!skill->isSPConvertSkill())
+                    room->getThread()->addTriggerSkill(skill);
+                else
+                    continue;
+
+                if (skill->getTriggerEvents().contains(GameStart))
+                    skill->trigger(GameStart, room, sp, v);
+            }
+
+            QString skills = this->players.at(i)["acquireSkills"];
+            if (skills != QString()) {
+                foreach (QString skill_name, skills.split(","))
+                    room->acquireSkill(sp, skill_name);
+            }
+
+            if (this->players.at(i)["chained"] != QString()) {
+                sp->setChained(true);
+                room->broadcastProperty(sp, "chained");
+                room->setEmotion(sp, "chain");
+            }
+
+            if (this->players.at(i)["turned"] != QString()) {
+                if(sp->faceUp())
+                    sp->turnOver();
+            }
+
+            if (this->players.at(i)["starter"] != QString()) {
+                room->setCurrent(sp);
+                QVariant data = QVariant::fromValue(sp);
+                room->setTag("Starter", data);
+            }
+
+            if (this->players[i]["nationality"] != QString()) {
+                room->setPlayerProperty(sp, "kingdom", this->players.at(i)["nationality"]);
+            }
+
+            str = this->players[i]["draw"];
+            if (str == QString()) str = "4";
             room->setPlayerFlag(sp, "NoManjuan");
-            foreach(QString hand, hands)
-                room->obtainCard(sp, hand.toInt());
+            room->drawCards(sp, str.toInt());
             room->setPlayerFlag(sp, "-NoManjuan");
-        }
 
-        QVariant v;
-        foreach (const TriggerSkill *skill, sp->getTriggerSkills()) {
-            if (!skill->isSPConvertSkill())
-                room->getThread()->addTriggerSkill(skill);
-            else
-                continue;
-
-            if (skill->getTriggerEvents().contains(GameStart))
-                skill->trigger(GameStart, room, sp, v);
-        }
-
-        QString skills = this->players.at(i)["acquireSkills"];
-        if (skills != QString()) {
-            foreach (QString skill_name, skills.split(","))
-                room->acquireSkill(sp, skill_name);
-        }
-
-        if (this->players.at(i)["chained"] != QString()) {
-            sp->setChained(true);
-            room->broadcastProperty(sp, "chained");
-            room->setEmotion(sp, "chain");
-        }
-
-        if (this->players.at(i)["turned"] != QString()) {
-            if(sp->faceUp())
-                sp->turnOver();
-        }
-
-        if (this->players.at(i)["starter"] != QString()) {
-            room->setCurrent(sp);
-            QVariant data = QVariant::fromValue(sp);
-            room->setTag("Starter", data);
-        }
-
-        if (this->players[i]["nationality"] != QString()) {
-            room->setPlayerProperty(sp, "kingdom", this->players.at(i)["nationality"]);
-        }
-
-        str = this->players[i]["draw"];
-        if (str == QString()) str = "4";
-        room->setPlayerFlag(sp, "NoManjuan");
-        room->drawCards(sp, str.toInt());
-        room->setPlayerFlag(sp, "-NoManjuan");
-
-        if (this->players[i]["marks"] != QString()) {
-            QStringList marks = this->players[i]["marks"].split(",");
-            foreach(QString qs, marks) {
-                QStringList keys = qs.split("*");
-                str = keys[1];
-                room->setPlayerMark(sp, keys[0], str.toInt());
+            if (this->players[i]["marks"] != QString()) {
+                QStringList marks = this->players[i]["marks"].split(",");
+                foreach(QString qs, marks) {
+                    QStringList keys = qs.split("*");
+                    str = keys[1];
+                    room->setPlayerMark(sp, keys[0], str.toInt());
+                }
             }
         }
 

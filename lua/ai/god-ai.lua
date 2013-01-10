@@ -608,11 +608,12 @@ end
 
 sgs.ai_skill_use_func.ShenfenCard=function(card,use,self)
 	if self:isFriend(self.room:getLord()) and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
+	-- We need a much more complicated strategy!!!
 	use.card = card
 end
 
 sgs.ai_use_value.ShenfenCard = 8
-sgs.ai_use_priority.ShenfenCard = 2.3
+sgs.ai_use_priority.ShenfenCard = 5.3
 
 sgs.dynamic_value.damage_card.ShenfenCard = true
 sgs.dynamic_value.control_card.ShenfenCard = true

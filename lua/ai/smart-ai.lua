@@ -67,6 +67,8 @@ sgs.ai_choicemade_filter = 	{
 sgs.card_lack = {}
 sgs.ai_need_damaged = {} 
 sgs.ai_debug_func = {}
+sgs.ai_chat_func = {}
+sgs.processvalue = { loyalist = "忠大优", dilemma = "纠结", loyalish = "忠小优", rebelish = "反小优", rebel = "反大优", neutral = "平衡" }
 
 function setInitialTables()
 	sgs.current_mode_players = 	{lord = 0, loyalist = 0, rebel = 0, renegade = 0}
@@ -1018,8 +1020,6 @@ sgs.ai_card_intention.general=function(from,to,level)
 end
 
 function sgs.outputRoleValues(player, level)
-	--global_room:writeToConsole(player:getGeneralName() .. " " .. level .. " " .. sgs.evaluatePlayerRole(player) .." R" .. sgs.role_evaluation[player:objectName()]["rebel"] .. " L" ..
-	--	sgs.role_evaluation[player:objectName()]["loyalist"] .. " r" .. sgs.role_evaluation[player:objectName()]["renegade"]
 	global_room:writeToConsole(player:getGeneralName() .. " " .. level .. " " .. sgs.evaluatePlayerRole(player) .." R" .. math.ceil(sgs.role_evaluation[player:objectName()]["rebel"]) .. " L" ..
 		math.ceil(sgs.role_evaluation[player:objectName()]["loyalist"]) .. " r" .. math.ceil(sgs.role_evaluation[player:objectName()]["renegade"])
 		.. " " .. sgs.gameProcess(player:getRoom()) .. " " .. sgs.current_mode_players["loyalist"] .. sgs.current_mode_players["rebel"]
@@ -1027,7 +1027,7 @@ function sgs.outputRoleValues(player, level)
 end
 
 function sgs.updateIntention(from, to, intention, card)
-	if not to then global_room:writeToConsole(debug.traceback()) end
+	if not to then global_room:writeToConsole(debug.traceback()) return end
 	if from:objectName() == to:objectName() then return end
 	
 	sgs.ai_card_intention.general(from, to, intention) 
@@ -1129,9 +1129,6 @@ function sgs.gameProcess(room, ...)
 			else rebel_hp = aplayer:getHp() end
 			if aplayer:getMaxHp() == 3 then rebel_value = rebel_value + 0.5 end
 			rebel_value = rebel_value + rebel_hp + math.max(sgs.getDefense(aplayer) - rebel_hp * 2, 0) * 0.7
-			if aplayer:getArmor() or (not aplayer:getArmor() and (aplayer:hasSkill("bazhen") or aplayer:hasSkill("yizhong"))) then
-				rebel_value = rebel_value + 0.5
-			end
 			if aplayer:getDefensiveHorse() then
 				rebel_value = rebel_value + 0.5
 			end
@@ -1571,6 +1568,10 @@ function SmartAI:filterEvent(event, player, data)
 	if player:objectName() == self.player:objectName() and sgs.debugmode and sgs.ai_debug_func[event] and type(sgs.ai_debug_func[event]) == "function" then
 		sgs.ai_debug_func[event](self, player, data)
 	end
+	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
+        	sgs.ai_chat_func[event](self,player,data)
+    	end
+	
 	sgs.lastevent = event
 	sgs.lasteventdata = eventdata
 	if event == sgs.ChoiceMade and self == sgs.recorder then
@@ -1690,7 +1691,9 @@ function SmartAI:filterEvent(event, player, data)
 			elseif type(callback) == "number" then
 				sgs.updateIntentions(from, to, callback, card)
 			end
-		end
+		else
+			logmsg("card_intention.txt",card:getClassName()) -- tmp debug
+		end        
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		local from = move.from
@@ -1780,7 +1783,7 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.debugmode = false
 		end
 		if player:isLord() and sgs.debugmode then
-			logmsg("<meta charset='utf-8'/>")
+			logmsg("ai.html", "<meta charset='utf-8'/>")
 		end
 	end
 end

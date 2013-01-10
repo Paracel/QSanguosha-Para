@@ -305,7 +305,7 @@ function SmartAI:useCardSlash(card, use)
 			and friend:getHandcardNum() < 3)
 		or self:getDamagedEffects(friend,self.player) 
 		or (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
-        and ((getCardsNum("Jink", friend) > 0 and sgs.card_lack[friend:objectName()]["Jink"] ~=1) or (not self:isWeak(friend) and self:isEquip("EightDiagram",friend)))
+        	and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:isEquip("EightDiagram",friend)))
 		and (hasExplicitRebel(self.room) or not friend:isLord()))
 		or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
 		or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))
@@ -527,7 +527,7 @@ function SmartAI:useCardPeach(card, use)
 	if self.player:isLord() and (self.player:hasSkill("hunzi") and self.player:getMark("hunzi") == 0) 
 		and self.player:getHp() < 4 and self.player:getHp() > peaches then return end
     for _, enemy in ipairs(self.enemies) do
-		if (self:hasSkills(sgs.drawpeach_skill,enemy) and self.player:getHandcardNum() < 3) or (self.player:hasSkill("buqu") and self.player:getHp() < 1) then
+		if (self:hasSkills(sgs.drawpeach_skill,enemy) and self.player:getHandcardNum() < 3) then
 			mustusepeach = true
 		end
 	end
@@ -535,14 +535,12 @@ function SmartAI:useCardPeach(card, use)
 		return
 	end
 
-	if peaches > self.player:getHp() then mustusepeach = true end	
-
 	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp()<1) or peaches > self.player:getHp() then
 		use.card = card
 		return 
 	end
 	
-	if self.player:hasSkill("jiuchi") and self:getCardsNum("Analeptic") > 0 and self:getOverflow() <=0 and #self.friends_noself>0 then
+	if self.player:hasSkill("jiuchi") and self:getCardsNum("Analeptic") > 0 and self:getOverflow() <= 0 and #self.friends_noself > 0 then
 		return
 	end
 

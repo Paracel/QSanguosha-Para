@@ -1207,7 +1207,8 @@ function SmartAI:getWoundedFriend(maleOnly)
 			if friend:getHp()>=getBestHp(friend) then
 				addToList(friend,2)
 			else
-				addToList(friend,1)
+				local index = friend:hasSkill("buqu") and friend:getPile("buqu"):length() <= 2 and 2 or 1
+				addToList(friend, index)
 			end
 		end
 	end
@@ -1231,7 +1232,7 @@ sgs.ai_skill_use_func.JieyinCard=function(card,use,self)
 		end
 	until true
 
-	if not target and self:isWeak() and self:getOverflow()>=2 and self:isLord() then
+	if not target and self:isWeak() and self:getOverflow()>=2 and self.player:isLord() then
 		local others = self.room:getOtherPlayers(self.player)
 		for _, other in sgs.qlist(others) do
 			if other:isWounded() and other:isMale() then
@@ -1253,9 +1254,9 @@ end
 
 sgs.ai_use_priority.JieyinCard = 2.5
 
-sgs.ai_card_intention.JieyinCard = function(card, from, to)
-	if not from:hasFlag("jieyin_isenemy_"..to[1]:objectName()) then 
-		sgs.updateIntention(from, to, -80) 
+sgs.ai_card_intention.JieyinCard = function(card, from, tos)
+	if not from:hasFlag("jieyin_isenemy_"..tos[1]:objectName()) then 
+		sgs.updateIntention(from, tos[1], -80)
 	end
 end
 

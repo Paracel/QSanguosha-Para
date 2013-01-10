@@ -18,7 +18,7 @@ function debugFunc(self, room, player, data)
 		if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
 		local msg = string.format(fmt, unpack(arg))
 		player:speak(msg)
-		logmsg("<pre>" .. msg .. "</pre>")
+	logmsg("ai.html", "<pre>"..msg.."</pre>")
 	end
 
 	local players = sgs.QList2Table(room:getAlivePlayers())
@@ -27,7 +27,7 @@ function debugFunc(self, room, player, data)
 		if choice == "cancel" then break end
 		if choice == "showVisiblecards" then
 			debugmsg(" ")
-			debugmsg("=======================")
+			debugmsg("===================")
 			debugmsg("查看已知牌。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
 			for i=1, #players, 1 do
 				local msg = string.format("%s已知牌:", sgs.Sanguosha:translate(players[i]:getGeneralName()))
@@ -43,7 +43,7 @@ function debugFunc(self, room, player, data)
 		end
 		if choice == "showHandcards" then
 			debugmsg(" ")
-			debugmsg("=======================")
+			debugmsg("===================")
 			debugmsg("查看手牌。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
 			for i=1, #players, 1 do
 				local msg = string.format("%s手牌:", sgs.Sanguosha:translate(players[i]:getGeneralName()))
@@ -56,7 +56,7 @@ function debugFunc(self, room, player, data)
 		end
 		if choice == "objectiveLevel" then
 			debugmsg(" ")
-			debugmsg("================%s(%.1f)", sgs.gameProcess(room), sgs.gameProcess(room,1))
+			debugmsg("============%s(%.1f)", sgs.processvalue[sgs.gameProcess(room)], sgs.gameProcess(room, 1))
 			debugmsg("查看身份关系。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
 			for i=1, #players, 1 do
 				local level = self:objectiveLevel(players[i])
@@ -74,7 +74,7 @@ function debugFunc(self, room, player, data)
 		end
 		if choice == "getDefenseSlash" then
 			debugmsg(" ")
-			debugmsg("=======================")
+			debugmsg("===================")
 			debugmsg("查看对【杀】防御值。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
 			for i=1, #players, 1 do
 				debugmsg("%s:%.2f", sgs.Sanguosha:translate(players[i]:getGeneralName()), sgs.getDefenseSlash(players[i]))
@@ -83,8 +83,8 @@ function debugFunc(self, room, player, data)
 	until false
 end
 
-function logmsg(fmt, ...)
-	local fp = io.open("ai.html", "ab")
+function logmsg(fname, fmt,...)
+	local fp = io.open(fname, "ab")
 	if type(fmt)=="boolean" then fmt = fmt and "true" or "false" end
 	fp:write(string.format(fmt, unpack(arg)) .. "\r\n")
 	fp:close()

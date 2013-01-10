@@ -497,8 +497,9 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
     self:sortByUseValue(cards,true)
     local name = self.player:objectName()
     local card, friend = self:getCardNeedPlayer(cards)
-    if card and not card:isEquipped() and friend then
-        use.card = sgs.Card_Parse("@RendeCard=" .. card:getId())
+    if card and friend then
+        if not self.player:getHandcards():contains(card) then return end
+		use.card = sgs.Card_Parse("@RendeCard=" .. card:getId())
         if use.to then use.to:append(friend) end
         return
     end
@@ -1304,12 +1305,13 @@ sgs.ai_skill_use_func.QingnangCard=function(card,use,self)
 
 	local arr1,arr2 = self:getWoundedFriend()
 	local target = nil
-	
+	 
 	if #arr1>0 and (self:isWeak(arr1[1]) or self:getOverflow()>=1) then target=arr1[1] end
-
-	if target and use.to then
+	if target then
 		use.card=card
-		use.to:append(target) 
+		if use.to then
+			use.to:append(target) 
+		end
 		return
 	end    
 end

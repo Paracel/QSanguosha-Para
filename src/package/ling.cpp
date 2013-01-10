@@ -95,6 +95,7 @@ void NeoFanjianCard::onEffect(const CardEffectStruct &effect) const{
         damage.card = NULL;
         damage.from = zhouyu;
         damage.to = target;
+        damage.reason = "neofanjian";
 
         room->damage(damage);
     }
@@ -227,6 +228,7 @@ public:
                     DamageStruct damage;
                     damage.from = xiahou;
                     damage.to = from;
+                    damage.reason = "neoganglie";
 
                     room->damage(damage);
                 } else

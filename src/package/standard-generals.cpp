@@ -222,6 +222,7 @@ public:
                     DamageStruct damage;
                     damage.from = xiahou;
                     damage.to = from;
+                    damage.reason = objectName();
                     room->damage(damage);
                 }
             }

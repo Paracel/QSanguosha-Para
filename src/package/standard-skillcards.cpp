@@ -125,6 +125,7 @@ void FanjianCard::onEffect(const CardEffectStruct &effect) const{
         damage.card = NULL;
         damage.from = zhouyu;
         damage.to = target;
+        damage.reason = "fanjian";
 
         room->damage(damage);
     }

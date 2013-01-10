@@ -35,8 +35,16 @@ QString LogMessage::toString() const{
 }
 
 DamageStruct::DamageStruct()
-    :from(NULL), to(NULL), card(NULL), damage(1), nature(Normal), chain(false), transfer(false)
+    :from(NULL), to(NULL), card(NULL), damage(1), nature(Normal), chain(false), transfer(false), reason(QString())
 {
+}
+
+QString DamageStruct::getReason() const{
+    if (reason != QString())
+        return reason;
+    else if (card)
+        return card->objectName();
+    return QString();
 }
 
 CardEffectStruct::CardEffectStruct()

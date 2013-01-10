@@ -49,6 +49,7 @@ void LeijiCard::onEffect(const CardEffectStruct &effect) const{
         damage.from = zhangjiao;
         damage.to = target;
         damage.nature = DamageStruct::Thunder;
+        damage.reason = "leiji";
 
         room->damage(damage);
     }

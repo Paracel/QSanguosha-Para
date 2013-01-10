@@ -1225,6 +1225,7 @@ void PaiyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
         damage.card = NULL;
         damage.from = zhonghui;
         damage.to = target;
+        damage.reason = "paiyi";
 
         room->damage(damage);
     }

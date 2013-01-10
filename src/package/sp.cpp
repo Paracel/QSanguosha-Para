@@ -42,6 +42,7 @@ public:
             DamageStruct damage;
             damage.from = player;
             damage.to = target;
+            damage.reason = objectName();
             room->damage(damage);
         }
         return false;

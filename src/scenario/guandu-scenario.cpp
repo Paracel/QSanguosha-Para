@@ -75,6 +75,7 @@ public:
         if (target->getPhase() == Player::Play) {
             DamageStruct damage;
             damage.to = target;
+            damage.reason = objectName();
             target->getRoom()->damage(damage);
         }
         return false;
@@ -106,7 +107,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         PindianStar pindian = data.value<PindianStar>();
         if (pindian->reason != objectName())
             return false;
@@ -118,6 +119,7 @@ public:
         DamageStruct damage;
         damage.from = winner;
         damage.to = loser;
+        damage.reason = objectName();
         room->damage(damage);
 
         return false;

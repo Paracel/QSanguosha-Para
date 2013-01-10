@@ -867,6 +867,7 @@ public:
                 damage.from = liubei;
                 damage.to = victim;
                 damage.damage = no_basic;
+                damage.reason = "zhaolie";
 
                 room->damage(damage);
             }

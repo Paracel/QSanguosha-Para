@@ -29,6 +29,9 @@ struct DamageStruct {
     Nature nature;
     bool chain;
     bool transfer;
+    QString reason;
+
+    QString getReason() const;
 };
 
 struct CardEffectStruct {

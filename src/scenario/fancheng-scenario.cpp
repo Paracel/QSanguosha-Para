@@ -122,6 +122,7 @@ void FloodCard::onEffect(const CardEffectStruct &effect) const{
         DamageStruct damage;
         damage.from = effect.from;
         damage.to = effect.to;
+        damage.reason = "flood";
 
         room->damage(damage);
     }

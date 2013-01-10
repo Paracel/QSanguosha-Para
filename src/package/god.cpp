@@ -235,6 +235,7 @@ void YeyanCard::damage(ServerPlayer *shenzhouyu, ServerPlayer *target, int point
     damage.to = target;
     damage.damage = point;
     damage.nature = DamageStruct::Fire;
+    damage.reason = "yeyan";
 
     shenzhouyu->getRoom()->damage(damage);
 }
@@ -569,6 +570,7 @@ void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> 
         damage.card = this;
         damage.from = shenlvbu;
         damage.to = player;
+        damage.reason = "shenfen";
 
         room->damage(damage);
         room->getThread()->delay();

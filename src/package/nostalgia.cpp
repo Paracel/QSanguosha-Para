@@ -286,6 +286,7 @@ public:
                     DamageStruct damage;
                     damage.from = lingtong;
                     damage.to = target;
+                    damage.reason = "xuanfeng";
                     room->damage(damage);
                 }
             }
@@ -487,6 +488,7 @@ void NosFanjianCard::onEffect(const CardEffectStruct &effect) const{
         damage.card = NULL;
         damage.from = zhouyu;
         damage.to = target;
+        damage.reason = "nosfanjian";
 
         room->damage(damage);
     }

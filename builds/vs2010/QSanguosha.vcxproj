@@ -396,7 +396,9 @@
     <ClCompile Include="Release\moc_roomscene.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Release\moc_roomthread.cpp" />
+    <ClCompile Include="Release\moc_roomthread.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Release\moc_roomthread1v1.cpp" />
     <ClCompile Include="Release\moc_roomthread3v3.cpp" />
     <ClCompile Include="Release\moc_scenario-overview.cpp" />

@@ -34,6 +34,7 @@ public:
                 damage.card = NULL;
                 damage.from = yuejin;
                 damage.to = player;
+                damage.reason = "xiaoguo";
                 room->damage(damage);
             } else
                 room->broadcastSkillInvoke(objectName(), 3);

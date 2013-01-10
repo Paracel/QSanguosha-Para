@@ -55,6 +55,7 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
         DamageStruct damage;
         damage.from = tiger;
         damage.to = wolf;
+        damage.reason = "quhu";
 
         room->damage(damage);
 
@@ -63,6 +64,7 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
         damage.card = NULL;
         damage.from = tiger;
         damage.to = xunyu;
+        damage.reason = "quhu";
 
         room->damage(damage);
     }
@@ -163,6 +165,7 @@ void QiangxiCard::onEffect(const CardEffectStruct &effect) const{
     damage.card = NULL;
     damage.from = effect.from;
     damage.to = effect.to;
+    damage.reason = "qiangxi";
 
     room->damage(damage);
 }

@@ -451,15 +451,21 @@ sgs.ai_view_as.jiuchi = function(card, player, card_place)
 end
 
 sgs.ai_skill_invoke.baonue = function(self, data)
+	local has_target = false
 	for _,p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if p:hasLordSkill("baonue") and self:isFriend(p) and not p:hasFlag("baonue_used") and p:isAlive() then
-			if p:getLostHp() == 0 then
-				local zhangjiao = self.room:findPlayerBySkillName("guidao")
-				if zhangjiao and self:isFriend(zhangjiao) then return true else return false end
+			if p:isWounded() then 
+				has_target = true 
+				break
 			end
-			return true
+			local zhangjiao = self.room:findPlayerBySkillName("guidao")
+			if zhangjiao and self:isFriend(zhangjiao) then 
+				has_target = true
+				break
+			end
 		end
 	end
+	return has_target
 end
 
 sgs.ai_skill_playerchosen.baonue = function(self, targets)

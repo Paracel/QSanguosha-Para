@@ -3055,7 +3055,7 @@ void Room::drawCards(QList<ServerPlayer*> players, int n, const QString &reason)
     QList<CardsMoveStruct> moves;
     foreach (ServerPlayer *player, players)
     {
-        if (!player->isAlive()) continue;
+        if (!player->isAlive() && reason != "reform") continue;
         QList<int> card_ids;
         QList<int> notify_card_ids;
 

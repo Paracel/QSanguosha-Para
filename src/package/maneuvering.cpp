@@ -44,13 +44,10 @@ QString Analeptic::getSubtype() const{
 bool Analeptic::IsAvailable(const Player *player, const Card *analeptic){
     Analeptic *newanal = new Analeptic(Card::NoSuitNoColor, 0);
     newanal->deleteLater();
-    if (analeptic == NULL) {
-        if (player->isCardLimited(newanal, Card::MethodUse) || player->isProhibited(player, newanal))
+    if (player->isCardLimited(analeptic, Card::MethodUse)
+        || player->isProhibited(player, analeptic == NULL ? newanal : analeptic))
             return false;
-    } else {
-        if (player->isCardLimited(analeptic, Card::MethodUse) || player->isProhibited(player, analeptic))
-            return false;
-    }
+
     return player->usedTimes("Analeptic")
            <= Sanguosha->correctCardTarget(TargetModSkill::Residue, player, analeptic == NULL ? newanal : analeptic);
 }

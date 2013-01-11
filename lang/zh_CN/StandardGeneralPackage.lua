@@ -351,17 +351,17 @@ return {
 -- test
 	["test"] = "测试",
 
-	["#zhibasunquan"] = "年轻的贤君",
-	["zhibasunquan"] = "制霸孙权",
-	["&zhibasunquan"] = "孙权",
+	["#zhiba_sunquan"] = "年轻的贤君",
+	["zhiba_sunquan"] = "制霸孙权",
+	["&zhiba_sunquan"] = "孙权",
 	["super_zhiheng"] = "制衡",
 	[":super_zhiheng"] = "出牌阶段，你可以弃置任意数量的牌：若如此做，你摸等数量的牌。每阶段你可以发动X+1次该技能。（X为你已损失的体力值）",
 	["$super_zhiheng1"] = "容我三思。",
 	["$super_zhiheng2"] = "且慢。",
 	
-	["#wuxingzhuge"] = "迟暮的丞相",
-	["wuxingzhuge"] = "五星诸葛",
-	["&wuxingzhuge"] = "诸葛亮", 
+	["#wuxing_zhugeliang"] = "迟暮的丞相",
+	["wuxing_zhugeliang"] = "五星诸葛",
+	["&wuxing_zhugeliang"] = "诸葛亮", 
 	["super_guanxing"] = "观星",
 	[":super_guanxing"] = "回合开始阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
 	

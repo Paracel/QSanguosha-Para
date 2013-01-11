@@ -228,11 +228,11 @@ public:
                     DamageStruct damage;
                     damage.from = xiahou;
                     damage.to = from;
-                    damage.reason = "neoganglie";
+                    damage.reason = objectName();
 
                     room->damage(damage);
                 } else
-                     room->askForDiscard(from, objectName(), 2, 2);
+                    room->askForDiscard(from, objectName(), 2, 2);
             }
         }
     }
@@ -254,41 +254,41 @@ public:
 LingPackage::LingPackage()
     : Package("ling")
 {
-    General * neo_xiahoudun = new General(this, "neo_xiahoudun", "wei");
+    General *neo_xiahoudun = new General(this, "neo_xiahoudun", "wei");
     neo_xiahoudun->addSkill(new NeoGanglie);
 
-    General * neo_xuchu = new General(this, "neo_xuchu", "wei");
+    General *neo_xuchu = new General(this, "neo_xuchu", "wei");
     neo_xuchu->addSkill(new NeoLuoyi);
     neo_xuchu->addSkill(new NeoLuoyiBuff);
     related_skills.insertMulti("neoluoyi", "#neoluoyi");
 
-    General * neo_caoren = new General(this, "neo_caoren", "wei");
+    General *neo_caoren = new General(this, "neo_caoren", "wei");
     neo_caoren->addSkill(new NeoJushou);
 
-    General * neo_guanyu = new General(this, "neo_guanyu", "shu");
+    General *neo_guanyu = new General(this, "neo_guanyu", "shu");
     neo_guanyu->addSkill("wusheng");
     neo_guanyu->addSkill(new Yishi);
 
-    General * neo_zhangfei = new General(this, "neo_zhangfei", "shu");
+    General *neo_zhangfei = new General(this, "neo_zhangfei", "shu");
     neo_zhangfei->addSkill("paoxiao");
     neo_zhangfei->addSkill(new Tannang);
 
-    General * neo_zhaoyun = new General(this, "neo_zhaoyun", "shu");
+    General *neo_zhaoyun = new General(this, "neo_zhaoyun", "shu");
     neo_zhaoyun->addSkill("longdan");
     neo_zhaoyun->addSkill("yicong");
     neo_zhaoyun->addSkill("#yicong_effect");
 
-    General * neo_zhouyu = new General(this, "neo_zhouyu", "wu", 3);
+    General *neo_zhouyu = new General(this, "neo_zhouyu", "wu", 3);
     neo_zhouyu->addSkill("yingzi");
     neo_zhouyu->addSkill(new NeoFanjian);
 
-    General * neo_zhoutai = new General(this, "neo_zhoutai", "wu", 4);
+    General *neo_zhoutai = new General(this, "neo_zhoutai", "wu", 4);
     neo_zhoutai->addSkill("buqu");
     neo_zhoutai->addSkill("#buqu-remove");
     neo_zhoutai->addSkill("#buqu-clear");
     neo_zhoutai->addSkill(new Fenji);
 
-    General * neo_gongsunzan = new General(this, "neo_gongsunzan", "qun");
+    General *neo_gongsunzan = new General(this, "neo_gongsunzan", "qun");
     neo_gongsunzan->addSkill(new Zhulou);
     neo_gongsunzan->addSkill("yicong");
     neo_gongsunzan->addSkill("#yicong_effect");

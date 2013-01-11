@@ -1,8 +1,8 @@
-local noslonghun_skill={}
-noslonghun_skill.name="noslonghun"
+local noslonghun_skill = {}
+noslonghun_skill.name = "noslonghun"
 table.insert(sgs.ai_skills, noslonghun_skill)
 noslonghun_skill.getTurnUseCard = function(self)
-	if self.player:getHp()>1 then return end
+	if self.player:getHp() > 1 then return end
 	local cards=sgs.QList2Table(self.player:getCards("he"))
 	self:sortByUseValue(cards,true)
 	for _, card in ipairs(cards) do
@@ -35,3 +35,4 @@ sgs.gd_shenzhaoyun_suit_value =
 	club = 4.2,
 	diamond = 3.9,
 }
+-- FORMATTED

@@ -1,4 +1,4 @@
-class QVariant{
+class QVariant {
 public:
 	QVariant();
 	QVariant(int);
@@ -11,8 +11,7 @@ public:
 };
 
 %extend QVariant {
-
-	void setValue(int value){
+	void setValue(int value) {
 		$self->setValue(QVariant::fromValue(value));
 	}
 
@@ -20,7 +19,7 @@ public:
 		return $self->value<DamageStruct>();
 	}
 	
-	void setValue(DamageStruct *damage){
+	void setValue(DamageStruct *damage) {
 		$self->setValue(QVariant::fromValue(*damage));
 	}
 
@@ -28,7 +27,7 @@ public:
 		return $self->value<CardEffectStruct>();
 	}
 	
-	void setValue(CardEffectStruct *effect){
+	void setValue(CardEffectStruct *effect) {
 		$self->setValue(QVariant::fromValue(*effect));
 	}
 	
@@ -36,7 +35,7 @@ public:
 		return $self->value<SlashEffectStruct>();
 	}
 	
-	void setValue(SlashEffectStruct *effect){
+	void setValue(SlashEffectStruct *effect) {
 		$self->setValue(QVariant::fromValue(*effect));
 	}
 	
@@ -44,7 +43,7 @@ public:
 		return $self->value<CardUseStruct>();
 	}
 	
-	void setValue(CardUseStruct *use){
+	void setValue(CardUseStruct *use) {
 		$self->setValue(QVariant::fromValue(*use));
 	}
 	
@@ -52,7 +51,7 @@ public:
 		return $self->value<CardStar>();
 	}
 	
-	void setValue(const Card *card){
+	void setValue(const Card *card) {
 		$self->setValue(QVariant::fromValue(card));
 	}
 	
@@ -60,7 +59,7 @@ public:
 		return $self->value<PlayerStar>();
 	}
 	
-	void setValue(ServerPlayer *player){
+	void setValue(ServerPlayer *player) {
 		$self->setValue(QVariant::fromValue(player));
 	}
 	
@@ -68,7 +67,7 @@ public:
 		return $self->value<DyingStruct>();
 	}
 	
-	void setValue(DyingStruct *dying){
+	void setValue(DyingStruct *dying) {
 		$self->setValue(QVariant::fromValue(*dying));
 	}
 	
@@ -76,7 +75,7 @@ public:
 		return $self->value<DeathStruct>();
 	}
 	
-	void setValue(DeathStruct *death){
+	void setValue(DeathStruct *death) {
 		$self->setValue(QVariant::fromValue(*death));
 	}
 
@@ -84,7 +83,7 @@ public:
 		return $self->value<DamageStar>();
 	}
 
-	void setValue(RecoverStruct *recover){
+	void setValue(RecoverStruct *recover) {
 		$self->setValue(QVariant::fromValue(*recover));
 	}
 
@@ -96,7 +95,7 @@ public:
 		return $self->value<JudgeStar>();
 	}
 
-	void setValue(PindianStruct *pindian){
+	void setValue(PindianStruct *pindian) {
 		$self->setValue(QVariant::fromValue(pindian));
 	}
 
@@ -108,7 +107,7 @@ public:
 		return $self->value<PhaseChangeStruct>();
 	}
 	
-	void setValue(PhaseChangeStruct *phase){
+	void setValue(PhaseChangeStruct *phase) {
 		$self->setValue(QVariant::fromValue(*phase));
 	}
 	
@@ -116,7 +115,7 @@ public:
 		return $self->value<CardsMoveOneTimeStar>();
 	}
 	
-	void setValue(const CardsMoveOneTimeStruct *move){
+	void setValue(const CardsMoveOneTimeStruct *move) {
 		$self->setValue(QVariant::fromValue(move));
 	}
 
@@ -124,7 +123,7 @@ public:
 		return $self->value<CardResponseStruct>();
 	}
 	
-	void setValue(CardResponseStruct *resp){
+	void setValue(CardResponseStruct *resp) {
 		$self->setValue(QVariant::fromValue(*resp));
 	}
 };

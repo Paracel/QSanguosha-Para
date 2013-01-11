@@ -1,5 +1,5 @@
 template <class T>
-class QList{
+class QList {
 public:
 	QList();
 	~QList();
@@ -14,7 +14,7 @@ public:
 	bool removeOne ( const T & value );
 };
 
-%extend QList{
+%extend QList {
 	T at(int i) const{
 		return $self->value(i);
 	}

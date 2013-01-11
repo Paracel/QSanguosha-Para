@@ -8,7 +8,7 @@ end
 
 function sgs.isGoodHp(player)
 	local goodHp = player:getHp() > 1 or getCardsNum("Peach", player) >= 1 or getCardsNum("Analeptic", player) >= 1 
-					or (player:hasSkill("buqu") and player:getPile("buqu") <= 4)
+					or (player:hasSkill("buqu") and player:getPile("buqu"):length() <= 4)
 					or (player:hasSkill("niepan") and player:getMark("@nirvana") > 0)
 					or (player:hasSkill("fuli") and player:getMark("@laoji") > 0)
 	if goodHp then 
@@ -230,6 +230,7 @@ end
 
 function SmartAI:slashIsEffective(slash, to)
 	if not to then self.room:writeToConsole(debug.traceback()) end
+	if not self.player:canSlash(to, slash, true) then return false end
 	if to:hasSkill("zuixiang") and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then

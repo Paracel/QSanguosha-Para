@@ -7,8 +7,8 @@
 
 static GeneralSelector *Selector;
 
-GeneralSelector *GeneralSelector::getInstance(){
-    if(Selector == NULL){
+GeneralSelector *GeneralSelector::getInstance() {
+    if (Selector == NULL) {
         Selector = new GeneralSelector;
         //@todo: this setParent is illegitimate in QT and is equivalent to calling
         // setParent(NULL). So taking it off at the moment until we figure out
@@ -19,34 +19,32 @@ GeneralSelector *GeneralSelector::getInstance(){
     return Selector;
 }
 
-GeneralSelector::GeneralSelector()
-{
+GeneralSelector::GeneralSelector() {
     loadFirstGeneralTable();
     loadSecondGeneralTable();
     load3v3Table();
     load1v1Table();
 }
 
-QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &candidates){
+QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &candidates) {
     QString role = player->getRole();
     int seat = player->getSeat();
     int player_count = Sanguosha->getPlayerCount(player->getRoom()->getMode());
     int index = seat;
-    if(player_count < 8 && seat == player_count)
+    if (player_count < 8 && seat == player_count)
         index = 8;
-    else if(player_count > 8 && seat > 8)
+    else if (player_count > 8 && seat > 8)
         index = 8;
 
     QString max_general;
 
     ServerPlayer *lord = player->getRoom()->getLord();
     QString suffix = QString();
-    if(lord->getGeneral() && lord->getGeneral()->isLord()){
+    if (lord->getGeneral() && lord->getGeneral()->isLord())
         suffix = lord->getGeneralName();
-    }
 
     QStringList key_list;
-    foreach(QString candidate, candidates){
+    foreach (QString candidate, candidates) {
         QString key = QString("%1:%2:%3:%4").arg(candidate).arg(role).arg(index).arg(suffix);
         key_list << key;
     }
@@ -85,17 +83,17 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
     return max_general;
 }
 
-QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &candidates){
+QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &candidates) {
     QString first = player->getGeneralName();
 
     int max = -1;
     QString max_general;
 
-    foreach(QString candidate, candidates){
+    foreach (QString candidate, candidates) {
         QString key = QString("%1+%2").arg(first).arg(candidate);
         int value = second_general_table.value(key, 3);
 
-        if(value > max){
+        if (value > max) {
             max = value;
             max_general = candidate;
         }
@@ -106,11 +104,11 @@ QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &c
     return max_general;
 }
 
-QString GeneralSelector::select3v3(ServerPlayer *, const QStringList &candidates){
+QString GeneralSelector::select3v3(ServerPlayer *, const QStringList &candidates) {
     return selectHighest(priority_3v3_table, candidates, 0);
 }
 
-QString GeneralSelector::select1v1(const QStringList &candidates){
+QString GeneralSelector::select1v1(const QStringList &candidates) {
     return selectHighest(priority_1v1_table, candidates, 5);
 }
 
@@ -118,10 +116,10 @@ QString GeneralSelector::selectHighest(const QHash<QString, int> &table, const Q
     int max = -1;
     QString max_general;
 
-    foreach(QString candidate, candidates){
+    foreach (QString candidate, candidates) {
         int value = table.value(candidate, default_value);
 
-        if(value > max){
+        if (value > max) {
             max = value;
             max_general = candidate;
         }
@@ -132,14 +130,14 @@ QString GeneralSelector::selectHighest(const QHash<QString, int> &table, const Q
     return max_general;
 }
 
-static bool CompareByMaxHp(const QString &a, const QString &b){
+static bool CompareByMaxHp(const QString &a, const QString &b) {
     const General *g1 = Sanguosha->getGeneral(a);
     const General *g2 = Sanguosha->getGeneral(b);
 
     return g1->getMaxHp() < g2->getMaxHp();
 }
 
-QStringList GeneralSelector::arrange3v3(ServerPlayer *player){
+QStringList GeneralSelector::arrange3v3(ServerPlayer *player) {
     QStringList arranged = player->getSelected();
     qShuffle(arranged);
     arranged = arranged.mid(0, 3);
@@ -150,40 +148,40 @@ QStringList GeneralSelector::arrange3v3(ServerPlayer *player){
     return arranged;
 }
 
-static bool CompareFunction(const QString &first, const QString &second){
+static bool CompareFunction(const QString &first, const QString &second) {
     return Selector->get1v1ArrangeValue(first) > Selector->get1v1ArrangeValue(second);
 }
 
 int GeneralSelector::get1v1ArrangeValue(const QString &name){
     int value = priority_1v1_table.value(name, 5);
-    if(sacrifice.contains(name))
+    if (sacrifice.contains(name))
         value += 100;
     return value;
 }
 
-QStringList GeneralSelector::arrange1v1(ServerPlayer *player){
+QStringList GeneralSelector::arrange1v1(ServerPlayer *player) {
     QStringList arranged = player->getSelected();
     qSort(arranged.begin(), arranged.end(), CompareFunction);
     return arranged.mid(0, 3);
 }
 
-void GeneralSelector::loadFirstGeneralTable(){
+void GeneralSelector::loadFirstGeneralTable() {
     loadFirstGeneralTable("loyalist");
     loadFirstGeneralTable("rebel");
     loadFirstGeneralTable("renegade");
 }
 
-void GeneralSelector::loadFirstGeneralTable(const QString &role){
+void GeneralSelector::loadFirstGeneralTable(const QString &role) {
     QStringList prefix = Sanguosha->getLords();
     prefix << QString();
-    foreach(QString lord, prefix){
-        QFile file(QString("etc/%1%2%3.txt").arg(lord).arg((lord.isEmpty()?"":"_")).arg(role));
-        if(file.open(QIODevice::ReadOnly)){
+    foreach (QString lord, prefix) {
+        QFile file(QString("etc/%1%2%3.txt").arg(lord).arg((lord.isEmpty() ? "" : "_")).arg(role));
+        if (file.open(QIODevice::ReadOnly)) {
             QTextStream stream(&file);
-            while(!stream.atEnd()){
+            while (!stream.atEnd()) {
                 QString name;
                 stream >> name;
-                for(int i = 0; i < 7; i++){
+                for (int i = 0; i < 7; i++) {
                     qreal value;
                     stream >> value;
 
@@ -197,14 +195,14 @@ void GeneralSelector::loadFirstGeneralTable(const QString &role){
     }
 }
 
-void GeneralSelector::loadSecondGeneralTable(){
+void GeneralSelector::loadSecondGeneralTable() {
     QRegExp rx("(\\w+)\\s+(\\w+)\\s+(\\d+)");
     QFile file("etc/double-generals.txt");
-    if(file.open(QIODevice::ReadOnly)){
+    if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        while(!stream.atEnd()){
+        while (!stream.atEnd()) {
             QString line = stream.readLine();
-            if(!rx.exactMatch(line))
+            if (!rx.exactMatch(line))
                 continue;
 
             QStringList texts = rx.capturedTexts();
@@ -220,11 +218,11 @@ void GeneralSelector::loadSecondGeneralTable(){
     }
 }
 
-void GeneralSelector::load3v3Table(){
+void GeneralSelector::load3v3Table() {
     QFile file("etc/3v3-priority.txt");
-    if(file.open(QIODevice::ReadOnly)){
+    if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        while(!stream.atEnd()){
+        while (!stream.atEnd()) {
             QString name;
             int priority;
 
@@ -237,14 +235,14 @@ void GeneralSelector::load3v3Table(){
     }
 }
 
-void GeneralSelector::load1v1Table(){
+void GeneralSelector::load1v1Table() {
     QRegExp rx("(\\w+)\\s+(\\d+)\\s*(\\*)?");
     QFile file("etc/1v1-priority.txt");
-    if(file.open(QIODevice::ReadOnly)){
+    if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        while(!stream.atEnd()){
+        while (!stream.atEnd()){
             QString line = stream.readLine();
-            if(!rx.exactMatch(line))
+            if (!rx.exactMatch(line))
                 continue;
 
             QStringList texts = rx.capturedTexts();
@@ -253,10 +251,11 @@ void GeneralSelector::load1v1Table(){
 
             priority_1v1_table.insert(name, priority);
 
-            if(!texts.at(3).isEmpty())
+            if (!texts.at(3).isEmpty())
                 sacrifice << name;
         }
 
         file.close();
     }
 }
+// FORMATTED

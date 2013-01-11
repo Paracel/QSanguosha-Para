@@ -75,7 +75,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
                 if (room->getMode() == "02_1v1") num--;
             }
 
-			QVariant data = num;
+            QVariant data = num;
             room->getThread()->trigger(DrawNCards, room, player, data);
             int n = data.toInt();
             if (n > 0)
@@ -877,14 +877,14 @@ void BasaraMode::playerShowed(ServerPlayer *player) const{
     if (answer == "yes") {
         QString general_name = room->askForGeneral(player,names);
 
-        generalShowed(player,general_name);
+        generalShowed(player, general_name);
         if (Config.EnableHegemony) room->getThread()->trigger(GameOverJudge, room, player);
         playerShowed(player);
     }
 }
 
 void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const{
-    Room * room = player->getRoom();
+    Room *room = player->getRoom();
     QStringList names = room->getTag(player->objectName()).toStringList();
     if (names.isEmpty()) return;
 

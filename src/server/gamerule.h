@@ -1,9 +1,9 @@
-#ifndef GAMERULE_H
-#define GAMERULE_H
+#ifndef _GAMERULE_H
+#define _GAMERULE_H
 
 #include "skill.h"
 
-class GameRule : public TriggerSkill{
+class GameRule: public TriggerSkill {
     Q_OBJECT
 
 public:
@@ -22,7 +22,7 @@ protected:
     QMap<QString, QString> skill_mark;
 };
 
-class HulaoPassMode: public GameRule{
+class HulaoPassMode: public GameRule {
     Q_OBJECT
 
 public:
@@ -30,7 +30,7 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;
 };
 
-class BasaraMode: public GameRule{
+class BasaraMode: public GameRule {
     Q_OBJECT
 
 public:
@@ -39,8 +39,9 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;
     virtual int getPriority() const;
     void playerShowed(ServerPlayer *player) const;
-    void generalShowed(ServerPlayer *player,QString general_name) const;
-    static QString getMappedRole(const QString& role);
+    void generalShowed(ServerPlayer *player, QString general_name) const;
+    static QString getMappedRole(const QString &role);
 };
 
-#endif // GAMERULE_H
+#endif
+// FORMATTED

@@ -69,17 +69,18 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
             break;
         }
     case Player::Draw: {
-            QVariant num = 2;
+            int num = 2;
             if (player->hasFlag("FirstRound")) {
                 room->setPlayerFlag(player, "-FirstRound");
                 if (room->getMode() == "02_1v1") num--;
             }
 
-            room->getThread()->trigger(DrawNCards, room, player, num);
-            int n = num.toInt();
+			QVariant data = num;
+            room->getThread()->trigger(DrawNCards, room, player, data);
+            int n = data.toInt();
             if (n > 0)
                 player->drawCards(n);
-            room->getThread()->trigger(AfterDrawNCards, room, player, num);
+            room->getThread()->trigger(AfterDrawNCards, room, player, QVariant::fromValue(n));
             break;
         }
     case Player::Play: {

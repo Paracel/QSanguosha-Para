@@ -324,6 +324,9 @@ function SmartAI:getUseValue(card)
 	end
 
 	if v == 0 then v = sgs.ai_use_value[class_name] or 0 end
+	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
+		v = sgs.ai_use_value[card:objectName()] or 0
+	end
 	return v
 end
 
@@ -368,6 +371,9 @@ function SmartAI:getUsePriority(card)
 	end
 
 	v = sgs.ai_use_priority[class_name] or 0
+	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
+		v = sgs.ai_use_priority[card:objectName()] or 0
+	end
 
 	if card:isKindOf("Slash") and (card:getSuit() == sgs.Card_NoSuitNoColor) then v = v-0.1 end
 	return v
@@ -1694,7 +1700,19 @@ function SmartAI:filterEvent(event, player, data)
 			end
 		else
 			logmsg("card_intention.txt",card:getClassName()) -- tmp debug
-		end        
+		end
+		if card:getClassName() == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
+			local luaskillcardcallback = sgs.ai_card_intention[card:objectName()]
+			if luaskillcardcallback then
+				if type(luaskillcardcallback) == "function" then
+					luaskillcardcallback(card, from, to)
+				elseif type(luaskillcardcallback) == "number" then
+					sgs.updateIntentions(from, to, luaskillcardcallback, card)
+				end
+			else
+				logmsg("card_intention.txt", card:objectName())
+			end
+		end		
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		local from = move.from

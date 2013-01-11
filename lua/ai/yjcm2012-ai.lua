@@ -242,7 +242,7 @@ end
 sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 	local friends={}
 	for _,player in ipairs(self.friends_noself) do
-		if not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) and (not player:hasSkill("kongcheng") and player:isKongcheng()) then
+		if not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) and not (player:hasSkill("kongcheng") and player:isKongcheng()) then
 			table.insert(friends, player)
 		end
 	end

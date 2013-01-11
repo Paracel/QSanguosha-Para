@@ -707,10 +707,12 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude()
 				and not self:needKongcheng(enemy) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", enemy) then
-				if enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy)<3 and enemy:getHp()<=3 then
+				if enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 3 and enemy:getHp() <= 3 then
 					local cardchosen
-					if self.player:distanceTo(enemy) == self.player:getAttackRange()+1 and enemy:getDefensiveHorse() then
+					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then
 						cardchosen = enemy:getDefensiveHorse():getEffectiveId()
+					elseif enemy:getArmor() and enemy:getArmor():isKindOf("EightDiagram") then
+						cardchosen = enemy:getArmor():getEffectiveId()
 					else
 						cardchosen = self:getCardRandomly(enemy, "h")
 					end

@@ -1282,7 +1282,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					local cardchosen
 					if self.player:distanceTo(enemy) == self.player:getAttackRange()+1 and enemy:getDefensiveHorse() then
 						cardchosen = enemy:getDefensiveHorse():getEffectiveId()
-					elseif self:isEquip("EightDiagram",enemy) then
+					elseif enemy:getArmor() and enemy:getArmor():isKindOf("EightDiagram") then
 						cardchosen = enemy:getArmor():getEffectiveId()
 					else
 						cardchosen = self:getCardRandomly(enemy, "h")

@@ -113,7 +113,7 @@ return {
 	["#sunquan"] = "年轻的贤君",
 	["sunquan"] = "孙权",
 	["zhiheng"] = "制衡",
-	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置任意数量的牌：若如此做，你摸等数量的牌。",
+	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置任意数量的牌，然后摸等数量的牌。",
 	["jiuyuan"] = "救援",
 	[":jiuyuan"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>若你处于濒死状态，其他吴势力角色对你使用【桃】时，你回复的体力+1。",
 	["#JiuyuanExtraRecover"] = "%from 的“%arg”被触发，将额外回复 <font color=\"yellow\"><b>1</b></font> 点体力",

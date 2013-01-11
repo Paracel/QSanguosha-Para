@@ -9,7 +9,7 @@
 #include "settings.h"
 
 AI::AI(ServerPlayer *player)
-    :self(player)
+    : self(player)
 {
     room = player->getRoom();
 }
@@ -18,51 +18,46 @@ typedef QPair<QString, QString> RolePair;
 
 struct RoleMapping: public QMap<RolePair, AI::Relation> {
     void set(const QString &role1, const QString &role2, AI::Relation relation,
-             bool bidirectional = false){
+             bool bidirectional = false) {
         insert(qMakePair(role1, role2), relation);
-        if(bidirectional)
+        if (bidirectional)
             insert(qMakePair(role2, role1), relation);
     }
 
-    AI::Relation get(const QString &role1, const QString &role2){
+    AI::Relation get(const QString &role1, const QString &role2) {
         return value(qMakePair(role1, role2), AI::Neutrality);
     }
 };
 
-AI::Relation AI::GetRelation3v3(const ServerPlayer *a, const ServerPlayer *b){
+AI::Relation AI::GetRelation3v3(const ServerPlayer *a, const ServerPlayer *b) {
     QChar c = a->getRole().at(0);
-    if(b->getRole().startsWith(c))
+    if (b->getRole().startsWith(c))
         return Friend;
     else
         return Enemy;
 }
 
-AI::Relation AI::GetRelationHegemony(const ServerPlayer *a, const ServerPlayer *b){
+AI::Relation AI::GetRelationHegemony(const ServerPlayer *a, const ServerPlayer *b) {
     const bool aShown = a->getRoom()->getTag(a->objectName()).toStringList().isEmpty();
     const bool bShown = b->getRoom()->getTag(b->objectName()).toStringList().isEmpty();
 
-    const QString aName = aShown ?
-                a->getGeneralName() :
-                a->getRoom()->getTag(a->objectName()).toStringList().first();
-    const QString bName = bShown ?
-                b->getGeneralName() :
-                b->getRoom()->getTag(b->objectName()).toStringList().first();
+    const QString aName = aShown ? a->getGeneralName() :
+                                   a->getRoom()->getTag(a->objectName()).toStringList().first();
+    const QString bName = bShown ? b->getGeneralName() :
+                                   b->getRoom()->getTag(b->objectName()).toStringList().first();
 
     const QString aKingdom = Sanguosha->getGeneral(aName)->getKingdom();
     const QString bKingdom = Sanguosha->getGeneral(bName)->getKingdom();
 
-
     qDebug() << aKingdom << bKingdom <<aShown << bShown;
 
-    return aKingdom == bKingdom ? Friend :Enemy;
+    return aKingdom == bKingdom ? Friend : Enemy;
 }
 
-AI::Relation AI::GetRelation(const ServerPlayer *a, const ServerPlayer *b)
-{
+AI::Relation AI::GetRelation(const ServerPlayer *a, const ServerPlayer *b) {
     if (a == b) return Friend;
     static RoleMapping map, map_good, map_bad;
-    if (map.isEmpty())
-    {
+    if (map.isEmpty()) {
         map.set("lord", "lord", Friend);
         map.set("lord", "rebel", Enemy);
         map.set("lord", "loyalist", Friend);
@@ -93,7 +88,7 @@ AI::Relation AI::GetRelation(const ServerPlayer *a, const ServerPlayer *b)
         map_bad.set("renegade", "rebel", Enemy, true);
     }
 
-    if(a->aliveCount() == 2){
+    if (a->aliveCount() == 2) {
         return Enemy;
     }
 
@@ -104,8 +99,8 @@ AI::Relation AI::GetRelation(const ServerPlayer *a, const ServerPlayer *b)
     
     int good = 0, bad = 0;
     QList<ServerPlayer *> players = room->getAlivePlayers();
-    foreach(ServerPlayer *player, players){
-        switch(player->getRoleEnum()){
+    foreach (ServerPlayer *player, players) {
+        switch (player->getRoleEnum()) {
         case Player::Lord:
         case Player::Loyalist: good++; break;
         case Player::Rebel: bad++; break;
@@ -121,41 +116,35 @@ AI::Relation AI::GetRelation(const ServerPlayer *a, const ServerPlayer *b)
         return map.get(roleA, roleB);
 }
 
-AI::Relation AI::relationTo(const ServerPlayer *other) const
-{
-    if(self == other)
+AI::Relation AI::relationTo(const ServerPlayer *other) const{
+    if (self == other)
         return Friend;
 
     const Scenario *scenario = room->getScenario();
-    if(scenario)
+    if (scenario)
         return scenario->relationTo(self, other);
 
-    if(room->getMode() == "06_3v3")
+    if (room->getMode() == "06_3v3")
         return GetRelation3v3(self, other);
-    else if(Config.EnableHegemony)
+    else if (Config.EnableHegemony)
         return GetRelationHegemony(self, other);
 
     return GetRelation(self, other);
 }
 
-bool AI::isFriend(const ServerPlayer *other) const
-{
+bool AI::isFriend(const ServerPlayer *other) const{
     return relationTo(other) == Friend;
 }
 
-bool AI::isEnemy(const ServerPlayer *other) const
-{
+bool AI::isEnemy(const ServerPlayer *other) const{
     return relationTo(other) == Enemy;
 }
 
-QList<ServerPlayer *> AI::getEnemies() const
-{
+QList<ServerPlayer *> AI::getEnemies() const{
     QList<ServerPlayer *> players = room->getOtherPlayers(self);
     QList<ServerPlayer *> enemies;
-    foreach(ServerPlayer *p, players) {
-        if(isEnemy(p))
-            enemies << p;
-    }
+    foreach (ServerPlayer *p, players)
+        if (isEnemy(p)) enemies << p;
 
     return enemies;
 }
@@ -163,72 +152,45 @@ QList<ServerPlayer *> AI::getEnemies() const
 QList<ServerPlayer *> AI::getFriends() const{
     QList<ServerPlayer *> players = room->getOtherPlayers(self);
     QList<ServerPlayer *> friends;
-    foreach(ServerPlayer *p, players){
-        if(isFriend(p))
-            friends << p;
-    }
+    foreach (ServerPlayer *p, players)
+        if (isFriend(p)) friends << p;
 
     return friends;
 }
 
-void AI::filterEvent(TriggerEvent , ServerPlayer *, const QVariant &){
+void AI::filterEvent(TriggerEvent , ServerPlayer *, const QVariant &) {
     // dummy
 }
 
 TrustAI::TrustAI(ServerPlayer *player)
-    :AI(player)
+    : AI(player)
 {
     response_skill = new ResponseSkill;
     response_skill->setParent(this);
 }
 
-void TrustAI::activate(CardUseStruct &card_use){
+void TrustAI::activate(CardUseStruct &card_use) {
     QList<const Card *> cards = self->getHandcards();
-    foreach(const Card *card, cards){
-        if(card->targetFixed()){
-            if(useCard(card)){
+    foreach (const Card *card, cards) {
+        if (card->targetFixed()) {
+            if (useCard(card)) {
                 card_use.card = card;
                 card_use.from = self;
-
                 return;
             }
         }
     }
 }
 
-bool TrustAI::useCard(const Card *card){
-    if(card->isKindOf("Peach"))
-        return self->isWounded();
-    else if(card->isKindOf("EquipCard")){
-        const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
-        switch(equip->location()){
-        case EquipCard::WeaponLocation:{
-                WrappedCard *weapon = self->getWeapon();
-                if(weapon == NULL)
-                    return true;
-
-                const Weapon *new_weapon = qobject_cast<const Weapon *>(equip);
-                const Weapon *ole_weapon = qobject_cast<const Weapon *>(weapon->getRealCard());
-                return new_weapon->getRange() > ole_weapon->getRange();
-            }
-        case EquipCard::ArmorLocation: return !self->getArmor();
-        case EquipCard::OffensiveHorseLocation: return !self->getOffensiveHorse();
-        case EquipCard::DefensiveHorseLocation: return !self->getDefensiveHorse();
-        default:
-            return true;
-        }
-
-    }else if(card->isKindOf("ExNihilo"))
-        return true;
-    else
-        return false;
+bool TrustAI::useCard(const Card *) {
+    return false;
 }
 
 Card::Suit TrustAI::askForSuit(const QString &){
     return Card::AllSuits[qrand() % 4];
 }
 
-QString TrustAI::askForKingdom(){
+QString TrustAI::askForKingdom() {
     QString role;
     ServerPlayer *lord = room->getLord();
     QStringList kingdoms = Sanguosha->getKingdoms();
@@ -251,18 +213,20 @@ QString TrustAI::askForKingdom(){
             }
             break;
         }
+    default:
+            break;
     }
 
     return role;
 }
 
-bool TrustAI::askForSkillInvoke(const QString &, const QVariant &){
+bool TrustAI::askForSkillInvoke(const QString &, const QVariant &) {
     return false;
 }
 
-QString TrustAI::askForChoice(const QString &skill_name, const QString &choice, const QVariant &){
+QString TrustAI::askForChoice(const QString &skill_name, const QString &choice, const QVariant &) {
     const Skill *skill = Sanguosha->getSkill(skill_name);
-    if(skill){
+    if (skill) {
         QString default_choice = skill->getDefaultChoice(self);
         if(choice.contains(default_choice))
             return default_choice;
@@ -272,23 +236,19 @@ QString TrustAI::askForChoice(const QString &skill_name, const QString &choice, 
     return choices.at(qrand() % choices.length());
 }
 
-QList<int> TrustAI::askForDiscard(const QString &, int discard_num, int min_num, bool optional, bool include_equip){
+QList<int> TrustAI::askForDiscard(const QString &, int discard_num, int min_num, bool optional, bool include_equip) {
     QList<int> to_discard;
-
-    if(optional)
+    if (optional)
         return to_discard;
     else
         return self->forceToDiscard(discard_num, include_equip);
 }
 
-const Card *TrustAI::askForNullification(const TrickCard *trick, ServerPlayer *, ServerPlayer *to, bool positive){
-    if(self == to && trick->isAggressive() && positive){
+const Card *TrustAI::askForNullification(const TrickCard *trick, ServerPlayer *, ServerPlayer *to, bool positive) {
+    if (self == to && trick->isAggressive() && positive) {
         QList<const Card *> cards = self->getHandcards();
-
-        foreach(const Card *card, cards){
-            if(card->isKindOf("Nullification"))
-                return card;
-        }
+        foreach (const Card *card, cards)
+            if (card->isKindOf("Nullification")) return card;
     }
 
     return NULL;
@@ -300,16 +260,14 @@ int TrustAI::askForCardChosen(ServerPlayer *who, const QString &flags, const QSt
     return cards.at(r)->getId();
 }
 
-const Card *TrustAI::askForCard(const QString &pattern, const QString &prompt, const QVariant &data){
+const Card *TrustAI::askForCard(const QString &pattern, const QString &prompt, const QVariant &data) {
     Q_UNUSED(prompt);
     Q_UNUSED(data);
 
     response_skill->setPattern(pattern);
     QList<const Card *> cards = self->getHandcards();
-    foreach(const Card *card, cards){
-        if(response_skill->matchPattern(self, card))
-            return card;
-    }
+    foreach (const Card *card, cards)
+        if (response_skill->matchPattern(self, card)) return card;
 
     return NULL;
 }
@@ -318,37 +276,37 @@ QString TrustAI::askForUseCard(const QString &, const QString &, const Card::Han
     return ".";
 }
 
-int TrustAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &){
-    if(refusable)
+int TrustAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &) {
+    if (refusable)
         return -1;
 
     int r = qrand() % card_ids.length();
     return card_ids.at(r);
 }
 
-const Card *TrustAI::askForCardShow(ServerPlayer *, const QString &){
+const Card *TrustAI::askForCardShow(ServerPlayer *, const QString &) {
     return self->getRandomHandCard();
 }
 
-static bool CompareByNumber(const Card *c1, const Card *c2){
+static bool CompareByNumber(const Card *c1, const Card *c2) {
     return c1->getNumber() < c2->getNumber();
 }
 
-const Card *TrustAI::askForPindian(ServerPlayer *requestor, const QString &reason){
+const Card *TrustAI::askForPindian(ServerPlayer *requestor, const QString &reason) {
     QList<const Card *> cards = self->getHandcards();
     qSort(cards.begin(), cards.end(), CompareByNumber);
 
     // zhiba special case
-    if(reason == "zhiba_pindian" && self->hasLordSkill("sunce_zhiba"))
+    if (reason == "zhiba_pindian" && self->hasLordSkill("sunce_zhiba"))
         return cards.last();
 
-    if(requestor != self && isFriend(requestor))
+    if (requestor != self && isFriend(requestor))
         return cards.first();
     else
         return cards.last();
 }
 
-ServerPlayer *TrustAI::askForPlayerChosen(const QList<ServerPlayer *> &targets, const QString &reason){
+ServerPlayer *TrustAI::askForPlayerChosen(const QList<ServerPlayer *> &targets, const QString &reason) {
     Q_UNUSED(reason);
 
     int r = qrand() % targets.length();
@@ -356,52 +314,20 @@ ServerPlayer *TrustAI::askForPlayerChosen(const QList<ServerPlayer *> &targets, 
 }
 
 const Card *TrustAI::askForSinglePeach(ServerPlayer *dying) {
-    if(isFriend(dying)){
+    if (isFriend(dying)) {
         QList<const Card *> cards = self->getHandcards();
-        foreach(const Card *card, cards){
-            if(card->isKindOf("Peach"))
+        foreach (const Card *card, cards) {
+            if (card->isKindOf("Peach"))
                 return card;
-
-            if(card->isKindOf("Analeptic") && dying == self)
+            if (card->isKindOf("Analeptic") && dying == self)
                 return card;
-        }
-
-        if(dying == self){
-            if(self->hasSkill("jiuchi")){
-                foreach(const Card *card, cards){
-                    if(card->getSuit() == Card::Spade){
-                        Analeptic *analeptic = new Analeptic(Card::Spade, card->getNumber());
-                        analeptic->addSubcard(card);
-                        analeptic->setSkillName("jiuchi");
-                        return analeptic;
-                    }
-                }
-            }
-
-            if(self->hasSkill("jiushi") && self->faceUp()){
-                Analeptic *analeptic = new Analeptic(Card::NoSuitNoColor, 0);
-                analeptic->setSkillName("jiushi");
-                return analeptic;
-            }
-        }
-
-        if(self->hasSkill("jijiu") && self->getPhase() == Player::NotActive){
-            cards = self->getCards("he");
-            foreach(const Card *card, cards){
-                if(card->isRed()){
-                    Peach *peach = new Peach(card->getSuit(), card->getNumber());
-                    peach->addSubcard(card);
-                    peach->setSkillName("jijiu");
-                    return peach;
-                }
-            }
         }
     }
 
     return NULL;
 }
 
-ServerPlayer *TrustAI::askForYiji(const QList<int> &, int &){
+ServerPlayer *TrustAI::askForYiji(const QList<int> &, int &) {
     return NULL;
 }
 
@@ -414,14 +340,12 @@ void TrustAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int>
 }
 
 LuaAI::LuaAI(ServerPlayer *player)
-    :TrustAI(player), callback(0)
+    : TrustAI(player), callback(0)
 {
-
 }
 
-
-QString LuaAI::askForUseCard(const QString &pattern, const QString &prompt, const Card::HandlingMethod method){
-    if(callback == 0)
+QString LuaAI::askForUseCard(const QString &pattern, const QString &prompt, const Card::HandlingMethod method) {
+    if (callback == 0)
         return TrustAI::askForUseCard(pattern, prompt, method);
 
     lua_State *L = room->getLuaState();
@@ -435,7 +359,7 @@ QString LuaAI::askForUseCard(const QString &pattern, const QString &prompt, cons
     const char *result = lua_tostring(L, -1);
     lua_pop(L, 1);
 
-    if(error){
+    if (error) {
         const char *error_msg = result;
         room->output(error_msg);
         return ".";
@@ -444,7 +368,7 @@ QString LuaAI::askForUseCard(const QString &pattern, const QString &prompt, cons
     return result;
 }
 
-QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip){
+QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip) {
     lua_State *L = room->getLuaState();
 
     pushCallback(L, __FUNCTION__);
@@ -455,28 +379,28 @@ QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_
     lua_pushboolean(L, include_equip);
 
     int error = lua_pcall(L, 6, 1, 0);
-    if(error){
+    if (error) {
         reportError(L);
         return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip);
     }
 
     QList<int> result;
-    if(getTable(L, result))
+    if (getTable(L, result))
         return result;
     else
         return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip);
 }
 
-bool LuaAI::getTable(lua_State *L, QList<int> &table){
-    if(!lua_istable(L, -1)){
+bool LuaAI::getTable(lua_State *L, QList<int> &table) {
+    if (!lua_istable(L, -1)) {
         lua_pop(L, 1);
         return false;
     }
 
     size_t len = lua_objlen(L, -1);
     size_t i;
-    for(i = 0; i < len; i++){
-        lua_rawgeti(L, -1, i+1);
+    for (i = 0; i < len; i++) {
+        lua_rawgeti(L, -1, i + 1);
         table << lua_tointeger(L, -1);
         lua_pop(L, 1);
     }
@@ -486,7 +410,7 @@ bool LuaAI::getTable(lua_State *L, QList<int> &table){
     return true;
 }
 
-int LuaAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &reason){
+int LuaAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &reason) {
     lua_State *L = room->getLuaState();
 
     pushCallback(L, __FUNCTION__);
@@ -495,7 +419,7 @@ int LuaAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &r
     lua_pushstring(L, reason.toAscii());
 
     int error = lua_pcall(L, 4, 1, 0);
-    if(error){
+    if (error) {
         reportError(L);
         return TrustAI::askForAG(card_ids, refusable, reason);
     }
@@ -506,29 +430,29 @@ int LuaAI::askForAG(const QList<int> &card_ids, bool refusable, const QString &r
     return card_id;
 }
 
-void LuaAI::pushCallback(lua_State *L, const char *function_name){
+void LuaAI::pushCallback(lua_State *L, const char *function_name) {
     Q_ASSERT(callback);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, callback);
     lua_pushstring(L, function_name);
 }
 
-void LuaAI::pushQIntList(lua_State *L, const QList<int> &list){
+void LuaAI::pushQIntList(lua_State *L, const QList<int> &list) {
     lua_createtable(L, list.length(), 0);
         
-    for(int i = 0; i < list.length(); i++){
+    for (int i = 0; i < list.length(); i++) {
         lua_pushinteger(L, list.at(i));
         lua_rawseti(L, -2, i + 1);
     }
 }
 
-void LuaAI::reportError(lua_State *L){
+void LuaAI::reportError(lua_State *L) {
     const char *error_msg = lua_tostring(L, -1);
     room->output(error_msg);
     lua_pop(L, 1);
 }
 
-void LuaAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only){
+void LuaAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only) {
     lua_State *L = room->getLuaState();
 
     pushCallback(L, __FUNCTION__);
@@ -536,7 +460,7 @@ void LuaAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &
     lua_pushboolean(L, up_only);
 
     int error = lua_pcall(L, 3, 2, 0);
-    if(error){
+    if (error) {
         reportError(L);
         return TrustAI::askForGuanxing(cards, up, bottom, up_only);
     }
@@ -544,3 +468,4 @@ void LuaAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &
     getTable(L, bottom);
     getTable(L, up);
 }
+// FORMATTED

@@ -182,7 +182,7 @@ void TrustAI::activate(CardUseStruct &card_use) {
     }
 }
 
-bool TrustAI::useCard(const Card *) {
+bool TrustAI::useCard(const Card *card) {
     if (card->isKindOf("EquipCard")) {
         const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
         switch (equip->location()) {
@@ -201,7 +201,7 @@ bool TrustAI::useCard(const Card *) {
                 return true;
         }
     }
-    return false;;
+    return false;
 }
 
 Card::Suit TrustAI::askForSuit(const QString &){

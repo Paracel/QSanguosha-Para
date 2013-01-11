@@ -71,7 +71,6 @@ public:
     virtual void onUninstall(ServerPlayer *player) const;
 
     virtual Location location() const = 0;
-    virtual QString label() const = 0;
 };
 
 class GlobalEffect: public TrickCard {
@@ -241,7 +240,6 @@ public:
     virtual QString getSubtype() const;
 
     virtual Location location() const;
-    virtual QString label() const;
     virtual QString getCommonEffectName() const;
     virtual bool isAvailable(const Player *player) const;
 
@@ -257,7 +255,6 @@ public:
     virtual QString getSubtype() const;
 
     virtual Location location() const;
-    virtual QString label() const;
     virtual QString getCommonEffectName() const;
 };
 
@@ -272,7 +269,6 @@ public:
     virtual void onInstall(ServerPlayer *player) const;
     virtual void onUninstall(ServerPlayer *player) const;
 
-    virtual QString label() const;
     virtual QString getCommonEffectName() const;
 
 private:

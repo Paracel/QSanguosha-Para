@@ -54,7 +54,6 @@ public:
 	virtual void onUninstall(ServerPlayer *player) const;
 
 	virtual Location location() const = 0;
-	virtual QString label() const = 0;
 
 protected:
 	TriggerSkill *skill;
@@ -67,7 +66,6 @@ public:
 	virtual QString getSubtype() const;
 
 	virtual Location location() const;
-	virtual QString label() const;
 
 	virtual void onInstall(ServerPlayer *player) const;
 	virtual void onUninstall(ServerPlayer *player) const;
@@ -82,7 +80,6 @@ public:
 	virtual QString getSubtype() const;
 
 	virtual Location location() const;
-	virtual QString label() const;
 };
 
 class Horse: public EquipCard {
@@ -92,8 +89,6 @@ public:
 	virtual Location location() const;
 	virtual void onInstall(ServerPlayer *player) const;
 	virtual void onUninstall(ServerPlayer *player) const;
-
-	virtual QString label() const;
 
 private:
 	int correct;

@@ -1605,8 +1605,8 @@ public:
 class Langgu: public TriggerSkill {
 public:
     Langgu(): TriggerSkill("langgu") {
-        view_as_skill = new LangguViewAsSkill;
         events << Damaged << AskForRetrial;
+        view_as_skill = new LangguViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *simazhao, QVariant &data) const{

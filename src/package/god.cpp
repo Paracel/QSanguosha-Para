@@ -791,8 +791,8 @@ public:
 class Kuangfeng: public TriggerSkill {
 public:
     Kuangfeng(): TriggerSkill("kuangfeng") {
-        view_as_skill = new KuangfengViewAsSkill;
         events << DamageForseen;
+        view_as_skill = new KuangfengViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -912,8 +912,8 @@ public:
 class Dawu: public TriggerSkill {
 public:
     Dawu(): TriggerSkill("dawu") {
-        view_as_skill = new DawuViewAsSkill;
         events << DamageForseen;
+        view_as_skill = new DawuViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{

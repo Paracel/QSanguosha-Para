@@ -274,8 +274,8 @@ public:
 class Guicai: public TriggerSkill {
 public:
     Guicai(): TriggerSkill("guicai") {
-        view_as_skill = new GuicaiViewAsSkill;
         events << AskForRetrial;
+        view_as_skill = new GuicaiViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -979,8 +979,8 @@ public:
 class Liuli: public TriggerSkill {
 public:
     Liuli(): TriggerSkill("liuli") {
-        view_as_skill = new LiuliViewAsSkill;
         events << TargetConfirming;
+        view_as_skill = new LiuliViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *daqiao, QVariant &data) const{

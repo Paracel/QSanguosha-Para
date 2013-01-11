@@ -274,8 +274,8 @@ public:
 class Shuangxiong: public TriggerSkill {
 public:
     Shuangxiong(): TriggerSkill("shuangxiong") {
-        view_as_skill = new ShuangxiongViewAsSkill;
         events << EventPhaseStart << FinishJudge;
+        view_as_skill = new ShuangxiongViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -527,8 +527,8 @@ public:
 class Tianyi: public TriggerSkill {
 public:
     Tianyi(): TriggerSkill("tianyi") {
-        view_as_skill = new TianyiViewAsSkill;
         events << EventLoseSkill;
+        view_as_skill = new TianyiViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{

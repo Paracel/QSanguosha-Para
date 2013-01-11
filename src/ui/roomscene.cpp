@@ -1174,8 +1174,8 @@ void RoomScene::updateTargetsEnablity(const Card *card){
         if (item->isSelected()) continue;
 
         //=====================================
-        bool weimuFailure = player->hasSkill("weimu") && card && card->isKindOf("Collateral")
-                && !selected_targets.isEmpty();
+        bool weimuFailure = player->hasSkill("weimu") && card && card->isKindOf("Collateral") && card->isBlack()
+                            && !selected_targets.isEmpty();
         //=====================================
 
         bool enabled = (card == NULL) ||

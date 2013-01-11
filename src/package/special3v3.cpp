@@ -130,8 +130,8 @@ public:
 class Huanshi: public TriggerSkill {
 public:
     Huanshi(): TriggerSkill("huanshi") {
-        view_as_skill = new HuanshiViewAsSkill;
         events << AskForRetrial;
+        view_as_skill = new HuanshiViewAsSkill;
     }
 
     QList<ServerPlayer *> getTeammates(ServerPlayer *zhugejin) const{

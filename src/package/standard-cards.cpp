@@ -606,15 +606,13 @@ AmazingGrace::AmazingGrace(Suit suit, int number)
     has_preact = true;
 }
 
-void AmazingGrace::doPreAction(Room *room, const CardUseStruct &card_use) const{
+void AmazingGrace::doPreAction(Room *room, const CardUseStruct &) const{
     QList<int> card_ids = room->getNCards(room->getAllPlayers().length());
     room->fillAG(card_ids);
 
     QVariantList ag_list;
-    foreach (int card_id, card_ids) {
-        room->setCardFlag(card_id, "visible");
+    foreach (int card_id, card_ids)
         ag_list << card_id;
-    }
     room->setTag("AmazingGrace", ag_list);
 }
 

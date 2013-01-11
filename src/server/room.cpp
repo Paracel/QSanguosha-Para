@@ -1102,10 +1102,6 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
                 to_discard.append(card->getSubcards());
             else
                 to_discard << card->getEffectiveId();
-
-            foreach(int card_id, to_discard){
-                setCardFlag(card_id, "visible");
-            }
             log.card_str = Card::IdsToStrings(to_discard).join("+");
             if (!skill_name.isEmpty())
                 log.arg = skill_name;
@@ -3059,6 +3055,7 @@ void Room::drawCards(QList<ServerPlayer*> players, int n, const QString &reason)
     QList<CardsMoveStruct> moves;
     foreach (ServerPlayer *player, players)
     {
+        if (!player->isAlive()) continue;
         QList<int> card_ids;
         QList<int> notify_card_ids;
 
@@ -3147,9 +3144,6 @@ void Room::throwCard(const Card *card, const CardMoveReason &reason, ServerPlaye
         }
     } else {
         log.type = "$EnterDiscardPile";
-    }
-    foreach(int card_id, to_discard){
-        setCardFlag(card_id, "visible");
     }
     log.card_str = Card::IdsToStrings(to_discard).join("+");
     sendLog(log);
@@ -3373,6 +3367,10 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
         for (int j = 0; j < cards_move.card_ids.size(); j++)
         {
             int card_id = cards_move.card_ids[j];
+            if (forceMoveVisible && cards_move.to_place == Player::PlaceHand)
+                setCardFlag(card_id, "visible");
+            else
+                setCardFlag(card_id, "-visible");
             const Card *card = Sanguosha->getCard(card_id);
             if(cards_move.to) // Hand/Equip/Judge
             {                
@@ -3545,6 +3543,10 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         for (int j = 0; j < cards_move.card_ids.size(); j++)
         {
             int card_id = cards_move.card_ids[j];
+            if (forceMoveVisible && cards_move.to_place == Player::PlaceHand)
+                setCardFlag(card_id, "visible");
+            else
+                setCardFlag(card_id, "-visible");
             const Card *card = Sanguosha->getCard(card_id);
             if(cards_move.to) // Hand/Equip/Judge
             {                
@@ -4600,6 +4602,7 @@ void Room::takeAG(ServerPlayer *player, int card_id){
     if(player){
         player->addCard(Sanguosha->getCard(card_id), Player::PlaceHand);
         setCardMapping(card_id, player, Player::PlaceHand);
+        setCardFlag(card_id, "visible");
         QList<const Card*>cards;
         cards << Sanguosha->getCard(card_id);
         filterCards(player, cards, false);
@@ -4654,6 +4657,8 @@ void Room::sendLog(const LogMessage &log){
 }
 
 void Room::showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer){
+    if (getCardOwner(card_id) != player) return;
+
     notifyMoveFocus(player);
     Json::Value show_arg(Json::arrayValue);
     show_arg[0] = toJsonString(player->objectName());

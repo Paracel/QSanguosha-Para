@@ -65,7 +65,7 @@ return {
 	["weimu"] = "帷幕",
 	[":weimu"] = "<font color=\"blue\"><b>锁定技。</b></font>你不能被选择为黑色锦囊的目标。",
 	["luanwu"] = "乱武",
-	[":luanwu"] = "<font color=\"red\"><b>限定技。</b></font>出牌阶段，你可以令所有其他角色选择一项：对距离最近的另一名角色使用一张【杀】，或失去1点体力。",
+	[":luanwu"] = "<font color=\"red\"><b>限定技。</b></font>出牌阶段，你可以令所有其他角色对距离最近的另一名角色使用一张【杀】，否则该角色失去1点体力。",
 	["@chaos"] = "乱武",
 	["#WanshaOne"] = "%from 的“%arg”被触发，只能 %from 自救",
 	["#WanshaTwo"] = "%from 的“%arg”被触发，只有 %from 和 %to 才能救 %to",

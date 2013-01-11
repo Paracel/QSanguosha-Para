@@ -183,7 +183,25 @@ void TrustAI::activate(CardUseStruct &card_use) {
 }
 
 bool TrustAI::useCard(const Card *) {
-    return false;
+    if (card->isKindOf("EquipCard")) {
+        const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
+        switch (equip->location()) {
+        case EquipCard::WeaponLocation: {
+                WrappedCard *weapon = self->getWeapon();
+                if (weapon == NULL)
+                    return true;
+                const Weapon *new_weapon = qobject_cast<const Weapon *>(equip);
+                const Weapon *ole_weapon = qobject_cast<const Weapon *>(weapon->getRealCard());
+                return new_weapon->getRange() > ole_weapon->getRange();
+            }
+        case EquipCard::ArmorLocation: return !self->getArmor();
+        case EquipCard::OffensiveHorseLocation: return !self->getOffensiveHorse();
+        case EquipCard::DefensiveHorseLocation: return !self->getDefensiveHorse();
+        default:
+                return true;
+        }
+    }
+    return false;;
 }
 
 Card::Suit TrustAI::askForSuit(const QString &){

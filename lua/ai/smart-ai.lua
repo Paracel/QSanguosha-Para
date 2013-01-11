@@ -4041,7 +4041,7 @@ function SmartAI:useEquipCard(card, use)
 	end
 	local same = self:getSameEquip(card)
 	if same then
-		if (self:hasSkills("rende|qingnang|gongqi"))
+		if (self:hasSkills("rende|qingnang|nosgongqi"))
 		or (self.player:hasSkill("yongsi") and self:getOverflow() < 3)
 		or (self:hasSkills("qixi|duanliang") and (card:isBlack() or same:isBlack()))
 		or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))

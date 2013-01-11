@@ -7,7 +7,10 @@ local function hasExplicitRebel(room)
 end
 
 function sgs.isGoodHp(player)
-	local goodHp=player:getHp()>1 or getCardsNum("Peach",player)>=1 or getCardsNum("Analeptic",player)>=1 or player:hasSkill("buqu")
+	local goodHp = player:getHp() > 1 or getCardsNum("Peach", player) >= 1 or getCardsNum("Analeptic", player) >= 1 
+					or (player:hasSkill("buqu") and player:getPile("buqu") <= 4)
+					or (player:hasSkill("niepan") and player:getMark("@nirvana") > 0)
+					or (player:hasSkill("fuli") and player:getMark("@laoji") > 0)
 	if goodHp then 
 		return goodHp 
 	else

@@ -293,6 +293,12 @@ bool FireAttack::targetFilter(const QList<const Player *> &targets, const Player
         return true;
 }
 
+void FireAttack::onUse(Room *room, const CardUseStruct &card_use) const{
+    if (card_use.from->hasFlag("LastFireAttackFailed"))
+        card_use.from->setFlags("-LastFireAttackFailed");
+    SingleTargetTrick::onUse(room, card_use);
+}
+
 void FireAttack::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
     if (effect.to->isKongcheng())
@@ -304,14 +310,19 @@ void FireAttack::onEffect(const CardEffectStruct &effect) const{
     QString suit_str = card->getSuitString();
     QString pattern = QString(".%1").arg(suit_str.at(0).toUpper());
     QString prompt = QString("@fire-attack:%1::%2").arg(effect.to->getGeneralName()).arg(suit_str);
-    if (effect.from->isAlive() && room->askForCard(effect.from, pattern, prompt)) {
-        DamageStruct damage;
-        damage.card = this;
-        damage.from = effect.from;
-        damage.to = effect.to;
-        damage.nature = DamageStruct::Fire;
+    if (effect.from->isAlive()) {
+        const Card *card_to_throw = room->askForCard(effect.from, pattern, prompt);
+        if (card_to_throw) {
+            DamageStruct damage;
+            damage.card = this;
+            damage.from = effect.from;
+            damage.to = effect.to;
+            damage.nature = DamageStruct::Fire;
 
-        room->damage(damage);
+            room->damage(damage);
+        } else {
+            effect.from->setFlags("FireAttackFailed"); // For AI
+        }
     }
 
     if (card->isVirtualCard())

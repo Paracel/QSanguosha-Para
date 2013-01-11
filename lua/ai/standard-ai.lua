@@ -1229,7 +1229,7 @@ sgs.ai_skill_use_func.JieyinCard=function(card,use,self)
 		end
 	until true
 
-	if not target and self:isWeak() and self:getOverflow()>=2 and self.player:isLord() then
+	if not target and self:isWeak() and self:getOverflow()>=2 and (self.role == "lord" or self.role == "renegade") then
 		local others = self.room:getOtherPlayers(self.player)
 		for _, other in sgs.qlist(others) do
 			if other:isWounded() and other:isMale() then

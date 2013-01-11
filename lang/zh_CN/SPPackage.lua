@@ -150,7 +150,7 @@ return {
 	["cv:chenlin"] = "苏遥东",
 	["$bifa1"] = "文人岂无用，笔墨亦作兵。",
 	["$bifa2"] = "将军可否直视此言？",                   --get
-	["$bifa3"] = "行文如刀，笔墨诛心，",                 --throw
+	["$bifa3"] = "行文如刀，笔墨诛心！",                 --throw
 	["$songci1"] = "广宜恩信，班扬符赏。",               --drawCards
 	["$songci2"] = "汝众违旅叛，当有此报！",             --discardCards
 	["~chenlin"] = "文未达意，贼不伏诛，吾之过也……",

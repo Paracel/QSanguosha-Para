@@ -84,7 +84,7 @@ sgs.dynamic_value.control_card.QuhuCard = true
 sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 	local friends = {}
 	for _,player in ipairs(self.friends) do
-		if not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
+		if friend:isAlive() and not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
 			table.insert(friends, player)
 		end
 	end
@@ -93,7 +93,13 @@ sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 	local max_x = 0
 	local target
 	for _, friend in ipairs(friends) do
+		if friend:hasFlag("ShenfenUsing") and math.min(friend:getMaxHp(), 5) - friend:getHandcardNum() >= 2 then
+			return "@JiemingCard=.->" .. friend:objectName()
+		end
+	end
+	for _, friend in ipairs(friends) do
 		local x = math.min(friend:getMaxHp(), 5) - friend:getHandcardNum()
+		if friend:hasSkill("manjuan") then x = x + 1 end
 
 		if x > max_x and friend:isAlive() then
 			max_x = x

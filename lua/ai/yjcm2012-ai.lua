@@ -242,7 +242,7 @@ end
 sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 	local friends={}
 	for _,player in ipairs(self.friends_noself) do
-		if not player:hasSkill("manjuan") then
+		if not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) and (not player:hasSkill("kongcheng") and player:isKongcheng()) then
 			table.insert(friends, player)
 		end
 	end
@@ -250,40 +250,43 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 
 	local lowest_friend=friends[1]
 
+	local zhuge_luxun
 	self:sort(self.enemies,"defense")
 	if lowest_friend then
 		for _,enemy in ipairs(self.enemies) do
 			local hand1=enemy:getHandcardNum()
 			local hand2=lowest_friend:getHandcardNum()
 
-			if (hand1 > hand2) then
+			if self:needKongcheng(enemy) and hand1 ==1 then
+				zhuge_luxun = enemy
+			end
+			if hand1 > hand2 and not zhuge_luxun then
 				use.card=card
 				if use.to then
 					use.to:append(enemy)
 					use.to:append(lowest_friend)
+					self.player:setFlags("anxu_isfriend_"..lowest_friend:objectName())
 					return
 				end
 			end
-		end
-		for _,friend in ipairs(self.friends_noself) do
-			local hand1=friend:getHandcardNum()
-			local hand2=lowest_friend:getHandcardNum()
-			if hand1 > hand2 and hand1 > 2 then
-				use.card=card
-				if use.to then
-					use.to:append(friend)
-					use.to:append(lowest_friend)
-					return
-				end
-			end
+		end		
+		if zhuge_luxun and zhuge_luxun:getHandcardNum() > lowest_friend:getHandcardNum() then
+			use.card=card
+			if use.to then
+				use.to:append(zhuge_luxun)
+				use.to:append(lowest_friend)
+				self.player:setFlags("anxu_isfriend_"..lowest_friend:objectName())
+				return
+			end			
 		end
 	end
-	self:sort(self.enemies,"handcard",true)
-	local much_enemy = self.enemies[1]
+
+	self:sort(self.enemies,"handcard")
+	local much_enemy = self.enemies[#self.enemies]
 	for _,enemy in ipairs(self.enemies) do
 		local hand1=enemy:getHandcardNum()
 		local hand2=much_enemy:getHandcardNum()
-		if hand1 < hand2 and hand1 > 1 then
+		if hand1 < hand2 and hand1 >= 1 and not (hand1==1 and self:needKongcheng(enemy)) and not (enemy:objectName()==much_enemy:objectName()) then
 			use.card=card
 			if use.to then
 				use.to:append(enemy)
@@ -295,13 +298,10 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 end
 
 sgs.ai_card_intention.AnxuCard = function(card, from, to)
-	local compare_func = function(a, b)
-		return a:getHandcardNum() < b:getHandcardNum()
-	end
-	table.sort(to, compare_func)
-	if to[1]:getHandcardNum() < to[2]:getHandcardNum() then
-		sgs.updateIntention(from, to[1], (to[2]:getHandcardNum()-to[1]:getHandcardNum())*20+40)
-	end
+	local intention = 80
+	sgs.updateIntention(from, to[1], intention)	
+	intention = from:hasFlag("anxu_isfriend_"..to[2]:objectName()) and -80 and 80
+	sgs.updateIntention(from, to[2], intention)
 end
 
 sgs.ai_skill_invoke.zhuiyi = function(self, data)

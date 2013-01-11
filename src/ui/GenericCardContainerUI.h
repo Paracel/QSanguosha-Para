@@ -199,7 +199,7 @@ protected:
     int _m_votesGot, _m_maxVotes;
     QGraphicsPixmapItem *_m_votesItem;
 
-    // The following stuffs for distance
+    // The following stuffs for showing distance
     QGraphicsPixmapItem *_m_distanceItem;
     
     // animations

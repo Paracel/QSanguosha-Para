@@ -977,7 +977,7 @@ void PlayerCardContainer::_updateDeathIcon()
                       _getDeathIconParent()->boundingRect().toRect());
     _paintPixmap(_m_deathIcon, deathArea,
                  QPixmap(m_player->getDeathPixmapPath()), _getDeathIconParent());
-    _m_deathIcon->setZValue(32767.0);
+    _m_deathIcon->setZValue(30000.0);
 }
     
 void PlayerCardContainer::killPlayer()

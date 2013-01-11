@@ -68,7 +68,7 @@ sgs.card_lack = {}
 sgs.ai_need_damaged = {} 
 sgs.ai_debug_func = {}
 sgs.ai_chat_func = {}
-sgs.processvalue = { loyalist = "÷“¥Û”≈", dilemma = "æ¿Ω·", loyalish = "÷“–°”≈", rebelish = "∑¥–°”≈", rebel = "∑¥¥Û”≈", neutral = "∆Ω∫‚" }
+sgs.processvalue = { loyalist = "Âø†Â§ß‰ºò", dilemma = "Á∫†Áªì", loyalish = "Âø†Â∞è‰ºò", rebelish = "ÂèçÂ∞è‰ºò", rebel = "ÂèçÂ§ß‰ºò", neutral = "Âπ≥Ë°°" }
 
 function setInitialTables()
 	sgs.current_mode_players = 	{lord = 0, loyalist = 0, rebel = 0, renegade = 0}

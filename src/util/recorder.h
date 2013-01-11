@@ -42,7 +42,6 @@ public:
 
     QString getPath() const;
 
-    bool m_isOldVersion;
     int m_commandSeriesCounter;
 
 public slots:

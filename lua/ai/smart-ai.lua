@@ -496,6 +496,7 @@ function SmartAI:getDynamicUsePriority(card)
 		elseif sgs.dynamic_value.lucky_chance[class_name] then
 			value = value + (#self.enemies - #self.friends)
 		end
+		if use_card:isKindOf("DelayedTrick") or use_card:isKindOf("GodSalvation") then value = 1.01 end
 		if self.player:hasSkill("jieyin|qingnang|kuanggu") and use_card.card:isKindOf("Peach") then
 			value = 1.01 
 		end
@@ -1960,8 +1961,17 @@ function SmartAI:askForNullification(trick, from, to, positive)
 
 		if self:isFriend(to) then
 			if not (to:hasSkill("guanxing") and global_room:alivePlayerCount() > 4) then 
-				if (trick:isKindOf("Indulgence") and not to:hasSkill("tuxi")) or 
-					(trick:isKindOf("SupplyShortage") and not self:hasSkills("guidao|tiandu",to) and to:getMark("@kuiwei") == 0) then
+				if trick:isKindOf("Indulgence") then
+					if to:hasSkill("tuxi") and to:getHp() >= 2 then return nil end
+					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
+					if to:hasSkill("shensu") and not self:isWeak(to) then return nil end
+					return null_card
+				end
+				if trick:isKindOf("SupplyShortage") then
+					if self:hasSkills("guidao|tiandu", to) then return nil end
+					if to:getMark("@kuiwei") == 0 then return nil end
+					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
+					if to:hasSkill("shensu") and not self:isWeak(to) then return nil end
 					return null_card
 				end
 			end 

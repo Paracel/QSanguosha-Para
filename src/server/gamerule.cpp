@@ -842,7 +842,7 @@ BasaraMode::BasaraMode(QObject *parent)
     events << EventPhaseStart << DamageInflicted;
 }
 
-QString BasaraMode::getMappedRole(const QString &role){
+QString BasaraMode::getMappedRole(const QString &role) {
     static QMap<QString, QString> roles;
     if (roles.isEmpty()) {
         roles["wei"] = "lord";

@@ -166,7 +166,12 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 		if self.player:hasSkill("tuxi") then return {} end
 		local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
 		if cardstr:match("->") then
-			return to_discard
+			local targetstr = cardstr:split("->")[2]
+			if #targetstr:split("+") == 2 then
+				return to_discard
+			else
+				return {}
+			end
 		else
 			return {}
 		end

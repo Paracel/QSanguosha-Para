@@ -2775,6 +2775,7 @@ void Room::startGame() {
     broadcastInvoke("setPileNumber", QString::number(m_drawPile->length()));
 
     thread = new RoomThread(this);
+    if (mode != "02_1v1" && mode != "06_3v3") thread->resetRoomState();
     connect(thread, SIGNAL(started()), this, SIGNAL(game_start()));
 
     if (!_virtual) thread->start();

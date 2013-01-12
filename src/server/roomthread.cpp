@@ -70,13 +70,11 @@ DeathStruct::DeathStruct()
 RecoverStruct::RecoverStruct()
     : recover(1), who(NULL), card(NULL)
 {
-
 }
 
 PindianStruct::PindianStruct()
     : from(NULL), to(NULL), from_card(NULL), to_card(NULL), success(false)
 {
-
 }
 
 bool PindianStruct::isSuccess() const{
@@ -252,6 +250,9 @@ QString EventTriplet::toString() const{
 RoomThread::RoomThread(Room *room)
     : room(room)
 {
+}
+
+void RoomThread::resetRoomState() {
     room->getRoomState()->reset();
 }
 

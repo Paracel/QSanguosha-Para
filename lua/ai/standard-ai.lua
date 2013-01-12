@@ -48,6 +48,15 @@ end
 sgs.ai_skill_cardask["@hujia-jink"] = function(self)
 	if not self:isFriend(sgs.hujiasource) then return "." end
 	if self:needBear() then return "." end
+	local bgm_zhangfei = self.room:findPlayerBySkillName("dahe")
+	if bgm_zhangfei and bgm_zhangfei:isAlive() and sgs.hujiasource:hasFlag("dahe") then
+		for _, card in ipairs(self:getCards("Jink")) do
+			if card:getSuit() == sgs.Card_Heart then
+				return card:getId()
+			end
+		end
+		return "."
+	end
 	return self:getCardId("Jink") or "."
 end
 

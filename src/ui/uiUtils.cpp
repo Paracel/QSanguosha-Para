@@ -8,13 +8,13 @@
 
 QImage QSanUiUtils::produceShadow(const QImage &image, QColor shadowColor, int radius, double decade)
 {
-    const uchar* oldImage = image.bits();
+    const uchar *oldImage = image.bits();
     int cols = image.width();
     int rows = image.height();
 
     int alpha = shadowColor.alpha();
         
-    uchar* newImage = new uchar[cols * rows * 4];
+    uchar *newImage = new uchar[cols * rows * 4];
     
 #define _NEW_PIXEL_CHANNEL(x, y, channel) (newImage[(y * cols + x) * 4 + channel])
 #define _NEW_PIXEL(x, y) _NEW_PIXEL_CHANNEL(x, y, 3)
@@ -133,7 +133,7 @@ int* QSanUiUtils::QSanFreeTypeFont::loadFont(const QString& fontName)
     FT_Face face = NULL;
     QString resolvedPath = resolveFont(fontName);
     QByteArray arr = resolvedPath.toAscii();
-    const char* fontPath = arr.constData();
+    const char *fontPath = arr.constData();
     FT_Error error = FT_New_Face(_ftlib, fontPath, 0, &face);
     if (error == FT_Err_Unknown_File_Format)
     {
@@ -150,7 +150,7 @@ int* QSanUiUtils::QSanFreeTypeFont::loadFont(const QString& fontName)
 static QMutex _paintTextMutex;
 
 bool QSanUiUtils::QSanFreeTypeFont::paintQString(
-    QPainter* painter, QString text, int* font, QColor color,
+    QPainter *painter, QString text, int* font, QColor color,
     QSize& fontSize, int spacing, int weight, QRect boundingBox,
     Qt::Orientation orient, Qt::Alignment align)
 {
@@ -203,7 +203,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQString(
     int cols = boundingBox.width() + pixelsAdded + 3;
     int imageSize = rows * cols;
     int imageBytes = imageSize * 4;
-    uchar* newImage = new uchar[imageBytes];
+    uchar *newImage = new uchar[imageBytes];
 
     for (int i = 0; i < imageBytes;)
     {
@@ -281,8 +281,8 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQString(
         {
             if (currentY + y >= rows)
                 break;
-            uchar* fontPtr = &_FONT_PIXEL(0, y);
-            uchar* imagePtr = &_NEW_PIXEL(currentX, currentY + y, 3);
+            uchar *fontPtr = &_FONT_PIXEL(0, y);
+            uchar *imagePtr = &_NEW_PIXEL(currentX, currentY + y, 3);
             int fontClippedCols;
             if (fontCols + currentX < cols)
                 fontClippedCols = fontCols;
@@ -385,7 +385,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQString(
 }
 
 bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(
-    QPainter* painter, QString text, int* font, QColor color,
+    QPainter *painter, QString text, int* font, QColor color,
     QSize& fontSize, int spacing, QRect boundingBox,
     Qt::Alignment align)
 {
@@ -417,7 +417,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(
     int cols = boundingBox.width();
     int imageSize = boundingBox.width() * boundingBox.height();
     int imageBytes = imageSize * 4;
-    uchar* newImage = new uchar[imageBytes];
+    uchar *newImage = new uchar[imageBytes];
 
     for (int i = 0; i < imageBytes;)
     {
@@ -489,8 +489,8 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(
 #endif
 #define _NEW_PIXEL(x, y, channel) (newImage[((y) * cols + (x)) * 4 + channel])
 #define _FONT_PIXEL(x, y) (bitmap.buffer[(y) * rowStep + (x)])
-            uchar* fontPtr = &_FONT_PIXEL(0, y);
-            uchar* imagePtr = &_NEW_PIXEL(currentX, currentY + y, 3);
+            uchar *fontPtr = &_FONT_PIXEL(0, y);
+            uchar *imagePtr = &_NEW_PIXEL(currentX, currentY + y, 3);
 #undef _NEW_PIXEL
 #undef _FONT_PIXEL
             int fontClippedCols;

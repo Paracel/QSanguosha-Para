@@ -25,7 +25,7 @@ public:
     const ClientPlayer *getPlayer() const;
     void speak(const QString &content);
     virtual void repaintAll();
-    QList<CardItem*> removeCardItems(const QList<int> &card_id, Player::Place place);
+    QList<CardItem *> removeCardItems(const QList<int> &card_id, Player::Place place);
 
     void showCard(int card_id);
     
@@ -62,7 +62,7 @@ protected:
     virtual QGraphicsItem* _getPileParent() { return _m_groupMain; }
     inline virtual QString getResourceKeyName() { return QSanRoomSkin::S_SKIN_KEY_PHOTO; }
     virtual void _adjustComponentZValues();
-    bool _addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo);
+    bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

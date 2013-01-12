@@ -65,8 +65,8 @@ public:
     
     virtual QGraphicsItem* getMouseClickReceiver();
 
-    QList<CardItem*> removeCardItems(const QList<int> &card_ids, Player::Place place);
-    virtual QList<CardItem*> cloneCardItems(QList<int> card_ids);
+    QList<CardItem *> removeCardItems(const QList<int> &card_ids, Player::Place place);
+    virtual QList<CardItem *> cloneCardItems(QList<int> card_ids);
 
     // pending operations
     void startPending(const ViewAsSkill *skill);
@@ -75,7 +75,7 @@ public:
     const ViewAsSkill *currentSkill() const;
     const Card *pendingCard() const;
 
-    void selectCard(CardItem* item, bool isSelected);
+    void selectCard(CardItem *item, bool isSelected);
 
     int getButtonWidgetWidth() const;
     int getTextureWidth() const;
@@ -94,8 +94,8 @@ public slots:
 protected:
     void _createExtraButtons();
     virtual void _adjustComponentZValues();
-    virtual void addHandCards(QList<CardItem*> &cards);
-    virtual QList<CardItem*> removeHandCards(const QList<int> &cardIds);
+    virtual void addHandCards(QList<CardItem *> &cards);
+    virtual QList<CardItem *> removeHandCards(const QList<int> &cardIds);
 
     // initialization of _m_layout is compulsory for children classes.
     inline virtual QGraphicsItem* _getEquipParent() { return _m_leftFrame; }
@@ -110,11 +110,11 @@ protected:
     inline virtual QGraphicsItem* _getDeathIconParent() { return _m_middleFrame;}
     inline virtual QString getResourceKeyName() { return QSanRoomSkin::S_SKIN_KEY_DASHBOARD; }
     
-    bool _addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo);
+    bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent);
-    void _addHandCard(CardItem* card_item);    
+    void _addHandCard(CardItem *card_item);    
     void _adjustCards();
     void _adjustCards(const QList<CardItem *> &list, int y);
 
@@ -132,7 +132,7 @@ protected:
     QGraphicsItem *button_widget;
         
     CardItem *selected;
-    QList<CardItem*> m_handCards;
+    QList<CardItem *> m_handCards;
 
     QGraphicsRectItem *trusting_item;
     QGraphicsSimpleTextItem *trusting_text;

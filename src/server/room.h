@@ -1,5 +1,5 @@
-#ifndef ROOM_H
-#define ROOM_H
+#ifndef _ROOM_H
+#define _ROOM_H
 
 class TriggerSkill;
 class ProhibitSkill;
@@ -17,8 +17,7 @@ struct LogMessage;
 #include "RoomState.h"
 #include <qmutex.h>
 
-class Room : public QThread
-{
+class Room: public QThread {
     Q_OBJECT
 
 public:
@@ -27,8 +26,8 @@ public:
     friend class RoomThread1v1;
 
     typedef void (Room::*Callback)(ServerPlayer *, const QString &);
-    typedef bool (Room::*CallBack)(ServerPlayer *, const QSanProtocol::QSanGeneralPacket*);
-    typedef bool (Room::*ResponseVerifyFunction)(ServerPlayer*, const Json::Value&, void*);
+    typedef bool (Room::*CallBack)(ServerPlayer *, const QSanProtocol::QSanGeneralPacket *);
+    typedef bool (Room::*ResponseVerifyFunction)(ServerPlayer *, const Json::Value&, void *);
 
     explicit Room(QObject *parent, const QString &mode);
     ServerPlayer *addSocket(ClientSocket *socket);
@@ -97,7 +96,6 @@ public:
     void sendLog(const LogMessage &log);
     void showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer = NULL);
     void showAllCards(ServerPlayer *player, ServerPlayer *to = NULL);
-
     void retrial(const Card *card, ServerPlayer *player, JudgeStar judge,
                  const QString &skill_name, bool exchange = false);
    
@@ -135,8 +133,8 @@ public:
     //        Maximum total milliseconds that server will wait for all clients to respond before returning. Any client 
     //        response after the timeOut will be rejected.
     // @return True if the a valid response is returned from client.  
-    bool doBroadcastRequest(QList<ServerPlayer*> &players, QSanProtocol::CommandType command, time_t timeOut);
-    bool doBroadcastRequest(QList<ServerPlayer*> &players, QSanProtocol::CommandType command);
+    bool doBroadcastRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command, time_t timeOut);
+    bool doBroadcastRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command);
 
     // Broadcast a request to a list of players and get the first valid client response. Call is blocking until the first
     // client response is received or server times out, whichever is earlier. Any client response is verified by the validation
@@ -146,8 +144,8 @@ public:
     //        Validation function that verifies whether the reply is a valid one. The first parameter passed to the function
     //        is the response sender, the second parameter is the response content, the third parameter is funcArg passed in.
     // @return The player that first send a legal request to the server. NULL if no such request is received.
-    ServerPlayer* doBroadcastRaceRequest(QList<ServerPlayer*> &players, QSanProtocol::CommandType command, 
-           time_t timeOut, ResponseVerifyFunction validateFunc = NULL, void* funcArg = NULL);
+    ServerPlayer *doBroadcastRaceRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command,
+                                         time_t timeOut, ResponseVerifyFunction validateFunc = NULL, void *funcArg = NULL);
     
     // Notify a player of a event by sending S_SERVER_NOTIFICATION packets. No reply should be expected from
     // the client for S_SERVER_NOTIFICATION as it's a one way notice. Any message from the client in reply to this call
@@ -158,7 +156,7 @@ public:
     // the clients for S_SERVER_NOTIFICATION as it's a one way notice. Any message from the client in reply to this call
     // will be rejected.    
     bool doBroadcastNotify(QSanProtocol::CommandType command, const Json::Value &arg);
-    bool doBroadcastNotify(const QList<ServerPlayer*> &players, QSanProtocol::CommandType command, const Json::Value &arg);
+    bool doBroadcastNotify(const QList<ServerPlayer *> &players, QSanProtocol::CommandType command, const Json::Value &arg);
     
     // Ask a server player to wait for the client response. Call is blocking until client replies or server times out, 
     // whichever is earlier.
@@ -176,16 +174,16 @@ public:
     // player->getClientReply(), use the default value directly. If the return value is true, the reply value should still be
     // examined as a malicious client can have tampered with the content of the package for cheating purposes.
     bool getResult(ServerPlayer *player, time_t timeOut);
-    ServerPlayer* getRaceResult(QList<ServerPlayer*> &players, QSanProtocol::CommandType command, time_t timeOut,
-                                ResponseVerifyFunction validateFunc = NULL, void* funcArg = NULL);
+    ServerPlayer *getRaceResult(QList<ServerPlayer *> &players, QSanProtocol::CommandType command, time_t timeOut,
+                                ResponseVerifyFunction validateFunc = NULL, void *funcArg = NULL);
 
     // Verification functions
-    bool verifyNullificationResponse(ServerPlayer*, const Json::Value&, void*);
+    bool verifyNullificationResponse(ServerPlayer *, const Json::Value &, void *);
 
     // Notification functions
     bool notifyMoveFocus(ServerPlayer *player);
     bool notifyMoveFocus(ServerPlayer *player, QSanProtocol::CommandType command);
-    bool notifyMoveFocus(const QList<ServerPlayer*> &players, QSanProtocol::CommandType command, QSanProtocol::Countdown countdown);
+    bool notifyMoveFocus(const QList<ServerPlayer *> &players, QSanProtocol::CommandType command, QSanProtocol::Countdown countdown);
 
     // Notify client side to move cards from one place to another place. A movement should always be completed by
     // calling notifyMoveCards in pairs, one with isLostPhase equaling true followed by one with isLostPhase
@@ -201,10 +199,10 @@ public:
     //        relevant or not.
     bool notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> move, bool forceVisible);
     bool notifyProperty(ServerPlayer *playerToNotify, const ServerPlayer *propertyOwner, const char *propertyName, const QString &value = QString());
-    bool notifyUpdateCard(ServerPlayer *player, int cardId, const Card* newCard);
-    bool broadcastUpdateCard(const QList<ServerPlayer*> &players, int cardId, const Card* newCard);
+    bool notifyUpdateCard(ServerPlayer *player, int cardId, const Card *newCard);
+    bool broadcastUpdateCard(const QList<ServerPlayer *> &players, int cardId, const Card *newCard);
     bool notifyResetCard(ServerPlayer *player, int cardId);
-    bool broadcastResetCard(const QList<ServerPlayer*> &players, int cardId);
+    bool broadcastResetCard(const QList<ServerPlayer *> &players, int cardId);
 
     bool broadcastProperty(ServerPlayer *player, const char *property_name, const QString &value = QString());
     bool broadcastSkillInvoke(const QString &skillName);
@@ -225,9 +223,9 @@ public:
     inline QList<int>& getDrawPile() { return *m_drawPile; }
     inline const QList<int>& getDrawPile() const { return *m_drawPile; }
     int getCardFromPile(const QString &card_name);
-    QList<ServerPlayer *> findPlayersBySkillName(const QString &skill_name, bool include_dead = false) const;
     ServerPlayer *findPlayer(const QString &general_name, bool include_dead = false) const;
-    ServerPlayer *findPlayerBySkillName(const QString &skill_name, bool include_dead = false) const;
+    QList<ServerPlayer *> findPlayersBySkillName(const QString &skill_name) const;
+    ServerPlayer *findPlayerBySkillName(const QString &skill_name) const;
     void installEquip(ServerPlayer *player, const QString &equip_name);
     void resetAI(ServerPlayer *player);
     void changeHero(ServerPlayer *player, const QString &new_general, bool full_state, bool invoke_start = true,
@@ -247,8 +245,8 @@ public:
 
     bool isVirtual();
     void setVirtual();
-    void copyFrom(Room* rRoom);
-    Room* duplicate();
+    void copyFrom(Room *rRoom);
+    Room *duplicate();
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
 
@@ -263,7 +261,7 @@ public:
     void setCardMapping(int card_id, ServerPlayer *owner, Player::Place place);
 
     void drawCards(ServerPlayer *player, int n, const QString &reason = QString());
-    void drawCards(QList<ServerPlayer*> players, int n, const QString &reason);
+    void drawCards(QList<ServerPlayer *> players, int n, const QString &reason);
     void obtainCard(ServerPlayer *target, const Card *card, bool unhide = true);
     void obtainCard(ServerPlayer *target, int card_id, bool unhide = true);
     void obtainCard(ServerPlayer *target, const Card *card,  const CardMoveReason &reason, bool unhide = true);
@@ -272,14 +270,13 @@ public:
     void throwCard(const Card *card, ServerPlayer *who, ServerPlayer *thrower = NULL);
     void throwCard(const Card *card, const CardMoveReason &reason, ServerPlayer *who, ServerPlayer *thrower = NULL);
 
-    void moveCardTo(const Card* card, ServerPlayer* dstPlayer, Player::Place dstPlace,
+    void moveCardTo(const Card *card, ServerPlayer *dstPlayer, Player::Place dstPlace, bool forceMoveVisible = false);
+    void moveCardTo(const Card *card, ServerPlayer *dstPlayer, Player::Place dstPlace, const CardMoveReason &reason,
                     bool forceMoveVisible = false);
-    void moveCardTo(const Card* card, ServerPlayer* dstPlayer, Player::Place dstPlace, const CardMoveReason &reason,
-                    bool forceMoveVisible = false);
-    void moveCardTo(const Card* card, ServerPlayer* srcPlayer, ServerPlayer* dstPlayer, Player::Place dstPlace, const CardMoveReason &reason,
-                    bool forceMoveVisible = false);
-    void moveCardTo(const Card* card, ServerPlayer* srcPlayer, ServerPlayer* dstPlayer, Player::Place dstPlace, const QString& pileName,
+    void moveCardTo(const Card *card, ServerPlayer *srcPlayer, ServerPlayer *dstPlayer, Player::Place dstPlace,
                     const CardMoveReason &reason, bool forceMoveVisible = false);
+    void moveCardTo(const Card *card, ServerPlayer *srcPlayer, ServerPlayer *dstPlayer, Player::Place dstPlace,
+                    const QString &pileName, const CardMoveReason &reason, bool forceMoveVisible = false);
     void moveCardsAtomic(QList<CardsMoveStruct> cards_move, bool forceMoveVisible);
     void moveCardsAtomic(CardsMoveStruct cards_move, bool forceMoveVisible);
     void moveCards(CardsMoveStruct cards_move, bool forceMoveVisible, bool ignoreChanges = true);
@@ -295,7 +292,7 @@ public:
     bool askForDiscard(ServerPlayer *target, const QString &reason, int discard_num, int min_num,
                        bool optional = false, bool include_equip = false, const QString &prompt = QString());
     const Card *askForExchange(ServerPlayer *player, const QString &reason, int discard_num, bool include_equip = false,
-                       const QString &prompt = QString(), bool optional = false);
+                               const QString &prompt = QString(), bool optional = false);
     bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason);
@@ -326,8 +323,8 @@ public:
     void broadcastInvoke(const QSanProtocol::QSanPacket* packet, ServerPlayer *except = NULL);
     void broadcastInvoke(const char *method, const QString &arg = ".", ServerPlayer *except = NULL);
     void networkDelayTestCommand(ServerPlayer *player, const QString &);
-    inline virtual RoomState* getRoomState() { return &_m_roomState; }
-    inline virtual Card* getCard(int cardId) const { return _m_roomState.getCard(cardId); }
+    inline virtual RoomState *getRoomState() { return &_m_roomState; }
+    inline virtual Card *getCard(int cardId) const { return _m_roomState.getCard(cardId); }
     inline virtual void resetCard(int cardId) { _m_roomState.resetCard(cardId); }
     virtual void updateCardsOnLose(const CardsMoveStruct &move);
     virtual void updateCardsOnGet(const CardsMoveStruct &move);
@@ -337,50 +334,39 @@ protected:
     int _m_Id;
 
 private:
-    struct _MoveSourceClassifier
-    {
-        inline _MoveSourceClassifier(const CardsMoveStruct &move)
-        {
+    struct _MoveSourceClassifier {
+        inline _MoveSourceClassifier(const CardsMoveStruct &move) {
             m_from = move.from; m_from_place = move.from_place; 
             m_from_pile_name = move.from_pile_name; m_from_player_name = move.from_player_name;
         }
-        inline void copyTo(CardsMoveStruct & move)
-        {
+        inline void copyTo(CardsMoveStruct &move) {
             move.from = m_from; move.from_place = m_from_place;
             move.from_pile_name = m_from_pile_name; move.from_player_name = m_from_player_name;
         }
-        inline bool operator == (const _MoveSourceClassifier &other) const
-        {
-            return m_from == other.m_from && m_from_place == other.m_from_place &&
-                m_from_pile_name == other.m_from_pile_name && m_from_player_name == other.m_from_player_name;
+        inline bool operator ==(const _MoveSourceClassifier &other) const{
+            return m_from == other.m_from && m_from_place == other.m_from_place
+                   && m_from_pile_name == other.m_from_pile_name && m_from_player_name == other.m_from_player_name;
         }
-        inline bool operator < (const _MoveSourceClassifier &other) const
-        {
-            return m_from < other.m_from || m_from_place < other.m_from_place ||
-                m_from_pile_name < other.m_from_pile_name || m_from_player_name < other.m_from_player_name;
+        inline bool operator <(const _MoveSourceClassifier &other) const{
+            return m_from < other.m_from || m_from_place < other.m_from_place
+                   || m_from_pile_name < other.m_from_pile_name || m_from_player_name < other.m_from_player_name;
         }
-        Player* m_from;
+        Player *m_from;
         Player::Place m_from_place;
         QString m_from_pile_name;
         QString m_from_player_name; 
     };
 
-    struct _MoveMergeClassifier
-    {
-        inline _MoveMergeClassifier(const CardsMoveStruct &move)
-        {
-            m_from = move.from; m_to = move.to;
-        }
-        inline bool operator == (const _MoveMergeClassifier &other) const
-        {
+    struct _MoveMergeClassifier {
+        inline _MoveMergeClassifier(const CardsMoveStruct &move) { m_from = move.from; m_to = move.to; }
+        inline bool operator ==(const _MoveMergeClassifier &other) const{
             return m_from == other.m_from && m_to == other.m_to;
         }
-        inline bool operator < (const _MoveMergeClassifier &other) const
-        {
+        inline bool operator < (const _MoveMergeClassifier &other) const{
             return m_from < other.m_from || m_to < other.m_to;
         }
-        Player* m_from;
-        Player* m_to;
+        Player *m_from;
+        Player *m_to;
     };
 
     int _m_lastMovementId;
@@ -391,7 +377,7 @@ private:
     QString _chooseDefaultGeneral(ServerPlayer *player) const;
     bool _setPlayerGeneral(ServerPlayer *player, const QString& generalName, bool isFirst);
     QString mode;
-    QList<ServerPlayer*> m_players, m_alivePlayers;
+    QList<ServerPlayer *> m_players, m_alivePlayers;
     int player_count;
     ServerPlayer *current;
     QList<int> pile1, pile2;
@@ -414,17 +400,17 @@ private:
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks; // Stores the callbacks for client request. Do not use this
                                                             // this map for anything else but S_CLIENT_REQUEST!!!!!
     QHash<QSanProtocol::CommandType, QSanProtocol::CommandType> m_requestResponsePair; 
-        // Stores the expected client response for each server request, any unmatched client response will be discarded.
+    // Stores the expected client response for each server request, any unmatched client response will be discarded.
 
     QTime _m_timeSinceLastSurrenderRequest; // Timer used to ensure that surrender polls are not initiated too frequently
     bool _m_isFirstSurrenderRequest; // We allow the first surrender poll to go through regardless of the timer.
     
     //helper variables for race request function
     bool _m_raceStarted; 
-    ServerPlayer* _m_raceWinner;
+    ServerPlayer *_m_raceWinner;
 
     QMap<int, Player::Place> place_map;
-    QMap<int, ServerPlayer*> owner_map;
+    QMap<int, ServerPlayer *> owner_map;
 
     const Card *provided;
     bool has_provided;
@@ -460,11 +446,10 @@ private:
     void doScript(const QString &script);
 
     //helper functions and structs
-    struct _NullificationAiHelper
-    {
-        const TrickCard* m_trick;
-        ServerPlayer* m_from;
-        ServerPlayer* m_to;
+    struct _NullificationAiHelper {
+        const TrickCard *m_trick;
+        ServerPlayer *m_from;
+        ServerPlayer *m_to;
     };
     bool _askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive, _NullificationAiHelper helper);
     void _setupChooseGeneralRequestArgs(ServerPlayer *player);    
@@ -484,4 +469,5 @@ signals:
 typedef Room *RoomStar;
 Q_DECLARE_METATYPE(RoomStar)
 
-#endif // ROOM_H
+#endif
+// FORMATTED

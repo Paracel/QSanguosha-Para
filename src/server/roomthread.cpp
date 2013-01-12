@@ -176,9 +176,9 @@ bool CardUseStruct::isValid(const QString &pattern) const{
         QSet<const Skill *> skills = from->getVisibleSkills();
         for (int i = 0; i < 4; i++)
         {
-            const EquipCard* equip = from->getEquip(i);
+            const EquipCard *equip = from->getEquip(i);
             if (equip == NULL) continue;
-            const Skill* skill = Sanguosha->getSkill(equip);
+            const Skill *skill = Sanguosha->getSkill(equip);
             if (skill)
             {
                 skills.insert(skill);
@@ -385,7 +385,7 @@ void RoomThread::run(){
 
     // start game, draw initial 4 cards
     try {        
-        trigger(GameStart, (Room*)room, NULL);
+        trigger(GameStart, (Room *)room, NULL);
         constructTriggerTable();
 
         if(room->mode == "06_3v3"){
@@ -419,7 +419,7 @@ void RoomThread::run(){
             catch (TriggerEvent event)
             {
                 if (event == StageChange) {
-                    trigger(event, (Room*)room, NULL);
+                    trigger(event, (Room *)room, NULL);
                     foreach(ServerPlayer *player, room->getPlayers()){
                         if(player != shenlvbu){
                             if(player->hasFlag("actioned"))
@@ -473,8 +473,8 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
     event_stack.push_back(triplet);
 
     bool broken = false;
-    QList<const TriggerSkill*> triggered;
-    const QList<const TriggerSkill*> &skills = skill_table[event];
+    QList<const TriggerSkill *> triggered;
+    const QList<const TriggerSkill *> &skills = skill_table[event];
     for (int i = 0; i < skills.size(); i++) {
         const TriggerSkill *skill = skills[i];
         if (skill->triggerable(target) && !triggered.contains(skill)) {

@@ -80,7 +80,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     if ((isVirtualCard() && subcardsLength() == 0) || (getSkillName() == "guhuo" && hasFlag("isFireSlash"))) {
         QList<ServerPlayer *> targets_ts;
         while (true) {
-            QList<const Player*> targets_const;
+            QList<const Player *> targets_const;
             foreach (ServerPlayer *p, use.to)
                 targets_const << qobject_cast<const Player *>(p);
             foreach (ServerPlayer *p, room->getAlivePlayers())
@@ -172,7 +172,7 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
 
     int rangefix = 0;
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
-        const Weapon* weapon = qobject_cast<const Weapon*>(Self->getWeapon()->getRealCard());
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         rangefix += weapon->getRange() - 1;
     }
 
@@ -774,7 +774,7 @@ bool Collateral::targetFilter(const QList<const Player *> &targets,
         // roomscene such that if it is collateral, then targetFilter's result is overrode
         Q_ASSERT(targets.length() <= 2);
         if (targets.length() == 2) return false;
-        const Player* slashFrom = targets[0];
+        const Player *slashFrom = targets[0];
         if (to_select == Self && to_select->hasSkill("kongcheng"))
             if (to_select->isLastHandCard(this)) return false;
         return slashFrom->canSlash(to_select);
@@ -961,7 +961,7 @@ bool Snatch::targetFilter(const QList<const Player *> &targets, const Player *to
     int distance_limit = 1 + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, Self, this);
     int rangefix = 0;
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())){
-        const Weapon* weapon = qobject_cast<const Weapon*>(Self->getWeapon()->getRealCard());
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         rangefix += weapon->getRange() - 1;
     }
 
@@ -1150,13 +1150,13 @@ public:
 
     virtual int getCorrect(const Player *from, const Player *to) const{
         int correct = 0;
-        const Horse* horse = NULL;
+        const Horse *horse = NULL;
         if (from->getOffensiveHorse() && from->getMark("Equips_Nullified_to_Yourself") == 0) {
-            horse = qobject_cast<const Horse*>(from->getOffensiveHorse()->getRealCard());
+            horse = qobject_cast<const Horse *>(from->getOffensiveHorse()->getRealCard());
             correct += horse->getCorrect();
         }
         if (to->getDefensiveHorse() && to->getMark("Equips_Nullified_to_Yourself") == 0) {
-            horse = qobject_cast<const Horse*>(to->getDefensiveHorse()->getRealCard());
+            horse = qobject_cast<const Horse *>(to->getDefensiveHorse()->getRealCard());
             correct += horse->getCorrect();
         }
 
@@ -1169,7 +1169,7 @@ StandardCardPackage::StandardCardPackage()
 {
     type = Package::CardPack;
 
-    QList<Card*> cards;
+    QList<Card *> cards;
 
     cards << new Slash(Card::Spade, 7)
           << new Slash(Card::Spade, 8)

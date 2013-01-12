@@ -29,7 +29,7 @@ public:
 
 private:
     TriggerEvent _m_event;
-    Room* _m_room;
+    Room *_m_room;
     ServerPlayer *_m_target;
     QVariant *_m_data;
 };

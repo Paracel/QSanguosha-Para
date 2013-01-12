@@ -14,24 +14,24 @@
 
 using namespace QSanProtocol;
 
-QList<CardItem*> GenericCardContainer::cloneCardItems(QList<int> card_ids){
+QList<CardItem *> GenericCardContainer::cloneCardItems(QList<int> card_ids){
     return _createCards(card_ids);
 }
 
-QList<CardItem*> GenericCardContainer::_createCards(QList<int> card_ids)
+QList<CardItem *> GenericCardContainer::_createCards(QList<int> card_ids)
 {
-    QList<CardItem*> result;
+    QList<CardItem *> result;
     foreach (int card_id, card_ids)
     {
-        CardItem* item = _createCard(card_id);
+        CardItem *item = _createCard(card_id);
         result.append(item);
     }
     return result;
 }
 
-CardItem* GenericCardContainer::_createCard(int card_id)
+CardItem *GenericCardContainer::_createCard(int card_id)
 {
-    const Card* card = Sanguosha->getCard(card_id);
+    const Card *card = Sanguosha->getCard(card_id);
     CardItem *item = new CardItem(card);
     item->setOpacity(0.0);
     item->setParentItem(this);
@@ -40,17 +40,17 @@ CardItem* GenericCardContainer::_createCard(int card_id)
 
 void GenericCardContainer::_destroyCard()
 {
-    CardItem* card = (CardItem*)sender();
+    CardItem *card = (CardItem *)sender();
     card->setVisible(false);
     card->deleteLater();
 }
 
-bool GenericCardContainer::_horizontalPosLessThan(const CardItem* card1, const CardItem* card2)
+bool GenericCardContainer::_horizontalPosLessThan(const CardItem *card1, const CardItem *card2)
 {
     return (card1->x() < card2->x());
 }
 
-void GenericCardContainer::_disperseCards(QList<CardItem*> &cards, QRectF fillRegion,
+void GenericCardContainer::_disperseCards(QList<CardItem *> &cards, QRectF fillRegion,
                                             Qt::Alignment align, bool useHomePos, bool keepOrder)
 {
     int numCards = cards.size();
@@ -63,7 +63,7 @@ void GenericCardContainer::_disperseCards(QList<CardItem*> &cards, QRectF fillRe
     align &= Qt::AlignHorizontal_Mask;
     for (int i = 0; i < numCards; i++)
     {
-        CardItem* card = cards[i];
+        CardItem *card = cards[i];
         double newX = 0;
         if (align == Qt::AlignHCenter)
             newX = fillRegion.center().x() + step * (i - (numCards - 1) / 2.0);
@@ -90,7 +90,7 @@ void GenericCardContainer::_doUpdate()
     update();
 }
 
-void GenericCardContainer::_playMoveCardsAnimation(QList<CardItem*> &cards, bool destroyCards)
+void GenericCardContainer::_playMoveCardsAnimation(QList<CardItem *> &cards, bool destroyCards)
 {    
     if (destroyCards)    
     {
@@ -99,8 +99,8 @@ void GenericCardContainer::_playMoveCardsAnimation(QList<CardItem*> &cards, bool
         _mutex_cardsToBeDestroyed.unlock();
     }
     
-    QParallelAnimationGroup* animation = new QParallelAnimationGroup;
-    foreach (CardItem* card_item, cards)
+    QParallelAnimationGroup *animation = new QParallelAnimationGroup;
+    foreach (CardItem *card_item, cards)
     {
         if (destroyCards)        
             connect(card_item, SIGNAL(movement_animation_finished()), this, SLOT(_destroyCard()));
@@ -112,9 +112,9 @@ void GenericCardContainer::_playMoveCardsAnimation(QList<CardItem*> &cards, bool
     animation->start();
 }
 
-void GenericCardContainer::addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo)
+void GenericCardContainer::addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo)
 {
-    foreach (CardItem* card_item, card_items)
+    foreach (CardItem *card_item, card_items)
     {        
         card_item->setPos(mapFromScene(card_item->scenePos()));
         card_item->setParentItem(this);        
@@ -331,10 +331,9 @@ static bool CompareByNumber(const Card *card1, const Card *card2){
 
 void PlayerCardContainer::updatePile(const QString &pile_name)
 {
-    ClientPlayer *player = (ClientPlayer*)sender();
+    ClientPlayer *player = (ClientPlayer *)sender();
     const QList<int> &pile = player->getPile(pile_name);
-    if (pile.size() == 0)
-    {
+    if (pile.size() == 0) {
         if (_m_privatePiles.contains(pile_name)) {
             delete _m_privatePiles[pile_name];
             _m_privatePiles.remove(pile_name);
@@ -436,7 +435,7 @@ void PlayerCardContainer::updateMarks()
 void PlayerCardContainer::_updateEquips()
 {
     for (int i = 0; i < 4; i++) {
-        CardItem* equip = _m_equipCards[i];
+        CardItem *equip = _m_equipCards[i];
         if (equip == NULL) continue;
         const EquipCard *equip_card = qobject_cast<const EquipCard *>(equip->getCard()->getRealCard());
         QPixmap pixmap = _getEquipPixmap(equip_card);
@@ -544,12 +543,12 @@ void PlayerCardContainer::setPlayer(ClientPlayer *player)
     refresh();
 }
 
- QList<CardItem*> PlayerCardContainer::removeDelayedTricks(const QList<int> &cardIds)
+ QList<CardItem *> PlayerCardContainer::removeDelayedTricks(const QList<int> &cardIds)
  {
-    QList<CardItem*> result;
+    QList<CardItem *> result;
     foreach (int card_id, cardIds)
     {
-        CardItem* item = CardItem::FindItem(_m_judgeCards, card_id);
+        CardItem *item = CardItem::FindItem(_m_judgeCards, card_id);
         Q_ASSERT(item != NULL);
         int index = _m_judgeCards.indexOf(item);
         QRect start = _m_layout->m_delayedTrickFirstRegion;
@@ -578,9 +577,9 @@ void PlayerCardContainer::updateDelayedTricks()
  }
 
 
-void PlayerCardContainer::addDelayedTricks(QList<CardItem*> &tricks)
+void PlayerCardContainer::addDelayedTricks(QList<CardItem *> &tricks)
 {
-    foreach (CardItem* trick, tricks)
+    foreach (CardItem *trick, tricks)
     {
         QGraphicsPixmapItem *item = new QGraphicsPixmapItem(_getDelayedTrickParent());
         QRect start = _m_layout->m_delayedTrickFirstRegion;
@@ -596,7 +595,7 @@ void PlayerCardContainer::addDelayedTricks(QList<CardItem*> &tricks)
     }
 }
 
-QPixmap PlayerCardContainer::_getEquipPixmap(const EquipCard* equip)
+QPixmap PlayerCardContainer::_getEquipPixmap(const EquipCard *equip)
 {
     const Card *realCard = Sanguosha->getEngineCard(equip->getEffectiveId());
     QPixmap equipIcon(_m_layout->m_equipAreas[0].size());
@@ -625,7 +624,7 @@ QPixmap PlayerCardContainer::_getEquipPixmap(const EquipCard* equip)
     QString distance;
     if (index == 0)
     {
-        const Weapon *weapon = qobject_cast<const Weapon*>(equip);
+        const Weapon *weapon = qobject_cast<const Weapon *>(equip);
         Q_ASSERT(weapon);
         if (weapon)
             distance = Sanguosha->translate(QString("CAPITAL(%1)")
@@ -634,13 +633,13 @@ QPixmap PlayerCardContainer::_getEquipPixmap(const EquipCard* equip)
     }
     else if (index == 2)
     {
-        const DefensiveHorse* horse = qobject_cast<const DefensiveHorse*>(equip);
+        const DefensiveHorse *horse = qobject_cast<const DefensiveHorse *>(equip);
         Q_ASSERT(horse);
         if (horse) distance = QString("+%1").arg(QString::number(horse->getCorrect()));
     }
     else if (index == 3)
     {
-        const OffensiveHorse* horse = qobject_cast<const OffensiveHorse*>(equip);
+        const OffensiveHorse *horse = qobject_cast<const OffensiveHorse *>(equip);
         Q_ASSERT(horse);
         if (horse) distance = QString::number(horse->getCorrect());
     }
@@ -667,10 +666,10 @@ void PlayerCardContainer::setFloatingArea(QRect rect)
     if (_getProgressBarParent() == _m_floatingArea) _updateProgressBar();
 }
 
-void PlayerCardContainer::addEquips(QList<CardItem*> &equips)
+void PlayerCardContainer::addEquips(QList<CardItem *> &equips)
 {   
 
-    foreach (CardItem* equip, equips)
+    foreach (CardItem *equip, equips)
     {
         const EquipCard *equip_card = qobject_cast<const EquipCard *>(equip->getCard()->getRealCard());
         int index = (int)(equip_card->location());
@@ -708,15 +707,15 @@ void PlayerCardContainer::addEquips(QList<CardItem*> &equips)
     }
 }
 
- QList<CardItem*> PlayerCardContainer::removeEquips(const QList<int> &cardIds)
+ QList<CardItem *> PlayerCardContainer::removeEquips(const QList<int> &cardIds)
  {
-    QList<CardItem*> result;
+    QList<CardItem *> result;
     foreach (int card_id, cardIds)
     {
         const EquipCard *equip_card = qobject_cast<const EquipCard *>(Sanguosha->getEngineCard(card_id));
         int index = (int)(equip_card->location());
         Q_ASSERT(_m_equipCards[index] != NULL);
-        CardItem* equip = _m_equipCards[index];
+        CardItem *equip = _m_equipCards[index];
         equip->setHomeOpacity(0.0);
         equip->setPos(_m_layout->m_equipAreas[index].center());
         result.append(equip);

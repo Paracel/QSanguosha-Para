@@ -172,7 +172,7 @@ public slots:
     void chooseDirection();
 
     void bringToFront(QGraphicsItem* item);
-    void arrangeSeats(const QList<const ClientPlayer*> &seats);
+    void arrangeSeats(const QList<const ClientPlayer *> &seats);
     void toggleDiscards();
     void enableTargets(const Card *card);
     void useSelectedCard();
@@ -214,14 +214,14 @@ private:
     const QSanRoomSkin* _m_roomSkin;
     QGraphicsItem* _m_last_front_item;
     double _m_last_front_ZValue;
-    GenericCardContainer* _getGenericCardContainer(Player::Place place, Player *player);
-    QMap<int, QList<QList<CardItem*> > > _m_cardsMoveStash;
+    GenericCardContainer *_getGenericCardContainer(Player::Place place, Player *player);
+    QMap<int, QList<QList<CardItem *> > > _m_cardsMoveStash;
     Button* add_robot, *fill_robots;
     QList<Photo*> photos;
     QMap<QString, Photo*> name2photo;
     Dashboard *dashboard;
     TablePile *m_tablePile;
-    // QQueue<CardItem*> piled_discards;
+    // QQueue<CardItem *> piled_discards;
     QMainWindow *main_window;
     QSanButton *ok_button, *cancel_button, *discard_button;
     QSanButton *trust_button;

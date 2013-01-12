@@ -102,6 +102,8 @@ public:
                     else
                         killer->drawCards(3);
                 }
+
+                break;
             }
         default:
             break;

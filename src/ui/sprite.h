@@ -43,7 +43,7 @@ private:
         QMap<int,QEasingCurve::Type> easings;
     };
 
-    QMap<QString,AnimationLine*> lines;
+    QMap<QString,AnimationLine *> lines;
     int total_time;
     int resetTime;
 };

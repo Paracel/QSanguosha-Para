@@ -132,7 +132,7 @@ public:
         return to_select->isRed() && !to_select->isEquipped();
     }
 
-    virtual const Card *viewAs(const Card* originalcard) const{
+    virtual const Card *viewAs(const Card *originalcard) const{
         DuoshiCard *await = new DuoshiCard;
         await->addSubcard(originalcard->getId());
         await->setSkillName(objectName());
@@ -171,7 +171,7 @@ public:
         return true;
     }
 
-    virtual const Card *viewAs(const Card* originalcard) const{
+    virtual const Card *viewAs(const Card *originalcard) const{
         FenxunCard *first = new FenxunCard;
         first->addSubcard(originalcard->getId());
         first->setSkillName(objectName());

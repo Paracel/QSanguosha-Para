@@ -9,7 +9,7 @@ class MiniSceneRule: public ScenarioRule {
     Q_OBJECT
 
 public:
-    static const char* S_EXTRA_OPTION_RANDOM_ROLES;
+    static const char *S_EXTRA_OPTION_RANDOM_ROLES;
 
     MiniSceneRule(Scenario *scenario);
     void assign(QStringList &generals, QStringList &roles) const;
@@ -34,12 +34,12 @@ class MiniScene: public Scenario {
     Q_OBJECT
 
 public:
-    static const char* S_KEY_MINISCENE;
+    static const char *S_KEY_MINISCENE;
     MiniScene(const QString &name);
     void setupCustom(QString name) const;
     virtual void onTagSet(Room *room, const QString &key) const;
     virtual void assign(QStringList &generals, QStringList &roles) const{
-        MiniSceneRule *rule = qobject_cast<MiniSceneRule*>(getRule());
+        MiniSceneRule *rule = qobject_cast<MiniSceneRule *>(getRule());
         rule->assign(generals,roles);
     }
     virtual int getPlayerCount() const{

@@ -535,7 +535,7 @@ public:
         return pattern == "slash";
     }
 
-    virtual bool viewFilter(const Card* card) const{
+    virtual bool viewFilter(const Card *card) const{
         if (!card->isRed())
             return false;
 

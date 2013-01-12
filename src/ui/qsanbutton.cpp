@@ -224,7 +224,7 @@ void QSanSkillButton::onMouseClick()
     }
 }
 
-void QSanSkillButton::setSkill(const Skill* skill)
+void QSanSkillButton::setSkill(const Skill *skill)
 {
      Q_ASSERT(skill != NULL);
      _m_skill = skill;
@@ -326,10 +326,10 @@ QSanSkillButton* QSanInvokeSkillDock::addSkillButtonByName(const QString& skillN
     Q_ASSERT(getSkillButtonByName(skillName) == NULL);
     QSanInvokeSkillButton* button = new QSanInvokeSkillButton(this);
     
-    const Skill* skill = Sanguosha->getSkill(skillName);
+    const Skill *skill = Sanguosha->getSkill(skillName);
     button->setSkill(skill);
-    connect(button, SIGNAL(skill_activated(const Skill*)), this, SIGNAL(skill_activated(const Skill*)));
-    connect(button, SIGNAL(skill_deactivated(const Skill*)), this, SIGNAL(skill_deactivated(const Skill*)));
+    connect(button, SIGNAL(skill_activated(const Skill *)), this, SIGNAL(skill_activated(const Skill *)));
+    connect(button, SIGNAL(skill_deactivated(const Skill *)), this, SIGNAL(skill_deactivated(const Skill *)));
     _m_buttons.append(button);
     update();
     return button;

@@ -182,9 +182,9 @@ void Photo::speak(const QString &content)
 
 }
 
-QList<CardItem*> Photo::removeCardItems(const QList<int> &card_ids, Player::Place place)
+QList<CardItem *> Photo::removeCardItems(const QList<int> &card_ids, Player::Place place)
 {
-    QList<CardItem*> result;    
+    QList<CardItem *> result;    
     if(place == Player::PlaceHand || place == Player::PlaceSpecial){
         result = _createCards(card_ids);
         updateHandcardNum();
@@ -203,7 +203,7 @@ QList<CardItem*> Photo::removeCardItems(const QList<int> &card_ids, Player::Plac
     return result;
 }
 
-bool Photo::_addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo)
+bool Photo::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo)
 {
     _disperseCards(card_items, G_PHOTO_LAYOUT.m_cardMoveRegion, Qt::AlignCenter, true, false);
     double homeOpacity = 0.0;
@@ -211,7 +211,7 @@ bool Photo::_addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &m
 
     Player::Place place = moveInfo.to_place;
 
-    foreach (CardItem* card_item, card_items)
+    foreach (CardItem *card_item, card_items)
         card_item->setHomeOpacity(homeOpacity);
     if (place == Player::PlaceEquip)
     {

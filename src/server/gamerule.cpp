@@ -698,7 +698,7 @@ HulaoPassMode::HulaoPassMode(QObject *parent)
 bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
     switch (event) {
     case StageChange: {
-            ServerPlayer* lord = room->getLord();
+            ServerPlayer *lord = room->getLord();
             room->setPlayerMark(lord, "secondMode", 1);
             room->changeHero(lord, "shenlvbu2", true, true);
             room->broadcastInvoke("animate", "lightbox:$StageChangeAnimate:5000");
@@ -714,7 +714,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
     case GameStart: {
             // Handle global events
             if (player == NULL) {
-                ServerPlayer* lord = room->getLord();
+                ServerPlayer *lord = room->getLord();
                 lord->drawCards(8);
                 foreach (ServerPlayer *player, room->getPlayers()) {
                     if (!player->isLord())
@@ -926,7 +926,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
         if (event == GameStart) {
             if (Config.EnableHegemony)
                 room->setTag("SkipNormalDeathProcess", true);
-            foreach (ServerPlayer* sp, room->getAlivePlayers()) {
+            foreach (ServerPlayer *sp, room->getAlivePlayers()) {
                 room->setPlayerProperty(sp, "general", "anjiang");
                 sp->setGender(General::SexLess);
                 room->setPlayerProperty(sp,"kingdom","god");
@@ -958,7 +958,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
                     if (ces.card->isKindOf("TrickCard") || ces.card->isKindOf("Slash"))
                         playerShowed(player);
 
-                const ProhibitSkill* prohibit = room->isProhibited(ces.from,ces.to,ces.card);
+                const ProhibitSkill *prohibit = room->isProhibited(ces.from,ces.to,ces.card);
                 if (prohibit) {
                     LogMessage log;
                     log.type = "#SkillAvoid";

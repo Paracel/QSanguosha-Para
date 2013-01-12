@@ -72,32 +72,32 @@ public:
         else if (type == QSanSkillButton::S_SKILL_ATTACHEDLORD) arg1 = "attachedlord";
         return arg1;
     }
-    virtual void setSkill(const Skill* skill);   
-    inline virtual const Skill* getSkill() const{ return _m_skill; }
+    virtual void setSkill(const Skill *skill);
+    inline virtual const Skill *getSkill() const{ return _m_skill; }
     inline virtual void setEnabled(bool enabled) {
         if (!_m_canEnable && enabled) return;
         if (!_m_canDisable && !enabled) return;
         QSanButton::setEnabled(enabled);
     }
     QSanSkillButton(QGraphicsItem* parent = NULL);
-    inline const ViewAsSkill* getViewAsSkill() const { return _m_viewAsSkill; }
+    inline const ViewAsSkill *getViewAsSkill() const { return _m_viewAsSkill; }
 protected:
     virtual void _setSkillType(SkillType type);
     virtual void _repaint() = 0;
-    const ViewAsSkill* _parseViewAsSkill() const;
+    const ViewAsSkill *_parseViewAsSkill() const;
     SkillType _m_skillType;
     bool _m_emitActivateSignal;
     bool _m_emitDeactivateSignal;
     bool _m_canEnable;
     bool _m_canDisable; 
-    const Skill* _m_skill;
-    const ViewAsSkill* _m_viewAsSkill;
+    const Skill *_m_skill;
+    const ViewAsSkill *_m_viewAsSkill;
 protected slots:
     void onMouseClick();
 signals:
-    void skill_activated(const Skill*);
+    void skill_activated(const Skill *);
     void skill_activated();
-    void skill_deactivated(const Skill*);
+    void skill_deactivated(const Skill *);
     void skill_deactivated();
 };
 
@@ -159,8 +159,8 @@ protected:
     QList<QSanInvokeSkillButton*> _m_buttons;
     int _m_width;    
 signals:
-    void skill_activated(const Skill* skill);
-    void skill_deactivated(const Skill* skill);
+    void skill_activated(const Skill *skill);
+    void skill_deactivated(const Skill *skill);
 };
 
 #endif

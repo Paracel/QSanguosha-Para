@@ -260,7 +260,7 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
     int card_id = subcards.first();
     int range_fix = 0;
     if (Self->getWeapon() && Self->getWeapon()->getId() == card_id) {
-        const Weapon *weapon = qobject_cast<const Weapon*>(Self->getWeapon()->getRealCard());
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         range_fix += weapon->getRange() - 1;
     } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getId() == card_id){
         range_fix += 1;

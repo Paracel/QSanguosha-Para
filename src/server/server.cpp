@@ -1050,7 +1050,7 @@ void Server::processNewConnection(ClientSocket *socket){
     socket->send("setup " + Sanguosha->getSetupString());
     emit server_message(tr("%1 connected").arg(socket->peerName()));
 
-    connect(socket, SIGNAL(message_got(const char*)), this, SLOT(processRequest(const char*)));
+    connect(socket, SIGNAL(message_got(const char *)), this, SLOT(processRequest(const char *)));
 }
 
 static inline QString ConvertFromBase64(const QString &base64){
@@ -1060,7 +1060,7 @@ static inline QString ConvertFromBase64(const QString &base64){
 
 void Server::processRequest(const char *request){
     ClientSocket *socket = qobject_cast<ClientSocket *>(sender());
-    socket->disconnect(this, SLOT(processRequest(const char*)));
+    socket->disconnect(this, SLOT(processRequest(const char *)));
 
     QRegExp rx("(signupr?) (.+):(.+)(:.+)?\n");
     if(!rx.exactMatch(request)){

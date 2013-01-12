@@ -26,7 +26,7 @@ public:
     virtual void setEnabled(bool enabled);   
 
     const Card *getCard() const;
-    void setCard(const Card* card);
+    void setCard(const Card *card);
     inline int getId() const {
         return m_cardId;
     }

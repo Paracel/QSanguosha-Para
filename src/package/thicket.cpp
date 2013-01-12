@@ -23,11 +23,11 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             DummyCard *dummy = new DummyCard;
-            QList <const Card*> handcards = player->getHandcards();
+            QList <const Card *> handcards = player->getHandcards();
             foreach(const Card *card, handcards)
                 dummy->addSubcard(card);
 
-            QList <const Card*> equips = player->getEquips();
+            QList <const Card *> equips = player->getEquips();
             foreach(const Card *card, equips)
                 dummy->addSubcard(card);
 

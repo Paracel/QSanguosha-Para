@@ -31,7 +31,7 @@ QRectF CardContainer::boundingRect() const
 }
 
 void CardContainer::fillCards(const QList<int> &card_ids){
-    QList<CardItem*> card_items;
+    QList<CardItem *> card_items;
     if(card_ids.isEmpty() && items.isEmpty()) return;
     else if(card_ids.isEmpty() && !items.isEmpty())
     {
@@ -79,7 +79,7 @@ void CardContainer::fillCards(const QList<int> &card_ids){
                 pos.setX(pos.x() + (i - half) * real_skip);
             }        
         }      
-        CardItem* item = items[i];
+        CardItem *item = items[i];
         item->setPos(pos);
         item->setHomePos(pos);
         item->setOpacity(1.0);
@@ -89,8 +89,8 @@ void CardContainer::fillCards(const QList<int> &card_ids){
     }    
 }
 
-bool CardContainer::_addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo){
-    // foreach(CardItem* card_item, card_items) card_item->setHomePos
+bool CardContainer::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo){
+    // foreach(CardItem *card_item, card_items) card_item->setHomePos
 
     return true;    
 }
@@ -123,8 +123,8 @@ void CardContainer::freezeCards(bool is_frozen){
     }
 }
 
-QList<CardItem*> CardContainer::removeCardItems(const QList<int> &card_ids, Player::Place place){
-    QList<CardItem*> result;
+QList<CardItem *> CardContainer::removeCardItems(const QList<int> &card_ids, Player::Place place){
+    QList<CardItem *> result;
     foreach (int card_id, card_ids)
     {
         CardItem *to_take = NULL;
@@ -274,7 +274,7 @@ void GuanxingBox::doGuanxing(const QList<int> &card_ids, bool up_only){
 }
 
 void GuanxingBox::adjust(){
-    CardItem *item = qobject_cast<CardItem*>(sender());
+    CardItem *item = qobject_cast<CardItem *>(sender());
 
     if(item == NULL)
         return;

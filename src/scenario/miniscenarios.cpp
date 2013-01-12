@@ -3,8 +3,8 @@
 #include <QMessageBox>
 #include <QFile>
 
-const char* MiniScene::S_KEY_MINISCENE = "_mini_%1";
-const char* MiniSceneRule::S_EXTRA_OPTION_RANDOM_ROLES = "randomRoles";
+const char *MiniScene::S_KEY_MINISCENE = "_mini_%1";
+const char *MiniSceneRule::S_EXTRA_OPTION_RANDOM_ROLES = "randomRoles";
 const QString MiniSceneRule::_S_DEFAULT_HERO = "sujiang";
 
 MiniSceneRule::MiniSceneRule(Scenario *scenario)
@@ -78,7 +78,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             room->sendLog(log);
         }
 
-        QList<ServerPlayer*> players = room->getAllPlayers();
+        QList<ServerPlayer *> players = room->getAllPlayers();
         while (players.first()->getState() == "robot")
             players.append(players.takeFirst());
 
@@ -112,7 +112,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                 qShuffle(all);
                 for (int k = 0; k < 5; k++) {
                     if (sp->getGeneral()) {
-                        foreach (const Skill* skill, sp->getGeneral()->getSkillList())
+                        foreach (const Skill *skill, sp->getGeneral()->getSkillList())
                             sp->loseSkill(skill->objectName());
                     }
                     sp->setGeneral(NULL);
@@ -132,7 +132,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                     qShuffle(all);
                     for (int k = 0; k < 5; k++) {
                         if (sp->getGeneral2()) {
-                            foreach (const Skill* skill, sp->getGeneral2()->getSkillList())
+                            foreach (const Skill *skill, sp->getGeneral2()->getSkillList())
                                 sp->loseSkill(skill->objectName());
                         }
                         room->setPlayerProperty(sp, "general2", QVariant());
@@ -321,7 +321,7 @@ void MiniScene::setupCustom(QString name) const{
     name.prepend("etc/customScenes/");
     name.append(".txt");
 
-    MiniSceneRule* arule = qobject_cast<MiniSceneRule*>(this->getRule());
+    MiniSceneRule *arule = qobject_cast<MiniSceneRule *>(this->getRule());
     arule->loadSetting(name);
 }
 

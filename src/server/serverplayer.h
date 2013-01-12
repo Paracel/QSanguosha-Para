@@ -112,7 +112,7 @@ public:
     void addToPile(const QString &pile_name, QList<int> card_ids, bool open = true);
     void gainAnExtraTurn(ServerPlayer *clearflag = NULL);
 
-    void copyFrom(ServerPlayer* sp);
+    void copyFrom(ServerPlayer *sp);
 
     void startNetworkDelayTest();
     qint64 endNetworkDelayTest();
@@ -122,7 +122,7 @@ public:
         SEMA_MUTEX, // used to protect mutex access to member variables        
         SEMA_COMMAND_INTERACTIVE // used to wait for response from client        
     };
-    inline QSemaphore* getSemaphore(SemaphoreType type) {return semas[type];}
+    inline QSemaphore *getSemaphore(SemaphoreType type) {return semas[type];}
     inline void acquireLock(SemaphoreType type) {semas[type]->acquire();}
     inline bool tryAcquireLock(SemaphoreType type, int timeout = 0) {
         return semas[type]->tryAcquire(1, timeout); 
@@ -155,7 +155,7 @@ protected:
 
 private:
     ClientSocket *socket;
-    QList<const Card*> handcards;
+    QList<const Card *> handcards;
     Room *room;
     AI *ai;
     AI *trust_ai;

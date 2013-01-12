@@ -412,7 +412,7 @@ bool SupplyShortage::targetFilter(const QList<const Player *> &targets, const Pl
     int distance_limit = 1 + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, Self, this);
     int rangefix = 0;
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())){
-        const Weapon* weapon = qobject_cast<const Weapon*>(Self->getWeapon()->getRealCard());
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         rangefix += weapon->getRange() - 1;
     }
 

@@ -270,7 +270,7 @@ public:
                 && move->card_ids.size() >= 2
                 && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE
                 && room->askForSkillInvoke(player,objectName(),data)) {
-                room->drawCards((ServerPlayer*)move->from, 1);
+                room->drawCards((ServerPlayer *)move->from, 1);
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
             }
         }else if (event == Damaged) {
@@ -1061,7 +1061,7 @@ public:
         return target && !target->hasSkill("quanji") && target->getPile("power").length() > 0;
     }
 
-    virtual bool trigger(TriggerEvent, Room*, ServerPlayer *player, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
         player->clearOnePrivatePile("power");
         return false;
     }

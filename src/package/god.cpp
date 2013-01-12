@@ -254,7 +254,7 @@ bool GreatYeyanCard::targetsFeasible(const QList<const Player *> &targets, const
     if (subcards.length() != 4) return false;
     QList<Card::Suit> allsuits;
     foreach (int cardId, subcards) {
-        const Card* card = Sanguosha->getCard(cardId);
+        const Card *card = Sanguosha->getCard(cardId);
         if (allsuits.contains(card->getSuit())) return false;
         allsuits.append(card->getSuit());
     }
@@ -280,15 +280,15 @@ bool GreatYeyanCard::targetFilter(const QList<const Player *> &targets, const Pl
 void GreatYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlayer *> &targets) const{
     int criticaltarget = 0;
     int totalvictim = 0;
-    QMap<ServerPlayer*,int> map;
+    QMap<ServerPlayer *, int> map;
 
-    foreach(ServerPlayer* sp, targets)
+    foreach(ServerPlayer *sp, targets)
         map[sp]++;
 
     if (targets.size() == 1)
         map[targets.first()] += 2;
 
-    foreach(ServerPlayer* sp,map.keys()){
+    foreach(ServerPlayer *sp, map.keys()){
         if(map[sp] > 1)
             criticaltarget++;
         totalvictim++;
@@ -306,7 +306,7 @@ void GreatYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlaye
         QList<ServerPlayer *>targets = map.keys();
         if (targets.size() > 1)
             qSort(targets.begin(), targets.end(), ServerPlayer::CompareByActionOrder);
-        foreach (ServerPlayer* sp, targets)
+        foreach (ServerPlayer *sp, targets)
             damage(shenzhouyu, sp, map[sp]);
     }
 }

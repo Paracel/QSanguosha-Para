@@ -1030,8 +1030,8 @@ public:
     QList<int> getDrawPile();
     int getCardFromPile(const char *card_name);
     ServerPlayer *findPlayer(const char *general_name, bool include_dead = false) const;
-    ServerPlayer *findPlayerBySkillName(const char *skill_name, bool include_dead = false) const;
-    QList<ServerPlayer *> findPlayersBySkillName(const char *skill_name, bool include_dead = false) const;
+    ServerPlayer *findPlayerBySkillName(const char *skill_name) const;
+    QList<ServerPlayer *> findPlayersBySkillName(const char *skill_name) const;
     void installEquip(ServerPlayer *player, const char *equip_name);
     void resetAI(ServerPlayer *player);
     void changeHero(ServerPlayer *player, const char *new_general, bool full_state, bool invokeStart,

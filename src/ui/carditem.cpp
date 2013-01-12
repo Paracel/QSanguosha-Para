@@ -50,12 +50,12 @@ QRectF CardItem::boundingRect() const
     return G_COMMON_LAYOUT.m_cardFrameArea;
 }
 
-void CardItem::setCard(const Card* card)
+void CardItem::setCard(const Card *card)
 {      
     if (card != NULL) 
     {
         m_cardId = card->getId();
-        const Card* engineCard = Sanguosha->getEngineCard(m_cardId);
+        const Card *engineCard = Sanguosha->getEngineCard(m_cardId);
         Q_ASSERT(engineCard != NULL);
         setObjectName(engineCard->objectName());
         setToolTip(engineCard->getDescription());
@@ -196,7 +196,7 @@ void CardItem::setAutoBack(bool auto_back){
 }
 
 bool CardItem::isEquipped() const{
-    const Card* card = getCard();
+    const Card *card = getCard();
     Q_ASSERT(card);
     return Self->hasEquip(card);
 }
@@ -296,7 +296,7 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
         painter->drawPixmap(G_COMMON_LAYOUT.m_cardMainArea, G_ROOM_SKIN.getCardMainPixmap(objectName()));
     else
         painter->drawPixmap(G_COMMON_LAYOUT.m_cardMainArea, G_ROOM_SKIN.getPixmap("generalCardBack"));
-    const Card* card = Sanguosha->getEngineCard(m_cardId);
+    const Card *card = Sanguosha->getEngineCard(m_cardId);
     if (card) 
     {
         painter->drawPixmap(G_COMMON_LAYOUT.m_cardSuitArea, G_ROOM_SKIN.getCardSuitPixmap(card->getSuit()));

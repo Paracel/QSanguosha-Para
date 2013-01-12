@@ -20,7 +20,7 @@ ServerPlayer::ServerPlayer(Room *room)
       ai(NULL), trust_ai(new TrustAI(this)), recorder(NULL),
       _m_phases_index(0), next(NULL), _m_clientResponse(Json::nullValue)
 {
-    semas = new QSemaphore*[S_NUM_SEMAPHORES];
+    semas = new QSemaphore *[S_NUM_SEMAPHORES];
     for (int i = 0; i < S_NUM_SEMAPHORES; i++) {
         semas[i] = new QSemaphore(0);
     }        
@@ -214,7 +214,7 @@ int ServerPlayer::getHandcardNum() const{
 void ServerPlayer::setSocket(ClientSocket *socket){
     if(socket){
         connect(socket, SIGNAL(disconnected()), this, SIGNAL(disconnected()));
-        connect(socket, SIGNAL(message_got(const char*)), this, SLOT(getMessage(const char*)));
+        connect(socket, SIGNAL(message_got(const char *)), this, SLOT(getMessage(const char *)));
         connect(this, SIGNAL(message_ready(QString)), this, SLOT(sendMessage(QString)));
     }else{
         if(this->socket){
@@ -445,7 +445,7 @@ bool ServerPlayer::isLastHandCard(const Card *card) const{
 
 QList<int> ServerPlayer::handCards() const{
     QList<int> cardIds;
-    foreach(const Card* card, handcards)
+    foreach(const Card *card, handcards)
         cardIds << card->getId();
     return cardIds;
 }
@@ -473,7 +473,7 @@ DummyCard *ServerPlayer::wholeHandCards() const{
         return NULL;
 
     DummyCard *dummy_card = new DummyCard;
-    foreach(const Card* card, handcards)
+    foreach(const Card *card, handcards)
         dummy_card->addSubcard(card->getId());
 
     return dummy_card;
@@ -485,14 +485,14 @@ bool ServerPlayer::hasNullification() const{
             return true;
     }
 
-    foreach(const Skill* skill, getVisibleSkillList(true)){
+    foreach(const Skill *skill, getVisibleSkillList(true)){
         if(skill->inherits("ViewAsSkill")){
-            const ViewAsSkill* vsskill = qobject_cast<const ViewAsSkill*>(skill);
+            const ViewAsSkill *vsskill = qobject_cast<const ViewAsSkill *>(skill);
             if(vsskill->isEnabledAtNullification(this)) return true;
         }else if(skill->inherits("TriggerSkill")){
-            const TriggerSkill* trigger_skill = qobject_cast<const TriggerSkill*>(skill);
+            const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
             if(trigger_skill && trigger_skill->getViewAsSkill()){
-                const ViewAsSkill* vsskill = qobject_cast<const ViewAsSkill*>(trigger_skill->getViewAsSkill());
+                const ViewAsSkill *vsskill = qobject_cast<const ViewAsSkill *>(trigger_skill->getViewAsSkill());
                 if(vsskill && vsskill->isEnabledAtNullification(this)) return true;
             }
         }
@@ -946,7 +946,7 @@ void ServerPlayer::marshal(ServerPlayer *player) const{
                            .arg(getHandcardNum()));
         }else{
             QStringList card_str;
-            foreach(const Card* card, handcards){
+            foreach(const Card *card, handcards){
                 card_str << QString::number(card->getId());
             }
 
@@ -1079,16 +1079,16 @@ void ServerPlayer::gainAnExtraTurn(ServerPlayer *clearflag){
     room->setCurrent(current);
 }
 
-void ServerPlayer::copyFrom(ServerPlayer* sp)
+void ServerPlayer::copyFrom(ServerPlayer *sp)
 {
     ServerPlayer *b = this;
     ServerPlayer *a = sp;
 
-    b->handcards    = QList<const Card*> (a->handcards);
-    b->phases       = QList<ServerPlayer::Phase> (a->phases);
-    b->selected     = QStringList (a->selected);
+    b->handcards = QList<const Card *> (a->handcards);
+    b->phases = QList<ServerPlayer::Phase> (a->phases);
+    b->selected = QStringList (a->selected);
 
-    Player* c = b;
+    Player *c = b;
     c->copyFrom(a);
 }
 

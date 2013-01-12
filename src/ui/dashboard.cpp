@@ -193,12 +193,12 @@ void Dashboard::revivePlayer()
     refresh();
 }
 
-bool Dashboard::_addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo)
+bool Dashboard::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo)
 {
     Player::Place place = moveInfo.to_place;
     if (place == Player::PlaceSpecial)
     {
-        foreach(CardItem* card, card_items)
+        foreach(CardItem *card, card_items)
         {
             card->setHomeOpacity(0.0);            
         }
@@ -220,14 +220,14 @@ bool Dashboard::_addCardItems(QList<CardItem*> &card_items, const CardsMoveStruc
     return false;
 }
 
-void Dashboard::addHandCards(QList<CardItem*> &card_items)
+void Dashboard::addHandCards(QList<CardItem *> &card_items)
 {
-    foreach (CardItem* card_item, card_items)
+    foreach (CardItem *card_item, card_items)
         _addHandCard(card_item);
     updateHandcardNum();
 }
 
-void Dashboard::_addHandCard(CardItem* card_item)
+void Dashboard::_addHandCard(CardItem *card_item)
 {
     if(ClientInstance->getStatus() == Client::Playing)
         card_item->setEnabled(card_item->getCard()->isAvailable(Self));
@@ -251,7 +251,7 @@ void Dashboard::selectCard(const QString &pattern, bool forward, bool multiple, 
         selected->clickItem();
 
     // find all cards that match the card type
-    QList<CardItem*> matches;
+    QList<CardItem *> matches;
 
     foreach(CardItem *card_item, m_handCards){
         if(card_item->isEnabled()){
@@ -304,7 +304,7 @@ const Card *Dashboard::getSelected() const
         return NULL;
 }
 
-void Dashboard::selectCard(CardItem* item, bool isSelected){
+void Dashboard::selectCard(CardItem *item, bool isSelected){
     bool oldState = item->isSelected();
     if (oldState == isSelected) return;
     m_mutex.lock();
@@ -364,7 +364,7 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName)
         Q_ASSERT(equip);
         // @todo: we must fix this in the server side - add a skill to the card itself instead
         // of getting it from the engine.
-        const Skill* skill = Sanguosha->getSkill(equip);
+        const Skill *skill = Sanguosha->getSkill(equip);
         if (skill == NULL) continue;
         if (skill->objectName() == skillName)
         {
@@ -382,7 +382,7 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName)
     }
     _mutexEquipAnim.unlock();
 #ifndef QT_NO_DEBUG
-    const Skill* skill = Sanguosha->getSkill(skillName);
+    const Skill *skill = Sanguosha->getSkill(skillName);
     Q_ASSERT(skill && !skill->inherits("WeaponSkill") && !skill->inherits("ArmorSkill"));
 #endif
     if(_m_skillDock->getSkillButtonByName(skillName) != NULL){
@@ -399,7 +399,7 @@ QSanSkillButton* Dashboard::removeSkillButton(const QString &skillName)
     for (int i = 0; i < 4; i++)
     {
         if (!_m_equipSkillBtns[i]) continue;
-        const Skill* skill = _m_equipSkillBtns[i]->getSkill();
+        const Skill *skill = _m_equipSkillBtns[i]->getSkill();
         Q_ASSERT(skill != NULL);
         if (skill->objectName() == skillName)
         {
@@ -544,7 +544,7 @@ void Dashboard::_onEquipSelectChanged()
     }
     else
     {
-        CardItem* equip = qobject_cast<CardItem*>(sender());
+        CardItem *equip = qobject_cast<CardItem *>(sender());
         // Do not remove this assertion. If equip is NULL here, some other
         // sources that could select equip has not been considered and must
         // be implemented.
@@ -629,7 +629,7 @@ void Dashboard::_setEquipBorderAnimation(int index, bool turnOn)
 
 void Dashboard::adjustCards(bool playAnimation){
     _adjustCards();
-    foreach (CardItem* card, m_handCards)
+    foreach (CardItem *card, m_handCards)
     {
         card->goBack(playAnimation);
     }        
@@ -644,7 +644,7 @@ void Dashboard::_adjustCards(){
 
     if (maxCards >= n) maxCards = n;
     else if (maxCards <= (n - 1) / 2 + 1) maxCards = (n - 1) / 2 + 1;
-    QList<CardItem*> row;
+    QList<CardItem *> row;
     QSanRoomSkin::DashboardLayout* layout = (QSanRoomSkin::DashboardLayout*)_m_layout;
     int leftWidth = layout->m_leftWidth;
     int cardHeight = G_COMMON_LAYOUT.m_cardNormalHeight;
@@ -668,7 +668,7 @@ void Dashboard::_adjustCards(){
 
     for (int i = 0; i < n; i++)
     {
-        CardItem* card = m_handCards[i];
+        CardItem *card = m_handCards[i];
 
         if (card->isSelected())
         {
@@ -684,10 +684,10 @@ int Dashboard::getMiddleWidth()
     return _m_width - G_DASHBOARD_LAYOUT.m_leftWidth - G_DASHBOARD_LAYOUT.m_rightWidth;
 }
 
-QList<CardItem*> Dashboard::cloneCardItems(QList<int> card_ids){
-    QList<CardItem*> result;
-    CardItem* card_item;
-    CardItem* new_card;
+QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids){
+    QList<CardItem *> result;
+    CardItem *card_item;
+    CardItem *new_card;
 
     foreach (int card_id, card_ids)
     {
@@ -704,10 +704,10 @@ QList<CardItem*> Dashboard::cloneCardItems(QList<int> card_ids){
     return result;
 }
 
-QList<CardItem*> Dashboard::removeHandCards(const QList<int> &card_ids)
+QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids)
 {
-    QList<CardItem*> result;
-    CardItem* card_item;
+    QList<CardItem *> result;
+    CardItem *card_item;
     foreach (int card_id, card_ids)
     {
 
@@ -726,9 +726,9 @@ QList<CardItem*> Dashboard::removeHandCards(const QList<int> &card_ids)
     return result;
 }
 
-QList<CardItem*> Dashboard::removeCardItems(const QList<int> &card_ids, Player::Place place){
+QList<CardItem *> Dashboard::removeCardItems(const QList<int> &card_ids, Player::Place place){
     CardItem *card_item = NULL;
-    QList<CardItem*> result;
+    QList<CardItem *> result;
     if (place == Player::PlaceHand)
         result = removeHandCards(card_ids);
     else if(place == Player::PlaceEquip)
@@ -843,13 +843,13 @@ void Dashboard::stopPending(){
     pending_card = NULL;
     emit card_selected(NULL);
 
-    foreach (CardItem* item, m_handCards)
+    foreach (CardItem *item, m_handCards)
     {
         item->setEnabled(false);
     }
 
     for (int i = 0; i < 4; i++) {
-        CardItem* equip = _m_equipCards[i];
+        CardItem *equip = _m_equipCards[i];
         if (equip != NULL) {
             equip->mark(false);
             equip->setMarkable(false);
@@ -894,8 +894,8 @@ void Dashboard::onCardItemClicked(){
 
 void Dashboard::updatePending(){
     if (!view_as_skill) return;
-    QList<const Card*> cards;
-    foreach (CardItem* item, pendings)
+    QList<const Card *> cards;
+    foreach (CardItem *item, pendings)
         cards.append(item->getCard());
 
     foreach(CardItem *item, m_handCards){

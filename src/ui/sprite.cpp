@@ -25,7 +25,7 @@ void Sprite::addKeyFrame(int time, const QString &property, qreal value, QEasing
 void Sprite::start(int loops)
 {
     if(loops<0)loops=0;
-    QMapIterator<QString, AnimationLine*> i(lines);
+    QMapIterator<QString, AnimationLine *> i(lines);
     QParallelAnimationGroup *pgroup = new QParallelAnimationGroup;
 
     while (i.hasNext())  {

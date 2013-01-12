@@ -31,14 +31,14 @@ class CardContainer : public GenericCardContainer
 
 public:
     explicit CardContainer();
-    virtual QList<CardItem*> removeCardItems(const QList<int> &card_ids, Player::Place place);    
+    virtual QList<CardItem *> removeCardItems(const QList<int> &card_ids, Player::Place place);
     int getFirstEnabled() const;
     void startChoose();
     void startGongxin();
     void addCloseButton();
     void view(const ClientPlayer *player);
     virtual QRectF boundingRect() const;
-    ClientPlayer* m_currentPlayer;
+    ClientPlayer *m_currentPlayer;
     virtual void paint(QPainter *,const QStyleOptionGraphicsItem *,QWidget *);
     bool retained();
 public slots:
@@ -48,7 +48,7 @@ public slots:
 
 protected:
     QRectF _m_boundingRect;
-    virtual bool _addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo);
+    virtual bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
 
 private:
     QList<CardItem *> items;

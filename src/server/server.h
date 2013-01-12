@@ -161,7 +161,7 @@ private:
     ServerSocket *server;
     Room *current;
     QSet<Room *> rooms;
-    QHash<QString, ServerPlayer*> players;
+    QHash<QString, ServerPlayer *> players;
     QSet<QString> addresses;
     QMultiHash<QString, QString> name2objname;
 

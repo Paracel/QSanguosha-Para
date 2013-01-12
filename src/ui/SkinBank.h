@@ -41,7 +41,7 @@ public:
         bool m_vertical;
         QSanSimpleTextFont();
         bool tryParse(Json::Value arg);
-        void paintText(QPainter* painter, QRect pos, Qt::Alignment align,
+        void paintText(QPainter *painter, QRect pos, Qt::Alignment align,
                        const QString &text) const;
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
@@ -59,7 +59,7 @@ public:
         QPoint m_shadowOffset;
         QColor m_shadowColor;
         bool tryParse(Json::Value arg);
-        void paintText(QPainter* painter, QRect pos, Qt::Alignment align,
+        void paintText(QPainter *painter, QRect pos, Qt::Alignment align,
                        const QString &text) const;        
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
@@ -79,8 +79,8 @@ public:
         QSize m_fixedSize;
         bool m_useFixedSize;
     };
-    static const char* S_SKIN_KEY_DEFAULT;
-    static const char* S_SKIN_KEY_DEFAULT_SECOND;
+    static const char *S_SKIN_KEY_DEFAULT;
+    static const char *S_SKIN_KEY_DEFAULT_SECOND;
     bool load(const QString &layoutConfigFileName, const QString &imageConfigFileName,
               const QString &audioConfigFileName, const QString &animationConfigFileName);
     QPixmap getPixmap(const QString &key, const QString &arg = QString()) const;
@@ -322,61 +322,61 @@ public:
 
     // static consts
     // main keys
-    static const char* S_SKIN_KEY_DASHBOARD;
-    static const char* S_SKIN_KEY_PHOTO;
-    static const char* S_SKIN_KEY_COMMON;
-    static const char* S_SKIN_KEY_ROOM; 
+    static const char *S_SKIN_KEY_DASHBOARD;
+    static const char *S_SKIN_KEY_PHOTO;
+    static const char *S_SKIN_KEY_COMMON;
+    static const char *S_SKIN_KEY_ROOM; 
 
     // button
-    static const char* S_SKIN_KEY_BUTTON;
-    static const char* S_SKIN_KEY_DASHBOARD_BUTTON_SET_BG;
-    static const char* S_SKIN_KEY_BUTTON_DASHBOARD_CONFIRM;
-    static const char* S_SKIN_KEY_BUTTON_DASHBOARD_CANCEL;
-    static const char* S_SKIN_KEY_BUTTON_DASHBOARD_DISCARD;
-    static const char* S_SKIN_KEY_BUTTON_DASHBOARD_TRUST;
-    static const char* S_SKIN_KEY_PLATTER;
-    static const char* S_SKIN_KEY_BUTTON_SKILL;
+    static const char *S_SKIN_KEY_BUTTON;
+    static const char *S_SKIN_KEY_DASHBOARD_BUTTON_SET_BG;
+    static const char *S_SKIN_KEY_BUTTON_DASHBOARD_CONFIRM;
+    static const char *S_SKIN_KEY_BUTTON_DASHBOARD_CANCEL;
+    static const char *S_SKIN_KEY_BUTTON_DASHBOARD_DISCARD;
+    static const char *S_SKIN_KEY_BUTTON_DASHBOARD_TRUST;
+    static const char *S_SKIN_KEY_PLATTER;
+    static const char *S_SKIN_KEY_BUTTON_SKILL;
 
     // player container
-    static const char* S_SKIN_KEY_MAINFRAME;
-    static const char* S_SKIN_KEY_LEFTFRAME;
-    static const char* S_SKIN_KEY_RIGHTFRAME;
-    static const char* S_SKIN_KEY_MIDDLEFRAME;
-    static const char* S_SKIN_KEY_HANDCARDNUM;
-    static const char* S_SKIN_KEY_FACETURNEDMASK;
-    static const char* S_SKIN_KEY_BLANK_GENERAL;
-    static const char* S_SKIN_KEY_CHAIN;
-    static const char* S_SKIN_KEY_PHASE;
-    static const char* S_SKIN_KEY_SELECTED_FRAME;
-    static const char* S_SKIN_KEY_FOCUS_FRAME;
-    static const char* S_SKIN_KEY_SAVE_ME_ICON;
-    static const char* S_SKIN_KEY_ACTIONED_ICON;
-    static const char* S_SKIN_KEY_KINGDOM_ICON;
-    static const char* S_SKIN_KEY_KINGDOM_COLOR_MASK;
-    static const char* S_SKIN_KEY_VOTES_NUMBER;
-    static const char* S_SKIN_KEY_HAND_CARD_BACK;
-    static const char* S_SKIN_KEY_HAND_CARD_SUIT;
-    static const char* S_SKIN_KEY_JUDGE_CARD_ICON;
-    static const char* S_SKIN_KEY_HAND_CARD_MAIN_PHOTO;
-    static const char* S_SKIN_KEY_HAND_CARD_NUMBER_BLACK;
-    static const char* S_SKIN_KEY_HAND_CARD_NUMBER_RED;
-    static const char* S_SKIN_KEY_HAND_CARD_FRAME;
-    static const char* S_SKIN_KEY_PLAYER_GENERAL_ICON;
-    static const char* S_SKIN_KEY_EXTRA_SKILL_BG;
-    static const char* S_SKIN_KEY_MAGATAMAS_BG;
-    static const char* S_SKIN_KEY_MAGATAMAS;
-    static const char* S_SKIN_KEY_PLAYER_AUDIO_EFFECT;
-    static const char* S_SKIN_KEY_SYSTEM_AUDIO_EFFECT;
-    static const char* S_SKIN_KEY_EQUIP_ICON;
-    static const char* S_SKIN_KEY_PROGRESS_BAR_IMAGE;
-    static const char* S_SKIN_KEY_GENERAL_CIRCLE_IMAGE;
-    static const char* S_SKIN_KEY_GENERAL_CIRCLE_MASK;
+    static const char *S_SKIN_KEY_MAINFRAME;
+    static const char *S_SKIN_KEY_LEFTFRAME;
+    static const char *S_SKIN_KEY_RIGHTFRAME;
+    static const char *S_SKIN_KEY_MIDDLEFRAME;
+    static const char *S_SKIN_KEY_HANDCARDNUM;
+    static const char *S_SKIN_KEY_FACETURNEDMASK;
+    static const char *S_SKIN_KEY_BLANK_GENERAL;
+    static const char *S_SKIN_KEY_CHAIN;
+    static const char *S_SKIN_KEY_PHASE;
+    static const char *S_SKIN_KEY_SELECTED_FRAME;
+    static const char *S_SKIN_KEY_FOCUS_FRAME;
+    static const char *S_SKIN_KEY_SAVE_ME_ICON;
+    static const char *S_SKIN_KEY_ACTIONED_ICON;
+    static const char *S_SKIN_KEY_KINGDOM_ICON;
+    static const char *S_SKIN_KEY_KINGDOM_COLOR_MASK;
+    static const char *S_SKIN_KEY_VOTES_NUMBER;
+    static const char *S_SKIN_KEY_HAND_CARD_BACK;
+    static const char *S_SKIN_KEY_HAND_CARD_SUIT;
+    static const char *S_SKIN_KEY_JUDGE_CARD_ICON;
+    static const char *S_SKIN_KEY_HAND_CARD_MAIN_PHOTO;
+    static const char *S_SKIN_KEY_HAND_CARD_NUMBER_BLACK;
+    static const char *S_SKIN_KEY_HAND_CARD_NUMBER_RED;
+    static const char *S_SKIN_KEY_HAND_CARD_FRAME;
+    static const char *S_SKIN_KEY_PLAYER_GENERAL_ICON;
+    static const char *S_SKIN_KEY_EXTRA_SKILL_BG;
+    static const char *S_SKIN_KEY_MAGATAMAS_BG;
+    static const char *S_SKIN_KEY_MAGATAMAS;
+    static const char *S_SKIN_KEY_PLAYER_AUDIO_EFFECT;
+    static const char *S_SKIN_KEY_SYSTEM_AUDIO_EFFECT;
+    static const char *S_SKIN_KEY_EQUIP_ICON;
+    static const char *S_SKIN_KEY_PROGRESS_BAR_IMAGE;
+    static const char *S_SKIN_KEY_GENERAL_CIRCLE_IMAGE;
+    static const char *S_SKIN_KEY_GENERAL_CIRCLE_MASK;
 
     // Animations
-    static const char* S_SKIN_KEY_ANIMATIONS;
+    static const char *S_SKIN_KEY_ANIMATIONS;
 
     // The following ones are to be moved to lobby skin later
-    static const char* S_SKIN_KEY_READY_ICON;
+    static const char *S_SKIN_KEY_READY_ICON;
 
 protected:
     RoomLayout _m_roomLayout;
@@ -406,7 +406,7 @@ public:
     const QSanSkinScheme& getCurrentSkinScheme();
     bool switchSkin(QString skinName);
 protected:
-    QSanSkinFactory(const char* fileName);
+    QSanSkinFactory(const char *fileName);
     static QSanSkinFactory* _sm_singleton;
     QSanSkinScheme _sm_currentSkin;
     Json::Value _m_skinList;

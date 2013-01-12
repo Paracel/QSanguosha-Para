@@ -32,7 +32,7 @@ public:
     inline QSize getIconSize() const { return m_iconSize; }
     virtual QRectF boundingRect() const;
     virtual void update();
-    virtual void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0);
 protected:
     void _autoAdjustPos();
     void _updateLayout();

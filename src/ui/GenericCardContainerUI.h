@@ -20,16 +20,16 @@ class GenericCardContainer: public QGraphicsObject
     Q_OBJECT
 public:
     inline GenericCardContainer() { _m_highestZ = 10000; }
-    virtual QList<CardItem*> removeCardItems(const QList<int> &card_ids,  Player::Place place) = 0;
-    virtual void addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo);
-    virtual QList<CardItem*> cloneCardItems(QList<int> card_ids);
+    virtual QList<CardItem *> removeCardItems(const QList<int> &card_ids,  Player::Place place) = 0;
+    virtual void addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
+    virtual QList<CardItem *> cloneCardItems(QList<int> card_ids);
 protected:
     // @return Whether the card items should be destroyed after animation
-    virtual bool _addCardItems(QList<CardItem*> &card_items, const CardsMoveStruct &moveInfo) = 0;
-    QList<CardItem*> _createCards(QList<int> card_ids);
-    CardItem* _createCard(int card_id);    
-    void _disperseCards(QList<CardItem*> &cards, QRectF fillRegion, Qt::Alignment align, bool useHomePos, bool keepOrder);
-    void _playMoveCardsAnimation(QList<CardItem*> &cards, bool destroyCards);
+    virtual bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo) = 0;
+    QList<CardItem *> _createCards(QList<int> card_ids);
+    CardItem *_createCard(int card_id);
+    void _disperseCards(QList<CardItem *> &cards, QRectF fillRegion, Qt::Alignment align, bool useHomePos, bool keepOrder);
+    void _playMoveCardsAnimation(QList<CardItem *> &cards, bool destroyCards);
     int _m_highestZ;
 protected slots:
     virtual void onAnimationFinished();
@@ -37,8 +37,8 @@ private slots:
     void _doUpdate();
     void _destroyCard();
 private:
-    static bool _horizontalPosLessThan(const CardItem* card1, const CardItem* card2);
-    QList<CardItem*> _cardsToBeDestroyed;
+    static bool _horizontalPosLessThan(const CardItem *card1, const CardItem *card2);
+    QList<CardItem *> _cardsToBeDestroyed;
     QMutex _mutex_cardsToBeDestroyed;    
 signals:
     void animation_finished();
@@ -122,15 +122,15 @@ protected:
     void _clearPixmap(QGraphicsPixmapItem* item);
     QPixmap _getPixmap(const QString &key);
     QPixmap _getPixmap(const QString &key, const QString &arg);
-    QPixmap _getEquipPixmap(const EquipCard* equip);
+    QPixmap _getEquipPixmap(const EquipCard *equip);
     virtual void _adjustComponentZValues();
     void _updateFloatingArea();
     // We use QList of cards instead of a single card as parameter here, just in case
     // we need to do group animation in the future.
-    virtual void addEquips(QList<CardItem*> &equips);
-    virtual QList<CardItem*> removeEquips(const QList<int> &cardIds);
-    virtual void addDelayedTricks(QList<CardItem*> &judges);
-    virtual QList<CardItem*> removeDelayedTricks(const QList<int> &cardIds);
+    virtual void addEquips(QList<CardItem *> &equips);
+    virtual QList<CardItem *> removeEquips(const QList<int> &cardIds);
+    virtual void addDelayedTricks(QList<CardItem *> &judges);
+    virtual QList<CardItem *> removeDelayedTricks(const QList<int> &cardIds);
     virtual void updateDelayedTricks();
     
     // This is a dirty but easy design, we require children class to call create controls after
@@ -177,8 +177,8 @@ protected:
     QList<CardItem *> _m_judgeCards;
 
     QGraphicsProxyWidget *_m_equipRegions[4];  
-    CardItem* _m_equipCards[4];
-    QLabel* _m_equipLabel[4];
+    CardItem *_m_equipCards[4];
+    QLabel *_m_equipLabel[4];
     QParallelAnimationGroup* _m_equipAnim[4];
     QMutex _mutexEquipAnim;
 
@@ -193,7 +193,7 @@ protected:
     QGraphicsPixmapItem *_m_groupDeath;
 
     // now, logic
-    ClientPlayer* m_player;
+    ClientPlayer *m_player;
 
     // The following stuffs for mulitple votes required for yeyan
     int _m_votesGot, _m_maxVotes;

@@ -16,56 +16,56 @@
 using namespace std;
 using namespace QSanProtocol::Utils;
 
-const char* IQSanComponentSkin::S_SKIN_KEY_DEFAULT = "default";
-const char* IQSanComponentSkin::S_SKIN_KEY_DEFAULT_SECOND = "default2";
-const char* QSanRoomSkin::S_SKIN_KEY_PHOTO = "photo";
-const char* QSanRoomSkin::S_SKIN_KEY_ROOM = "room";
-const char* QSanRoomSkin::S_SKIN_KEY_COMMON = "common";
-const char* QSanRoomSkin::S_SKIN_KEY_DASHBOARD = "dashboard";
+const char *IQSanComponentSkin::S_SKIN_KEY_DEFAULT = "default";
+const char *IQSanComponentSkin::S_SKIN_KEY_DEFAULT_SECOND = "default2";
+const char *QSanRoomSkin::S_SKIN_KEY_PHOTO = "photo";
+const char *QSanRoomSkin::S_SKIN_KEY_ROOM = "room";
+const char *QSanRoomSkin::S_SKIN_KEY_COMMON = "common";
+const char *QSanRoomSkin::S_SKIN_KEY_DASHBOARD = "dashboard";
 
 // buttons
-const char* QSanRoomSkin::S_SKIN_KEY_BUTTON = "button-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_DASHBOARD_BUTTON_SET_BG = "dashboardButtonSetBg";
-const char* QSanRoomSkin::S_SKIN_KEY_BUTTON_SKILL = "skill";
+const char *QSanRoomSkin::S_SKIN_KEY_BUTTON = "button-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_DASHBOARD_BUTTON_SET_BG = "dashboardButtonSetBg";
+const char *QSanRoomSkin::S_SKIN_KEY_BUTTON_SKILL = "skill";
 
 // player container
-const char* QSanRoomSkin::S_SKIN_KEY_EQUIP_ICON = "%1Equip-%2";
-const char* QSanRoomSkin::S_SKIN_KEY_MAINFRAME = "%1MainFrame";
-const char* QSanRoomSkin::S_SKIN_KEY_LEFTFRAME = "%1LeftFrame";
-const char* QSanRoomSkin::S_SKIN_KEY_RIGHTFRAME = "%1RightFrame";
-const char* QSanRoomSkin::S_SKIN_KEY_MIDDLEFRAME = "%1MiddleFrame";
-const char* QSanRoomSkin::S_SKIN_KEY_HANDCARDNUM = "%1HandCardNum";
-const char* QSanRoomSkin::S_SKIN_KEY_FACETURNEDMASK = "%1FaceTurnedMask";
-const char* QSanRoomSkin::S_SKIN_KEY_BLANK_GENERAL = "%1BlankGeneral";
-const char* QSanRoomSkin::S_SKIN_KEY_EXTRA_SKILL_BG = "%1ExtraSkillBg";
-const char* QSanRoomSkin::S_SKIN_KEY_CHAIN = "%1Chain";
-const char* QSanRoomSkin::S_SKIN_KEY_PHASE = "%1Phase%2";
-const char* QSanRoomSkin::S_SKIN_KEY_SELECTED_FRAME = "%1FrameWhenSelected";
-const char* QSanRoomSkin::S_SKIN_KEY_FOCUS_FRAME = "%1FocusFrame%2";
-const char* QSanRoomSkin::S_SKIN_KEY_KINGDOM_ICON = "kingdomIcon-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_KINGDOM_COLOR_MASK = "kingdomColorMask-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_VOTES_NUMBER = "votesNum-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_SAVE_ME_ICON = "saveMe";
-const char* QSanRoomSkin::S_SKIN_KEY_ACTIONED_ICON = "playerActioned";
-const char* QSanRoomSkin::S_SKIN_KEY_READY_ICON = "playerReady";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_BACK = "handCardBack";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_SUIT = "handCardSuit-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_JUDGE_CARD_ICON = "judgeCardIcon-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_FRAME = "handCardFrame-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_MAIN_PHOTO = "handCardMainPhoto-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_NUMBER_BLACK = "handCardNumber-black-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_HAND_CARD_NUMBER_RED = "handCardNumber-red-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_PLAYER_AUDIO_EFFECT = "playerAudioEffect-%1-%2";
-const char* QSanRoomSkin::S_SKIN_KEY_SYSTEM_AUDIO_EFFECT = "systemAudioEffect-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_PLAYER_GENERAL_ICON = "playerGeneralIcon-%2-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_MAGATAMAS_BG = "magatamasBg%1";
-const char* QSanRoomSkin::S_SKIN_KEY_MAGATAMAS = "magatamas%1";
-const char* QSanRoomSkin::S_SKIN_KEY_PROGRESS_BAR_IMAGE = "progressBar";
-const char* QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_IMAGE = "generalCircleImage-%1";
-const char* QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_MASK = "generalCircleMask-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_EQUIP_ICON = "%1Equip-%2";
+const char *QSanRoomSkin::S_SKIN_KEY_MAINFRAME = "%1MainFrame";
+const char *QSanRoomSkin::S_SKIN_KEY_LEFTFRAME = "%1LeftFrame";
+const char *QSanRoomSkin::S_SKIN_KEY_RIGHTFRAME = "%1RightFrame";
+const char *QSanRoomSkin::S_SKIN_KEY_MIDDLEFRAME = "%1MiddleFrame";
+const char *QSanRoomSkin::S_SKIN_KEY_HANDCARDNUM = "%1HandCardNum";
+const char *QSanRoomSkin::S_SKIN_KEY_FACETURNEDMASK = "%1FaceTurnedMask";
+const char *QSanRoomSkin::S_SKIN_KEY_BLANK_GENERAL = "%1BlankGeneral";
+const char *QSanRoomSkin::S_SKIN_KEY_EXTRA_SKILL_BG = "%1ExtraSkillBg";
+const char *QSanRoomSkin::S_SKIN_KEY_CHAIN = "%1Chain";
+const char *QSanRoomSkin::S_SKIN_KEY_PHASE = "%1Phase%2";
+const char *QSanRoomSkin::S_SKIN_KEY_SELECTED_FRAME = "%1FrameWhenSelected";
+const char *QSanRoomSkin::S_SKIN_KEY_FOCUS_FRAME = "%1FocusFrame%2";
+const char *QSanRoomSkin::S_SKIN_KEY_KINGDOM_ICON = "kingdomIcon-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_KINGDOM_COLOR_MASK = "kingdomColorMask-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_VOTES_NUMBER = "votesNum-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_SAVE_ME_ICON = "saveMe";
+const char *QSanRoomSkin::S_SKIN_KEY_ACTIONED_ICON = "playerActioned";
+const char *QSanRoomSkin::S_SKIN_KEY_READY_ICON = "playerReady";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_BACK = "handCardBack";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_SUIT = "handCardSuit-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_JUDGE_CARD_ICON = "judgeCardIcon-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_FRAME = "handCardFrame-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_MAIN_PHOTO = "handCardMainPhoto-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_NUMBER_BLACK = "handCardNumber-black-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_HAND_CARD_NUMBER_RED = "handCardNumber-red-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_PLAYER_AUDIO_EFFECT = "playerAudioEffect-%1-%2";
+const char *QSanRoomSkin::S_SKIN_KEY_SYSTEM_AUDIO_EFFECT = "systemAudioEffect-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_PLAYER_GENERAL_ICON = "playerGeneralIcon-%2-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_MAGATAMAS_BG = "magatamasBg%1";
+const char *QSanRoomSkin::S_SKIN_KEY_MAGATAMAS = "magatamas%1";
+const char *QSanRoomSkin::S_SKIN_KEY_PROGRESS_BAR_IMAGE = "progressBar";
+const char *QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_IMAGE = "generalCircleImage-%1";
+const char *QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_MASK = "generalCircleMask-%1";
 
 // Animations
-const char* QSanRoomSkin::S_SKIN_KEY_ANIMATIONS = "preloads";
+const char *QSanRoomSkin::S_SKIN_KEY_ANIMATIONS = "preloads";
 
 QSanSkinFactory* QSanSkinFactory::_sm_singleton = NULL;
 QHash<QString, QPixmap> QSanPixmapCache::_m_pixmapBank;
@@ -134,7 +134,7 @@ bool IQSanComponentSkin::isImageKeyDefined(const QString &key) const
     return val.isArray() || val.isString();
 }
 
-void IQSanComponentSkin::QSanSimpleTextFont::paintText(QPainter* painter, QRect pos, Qt::Alignment align,
+void IQSanComponentSkin::QSanSimpleTextFont::paintText(QPainter *painter, QRect pos, Qt::Alignment align,
                                                        const QString &text) const
 {
     if (pos.width() <= 0 || pos.height() <= 0 || m_fontSize.width() <= 0 || m_fontSize.height() <= 0) return;
@@ -164,7 +164,7 @@ void IQSanComponentSkin::QSanSimpleTextFont::paintText(QGraphicsPixmapItem* item
     item->setPos(pos.x(), pos.y());
 }
 
-void IQSanComponentSkin::QSanShadowTextFont::paintText(QPainter* painter, QRect pos,
+void IQSanComponentSkin::QSanShadowTextFont::paintText(QPainter *painter, QRect pos,
                                                        Qt::Alignment align, const QString &text) const
 {
     if (pos.width() <= 0 || pos.height() <= 0 || m_fontSize.width() <= 0 || m_fontSize.height() <= 0) return;
@@ -209,7 +209,7 @@ QString QSanRoomSkin::getButtonPixmapPath(const QString &groupName,
                                           const QString &buttonName,
                                           QSanButton::ButtonState state) const
 {
-    const char* key;
+    const char *key;
     QString qkey = QString(QSanRoomSkin::S_SKIN_KEY_BUTTON).arg(groupName);
     QByteArray arr = qkey.toAscii();
     key = arr.constData();
@@ -327,7 +327,7 @@ QString QSanRoomSkin::getGeneralPixmapPath(const QString &generalName, GeneralIc
         {
             QByteArray arr = QString(S_SKIN_KEY_PLAYER_GENERAL_ICON)
                              .arg(size).arg(S_SKIN_KEY_DEFAULT).toAscii();
-            const char* ckey = arr.constData();
+            const char *ckey = arr.constData();
             Json::Value imageMap = _m_imageConfig[ckey];
             QString fileName;
             if (imageMap.isString())
@@ -524,7 +524,7 @@ bool IQSanComponentSkin::_loadImageConfig(const Json::Value &config)
         Json::Value::Members keys = config.getMemberNames();
         for (unsigned int i = 0; i < keys.size(); i++)
         {
-            const char* key = keys[i].c_str();
+            const char *key = keys[i].c_str();
             _m_imageConfig[key] = config[key];
             S_IMAGE_KEY2FILE.remove(key);
             S_IMAGE_KEY2PIXMAP.remove(key);
@@ -1064,7 +1064,7 @@ bool QSanRoomSkin::_loadLayoutConfig(const Json::Value &layoutConfig)
         {
             int index = i * 4 + j;
             QByteArray arr = key.toAscii();
-            const char* sKey = arr.constData();
+            const char *sKey = arr.constData();
             tryParse(config[sKey][j][0], _m_dashboardLayout.m_skillTextColors[index]);
             tryParse(config[sKey][j][1], _m_dashboardLayout.m_skillTextShadowColors[index]);
         }
@@ -1123,7 +1123,7 @@ bool QSanSkinFactory::switchSkin(QString skinName)
     return success;
 }
 
-QSanSkinFactory::QSanSkinFactory(const char* fileName)
+QSanSkinFactory::QSanSkinFactory(const char *fileName)
 {
     Json::Reader reader;
     ifstream file(fileName);

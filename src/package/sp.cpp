@@ -236,12 +236,12 @@ void WeidiCard::onUse(Room *room, const CardUseStruct &card_use) const{
 
     if (choice == "jijiang") {
         QList<ServerPlayer *> targets;
-        foreach (ServerPlayer* target, room->getOtherPlayers(yuanshu)) {
+        foreach (ServerPlayer *target, room->getOtherPlayers(yuanshu)) {
             if (yuanshu->canSlash(target))
                 targets << target;
         }
 
-        ServerPlayer* target = room->askForPlayerChosen(yuanshu, targets, "jijiang");
+        ServerPlayer *target = room->askForPlayerChosen(yuanshu, targets, "jijiang");
         if (target) {
             JijiangCard *jijiang = new JijiangCard;
             jijiang->setSkillName("weidi");
@@ -446,7 +446,7 @@ bool XuejiCard::targetFilter(const QList<const Player *> &targets, const Player 
 
     int range_fix = 0;
     if (Self->getWeapon() && Self->getWeapon()->getEffectiveId() == getEffectiveId()) {
-        const Weapon *weapon = qobject_cast<const Weapon*>(Self->getWeapon()->getRealCard());
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         range_fix += weapon->getRange() - 1;
     } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getEffectiveId() == getEffectiveId())
         range_fix += 1;

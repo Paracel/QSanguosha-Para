@@ -27,7 +27,7 @@ neoluoyi_skill.getTurnUseCard=function(self)
 		if card:isKindOf("Duel") then
 			for _, enemy in ipairs(self.enemies) do
 				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) 
-				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and enemy:getMark("@fog") < 1 then 
+				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) and enemy:getMark("@late") == 0 then 
 					dueltarget = dueltarget + 1 
 				end
 			end
@@ -85,7 +85,7 @@ sgs.ai_skill_use_func.NeoFanjianCard=function(card,use,self)
 	self:sort(self.enemies, "hp")
 
 	for _, enemy in ipairs(self.enemies) do
-		if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or enemy:getMark("@fog") > 0 then
+		if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy) then
 		elseif (not enemy:hasSkill("qingnang")) or (enemy:getHp() == 1 and enemy:getHandcardNum() == 0 and not enemy:getEquips()) then
 			use.card = card
 			if use.to then use.to:append(enemy) end

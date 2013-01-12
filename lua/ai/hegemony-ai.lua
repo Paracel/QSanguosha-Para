@@ -268,7 +268,7 @@ end
 -- AI for general
 sgs.ai_skill_use["@xiaoguo"] = function(self, prompt)
 	local currentplayer = self.room:getCurrent()
-	if (currentplayer:getMark("@fog") > 0 or currentplayer:getMark("@fenyong") > 0) and not self.player:hasSkill("jueqing") then return "." end
+	if self:damageIsEffective(currentplayer) then return "." end
 	if self:isEquip("SilverLion", currentplayer) and currentplayer:getLostHp() > 0 then return "." end
 	if self:isFriend(currentplayer) then 
 		return "." 
@@ -296,8 +296,7 @@ end
 
 sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	local yuejin = self.room:findPlayerBySkillName("xiaoguo")
-	if (self.player:getMark("@fog") > 0 or self.player:getMark("@late") > 0 or self.player:getMark("@fenyong") > 0) 
-		and not (yuejin and yuejin:hasSkill("jueqing")) then 
+	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, yuejin) then 
 		return "." 
 	end
 	if self.player:getArmor() and self.player:getArmor():isKindOf("SilverLion") and self.player:isWounded() then

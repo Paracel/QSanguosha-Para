@@ -230,6 +230,8 @@ sgs.ai_skill_cardask["@jiefan-discard"] = function(self, data)
 	return "."
 end
 
+sgs.ai_card_intention.JiefanCard = -80
+
 anxu_skill={}
 anxu_skill.name="anxu"
 table.insert(sgs.ai_skills,anxu_skill)

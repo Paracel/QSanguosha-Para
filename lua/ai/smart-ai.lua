@@ -3070,13 +3070,10 @@ function SmartAI:damageIsEffective(player, nature, source)
 	source = source or self.player
 	nature = nature or sgs.DamageStruct_Normal
 
-	if player:getMark("@fenyong") > 0 then
-		return false
-	end
-
-	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then
-		return false
-	end
+	if source:hasSkill("jueqing") then return true end
+	
+	if player:getMark("@fenyong") > 0 then return false	end
+	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate_to") == 0 then
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do

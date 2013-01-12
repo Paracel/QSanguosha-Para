@@ -1699,7 +1699,7 @@ function SmartAI:filterEvent(event, player, data)
 				sgs.updateIntentions(from, to, callback, card)
 			end
 		else
-			if card:isKindOf("SkillCard") then
+			if card:isKindOf("SkillCard") and not card:targetFixed() then
 				logmsg("card_intention.txt", card:getClassName()) -- tmp debug
 			end
 		end

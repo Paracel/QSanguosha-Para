@@ -213,7 +213,7 @@ end
 
 function sgs.reverse(list)
 	local new = {}
-	for i=#list, 1, -1 do
+	for i = #list, 1, -1 do
 		table.insert(new, list[i])
 	end
 	
@@ -223,8 +223,8 @@ end
 -- copied from "Well House Consultants"
 -- used to split string into a table, similar with php' explode function
 function string:split(delimiter)
-  local result = { }
-  local from  = 1
+  local result = {}
+  local from = 1
   local delim_from, delim_to = string.find( self, delimiter, from  )
   while delim_from do
     table.insert( result, string.sub( self, from , delim_from-1 ) )

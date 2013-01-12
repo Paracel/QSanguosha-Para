@@ -4,14 +4,13 @@ package.path = package.path .. ";./lua/lib/?.lua"
 package.cpath = package.cpath .. ";./lua/clib/?.dll"
 
 dofile "lua/sgs_ex.lua"
-dofile "lua/sgs_ex2.lua"
 
 function load_translation(file)
 	local t = dofile(file)
 	if type(t) ~= "table" then
-	    error(("file %s is should return a table!"):format(file))
+		error(("file %s is should return a table!"):format(file))
 	end
-	
+
 	sgs.LoadTranslationTable(t)
 end
 
@@ -20,20 +19,20 @@ function load_translations()
 	local lang_dir = "lang/" .. lang
 
 	local lang_files = sgs.GetFileNames(lang_dir)
-	for _, file in ipairs(lang_files) do	
+	for _, file in ipairs(lang_files) do
 		load_translation(("%s/%s"):format(lang_dir, file))
 	end
 end
 
 function load_extensions(just_require)
 	local scripts = sgs.GetFileNames("extensions")
-	
-	for _, script in ipairs(scripts) do	
+
+	for _, script in ipairs(scripts) do
 		if script:match(".+%.lua$") then
 			local name = script:sub(script:find("%w+"))
 			local module_name = "extensions." .. name
 			local loaded = require(module_name)
-			
+
 			sgs.Sanguosha:addPackage(loaded.extension)
 		end
 	end

@@ -17,7 +17,7 @@ QSanguosha.pro.user*
 etc/customScenes/custom_scenario.txt
 *.dylib
 QSanguosha.exe
-tools/
+/tools/
 builds/vs2010/Win32/
 Bin/
 /builds/vs2010/ipch
@@ -41,3 +41,4 @@ joystick*
 contestdb.*
 doc/
 diy/
+/lua/sgs_ex2.lua

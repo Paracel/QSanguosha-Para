@@ -5,7 +5,7 @@ config = {
 	version = "20130101",
 	version_name = "Alpha",
 	mod_name = "Para",
-	kingdoms = {"wei", "shu", "wu", "qun", "god"},
+	kingdoms = { "wei", "shu", "wu", "qun", "god" },
 	package_names = {
 		"StandardCard",
 		"StandardExCard",

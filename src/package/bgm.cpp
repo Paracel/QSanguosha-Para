@@ -1435,7 +1435,7 @@ public:
 
     virtual int getEffectIndex(const ServerPlayer *, const Card *) const {
         return -2;
-	}
+    }
 };
 
 class XuehenAvoidTriggeringCardsMove: public TriggerSkill {

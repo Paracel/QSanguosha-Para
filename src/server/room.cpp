@@ -995,7 +995,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
     bool continuable = false;
     card = card->validateInResponse(player, continuable);
     const Card *result = NULL;
-	
+
     if (card) {
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
             if (!(method == Card::MethodUse && pattern == "slash")) {

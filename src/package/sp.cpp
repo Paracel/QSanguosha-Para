@@ -166,7 +166,7 @@ public:
             log.from = player;
             log.arg = effect.card->objectName();
             log.arg2 = objectName();
-			room->sendLog(log);
+            room->sendLog(log);
 
             return true;
         }
@@ -699,7 +699,7 @@ public:
                 player->tag.remove("BifaSource" + QString::number(card_id));
             }
         }
-		return false;
+        return false;
     }
 };
 

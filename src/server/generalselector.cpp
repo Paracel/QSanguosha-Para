@@ -155,14 +155,30 @@ static bool CompareFunction(const QString &first, const QString &second) {
 int GeneralSelector::get1v1ArrangeValue(const QString &name){
     int value = priority_1v1_table.value(name, 5);
     if (sacrifice.contains(name))
-        value += 100;
+        value += 1000;
     return value;
 }
 
 QStringList GeneralSelector::arrange1v1(ServerPlayer *player) {
     QStringList arranged = player->getSelected();
     qSort(arranged.begin(), arranged.end(), CompareFunction);
-    return arranged.mid(0, 3);
+
+    QStringList result;
+    for (int i = 0; i < 3; i++) {
+        if (get1v1ArrangeValue(arranged[i]) > 1000) {
+            result << arranged[i];
+            break;
+        }
+    }
+    if (!result.isEmpty()) {
+        int strong = (i == 0) ? 1 : 0;
+        int weak = (i == 2) ? 1 : 2;
+        result << arranged[weak] << arranged[strong];
+    } else {
+        result << arranged[1] << arranged[2] << arranged[0];
+    }
+
+    return result;
 }
 
 void GeneralSelector::loadFirstGeneralTable() {

@@ -9,11 +9,11 @@
 
 #include <QDateTime>
 
-//@todo: setParent here is illegitimate in QT and is equivalent to calling
-// setParent(NULL). Find another way to do it if we really need a parent.
 RoomThread3v3::RoomThread3v3(Room *room)
     :room(room)
-{}
+{
+    room->getRoomState()->reset();
+}
 
 QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     QList<const General *> generals;
@@ -26,34 +26,32 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
 
     // remove hidden generals
     QMutableListIterator<const General *> itor(generals);
-    while(itor.hasNext()){
+    while (itor.hasNext()) {
         itor.next();
-
-        if(itor.value()->isHidden())
+        if (itor.value()->isHidden())
             itor.remove();
     }
 
     generals.removeOne(Sanguosha->getGeneral("yuji"));
 
-    if(Config.value("3v3/UsingNewMode", false).toBool()){
+    if (Config.value("3v3/UsingNewMode", false).toBool()) {
           QStringList list_remove, list_add;
           list_remove << "zhangjiao" << "caoren" << "lvmeng" << "xiahoudun" << "weiyan";
           list_add << "sunjian" << "menghuo" << "xuhuang" << "pangde" << "zhugejin";
-          foreach(QString general_name, list_remove)
+          foreach (QString general_name, list_remove)
               generals.removeOne(Sanguosha->getGeneral(general_name));
-          foreach(QString general_name, list_add)
+          foreach (QString general_name, list_add)
               generals << Sanguosha->getGeneral(general_name);
     }
 
     QStringList general_names;
-    foreach(const General *general, generals)
+    foreach (const General *general, generals)
         general_names << general->objectName();
 
     return general_names;
 }
 
-void RoomThread3v3::run()
-{
+void RoomThread3v3::run() {
     // initialize the random seed for this thread
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 
@@ -61,17 +59,19 @@ void RoomThread3v3::run()
     assignRoles(scheme);
     room->adjustSeats();
 
-    foreach(ServerPlayer *player, room->m_players){
-        switch(player->getRoleEnum()){
+    foreach (ServerPlayer *player, room->m_players) {
+        switch (player->getRoleEnum()) {
         case Player::Lord: warm_leader = player; break;
         case Player::Renegade: cool_leader = player; break;
         default:
-            break;
+                break;
         }
     }
 
-    if(Config.value("3v3/UsingExtension", false).toBool())
+    if (Config.value("3v3/UsingExtension", false).toBool())
         general_names = Config.value("3v3/ExtensionGenerals").toStringList();
+        if (general_names.isEmpty())
+            general_names = getGeneralsWithoutExtension();
     else
         general_names = getGeneralsWithoutExtension();
 
@@ -82,17 +82,17 @@ void RoomThread3v3::run()
 
     QString order = room->askForOrder(warm_leader);
     ServerPlayer *first, *next;
-    if(order == "warm"){
+    if (order == "warm") {
         first = warm_leader;
         next = cool_leader;
-    }else{
+    } else {
         first = cool_leader;
         next = warm_leader;
     }
 
     askForTakeGeneral(first);
 
-    while(general_names.length() > 1){
+    while (general_names.length() > 1) {
         qSwap(first, next);
 
         askForTakeGeneral(first);
@@ -107,22 +107,22 @@ void RoomThread3v3::run()
     room->sem->acquire(2);
 }
 
-void RoomThread3v3::askForTakeGeneral(ServerPlayer *player){
+void RoomThread3v3::askForTakeGeneral(ServerPlayer *player) {
     QString name;
-    if(general_names.length() == 1 || player->getState() != "online")
+    if (general_names.length() == 1 || player->getState() != "online")
         name = GeneralSelector::getInstance()->select3v3(player, general_names);
 
-    if(name.isNull()){
+    if (name.isNull()) {
         player->invoke("askForGeneral3v3");
-    }else{
-        msleep(1000);
+    } else {
+        msleep(Config.AIDelay);
         takeGeneral(player, name);
     }
 
     room->sem->acquire();
 }
 
-void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name){
+void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name) {
     general_names.removeOne(name);
     player->addToSelected(name);
 
@@ -132,26 +132,26 @@ void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name){
     room->sem->release();
 }
 
-void RoomThread3v3::startArrange(ServerPlayer *player){
-    if(!player->isOnline()){
+void RoomThread3v3::startArrange(ServerPlayer *player) {
+    if (!player->isOnline()) {
         GeneralSelector *selector = GeneralSelector::getInstance();
         arrange(player, selector->arrange3v3(player));
-    }else{
+    } else {
         player->invoke("startArrange");
     }
 }
 
-void RoomThread3v3::arrange(ServerPlayer *player, const QStringList &arranged){
+void RoomThread3v3::arrange(ServerPlayer *player, const QStringList &arranged) {
     Q_ASSERT(arranged.length() == 3);
 
-    if(player->isLord()){
+    if (player->isLord()) {
         room->m_players.at(5)->setGeneralName(arranged.at(0));
         room->m_players.at(0)->setGeneralName(arranged.at(1));
         room->m_players.at(1)->setGeneralName(arranged.at(2));
         room->setTag(room->m_players.at(5)->objectName(),QStringList(arranged.at(0)));
         room->setTag(room->m_players.at(0)->objectName(),QStringList(arranged.at(1)));
         room->setTag(room->m_players.at(1)->objectName(),QStringList(arranged.at(2)));
-    }else{
+    } else {
         room->m_players.at(2)->setGeneralName(arranged.at(0));
         room->m_players.at(3)->setGeneralName(arranged.at(1));
         room->m_players.at(4)->setGeneralName(arranged.at(2));
@@ -163,7 +163,7 @@ void RoomThread3v3::arrange(ServerPlayer *player, const QStringList &arranged){
     room->sem->release();
 }
 
-void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme){
+void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme) {
     QStringList all_roles = roles;
     QStringList roleChoices = all_roles;
     roleChoices.removeDuplicates();
@@ -171,16 +171,15 @@ void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme)
     for (int i = 0; i < 6; i++)
         new_players << NULL;
 
-    foreach(ServerPlayer *player, room->m_players){
-        if(player->isOnline()){
-            
+    foreach (ServerPlayer *player, room->m_players) {
+        if (player->isOnline()) {
             QString role = room->askForRole(player, roleChoices, scheme);
-            if(role != "abstain"){
+            if (role != "abstain") {
                 player->setRole(role);
                 all_roles.removeOne(role);
 
-                for(int i = 0; i < 6; i++){
-                    if(roles.at(i) == role && new_players.at(i) == NULL){
+                for (int i = 0; i < 6; i++) {
+                    if (roles.at(i) == role && new_players.at(i) == NULL) {
                         new_players[i] = player;
                         break;
                     }
@@ -193,11 +192,11 @@ void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme)
         abstained << player;
     }
 
-    if(!abstained.isEmpty()){
+    if (!abstained.isEmpty()) {
         qShuffle(abstained);
 
-        for(int i = 0; i < 6; i++){
-            if(new_players.at(i) == NULL){
+        for (int i = 0; i < 6; i++) {
+            if (new_players.at(i) == NULL) {
                 new_players[i] = abstained.takeFirst();
                 new_players.at(i)->setRole(roles.at(i));
             }
@@ -211,7 +210,7 @@ void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme)
 // Normal: choose team1 or team2
 // Random: assign role randomly
 // AllRoles: select roles directly
-void RoomThread3v3::assignRoles(const QString &scheme){
+void RoomThread3v3::assignRoles(const QString &scheme) {
     QStringList roles;
     roles << "lord" << "loyalist" << "rebel"
           << "renegade" << "rebel" << "loyalist";
@@ -227,7 +226,7 @@ void RoomThread3v3::assignRoles(const QString &scheme){
     } else {
         QStringList all_roles;
         all_roles << "leader1" << "guard1" << "guard2"
-                    << "leader2" << "guard2" << "guard1";
+                  << "leader2" << "guard2" << "guard1";
         assignRoles(all_roles, scheme);
 
         QMap<QString, QString> map;
@@ -247,11 +246,11 @@ void RoomThread3v3::assignRoles(const QString &scheme){
             room->m_players.swap(2, 5);
         }
 
-        foreach (ServerPlayer *player, room->m_players) {
+        foreach (ServerPlayer *player, room->m_players)
             player->setRole(map[player->getRole()]);
-        }
     }
 
     foreach (ServerPlayer *player, room->m_players)
         room->broadcastProperty(player, "role");
 }
+// FORMATTED

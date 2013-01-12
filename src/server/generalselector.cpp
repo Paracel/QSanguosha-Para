@@ -164,7 +164,8 @@ QStringList GeneralSelector::arrange1v1(ServerPlayer *player) {
     qSort(arranged.begin(), arranged.end(), CompareFunction);
 
     QStringList result;
-    for (int i = 0; i < 3; i++) {
+    int i;
+	for (i = 0; i < 3; i++) {
         if (get1v1ArrangeValue(arranged[i]) > 1000) {
             result << arranged[i];
             break;

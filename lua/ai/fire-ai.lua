@@ -84,7 +84,7 @@ sgs.dynamic_value.control_card.QuhuCard = true
 sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 	local friends = {}
 	for _, player in ipairs(self.friends) do
-		if friend:isAlive() and not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
+		if player:isAlive() and not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
 			table.insert(friends, player)
 		end
 	end

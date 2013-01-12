@@ -440,10 +440,10 @@ jiuchi_skill.getTurnUseCard=function(self)
 	local card_str = ("analeptic:jiuchi[spade:%s]=%d"):format(number, card_id)
 	local analeptic = sgs.Card_Parse(card_str)
 
-	assert(analeptic)
-
-	return analeptic
-
+	if sgs.Analeptic_IsAvailable(self.player, analeptic) then
+		assert(analeptic)
+		return analeptic
+	end
 end
 
 sgs.ai_view_as.jiuchi = function(card, player, card_place)

@@ -796,6 +796,7 @@ public:
         analeptic->setSkillName(objectName());
         analeptic->addSubcard(originalCard->getId());
 
+        if (!Analeptic::IsAvailable(Self, analeptic)) return NULL;
         return analeptic;
     }
 };

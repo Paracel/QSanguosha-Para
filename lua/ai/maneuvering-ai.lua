@@ -24,7 +24,7 @@ sgs.ai_use_priority.Vine = 1.6
 
 	
 sgs.ai_skill_invoke.fan = function(self, data)
-    local use = data:toCardUse()
+	local use = data:toCardUse()
 	for _,target in sgs.qlist(use.to) do
 		if self:isFriend(target) then
 			if not (target:isChained() and self:isGoodChainTarget(target)) then return false end
@@ -140,7 +140,7 @@ function SmartAI:searchForAnaleptic(use,enemy,slash)
 
 	local card_str = self:getCardId("Analeptic")
 	if card_str then return sgs.Card_Parse(card_str) end
-        
+
 	for _, anal in ipairs(cards) do
 		if (anal:getClassName() == "Analeptic") and not (anal:getEffectiveId() == slash:getEffectiveId()) then
 			return anal
@@ -234,7 +234,7 @@ function SmartAI:getChainedEnemies()
 end
 
 function SmartAI:isGoodChainPartner(player)  
-    player = player or self.player
+	player = player or self.player
 	if player:hasSkill("buqu") or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0) or player:getHp() > getBestHp(player)
 		or self:getDamagedEffects(player) or (player:hasSkill("fuli") and player:getMark("@laoji") > 0) then 
 		return true
@@ -242,8 +242,8 @@ function SmartAI:isGoodChainPartner(player)
 	return false
 end
 
-function SmartAI:isGoodChainTarget(who)    
-    local haslord                                                           
+function SmartAI:isGoodChainTarget(who)
+	local haslord
 	local good = #(self:getChainedEnemies(self.player))
 	local bad = #(self:getChainedFriends(self.player))
 	for _, friend in ipairs(self:getChainedFriends(self.player)) do
@@ -273,7 +273,7 @@ function SmartAI:isGoodChainTarget(who)
 end
 
 
-function SmartAI:useCardIronChain(card, use)    
+function SmartAI:useCardIronChain(card, use)	
 	use.card = card
 	if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
 	if self:needBear() then return end
@@ -311,7 +311,7 @@ function SmartAI:useCardIronChain(card, use)
 			if use.to then use.to:append(friendtargets[1]) end
 			if use.to then use.to:append(friendtargets[2]) end
 		elseif #friendtargets == 1 then
-		    if #enemytargets > 0 then
+			if #enemytargets > 0 then
 				if use.to then use.to:append(friendtargets[1]) end
 				if use.to then use.to:append(enemytargets[1]) end
 			elseif chainSelf then

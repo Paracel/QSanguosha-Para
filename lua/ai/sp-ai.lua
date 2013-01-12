@@ -253,18 +253,18 @@ xueji_skill.name="xueji"
 table.insert(sgs.ai_skills,xueji_skill)
 xueji_skill.getTurnUseCard=function(self,inclusive)
 	local cards = self.player:getCards("he")
-    cards=sgs.QList2Table(cards)
-    
-    local red_card
-    
-    self:sortByUseValue(cards,true)
-    
-    for _,card in ipairs(cards) do
-        if card:isRed() and not card:isKindOf("Peach") and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
-            red_card = card
-            break
-        end
-    end
+	cards=sgs.QList2Table(cards)
+
+	local red_card
+
+	self:sortByUseValue(cards,true)
+
+	for _,card in ipairs(cards) do
+		if card:isRed() and not card:isKindOf("Peach") and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
+			red_card = card
+			break
+		end
+	end
 
 	if red_card then
 		local card_id = red_card:getEffectiveId()
@@ -420,7 +420,7 @@ sgs.ai_skill_use_func.SongciCard = function(card,use,self)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
 			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0) 
-			        or (self:isEquip("SilverLion", enemy) and enemy:isWounded())) then
+					or (self:isEquip("SilverLion", enemy) and enemy:isWounded())) then
 				use.card = sgs.Card_Parse("@SongciCard=.")
 				if use.to then use.to:append(enemy) end
 				return

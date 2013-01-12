@@ -497,16 +497,16 @@ end
 sgs.ai_skill_cardask["tiaoxin-slash"] = function(self, data, pattern, target)
 	if target then
 		for _, slash in ipairs(self:getCards("Slash")) do
-            if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target))) 
+			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target))) 
 				and self:isEnemy(target) then 
-                return slash:toString()
-            end 
-            if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target)) 
+				return slash:toString()
+			end 
+			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target)) 
 				and self:isFriend(target) then 
-                return slash:toString()
-            end 
+				return slash:toString()
+			end 
 
-        end
+		end
 	end
 	return "."
 end

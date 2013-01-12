@@ -463,7 +463,7 @@ sgs.ai_need_damaged.shichou = function (self, attacker)
 		end
 		if victim ~= nil then
 			local role
-	        if sgs.isRolePredictable() and sgs.evaluatePlayerRole(player) == "rebel" or sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then 
+			if sgs.isRolePredictable() and sgs.evaluatePlayerRole(player) == "rebel" or sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then 
 				role = "rebel" 
 			end
 			local need_damage = false
@@ -674,7 +674,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 	end
 	
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() then      
+		if not enemy:isNude() then	  
 			if self:hasSkills("jijiu|dimeng|guzheng|qiaobian|jieyin|lijian|beige", enemy) or (enemy:hasSkill("miji") and enemy:isWounded()) then
 				local cardchosen = self:getValuableCard(enemy)
 				local gethandcard
@@ -687,9 +687,9 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 						gethandcard = false
 					elseif not isDefenseCard then
 						gethandcard = true
-					end            
+					end
 				end
-	
+
 				if not enemy:isKongcheng() and gethandcard then cardchosen = self:getCardRandomly(enemy, "h") end
 				if not cardchosen then cardchosen = self:getCardRandomly(enemy, "he") end
 				use.card = card

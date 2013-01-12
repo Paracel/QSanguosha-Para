@@ -88,7 +88,7 @@ function setInitialTables()
 					"jieyin|renjie|zhiheng|rende|jujian|guicai|guidao|jilve|longhun|wusheng|longdan"
 	sgs.drawpeach_skill =		"tuxi|qiaobian"
 	sgs.recover_skill =		"rende|kuanggu|zaiqi|jieyin|qingnang|yinghun|shenzhi"
-	sgs.use_lion_skill =            "longhun|duanliang|qixi|guidao|lijian|jujian|zhiheng|mingce"
+	sgs.use_lion_skill =			"longhun|duanliang|qixi|guidao|lijian|jujian|zhiheng|mingce"
 	
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
 		table.insert(sgs.role_evaluation, aplayer:objectName())
@@ -211,7 +211,7 @@ function sgs.getDefense(player)
 	if player:hasSkill("jijiu") then defense = defense - 3 end
 	if player:hasSkill("dimeng") then defense = defense - 2.5 end
 	if player:hasSkill("guzheng") and knownJink ==0 then defense = defense - 2.5 end
-	if player:hasSkill("qiaobian") then defense = defense - 2.4 end    
+	if player:hasSkill("qiaobian") then defense = defense - 2.4 end	
 	if player:hasSkill("jieyin") then defense = defense - 2.3 end
 	if player:hasSkill("lijian") then defense = defense - 2.2 end
 	if player:hasSkill("miji") and player:isWounded() then defense = defense - 1.5 end
@@ -1449,7 +1449,7 @@ function SmartAI:updatePlayers()
 	sgs.draw_pile = global_room:getDrawPile()
 	
 	if sgs.isRolePredictable() then
-		local friends= sgs.QList2Table(self.lua_ai:getFriends())    
+		local friends= sgs.QList2Table(self.lua_ai:getFriends())	
 		for i=1, #friends,1 do
 			if friends[i]:isDead() or friends[i]:objectName() == self.player:objectName() then table.remove(friends, i) end
 		end
@@ -1576,8 +1576,8 @@ function SmartAI:filterEvent(event, player, data)
 		sgs.ai_debug_func[event](self, player, data)
 	end
 	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
-        	sgs.ai_chat_func[event](self,player,data)
-    	end
+			sgs.ai_chat_func[event](self,player,data)
+		end
 	
 	sgs.lastevent = event
 	sgs.lasteventdata = eventdata
@@ -1794,7 +1794,7 @@ function SmartAI:filterEvent(event, player, data)
 		else
 			sgs.debugmode = false
 		end
-	elseif event == sgs.GameStart then        
+	elseif event == sgs.GameStart then		
 		sgs.turncount = 0
 		local file = io.open("lua/ai/AIDebug.Readme")
 		if file then 

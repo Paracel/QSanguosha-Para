@@ -135,20 +135,20 @@ sgs.ai_skill_invoke.xiansheng = function(self)
 end
 
 sgs.ai_skill_use["@@smalltuxi"] = function(self, prompt)
-    self:sort(self.enemies, "handcard")
+	self:sort(self.enemies, "handcard")
 
-    local first_index
-    for i = 1, #self.enemies - 1 do
-        if self:hasSkills(sgs.need_kongcheng, self.enemies[i]) and self.enemies[i]:getHandcardNum() == 1 then
-        elseif not self.enemies[i]:isKongcheng() then
+	local first_index
+	for i = 1, #self.enemies - 1 do
+		if self:hasSkills(sgs.need_kongcheng, self.enemies[i]) and self.enemies[i]:getHandcardNum() == 1 then
+		elseif not self.enemies[i]:isKongcheng() then
 			first_index = i
 			break
 		end
-    end
+	end
 
-    self:log(self.enemies[first_index]:getGeneralName())
-    local first = self.enemies[first_index]:objectName()
-    return ("@SmallTuxiCard=.->%s+%s"):format(first)
+	self:log(self.enemies[first_index]:getGeneralName())
+	local first = self.enemies[first_index]:objectName()
+	return ("@SmallTuxiCard=.->%s+%s"):format(first)
 end
 
 sgs.ai_card_intention.SmallTuxiCard = 80

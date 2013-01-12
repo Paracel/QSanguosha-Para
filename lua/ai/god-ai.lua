@@ -52,7 +52,7 @@ sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 end
 
 function sgs.ai_slash_prohibit.wuhun(self, to)
-    if self:hasSkills("jueqing|qianxi") then return false end
+	if self:hasSkills("jueqing|qianxi") then return false end
 	local maxfriendmark = 0
 	local maxenemymark = 0
 	for _, friend in ipairs(self.friends) do
@@ -117,7 +117,7 @@ function SmartAI:cantbeHurt(player)
 end
 
 function SmartAI:needDeath(player)
-    local maxfriendmark = 0
+	local maxfriendmark = 0
 	local maxenemymark = 0
 	player = player or self.player
 	if player:hasSkill("wuhun") then
@@ -741,8 +741,8 @@ sgs.shenzhaoyun_suit_value =
 sgs.ai_skill_invoke.lianpo = true
 
 function SmartAI:needBear(player)
-    player = player or self.player
-    return player:hasSkill("renjie") and not player:hasSkill("jilve") and player:getMark("@bear") < 4
+	player = player or self.player
+	return player:hasSkill("renjie") and not player:hasSkill("jilve") and player:getMark("@bear") < 4
 end
 
 sgs.ai_skill_invoke.jilve = function(self, data)
@@ -753,7 +753,7 @@ sgs.ai_skill_invoke.jilve = function(self, data)
 		local judge = data:toJudge()
 		if not self:needRetrial(judge) then return false end
 		return (use or judge.who == self.player or judge.reason == "lightning")
-		        and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
+				and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
 	elseif event == sgs.Damaged then
 		if #self.enemies == 0 then return false end
 		return use and self:askForUseCard("@@fangzhu", "@fangzhu") ~= "."
@@ -770,7 +770,7 @@ local jilve_skill = {}
 jilve_skill.name = "jilve"
 table.insert(sgs.ai_skills, jilve_skill)
 jilve_skill.getTurnUseCard=function(self)
-    if self.player:getMark("@bear") < 1 or self.player:usedTimes("JilveCard") >= 2 then return end
+	if self.player:getMark("@bear") < 1 or self.player:usedTimes("JilveCard") >= 2 then return end
 	local wanshadone = self.player:getTag("JilveWansha"):toPlayer()
 	if not self.player:hasUsed("JilveCard") and not wanshadone then
 	   sgs.ai_skill_choice.jilve = "zhiheng" 
@@ -779,15 +779,15 @@ jilve_skill.getTurnUseCard=function(self)
 	   self:useSkillCard(card,dummy_use)
 	   if dummy_use.card then return sgs.Card_Parse("@JilveCard=.") end
 	elseif not wanshadone then
-	    local cards=self.player:getHandcards()
-	    cards=sgs.QList2Table(cards)
-	    local slashes = self:getCards("Slash")
-	    self:sort(self.enemies, "hp")
+		local cards=self.player:getHandcards()
+		cards=sgs.QList2Table(cards)
+		local slashes = self:getCards("Slash")
+		self:sort(self.enemies, "hp")
 		local target
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:isKongcheng()) and self:isWeak(enemy) and self:damageMinusHp(self, enemy, 1) > 0 then
 				sgs.ai_skill_choice.jilve = "wansha" 
-	            return sgs.Card_Parse("@JilveCard=.") 
+				return sgs.Card_Parse("@JilveCard=.") 
 			end
 		end
 	end

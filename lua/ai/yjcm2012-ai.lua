@@ -153,7 +153,7 @@ gongqi_skill.getTurnUseCard=function(self,inclusive)
 end
 
 sgs.ai_skill_use_func.GongqiCard=function(card,use,self)
-    use.card = card
+	use.card = card
 end
 
 sgs.ai_skill_invoke.gongqi = function(self, data)

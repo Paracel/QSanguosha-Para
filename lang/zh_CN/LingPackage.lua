@@ -48,7 +48,6 @@ return {
 	["tannang"] = "探囊",
 	[":tannang"] = "<font color=\"blue\"><b>锁定技。</b></font>你与其他角色的距离-X。（X为你已损失的体力值）",
 
-		
 	["#neo_zhaoyun"] = "少年将军",
 	["neo_zhaoyun"] = "赵云-新",
 	["&neo_zhaoyun"] = "赵云", 
@@ -81,4 +80,3 @@ return {
 	["$zhulou1"] = "易京高楼，易守难攻。",
 	["$zhulou2"] = "快！快！多加些砖瓦。",
 }
-

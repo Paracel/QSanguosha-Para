@@ -112,7 +112,7 @@ return {
 	["cv:shenguanyu"] = "奈何",
 	["$wushen1"] = "武神现世，天下莫敌！",
 	["$wushen2"] = "战意，化为青龙翱翔吧！",
-	["$wuhun1"] = "关某记下了",
+	["$wuhun1"] = "关某记下了。",
 	["$wuhun2"] = "我生不能啖汝之肉，死当追汝之魂！",
 	["$wuhun3"] = "桃园之梦，再也不会回来了……",
 	["$WuhunAnimate"] = "anim=image/animate/wuhun.png",
@@ -126,13 +126,13 @@ return {
 	["~shenlvmeng"] = "劫数难逃，我们别无选择……",
 
 --神周瑜
-	["$qinyin1"] = "（琴音～）",
-	["$qinyin2"] = "（琴音～）",
+	["$qinyin1"] = "（琴音）",
+	["$qinyin2"] = "（琴音）",
 	["$yeyan1"] = "聆听吧，这献给你的镇魂曲！",
 	["$yeyan2"] = "让这熊熊业火，焚尽你的罪恶！",
-	["$yeyan3"] = "（业炎琴音～）",
+	["$yeyan3"] = "（业炎琴音）",
 	["$YeyanAnimate"] = "anim=image/animate/yeyan.png",
-	["~shenzhouyu"] = "逝者不死，浴火…重生……",
+	["~shenzhouyu"] = "逝者不死，浴火重生……",
 	
 --神诸葛亮
 	["$qixing1"] = "伏望天恩，誓讨汉贼。",
@@ -141,13 +141,13 @@ return {
 	["$dawu2"] = "此非万全之策，唯惧天雷。",
 	["$kuangfeng1"] = "万事俱备，只欠业火。",
 	["$kuangfeng2"] = "风……起……",
-	["~shenzhugeliang"] = "今当远离，临表涕零，不知…所言……",
+	["~shenzhugeliang"] = "今当远离，临表涕零，不知所言……",
 
 --神曹操
 	["$guixin1"] = "山不厌高，海不厌深。",
 	["$guixin2"] = "周公吐哺，天下归心。",
 	["$GuixinAnimate"] = "anim=image/animate/guixin.png",
-	["~shencaocao"] = "腾蛇乘雾，终为…土灰……",
+	["~shencaocao"] = "腾蛇乘雾，终为土灰……",
 	
 --神吕布
 	["$kuangbao1"] = "呃～啊啊啊～！",
@@ -157,18 +157,18 @@ return {
 	["$wuqian1"] = "看我神威，无坚不摧！",
 	["$wuqian2"] = "天王老子也保不住你！",
 	["$shenfen1"] = "凡人们，颤抖吧！这是神之怒火！",
-	["$shenfen2"] = "这，才是活生生的地狱！",	
+	["$shenfen2"] = "这，才是活生生的地狱！",
 	["$ShenfenAnimate"] = "anim=image/animate/shenfen.png",
-	["~shenlvbu"] = "我在修罗炼狱，等着你们！呵呵呵哈哈哈哈～",
+	["~shenlvbu"] = "我在修罗炼狱，等着你们！呵呵呵哈哈哈哈……",
 	
 --神赵云
 	["cv:shenzhaoyun"] = "猎狐",
-	["$juejing"] = "龙战于野,其血玄黄",
-	["$longhun1"] = "金甲映日,驱邪祛秽", -- spade
-	["$longhun2"] = "腾龙行云,首尾不见", -- club
-	["$longhun3"] = "潜龙于渊,涉灵愈伤", -- heart
-	["$longhun4"] = "千里一怒,红莲灿世", -- diamond
-	["~shenzhaoyun"] = "血染鳞甲,龙坠九天",
+	["$juejing"] = "龙战于野，其血玄黄。",
+	["$longhun1"] = "金甲映日，驱邪祛秽。", -- spade
+	["$longhun2"] = "腾龙行云，首尾不见。", -- club
+	["$longhun3"] = "潜龙于渊，涉灵愈伤。", -- heart
+	["$longhun4"] = "千里一怒，红莲灿世。", -- diamond
+	["~shenzhaoyun"] = "血染鳞甲，龙坠九天。",
 
 --神司马懿
 	["cv:shensimayi"] = "泥马",

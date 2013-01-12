@@ -1308,13 +1308,20 @@ void Client::onPlayerDiscardCards(const Card *cards) {
 }
 
 void Client::fillAG(const QString &cards_str) {
-    QStringList cards = cards_str.split("+");
+    QStringList list = cards_str.split(":");
+    QStringList cards = list.first().split("+");
     QList<int> card_ids;
-    foreach (QString card, cards) {
+    foreach (QString card, cards)
         card_ids << card.toInt();
+
+    QList<int> disabled_ids = QList<int>();
+    if (list.length() == 2) {
+        QStringList disabled = list.last().split("+");
+        foreach (QString card, disabled)
+            disabled_ids << card.toInt();
     }
 
-    emit ag_filled(card_ids);
+    emit ag_filled(card_ids, disabled_ids);
 }
 
 void Client::takeAG(const QString &take_str) {

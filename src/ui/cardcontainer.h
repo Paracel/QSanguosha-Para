@@ -41,7 +41,7 @@ public:
     bool retained();
 
 public slots:
-    void fillCards(const QList<int> &card_ids = QList<int>());
+    void fillCards(const QList<int> &card_ids = QList<int>(), const QList<int> &disabled_ids = QList<int>());
     void clear();
     void freezeCards(bool is_disable);
 

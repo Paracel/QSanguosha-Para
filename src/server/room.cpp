@@ -4184,15 +4184,24 @@ void Room::makeReviving(const QString &name) {
     setPlayerProperty(player, "hp", player->getMaxHp());
 }
 
-void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who) {
+void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who, const QList<int> &disabled_ids) {
     QStringList card_str;
     foreach (int card_id, card_ids)
         card_str << QString::number(card_id);
+    QStringList disabled_str;
+    foreach (int card_id, disabled_ids)
+        disabled_str << QString::number(card_id);
+
+    QString ag_str;
+    if (disabled_str.isEmpty())
+        ag_str = card_str.join("+");
+    else
+        ag_str = QString("%1:%2").arg(card_str.join("+")).arg(disabled_str.join("+"));
 
     if (who)
-        who->invoke("fillAG", card_str.join("+"));
+        who->invoke("fillAG", ag_str);
     else
-        broadcastInvoke("fillAG", card_str.join("+"));
+        broadcastInvoke("fillAG", ag_str);
 }
 
 void Room::takeAG(ServerPlayer *player, int card_id) {

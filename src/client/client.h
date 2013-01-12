@@ -317,7 +317,7 @@ signals:
     void skill_detached(const QString &skill_name);
     void do_filter();
 
-    void ag_filled(const QList<int> &card_ids);
+    void ag_filled(const QList<int> &card_ids, const QList<int> &disabled_ids);
     void ag_taken(ClientPlayer *taker, int card_id);
     void ag_cleared();
 

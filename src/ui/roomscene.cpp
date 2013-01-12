@@ -191,7 +191,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
         connect(card_container, SIGNAL(item_chosen(int)), ClientInstance, SLOT(onPlayerChooseAG(int)));
         connect(card_container, SIGNAL(item_gongxined(int)), ClientInstance, SLOT(onPlayerReplyGongxin(int)));
 
-        connect(ClientInstance, SIGNAL(ag_filled(QList<int>)), this, SLOT(fillCards(QList<int>)));
+        connect(ClientInstance, SIGNAL(ag_filled(QList<int>, QList<int>)), this, SLOT(fillCards(QList<int>, QList<int>)));
         connect(ClientInstance, SIGNAL(ag_taken(ClientPlayer *, int)), this, SLOT(takeAmazingGrace(ClientPlayer *, int)));
         connect(ClientInstance, SIGNAL(ag_cleared()), card_container, SLOT(clear()));
 
@@ -3268,10 +3268,9 @@ void RoomScene::speak(){
     chat_edit->clear();
 }
 
-void RoomScene::fillCards(const QList<int> &card_ids)
-{
+void RoomScene::fillCards(const QList<int> &card_ids, const QList<int> &disabled_ids) {
     bringToFront(card_container);
-    card_container->fillCards(card_ids);
+    card_container->fillCards(card_ids, disabled_ids);
     card_container->show();
 }
 

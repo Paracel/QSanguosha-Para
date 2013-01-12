@@ -802,7 +802,7 @@ public:
 
         if (erzhang->askForSkillInvoke("guzheng", cards.length())) {
             room->broadcastSkillInvoke("guzheng");
-            room->fillAG(cards, erzhang);
+            room->fillAG(cards, erzhang, cardsOther);
 
             int to_back = room->askForAG(erzhang, cardsToGet, false, objectName());
             player->obtainCard(Sanguosha->getCard(to_back));

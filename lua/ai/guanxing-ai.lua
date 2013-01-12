@@ -50,13 +50,13 @@ local function getOwnCards(self, up, bottom, next_judge)
 			end
 		end
 	end
-	
+
 	if hasNext then
 		for _, gcard in ipairs(next_judge) do
 			table.insert(up, gcard) 
 		end
 	end
-	
+
 	return up, bottom
 end
 
@@ -64,19 +64,19 @@ local function GuanXing(self, cards)
 	local up, bottom = {}, {}
 	local has_lightning, has_judged
 	local judged_list = {}
-	
+
 	bottom = getIdToCard(self, cards)
 	self:sortByUseValue(bottom, true)
-	
+
 	local judge = self.player:getCards("j")
 	judge = sgs.QList2Table(judge)
 	judge = sgs.reverse(judge)
-	
+
 	for judge_count, need_judge in ipairs(judge) do
 		local index = 1
 		local lightning_flag = false
 		local judge_str = sgs.ai_judgestring[need_judge:objectName()] or sgs.ai_judgestring[need_judge:getSuitString()]
-		
+	
 		for _, for_judge in ipairs(bottom) do
 			if judge_str == "spade" and not lightning_flag then
 				has_lightning = need_judge
@@ -94,7 +94,7 @@ local function GuanXing(self, cards)
 		end
 		if not judged_list[judge_count] then judged_list[judge_count] = 0 end
 	end
-	
+
 	--if has_judged then
 		for index=1, #judged_list do
 			if judged_list[index] == 0 then
@@ -102,7 +102,7 @@ local function GuanXing(self, cards)
 			end
 		end
 	--end
-	
+
 	local pos = 1
 	local luoshen_flag = false
 	local next_judge = {}
@@ -111,26 +111,26 @@ local function GuanXing(self, cards)
 	judge = sgs.QList2Table(judge)
 	judge = sgs.reverse(judge)
 	if has_lightning then table.insert(judge, 1, has_lightning) end
-	
+
 	has_judged = false
 	judged_list = {}
-	
+
 	while(#bottom >= 3) do
 		local index = 1
 		local lightning_flag = false
 		if pos > #judge then break end
 		local judge_str = sgs.ai_judgestring[judge[pos]:objectName()] or sgs.ai_judgestring[judge[pos]:getSuitString()]
-	
+
 		for _, for_judge in ipairs(bottom) do
 			if judge_str == "spade" and not lightning_flag then
 				if for_judge:getNumber() >= 2 and for_judge:getNumber() <= 9 then lightning_flag = true end
 			end
-			
+		
 			if self:isFriend(next_player) then 
 				if next_player:hasSkill("luoshen") then
 					if for_judge:isBlack() then
 						table.insert(next_judge, for_judge)
-						table.remove(bottom, index)	
+						table.remove(bottom, index)
 						has_judged = true
 						judged_list[pos] = 1
 						break
@@ -149,7 +149,7 @@ local function GuanXing(self, cards)
 			else
 				if next_player:hasSkill("luoshen") and for_judge:isRed() and not luoshen_flag then
 					table.insert(next_judge, for_judge)
-					table.remove(bottom, index)	
+					table.remove(bottom, index)
 					has_judged = true
 					judged_list[pos] = 1
 					luoshen_flag = true
@@ -169,7 +169,7 @@ local function GuanXing(self, cards)
 		if not judged_list[pos] then judged_list[pos] = 0 end
 		pos = pos + 1
 	end
-	
+
 	if has_judged then
 		for index=1, #judged_list do
 			if judged_list[index] == 0 then
@@ -177,9 +177,9 @@ local function GuanXing(self, cards)
 			end
 		end
 	end
-	
+
 	up, bottom = getOwnCards(self, up, bottom, next_judge) 
-	
+
 	up = getBackToId(self, up)
 	bottom = getBackToId(self, bottom)
 	return up, bottom
@@ -193,14 +193,14 @@ local function XinZhan(self, cards)
 	local judge = next_player:getCards("j")
 	judge = sgs.QList2Table(judge)
 	judge = sgs.reverse(judge)
-	
+
 	bottom = getIdToCard(self, cards)
 	for judge_count, need_judge in ipairs(judge) do
 		local index = 1
 		local lightning_flag = false
 		local judge_str = sgs.ai_judgestring[need_judge:objectName()] or sgs.ai_judgestring[need_judge:getSuitString()]
 		self:log("------------------>"..judge_str ..":")
-		
+	
 		for _, for_judge in ipairs(bottom) do
 			if judge_str == "spade" and not lightning_flag then
 				has_lightning = need_judge
@@ -229,7 +229,7 @@ local function XinZhan(self, cards)
 		end
 		if not judged_list[judge_count] then judged_list[judge_count] = 0 end
 	end
-	
+
 	if has_judged then
 		for index=1, #judged_list do
 			if judged_list[index] == 0 then
@@ -237,11 +237,11 @@ local function XinZhan(self, cards)
 			end
 		end
 	end
-	
+
 	while #bottom ~= 0 do
 		table.insert(up, table.remove(bottom))
 	end
-	
+
 	up = getBackToId(self, up)
 	return up, {}
 end

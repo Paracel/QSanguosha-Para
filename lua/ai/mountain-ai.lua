@@ -62,7 +62,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 			end
 		end
-		
+	
 		if card == nil or target == nil then
 			if not who:hasEquip() then return nil end
 			local card_id = self:askForCardChosen(who, "e", "snatch")
@@ -87,7 +87,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 			end
 		end
-		
+	
 		if not target then
 			local judges = who:getJudgingArea()
 			if not judges:isEmpty() then
@@ -186,7 +186,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 				return to_discard
 			end
 		end
-		
+	
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:getCards("j"):isEmpty() and enemy:containsTrick("YanxiaoCard") and card_for_qiaobian(self, enemy, ".") then
 				return to_discard
@@ -214,7 +214,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 				table.insert(targets, enemy)
 			end
 		end
-		
+	
 		if #targets > 0 then
 			return to_discard
 		end
@@ -254,7 +254,7 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 				return "@QiaobianCard=.->".. friend:objectName()
 			end
 		end
-		
+	
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:getCards("j"):isEmpty() and enemy:containsTrick("YanxiaoCard") and card_for_qiaobian(self, enemy, ".") then
 				return "@QiaobianCard=.->".. enemy:objectName()
@@ -274,7 +274,7 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 				table.insert(targets, enemy)
 			end
 		end
-		
+	
 		if #targets > 0 then
 			self:sort(targets, "defense")
 			return "@QiaobianCard=.->".. targets[#targets]:objectName()
@@ -307,7 +307,7 @@ jixi_skill.getTurnUseCard = function(self)
 	for i = 0, self.player:getPile("field"):length() - 1, 1 do
 		local snatch=sgs.Sanguosha:getCard(self.player:getPile("field"):at(i))
 		self.jixisnatch = sgs.Sanguosha:cloneCard("snatch", snatch:getSuit(), snatch:getNumber())
-	
+
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, snatch)) 
 				and not self.room:isProhibited(self.player, player, snatch) and self:hasTrickEffective(snatch, player) then 
@@ -317,9 +317,9 @@ jixi_skill.getTurnUseCard = function(self)
 			end
 		end
 	end
-	
+
 	if not can_use then self.room:setPlayerFlag(self.player, "ForbidJixi") end
-	
+
 	if self.jixisnatch then
 		local use={isDummy=true}
 		self.room:setPlayerFlag(self.player, "JixiSnatch")
@@ -394,7 +394,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 
 	local limit = self.player:getMaxCards()
 	if self.player:getHandcardNum() > limit or self.player:isKongcheng() then return false end
-	
+
 	local to_discard = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
 
@@ -416,7 +416,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 			table.remove(cards, i)
 			break
 		end
-	end	
+	end
 	return #to_discard > 1
 end
 
@@ -441,7 +441,7 @@ sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, i
 			table.remove(cards, i)
 			break
 		end
-	end	
+	end
 	if #to_discard < 1 then return {} 
 	else
 		return to_discard
@@ -565,7 +565,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		local lord_min_num = 14, lord_min_card
 		local lord_cards = lord:getHandcards()
 		local flag=string.format("%s_%s_%s","visible",global_room:getCurrent():objectName(),lord:objectName())
-		for _, lcard in sgs.qlist(lord_cards) do			
+		for _, lcard in sgs.qlist(lord_cards) do		
 			if (lcard:hasFlag("visible") or lcard:hasFlag(flag)) and lcard:getNumber() > lord_max_num then
 				lord_max_card = lcard
 				lord_max_num = lcard:getNumber()
@@ -781,7 +781,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|"..
 		"guzheng|xingshang|shushen|weidi|mashu"):split("|")) do
 			if str:matchOne(askill) then return askill end
-		end	
+		end
 	end
 	for index = #choices, 1, -1 do
 		if ("renjie|benghuai|kuangbao|wumou|wuqian|shenfen|shiyong|qixing|kuangfeng|dawu|manjuan")

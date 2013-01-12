@@ -96,7 +96,7 @@ sgs.ai_skill_invoke.jilei = function(self, data)
 	if not damage then return false end
 	self.jilei_source = damage.from
 	return self:isEnemy(damage.from)
-end	
+end
 
 sgs.ai_skill_choice.jilei = function(self, choices)
 	local tmptrick = sgs.Sanguosha:cloneCard("ex_nihilo", sgs.Card_NoSuitNoColor, 0)
@@ -415,7 +415,7 @@ sgs.ai_skill_use_func.SongciCard = function(card,use,self)
 			end
 		end
 	end
-	
+
 	self:sort(self.enemies, "handcard", true)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
@@ -460,7 +460,7 @@ sgs.ai_skill_invoke.cv_machao = function(self, data)
 	if lord:hasLordSkill("shichou") then
 		return not self:isFriend(lord)
 	end
-	
+
 	return lord:getKingdom() == "qun"
 end
 

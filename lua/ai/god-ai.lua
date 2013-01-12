@@ -283,7 +283,7 @@ sgs.ai_skill_use_func.GreatYeyanCard=function(card,use,self)
 						if use.to then 
 							use.to:append(enemy)
 							use.to:append(enemy)
-							use.to:append(enemy)	
+							use.to:append(enemy)
 						end
 						return
 					end
@@ -299,7 +299,7 @@ sgs.ai_skill_use_func.GreatYeyanCard=function(card,use,self)
 					if use.to then 
 						use.to:append(enemy)
 						use.to:append(enemy)
-						use.to:append(enemy)	
+						use.to:append(enemy)
 					end
 					return
 				end
@@ -315,7 +315,7 @@ sgs.ai_skill_use_func.GreatYeyanCard=function(card,use,self)
 						if use.to then 
 							use.to:append(enemy)
 							use.to:append(enemy)
-							use.to:append(enemy)	
+							use.to:append(enemy)
 						end
 						return
 					end
@@ -331,7 +331,7 @@ sgs.ai_skill_use_func.GreatYeyanCard=function(card,use,self)
 					if use.to then 
 						use.to:append(enemy)
 						use.to:append(enemy)
-						use.to:append(enemy)	
+						use.to:append(enemy)
 					end
 					return
 				end
@@ -368,7 +368,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card,use,self)
 				end
 			end
 		end
-	end	
+	end
 	if num < 3 then
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
@@ -460,7 +460,7 @@ sgs.ai_skill_use["@@dawu"] = function(self, prompt)
 	else
 		for _, friend in ipairs(self.friends_noself) do
 			if self:isWeak(friend) and not friend:hasSkill("buqu") then table.insert(targets, friend:objectName()) break end
-		end	
+		end
 	end
 	if self.player:getPile("stars"):length() > #targets and self:isWeak() then table.insert(targets, self.player:objectName()) end
 	if #targets > 0 then return "@DawuCard=.->" .. table.concat(targets, "+") end
@@ -477,7 +477,7 @@ sgs.ai_skill_invoke.guixin = function(self, data)
 	return self.room:alivePlayerCount() > 2 or damage.damage > 1
 end
 
-sgs.ai_need_damaged.guixin = function (self, attacker)	
+sgs.ai_need_damaged.guixin = function (self, attacker)
 	if self.room:alivePlayerCount() <= 3 then return false end
 	local diaochan = self.room:findPlayerBySkillName("lihun")
 	if diaochan and self:isEnemy(diaochan) then return false end
@@ -579,7 +579,7 @@ function SmartAI:canSaveSelf(player)
 	end
 	return false
 end
-	
+
 local function getShenfenUseValueOf_HE_Cards(self, to)
 	local value = 0
 	-- value of handcards
@@ -595,7 +595,7 @@ local function getShenfenUseValueOf_HE_Cards(self, to)
 	if (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getHp() > 2 and to:getMark("zhiji") == 0)) and not to:isKongcheng() then value_h = value_h * 0.7 end
 	if self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", to) then value_h = value_h * 0.95 end
 	value = value + value_h
-	
+
 	-- value of equips
 	local value_e = 0
 	local equip_num = to:getEquips():length()

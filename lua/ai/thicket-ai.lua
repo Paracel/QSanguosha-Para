@@ -103,8 +103,8 @@ sgs.ai_need_damaged.fangzhu = function (self, attacker)
 		if (friend:hasSkill("jushou") or friend:hasSkill("kuiwei")) and friend:getPhase() == sgs.Player_Play then
 			return true
 		end
-	end	
-	if self.player:getLostHp()<=1 and sgs.turncount>2 then return true end	
+	end
+	if self.player:getLostHp()<=1 and sgs.turncount>2 then return true end
 	return false
 end
 

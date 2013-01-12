@@ -49,7 +49,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 	local goodtarget = 0
 	local slashnum = 0
 	local needburst = 0
-	
+
 	for _, slash in ipairs(self:getCards("Slash")) do
 		for _,enemy in ipairs(self.enemies) do
 			if self:slashIsEffective(slash, enemy) then 
@@ -68,23 +68,23 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 	if slashnum > 1 or (slashnum > 0 and goodtarget == 0) then needburst = 1 end
 	self:sort(self.enemies,"defenseSlash")
 	if goodtarget == 0 or self.player:isSkipped(sgs.Player_Play) then return "jiang" end
-		
-	for _,enemy in ipairs(self.enemies) do
-		local def=sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
-		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-			
-		if not self.player:canSlash(enemy, nil, false) then
-		elseif self:slashProhibit(nil, enemy) then
-		elseif def<6 and eff and needburst > 0 then return "chi"
-		end	
-	end
 	
 	for _,enemy in ipairs(self.enemies) do
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-			
+		
+		if not self.player:canSlash(enemy, nil, false) then
+		elseif self:slashProhibit(nil, enemy) then
+		elseif def<6 and eff and needburst > 0 then return "chi"
+		end
+	end
+
+	for _,enemy in ipairs(self.enemies) do
+		local def=sgs.getDefense(enemy)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
+		
 		if not self.player:canSlash(enemy, nil, false) then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif eff and def<8 and needburst > 0 then return "chi"
@@ -105,11 +105,11 @@ gongqi_skill.getTurnUseCard=function(self,inclusive)
 		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
 		return sgs.Card_Parse("@GongqiCard=" .. self.player:getArmor():getEffectiveId())
 	end
-	
+
 	for _, c in ipairs(cards) do
 		if c:isKindOf("Weapon") then return sgs.Card_Parse("@GongqiCard=" .. c:getEffectiveId()) end
 	end
-	
+
 	local handcards = self.player:getHandcards()
 	handcards = sgs.QList2Table(handcards)
 	local has_weapon, has_armor, has_def, has_off = false, false, false, false
@@ -202,7 +202,7 @@ sgs.ai_skill_use_func.JiefanCard=function(card,use,self)
 			target = friend
 		end
 	end
-	
+
 	if target and max_value >= self.player:aliveCount() / 2 then
 		use.card = card
 		if use.to then use.to:append(target) end
@@ -217,15 +217,15 @@ sgs.ai_skill_cardask["@jiefan-discard"] = function(self, data)
 			return "$" .. card:getEffectiveId()
 		end
 	end
-	
+
 	if not self.player:getWeapon() then return "." end
 	local count = 0
 	local range_fix = sgs.weapon_range[self.player:getWeapon():getClassName()] - 1
-	
+
 	for _, p in sgs.qlist(self.room:getAllPlayers()) do
 		if self:isEnemy(p) and self.player:distanceTo(p, range_fix) > self.player:getAttackRange() then count = count + 1 end
 	end
-	
+
 	if count <= 2 then return "$" .. self.player:getWeapon():getEffectiveId() end
 	return "."
 end
@@ -262,7 +262,7 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 			break
 		end
 	end
-	
+
 	local enemies = {}
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:hasSkill("tuntian") and not (enemy:isKongcheng() or (enemy:getHandcardNum() <= 1 and self:needKongcheng(enemy))) then
@@ -284,7 +284,7 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 		end
 		if prior_enemy and kongcheng_enemy and manjuan_enemy then break end
 	end
-	
+
 	-- Enemy -> Friend
 	if least_friend then
 		local tg_enemy = prior_enemy or most_enemy
@@ -297,7 +297,7 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 			return
 		end
 	end
-	
+
 	-- Friend -> Friend
 	if #friends >= 2 then
 		if need_kongcheng_friend and least_friend:isKongcheng() then
@@ -316,7 +316,7 @@ sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 			return
 		end
 	end
-	
+
 	-- Enemy -> Enemy
 	if kongcheng_enemy and not kongcheng_enemy:hasSkill("manjuan") then
 		local tg_enemy = prior_enemy or most_enemy
@@ -408,13 +408,13 @@ sgs.ai_skill_invoke.zhuiyi = function(self, data)
 	local damage = data:toDamageStar()
 	local exclude = self.player
 	if damage and damage.from then exclude = damage.from end
-	
+
 	local friends = self:getFriendsNoself()
 	table.removeOne(friends, exclude)
 	return #friends > 0
 end
 
-sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)	
+sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets,"defense")
 	for _, friend in ipairs(targets) do
@@ -439,17 +439,17 @@ local lihuo_skill={}
 lihuo_skill.name="lihuo"
 table.insert(sgs.ai_skills,lihuo_skill)
 lihuo_skill.getTurnUseCard=function(self)
-	local cards = self.player:getCards("h")	
+	local cards = self.player:getCards("h")
 	cards=sgs.QList2Table(cards)
 	local slash_card
-	
+
 	for _,card in ipairs(cards)  do
 		if card:isKindOf("Slash") and not (card:isKindOf("FireSlash") or card:isKindOf("ThunderSlash")) then
 			slash_card = card
 			break
 		end
 	end
-	
+
 	if not slash_card  then return nil end
 	if self.player:getHp() == 1 and self.player:getRole() == "lord" then return nil end
 	local suit = slash_card:getSuitString()
@@ -458,15 +458,15 @@ lihuo_skill.getTurnUseCard=function(self)
 	local card_str = ("fire_slash:lihuo[%s:%s]=%d"):format(suit, number, card_id)
 	local fireslash = sgs.Card_Parse(card_str)
 	assert(fireslash)
-	
+
 	return fireslash
-		
+	
 end
 
 sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
 	local slashcards={}
 	local chunlao = self.player:getPile("wine")
-	local cards = self.player:getCards("h")	
+	local cards = self.player:getCards("h")
 	cards=sgs.QList2Table(cards)
 	for _,card in ipairs(cards)  do
 		if card:isKindOf("Slash") then
@@ -492,7 +492,7 @@ sgs.chengpu_keep_value =
 }
 
 sgs.ai_skill_invoke.zhiyu = function(self)
-	local cards = self.player:getCards("h")	
+	local cards = self.player:getCards("h")
 	cards=sgs.QList2Table(cards)
 	local first
 	local difcolor = 0

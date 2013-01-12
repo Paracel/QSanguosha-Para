@@ -89,7 +89,7 @@ sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 		end
 	end
 	self:sort(friends)
-	
+
 	local max_x = 0
 	local target
 	for _, friend in ipairs(friends) do
@@ -295,7 +295,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 		if use.to then use.to:append(zhugeliang) end
 		return
 	end
-	
+
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
@@ -446,7 +446,7 @@ sgs.ai_skill_invoke.shuangxiong = function(self,data)
 			target = target + 1
 		end
 	end
-	
+
 	return self.player:getHandcardNum() >= self.player:getHp() and target > 0
 end
 
@@ -460,7 +460,7 @@ shuangxiong_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards,true)
-	
+
 	local card
 	for _, acard in ipairs(cards) do
 		if (acard:isRed() and mark == 2) or (acard:isBlack() and mark == 1) then

@@ -89,14 +89,14 @@ end
 
 sgs.ai_skill_discard.lihun = function(self, discard_num, min_num, optional, include_equip)
 	local to_discard = {}
-	
+
 	local cards = sgs.QList2Table(self.player:getCards("he"))
 	self:sortByKeepValue(cards)
 	local card_ids = {}
 	for _, card in ipairs(cards) do
 		table.insert(card_ids, card:getEffectiveId())
 	end
-	
+
 	local temp = table.copyFrom(card_ids)
 	for i = 1, #temp, 1 do
 		local card = sgs.Sanguosha:getCard(temp[i])
@@ -108,7 +108,7 @@ sgs.ai_skill_discard.lihun = function(self, discard_num, min_num, optional, incl
 			end
 		end
 	end
-	
+
 	temp = table.copyFrom(card_ids)
 
 	for i = 1, #card_ids, 1 do
@@ -118,7 +118,7 @@ sgs.ai_skill_discard.lihun = function(self, discard_num, min_num, optional, incl
 			return to_discard
 		end
 	end
-	
+
 	if #to_discard < discard_num then return {} end
 end
 
@@ -190,7 +190,7 @@ dahe_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("DaheCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@DaheCard=.") end
 end
 
-sgs.ai_skill_use_func.DaheCard = function(card,use,self)	
+sgs.ai_skill_use_func.DaheCard = function(card,use,self)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard(self.player)
 	local max_point = max_card:getNumber()
@@ -403,7 +403,7 @@ sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, in
 			index = index + 1
 			if index == discard_num then break end
 		end
-	end	
+	end
 	if #to_discard < min_num then return {} else return to_discard end
 end
 
@@ -472,7 +472,7 @@ sgs.ai_need_damaged.shichou = function (self, attacker)
 			if self.player:getRole() == "renegade" then need_damage = true end
 			if victim:isAlive() and need_damage then
 				return victim:hasSkill("wuhun") and 2 or 1
-			end			
+			end		
 		end
 	end
 	return false
@@ -558,11 +558,11 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 	self:sortByUseValue(cards, true)
 	local black_card
 	local has_weapon = false
-	
+
 	for _, card in ipairs(cards) do
 		if card:isKindOf("Weapon") and card:isBlack() then has_weapon = true end
 	end
-	
+
 	for _, card in ipairs(cards) do
 		if card:isBlack() and ((self:getUseValue(card) < sgs.ai_use_value.YinlingCard) or inclusive or self:getOverflow() > 0) then
 			local shouldUse = true
@@ -578,7 +578,7 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 				elseif self:hasEquip(card) and not has_weapon then shouldUse = false
 				end
 			end
-			
+		
 			if card:isKindOf("Slash") then
 				local dummy_use = {isDummy = true}
 				if self:getCardsNum("Slash") == 1 then
@@ -654,7 +654,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 			end
 		end
 	end
-	
+
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
 		local flag = string.format("%s_%s_%s","visible",self.player:objectName(),enemy:objectName())
@@ -672,7 +672,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 			end
 		end
 	end
-	
+
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() then	  
 			if self:hasSkills("jijiu|dimeng|guzheng|qiaobian|jieyin|lijian|beige", enemy) or (enemy:hasSkill("miji") and enemy:isWounded()) then
@@ -702,7 +702,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 			end
 		end
 	end
-	
+
 	for i = 1, 2, 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude()
@@ -722,7 +722,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
 					end
-					return	
+					return
 				end
 			end
 		end
@@ -736,7 +736,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
 		end
 		return
 	end
-	
+
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isKongcheng() and (enemy:getHandcardNum() > enemy:getHp() - 2 or (enemy:getHandcardNum() == 1 and not self:needKongcheng(enemy))) then
 			use.card = card
@@ -1106,12 +1106,12 @@ sgs.ai_skill_use_func.HantongCard = function(card,use,self)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
 			use.card = card
 		end
-	end	
+	end
 end
 
 sgs.ai_skill_use["@@diyyicong"] = function(self, prompt)
 	local yicongcards={}
-	local cards = self.player:getCards("he")	
+	local cards = self.player:getCards("he")
 	if self:isEquip("SilverLion") and self.player:isWounded() then
 		table.insert(yicongcards, self.player:getArmor():getId())
 	end

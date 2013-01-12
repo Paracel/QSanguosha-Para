@@ -67,7 +67,7 @@ neofanjian_skill.getTurnUseCard=function(self)
 
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
-	
+
 	local keep_value = self:getKeepValue(cards[1])
 	if cards[1]:getSuit() == sgs.Card_Diamond then keep_value = keep_value + 1 end
 
@@ -190,6 +190,6 @@ sgs.ai_skill_discard.neoganglie = function(self, discard_num, min_num, optional,
 			index = index + 1
 			if index == 2 then break end
 		end
-	end	
+	end
 	return to_discard
 end

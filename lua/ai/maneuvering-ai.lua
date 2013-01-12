@@ -22,7 +22,7 @@ sgs.weapon_range.Fan = 4
 sgs.ai_use_priority.Fan = 2.655
 sgs.ai_use_priority.Vine = 1.6
 
-	
+
 sgs.ai_skill_invoke.fan = function(self, data)
 	local use = data:toCardUse()
 	for _,target in sgs.qlist(use.to) do
@@ -48,17 +48,17 @@ local fan_skill={}
 fan_skill.name="fan"
 table.insert(sgs.ai_skills,fan_skill)
 fan_skill.getTurnUseCard=function(self)
-	local cards = self.player:getCards("h")	
+	local cards = self.player:getCards("h")
 	cards=sgs.QList2Table(cards)
 	local slash_card
-	
+
 	for _,card in ipairs(cards)  do
 		if card:isKindOf("Slash") and not (card:isKindOf("FireSlash") or card:isKindOf("ThunderSlash")) then
 			slash_card = card
 			break
 		end
 	end
-	
+
 	if not slash_card  then return nil end
 	local suit = slash_card:getSuitString()
 	local number = slash_card:getNumberString()
@@ -66,9 +66,9 @@ fan_skill.getTurnUseCard=function(self)
 	local card_str = ("fire_slash:fan[%s:%s]=%d"):format(suit, number, card_id)
 	local fireslash = sgs.Card_Parse(card_str)
 	assert(fireslash)
-	
+
 	return fireslash
-		
+	
 end
 
 function sgs.ai_weapon_value.fan(self, enemy)
@@ -181,7 +181,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 		if self:hasSkills("yongsi|haoshi|tuxi|lijian|fanjian|neofanjian|dimeng|jijiu|jieyin",enemy) or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1)
 			then value = value + 10 
-		end		
+		end	
 		if self:isWeak(enemy) then value = value + 5 end
 		if enemy:isLord() then value = value + 3 end
 
@@ -203,7 +203,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 	if getvalue(target) > -100 then
 		use.card = card
 		if use.to then use.to:append(target) end
-		return		
+		return	
 	end
 end
 
@@ -273,7 +273,7 @@ function SmartAI:isGoodChainTarget(who)
 end
 
 
-function SmartAI:useCardIronChain(card, use)	
+function SmartAI:useCardIronChain(card, use)
 	use.card = card
 	if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
 	if self:needBear() then return end
@@ -300,12 +300,12 @@ function SmartAI:useCardIronChain(card, use)
 			end
 		end
 	end
-	
+
 	local chainSelf = (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player)) and not self.player:isChained()
 						and not self.player:hasSkill("jueqing")
 						and (self:getCardId("NatureSlash") or (self:getCardId("Slash") and (self:hasWeapon("fan") or self:hasSkill("lihuo"))) 
 						or (self:getCardId("FireAttack") and self:getHandcardNum() > 2))
-	
+
 	if not self.player:hasSkill("noswuyan") then
 		if #friendtargets > 1 then
 			if use.to then use.to:append(friendtargets[1]) end
@@ -405,8 +405,8 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 
 	local targets ={}
 	for _, enemy in ipairs(self.enemies) do
-		if can_attack(enemy) then		
-			table.insert(targets,enemy)			
+		if can_attack(enemy) then	
+			table.insert(targets,enemy)		
 		end
 	end
 
@@ -435,7 +435,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 					if use.to then use.to:append(enemy) end
 					return
 				end
-			end			
+			end		
 		end
 	end
 

@@ -144,7 +144,7 @@ function sgs.ai_slash_prohibit.nosenyuan(self)
 	if self:isWeak() then return true end
 end
 
-sgs.ai_need_damaged.nosenyuan = function (self, attacker)	
+sgs.ai_need_damaged.nosenyuan = function (self, attacker)
 	if self:isEnemy(attacker) and self:isWeak(attacker) then
 		return true
 	end
@@ -264,11 +264,11 @@ table.insert(sgs.ai_skills, nosgongqi_skill)
 nosgongqi_skill.getTurnUseCard=function(self,inclusive)
 	local cards = self.player:getCards("he")
 	cards=sgs.QList2Table(cards)
-	
+
 	local equip_card
-	
+
 	self:sortByUseValue(cards,true)
-	
+
 	for _,card in ipairs(cards) do
 		if card:getTypeId() == sgs.Card_TypeEquip and ((self:getUseValue(card)<sgs.ai_use_value.Slash) or inclusive) then
 			equip_card = card
@@ -276,15 +276,15 @@ nosgongqi_skill.getTurnUseCard=function(self,inclusive)
 		end
 	end
 
-	if equip_card then		
+	if equip_card then	
 		local suit = equip_card:getSuitString()
 		local number = equip_card:getNumberString()
 		local card_id = equip_card:getEffectiveId()
 		local card_str = ("slash:nosgongqi[%s:%s]=%d"):format(suit, number, card_id)
 		local slash = sgs.Card_Parse(card_str)
-		
+	
 		assert(slash)
-		
+	
 		return slash
 	end
 end

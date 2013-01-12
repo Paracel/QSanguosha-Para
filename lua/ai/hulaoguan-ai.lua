@@ -19,7 +19,7 @@ sgs.ai_skill_invoke.xiuluo = function(self, data)
 			if card:getSuit() == judge:getSuit() then return true end
 		end
 	end
-	
+
 	return false
 end
 -- FORMATTED

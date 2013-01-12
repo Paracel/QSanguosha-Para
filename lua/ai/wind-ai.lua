@@ -3,24 +3,24 @@ sgs.ai_skill_use["@@shensu1"]=function(self,prompt)
 	self:sort(self.enemies,"defenseSlash")
 	if self.player:containsTrick("lightning") and self.player:getCards("j"):length()==1
 		and self:hasWizard(self.friends) and not self:hasWizard(self.enemies,true) then return false end
-	
+
 	local selfSub = self.player:getHp()-self.player:getHandcardNum()
 	local selfDef = sgs.getDefense(self.player)
-	
+
 	for _,enemy in ipairs(self.enemies) do
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-			
+		
 		if not self.player:canSlash(enemy, slash, false) then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif def<6 and eff then return "@ShensuCard=.->"..enemy:objectName()
 
 		elseif selfSub>=2 then return "."
 		elseif selfDef<6 then return "." end
-		
-	end
 	
+	end
+
 	for _,enemy in ipairs(self.enemies) do
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
@@ -44,23 +44,23 @@ end
 sgs.ai_skill_use["@@shensu2"]=function(self,prompt)
 	self:updatePlayers()
 	self:sort(self.enemies,"defenseSlash")
-	
+
 	local selfSub = self.player:getHp()-self.player:getHandcardNum()
 	local selfDef = sgs.getDefense(self.player)
-	
+
 	local cards = self.player:getCards("he")
-	
+
 	cards=sgs.QList2Table(cards)
-	
+
 	local eCard
 	local hasCard={0, 0, 0, 0}
-	
+
 	for _,card in ipairs(cards) do
 		if card:isKindOf("EquipCard") then
 			hasCard[sgs.ai_get_cardType(card)] = hasCard[sgs.ai_get_cardType(card)]+1
-		end		
+		end	
 	end
-	
+
 	for _,card in ipairs(cards) do
 		if card:isKindOf("EquipCard") then
 			if hasCard[sgs.ai_get_cardType(card)]>1 or sgs.ai_get_cardType(card)>3 then
@@ -70,9 +70,9 @@ sgs.ai_skill_use["@@shensu2"]=function(self,prompt)
 			if not eCard and not card:isKindOf("Armor") then eCard = card end
 		end
 	end
-	
+
 	if not eCard then return "." end
-	
+
 	local effectslash, best_target, target
 	local defense = 6
 	for _,enemy in ipairs(self.enemies) do
@@ -92,10 +92,10 @@ sgs.ai_skill_use["@@shensu2"]=function(self,prompt)
 		end
 		if selfSub<0 then return "." end
 	end
-	
+
 	if best_target then return "@ShensuCard="..eCard:getEffectiveId().."->"..best_target:objectName() end
 	if target then return "@ShensuCard="..eCard:getEffectiveId().."->"..target:objectName() end
-	
+
 	return "."
 end
 
@@ -163,7 +163,7 @@ sgs.ai_skill_cardask["@guidao-card"]=function(self, data)
 		local card = sgs.Sanguosha:getCard(card_id)
 		return "@GuidaoCard[" .. card:getSuitString() .. ":" .. card:getNumberString() .. "]=" .. card_id
 	end
-	
+
 	return "."
 end
 
@@ -212,28 +212,28 @@ huangtianv_skill.getTurnUseCard=function(self)
 	if self.player:hasFlag("ForbidHuangtian") then return nil end
 	if self.player:getKingdom() ~= "qun" then return nil end
 
-	local cards = self.player:getCards("h")	
+	local cards = self.player:getCards("h")
 	cards=sgs.QList2Table(cards)
-	
+
 	local card
-	
+
 	self:sortByUseValue(cards,true)
-	
+
 	for _,acard in ipairs(cards)  do
 		if acard:isKindOf("Jink") then
 			card = acard
 			break
 		end
 	end
-	
+
 	if not card then
 		return nil
 	end
-	
+
 	local card_id = card:getEffectiveId()
 	local card_str = "@HuangtianCard="..card_id
 	local skillcard = sgs.Card_Parse(card_str)
-		
+	
 	assert(skillcard)
 	return skillcard
 end
@@ -245,7 +245,7 @@ sgs.ai_skill_use_func.HuangtianCard=function(card,use,self)
 			table.insert(targets, friend)
 		end
 	end
-	
+
 	if #targets == 0 then return end
 	if self:needBear() or self:getCardsNum("Jink", self.player, "h") <= 1 then return "." end
 	use.card=card

@@ -1,7 +1,7 @@
 function speak(to, type)
 	if not sgs.GetConfig("AIChat", true) then return end
 	if to:getState() ~= "robot" then return end
-	
+
 	local i = math.random(1, #sgs.ai_chat[type])
 	to:speak(sgs.ai_chat[type][i])
 end
@@ -48,7 +48,7 @@ sgs.ai_chat_func[sgs.SlashEffected] = function(self, player, data)
 	end
 
 	if effect.from:hasFlag("drank") then
-		table.insert(chat, "喝醉了吧，乱砍人？")		
+		table.insert(chat, "喝醉了吧，乱砍人？")	
 	end
 
 	if effect.from:isLord() then
@@ -122,7 +122,7 @@ end
 function SmartAI:speak(type, isFemale)
 	if not sgs.GetConfig("AIChat", true) then return end
 	if self.player:getState() ~= "robot" then return end
-	
+
 	local i = math.random(1,#sgs.ai_chat[type])
 	if isFemale then
 		type = type .. "_female"

@@ -138,7 +138,7 @@ sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, inc
 			return to_discard
 		end
 	end
-	
+
 	return {}
 end
 
@@ -149,7 +149,7 @@ function sgs.ai_slash_prohibit.enyuan(self)
 end
 
 
-sgs.ai_need_damaged.enyuan = function (self, attacker)	
+sgs.ai_need_damaged.enyuan = function (self, attacker)
 	if self:isEnemy(attacker) and self:isWeak(attacker) and attacker:getHandcardNum()<3 and not self:hasSkills("lianying|kongcheng",attacker) then
 		return true
 	end
@@ -274,7 +274,7 @@ function sgs.ai_skill_invoke.xuanfeng(self, data)
 	return enemynum > 0 
 end
 
-sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)	
+sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets,"defense")
 	for _, enemy in ipairs(self.enemies) do
@@ -514,7 +514,7 @@ end
 sgs.ai_skill_use_func.XianzhenSlashCard=function(card,use,self)
 	local target = self.player:getTag("XianzhenTarget"):toPlayer()
 	if self:askForCard("slash", "@xianzhen-slash") == "." then return end
-	
+
 	if self:getCard("Slash") and self.player:canSlash(target, nil, false) and target:isAlive() then
 		use.card=card
 	end
@@ -604,9 +604,9 @@ sgs.ai_skill_discard.quanji = function(self)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
-	
+
 	table.insert(to_discard, cards[1]:getEffectiveId())
-	
+
 	return to_discard
 end
 

@@ -48,7 +48,7 @@ sgs.ai_chat_func[sgs.SlashEffected] = function(self, player, data)
 	end
 
 	if effect.from:hasFlag("drank") then
-		table.insert(chat, "喝醉了吧，乱砍人？")	
+		table.insert(chat, "喝醉了吧，乱砍人？")
 	end
 
 	if effect.from:isLord() then
@@ -112,7 +112,7 @@ sgs.ai_chat_func[sgs.EventPhaseStart] = function(self, player, data)
 		local index = 1 + (os.time() % #chat_jink)
 		player:speak(chat_jink[index])
 	end
-	if player:getPhase() == sgs.Player_Start and self.role == "rebel" and sgs.current_mode_players["renegade"] == 0 
+	if player:getPhase() == sgs.Player_Start and self.role == "rebel" and sgs.current_mode_players["renegade"] == 0
 		and sgs.current_mode_players["loyalist"]==0  and sgs.current_mode_players["rebel"]>=2 and os.time() % 10 < 4 then
 		local index = 1 + (os.time() % #chat_watch)
 		player:speak(chat_watch[index])

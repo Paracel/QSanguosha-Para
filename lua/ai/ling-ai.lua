@@ -26,9 +26,9 @@ neoluoyi_skill.getTurnUseCard=function(self)
 		end
 		if card:isKindOf("Duel") then
 			for _, enemy in ipairs(self.enemies) do
-				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) 
-				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) and enemy:getMark("@late") == 0 then 
-					dueltarget = dueltarget + 1 
+				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy)
+				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) and enemy:getMark("@late") == 0 then
+					dueltarget = dueltarget + 1
 				end
 			end
 		end
@@ -104,7 +104,7 @@ sgs.ai_skill_invoke.zhongyi = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
 	if self:isFriend(target) then return false end
-	return target:getCards("e"):length() > 0 
+	return target:getCards("e"):length() > 0
 end
 
 sgs.ai_skill_invoke.zhulou = function(self, data)
@@ -116,12 +116,12 @@ end
 
 sgs.ai_skill_cardask["@zhulou-discard"] = function(self, data)
 	for _, card in sgs.qlist(self.player:getCards("he")) do
-		if card:isKindOf("Weapon") and not self.player:hasEquip(card) then 
+		if card:isKindOf("Weapon") and not self.player:hasEquip(card) then
 			return "$" .. card:getEffectiveId()
 		end
 	end
 	for _, card in sgs.qlist(self.player:getCards("he")) do
-		if card:isKindOf("Weapon") then 
+		if card:isKindOf("Weapon") then
 			return "$" .. card:getEffectiveId()
 		end
 	end
@@ -143,9 +143,9 @@ sgs.ai_skill_invoke.neoganglie = function(self, data)
 		self.room:setPlayerFlag(target, "ganglie_target")
 		return true
 	else
-		if self:getDamagedEffects(target,self.player) then 
-			sgs.ai_ganglie_effect = string.format("%s_%s_%d",self.player:objectName(), target:objectName(),sgs.turncount) 
-			return true 
+		if self:getDamagedEffects(target,self.player) then
+			sgs.ai_ganglie_effect = string.format("%s_%s_%d",self.player:objectName(), target:objectName(),sgs.turncount)
+			return true
 		end
 	end
 	return false

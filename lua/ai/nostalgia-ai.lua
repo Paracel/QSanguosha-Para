@@ -203,13 +203,13 @@ end
 
 sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	for _, player in sgs.qlist(targets) do
-		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player) 
+		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player)
 			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end
 	for _, player in sgs.qlist(targets) do
-		if self:isFriend(player) 
+		if self:isFriend(player)
 			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player) and not player:hasSkill("manjuan") then
 			return player
 		end
@@ -221,7 +221,7 @@ sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	end
 end
 
-sgs.nosfazheng_suit_value = 
+sgs.nosfazheng_suit_value =
 {
 	heart = 3.9
 }
@@ -276,15 +276,15 @@ nosgongqi_skill.getTurnUseCard=function(self,inclusive)
 		end
 	end
 
-	if equip_card then	
+	if equip_card then
 		local suit = equip_card:getSuitString()
 		local number = equip_card:getNumberString()
 		local card_id = equip_card:getEffectiveId()
 		local card_str = ("slash:nosgongqi[%s:%s]=%d"):format(suit, number, card_id)
 		local slash = sgs.Card_Parse(card_str)
-	
+
 		assert(slash)
-	
+
 		return slash
 	end
 end
@@ -295,9 +295,9 @@ sgs.ai_skill_invoke.nosjiefan = function(self, data)
 	local friend = dying.who
 	local currentplayer = self.room:getCurrent()
 	for _, slash in ipairs(self:getCards("Slash")) do
-		if self:slashIsEffective(slash, currentplayer) then 
-			slashnum = slashnum + 1  
-		end 
+		if self:slashIsEffective(slash, currentplayer) then
+			slashnum = slashnum + 1
+		end
 	end
 	return self:isFriend(friend) and not (self:isEnemy(currentplayer) and (currentplayer:hasSkill("leiji") or currentplayer:hasSkill("wansha"))
 		and (currentplayer:getHandcardNum() > 2 or self:isEquip("EightDiagram", currentplayer))) and slashnum > 0
@@ -306,9 +306,9 @@ end
 sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
 	target = global_room:getCurrent()
 	for _, slash in ipairs(self:getCards("Slash")) do
-		if self:slashIsEffective(slash, target) then 
+		if self:slashIsEffective(slash, target) then
 			return slash:toString()
-		end 
+		end
 	end
 	return "."
 end
@@ -480,16 +480,16 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 		if self:isEnemy(target) and target:hasSkill("zhiji") and not target:hasSkill("guanxing") and target:getHandcardNum() == 0 then
 			sgs.nosPaiyiTarget = target
 			sgs.nosPaiyiCard = nil
-			return target 
-		end 
+			return target
+		end
 	end
 
 	for _, target in ipairs(targets) do
 		if self:isFriend(target) and target:objectName() ~= self.player:objectName() then
 			sgs.nosPaiyiTarget = target
 			sgs.nosPaiyiCard = nil
-			return target 
-		end 
+			return target
+		end
 	end
 
 	sgs.nosPaiyiTarget = self.player
@@ -522,7 +522,7 @@ local function findPlayerForModifyKingdom(self, players)
 	for _, player in sgs.qlist(players) do
 		if not player:isLord() or player:hasLordSkill("weidai") then
 			if  sgs.evaluateRoleTrends(player) == "loyalist" then
-				local sameKingdom = player:getKingdom() == lord:getKingdom() 
+				local sameKingdom = player:getKingdom() == lord:getKingdom()
 				if isGood ~= sameKingdom then
 					return player
 				end

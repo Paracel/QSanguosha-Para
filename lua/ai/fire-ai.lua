@@ -21,10 +21,10 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 				allknown = allknown + 1
 			end
 			if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
-				or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10) 
+				or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
 				or (not enemy_max_card and max_point > 10) then
 				for _, enemy2 in ipairs(self.enemies) do
-					if (enemy:objectName() ~= enemy2:objectName()) 
+					if (enemy:objectName() ~= enemy2:objectName())
 						and enemy:distanceTo(enemy2) <= enemy:getAttackRange() then
 						local card_id = max_card:getEffectiveId()
 						local card_str = "@QuhuCard=" .. card_id
@@ -230,7 +230,7 @@ function sgs.ai_armor_value.bazhen(card)
 	if not card then return 4 end
 end
 
-sgs.wolong_suit_value = 
+sgs.wolong_suit_value =
 {
 	spade = 3.9,
 	club = 3.9
@@ -321,7 +321,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 				local allknown = 0
 				if self:getKnownNum(enemy) == enemy:getHandcardNum() then allknown = allknown + 1 end
 				if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
-					or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10) 
+					or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
 					or (not enemy_max_card and max_point > 10) then
 					use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 					if use.to then use.to:append(enemy) end
@@ -398,7 +398,7 @@ luanji_skill.getTurnUseCard = function(self)
 				first_card = fcard
 				first_found = true
 				for _, scard in ipairs(cards) do
-					if first_card ~= scard and scard:getSuitString() == first_card:getSuitString() and 
+					if first_card ~= scard and scard:getSuitString() == first_card:getSuitString() and
 						not (scard:isKindOf("Peach") or scard:isKindOf("ExNihilo") or scard:isKindOf("AOE")) then
 						second_card = scard
 						second_found = true
@@ -441,7 +441,7 @@ sgs.ai_skill_invoke.shuangxiong = function(self,data)
 	handnum = handnum / 2
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
-		if (getCardsNum("Slash", enemy) + enemy:getHp() <= handnum) and (self:getCardsNum("Slash") >= getCardsNum("Slash", enemy)) 
+		if (getCardsNum("Slash", enemy) + enemy:getHp() <= handnum) and (self:getCardsNum("Slash") >= getCardsNum("Slash", enemy))
 			and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
 			target = target + 1
 		end

@@ -40,19 +40,19 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 				for _, enemy in ipairs(self.enemies) do
 					if enemy:canSlash(self.player) and self:isEquip("GudingBlade", enemy) then return 6 end
 				end
-				if self.player:isWounded() then 
+				if self.player:isWounded() then
 					return -2
 				end
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3
-			elseif card:isKindOf("Armor") then 
-				return 4 
+			elseif card:isKindOf("Armor") then
+				return 4
 			end
-		elseif self:hasSkills(sgs.lose_equip_skill) then 
+		elseif self:hasSkills(sgs.lose_equip_skill) then
 			return 5
-		else 
-			return 0 
+		else
+			return 0
 		end
 	end
 	local compare_func = function(a, b)
@@ -66,11 +66,11 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 		least = discard_num -1
 	end
 	for _, card in ipairs(cards) do
-		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then 
-			break 
+		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then
+			break
 		end
-		if not self.player:isJilei(card) then 
-			table.insert(to_discard, card:getId()) 
+		if not self.player:isJilei(card) then
+			table.insert(to_discard, card:getId())
 		end
 	end
 	return to_discard
@@ -232,15 +232,15 @@ end
 sgs.ai_skill_playerchosen.yuanhu = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, p in ipairs(targets) do
-		if p:hasFlag("YuanhuToChoose") then 
+		if p:hasFlag("YuanhuToChoose") then
 			self.room:setPlayerFlag(p, "-YuanhuToChoose")
-			return p 
-		end 
+			return p
+		end
 	end
 	for _, p in sgs.qlist(self.room:getAllPlayers()) do
-		if p:hasFlag("YuanhuToChoose") then 
+		if p:hasFlag("YuanhuToChoose") then
 			self.room:setPlayerFlag(p, "-YuanhuToChoose")
-		end 
+		end
 	end
 end
 
@@ -284,7 +284,7 @@ local function can_be_selected_as_target(self, card, who)
 	elseif self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == card:getEffectiveId() then
 		if self.player:distanceTo(who, 1) > self.player:getAttackRange() then return false end
 	elseif self.player:distanceTo(who) > self.player:getAttackRange() then
-		return false 
+		return false
 	end
 	-- validation of strategy
 	if self:cantbeHurt(who) or self:damageIsEffective(who) then return false end
@@ -307,10 +307,10 @@ local function can_be_selected_as_target(self, card, who)
 	elseif self:isFriend(who) then
 		if who:hasSkill("yiji") and not self.player:hasSkill("jueqing") then
 			local huatuo = self.room:findPlayerBySkillName("jijiu")
-			if (huatuo and self:isFriend(huatuo) and huatuo:getHandcardNum() >= 3 and huatuo ~= self.player) 
-				or (who:getLostHp() == 0 and who:getMaxHp() >= 3) then 
-				return true 
-			end 
+			if (huatuo and self:isFriend(huatuo) and huatuo:getHandcardNum() >= 3 and huatuo ~= self.player)
+				or (who:getLostHp() == 0 and who:getMaxHp() >= 3) then
+				return true
+			end
 		end
 		if who:hasSkill("hunzi") and who:getMark("hunzi") == 0 and who == self.player:getNextAlive() and who:getHp() == 2 then return true end
 		return false
@@ -369,13 +369,13 @@ sgs.ai_skill_use["@@bifa"] = function(self, prompt)
 			if c:isKindOf("EquipCard") then return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() end
 		end
 		for _, c in ipairs(cards) do
-			if c:isKindOf("TrickCard") and not (c:isKindOf("Nullification") and self:getCardsNum("Nullification") == 1) then 
-				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() 
+			if c:isKindOf("TrickCard") and not (c:isKindOf("Nullification") and self:getCardsNum("Nullification") == 1) then
+				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
 			end
 		end
 		for _, c in ipairs(cards) do
-			if c:isKindOf("Slash") then 
-				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() 
+			if c:isKindOf("Slash") then
+				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
 			end
 		end
 	end
@@ -419,7 +419,7 @@ sgs.ai_skill_use_func.SongciCard = function(card,use,self)
 	self:sort(self.enemies, "handcard", true)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
-			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0) 
+			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0)
 					or (self:isEquip("SilverLion", enemy) and enemy:isWounded())) then
 				use.card = sgs.Card_Parse("@SongciCard=.")
 				if use.to then use.to:append(enemy) end
@@ -455,7 +455,7 @@ sgs.ai_chaofeng.sp_caiwenji = sgs.ai_chaofeng.caiwenji
 sgs.ai_skill_invoke.cv_machao = function(self, data)
 	local lord = self.room:getLord()
 	if lord:hasSkill("xueyi") then
-		return self:isFriend(lord) 
+		return self:isFriend(lord)
 	end
 	if lord:hasLordSkill("shichou") then
 		return not self:isFriend(lord)

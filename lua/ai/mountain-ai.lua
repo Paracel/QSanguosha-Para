@@ -7,7 +7,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				card = sgs.Sanguosha:getCard(judge:getEffectiveId())
 				if not judge:isKindOf("YanxiaoCard") then
 					for _, enemy in ipairs(self.enemies) do
-						if not enemy:containsTrick(judge:objectName()) and not enemy:containsTrick("YanxiaoCard") 
+						if not enemy:containsTrick(judge:objectName()) and not enemy:containsTrick("YanxiaoCard")
 							and not self.room:isProhibited(self.player, enemy, judge) then
 							target = enemy
 							break
@@ -45,7 +45,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				if judge:isKindOf("YanxiaoCard") then
 					card = sgs.Sanguosha:getCard(judge:getEffectiveId())
 					for _, friend in ipairs(self.friends) do
-						if not friend:containsTrick(judge:objectName()) and not self.room:isProhibited(self.player, friend, judge) 
+						if not friend:containsTrick(judge:objectName()) and not self.room:isProhibited(self.player, friend, judge)
 							and not friend:getJudgingArea():isEmpty() then
 							target = friend
 							break
@@ -62,7 +62,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 			end
 		end
-	
+
 		if card == nil or target == nil then
 			if not who:hasEquip() then return nil end
 			local card_id = self:askForCardChosen(who, "e", "snatch")
@@ -87,7 +87,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 			end
 		end
-	
+
 		if not target then
 			local judges = who:getJudgingArea()
 			if not judges:isEmpty() then
@@ -186,7 +186,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 				return to_discard
 			end
 		end
-	
+
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:getCards("j"):isEmpty() and enemy:containsTrick("YanxiaoCard") and card_for_qiaobian(self, enemy, ".") then
 				return to_discard
@@ -214,7 +214,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 				table.insert(targets, enemy)
 			end
 		end
-	
+
 		if #targets > 0 then
 			return to_discard
 		end
@@ -254,7 +254,7 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 				return "@QiaobianCard=.->".. friend:objectName()
 			end
 		end
-	
+
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:getCards("j"):isEmpty() and enemy:containsTrick("YanxiaoCard") and card_for_qiaobian(self, enemy, ".") then
 				return "@QiaobianCard=.->".. enemy:objectName()
@@ -274,7 +274,7 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 				table.insert(targets, enemy)
 			end
 		end
-	
+
 		if #targets > 0 then
 			self:sort(targets, "defense")
 			return "@QiaobianCard=.->".. targets[#targets]:objectName()
@@ -309,8 +309,8 @@ jixi_skill.getTurnUseCard = function(self)
 		self.jixisnatch = sgs.Sanguosha:cloneCard("snatch", snatch:getSuit(), snatch:getNumber())
 
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, snatch)) 
-				and not self.room:isProhibited(self.player, player, snatch) and self:hasTrickEffective(snatch, player) then 
+			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, snatch))
+				and not self.room:isProhibited(self.player, player, snatch) and self:hasTrickEffective(snatch, player) then
 				can_use = true
 				self.jixi = i + 1
 				break
@@ -325,9 +325,9 @@ jixi_skill.getTurnUseCard = function(self)
 		self.room:setPlayerFlag(self.player, "JixiSnatch")
 		self:useCardSnatch(self.jixisnatch, use)
 		self.room:setPlayerFlag(self.player, "-JixiSnatch")
-		if can_use and use.card then 
-			self.jixisnatch = nil 
-			return sgs.Card_Parse("@JixiCard=.") 
+		if can_use and use.card then
+			self.jixisnatch = nil
+			return sgs.Card_Parse("@JixiCard=.")
 		end
 	end
 	return
@@ -442,7 +442,7 @@ sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, i
 			break
 		end
 	end
-	if #to_discard < 1 then return {} 
+	if #to_discard < 1 then return {}
 	else
 		return to_discard
 	end
@@ -451,7 +451,7 @@ end
 sgs.ai_skill_playerchosen.fangquan = function(self, targets)
 	self:sort(self.friends_noself, "handcard", true)
 	for _, target in ipairs(self.friends_noself) do
-		if not target:hasSkill("dawu") and self:hasSkills("yongsi|zhiheng|"..sgs.priority_skill.."|shensu",target) 
+		if not target:hasSkill("dawu") and self:hasSkills("yongsi|zhiheng|"..sgs.priority_skill.."|shensu",target)
 			and (not self:willSkipPlayPhase(target) or target:hasSkill("shensu")) then
 			return target
 		end
@@ -497,14 +497,14 @@ end
 sgs.ai_skill_cardask["tiaoxin-slash"] = function(self, data, pattern, target)
 	if target then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target))) 
-				and self:isEnemy(target) then 
+			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target)))
+				and self:isEnemy(target) then
 				return slash:toString()
-			end 
-			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target)) 
-				and self:isFriend(target) then 
+			end
+			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target))
+				and self:isFriend(target) then
 				return slash:toString()
-			end 
+			end
 
 		end
 	end
@@ -634,7 +634,7 @@ function sgs.ai_card_intention.ZhibaCard(card, from, tos, source)
 	local number = sgs.Sanguosha:getCard(card:getSubcards():first()):getNumber()
 	if number < 6 then sgs.updateIntention(from, tos[1], -60)
 	elseif number > 8 then sgs.updateIntention(from, tos[1], 60) end
-end 
+end
 
 local zhijian_skill={}
 zhijian_skill.name="zhijian"
@@ -775,7 +775,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		for _, askill in ipairs(("yizhong|bazhen"):split("|")) do
 				if str:matchOne(askill) and not self.player:getArmor() then return askill end
 		end
-		 
+
 		for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|qingguo|longdan|xiangle|jiang|yanzheng|tianming|kongcheng|" ..
 		"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
 		"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|"..

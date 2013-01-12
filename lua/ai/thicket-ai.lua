@@ -20,7 +20,7 @@ sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
 					target = friend
 					break
 				end
-				if friend:faceUp() and friend:hasSkill("shenfen") and friend:getPhase() == sgs.Player_Play 
+				if friend:faceUp() and friend:hasSkill("shenfen") and friend:getPhase() == sgs.Player_Play
 					and (not friend:hasUsed("ShenfenCard") and friend:getMark("@wrath") >= 6 or friend:hasFlag("ShenfenUsing")) then
 					target = friend
 					break
@@ -40,7 +40,7 @@ sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
 		else
 			self:sort(self.enemies)
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:isAlive() and enemy:faceUp() 
+				if enemy:isAlive() and enemy:faceUp()
 				   and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
 					target = enemy
 					break
@@ -50,7 +50,7 @@ sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
 				for _, enemy in ipairs(self.enemies) do
 					local invoke = true
 					if (self:hasSkills("jushou|neojushou|kuiwei", enemy)) and enemy:getPhase() == sgs.Player_Play then invoke = false end
-					if enemy:hasSkill("shenfen") and enemy:getMark("@wrath") >= 6 and enemy:getPhase() == sgs.Player_Play 
+					if enemy:hasSkill("shenfen") and enemy:getMark("@wrath") >= 6 and enemy:getPhase() == sgs.Player_Play
 						and (not enemy:hasUsed("ShenfenCard") or enemy:hasFlag("ShenfenUsing")) then invoke = false end
 					if enemy:hasSkill("lihun") and enemy:getPhase() == sgs.Player_Play and not enemy:hasUsed("LihunCard") then invoke = false end
 					if enemy:hasSkill("jijiu") and x >= 2 then invoke = false end
@@ -81,9 +81,9 @@ end
 sgs.ai_skill_playerchosen.songwei = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, target in ipairs(targets) do
-		if self:isFriend(target) and not target:hasFlag("songwei_used") and target:isAlive() then 
-			return target 
-		end 
+		if self:isFriend(target) and not target:hasFlag("songwei_used") and target:isAlive() then
+			return target
+		end
 	end
 	return targets[1]
 end
@@ -141,7 +141,7 @@ duanliang_skill.getTurnUseCard=function(self)
 
 end
 
-sgs.xuhuang_suit_value = 
+sgs.xuhuang_suit_value =
 {
 	spade = 3.9,
 	club = 3.9
@@ -181,7 +181,7 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	local x = self.player:getLostHp()
 	if x == 1 and #self.friends == 1 then
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:hasSkill("manjuan") then 
+			if enemy:hasSkill("manjuan") then
 				return "@YinghunCard=.->" .. enemy:objectName()
 			end
 		end
@@ -461,12 +461,12 @@ sgs.ai_skill_invoke.baonue = function(self, data)
 	local has_target = false
 	for _,p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if p:hasLordSkill("baonue") and self:isFriend(p) and not p:hasFlag("baonue_used") and p:isAlive() then
-			if p:isWounded() then 
-				has_target = true 
+			if p:isWounded() then
+				has_target = true
 				break
 			end
 			local zhangjiao = self.room:findPlayerBySkillName("guidao")
-			if zhangjiao and self:isFriend(zhangjiao) then 
+			if zhangjiao and self:isFriend(zhangjiao) then
 				has_target = true
 				break
 			end
@@ -478,14 +478,14 @@ end
 sgs.ai_skill_playerchosen.baonue = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, target in ipairs(targets) do
-		if self:isFriend(target) and not target:hasFlag("baonue_used") and target:isAlive() then 
-			return target 
-		end 
+		if self:isFriend(target) and not target:hasFlag("baonue_used") and target:isAlive() then
+			return target
+		end
 	end
 	return targets[1]
 end
 
-sgs.dongzhuo_suit_value = 
+sgs.dongzhuo_suit_value =
 {
 	spade = 5,
 }

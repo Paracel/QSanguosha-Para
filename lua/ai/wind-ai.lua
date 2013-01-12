@@ -18,7 +18,7 @@ sgs.ai_skill_use["@@shensu1"]=function(self,prompt)
 
 		elseif selfSub>=2 then return "."
 		elseif selfDef<6 then return "." end
-	
+
 	end
 
 	for _,enemy in ipairs(self.enemies) do
@@ -58,7 +58,7 @@ sgs.ai_skill_use["@@shensu2"]=function(self,prompt)
 	for _,card in ipairs(cards) do
 		if card:isKindOf("EquipCard") then
 			hasCard[sgs.ai_get_cardType(card)] = hasCard[sgs.ai_get_cardType(card)]+1
-		end	
+		end
 	end
 
 	for _,card in ipairs(cards) do
@@ -103,7 +103,7 @@ sgs.ai_cardneed.shensu = sgs.ai_cardneed.equip
 
 sgs.ai_card_intention.ShensuCard = 80
 
-sgs.xiahouyuan_keep_value = 
+sgs.xiahouyuan_keep_value =
 {
 	Peach = 6,
 	Jink = 5.1,
@@ -233,7 +233,7 @@ huangtianv_skill.getTurnUseCard=function(self)
 	local card_id = card:getEffectiveId()
 	local card_str = "@HuangtianCard="..card_id
 	local skillcard = sgs.Card_Parse(card_str)
-	
+
 	assert(skillcard)
 	return skillcard
 end
@@ -260,7 +260,7 @@ sgs.ai_card_intention.HuangtianCard = -80
 sgs.ai_use_priority.HuangtianCard = 10
 sgs.ai_use_value.HuangtianCard = 8.5
 
-sgs.zhangjiao_suit_value = 
+sgs.zhangjiao_suit_value =
 {
 	spade = 3.9,
 	club = 2.7
@@ -334,8 +334,8 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 	for _, friend in ipairs(self.friends_noself) do
 		if (friend:getLostHp() + dmg.damage>1 and friend:isAlive()) then
 			if friend:isChained() and #self:getChainedFriends()>1 and dmg.nature>0 then
-			elseif friend:getHp() >= 2 and dmg.damage<2 and 
-				(self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend) 
+			elseif friend:getHp() >= 2 and dmg.damage<2 and
+				(self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
 				or (friend:getHandcardNum()<3 and friend:hasSkill("rende"))
 				)
 				then return "@TianxiangCard="..card_id.."->"..friend:objectName()
@@ -366,7 +366,7 @@ function sgs.ai_slash_prohibit.tianxiang(self, to)
 	return self:cantbeHurt(to)
 end
 
-sgs.xiaoqiao_suit_value = 
+sgs.xiaoqiao_suit_value =
 {
 	spade = 6,
 	heart = 6
@@ -426,7 +426,7 @@ guhuo_skill.getTurnUseCard=function(self)
 		end
 	end
 
-	local card_str = self:getGuhuoCard("Peach", self.player, true) 
+	local card_str = self:getGuhuoCard("Peach", self.player, true)
 	if card_str then return sgs.Card_Parse(card_str) end
 
 	local slash_str = self:getGuhuoCard("Slash", self.player, true) or self:getGuhuoCard("Analeptic", self.player, true)

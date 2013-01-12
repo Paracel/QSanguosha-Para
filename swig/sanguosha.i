@@ -1,6 +1,7 @@
 %module sgs
 
 %{
+
 #include "structs.h"
 #include "engine.h"
 #include "client.h"
@@ -16,18 +17,17 @@
 
 // ----------------------------------------
 
-class QObject{
+class QObject {
 public:
     QString objectName();
     void setObjectName(const char *name);
     bool inherits(const char *class_name);
-    bool setProperty ( const char * name, const QVariant & value);
-    QVariant property ( const char * name ) const;
+    bool setProperty (const char * name, const QVariant & value);
+    QVariant property (const char * name) const;
     void setParent(QObject *parent);
 };
 
-class General : public QObject
-{
+class General: public QObject{
 public:
     explicit General(Package *package, const char *name, const char *kingdom, int max_hp = 4, bool male = true, bool hidden = false, bool never_shown = false);
 
@@ -59,8 +59,7 @@ public:
     void lastWord() const;
 };
 
-class Player: public QObject
-{
+class Player: public QObject {
 public:
     enum Phase {RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone};
     enum Place {PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge, PlaceSpecial,
@@ -220,22 +219,21 @@ public:
     QList<const Player *> getSiblings() const;
 };
 
-%extend Player{
-    void setTag(const char *key, QVariant &value){
+%extend Player {
+    void setTag(const char *key, QVariant &value) {
         $self->tag[key] = value;
     }
 
-    QVariant getTag(const char *key){
+    QVariant getTag(const char *key) {
         return $self->tag[key];
     }
 
-    void removeTag(const char *tag_name){
+    void removeTag(const char *tag_name) {
         $self->tag.remove(tag_name);
     }
 };
 
-class ServerPlayer : public Player
-{
+class ServerPlayer: public Player {
 public:
     ServerPlayer(Room *room);
 
@@ -317,15 +315,14 @@ public:
     void gainAnExtraTurn(ServerPlayer *clearflag = NULL);
 };
 
-%extend ServerPlayer{
-    void speak(const char *msg){
+%extend ServerPlayer {
+    void speak(const char *msg) {
         QString str = QByteArray(msg).toBase64();
         $self->getRoom()->speakCommand($self, str);
     }
 };
 
-class ClientPlayer : public Player
-{
+class ClientPlayer: public Player {
 public:
     explicit ClientPlayer(Client *client);
     virtual int aliveCount() const;
@@ -338,8 +335,7 @@ public:
 
 extern ClientPlayer *Self;
 
-class CardMoveReason
-{
+class CardMoveReason {
 public:
     int m_reason;
     QString m_playerId; // the cause (not the source) of the movement, such as "lusu" when "dimeng", or "zhanghe" when "qiaobian"
@@ -350,11 +346,8 @@ public:
     QString m_eventName; // additional arg such as "lebusishu" on top of "S_REASON_JUDGE"
     
     CardMoveReason();
-    
     CardMoveReason(int moveReason, char *playerId);
-
     CardMoveReason(int moveReason, char *playerId, char *skillName, char *eventName);
-
     CardMoveReason(int moveReason, char *playerId, char *targetId, char *skillName, char *eventName);
 
     static const int S_REASON_UNKNOWN = 0x00;
@@ -410,10 +403,10 @@ public:
     static const int S_MASK_BASIC_REASON = 0x0F;
 };
 
-struct DamageStruct{
+struct DamageStruct {
     DamageStruct();
 
-    enum Nature{
+    enum Nature {
         Normal, // normal slash, duel and most damage caused by skill
         Fire,  // fire slash, fire attack and few damage skill (Yeyan, etc)
         Thunder // lightning, thunder slash, and few damage skill (Leiji, etc)
@@ -431,7 +424,7 @@ struct DamageStruct{
 	QString getReason() const;
 };
 
-struct CardEffectStruct{
+struct CardEffectStruct {
     CardEffectStruct();
 
     const Card *card;
@@ -442,7 +435,7 @@ struct CardEffectStruct{
     bool multiple;
 };
 
-struct SlashEffectStruct{
+struct SlashEffectStruct {
     SlashEffectStruct();
 
     int jink_num;
@@ -458,9 +451,8 @@ struct SlashEffectStruct{
     DamageStruct::Nature nature;
 };
 
-struct CardUseStruct{
-    enum CardUseReason
-    {
+struct CardUseStruct {
+    enum CardUseReason {
         CARD_USE_REASON_UNKNOWN,
         CARD_USE_REASON_PLAY,
         CARD_USE_REASON_RESPONSE
@@ -468,15 +460,15 @@ struct CardUseStruct{
 
     CardUseStruct();
     bool isValid(const char *pattern) const;
-    void parse(const QString &str, Room *room);
-    bool tryParse(const Json::Value&, Room *room);
+    void parse(const char *, Room *room);
+    bool tryParse(const Json::Value &, Room *room);
 
     const Card *card;
     ServerPlayer *from;
     QList<ServerPlayer *> to;
 };
 
-struct CardsMoveStruct{
+struct CardsMoveStruct {
     CardsMoveStruct();
     QList<int> card_ids;
     Player::Place from_place, to_place;
@@ -485,7 +477,7 @@ struct CardsMoveStruct{
     bool open;
 };
 
-struct CardsMoveOneTimeStruct{
+struct CardsMoveOneTimeStruct {
     QList<int> card_ids;
     QList<Player::Place> from_places;
     Player::Place to_place;
@@ -495,7 +487,7 @@ struct CardsMoveOneTimeStruct{
 
 typedef const CardsMoveOneTimeStruct *CardsMoveOneTimeStar;
 
-struct DyingStruct{
+struct DyingStruct {
     DyingStruct();
 
     ServerPlayer *who; // who is ask for help
@@ -503,14 +495,14 @@ struct DyingStruct{
     QList<ServerPlayer *> savers; // savers are the available players who can use peach for the dying player
 };
 
-struct DeathStruct{
+struct DeathStruct {
     DeathStruct();
 
     ServerPlayer *who; // who is ask for help
     DamageStruct *damage; // if it is NULL that means the dying is caused by losing hp
 };
 
-struct RecoverStruct{
+struct RecoverStruct {
     RecoverStruct();
 
     int recover;
@@ -518,7 +510,7 @@ struct RecoverStruct{
     const Card *card;
 };
 
-struct JudgeStruct{
+struct JudgeStruct {
     JudgeStruct();
     bool isGood(const Card *card = NULL) const;
     bool isEffected();
@@ -536,7 +528,7 @@ struct JudgeStruct{
 
 typedef JudgeStruct *JudgeStar;
 
-struct PindianStruct{
+struct PindianStruct {
     PindianStruct();
 
     ServerPlayer *from;
@@ -549,20 +541,22 @@ struct PindianStruct{
 
 typedef PindianStruct *PindianStar;
 
-struct PhaseChangeStruct{
+struct PhaseChangeStruct {
     PhaseChangeStruct();
+	
     Player::Phase from;
     Player::Phase to;
 };
 
-struct CardResponseStruct{
+struct CardResponseStruct {
     CardResponseStruct();
+	
     const Card *m_card;
     ServerPlayer *m_who;
     bool m_isUse;
 };
 
-enum TriggerEvent{
+enum TriggerEvent {
     NonTrigger,
 
     GameStart,
@@ -648,17 +642,15 @@ enum TriggerEvent{
     NumOfEvents
 };
 
-class Card: public QObject
-{
-
+class Card: public QObject {
 public:
     // enumeration type
-    enum Suit {Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor};
-    enum HandlingMethod {MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian};
+    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor, SuitToBeDecided };
+    enum HandlingMethod { MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian };
     static const Suit AllSuits[4];
     
     // card types
-    enum CardType{
+    enum CardType {
         TypeSkill,
         TypeBasic,
         TypeTrick,
@@ -751,27 +743,29 @@ public:
     static QList<int> StringsToIds(const QStringList &strings);
 };
 
-%extend Card{
-    Weapon *toWeapon(){
+%extend Card {
+	EquipCard *toEquipCard() {
+        return qobject_cast<EquipCard *>($self);
+    }
+    Weapon *toWeapon() {
         return qobject_cast<Weapon *>($self);
     }
-    WrappedCard *toWrapped(){
+    WrappedCard *toWrapped() {
         return qobject_cast<WrappedCard *>($self);
     }
-    TrickCard *toTrick(){
+    TrickCard *toTrick() {
         return qobject_cast<TrickCard *>($self);
     }
 };
 
-class WrappedCard : public Card
-{
+class WrappedCard: public Card {
 public:
     void takeOver(Card *card);
     void copyEverythingFrom(Card *card);
     void setModified(bool modified);
 };
 
-class SkillCard: public Card{
+class SkillCard: public Card {
 public:
     SkillCard();
     void setUserString(const char *user_string);
@@ -785,17 +779,15 @@ protected:
     QString user_string;
 };
 
-class DummyCard: public Card{
-
+class DummyCard: public Card {
 };
 
-class Package: public QObject{
+class Package: public QObject {
 public:
     Package(const char *name);
 };
 
-class Engine: public QObject
-{
+class Engine: public QObject {
 public:
     void addTranslationEntry(const char *key, const char *value);
     QString translate(const char *to_translate) const;    
@@ -863,21 +855,10 @@ public:
 
 extern Engine *Sanguosha;
 
-class Skill : public QObject
-{
+class Skill: public QObject {
 public:
-    enum Frequency{
-        Frequent,
-        NotFrequent,
-        Compulsory,
-        Limited,
-        Wake
-    };
-
-    enum Location{
-        Left,
-        Right
-    };
+    enum Frequency { Frequent, NotFrequent, Compulsory, Limited, Wake };
+    enum Location { Left, Right };
 
     explicit Skill(const char *name, Frequency frequent = NotFrequent);
     bool isLordSkill() const;
@@ -942,7 +923,7 @@ public:
     void action3v3(ServerPlayer *player);
 };
 
-class Room : public QThread{
+class Room: public QThread {
 public:
     explicit Room(QObject *parent, const char *mode);
     ServerPlayer *addSocket(ClientSocket *socket);
@@ -971,10 +952,8 @@ public:
     void setPlayerFlag(ServerPlayer *player, const char *flag);
     void setPlayerProperty(ServerPlayer *player, const char *property_name, const QVariant &value);
     void setPlayerMark(ServerPlayer *player, const char *mark, int value);
-    void setPlayerCardLimitation(ServerPlayer *player, const char *limit_list, 
-                                 const char *pattern, bool single_turn);
-    void removePlayerCardLimitation(ServerPlayer *player, const char *limit_list, 
-                                    const char *pattern);
+    void setPlayerCardLimitation(ServerPlayer *player, const char *limit_list, const char *pattern, bool single_turn);
+    void removePlayerCardLimitation(ServerPlayer *player, const char *limit_list, const char *pattern);
     void clearPlayerCardLimitation(ServerPlayer *player, bool single_turn);
     void setPlayerCardLock(ServerPlayer *player, const char *name);
     void setPlayerJilei(ServerPlayer *player, const char *name);
@@ -1034,8 +1013,7 @@ public:
     QList<ServerPlayer *> findPlayersBySkillName(const char *skill_name) const;
     void installEquip(ServerPlayer *player, const char *equip_name);
     void resetAI(ServerPlayer *player);
-    void changeHero(ServerPlayer *player, const char *new_general, bool full_state, bool invokeStart,
-                    bool isSecondaryHero, bool sendLog);
+    void changeHero(ServerPlayer *player, const char *new_general, bool full_state, bool invokeStart, bool isSecondaryHero, bool sendLog);
     void swapSeat(ServerPlayer *a, ServerPlayer *b);
     lua_State *getLuaState() const;
     void setFixedDistance(Player *from, const Player *to, int distance);
@@ -1073,8 +1051,7 @@ public:
     void throwCard(const Card *card, ServerPlayer *who, ServerPlayer *thrower = NULL);    
     void throwCard(const Card *card, const CardMoveReason &reason, ServerPlayer *who, ServerPlayer *thrower = NULL);
     
-    void moveCardTo(const Card *card, ServerPlayer *dstPlayer, Player::Place dstPlace,
-                    bool forceMoveVisible = false);
+    void moveCardTo(const Card *card, ServerPlayer *dstPlayer, Player::Place dstPlace, bool forceMoveVisible = false);
     void moveCardTo(const Card *card, ServerPlayer *dstPlayer, Player::Place dstPlace, const CardMoveReason &reason,
                     bool forceMoveVisible = false);
     void moveCardTo(const Card *card, ServerPlayer *srcPlayer, ServerPlayer *dstPlayer, Player::Place dstPlace, const CardMoveReason &reason,
@@ -1093,17 +1070,17 @@ public:
     bool askForSkillInvoke(ServerPlayer *player, const char *skill_name, const QVariant &data = QVariant());
     QString askForChoice(ServerPlayer *player, const char *skill_name, const char *choices, const QVariant &data = QVariant());
     bool askForDiscard(ServerPlayer *target, const char *reason, int discard_num, int min_num,
-            bool optional = false, bool include_equip = false, const char *prompt = NULL);
+                       bool optional = false, bool include_equip = false, const char *prompt = NULL);
     const Card *askForExchange(ServerPlayer *player, const char *reason, int discard_num, bool include_equip = false,
-            const char *prompt = NULL, bool optional = false);
+                               const char *prompt = NULL, bool optional = false);
     bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason);
 	const Card *askForCard(ServerPlayer *player, const char *pattern,
-                            const char *prompt, const QVariant &data, const char *skill_name);
+                           const char *prompt, const QVariant &data, const char *skill_name);
     const Card *askForCard(ServerPlayer *player, const char *pattern,
-                            const char *prompt, const QVariant &data = QVariant(),
-                            Card::HandlingMethod method = Card::MethodDiscard, ServerPlayer *to = NULL, bool isRetrial = false, const char *skill_name = NULL);
+                           const char *prompt, const QVariant &data = QVariant(),
+                           Card::HandlingMethod method = Card::MethodDiscard, ServerPlayer *to = NULL, bool isRetrial = false, const char *skill_name = NULL);
     bool askForUseCard(ServerPlayer *player, const char *pattern, const char *prompt, int notice_index = -1, Card::HandlingMethod method = Card::MethodUse);
     bool askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const char *prompt, bool distance_limit = true);
     bool askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const char *prompt, bool distance_limit = true);
@@ -1127,18 +1104,15 @@ public:
     ServerPlayer *nextPlayer() const{
         return $self->getCurrent()->getNextAlive();
     }
-
-    void output(const char *msg){
+    void output(const char *msg) {
         if(Config.value("DebugOutput", false).toBool())
             $self->output(msg);
     }
-
-    void outputEventStack(){
+    void outputEventStack() {
         if(Config.value("DebugOutput", false).toBool())
             $self->outputEventStack();
     }
-
-    void writeToConsole(const char *msg){
+    void writeToConsole(const char *msg) {
         $self->output(msg);
         qWarning("%s", msg);
     }
@@ -1146,7 +1120,7 @@ public:
 
 %{
 
-void Room::doScript(const QString &script){
+void Room::doScript(const QString &script) {
     SWIG_NewPointerObj(L, this, SWIGTYPE_p_Room, 0);
     lua_setglobal(L, "R");
 
@@ -1158,12 +1132,11 @@ void Room::doScript(const QString &script){
 
 %}
 
-class QRegExp{
+class QRegExp {
 public:
     QRegExp(const char *);
     bool exactMatch(const char *);
 };
-
 
 %include "luaskills.i"
 %include "card.i"

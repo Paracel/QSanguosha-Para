@@ -562,7 +562,7 @@ function SmartAI:useCardPeach(card, use)
 		return		
 	end
 
-	if #self.friends>1 and self.friends[2]:getHp()<3 and not self.friends[2]:hasSkill("buqu") and peaches == 1 then
+	if #self.friends>1 and self.friends[2]:getHp()<3 and not self.friends[2]:hasSkill("buqu") and self:getOverflow() < 1 then
 		return
 	end
 

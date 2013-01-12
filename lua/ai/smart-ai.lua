@@ -1658,7 +1658,7 @@ function SmartAI:filterEvent(event, player, data)
 		if not damage.card then
 			local intention
 			if sgs.ai_quhu_effect then
-				sgs.quhu_effect = false
+				sgs.ai_quhu_effect = false
 				local xunyu = self.room:findPlayerBySkillName("quhu")
 				intention = 80
 				from = xunyu

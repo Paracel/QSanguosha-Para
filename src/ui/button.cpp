@@ -10,21 +10,19 @@
 static QRectF ButtonRect(0, 0, 189, 46);
 
 Button::Button(const QString &label, qreal scale)
-    :label(label), size(ButtonRect.size() * scale),
-    mute(true), font(Config.SmallFont)
+    : label(label), size(ButtonRect.size() * scale),
+      mute(true), font(Config.SmallFont)
 {
-
     init();
 }
 
 Button::Button(const QString &label, const QSizeF &size)
-    :label(label), size(size), mute(true), font(Config.SmallFont)
+    : label(label), size(size), mute(true), font(Config.SmallFont)
 {
     init();
 }
 
-void Button::init()
-{
+void Button::init() {
     setFlags(ItemIsFocusable);
 
     setAcceptHoverEvents(true);
@@ -90,15 +88,14 @@ void Button::init()
     this->setGraphicsEffect(effect);
     
     glow = 0;
-
     timer_id = 0;
 }
 
-void Button::setMute(bool mute){
+void Button::setMute(bool mute) {
     this->mute = mute;
 }
 
-void Button::setFont(const QFont &font){
+void Button::setFont(const QFont &font) {
     this->font = font;
     title->fill(QColor(0, 0, 0, 0));
     QPainter pt(title);
@@ -112,31 +109,22 @@ void Button::setFont(const QFont &font){
 
 #include "engine.h"
 
-void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *){
+void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
     setFocus(Qt::MouseFocusReason);
-
 #ifdef AUDIO_SUPPORT
-
-    if(!mute)
-        Sanguosha->playSystemAudioEffect("button-hover");
-
+    if (!mute) Sanguosha->playSystemAudioEffect("button-hover");
 #endif
-
-    if(!timer_id)timer_id = QObject::startTimer(40);
+    if(!timer_id )timer_id = QObject::startTimer(40);
 }
 
-void Button::mousePressEvent(QGraphicsSceneMouseEvent *event){
+void Button::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     event->accept();
 }
 
-void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *){
+void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
 #ifdef AUDIO_SUPPORT
-
-    if(!mute)
-        Sanguosha->playSystemAudioEffect("button-down");
-
+    if(!mute) Sanguosha->playSystemAudioEffect("button-down");
 #endif
-
     emit clicked();
 }
 
@@ -144,29 +132,24 @@ QRectF Button::boundingRect() const{
     return QRectF(QPointF(), size);
 }
 
-void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget){
+void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     QRectF rect = boundingRect();
 
-    //painter->setOpacity(0.8);
     painter->drawImage(rect,*outimg);
     painter->fillRect(rect,QColor(255, 255, 255, glow * 10));
-    //painter->drawPixmap(rect.toRect(),*title);
 }
 
-void Button::timerEvent(QTimerEvent *)
-{
+void Button::timerEvent(QTimerEvent *) {
     update();
-    if (hasFocus())
-    {
+    if (hasFocus()) {
         if (glow < 5) glow++;
-    }
-    else
-    {
-        if (glow > 0) glow--;
-        else if(timer_id)
-        {
+    } else {
+        if (glow > 0)
+            glow--;
+        else if (timer_id) {
             QObject::killTimer(timer_id);
             timer_id = 0;
         }
     }
 }
+// FORMATTED

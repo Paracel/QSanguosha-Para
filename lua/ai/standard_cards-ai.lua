@@ -360,10 +360,6 @@ function SmartAI:useCardSlash(card, use)
 			-- fill the card use struct
 			local usecard = card
 			if not use.to or use.to:isEmpty() then
-				local anal = self:searchForAnaleptic(use,target,card)
-				if anal and not self:isEquip("SilverLion", target) and not self:isWeak() then
-					if anal:getEffectiveId() ~= card:getEffectiveId() then use.card = anal return end
-				end
 				local equips = self:getCards("EquipCard", self.player, "h")
 				for _, equip in ipairs(equips) do
 					local callback = sgs.ai_slash_weaponfilter[equip:objectName()]
@@ -387,6 +383,10 @@ function SmartAI:useCardSlash(card, use)
 						local slash = self:getCard("NatureSlash")
 						if slash and self:slashIsEffective(slash, target) and not self:slashProhibit(slash, target) then usecard = slash end
 					end
+				end
+				local anal = self:searchForAnaleptic(use,target,card)
+				if anal and not self:isEquip("SilverLion", target) and not self:isWeak() then
+					if anal:getEffectiveId() ~= card:getEffectiveId() then use.card = anal return end
 				end
 			end
 			use.card = use.card or usecard

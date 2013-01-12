@@ -105,37 +105,13 @@ function SmartAI:searchForAnaleptic(use,enemy,slash)
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
 
-	if enemy:getArmor() and enemy:getArmor():objectName() == "silver_lion" then
+	if enemy:hasArmorEffect("silver_lion") then
 		return
 	end
 
 	if ((enemy:getArmor() and enemy:getArmor():objectName() == "eight_diagram") or enemy:getHandcardNum() > 2)
 		and not ((self:isEquip("Axe") and #allcards > 4) or self.player:getHandcardNum() > 1+self.player:getHp()) then
 		return
-	end
-
-	if self.player:getPhase() == sgs.Player_Play then
-		if self.player:hasFlag("lexue") then
-			local lexuesrc = sgs.Sanguosha:getCard(self.player:getMark("lexue"))
-			if lexuesrc:isKindOf("Analeptic") then
-				local cards = sgs.QList2Table(self.player:getHandcards())
-				self:sortByUseValue(cards, true)
-				for _, hcard in ipairs(cards) do
-					if hcard:getSuit() == lexuesrc:getSuit() then
-						local lexue = sgs.Sanguosha:cloneCard("analeptic", lexuesrc:getSuit(), lexuesrc:getNumber())
-						lexue:addSubcard(hcard:getId())
-						lexue:setSkillName("lexue")
-						if self:getUseValue(lexuesrc) > self:getUseValue(hcard) then
-							return lexue
-						end
-					end
-				end
-			end
-		end
-
-		if self.player:hasLordSkill("weidai") and not self.player:hasUsed("WeidaiCard") then
-			return sgs.Card_Parse("@WeidaiCard=.")
-		end
 	end
 
 	local card_str = self:getCardId("Analeptic")

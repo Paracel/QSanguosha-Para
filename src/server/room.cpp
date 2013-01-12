@@ -402,9 +402,9 @@ void Room::gameOver(const QString &winner) {
     emit game_over(winner);
 
     if (mode.contains("_mini_")) {
-        ServerPlayer * playerWinner = NULL;
+        ServerPlayer *playerWinner = NULL;
         QStringList winners =winner.split("+");
-        foreach (ServerPlayer * sp, m_players) {
+        foreach (ServerPlayer *sp, m_players) {
             if (sp->getState() != "robot"
                 && (winners.contains(sp->getRole())
                     || winners.contains(sp->objectName()))) {
@@ -1240,7 +1240,7 @@ const Card *Room::askForCardShow(ServerPlayer *player, ServerPlayer *requestor, 
 const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
     notifyMoveFocus(player, S_COMMAND_ASK_PEACH);
 
-    const Card * card;
+    const Card *card;
     bool continuable = false;
 
     AI *ai = player->getAI();
@@ -2333,7 +2333,7 @@ QString Room::_chooseDefaultGeneral(ServerPlayer *player) const{
 }
 
 bool Room::_setPlayerGeneral(ServerPlayer *player, const QString& generalName, bool isFirst) {
-    const General* general = Sanguosha->getGeneral(generalName);
+    const General *general = Sanguosha->getGeneral(generalName);
     if (general == NULL)
         return false;
     else if (!Config.FreeChoose && !player->getSelected().contains(generalName))

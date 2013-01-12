@@ -30,7 +30,7 @@ void Sprite::start(int loops)
 
     while (i.hasNext())  {
         i.next();
-        AnimationLine * line = i.value();
+        AnimationLine *line = i.value();
         const QByteArray &name = i.key().toLocal8Bit();
         QSequentialAnimationGroup *sgroup = new QSequentialAnimationGroup;
 
@@ -99,7 +99,7 @@ EffectAnimation::EffectAnimation()
 
 void EffectAnimation::fade(QGraphicsItem *map)
 {
-    QAnimatedEffect * effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
+    QAnimatedEffect *effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
 
     if(effect)
     {
@@ -121,7 +121,7 @@ void EffectAnimation::fade(QGraphicsItem *map)
 
 void EffectAnimation::emphasize(QGraphicsItem *map,bool stay)
 {
-    QAnimatedEffect * effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
+    QAnimatedEffect *effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
 
     if(effect)
     {
@@ -142,7 +142,7 @@ void EffectAnimation::emphasize(QGraphicsItem *map,bool stay)
 
 void EffectAnimation::sendBack(QGraphicsItem *map)
 {
-    QAnimatedEffect * effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
+    QAnimatedEffect *effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
 
     if(effect)
     {
@@ -163,7 +163,7 @@ void EffectAnimation::sendBack(QGraphicsItem *map)
 
 void EffectAnimation::effectOut(QGraphicsItem *map)
 {
-    QAnimatedEffect * effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
+    QAnimatedEffect *effect = qobject_cast<QAnimatedEffect *>(map->graphicsEffect());
 
     if(effect)
     {
@@ -180,7 +180,7 @@ void EffectAnimation::effectOut(QGraphicsItem *map)
 
 void EffectAnimation::deleteEffect()
 {
-    QAnimatedEffect * effect = qobject_cast<QAnimatedEffect * >(sender());
+    QAnimatedEffect *effect = qobject_cast<QAnimatedEffect *>(sender());
     deleteEffect(effect);
 }
 
@@ -193,7 +193,7 @@ void EffectAnimation::deleteEffect(QAnimatedEffect *effect)
     QGraphicsItem *pix = effects.key(effect);
     if(pix)
     {
-        QAnimatedEffect * effect = registered.value(pix);
+        QAnimatedEffect *effect = registered.value(pix);
         if(effect)effect->reset();
         pix->setGraphicsEffect(registered.value(pix));
         effects.insert(pix,registered.value(pix));
@@ -206,7 +206,7 @@ EmphasizeEffect::EmphasizeEffect(bool stay,QObject *parent)
     this->setObjectName("emphasizer");
     index = 0;
     this->stay = stay;
-    QPropertyAnimation * anim = new QPropertyAnimation(this,"index");
+    QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
     connect(anim,SIGNAL(valueChanged(QVariant)),this,SLOT(update()));
     anim->setEndValue(40);
     anim->setDuration((40 - index)* 5);
@@ -258,7 +258,7 @@ void QAnimatedEffect::setStay(bool stay)
 
     if(!stay)
     {
-        QPropertyAnimation * anim = new QPropertyAnimation(this,"index");
+        QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
         anim->setEndValue(0);
         anim->setDuration(index * 5);
 
@@ -277,7 +277,7 @@ SentbackEffect::SentbackEffect(bool stay, QObject *parent)
     index = 0;
     this->stay = stay;
 
-    QPropertyAnimation * anim = new QPropertyAnimation(this,"index");
+    QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
     connect(anim,SIGNAL(valueChanged(QVariant)),this,SLOT(update()));
     anim->setEndValue(40);
     anim->setDuration((40 - index)* 5);
@@ -336,7 +336,7 @@ FadeEffect::FadeEffect(bool stay, QObject *parent)
     index = 0;
     this->stay = stay;
 
-    QPropertyAnimation * anim = new QPropertyAnimation(this,"index");
+    QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
     connect(anim,SIGNAL(valueChanged(QVariant)),this,SLOT(update()));
     anim->setEndValue(40);
     anim->setDuration((40 - index)* 5);

@@ -75,7 +75,7 @@ QWidget *ServerDialog::createBasicTab() {
     hlay->addWidget(nolimit_checkbox);
     hlay->addWidget(edit_button);
     form_layout->addRow(tr("Server name"), server_name_edit);
-    QHBoxLayout * lay = new QHBoxLayout;
+    QHBoxLayout *lay = new QHBoxLayout;
     lay->addWidget(timeout_spinbox);
     lay->addWidget(nolimit_checkbox);
     lay->addWidget(edit_button);

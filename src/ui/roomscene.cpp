@@ -2093,7 +2093,7 @@ void RoomScene::useSelectedCard() {
 void RoomScene::onSelectChange()
 {
     /*
-    QGraphicsItem * photo = qobject_cast<QGraphicsItem *>(sender());
+    QGraphicsItem *photo = qobject_cast<QGraphicsItem *>(sender());
     if (!photo) return;
     if (photo->isSelected()) animations->emphasize(photo);
     else animations->effectOut(photo); */
@@ -2101,7 +2101,7 @@ void RoomScene::onSelectChange()
 
 void RoomScene::onEnabledChange()
 {
-    QGraphicsItem * photo = qobject_cast<QGraphicsItem *>(sender());
+    QGraphicsItem *photo = qobject_cast<QGraphicsItem *>(sender());
     if(!photo)return;
     if(photo->isEnabled())animations->effectOut(photo);
     else animations->sendBack(photo);
@@ -3516,7 +3516,7 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool perm
         photo->setEmotion(emotion, permanent);
         return;
     }
-    PixmapAnimation * pma = PixmapAnimation::GetPixmapAnimation(dashboard, emotion);
+    PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(dashboard, emotion);
     if(pma)
     {
         pma->moveBy(0,- dashboard->boundingRect().height() / 1.5);

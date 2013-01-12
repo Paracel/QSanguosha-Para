@@ -248,7 +248,7 @@ int Engine::getRoleIndex() const{
 }
 
 const CardPattern *Engine::getPattern(const QString &name) const{
-    const CardPattern * ptn = patterns.value(name, NULL);
+    const CardPattern *ptn = patterns.value(name, NULL);
     if (ptn) return ptn;
 
     return new ExpPattern(name);

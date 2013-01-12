@@ -187,7 +187,7 @@ protected:
     QGraphicsProxyWidget *_m_equipRegions[4];  
     CardItem *_m_equipCards[4];
     QLabel *_m_equipLabel[4];
-    QParallelAnimationGroup* _m_equipAnim[4];
+    QParallelAnimationGroup *_m_equipAnim[4];
     QMutex _mutexEquipAnim;
 
     // controls

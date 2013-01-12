@@ -117,7 +117,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
         layout = new QHBoxLayout;
 
         if (lord_name.size() && !ServerInfo.EnableHegemony && !no_icon) {
-            const General * lord = Sanguosha->getGeneral(lord_name);
+            const General *lord = Sanguosha->getGeneral(lord_name);
 
             QLabel *label = new QLabel;
             label->setPixmap(G_ROOM_SKIN.getGeneralPixmap(lord->objectName(), icon_type));
@@ -132,7 +132,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
         layout = grid_layout;
 
         if (lord_name.size() && !ServerInfo.EnableHegemony && !no_icon) {
-            const General * lord = Sanguosha->getGeneral(lord_name);
+            const General *lord = Sanguosha->getGeneral(lord_name);
 
             QLabel *label = new QLabel;
             label->setPixmap(G_ROOM_SKIN.getGeneralPixmap(lord->objectName(), icon_type));

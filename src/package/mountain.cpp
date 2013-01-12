@@ -1072,12 +1072,12 @@ public:
 
         QStringList skill_names;
         QString skill_name;
-        const General* general = NULL;
+        const General *general = NULL;
         AI* ai = zuoci->getAI();
         if (ai) {
-            QHash<QString, const General*> hash;
+            QHash<QString, const General *> hash;
             foreach (QString general_name, huashen_generals) {
-                const General* general = Sanguosha->getGeneral(general_name);
+                const General *general = Sanguosha->getGeneral(general_name);
                 foreach (const Skill *skill, general->getVisibleSkillList()) {
                     if (skill->isLordSkill() || skill->isSPConvertSkill()
                         || skill->getFrequency() == Skill::Limited

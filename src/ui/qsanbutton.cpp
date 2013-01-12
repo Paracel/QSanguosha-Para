@@ -417,11 +417,8 @@ void QSanInvokeSkillDock::update()
     QGraphicsObject::update();
 }
 
-QSanInvokeSkillButton*
-QSanInvokeSkillDock::getSkillButtonByName(const QString &skillName) const
-{
-    foreach (QSanInvokeSkillButton *button, _m_buttons)
-    {
+QSanInvokeSkillButton *QSanInvokeSkillDock::getSkillButtonByName(const QString &skillName) const{
+    foreach (QSanInvokeSkillButton *button, _m_buttons) {
         if (button->getSkill()->objectName() == skillName)
             return button;
     }

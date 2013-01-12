@@ -1,5 +1,5 @@
-#ifndef _GAMERULE_H
-#define _GAMERULE_H
+#ifndef _GAME_RULE_H
+#define _GAME_RULE_H
 
 #include "skill.h"
 

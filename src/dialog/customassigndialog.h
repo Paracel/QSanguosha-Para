@@ -1,5 +1,5 @@
-#ifndef _CUSTOMASSIGNDIALOG_H
-#define _CUSTOMASSIGNDIALOG_H
+#ifndef _CUSTOM_ASSIGN_DIALOG_H
+#define _CUSTOM_ASSIGN_DIALOG_H
 
 #include "engine.h"
 

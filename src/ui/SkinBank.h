@@ -16,24 +16,23 @@
 #include <QGraphicsPixmapItem>
 #include <QAbstractAnimation>
 
-class QSanPixmapCache
-{
+class QSanPixmapCache {
 public:
     // Load pixmap from a file and map it to the given key.
-    static const QPixmap& getPixmap(const QString &key, const QString &fileName);
+    static const QPixmap &getPixmap(const QString &key, const QString &fileName);
     // Load pixmap from a existing key.
-    static const QPixmap& getPixmap(const QString &key);
+    static const QPixmap &getPixmap(const QString &key);
     static bool contains(const QString &key); 
+
 private:
     static QHash<QString, QPixmap> _m_pixmapBank;
 };
 
-class IQSanComponentSkin // interface class
-{
+class IQSanComponentSkin { // interface class
 public:
     class QSanSimpleTextFont {
     public:
-        int* m_fontFace;
+        int *m_fontFace;
         QSize m_fontSize;
         int m_spacing;
         int m_weight;
@@ -41,37 +40,34 @@ public:
         bool m_vertical;
         QSanSimpleTextFont();
         bool tryParse(Json::Value arg);
-        void paintText(QPainter *painter, QRect pos, Qt::Alignment align,
-                       const QString &text) const;
+        void paintText(QPainter *painter, QRect pos, Qt::Alignment align, const QString &text) const;
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
-        void paintText(QGraphicsPixmapItem* item, QRect pos, 
-                       Qt::Alignment align, const QString &text) const;
+        void paintText(QGraphicsPixmapItem* item, QRect pos, Qt::Alignment align, const QString &text) const;
+
     protected:
         static QHash<QString, int*> _m_fontBank;
     };
 
-    class QSanShadowTextFont : public QSanSimpleTextFont
-    {
+    class QSanShadowTextFont: public QSanSimpleTextFont {
     public:
         int m_shadowRadius;
         double m_shadowDecadeFactor;
         QPoint m_shadowOffset;
         QColor m_shadowColor;
         bool tryParse(Json::Value arg);
-        void paintText(QPainter *painter, QRect pos, Qt::Alignment align,
-                       const QString &text) const;        
+        void paintText(QPainter *painter, QRect pos, Qt::Alignment align, const QString &text) const;
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
-        void paintText(QGraphicsPixmapItem* item, QRect pos, Qt::Alignment align,
-                       const QString &text) const;
+        void paintText(QGraphicsPixmapItem* item, QRect pos, Qt::Alignment align, const QString &text) const;
     };
-    class AnchoredRect
-    {
+
+    class AnchoredRect {
     public:
         QRect getTranslatedRect(QRect parentRect) const;
         QRect getTranslatedRect(QRect parentRect, QSize childSize) const;
         bool tryParse(Json::Value value);
+
     protected:
         Qt::Alignment m_anchorChild;
         Qt::Alignment m_anchorParent;
@@ -79,6 +75,7 @@ public:
         QSize m_fixedSize;
         bool m_useFixedSize;
     };
+
     static const char *S_SKIN_KEY_DEFAULT;
     static const char *S_SKIN_KEY_DEFAULT_SECOND;
     bool load(const QString &layoutConfigFileName, const QString &imageConfigFileName,
@@ -90,6 +87,7 @@ public:
     QString getRandomAudioFileName(const QString &key) const;
     bool isImageKeyDefined(const QString &key) const;
     QStringList getAnimationFileNames() const;
+
 protected:
     virtual bool _loadLayoutConfig(const Json::Value &config) = 0;
     virtual bool _loadImageConfig(const Json::Value &config);
@@ -110,11 +108,9 @@ protected:
     // for example,
     // "generalIcon-1-default" -> "generalIcon-1-zhangliao", "generalIcon-1-liubie", ...
     static QHash<QString, QList<QString> > S_IMAGE_GROUP_KEYS;
-
 };
 
-class QSanRoomSkin : public IQSanComponentSkin
-{
+class QSanRoomSkin: public IQSanComponentSkin {
 public:
     struct RoomLayout {
         int m_scenePadding;
@@ -135,8 +131,7 @@ public:
         QSize m_maximumSceneSize10Player;
     };
 
-    struct PlayerCardContainerLayout
-    {        
+    struct PlayerCardContainerLayout {
         int m_normalHeight;
         QRect m_boundingRect;
         QRect m_focusFrameArea;
@@ -210,8 +205,7 @@ public:
         QRect m_extraSkillTextArea;
     };
 
-    struct PhotoLayout : public PlayerCardContainerLayout
-    {
+    struct PhotoLayout: public PlayerCardContainerLayout {
         int m_normalWidth;
         QRect m_mainFrameArea;
         QRect m_cardMoveRegion;        
@@ -222,8 +216,7 @@ public:
         QSanShadowTextFont m_skillNameFont;        
     };
 
-    struct DashboardLayout : public PlayerCardContainerLayout
-    {
+    struct DashboardLayout: public PlayerCardContainerLayout {
         int m_leftWidth, m_rightWidth;
         int m_floatingAreaHeight;
         QSize m_buttonSetSize;
@@ -238,18 +231,15 @@ public:
         QPoint m_equipSelectedOffset;
         int m_disperseWidth;
         QSanShadowTextFont m_skillTextFonts[3];
-        QColor m_skillTextColors[QSanButton::S_NUM_BUTTON_STATES *
-                                 QSanInvokeSkillButton::S_NUM_SKILL_TYPES];
-        QColor m_skillTextShadowColors[QSanButton::S_NUM_BUTTON_STATES *
-                                       QSanInvokeSkillButton::S_NUM_SKILL_TYPES];
+        QColor m_skillTextColors[QSanButton::S_NUM_BUTTON_STATES * QSanInvokeSkillButton::S_NUM_SKILL_TYPES];
+        QColor m_skillTextShadowColors[QSanButton::S_NUM_BUTTON_STATES * QSanInvokeSkillButton::S_NUM_SKILL_TYPES];
 
         QSanShadowTextFont getSkillTextFont(QSanButton::ButtonState state,
                                             QSanInvokeSkillButton::SkillType type,
                                             QSanInvokeSkillButton::SkillButtonWidth width) const;        
     };
 
-    struct CommonLayout
-    {
+    struct CommonLayout {
         // card related
         int m_cardNormalWidth;
         int m_cardNormalHeight;
@@ -264,9 +254,9 @@ public:
         int m_hpExtraSpaceHolder;
 
         // dialogs        
-        // when # of generals < switchIconSizeThreadshold
+        // when # of generals <= switchIconSizeThreadshold
         QSize m_chooseGeneralBoxSparseIconSize;
-        // when # of generals < switchIconSizeThreadshold
+        // when # of generals > switchIconSizeThreadshold
         QSize m_chooseGeneralBoxDenseIconSize;
         int m_chooseGeneralBoxSwitchIconSizeThreshold;
         int m_chooseGeneralBoxSwitchIconEachRow;
@@ -277,8 +267,7 @@ public:
         QSize m_tinyAvatarSize;
     };
 
-    enum GeneralIconSize
-    {
+    enum GeneralIconSize {
         S_GENERAL_ICON_SIZE_TINY,
         S_GENERAL_ICON_SIZE_SMALL,
         S_GENERAL_ICON_SIZE_LARGE,
@@ -290,10 +279,10 @@ public:
         S_GENERAL_ICON_SIZE_KOF
     };
 
-    const RoomLayout& getRoomLayout() const;
-    const PhotoLayout& getPhotoLayout() const;
-    const CommonLayout& getCommonLayout() const;
-    const DashboardLayout& getDashboardLayout() const;
+    const RoomLayout &getRoomLayout() const;
+    const PhotoLayout &getPhotoLayout() const;
+    const CommonLayout &getCommonLayout() const;
+    const DashboardLayout &getDashboardLayout() const;
     
     // @todo: these two functions are currently only used to generate HTML when prompt whether to
     // use Nullification. Get rid of them in the future.
@@ -317,7 +306,7 @@ public:
     QPixmap getProgressBarPixmap(int percentile) const;
 
     // Animations
-    QAbstractAnimation* createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
+    QAbstractAnimation *createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
                                                QGraphicsItem* &huashenItemCreated) const;
 
     // static consts
@@ -387,24 +376,24 @@ protected:
     virtual bool _loadAnimationConfig(const Json::Value &animationConfig);
 };
 
-class QSanSkinScheme
-{
+class QSanSkinScheme {
 // Why do we need another layer above room skin? Because we may add lobby, login interface
 // in the future; and we may need to assemble a set of different skins into a scheme.
 public:
     bool load(Json::Value configs);
     const QSanRoomSkin& getRoomSkin() const;
+
 protected:
     QSanRoomSkin _m_roomSkin;
 };
 
-class QSanSkinFactory
-{
+class QSanSkinFactory {
 public:
-    static QSanSkinFactory& getInstance();
-    const QString& getCurrentSkinName() const;
-    const QSanSkinScheme& getCurrentSkinScheme();
+    static QSanSkinFactory &getInstance();
+    const QString &getCurrentSkinName() const;
+    const QSanSkinScheme &getCurrentSkinScheme();
     bool switchSkin(QString skinName);
+
 protected:
     QSanSkinFactory(const char *fileName);
     static QSanSkinFactory* _sm_singleton;
@@ -420,3 +409,4 @@ protected:
 #define G_COMMON_LAYOUT (G_ROOM_SKIN.getCommonLayout())
 
 #endif
+// FORMATTED

@@ -724,7 +724,7 @@ GuhuoDialog::GuhuoDialog(const QString &object, bool left, bool right): object_n
     if (right) layout->addWidget(createRight());
     setLayout(layout);
 
-    connect(group, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(selectCard(QAbstractButton*)));
+    connect(group, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(selectCard(QAbstractButton *)));
 }
 
 void GuhuoDialog::popup() {

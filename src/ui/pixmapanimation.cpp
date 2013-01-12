@@ -73,7 +73,7 @@ void PixmapAnimation::preStart(){
     this->startTimer(S_DEFAULT_INTERVAL);
 }
 
-PixmapAnimation* PixmapAnimation::GetPixmapAnimation(QGraphicsItem *parent, const QString &emotion)
+PixmapAnimation *PixmapAnimation::GetPixmapAnimation(QGraphicsItem *parent, const QString &emotion)
 {
     PixmapAnimation *pma = new PixmapAnimation();
     pma->setPath(QString("image/system/emotion/%1/").arg(emotion));

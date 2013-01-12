@@ -1,5 +1,5 @@
-#ifndef _MAINWINDOW_H
-#define _MAINWINDOW_H
+#ifndef _MAIN_WINDOW_H
+#define _MAIN_WINDOW_H
 
 #include "engine.h"
 #include "connectiondialog.h"

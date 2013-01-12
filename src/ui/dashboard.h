@@ -1,5 +1,5 @@
-#ifndef DASHBOARD_H
-#define DASHBOARD_H
+#ifndef _DASHBOARD_H
+#define _DASHBOARD_H
 
 #include "QSanSelectableItem.h"
 #include "qsanbutton.h"
@@ -21,16 +21,15 @@
 #include <QPropertyAnimation>
 
 
-class Dashboard : public PlayerCardContainer
-{
+class Dashboard: public PlayerCardContainer {
     Q_OBJECT
+
 public:
     Dashboard(QGraphicsItem *button_widget);
     virtual QRectF boundingRect() const;
     void setWidth(int width);
     int getMiddleWidth();
-    inline QRectF getAvatarArea()
-    {
+    inline QRectF getAvatarArea() {
         QRectF rect;
         rect.setSize(_dlayout->m_avatarArea.size());
         QPointF topLeft = mapFromItem(_getAvatarParent(), _dlayout->m_avatarArea.topLeft());
@@ -84,6 +83,7 @@ public:
     int height();
 
     static const int S_PENDING_OFFSET_Y = -25;
+
 public slots:
     void sortCards(bool doAnmiation = true);
     void reverseSelection();
@@ -156,10 +156,10 @@ protected:
     const FilterSkill *filter;
     
     // for equip skill/selections
-    PixmapAnimation* _m_equipBorders[4];
-    QSanSkillButton* _m_equipSkillBtns[4];
+    PixmapAnimation *_m_equipBorders[4];
+    QSanSkillButton *_m_equipSkillBtns[4];
     bool _m_isEquipsAnimOn[4];
-    QList<QSanSkillButton*> _m_button_recycle;
+    QList<QSanSkillButton *> _m_button_recycle;
 
     void _createEquipBorderAnimations();
     void _setEquipBorderAnimation(int index, bool turnOn);
@@ -183,4 +183,5 @@ signals:
     void progressBarTimedOut();
 };
 
-#endif // DASHBOARD_H
+#endif
+// FORMATTED

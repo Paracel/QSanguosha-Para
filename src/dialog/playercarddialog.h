@@ -1,5 +1,5 @@
-#ifndef _PLAYERCARDDIALOG_H
-#define _PLAYERCARDDIALOG_H
+#ifndef _PLAYER_CARD_DIALOG_H
+#define _PLAYER_CARD_DIALOG_H
 
 #include "clientplayer.h"
 

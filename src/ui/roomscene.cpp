@@ -1930,7 +1930,7 @@ void RoomScene::addSkillButton(const Skill *skill, bool from_left){
     if(skill->isSPConvertSkill())
         return;
     // check duplication
-    QSanSkillButton* btn = dashboard->addSkillButton(skill->objectName());
+    QSanSkillButton *btn = dashboard->addSkillButton(skill->objectName());
     if(btn == NULL)
         return;
 
@@ -3217,7 +3217,7 @@ void RoomScene::showCard(const QString &player_name, int card_id){
 
 void RoomScene::chooseSkillButton(){
     QList<QSanSkillButton *> enabled_buttons;
-    foreach (QSanSkillButton* btn, m_skillButtons){
+    foreach (QSanSkillButton *btn, m_skillButtons){
         if(btn->isEnabled())
             enabled_buttons << btn;
     }
@@ -3230,7 +3230,7 @@ void RoomScene::chooseSkillButton(){
 
     QVBoxLayout *layout = new QVBoxLayout;
 
-    foreach (QSanSkillButton* btn, enabled_buttons) {
+    foreach (QSanSkillButton *btn, enabled_buttons) {
         QCommandLinkButton *button = new QCommandLinkButton(Sanguosha->translate(btn->getSkill()->objectName()));
         connect(button, SIGNAL(clicked()), btn, SLOT(click()));
         connect(button, SIGNAL(clicked()), dialog, SLOT(accept()));
@@ -3249,7 +3249,7 @@ void RoomScene::attachSkill(const QString &skill_name, bool from_left)
 }
 
 void RoomScene::detachSkill(const QString &skill_name){
-    QSanSkillButton* btn = dashboard->removeSkillButton(skill_name);
+    QSanSkillButton *btn = dashboard->removeSkillButton(skill_name);
     if (btn == NULL) return;    //be care LordSkill and SPConvertSkill
     m_skillButtons.removeAll(btn);
     btn->deleteLater();

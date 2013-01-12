@@ -1,5 +1,5 @@
-#ifndef _CARDITEM_H
-#define _CARDITEM_H
+#ifndef _CARD_ITEM_H
+#define _CARD_ITEM_H
 
 #include "card.h"
 #include "QSanSelectableItem.h"
@@ -12,12 +12,10 @@
 class FilterSkill;
 class General;
 
-class CardItem : public QSanSelectableItem
-{
+class CardItem: public QSanSelectableItem {
     Q_OBJECT
 
 public:
-
     CardItem(const Card *card);
     CardItem(const QString &general_name);
     ~CardItem();
@@ -27,17 +25,15 @@ public:
 
     const Card *getCard() const;
     void setCard(const Card *card);
-    inline int getId() const {
-        return m_cardId;
-    }
+    inline int getId() const { return m_cardId; }
 
     // For move card animation
     void setHomePos(QPointF home_pos);
     QPointF homePos() const;    
-    QAbstractAnimation* getGoBackAnimation(bool doFadeEffect, bool smoothTransition = false, 
+    QAbstractAnimation *getGoBackAnimation(bool doFadeEffect, bool smoothTransition = false,
                                            int duration = Config.S_MOVE_CARD_ANIMATION_DURAION);
     void goBack(bool playAnimation, bool doFade = true);
-    inline QAbstractAnimation* getCurrentAnimation(bool doFade) { return m_currentAnimation; }
+    inline QAbstractAnimation *getCurrentAnimation(bool doFade) { return m_currentAnimation; }
     inline void setHomeOpacity(double opacity) { m_opacityAtHome = opacity; }
     inline double getHomeOpacity() { return m_opacityAtHome; }
 
@@ -60,8 +56,7 @@ public:
 
     static CardItem *FindItem(const QList<CardItem *> &items, int card_id);
     
-    struct UiHelper
-    {
+    struct UiHelper {
         int tablePileClearTimeStamp;
     } m_uiHelper;
 
@@ -69,7 +64,7 @@ public:
 
 protected:
     void _initialize();
-    QAbstractAnimation* m_currentAnimation;
+    QAbstractAnimation *m_currentAnimation;
     QImage _m_footnoteImage;
     bool _m_showFootnote;
     // QGraphicsPixmapItem* _m_footnoteItem;
@@ -104,4 +99,5 @@ signals:
     void movement_animation_finished();
 };
 
-#endif // CARDITEM_H
+#endif
+// FORMATTED

@@ -1,5 +1,5 @@
-#ifndef _GENERALSELECTOR_H
-#define _GENERALSELECTOR_H
+#ifndef _GENERAL_SELECTOR_H
+#define _GENERAL_SELECTOR_H
 
 #include <QObject>
 #include <QHash>

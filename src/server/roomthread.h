@@ -1,5 +1,5 @@
-#ifndef ROOMTHREAD_H
-#define ROOMTHREAD_H
+#ifndef _ROOM_THREAD_H
+#define _ROOM_THREAD_H
 
 #include <QThread>
 #include <QSemaphore>
@@ -9,7 +9,7 @@
 
 #include "structs.h"
 
-struct LogMessage{
+struct LogMessage {
     LogMessage();
     QString toString() const;
 
@@ -21,10 +21,10 @@ struct LogMessage{
     QString arg2;
 };
 
-class EventTriplet{
+class EventTriplet {
 public:
     inline EventTriplet(TriggerEvent event, Room *room, ServerPlayer *target, QVariant *data)
-        :_m_event(event), _m_room(room), _m_target(target), _m_data(data){}
+               : _m_event(event), _m_room(room), _m_target(target), _m_data(data){}
     QString toString() const;
 
 private:
@@ -34,7 +34,7 @@ private:
     QVariant *_m_data;
 };
 
-class RoomThread : public QThread{
+class RoomThread: public QThread {
     Q_OBJECT
 
 public:
@@ -65,4 +65,5 @@ private:
     QList<EventTriplet> event_stack;
 };
 
-#endif // ROOMTHREAD_H
+#endif
+// FORMATTED

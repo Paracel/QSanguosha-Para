@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef _SERVER_H
+#define _SERVER_H
 
 class Room;
 class QGroupBox;
@@ -24,7 +24,7 @@ class QRadioButton;
 
 class Package;
 
-class Select3v3GeneralDialog: public QDialog{
+class Select3v3GeneralDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -42,7 +42,7 @@ private slots:
     void toggleCheck();
 };
 
-class BanlistDialog: public QDialog{
+class BanlistDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -50,10 +50,10 @@ public:
 
 private:
     QList<QListWidget *>lists;
-    QListWidget * list;
+    QListWidget *list;
     int item;
     QStringList ban_list;
-    QPushButton* add2nd;
+    QPushButton *add2nd;
 
 private slots:
     void addGeneral(const QString &name);
@@ -67,7 +67,7 @@ private slots:
     void switchTo(int item);
 };
 
-class ServerDialog: public QDialog{
+class ServerDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -135,7 +135,7 @@ private slots:
     void onHttpDone(bool error);
     void select3v3Generals();
     void edit1v1Banlist();
-    void updateButtonEnablility(QAbstractButton* button);
+    void updateButtonEnablility(QAbstractButton *button);
 
     void doCustomAssign();
     void setMiniCheckBox();
@@ -144,7 +144,7 @@ private slots:
 class Scenario;
 class ServerPlayer;
 
-class Server : public QObject{
+class Server: public QObject {
     Q_OBJECT
 
 public:
@@ -175,4 +175,5 @@ signals:
     void server_message(const QString &);
 };
 
-#endif // SERVER_H
+#endif
+// FORMATTED

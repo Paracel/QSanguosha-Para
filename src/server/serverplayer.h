@@ -1,5 +1,5 @@
-#ifndef SERVERPLAYER_H
-#define SERVERPLAYER_H
+#ifndef _SERVER_PLAYER_H
+#define _SERVER_PLAYER_H
 
 class Room;
 struct CardMoveStruct;
@@ -14,10 +14,8 @@ class Recorder;
 #include <QSemaphore>
 #include <QDateTime>
 
-class ServerPlayer : public Player
-{
+class ServerPlayer: public Player{
     Q_OBJECT
-
     Q_PROPERTY(QString ip READ getIp)
 
 public:
@@ -127,17 +125,17 @@ public:
     inline bool tryAcquireLock(SemaphoreType type, int timeout = 0) {
         return semas[type]->tryAcquire(1, timeout); 
     }
-    inline void releaseLock(SemaphoreType type) {semas[type]->release();}
-    inline void drainLock(SemaphoreType type) {while ((semas[type]->tryAcquire())) {}}
+    inline void releaseLock(SemaphoreType type) { semas[type]->release(); }
+    inline void drainLock(SemaphoreType type) { while (semas[type]->tryAcquire()) {} }
     inline void drainAllLocks() {
         for (int i  =0; i < S_NUM_SEMAPHORES; i++) {
             drainLock((SemaphoreType)i);
         }
     }
-    inline QString getClientReplyString() {return m_clientResponseString;}
-    inline void setClientReplyString(const QString &val) {m_clientResponseString = val;}
-    inline Json::Value getClientReply() {return _m_clientResponse;}
-    inline void setClientReply(const Json::Value &val) {_m_clientResponse = val;}
+    inline QString getClientReplyString() { return m_clientResponseString; }
+    inline void setClientReplyString(const QString &val) { m_clientResponseString = val; }
+    inline Json::Value getClientReply() { return _m_clientResponse; }
+    inline void setClientReply(const Json::Value &val) { _m_clientResponse = val; }
     unsigned int m_expectedReplySerial; // Suggest the acceptable serial number of an expected response.
     bool m_isClientResponseReady; //Suggest whether a valid player's reponse has been received.
     bool m_isWaitingReply; // Suggest if the server player is waiting for client's response.
@@ -180,4 +178,5 @@ signals:
     void message_ready(const QString &msg);
 };
 
-#endif // SERVERPLAYER_H
+#endif
+// FORMATTED

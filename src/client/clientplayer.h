@@ -1,5 +1,5 @@
-#ifndef _CLIENTPLAYER_H
-#define _CLIENTPLAYER_H
+#ifndef _CLIENT_PLAYER_H
+#define _CLIENT_PLAYER_H
 
 #include "player.h"
 #include "clientstruct.h"

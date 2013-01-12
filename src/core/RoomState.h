@@ -1,5 +1,6 @@
-#ifndef _ROOMSTATE_H
-#define _ROOMSTATE_H
+#ifndef _ROOM_STATE_H
+#define _ROOM_STATE_H
+
 #include <QHash>
 #include "player.h"
 #include "structs.h"

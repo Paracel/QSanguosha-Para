@@ -1,28 +1,32 @@
 #ifndef _GENERAL_CARD_CONTAINER_UI_H
 #define _GENERAL_CARD_CONTAINER_UI_H
+
 #include "carditem.h"
 #include "player.h"
-#include <QGraphicsScene>
-#include <QGraphicsItem>
-#include <qparallelanimationgroup.h>
-#include <qgraphicseffect.h>
 #include "QSanSelectableItem.h"
-#include <QMutex>
-#include <qvariant.h>
-#include <qlabel.h>
 #include "SkinBank.h"
 #include "TimedProgressBar.h"
 #include "magatamasItem.h"
 #include "rolecombobox.h"
 
-class GenericCardContainer: public QGraphicsObject
-{    
+#include <QGraphicsScene>
+#include <QGraphicsItem>
+#include <QMutex>
+
+#include <qparallelanimationgroup.h>
+#include <qgraphicseffect.h>
+#include <qvariant.h>
+#include <qlabel.h>
+
+class GenericCardContainer: public QGraphicsObject {
     Q_OBJECT
+
 public:
     inline GenericCardContainer() { _m_highestZ = 10000; }
     virtual QList<CardItem *> removeCardItems(const QList<int> &card_ids,  Player::Place place) = 0;
     virtual void addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
     virtual QList<CardItem *> cloneCardItems(QList<int> card_ids);
+
 protected:
     // @return Whether the card items should be destroyed after animation
     virtual bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo) = 0;
@@ -31,21 +35,24 @@ protected:
     void _disperseCards(QList<CardItem *> &cards, QRectF fillRegion, Qt::Alignment align, bool useHomePos, bool keepOrder);
     void _playMoveCardsAnimation(QList<CardItem *> &cards, bool destroyCards);
     int _m_highestZ;
+
 protected slots:
     virtual void onAnimationFinished();
+
 private slots:
     void _doUpdate();
     void _destroyCard();
+
 private:
     static bool _horizontalPosLessThan(const CardItem *card1, const CardItem *card2);
     QList<CardItem *> _cardsToBeDestroyed;
-    QMutex _mutex_cardsToBeDestroyed;    
+    QMutex _mutex_cardsToBeDestroyed;
+
 signals:
     void animation_finished();
 };
 
-class PlayerCardContainer: public GenericCardContainer
-{
+class PlayerCardContainer: public GenericCardContainer {
     Q_OBJECT
 
 public:
@@ -76,6 +83,7 @@ public:
     inline void hookMouseEvents();
 
     QPixmap paintByMask(QPixmap& source);
+
 public slots:
     void updateAvatar();    
     void updateSmallAvatar();
@@ -210,11 +218,13 @@ protected:
 
 protected slots:
     virtual void _onEquipSelectChanged();
+
 private:   
     bool _startLaying();    
     void clearVotes();
     int _lastZ;
     bool _allZAdjusted;
+
 signals:
     void selected_changed();
     void enable_changed();
@@ -223,3 +233,4 @@ signals:
 };
 
 #endif
+// FORMATTED

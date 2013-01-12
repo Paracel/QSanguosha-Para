@@ -1,5 +1,5 @@
-#ifndef _CONNECTIONDIALOG_H
-#define _CONNECTIONDIALOG_H
+#ifndef _CONNECTION_DIALOG_H
+#define _CONNECTION_DIALOG_H
 
 #include <QDialog>
 #include <QListWidget>

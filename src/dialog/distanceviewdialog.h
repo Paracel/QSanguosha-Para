@@ -1,5 +1,5 @@
-#ifndef _DISTANCEVIEWDIALOG_H
-#define _DISTANCEVIEWDIALOG_H
+#ifndef _DISTANCE_VIEW_DIALOG_H
+#define _DISTANCE_VIEW_DIALOG_H
 
 class ClientPlayer;
 

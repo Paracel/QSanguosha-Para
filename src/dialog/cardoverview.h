@@ -1,5 +1,5 @@
-#ifndef _CARDOVERVIEW_H
-#define _CARDOVERVIEW_H
+#ifndef _CARD_OVERVIEW_H
+#define _CARD_OVERVIEW_H
 
 #include "card.h"
 

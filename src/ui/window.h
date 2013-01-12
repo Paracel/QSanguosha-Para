@@ -1,13 +1,12 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef _WINDOW_H
+#define _WINDOW_H
 
 #include <QGraphicsScale>
-
 #include <QGraphicsObject>
 
-class Window : public QGraphicsObject
-{
+class Window: public QGraphicsObject {
     Q_OBJECT
+
 public:
     explicit Window(const QString &title, const QSizeF &size);
     void addContent(const QString &content);
@@ -32,4 +31,5 @@ private:
     QImage *outimg;
 };
 
-#endif // WINDOW_H
+#endif
+// FORMATTED

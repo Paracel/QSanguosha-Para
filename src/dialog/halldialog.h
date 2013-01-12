@@ -1,5 +1,5 @@
-#ifndef _HALLDIALOG_H
-#define _HALLDIALOG_H
+#ifndef _HALL_DIALOG_H
+#define _HALL_DIALOG_H
 
 #include <QDialog>
 #include <QTableWidget>

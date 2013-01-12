@@ -1,5 +1,5 @@
-#ifndef _CLIENTSTRUCT_H
-#define _CLIENTSTRUCT_H
+#ifndef _CLIENT_STRUCT_H
+#define _CLIENT_STRUCT_H
 
 #include "player.h"
 #include "QSanSelectableItem.h"

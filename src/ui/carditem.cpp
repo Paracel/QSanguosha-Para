@@ -130,7 +130,7 @@ void CardItem::goBack(bool playAnimation, bool doFade){
     }
 }
 
-QAbstractAnimation* CardItem::getGoBackAnimation(bool doFade, bool smoothTransition, int duration)
+QAbstractAnimation *CardItem::getGoBackAnimation(bool doFade, bool smoothTransition, int duration)
 {
     m_animationMutex.lock();
     if (m_currentAnimation != NULL)

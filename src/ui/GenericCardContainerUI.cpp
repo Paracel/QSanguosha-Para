@@ -341,7 +341,7 @@ void PlayerCardContainer::updatePile(const QString &pile_name)
     } else {
         // retrieve menu and create a new pile if necessary
         QMenu* menu;
-        QPushButton* button;
+        QPushButton *button;
         if (!_m_privatePiles.contains(pile_name)) {
             button = new QPushButton;
             button->setObjectName(pile_name);
@@ -350,7 +350,7 @@ void PlayerCardContainer::updatePile(const QString &pile_name)
             button_widget->setWidget(button);
             _m_privatePiles[pile_name] = button_widget;
         } else {
-            button = (QPushButton*)(_m_privatePiles[pile_name]->widget());
+            button = (QPushButton *)(_m_privatePiles[pile_name]->widget());
             menu = button->menu();
         }
 
@@ -689,7 +689,7 @@ void PlayerCardContainer::addEquips(QList<CardItem *> &equips)
         _m_equipRegions[index]->show();
         _m_equipAnim[index]->stop();
         _m_equipAnim[index]->clear();
-        QPropertyAnimation* anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
+        QPropertyAnimation *anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
         anim->setEndValue(_m_layout->m_equipAreas[index].topLeft());
         anim->setDuration(200);
         _m_equipAnim[index]->addAnimation(anim);
@@ -723,7 +723,7 @@ void PlayerCardContainer::addEquips(QList<CardItem *> &equips)
         _mutexEquipAnim.lock();        
         _m_equipAnim[index]->stop();
         _m_equipAnim[index]->clear();
-        QPropertyAnimation* anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
+        QPropertyAnimation *anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
         anim->setEndValue(_m_layout->m_equipAreas[index].topLeft() + 
                           QPoint(_m_layout->m_equipAreas[index].width() / 2, 0));
         anim->setDuration(200);

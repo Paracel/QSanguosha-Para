@@ -1,5 +1,5 @@
-#ifndef CARDCONTAINER_H
-#define CARDCONTAINER_H
+#ifndef _CARD_CONTAINER_H
+#define _CARD_CONTAINER_H
 
 class CardItem;
 class ClientPlayer;
@@ -10,7 +10,7 @@ class ClientPlayer;
 
 #include <QStack>
 
-class CloseButton: public QSanSelectableItem{
+class CloseButton: public QSanSelectableItem {
     Q_OBJECT
 
 public:
@@ -24,9 +24,7 @@ signals:
     void clicked();
 };
 
-
-class CardContainer : public GenericCardContainer
-{
+class CardContainer: public GenericCardContainer {
     Q_OBJECT
 
 public:
@@ -41,6 +39,7 @@ public:
     ClientPlayer *m_currentPlayer;
     virtual void paint(QPainter *,const QStyleOptionGraphicsItem *,QWidget *);
     bool retained();
+
 public slots:
     void fillCards(const QList<int> &card_ids = QList<int>());
     void clear();
@@ -52,7 +51,7 @@ protected:
 
 private:
     QList<CardItem *> items;
-    CloseButton* close_button;
+    CloseButton *close_button;
     QPixmap _m_background;
     QStack<QList<CardItem *> > items_stack;
     bool last_retained;
@@ -69,7 +68,7 @@ signals:
     void item_gongxined(int card_id);
 };
 
-class GuanxingBox: public QSanSelectableItem{
+class GuanxingBox: public QSanSelectableItem {
     Q_OBJECT
 
 public:
@@ -92,4 +91,5 @@ private:
     static const int skip = 102;
 };
 
-#endif // CARDCONTAINER_H
+#endif
+// FORMATTED

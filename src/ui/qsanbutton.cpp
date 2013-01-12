@@ -321,10 +321,10 @@ void QSanInvokeSkillButton::paint(QPainter *painter, const QStyleOptionGraphicsI
     // painter->drawPixmap(0, 0, _m_skillTextPixmap[(int)_m_skillType]);
 }
 
-QSanSkillButton* QSanInvokeSkillDock::addSkillButtonByName(const QString& skillName)
+QSanSkillButton *QSanInvokeSkillDock::addSkillButtonByName(const QString& skillName)
 {
     Q_ASSERT(getSkillButtonByName(skillName) == NULL);
-    QSanInvokeSkillButton* button = new QSanInvokeSkillButton(this);
+    QSanInvokeSkillButton *button = new QSanInvokeSkillButton(this);
     
     const Skill *skill = Sanguosha->getSkill(skillName);
     button->setSkill(skill);
@@ -407,7 +407,7 @@ void QSanInvokeSkillDock::update()
             int btnWidth = _m_width / btnNum[i];
             for (int j = 0; j < btnNum[i]; j++)
             {
-                QSanInvokeSkillButton* button = all_buttons[m++];
+                QSanInvokeSkillButton *button = all_buttons[m++];
                 button->setButtonWidth((QSanInvokeSkillButton::SkillButtonWidth)(btnNum[i] - 1));
                 button->setPos(btnWidth * j, rowTop);
             }
@@ -420,7 +420,7 @@ void QSanInvokeSkillDock::update()
 QSanInvokeSkillButton*
 QSanInvokeSkillDock::getSkillButtonByName(const QString &skillName) const
 {
-    foreach (QSanInvokeSkillButton* button, _m_buttons)
+    foreach (QSanInvokeSkillButton *button, _m_buttons)
     {
         if (button->getSkill()->objectName() == skillName)
             return button;

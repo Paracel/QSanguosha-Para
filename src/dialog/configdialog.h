@@ -1,5 +1,5 @@
-#ifndef _CONFIGDIALOG_H
-#define _CONFIGDIALOG_H
+#ifndef _CONFIG_DIALOG_H
+#define _CONFIG_DIALOG_H
 
 #include <QDialog>
 #include <QLineEdit>

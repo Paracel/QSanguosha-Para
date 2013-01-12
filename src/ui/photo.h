@@ -1,5 +1,5 @@
-#ifndef PHOTO_H
-#define PHOTO_H
+#ifndef _PHOTO_H
+#define _PHOTO_H
 
 #include "QSanSelectableItem.h"
 #include "player.h"
@@ -11,13 +11,11 @@
 #include <QPixmap>
 #include <QComboBox>
 
-
 class ClientPlayer;
 class RoleComboBox;
 class QPushButton;
 
-class Photo : public PlayerCardContainer
-{
+class Photo: public PlayerCardContainer {
     Q_OBJECT
 
 public:
@@ -33,7 +31,7 @@ public:
     void tremble();
     void showSkillName(const QString &skill_name);
 
-    enum FrameType{
+    enum FrameType {
         S_FRAME_PLAYING,
         S_FRAME_RESPONDING,
         S_FRAME_SOS,
@@ -43,6 +41,7 @@ public:
     void setFrame(FrameType type);
     virtual QRectF boundingRect() const;
     QGraphicsItem* getMouseClickReceiver();
+
 public slots:
     void updatePhase();
     void hideEmotion();
@@ -74,4 +73,5 @@ protected:
     QGraphicsPixmapItem *_m_onlineStatusItem;
 };
 
-#endif // PHOTOBACK_H
+#endif
+// FORMATTED

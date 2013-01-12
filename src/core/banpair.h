@@ -1,5 +1,5 @@
-#ifndef _BANPAIR_H
-#define _BANPAIR_H
+#ifndef _BAN_PAIR_H
+#define _BAN_PAIR_H
 
 #include <QDialog>
 #include <QPair>

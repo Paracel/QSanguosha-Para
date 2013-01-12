@@ -1,5 +1,5 @@
-#ifndef _ROLEASSIGNDIALOG_H
-#define _ROLEASSIGNDIALOG_H
+#ifndef _ROLE_ASSIGN_DIALOG_H
+#define _ROLE_ASSIGN_DIALOG_H
 
 #include <QDialog>
 #include <QListWidget>

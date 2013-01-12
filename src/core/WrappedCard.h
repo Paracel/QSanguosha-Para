@@ -1,6 +1,7 @@
 #ifndef _WRAPPED_CARD_H
 #define _WRAPPED_CARD_H
-#include <card.h>
+
+#include "card.h"
 
 // This is a wrapper class around a card. Each card id should have one and only one WrappedCard
 // copy in each room after game initialization is done. Each room's WrappedCards are isolated,

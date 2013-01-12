@@ -375,7 +375,7 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName)
             _m_equipSkillBtns[i]->setSkill(skill);
             connect(_m_equipSkillBtns[i], SIGNAL(clicked()), this, SLOT(_onEquipSelectChanged()));
             connect(_m_equipSkillBtns[i], SIGNAL(enable_changed()), this, SLOT(_onEquipSelectChanged()));
-            QSanSkillButton* btn = _m_equipSkillBtns[i];
+            QSanSkillButton *btn = _m_equipSkillBtns[i];
             _mutexEquipAnim.unlock();
             return btn;
         }
@@ -392,9 +392,9 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName)
     return _m_skillDock->addSkillButtonByName(skillName);
 }
 
-QSanSkillButton* Dashboard::removeSkillButton(const QString &skillName)
+QSanSkillButton *Dashboard::removeSkillButton(const QString &skillName)
 {
-    QSanSkillButton* btn = NULL;
+    QSanSkillButton *btn = NULL;
     _mutexEquipAnim.lock();
     for (int i = 0; i < 4; i++)
     {
@@ -410,7 +410,7 @@ QSanSkillButton* Dashboard::removeSkillButton(const QString &skillName)
     }
     _mutexEquipAnim.unlock();
     if (btn == NULL){
-        QSanSkillButton* temp = _m_skillDock->getSkillButtonByName(skillName);
+        QSanSkillButton *temp = _m_skillDock->getSkillButtonByName(skillName);
         if(_m_button_recycle.contains(temp))
             _m_button_recycle.removeOne(temp);
         else
@@ -530,7 +530,7 @@ void Dashboard::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
 
 void Dashboard::_onEquipSelectChanged()
 {
-    QSanSkillButton* btn = qobject_cast<QSanSkillButton*>(sender());
+    QSanSkillButton *btn = qobject_cast<QSanSkillButton *>(sender());
     if (btn)
     {
         for (int i = 0; i < 4; i++)
@@ -601,7 +601,7 @@ void Dashboard::_setEquipBorderAnimation(int index, bool turnOn)
     
     _m_equipAnim[index]->stop();
     _m_equipAnim[index]->clear();
-    QPropertyAnimation* anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
+    QPropertyAnimation *anim = new QPropertyAnimation(_m_equipRegions[index], "pos");
     anim->setEndValue(newPos);
     anim->setDuration(200);
     _m_equipAnim[index]->addAnimation(anim);

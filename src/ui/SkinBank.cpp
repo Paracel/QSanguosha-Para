@@ -782,10 +782,8 @@ bool QSanRoomSkin::_loadAnimationConfig(const Json::Value &animationConfig)
     return true;
 }
 
-QAbstractAnimation* 
-QSanRoomSkin::createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
-                                     QGraphicsItem* &huashenAvatarCreated) const
-{
+QAbstractAnimation *QSanRoomSkin::createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
+                                                         QGraphicsItem* &huashenAvatarCreated) const{
     QLabel* avatar = new QLabel;
     avatar->setStyleSheet("QLabel{ background-color: transparent;}");
     avatar->setPixmap(huashenAvatar);

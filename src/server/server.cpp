@@ -223,7 +223,7 @@ QWidget *ServerDialog::createAdvancedTab(){
     basara_checkbox = new QCheckBox(tr("Enable Basara"));
     basara_checkbox->setChecked(Config.EnableBasara);
     updateButtonEnablility(mode_group->checkedButton());
-    connect(mode_group,SIGNAL(buttonClicked(QAbstractButton*)),this,SLOT(updateButtonEnablility(QAbstractButton*)));
+    connect(mode_group,SIGNAL(buttonClicked(QAbstractButton *)),this,SLOT(updateButtonEnablility(QAbstractButton *)));
 
     hegemony_checkbox = new QCheckBox(tr("Enable Hegemony"));
     hegemony_checkbox->setChecked(Config.EnableHegemony);

@@ -8,9 +8,9 @@
 #include <qlist.h>
 #include "skill.h"
 
-class QSanButton : public QGraphicsObject
-{
+class QSanButton: public QGraphicsObject{
     Q_OBJECT
+
 public:
     QSanButton(QGraphicsItem* parent);
     QSanButton(const QString &groupName, const QString &buttonName, QGraphicsItem* parent);
@@ -22,13 +22,14 @@ public:
     void setState(ButtonState state);
     inline void setButtonName(QString buttonName) { _m_buttonName = buttonName; }
     inline QString getButtonName() { return _m_buttonName; }
-    inline ButtonState getState() const { return _m_state; }
-    inline ButtonStyle getStyle() const { return _m_style; }
+    inline ButtonState getState() const{ return _m_state; }
+    inline ButtonStyle getStyle() const{ return _m_style; }
     void setRect(QRect rect);
     virtual QRectF boundingRect() const;
     bool insideButton(QPointF pos) const;
     void setEnabled(bool enabled);
     bool isDown();
+
 public slots:
     void click();
 
@@ -50,19 +51,20 @@ protected:
     // get rid of it.
     bool _m_mouseEntered;
     QPixmap _m_bgPixmap[S_NUM_BUTTON_STATES];
+
 signals:
     void clicked();
     void enable_changed();
 };
 
-class QSanSkillButton: public QSanButton
-{
+class QSanSkillButton: public QSanButton {
     Q_OBJECT
+
 public:
     enum SkillType { S_SKILL_ATTACHEDLORD, S_SKILL_PROACTIVE, S_SKILL_FREQUENT, S_SKILL_COMPULSORY,
                      S_SKILL_AWAKEN, S_SKILL_ONEOFF_SPELL, S_NUM_SKILL_TYPES };
-    inline static QString getSkillTypeString(SkillType type)
-    {
+
+    inline static QString getSkillTypeString(SkillType type) {
         QString arg1;
         if (type == QSanSkillButton::S_SKILL_AWAKEN) arg1 = "awaken";
         else if (type == QSanSkillButton::S_SKILL_COMPULSORY) arg1 = "compulsory";
@@ -80,7 +82,8 @@ public:
         QSanButton::setEnabled(enabled);
     }
     QSanSkillButton(QGraphicsItem* parent = NULL);
-    inline const ViewAsSkill *getViewAsSkill() const { return _m_viewAsSkill; }
+    inline const ViewAsSkill *getViewAsSkill() const{ return _m_viewAsSkill; }
+
 protected:
     virtual void _setSkillType(SkillType type);
     virtual void _repaint() = 0;
@@ -92,8 +95,10 @@ protected:
     bool _m_canDisable; 
     const Skill *_m_skill;
     const ViewAsSkill *_m_viewAsSkill;
+
 protected slots:
     void onMouseClick();
+
 signals:
     void skill_activated(const Skill *);
     void skill_activated();
@@ -101,66 +106,63 @@ signals:
     void skill_deactivated();
 };
 
-class QSanInvokeSkillButton: public QSanSkillButton
-{
+class QSanInvokeSkillButton: public QSanSkillButton {
     Q_OBJECT
+
 public:
-    inline QSanInvokeSkillButton(QGraphicsItem* parent = NULL) : QSanSkillButton(parent)
+    inline QSanInvokeSkillButton(QGraphicsItem* parent = NULL): QSanSkillButton(parent)
     {
         _m_enumWidth = S_WIDTH_NARROW;
     }
-    enum SkillButtonWidth { S_WIDTH_WIDE = 0, S_WIDTH_MED = 1, S_WIDTH_NARROW = 2, S_NUM_BUTTON_WIDTHS};    
+    enum SkillButtonWidth { S_WIDTH_WIDE, S_WIDTH_MED, S_WIDTH_NARROW, S_NUM_BUTTON_WIDTHS};
     inline void setButtonWidth(SkillButtonWidth width) { _m_enumWidth = width; _repaint(); }
     inline SkillButtonWidth getButtonWidth() { return _m_enumWidth; }
+
 protected:
     // this function does not update the button's bg and is therefore not exposed to outside
     // classes.    
     virtual void _repaint();
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     SkillButtonWidth _m_enumWidth;
-    
-    // QPixmap _m_skillTextPixmap[S_NUM_BUTTON_STATES];
 };
 
-class QSanInvokeSkillDock: public QGraphicsObject
-{
+class QSanInvokeSkillDock: public QGraphicsObject {
     Q_OBJECT
+
 public:
-    QSanInvokeSkillDock(QGraphicsItem* parent) : QGraphicsObject(parent) {}
+    QSanInvokeSkillDock(QGraphicsItem* parent): QGraphicsObject(parent) {}
     int width() const;
     int height() const;
     void setWidth(int width);
-    inline void addSkillButton(QSanInvokeSkillButton* button)
-    {
-        _m_buttons.push_back(button);
-    }
-    inline void removeSkillButton(QSanInvokeSkillButton* button)
-    {
+    inline void addSkillButton(QSanInvokeSkillButton *button) { _m_buttons.push_back(button);  }
+    inline void removeSkillButton(QSanInvokeSkillButton *button) {
         if (button == NULL) return;
         disconnect(button);
         _m_buttons.removeAll(button);
     }
     // Any one who call the following functions are responsible for
     // destroying the buttons returned
-    QSanSkillButton* addSkillButtonByName(const QString &skillName);
-    inline QSanSkillButton* removeSkillButtonByName(const QString &skillName)
-    {
-        QSanInvokeSkillButton* button = getSkillButtonByName(skillName);
+    QSanSkillButton *addSkillButtonByName(const QString &skillName);
+    inline QSanSkillButton *removeSkillButtonByName(const QString &skillName) {
+        QSanInvokeSkillButton *button = getSkillButtonByName(skillName);
         if (button != NULL) removeSkillButton(button);
         update();
         return button;
     }
-    QSanInvokeSkillButton* getSkillButtonByName(const QString &skillName) const;
+    QSanInvokeSkillButton *getSkillButtonByName(const QString &skillName) const;
     void update();    
-    virtual QRectF boundingRect() const {return QRectF(0, -height(), width(), height());}
-    inline QList<QSanInvokeSkillButton*> getAllSkillButtons(){return _m_buttons;}
+    virtual QRectF boundingRect() const{ return QRectF(0, -height(), width(), height()); }
+    inline QList<QSanInvokeSkillButton *> getAllSkillButtons() { return _m_buttons; }
+
 protected:
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {}    
-    QList<QSanInvokeSkillButton*> _m_buttons;
+    QList<QSanInvokeSkillButton *> _m_buttons;
     int _m_width;    
+
 signals:
     void skill_activated(const Skill *skill);
     void skill_deactivated(const Skill *skill);
 };
 
 #endif
+// FORMATTED

@@ -1,5 +1,5 @@
-#ifndef ROOMSCENE_H
-#define ROOMSCENE_H
+#ifndef _ROOM_SCENE_H
+#define _ROOM_SCENE_H
 
 #include "photo.h"
 #include "dashboard.h"
@@ -38,7 +38,7 @@ struct RoomLayout;
 #include <QMutex>
 #include <QStack>
 
-class ScriptExecutor: public QDialog{
+class ScriptExecutor: public QDialog {
     Q_OBJECT
 
 public:
@@ -48,7 +48,7 @@ public slots:
     void doScript();
 };
 
-class DeathNoteDialog: public QDialog{
+class DeathNoteDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -61,7 +61,7 @@ private:
     QComboBox *killer, *victim;
 };
 
-class DamageMakerDialog: public QDialog{
+class DamageMakerDialog: public QDialog {
     Q_OBJECT
 
 public:
@@ -82,7 +82,7 @@ private slots:
     void disableSource();
 };
 
-class KOFOrderBox: public QGraphicsPixmapItem{
+class KOFOrderBox: public QGraphicsPixmapItem {
 public:
     KOFOrderBox(bool self, QGraphicsScene *scene);
     void revealGeneral(const QString &name);
@@ -93,8 +93,7 @@ private:
     int revealed;
 };
 
-class ReplayerControlBar: public QGraphicsObject
-{
+class ReplayerControlBar: public QGraphicsObject{
     Q_OBJECT
 
 public:
@@ -111,6 +110,7 @@ protected:
     static const int S_BUTTON_GAP = 3;
     static const int S_BUTTON_WIDTH = 25;
     static const int S_BUTTON_HEIGHT = 21;
+
 private:
     QLabel *time_label;
     QString duration_str;
@@ -118,10 +118,9 @@ private:
 };
 
 #ifdef CHAT_VOICE
-
 class QAxObject;
 
-class SpeakThread: public QThread{
+class SpeakThread: public QThread {
     Q_OBJECT
 
 public:
@@ -139,10 +138,9 @@ private:
     QSemaphore sem;
     QString to_speak;
 };
-
 #endif
 
-class RoomScene : public QGraphicsScene{
+class RoomScene: public QGraphicsScene {
     Q_OBJECT
 
 public:
@@ -190,7 +188,7 @@ public slots:
 
     void handleGameEvent(const Json::Value &arg);
 
-    EffectAnimation * getEA() const{return animations;}
+    EffectAnimation *getEA() const{ return animations; }
     
 protected:    
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -216,7 +214,7 @@ private:
     double _m_last_front_ZValue;
     GenericCardContainer *_getGenericCardContainer(Player::Place place, Player *player);
     QMap<int, QList<QList<CardItem *> > > _m_cardsMoveStash;
-    Button* add_robot, *fill_robots;
+    Button *add_robot, *fill_robots;
     QList<Photo*> photos;
     QMap<QString, Photo*> name2photo;
     Dashboard *dashboard;
@@ -233,12 +231,11 @@ private:
 
     int timer_id;
     int tick;
-
     
     QList<QGraphicsPixmapItem *> role_items;
     CardContainer *card_container;
     
-    QList<QSanSkillButton*> m_skillButtons;
+    QList<QSanSkillButton *> m_skillButtons;
 
     ResponseSkill *response_skill;
     ShowOrPindianSkill *showorpindian_skill;
@@ -275,20 +272,10 @@ private:
     QPointF m_tableCenterPos;
     ReplayerControlBar *m_replayControl;
 
-    struct _MoveCardsClassifier
-    {
-        inline _MoveCardsClassifier(const CardsMoveStruct &move)
-        {
-            m_card_ids = move.card_ids;
-        }
-        inline bool operator == (const _MoveCardsClassifier &other) const
-        {
-            return m_card_ids == other.m_card_ids;
-        }
-        inline bool operator < (const _MoveCardsClassifier &other) const
-        {
-            return m_card_ids.first() < other.m_card_ids.first();
-        }
+    struct _MoveCardsClassifier {
+        inline _MoveCardsClassifier(const CardsMoveStruct &move) { m_card_ids = move.card_ids; }
+        inline bool operator ==(const _MoveCardsClassifier &other) const{ return m_card_ids == other.m_card_ids; }
+        inline bool operator <(const _MoveCardsClassifier &other) const{ return m_card_ids.first() < other.m_card_ids.first(); }
         QList<int> m_card_ids;
     };
 
@@ -332,12 +319,12 @@ private:
 
     // re-layout attempts
     bool game_started;
-    void _dispersePhotos(QList<Photo*> &photos, QRectF disperseRegion,
-                         Qt::Orientation orientation, Qt::Alignment align);
+    void _dispersePhotos(QList<Photo*> &photos, QRectF disperseRegion, Qt::Orientation orientation, Qt::Alignment align);
 
     void _cancelAllFocus();
     // for miniscenes
     int _m_currentStage;
+
 private slots:
     void fillCards(const QList<int>& card_ids);
     void updateSkillButtons();
@@ -407,6 +394,7 @@ private slots:
 
     void skillStateChange(const QString &skill_name);
     void trust();
+
 signals:
     void restart();
     void return_to_start();
@@ -414,4 +402,5 @@ signals:
 
 extern RoomScene *RoomSceneInstance;
 
-#endif // ROOMSCENE_H
+#endif
+// FORMATTED

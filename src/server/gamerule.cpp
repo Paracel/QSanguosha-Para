@@ -649,8 +649,8 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
                 if (p->isAlive()) winners << p->objectName();
                 if (p->getKingdom() == aliveKingdom) {
                     QStringList generals = room->getTag(p->objectName()).toStringList();
-                    if(generals.size()&&!Config.Enable2ndGeneral)continue;
-                    if(generals.size()>1)continue;
+                    if (generals.size() && !Config.Enable2ndGeneral) continue;
+                    if (generals.size() > 1) continue;
 
                     //if someone showed his kingdom before death,
                     //he should be considered victorious as well if his kingdom survives

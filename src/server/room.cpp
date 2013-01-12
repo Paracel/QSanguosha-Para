@@ -289,7 +289,7 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
     updateStateItem();
 
     LogMessage log;
-    log.type = killer ? (killer == victim ? "#Suicide" : "#Murder") : "#Contigency";
+    log.type = killer ? (killer == victim ? "#Suicide" : "#Murder") : "#Contingency";
     log.to << victim;
     log.arg = Config.EnableHegemony ? victim->getKingdom() : victim->getRole();
     log.from = killer;

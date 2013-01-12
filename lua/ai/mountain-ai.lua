@@ -63,10 +63,10 @@ local function card_for_qiaobian(self, who, return_prompt)
 			end
 		end
 		
-		if card==nil or target==nil then
-			if not who:hasEquip() or (who:getCards("e"):length() == 1 and who:getArmor() and who:getArmor():isKindOf("GaleShell")) then return nil end
+		if card == nil or target == nil then
+			if not who:hasEquip() then return nil end
 			local card_id = self:askForCardChosen(who, "e", "snatch")
-			if card_id >= 0 and who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
+			if who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
 			local targets = {}
 			if card then
 				for _, friend in ipairs(self.friends) do

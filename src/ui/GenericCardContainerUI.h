@@ -76,7 +76,7 @@ public:
     virtual void repaintAll();
     virtual void killPlayer();
     virtual void revivePlayer();
-    virtual QGraphicsItem* getMouseClickReceiver() = 0;
+    virtual QGraphicsItem *getMouseClickReceiver() = 0;
     virtual void startHuaShen(QString generalName, QString skillName);
     virtual void stopHuaShen();
 
@@ -107,27 +107,27 @@ protected:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     // initialization of _m_layout is compulsory for children classes.
-    virtual QGraphicsItem* _getEquipParent() = 0;
-    virtual QGraphicsItem* _getDelayedTrickParent() = 0;
-    virtual QGraphicsItem* _getAvatarParent() = 0;
-    virtual QGraphicsItem* _getMarkParent() = 0;
-    virtual QGraphicsItem* _getPhaseParent() = 0;
-    virtual QGraphicsItem* _getRoleComboBoxParent() = 0;
-    virtual QGraphicsItem* _getPileParent() = 0;
-    virtual QGraphicsItem* _getFocusFrameParent() = 0;
-    virtual QGraphicsItem* _getProgressBarParent() = 0;
-    virtual QGraphicsItem* _getDeathIconParent() = 0;
+    virtual QGraphicsItem *_getEquipParent() = 0;
+    virtual QGraphicsItem *_getDelayedTrickParent() = 0;
+    virtual QGraphicsItem *_getAvatarParent() = 0;
+    virtual QGraphicsItem *_getMarkParent() = 0;
+    virtual QGraphicsItem *_getPhaseParent() = 0;
+    virtual QGraphicsItem *_getRoleComboBoxParent() = 0;
+    virtual QGraphicsItem *_getPileParent() = 0;
+    virtual QGraphicsItem *_getFocusFrameParent() = 0;
+    virtual QGraphicsItem *_getProgressBarParent() = 0;
+    virtual QGraphicsItem *_getDeathIconParent() = 0;
     virtual QString getResourceKeyName() = 0;
 
     void _createRoleComboBox();    
     void _updateProgressBar(); // a dirty function used by the class itself only.
     void _updateDeathIcon();
     void _updateEquips();
-    void _paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QString &key);
-    void _paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QString &key, QGraphicsItem* parent);
-    void _paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QPixmap &pixmap);
-    void _paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QPixmap &pixmap, QGraphicsItem* parent);
-    void _clearPixmap(QGraphicsPixmapItem* item);
+    void _paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QString &key);
+    void _paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QString &key, QGraphicsItem *parent);
+    void _paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QPixmap &pixmap);
+    void _paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QPixmap &pixmap, QGraphicsItem *parent);
+    void _clearPixmap(QGraphicsPixmapItem *item);
     QPixmap _getPixmap(const QString &key);
     QPixmap _getPixmap(const QString &key, const QString &arg);
     QPixmap _getEquipPixmap(const EquipCard *equip);
@@ -145,13 +145,13 @@ protected:
     // everything specific to the children has been setup (such as the frames that we attach
     // the controls. Consider revise this in the future.
     void _createControls();
-    void _layBetween(QGraphicsItem* middle, QGraphicsItem* item1, QGraphicsItem* item2);
-    void _layUnder(QGraphicsItem* item);
+    void _layBetween(QGraphicsItem *middle, QGraphicsItem *item1, QGraphicsItem *item2);
+    void _layUnder(QGraphicsItem *item);
 
     QPixmap _getAvatarIcon(QString generalName);
 
     // layout
-    const QSanRoomSkin::PlayerCardContainerLayout* _m_layout;
+    const QSanRoomSkin::PlayerCardContainerLayout *_m_layout;
     QGraphicsRectItem *_m_avatarArea, *_m_smallAvatarArea;
 
     // icons;
@@ -172,7 +172,7 @@ protected:
     QGraphicsPixmapItem *_m_extraSkillText;
     QGraphicsTextItem *_m_markItem;
     QGraphicsPixmapItem *_m_selectedFrame;
-    QMap<QString, QGraphicsProxyWidget*> _m_privatePiles;
+    QMap<QString, QGraphicsProxyWidget *> _m_privatePiles;
 
     // The frame that is maintained by roomscene. Items in this area has positions
     // or contents that cannot be decided based on the information of PlayerCardContainer

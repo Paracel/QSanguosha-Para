@@ -62,7 +62,7 @@ public:
 
     void adjustCards(bool playAnimation = true);
     
-    virtual QGraphicsItem* getMouseClickReceiver();
+    virtual QGraphicsItem *getMouseClickReceiver();
 
     QList<CardItem *> removeCardItems(const QList<int> &card_ids, Player::Place place);
     virtual QList<CardItem *> cloneCardItems(QList<int> card_ids);
@@ -98,16 +98,16 @@ protected:
     virtual QList<CardItem *> removeHandCards(const QList<int> &cardIds);
 
     // initialization of _m_layout is compulsory for children classes.
-    inline virtual QGraphicsItem* _getEquipParent() { return _m_leftFrame; }
-    inline virtual QGraphicsItem* _getDelayedTrickParent() { return _m_leftFrame; }
-    inline virtual QGraphicsItem* _getAvatarParent() { return _m_rightFrame; }
-    inline virtual QGraphicsItem* _getMarkParent() { return _m_floatingArea; }
-    inline virtual QGraphicsItem* _getPhaseParent() { return _m_floatingArea; }
-    inline virtual QGraphicsItem* _getRoleComboBoxParent() { return _m_rightFrame; }
-    inline virtual QGraphicsItem* _getPileParent() { return _m_rightFrame; }
-    inline virtual QGraphicsItem* _getProgressBarParent() { return _m_floatingArea; }
-    inline virtual QGraphicsItem* _getFocusFrameParent() { return _m_rightFrame; }
-    inline virtual QGraphicsItem* _getDeathIconParent() { return _m_middleFrame;}
+    inline virtual QGraphicsItem *_getEquipParent() { return _m_leftFrame; }
+    inline virtual QGraphicsItem *_getDelayedTrickParent() { return _m_leftFrame; }
+    inline virtual QGraphicsItem *_getAvatarParent() { return _m_rightFrame; }
+    inline virtual QGraphicsItem *_getMarkParent() { return _m_floatingArea; }
+    inline virtual QGraphicsItem *_getPhaseParent() { return _m_floatingArea; }
+    inline virtual QGraphicsItem *_getRoleComboBoxParent() { return _m_rightFrame; }
+    inline virtual QGraphicsItem *_getPileParent() { return _m_rightFrame; }
+    inline virtual QGraphicsItem *_getProgressBarParent() { return _m_floatingArea; }
+    inline virtual QGraphicsItem *_getFocusFrameParent() { return _m_rightFrame; }
+    inline virtual QGraphicsItem *_getDeathIconParent() { return _m_middleFrame;}
     inline virtual QString getResourceKeyName() { return QSanRoomSkin::S_SKIN_KEY_DASHBOARD; }
     
     bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
@@ -138,7 +138,7 @@ protected:
     QGraphicsSimpleTextItem *trusting_text;
 
     QSanInvokeSkillDock* _m_skillDock;
-    const QSanRoomSkin::DashboardLayout* _dlayout;
+    const QSanRoomSkin::DashboardLayout *_dlayout;
 
     //for animated effects
     EffectAnimation *animations;

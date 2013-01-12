@@ -299,7 +299,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
     timer_id = 0;
     tick = 0;
 
-    QHBoxLayout* skill_dock_layout = new QHBoxLayout;
+    QHBoxLayout *skill_dock_layout = new QHBoxLayout;
     QMargins margins = skill_dock_layout->contentsMargins();
     margins.setTop(0);
     margins.setBottom(5);
@@ -876,7 +876,7 @@ void RoomScene::updateTable()
     guanxing_box->setPos(m_tableCenterPos);
     prompt_box->setPos(m_tableCenterPos);
 
-    int* seatToRegion;
+    int *seatToRegion;
     bool pkMode = false;
     if (ServerInfo.GameMode == "04_1v3" && game_started)
     {
@@ -1040,7 +1040,7 @@ void RoomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsScene::mouseMoveEvent(event);
     /*
-    QGraphicsObject *obj = static_cast<QGraphicsObject*>(focusItem());
+    QGraphicsObject *obj = static_cast<QGraphicsObject *>(focusItem());
     CardItem *card_item = qobject_cast<CardItem *>(obj);
     if(!card_item || !card_item->isUnderMouse())
         return;
@@ -1101,7 +1101,7 @@ void RoomScene::enableTargets(const Card *card) {
     if (card == NULL) {
 
         foreach(PlayerCardContainer *item, item2player.keys()){
-            QGraphicsItem* animationTarget = item->getMouseClickReceiver();
+            QGraphicsItem *animationTarget = item->getMouseClickReceiver();
             animations->effectOut(animationTarget);
             item->setFlag(QGraphicsItem::ItemIsSelectable, false);
             item->setEnabled(true);
@@ -1114,7 +1114,7 @@ void RoomScene::enableTargets(const Card *card) {
     if (card->targetFixed() || ClientInstance->hasNoTargetResponding() ||
             ClientInstance->getStatus() == Client::AskForShowOrPindian) {
         foreach(PlayerCardContainer *item, item2player.keys()) {
-            QGraphicsItem* animationTarget = item->getMouseClickReceiver();
+            QGraphicsItem *animationTarget = item->getMouseClickReceiver();
             animations->effectOut(animationTarget);
             item->setFlag(QGraphicsItem::ItemIsSelectable, false);
         }
@@ -1182,7 +1182,7 @@ void RoomScene::updateTargetsEnablity(const Card *card){
                     ((weimuFailure || !Sanguosha->isProhibited(Self, player, card))
                         && maxVotes > 0);
         
-        QGraphicsItem* animationTarget = item->getMouseClickReceiver();
+        QGraphicsItem *animationTarget = item->getMouseClickReceiver();
         if (enabled)
             animations->effectOut(animationTarget);
         else if(!animationTarget->graphicsEffect() ||
@@ -2093,7 +2093,7 @@ void RoomScene::useSelectedCard() {
 void RoomScene::onSelectChange()
 {
     /*
-    QGraphicsItem * photo = qobject_cast<QGraphicsItem*>(sender());
+    QGraphicsItem * photo = qobject_cast<QGraphicsItem *>(sender());
     if (!photo) return;
     if (photo->isSelected()) animations->emphasize(photo);
     else animations->effectOut(photo); */
@@ -2101,7 +2101,7 @@ void RoomScene::onSelectChange()
 
 void RoomScene::onEnabledChange()
 {
-    QGraphicsItem * photo = qobject_cast<QGraphicsItem*>(sender());
+    QGraphicsItem * photo = qobject_cast<QGraphicsItem *>(sender());
     if(!photo)return;
     if(photo->isEnabled())animations->effectOut(photo);
     else animations->sendBack(photo);
@@ -3915,7 +3915,7 @@ void RoomScene::fillGenerals(const QStringList &names){
         fillGenerals1v1(names);
 }
 
-void RoomScene::bringToFront(QGraphicsItem* front_item)
+void RoomScene::bringToFront(QGraphicsItem *front_item)
 {
     m_zValueMutex.lock();    
     if (_m_last_front_item != NULL)

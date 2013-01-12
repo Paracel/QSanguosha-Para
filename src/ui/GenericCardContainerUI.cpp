@@ -123,18 +123,18 @@ void GenericCardContainer::addCardItems(QList<CardItem *> &card_items, const Car
     _playMoveCardsAnimation(card_items, destroy);
 }
 
-void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QString &key)
+void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QString &key)
 {
     _paintPixmap(item, rect, _getPixmap(key));
 }
 
-void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem* &item,
-    const QRect &rect, const QString &key, QGraphicsItem* parent)
+void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem *&item,
+    const QRect &rect, const QString &key, QGraphicsItem *parent)
 {
     _paintPixmap(item, rect, _getPixmap(key), parent);
 }
 
-void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem* &item, const QRect &rect, const QPixmap &pixmap)
+void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem *&item, const QRect &rect, const QPixmap &pixmap)
 {
     _paintPixmap(item, rect, pixmap, _m_groupMain);
 }
@@ -167,8 +167,8 @@ QPixmap PlayerCardContainer::_getPixmap(const QString &key)
 
 }
 
-void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem* &item,
-    const QRect &rect, const QPixmap &pixmap, QGraphicsItem* parent)
+void PlayerCardContainer::_paintPixmap(QGraphicsPixmapItem *&item,
+    const QRect &rect, const QPixmap &pixmap, QGraphicsItem *parent)
 {
     if (item == NULL)
     {
@@ -382,10 +382,10 @@ void PlayerCardContainer::updatePile(const QString &pile_name)
     QPoint start = _m_layout->m_privatePileStartPos;
     QPoint step = _m_layout->m_privatePileStep;
     QSize size = _m_layout->m_privatePileButtonSize;
-    QList<QGraphicsProxyWidget*> widgets = _m_privatePiles.values();
+    QList<QGraphicsProxyWidget *> widgets = _m_privatePiles.values();
     for (int i = 0; i < widgets.length(); i++)
     {
-        QGraphicsProxyWidget* widget = widgets[i];
+        QGraphicsProxyWidget *widget = widgets[i];
         widget->setPos(start + i * step);
         widget->resize(size);
     }
@@ -401,7 +401,7 @@ void PlayerCardContainer::updateDrankState()
 
 void PlayerCardContainer::updateDuanchang()
 {
-    QGraphicsColorizeEffect* effect = new QGraphicsColorizeEffect();
+    QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
     effect->setColor(G_PHOTO_LAYOUT.m_duanchangMaskColor);
     effect->setStrength(0.4);
     if(m_player->getMark("@duanchang") > 0) {
@@ -533,7 +533,7 @@ void PlayerCardContainer::setPlayer(ClientPlayer *player)
         connect(player, SIGNAL(role_changed(QString)), _m_roleComboBox, SLOT(fix(QString)));
         connect(player, SIGNAL(hp_changed()), this, SLOT(updateHp()));
 
-        QTextDocument* textDoc = m_player->getMarkDoc();
+        QTextDocument *textDoc = m_player->getMarkDoc();
         Q_ASSERT(_m_markItem);
         _m_markItem->setDocument(textDoc);
         connect(textDoc, SIGNAL(contentsChanged()), this, SLOT(updateMarks()));
@@ -829,7 +829,7 @@ void PlayerCardContainer::hideAvatars()
     if (_m_smallAvatarIcon) _m_smallAvatarIcon->hide();
 }
 
-void PlayerCardContainer::_layUnder(QGraphicsItem* item)
+void PlayerCardContainer::_layUnder(QGraphicsItem *item)
 {
     _lastZ--;
     Q_ASSERT((unsigned long)item != 0xcdcdcdcd);
@@ -848,8 +848,8 @@ bool PlayerCardContainer::_startLaying()
     return true;
 }
 
-void PlayerCardContainer::_layBetween(QGraphicsItem* middle, QGraphicsItem* item1,
-                                       QGraphicsItem* item2)
+void PlayerCardContainer::_layBetween(QGraphicsItem *middle, QGraphicsItem *item1,
+                                       QGraphicsItem *item2)
 {
     if (middle && item1 && item2)
         middle->setZValue((item1->zValue() + item2->zValue()) / 2.0);
@@ -868,9 +868,9 @@ void PlayerCardContainer::_adjustComponentZValues()
     _layUnder(_m_floatingArea);
     _layUnder(_m_distanceItem);
     _layUnder(_m_votesItem);
-    foreach (QGraphicsItem* pile, _m_privatePiles.values())
+    foreach (QGraphicsItem *pile, _m_privatePiles.values())
         _layUnder(pile);
-    foreach (QGraphicsItem* judge, _m_judgeIcons)
+    foreach (QGraphicsItem *judge, _m_judgeIcons)
         _layUnder(judge);
     _layUnder(_m_markItem);
     _layUnder(_m_progressBarItem);
@@ -909,7 +909,7 @@ void PlayerCardContainer::updateRole(const QString &role)
 
 void PlayerCardContainer::_updateProgressBar()
 {
-    QGraphicsItem* parent = _getProgressBarParent();
+    QGraphicsItem *parent = _getProgressBarParent();
     if (parent == NULL) return;
     _m_progressBar->setOrientation(_m_layout->m_isProgressBarHorizontal ? Qt::Horizontal : Qt::Vertical);  
     QRectF newRect = _m_layout->m_progressBarArea
@@ -989,7 +989,7 @@ void PlayerCardContainer::killPlayer()
         _m_votesItem->hide();
     if (_m_distanceItem)
         _m_distanceItem->hide();
-    QGraphicsColorizeEffect* effect = new QGraphicsColorizeEffect();
+    QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
     effect->setColor(_m_layout->m_deathEffectColor);
     effect->setStrength(1.0);
     _m_groupMain->setGraphicsEffect(effect);
@@ -1030,7 +1030,7 @@ void PlayerCardContainer::showDistance() {
                  _getAvatarParent());
     _m_distanceItem->setZValue(1.1);
     if (!Self->inMyAttackRange(m_player)) {
-        QGraphicsColorizeEffect* effect = new QGraphicsColorizeEffect();
+        QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
         effect->setColor(_m_layout->m_deathEffectColor);
         effect->setStrength(1.0);
         _m_distanceItem->setGraphicsEffect(effect);
@@ -1045,7 +1045,7 @@ void PlayerCardContainer::showDistance() {
 
 void PlayerCardContainer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {    
-    QGraphicsItem* item = getMouseClickReceiver();
+    QGraphicsItem *item = getMouseClickReceiver();
     if (item != NULL && item->isUnderMouse() && isEnabled() &&
         (flags() & QGraphicsItem::ItemIsSelectable))
     {

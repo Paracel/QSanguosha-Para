@@ -43,10 +43,10 @@ public:
         void paintText(QPainter *painter, QRect pos, Qt::Alignment align, const QString &text) const;
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
-        void paintText(QGraphicsPixmapItem* item, QRect pos, Qt::Alignment align, const QString &text) const;
+        void paintText(QGraphicsPixmapItem *item, QRect pos, Qt::Alignment align, const QString &text) const;
 
     protected:
-        static QHash<QString, int*> _m_fontBank;
+        static QHash<QString, int *> _m_fontBank;
     };
 
     class QSanShadowTextFont: public QSanSimpleTextFont {
@@ -59,7 +59,7 @@ public:
         void paintText(QPainter *painter, QRect pos, Qt::Alignment align, const QString &text) const;
         // this function's prototype is confusing. It will CLEAR ALL contents on the
         // QGraphicsPixmapItem passed in and then start drawing.
-        void paintText(QGraphicsPixmapItem* item, QRect pos, Qt::Alignment align, const QString &text) const;
+        void paintText(QGraphicsPixmapItem *item, QRect pos, Qt::Alignment align, const QString &text) const;
     };
 
     class AnchoredRect {
@@ -307,7 +307,7 @@ public:
 
     // Animations
     QAbstractAnimation *createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
-                                               QGraphicsItem* &huashenItemCreated) const;
+                                               QGraphicsItem *&huashenItemCreated) const;
 
     // static consts
     // main keys

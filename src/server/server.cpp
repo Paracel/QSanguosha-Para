@@ -961,7 +961,7 @@ Server::Server(QObject *parent)
     ServerInfo.parse(Sanguosha->getSetupString());
     createNewRoom();
 
-    connect(server, SIGNAL(new_connection(ClientSocket*)), this, SLOT(processNewConnection(ClientSocket*)));
+    connect(server, SIGNAL(new_connection(ClientSocket *)), this, SLOT(processNewConnection(ClientSocket *)));
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
 
     current = NULL;

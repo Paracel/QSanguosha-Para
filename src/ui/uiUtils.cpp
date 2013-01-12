@@ -125,7 +125,7 @@ QString QSanUiUtils::QSanFreeTypeFont::resolveFont(const QString& fontName)
     return result;
 }
 
-int* QSanUiUtils::QSanFreeTypeFont::loadFont(const QString& fontName)
+int *QSanUiUtils::QSanFreeTypeFont::loadFont(const QString& fontName)
 {
     if (!_ftLibInitialized)
         if (!_initLibrary())
@@ -143,14 +143,14 @@ int* QSanUiUtils::QSanFreeTypeFont::loadFont(const QString& fontName)
     {
         qWarning("Cannot open font file: %s.", fontPath);    
     }
-    else return (int*)face;
+    else return (int *)face;
     return 0; 
 }
 
 static QMutex _paintTextMutex;
 
 bool QSanUiUtils::QSanFreeTypeFont::paintQString(
-    QPainter *painter, QString text, int* font, QColor color,
+    QPainter *painter, QString text, int *font, QColor color,
     QSize& fontSize, int spacing, int weight, QRect boundingBox,
     Qt::Orientation orient, Qt::Alignment align)
 {
@@ -385,7 +385,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQString(
 }
 
 bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(
-    QPainter *painter, QString text, int* font, QColor color,
+    QPainter *painter, QString text, int *font, QColor color,
     QSize& fontSize, int spacing, QRect boundingBox,
     Qt::Alignment align)
 {

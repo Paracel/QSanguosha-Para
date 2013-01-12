@@ -165,7 +165,7 @@ QStringList GeneralSelector::arrange1v1(ServerPlayer *player) {
 
     QStringList result;
     int i;
-	for (i = 0; i < 3; i++) {
+    for (i = 0; i < 3; i++) {
         if (get1v1ArrangeValue(arranged[i]) > 1000) {
             result << arranged[i];
             break;

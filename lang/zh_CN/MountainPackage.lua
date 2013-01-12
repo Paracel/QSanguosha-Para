@@ -136,7 +136,7 @@ return {
 	["$zhiji2"] = "丞相厚恩，维万死不能相报！",
 	["$ZhijiAnimate"] = "anim=image/animate/zhiji.png",
 	["$guanxing3"] = "继丞相之遗志，讨篡汉之逆贼！",
-	["$guanxing4"] = "克复中原，指日可待！",-
+	["$guanxing4"] = "克复中原，指日可待！",
 	["~jiangwei"] = "我计不成，乃天命也……",
 
 --孙策

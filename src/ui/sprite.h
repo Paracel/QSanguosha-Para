@@ -81,8 +81,8 @@ public slots:
     void deleteEffect();
 
 private:
-    QMap<QGraphicsItem*,QAnimatedEffect*> effects;
-    QMap<QGraphicsItem*,QAnimatedEffect*> registered;
+    QMap<QGraphicsItem *, QAnimatedEffect *> effects;
+    QMap<QGraphicsItem *, QAnimatedEffect *> registered;
 };
 
 class EmphasizeEffect: public QAnimatedEffect {

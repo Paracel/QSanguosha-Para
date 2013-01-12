@@ -640,7 +640,7 @@ void Room::broadcastInvoke(const char *method, const QString &arg, ServerPlayer 
     broadcast(QString("%1 %2").arg(method).arg(arg), except);
 }
 
-void Room::broadcastInvoke(const QSanProtocol::QSanPacket* packet, ServerPlayer *except) {
+void Room::broadcastInvoke(const QSanProtocol::QSanPacket *packet, ServerPlayer *except) {
     broadcast(QString(packet->toString().c_str()), except);
 }
 

@@ -10,7 +10,7 @@ MagatamasBoxItem::MagatamasBoxItem() : QGraphicsObject(NULL)
     m_maxHp = 0;
 }
 
-MagatamasBoxItem::MagatamasBoxItem(QGraphicsItem* parent)
+MagatamasBoxItem::MagatamasBoxItem(QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
     m_hp = 0;
@@ -166,7 +166,7 @@ void MagatamasBoxItem::_doHpChangeAnimation(int newHp)
     }
 }
 
-void MagatamasBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+void MagatamasBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     if (m_maxHp <= 0) return;
     int imageIndex = qBound(0, m_hp, 5);

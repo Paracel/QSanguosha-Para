@@ -79,7 +79,7 @@ QRectF MyPixmapItem::boundingRect() const{
     return QRectF(QPointF(0, 0), QSizeF(sizex, sizey));
 }
 
-void MyPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem*, QWidget*) {
+void MyPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     painter->drawPixmap(boundingRect().toRect(), pixmap());
 }
 

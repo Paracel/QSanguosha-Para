@@ -69,7 +69,7 @@ const char *QSanRoomSkin::S_SKIN_KEY_ANIMATIONS = "preloads";
 
 QSanSkinFactory* QSanSkinFactory::_sm_singleton = NULL;
 QHash<QString, QPixmap> QSanPixmapCache::_m_pixmapBank;
-QHash<QString, int*> IQSanComponentSkin::QSanSimpleTextFont::_m_fontBank;
+QHash<QString, int *> IQSanComponentSkin::QSanSimpleTextFont::_m_fontBank;
 
 IQSanComponentSkin::QSanSimpleTextFont::QSanSimpleTextFont()
 {
@@ -153,7 +153,7 @@ void IQSanComponentSkin::QSanSimpleTextFont::paintText(QPainter *painter, QRect 
 }
 
 
-void IQSanComponentSkin::QSanSimpleTextFont::paintText(QGraphicsPixmapItem* item, QRect pos,
+void IQSanComponentSkin::QSanSimpleTextFont::paintText(QGraphicsPixmapItem *item, QRect pos,
                                                        Qt::Alignment align, const QString &text) const
 {
     QPixmap pixmap(pos.size());
@@ -185,7 +185,7 @@ void IQSanComponentSkin::QSanShadowTextFont::paintText(QPainter *painter, QRect 
     painter->drawImage(pos.topLeft(), image); //pos, image);
 }
 
-void IQSanComponentSkin::QSanShadowTextFont::paintText(QGraphicsPixmapItem* pixmapItem,
+void IQSanComponentSkin::QSanShadowTextFont::paintText(QGraphicsPixmapItem *pixmapItem,
                                                        QRect pos,
                                                        Qt::Alignment align,
                                                        const QString &text) const
@@ -783,11 +783,11 @@ bool QSanRoomSkin::_loadAnimationConfig(const Json::Value &animationConfig)
 }
 
 QAbstractAnimation *QSanRoomSkin::createHuaShenAnimation(QPixmap &huashenAvatar, QPoint topLeft, QGraphicsItem *parent,
-                                                         QGraphicsItem* &huashenAvatarCreated) const{
+                                                         QGraphicsItem *&huashenAvatarCreated) const{
     QLabel* avatar = new QLabel;
     avatar->setStyleSheet("QLabel{ background-color: transparent;}");
     avatar->setPixmap(huashenAvatar);
-    QGraphicsProxyWidget* widget = new QGraphicsProxyWidget(parent);
+    QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(parent);
     widget->setWidget(avatar);
     widget->setPos(topLeft);
     // widget->setOpacity(0.0);
@@ -898,7 +898,7 @@ bool QSanRoomSkin::_loadLayoutConfig(const Json::Value &layoutConfig)
     for (int i = 0; i < 2; i++)
     {
         Json::Value playerConfig;
-        PlayerCardContainerLayout* layout;
+        PlayerCardContainerLayout *layout;
         if (i == 0)
         {
             layout = &_m_photoLayout;

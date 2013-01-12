@@ -8,7 +8,7 @@
 #include <QPainter>
 #include <QGraphicsSceneHoverEvent>
 
-QSanButton::QSanButton(QGraphicsItem* parent): QGraphicsObject(parent)
+QSanButton::QSanButton(QGraphicsItem *parent): QGraphicsObject(parent)
 {
     _m_state = S_STATE_UP;
     _m_style = S_STYLE_PUSH;
@@ -20,7 +20,7 @@ QSanButton::QSanButton(QGraphicsItem* parent): QGraphicsObject(parent)
 
 QSanButton::QSanButton(const QString &groupName, 
                        const QString &buttonName,
-                       QGraphicsItem* parent)
+                       QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
     _m_state = S_STATE_UP;
@@ -189,7 +189,7 @@ bool QSanButton::isDown()
     return (_m_state == S_STATE_DOWN);
 }
 
-QSanSkillButton::QSanSkillButton(QGraphicsItem* parent): 
+QSanSkillButton::QSanSkillButton(QGraphicsItem *parent):
                                         QSanButton(parent)
 {
     _m_groupName = QSanRoomSkin::S_SKIN_KEY_BUTTON_SKILL;
@@ -371,7 +371,7 @@ void QSanInvokeSkillDock::update()
         Q_ASSERT(lordskillNum <= 3);
         int rows = (numButtons == 0) ? 0 : (numButtons - 1) / 3 + 1;
         int rowH = G_DASHBOARD_LAYOUT.m_skillButtonsSize[0].height();
-        int* btnNum = new int[rows + 1 + 1]; // we allocate one more row in case we need it.
+        int *btnNum = new int[rows + 1 + 1]; // we allocate one more row in case we need it.
         int remainingBtns = numButtons;
         for (int i = 0; i < rows; i++)
         {

@@ -260,7 +260,7 @@ void Photo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 }
 
-QGraphicsItem* Photo::getMouseClickReceiver()  
+QGraphicsItem *Photo::getMouseClickReceiver()  
 {
     return this; 
 }

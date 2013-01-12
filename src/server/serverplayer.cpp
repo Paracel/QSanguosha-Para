@@ -298,7 +298,7 @@ void ServerPlayer::sendMessage(const QString &message) {
     }
 }
 
-void ServerPlayer::invoke(const QSanPacket* packet) {
+void ServerPlayer::invoke(const QSanPacket *packet) {
     unicast(QString(packet->toString().c_str()));
 }
 

@@ -30,7 +30,7 @@ void TimedProgressBar::hide()
     QProgressBar::hide();
 }
 
-void TimedProgressBar::timerEvent(QTimerEvent* timerEvent)
+void TimedProgressBar::timerEvent(QTimerEvent *timerEvent)
 {
     bool emitTimeout = false;
     bool doHide = false;

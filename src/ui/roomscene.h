@@ -169,7 +169,7 @@ public slots:
     void chooseRole(const QString &scheme, const QStringList &roles);
     void chooseDirection();
 
-    void bringToFront(QGraphicsItem* item);
+    void bringToFront(QGraphicsItem *item);
     void arrangeSeats(const QList<const ClientPlayer *> &seats);
     void toggleDiscards();
     void enableTargets(const Card *card);
@@ -206,11 +206,11 @@ private:
     bool _processCardsMove(CardsMoveStruct &move, bool isLost);
     bool _m_isMouseButtonDown;
     bool _m_isInDragAndUseMode;
-    const QSanRoomSkin::RoomLayout* _m_roomLayout;
-    const QSanRoomSkin::PhotoLayout* _m_photoLayout;
-    const QSanRoomSkin::CommonLayout* _m_commonLayout;
+    const QSanRoomSkin::RoomLayout *_m_roomLayout;
+    const QSanRoomSkin::PhotoLayout *_m_photoLayout;
+    const QSanRoomSkin::CommonLayout *_m_commonLayout;
     const QSanRoomSkin* _m_roomSkin;
-    QGraphicsItem* _m_last_front_item;
+    QGraphicsItem *_m_last_front_item;
     double _m_last_front_ZValue;
     GenericCardContainer *_getGenericCardContainer(Player::Place place, Player *player);
     QMap<int, QList<QList<CardItem *> > > _m_cardsMoveStash;

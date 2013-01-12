@@ -49,7 +49,7 @@ protected:
 
 private:
     QList<RoleComboBoxItem *> items;
-    RoleComboBoxItem* m_currentRole;
+    RoleComboBoxItem *m_currentRole;
 
 private slots:
     void collapse();

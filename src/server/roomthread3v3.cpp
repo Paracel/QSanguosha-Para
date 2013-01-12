@@ -68,11 +68,11 @@ void RoomThread3v3::run() {
         }
     }
 
-    if (Config.value("3v3/UsingExtension", false).toBool())
+    if (Config.value("3v3/UsingExtension", false).toBool()) {
         general_names = Config.value("3v3/ExtensionGenerals").toStringList();
         if (general_names.isEmpty())
             general_names = getGeneralsWithoutExtension();
-    else
+    } else
         general_names = getGeneralsWithoutExtension();
 
     qShuffle(general_names);

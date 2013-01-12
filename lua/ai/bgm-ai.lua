@@ -1119,7 +1119,8 @@ sgs.ai_skill_use["@@diyyicong"] = function(self, prompt)
 	self:sortByKeepValue(cards)
 	for _,card in ipairs(cards)  do
 		if self:getKeepValue(card) < 6 
-		   and card:getId() ~= self.player:getArmor():getEffectiveId() and card:getId() ~= self.player:getDefensiveHorse():getEffectiveId() then
+		   and (not self.player:getArmor() or card:getId() ~= self.player:getArmor():getEffectiveId())
+		   and (not self.player:getDefensiveHorse() or card:getId() ~= self.player:getDefensiveHorse():getEffectiveId()) then
 			table.insert(yicongcards, card:getId()) 
 			break
 		end

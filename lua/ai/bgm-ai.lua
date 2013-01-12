@@ -338,7 +338,7 @@ sgs.dynamic_value.control_card.TanhuCard = true
 sgs.ai_use_priority.TanhuCard = 8
 
 sgs.ai_skill_invoke.mouduan = function(self, data)
-	local cardsCount = self.player:getCardCount(true)
+	local cardsCount = self.player:getHandcardNum()
 	if cardsCount <= 3 then return false end
 	local current = self.room:getCurrent()
 	if current:objectName() == self.player:objectName() then

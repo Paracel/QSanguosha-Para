@@ -24,6 +24,58 @@ function sgs.ai_slash_prohibit.weidi(self, to, card)
 	end
 end
 
+sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, include_equip)
+	self:assignKeep(self.player:getHp(), true)
+	if optional then return {} end
+	local flag = "h"
+	local equips = self.player:getEquips()
+	if include_equip and not (equips:isEmpty() or self.player:isJilei(equips:first())) then flag = flag .. "e" end
+	local cards = self.player:getCards(flag)
+	local to_discard = {}
+	cards = sgs.QList2Table(cards)
+	local aux_func = function(card)
+		local place = self.room:getCardPlace(card:getEffectiveId())
+		if place == sgs.Player_PlaceEquip then
+			if card:isKindOf("SilverLion") then
+				for _, enemy in ipairs(self.enemies) do
+					if enemy:canSlash(self.player) and self:isEquip("GudingBlade", enemy) then return 6 end
+				end
+				if self.player:isWounded() then 
+					return -2
+				end
+			elseif card:isKindOf("OffensiveHorse") then return 1
+			elseif card:isKindOf("Weapon") then return 2
+			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif card:isKindOf("Armor") then 
+				return 4 
+			end
+		elseif self:hasSkills(sgs.lose_equip_skill) then 
+			return 5
+		else 
+			return 0 
+		end
+	end
+	local compare_func = function(a, b)
+		if aux_func(a) ~= aux_func(b) then return aux_func(a) < aux_func(b) end
+		return self:getKeepValue(a) < self:getKeepValue(b)
+	end
+
+	table.sort(cards, compare_func)
+	local least = min_num
+	if discard_num - min_num > 1 then
+		least = discard_num -1
+	end
+	for _, card in ipairs(cards) do
+		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then 
+			break 
+		end
+		if not self.player:isJilei(card) then 
+			table.insert(to_discard, card:getId()) 
+		end
+	end
+	return to_discard
+end
+
 sgs.ai_chaofeng.yuanshu = 3
 
 sgs.ai_skill_invoke.danlao = function(self, data)

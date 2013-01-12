@@ -213,7 +213,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 			if max_loyalty < (list[player:objectName()] or 0) then
 				max_loyalty = (list[player:objectName()] or 0)
 				max_kingdom = akingdom
-			end			
+			end
 		end
 		if neg_loyalty_count > 2 or pos_loyalty_count > 0 then
 			sgs.ai_explicit[player:objectName()] = max_kingdom

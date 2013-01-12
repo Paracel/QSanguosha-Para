@@ -11,7 +11,7 @@ sgs.ai_skill_use["@@shensu1"]=function(self,prompt)
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-		
+
 		if not self.player:canSlash(enemy, slash, false) then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif def<6 and eff then return "@ShensuCard=.->"..enemy:objectName()

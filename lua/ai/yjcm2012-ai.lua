@@ -73,7 +73,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-		
+
 		if not self.player:canSlash(enemy, nil, false) then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif def<6 and eff and needburst > 0 then return "chi"
@@ -84,7 +84,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-		
+
 		if not self.player:canSlash(enemy, nil, false) then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif eff and def<8 and needburst > 0 then return "chi"

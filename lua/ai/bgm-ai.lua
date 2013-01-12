@@ -472,7 +472,7 @@ sgs.ai_need_damaged.shichou = function (self, attacker)
 			if self.player:getRole() == "renegade" then need_damage = true end
 			if victim:isAlive() and need_damage then
 				return victim:hasSkill("wuhun") and 2 or 1
-			end		
+			end
 		end
 	end
 	return false
@@ -578,7 +578,7 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 				elseif self:hasEquip(card) and not has_weapon then shouldUse = false
 				end
 			end
-		
+
 			if card:isKindOf("Slash") then
 				local dummy_use = {isDummy = true}
 				if self:getCardsNum("Slash") == 1 then

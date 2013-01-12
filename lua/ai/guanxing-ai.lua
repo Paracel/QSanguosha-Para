@@ -125,7 +125,7 @@ local function GuanXing(self, cards)
 			if judge_str == "spade" and not lightning_flag then
 				if for_judge:getNumber() >= 2 and for_judge:getNumber() <= 9 then lightning_flag = true end
 			end
-		
+
 			if self:isFriend(next_player) then 
 				if next_player:hasSkill("luoshen") then
 					if for_judge:isBlack() then

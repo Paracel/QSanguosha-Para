@@ -111,7 +111,7 @@ function SmartAI:initialize(player)
 		--in MSVC, while in gcc only FUNCTION_NAME is in place.
 		local method_name_start = 1
 		while true do
-			local found = string.find(full_method_name, "::", method_name_start)		
+			local found = string.find(full_method_name, "::", method_name_start)
 			if found ~= nil then
 				method_name_start = found + 2
 			else
@@ -1665,12 +1665,12 @@ function SmartAI:filterEvent(event, player, data)
 			else
 				intention = 100 
 			end
-		
+
 			if sgs.ai_ganglie_effect and sgs.ai_ganglie_effect == string.format("%s_%s_%d",from:objectName(), to:objectName(), sgs.turncount) then
 				sgs.ai_ganglie_effect = nil
 				intention = -30
 			end
-		
+
 			if from then sgs.updateIntention(from, to, intention) end
 		end
 	elseif event == sgs.CardUsed then
@@ -1742,10 +1742,10 @@ function SmartAI:filterEvent(event, player, data)
 							intention=math.abs(intention)
 						else
 							intention = 0 
-						end					
+						end
 					end
 				elseif place == sgs.Player_PlaceHand then
-					if player:hasSkill("kongcheng") and player:isKongcheng() then					
+					if player:hasSkill("kongcheng") and player:isKongcheng() then
 						intention = - (intention / 10)
 					end
 				end
@@ -1765,15 +1765,15 @@ function SmartAI:filterEvent(event, player, data)
 			if move.to_place==sgs.Player_PlaceHand and move.to and place~=sgs.Player_DrawPile then
 				local flag="visible"
 				if move.from and move.from:objectName()~=move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
-					flag=string.format("%s_%s_%s","visible",move.from:objectName(),move.to:objectName())				
+					flag=string.format("%s_%s_%s","visible",move.from:objectName(),move.to:objectName())		
 				end
 				global_room:setCardFlag(card_id,flag)
 			end
 
-			if move.to_place==sgs.Player_DiscardPile then							
-				global_room:clearCardFlag(card)			
+			if move.to_place==sgs.Player_DiscardPile then		
+				global_room:clearCardFlag(card)	
 			end
-		
+
 		end
 	elseif event == sgs.StartJudge then
 		local judge = data:toJudge()
@@ -1811,7 +1811,7 @@ end
 
 function is_a_jink(player, card)
 	if card:isKindOf("Jink") then return true end	
-	if player:hasSkill("qingguo") and card:isBlack() then return true end		
+	if player:hasSkill("qingguo") and card:isBlack() then return true end
 	if player:hasSkill("longdan") and card:isKindOf("Slash") then return true end
 	if player:hasSkill("longhun") and player:getHp() == 1 and card:getSuit()==sgs.Card_Club then return true end
 	return false
@@ -1819,7 +1819,7 @@ end
 
 function is_a_slash(player, card)
 	if card:isKindOf("Slash") then return true end	
-	if player:hasSkill("wusheng") and card:isRed() then return true end		
+	if player:hasSkill("wusheng") and card:isRed() then return true end
 	if player:hasSkill("wushen") and card:getSuit()==sgs.Card_Heart then return true end
 	if player:hasSkill("longdan") and card:isKindOf("Jink") then return true end
 	if player:hasSkill("nosgongqi") and card:isKindOf("EquipCard") then return true end
@@ -2127,7 +2127,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
 				if who:getWeapon() then return who:getWeapon():getId() end
 				if who:getArmor() and who:getArmor():isKindOf("Vine") then return who:getArmor():getId() end
-				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end			
+				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end	
 			end
 		end
 	else
@@ -3352,7 +3352,7 @@ function getCardsNum(class_name, player)
 		equipcard = equipcard + 1
 		if player:getHandcardNum() > player:getHp() then
 			equipnull = equipnull + 1
-		end		
+		end
 		if card:isRed() then 
 			redpeach = redpeach + 1
 			redslash = redslash + 1 
@@ -3402,7 +3402,7 @@ function getCardsNum(class_name, player)
 			return num + redpeach + (player:getHandcardNum()-shownum) * 0.6
 		elseif player:hasSkill("longhun") then
 			return num+heartpeach+(player:getHandcardNum()-shownum) * 0.5
-		elseif player:hasSkill("chunlao") then		
+		elseif player:hasSkill("chunlao") then
 			return num + player:getPile("wine"):length()
 		else 
 			return num

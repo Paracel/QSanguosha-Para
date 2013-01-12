@@ -95,7 +95,7 @@ sgs.ai_need_damaged.fankui = function (self, attacker)
 	local need_retrial=function(player)
 		local alive_num=self.room:alivePlayerCount()
 		return alive_num + player:getSeat() % alive_num > self.room:getCurrent():getSeat() 
-				and player:getSeat() < alive_num + self.player:getSeat() % alive_num			
+				and player:getSeat() < alive_num + self.player:getSeat() % alive_num	
 	end
 	local retrial_card ={["spade"]=nil,["heart"]=nil,["club"]=nil}
 	local attacker_card ={["spade"]=nil,["heart"]=nil,["club"]=nil}
@@ -244,7 +244,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		if player:getHandcardNum() ==0 or player:objectName()==self.player:objectName() then return #targets end
 		if #targets==0 then 
 			table.insert(targets, player:objectName())
-		elseif #targets==1 then		
+		elseif #targets==1 then
 			if player:objectName()~=targets[1] then 
 				table.insert(targets, player:objectName()) 
 			end
@@ -263,12 +263,12 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		if zhugeliang:getHp() <=2 then  
 			if add_player(zhugeliang,1)==2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 		else
-			local flag = string.format("%s_%s_%s","visible",self.player:objectName(),zhugeliang:objectName())				
+			local flag = string.format("%s_%s_%s","visible",self.player:objectName(),zhugeliang:objectName())		
 			local cards = sgs.QList2Table(zhugeliang:getHandcards())
 			if #cards==1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
 				if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
 					if add_player(zhugeliang,1)==2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
-				end			
+				end	
 			end
 		end
 	end
@@ -309,10 +309,10 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	for i = 1, #self.enemies, 1 do
 		local p = self.enemies[i]
 		local x= p:getHandcardNum()
-		local good_target=true			
+		local good_target=true	
 		if x==1 and self:hasSkills(sgs.need_kongcheng,p) then good_target = false end
 		if x>=2  and self:hasSkills("tuntian",p) then good_target = false end
-		if good_target and add_player(p)==2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end			
+		if good_target and add_player(p)==2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end	
 	end
 
 
@@ -819,7 +819,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 			table.remove(unpreferedCards,1)
 		end
 	
-		local num=self:getCardsNum("Jink")-1						
+		local num=self:getCardsNum("Jink")-1	
 		if self.player:getArmor() then num=num+1 end
 		if num>0 then
 			for _,card in ipairs(cards) do
@@ -839,7 +839,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 		if self.player:getWeapon() and self.player:getHandcardNum()<3 then
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
-			
+	
 	if (self:isEquip("SilverLion") and self.player:isWounded()) then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
 		end
@@ -895,7 +895,7 @@ qixi_skill.getTurnUseCard=function(self,inclusive)
 				elseif self:hasEquip(card) and not has_weapon then shouldUse=false
 				end
 			end
-		
+
 			if card:isKindOf("Slash") then
 				local dummy_use = {isDummy = true}
 				if self:getCardsNum("Slash") == 1 then
@@ -914,7 +914,7 @@ qixi_skill.getTurnUseCard=function(self,inclusive)
 				black_card = card
 				break
 			end
-		
+
 		end
 	end
 
@@ -992,9 +992,9 @@ end
 
 sgs.ai_skill_use_func.FanjianCard=function(card,use,self)
 	self:sort(self.enemies, "hp")
-		
+
 	for _, enemy in ipairs(self.enemies) do	
-		if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy) then					
+		if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy) then
 		elseif (not enemy:hasSkill("qingnang")) or (enemy:getHp() == 1 and enemy:getHandcardNum() == 0 and not enemy:getEquips()) then
 			use.card = card
 			if use.to then use.to:append(enemy) end
@@ -1038,19 +1038,19 @@ guose_skill.getTurnUseCard=function(self,inclusive)
 	for _,acard in ipairs(cards)  do
 		if (acard:getSuit() == sgs.Card_Diamond) and ((self:getUseValue(acard)<sgs.ai_use_value.Indulgence) or inclusive) then
 			local shouldUse=true
-		
+
 			if acard:isKindOf("Armor") then
 				if not self.player:getArmor() then shouldUse=false 
 				elseif self:hasEquip(acard) and not has_armor and self:evaluateArmor()>0 then shouldUse=false
 				end
 			end
-		
+
 			if acard:isKindOf("Weapon") then
 				if not self.player:getWeapon() then shouldUse=false
 				elseif self:hasEquip(acard) and not has_weapon then shouldUse=false
 				end
 			end
-		
+
 			if shouldUse then
 				card = acard
 				break
@@ -1363,7 +1363,7 @@ lijian_skill.getTurnUseCard=function(self)
 		elseif self.player:getHandcardNum() > self.player:getHp() then
 			local cards = self.player:getHandcards()
 			cards=sgs.QList2Table(cards)
-		
+
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
 					and not acard:isKindOf("Peach") then 

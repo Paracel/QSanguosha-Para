@@ -406,7 +406,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	local targets ={}
 	for _, enemy in ipairs(self.enemies) do
 		if can_attack(enemy) then	
-			table.insert(targets,enemy)		
+			table.insert(targets,enemy)
 		end
 	end
 
@@ -435,7 +435,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 					if use.to then use.to:append(enemy) end
 					return
 				end
-			end		
+			end
 		end
 	end
 

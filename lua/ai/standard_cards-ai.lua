@@ -117,7 +117,7 @@ function sgs.getDefenseSlash(player)
 
 	local hujiaJink=0
 	if player:hasLordSkill("hujia") then
-			local lieges = global_room:getLieges("wei", player)		
+			local lieges = global_room:getLieges("wei", player)
 			for _, liege in sgs.qlist(lieges) do
 				if sgs.compareRoleEvaluation(liege,"rebel","loyalist")==sgs.compareRoleEvaluation(player,"rebel","loyalist") then
 					hujiaJink = hujiaJink + getCardsNum("Jink",liege)
@@ -1192,12 +1192,12 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					if trick:isKindOf("Indulgence") then
 						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId() 
 					end
-				end			
+				end	
 				use.to:append(friend) 
 			elseif isJixi then
 				self.room:setPlayerFlag(friend, "JixiTarget")
 			end
-		
+
 			return
 		end
 		if self:isEquip("SilverLion", friend) and self:hasTrickEffective(card, friend) and 
@@ -1257,7 +1257,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						gethandcard = false
 					elseif not isDefenseCard then
 						gethandcard = true
-					end		
+					end
 				end
 
 				if not enemy:isKongcheng() and gethandcard then cardchosen = self:getCardRandomly(enemy, "h") end

@@ -196,6 +196,7 @@ sgs.ai_skill_use_func.JiefanCard=function(card,use,self)
 				end
 			end
 		end
+		use_value = use_value - friend:getHandcardNum() / 2
 		if use_value > max_value then
 			max_value = use_value
 			target = friend
@@ -239,7 +240,7 @@ anxu_skill.getTurnUseCard=function(self)
 
 end
 
-sgs.ai_skill_use_func.AnxuCard = function(card,use,self)
+sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
 	local friends = {}
 	for _, friend in ipairs(self.friends_noself) do
 		if friend:hasSkill("manjuan") then

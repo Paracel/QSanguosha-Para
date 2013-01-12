@@ -221,6 +221,12 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	end
 end
 
+function sgs.ai_card_intention.YinghunCard(card, from, tos, source)
+	local intention = -50
+	if self.yinghunchoice and self.yinghunchoice == "d1tx" then intention = -intention end
+	sgs.updateIntention(from, tos[1], intention)
+end
+
 local function getLowerBoundOfHandcard(self)
 	local least = math.huge
 	local players = self.room:getOtherPlayers(self.player)

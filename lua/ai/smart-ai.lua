@@ -1699,7 +1699,9 @@ function SmartAI:filterEvent(event, player, data)
 				sgs.updateIntentions(from, to, callback, card)
 			end
 		else
-			logmsg("card_intention.txt",card:getClassName()) -- tmp debug
+			if card:isKindOf("SkillCard") then
+				logmsg("card_intention.txt", card:getClassName()) -- tmp debug
+			end
 		end
 		if card:getClassName() == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
 			local luaskillcardcallback = sgs.ai_card_intention[card:objectName()]

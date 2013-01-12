@@ -3333,11 +3333,10 @@ void KOFOrderBox::revealGeneral(const QString &name) {
     }
 }
 
-void KOFOrderBox::killPlayer(const QString &general_name){
-    int i;
-    for(i = 0; i < revealed; i++){
+void KOFOrderBox::killPlayer(const QString &general_name) {
+    for (int i = 0; i < revealed; i++) {
         QSanSelectableItem *avatar = avatars[i];
-        if(avatar->isEnabled() && avatar->objectName() == general_name){
+        if (avatar->isEnabled() && avatar->objectName() == general_name) {
             QPixmap pixmap("image/system/death/unknown.png");
             QGraphicsPixmapItem *death = new QGraphicsPixmapItem(pixmap, avatar);
             death->setScale(0.5);

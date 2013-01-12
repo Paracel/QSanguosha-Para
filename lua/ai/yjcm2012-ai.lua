@@ -239,69 +239,166 @@ anxu_skill.getTurnUseCard=function(self)
 
 end
 
-sgs.ai_skill_use_func.AnxuCard=function(card,use,self)
-	local friends={}
-	for _,player in ipairs(self.friends_noself) do
-		if not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) and not (player:hasSkill("kongcheng") and player:isKongcheng()) then
-			table.insert(friends, player)
+sgs.ai_skill_use_func.AnxuCard = function(card,use,self)
+	local friends = {}
+	for _, friend in ipairs(self.friends_noself) do
+		if friend:hasSkill("manjuan") then
+			if friend:hasSkill("kongcheng") and friend:isKongcheng() then
+				table.insert(friends, friend)
+			end
+		elseif not (friend:hasSkill("kongcheng") and friend:isKongcheng()) then
+			table.insert(friends, friend)
 		end
 	end
-	self:sort(friends,"handcard")
-
-	local lowest_friend=friends[1]
-
-	local zhuge_luxun
-	self:sort(self.enemies,"defense")
-	if lowest_friend then
-		for _,enemy in ipairs(self.enemies) do
-			local hand1=enemy:getHandcardNum()
-			local hand2=lowest_friend:getHandcardNum()
-
-			if self:needKongcheng(enemy) and hand1 ==1 then
-				zhuge_luxun = enemy
+	self:sort(friends, "handcard")
+	local least_friend, most_friend = friends[1], friends[#friends]
+	local need_kongcheng_friend
+	for _, friend in ipairs(friends) do
+		if friend:getHandcardNum() == 1 and (friend:hasSkill("kongcheng") or (friend:hasSkill("zhiji") and friend:getMark("zhiji") == 0 and friend:getHp() >= 3)) then
+			need_kongcheng_friend = friend
+			break
+		end
+	end
+	
+	local enemies = {}
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:hasSkill("tuntian") and not (enemy:isKongcheng() or (enemy:getHandcardNum() <= 1 and self:needKongcheng(enemy))) then
+			table.insert(enemies, enemy)
+		end
+	end
+	self:sort(enemies, "handcard", true)
+	local most_enemy = enemies[1]
+	local prior_enemy, kongcheng_enemy, manjuan_enemy
+	for _, enemy in ipairs(enemies) do
+		if enemy:getHandcardNum() >= 2 and self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", enemy) then
+			if not prior_enemy then prior_enemy = enemy end
+		end
+		if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then
+			if not kongcheng_enemy then kongcheng_enemy = enemy end
+		end
+		if enemy:hasSkill("manjuan") then
+			if not manjuan_enemy then manjuan_enemy = enemy end
+		end
+		if prior_enemy and kongcheng_enemy and manjuan_enemy then break end
+	end
+	
+	-- Enemy -> Friend
+	if least_friend then
+		local tg_enemy = prior_enemy or most_enemy
+		if tg_enemy and tg_enemy:getHandcardNum() > least_friend:getHandcardNum() then
+			use.card = card
+			if use.to then
+				use.to:append(tg_enemy)
+				use.to:append(least_friend)
 			end
-			if hand1 > hand2 and not zhuge_luxun then
-				use.card=card
-				if use.to then
-					use.to:append(enemy)
-					use.to:append(lowest_friend)
-					self.player:setFlags("anxu_isfriend_"..lowest_friend:objectName())
-					return
+			return
+		end
+	end
+	
+	-- Friend -> Friend
+	if #friends >= 2 then
+		if need_kongcheng_friend and least_friend:isKongcheng() then
+			use.card = card
+			if use.to then
+				use.to:append(need_kongcheng_friend)
+				use.to:append(least_friend)
+			end
+			return
+		elseif most_friend:getHandcardNum() >= 4 and most_friend:getHandcardNum() > least_friend:getHandcardNum() then
+			use.card = card
+			if use.to then
+				use.to:append(most_friend)
+				use.to:append(least_friend)
+			end
+			return
+		end
+	end
+	
+	-- Enemy -> Enemy
+	if kongcheng_enemy and not kongcheng_enemy:hasSkill("manjuan") then
+		local tg_enemy = prior_enemy or most_enemy
+		if tg_enemy and not tg_enemy:isKongcheng() then
+			use.card = card
+			if use.to then
+				use.to:append(tg_enemy)
+				use.to:append(kongcheng_enemy)
+			end
+			return
+		elseif most_friend and most_friend:getHandcardNum() >= 4 then -- Friend -> Enemy for KongCheng
+			use.card = card
+			if use.to then
+				use.to:append(most_friend)
+				use.to:append(kongcheng_enemy)
+			end
+			return
+		end
+	elseif manjuan_enemy then
+		local tg_enemy = prior_enemy or most_enemy
+		if tg_enemy and tg_enemy:getHandcardNum() > manjuan_enemy:getHandcardNum() then
+			use.card = card
+			if use.to then
+				use.to:append(tg_enemy)
+				use.to:append(manjuan_enemy)
+			end
+			return
+		end
+	elseif most_enemy then
+		local tg_enemy, second_enemy
+		if prior_enemy then
+			for _, enemy in ipairs(enemies) do
+				if enemy:getHandcardNum() < prior_enemy:getHandcardNum() then
+					second_enemy = enemy
+					tg_enemy = prior_enemy
+					break
 				end
 			end
-		end		
-		if zhuge_luxun and zhuge_luxun:getHandcardNum() > lowest_friend:getHandcardNum() then
-			use.card=card
-			if use.to then
-				use.to:append(zhuge_luxun)
-				use.to:append(lowest_friend)
-				self.player:setFlags("anxu_isfriend_"..lowest_friend:objectName())
-				return
-			end			
 		end
-	end
-
-	self:sort(self.enemies,"handcard")
-	local much_enemy = self.enemies[#self.enemies]
-	for _,enemy in ipairs(self.enemies) do
-		local hand1=enemy:getHandcardNum()
-		local hand2=much_enemy:getHandcardNum()
-		if hand1 < hand2 and hand1 >= 1 and not (hand1==1 and self:needKongcheng(enemy)) and not (enemy:objectName()==much_enemy:objectName()) then
-			use.card=card
-			if use.to then
-				use.to:append(enemy)
-				use.to:append(much_enemy)
-				return
+		if not second_enemy then
+			tg_enemy = most_enemy
+			for _, enemy in ipairs(enemies) do
+				if enemy:getHandcardNum() < most_enemy:getHandcardNum() then
+					second_enemy = enemy
+					break
+				end
 			end
+		end
+		if tg_enemy and second_enemy then
+			use.card = card
+			if use.to then
+				use.to:append(tg_enemy)
+				use.to:append(second_enemy)
+				self.player:setFlags("anxu_isenemy_" .. second_enemy:objectName())
+			end
+			return
 		end
 	end
 end
 
 sgs.ai_card_intention.AnxuCard = function(card, from, to)
-	local intention = 80
-	sgs.updateIntention(from, to[1], intention)	
-	intention = from:hasFlag("anxu_isfriend_"..to[2]:objectName()) and -80 and 80
-	sgs.updateIntention(from, to[2], intention)
+	local more, less
+	if to[1]:getHandcardNum() > to[2]:getHandcardNum() then
+		more = to[1]
+		less = to[2]
+	else
+		more = to[2]
+		less = to[1]
+	end
+	local intention = -50
+	local kc_enemy = false
+	if less:hasSkill("manjuan") or (less:hasSkill("kongcheng") and less:isKongcheng()) then
+		kc_enemy = true
+		intention = 80
+	else
+		if from:hasFlag("anxu_isenemy_" .. less:objectName()) then intention = -intention end
+		intention = intention / (less:getHandcardNum() + 1)
+	end
+	sgs.updateIntention(from, less, intention)
+	if kc_enemy then 
+		intention = 0 
+	elseif sgs.evaluateRoleTrends(more) ~= sgs.evaluateRoleTrends(less) then 
+		intention = -intention
+	end
+	sgs.updateIntention(from, more, intention)
 end
 
 sgs.ai_skill_invoke.zhuiyi = function(self, data)

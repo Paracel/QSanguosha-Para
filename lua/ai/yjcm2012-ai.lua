@@ -425,7 +425,14 @@ sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 	end
 end
 
-sgs.ai_skill_invoke.lihuo = sgs.ai_skill_invoke.fan
+sgs.ai_skill_invoke.lihuo = function(self, data)
+	if not sgs.ai_skill_invoke.fan then return false end
+	local use = data:toCardUse()
+	for _, player in sgs.qlist(use.to) do
+		if self:isEnemy(player) and not self:damageIsEffective(player) and self:damageIsEffective(player, sgs.DamageStruct_Fire) then return true end
+	end
+	return false
+end
 
 sgs.ai_view_as.lihuo = function(card, player, card_place)
 	local suit = card:getSuitString()
@@ -452,7 +459,7 @@ lihuo_skill.getTurnUseCard = function(self)
 	end
 
 	if not slash_card then return nil end
-	if self.player:getHp() == 1 and self.player:getRole() == "lord" then return nil end
+	if self.player:getHp() == 1 then return nil end
 	local suit = slash_card:getSuitString()
 	local number = slash_card:getNumberString()
 	local card_id = slash_card:getEffectiveId()

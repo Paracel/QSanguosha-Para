@@ -466,6 +466,10 @@ sgs.ai_card_intention.Slash = function(card, from, tos)
 	end
 end
 
+sgs.ai_skill_choice.slash_extra_targets = function(self, choices)
+	return "no"
+end
+
 sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	local effect = data:toSlashEffect()
 	local cards = sgs.QList2Table(self.player:getHandcards())

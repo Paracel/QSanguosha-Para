@@ -117,29 +117,6 @@ private:
     qreal speed;
 };
 
-#ifdef CHAT_VOICE
-class QAxObject;
-
-class SpeakThread: public QThread {
-    Q_OBJECT
-
-public:
-    SpeakThread();
-
-public slots:
-    void speak(const QString &text);
-    void finish();
-
-protected:
-    virtual void run();
-
-private:
-    QAxObject *voice_obj;
-    QSemaphore sem;
-    QString to_speak;
-};
-#endif
-
 class RoomScene: public QGraphicsScene {
     Q_OBJECT
 
@@ -215,8 +192,8 @@ private:
     GenericCardContainer *_getGenericCardContainer(Player::Place place, Player *player);
     QMap<int, QList<QList<CardItem *> > > _m_cardsMoveStash;
     Button *add_robot, *fill_robots;
-    QList<Photo*> photos;
-    QMap<QString, Photo*> name2photo;
+    QList<Photo *> photos;
+    QMap<QString, Photo *> name2photo;
     Dashboard *dashboard;
     TablePile *m_tablePile;
     // QQueue<CardItem *> piled_discards;
@@ -319,7 +296,7 @@ private:
 
     // re-layout attempts
     bool game_started;
-    void _dispersePhotos(QList<Photo*> &photos, QRectF disperseRegion, Qt::Orientation orientation, Qt::Alignment align);
+    void _dispersePhotos(QList<Photo *> &photos, QRectF disperseRegion, Qt::Orientation orientation, Qt::Alignment align);
 
     void _cancelAllFocus();
     // for miniscenes

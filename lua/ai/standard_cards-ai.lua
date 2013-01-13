@@ -437,9 +437,9 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	return targets:first()
 end
 
-sgs.ai_card_intention.Slash = function(card,from,tos)
+sgs.ai_card_intention.Slash = function(card, from, tos)
 	if sgs.ai_liuli_effect then
-		sgs.ai_liuli_effect=false
+		sgs.ai_liuli_effect = false
 		return
 	end
 	for _, to in ipairs(tos) do
@@ -456,7 +456,7 @@ sgs.ai_card_intention.Slash = function(card,from,tos)
 				value = 0
 			end
 		end
-		speakTrigger(card,from,to)
+		speakTrigger(card, from, to)
 		if to:hasSkill("yiji") then
 			-- value = value*(2-to:getHp())/1.1
 			value = math.max(value*(2-to:getHp())/1.1, 0)
@@ -1008,7 +1008,7 @@ function SmartAI:useCardDuel(duel, use)
 
 end
 
-sgs.ai_card_intention.Duel=function(card,from,tos,source)
+sgs.ai_card_intention.Duel=function(card, from, tos,source)
 	if sgs.ai_lijian_effect then
 		sgs.ai_lijian_effect = false
 		return

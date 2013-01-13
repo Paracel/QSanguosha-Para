@@ -323,7 +323,7 @@ function SmartAI:useCardIronChain(card, use)
 	if use.to then assert(use.to:length() < 3) end
 end
 
-sgs.ai_card_intention.IronChain=function(card,from,tos)
+sgs.ai_card_intention.IronChain=function(card, from, tos)
 	for _, to in ipairs(tos) do
 		if to:isChained() then
 			sgs.updateIntention(from, to, 80)

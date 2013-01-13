@@ -591,6 +591,7 @@ end
 
 sgs.ai_use_value.JijiangCard = 8.5
 sgs.ai_use_priority.JijiangCard = 2.4
+sgs.ai_card_intention.JijiangCard = sgs.ai_card_intention.Slash
 
 sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
@@ -1120,7 +1121,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	return "."
 end
 
-sgs.ai_card_intention.LiuliCard = function(card,from,to)
+sgs.ai_card_intention.LiuliCard = function(card, from, to)
 	sgs.ai_liuli_effect=true
 end
 

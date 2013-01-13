@@ -337,7 +337,7 @@ sgs.ai_skill_playerchosen.shushen = function(self, targets)
 end
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
-	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= 2 * self.player:getHp()
+	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
 		   and self.player:getLostHp() > 0 and self:getCardsNum("Peach") == 0
 end
 

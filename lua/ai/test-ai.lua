@@ -28,8 +28,7 @@ sgs.ai_view_as.noslonghun = function(card, player, card_place)
 	end
 end
 
-sgs.gd_shenzhaoyun_suit_value = 
-{
+sgs.gd_shenzhaoyun_suit_value = {
 	heart = 6.7,
 	spade = 5,
 	club = 4.2,

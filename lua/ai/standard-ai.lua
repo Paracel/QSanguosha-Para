@@ -170,8 +170,7 @@ sgs.ai_skill_cardask["@guicai-card"]=function(self, data)
 	return "."
 end
 
-sgs.simayi_suit_value =
-{
+sgs.simayi_suit_value = {
 	heart = 3.9,
 	club = 3.9,
 	spade = 3.5
@@ -471,8 +470,7 @@ sgs.ai_skill_invoke.luoshen = function(self, data)
  	return true
 end
 
-sgs.zhenji_suit_value =
-{
+sgs.zhenji_suit_value = {
 	spade = 4.1,
 	club = 4.2
 }
@@ -933,8 +931,7 @@ qixi_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
-sgs.ganning_suit_value =
-{
+sgs.ganning_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }
@@ -1134,8 +1131,7 @@ function sgs.ai_slash_prohibit.liuli(self, to, card)
 	end
 end
 
-sgs.daqiao_suit_value =
-{
+sgs.daqiao_suit_value = {
 	diamond = 3.9
 }
 
@@ -1326,8 +1322,7 @@ sgs.ai_view_as.jijiu = function(card, player, card_place)
 	end
 end
 
-sgs.huatuo_suit_value =
-{
+sgs.huatuo_suit_value = {
 	heart = 6,
 	diamond = 6
 }

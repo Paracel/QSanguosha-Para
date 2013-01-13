@@ -230,8 +230,7 @@ function sgs.ai_armor_value.bazhen(card)
 	if not card then return 4 end
 end
 
-sgs.wolong_suit_value =
-{
+sgs.wolong_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }

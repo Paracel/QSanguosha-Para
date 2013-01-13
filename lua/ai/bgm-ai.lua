@@ -798,8 +798,7 @@ sgs.ai_skill_cardask["@junwei-show"] = function(self, data)
 	return "."
 end
 
-sgs.bgm_ganning_suit_value =
-{
+sgs.bgm_ganning_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }

@@ -3045,7 +3045,7 @@ function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
 	for _, card in ipairs(cards) do
 		local card_x = card
-		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
+		if judge.who:hasSkill("hongyan") and sgs.Sanguosha:getEngineCard(card_x:getEffectiveId()):getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
 		end
 		if self:isFriend(judge.who) and judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then

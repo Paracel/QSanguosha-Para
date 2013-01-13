@@ -140,8 +140,7 @@ duanliang_skill.getTurnUseCard = function(self)
 
 end
 
-sgs.xuhuang_suit_value =
-{
+sgs.xuhuang_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }
@@ -484,7 +483,6 @@ sgs.ai_skill_playerchosen.baonue = function(self, targets)
 	return targets[1]
 end
 
-sgs.dongzhuo_suit_value =
-{
+sgs.dongzhuo_suit_value = {
 	spade = 5,
 }

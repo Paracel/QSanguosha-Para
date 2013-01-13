@@ -830,7 +830,6 @@ void CustomAssignDialog::removeJudgeCard() {
 void CustomAssignDialog::removePileCard() {
     int card_id = pile_list->currentItem()->data(Qt::UserRole).toInt();
     if (set_pile.contains(card_id)) {
-        set_pile.removeOne(card_id);
         int row = pile_list->currentRow();
         pile_list->takeItem(row);
         if (pile_list->count() > 0)
@@ -840,6 +839,7 @@ void CustomAssignDialog::removePileCard() {
             ended_by_pile->setEnabled(false);
             ended_by_pile->setChecked(false);
         }
+        set_pile.removeOne(card_id);
     }
 }
 

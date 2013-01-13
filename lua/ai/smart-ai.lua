@@ -3050,9 +3050,13 @@ end
 function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
 	for _, card in ipairs(cards) do
-		if self:isFriend(judge.who) and judge:isGood(card) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
-			table.insert(can_use, card)
-		elseif self:isEnemy(judge.who) and not judge:isGood(card) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
+		local card_x = card
+		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
+			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
+		end
+		if self:isFriend(judge.who) and judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
+				table.insert(can_use, card)
+		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
 			table.insert(can_use, card)
 		end
 	end
@@ -3631,6 +3635,7 @@ function SmartAI:useSkillCard(card,use)
 	else
 		name = card:getClassName()
 	end
+	if not sgs.ai_skill_use_func[name](card, use, self) then return end
 	sgs.ai_skill_use_func[name](card, use, self)
 	if use.to then
 		if not use.to:isEmpty() and sgs.dynamic_value.damage_card[name] then

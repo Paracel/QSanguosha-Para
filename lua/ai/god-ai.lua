@@ -204,6 +204,7 @@ yeyan_skill.name = "yeyan"
 table.insert(sgs.ai_skills, yeyan_skill)
 yeyan_skill.getTurnUseCard = function(self)
 	if self.player:getMark("@flame") == 0 then return end
+	if self.player:getRole() == "lord" and (self.enemies > 1 or sgs.turncount == 1) then return end
 	if self.player:getHandcardNum() >= 4 then
 		local spade, club, heart, diamond
 		for _, card in sgs.qlist(self.player:getHandcards()) do

@@ -1,20 +1,20 @@
-neoluoyi_skill={}
-neoluoyi_skill.name="neoluoyi"
+neoluoyi_skill = {}
+neoluoyi_skill.name = "neoluoyi"
 table.insert(sgs.ai_skills, neoluoyi_skill)
-neoluoyi_skill.getTurnUseCard=function(self)
+neoluoyi_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LuoyiCard") then return nil end
-	local cards=self.player:getHandcards()
-	cards=sgs.QList2Table(cards)
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
 	local slashtarget = 0
 	local dueltarget = 0
 	local equipnum = 0
 	self:sort(self.enemies,"hp")
 	for _, card in sgs.qlist(self.player:getCards("he")) do
-		if card:isKindOf("EquipCard") and not (card:isKindOf("Weapon") and self:hasEquip(card))  then
+		if card:isKindOf("EquipCard") and not (card:isKindOf("Weapon") and self:hasEquip(card)) then
 			equipnum = equipnum + 1
 		end
 	end
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isKindOf("Slash") then
 			for _,enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
@@ -33,7 +33,7 @@ neoluoyi_skill.getTurnUseCard=function(self)
 			end
 		end
 	end
-	if (slashtarget+dueltarget) > 0 and equipnum > 0 then
+	if (slashtarget + dueltarget) > 0 and equipnum > 0 then
 		self:speak("luoyi")
 		local luoyicard
 		for _, card in sgs.qlist(self.player:getCards("he")) do
@@ -52,18 +52,18 @@ neoluoyi_skill.getTurnUseCard=function(self)
 	end
 end
 
-sgs.ai_skill_use_func.LuoyiCard=function(card,use,self)
+sgs.ai_skill_use_func.LuoyiCard = function(card, use, self)
 	use.card = card
 end
 
 sgs.ai_use_priority.LuoyiCard = 9.2
 
-local neofanjian_skill={}
-neofanjian_skill.name="neofanjian"
-table.insert(sgs.ai_skills,neofanjian_skill)
-neofanjian_skill.getTurnUseCard=function(self)
+local neofanjian_skill = {}
+neofanjian_skill.name = "neofanjian"
+table.insert(sgs.ai_skills, neofanjian_skill)
+neofanjian_skill.getTurnUseCard = function(self)
 	if self.player:isKongcheng() then return nil end
-	if self.player:usedTimes("NeoFanjianCard")>0 then return nil end
+	if self.player:usedTimes("NeoFanjianCard") > 0 then return nil end
 
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
@@ -81,7 +81,7 @@ neofanjian_skill.getTurnUseCard=function(self)
 	end
 end
 
-sgs.ai_skill_use_func.NeoFanjianCard=function(card,use,self)
+sgs.ai_skill_use_func.NeoFanjianCard = function(card, use, self)
 	self:sort(self.enemies, "hp")
 
 	for _, enemy in ipairs(self.enemies) do
@@ -138,7 +138,7 @@ end
 
 sgs.ai_skill_invoke.neoganglie = function(self, data)
 	local target = data:toPlayer()
-	if (self:hasSkills(sgs.masochism_skill,target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum()<=1 then return false end
+	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum()<=1 then return false end
 	if not self:isFriend(target) then
 		self.room:setPlayerFlag(target, "ganglie_target")
 		return true
@@ -169,7 +169,7 @@ sgs.ai_skill_choice.neoganglie = function(self, choices)
 		end
 	end
 	if self:getDamagedEffects(target,self.player) and self:isFriend(target) then return "damage" end
-	if (self:hasSkills(sgs.masochism_skill,target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum() > 1 then
+	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum() > 1 then
 		return "throw"
 	end
 	return "damage"

@@ -84,7 +84,7 @@ sgs.ai_chat_func[sgs.Dying] = function(self, player, data)
 	local chat = {
 				"小内，你还不跳啊，要崩盘吧",
 				"9啊，不9就输了",
-				"999...999...",
+				"999...999. .. ",
 				"小内，我死了，你也赢不了",
 				"没戏了，小内不帮忙的话，我们全部托管吧",
 			}
@@ -113,7 +113,7 @@ sgs.ai_chat_func[sgs.EventPhaseStart] = function(self, player, data)
 		player:speak(chat_jink[index])
 	end
 	if player:getPhase() == sgs.Player_Start and self.role == "rebel" and sgs.current_mode_players["renegade"] == 0
-		and sgs.current_mode_players["loyalist"]==0  and sgs.current_mode_players["rebel"]>=2 and os.time() % 10 < 4 then
+		and sgs.current_mode_players["loyalist"] == 0 and sgs.current_mode_players["rebel"] >= 2 and os.time() % 10 < 4 then
 		local index = 1 + (os.time() % #chat_watch)
 		player:speak(chat_watch[index])
 	end
@@ -278,4 +278,3 @@ sgs.ai_chat.luoyi =
 {
 	"不脱光衣服干不过你"
 }
--- FORMATTED

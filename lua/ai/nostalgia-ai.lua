@@ -1,12 +1,12 @@
 sgs.weapon_range.MoonSpear = 3
 sgs.ai_use_priority.MoonSpear = 2.635
 
-local nosfanjian_skill={}
-nosfanjian_skill.name="nosfanjian"
-table.insert(sgs.ai_skills,nosfanjian_skill)
-nosfanjian_skill.getTurnUseCard=function(self)
+local nosfanjian_skill = {}
+nosfanjian_skill.name = "nosfanjian"
+table.insert(sgs.ai_skills, nosfanjian_skill)
+nosfanjian_skill.getTurnUseCard = function(self)
 	if self.player:isKongcheng() then return nil end
-	if self.player:usedTimes("NosFanjianCard")>0 then return nil end
+	if self.player:usedTimes("NosFanjianCard") > 0 then return nil end
 
 	local cards = self.player:getHandcards()
 
@@ -33,10 +33,10 @@ sgs.dynamic_value.damage_card.NosFanjianCard = true
 
 sgs.ai_chaofeng.noszhouyu = sgs.ai_chaofeng.zhouyu
 
-nosjujian_skill={}
-nosjujian_skill.name="nosjujian"
-table.insert(sgs.ai_skills,nosjujian_skill)
-nosjujian_skill.getTurnUseCard=function(self)
+nosjujian_skill = {}
+nosjujian_skill.name = "nosjujian"
+table.insert(sgs.ai_skills, nosjujian_skill)
+nosjujian_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("NosJujianCard") then return sgs.Card_Parse("@NosJujianCard=.") end
 end
 
@@ -48,7 +48,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	local trick_num, basic_num, equip_num = 0, 0, 0
 	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum() >=3 then
 		local cards = self.player:getCards("he")
-		cards=sgs.QList2Table(cards)
+		cards = sgs.QList2Table(cards)
 		self:sortByUseValue(cards, true)
 		for _, card in ipairs(cards) do
 			if card:getTypeId() == sgs.Card_TypeTrick and not card:isKindOf("ExNihilo") then trick_num = trick_num + 1
@@ -63,7 +63,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		end
 		local f
 		for _, friend in ipairs(self.friends_noself) do
-			if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp()+1) and not friend:hasSkill("manjuan") then
+			if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp() + 1) and not friend:hasSkill("manjuan") then
 				for _, fcard in ipairs(cards) do
 					if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
 						table.insert(abandon_handcard, fcard:getId())
@@ -81,12 +81,12 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	end
 	abandon_handcard = {}
 	local cards = self.player:getHandcards()
-	cards=sgs.QList2Table(cards)
+	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
 	local slash_num = self:getCardsNum("Slash")
 	local jink_num = self:getCardsNum("Jink")
 	for _, friend in ipairs(self.friends_noself) do
-		if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp()+1) or self.player:isWounded() then
+		if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp() + 1) or self.player:isWounded() then
 			for _, card in ipairs(cards) do
 				if #abandon_handcard >= 3 then break end
 				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard") and
@@ -114,7 +114,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 			end
 		end
 	end
-	if #self.friends_noself>0 and self:getOverflow()>0 then
+	if #self.friends_noself > 0 and self:getOverflow() > 0 then
 		self:sort(self.friends_noself, "handcard")
 		local discard = self:askForDiscard("gamerule", math.min(self:getOverflow(),3))
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(discard, "+"))
@@ -151,10 +151,10 @@ sgs.ai_need_damaged.nosenyuan = function (self, attacker)
 	return false
 end
 
-nosxuanhuo_skill={}
-nosxuanhuo_skill.name="nosxuanhuo"
-table.insert(sgs.ai_skills,nosxuanhuo_skill)
-nosxuanhuo_skill.getTurnUseCard=function(self)
+nosxuanhuo_skill = {}
+nosxuanhuo_skill.name = "nosxuanhuo"
+table.insert(sgs.ai_skills, nosxuanhuo_skill)
+nosxuanhuo_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("NosXuanhuoCard") then
 		return sgs.Card_Parse("@NosXuanhuoCard=.")
 	end
@@ -162,7 +162,7 @@ end
 
 sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 	local cards = self.player:getHandcards()
-	cards=sgs.QList2Table(cards)
+	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards,true)
 
 	local target
@@ -182,7 +182,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isKongcheng() then
 				for _, card in ipairs(cards)do
-					if card:getSuit() == sgs.Card_Heart and not card:isKindOf("Peach")  and self.player:getHandcardNum() > 1 then
+					if card:getSuit() == sgs.Card_Heart and not card:isKindOf("Peach") and self.player:getHandcardNum() > 1 then
 						use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
 						target = enemy
 						break
@@ -247,7 +247,6 @@ sgs.ai_skill_playerchosen.nosxuanfeng_slash = sgs.ai_skill_playerchosen.zero_car
 sgs.ai_playerchosen_intention.nosxuanfeng_damage = 80
 sgs.ai_playerchosen_intention.nosxuanfeng_slash = 80
 
-
 sgs.ai_view_as.nosgongqi = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
@@ -257,18 +256,18 @@ sgs.ai_view_as.nosgongqi = function(card, player, card_place)
 	end
 end
 
-local nosgongqi_skill={}
-nosgongqi_skill.name="nosgongqi"
+local nosgongqi_skill = {}
+nosgongqi_skill.name = "nosgongqi"
 table.insert(sgs.ai_skills, nosgongqi_skill)
-nosgongqi_skill.getTurnUseCard=function(self,inclusive)
+nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
-	cards=sgs.QList2Table(cards)
+	cards = sgs.QList2Table(cards)
 
 	local equip_card
 
 	self:sortByUseValue(cards,true)
 
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:getTypeId() == sgs.Card_TypeEquip and ((self:getUseValue(card)<sgs.ai_use_value.Slash) or inclusive) then
 			equip_card = card
 			break
@@ -369,8 +368,8 @@ sgs.ai_skill_invoke.nosyexin = function(self,data)
 	return true
 end
 
-local nosyexin_skill={}
-nosyexin_skill.name="nosyexin"
+local nosyexin_skill = {}
+nosyexin_skill.name = "nosyexin"
 table.insert(sgs.ai_skills, nosyexin_skill)
 nosyexin_skill.getTurnUseCard = function(self)
 	if self.player:getPile("nospower"):isEmpty() or self.player:hasUsed("NosYexinCard") then
@@ -520,7 +519,7 @@ local function findPlayerForModifyKingdom(self, players)
 
 	for _, player in sgs.qlist(players) do
 		if not player:isLord() or player:hasLordSkill("weidai") then
-			if  sgs.evaluateRoleTrends(player) == "loyalist" then
+			if sgs.evaluateRoleTrends(player) == "loyalist" then
 				local sameKingdom = player:getKingdom() == lord:getKingdom()
 				if isGood ~= sameKingdom then
 					return player
@@ -538,7 +537,7 @@ end
 local function chooseKingdomForPlayer(self, to_modify)
 	local lord = self.room:getLord()
 	local isGood = self:isFriend(lord)
-	if  sgs.evaluateRoleTrends(to_modify) == "loyalist" or sgs.evaluateRoleTrends(to_modify) == "renegade" then
+	if sgs.evaluateRoleTrends(to_modify) == "loyalist" or sgs.evaluateRoleTrends(to_modify) == "renegade" then
 		if isGood then
 			return lord:getKingdom()
 		else

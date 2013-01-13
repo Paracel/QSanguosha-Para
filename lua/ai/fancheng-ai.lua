@@ -31,7 +31,7 @@ zhiyuan_skill.getTurnUseCard = function(self)
 	return nil
 end
 
-sgs.ai_skill_use_func["ZhiyuanCard"] = function(card,use,self)
+sgs.ai_skill_use_func["ZhiyuanCard"] = function(card, use, self)
 	if self.player:usedTimes("ZhiyuanCard") > 1 then return end
 	self:sort(self.friends_noself, "handcard")
 	for _, friend in ipairs(self.friends_noself) do
@@ -55,12 +55,12 @@ taichen_fight_skill.getTurnUseCard = function(self)
 	return taichen_card
 end
 
-sgs.ai_skill_use_func["TaichenFightCard"] = function(card,use,self)
+sgs.ai_skill_use_func["TaichenFightCard"] = function(card, use, self)
 	if self.player:usedTimes("TaichenFightCard") > 0 then return end
 	local lord = self.room:getLord()
 	if self.player:getHp() >= lord:getHp() then
 		if (self:getCardsNum("Slash") + 1) * 2 > getCardsNum("Slash", lord) then
-			use.card=  card
+			use.card = card
 		end
 	end
 end
@@ -77,9 +77,9 @@ flood_skill.getTurnUseCard = function(self)
 
 	local blacks = {}
 
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isBlack() then
-			table.insert(blacks,card:getEffectiveId())
+			table.insert(blacks, card:getEffectiveId())
 			if #blacks == 3 then break end
 		end
 	end
@@ -92,7 +92,7 @@ flood_skill.getTurnUseCard = function(self)
 	return flood_card
 end
 
-sgs.ai_skill_use_func["FloodCard"]=function(card,use,self)
+sgs.ai_skill_use_func["FloodCard"] = function(card, use, self)
 	local eqs = 0
 
 	local players = self.room:getOtherPlayers(self.player)
@@ -152,4 +152,3 @@ sgs.ai_skill_use["@@smalltuxi"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.SmallTuxiCard = 80
--- FORMATTED

@@ -7,7 +7,7 @@ noslonghun_skill.getTurnUseCard = function(self)
 	self:sortByUseValue(cards,true)
 	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond then
-			return sgs.Card_Parse(("fire_slash:noslonghun[%s:%s]=%d"):format(card:getSuitString(),card:getNumberString(),card:getId()))
+			return sgs.Card_Parse(("fire_slash:noslonghun[%s:%s]=%d"):format(card:getSuitString(), card:getNumberString(), card:getId()))
 		end
 	end
 end
@@ -35,4 +35,3 @@ sgs.gd_shenzhaoyun_suit_value =
 	club = 4.2,
 	diamond = 3.9,
 }
--- FORMATTED

@@ -30,7 +30,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 	if #unpreferedCards == 0 then
 		if self:getCardsNum("Slash") > 1 then
 			self:sortByKeepValue(cards)
-			for _,card in ipairs(cards) do
+			for _, card in ipairs(cards) do
 				if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
 			end
 			table.remove(unpreferedCards, 1)
@@ -49,7 +49,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 		for _, card in ipairs(cards) do
 			if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse")
 				or self:getSameEquip(card, self.player) or card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
-				table.insert(unpreferedCards,card:getId())
+				table.insert(unpreferedCards, card:getId())
 			end
 		end
 
@@ -98,7 +98,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 		local num = self:getCardsNum("Jink") - 1	
 		if self.player:getArmor() then num = num + 1 end
 		if num > 0 then
-			for _,card in ipairs(cards) do
+			for _, card in ipairs(cards) do
 				if card:isKindOf("Jink") and num > 0 then 
 					table.insert(unpreferedCards, card:getId())
 					num = num - 1
@@ -108,7 +108,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 		for _, card in ipairs(cards) do
 			if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse")
 				or self:getSameEquip(card, self.player) or	card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
-				table.insert(unpreferedCards,card:getId())
+				table.insert(unpreferedCards, card:getId())
 			end
 		end
 	
@@ -147,8 +147,8 @@ mizhao_skill.getTurnUseCard = function(self)
 	local cards = self.player:getHandcards()
 	local allcard = {}
 	cards = sgs.QList2Table(cards)
-	for _,card in ipairs(cards) do
-		table.insert(allcard,card:getId()) 
+	for _, card in ipairs(cards) do
+		table.insert(allcard, card:getId()) 
 	end
 	local parsed_card = sgs.Card_Parse("@MizhaoCard=" .. table.concat(allcard, "+"))
 	return parsed_card
@@ -213,7 +213,7 @@ sgs.ai_skill_cardask["@JieyuanIncrease"] = function(self, data)
 	if self:isEquip("SilverLion", target) then return "." end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isBlack() then return "$" .. card:getEffectiveId() end
 	end
 	return "."
@@ -224,7 +224,7 @@ sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
 	if self:hasSkills(sgs.masochism_skill) and damage.damage <= 1 and self.player:getHp() > 1 then return "." end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end
 	end
 	return "."
@@ -244,4 +244,3 @@ sgs.ai_skill_invoke.fenxin = function(self, data)
 	if self_role ~= "rebel" and target_role == "rebel" and count1 < count2 then return true end
 	return false
 end
--- FORMATTED

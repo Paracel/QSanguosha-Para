@@ -9,8 +9,8 @@ sgs.ai_skill_use["@@drzhiheng"] = function(self, prompt)
 	for index = #to_discard, 1, -1 do
 		if self.player:isJilei(sgs.Sanguosha:getCard(to_discard[index])) then table.remove(to_discard, index) end
 	end
-	if #to_discard>0 then 
-		return ("@DrZhihengCard="..table.concat(to_discard,"+"))
+	if #to_discard > 0 then 
+		return ("@DrZhihengCard=" .. table.concat(to_discard,"+"))
 	else
 		return ("@DrZhihengCard=.")
 	end
@@ -26,7 +26,7 @@ drjiuyuanv_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse("@DrJiuyuanCard=.")
 end
 
-sgs.ai_skill_use_func.DrJiuyuanCard = function(card,use,self)
+sgs.ai_skill_use_func.DrJiuyuanCard = function(card, use, self)
 	local targets = {}
 	for _, player in ipairs(self.friends_noself) do
 		if player:hasLordSkill("drjiuyuan") and not player:hasFlag("DrJiuyuanInvoked") and not player:hasSkill("manjuan") then
@@ -92,7 +92,7 @@ drjiedao_skill.getTurnUseCard = function(self)
 	if can_use then return sgs.Card_Parse("@DrJiedaoCard=.") end
 end
 
-sgs.ai_skill_use_func.DrJiedaoCard = function(card,use,self)
+sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
@@ -147,7 +147,7 @@ sgs.ai_skill_cardask["@JijiuDecrease"] = function(self, data)
 	if self:hasSkills(sgs.masochism_skill, damage.to) and damage.damage <= 1 and damage.to:getHp() > 1 then return "." end
 	local cards=sgs.QList2Table(self.player:getCards("he"))
 	self:sortByKeepValue(cards)
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end
 	end
 	return "."
@@ -168,7 +168,7 @@ drqingnang_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse(card_str)
 end
 
-sgs.ai_skill_use_func.DrQingnangCard = function(card,use,self)
+sgs.ai_skill_use_func.DrQingnangCard = function(card, use, self)
 	use.card = card
 end
 
@@ -210,4 +210,3 @@ sgs.ai_skill_discard.drwushuang = function(self, discard_num, min_num, optional,
 	end
 	return {}
 end
--- FORMATTED

@@ -246,7 +246,7 @@ lianhuan_skill.getTurnUseCard = function(self)
 	local card
 	self:sortByUseValue(cards, true)
 
-	for _,acard in ipairs(cards)  do
+	for _, acard in ipairs(cards) do
 		if acard:getSuit() == sgs.Card_Club then
 			card = acard
 			break
@@ -286,7 +286,7 @@ tianyi_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("TianyiCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@TianyiCard=.") end
 end
 
-sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
+sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
 		local cards = sgs.QList2Table(self.player:getHandcards())
@@ -313,7 +313,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 	if slashcount > 1 or (slashcount == 1 and #self.enemies > 1) then
 		local slash = self:getCard("Slash")
 		assert(slash)
-		local dummy_use = {isDummy = true}
+		local dummy_use = { isDummy = true }
 		self:useBasicCard(slash, dummy_use)
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
@@ -352,7 +352,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 	if slashcount > 0 then
 		local slash = self:getCard("Slash")
 		assert(slash)
-		local dummyuse = {isDummy = true}
+		local dummyuse = { isDummy = true }
 		self:useBasicCard(slash, dummyuse)
 		if not dummyuse.card then shouldUse = true end
 	end
@@ -486,4 +486,3 @@ sgs.ai_skill_invoke.mengjin = function(self, data)
 	if effect.to:getCardCount(true) == 1 and effect.to:hasArmorEffect("silver_lion") then return false end
 	return not self:isFriend(effect.to)
 end
--- FORMATTED

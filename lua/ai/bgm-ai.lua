@@ -51,7 +51,7 @@ lihun_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_skill_use_func.LihunCard = function(card,use,self)
+sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 
@@ -61,7 +61,7 @@ sgs.ai_skill_use_func.LihunCard = function(card,use,self)
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isMale() and not enemy:hasSkill("kongcheng") then
 				if (enemy:hasSkill("lianying") and self:damageMinusHp(self, enemy, 1) > 0)
-					or (enemy:getHp() < 3 and self:damageMinusHp(self, enemy, 0) > 0  and enemy:getHandcardNum() > 0)
+					or (enemy:getHp() < 3 and self:damageMinusHp(self, enemy, 0) > 0 and enemy:getHandcardNum() > 0)
 					or (enemy:getHandcardNum() >= enemy:getHp() and enemy:getHp() > 2 and self:damageMinusHp(self, enemy, 0) >= -1)
 					or (enemy:getHandcardNum() - enemy:getHp() > 2) then
 					target = enemy
@@ -190,7 +190,7 @@ dahe_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("DaheCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@DaheCard=.") end
 end
 
-sgs.ai_skill_use_func.DaheCard = function(card,use,self)
+sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard(self.player)
 	local max_point = max_card:getNumber()
@@ -208,7 +208,7 @@ sgs.ai_skill_use_func.DaheCard = function(card,use,self)
 	if slashcount > 0 then
 		local slash = self:getCard("Slash")
 		assert(slash)
-		local dummy_use = {isDummy = true}
+		local dummy_use = { isDummy = true }
 		self:useBasicCard(slash, dummy_use)
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1 and enemy:getHp() > self.player:getHp())
@@ -447,7 +447,7 @@ sgs.ai_skill_playerchosen.shichou = function(self, targets)
 		if self:hasSkills("zaiqi|nosenyuan|kuanggu|enyuan|shushen", target) and target:getHp() >= 2 then
 			return target
 		end
- 	end
+	end
 	return targets[1]
 end
 
@@ -513,7 +513,7 @@ yanxiao_skill.getTurnUseCard = function(self)
 	local diamond_card
 	self:sortByUseValue(cards,true)
 
-	for _,card in ipairs(cards)  do
+	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond then
 			diamond_card = card
 			break
@@ -549,10 +549,10 @@ sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 	return "$" .. cards[1]:getEffectiveId()
 end
 
-local yinling_skill={}
-yinling_skill.name="yinling"
-table.insert(sgs.ai_skills,yinling_skill)
-yinling_skill.getTurnUseCard=function(self,inclusive)
+local yinling_skill = {}
+yinling_skill.name = "yinling"
+table.insert(sgs.ai_skills, yinling_skill)
+yinling_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
@@ -580,7 +580,7 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 			end
 
 			if card:isKindOf("Slash") then
-				local dummy_use = {isDummy = true}
+				local dummy_use = { isDummy = true }
 				if self:getCardsNum("Slash") == 1 then
 					self:useBasicCard(card, dummy_use)
 					if dummy_use.card then shouldUse = false end
@@ -588,7 +588,7 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 			end
 
 			if self:getUseValue(card) > sgs.ai_use_value.YinlingCard and card:isKindOf("TrickCard") then
-				local dummy_use = {isDummy = true}
+				local dummy_use = { isDummy = true }
 				self:useTrickCard(card, dummy_use)
 				if dummy_use.card then shouldUse = false end
 			end
@@ -602,14 +602,14 @@ yinling_skill.getTurnUseCard=function(self,inclusive)
 
 	if black_card then
 		local card_id = black_card:getEffectiveId()
-		local card_str = ("@YinlingCard="..card_id)
+		local card_str = ("@YinlingCard=" .. card_id)
 		local yinling = sgs.Card_Parse(card_str)
 		assert(yinling)
 		return yinling
 	end
 end
 
-sgs.ai_skill_use_func.YinlingCard = function(card,use,self)
+sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	if self.player:getPile("brocade"):length() >= 4 then return end
 	local players = self.room:getOtherPlayers(self.player)
 	players = self:exclude(players, card)
@@ -789,8 +789,8 @@ end
 sgs.ai_skill_cardask["@junwei-show"] = function(self, data)
 	local ganning = data:toPlayer()
 	local cards = self.player:getHandcards()
-	cards=sgs.QList2Table(cards)
-	for _,card in ipairs(cards) do
+	cards = sgs.QList2Table(cards)
+	for _, card in ipairs(cards) do
 		if card:isKindOf("Jink") then
 			return "$" .. card:getEffectiveId()
 		end
@@ -957,7 +957,7 @@ local function can_be_selected_as_target_fuluan(self, card, who)
 	return false
 end
 
-sgs.ai_skill_use_func.FuluanCard=function(card,use,self)
+sgs.ai_skill_use_func.FuluanCard = function(card, use, self)
 	local subcards = card:getSubcards()
 	self:sort(self.friends_noself)
 	for _, friend in ipairs(self.friends_noself) do
@@ -1099,7 +1099,7 @@ hantong_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse("@HantongCard=.")
 end
 
-sgs.ai_skill_use_func.HantongCard = function(card,use,self)
+sgs.ai_skill_use_func.HantongCard = function(card, use, self)
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
@@ -1111,24 +1111,23 @@ sgs.ai_skill_use_func.HantongCard = function(card,use,self)
 end
 
 sgs.ai_skill_use["@@diyyicong"] = function(self, prompt)
-	local yicongcards={}
+	local yicongcards = {}
 	local cards = self.player:getCards("he")
 	if self:isEquip("SilverLion") and self.player:isWounded() then
 		table.insert(yicongcards, self.player:getArmor():getId())
 	end
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
-	for _,card in ipairs(cards)  do
+	for _, card in ipairs(cards) do
 		if self:getKeepValue(card) < 6
-		   and (not self.player:getArmor() or card:getId() ~= self.player:getArmor():getEffectiveId())
-		   and (not self.player:getDefensiveHorse() or card:getId() ~= self.player:getDefensiveHorse():getEffectiveId()) then
+			and (not self.player:getArmor() or card:getId() ~= self.player:getArmor():getEffectiveId())
+			and (not self.player:getDefensiveHorse() or card:getId() ~= self.player:getDefensiveHorse():getEffectiveId()) then
 			table.insert(yicongcards, card:getId())
 			break
 		end
 	end
 	if #yicongcards > 0 then
-		return "@DIYYicongCard="..table.concat(yicongcards,"+").."->".."."
+		return "@DIYYicongCard=" .. table.concat(yicongcards, "+") .. "->."
 	end
 	return "."
 end
--- FORMATTED

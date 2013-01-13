@@ -1,5 +1,4 @@
-sgs.ai_judgestring =
-{
+sgs.ai_judgestring = {
 	indulgence = "heart",
 	diamond = "heart",
 	supply_shortage = "club",
@@ -95,13 +94,11 @@ local function GuanXing(self, cards)
 		if not judged_list[judge_count] then judged_list[judge_count] = 0 end
 	end
 
-	--if has_judged then
-		for index=1, #judged_list do
-			if judged_list[index] == 0 then
-				table.insert(up, index, table.remove(bottom))
-			end
+	for index=1, #judged_list do
+		if judged_list[index] == 0 then
+			table.insert(up, index, table.remove(bottom))
 		end
-	--end
+	end
 
 	local pos = 1
 	local luoshen_flag = false
@@ -199,7 +196,7 @@ local function XinZhan(self, cards)
 		local index = 1
 		local lightning_flag = false
 		local judge_str = sgs.ai_judgestring[need_judge:objectName()] or sgs.ai_judgestring[need_judge:getSuitString()]
-		self:log("------------------>"..judge_str ..":")
+		self:log("------------------>" .. judge_str .. ":")
 
 		for _, for_judge in ipairs(bottom) do
 			if judge_str == "spade" and not lightning_flag then
@@ -247,8 +244,7 @@ local function XinZhan(self, cards)
 end
 
 function SmartAI:askForGuanxing(cards, up_only)
-	if not up_only then return GuanXing(self,cards)
-	else return XinZhan(self, cards)
+	if not up_only then return GuanXing(self, cards) else return XinZhan(self, cards)
 	end
 	return cards, {}
 end

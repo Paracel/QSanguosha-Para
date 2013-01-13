@@ -8,7 +8,7 @@ wushen_skill.getTurnUseCard = function(self)
 	local red_card
 	self:sortByUseValue(cards, true)
 
-	for _,card in ipairs(cards)  do
+	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Heart then
 			red_card = card
 			break
@@ -65,7 +65,7 @@ function sgs.ai_slash_prohibit.wuhun(self, to)
 	end
 	if self:isEnemy(to) and not (to:isLord() and self.player:getRole() == "rebel") then
 		if (maxfriendmark + 2 > maxenemymark) and not (#self.enemies == 1 and #self.friends + #self.enemies == self.room:alivePlayerCount()) then
-			if not (self.player:getMark("@nightmare") == maxfriendmark and  self.role == "loyalist") then
+			if not (self.player:getMark("@nightmare") == maxfriendmark and self.role == "loyalist") then
 				return true
 			end
 		end
@@ -145,23 +145,22 @@ function SmartAI:doNotSave(player)
 	return false
 end
 
-
 sgs.ai_chaofeng.shenguanyu = -6
 
 sgs.ai_skill_invoke.shelie = true
 
-local gongxin_skill={}
-gongxin_skill.name="gongxin"
-table.insert(sgs.ai_skills,gongxin_skill)
-gongxin_skill.getTurnUseCard=function(self)
+local gongxin_skill = {}
+gongxin_skill.name = "gongxin"
+table.insert(sgs.ai_skills, gongxin_skill)
+gongxin_skill.getTurnUseCard = function(self)
 		local card_str = ("@GongxinCard=.")
 		local gongxin_card = sgs.Card_Parse(card_str)
 		assert(gongxin_card)
 		return gongxin_card
 end
 
-sgs.ai_skill_use_func.GongxinCard=function(card,use,self)
-	if self.player:usedTimes("GongxinCard")>0 then return end
+sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
+	if self.player:usedTimes("GongxinCard") > 0 then return end
 	self:sort(self.enemies,"handcard")
 
 	for index = #self.enemies, 1, -1 do
@@ -256,7 +255,7 @@ yeyan_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_skill_use_func.GreatYeyanCard=function(card,use,self)
+sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
@@ -345,7 +344,7 @@ sgs.ai_use_priority.GreatYeyanCard = 9
 
 sgs.ai_card_intention.GreatYeyanCard = 200
 
-sgs.ai_skill_use_func.SmallYeyanCard = function(card,use,self)
+sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	local num = 0
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
@@ -415,7 +414,7 @@ sgs.ai_skill_askforag.qixing = function(self, card_ids)
 	return -1
 end
 
-sgs.ai_skill_use["@@kuangfeng"] = function(self,prompt)
+sgs.ai_skill_use["@@kuangfeng"] = function(self, prompt)
 	local friendly_fire
 	for _, friend in ipairs(self.friends) do
 		if friend:hasSkill("huoji") or self:isEquip("Fan", friend) or (friend:hasSkill("yeyan") and friend:getMark("@flame") > 0) then
@@ -523,7 +522,7 @@ wuqian_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_skill_use_func.WuqianCard = function(card,use,self)
+sgs.ai_skill_use_func.WuqianCard = function(card, use, self)
 	self:sort(self.enemies,"hp")
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy) < 2 and self.player:distanceTo(enemy) <= self.player:getAttackRange() then
@@ -625,7 +624,7 @@ local function getDangerousShenGuanYu(self)
 	return false
 end
 
-sgs.ai_skill_use_func.ShenfenCard=function(card,use,self)
+sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 	if (self.role == "loyalist" or self.role == "renegade") and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
 	local benefit = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
@@ -710,7 +709,7 @@ longhun_skill.getTurnUseCard = function(self)
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond and self:slashIsAvailable() then
-			return sgs.Card_Parse(("fire_slash:longhun[%s:%s]=%d"):format(card:getSuitString(),card:getNumberString(),card:getId()))
+			return sgs.Card_Parse(("fire_slash:longhun[%s:%s]=%d"):format(card:getSuitString(), card:getNumberString(), card:getId()))
 		end
 	end
 end
@@ -770,18 +769,18 @@ end
 local jilve_skill = {}
 jilve_skill.name = "jilve"
 table.insert(sgs.ai_skills, jilve_skill)
-jilve_skill.getTurnUseCard=function(self)
+jilve_skill.getTurnUseCard = function(self)
 	if self.player:getMark("@bear") < 1 or self.player:usedTimes("JilveCard") >= 2 then return end
 	local wanshadone = self.player:getTag("JilveWansha"):toPlayer()
 	if not self.player:hasUsed("JilveCard") and not wanshadone then
-	   sgs.ai_skill_choice.jilve = "zhiheng"
-	   local card = sgs.Card_Parse("@ZhihengCard=.")
-	   local dummy_use = { isDummy = true }
-	   self:useSkillCard(card,dummy_use)
-	   if dummy_use.card then return sgs.Card_Parse("@JilveCard=.") end
+		sgs.ai_skill_choice.jilve = "zhiheng"
+		local card = sgs.Card_Parse("@ZhihengCard=.")
+		local dummy_use = { isDummy = true }
+		self:useSkillCard(card,dummy_use)
+		if dummy_use.card then return sgs.Card_Parse("@JilveCard=.") end
 	elseif not wanshadone then
 		local cards=self.player:getHandcards()
-		cards=sgs.QList2Table(cards)
+		cards = sgs.QList2Table(cards)
 		local slashes = self:getCards("Slash")
 		self:sort(self.enemies, "hp")
 		local target
@@ -794,7 +793,7 @@ jilve_skill.getTurnUseCard=function(self)
 	end
 end
 
-sgs.ai_skill_use_func.JilveCard = function(card,use,self)
+sgs.ai_skill_use_func.JilveCard = function(card, use, self)
 	use.card = card
 end
 
@@ -804,11 +803,10 @@ else
 	sgs.ai_use_priority.JilveCard = 6
 end
 
-sgs.ai_skill_use["@zhiheng"] = function(self,prompt)
+sgs.ai_skill_use["@zhiheng"] = function(self, prompt)
 	local card = sgs.Card_Parse("@ZhihengCard=.")
 	local dummy_use = { isDummy = true }
 	self:useSkillCard(card,dummy_use)
 	if dummy_use.card then return (dummy_use.card):toString() .. "->." end
 	return "."
 end
--- FORMATTED

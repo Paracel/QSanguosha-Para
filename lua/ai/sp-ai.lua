@@ -19,7 +19,7 @@ function sgs.ai_slash_prohibit.weidi(self, to, card)
 	for _, askill in sgs.qlist(lord:getVisibleSkillList()) do
 		if askill:objectName() ~= "weidi" and askill:isLordSkill() then
 			local filter = sgs.ai_slash_prohibit[askill:objectName()]
-			if  type(filter) == "function" and filter(self, to, card) then return true end
+			if type(filter) == "function" and filter(self, to, card) then return true end
 		end
 	end
 end
@@ -248,18 +248,18 @@ sgs.ai_card_intention.YuanhuCard = -30
 
 sgs.ai_cardneed.yuanhu = sgs.ai_cardneed.equip
 
-local xueji_skill={}
-xueji_skill.name="xueji"
-table.insert(sgs.ai_skills,xueji_skill)
-xueji_skill.getTurnUseCard=function(self,inclusive)
+local xueji_skill = {}
+xueji_skill.name = "xueji"
+table.insert(sgs.ai_skills, xueji_skill)
+xueji_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
-	cards=sgs.QList2Table(cards)
+	cards = sgs.QList2Table(cards)
 
 	local red_card
 
 	self:sortByUseValue(cards,true)
 
-	for _,card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isRed() and not card:isKindOf("Peach") and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
 			red_card = card
 			break
@@ -318,7 +318,7 @@ local function can_be_selected_as_target(self, card, who)
 	return false
 end
 
-sgs.ai_skill_use_func.XuejiCard = function(card,use,self)
+sgs.ai_skill_use_func.XuejiCard = function(card, use, self)
 	if self.player:getLostHp() == 0 or self.player:hasUsed("XuejiCard") then return end
 	self:sort(self.enemies)
 	local to_use = false
@@ -396,15 +396,15 @@ end
 
 sgs.ai_card_intention.BifaCard = 30
 
-local songci_skill={}
-songci_skill.name="songci"
+local songci_skill = {}
+songci_skill.name = "songci"
 table.insert(sgs.ai_skills, songci_skill)
 songci_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("SongciCard") then return end
 	return sgs.Card_Parse("@SongciCard=.")
 end
 
-sgs.ai_skill_use_func.SongciCard = function(card,use,self)
+sgs.ai_skill_use_func.SongciCard = function(card, use, self)
 	self:sort(self.friends, "handcard")
 	for _, friend in ipairs(self.friends) do
 		if friend:getMark("@songci") == 0 and friend:getHandcardNum() < friend:getHp() and not (friend:hasSkill("manjuan") and self.room:getCurrent() ~= friend) then
@@ -468,14 +468,13 @@ sgs.ai_chaofeng.sp_machao = sgs.ai_chaofeng.machao
 
 sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	if math.random(0, 2) == 0 then return false
-	elseif math.random(0, 3) == 0  then sgs.ai_skill_choice.cv_diaochan="tw_diaochan" return true
+	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan="tw_diaochan" return true
 	else sgs.ai_skill_choice.cv_diaochan="sp_diaochan" return true end
 end
 
 sgs.ai_chaofeng.sp_diaochan = sgs.ai_chaofeng.diaochan
 
 sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
-
 sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
 
 sgs.ai_skill_invoke.cv_yuanshu = function(self, data)
@@ -490,18 +489,18 @@ end
 
 sgs.ai_skill_invoke.cv_daqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0  then sgs.ai_skill_choice.cv_daqiao="tw_daqiao" return true
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_daqiao = "tw_daqiao" return true
 	else sgs.ai_skill_choice.cv_daqiao="wz_daqiao" return true end
 end
 
 sgs.ai_skill_invoke.cv_xiaoqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0  then sgs.ai_skill_choice.cv_xiaoqiao="wz_xiaoqiao" return true
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "wz_xiaoqiao" return true
 	else sgs.ai_skill_choice.cv_xiaoqiao="heg_xiaoqiao" return true end
 end
 
 sgs.ai_skill_invoke.cv_zhouyu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0  then sgs.ai_skill_choice.cv_xiaoqiao="heg_zhouyu" return true
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "heg_zhouyu" return true
 	else sgs.ai_skill_choice.cv_xiaoqiao="sp_heg_zhouyu" return true end
 end

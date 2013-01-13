@@ -17,4 +17,3 @@ end
 
 sgs.ai_playerchosen_intention.gh_tuxi = 80
 sgs.ai_chaofeng.gh_zhangliao = 4
--- FORMATTED

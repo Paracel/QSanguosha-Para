@@ -18,24 +18,24 @@ function debugFunc(self, room, player, data)
 		if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
 		local msg = string.format(fmt, unpack(arg))
 		player:speak(msg)
-	logmsg("ai.html", "<pre>"..msg.."</pre>")
+	logmsg("ai.html", "<pre>" .. msg .. "</pre>")
 	end
 
 	local players = sgs.QList2Table(room:getAlivePlayers())
 	repeat
-		local choice = room:askForChoice(owner, "aidebug", "cancel+"..table.concat(choices, "+"))
+		local choice = room:askForChoice(owner, "aidebug", "cancel+" .. table.concat(choices, "+"))
 		if choice == "cancel" then break end
 		if choice == "showVisiblecards" then
 			debugmsg(" ")
 			debugmsg("===================")
 			debugmsg("查看已知牌。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
-			for i=1, #players, 1 do
+			for i = 1, #players, 1 do
 				local msg = string.format("%s已知牌:", sgs.Sanguosha:translate(players[i]:getGeneralName()))
 				local cards = sgs.QList2Table(players[i]:getHandcards())
 				for _, card in ipairs(cards) do
-					local flag = string.format("%s_%s_%s","visible",player:objectName(),players[i]:objectName())
+					local flag = string.format("%s_%s_%s","visible", player:objectName(), players[i]:objectName())
 					if card:hasFlag("visible") or card:hasFlag(flag) then
-						msg = msg .. card:getLogName() ..", "
+						msg = msg .. card:getLogName() .. ", "
 					end
 				end
 				debugmsg(msg)
@@ -45,11 +45,11 @@ function debugFunc(self, room, player, data)
 			debugmsg(" ")
 			debugmsg("===================")
 			debugmsg("查看手牌。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
-			for i=1, #players, 1 do
+			for i = 1, #players, 1 do
 				local msg = string.format("%s手牌:", sgs.Sanguosha:translate(players[i]:getGeneralName()))
 				local cards = sgs.QList2Table(players[i]:getHandcards())
 				for _, card in ipairs(cards) do
-					msg = msg .. card:getLogName() ..", "
+					msg = msg .. card:getLogName() .. ", "
 				end
 				debugmsg(msg)
 			end
@@ -58,7 +58,7 @@ function debugFunc(self, room, player, data)
 			debugmsg(" ")
 			debugmsg("============%s(%.1f)", sgs.processvalue[sgs.gameProcess(room)], sgs.gameProcess(room, 1))
 			debugmsg("查看身份关系。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
-			for i=1, #players, 1 do
+			for i = 1, #players, 1 do
 				local level = self:objectiveLevel(players[i])
 				local rel = level > 0 and "敌对" or (level < 0 and "友好" or "中立")
 				rel = rel .. " " .. level
@@ -76,7 +76,7 @@ function debugFunc(self, room, player, data)
 			debugmsg(" ")
 			debugmsg("===================")
 			debugmsg("查看对【杀】防御值。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
-			for i=1, #players, 1 do
+			for i = 1, #players, 1 do
 				debugmsg("%s:%.2f", sgs.Sanguosha:translate(players[i]:getGeneralName()), sgs.getDefenseSlash(players[i]))
 			end
 		end
@@ -111,7 +111,7 @@ function SmartAI:printFEList()
 	for _, player in ipairs(self.friends_noself) do
 		self.room:writeToConsole("friend " .. player:getGeneralName() .. (sgs.role_evaluation[player:objectName()][player:getRole()] or "") .. player:getRole())
 	end
-	self.room:writeToConsole(self.player:getGeneralName().." list end")
+	self.room:writeToConsole(self.player:getGeneralName() .. " list end")
 end
 
 function SmartAI:log(outString)
@@ -165,7 +165,7 @@ function sgs.checkMisjudge(player)
 					sgs.modifiedRoleTrends("rebel")
 				elseif evaluate_loyalist >= loyalist_num + renegade_num and evaluate_loyalist > loyalist_num and rebel_num > 0 then
 					sgs.modifiedRoleTrends("loyalist")
-				elseif  evaluate_rebel > rebel_num and evaluate_loyalist > loyalist_num then
+				elseif evaluate_rebel > rebel_num and evaluate_loyalist > loyalist_num then
 					sgs.modifiedRoleTrends("rebel")
 					sgs.modifiedRoleTrends("loyalist")
 				end
@@ -189,4 +189,3 @@ function sgs.Card_Parse(str)
 	end
 	return cardparse(str)
 end
--- FORMATTED

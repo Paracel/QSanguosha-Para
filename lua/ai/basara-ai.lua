@@ -33,4 +33,3 @@ sgs.ai_skill_choice.RevealGeneral = function(self, choices)
 		return "no"
 	end
 end
--- FORMATTED

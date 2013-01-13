@@ -18,12 +18,12 @@ sgs.ai_skill_invoke.huanshi = true
 sgs.ai_skill_choice.huanshi = function(self, choices)
 	local zhugejin = self.room:findPlayerBySkillName("huanshi")
 	if self:objectiveLevel(zhugejin) > 2 then return "reject" end
- 	return "accept"
+	return "accept"
 end
 
 sgs.ai_skill_invoke.hongyuan = function(self, data)
 	local count = 0
-	for i=1, #self.friends_noself do
+	for i = 1, #self.friends_noself do
 		if self:needKongcheng(self.friends_noself[i]) and self.friends_noself[i]:getHandcardNum() == 0
 			or self.friends_noself[i]:hasSkill("manjuan") then
 		else
@@ -71,4 +71,3 @@ sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.HongyuanCard = -70
--- FORMATTED

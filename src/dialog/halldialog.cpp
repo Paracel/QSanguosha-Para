@@ -183,4 +183,4 @@ void Client::roomError(const QString &errorStr) {
 void Client::hallEntered(const QString &) {
     HallDialogInstance->show();
 }
-// FORMATTED
+

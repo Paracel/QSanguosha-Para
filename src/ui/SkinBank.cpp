@@ -984,4 +984,4 @@ QSanSkinFactory::QSanSkinFactory(const char *fileName) {
 const QString &QSanSkinFactory::getCurrentSkinName() const{
     return _m_skinName;
 }
-// FORMATTED
+

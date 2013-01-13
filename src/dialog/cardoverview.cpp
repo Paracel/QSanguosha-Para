@@ -128,4 +128,4 @@ void CardOverview::on_femalePlayButton_clicked() {
         Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(card->objectName(), false));
     }
 }
-// FORMATTED
+

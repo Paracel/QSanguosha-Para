@@ -178,4 +178,4 @@ void ClientLogBox::appendLog(const QString &log_str) {
 void ClientLogBox::append(const QString &text) {
     QTextEdit::append(QString("<p style=\"margin:3px 2px; line-height:120%;\">%1</p>").arg(text));
 }
-// FORMATTED
+

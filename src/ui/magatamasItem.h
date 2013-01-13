@@ -46,4 +46,4 @@ protected:
     QPixmap _bgImages[6];
 };
 #endif
-// FORMATTED
+

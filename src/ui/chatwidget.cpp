@@ -210,4 +210,4 @@ QGraphicsProxyWidget *ChatWidget::addWidget(QWidget *widget, int x) {
 
     return proxy_widget;
 }
-// FORMATTED
+

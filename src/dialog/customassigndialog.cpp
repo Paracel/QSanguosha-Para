@@ -1847,4 +1847,4 @@ void SkillAssignDialog::accept() {
     emit skill_update(update_skills);
     QDialog::accept();
 }
-// FORMATTED
+

@@ -368,4 +368,4 @@ void FanchengScenario::onTagSet(Room *room, const QString &key) const{
             room->setPlayerProperty(caoren, "xueyi", 0);
     }
 }
-// FORMATTED
+

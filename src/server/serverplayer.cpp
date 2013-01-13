@@ -969,4 +969,4 @@ bool ServerPlayer::CompareByActionOrder(ServerPlayer *a, ServerPlayer *b) {
     Room *room = a->getRoom();
     return room->getFront(a, b) == a;
 }
-// FORMATTED
+

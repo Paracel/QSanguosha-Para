@@ -506,4 +506,4 @@ void RoomThread::delay(long secs) {
     if (room->property("to_test").toString().isEmpty()&& Config.AIDelay > 0)
         msleep(secs);
 }
-// FORMATTED
+

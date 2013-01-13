@@ -113,4 +113,4 @@ int PixmapAnimation::GetFrameCount(const QString &emotion) {
     dir.setNameFilters(QStringList("*.png"));
     return dir.entryList(QDir::Files | QDir::NoDotAndDotDot).count();
 }
-// FORMATTED
+

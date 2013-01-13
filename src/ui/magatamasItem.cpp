@@ -197,4 +197,4 @@ void MagatamasBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *
         G_COMMON_LAYOUT.m_hpFont[imageIndex].paintText(painter, rect, Qt::AlignCenter, QString::number(m_maxHp));
     }
 }
-// FORMATTED
+

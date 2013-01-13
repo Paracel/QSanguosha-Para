@@ -99,4 +99,4 @@ void RoleComboBox::fix(const QString &role) {
         delete item;
    items.clear();
 }
-// FORMATTED
+

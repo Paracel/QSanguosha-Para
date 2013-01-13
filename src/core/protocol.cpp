@@ -95,4 +95,4 @@ string QSanProtocol::QSanGeneralPacket::toString() const{
         return msg.substr(0, S_MAX_PACKET_SIZE);
     return msg;
 }
-// FORMATTED
+

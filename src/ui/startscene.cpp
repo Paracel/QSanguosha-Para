@@ -144,4 +144,4 @@ void StartScene::printServerInfo() {
     } else
         server_log->append(tr("This server is AI disabled"));
 }
-// FORMATTED
+

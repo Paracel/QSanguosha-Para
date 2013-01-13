@@ -501,4 +501,4 @@ Q_DECLARE_METATYPE(PindianStar)
 Q_DECLARE_METATYPE(PhaseChangeStruct)
 Q_DECLARE_METATYPE(CardResponseStruct)
 #endif
-// FORMATTED
+

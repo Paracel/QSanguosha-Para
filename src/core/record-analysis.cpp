@@ -546,4 +546,4 @@ PlayerRecordStruct::PlayerRecordStruct()
 bool PlayerRecordStruct::isNull() {
     return m_screenName.isEmpty() || m_generalName.isEmpty();
 }
-// FORMATTED
+

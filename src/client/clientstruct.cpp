@@ -190,4 +190,4 @@ void ServerInfoWidget::clear() {
     time_limit_label->clear();
     list_widget->clear();
 }
-// FORMATTED
+

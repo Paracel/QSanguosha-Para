@@ -152,4 +152,4 @@ void Button::timerEvent(QTimerEvent *) {
         }
     }
 }
-// FORMATTED
+

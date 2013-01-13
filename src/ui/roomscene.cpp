@@ -3764,4 +3764,4 @@ void RoomScene::appendChatBox(QString txt) {
     txt=txt.replace("#>", suffix);
     chat_box->append(txt);
 }
-// FORMATTED
+

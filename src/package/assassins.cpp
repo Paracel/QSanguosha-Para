@@ -297,4 +297,4 @@ AssassinsPackage::AssassinsPackage(): Package("assassins") {
 }
 
 ADD_PACKAGE(Assassins)
-// FORMATTED
+

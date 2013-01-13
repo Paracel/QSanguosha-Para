@@ -19,4 +19,4 @@ struct BanPair: public QPair<QString, QString> {
 };
 
 #endif
-// FORMATTED
+

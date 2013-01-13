@@ -24,4 +24,4 @@ void DoLuaScripts(lua_State *L, const QStringList &scripts);
 QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 
 #endif
-// FORMATTED
+

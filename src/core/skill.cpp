@@ -424,4 +424,4 @@ MarkAssignSkill::MarkAssignSkill(const QString &mark, int n)
 void MarkAssignSkill::onGameStart(ServerPlayer *player) const{
     player->getRoom()->setPlayerMark(player, mark_name, n);
 }
-// FORMATTED
+

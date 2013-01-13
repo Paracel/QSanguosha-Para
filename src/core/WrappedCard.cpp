@@ -51,4 +51,4 @@ void WrappedCard::setFlags(const QString &flag) const{
     m_card->setFlags(flag);
     m_isModified = true;
 }
-// FORMATTED
+

@@ -84,4 +84,4 @@ const QSet<QString> BanPair::getSecondBanSet() {
 const QSet<BanPair> BanPair::getBanPairSet() {
     return BanPairSet;
 }
-// FORMATTED
+

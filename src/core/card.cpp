@@ -716,4 +716,4 @@ QString DummyCard::getSubtype() const{
 QString DummyCard::toString() const{
     return "$" + subcardString();
 }
-// FORMATTED
+

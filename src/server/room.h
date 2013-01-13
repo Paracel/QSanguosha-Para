@@ -470,4 +470,4 @@ typedef Room *RoomStar;
 Q_DECLARE_METATYPE(RoomStar)
 
 #endif
-// FORMATTED
+

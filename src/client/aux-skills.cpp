@@ -152,4 +152,4 @@ void ChoosePlayerSkill::setPlayerNames(const QStringList &names) {
 const Card *ChoosePlayerSkill::viewAs() const{
     return card;
 }
-// FORMATTED
+

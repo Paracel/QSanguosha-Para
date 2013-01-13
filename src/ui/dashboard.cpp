@@ -866,4 +866,4 @@ const ViewAsSkill *Dashboard::currentSkill() const{
 const Card *Dashboard::pendingCard() const{
     return pending_card;
 }
-// FORMATTED
+

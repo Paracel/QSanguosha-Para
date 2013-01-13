@@ -150,4 +150,4 @@ void Window::disappear() {
     if(!keep_when_disappear)
         connect(group, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
-// FORMATTED
+

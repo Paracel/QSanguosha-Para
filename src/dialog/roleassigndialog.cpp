@@ -179,4 +179,4 @@ void RoomScene::startAssign() {
     RoleAssignDialog *dialog = new RoleAssignDialog(main_window);
     dialog->exec();
 }
-// FORMATTED
+

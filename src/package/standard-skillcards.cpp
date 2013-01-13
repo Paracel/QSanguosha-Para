@@ -301,4 +301,4 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
     }
     room->setPlayerFlag(liubei, "jijiang_failed");
 }
-// FORMATTED
+

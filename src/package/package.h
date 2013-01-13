@@ -82,4 +82,4 @@ public:
 #define ADD_PACKAGE(name) static PackageAdder name##PackageAdder(#name, new name##Package);
 
 #endif
-// FORMATTED
+

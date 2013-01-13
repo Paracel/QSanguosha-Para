@@ -1006,4 +1006,4 @@ HegemonySPPackage::HegemonySPPackage()
 }
 
 ADD_PACKAGE(HegemonySP)
-// FORMATTED
+

@@ -231,4 +231,4 @@ void Replayer::run() {
 QString Replayer::getPath() const{
     return filename;
 }
-// FORMATTED
+

@@ -36,4 +36,4 @@ void RoomState::reset() {
         m_cards[i] = new WrappedCard(Card::Clone(clonedCard));
     }
 }
-// FORMATTED
+

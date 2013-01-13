@@ -254,4 +254,4 @@ AI::Relation CoupleScenario::relationTo(const ServerPlayer *a, const ServerPlaye
 
     return AI::Enemy;
 }
-// FORMATTED
+

@@ -968,4 +968,4 @@ QVariant PlayerCardContainer::itemChange(GraphicsItemChange change, const QVaria
 
 void PlayerCardContainer::_onEquipSelectChanged() {
 }
-// FORMATTED
+

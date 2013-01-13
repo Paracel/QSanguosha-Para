@@ -161,4 +161,4 @@ void General::lastWord() const{
     }
     Sanguosha->playAudioEffect(filename);
 }
-// FORMATTED
+

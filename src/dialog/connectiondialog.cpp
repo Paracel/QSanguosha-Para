@@ -177,4 +177,4 @@ void UdpDetectorDialog::chooseAddress(QListWidgetItem *item) {
     QString address = item->data(Qt::UserRole).toString();
     emit address_chosen(address);
 }
-// FORMATTED
+

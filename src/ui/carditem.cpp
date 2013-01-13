@@ -282,4 +282,4 @@ void CardItem::setFootnote(const QString &desc) {
     font.paintText(&painter, QRect(QPoint(0, 0), rect.size()), 
                    (Qt::AlignmentFlag)((int)Qt::AlignHCenter | Qt::AlignBottom | Qt::TextWrapAnywhere), desc);
 }
-// FORMATTED
+

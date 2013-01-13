@@ -91,4 +91,4 @@ void QSanCommandProgressBar::setCountdown(Countdown countdown) {
     m_val = countdown.m_current;
     m_mutex.unlock();
 }
-// FORMATTED
+

@@ -220,4 +220,4 @@ void Settings::init() {
         setValue("ForbidPackages", forbid_packages);
     }
 }
-// FORMATTED
+

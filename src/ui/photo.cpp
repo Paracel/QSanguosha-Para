@@ -237,4 +237,4 @@ void Photo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 QGraphicsItem *Photo::getMouseClickReceiver() {
     return this; 
 }
-// FORMATTED
+

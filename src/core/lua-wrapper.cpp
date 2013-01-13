@@ -173,4 +173,4 @@ QString LuaSkillCard::toString() const{
            .arg(getSuitString()).arg(getNumberString())
            .arg(subcardString()).arg(user_string);
 }
-// FORMATTED
+

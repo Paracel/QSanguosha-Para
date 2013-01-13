@@ -351,4 +351,4 @@ QSanInvokeSkillButton *QSanInvokeSkillDock::getSkillButtonByName(const QString &
     }
     return NULL;
 }
-// FORMATTED
+

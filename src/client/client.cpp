@@ -1719,4 +1719,4 @@ void Client::onPlayerChooseOrder() {
 void Client::updateStateItem(const QString &state_str) {
     emit role_state_changed(state_str);
 }
-// FORMATTED
+

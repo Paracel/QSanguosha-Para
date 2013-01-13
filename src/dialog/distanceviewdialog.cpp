@@ -146,4 +146,4 @@ void DistanceViewDialog::showDistance() {
 
     ui->final->setText(QString::number(from->distanceTo(to)));
 }
-// FORMATTED
+

@@ -136,4 +136,4 @@ void NativeClientSocket::raiseError(QAbstractSocket::SocketError socket_error){
 
     emit error_message(tr("Connection failed, error code = %1\n reason:\n %2").arg(socket_error).arg(reason));
 }
-// FORMATTED
+

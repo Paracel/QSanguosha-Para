@@ -270,4 +270,4 @@ void GeneralOverview::on_tableWidget_itemDoubleClicked(QTableWidgetItem *) {
         ClientInstance->requestCheatChangeGeneral(general_name);
     }
 }
-// FORMATTED
+

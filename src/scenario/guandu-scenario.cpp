@@ -348,4 +348,4 @@ void GuanduScenario::onTagSet(Room *room, const QString &) const{
         }
     }
 }
-// FORMATTED
+

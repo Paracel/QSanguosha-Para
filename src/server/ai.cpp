@@ -486,4 +486,4 @@ void LuaAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &
     getTable(L, bottom);
     getTable(L, up);
 }
-// FORMATTED
+

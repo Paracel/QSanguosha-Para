@@ -844,4 +844,4 @@ void MainWindow::on_actionAbout_Lua_triggered() {
 
     window->appear();
 }
-// FORMATTED
+

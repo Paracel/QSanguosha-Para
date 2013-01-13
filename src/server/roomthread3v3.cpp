@@ -253,4 +253,4 @@ void RoomThread3v3::assignRoles(const QString &scheme) {
     foreach (ServerPlayer *player, room->m_players)
         room->broadcastProperty(player, "role");
 }
-// FORMATTED
+

@@ -365,4 +365,4 @@ void FreeChooseDialog::uncheckExtraButton(QAbstractButton *click_button) {
         }
     }
 }
-// FORMATTED
+

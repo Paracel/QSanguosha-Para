@@ -67,4 +67,4 @@ void DoLuaScripts(lua_State *L, const QStringList &scripts) {
         DoLuaScript(L, script.toLocal8Bit());
     }
 }
-// FORMATTED
+

@@ -145,4 +145,4 @@ bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QColor &color) {
         color.setAlpha(255);
     return true;
 }
-// FORMATTED
+

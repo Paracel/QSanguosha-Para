@@ -327,4 +327,4 @@ void MiniScene::setupCustom(QString name) const{
 
 void MiniScene::onTagSet(Room *, const QString &) const{
 }
-// FORMATTED
+

@@ -166,4 +166,4 @@ void PlayerCardDialog::emitId() {
     if (id != -2)
         emit card_id_chosen(id);
 }
-// FORMATTED
+

@@ -78,4 +78,4 @@ QRectF IndicatorItem::boundingRect() const{
 
     return QRectF(0, 0, width, height).adjusted(-2, -2, 2, 2);
 }
-// FORMATTED
+

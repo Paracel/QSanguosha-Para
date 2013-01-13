@@ -168,4 +168,4 @@ void TablePile::adjustCards() {
         animation->addAnimation(card_item->getGoBackAnimation(true));
     animation->start();
 }
-// FORMATTED
+

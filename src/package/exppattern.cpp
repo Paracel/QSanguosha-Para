@@ -106,4 +106,4 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
 
     return false;
 }
-// FORMATTED
+

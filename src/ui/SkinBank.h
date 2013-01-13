@@ -409,4 +409,4 @@ protected:
 #define G_COMMON_LAYOUT (G_ROOM_SKIN.getCommonLayout())
 
 #endif
-// FORMATTED
+

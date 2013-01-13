@@ -104,4 +104,4 @@ Json::Value CardMoveReason::toJsonValue() const{
     result[4] = toJsonString(m_targetId);
     return result;
 }
-// FORMATTED
+

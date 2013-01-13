@@ -107,4 +107,4 @@ void RoomThread1v1::arrange(ServerPlayer *player, const QStringList &arranged) {
 
     room->sem->release();
 }
-// FORMATTED
+

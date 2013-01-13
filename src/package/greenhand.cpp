@@ -147,4 +147,4 @@ GreenHandCardPackage::GreenHandCardPackage()
 }
 
 ADD_PACKAGE(GreenHandCard)
-// FORMATTED
+

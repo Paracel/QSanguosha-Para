@@ -1016,4 +1016,4 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
     }
     return false;
 }
-// FORMATTED
+

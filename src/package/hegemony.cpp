@@ -849,4 +849,4 @@ HegemonyPackage::HegemonyPackage()
 }
 
 ADD_PACKAGE(Hegemony)
-// FORMATTED
+

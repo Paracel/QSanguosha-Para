@@ -118,4 +118,4 @@ void QSanSelectableItem::mark(bool marked) {
 void QSanSelectableItem::setMarkable(bool markable) {
     this->markable = markable;
 }
-// FORMATTED
+

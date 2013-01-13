@@ -183,4 +183,4 @@ void ConfigDialog::on_setTextEditColorButton_clicked() {
         ui->textEditFontLineEdit->setPalette(palette);
     }
 }
-// FORMATTED
+

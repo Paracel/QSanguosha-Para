@@ -53,4 +53,4 @@ bool Scenario::generalSelection() const{
 AI::Relation Scenario::relationTo(const ServerPlayer *a, const ServerPlayer *b) const{
     return AI::GetRelation(a, b);
 }
-// FORMATTED
+

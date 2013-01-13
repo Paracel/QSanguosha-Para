@@ -229,4 +229,4 @@ void ClientPlayer::setMark(const QString &mark, int value) {
     if (mark == "@duanchang")
         emit duanchang_invoked();
 }
-// FORMATTED
+

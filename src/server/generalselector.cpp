@@ -275,4 +275,4 @@ void GeneralSelector::load1v1Table() {
         file.close();
     }
 }
-// FORMATTED
+

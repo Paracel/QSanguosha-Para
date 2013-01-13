@@ -285,4 +285,4 @@ void FadeEffect::draw(QPainter *painter) {
     painter->setOpacity(index / 40.0);
     painter->drawPixmap(offset,pixmap);
 }
-// FORMATTED
+

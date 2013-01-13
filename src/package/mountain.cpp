@@ -600,7 +600,6 @@ public:
 };
 
 TiaoxinCard::TiaoxinCard() {
-    mute = true;
 }
 
 bool TiaoxinCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -609,9 +608,6 @@ bool TiaoxinCard::targetFilter(const QList<const Player *> &targets, const Playe
 
 void TiaoxinCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-
-    room->broadcastSkillInvoke("tiaoxin");
-
     if (!room->askForUseSlashTo(effect.to, effect.from, "@tiaoxin-slash:" + effect.from->objectName())
         && !effect.to->isNude())
         room->throwCard(room->askForCardChosen(effect.from, effect.to, "he", "tiaoxin"), effect.to, effect.from);

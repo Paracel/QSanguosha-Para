@@ -53,7 +53,6 @@ void RendeCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
 }
 
 JieyinCard::JieyinCard() {
-    mute = true;
 }
 
 bool JieyinCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -71,8 +70,6 @@ void JieyinCard::onEffect(const CardEffectStruct &effect) const{
 
     room->recover(effect.from, recover, true);
     room->recover(effect.to, recover, true);
-
-    room->broadcastSkillInvoke("jieyin");
 }
 
 TuxiCard::TuxiCard() {
@@ -138,7 +135,6 @@ void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) c
 }
 
 LijianCard::LijianCard() {
-    mute = true;
 }
 
 bool LijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -181,8 +177,6 @@ void LijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
 }
 
 void LijianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    room->broadcastSkillInvoke("lijian");
-
     ServerPlayer *to = targets.at(0);
     ServerPlayer *from = targets.at(1);
 

@@ -1180,8 +1180,8 @@ public:
         return lijian_card;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
-        return 0;
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
+        return card->isKindOf("Duel") ? 0 : -1;
     }
 };
 

@@ -293,7 +293,7 @@ void Client::processServerPacket(const char *cmd) {
     else processObsoleteServerPacket(cmd);
 }
 
-bool Client::processServerRequest(const QSanGeneralPacket& packet) {
+bool Client::processServerRequest(const QSanGeneralPacket &packet) {
     setStatus(Client::NotActive);
     _m_lastServerSerial = packet.m_globalSerial;
     CommandType command = packet.getCommandType();
@@ -397,7 +397,7 @@ bool Client::_getSingleCard(int card_id, CardsMoveStruct move) {
     }
     return true;
 }
-void Client::getCards(const Json::Value& arg) {
+void Client::getCards(const Json::Value &arg) {
     Q_ASSERT(arg.isArray() && arg.size() >= 1);
     int moveId = arg[0].asInt();
     QList<CardsMoveStruct> moves;
@@ -420,7 +420,7 @@ void Client::getCards(const Json::Value& arg) {
     emit move_cards_got(moveId, moves);
 }
 
-void Client::loseCards(const Json::Value& arg) {
+void Client::loseCards(const Json::Value &arg) {
     Q_ASSERT(arg.isArray() && arg.size() >= 1);
     int moveId = arg[0].asInt();
     QList<CardsMoveStruct> moves;
@@ -452,21 +452,21 @@ void Client::onPlayerChooseGeneral(const QString &item_name) {
 
 }
 
-void Client::requestCheatRunScript(const QString& script) {
+void Client::requestCheatRunScript(const QString &script) {
     Json::Value cheatReq(Json::arrayValue);
     cheatReq[0] = (int)S_CHEAT_RUN_SCRIPT;    
     cheatReq[1] = toJsonString(script);
     requestToServer(S_COMMAND_CHEAT, cheatReq);
 }
 
-void Client::requestCheatRevive(const QString& name) {
+void Client::requestCheatRevive(const QString &name) {
     Json::Value cheatReq(Json::arrayValue);
     cheatReq[0] = (int)S_CHEAT_REVIVE_PLAYER;    
     cheatReq[1] = toJsonString(name);
     requestToServer(S_COMMAND_CHEAT, cheatReq);
 }
 
-void Client::requestCheatDamage(const QString& source, const QString& target, DamageStruct::Nature nature, int points) {
+void Client::requestCheatDamage(const QString &source, const QString &target, DamageStruct::Nature nature, int points) {
     Json::Value cheatReq(Json::arrayValue), cheatArg(Json::arrayValue);
     cheatArg[0] = toJsonString(source);
     cheatArg[1] = toJsonString(target);
@@ -478,7 +478,7 @@ void Client::requestCheatDamage(const QString& source, const QString& target, Da
     requestToServer(S_COMMAND_CHEAT, cheatReq);
 }
 
-void Client::requestCheatKill(const QString& killer, const QString& victim) {
+void Client::requestCheatKill(const QString &killer, const QString &victim) {
     Json::Value cheatArg;
     cheatArg[0] = (int)S_CHEAT_KILL_PLAYER;
     cheatArg[1] = toJsonArray(killer, victim);
@@ -580,7 +580,7 @@ void Client::notifyRoleChange(const QString &new_role) {
     }
 }
 
-void Client::activate(const Json::Value& playerId) {
+void Client::activate(const Json::Value &playerId) {
     if (toQString(playerId) == Self->objectName())
         setStatus(Playing);
     else
@@ -1219,7 +1219,7 @@ void Client::askForSuit(const Json::Value &) {
     setStatus(ExecDialog);
 }
 
-void Client::askForKingdom(const Json::Value&) {
+void Client::askForKingdom(const Json::Value &) {
     QStringList kingdoms = Sanguosha->getKingdoms();
     kingdoms.removeOne("god"); // god kingdom does not really exist
     emit kingdoms_got(kingdoms);

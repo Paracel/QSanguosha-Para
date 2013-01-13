@@ -14,7 +14,7 @@ QSanSelectableItem::QSanSelectableItem(const QString &filename, bool center_as_o
     _m_height = _m_mainPixmap.height();
 }
 
-bool QSanSelectableItem::load(const QString& filename, bool center_as_origin) {
+bool QSanSelectableItem::load(const QString &filename, bool center_as_origin) {
     return _load(filename, QSize(), false, center_as_origin);
 }
 

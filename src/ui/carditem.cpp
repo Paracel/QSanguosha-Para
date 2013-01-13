@@ -273,7 +273,7 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
 }
 
 void CardItem::setFootnote(const QString &desc) {
-    const IQSanComponentSkin::QSanShadowTextFont& font = G_COMMON_LAYOUT.m_cardFootnoteFont;
+    const IQSanComponentSkin::QSanShadowTextFont &font = G_COMMON_LAYOUT.m_cardFootnoteFont;
     QRect rect = G_COMMON_LAYOUT.m_cardFootnoteArea;
     rect.moveTopLeft(QPoint(0, 0));
     _m_footnoteImage = QImage(rect.size(), QImage::Format_ARGB32);

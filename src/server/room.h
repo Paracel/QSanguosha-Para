@@ -27,7 +27,7 @@ public:
 
     typedef void (Room::*Callback)(ServerPlayer *, const QString &);
     typedef bool (Room::*CallBack)(ServerPlayer *, const QSanProtocol::QSanGeneralPacket *);
-    typedef bool (Room::*ResponseVerifyFunction)(ServerPlayer *, const Json::Value&, void *);
+    typedef bool (Room::*ResponseVerifyFunction)(ServerPlayer *, const Json::Value &, void *);
 
     explicit Room(QObject *parent, const QString &mode);
     ServerPlayer *addSocket(ClientSocket *socket);
@@ -375,7 +375,7 @@ private:
     QList<CardsMoveOneTimeStruct> _mergeMoves(QList<CardsMoveStruct> cards_moves);
     void _moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible, bool ignoreChanges);
     QString _chooseDefaultGeneral(ServerPlayer *player) const;
-    bool _setPlayerGeneral(ServerPlayer *player, const QString& generalName, bool isFirst);
+    bool _setPlayerGeneral(ServerPlayer *player, const QString &generalName, bool isFirst);
     QString mode;
     QList<ServerPlayer *> m_players, m_alivePlayers;
     int player_count;
@@ -440,8 +440,8 @@ private:
 
     bool makeSurrender(ServerPlayer *player);
     bool makeCheat(ServerPlayer *player);
-    void makeDamage(const QString& source, const QString& target, QSanProtocol::CheatCategory nature, int point);
-    void makeKilling(const QString& killer, const QString& victim);
+    void makeDamage(const QString &source, const QString &target, QSanProtocol::CheatCategory nature, int point);
+    void makeKilling(const QString &killer, const QString &victim);
     void makeReviving(const QString &name);
     void doScript(const QString &script);
 

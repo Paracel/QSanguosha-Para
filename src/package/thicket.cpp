@@ -489,7 +489,7 @@ public:
         events << AfterDrawNCards;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *lusu, QVariant& data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *lusu, QVariant &) const{
         if (lusu->hasFlag("haoshi")) {
             lusu->setFlags("-haoshi");
 

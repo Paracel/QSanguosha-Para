@@ -966,6 +966,6 @@ QVariant PlayerCardContainer::itemChange(GraphicsItemChange change, const QVaria
     return QGraphicsObject::itemChange(change, value);
 }
 
-void PlayerCardContainer::_onEquipSelectChanged(){
+void PlayerCardContainer::_onEquipSelectChanged() {
 }
 // FORMATTED

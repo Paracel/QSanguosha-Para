@@ -589,7 +589,7 @@ void RoomScene::createReplayControlBar(){
     m_replayControl = new ReplayerControlBar(dashboard);
 }
 
-void RoomScene::_getSceneSizes(QSize& minSize, QSize &maxSize)
+void RoomScene::_getSceneSizes(QSize &minSize, QSize &maxSize)
 {
     if (photos.size() >= 8)
     {
@@ -995,7 +995,7 @@ void RoomScene::arrangeSeats(const QList<const ClientPlayer *> &seats){
     }
 }
 
-// @todo: The following 3 fuctions are for drag&use feature. Currently they are very buggy and
+// @todo: The following 3 fuctions are for drag & use feature. Currently they are very buggy and
 // cause a lot of major problems. We should look into this later.
 void RoomScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {

@@ -54,10 +54,10 @@ public:
     // cheat functions
     void requestCheatGetOneCard(int card_id);
     void requestCheatChangeGeneral(QString name);
-    void requestCheatKill(const QString& killer, const QString& victim);
-    void requestCheatDamage(const QString& source, const QString& target, DamageStruct::Nature nature, int points);
-    void requestCheatRevive(const QString& name);
-    void requestCheatRunScript(const QString& script);
+    void requestCheatKill(const QString &killer, const QString &victim);
+    void requestCheatDamage(const QString &source, const QString &target, DamageStruct::Nature nature, int points);
+    void requestCheatRevive(const QString &name);
+    void requestCheatRunScript(const QString &script);
 
     // other client requests
     void requestSurrender();
@@ -98,7 +98,7 @@ public:
 
     void checkVersion(const QString &server_version);
     void setup(const QString &setup_str);
-    void networkDelayTest(const QString&);
+    void networkDelayTest(const QString &);
     void addPlayer(const QString &player_info);
     void removePlayer(const QString &player_name);
     void drawCards(const QString &cards_str);
@@ -143,9 +143,9 @@ public:
     void clearAG(const QString &);
 
     //interactive server callbacks
-    void askForCard(const Json::Value&);
-    void askForUseCard(const Json::Value&);
-    void askForAG(const Json::Value&);
+    void askForCard(const Json::Value &);
+    void askForUseCard(const Json::Value &);
+    void askForAG(const Json::Value &);
     void askForSinglePeach(const Json::Value &);
     void askForCardShow(const Json::Value &);
     void askForSkillInvoke(const Json::Value &);
@@ -252,14 +252,14 @@ private:
     QString _processCardPattern(const QString &pattern);
     void commandFormatWarning(const QString &str, const QRegExp &rx, const char *command);
 
-    void _askForCardOrUseCard(const Json::Value&);
+    void _askForCardOrUseCard(const Json::Value &);
     bool _loseSingleCard(int card_id, CardsMoveStruct move);
     bool _getSingleCard(int card_id, CardsMoveStruct move);
 
 private slots:
     void processServerPacket(const QString &cmd);
     void processServerPacket(const char *cmd);
-    bool processServerRequest(const QSanProtocol::QSanGeneralPacket& packet);
+    bool processServerRequest(const QSanProtocol::QSanGeneralPacket &packet);
     void processObsoleteServerPacket(const QString &cmd);
     void notifyRoleChange(const QString &new_role);
     void onPlayerChooseSuit();
@@ -308,7 +308,7 @@ signals:
     void game_started();
     void game_over();
     void standoff();
-    void event_received(const Json::Value&);
+    void event_received(const Json::Value &);
         
     void move_cards_lost(int moveId, QList<CardsMoveStruct> moves);
     void move_cards_got(int moveId, QList<CardsMoveStruct> moves);

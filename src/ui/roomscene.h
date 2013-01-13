@@ -164,7 +164,7 @@ public slots:
     void chooseSuit(const QStringList &suits);
     void chooseCard(const ClientPlayer *playerName, const QString &flags, const QString &reason);
     void chooseKingdom(const QStringList &kingdoms);
-    void chooseOption(const QString& skillName, const QStringList &options);
+    void chooseOption(const QString &skillName, const QStringList &options);
     void chooseOrder(QSanProtocol::Game3v3ChooseOrderCommand reason);
     void chooseRole(const QString &scheme, const QStringList &roles);
     void chooseDirection();
@@ -201,7 +201,7 @@ protected:
     QMutex m_zValueMutex;
 
 private:
-    void _getSceneSizes(QSize& minSize, QSize& maxSize);
+    void _getSceneSizes(QSize &minSize, QSize &maxSize);
     bool _shouldIgnoreDisplayMove(Player::Place from, Player::Place to);
     bool _processCardsMove(CardsMoveStruct &move, bool isLost);
     bool _m_isMouseButtonDown;
@@ -283,7 +283,7 @@ private:
 
     // @todo: this function shouldn't be here. But it's here anyway, before someone find a better
     // home for it.
-    QString _translateMovement(const CardsMoveStruct& move);
+    QString _translateMovement(const CardsMoveStruct &move);
 
     void useCard(const Card *card);
     void fillTable(QTableWidget *table, const QList<const ClientPlayer *> &players);

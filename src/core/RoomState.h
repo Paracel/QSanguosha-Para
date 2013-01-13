@@ -18,7 +18,7 @@ public:
     Card *getCard(int cardId) const;
     inline void setCurrentPlayer(Player *player) { m_currentPlayer = player; }
     inline QString getCurrentCardUsePattern() const{ return m_currentCardUsePattern; }
-    inline void setCurrentCardUsePattern(const QString& newPattern) { m_currentCardUsePattern = newPattern; }
+    inline void setCurrentCardUsePattern(const QString &newPattern) { m_currentCardUsePattern = newPattern; }
     inline Player *getCurrentPlayer() const{ return m_currentPlayer; }
     inline CardUseStruct::CardUseReason getCurrentCardUseReason() const{ return m_currentCardUseReason; }
     inline void setCurrentCardUseReason(CardUseStruct::CardUseReason reason) { m_currentCardUseReason = reason; }

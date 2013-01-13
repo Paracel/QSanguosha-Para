@@ -35,7 +35,7 @@ public:
     QList<ServerPlayer *> getFriends() const;
     
     virtual void activate(CardUseStruct &card_use) = 0;
-    virtual Card::Suit askForSuit(const QString& reason) = 0;
+    virtual Card::Suit askForSuit(const QString &reason) = 0;
     virtual QString askForKingdom() = 0;
     virtual bool askForSkillInvoke(const QString &skill_name, const QVariant &data) = 0;
     virtual QString askForChoice(const QString &skill_name, const QString &choices, const QVariant &data) = 0;
@@ -65,7 +65,7 @@ public:
     TrustAI(ServerPlayer *player);
 
     virtual void activate(CardUseStruct &card_use);
-    virtual Card::Suit askForSuit(const QString&);
+    virtual Card::Suit askForSuit(const QString &);
     virtual QString askForKingdom();
     virtual bool askForSkillInvoke(const QString &skill_name, const QVariant &data);
     virtual QString askForChoice(const QString &skill_name, const QString &choices, const QVariant &data);

@@ -164,7 +164,7 @@ namespace QSanProtocol {
 
     class QSanPacket {
     public:
-        virtual bool parse(const std::string&) = 0;
+        virtual bool parse(const std::string &) = 0;
         virtual std::string toString() const = 0;
         virtual PacketDescription getPacketDestination() const = 0;
         virtual PacketDescription getPacketSource() const = 0;
@@ -187,9 +187,9 @@ namespace QSanProtocol {
             m_msgBody = Json::nullValue;
         }
         inline void setMessageBody(const Json::Value &value) {m_msgBody = value;}
-        inline Json::Value& getMessageBody() {return m_msgBody;}
-        inline const Json::Value& getMessageBody() const{return m_msgBody;}
-        virtual bool parse(const std::string&);
+        inline Json::Value &getMessageBody() {return m_msgBody;}
+        inline const Json::Value &getMessageBody() const{return m_msgBody;}
+        virtual bool parse(const std::string &);
         virtual std::string toString() const;
         virtual PacketDescription getPacketDestination() const{
             return static_cast<PacketDescription>(m_packetDescription & S_DEST_MASK);
@@ -208,7 +208,7 @@ namespace QSanProtocol {
         PacketDescription m_packetDescription;
         Json::Value m_msgBody;
         inline virtual bool parseBody(const Json::Value &value) {m_msgBody = value; return true;}
-        virtual const Json::Value& constructBody() const{return m_msgBody;}
+        virtual const Json::Value &constructBody() const{return m_msgBody;}
 
         //helper functions                
         static bool tryParse(const std::string &result, int &val);

@@ -71,7 +71,7 @@ struct CardUseStruct {
     CardUseStruct();
     bool isValid(const QString &pattern) const;
     void parse(const QString &str, Room *room);
-    bool tryParse(const Json::Value&, Room *room);
+    bool tryParse(const Json::Value &, Room *room);
 
     const Card *card;
     ServerPlayer *from;
@@ -108,7 +108,7 @@ public:
         m_eventName = eventName;
     }
 
-    bool tryParse(const Json::Value&);
+    bool tryParse(const Json::Value &);
     Json::Value toJsonValue() const;
 
     static const int S_REASON_UNKNOWN = 0x00;
@@ -178,7 +178,7 @@ struct CardMoveStruct {
     Player *from, *to;
     CardMoveReason reason;
     bool open;    
-    bool tryParse(const Json::Value&);
+    bool tryParse(const Json::Value &);
     Json::Value toJsonValue() const;
     inline bool isRelevant(Player *player) {
         return player != NULL && (from == player || (to == player && to_place != Player::PlaceSpecial));
@@ -255,7 +255,7 @@ struct CardsMoveStruct {
     CardMoveReason reason;
     bool open; // helper to prevent sending card_id to unrelevant clients
     bool countAsOneTime; // helper to identify distinct move counted as one time
-    bool tryParse(const Json::Value&);
+    bool tryParse(const Json::Value &);
     Json::Value toJsonValue() const;
     inline bool isRelevant(const Player *player) {
         return player != NULL && (from == player || (to == player && to_place != Player::PlaceSpecial));

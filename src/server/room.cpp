@@ -803,7 +803,7 @@ bool Room::isCanceled(const CardEffectStruct &effect) {
         return false;
 }
 
-bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value& response, void *) {
+bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value &response, void *) {
     const Card *card = NULL;
     if (player != NULL && response.isString())
         card = Card::Parse(toQString(response));
@@ -2332,7 +2332,7 @@ QString Room::_chooseDefaultGeneral(ServerPlayer *player) const{
     }    
 }
 
-bool Room::_setPlayerGeneral(ServerPlayer *player, const QString& generalName, bool isFirst) {
+bool Room::_setPlayerGeneral(ServerPlayer *player, const QString &generalName, bool isFirst) {
     const General *general = Sanguosha->getGeneral(generalName);
     if (general == NULL)
         return false;
@@ -3135,7 +3135,7 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
 QList<CardsMoveStruct> Room::_breakDownCardMoves(QList<CardsMoveStruct> &cards_moves) {
     QList<CardsMoveStruct> all_sub_moves;
     for (int i = 0; i < cards_moves.size(); i++) {
-        CardsMoveStruct& move = cards_moves[i];
+        CardsMoveStruct &move = cards_moves[i];
         if (move.card_ids.size() == 0) continue;
 
         QMap<_MoveSourceClassifier, QList<int> > moveMap;
@@ -3620,7 +3620,7 @@ void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
     thread->trigger(ChoiceMade, this, player, data);
 }
 
-Card::Suit Room::askForSuit(ServerPlayer *player, const QString& reason) {
+Card::Suit Room::askForSuit(ServerPlayer *player, const QString &reason) {
     notifyMoveFocus(player, S_COMMAND_CHOOSE_SUIT);
     AI *ai = player->getAI();
     if (ai)
@@ -4081,7 +4081,7 @@ void Room::kickCommand(ServerPlayer *player, const QString &arg) {
 }
 
 bool Room::makeCheat(ServerPlayer *player) {
-    Json::Value& arg = player->m_cheatArgs;
+    Json::Value &arg = player->m_cheatArgs;
     if (!arg.isArray() || !arg[0].isInt()) return false;
     CheatCode code = (CheatCode)arg[0].asInt();
     if (code == S_CHEAT_KILL_PLAYER) {
@@ -4121,7 +4121,7 @@ bool Room::makeCheat(ServerPlayer *player) {
     return true;
 }
 
-void Room::makeDamage(const QString& source, const QString& target, QSanProtocol::CheatCategory nature, int point) {
+void Room::makeDamage(const QString &source, const QString &target, QSanProtocol::CheatCategory nature, int point) {
     ServerPlayer *sourcePlayer = findChild<ServerPlayer *>(source);
     ServerPlayer *targetPlayer = findChild<ServerPlayer *>(target);
     if (targetPlayer == NULL) return;
@@ -4161,7 +4161,7 @@ void Room::makeDamage(const QString& source, const QString& target, QSanProtocol
     this->damage(damage);
 }
 
-void Room::makeKilling(const QString& killerName, const QString& victimName) {
+void Room::makeKilling(const QString &killerName, const QString &victimName) {
     ServerPlayer *killer = NULL, *victim = NULL;
 
     killer = findChild<ServerPlayer *>(killerName);

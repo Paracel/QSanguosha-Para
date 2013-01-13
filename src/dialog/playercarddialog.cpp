@@ -42,8 +42,6 @@ QWidget *PlayerCardDialog::createAvatar() {
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(avatar);
-    // @todo: add magatamas box here!
-    // layout->addWidget(new QGraphicsProxyWidget(magatamas));
 
     box->setLayout(layout);
 

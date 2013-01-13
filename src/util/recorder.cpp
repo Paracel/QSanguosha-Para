@@ -182,7 +182,7 @@ void Replayer::slowDown(){
     mutex.lock();
 
     if (speed >= 1.0) {
-        qreal dec = speed >= 2.0 ? 1.0 : 0.5;
+        qreal dec = speed > 2.0 ? 1.0 : 0.5;
         speed -= dec;
         emit speed_changed(speed);
     }

@@ -53,15 +53,14 @@ using namespace QSanProtocol;
 
 RoomScene *RoomSceneInstance;
 
-void RoomScene::resetPiles()
-{
+void RoomScene::resetPiles() {
     // @todo: fix this...
 }
 
 #include "qsanbutton.h"
 
-RoomScene::RoomScene(QMainWindow *main_window):
-           main_window(main_window),game_started(false)
+RoomScene::RoomScene(QMainWindow *main_window)
+    : main_window(main_window),game_started(false)
 {
     m_choiceDialog = NULL;
     RoomSceneInstance = this;
@@ -82,25 +81,24 @@ RoomScene::RoomScene(QMainWindow *main_window):
         photo->setZValue(-0.5);
     }
 
-    {
-        // create table pile
-        m_tablePile = new TablePile;
-        addItem(m_tablePile);
-        connect(ClientInstance, SIGNAL(card_used()), m_tablePile, SLOT(clear()));
-        // create dashboard
-        dashboard = new Dashboard(createDashboardButtons());
-        dashboard->setObjectName("dashboard");         
-        dashboard->setZValue(0.8);
-        addItem(dashboard);
+    // create table pile
+    m_tablePile = new TablePile;
+    addItem(m_tablePile);
+    connect(ClientInstance, SIGNAL(card_used()), m_tablePile, SLOT(clear()));
 
-        dashboard->setPlayer(Self);
-        connect(Self, SIGNAL(general_changed()), dashboard, SLOT(updateAvatar()));
-        connect(Self, SIGNAL(general2_changed()), dashboard, SLOT(updateSmallAvatar()));
-        connect(dashboard, SIGNAL(card_selected(const Card *)), this, SLOT(enableTargets(const Card *)));
-        connect(dashboard, SIGNAL(card_to_use()), this, SLOT(doOkButton()));
-        //connect(dashboard, SIGNAL(add_equip_skill(const Skill *, bool)), this, SLOT(addSkillButton(const Skill *, bool)));
-        //connect(dashboard, SIGNAL(remove_equip_skill(QString)), this, SLOT(detachSkill(QString)));
-    }
+    // create dashboard
+    dashboard = new Dashboard(createDashboardButtons());
+    dashboard->setObjectName("dashboard");
+    dashboard->setZValue(0.8);
+    addItem(dashboard);
+
+    dashboard->setPlayer(Self);
+    connect(Self, SIGNAL(general_changed()), dashboard, SLOT(updateAvatar()));
+    connect(Self, SIGNAL(general2_changed()), dashboard, SLOT(updateSmallAvatar()));
+    connect(dashboard, SIGNAL(card_selected(const Card *)), this, SLOT(enableTargets(const Card *)));
+    connect(dashboard, SIGNAL(card_to_use()), this, SLOT(doOkButton()));
+    //connect(dashboard, SIGNAL(add_equip_skill(const Skill *, bool)), this, SLOT(addSkillButton(const Skill *, bool)));
+    //connect(dashboard, SIGNAL(remove_equip_skill(QString)), this, SLOT(detachSkill(QString)));
 
     connect(Self, SIGNAL(pile_changed(QString)), dashboard, SLOT(updatePile(QString)));
 
@@ -108,8 +106,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
     connect(Self, SIGNAL(role_changed(QString)), dashboard, SLOT(updateRole(QString)));
 
     m_replayControl = NULL;
-    if(ClientInstance->getReplayer())
-    {
+    if (ClientInstance->getReplayer()) {
         dashboard->hideControlButtons();
         createReplayControlBar();
     }
@@ -122,14 +119,12 @@ RoomScene::RoomScene(QMainWindow *main_window):
 
     known_cards_menu = new QMenu(main_window);
 
-    {
-        change_general_menu = new QMenu(main_window);
-        QAction *action = change_general_menu->addAction(tr("Change general ..."));
-        FreeChooseDialog *general_changer = new FreeChooseDialog(main_window);
-        connect(action, SIGNAL(triggered()), general_changer, SLOT(exec()));
-        connect(general_changer, SIGNAL(general_chosen(QString)), this, SLOT(changeGeneral(QString)));
-        to_change = NULL;
-    }
+    change_general_menu = new QMenu(main_window);
+    QAction *action = change_general_menu->addAction(tr("Change general ..."));
+    FreeChooseDialog *general_changer = new FreeChooseDialog(main_window);
+    connect(action, SIGNAL(triggered()), general_changer, SLOT(exec()));
+    connect(general_changer, SIGNAL(general_chosen(QString)), this, SLOT(changeGeneral(QString)));
+    to_change = NULL;
 
     // do signal-slot connections
     connect(ClientInstance, SIGNAL(player_added(ClientPlayer *)), SLOT(addPlayer(ClientPlayer *)));
@@ -170,33 +165,27 @@ RoomScene::RoomScene(QMainWindow *main_window):
     connect(ClientInstance, SIGNAL(assign_asked()), this, SLOT(startAssign()));
     connect(ClientInstance, SIGNAL(start_in_xs()), this, SLOT(startInXs()));
 
-    {
-        guanxing_box = new GuanxingBox;
-        guanxing_box->hide();
-        addItem(guanxing_box);
-        guanxing_box->setZValue(20000.0);
+    guanxing_box = new GuanxingBox;
+    guanxing_box->hide();
+    addItem(guanxing_box);
+    guanxing_box->setZValue(20000.0);
 
-        connect(ClientInstance, SIGNAL(guanxing(QList<int>,bool)), guanxing_box, SLOT(doGuanxing(QList<int>,bool)));
+    connect(ClientInstance, SIGNAL(guanxing(QList<int>,bool)), guanxing_box, SLOT(doGuanxing(QList<int>,bool)));
+    guanxing_box->moveBy(-120, 0);
 
-        guanxing_box->moveBy(-120, 0);
-    }
+    card_container = new CardContainer();
+    card_container->hide();
+    addItem(card_container);
+    card_container->setZValue(9.0);
 
-    {
-        card_container = new CardContainer();
-        card_container->hide();
-        addItem(card_container);
-        // card_container->shift();
-        card_container->setZValue(9.0);
+    connect(card_container, SIGNAL(item_chosen(int)), ClientInstance, SLOT(onPlayerChooseAG(int)));
+    connect(card_container, SIGNAL(item_gongxined(int)), ClientInstance, SLOT(onPlayerReplyGongxin(int)));
 
-        connect(card_container, SIGNAL(item_chosen(int)), ClientInstance, SLOT(onPlayerChooseAG(int)));
-        connect(card_container, SIGNAL(item_gongxined(int)), ClientInstance, SLOT(onPlayerReplyGongxin(int)));
+    connect(ClientInstance, SIGNAL(ag_filled(QList<int>, QList<int>)), this, SLOT(fillCards(QList<int>, QList<int>)));
+    connect(ClientInstance, SIGNAL(ag_taken(ClientPlayer *, int)), this, SLOT(takeAmazingGrace(ClientPlayer *, int)));
+    connect(ClientInstance, SIGNAL(ag_cleared()), card_container, SLOT(clear()));
 
-        connect(ClientInstance, SIGNAL(ag_filled(QList<int>, QList<int>)), this, SLOT(fillCards(QList<int>, QList<int>)));
-        connect(ClientInstance, SIGNAL(ag_taken(ClientPlayer *, int)), this, SLOT(takeAmazingGrace(ClientPlayer *, int)));
-        connect(ClientInstance, SIGNAL(ag_cleared()), card_container, SLOT(clear()));
-
-        card_container->moveBy(-120, 0);
-    }
+    card_container->moveBy(-120, 0);
 
     connect(ClientInstance, SIGNAL(skill_attached(QString, bool)), this, SLOT(attachSkill(QString,bool)));
     connect(ClientInstance, SIGNAL(skill_detached(QString)), this, SLOT(detachSkill(QString)));
@@ -204,7 +193,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
     enemy_box = NULL;
     self_box = NULL;
 
-    if(ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "02_1v1"){
+    if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "02_1v1") {
         // 1v1 & 3v3 mode
         connect(ClientInstance, SIGNAL(generals_filled(QStringList)), this, SLOT(fillGenerals(QStringList)));
         connect(ClientInstance, SIGNAL(general_asked()), this, SLOT(startGeneralSelection()));
@@ -214,7 +203,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
 
         arrange_button = NULL;
 
-        if(ServerInfo.GameMode == "02_1v1"){
+        if (ServerInfo.GameMode == "02_1v1") {
             enemy_box = new KOFOrderBox(false, this);
             self_box = new KOFOrderBox(true, this);
 
@@ -225,76 +214,69 @@ RoomScene::RoomScene(QMainWindow *main_window):
         }
     }
 
-    {
-        // chat box
-        chat_box = new QTextEdit;
-        chat_box->setObjectName("chat_box");
-        chat_box_widget = addWidget(chat_box);
-        chat_box_widget->setZValue(-2.0);
-        chat_box_widget->setObjectName("chat_box_widget");
-        chat_box->setReadOnly(true);
-        chat_box->setTextColor(Config.TextEditColor);
-        connect(ClientInstance, SIGNAL(line_spoken(QString)), this, SLOT(appendChatBox(QString)));
+    // chat box
+    chat_box = new QTextEdit;
+    chat_box->setObjectName("chat_box");
+    chat_box_widget = addWidget(chat_box);
+    chat_box_widget->setZValue(-2.0);
+    chat_box_widget->setObjectName("chat_box_widget");
+    chat_box->setReadOnly(true);
+    chat_box->setTextColor(Config.TextEditColor);
+    connect(ClientInstance, SIGNAL(line_spoken(QString)), this, SLOT(appendChatBox(QString)));
 
-        // chat edit
-        chat_edit = new QLineEdit;        
-        chat_edit->setObjectName("chat_edit");
-        chat_edit->setMaxLength(50);
-        chat_edit_widget = addWidget(chat_edit);
-        chat_edit_widget->setObjectName("chat_edit_widget");
-        chat_edit_widget->setZValue(-2.0);
-        connect(chat_edit, SIGNAL(returnPressed()), this, SLOT(speak()));
+    // chat edit
+    chat_edit = new QLineEdit;
+    chat_edit->setObjectName("chat_edit");
+    chat_edit->setMaxLength(50);
+    chat_edit_widget = addWidget(chat_edit);
+    chat_edit_widget->setObjectName("chat_edit_widget");
+    chat_edit_widget->setZValue(-2.0);
+    connect(chat_edit, SIGNAL(returnPressed()), this, SLOT(speak()));
 #if QT_VERSION >= 0x040700
-        chat_edit->setPlaceholderText(tr("Please enter text to chat ... "));
+    chat_edit->setPlaceholderText(tr("Please enter text to chat ... "));
 #endif
-        
-        chat_widget = new ChatWidget();
-        chat_widget->setZValue(-2.0);
-        addItem(chat_widget);
-        connect(chat_widget,SIGNAL(return_button_click()),this, SLOT(speak()));
-        connect(chat_widget,SIGNAL(chat_widget_msg(QString)),this, SLOT(appendChatEdit(QString)));        
 
-        if(ServerInfo.DisableChat)
-            chat_edit_widget->hide();
-    }
+    chat_widget = new ChatWidget();
+    chat_widget->setZValue(-2.0);
+    addItem(chat_widget);
+    connect(chat_widget,SIGNAL(return_button_click()),this, SLOT(speak()));
+    connect(chat_widget,SIGNAL(chat_widget_msg(QString)),this, SLOT(appendChatEdit(QString)));
 
-    {
-        // log box
-        log_box = new ClientLogBox;
-        log_box->setTextColor(Config.TextEditColor);
-        log_box->setObjectName("log_box");
+    if (ServerInfo.DisableChat)
+        chat_edit_widget->hide();
 
-        log_box_widget = addWidget(log_box);
-        log_box_widget->setObjectName("log_box_widget");
-        log_box_widget->setZValue(-1.0);
-        connect(ClientInstance, SIGNAL(log_received(QString)), log_box, SLOT(appendLog(QString)));
-    }
+    // log box
+    log_box = new ClientLogBox;
+    log_box->setTextColor(Config.TextEditColor);
+    log_box->setObjectName("log_box");
 
-    {
-        prompt_box = new Window(tr("QSanguosha"), QSize(480, 200));
-        prompt_box->setOpacity(0);
-        prompt_box->setFlag(QGraphicsItem::ItemIsMovable);
-        prompt_box->shift();
-        prompt_box->setZValue(10);
-        prompt_box->keepWhenDisappear();
+    log_box_widget = addWidget(log_box);
+    log_box_widget->setObjectName("log_box_widget");
+    log_box_widget->setZValue(-1.0);
+    connect(ClientInstance, SIGNAL(log_received(QString)), log_box, SLOT(appendLog(QString)));
 
-        prompt_box_widget = new QGraphicsTextItem(prompt_box);
-        prompt_box_widget->setParent(prompt_box);
-        prompt_box_widget->setPos(40, 45);
-        prompt_box_widget->setDefaultTextColor(Qt::white);
+    prompt_box = new Window(tr("QSanguosha"), QSize(480, 200));
+    prompt_box->setOpacity(0);
+    prompt_box->setFlag(QGraphicsItem::ItemIsMovable);
+    prompt_box->shift();
+    prompt_box->setZValue(10);
+    prompt_box->keepWhenDisappear();
 
-        QTextDocument *prompt_doc = ClientInstance->getPromptDoc();
-        prompt_doc->setTextWidth(prompt_box->boundingRect().width() - 80);
-        prompt_box_widget->setDocument(prompt_doc);
+    prompt_box_widget = new QGraphicsTextItem(prompt_box);
+    prompt_box_widget->setParent(prompt_box);
+    prompt_box_widget->setPos(40, 45);
+    prompt_box_widget->setDefaultTextColor(Qt::white);
 
-        QFont qf = Config.SmallFont;
-        qf.setPixelSize(21);
-        qf.setStyleStrategy(QFont::PreferAntialias);
-        //qf.setBold(true);
-        prompt_box_widget->setFont(qf);
+    QTextDocument *prompt_doc = ClientInstance->getPromptDoc();
+    prompt_doc->setTextWidth(prompt_box->boundingRect().width() - 80);
+    prompt_box_widget->setDocument(prompt_doc);
 
-        addItem(prompt_box);
-    }
+    QFont qf = Config.SmallFont;
+    qf.setPixelSize(21);
+    qf.setStyleStrategy(QFont::PreferAntialias);
+    prompt_box_widget->setFont(qf);
+
+    addItem(prompt_box);
 
     timer_id = 0;
     tick = 0;
@@ -318,9 +300,8 @@ RoomScene::RoomScene(QMainWindow *main_window):
 
     add_robot = NULL;
     fill_robots = NULL;
-    if(ServerInfo.EnableAI){
+    if (ServerInfo.EnableAI) {
         control_panel = addRect(0, 0, 500, 150, Qt::NoPen);
-        // control_panel->translate(-control_panel->boundingRect().width() / 2, -control_panel->boundingRect().height() / 2);
         control_panel->hide();
 
         add_robot = new Button(tr("Add a robot"));
@@ -342,8 +323,7 @@ RoomScene::RoomScene(QMainWindow *main_window):
     animations = new EffectAnimation();
 }
 
-void RoomScene::handleGameEvent(const Json::Value &arg)
-{
+void RoomScene::handleGameEvent(const Json::Value &arg) {
     GameEventType eventType = (GameEventType)arg[0].asInt();
     switch(eventType){
 
@@ -549,9 +529,15 @@ ReplayerControlBar::ReplayerControlBar(Dashboard *dashboard){
     speed_up->setPos(step * 3, 0);
 
     time_label = new QLabel;
+    time_label->setAttribute(Qt::WA_NoSystemBackground);
+    time_label->setText("-----------------------------------------------------");
     QPalette palette;
     palette.setColor(QPalette::WindowText, Config.TextEditColor);
     time_label->setPalette(palette);
+
+    QGraphicsProxyWidget *widget = new QGraphicsProxyWidget(this);
+    widget->setWidget(time_label);
+    widget->setPos(step * 4, 0);
 
     Replayer *replayer = ClientInstance->getReplayer();
     connect(play, SIGNAL(clicked()), replayer, SLOT(toggle()));

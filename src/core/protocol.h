@@ -186,9 +186,9 @@ namespace QSanProtocol {
             m_command = command;
             m_msgBody = Json::nullValue;
         }
-        inline void setMessageBody(const Json::Value &value) {m_msgBody = value;}
-        inline Json::Value &getMessageBody() {return m_msgBody;}
-        inline const Json::Value &getMessageBody() const{return m_msgBody;}
+        inline void setMessageBody(const Json::Value &value) { m_msgBody = value; }
+        inline Json::Value &getMessageBody() { return m_msgBody; }
+        inline const Json::Value &getMessageBody() const{ return m_msgBody; }
         virtual bool parse(const std::string &);
         virtual std::string toString() const;
         virtual PacketDescription getPacketDestination() const{
@@ -200,15 +200,15 @@ namespace QSanProtocol {
         virtual PacketDescription getPacketType() const{
             return static_cast<PacketDescription>(m_packetDescription & S_TYPE_MASK);
         }
-        virtual PacketDescription getPacketDescription() const{return m_packetDescription;}
-        virtual CommandType getCommandType() const{return m_command;}
+        virtual PacketDescription getPacketDescription() const{ return m_packetDescription; }
+        virtual CommandType getCommandType() const{ return m_command; }
     protected:
         static unsigned int _m_globalSerial;
         CommandType m_command;
         PacketDescription m_packetDescription;
         Json::Value m_msgBody;
-        inline virtual bool parseBody(const Json::Value &value) {m_msgBody = value; return true;}
-        virtual const Json::Value &constructBody() const{return m_msgBody;}
+        inline virtual bool parseBody(const Json::Value &value) { m_msgBody = value; return true; }
+        virtual const Json::Value &constructBody() const{ return m_msgBody; }
 
         //helper functions                
         static bool tryParse(const std::string &result, int &val);

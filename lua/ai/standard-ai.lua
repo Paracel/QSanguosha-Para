@@ -1368,7 +1368,7 @@ lijian_skill.getTurnUseCard=function(self)
 		local card
 		local card_id
 		if self:isEquip("SilverLion") and self.player:isWounded() then
-			card = sgs.Card_Parse("@LijianCard=" .. self.player:getArmor():getId())
+			card_id = self.player:getArmor():getId()
 		elseif self.player:getHandcardNum() > self.player:getHp() then
 			local cards = self.player:getHandcards()
 			cards=sgs.QList2Table(cards)

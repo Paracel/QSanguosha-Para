@@ -253,6 +253,7 @@ function SmartAI:useCardIronChain(card, use)
 	use.card = card
 	if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
 	if self:needBear() then return end
+	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return end
 	local friendtargets = {}
 	local otherfriends = {}
 	local enemytargets = {}

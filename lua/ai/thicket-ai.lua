@@ -90,7 +90,7 @@ end
 
 sgs.ai_card_intention.FangzhuCard = function(card, from, tos)
 	if from:getLostHp() < 3 then
-		sgs.updateIntention(from, tos[1], 80/from:getLostHp())
+		sgs.updateIntention(from, tos[1], 80 / math.max(from:getLostHp(), 1))
 	end
 end
 
@@ -104,7 +104,7 @@ sgs.ai_need_damaged.fangzhu = function (self, attacker)
 			return true
 		end
 	end
-	if self.player:getLostHp()<=1 and sgs.turncount > 2 then return true end
+	if self.player:getLostHp() <= 1 and sgs.turncount > 2 then return true end
 	return false
 end
 
@@ -120,7 +120,7 @@ duanliang_skill.getTurnUseCard = function(self)
 	local card
 	self:sortByUseValue(cards, true)
 
-	for _,acard in ipairs(cards) do
+	for _, acard in ipairs(cards) do
 		if (acard:isBlack()) and (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard")) and (self:getDynamicUsePriority(acard) < sgs.ai_use_value.SupplyShortage)then
 			card = acard
 			break
@@ -154,7 +154,7 @@ end
 sgs.ai_skill_invoke.lieren = function(self, data)
 	local damage = data:toDamage()
 	if self:isEnemy(damage.to) then
-		if self.player:getHandcardNum()>=self.player:getHp() then return true
+		if self.player:getHandcardNum() >= self.player:getHp() then return true
 		else return false
 		end
 	end
@@ -267,9 +267,9 @@ sgs.ai_skill_use["@@haoshi!"] = function(self, prompt)
 
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 	local card_ids = {}
-	for i = 1, math.floor(#cards/2) do
+	for i = 1, math.floor(#cards / 2) do
 		table.insert(card_ids, cards[i]:getEffectiveId())
 	end
 
@@ -311,11 +311,11 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	self:sort(self.enemies,"defense")
 	if lowest_friend then
 		local hand2=lowest_friend:getHandcardNum()
-		for _,enemy in ipairs(self.enemies) do
+		for _, enemy in ipairs(self.enemies) do
 			local hand1=enemy:getHandcardNum()
 
-			if enemy:hasSkill("manjuan") and (hand1 > hand2 - 1) and (hand1-hand2)<=cardNum then
-				use.card=card
+			if enemy:hasSkill("manjuan") and (hand1 > hand2 - 1) and (hand1 - hand2) <= cardNum then
+				use.card = card
 				if use.to then
 					use.to:append(enemy)
 					use.to:append(lowest_friend)
@@ -323,12 +323,12 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 				return
 			end
 		end
-		for _,enemy in ipairs(self.enemies) do
+		for _, enemy in ipairs(self.enemies) do
 			local hand1=enemy:getHandcardNum()
 
 			if (hand1 > hand2) then
-				if (hand1-hand2)<=cardNum then
-					use.card=card
+				if (hand1 - hand2) <= cardNum then
+					use.card = card
 					if use.to then
 						use.to:append(enemy)
 						use.to:append(lowest_friend)
@@ -375,9 +375,10 @@ luanwu_skill.getTurnUseCard = function(self)
 	if good == 0 then return end
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		local hp = math.max(player:getHp(), 1)
 		if getCardsNum("Analeptic", player) > 0 then
-			if self:isFriend(player) then good = good + 1.0/player:getHp()
-			else bad = bad + 1.0/player:getHp()
+			if self:isFriend(player) then good = good + 1.0 / hp
+			else bad = bad + 1.0 / hp
 			end
 		end
 
@@ -396,9 +397,10 @@ luanwu_skill.getTurnUseCard = function(self)
 
 		if getCardsNum("Jink", player) == 0 then
 			local lost_value = 0
-			if self:hasSkills(sgs.masochism_skill, player) then lost_value = player:getHp()/2 end
-			if self:isFriend(player) then bad = bad + (lost_value + 1)/player:getHp()
-			else good = good + (lost_value + 1)/player:getHp()
+			if self:hasSkills(sgs.masochism_skill, player) then lost_value = player:getHp() / 2 end
+			local hp = math.max(player:getHp(), 1)
+			if self:isFriend(player) then bad = bad + (lost_value + 1) / hp
+			else good = good + (lost_value + 1) / hp
 			end
 		end
 	end
@@ -423,9 +425,9 @@ jiuchi_skill.getTurnUseCard = function(self)
 
 	local card
 
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
-	for _,acard in ipairs(cards) do
+	for _, acard in ipairs(cards) do
 		if acard:getSuit() == sgs.Card_Spade then
 			card = acard
 			break

@@ -187,7 +187,7 @@ sgs.ai_chaofeng.dianwei = 2
 
 local huoji_skill = {}
 huoji_skill.name = "huoji"
-table.insert(sgs.ai_skills,huoji_skill)
+table.insert(sgs.ai_skills, huoji_skill)
 huoji_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
@@ -237,7 +237,7 @@ sgs.wolong_suit_value = {
 
 local lianhuan_skill = {}
 lianhuan_skill.name = "lianhuan"
-table.insert(sgs.ai_skills,lianhuan_skill)
+table.insert(sgs.ai_skills, lianhuan_skill)
 lianhuan_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
@@ -422,12 +422,12 @@ end
 
 sgs.ai_chaofeng.yuanshao = 1
 
-sgs.ai_skill_invoke.shuangxiong = function(self,data)
+sgs.ai_skill_invoke.shuangxiong = function(self, data)
 	if self.player:isSkipped(sgs.Player_Play) or self.player:getHp() < 2 then
 		return false
 	end
 	local target = 0
-	local cards=self.player:getCards("h")
+	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
 
 	local handnum = 0
@@ -458,7 +458,7 @@ shuangxiong_skill.getTurnUseCard = function(self)
 
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	local card
 	for _, acard in ipairs(cards) do

@@ -85,7 +85,7 @@ end
 
 function logmsg(fname, fmt,...)
 	local fp = io.open(fname, "ab")
-	if type(fmt)=="boolean" then fmt = fmt and "true" or "false" end
+	if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
 	fp:write(string.format(fmt, unpack(arg)) .. "\r\n")
 	fp:close()
 end
@@ -119,7 +119,7 @@ function SmartAI:log(outString)
 end
 
 function outputPlayersEvaluation()
-	global_room:writeToConsole("=========== MISJUDGE START ===========" )
+	global_room:writeToConsole("=========== MISJUDGE START ===========")
 	for _, player in sgs.qlist(global_room:getOtherPlayers(global_room:getLord())) do
 		local evaluate_role = sgs.evaluatePlayerRole(player)
 		global_room:writeToConsole("<------- " .. player:getGeneralName() .. " ------->")
@@ -128,7 +128,7 @@ function outputPlayersEvaluation()
 									.. sgs.role_evaluation[player:objectName()]["loyalist"] .. " Renegade:"
 									.. sgs.role_evaluation[player:objectName()]["renegade"])
 	end
-	global_room:writeToConsole("================ END ================" )
+	global_room:writeToConsole("================ END ================")
 end
 
 function sgs.checkMisjudge(player)
@@ -158,7 +158,7 @@ function sgs.checkMisjudge(player)
 
 		if evaluate_renegade < 1 then
 			if (evaluate_rebel >= rebel_num + renegade_num and evaluate_rebel > rebel_num)
-				or (evaluate_loyalist >= loyalist_num+renegade_num and evaluate_loyalist > loyalist_num)
+				or (evaluate_loyalist >= loyalist_num + renegade_num and evaluate_loyalist > loyalist_num)
 				or (evaluate_rebel == rebel_num + 1 and evaluate_loyalist == loyalist_num + 1) then
 				outputPlayersEvaluation()
 				if evaluate_rebel >= rebel_num + renegade_num and evaluate_rebel > rebel_num then

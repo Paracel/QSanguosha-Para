@@ -6,7 +6,7 @@ function speak(to, type)
 	to:speak(sgs.ai_chat[type][i])
 end
 
-function speakTrigger(card, from, to,event)
+function speakTrigger(card, from, to, event)
 	if (event == "death") and from:hasSkill("ganglie") then
 		speak(from, "ganglie_death")
 	end
@@ -108,7 +108,7 @@ sgs.ai_chat_func[sgs.EventPhaseStart] = function(self, player, data)
 				"速度，一人一下，弄死",
 				"主公，你投降吧，免受皮肉之苦啊，投降给全尸",
 			}
-	if player:getPhase()== sgs.Player_Finish and not player:isKongcheng() and player:hasSkill("leiji") and os.time() % 10 < 4 then
+	if player:getPhase() ==  sgs.Player_Finish and not player:isKongcheng() and player:hasSkill("leiji") and os.time() % 10 < 4 then
 		local index = 1 + (os.time() % #chat_jink)
 		player:speak(chat_jink[index])
 	end
@@ -123,7 +123,7 @@ function SmartAI:speak(type, isFemale)
 	if not sgs.GetConfig("AIChat", true) then return end
 	if self.player:getState() ~= "robot" then return end
 
-	local i = math.random(1,#sgs.ai_chat[type])
+	local i = math.random(1, #sgs.ai_chat[type])
 	if isFemale then
 		type = type .. "_female"
 	end

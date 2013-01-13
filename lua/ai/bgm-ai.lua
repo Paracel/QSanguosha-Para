@@ -511,7 +511,7 @@ yanxiao_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
 	local diamond_card
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond then
@@ -635,7 +635,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 
 	for _, friend in ipairs(friends) do
 		if self:isEquip("SilverLion", friend) and
-		friend:isWounded() and not self:hasSkills("longhun|duanliang|qixi|guidao|lijian|jujian",friend) then
+		friend:isWounded() and not self:hasSkills("longhun|duanliang|qixi|guidao|lijian|jujian", friend) then
 			hasLion = true
 			target = friend
 		end
@@ -657,7 +657,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
-		local flag = string.format("%s_%s_%s","visible",self.player:objectName(),enemy:objectName())
+		local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
 		if #cards <= 2 and not enemy:isKongcheng() then
 			for _, cc in ipairs(cards) do
 				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
@@ -825,11 +825,11 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 		end
 	end
 	if self:isFriend(current) then
-		for _,enemy in ipairs(self.enemies) do
+		for _, enemy in ipairs(self.enemies) do
 			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 			local eff = self:slashIsEffective(slash, enemy)
 
-			if self.player:canSlash(enemy, nil ,false) and not self:slashProhibit(nil, enemy) then
+			if self.player:canSlash(enemy, nil , false) and not self:slashProhibit(nil, enemy) then
 				self.room:setPlayerFlag(enemy, "XuehenToChoose")
 				return "slash"
 			end
@@ -906,7 +906,7 @@ fuluan_skill.getTurnUseCard = function(self)
 	local first_card, second_card, third_card
 	if self.player:getCards("he"):length() >= 3 then
 		local cards = self.player:getCards("he")
-		local same_suit=false
+		local same_suit = false
 		cards = sgs.QList2Table(cards)
 		for _, fcard in ipairs(cards) do
 			if not (fcard:isKindOf("Peach") or fcard:isKindOf("ExNihilo")) then

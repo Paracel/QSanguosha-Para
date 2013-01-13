@@ -3,8 +3,8 @@ noslonghun_skill.name = "noslonghun"
 table.insert(sgs.ai_skills, noslonghun_skill)
 noslonghun_skill.getTurnUseCard = function(self)
 	if self.player:getHp() > 1 then return end
-	local cards=sgs.QList2Table(self.player:getCards("he"))
-	self:sortByUseValue(cards,true)
+	local cards = sgs.QList2Table(self.player:getCards("he"))
+	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond then
 			return sgs.Card_Parse(("fire_slash:noslonghun[%s:%s]=%d"):format(card:getSuitString(), card:getNumberString(), card:getId()))

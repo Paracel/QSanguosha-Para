@@ -145,7 +145,7 @@ sgs.ai_skill_cardask["@JijiuDecrease"] = function(self, data)
 	local damage = data:toDamage()
 	if not self:isFriend(damage.to) then return "." end
 	if self:hasSkills(sgs.masochism_skill, damage.to) and damage.damage <= 1 and damage.to:getHp() > 1 then return "." end
-	local cards=sgs.QList2Table(self.player:getCards("he"))
+	local cards = sgs.QList2Table(self.player:getCards("he"))
 	self:sortByKeepValue(cards)
 	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end

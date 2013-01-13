@@ -299,8 +299,8 @@ table.insert(sgs.ai_skills, jixi_skill)
 jixi_skill.getTurnUseCard = function(self)
 	if self.player:hasFlag("ForbidJixi")
 		or self.player:getPile("field"):isEmpty()
-		or (self.player:getHandcardNum()>=self.player:getHp() and
-		self.player:getPile("field"):length()<= self.room:getAlivePlayers():length()/2) then
+		or (self.player:getHandcardNum() >= self.player:getHp() and
+		self.player:getPile("field"):length()<= self.room:getAlivePlayers():length() / 2) then
 		return
 	end
 	local can_use = false
@@ -344,7 +344,7 @@ sgs.ai_skill_askforag.jixi = function(self, card_ids)
 			if not self.jixitarget and self:hasTrickEffective(snatch, player) then self.jixitarget = player end
 		end
 	end
-	if self.jixi then self.jixi = card_ids[self.jixi] else self.jixi = card_ids[math.random(1,#card_ids)] end
+	if self.jixi then self.jixi = card_ids[self.jixi] else self.jixi = card_ids[math.random(1, #card_ids)] end
 	return self.jixi
 end
 
@@ -359,7 +359,7 @@ sgs.dynamic_value.control_card.JixiCard = true
 sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	local target = data:toPlayer()
 	if self:isFriend(target) and not
-		(target:hasSkill("leiji") and (getCardsNum("Jink", target) > 0 or (not self:isWeak(target) and self:isEquip("EightDiagram",target))))
+		(target:hasSkill("leiji") and (getCardsNum("Jink", target) > 0 or (not self:isWeak(target) and self:isEquip("EightDiagram", target))))
 		then return "." end
 	local has_peach, has_anal, has_slash, has_jink
 	for _, card in sgs.qlist(self.player:getHandcards()) do
@@ -384,7 +384,7 @@ end
 
 function sgs.ai_slash_prohibit.xiangle(self, to)
 	if self:isFriend(to) then return false end
-	return self:getCardsNum("Slash")+self:getCardsNum("Analpetic")+math.max(self:getCardsNum("Jink")-1,0) < 2
+	return self:getCardsNum("Slash") + self:getCardsNum("Analpetic") + math.max(self:getCardsNum("Jink") - 1, 0) < 2
 end
 
 sgs.ai_skill_invoke.fangquan = function(self, data)
@@ -497,11 +497,11 @@ end
 sgs.ai_skill_cardask["tiaoxin-slash"] = function(self, data, pattern, target)
 	if target then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target)))
+			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target, self.player) or target:getHp()>getBestHp(target)))
 				and self:isEnemy(target) then
 				return slash:toString()
 			end
-			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target,self.player) or target:getHp()>getBestHp(target))
+			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target, self.player) or target:getHp()>getBestHp(target))
 				and self:isFriend(target) then
 				return slash:toString()
 			end
@@ -564,7 +564,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		local lord_max_num = 0, lord_max_card
 		local lord_min_num = 14, lord_min_card
 		local lord_cards = lord:getHandcards()
-		local flag = string.format("%s_%s_%s","visible",global_room:getCurrent():objectName(),lord:objectName())
+		local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), lord:objectName())
 		for _, lcard in sgs.qlist(lord_cards) do
 			if (lcard:hasFlag("visible") or lcard:hasFlag(flag)) and lcard:getNumber() > lord_max_num then
 				lord_max_card = lcard
@@ -592,7 +592,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 end
 
 sgs.ai_need_damaged.hunzi = function (self, attacker)
-	if self.player:getMark("hunzi")==0 and self.player:getHp() == 2 then return true end
+	if self.player:getMark("hunzi") == 0 and self.player:getHp() == 2 then return true end
 	return false
 end
 
@@ -703,7 +703,7 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 	end
 
 	if self:isFriend(who) then
-		self:sortByKeepValue(cards,true)
+		self:sortByKeepValue(cards, true)
 	else
 		self:sortByKeepValue(cards)
 	end
@@ -786,10 +786,10 @@ function sgs.ai_skill_choice.huashen(self, choices)
 	for index = #choices, 1, -1 do
 		if ("renjie|benghuai|kuangbao|wumou|wuqian|shenfen|shiyong|qixing|kuangfeng|dawu|manjuan")
 		:match(choices[index]) then
-			table.remove(choices,index)
+			table.remove(choices, index)
 		end
 	end
 	if #choices > 0 then
-		return choices[math.random(1,#choices)]
+		return choices[math.random(1, #choices)]
 	end
 end

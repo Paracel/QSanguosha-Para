@@ -16,7 +16,7 @@ neoluoyi_skill.getTurnUseCard = function(self)
 	end
 	for _, card in ipairs(cards) do
 		if card:isKindOf("Slash") then
-			for _,enemy in ipairs(self.enemies) do
+			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
 					if getCardsNum("Jink", enemy) < 1 or (self:isEquip("Axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
@@ -138,13 +138,13 @@ end
 
 sgs.ai_skill_invoke.neoganglie = function(self, data)
 	local target = data:toPlayer()
-	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum()<=1 then return false end
+	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target, self.player)) and target:getHandcardNum() <= 1 then return false end
 	if not self:isFriend(target) then
 		self.room:setPlayerFlag(target, "ganglie_target")
 		return true
 	else
-		if self:getDamagedEffects(target,self.player) then
-			sgs.ai_ganglie_effect = string.format("%s_%s_%d",self.player:objectName(), target:objectName(),sgs.turncount)
+		if self:getDamagedEffects(target, self.player) then
+			sgs.ai_ganglie_effect = string.format("%s_%s_%d", self.player:objectName(), target:objectName(), sgs.turncount)
 			return true
 		end
 	end
@@ -152,7 +152,7 @@ sgs.ai_skill_invoke.neoganglie = function(self, data)
 end
 
 sgs.ai_need_damaged.neoganglie = function (self, attacker)
-	if self:getDamagedEffects(attacker,self.player) then return self:isFriend(attacker) end
+	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
 
 	if self:isEnemy(attacker) and attacker:getHp() <= 2 and not attacker:hasSkill("buqu") and sgs.isGoodTarget(attacker, self.enemies) then
 		return true
@@ -168,8 +168,8 @@ sgs.ai_skill_choice.neoganglie = function(self, choices)
 			self.room:setPlayerFlag(target, "-ganglie_target")
 		end
 	end
-	if self:getDamagedEffects(target,self.player) and self:isFriend(target) then return "damage" end
-	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target,self.player)) and target:getHandcardNum() > 1 then
+	if self:getDamagedEffects(target, self.player) and self:isFriend(target) then return "damage" end
+	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target, self.player)) and target:getHandcardNum() > 1 then
 		return "throw"
 	end
 	return "damage"

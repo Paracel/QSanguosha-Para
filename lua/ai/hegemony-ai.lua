@@ -348,7 +348,7 @@ duoshi_skill.getTurnUseCard = function(self, inclusive)
 
 	local red_card
 	if self.player:getCardCount(false) <= 2 then return end
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
 		if card:isRed() then
@@ -620,7 +620,7 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 			end
 		end
 	end
-	for _,friend in ipairs(self.friends_noself) do
+	for _, friend in ipairs(self.friends_noself) do
 		if friend:hasSkill("shiyong", true) and friend:getMark("Qingchengshiyong") == 0 then
 			use.card = card
 			if use.to then

@@ -3,7 +3,7 @@ sgs.weapon_range.SPMoonSpear = 3
 sgs.ai_skill_invoke.sp_moonspear = function(self, data)
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 	for _, target in ipairs(self.enemies) do
-		if self.player:canSlash(target) and not self:slashProhibit(slash ,target) then
+		if self.player:canSlash(target) and not self:slashProhibit(slash , target) then
 		return true
 		end
 	end
@@ -84,7 +84,7 @@ sgs.ai_skill_invoke.danlao = function(self, data)
 	if effect.card:isKindOf("GodSalvation") and self.player:isWounded() then
 		return false
 	elseif effect.card:isKindOf("AmazingGrace") and
-		(self.player:getSeat() - current:getSeat()) % (global_room:alivePlayerCount()) < global_room:alivePlayerCount()/2 then
+		(self.player:getSeat() - current:getSeat()) % (global_room:alivePlayerCount()) < global_room:alivePlayerCount() / 2 then
 		return false
 	else
 		return true
@@ -100,7 +100,7 @@ end
 
 sgs.ai_skill_choice.jilei = function(self, choices)
 	local tmptrick = sgs.Sanguosha:cloneCard("ex_nihilo", sgs.Card_NoSuitNoColor, 0)
-	if (self:isEquip("Crossbow",self.jilei_source) and self.jilei_source:inMyAttackRange(self.player)) or
+	if (self:isEquip("Crossbow", self.jilei_source) and self.jilei_source:inMyAttackRange(self.player)) or
 		 self.jilei_source:isJilei(tmptrick) then
 		return "basic"
 	else
@@ -257,7 +257,7 @@ xueji_skill.getTurnUseCard = function(self, inclusive)
 
 	local red_card
 
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
 		if card:isRed() and not card:isKindOf("Peach") and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
@@ -468,7 +468,7 @@ sgs.ai_chaofeng.sp_machao = sgs.ai_chaofeng.machao
 
 sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	if math.random(0, 2) == 0 then return false
-	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan="tw_diaochan" return true
+	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "tw_diaochan" return true
 	else sgs.ai_skill_choice.cv_diaochan="sp_diaochan" return true end
 end
 

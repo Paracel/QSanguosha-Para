@@ -14,7 +14,7 @@ sgs.ai_skill_invoke.qianxi = function(self, data)
 	local target = damage.to
 	if self:isFriend(target) then return false end
 	if target:getLostHp() >= 2 and target:getHp() <= 1 then return false end
-	if self:hasSkills(sgs.masochism_skill, target) or self:hasSkills(sgs.recover_skill, target) or self:hasSkills("longhun|buqu",target) then return true end
+	if self:hasSkills(sgs.masochism_skill, target) or self:hasSkills(sgs.recover_skill, target) or self:hasSkills("longhun|buqu", target) then return true end
 	if damage.damage > 1 then return false end
 	return (target:getMaxHp() - target:getHp()) < 2
 end
@@ -23,7 +23,7 @@ sgs.ai_skill_invoke.fuli = true
 
 sgs.ai_skill_invoke.fuhun = function(self, data)
 	local target = 0
-	for _,enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self.enemies) do
 		if (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then target = target + 1 end
 	end
 	return target > 0 and not self.player:isSkipped(sgs.Player_Play)
@@ -51,14 +51,14 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 	local needburst = 0
 
 	for _, slash in ipairs(self:getCards("Slash")) do
-		for _,enemy in ipairs(self.enemies) do
+		for _, enemy in ipairs(self.enemies) do
 			if self:slashIsEffective(slash, enemy) then
 				slashnum = slashnum + 1 break
 			end
 		end
 	end
 
-	for _,enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self.enemies) do
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, enemy) and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
 				goodtarget = goodtarget + 1
@@ -70,7 +70,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 	self:sort(self.enemies,"defenseSlash")
 	if goodtarget == 0 or self.player:isSkipped(sgs.Player_Play) then return "jiang" end
 
-	for _,enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self.enemies) do
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
@@ -81,7 +81,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 		end
 	end
 
-	for _,enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self.enemies) do
 		local def=sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
@@ -626,12 +626,12 @@ qice_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.QiceCard = function(card, use, self)
-	local userstring=card:toString()
-	userstring=(userstring:split(":"))[3]
+	local userstring = card:toString()
+	userstring = (userstring:split(":"))[3]
 	local qicecard=sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
-	self:useTrickCard(qicecard,use)
+	self:useTrickCard(qicecard, use)
 	if not use.card then return end
-	use.card=card
+	use.card = card
 end
 
 sgs.ai_use_priority.QiceCard = 1.5

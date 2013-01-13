@@ -123,10 +123,10 @@ function SmartAI:needDeath(player)
 	if player:hasSkill("wuhun") then
 		for _, aplayer in sgs.qlist(self.room:getAlivePlayers()) do
 			local mark = aplayer:getMark("@nightmare")
-			if self:isFriend(player,aplayer) and player:objectName() ~= aplayer:objectName() then
+			if self:isFriend(player, aplayer) and player:objectName() ~= aplayer:objectName() then
 				if mark > maxfriendmark then maxfriendmark = mark end
 			end
-			if self:isEnemy(player,aplayer) then
+			if self:isEnemy(player, aplayer) then
 				if mark > maxenemymark then maxenemymark = mark end
 			end
 			if maxfriendmark > maxenemymark then return false
@@ -181,7 +181,7 @@ sgs.ai_use_priority.GongxinCard = 8.8
 sgs.ai_card_intention.GongxinCard = 80
 
 sgs.ai_skill_invoke.qinyin = function(self, data)
-	for _,friend in ipairs(self.friends) do
+	for _, friend in ipairs(self.friends) do
 		if friend:isWounded() then return true end
 	end
 	if sgs.ai_skill_choice.qinyin(self, "up+down") == "down" then return true end
@@ -353,7 +353,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num >=3 then break end
+					if num  >= 3 then break end
 				end
 			end
 		end
@@ -364,7 +364,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if enemy:isChained() and self:isGoodChainTarget(enemy) and not enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num >=3 then break end
+					if num  >= 3 then break end
 				end
 			end
 		end
@@ -376,7 +376,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 					if enemy:hasArmorEffect("vine") then
 						if use.to then use.to:append(enemy) end
 						num = num + 1
-						if num >=3 then break end
+						if num  >= 3 then break end
 					end
 				end
 			end
@@ -388,7 +388,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if not enemy:isChained() and not enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num >=3 then break end
+					if num  >= 3 then break end
 				end
 			end
 		end
@@ -442,7 +442,7 @@ sgs.ai_skill_use["@@kuangfeng"] = function(self, prompt)
 		if target[1]:hasArmorEffect("vine") and friendly_fire then usecard = true end
 	end
 	if usecard then
-		if not target[1] then table.insert(target,self.enemies[1]) end
+		if not target[1] then table.insert(target, self.enemies[1]) end
 		if target[1] then return "@KuangfengCard=.->" .. target[1]:objectName() else return "." end
 	else
 		return "."
@@ -705,7 +705,7 @@ longhun_skill.name = "longhun"
 table.insert(sgs.ai_skills, longhun_skill)
 longhun_skill.getTurnUseCard = function(self)
 	if self.player:getHp() > 1 then return end
-	local cards=sgs.QList2Table(self.player:getCards("he"))
+	local cards = sgs.QList2Table(self.player:getCards("he"))
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
 		if card:getSuit() == sgs.Card_Diamond and self:slashIsAvailable() then
@@ -775,10 +775,10 @@ jilve_skill.getTurnUseCard = function(self)
 		sgs.ai_skill_choice.jilve = "zhiheng"
 		local card = sgs.Card_Parse("@ZhihengCard=.")
 		local dummy_use = { isDummy = true }
-		self:useSkillCard(card,dummy_use)
+		self:useSkillCard(card, dummy_use)
 		if dummy_use.card then return sgs.Card_Parse("@JilveCard=.") end
 	elseif not wanshadone then
-		local cards=self.player:getHandcards()
+		local cards = self.player:getHandcards()
 		cards = sgs.QList2Table(cards)
 		local slashes = self:getCards("Slash")
 		self:sort(self.enemies, "hp")
@@ -805,7 +805,7 @@ end
 sgs.ai_skill_use["@zhiheng"] = function(self, prompt)
 	local card = sgs.Card_Parse("@ZhihengCard=.")
 	local dummy_use = { isDummy = true }
-	self:useSkillCard(card,dummy_use)
+	self:useSkillCard(card, dummy_use)
 	if dummy_use.card then return (dummy_use.card):toString() .. "->." end
 	return "."
 end

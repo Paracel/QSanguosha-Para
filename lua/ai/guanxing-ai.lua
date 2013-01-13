@@ -94,7 +94,7 @@ local function GuanXing(self, cards)
 		if not judged_list[judge_count] then judged_list[judge_count] = 0 end
 	end
 
-	for index=1, #judged_list do
+	for index = 1, #judged_list do
 		if judged_list[index] == 0 then
 			table.insert(up, index, table.remove(bottom))
 		end
@@ -168,7 +168,7 @@ local function GuanXing(self, cards)
 	end
 
 	if has_judged then
-		for index=1, #judged_list do
+		for index = 1, #judged_list do
 			if judged_list[index] == 0 then
 				table.insert(next_judge, index, table.remove(bottom))
 			end
@@ -228,7 +228,7 @@ local function XinZhan(self, cards)
 	end
 
 	if has_judged then
-		for index=1, #judged_list do
+		for index = 1, #judged_list do
 			if judged_list[index] == 0 then
 				table.insert(up, index, table.remove(bottom))
 			end

@@ -46,7 +46,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	local hasPeach = (self:getCardsNum("Peach") > 0)
 
 	local trick_num, basic_num, equip_num = 0, 0, 0
-	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum() >=3 then
+	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum()  >= 3 then
 		local cards = self.player:getCards("he")
 		cards = sgs.QList2Table(cards)
 		self:sortByUseValue(cards, true)
@@ -95,7 +95,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 					table.insert(abandon_handcard, card:getId())
 					index = 5
 				elseif card:isKindOf("Slash") and slash_num > 1 then
-					if (self.player:getWeapon() and not self.player:getWeapon():objectName()=="crossbow") or
+					if (self.player:getWeapon() and not self.player:getWeapon():objectName() == "crossbow") or
 						not self.player:getWeapon() then
 						table.insert(abandon_handcard, card:getId())
 						index = 5
@@ -116,7 +116,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	end
 	if #self.friends_noself > 0 and self:getOverflow() > 0 then
 		self:sort(self.friends_noself, "handcard")
-		local discard = self:askForDiscard("gamerule", math.min(self:getOverflow(),3))
+		local discard = self:askForDiscard("gamerule", math.min(self:getOverflow(), 3))
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(discard, "+"))
 		if use.to then use.to:append(self.friends_noself[1]) end
 		return
@@ -163,7 +163,7 @@ end
 sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	local target
 	for _, friend in ipairs(self.friends_noself) do
@@ -231,7 +231,7 @@ sgs.ai_skill_choice.nosxuanfeng = function(self, choices)
 	self:sort(self.enemies, "defense")
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 	for _, enemy in ipairs(self.enemies) do
-		if self.player:distanceTo(enemy)<=1 then
+		if self.player:distanceTo(enemy) <= 1 then
 			return "damage"
 		elseif not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
 			return "slash"
@@ -264,7 +264,7 @@ nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 
 	local equip_card
 
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
 		if card:getTypeId() == sgs.Card_TypeEquip and ((self:getUseValue(card)<sgs.ai_use_value.Slash) or inclusive) then
@@ -310,7 +310,7 @@ sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
 	return "."
 end
 
-sgs.ai_skill_invoke.noszhenggong = function(self,data)
+sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
 	if self:isFriend(target) then
@@ -363,7 +363,7 @@ sgs.ai_skill_use["@@nosquanji"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_skill_invoke.nosyexin = function(self,data)
+sgs.ai_skill_invoke.nosyexin = function(self, data)
 	return true
 end
 
@@ -391,7 +391,7 @@ sgs.ai_skill_askforag.nosyexin = function(self, card_ids)
 	return cards[#cards]:getEffectiveId()
 end
 
-sgs.ai_skill_invoke.nospaiyi = function(self,data)
+sgs.ai_skill_invoke.nospaiyi = function(self, data)
 	return true
 end
 
@@ -414,7 +414,7 @@ sgs.ai_skill_askforag.nospaiyi = function(self, card_ids)
 	return card:getEffectiveId()
 end
 
-local function hp_subtract_handcard(a,b)
+local function hp_subtract_handcard(a, b)
 	local diff1 = a:getHp() - a:getHandcardNum()
 	local diff2 = b:getHp() - b:getHandcardNum()
 
@@ -434,7 +434,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 
 		local enemies = self.enemies
 		for _, enemy in ipairs(enemies) do
-			if self:hasSkills("lijian|fanjian|nosfanjian|neofanjian",enemy) and not enemy:containsTrick("indulgence") and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if self:hasSkills("lijian|fanjian|nosfanjian|neofanjian", enemy) and not enemy:containsTrick("indulgence") and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy
@@ -463,7 +463,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 			end
 		end
 		for _, enemy in ipairs(enemies) do
-			if ((#enemies == 1) or not self:hasSkills("tiandu|guidao",enemy)) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if ((#enemies == 1) or not self:hasSkills("tiandu|guidao", enemy)) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy
@@ -568,7 +568,7 @@ sgs.ai_skill_choice.weiwudi_guixin = function(self, choices)
 		if choices:match("weidai") and self:isWeak() then return "weidai" end
 		if choices:match("ruoyu") then return "ruoyu" end
 		local choice_table = choices:split("+")
-		return choice_table[math.random(1,#choice_table)]
+		return choice_table[math.random(1, #choice_table)]
 	end
 
 	-- two choices: modify and obtain

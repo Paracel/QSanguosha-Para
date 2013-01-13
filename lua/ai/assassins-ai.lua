@@ -23,7 +23,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 	local zcards = self.player:getCards("he")
 	for _, zcard in sgs.qlist(zcards) do
 		if not zcard:isKindOf("Peach") and not zcard:isKindOf("ExNihilo") then
-			table.insert(unpreferedCards,zcard:getId())
+			table.insert(unpreferedCards, zcard:getId())
 		end	
 	end
 
@@ -82,7 +82,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 	local zcards = self.player:getCards("he")
 	for _, zcard in sgs.qlist(zcards) do
 		if not zcard:isKindOf("Peach") and not zcard:isKindOf("ExNihilo") then
-			table.insert(unpreferedCards,zcard:getId())
+			table.insert(unpreferedCards, zcard:getId())
 		end
 	end
 	

@@ -1004,7 +1004,8 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 	if card:isKindOf("AmazingGrace") then return "." end
 	local first_index, second_index, third_index, forth_index, fifth_index
 	local i = 1
-	for _,player in sgs.qlist(self.room:getAllPlayers()) do
+	local players = sgs.QList2Table(self.room:getAllPlayers())
+	for _, player in ipairs(players) do
 		if player:hasFlag("HuangenTarget") then
 			if not first_index and need_huangen(self, player) then
 				first_index = i
@@ -1021,21 +1022,23 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 		end
 		i = i + 1
 	end
+	if not first_index then return "." end
+	
 	local first, second, third, forth, fifth
 	if first_index then
-		first = self.friends[first_index]:objectName()
+		first = players[first_index]:objectName()
 	end
 	if second_index then
-		second = self.friends[second_index]:objectName()
+		second = players[second_index]:objectName()
 	end
 	if third_index then
-		third = self.friends[third_index]:objectName()
+		third = players[third_index]:objectName()
 	end
 	if forth_index then
-		forth = self.friends[forth_index]:objectName()
+		forth = players[forth_index]:objectName()
 	end
 	if fifth_index then
-		fifth = self.friends[fifth_index]:objectName()
+		fifth = players[fifth_index]:objectName()
 	end
 
 	local hp = self.player:getHp()
@@ -1050,8 +1053,6 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 	elseif first_index and hp >= 1 then
 		return ("@HuangenCard=.->%s"):format(first)
 	end
-
-	if not first_index then return "." end
 end
 
 sgs.ai_card_intention.HuangenCard = -50

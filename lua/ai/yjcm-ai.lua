@@ -358,6 +358,22 @@ end
 
 sgs.dynamic_value.control_card.GanluCard = true
 
+sgs.ai_card_intention.GanluCard = function(card, from, to)
+	local compare_func = function(a, b)
+		return a:getEquips():length() < b:getEquips():length()
+	end
+	table.sort(to, compare_func)
+	for i = 1, 2, 1 do
+		if to[i]:hasArmorEffect("silver_lion") then 
+			sgs.updateIntention(from, to[i], -20)
+			break
+		end
+	end
+	if to[1]:getHandcardNum() < to[2]:getHandcardNum() then
+		sgs.updateIntention(from, to[1], (to[2]:getEquips():length() - to[1]:getEquips():length()) * 20 + 40)
+	end
+end
+
 sgs.ai_skill_invoke.buyi = function(self, data)
 	local dying = data:toDying()
 	return self:isFriend(dying.who)

@@ -338,7 +338,7 @@ end
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
 	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
-		   and self.player:getLostHp() > 0 and self:getCardsNum("Peach") == 0
+			and self.player:getLostHp() > 0 and self:getCardsNum("Peach") == 0
 end
 
 local duoshi_skill={}

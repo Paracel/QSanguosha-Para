@@ -2745,7 +2745,7 @@ function SmartAI:askForYiji(card_ids)
 		end
 	end
 	--All cards should be given out for LiRang
-	if self.player:hasFlag("Lirang_InTempMoving") then
+	if self.player:hasFlag("lirang_InTempMoving") then
 		local tos = {}
 		for _, target in ipairs(self.friends_noself) do
 			if self:isFriend(target) and not target:hasSkill("manjuan") and not self:needKongcheng(target) then

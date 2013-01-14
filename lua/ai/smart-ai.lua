@@ -2358,6 +2358,24 @@ function sgs.ai_cardneed.equip(to, card, self)
 	end
 end
 
+function sgs.ai_cardneed.weapon(to, card, self)
+	if not to:containsTrick("indulgence") then
+		return card:isKindOf("Weapon")
+	end
+end
+
+function SmartAI:getEnemyNumBySeat(from, to)
+	local players = sgs.QList2Table(global_room:getAllPlayers())
+	local to_seat = (to:getSeat() - from:getSeat()) % #players
+	local enemynum = 0
+	for _, p in ipairs(players) do
+		if self:isEnemy(from, p) and ((p:getSeat() - from:getSeat()) % #players) < to_seat then			 
+			enemynum = enemynum + 1 
+		end
+	end
+	return enemynum
+end
+
 function SmartAI:needKongcheng(player)
 	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0))) or
 			(not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))

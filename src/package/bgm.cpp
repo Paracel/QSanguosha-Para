@@ -1269,7 +1269,7 @@ public:
             move1.card_ids << card_id;
             move1.to = player;
             move1.to_place = Player::PlaceEquip;
-            move1.reason = CardMoveReason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, player->objectName());
+            move1.reason = CardMoveReason(CardMoveReason::S_REASON_PUT, player->objectName());
             exchangeMove.push_back(move1);
             if (player->getEquip(equip_index) != NULL) {
                 CardsMoveStruct move2;
@@ -1410,7 +1410,7 @@ public:
                 room->useCard(card_use, false);
             } else {
                 room->broadcastSkillInvoke(objectName(), 1);
-                room->setPlayerFlag(player, "XuehenTarget_InTempMoving");
+                room->setPlayerFlag(player, "xuehen_InTempMoving");
                 DummyCard *dummy = new DummyCard;
                 QList<int> card_ids;
                 QList<Player::Place> original_places;
@@ -1424,7 +1424,7 @@ public:
                 }
                 for (int i = 0; i < dummy->subcardsLength(); i++)
                     room->moveCardTo(Sanguosha->getCard(card_ids[i]), player, original_places[i], false);
-                room->setPlayerFlag(player, "-XuehenTarget_InTempMoving");
+                room->setPlayerFlag(player, "-xuehen_InTempMoving");
                 if (dummy->subcardsLength() > 0)
                     room->throwCard(dummy, player, xiahou);
                 dummy->deleteLater();
@@ -1435,28 +1435,6 @@ public:
 
     virtual int getEffectIndex(const ServerPlayer *, const Card *) const {
         return -2;
-    }
-};
-
-class XuehenAvoidTriggeringCardsMove: public TriggerSkill {
-public:
-    XuehenAvoidTriggeringCardsMove(): TriggerSkill("#xuehen-avoid-triggering-cards-move") {
-        events << CardsMoving << CardsMoveOneTime;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &) const{
-        foreach (ServerPlayer *p, room->getAllPlayers())
-            if (p->hasFlag("XuehenTarget_InTempMoving"))
-                return true;
-        return false;
     }
 };
 
@@ -1520,10 +1498,10 @@ BGMPackage::BGMPackage(): Package("BGM") {
     bgm_xiahoudun->addSkill(new FenyongClear);
     bgm_xiahoudun->addSkill(new FenyongForHuashen);
     bgm_xiahoudun->addSkill(new Xuehen);
-    bgm_xiahoudun->addSkill(new XuehenAvoidTriggeringCardsMove);
+    bgm_xiahoudun->addSkill(new FakeMoveSkill("xuehen"));
     related_skills.insertMulti("fenyong", "#fenyong-clear");
     related_skills.insertMulti("fenyong", "#fenyong-for-huashen");
-    related_skills.insertMulti("xuehen", "#xuehen-avoid-triggering-cards-move");
+    related_skills.insertMulti("xuehen", "#xuehen-fake-move");
 
     addMetaObject<LihunCard>();
     addMetaObject<DaheCard>();

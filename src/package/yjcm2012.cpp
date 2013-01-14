@@ -52,7 +52,7 @@ public:
             room->judge(judge);
 
             if (judge.isGood() && wangyi->isAlive()) {
-                room->setPlayerFlag(wangyi, "Miji_InTempMoving");
+                room->setPlayerFlag(wangyi, "miji_InTempMoving");
                 int x = wangyi->getLostHp();
                 wangyi->drawCards(x); //It should be preview, not draw
                 ServerPlayer *target = room->askForPlayerChosen(wangyi, room->getAllPlayers(), objectName());
@@ -78,35 +78,18 @@ public:
                                              wangyi->objectName(), target->objectName(), objectName());
                 if (target != wangyi) {
                     room->moveCardsAtomic(move, false);
-                    room->setPlayerFlag(wangyi, "-Miji_InTempMoving");
+                    room->setPlayerFlag(wangyi, "-miji_InTempMoving");
                 } else {
                     wangyi->addToPile("#miji_tempPile", ids, false);
                     DummyCard *dummy = new DummyCard;
                     foreach (int id, ids)
                         dummy->addSubcard(id);
-                    room->setPlayerFlag(wangyi, "-Miji_InTempMoving");
+                    room->setPlayerFlag(wangyi, "-miji_InTempMoving");
                     wangyi->obtainCard(dummy, false);
                     dummy->deleteLater();
                 }
             }
         }
-        return false;
-    }
-};
-
-class MijiAvoidTriggeringCardsMove: public TriggerSkill {
-public:
-    MijiAvoidTriggeringCardsMove(): TriggerSkill("#miji-avoid-triggering-cards-move") {
-        events << CardsMoving << CardsMoveOneTime;
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        if (player->hasFlag("Miji_InTempMoving"))
-            return true;
         return false;
     }
 };
@@ -890,8 +873,8 @@ YJCM2012Package::YJCM2012Package()
     General *wangyi = new General(this, "wangyi", "wei", 3, false);
     wangyi->addSkill(new Zhenlie);
     wangyi->addSkill(new Miji);
-    wangyi->addSkill(new MijiAvoidTriggeringCardsMove);
-    related_skills.insertMulti("miji", "#miji-avoid-triggering-cards-move");
+    wangyi->addSkill(new FakeMoveSkill("miji", FakeMoveSkill::SourceOnly));
+    related_skills.insertMulti("miji", "#miji-fake-move");
 
     General *xunyou = new General(this, "xunyou", "wei", 3);
     xunyou->addSkill(new Qice);

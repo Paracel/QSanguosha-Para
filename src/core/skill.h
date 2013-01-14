@@ -144,7 +144,6 @@ class MasochismSkill: public TriggerSkill {
 public:
     MasochismSkill(const QString &name);
 
-    virtual int getPriority() const;
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const = 0;
 };
@@ -222,7 +221,6 @@ public:
 
 class TargetModSkill: public Skill {
     Q_OBJECT
-
     Q_ENUMS(ModType)
 
 public:
@@ -241,6 +239,28 @@ public:
 
 protected:
     QString pattern;
+};
+
+// a nasty way for 'fake moves'
+class FakeMoveSkill: public TriggerSkill {
+    Q_OBJECT
+    Q_ENUMS(FakeCondition)
+
+public:
+    enum FakeCondition {
+        Global,
+        SourceOnly
+    };
+
+    FakeMoveSkill(const QString &skillname, FakeCondition condition = Global);
+
+    virtual int getPriority() const;
+    virtual bool triggerable(const ServerPlayer *target) const;
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;
+
+private:
+    QString name;
+    FakeCondition condition;
 };
 
 class WeaponSkill: public TriggerSkill {

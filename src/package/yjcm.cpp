@@ -338,7 +338,7 @@ void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
         if (!room->askForUseSlashTo(effect.to, victim, prompt)) {
             if (effect.to->isNude())
                 return;
-            room->setPlayerFlag(effect.to, "XuanhuoTarget_InTempMoving");
+            room->setPlayerFlag(effect.to, "xuanhuo_InTempMoving");
             int first_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
             Player::Place original_place = room->getCardPlace(first_id);
             DummyCard *dummy = new DummyCard;
@@ -351,14 +351,14 @@ void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
 
             //move the first card back temporarily
             room->moveCardTo(Sanguosha->getCard(first_id), effect.to, original_place, false);
-            room->setPlayerFlag(effect.to, "-XuanhuoTarget_InTempMoving");
+            room->setPlayerFlag(effect.to, "-xuanhuo_InTempMoving");
             room->moveCardTo(dummy, effect.from, Player::PlaceHand, false);
             delete dummy;
         }
     } else {
         if (effect.to->isNude())
             return;
-        room->setPlayerFlag(effect.to, "XuanhuoTarget_InTempMoving");
+        room->setPlayerFlag(effect.to, "xuanhuo_InTempMoving");
         int first_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
         Player::Place original_place = room->getCardPlace(first_id);
         DummyCard *dummy = new DummyCard;
@@ -369,7 +369,7 @@ void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
 
         //move the first card back temporarily
         room->moveCardTo(Sanguosha->getCard(first_id), effect.to, original_place, false);
-        room->setPlayerFlag(effect.to, "-XuanhuoTarget_InTempMoving");
+        room->setPlayerFlag(effect.to, "-xuanhuo_InTempMoving");
         room->moveCardTo(dummy, effect.from, Player::PlaceHand, false);
         delete dummy;
     }
@@ -405,28 +405,6 @@ public:
         if (fazheng->getPhase() == Player::Draw && room->askForUseCard(fazheng, "@@xuanhuo", "@xuanhuo-card"))
             return true;
 
-        return false;
-    }
-};
-
-class XuanhuoAvoidTriggeringCardsMove: public TriggerSkill {
-public:
-    XuanhuoAvoidTriggeringCardsMove():TriggerSkill("#xuanhuo-avoid-triggering-cards-move"){
-        events << CardsMoving << CardsMoveOneTime;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &) const{
-        foreach (ServerPlayer *p, room->getAllPlayers())
-            if (p->hasFlag("XuanhuoTarget_InTempMoving"))
-                return true;
         return false;
     }
 };
@@ -1279,8 +1257,8 @@ YJCMPackage::YJCMPackage()
     General *fazheng = new General(this, "fazheng", "shu", 3);
     fazheng->addSkill(new Enyuan);
     fazheng->addSkill(new Xuanhuo);
-    fazheng->addSkill(new XuanhuoAvoidTriggeringCardsMove);
-    related_skills.insertMulti("xuanhuo", "#xuanhuo-avoid-triggering-cards-move");
+    fazheng->addSkill(new FakeMoveSkill("xuanhuo"));
+    related_skills.insertMulti("xuanhuo", "#xuanhuo-fake-move");
 
     General *gaoshun = new General(this, "gaoshun", "qun");
     gaoshun->addSkill(new Xianzhen);

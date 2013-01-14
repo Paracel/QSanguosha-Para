@@ -144,6 +144,8 @@ return {
 	["#LoseMark"] = "%from 失去了 %arg2 枚 %arg 标记",
 	["$AddToPile"] = "%card 被作为 %arg 牌移出游戏",
 	["#RemoveFromGame"] = "%arg2 张牌被作为 %arg 牌移出游戏",
+	["$GotCardFromPile"] = "%from 从 %arg 牌中获得 %card",
+	["#GotNCardFromPile"] = "%from 从 %arg 牌中获得 %arg2 张牌",
 	["@askforslash"] = "你可以对你攻击范围内的一名其他角色使用一张【杀】",
 	["@askforretrial"] = "请使用“%dest”来修改 %src 的 %arg 判定",
 	["$CheatCard"] = "%from 作弊，获得了 %card",

@@ -770,7 +770,7 @@ QString Room::askForChoice(ServerPlayer *player, const QString &skill_name, cons
     return answer;
 }
 
-void Room::obtainCard(ServerPlayer *target, const Card *card,  const CardMoveReason &reason, bool unhide) {
+void Room::obtainCard(ServerPlayer *target, const Card *card, const CardMoveReason &reason, bool unhide) {
     if (card == NULL) return;
     moveCardTo(card, NULL, target, Player::PlaceHand, reason, unhide);
 }

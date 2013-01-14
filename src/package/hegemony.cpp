@@ -278,7 +278,7 @@ public:
                 return false;
 
             room->broadcastSkillInvoke(objectName());
-            room->setPlayerFlag(kongrong, "Lirang_InTempMoving");
+            room->setPlayerFlag(kongrong, "lirang_InTempMoving");
 
             CardsMoveStruct move2;
             move2.card_ids = lirang_card;
@@ -294,25 +294,8 @@ public:
             move3.reason = move->reason;
             room->moveCardsAtomic(move3, true);
 
-            room->setPlayerFlag(kongrong, "-Lirang_InTempMoving");
+            room->setPlayerFlag(kongrong, "-lirang_InTempMoving");
         }
-        return false;
-    }
-};
-
-class LirangAvoidTriggeringCardsMove: public TriggerSkill {
-public:
-    LirangAvoidTriggeringCardsMove(): TriggerSkill("#lirang-avoid-triggering-cards-move") {
-        events << CardsMoving << CardsMoveOneTime;
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        if (player->hasFlag("Lirang_InTempMoving"))
-            return true;
         return false;
     }
 };
@@ -790,8 +773,8 @@ HegemonyPackage::HegemonyPackage()
     General *kongrong = new General(this, "kongrong", "qun", 3);
     kongrong->addSkill(new Mingshi);
     kongrong->addSkill(new Lirang);
-    kongrong->addSkill(new LirangAvoidTriggeringCardsMove);
-    related_skills.insertMulti("lirang", "#lirang-avoid-triggering-cards-move");
+    kongrong->addSkill(new FakeMoveSkill("lirang", FakeMoveSkill::SourceOnly));
+    related_skills.insertMulti("lirang", "#lirang-fake-move");
 
     General *jiling = new General(this, "jiling", "qun", 4);
     jiling->addSkill(new Shuangren);

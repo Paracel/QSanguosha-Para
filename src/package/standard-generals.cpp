@@ -144,7 +144,7 @@ public:
             if(!room->askForSkillInvoke(guojia, objectName()))
                 return;
             room->broadcastSkillInvoke(objectName());
-            room->setPlayerFlag(guojia, "Yiji_InTempMoving");
+            room->setPlayerFlag(guojia, "yiji_InTempMoving");
             QList<int> yiji_cards;
             yiji_cards.append(room->drawCard());
             yiji_cards.append(room->drawCard());
@@ -156,14 +156,14 @@ public:
             room->moveCardsAtomic(move, false);
 
             if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
                 continue;
             }
 
             while (room->askForYiji(guojia, yiji_cards)) {}
 
             if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
                 continue;
             }
 
@@ -171,27 +171,10 @@ public:
             DummyCard *dummy = new DummyCard;
             foreach (int id, yiji_cards)
                 dummy->addSubcard(id);
-            room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
             guojia->obtainCard(dummy, false);
             dummy->deleteLater();
         }
-    }
-};
-
-class YijiAvoidTriggeringCardsMove: public TriggerSkill {
-public:
-    YijiAvoidTriggeringCardsMove(): TriggerSkill("#yiji-avoid-triggering-cards-move") {
-        events << CardsMoving << CardsMoveOneTime;
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        if (player->hasFlag("Yiji_InTempMoving"))
-            return true;
-        return false;
     }
 };
 
@@ -1366,8 +1349,8 @@ void StandardPackage::addGenerals() {
     General *guojia = new General(this, "guojia", "wei", 3);
     guojia->addSkill(new Tiandu);
     guojia->addSkill(new Yiji);
-    guojia->addSkill(new YijiAvoidTriggeringCardsMove);
-    related_skills.insertMulti("yiji", "#yiji-avoid-triggering-cards-move");
+    guojia->addSkill(new FakeMoveSkill("yiji", FakeMoveSkill::SourceOnly));
+    related_skills.insertMulti("yiji", "#yiji-fake-move");
 
     General *zhenji = new General(this, "zhenji", "wei", 3, false);
     zhenji->addSkill(new Luoshen);

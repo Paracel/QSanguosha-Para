@@ -682,49 +682,13 @@ NosYexinCard::NosYexinCard(){
     target_fixed = true;
 }
 
-void NosYexinCard::onUse(Room *room, const CardUseStruct &card_use) const{
+void NosYexinCard::onUse(Room *, const CardUseStruct &card_use) const{
     ServerPlayer *zhonghui = card_use.from;
 
     QList<int> powers = zhonghui->getPile("nospower");
     if (powers.isEmpty())
         return;
-
-    int ai_delay = Config.AIDelay;
-    Config.AIDelay = 0;
-
-    int n = 0;
-    while (!powers.isEmpty()) {
-        room->fillAG(powers, zhonghui);
-        int card_id = room->askForAG(zhonghui, powers, true, "nosyexin");
-        if (card_id == -1)
-            break;
-
-        powers.removeOne(card_id);
-        n++;
-
-        CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, zhonghui->objectName());
-        room->obtainCard(zhonghui, Sanguosha->getCard(card_id), reason, false);
-        zhonghui->invoke("clearAG");
-    }
-
-    Config.AIDelay = ai_delay;
-
-    if (n == 0)
-        return;
-
-    const Card *exchange_card = room->askForExchange(zhonghui, "nosyexin", n);
-
-    foreach (int card_id, exchange_card->getSubcards())
-        zhonghui->addToPile("nospower", card_id, true);
-
-    LogMessage log;
-    log.type = "#QixingExchange";
-    log.from = zhonghui;
-    log.arg = QString::number(n);
-    log.arg2 = "nosyexin";
-    room->sendLog(log);
-
-    delete exchange_card;
+    zhonghui->exchangeFreelyFromPrivatePile("nosyexin", "nospower");
 }
 
 class NosYexinViewAsSkill: public ZeroCardViewAsSkill {
@@ -958,7 +922,9 @@ NostalGeneralPackage::NostalGeneralPackage()
     nos_zhonghui->addSkill(new NosZili);
     nos_zhonghui->addRelateSkill("nosyexin");
     nos_zhonghui->addRelateSkill("#nosyexin-clear");
+    nos_zhonghui->addRelateSkill("#nosyexin-fake-move");
     related_skills.insertMulti("nosyexin", "#nosyexin-clear");
+    related_skills.insertMulti("nosyexin", "#nosyexin-fake-move");
     nos_zhonghui->addRelateSkill("nospaiyi");
 
     General *weiwudi = new General(this, "weiwudi", "god", 3);
@@ -969,7 +935,7 @@ NostalGeneralPackage::NostalGeneralPackage()
     addMetaObject<NosQuanjiCard>();
     addMetaObject<NosYexinCard>();
 
-    skills << new NosYexin << new NosYexinClear << new NosPaiyi;
+    skills << new NosYexin << new NosYexinClear << new FakeMoveSkill("nosyexin") << new NosPaiyi;
 }
 
 NostalYJCMPackage::NostalYJCMPackage()

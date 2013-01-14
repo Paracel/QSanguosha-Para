@@ -273,10 +273,6 @@ MasochismSkill::MasochismSkill(const QString &name)
     events << Damaged;
 }
 
-int MasochismSkill::getPriority() const{
-    return 2;
-}
-
 bool MasochismSkill::trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
     DamageStruct damage = data.value<DamageStruct>();
 
@@ -392,6 +388,31 @@ int TargetModSkill::getDistanceLimit(const Player *, const Card *) const{
 
 int TargetModSkill::getExtraTargetNum(const Player *, const Card *) const{
     return 0;
+}
+
+FakeMoveSkill::FakeMoveSkill(const QString &name, FakeCondition condition)
+    : TriggerSkill(QString("#%1-fake-move").arg(name)), name(name), condition(condition)
+{
+    events << CardsMoving << CardsMoveOneTime;
+}
+
+int FakeMoveSkill::getPriority() const{
+    return 10;
+}
+
+bool FakeMoveSkill::triggerable(const ServerPlayer *target) const{
+    return target != NULL;
+}
+
+bool FakeMoveSkill::trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+    QString flag = QString("%1_InTempMoving").arg(name);
+    if (condition == Global) {
+        foreach (ServerPlayer *p, room->getAllPlayers())
+            if (p->hasFlag(flag)) return true;
+    } else if (condition == SourceOnly) {
+        if (player->hasFlag(flag)) return true;
+    }
+    return false;
 }
 
 WeaponSkill::WeaponSkill(const QString &name)

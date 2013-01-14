@@ -674,44 +674,10 @@ public:
 
     static void Exchange(ServerPlayer *shenzhuge) {
         QList<int> stars = shenzhuge->getPile("stars");
-        if (stars.isEmpty())
-            return;
+        if (stars.isEmpty()) return;
 
-        Room *room = shenzhuge->getRoom();
-        room->broadcastSkillInvoke("qixing");
-
-        int ai_delay = Config.AIDelay;
-        Config.AIDelay = 0;
-
-        int n = 0;
-        while (!stars.isEmpty()) {
-            room->fillAG(stars, shenzhuge);
-            int card_id = room->askForAG(shenzhuge, stars, true, "qixing");
-            shenzhuge->invoke("clearAG");
-            if (card_id == -1)
-                break;
-
-            stars.removeOne(card_id);
-            n++;
-
-            CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, shenzhuge->objectName());
-            room->obtainCard(shenzhuge, Sanguosha->getCard(card_id), reason, false);
-        }
-
-        Config.AIDelay = ai_delay;
-
-        if (n == 0) return;
-
-        LogMessage log;
-        log.type = "#QixingExchange";
-        log.from = shenzhuge;
-        log.arg = QString::number(n);
-        log.arg2 = "qixing";
-        room->sendLog(log);
-
-        const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", n);
-        shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
-        delete exchange_card;
+        shenzhuge->getRoom()->broadcastSkillInvoke("qixing");
+        shenzhuge->exchangeFreelyFromPrivatePile("qixing", "stars");
     }
 
     static void DiscardStar(ServerPlayer *shenzhuge, int n, QString skillName) {
@@ -1415,12 +1381,13 @@ GodPackage::GodPackage()
     shenzhugeliang->addSkill(new QixingStart);
     shenzhugeliang->addSkill(new QixingAsk);
     shenzhugeliang->addSkill(new QixingClear);
+    shenzhugeliang->addSkill(new FakeMoveSkill("qixing"));
     shenzhugeliang->addSkill(new Kuangfeng);
     shenzhugeliang->addSkill(new Dawu);
-
     related_skills.insertMulti("qixing", "#qixing");
     related_skills.insertMulti("qixing", "#qixing-ask");
     related_skills.insertMulti("qixing", "#qixing-clear");
+    related_skills.insertMulti("qixing", "#qixing-fake-move");
 
     General *shencaocao = new General(this, "shencaocao", "god", 3);
     shencaocao->addSkill(new Guixin);

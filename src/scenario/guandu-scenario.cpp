@@ -31,7 +31,7 @@ public:
             if (!room->askForSkillInvoke(guojia, objectName()))
                 return;
             room->broadcastSkillInvoke("yiji");
-            room->setPlayerFlag(guojia, "Yiji_InTempMoving");
+            room->setPlayerFlag(guojia, "yiji_InTempMoving");
             QList<int> yiji_cards;
             yiji_cards.append(room->drawCard());
             yiji_cards.append(room->drawCard());
@@ -44,14 +44,14 @@ public:
             room->moveCardsAtomic(move, false);
 
             if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
                 continue;
             }
 
             while (room->askForYiji(guojia, yiji_cards)) {}
 
             if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
                 continue;
             }
 
@@ -59,7 +59,7 @@ public:
             DummyCard *dummy = new DummyCard;
             foreach (int id, yiji_cards)
                 dummy->addSubcard(id);
-            room->setPlayerFlag(guojia, "-Yiji_InTempMoving");
+            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
             guojia->obtainCard(dummy, false);
             dummy->deleteLater();
         }
@@ -343,7 +343,7 @@ void GuanduScenario::onTagSet(Room *room, const QString &) const{
         if (guojia && !guojia->hasSkill("greatyiji")) {
             room->detachSkillFromPlayer(guojia, "yiji");
             room->acquireSkill(guojia, "greatyiji");
-            room->acquireSkill(guojia, "#yiji-avoid-triggering-cards-move", false);
+            room->acquireSkill(guojia, "#yiji-fake-move", false);
             room->acquireSkill(guojia, "damagebeforeplay", false);
         }
     }

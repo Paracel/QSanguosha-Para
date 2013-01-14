@@ -8,7 +8,7 @@ sgs.ai_skill_use["@@shensu1"]=function(self, prompt)
 	local selfDef = sgs.getDefense(self.player)
 
 	for _, enemy in ipairs(self.enemies) do
-		local def=sgs.getDefense(enemy)
+		local def = sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
@@ -22,7 +22,7 @@ sgs.ai_skill_use["@@shensu1"]=function(self, prompt)
 	end
 
 	for _, enemy in ipairs(self.enemies) do
-		local def=sgs.getDefense(enemy)
+		local def = sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
@@ -76,7 +76,7 @@ sgs.ai_skill_use["@@shensu2"]=function(self, prompt)
 	local effectslash, best_target, target
 	local defense = 6
 	for _, enemy in ipairs(self.enemies) do
-		local def=sgs.getDefense(enemy)
+		local def = sgs.getDefense(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 

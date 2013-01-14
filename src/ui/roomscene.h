@@ -179,7 +179,7 @@ protected:
 
 private:
     void _getSceneSizes(QSize &minSize, QSize &maxSize);
-    bool _shouldIgnoreDisplayMove(Player::Place from, Player::Place to);
+    bool _shouldIgnoreDisplayMove(CardsMoveStruct &movement);
     bool _processCardsMove(CardsMoveStruct &move, bool isLost);
     bool _m_isMouseButtonDown;
     bool _m_isInDragAndUseMode;

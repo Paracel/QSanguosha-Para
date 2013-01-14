@@ -649,9 +649,8 @@ QList<int> Player::getPile(const QString &pile_name) const{
 
 QStringList Player::getPileNames() const{
     QStringList names;
-    foreach (QString pile_name,piles.keys()) {
+    foreach (QString pile_name, piles.keys())
         names.append(pile_name);
-    }
     return names;
 }
 

@@ -1473,8 +1473,13 @@ GenericCardContainer *RoomScene::_getGenericCardContainer(Player::Place place, P
     return NULL;
 }
 
-bool RoomScene::_shouldIgnoreDisplayMove(Player::Place from, Player::Place to) {
-    if (from == Player::DiscardPile && to == Player::DiscardPile)
+bool RoomScene::_shouldIgnoreDisplayMove(CardsMoveStruct &movement) {
+    Player::Place from = movement.from_place, to = movement.to_place;
+    QString from_pile = movement.from_pile_name, to_pile = movement.to_pile_name;
+    if ((from == Player::PlaceSpecial && !from_pile.isEmpty() && from_pile.startsWith('#'))
+        || (to == Player::PlaceSpecial && !to_pile.isEmpty() && to_pile.startsWith('#')))
+        return true;
+    else if (from == Player::DiscardPile && to == Player::DiscardPile)
         return true;
     else if (from == Player::PlaceTable && to == Player::DiscardPile)
         return true;
@@ -1505,8 +1510,8 @@ void RoomScene::getCards(int moveId, QList<CardsMoveStruct> card_moves) {
     for (int i = 0; i < card_moves.size(); i++) {
         CardsMoveStruct &movement = card_moves[i];
         bool skipMove = _processCardsMove(movement, false);
-        if(skipMove) continue;
-        if (_shouldIgnoreDisplayMove(movement.from_place, movement.to_place)) continue;
+        if (skipMove) continue;
+        if (_shouldIgnoreDisplayMove(movement)) continue;
         card_container->m_currentPlayer = (ClientPlayer *)movement.to;
         GenericCardContainer *to_container = _getGenericCardContainer(movement.to_place, movement.to);
         QList<CardItem *> cards = _m_cardsMoveStash[moveId][i];
@@ -1518,7 +1523,8 @@ void RoomScene::getCards(int moveId, QList<CardsMoveStruct> card_moves) {
                 cards.removeAt(j);
                 j--;
             }
-            else card->setEnabled(true);
+            else
+                card->setEnabled(true);
             card->setFootnote(_translateMovement(movement));
             card->hideFootnote();
         }
@@ -1534,7 +1540,7 @@ void RoomScene::loseCards(int moveId, QList<CardsMoveStruct> card_moves) {
         CardsMoveStruct &movement = card_moves[i];
         bool skipMove = _processCardsMove(movement, true);
         if (skipMove) continue;
-        if (_shouldIgnoreDisplayMove(movement.from_place, movement.to_place)) continue;
+        if (_shouldIgnoreDisplayMove(movement)) continue;
         card_container->m_currentPlayer = (ClientPlayer *)movement.to;
         GenericCardContainer *from_container = _getGenericCardContainer(movement.from_place, movement.from);
         QList<CardItem *> cards = from_container->removeCardItems(movement.card_ids, movement.from_place);
@@ -1634,6 +1640,19 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
             if (flag.endsWith("_InTempMoving"))
                 return;
     }
+    //private pile
+    if (move.to_place == Player::PlaceSpecial && !move.to_pile_name.isNull() && !move.to_pile_name.startsWith('#')) {
+        bool hiden = false;
+        foreach (int card_id, move.card_ids)
+            if (card_id == Card::S_UNKNOWN_CARD_ID) {
+                hiden = true;
+                break;
+            }
+        if (hiden)
+            log_box->appendLog("#RemoveFromGame", QString(), QStringList(), QString(), move.to_pile_name, QString::number(move.card_ids.length()));
+        else
+            log_box->appendLog("$AddToPile", QString(), QStringList(), Card::IdsToStrings(move.card_ids).join("+"), move.to_pile_name);
+    }
     //DrawNCards
     if (move.from_place == Player::DrawPile && move.to_place == Player::PlaceHand) {
         QString to_general = move.to->objectName();
@@ -1647,10 +1666,17 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
     }
     if (move.from_place == Player::PlaceTable && move.to_place == Player::PlaceHand) {
         QString to_general = move.to->objectName();
+        QString card_str = QString();
         foreach (int card_id, move.card_ids) {
-            if (card_id != -1)
-                log_box->appendLog("$GotCardBack", to_general, QStringList(), QString::number(card_id));
+            if (card_id != Card::S_UNKNOWN_CARD_ID) {
+                if(card_str.isEmpty())
+                    card_str = QString::number(card_id);
+                else
+                    card_str += "+" + QString::number(card_id);
+            }
         }
+        if (!card_str.isEmpty())
+            log_box->appendLog("$GotCardBack", to_general, QStringList(), card_str);
     }
     if (move.from_place == Player::DiscardPile && move.to_place == Player::PlaceHand && move.from == NULL) {
         QString to_general = move.to->objectName();

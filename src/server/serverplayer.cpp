@@ -918,20 +918,6 @@ void ServerPlayer::addToPile(const QString &pile_name, int card_id, bool open) {
 
 void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open){
     piles[pile_name].append(card_ids);
-    if (open) {
-        LogMessage log;
-        log.type = "$AddToPile";
-
-        foreach (int card_id, card_ids) {
-            if (card_id < 0) continue;
-            if (log.card_str.isEmpty())
-                log.card_str = QString::number(card_id);
-            else
-                log.card_str += "+" + QString::number(card_id);
-        }
-        log.arg = pile_name;
-        room->sendLog(log);
-    }
 
     CardsMoveStruct move;
     move.card_ids = card_ids;

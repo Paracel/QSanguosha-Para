@@ -700,13 +700,7 @@ public:
 
         Config.AIDelay = ai_delay;
 
-        if (n == 0)
-            return;
-
-        const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", n);
-
-        foreach (int card_id, exchange_card->getSubcards())
-            shenzhuge->addToPile("stars", card_id, false);
+        if (n == 0) return;
 
         LogMessage log;
         log.type = "#QixingExchange";
@@ -715,6 +709,8 @@ public:
         log.arg2 = "qixing";
         room->sendLog(log);
 
+        const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", n);
+        shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
         delete exchange_card;
     }
 
@@ -748,11 +744,22 @@ public:
     }
 
     virtual void onGameStart(ServerPlayer *shenzhuge) const{
-        QList<int> stars;
-        for (int i = 0; i < 7; i++)
-            stars.push_back(shenzhuge->getRoom()->drawCard());
-        shenzhuge->addToPile("stars", stars, false);
-        Qixing::Exchange(shenzhuge);
+        Room *room = shenzhuge->getRoom();
+
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = shenzhuge;
+        log.arg = "qixing";
+        room->sendLog(log);
+
+        room->setTag("FirstRound", true); //For Manjuan
+        shenzhuge->drawCards(7);
+        room->setTag("FirstRound", false);
+
+        room->broadcastSkillInvoke("qixing");
+        const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", 7);
+        shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
+        delete exchange_card;
     }
 };
 

@@ -1275,8 +1275,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() and self:hasTrickEffective(card, enemy)
-				and not self:needKongcheng(enemy) and not (self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", enemy) and i <= 2) then
-				if (enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy)< 3 + (isJixi and 6 or 0) and enemy:getHp()<= 3 + (isJixi and 2 or 0)) then
+				and not self:needKongcheng(enemy) and not (self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", enemy) and i <= 1) then
+				if (enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 6 + (isJixi and 6 or 0) and enemy:getHp() <= 3 + (isJixi and 2 or 0)) then
 					local cardchosen
 					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then
 						cardchosen = enemy:getDefensiveHorse():getEffectiveId()

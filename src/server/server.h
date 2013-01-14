@@ -103,11 +103,11 @@ private:
     QCheckBox *same_checkbox;
     QCheckBox *basara_checkbox;
     QCheckBox *hegemony_checkbox;
+    QLabel *hegemony_maxchoice_label;
     QSpinBox *hegemony_maxchoice_spinbox;
     QLabel *max_hp_label;
     QComboBox *max_hp_scheme_ComboBox;
     QCheckBox *prevent_awaken_below3_checkbox;
-    QCheckBox *announce_ip_checkbox;
     QComboBox *scenario_ComboBox;
     QComboBox *mini_scene_ComboBox;
     QPushButton *mini_scene_button;

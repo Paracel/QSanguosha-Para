@@ -39,7 +39,6 @@ public:
     bool EnableHegemony;
     int MaxHpScheme;
     bool PreventAwakenBelow3;
-    bool AnnounceIP;
     QString Address;
     bool EnableAI;
     int AIDelay;

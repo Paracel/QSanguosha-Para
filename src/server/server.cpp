@@ -227,13 +227,10 @@ QWidget *ServerDialog::createAdvancedTab() {
     hegemony_checkbox->setEnabled(basara_checkbox->isChecked());
     connect(basara_checkbox,SIGNAL(toggled(bool)),hegemony_checkbox, SLOT(setEnabled(bool)));
 
+    hegemony_maxchoice_label = new QLabel(tr("Upperlimit for hegemony"));
     hegemony_maxchoice_spinbox = new QSpinBox;
     hegemony_maxchoice_spinbox->setRange(5, 21);
     hegemony_maxchoice_spinbox->setValue(Config.value("HegemonyMaxChoice", 7).toInt());
-
-    announce_ip_checkbox = new QCheckBox(tr("Annouce my IP in WAN"));
-    announce_ip_checkbox->setChecked(Config.AnnounceIP);
-    announce_ip_checkbox->setEnabled(false); // not support now
 
     address_edit = new QLineEdit;
     address_edit->setText(Config.Address);
@@ -261,9 +258,8 @@ QWidget *ServerDialog::createAdvancedTab() {
     layout->addLayout(HLay(max_hp_label, max_hp_scheme_ComboBox));
     layout->addWidget(prevent_awaken_below3_checkbox);
     layout->addLayout(HLay(basara_checkbox, hegemony_checkbox));
-    layout->addLayout(HLay(new QLabel(tr("Upperlimit for hegemony")), hegemony_maxchoice_spinbox));
+    layout->addLayout(HLay(hegemony_maxchoice_label, hegemony_maxchoice_spinbox));
     layout->addWidget(same_checkbox);
-    layout->addWidget(announce_ip_checkbox);
     layout->addLayout(HLay(new QLabel(tr("Address")), address_edit));
     layout->addWidget(detect_button);
     layout->addLayout(HLay(new QLabel(tr("Port")), port_edit));
@@ -276,8 +272,14 @@ QWidget *ServerDialog::createAdvancedTab() {
     connect(second_general_checkbox, SIGNAL(toggled(bool)), max_hp_label, SLOT(setVisible(bool)));
     max_hp_scheme_ComboBox->setVisible(Config.Enable2ndGeneral);
     connect(second_general_checkbox, SIGNAL(toggled(bool)), max_hp_scheme_ComboBox, SLOT(setVisible(bool)));
+
     prevent_awaken_below3_checkbox->setVisible(Config.Enable2ndGeneral);
     connect(second_general_checkbox, SIGNAL(toggled(bool)), prevent_awaken_below3_checkbox, SLOT(setVisible(bool)));
+
+    hegemony_maxchoice_label->setVisible(Config.EnableHegemony);
+    connect(hegemony_checkbox, SIGNAL(toggled(bool)), hegemony_maxchoice_label, SLOT(setVisible(bool)));
+    hegemony_maxchoice_spinbox->setVisible(Config.EnableHegemony);
+    connect(hegemony_checkbox, SIGNAL(toggled(bool)), hegemony_maxchoice_spinbox, SLOT(setVisible(bool)));
 
     return widget;
 }
@@ -726,10 +728,7 @@ void ServerDialog::onHttpDone(bool error) {
 }
 
 void ServerDialog::onOkButtonClicked() {
-    if (announce_ip_checkbox->isChecked() && address_edit->text().isEmpty()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Please fill address when you want to annouce your server's IP"));
-    } else
-        accept();
+    accept();
 }
 
 Select3v3GeneralDialog::Select3v3GeneralDialog(QDialog *parent)
@@ -874,7 +873,6 @@ bool ServerDialog::config() {
         Config.PreventAwakenBelow3 = false;
     else
         Config.PreventAwakenBelow3 = prevent_awaken_below3_checkbox->isChecked();
-    Config.AnnounceIP = announce_ip_checkbox->isChecked();
     Config.Address = address_edit->text();
     Config.EnableAI = ai_enable_checkbox->isChecked();
     Config.OriginAIDelay = ai_delay_spinbox->value();
@@ -924,7 +922,6 @@ bool ServerDialog::config() {
     Config.setValue("AlterAIDelayAD", ai_delay_altered_checkbox->isChecked());
     Config.setValue("AIDelayAD", Config.AIDelayAD);
     Config.setValue("ServerPort", Config.ServerPort);
-    Config.setValue("AnnounceIP", Config.AnnounceIP);
     Config.setValue("Address", Config.Address);
 
     Config.beginGroup("3v3");

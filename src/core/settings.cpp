@@ -87,7 +87,6 @@ void Settings::init() {
     EnableHegemony = value("EnableHegemony", false).toBool();
     MaxHpScheme = value("MaxHpScheme", 0).toInt();
     PreventAwakenBelow3 = value("PreventAwakenBelow3", false).toBool();
-    AnnounceIP = value("AnnounceIP", false).toBool();
     Address = value("Address", QString()).toString();
     EnableAI = value("EnableAI", true).toBool();
     OriginAIDelay = value("OriginAIDelay", 1000).toInt();

@@ -136,10 +136,14 @@ gongqi_skill.getTurnUseCard = function(self, inclusive)
 		return sgs.Card_Parse("@GongqiCard=" .. self.player:getArmor():getEffectiveId())
 	end
 
-	if self.player:getHandcardNum() > self.player:getHp() and self:getCardsNum("Slash") >= 1 then
+	if self.player:getOverflow() > 0 and self:getCardsNum("Slash") >= 1 then
 		self:sortByKeepValue(handcards)
 		for _, c in ipairs(handcards) do
-			if c:isKindOf("Peach")
+			if c:isKindOf("Snatch") or c:isKindOf("Dismantlement") then
+				local use = { isDummy = true }
+				self:useCardSnatch(c, use)
+				if use.card then return end
+			elseif c:isKindOf("Peach")
 				or c:isKindOf("ExNihilo")
 				or (c:isKindOf("Analeptic") and self.player:getHp() <= 2)
 				or (c:isKindOf("Jink") and self:getCardsNum("Jink") < 2)

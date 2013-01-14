@@ -205,6 +205,7 @@ function sgs.getDefense(player)
 		defense = defense + 0.3
 	end
 
+	-- effected by chaofeng
 	if player:hasSkill("jijiu") then defense = defense - 3 end
 	if player:hasSkill("dimeng") then defense = defense - 2.5 end
 	if player:hasSkill("guzheng") and knownJink == 0 then defense = defense - 2.5 end
@@ -212,6 +213,8 @@ function sgs.getDefense(player)
 	if player:hasSkill("jieyin") then defense = defense - 2.3 end
 	if player:hasSkill("lijian") then defense = defense - 2.2 end
 	if player:hasSkill("miji") and player:isWounded() then defense = defense - 1.5 end
+	
+	if player:isLord() then defense = defense - 2 end
 
 	return defense
 end
@@ -550,18 +553,20 @@ end
 -- compare functions
 sgs.ai_compare_funcs = {
 	hp = function(a, b)
-		return a:getHp() < b:getHp()
-	end,
-
-	handcard = function(a, b)
-		return a:getHandcardNum() < b:getHandcardNum()
+		local c1 = a:getHp()
+		local c2 = b:getHp()
+		if c1 == c2 then
+			return sgs.ai_compare_funcs.defense(a, b)
+		else
+			return c1 < c2
+		end
 	end,
 
 	value = function(a, b)
 		return sgs.getValue(a) < sgs.getValue(b)
 	end,
 
-	handcard_defense = function(a, b)
+	handcard = function(a, b)
 		local c1 = a:getHandcardNum()
 		local c2 = b:getHandcardNum()
 		if c1 == c2 then
@@ -591,14 +596,14 @@ sgs.ai_compare_funcs = {
 		local d1 = a:getHandcardNum()
 		for _, player in ipairs(players) do
 			if a:canSlash(player, nil, true) then
-				d1 = d1 + 10/(sgs.getDefense(player))
+				d1 = d1 + 10 / (sgs.getDefense(player))
 			end
 		end
 		players = sgs.QList2Table(b:getRoom():getOtherPlayers(b))
 		local d2 = b:getHandcardNum()
 		for _, player in ipairs(players) do
 			if b:canSlash(player, nil, true) then
-				d2 = d2 + 10/(sgs.getDefense(player))
+				d2 = d2 + 10 / (sgs.getDefense(player))
 			end
 		end
 

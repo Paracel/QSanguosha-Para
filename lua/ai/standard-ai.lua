@@ -237,7 +237,7 @@ end
 sgs.ai_chaofeng.xiahoudun = -3
 
 sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
-	self:sort(self.enemies, "handcard_defense")
+	self:sort(self.enemies, "handcard")
 	local targets = {}
 
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")

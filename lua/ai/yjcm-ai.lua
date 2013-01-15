@@ -64,8 +64,7 @@ end
 
 sgs.ai_card_intention.JujianCard = -100
 
-sgs.xushu_keep_value =
-{
+sgs.jujian_keep_value = {
 	Peach = 6,
 	Jink = 5,
 	Weapon = 5,

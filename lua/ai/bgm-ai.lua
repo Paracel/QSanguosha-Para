@@ -531,6 +531,10 @@ yanxiao_skill.getTurnUseCard = function(self)
 	end
 end
 
+sgs.yanxiao_suit_value = {
+	diamond = 3.9
+}
+
 sgs.ai_skill_invoke.anxian = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
@@ -798,7 +802,7 @@ sgs.ai_skill_cardask["@junwei-show"] = function(self, data)
 	return "."
 end
 
-sgs.bgm_ganning_suit_value = {
+sgs.yinling_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }

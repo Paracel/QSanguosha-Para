@@ -496,8 +496,7 @@ sgs.ai_skill_invoke.chunlao = function(self, data)
 	return self:isFriend(dying.who) and self.player:getPile("wine"):length() > 0
 end
 
-sgs.chengpu_keep_value =
-{
+sgs.chunlao_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
 	Slash = 5.5,

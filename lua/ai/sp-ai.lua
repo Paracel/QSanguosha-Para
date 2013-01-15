@@ -248,6 +248,14 @@ sgs.ai_card_intention.YuanhuCard = -30
 
 sgs.ai_cardneed.yuanhu = sgs.ai_cardneed.equip
 
+sgs.yuanhu_keep_value = {
+	Peach = 6,
+	Jink = 5.1,
+	Weapon = 4.7,
+	Armor = 4.8,
+	Horse = 4.9
+}
+
 local xueji_skill = {}
 xueji_skill.name = "xueji"
 table.insert(sgs.ai_skills, xueji_skill)
@@ -395,6 +403,14 @@ sgs.ai_skill_cardask["@bifa-give"] = function(self, data)
 end
 
 sgs.ai_card_intention.BifaCard = 30
+
+sgs.bifa_keep_value = {
+	Peach = 6,
+	Jink = 5.1,
+	Nullification = 5,
+	EquipCard = 4.9,
+	TrickCard = 4.8
+}
 
 local songci_skill = {}
 songci_skill.name = "songci"

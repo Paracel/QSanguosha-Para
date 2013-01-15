@@ -71,3 +71,15 @@ sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.HongyuanCard = -70
+
+sgs.huanshi_suit_value = {
+	heart = 3.9,
+	diamond = 3.4,
+	club = 3.9,
+	spade = 3.5
+}
+
+sgs.mingzhe_suit_value = {
+	heart = 4.0,
+	diamond = 4.0
+}

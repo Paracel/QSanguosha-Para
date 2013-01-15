@@ -103,8 +103,7 @@ sgs.ai_cardneed.shensu = sgs.ai_cardneed.equip
 
 sgs.ai_card_intention.ShensuCard = 80
 
-sgs.xiahouyuan_keep_value =
-{
+sgs.shensu_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
 	Crossbow = 5,
@@ -260,7 +259,7 @@ sgs.ai_card_intention.HuangtianCard = -80
 sgs.ai_use_priority.HuangtianCard = 10
 sgs.ai_use_value.HuangtianCard = 8.5
 
-sgs.zhangjiao_suit_value = {
+sgs.guidao_suit_value = {
 	spade = 3.9,
 	club = 2.7
 }
@@ -364,8 +363,7 @@ function sgs.ai_slash_prohibit.tianxiang(self, to)
 	return self:cantbeHurt(to)
 end
 
-sgs.xiaoqiao_suit_value = {
-	spade = 4.9,
+sgs.tianxiang_suit_value = {
 	heart = 4.9
 }
 
@@ -500,7 +498,7 @@ function SmartAI:getGuhuoCard(class_name, player, at_play)
 	return getGuhuoViewCard(self, class_name, player)
 end
 
-sgs.yuji_suit_value = {
+sgs.guhuo_suit_value = {
 	heart = 5,
 }
 

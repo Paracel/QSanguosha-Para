@@ -6,7 +6,7 @@ sgs.ai_card_intention.ThunderSlash = sgs.ai_card_intention.Slash
 
 sgs.ai_use_value.ThunderSlash = 4.5
 sgs.ai_keep_value.ThunderSlash = 2.5
-sgs.ai_use_priority.ThunderSlash = 2.5
+sgs.ai_use_priority.ThunderSlash = 2.3
 
 function SmartAI:useCardFireSlash(...)
 	self:useCardSlash(...)
@@ -16,7 +16,7 @@ sgs.ai_card_intention.FireSlash = sgs.ai_card_intention.Slash
 
 sgs.ai_use_value.FireSlash = 4.4
 sgs.ai_keep_value.FireSlash = 2.6
-sgs.ai_use_priority.FireSlash = 2.6
+sgs.ai_use_priority.FireSlash = 2.3
 
 sgs.weapon_range.Fan = 4
 sgs.ai_use_priority.Fan = 2.655
@@ -183,7 +183,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 end
 
 sgs.ai_use_value.SupplyShortage = 7
-
+sgs.ai_use_priority.SupplyShortage = 0.5
 sgs.ai_card_intention.SupplyShortage = 120
 
 sgs.dynamic_value.control_usecard.SupplyShortage = true
@@ -334,7 +334,7 @@ sgs.ai_card_intention.IronChain=function(card, from, tos)
 end
 
 sgs.ai_use_value.IronChain = 5.4
-sgs.ai_use_priority.IronChain = 2.8
+sgs.ai_use_priority.IronChain = 8.5
 
 sgs.dynamic_value.benefit.IronChain = true
 

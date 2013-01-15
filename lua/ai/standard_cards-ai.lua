@@ -973,13 +973,13 @@ sgs.dynamic_value.benefit.GodSalvation = true
 function SmartAI:useCardDuel(duel, use)
 	if self.player:hasSkill("wuyan") then return end
 	if self.player:hasSkill("noswuyan") then return end
-	self:sort(self.enemies,"defenseSlash")
+	self:sort(self.enemies,"defense")
 	local enemies = self:exclude(self.enemies, duel)
 	local friends = self:exclude(self.friends_noself, duel)
 	local n1 = self:getCardsNum("Slash")
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 
-	local canUseDuelTo=function(target)
+	local canUseDuelTo = function(target)
 		return self:hasTrickEffective(duel, target) and (self:damageIsEffective(target, sgs.DamageStruct_Normal) or self.player:hasSkill("jueqing"))
 				and not self.room:isProhibited(self.player, target, duel)
 	end
@@ -995,7 +995,12 @@ function SmartAI:useCardDuel(duel, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and sgs.isGoodTarget(enemy, self.enemies) and n1 >= getCardsNum("Slash", enemy) then
+		local useduel 
+		local n2 = getCardsNum("Slash", enemy)
+		if sgs.card_lack[enemy:objectName()]["Slash"] == 1 then n2 = 0 end
+		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
+		useduel = useduel and enemy:getHp() <= getBestHp(enemy) and not self:getDamagedEffects(enemy, self.player)
+		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and sgs.isGoodTarget(enemy, self.enemies) and useduel then
 			use.card = duel
 			if use.to then
 				use.to:append(enemy)
@@ -1007,7 +1012,7 @@ function SmartAI:useCardDuel(duel, use)
 
 end
 
-sgs.ai_card_intention.Duel=function(card, from, tos, source)
+sgs.ai_card_intention.Duel = function(card, from, tos, source)
 	if sgs.ai_lijian_effect then
 		sgs.ai_lijian_effect = false
 		return
@@ -1044,7 +1049,7 @@ sgs.ai_card_intention.ExNihilo = -80
 
 sgs.ai_keep_value.ExNihilo = 3.6
 sgs.ai_use_value.ExNihilo = 10
-sgs.ai_use_priority.ExNihilo = 6
+sgs.ai_use_priority.ExNihilo = 10
 
 sgs.dynamic_value.benefit.ExNihilo = true
 
@@ -1521,7 +1526,7 @@ function SmartAI:useCardIndulgence(card, use)
 end
 
 sgs.ai_use_value.Indulgence = 8
-sgs.ai_use_priority.Indulgence = 8.9
+sgs.ai_use_priority.Indulgence = 0.5
 sgs.ai_card_intention.Indulgence = 120
 
 sgs.dynamic_value.control_usecard.Indulgence = true

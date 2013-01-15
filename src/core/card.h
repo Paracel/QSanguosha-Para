@@ -37,19 +37,14 @@ class Card: public QObject {
 
 public:
     // enumeration type
-    enum Suit {Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor, SuitToBeDecided = -1};
-    enum Color {Red, Black, Colorless};
-    enum HandlingMethod {MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian};
+    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor, SuitToBeDecided = -1 };
+    enum Color { Red, Black, Colorless };
+    enum HandlingMethod { MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian };
 
     static const Suit AllSuits[4];
 
     // card types
-    enum CardType{
-        TypeSkill,
-        TypeBasic,
-        TypeTrick,
-        TypeEquip
-    };
+    enum CardType { TypeSkill, TypeBasic, TypeTrick, TypeEquip };
 
     // constructor
     Card(Suit suit, int number, bool target_fixed = false);

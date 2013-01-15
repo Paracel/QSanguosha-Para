@@ -245,13 +245,30 @@ function SmartAI:getKeepValue(card, kept)
 	local class_name = card:getClassName()
 	local suit_string = card:getSuitString()
 	local value, newvalue
-	if sgs[self.player:getGeneralName() .. "_keep_value"] then
-		value = sgs[self.player:getGeneralName() .. "_keep_value"][class_name]
-		if value then return value end
+	
+	local i = 0
+	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+		if sgs[askill:objectName() .. "_keep_value"] then
+			local v = sgs[askill:objectName() .. "_keep_value"][class_name]
+			if v then
+				i = i + 1
+				if value then value = value + v else value = v end
+			end
+		end
 	end
-	if sgs[self.player:getGeneralName() .. "_suit_value"] then
-		value = sgs[self.player:getGeneralName() .. "_suit_value"][suit_string]
+	if value then return value / i end
+	i = 0
+	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+		if sgs[askill:objectName() .. "_suit_value"] then
+			local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
+			if v then
+				i = i + 1
+				if value then value = value + v else value = v end
+			end
+		end
 	end
+	if value then value = value / i end
+	
 	newvalue = sgs.ai_keep_value[class_name] or 0
 	for _, acard in ipairs(kept) do
 		if acard:getClassName() == card:getClassName() then newvalue = newvalue - 1.2
@@ -327,6 +344,7 @@ function SmartAI:getUseValue(card)
 	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
 		v = sgs.ai_use_value[card:objectName()] or 0
 	end
+	if self.player:getPhase() == sgs.Player_Play then v = self:adjustUsePriority(card, v) end
 	return v
 end
 
@@ -334,7 +352,7 @@ function SmartAI:getUsePriority(card)
 	local class_name = card:getClassName()
 	local v = 0
 	if card:isKindOf("EquipCard") then
-		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
+		if self:hasSkills(sgs.lose_equip_skill) then return 15 end
 		if card:isKindOf("Armor") and not self.player:getArmor() then v = 6
 		elseif card:isKindOf("Weapon") and not self.player:getWeapon() then v = 5.7
 		elseif card:isKindOf("DefensiveHorse") and not self.player:getDefensiveHorse() then v = 5.8
@@ -343,39 +361,25 @@ function SmartAI:getUsePriority(card)
 		return v
 	end
 
-	if self.player:hasSkill("wuyan") then
-		if card:isKindOf("Slash") then
-			v = 4
-
-		elseif card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault") then v = 0
-		end
-		if v then return v else return sgs.ai_use_priority[class_name] end
-	end
-	if self.player:hasSkill("noswuyan") then
-		if card:isKindOf("Slash") then
-			v = 4
-
-		elseif card:isKindOf("Collateral") or card:isKindOf("Dismantlement") or card:isKindOf("Snatch") or card:isKindOf("IronChain") then v = 0
-		end
-		if v then return v else return sgs.ai_use_priority[class_name] end
-	end
-	if self.player:hasSkill("qingnang") then
-		if card:isKindOf("Dismantlement") then v = 3.8
-		elseif card:isKindOf("Collateral") then v = 3.9
-		end
-		if v then return v else return sgs.ai_use_priority[class_name] end
-	end
-	if self.player:hasSkill("rende") then
-		if card:isKindOf("ExNihilo") then v = 8.9 end
-		return v or sgs.ai_use_priority[class_name]
-	end
-
 	v = sgs.ai_use_priority[class_name] or 0
 	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
 		v = sgs.ai_use_priority[card:objectName()] or 0
 	end
+	if not self:hasTrickEffective(card) then v = 0 end
+	return self:adjustUsePriority(card, v)
+end
 
-	if card:isKindOf("Slash") and (card:getSuit() == sgs.Card_NoSuitNoColor) then v = v-0.1 end
+function SmartAI:adjustUsePriority(card, v)
+	if v <= 0 then return 0 end
+	if card:isKindOf("Slash") then
+		if card:isRed() then v = v - 0.05 end
+		if card:isKindOf("NatureSlash") then v = v - 0.1 end
+		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.11 end
+		if self.player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then v = v + 0.11 end
+		if self.player:hasSkill("jinjiu") and card:getEffectiveId() >= 0 and sgs.Sanguosha:getEngineCard(card:getEffectiveId()):isKindOf("Analeptic") then v = v + 0.11 end
+	end
+	if self.player:hasSkill("mingzhe") and card:isRed() then v = v + (self.player:getPhase() ~= sgs.Player_NotActive and 0.05 or -0.05) end
+	v = v + (13 - card:getNumber()) / 1000
 	return v
 end
 
@@ -523,14 +527,29 @@ function SmartAI:cardNeed(card)
 		return self:getUseValue(card)
 	end
 	if self:isWeak() and card:isKindOf("Jink") and self:getCardsNum("Jink") < 1 then return 12 end
-	if sgs[self.player:getGeneralName() .. "_keep_value"] then
-		value = sgs[self.player:getGeneralName() .. "_keep_value"][class_name]
-		if value then return value + 4 end
+	
+	local i = 0
+	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+		if sgs[askill:objectName() .. "_keep_value"] then
+			local v = sgs[askill:objectName() .. "_keep_value"][class_name]
+			if v then
+				i = i + 1
+				if value then value = value + v else value = v end
+			end
+		end
 	end
-	if sgs[self.player:getGeneralName() .. "_suit_value"] then
-		value = (sgs[self.player:getGeneralName() .. "_suit_value"][suit_string])
-		if value then return value + 4 end
+	if value then return value / i + 4 end
+	i = 0
+	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+		if sgs[askill:objectName() .. "_suit_value"] then
+			local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
+			if v then
+				i = i + 1
+				if value then value = value + v else value = v end
+			end
+		end
 	end
+	if value then return value / i + 4 end
 
 	if card:isKindOf("Slash") and self:getCardsNum("Slash") == 0 then return 5.9 end
 	if card:isKindOf("Analeptic") then
@@ -2650,15 +2669,11 @@ function SmartAI:getCardNeedPlayer(cards)
 			if self:getUseValue(hcard)<6 then
 				for _, friend in ipairs(friends) do
 					if not self:needKongcheng(friend) then
-						if sgs[friend:getGeneralName() .. "_suit_value"] and
-							(sgs[friend:getGeneralName() .. "_suit_value"][hcard:getSuitString()] or 0) >= 3.9 then
-							return hcard, friend
-						end
-						if friend:getGeneral2Name()~="" then
-							if sgs[friend:getGeneral2Name() .. "_suit_value"] and
-								(sgs[friend:getGeneral2Name() .. "_suit_value"][hcard:getSuitString()] or 0) >= 3.9 then
+						for _, askill in sgs.qlist(friend:getVisibleSkillList()) do
+							if sgs[askill:objectName() .. "_suit_value"] and
+								(sgs[askill:objectName() .. "_suit_value"][hcard:getSuitString()] or 0) >= 3.9 then
 								return hcard, friend
-							end
+						end
 						end
 					end
 				end

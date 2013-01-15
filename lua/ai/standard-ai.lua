@@ -170,7 +170,7 @@ sgs.ai_skill_cardask["@guicai-card"]=function(self, data)
 	return "."
 end
 
-sgs.simayi_suit_value = {
+sgs.guicai_suit_value = {
 	heart = 3.9,
 	club = 3.9,
 	spade = 3.5
@@ -393,23 +393,23 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 	return false
 end
 
-sgs.xuchu_keep_value =
-{
-	Peach 			= 6,
-	Analeptic 		= 5.8,
-	Jink 			= 5.2,
-	Duel			= 5.5,
-	FireSlash 		= 5.6,
-	Slash 			= 5.4,
-	ThunderSlash 	= 5.5,
-	Axe				= 5,
-	Blade 			= 4.9,
-	Spear 			= 4.9,
-	Fan				= 4.8,
-	KylinBow		= 4.7,
-	Halberd			= 4.6,
-	MoonSpear		= 4.5,
-	DefensiveHorse 	= 4
+sgs.luoyi_keep_value = {
+	Peach = 6,
+	Analeptic = 5.8,
+	Jink = 5.2,
+	Duel = 5.5,
+	FireSlash = 5.6,
+	Slash = 5.4,
+	ThunderSlash = 5.5,
+	Axe = 5,
+	Blade = 4.9,
+	Spear = 4.9,
+	Fan = 4.8,
+	KylinBow = 4.7,
+	Halberd = 4.6,
+	MoonSpear = 4.5,
+	SPMoonSpear = 4.5,
+	DefensiveHorse = 4
 }
 
 sgs.ai_chaofeng.xuchu = 3
@@ -470,7 +470,7 @@ sgs.ai_skill_invoke.luoshen = function(self, data)
  	return true
 end
 
-sgs.zhenji_suit_value = {
+sgs.qingguo_suit_value = {
 	spade = 4.1,
 	club = 4.2
 }
@@ -683,8 +683,7 @@ function sgs.ai_cardneed.paoxiao(to, card)
 	end
 end
 
-sgs.zhangfei_keep_value =
-{
+sgs.paoxiao_keep_value = {
 	Peach = 6,
 	Analeptic = 5.8,
 	Jink = 5.7,
@@ -743,8 +742,7 @@ end
 
 sgs.ai_use_priority.longdan = 9
 
-sgs.zhaoyun_keep_value =
-{
+sgs.longdan_keep_value = {
 	Peach = 6,
 	Analeptic = 5.8,
 	Jink = 5.7,
@@ -773,21 +771,20 @@ function sgs.ai_cardneed.jizhi(to, card)
 	end
 end
 
-sgs.huangyueying_keep_value =
-{
-	Peach 		= 6,
-	Analeptic 	= 5.9,
-	Jink 		= 5.8,
-	ExNihilo	= 5.7,
-	Snatch 		= 5.7,
+sgs.jizhi_keep_value = {
+	Peach = 6,
+	Analeptic = 5.9,
+	Jink = 5.8,
+	ExNihilo = 5.7,
+	Snatch = 5.7,
 	Dismantlement = 5.6,
-	IronChain 	= 5.5,
-	SavageAssault=5.4,
-	Duel 		= 5.3,
+	IronChain = 5.5,
+	SavageAssault =5.4,
+	Duel = 5.3,
 	ArcheryAttack = 5.2,
 	AmazingGrace = 5.1,
-	Collateral 	= 5,
-	FireAttack	=4.9
+	Collateral = 5,
+	FireAttack =4.9
 }
 
 sgs.ai_chaofeng.huangyueying = 4
@@ -932,7 +929,7 @@ qixi_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
-sgs.ganning_suit_value = {
+sgs.qixi_suit_value = {
 	spade = 3.9,
 	club = 3.9
 }
@@ -963,6 +960,8 @@ sgs.ai_skill_use_func.KurouCard = function(card, use, self)
 	if not use.isDummy then self:speak("kurou") end
 	use.card = card
 end
+
+sgs.ai_use_priority.KurouCard = 6.8
 
 sgs.ai_chaofeng.huanggai = 3
 
@@ -1132,7 +1131,7 @@ function sgs.ai_slash_prohibit.liuli(self, to, card)
 	end
 end
 
-sgs.daqiao_suit_value = {
+sgs.guose_suit_value = {
 	diamond = 3.9
 }
 
@@ -1257,22 +1256,21 @@ end
 
 sgs.dynamic_value.benefit.JieyinCard = true
 
-sgs.sunshangxiang_keep_value =
-{
+sgs.xiaoji_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
 	Crossbow = 5,
 	Blade = 5,
 	Spear = 5,
-	DoubleSword =5,
-	QinggangSword=5,
-	Axe=5,
-	KylinBow=5,
-	Halberd=5,
-	IceSword=5,
-	Fan=5,
-	MoonSpear=5,
-	GudingBlade=5,
+	DoubleSword = 5,
+	QinggangSword = 5,
+	Axe = 5,
+	KylinBow = 5,
+	Halberd = 5,
+	IceSword = 5,
+	Fan = 5,
+	MoonSpear = 5,
+	GudingBlade = 5,
 	DefensiveHorse = 5,
 	OffensiveHorse = 5
 }
@@ -1323,7 +1321,7 @@ sgs.ai_view_as.jijiu = function(card, player, card_place)
 	end
 end
 
-sgs.huatuo_suit_value = {
+sgs.jijiu_suit_value = {
 	heart = 6,
 	diamond = 6
 }

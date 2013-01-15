@@ -511,7 +511,7 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == SlashMissed) {
             if (player->getPhase() == Player::Play)
-                room->setPlayerMark(player, "huxiao", player->getMark(objectName()) + 1);
+                room->setPlayerMark(player, "huxiao", player->getMark("huxiao") + 1);
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.from == Player::Play)

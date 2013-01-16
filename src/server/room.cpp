@@ -2828,11 +2828,11 @@ void Room::drawCards(QList<ServerPlayer *> players, int n, const QString &reason
 
             QVariant data = QVariant::fromValue(card_id);
             if (thread->trigger(CardDrawing, this, player, data)) {
-                setPlayerMark(player, "has_drawn_card", player->getMark("has_drawn_card") + 1);
+                player->addMark("has_drawn_card");
                 continue;
             }
 
-            setPlayerMark(player, "has_drawn_card", player->getMark("has_drawn_card") + 1);
+            player->addMark("has_drawn_card");
             player->drawCard(card);
 
             notify_card_ids << card_id;
@@ -2841,7 +2841,7 @@ void Room::drawCards(QList<ServerPlayer *> players, int n, const QString &reason
             setCardMapping(card_id, player, Player::PlaceHand);
         }
 
-        setPlayerMark(player, "has_drawn_card", 0);
+        player->setMark("has_drawn_card", 0);
 
         if (notify_card_ids.isEmpty())
             return;

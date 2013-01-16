@@ -133,7 +133,7 @@ Card::Suit Card::getSuit() const{
                 else if (color != color2)
                     return NoSuitNoColor;
             }
-            if (color == Red) return NoSuitRed; else return NoSuitBlack;
+            return (color == Red) ? NoSuitRed : NoSuitBlack;
         }
     } else
         return m_suit;

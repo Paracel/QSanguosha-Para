@@ -2414,7 +2414,7 @@ function SmartAI:getLeastHandcardNum(player)
 end
 
 function SmartAI:hasLoseHandcardEffective(player)
-	return player:getHandcardNum() > player:getLeastHandcardNum()
+	return player:getHandcardNum() > self:getLeastHandcardNum(player)
 end
 
 function SmartAI:getCardNeedPlayer(cards)

@@ -858,6 +858,7 @@ HegemonyPackage::HegemonyPackage()
     addMetaObject<FenxunCard>();
     addMetaObject<ShuangrenCard>();
     addMetaObject<XiongyiCard>();
+    addMetaObject<SijianCard>();
     addMetaObject<QingchengCard>();
 }
 

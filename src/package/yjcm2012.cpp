@@ -358,6 +358,8 @@ public:
             if (shuangying->askForSkillInvoke(objectName())) {
                 int card1 = room->drawCard();
                 int card2 = room->drawCard();
+                bool diff = (Sanguosha->getCard(card1)->getColor() != Sanguosha->getCard(card2)->getColor());
+
                 CardsMoveStruct move, move2;
                 move.card_ids.append(card1);
                 move.card_ids.append(card2);
@@ -365,13 +367,14 @@ public:
                 move.to_place = Player::PlaceTable;
                 room->moveCardsAtomic(move, true);
                 room->getThread()->delay();
+
                 move2 = move;
                 move2.to_place = Player::PlaceHand;
                 move2.to = shuangying;
                 move2.reason.m_reason = CardMoveReason::S_REASON_DRAW;
                 room->moveCardsAtomic(move2, true);
 
-                if (Sanguosha->getCard(card1)->getColor() != Sanguosha->getCard(card2)->getColor()) {
+                if (diff) {
                     room->acquireSkill(shuangying, "wusheng");
                     room->acquireSkill(shuangying, "paoxiao");
 

@@ -837,9 +837,9 @@ public:
     }
 };
 
-class WeiwudiGuixin: public PhaseChangeSkill {
+class NosGuixin: public PhaseChangeSkill {
 public:
-    WeiwudiGuixin(): PhaseChangeSkill("weiwudi_guixin") {
+    NosGuixin(): PhaseChangeSkill("nosguixin") {
     }
 
     virtual bool onPhaseChange(ServerPlayer *weiwudi) const{
@@ -927,9 +927,9 @@ NostalGeneralPackage::NostalGeneralPackage()
     related_skills.insertMulti("nosyexin", "#nosyexin-fake-move");
     nos_zhonghui->addRelateSkill("nospaiyi");
 
-    General *weiwudi = new General(this, "weiwudi", "god", 3);
-    weiwudi->addSkill(new WeiwudiGuixin);
-    weiwudi->addSkill("feiying");
+    General *nos_shencaocao = new General(this, "nos_shencaocao", "god", 3);
+    nos_shencaocao->addSkill(new NosGuixin);
+    nos_shencaocao->addSkill("feiying");
 
     addMetaObject<NosFanjianCard>();
     addMetaObject<NosQuanjiCard>();

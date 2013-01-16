@@ -41,7 +41,6 @@ class Player: public QObject {
     Q_PROPERTY(bool kongcheng READ isKongcheng)
     Q_PROPERTY(bool nude READ isNude)
     Q_PROPERTY(bool all_nude READ isAllNude)
-    Q_PROPERTY(bool caocao READ isCaoCao)
 
     Q_ENUMS(Phase)
     Q_ENUMS(Place)
@@ -210,7 +209,6 @@ public:
     void clearCardLimitation(bool single_turn = false);
     bool isCardLimited(const Card *card, Card::HandlingMethod method, bool isHandcard = false) const;
 
-    bool isCaoCao() const;
     void copyFrom(Player *p);
 
     QList<const Player *> getSiblings() const;

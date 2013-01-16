@@ -123,7 +123,7 @@ zhugejin				60
 chenlin					43					
 nos_zhouyu				90					
 nos_zhonghui			78					
-weiwudi					35					
+nos_shencaocao			35					
 nos_fazheng				73					
 nos_lingtong			55					
 nos_xushu				2					

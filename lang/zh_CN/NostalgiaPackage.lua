@@ -112,17 +112,13 @@ return {
 	["$NosBaijiangAnimate"] = "anim=image/animate/nosbaijiang.png",
 	["$NosZiliAnimate"] = "anim=image/animate/noszili.png",
 	
-	["#weiwudi"] = "超世之英杰",
-	["weiwudi"] = "神曹操-内测",
-	["&weiwudi"] = "神曹操", 
-	["weiwudi_guixin"] = "归心",
-	[":weiwudi_guixin"] = "回合结束阶段开始时，你可以选择一项：1.改变一名其他角色的势力。 2.获得并可以发动一名已死亡或未上场角色的主公技。",
-	["weiwudi_guixin:yes"] = "改变一名其他角色的势力，或获得并可以发动一名已死亡或未上场角色的主公技",
-	["weiwudi_guixin:modify"] = "改变一名其他角色的势力",
-	["weiwudi_guixin:obtain"] = "获得一项主公技",
-	
--- Lines
-	["~weiwudi"] = "腾蛇乘雾，终为…土灰……"
-
+	["#nos_shencaocao"] = "超世之英杰",
+	["nos_shencaocao"] = "神曹操-内测",
+	["&nos_shencaocao"] = "神曹操", 
+	["nosguixin"] = "归心",
+	[":nosguixin"] = "回合结束阶段开始时，你可以选择一项：1.改变一名其他角色的势力。 2.获得并可以发动一名已死亡或未上场角色的主公技。",
+	["nosguixin:yes"] = "改变一名其他角色的势力，或获得并可以发动一名已死亡或未上场角色的主公技",
+	["nosguixin:modify"] = "改变一名其他角色的势力",
+	["nosguixin:obtain"] = "获得一项主公技",
 }
 

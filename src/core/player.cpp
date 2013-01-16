@@ -852,11 +852,6 @@ bool Player::isCardLimited(const Card *card, Card::HandlingMethod method, bool i
     return false;
 }
 
-bool Player::isCaoCao() const{
-    QString general_name = getGeneralName();
-    return general_name == "caocao" || general_name == "shencaocao" || general_name == "weiwudi";
-}
-
 void Player::copyFrom(Player *p) {
     Player *b = this;
     Player *a = p;

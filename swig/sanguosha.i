@@ -207,13 +207,12 @@ public:
 
     void setCardLocked(const char *name);
     bool isLocked(const Card *card) const;
-	
+
     void setCardLimitation(const char *limit_list, const char *pattern, bool single_turn = false);
     void removeCardLimitation(const char *limit_list, const char *pattern);
     void clearCardLimitation(bool single_turn = false);
     bool isCardLimited(const Card *card, Card::HandlingMethod method, bool isHandcard = false) const;
 
-    bool isCaoCao() const;
     void copyFrom(Player *p);
 
     QList<const Player *> getSiblings() const;

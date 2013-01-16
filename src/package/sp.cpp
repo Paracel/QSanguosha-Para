@@ -346,7 +346,7 @@ void YuanhuCard::onUse(Room *room, const CardUseStruct &card_use) const{
     int index = -1;
     if (card_use.to.first() == card_use.from)
         index = 5;
-    else if (card_use.to.first()->isCaoCao())
+    else if (card_use.to.first()->getGeneralName().contains("caocao"))
         index = 4;
     else {
         const Card *card = Sanguosha->getCard(card_use.card->getSubcards().first());

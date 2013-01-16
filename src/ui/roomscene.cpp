@@ -2502,7 +2502,7 @@ void RoomScene::onGameOver() {
     if (victory) {
         win_effect = "win";
         foreach(const Player *player, ClientInstance->getPlayers()){
-            if(player->property("win").toBool() && player->isCaoCao()){
+            if(player->property("win").toBool() && player->getGeneralName().contains("caocao")){
                 Audio::stop();
                 win_effect = "win-cc";
                 break;

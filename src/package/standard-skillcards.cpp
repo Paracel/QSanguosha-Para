@@ -172,6 +172,7 @@ void LijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
 
+    thread->trigger(PreCardUsed, room, diaochan, data);
     thread->trigger(CardUsed, room, diaochan, data);
     thread->trigger(CardFinished, room, diaochan, data);
 }

@@ -1635,7 +1635,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.EventPhaseStart then
+	elseif event == sgs.PreCardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.EventPhaseStart then
 		self:updatePlayers()
 	end
 
@@ -1693,7 +1693,7 @@ function SmartAI:filterEvent(event, player, data)
 
 			if from then sgs.updateIntention(from, to, intention) end
 		end
-	elseif event == sgs.CardUsed then
+	elseif event == sgs.PreCardUsed then
 		local struct = data:toCardUse()
 		local card = struct.card
 		local to = struct.to
@@ -1731,8 +1731,6 @@ function SmartAI:filterEvent(event, player, data)
 				elseif type(luaskillcardcallback) == "number" then
 					sgs.updateIntentions(from, to, luaskillcardcallback, card)
 				end
-			else
-				logmsg("card_intention.txt", card:objectName())
 			end
 		end
 	elseif event == sgs.CardsMoveOneTime then

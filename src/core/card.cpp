@@ -550,6 +550,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
         room->moveCardTo(this, player, NULL, Player::DiscardPile, reason, true);
     }
 
+    thread->trigger(PreCardUsed, room, player, data);
     thread->trigger(CardUsed, room, player, data);
     thread->trigger(CardFinished, room, player, data);
 }

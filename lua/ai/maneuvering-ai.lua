@@ -325,7 +325,7 @@ end
 
 sgs.ai_card_intention.IronChain = function(card, from, tos)
 	for _, to in ipairs(tos) do
-		if to:isChained() then
+		if not to:isChained() then
 			sgs.updateIntention(from, to, 80)
 		else
 			sgs.updateIntention(from, to, -80)

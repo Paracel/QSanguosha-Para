@@ -250,10 +250,6 @@ function SmartAI:slashIsEffective(slash, to)
 	local nature = natures[slash:getClassName()]
 	if not self:damageIsEffective(to, nature) then return false end
 
-	if to:getMark("Armor_Nullified") > 0 or to:getMark("Qinggang_Armor_Nullified") > 0 or to:getMark("Equips_Nullified_to_Yourself") > 0 then
-		return true
-	end
-
 	local armor = to:getArmor()
 	if armor and to:hasArmorEffect(armor:objectName()) then
 		if armor:objectName() == "renwang_shield" then
@@ -473,6 +469,7 @@ end
 sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	local effect = data:toSlashEffect()
 	local cards = sgs.QList2Table(self.player:getHandcards())
+	if not self:slashIsEffective(effect.slash, self.player) then return "." end
 	if (not target or self:isFriend(target)) and effect.slash:hasFlag("nosjiefan-slash") then return "." end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) and not target:hasSkill("qianxi") then return "." end
 	--if not target then self.room:writeToConsole(debug.traceback()) end
@@ -485,7 +482,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if self.player:isChained() and self:isGoodChainTarget(self.player) then return "." end
 		end
 	else
-		if not effect.slash:hasFlag("drank") and not target:hasFlag("luoyi") and not target:hasFlag("neoluoyi") then
+		if effect.drank == 0 and not target:hasFlag("luoyi") and not target:hasFlag("neoluoyi") then
 			if target:hasSkill("mengjin") and not target:hasSkill("qianxi") then
 				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 				if self:canUseJieyuanDecrease(target) then return "." end
@@ -499,7 +496,12 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
 			elseif self:isEquip("Blade", target) then
-				if self:getCardsNum("Jink") <= getCardsNum("Slash", target) then return "." end
+				if effect.drank > 0 
+					or (effect.slash:isKindOf("FireSlash") 
+						and not target:hasSkill("jueqing") 
+						and (self:hasArmorEffect("vine") or self:getMark("@gale") > 0))
+					or (target:hasSkill("jie") and effect.slash:isRed()) then
+				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) then return "." end
 			end
 		end
 	end

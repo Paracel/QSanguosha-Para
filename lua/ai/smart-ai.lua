@@ -2310,10 +2310,10 @@ function SmartAI:askForCard(pattern, prompt, data)
 
 	local card
 	if pattern == "slash" then
-		card= sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Slash") or "."
+		card = sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Slash") or "."
 		if card == "." then sgs.card_lack[self.player:objectName()]["Slash"] = 1 end
 	elseif pattern == "jink" then
-		card= sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Jink") or "."
+		card = sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Jink") or "."
 		if card == "." then sgs.card_lack[self.player:objectName()]["Jink"] = 1 end
 	end
 	return card

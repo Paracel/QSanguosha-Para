@@ -634,7 +634,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return  pattern == "@@bifa";
+        return pattern == "@@bifa";
     }
 
     virtual bool viewFilter(const Card *to_select) const{

@@ -265,7 +265,7 @@ sgs.ai_chaofeng.fazheng = -3
 function sgs.ai_skill_invoke.xuanfeng(self, data)
 	local enemynum = 0
 	for _, enemy in ipairs(self.enemies) do
-		if not self:needKongcheng(enemy) then
+		if (not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy)) or self:getDangerousCard(enemy) or self:getValuableCard(enemy) then
 			enemynum = enemynum + 1
 		end
 	end
@@ -276,8 +276,9 @@ sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets,"defense")
 	for _, enemy in ipairs(self.enemies) do
-		if not self:needKongcheng(enemy) and not enemy:isNude() and
-		not (enemy:hasSkill("guzheng") and self.room:getCurrent():getPhase() == sgs.Player_Discard) then
+		if ((not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy)) 
+			or self:getDangerousCard(enemy) or self:getValuableCard(enemy)) and not enemy:isNude() and
+			not (enemy:hasSkill("guzheng") and self.room:getCurrent():getPhase() == sgs.Player_Discard) then
 			return enemy
 		end
 	end

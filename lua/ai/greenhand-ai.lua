@@ -14,6 +14,5 @@ sgs.ai_skill_playerchosen.gh_tuxi = function(self, targets)
 	return targetlist[1]
 end
 
-
 sgs.ai_playerchosen_intention.gh_tuxi = 80
 sgs.ai_chaofeng.gh_zhangliao = 4

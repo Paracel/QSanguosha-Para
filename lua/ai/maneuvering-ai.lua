@@ -75,7 +75,7 @@ function sgs.ai_weapon_value.fan(self, enemy)
 end
 
 function sgs.ai_armor_value.vine(player, self)
-	if (self:needKongcheng(player) or player:hasSkill("lianying")) and player:getHandcardNum() == 1 then
+	if (self:needKongcheng(player) and player:getHandcardNum() == 1) or not self:hasLoseHandcardEffective(player) then
 		return player:hasSkill("kongcheng") and 5 or 3.8
 	end
 	if self:hasSkills(sgs.lose_equip_skill, player) then return 3.8 end

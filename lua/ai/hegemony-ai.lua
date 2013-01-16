@@ -495,12 +495,20 @@ sgs.ai_skill_invoke.lirang = function(self, data)
 	return #self.friends_noself > 0
 end
 
-sgs.ai_skill_invoke.sijian = function(self, data)
-	return #self.enemies > 0
+sgs.ai_skill_use["@@sijian"] = function(self, prompt)
+	self:sort(self.enemies, "defense")
+	
+	for _, enemy in ipairs(self.enemies) do
+		if ((not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy)) 
+			or self:getDangerousCard(enemy) or self:getValuableCard(enemy)) and not enemy:isNude() then
+			return ("@SijianCard=.->%s"):format(enemy:objectName())
+		end
+	end
+
+	return "."
 end
 
-sgs.ai_skill_playerchosen.sijian = sgs.ai_skill_playerchosen.zero_card_as_slash
-sgs.ai_playerchosen_intention.sijian = 80
+sgs.ai_card_intention.SijianCard = 80
 
 sgs.ai_skill_choice.suishi1 = function(self, choices)
 	local tianfeng = self.room:findPlayerBySkillName("suishi")

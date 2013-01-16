@@ -141,11 +141,10 @@ public:
 };
 
 FenxunCard::FenxunCard() {
-    will_throw = true;
 }
 
 bool FenxunCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self ;
+    return targets.isEmpty() && to_select != Self;
 }
 
 void FenxunCard::onEffect(const CardEffectStruct &effect) const{
@@ -300,27 +299,58 @@ public:
     }
 };
 
+SijianCard::SijianCard() {
+}
+
+bool SijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isNude() && to_select != Self;
+}
+
+void SijianCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    int card_id = room->askForCardChosen(effect.from, effect.to, "he", objectName());
+    room->throwCard(card_id, effect.to, effect.from);
+}
+
+class SijianViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    SijianViewAsSkill(): ZeroCardViewAsSkill("sijian") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@sijian";
+    }
+
+    virtual const Card *viewAs() const{
+        return new SijianCard;
+    }
+};
+
 class Sijian: public TriggerSkill {
 public:
     Sijian(): TriggerSkill("sijian") {
         events << CardsMoveOneTime;
+        view_as_skill = new SijianViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *tianfeng, QVariant &data) const{
         if (tianfeng->isKongcheng()) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->from == tianfeng && move->from_places.contains(Player::PlaceHand)) {
+                bool can_invoke = false;
                 QList<ServerPlayer *> other_players = room->getOtherPlayers(tianfeng);
                 foreach (ServerPlayer *p, other_players) {
-                    if (p->isNude())
-                        other_players.removeOne(p);
+                    if (!p->isNude()) {
+                        can_invoke = true;
+                        break;
+                    }
                 }
-                if (!other_players.empty() && room->askForSkillInvoke(tianfeng, objectName())) {
-                    room->broadcastSkillInvoke(objectName());
-                    ServerPlayer *target = room->askForPlayerChosen(tianfeng, other_players, objectName());
-                    int card_id = room->askForCardChosen(tianfeng, target, "he", objectName());
-                    room->throwCard(card_id, target, tianfeng);
-                }
+                if (!can_invoke) return false;
+                room->askForUseCard(tianfeng, "@@sijian", "@sijian-discard");
             }
         }
 

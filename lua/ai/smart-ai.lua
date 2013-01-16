@@ -2405,6 +2405,18 @@ function SmartAI:needKongcheng(player)
 			(not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
 end
 
+function SmartAI:getLeastHandcardNum(player)
+	local least = 0
+	if player:hasSkill("lianying") and least < 1 then least = 1 end
+	if player:hasSkill("shangshi") and least < math.min(2, player:getLostHp()) then least = math.min(2, player:getLostHp()) end
+	if player:hasSkill("nosshangshi") and least < player:getLostHp() then least = player:getLostHp() end
+	return least
+end
+
+function SmartAI:hasLoseHandcardEffective(player)
+	return player:getHandcardNum() > player:getLeastHandcardNum()
+end
+
 function SmartAI:getCardNeedPlayer(cards)
 	cards = cards or sgs.QList2Table(self.player:getHandcards())
 
@@ -2635,7 +2647,7 @@ function SmartAI:getCardNeedPlayer(cards)
 
 	if #self.friends == 1 then
 		for _, enemy in ipairs(self.enemies) do
-			if (self:needKongcheng(enemy) or (enemy:hasSkill("lianying") and enemy:getHandcardNum() == 1)) and enemy:faceUp() then
+			if (self:needKongcheng(enemy) or (self:getLeastHandcardNum(enemy) == 1 and enemy:getHandcardNum() == 1)) and enemy:faceUp() then
 				for _, acard in ipairs(cardtogive) do
 					if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or acard:isKindOf("GodSalvation") then
 						return acard, enemy

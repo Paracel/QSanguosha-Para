@@ -710,7 +710,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	for i = 1, 2, 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude()
-				and not self:needKongcheng(enemy) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", enemy) then
+				and not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy) then
 				if enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 3 and enemy:getHp() <= 3 then
 					local cardchosen
 					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then
@@ -742,7 +742,8 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isKongcheng() and (enemy:getHandcardNum() > enemy:getHp() - 2 or (enemy:getHandcardNum() == 1 and not self:needKongcheng(enemy))) then
+		if not enemy:isKongcheng() and self:hasLoseCardEffective(enemy)
+			and (enemy:getHandcardNum() > enemy:getHp() - 2 or (enemy:getHandcardNum() == 1 and not self:needKongcheng(enemy))) then
 			use.card = card
 			if use.to then
 				sgs.ai_skill_cardchosen.yinling = enemy:getRandomHandCardId()

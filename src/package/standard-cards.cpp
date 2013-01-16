@@ -140,9 +140,10 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
 
 void Slash::onEffect(const CardEffectStruct &card_effect) const{
     Room *room = card_effect.from->getRoom();
+    int n = 0;
     if (card_effect.from->getMark("drank") > 0) {
         room->setCardFlag(this, "drank");
-        room->setTag("DrankOfSlash", card_effect.from->getMark("drank"));
+        n = card_effect.from->getMark("drank");
         room->setPlayerMark(card_effect.from, "drank", 0);
     }
 
@@ -155,7 +156,7 @@ void Slash::onEffect(const CardEffectStruct &card_effect) const{
     effect.slash = this;
 
     effect.to = card_effect.to;
-    effect.drank = this->hasFlag("drank");
+    effect.drank = n;
 
     room->slashEffect(effect);
 }

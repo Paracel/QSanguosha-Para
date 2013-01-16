@@ -241,8 +241,6 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
         }
     case CardFinished: {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->hasFlag("drank"))
-                room->setTag("DrankOfSlash", 0);
             room->clearCardFlag(use.card);
 
             break;
@@ -300,15 +298,20 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
         }
     case ConfirmDamage: {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.card && damage.card->hasFlag("drank")) {
+            if (damage.card && damage.to->getMark("SlashIsDrank") > 0) {
                 LogMessage log;
                 log.type = "#AnalepticBuff";
                 log.from = damage.from;
                 log.to << damage.to;
-                log.arg = QString::number(room->getTag("DrankOfSlash").toInt());
+                log.arg = QString::number(damage.damage);
+
+                damage.damage += damage.to->getMark("SlashIsDrank");
+                damage.to->setMark("SlashIsDrank", 0);
+
+                log.arg2 = QString::number(damage.damage);
+
                 room->sendLog(log);
 
-                damage.damage += room->getTag("DrankOfSlash").toInt();
                 data = QVariant::fromValue(damage);
             }
 
@@ -463,6 +466,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             damage.from = effect.from;
             damage.to = effect.to;
             damage.nature = effect.nature;
+            if (effect.drank > 0) damage.to->setMark("SlashIsDrank", effect.drank);
             room->damage(damage);
 
             break;

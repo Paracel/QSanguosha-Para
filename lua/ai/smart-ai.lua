@@ -943,7 +943,7 @@ function sgs.findUnionSkills(first, second)
 	return findings
 end
 
-sgs.ai_card_intention.general=function(from, to, level)
+sgs.ai_card_intention.general = function(from, to, level)
 	if sgs.isRolePredictable() then return end
 	if not to then global_room:writeToConsole(debug.traceback()) return end
 	if from:isLord() then return end
@@ -2673,7 +2673,7 @@ function SmartAI:getCardNeedPlayer(cards)
 							if sgs[askill:objectName() .. "_suit_value"] and
 								(sgs[askill:objectName() .. "_suit_value"][hcard:getSuitString()] or 0) >= 3.9 then
 								return hcard, friend
-						end
+							end
 						end
 					end
 				end

@@ -56,7 +56,7 @@ struct SlashEffectStruct {
     ServerPlayer *from;
     ServerPlayer *to;
 
-    bool drank;
+    int drank;
 
     DamageStruct::Nature nature;
 };

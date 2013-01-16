@@ -144,7 +144,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 	if #enemies == 0 then return end
 
-	local getvalue=function(enemy)
+	local getvalue = function(enemy)
 		if enemy:containsTrick("supply_shortage") or enemy:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", enemy) then return -100 end
 		if zhanghe_seat > 0 then
 			local gap1 = (enemy:getSeat() - self.player:getSeat()) % self.room:alivePlayerCount()
@@ -323,7 +323,7 @@ function SmartAI:useCardIronChain(card, use)
 	if use.to then assert(use.to:length() < 3) end
 end
 
-sgs.ai_card_intention.IronChain=function(card, from, tos)
+sgs.ai_card_intention.IronChain = function(card, from, tos)
 	for _, to in ipairs(tos) do
 		if to:isChained() then
 			sgs.updateIntention(from, to, 80)

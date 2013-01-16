@@ -1758,7 +1758,7 @@ function SmartAI:filterEvent(event, player, data)
 						end
 					end
 					if self:hasSkills(sgs.lose_equip_skill, player) then
-						if self:isWeak(player) and (card:iskindOf("DefensiveHorse") or card:isKindOf("Armor")) then
+						if self:isWeak(player) and (card:isKindOf("DefensiveHorse") or card:isKindOf("Armor")) then
 							intention=math.abs(intention)
 						else
 							intention = 0

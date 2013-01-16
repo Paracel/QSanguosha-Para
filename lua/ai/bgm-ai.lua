@@ -881,7 +881,7 @@ sgs.ai_skill_askforag.langgu = function(self, card_ids)
 	return -1
 end
 
-sgs.ai_skill_cardask["@langgu-card"]=function(self, data)
+sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 	local judge = data:toJudge()
 
 	if self.player:hasFlag("langgu_hongyan") and judge.card:getSuit() ~= sgs.Card_Heart then

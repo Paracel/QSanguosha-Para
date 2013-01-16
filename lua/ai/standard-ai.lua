@@ -98,7 +98,7 @@ end
 
 sgs.ai_need_damaged.fankui = function (self, attacker)
 	if not self.player:hasSkill("guicai") then return false end
-	local need_retrial=function(player)
+	local need_retrial = function(player)
 		local alive_num=self.room:alivePlayerCount()
 		return alive_num + player:getSeat() % alive_num > self.room:getCurrent():getSeat()
 				and player:getSeat() < alive_num + self.player:getSeat() % alive_num
@@ -155,7 +155,7 @@ sgs.ai_need_damaged.fankui = function (self, attacker)
 	return false
 end
 
-sgs.ai_skill_cardask["@guicai-card"]=function(self, data)
+sgs.ai_skill_cardask["@guicai-card"] = function(self, data)
 	local judge = data:toJudge()
 
 	if self:needRetrial(judge) then
@@ -1394,7 +1394,7 @@ lijian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.LijianCard = function(card, use, self)
-	local findFriend_maxSlash=function(self, first)
+	local findFriend_maxSlash = function(self, first)
 		self:log("Looking for the friend!")
 		local maxSlash = 0
 		local friend_maxSlash

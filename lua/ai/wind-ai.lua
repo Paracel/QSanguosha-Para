@@ -1,4 +1,4 @@
-sgs.ai_skill_use["@@shensu1"]=function(self, prompt)
+sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 	self:updatePlayers()
 	self:sort(self.enemies,"defenseSlash")
 	if self.player:containsTrick("lightning") and self.player:getCards("j"):length() == 1
@@ -14,10 +14,10 @@ sgs.ai_skill_use["@@shensu1"]=function(self, prompt)
 
 		if not self.player:canSlash(enemy, slash, false) then
 		elseif self:slashProhibit(nil, enemy) then
-		elseif def<6 and eff then return "@ShensuCard=.->" .. enemy:objectName()
+		elseif def < 6 and eff then return "@ShensuCard=.->" .. enemy:objectName()
 
 		elseif selfSub >= 2 then return "."
-		elseif selfDef<6 then return "." end
+		elseif selfDef < 6 then return "." end
 
 	end
 
@@ -34,18 +34,18 @@ sgs.ai_skill_use["@@shensu1"]=function(self, prompt)
 	return "."
 end
 
-sgs.ai_get_cardType=function(card)
+sgs.ai_get_cardType = function(card)
 	if card:isKindOf("Weapon") then return 1 end
 	if card:isKindOf("Armor") then return 2 end
 	if card:isKindOf("OffensiveHorse")then return 3 end
 	if card:isKindOf("DefensiveHorse") then return 4 end
 end
 
-sgs.ai_skill_use["@@shensu2"]=function(self, prompt)
+sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
 	self:updatePlayers()
 	self:sort(self.enemies,"defenseSlash")
 
-	local selfSub = self.player:getHp()-self.player:getHandcardNum()
+	local selfSub = self.player:getHp() - self.player:getHandcardNum()
 	local selfDef = sgs.getDefense(self.player)
 
 	local cards = self.player:getCards("he")
@@ -138,7 +138,7 @@ end
 sgs.ai_chaofeng.huangzhong = 1
 sgs.ai_chaofeng.weiyan = -2
 
-sgs.ai_skill_cardask["@guidao-card"]=function(self, data)
+sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 	local judge = data:toJudge()
 	local all_cards = self.player:getCards("he")
 	if all_cards:isEmpty() then return "." end
@@ -166,7 +166,7 @@ sgs.ai_skill_cardask["@guidao-card"]=function(self, data)
 	return "."
 end
 
-sgs.ai_skill_use["@@leiji"]=function(self, prompt)
+sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	local mode = self.room:getMode()
 	if mode:find("_mini_17") or mode:find("_mini_19") or mode:find("_mini_20") or mode:find("_mini_26") then
 		local players = self.room:getAllPlayers();

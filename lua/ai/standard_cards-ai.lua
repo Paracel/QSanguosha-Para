@@ -641,7 +641,7 @@ function sgs.ai_weapon_value.qinggang_sword(self, enemy)
 	if enemy and enemy:getArmor() then return 3 end
 end
 
-sgs.ai_skill_invoke.ice_sword=function(self, data)
+sgs.ai_skill_invoke.ice_sword = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
 	if damage.card:hasFlag("drank") then return false end
@@ -1489,7 +1489,7 @@ function SmartAI:useCardIndulgence(card, use)
 
 	if #enemies == 0 then return end
 
-	local getvalue=function(enemy)
+	local getvalue = function(enemy)
 		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", enemy) then return -100 end
 		if zhanghe_seat > 0 then
 			local gap1 = (enemy:getSeat() - self.player:getSeat()) % self.room:alivePlayerCount()

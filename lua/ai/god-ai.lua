@@ -525,12 +525,15 @@ end
 sgs.ai_skill_use_func.WuqianCard = function(card, use, self)
 	self:sort(self.enemies,"hp")
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy) < 2 and self.player:distanceTo(enemy) <= self.player:getAttackRange() then
-			if use.to then
-				use.to:append(enemy)
+		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy) < 2 and self.player:inMyAttackRange(enemy) then
+			if (not enemy:getArmor() or enemy:hasArmorEffect("silver_lion")) and getCardsNum("Jink", enemy) < 1 then
+			else
+				if use.to then
+					use.to:append(enemy)
+				end
+				use.card = card
+				return
 			end
-			use.card = card
-			return
 		end
 	end
 end

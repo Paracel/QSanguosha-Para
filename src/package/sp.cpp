@@ -960,6 +960,10 @@ SPPackage::SPPackage()
     related_skills.insertMulti("huxiao", "#huxiao-count");
     related_skills.insertMulti("huxiao", "#huxiao-clear");
 
+    /*
+    General *xiahouba = new General(this, "xiahouba", "shu");
+    */
+
     General *chenlin = new General(this, "chenlin", "wei", 3);
     chenlin->addSkill(new Bifa);
     chenlin->addSkill(new Songci);

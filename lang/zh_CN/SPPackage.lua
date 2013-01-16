@@ -136,6 +136,9 @@ return {
 	["$wuji"] = "武圣虽死，血脉尚存。先父佑我，再现武魂！",
 	["~guanyinping"] = "父亲……",
 	
+	["#xiahouba"] = "棘途壮志",
+	["xiahouba"] = "夏侯霸",
+	
 	["#chenlin"] = "破竹之咒",
 	["chenlin"] = "陈琳",
 	["illustrator:chenlin"] = "木美人",

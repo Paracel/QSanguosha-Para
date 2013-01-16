@@ -292,6 +292,12 @@ sgs.ai_skill_use["@xiaoguo"] = function(self, prompt)
 	end
 end
 
+sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist)
+	if promptlist[#promptlist] ~= "_nil_" then
+		sgs.updateIntention(player, player:getRoom():getCurrent(), -80)
+	end
+end
+
 sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	local yuejin = self.room:findPlayerBySkillName("xiaoguo")
 	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, yuejin) then
@@ -333,6 +339,8 @@ sgs.ai_skill_playerchosen.shushen = function(self, targets)
 		return tos[1]
 	end
 end
+
+sgs.ai_playerchosen_intention.shushen = -80
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
 	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
@@ -492,6 +500,7 @@ sgs.ai_skill_invoke.sijian = function(self, data)
 end
 
 sgs.ai_skill_playerchosen.sijian = sgs.ai_skill_playerchosen.zero_card_as_slash
+sgs.ai_playerchosen_intention.sijian = 80
 
 sgs.ai_skill_choice.suishi1 = function(self, choices)
 	local tianfeng = self.room:findPlayerBySkillName("suishi")
@@ -548,7 +557,7 @@ sgs.ai_skill_use_func.XiongyiCard = function(card, use, self)
 	end
 end
 
-sgs.ai_card_intention.XiongyiCard = -50
+sgs.ai_card_intention.XiongyiCard = -80
 
 sgs.ai_skill_invoke.kuangfu = function(self, data)
 	local damage = data:toDamage()

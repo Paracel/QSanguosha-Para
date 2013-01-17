@@ -76,8 +76,9 @@ end
 
 function sgs.ai_armor_value.vine(player, self)
 	for _, enemy in ipairs(self:getEnemies(player)) do
-		if (enemy:canSlash(player) and self:isEquip("Fan", enemy)) or self:hasSkills("huoji", enemy) then return -1 end
-		if self:getCardsNum("FireSlash", enemy) or self:getCardsNum("FireAttack", enemy) then return -1 end
+		if (enemy:canSlash(player) and (self:isEquip("Fan", enemy) or enemy:hasSkill("lihuo")) or enemy:hasSkill("huoji") then return -1 end
+		if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -1 end
+		if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 then return -1 end
 	end
 
 	if #self.enemies < 3 or player:getHp() <= 2 then return 5 end
@@ -175,7 +176,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 	table.sort(enemies, cmp)
 
-	local target=enemies[1]
+	local target = enemies[1]
 	if getvalue(target) > -100 then
 		use.card = card
 		if use.to then use.to:append(target) end
@@ -342,7 +343,7 @@ sgs.dynamic_value.benefit.IronChain = true
 function SmartAI:useCardFireAttack(fire_attack, use)
 	if self.player:hasSkill("wuyan") then return end
 	if self.player:hasSkill("noswuyan") then return end
-	if self.player:hasFlag("LastFireAttackFailed") then return end
+	if self.player:hasFlag("LastFireAttackFailed") and self:getOverflow() <= 0 and not self:hasSkills("jizhi") then return end
 
 	local lack = {
 		spade = true,
@@ -431,17 +432,17 @@ end
 
 sgs.ai_cardshow.fire_attack = function(self, requestor)
 	local priority = {
-	heart = 4,
-	spade = 3,
-	club = 2,
-	diamond = 1
+		heart = 4,
+		spade = 3,
+		club = 2,
+		diamond = 1
 	}
-	if self.player:hasSkill("hongyan") then
+	if requestor:hasSkill("hongyan") then
 		priority = {
-			heart = 4,
-			spade = 0,
+			spade = 10,
 			club = 2,
-			diamond = 1
+			diamond = 1,
+			heart = 0
 		}
 	end
 	local index = 0
@@ -452,10 +453,6 @@ sgs.ai_cardshow.fire_attack = function(self, requestor)
 			result = card
 			index = priority[card:getSuitString()]
 		end
-	end
-	if self.player:hasSkill("hongyan") and result:getSuit() == sgs.Card_Spade then
-		result = sgs.Sanguosha:cloneCard(result:objectName(), sgs.Card_Heart, result:getNumber())
-		result:setSkillName("hongyan")
 	end
 
 	return result

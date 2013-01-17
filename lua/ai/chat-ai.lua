@@ -54,7 +54,7 @@ sgs.ai_chat_func[sgs.SlashEffected] = function(self, player, data)
 	if effect.from:isLord() then
 		table.insert(chat, "尼玛眼瞎了，老子是忠啊")
 		table.insert(chat, "主公别打我，我是忠")
-		table.insert(chat, "主公，再杀我，你会裸体")
+		table.insert(chat, "主公，再杀我，你会裸")
 	end
 
 	local index = 1 + (os.time() % #chat)

@@ -42,3 +42,7 @@ contestdb.*
 doc/
 diy/
 /lua/sgs_ex2.lua
+/image/system/button/promptbox
+/image/system/button/back2.png
+/image/system/button/back.png
+/image/system/button/back_shade.png

@@ -413,7 +413,7 @@ void Dashboard::skillButtonActivated() {
     }
 
     for (int i = 0; i < 4; i++) {
-        if(button == _m_equipSkillBtns[i]) continue;
+        if (button == _m_equipSkillBtns[i]) continue;
 
         if (_m_equipSkillBtns[i] != NULL)
             _m_equipSkillBtns[i]->setEnabled(false);

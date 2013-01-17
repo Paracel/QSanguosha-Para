@@ -445,7 +445,7 @@ sgs.ai_cardshow.fire_attack = function(self, requestor)
 			heart = 0
 		}
 	end
-	local index = 0
+	local index = -1
 	local result
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do

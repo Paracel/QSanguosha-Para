@@ -2811,42 +2811,42 @@
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3425"/>
         <source>Server information</source>
-        <translation type="unfinished">服务器信息</translation>
+        <translation>服务器信息</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3438"/>
         <source>Only the lord can kick!</source>
-        <translation type="unfinished"></translation>
+        <translation>只有主公才能踢人！</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3453"/>
         <source>Kick</source>
-        <translation type="unfinished">踢人</translation>
+        <translation>踢人</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3454"/>
         <source>Please select the player to kick</source>
-        <translation type="unfinished"></translation>
+        <translation>请选择被踢玩家</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3463"/>
         <source>You can only initiate a surrender poll at your play phase!</source>
-        <translation type="unfinished"></translation>
+        <translation>只有在你的出牌阶段才能请求投降！</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3468"/>
         <source>Surrender</source>
-        <translation type="unfinished">投降</translation>
+        <translation>投降</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3468"/>
         <source>Are you sure to surrender ?</source>
-        <translation type="unfinished"></translation>
+        <translation>你真的要投降吗？</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3686"/>
         <source>Complete</source>
-        <translation type="unfinished"></translation>
+        <translation>完成</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2570"/>

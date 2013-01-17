@@ -337,7 +337,7 @@ sgs.ai_skill_use_func.JixiCard = function(card, use, self)
 	use.card = sgs.Card_Parse("@JixiCard=.")
 end
 
-sgs.ai_use_priority.JixiCard = 9.7
+sgs.ai_use_priority.JixiCard = sgs.ai_use_priority.Snatch
 
 sgs.ai_skill_askforag.jixi = function(self, card_ids)
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do

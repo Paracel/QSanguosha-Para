@@ -148,7 +148,7 @@ bool QiangxiCard::targetFilter(const QList<const Player *> &targets, const Playe
 
     int rangefix = 0;
     if (!subcards.isEmpty() && Self->getWeapon() && Self->getWeapon()->getId() == subcards.first()) {
-        const Weapon *card = qobject_cast<const Weapon *>(Self->getWeapon());
+        const Weapon *card = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         rangefix += card->getRange() - 1;
     }
 

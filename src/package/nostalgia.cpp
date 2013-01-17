@@ -787,7 +787,7 @@ public:
                 places << "Judging";
             room->moveCardTo(card, zhonghui, target, _m_place[getPlace(room, zhonghui, places)], reason, true);
         } else if (card->isKindOf("EquipCard")) {
-            const EquipCard *equip = qobject_cast<const EquipCard *>(card);
+            const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
             if (!target->getEquip(equip->location()))
                 places << "Equip";
             room->moveCardTo(card, zhonghui, target, _m_place[getPlace(room, zhonghui, places)], reason, true);

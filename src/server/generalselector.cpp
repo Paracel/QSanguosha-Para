@@ -55,7 +55,7 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
         foreach (QString key, key_list) {
             qreal value = first_general_table.value(key, 0.0);
             if (value < 0.001) {
-                QString _key = QString("%1:%2:%3:").arg(candidate).arg(role).arg(index);
+                QString _key = QString("%1:%2:%3:").arg(key.split(":").first()).arg(role).arg(index);
                 value = first_general_table.value(_key, 0.0);
             }
             if (value < 0.001) value = 5.0;

@@ -308,7 +308,7 @@ public:
 class Zuixiang: public TriggerSkill {
 public:
     Zuixiang(): TriggerSkill("zuixiang") {
-        events << EventPhaseStart << CardEffected;
+        events << EventPhaseStart << SlashEffected << CardEffected;
         frequency = Limited;
 
         type[Card::TypeBasic] = "BasicCard";
@@ -408,6 +408,7 @@ public:
                 return false;
 
             CardEffectStruct effect = data.value<CardEffectStruct>();
+            if (effect.card->isKindOf("Slash")) return false; // we'll judge it later
             QList<Card::CardType> type_list;
             foreach (int card_id, zuixiang) {
                 const Card *c = Sanguosha->getCard(card_id);
@@ -421,6 +422,33 @@ public:
                 if(effect.from)
                     log.to << effect.from;
                 log.arg = effect.card->objectName();
+                log.arg2 = objectName();
+
+                room->sendLog(log);
+                room->broadcastSkillInvoke(objectName());
+                return true;
+            }
+        } else if (event == SlashEffected) {
+            if (zuixiang.isEmpty())
+                return false;
+
+            SlashEffectStruct effect = data.value<SlashEffectStruct>();
+            bool eff = true;
+            foreach (int card_id, zuixiang) {
+                const Card *c = Sanguosha->getCard(card_id);
+                if (c->getTypeId() == Card::TypeBasic) {
+                    eff = false;
+                    break;
+                }
+            }
+
+            if (eff) {
+                LogMessage log;
+                log.type = effect.from ? "#ZuiXiang1" : "#ZuiXiang2";
+                log.from = effect.to;
+                if(effect.from)
+                    log.to << effect.from;
+                log.arg = effect.slash->objectName();
                 log.arg2 = objectName();
 
                 room->sendLog(log);

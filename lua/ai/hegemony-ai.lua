@@ -552,7 +552,6 @@ sgs.ai_skill_playerchosen.shuangren_slash = sgs.ai_skill_playerchosen.zero_card_
 
 sgs.ai_card_intention.ShuangrenCard = sgs.ai_card_intention.TianyiCard
 
-
 xiongyi_skill = {}
 xiongyi_skill.name = "xiongyi"
 table.insert(sgs.ai_skills, xiongyi_skill)

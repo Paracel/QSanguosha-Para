@@ -438,7 +438,8 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return hasShuGenerals(player) && player->hasLordSkill("jijiang") && Slash::IsAvailable(player);
+        return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("jijiang_failed")
+               && Slash::IsAvailable(player);
     }
 
     virtual const Card *viewAs() const{

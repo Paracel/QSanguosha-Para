@@ -49,6 +49,7 @@ public:
     QStringList getExtensions() const;
     QStringList getKingdoms() const;
     QColor getKingdomColor(const QString &kingdom) const;
+    QStringList getChattingEasyTexts() const;
     QString getSetupString() const;
 
     QMap<QString, QString> getAvailableModes() const;

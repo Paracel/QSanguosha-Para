@@ -1265,7 +1265,7 @@
         <translation>重复技能: %1</translation>
     </message>
     <message>
-        <location filename="../../src/core/engine.cpp" line="542"/>
+        <location filename="../../src/core/engine.cpp" line="550"/>
         <source>%1 [Scenario mode]</source>
         <translation>%1 【剧情模式】</translation>
     </message>
@@ -2061,59 +2061,6 @@
         <location filename="../../src/dialog/mainwindow.cpp" line="229"/>
         <source>Select a reply file</source>
         <translation>请选择重放文件</translation>
-    </message>
-</context>
-<context>
-    <name>MyPixmapItem</name>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="13"/>
-        <source>EASY_TEXT_1</source>
-        <translation>太慢了，做两个俯卧撑吧！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="13"/>
-        <source>EASY_TEXT_2</source>
-        <translation>快点吧，我等的花儿都谢了！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="13"/>
-        <source>EASY_TEXT_3</source>
-        <translation>高，实在是高！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="13"/>
-        <source>EASY_TEXT_4</source>
-        <translation>好手段，可真不一般啊！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="13"/>
-        <source>EASY_TEXT_5</source>
-        <translation>哦，太菜了。水平有待提高。</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="14"/>
-        <source>EASY_TEXT_6</source>
-        <translation>你会不会玩啊？！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="14"/>
-        <source>EASY_TEXT_7</source>
-        <translation>嘿，一般人，我不使这招。</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="14"/>
-        <source>EASY_TEXT_8</source>
-        <translation>呵，好牌就是这么打地！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="14"/>
-        <source>EASY_TEXT_9</source>
-        <translation>杀！神挡杀神！佛挡杀佛！</translation>
-    </message>
-    <message>
-        <location filename="../../src/ui/chatwidget.cpp" line="14"/>
-        <source>EASY_TEXT_10</source>
-        <translation>你也忒坏了吧？！</translation>
     </message>
 </context>
 <context>

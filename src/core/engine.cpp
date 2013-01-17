@@ -497,6 +497,14 @@ QColor Engine::getKingdomColor(const QString &kingdom) const{
     return color_map.value(kingdom);
 }
 
+QStringList Engine::getChattingEasyTexts() const{
+    static QStringList easy_texts;
+    if (easy_texts.isEmpty())
+        easy_texts = GetConfigFromLuaState(lua, "easy_text").toStringList();
+
+    return easy_texts;
+}
+
 QString Engine::getSetupString() const{
     int timeout = Config.OperationNoLimit ? 0 : Config.OperationTimeout;
     QString flags;

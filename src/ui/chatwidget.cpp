@@ -1,4 +1,5 @@
 #include "chatwidget.h"
+#include "engine.h"
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QMessageBox>
@@ -10,8 +11,7 @@ MyPixmapItem::MyPixmapItem(const QPixmap &pixmap, QGraphicsItem *parentItem)
     setAcceptedMouseButtons(Qt::LeftButton);
     initFaceBoardPos();
     initEasyTextPos();
-    easytext << tr("EASY_TEXT_1") << tr("EASY_TEXT_2") << tr("EASY_TEXT_3") << tr("EASY_TEXT_4") << tr("EASY_TEXT_5")
-             << tr("EASY_TEXT_6") << tr("EASY_TEXT_7") << tr("EASY_TEXT_8") << tr("EASY_TEXT_9") << tr("EASY_TEXT_10") ;
+    easytext = Sanguosha->getChattingEasyTexts();
 }
 
 MyPixmapItem::~MyPixmapItem() {
@@ -46,7 +46,7 @@ int MyPixmapItem::mouseCanClick(int x, int y) {
     if (this->itemName == "faceboard")
         result = mouseOnIcon(x, y);
     else if (this->itemName == "easytextboard")
-        result=mouseOnText(x, y);
+        result = mouseOnText(x, y);
     return result;
 }
 
@@ -129,14 +129,14 @@ ChatWidget::ChatWidget()
     chat_face_board = new MyPixmapItem(QPixmap("image/system/chatface/faceboard.png"), this);
     chat_face_board->setSize(160, 180);
     chat_face_board->setPos(-160 + 74, -180 - 1); // 24 + 24 + 24 + 2 = 74
-    chat_face_board->setZValue(1);
+    chat_face_board->setZValue(10000);
     chat_face_board->setVisible(false);
     chat_face_board->itemName="faceboard";
 
     easy_text_board = new MyPixmapItem(QPixmap("image/system/chatface/easytextboard.png"), this);
     easy_text_board->setSize(180, 222);
     easy_text_board->setPos(-106, -223);
-    easy_text_board->setZValue(1);
+    easy_text_board->setZValue(10000);
     easy_text_board->setVisible(false);
     easy_text_board->itemName="easytextboard";
 

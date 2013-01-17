@@ -237,7 +237,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
 #endif
 
     chat_widget = new ChatWidget();
-    chat_widget->setZValue(-2.0);
+    chat_widget->setZValue(-0.1);
     addItem(chat_widget);
     connect(chat_widget,SIGNAL(return_button_click()),this, SLOT(speak()));
     connect(chat_widget,SIGNAL(chat_widget_msg(QString)),this, SLOT(appendChatEdit(QString)));

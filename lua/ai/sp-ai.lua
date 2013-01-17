@@ -125,11 +125,11 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 					local seat_diff = enemy:getSeat() - self.player:getSeat()
 					local alive_count = self.room:alivePlayerCount()
 					if seat_diff < 0 then seat_diff = seat_diff + alive_count end
-					if seat_diff > alive_count / 2.5 + 1 then return enemy	end
+					if seat_diff > alive_count / 2.5 + 1 then return enemy end
 				end
 			end
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:hasSkill("bazhen") or enemy:hasSkill("yizhong") then
+				if self:hasSkills("bazhen|yizhong", enemy) then
 					return enemy
 				end
 			end
@@ -244,7 +244,15 @@ sgs.ai_skill_playerchosen.yuanhu = function(self, targets)
 	end
 end
 
-sgs.ai_card_intention.YuanhuCard = -30
+sgs.ai_card_intention.YuanhuCard = function(card, from, to)
+	if to[1]:hasSkill("bazhen") or to[1]:hasSkill("yizhong") or (to[1]:hasSkill("kongcheng") and to[1]:isKongcheng()) then
+		if sgs.Sanguosha:getCard(card:getEffectiveId()):isKindOf("SilverLion") then
+			sgs.updateIntention(from, to[1], 10)
+			return
+		end
+	end
+	sgs.updateIntention(from, to[1], -50)
+end
 
 sgs.ai_cardneed.yuanhu = sgs.ai_cardneed.equip
 

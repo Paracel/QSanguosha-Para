@@ -84,7 +84,7 @@ function setInitialTables()
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|buqu|yiji|neoganglie|ganglie|guixin|jieming|miji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|jieyin|renjie|zhiheng|rende|jujian|guicai|guidao|jilve|longhun|wusheng|longdan"
 	sgs.drawpeach_skill = "tuxi|qiaobian"
-	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|yinghun|shenzhi"
+	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
 	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|zhiheng|mingce"
 
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
@@ -1635,7 +1635,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.PreCardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.EventPhaseStart then
+	elseif event == sgs.PreCardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.TurnStart then
 		self:updatePlayers()
 	end
 

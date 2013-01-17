@@ -364,15 +364,14 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (!player->isAlive() || player->getPhase() != Player::Play || player != use.from
-                || !use.card->isKindOf("Slash"))
+            if (!player->isAlive() || player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
                 return false;
             int count = 1;
             int mark_n = player->getMark("no_jink" + use.card->toString());
             foreach (ServerPlayer *p, use.to) {
                 int handcardnum = p->getHandcardNum();
                 if ((player->getHp() <= handcardnum || player->getAttackRange() >= handcardnum)
-                    && player->askForSkillInvoke("liegong", QVariant::fromValue(p))){
+                    && player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
                     room->broadcastSkillInvoke(objectName());
 
                     LogMessage log;

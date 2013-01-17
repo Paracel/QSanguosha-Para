@@ -617,7 +617,7 @@ public:
             int count = 1;
             int mark_n = player->getMark("no_jink" + use.card->toString());
             foreach (ServerPlayer *p, use.to) {
-                if (player->askForSkillInvoke("tieji", QVariant::fromValue(p))) {
+                if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
                     room->broadcastSkillInvoke(objectName());
 
                     JudgeStruct judge;

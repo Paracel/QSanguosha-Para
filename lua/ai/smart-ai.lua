@@ -304,7 +304,7 @@ function SmartAI:getUseValue(card)
 		end
 		if not self:getSameEquip(card) then v = 6.7 end
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
-		if self.player:hasSkill("qiangxi") and card:isKindOf("Weapon") then v = 2 end
+		if self:hasSkills("qiangxi|zhulou") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
 		if self:hasSkill("bazhen") or self:hasSkill("yizhong") and card:isKindOf("Armor") then v = 2 end
 		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong") and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
@@ -4097,7 +4097,7 @@ function SmartAI:useEquipCard(card, use)
 	if use.card or use.broken then return end
 	if card:isKindOf("Weapon") then
 		if self:needBear() then return end
-		if self:hasSkill("qiangxi") and same then return end
+		if self:hasSkills("qiangxi|zhulou") and same then return end
 		if self.player:hasSkill("rende") then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getWeapon() then return end

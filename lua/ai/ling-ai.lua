@@ -97,7 +97,7 @@ end
 sgs.ai_card_intention.NeoFanjianCard = 70
 
 function sgs.ai_skill_suit.neofanjian()
-	local map = {0, 0, 1, 2, 2, 3, 3, 3}
+	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
 	return map[math.random(1,8)]
 end
 sgs.ai_skill_invoke.zhongyi = function(self, data)
@@ -108,6 +108,11 @@ sgs.ai_skill_invoke.zhongyi = function(self, data)
 end
 
 sgs.ai_skill_invoke.zhulou = function(self, data)
+	for _, card in sgs.qlist(self.player:getCards("he")) do
+		if card:isKindOf("Weapon") then
+			return true
+		end
+	end
 	if self.player:getHandcardNum() < 3 and self.player:getHp() > 2 then
 		return true
 	end
@@ -127,6 +132,14 @@ sgs.ai_skill_cardask["@zhulou-discard"] = function(self, data)
 	end
 	return "."
 end
+
+sgs.ai_cardneed.zhulou = sgs.ai_cardneed.weapon
+
+sgs.zhulou_keep_value = {
+	Peach = 6,
+	Jink = 5.1,
+	Weapon = 5
+}
 
 function sgs.ai_skill_invoke.neojushou(self, data)
 	if not self.player:faceUp() then return true end

@@ -112,7 +112,7 @@ public:
     }
 
     virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
-        return qrand() % 2 + 1;
+        return 1;
     }
 
 private:
@@ -122,11 +122,11 @@ private:
 class JiushiFlip: public TriggerSkill {
 public:
     JiushiFlip(): TriggerSkill("#jiushi-flip") {
-        events << CardUsed << DamageDone << DamageComplete;
+        events << PreCardUsed << DamageDone << DamageComplete;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == CardUsed) {
+        if (event == PreCardUsed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->getSkillName() == "jiushi")
                 player->turnOver();
@@ -136,7 +136,7 @@ public:
             bool faceup = player->tag.value("PredamagedFace").toBool();
             player->tag.remove("PredamagedFace");
             if (!faceup && !player->faceUp() && player->askForSkillInvoke("jiushi", data)) {
-                room->broadcastSkillInvoke("jiushi", 3);
+                room->broadcastSkillInvoke("jiushi", 2);
                 player->turnOver();
             }
         }

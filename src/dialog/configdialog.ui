@@ -380,7 +380,7 @@
        </rect>
       </property>
       <property name="readOnly">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
      </widget>
      <widget class="QPushButton" name="setTextEditFontButton">

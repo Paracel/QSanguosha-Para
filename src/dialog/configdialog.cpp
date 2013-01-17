@@ -46,6 +46,9 @@ ConfigDialog::ConfigDialog(QWidget *parent)
 
     QPalette palette;
     palette.setColor(QPalette::Text, Config.TextEditColor);
+    QColor color = Config.TextEditColor;
+    int aver = (color.red() + color.green() + color.blue()) / 3;
+    palette.setColor(QPalette::Base, aver >= 208 ? Qt::black : Qt::white);
     ui->textEditFontLineEdit->setPalette(palette);
 
 }
@@ -180,6 +183,8 @@ void ConfigDialog::on_setTextEditColorButton_clicked() {
         Config.setValue("TextEditColor", color);
         QPalette palette;
         palette.setColor(QPalette::Text, color);
+        int aver = (color.red() + color.green() + color.blue()) / 3;
+        palette.setColor(QPalette::Base, aver >= 208 ? Qt::black : Qt::white);
         ui->textEditFontLineEdit->setPalette(palette);
     }
 }

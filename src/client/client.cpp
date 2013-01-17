@@ -1062,7 +1062,7 @@ void Client::playSystemAudioEffect(const QString &effect_str) {
 void Client::updatePileNum() {
     QString pile_str = tr("Draw pile: <b>%1</b>, discard pile: <b>%2</b>, swap times: <b>%3</b>")
                        .arg(pile_num).arg(discarded_list.length()).arg(swap_pile);
-    lines_doc->setHtml("<p align = \"center\">" + pile_str + "</p>");
+    lines_doc->setHtml(QString("<font color='%1'><p align = \"center\">" + pile_str + "</p></font>").arg(Config.TextEditColor.name()));
 }
 
 void Client::askForDiscard(const Json::Value &req) {

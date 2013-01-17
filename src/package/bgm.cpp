@@ -442,7 +442,7 @@ public:
                 }
             }
 
-            if (eff) {
+            if (!eff) {
                 LogMessage log;
                 log.type = effect.from ? "#ZuiXiang1" : "#ZuiXiang2";
                 log.from = effect.to;

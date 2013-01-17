@@ -55,8 +55,7 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
         foreach (QString key, key_list) {
             qreal value = first_general_table.value(key, 0.0);
             if (value < 0.001) {
-                QString _key = key;
-                _key.replace(suffix, "");
+                QString _key = QString("%1:%2:%3:").arg(candidate).arg(role).arg(index);
                 value = first_general_table.value(_key, 0.0);
             }
             if (value < 0.001) value = 5.0;
@@ -202,7 +201,7 @@ void GeneralSelector::loadFirstGeneralTable(const QString &role) {
                     qreal value;
                     stream >> value;
 
-                    QString key = QString("%1:%2:%3:%4").arg(name).arg(role).arg(i+2).arg(lord);
+                    QString key = QString("%1:%2:%3:%4").arg(name).arg(role).arg(i + 2).arg(lord);
                     first_general_table.insert(key, value);
                 }
             }

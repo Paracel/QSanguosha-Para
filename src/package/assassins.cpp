@@ -142,7 +142,7 @@ public:
         return !player->isKongcheng() && !player->hasUsed("MizhaoCard");
     }
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
         return !to_select->isEquipped();
     }
 

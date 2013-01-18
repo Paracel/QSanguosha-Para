@@ -987,26 +987,29 @@ sgs.ai_skill_use_func.FuluanCard = function(card, use, self)
 end
 
 sgs.ai_use_priority.FuluanCard = 2.3
+sgs.ai_card_intention.FuluanCard = function(card, from, tos)
+	sgs.updateIntention(from, tos[1], tos[1]:faceUp() and 80 or -80)
+end
 
 local function need_huangen(self, who)
 	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
 	if card == nil then return false end
 	if self:isEnemy(who) then
-		if card:isKindOf("GodSalvation") and who:getLostHp() > 0 and (who:getHp() <= 0 or who:hasSkill("manjuan")) then
+		if card:isKindOf("GodSalvation") and who:isWounded() and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then
 			return true
 		end
 		return false
-	else
+	elseif self:isFriend(who) then
 		if self:hasSkills("noswuyan", who) and self.room:getCurrent():objectName() ~= who:objectName() then return true end
 		if card:isKindOf("GodSalvation") and who:isWounded() then return false end
 		if card:isKindOf("IronChain") and who:isChained() then return false end
+		if card:isKindOf("AmazingGrace") then return not self:hasTrickEffective(card, who) end
 		return true
 	end
 end
 
 sgs.ai_skill_use["@@huangen"] = function(self, prompt)
-	local card = sgs.Sanguosha:getCard(self.player:getTag("Huangen_user"):toInt())
-	if card:isKindOf("AmazingGrace") then return "." end
+	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
 	local first_index, second_index, third_index, forth_index, fifth_index
 	local i = 1
 	local players = sgs.QList2Table(self.room:getAllPlayers())
@@ -1060,7 +1063,15 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 	end
 end
 
-sgs.ai_card_intention.HuangenCard = -50
+sgs.ai_card_intention.HuangenCard = function(card, from, tos)
+	local cardx = sgs.Card_Parse(from:getTag("Huangen_user"):toString())
+	if not cardx then return end
+	for _, to in ipairs(tos) do
+		local intention = -80
+		if cardx:isKindOf("GodSalvation") and to:isWounded() and to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then intention = 50 end
+		sgs.updateIntention(from, to, intention)
+	end
+end
 
 sgs.ai_skill_invoke.hantong = true
 
@@ -1069,13 +1080,13 @@ sgs.ai_skill_invoke.hantong_acquire = function(self, data)
 	if skill == "hujia" and not self.player:hasSkill("hujia") then
 		local can_invoke = false
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:getKingdom() == "wei" then can_invoke = true end
+			if friend:getKingdom() == "wei" and getCardsNum("Jink", friend) > 0 then can_invoke = true end
 		end
 		if can_invoke then return sgs.ai_skill_invoke.hujia end
 	elseif skill == "jijiang" and not self.player:hasSkill("jijiang") then
 		local can_invoke = false
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:getKingdom() == "shu" then can_invoke = true end
+			if friend:getKingdom() == "shu" and getCardsNum("Slash", friend) > 0 then can_invoke = true end
 		end
 		if can_invoke then return sgs.ai_skill_invoke.jijiang end
 	elseif skill == "jiuyuan" and not self.player:hasSkill("jiuyuan") then

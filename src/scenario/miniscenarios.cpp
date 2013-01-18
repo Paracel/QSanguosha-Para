@@ -100,6 +100,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             int_list << i;
         if (ex_options.contains("randomRoles"))
             qShuffle(int_list);
+
         for (j = 0; j < players.length(); j++) {
             i = int_list[j];
             ServerPlayer *sp = players.at(j);
@@ -120,7 +121,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                     available << choice;
                     all.removeOne(choice);
                 }
-                general = room->askForGeneral(sp,available);
+                general = room->askForGeneral(sp, available);
             }
             room->changeHero(sp, general, false, false, false, false);
 
@@ -140,7 +141,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                         available << choice;
                         all.removeOne(choice);
                      }
-                     general = room->askForGeneral(sp,available);
+                     general = room->askForGeneral(sp, available);
                  }
                  if(general == sp->getGeneralName()) general = this->players.at(i)["general3"];
                  room->changeHero(sp, general, false, false, true, false);
@@ -189,17 +190,6 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                 room->setPlayerFlag(sp, "-NoManjuan");
             }
 
-            QVariant v;
-            foreach (const TriggerSkill *skill, sp->getTriggerSkills()) {
-                if (!skill->isSPConvertSkill())
-                    room->getThread()->addTriggerSkill(skill);
-                else
-                    continue;
-
-                if (skill->getTriggerEvents().contains(GameStart))
-                    skill->trigger(GameStart, room, sp, v);
-            }
-
             QString skills = this->players.at(i)["acquireSkills"];
             if (skills != QString()) {
                 foreach (QString skill_name, skills.split(","))
@@ -243,7 +233,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             }
         }
 
-        room->setTag("WaitForPlayer",QVariant(true));
+        room->setTag("WaitForPlayer", QVariant(true));
         room->updateStateItem();
         return true;
     } else

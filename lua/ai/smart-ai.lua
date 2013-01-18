@@ -703,7 +703,7 @@ function SmartAI:sortByDynamicUsePriority(cards)
 	table.sort(cards, compare_func)
 end
 
-function SmartAI:sortByCardNeed(cards)
+function SmartAI:sortByCardNeed(cards, inverse)
 	local compare_func = function(a, b)
 		local value1 = self:cardNeed(a)
 		local value2 = self:cardNeed(b)
@@ -711,11 +711,12 @@ function SmartAI:sortByCardNeed(cards)
 		if value1 ~= value2 then
 			return value1 < value2
 		else
-			return a:getNumber() > b:getNumber()
+			return a:getNumber() < b:getNumber()
 		end
 	end
 
 	table.sort(cards, compare_func)
+	if inverse then sgs.reverse(cards)
 end
 
 function SmartAI:getPriorTarget()
@@ -2369,19 +2370,19 @@ function SmartAI:askForCardShow(requestor, reason)
 end
 
 function sgs.ai_cardneed.bignumber(to, card, self)
-	if not to:containsTrick("indulgence") and self:getUseValue(card) < 6 then
+	if not self:willSkipPlayPhase(to) and self:getUseValue(card) < 6 then
 		return card:getNumber() > 10
 	end
 end
 
 function sgs.ai_cardneed.equip(to, card, self)
-	if not self:willSkipPlayPhase() then
+	if not self:willSkipPlayPhase(to) then
 		return card:getTypeId() == sgs.Card_TypeEquip
 	end
 end
 
 function sgs.ai_cardneed.weapon(to, card, self)
-	if not to:containsTrick("indulgence") then
+	if not self:willSkipPlayPhase(to) then
 		return card:isKindOf("Weapon")
 	end
 end

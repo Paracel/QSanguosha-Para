@@ -867,18 +867,24 @@ public:
             room->moveCardsAtomic(move, true);
             room->getThread()->delay();
         }
+        DummyCard *dummy = new DummyCard;
         for (int i = 0; i < 3; i++) {
             int card_id = cardIds[i];
             const Card *card = Sanguosha->getCard(card_id);
             if (!card->isKindOf("BasicCard") || card->isKindOf("Peach")) {
                 if (!card->isKindOf("BasicCard"))
                     no_basic++;
-                CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "zhaolie", QString());
-                room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
+                dummy->addSubcard(card_id);
             } else {
                 cards << card;
             }
         }
+        if (dummy->subcardsLength() > 0) {
+            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "zhaolie", QString());
+            room->throwCard(dummy, reason, NULL);
+        }
+        dummy->deleteLater();
+
         QStringList choicelist;
         choicelist << "damage";
         if (victim->getCards("he").length() >= no_basic)

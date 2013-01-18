@@ -1036,7 +1036,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         } else if (method == Card::MethodDiscard) {
             CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName());
             moveCardTo(card, player, NULL, Player::DiscardPile, reason);
-        } else if(method != Card::MethodNone && !isRetrial) {
+        } else if (method != Card::MethodNone && !isRetrial) {
             CardMoveReason reason(CardMoveReason::S_REASON_RESPONSE, player->objectName());
             reason.m_skillName = card->getSkillName();
             moveCardTo(card, player, NULL, Player::DiscardPile, reason);

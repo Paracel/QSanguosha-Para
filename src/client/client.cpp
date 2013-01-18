@@ -851,7 +851,7 @@ void Client::askForSurrender(const Json::Value &initiator) {
 
 void Client::askForNullification(const Json::Value &arg) {
     if (!arg.isArray() || arg.size() != 3 || !arg[0].isString()
-        || !(arg[1].isNull() ||arg[1].isString())
+        || !(arg[1].isNull() || arg[1].isString())
         || !arg[2].isString())
         return;
     

@@ -230,7 +230,7 @@ function SmartAI:assignKeep(num, start)
 	self:sortByKeepValue(cards, true, self.kept)
 	for _, card in ipairs(cards) do
 		if not self.keepValue[card:getId()] then
-			self.keepValue[card:getId()]=self:getKeepValue(card, self.kept)
+			self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
 			table.insert(self.kept, card)
 			--self:log(card:getClassName())
 			self:assignKeep(num-1)
@@ -523,8 +523,12 @@ function SmartAI:cardNeed(card)
 	if card:isKindOf("Peach") then
 		self:sort(self.friends,"hp")
 		if self.friends[1]:getHp() < 2 then return 10 end
-		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkill("longhun")) or self:hasSkills("kurou|benghuai") then return 14 end
+		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 14 end
 		return self:getUseValue(card)
+	end
+	local wuguotai = self.room:findPlayerBySkillName("buyi")
+	if wuguotai and self:isFriend(wuguotai) and not card:isKindOf("BasicCard") then
+		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 13 end
 	end
 	if self:isWeak() and card:isKindOf("Jink") and self:getCardsNum("Jink") < 1 then return 12 end
 	
@@ -560,9 +564,9 @@ function SmartAI:cardNeed(card)
 	if card:isKindOf("Axe") and self:hasSkills("luoyi|jiushi|jiuchi|pojun", self.player) then return 15 end
 	if card:isKindOf("Weapon") and (not self.player:getWeapon()) and (self:getCardsNum("Slash") > 1) then return 6 end
 	if card:isKindOf("Nullification") and self:getCardsNum("Nullification") == 0 then
-		if self.player:containsTrick("indulgence") or self.player:containsTrick("supply_shortage") then return 10 end
+		if self:willSkipPlayPhase() or self:willSkipDrawPhase() then return 10 end
 		for _, friend in ipairs(self.friends) do
-			if friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage") then return 7 end
+			if self:willSkipPlayPhase(friend) or self:willSkipDrawPhase(friend) then return 9 end
 		end
 		return 6
 	end
@@ -716,7 +720,7 @@ function SmartAI:sortByCardNeed(cards, inverse)
 	end
 
 	table.sort(cards, compare_func)
-	if inverse then sgs.reverse(cards)
+	if inverse then sgs.reverse(cards) end
 end
 
 function SmartAI:getPriorTarget()
@@ -1974,6 +1978,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 
 	if positive then
 		if from and self:isEnemy(from) and (sgs.evaluateRoleTrends(from) ~= "neutral" or sgs.isRolePredictable()) then
+			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandcard(null_card) then return null_card end
 			if trick:isKindOf("ExNihilo") and (self:isWeak(from) or self:hasSkills(sgs.cardneed_skill, from) or from:hasSkill("manjuan")) then return null_card end
 			if trick:isKindOf("IronChain") and not self:isEquip("Vine", to) then return nil end
 			if self:isFriend(to) then
@@ -1982,11 +1987,11 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				else
 					if trick:isKindOf("Snatch") then return null_card end
 					if trick:isKindOf("FireAttack") and (self:isEquip("Vine", to) or to:getMark("@kuangfeng") > 0 or (to:isChained() and not self:isGoodChainTarget(to)))
-						and from:objectName() ~= to:objectName() and not from:hasSkill("wuyan") and not to:hasFlag("TanhuTarget") then return null_card end
+						and from:objectName() ~= to:objectName() and not from:hasSkill("wuyan") then return null_card end
 					if self:isWeak(to) then
-						if trick:isKindOf("Duel") and not from:hasSkill("wuyan") and not to:hasFlag("TanhuTarget") then
+						if trick:isKindOf("Duel") and not from:hasSkill("wuyan") then
 							return null_card
-						elseif trick:isKindOf("FireAttack") and not from:hasSkill("wuyan") and not to:hasFlag("TanhuTarget") then
+						elseif trick:isKindOf("FireAttack") and not from:hasSkill("wuyan") then
 							if from:getHandcardNum() > 2 and from:objectName() ~= to:objectName() then return null_card end
 						end
 					end

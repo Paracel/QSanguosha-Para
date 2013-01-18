@@ -64,8 +64,8 @@ QScrollBar::down-arrow:vertical {
     border-image: url(image/system/button/scroll-down-arrow.png);
 }
 
- QLineEdit#chat_edit{
-    background-color: rgba(20,20,20,255);
+QLineEdit#chat_edit {
+    background-color: rgba(20,20,20,200);
     color: white;
     border: 10px transparent;
     height: 20px;

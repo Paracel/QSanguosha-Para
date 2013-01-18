@@ -928,12 +928,22 @@ sgs.ai_keep_value.Nullification = 3
 sgs.ai_use_value.Nullification = 8
 
 function SmartAI:useCardAmazingGrace(card, use)
-	if #self.friends >= #self.enemies or (self:hasSkills(sgs.need_kongcheng) and self.player:getHandcardNum() == 1)
-		or self.player:hasSkill("jizhi") then
-		use.card = card
-	elseif self.player:hasSkill("noswuyan") then
-		use.card = card
+	if self.player:hasSkill("noswuyan") then use.card = card end
+	if self.player:getRole() == "loyalist" and self.player:getSeat() == 2 and sgs.turncount == 1 or self.player:getRole() == "lord" and sgs.turncount == 0 then return end
+	local value = 1
+	local suf, coeff = 0.8, 0.8
+	if self:hasSkills(sgs.need_kongcheng) and self.player:getHandcardNum() == 1 or self.player:hasSkill("jizhi") then
+		suf = 0.6
+		coeff = 0.6
 	end
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		local index = 0
+		if self:isFriend(player) then index = 1 elseif self:isEnemy(friend) then index = -1 end
+		value = value + index * suf
+		if value < 0 then return end
+		suf = suf * coeff
+	end
+	use.card = card
 end
 
 sgs.ai_use_value.AmazingGrace = 3
@@ -1584,3 +1594,47 @@ end
 sgs.dynamic_value.lucky_chance.Lightning = true
 
 sgs.ai_keep_value.Lightning = -1
+
+sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
+	local wuguotai = self.room:findPlayerBySkillName(wuguotai)
+	
+	local cards = {}
+	for _, id in ipairs(card_ids) do
+		table.insert(cards, sgs.Sanguosha:getCard(id))
+	end
+	local next_alive = self.player:getNextAlive()
+	if next_alive:getPhase() == sgs.Player_Play then
+		self:sortByCardNeed(cards, true)
+		return cards[1]:getEffectiveId()
+	end
+	local no_basic_num = 0
+	for _, c in ipairs(cards) do
+		if c:getTypeId() ~= sgs.Card_TypeBasic then no_basic_num = no_basic_num + 1 end
+	end
+	local next_need_buyi = false
+	if not next_alive:hasSkill("manjuan") and wuguotai and self:isFriend(next_alive, wuguotai) and self:isWeak(next_alive) then next_need_buyi = true end
+	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
+		if self:isFriend(next_alive) then
+			self:sortByCardNeed(cards)
+			local index = 1
+			if next_need_buyi and no_basic_num == 1 then index = 2 end
+			return cards[index]:getEffectiveId()
+		elseif self:isEnemy(next_alive) then
+			self:sortByCardNeed(cards, true)
+			if next_need_buyi and no_basic_num == 1 then
+				for _, c in ipairs(cards) do
+					if c:getTypeId() ~= sgs.Card_TypeBasic then return c:getEffectiveId() end
+				end
+			end
+			return cards[1]:getEffectiveId()
+		end
+	end
+	if self.player:hasSkill("kongcheng") and self.player:isKongcheng() 
+		and not self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
+		for _, c in ipairs(cards) do
+			if c:isKindOf("Jink") or c:isKindOf("Peach") then return c:getEffectiveId() end
+		end
+	end
+	self:sortByCardNeed(cards, true)
+	return cards[1]:getEffectiveId()
+end

@@ -64,8 +64,8 @@ QScrollBar::down-arrow:vertical {
     border-image: url(image/system/button/scroll-down-arrow.png);
 }
 
-QLineEdit#chat_edit {
-    background-color: rgba(20,20,20,200);
+ QLineEdit#chat_edit{
+    background-color: rgba(20,20,20,255);
     color: white;
     border: 10px transparent;
     height: 20px;
@@ -77,13 +77,13 @@ QStatusBar::item {
 }
 
 QMenu[private_pile="true"] {
-    background-color: rgba(43,63,53,100);
+    background-color: rgba(43,63,53,200);
     border-radius: 5px;
     color: white;
 }
 
 QPushButton[private_pile="true"] {
-    background-color: rgba(43,63,53,100);
+    background-color: rgba(43,63,53,200);
     border-radius: 5px;
     color: white;
 }

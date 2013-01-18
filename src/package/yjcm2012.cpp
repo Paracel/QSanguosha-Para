@@ -733,8 +733,7 @@ ChunlaoCard::ChunlaoCard() {
 }
 
 void ChunlaoCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    foreach (int id, this->subcards)
-        source->addToPile("wine", id, true);
+    source->addToPile("wine", this);
 }
 
 class ChunlaoViewAsSkill: public ViewAsSkill {

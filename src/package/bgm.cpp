@@ -1935,11 +1935,15 @@ public:
             && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
             if (liuxie->askForSkillInvoke(objectName())) {
                 int i = 0;
+                DummyCard *dummy = new DummyCard;
                 foreach (int card_id, move->card_ids) {
                     if (room->getCardPlace(card_id) == Player::DiscardPile && move->from_places[i] == Player::PlaceHand)
-                        liuxie->addToPile("edict", card_id);
+                        dummy->addSubcard(card_id);
                     i++;
                 }
+                if (dummy->subcardsLength() > 0)
+                    liuxie->addToPile("edict", dummy);
+                dummy->deleteLater();
             }
         }
         return false;
@@ -2088,9 +2092,7 @@ DIYYicongCard::DIYYicongCard() {
 }
 
 void DIYYicongCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    foreach (int id, this->subcards) {
-        source->addToPile("retinue", id, true);
-    }
+    source->addToPile("retinue", this);
 }
 
 class DIYYicongViewAsSkill: public ViewAsSkill {

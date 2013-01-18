@@ -114,6 +114,13 @@ public:
                 if (player->askForSkillInvoke(objectName())) {
                     ServerPlayer *caopi = room->askForPlayerChosen(player, caopis, objectName());
                     room->broadcastSkillInvoke(objectName());
+                    LogMessage log;
+                    log.type = "#InvokeOthersSkill";
+                    log.from = player;
+                    log.to << caopi;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
                     caopi->drawCards(1);
                     caopi->setFlags("songwei_used"); //for AI
                     caopis.removeOne(caopi);
@@ -939,6 +946,14 @@ public:
                     ServerPlayer *dongzhuo = room->askForPlayerChosen(player, dongzhuos, objectName());
                     dongzhuo->setFlags("baonue_used"); //for AI
                     dongzhuos.removeOne(dongzhuo);
+
+                    LogMessage log;
+                    log.type = "#InvokeOthersSkill";
+                    log.from = player;
+                    log.to << dongzhuo;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
                     JudgeStruct judge;
                     judge.pattern = QRegExp("(.*):(spade):(.*)");
                     judge.good = true;

@@ -373,8 +373,9 @@ public:
             if (dying.who != player && target && room->askForChoice(target, "suishi1", "draw+no") == "draw") {
                 room->broadcastSkillInvoke(objectName(), 1);
                 LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
+                log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
+                log.from = target;
+                log.to << player;
                 log.arg = objectName();
                 room->sendLog(log);
 
@@ -387,8 +388,9 @@ public:
             if (target && room->askForChoice(target, "suishi2", "damage+no") == "damage") {
                 room->broadcastSkillInvoke(objectName(), 2);
                 LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
+                log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
+                log.from = target;
+                log.to << player;
                 log.arg = objectName();
                 room->sendLog(log);
 

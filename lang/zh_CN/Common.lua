@@ -82,6 +82,7 @@ return {
 	["#Murder"] = "%to【%arg】 阵亡，伤害来源为 %from",
 	["#Suicide"] = "%to【%arg】 自杀",
 	["#InvokeSkill"] = "%from 发动了“%arg”",
+	["#InvokeOthersSkill"] = "%from 发动了 %to 的“%arg”",
 	["#TriggerSkill"] = "%from 的“%arg”被触发",
 	["#Pindian"] = "%from 向 %to 发起了拼点",
 	["#PindianSuccess"] = "%from (对 %to) 拼点赢！",

@@ -162,7 +162,7 @@ sgs.ai_skill_askforag.manjuan = function(self, card_ids)
 		if card:isKindOf("IronChain") then return card:getEffectiveId() end
 	end
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Snatch") then
+		if card:isKindOf("Snatch") and #self.enemies > 0 then
 			self:sort(self.enemies,"defense")
 			if sgs.getDefense(self.enemies[1]) >= 8 then self:sort(self.enemies, "threat") end
 			local enemies = self:exclude(self.enemies, card)
@@ -276,6 +276,7 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
 	local ptarget = self:getPriorTarget()
+	if not ptarget then return end
 	local slashcount = self:getCardsNum("Slash")
 	if max_card:isKindOf("Slash") then slashcount = slashcount - 1 end
 	if not ptarget:isKongcheng() and slashcount > 0 and self.player:canSlash(ptarget, nil, true)

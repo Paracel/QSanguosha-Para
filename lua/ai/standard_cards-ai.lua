@@ -149,7 +149,7 @@ function sgs.getDefenseSlash(player)
 	for i = 1, #cards, 1 do
 		if cards[i]:objectName() == "slash" then
 			if attacker:hasWeapon("fan") then
-				has_fire_slash = true
+				has_fire_slash = 1
 				break
 			elseif attacker:hasSkill("lihuo") then
 				has_fire_slash = 2

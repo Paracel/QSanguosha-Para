@@ -568,7 +568,8 @@ jijiang_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
-	self:sort(self.enemies, "defense")
+	if self.player:hasFlag("jijiang_failed") then return end
+	self:sort(self.enemies, "defenseSlash")
 
 	if not sgs.jijiangtarget then table.insert(sgs.ai_global_flags, "jijiangtarget") end
 	sgs.jijiangtarget = {}
@@ -581,8 +582,8 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 			use.card = card
 			if use.to then
 				use.to:append(enemy)
-				table.insert(sgs.jijiangtarget, enemy)
 			end
+			table.insert(sgs.jijiangtarget, enemy)
 			target_count = target_count + 1
 			if self.slash_targets <= target_count then return end
 		end
@@ -590,7 +591,7 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 end
 
 sgs.ai_use_value.JijiangCard = 8.5
-sgs.ai_use_priority.JijiangCard = 2.4
+sgs.ai_use_priority.JijiangCard = 2.6
 sgs.ai_card_intention.JijiangCard = sgs.ai_card_intention.Slash
 
 sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(player, promptlist)

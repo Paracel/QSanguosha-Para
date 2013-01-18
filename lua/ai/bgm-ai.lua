@@ -996,7 +996,7 @@ local function need_huangen(self, who)
 		end
 		return false
 	else
-		if self:hasSkills("wuyan", who) and self.getCurrent() ~= who then return true end
+		if self:hasSkills("noswuyan", who) and self.room:getCurrent():objectName() ~= who:objectName() then return true end
 		if card:isKindOf("GodSalvation") and who:isWounded() then return false end
 		if card:isKindOf("IronChain") and who:isChained() then return false end
 		return true
@@ -1094,25 +1094,41 @@ local hantong_skill = {}
 hantong_skill.name = "hantong"
 table.insert(sgs.ai_skills, hantong_skill)
 hantong_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("HantongCard") or not self:slashIsAvailable() then return end
+	if self.player:hasLordSkill("jijiang") or self.player:getPile("edict"):isEmpty() or not self:slashIsAvailable() then return end
 	local can_invoke = false
 	for _, friend in ipairs(self.friends_noself) do
-		if friend:getKingdom() == "shu" then can_invoke = true end
+		if friend:getKingdom() == "shu" and getCardsNum("Slash", friend) > 0 then can_invoke = true end
 	end
 	if not can_invoke then return end
 	return sgs.Card_Parse("@HantongCard=.")
 end
 
 sgs.ai_skill_use_func.HantongCard = function(card, use, self)
-	self:sort(self.enemies, "defenseSlash")
-	for _, enemy in ipairs(self.enemies) do
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
-		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
-		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
-			use.card = card
+	local jcard = sgs.Card_Parse("@JijiangCard=.")
+	local dummy_use = { isDummy = true }
+	self:useSkillCard(jcard, dummy_use)
+	if dummy_use.card then use.card = card end
+end
+
+sgs.ai_skill_use["@jijiang"] = function(self, prompt)
+	local card = sgs.Card_Parse("@JijiangCard=.")
+	local dummy_use = { isDummy = true }
+	self:useSkillCard(card, dummy_use)
+	if dummy_use.card then
+		local jijiang = {}
+		if sgs.jijiangtarget then
+			for _, p in ipairs(sgs.jijiangtarget) do
+				table.insert(jijiang, p:objectName())
+			end
+			return "@JijiangCard=.->" .. table.concat(jijiang, "+")
 		end
 	end
+	return "."
 end
+
+sgs.ai_use_value.HantongCard = sgs.ai_use_value.JijiangCard
+sgs.ai_use_priority.HantongCard = sgs.ai_use_priority.JijiangCard
+sgs.ai_card_intention.HantongCard = sgs.ai_card_intention.JijiangCard
 
 sgs.ai_skill_use["@@diyyicong"] = function(self, prompt)
 	local yicongcards = {}

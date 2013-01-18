@@ -1635,7 +1635,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.PreCardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.TurnStart then
+	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.TurnStart then
 		self:updatePlayers()
 	end
 
@@ -2934,7 +2934,7 @@ function SmartAI:getTurnUse()
 					table.insert(turnUse, card)
 				end
 			else
-				if self.player:hasFlag("gongqi_inf_atkrng") then
+				if self.player:hasFlag("InfinityAttackRange") or self.player:getMark("InfinityAttackRange") > 0 then
 					self.predictedRange = 10000
 				elseif card:isKindOf("Weapon") then
 					self.predictedRange = sgs.weapon_range[card:getClassName()]

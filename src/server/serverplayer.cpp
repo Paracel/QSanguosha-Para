@@ -926,7 +926,7 @@ void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool
     room->moveCardsAtomic(move, open);
 }
 
-void ServerPlayer::exchangeFreelyFromPrivatePile(const QString &skill_name, const QString &pile_name, int upperlimit) {
+void ServerPlayer::exchangeFreelyFromPrivatePile(const QString &skill_name, const QString &pile_name, int upperlimit, bool include_equip) {
     QList<int> pile = getPile(pile_name);
     if (pile.isEmpty()) return;
 
@@ -954,7 +954,8 @@ void ServerPlayer::exchangeFreelyFromPrivatePile(const QString &skill_name, cons
     Config.AIDelay = ai_delay;
 
     int n = will_to_handcard.length();
-    const Card *exchange_card = room->askForExchange(this, skill_name, n);
+    if (n == 0) return;
+    const Card *exchange_card = room->askForExchange(this, skill_name, n, include_equip);
     will_to_pile = exchange_card->getSubcards();
     delete exchange_card;
 

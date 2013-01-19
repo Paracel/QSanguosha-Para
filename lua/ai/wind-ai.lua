@@ -426,14 +426,10 @@ guhuo_skill.getTurnUseCard = function(self)
 	local slash_str = self:getGuhuoCard("Slash", self.player, true) or self:getGuhuoCard("Analeptic", self.player, true)
 	if slash_str and self:slashIsAvailable() then return sgs.Card_Parse(slash_str) end
 
-	local guhuo = "peach|ex_nihilo|snatch|amazing_grace|archery_attack|fire_attack"
-	local guhuos = guhuo:split("|")
-	for _, package in ipairs(sgs.Sanguosha:getBanPackages()) do
-		if package == "maneuvering" then
-			table.remove(guhuos, #guhuos)
-			break
-		end
-	end
+	local guhuo = "peach|ex_nihilo|snatch|amazing_grace|archery_attack"
+	local ban = sgs.GetConfig("BanPackages", "")
+	if not ban:match("maneuvering") then guhuo = guhuo .. "|fire_attack" end
+	
 	for i = 1, #guhuos do
 		local forbiden = guhuos[i]
 		forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuitNoColor, 0)
@@ -478,7 +474,7 @@ local function getGuhuoViewCard(self, class_name, player)
 
 	if #card_use > 1 or (#card_use > 0 and card_use[1]:getSuit() == sgs.Card_Heart) then
 		local index = 1
-		if class_name == "Peach" or (class_name == "Analeptic" and not sgs.Sanguosha:getBanPackages():contains("maneuvering")) or class_name == "Jink" then
+		if class_name == "Peach" or (class_name == "Analeptic" and not sgs.GetConfig("BanPackages", ""):match("maneuvering")) or class_name == "Jink" then
 			index = #card_use
 		end
 		return "@GuhuoCard=" .. card_use[index]:getEffectiveId() .. ":" .. card_use[index]:objectName()

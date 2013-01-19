@@ -3554,7 +3554,7 @@ function SmartAI:getCardsFromGame(class_name)
 	local ban = sgs.GetConfig("BanPackages", "")
 	local cards = {}
 	for i = 1, sgs.Sanguosha:getCardCount() do
-		local card = sgs.Sanguosha:getCard(i-1)
+		local card = sgs.Sanguosha:getEngineCard(i - 1)
 		if card:isKindOf(class_name) and not ban:match(card:getPackage()) then table.insert(cards, card) end
 	end
 

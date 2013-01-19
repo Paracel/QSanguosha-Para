@@ -264,37 +264,48 @@ if sgs.GetConfig("EnableHegemony", false) then
 end
 
 -- AI for general
+local function xiaoguo_card(self, target)
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if card:isKindOf("Peach") then has_peach = card
+		elseif card:isKindOf("Analeptic") then has_anal = card
+		elseif card:isKindOf("Slash") then has_slash = card
+		elseif card:isKindOf("Jink") then has_jink = card
+		end
+	end
+
+	if has_slash then return has_slash
+	elseif has_jink then return has_jink
+	elseif has_anal or has_peach then
+		if getCardsNum("Jink", target) == 0 and self:getAllPeachNum(target) == 0 and not self:isWeak() then
+			return has_anal or has_peach
+		end
+	end
+end
+
 sgs.ai_skill_use["@xiaoguo"] = function(self, prompt)
 	local currentplayer = self.room:getCurrent()
-	if self:damageIsEffective(currentplayer) then return "." end
-	if self:isEquip("SilverLion", currentplayer) and currentplayer:getLostHp() > 0 then return "." end
 	if self:isFriend(currentplayer) then
+		if currentplayer:hasArmorEffect("silver_lion") and current:isWounded() then 
+			local card = xiaoguo_card(self, currentplayer)
+			if card and (card:isKindOf("Slash") or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 1)) then
+				return "$" .. card:getEffectiveId()
+			end
+		end
 		return "."
-	else
-		for _, card in sgs.qlist(self.player:getHandcards()) do
-			if card:isKindOf("Peach") then has_peach = card
-			elseif card:isKindOf("Analeptic") then has_anal = card
-			elseif card:isKindOf("Slash") then has_slash = card
-			elseif card:isKindOf("Jink") then has_jink = card
-			end
-		end
-
-		if has_slash then return "$" .. has_slash:getEffectiveId()
-		elseif has_jink then return "$" .. has_jink:getEffectiveId()
-		elseif has_anal or has_peach then
-			if getCardsNum("Jink", target) == 0 and self:getAllPeachNum(target) == 0 and not self:isWeak() then
-				if has_anal then return "$" .. has_anal:getEffectiveId()
-				else return "$" .. has_peach:getEffectiveId()
-				end
-			end
-		else return "."
-		end
+	elseif self:isEnemy(currentplayer) then
+		if not self:damageIsEffective(currentplayer) then return "." end
+		local card = xiaoguo_card(self, currentplayer)
+		return card and ("$" .. card:getEffectiveId()) or "."
 	end
 end
 
 sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
-		sgs.updateIntention(player, player:getRoom():getCurrent(), -80)
+		local current = player:getRoom():getCurrent()
+		if not current then return end
+		local intention = 50
+		if current:hasArmorEffect("silver_lion") and current:isWounded() then intention = -30 end
+		sgs.updateIntention(player, current, intention)
 	end
 end
 

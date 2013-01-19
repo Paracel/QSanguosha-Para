@@ -625,10 +625,11 @@ enum TriggerEvent {
     CardsMoveOneTime,
     CardDrawing,
 
-    PreCardUsed, // for AI only. For AI needs to judge intention when we use cards. 
+    PreCardUsed, // for AI to filter events only.
     CardUsed,
     TargetConfirming,
     TargetConfirmed,
+    CardEffect, // for AI to filter events only
     CardEffected,
     CardFinished,
 	TrickCardCanceling,

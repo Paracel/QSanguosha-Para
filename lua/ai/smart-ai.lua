@@ -3568,7 +3568,7 @@ function SmartAI:getRestCardsNum(class_name)
 	local discardnum = 0
 	local card
 	for i = 1, sgs.Sanguosha:getCardCount() do
-		card = sgs.Sanguosha:getCard(i-1)
+		card = sgs.Sanguosha:getEngineCard(i - 1)
 		if card:isKindOf(class_name) and not ban:match(card:getPackage()) then totalnum = totalnum + 1 end
 	end
 	for _, card_id in sgs.qlist(sgs.discard_pile) do

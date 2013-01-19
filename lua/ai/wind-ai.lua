@@ -376,12 +376,12 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuitNoColor, 0)
 	local guhuotype = guhuocard:getClassName()
-	--if guhuotype and self:getRestCardsNum(guhuotype) == 0 and self.player:getHp() > 0 then return "question" end
+	if guhuotype and self:getRestCardsNum(guhuotype) == 0 and self.player:getHp() > 0 then return "question" end
 	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:isEquip("Crossbow", yuji))) then return "noquestion" end
 	local players = self.room:getOtherPlayers(self.player)
 	players = sgs.QList2Table(players)
 	local yuji
-	if self.player:getHp()<2 and self.room:alivePlayerCount() > 2 then return "noquestion" end
+	if self.player:getHp() < 2 and self.room:alivePlayerCount() > 2 then return "noquestion" end
 	for _, other in ipairs(players) do
 		if other:hasSkill("guhuo") then yuji = other break end
 	end
@@ -389,10 +389,10 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	elseif sgs.questioner then return "noquestion"
 	else
 		self:sort(self.friends,"hp")
-		if self.player:getHp()<self.friends[#self.friends]:getHp() then return "noquestion" end
+		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
-	local r=math.random(0, self.player:getHp()-1)
-	if r == 0 then return "noquestion" else return "question" end
+	local r = math.random(0, self.player:getHp() - 1)
+	return (r == 0) and "noquestion" or "question"
 end
 
 sgs.ai_choicemade_filter.skillChoice.guhuo = function(player, promptlist)

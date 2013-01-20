@@ -58,6 +58,7 @@ class SijianCard: public SkillCard {
 public:
     Q_INVOKABLE SijianCard();
 
+    void onUse(Room *room, const CardUseStruct &card_use) const;
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
 };

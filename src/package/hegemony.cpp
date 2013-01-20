@@ -300,6 +300,12 @@ public:
 };
 
 SijianCard::SijianCard() {
+    mute = true;
+}
+
+void SijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
+    room->broadcastSkillInvoke("sijian", card_use.to.first()->isLord() ? 2 : 1);
+    SkillCard::onUse(room, card_use);
 }
 
 bool SijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{

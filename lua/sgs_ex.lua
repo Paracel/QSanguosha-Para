@@ -184,7 +184,7 @@ end
 -- utilities, i.e: convert QList<const Card> to Lua's native table
 function sgs.QList2Table(qlist)
 	local t = {}
-	for i=0, qlist:length()-1 do
+	for i = 0, qlist:length() - 1 do
 		table.insert(t, qlist:at(i))
 	end
 

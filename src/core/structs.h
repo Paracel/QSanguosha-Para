@@ -465,11 +465,8 @@ enum TriggerEvent {
 
     ChoiceMade,
 
-    // For hulao pass only
-    StageChange,
-
-    // For miniscenarios only
-    FetchDrawPileCard,
+    StageChange, // For hulao pass only
+    FetchDrawPileCard, // For miniscenarios only
 
     NumOfEvents
 };

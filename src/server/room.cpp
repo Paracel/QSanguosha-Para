@@ -2581,9 +2581,9 @@ bool Room::cardEffect(const CardEffectStruct &effect) {
         return false;
 
     QVariant data = QVariant::fromValue(effect);
-    // No events should be triggered here!
+    // No skills should be triggered here!
     thread->trigger(CardEffect, this, effect.to, data);
-    // Make sure that effectiveness of Slash not judged here!
+    // Make sure that effectiveness of Slash isn't judged here!
     return !thread->trigger(CardEffected, this, effect.to, data);
 }
 

@@ -27,7 +27,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
     if (event == EventPhaseStart) {
         if (player == room->getTag("Starter").value<PlayerStar>()) {
             if (player->getPhase() == Player::Start) {
-                room->setTag("Round", room->getTag("Round").toInt()+1);
+                room->setTag("Round", room->getTag("Round").toInt() + 1);
 
                 if (!ex_options["beforeStartRound"].isNull()) {
                     if (ex_options["beforeStartRound"].toInt() == room->getTag("Round").toInt())

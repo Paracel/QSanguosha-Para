@@ -74,6 +74,7 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
     for (int i = 0; i < 6; i++) {
         if (rnd <= prob[i] || total <= i + 1) {
             max_general = choice_list.at(i).split(":").at(0);
+			break;
         }
     }
 

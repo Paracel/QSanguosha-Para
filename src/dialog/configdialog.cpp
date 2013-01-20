@@ -23,6 +23,7 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     ui->enableLastWordCheckBox->setChecked(Config.EnableLastWord);
     ui->enableBgMusicCheckBox->setChecked(Config.EnableBgMusic);
     ui->noIndicatorCheckBox->setChecked(Config.value("NoIndicator", false).toBool());
+    ui->noEquipAnimCheckBox->setChecked(Config.value("NoEquipAnim", false).toBool());
     ui->minimizecCheckBox->setChecked(Config.value("EnableMinimizeDialog", false).toBool());
 
     ui->bgmVolumeSlider->setValue(100 * Config.BGMVolume);
@@ -117,6 +118,7 @@ void ConfigDialog::saveConfig() {
     Config.setValue("EnableBgMusic", enabled);
 
     Config.setValue("NoIndicator", ui->noIndicatorCheckBox->isChecked());
+    Config.setValue("NoEquipAnim", ui->noEquipAnimCheckBox->isChecked());
 
     Config.NeverNullifyMyTrick = ui->neverNullifyMyTrickCheckBox->isChecked();
     Config.setValue("NeverNullifyMyTrick", Config.NeverNullifyMyTrick);

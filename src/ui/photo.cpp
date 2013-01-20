@@ -113,7 +113,7 @@ void Photo::setEmotion(const QString &emotion, bool permanent) {
         if (!permanent)
             QTimer::singleShot(2000, this, SLOT(hideEmotion()));
     } else {
-        PixmapAnimation::GetPixmapAnimation(this,emotion);
+        PixmapAnimation::GetPixmapAnimation(this, emotion);
     }
 }
 

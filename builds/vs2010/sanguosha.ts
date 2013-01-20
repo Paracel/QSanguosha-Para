@@ -512,98 +512,103 @@
         <translation>不显示指示线</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="323"/>
+        <location filename="../../src/dialog/configdialog.ui" line="322"/>
+        <source>No equip anim</source>
+        <translation>不显示装备动画</translation>
+    </message>
+    <message>
+        <location filename="../../src/dialog/configdialog.ui" line="336"/>
         <source>Font setup</source>
         <translation>字体设置</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="335"/>
+        <location filename="../../src/dialog/configdialog.ui" line="348"/>
         <source>Set application font</source>
         <translation>设置应用程序字体</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="348"/>
+        <location filename="../../src/dialog/configdialog.ui" line="361"/>
         <source>Application font</source>
         <translation>应用程序字体</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="396"/>
+        <location filename="../../src/dialog/configdialog.ui" line="409"/>
         <source>Font ...</source>
         <translation>字体 ...</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="409"/>
+        <location filename="../../src/dialog/configdialog.ui" line="422"/>
         <source>Text edit font</source>
         <translation>文本框字体</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="425"/>
+        <location filename="../../src/dialog/configdialog.ui" line="438"/>
         <source>Color ...</source>
         <translation>颜色 ...</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="432"/>
+        <location filename="../../src/dialog/configdialog.ui" line="445"/>
         <source>Game</source>
         <translation>游戏</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="459"/>
+        <location filename="../../src/dialog/configdialog.ui" line="472"/>
         <source>Nullification count down</source>
         <translation>【无懈可击】等待时长</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="478"/>
-        <location filename="../../src/dialog/configdialog.ui" line="575"/>
+        <location filename="../../src/dialog/configdialog.ui" line="491"/>
+        <location filename="../../src/dialog/configdialog.ui" line="588"/>
         <source> seconds</source>
         <translation> 秒</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="503"/>
+        <location filename="../../src/dialog/configdialog.ui" line="516"/>
         <source>Never nullify my single target trick</source>
         <translation>从不对自己使用的单目标锦囊使用【无懈可击】</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="519"/>
+        <location filename="../../src/dialog/configdialog.ui" line="532"/>
         <source>Minimize the dialog when server runs</source>
         <translation>服务器运行时最小化到托盘</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="547"/>
+        <location filename="../../src/dialog/configdialog.ui" line="560"/>
         <source>Game start count down</source>
         <translation>游戏开始前倒计时时长</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="603"/>
+        <location filename="../../src/dialog/configdialog.ui" line="616"/>
         <source>Enable auto target</source>
         <translation>自动选择唯一目标</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="622"/>
+        <location filename="../../src/dialog/configdialog.ui" line="635"/>
         <source>Enable intellectual selection</source>
         <translation>智能选牌</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.ui" line="638"/>
+        <location filename="../../src/dialog/configdialog.ui" line="651"/>
         <source>Disable Lua extensions</source>
         <translation>禁用Lua扩展</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.cpp" line="67"/>
+        <location filename="../../src/dialog/configdialog.cpp" line="68"/>
         <source>Select a background image</source>
         <translation>请选择一张背景图片</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.cpp" line="69"/>
+        <location filename="../../src/dialog/configdialog.cpp" line="70"/>
         <source>Images (*.png *.bmp *.jpg)</source>
         <translation>图片 (*.png *.bmp *.jpg)</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.cpp" line="139"/>
+        <location filename="../../src/dialog/configdialog.cpp" line="141"/>
         <source>Select a background music</source>
         <translation>请选择背景音乐文件</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/configdialog.cpp" line="141"/>
+        <location filename="../../src/dialog/configdialog.cpp" line="143"/>
         <source>Audio files (*.wav *.mp3 *.ogg)</source>
         <translation>音频 (*.wav *.mp3 *.ogg)</translation>
     </message>
@@ -2434,64 +2439,64 @@
 <context>
     <name>Room</name>
     <message>
-        <location filename="../../src/server/room.cpp" line="1692"/>
+        <location filename="../../src/server/room.cpp" line="1699"/>
         <source>disconnected</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1914"/>
+        <location filename="../../src/server/room.cpp" line="1921"/>
         <source>Computer %1</source>
         <translation>电脑 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1715"/>
+        <location filename="../../src/server/room.cpp" line="1722"/>
         <source>&lt;font color=#000000&gt;Player &lt;b&gt;%1&lt;/b&gt; left the game&lt;/font&gt;</source>
         <translation>&lt;font color=#000000&gt;玩家 %1 离开了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1895"/>
+        <location filename="../../src/server/room.cpp" line="1902"/>
         <source>%1: %2 is not invokable</source>
         <translation>%1: 不可调用的方法名 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1918"/>
+        <location filename="../../src/server/room.cpp" line="1925"/>
         <source>Hello, I&apos;m a robot</source>
         <translation>大家好，我是一个机器人</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1982"/>
+        <location filename="../../src/server/room.cpp" line="1989"/>
         <source>&lt;font color=#EEB422&gt;Player &lt;b&gt;%1&lt;/b&gt; joined the game&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2360"/>
+        <location filename="../../src/server/room.cpp" line="2367"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2362"/>
+        <location filename="../../src/server/room.cpp" line="2369"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2364"/>
+        <location filename="../../src/server/room.cpp" line="2371"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2367"/>
+        <location filename="../../src/server/room.cpp" line="2374"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="3612"/>
+        <location filename="../../src/server/room.cpp" line="3622"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4482"/>
+        <location filename="../../src/server/room.cpp" line="4492"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>

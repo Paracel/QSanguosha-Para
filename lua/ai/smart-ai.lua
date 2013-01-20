@@ -2146,7 +2146,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		if flags:match("e") then
 			if who:isWounded() and self:isEquip("SilverLion", who)
 				and not self:hasSkills(sgs.use_lion_skill, who) then return who:getArmor():getId() end
-			if self:evaluateArmor(who:getArmor(), who)<-5 then return who:getArmor():getId() end
+			if self:evaluateArmor(who:getArmor(), who) < -5 then return who:getArmor():getId() end
 			if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
 				if who:getWeapon() then return who:getWeapon():getId() end
 				if who:getArmor() and who:getArmor():isKindOf("Vine") then return who:getArmor():getId() end

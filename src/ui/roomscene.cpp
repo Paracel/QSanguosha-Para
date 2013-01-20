@@ -140,18 +140,18 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(seats_arranged(QList<const ClientPlayer *>)), SLOT(arrangeSeats(QList<const ClientPlayer *>)));
     connect(ClientInstance, SIGNAL(status_changed(Client::Status, Client::Status)), this, SLOT(updateStatus(Client::Status, Client::Status)));
     connect(ClientInstance, SIGNAL(avatars_hiden()), this, SLOT(hideAvatars()));
-    connect(ClientInstance, SIGNAL(hp_changed(QString,int,DamageStruct::Nature,bool)), SLOT(changeHp(QString,int,DamageStruct::Nature,bool)));
-    connect(ClientInstance, SIGNAL(maxhp_changed(QString,int)), SLOT(changeMaxHp(QString,int)));
+    connect(ClientInstance, SIGNAL(hp_changed(QString, int, DamageStruct::Nature, bool)), SLOT(changeHp(QString, int, DamageStruct::Nature, bool)));
+    connect(ClientInstance, SIGNAL(maxhp_changed(QString, int)), SLOT(changeMaxHp(QString, int)));
     connect(ClientInstance, SIGNAL(pile_reset()), this, SLOT(resetPiles()));
     connect(ClientInstance, SIGNAL(player_killed(QString)), this, SLOT(killPlayer(QString)));
     connect(ClientInstance, SIGNAL(player_revived(QString)), this, SLOT(revivePlayer(QString)));
-    connect(ClientInstance, SIGNAL(card_shown(QString,int)), this, SLOT(showCard(QString,int)));
+    connect(ClientInstance, SIGNAL(card_shown(QString, int)), this, SLOT(showCard(QString, int)));
     connect(ClientInstance, SIGNAL(gongxin(QList<int>, bool)), this, SLOT(doGongxin(QList<int>, bool)));
     connect(ClientInstance, SIGNAL(focus_moved(QStringList, QSanProtocol::Countdown)), this, SLOT(moveFocus(QStringList, QSanProtocol::Countdown)));
-    connect(ClientInstance, SIGNAL(emotion_set(QString,QString)), this, SLOT(setEmotion(QString,QString)));
-    connect(ClientInstance, SIGNAL(skill_invoked(QString,QString)), this, SLOT(showSkillInvocation(QString,QString)));
+    connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString,QString)));
+    connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString,QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
-    connect(ClientInstance, SIGNAL(animated(QString,QStringList)), this, SLOT(doAnimation(QString,QStringList)));
+    connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString,QStringList)));
     connect(ClientInstance, SIGNAL(role_state_changed(QString)),this, SLOT(updateRoles(QString)));
     connect(ClientInstance, SIGNAL(event_received(const Json::Value)), this, SLOT(handleGameEvent(const Json::Value))); 
 
@@ -3174,15 +3174,17 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion) {
 }
 
 void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool permanent) {
+    if (Config.value("NoEquipAnim", false).toBool() && (emotion.startsWith("weapon/") || emotion.startsWith("armor/")))
+        return;
     Photo *photo = name2photo[who];
     if (photo) {
         photo->setEmotion(emotion, permanent);
-        return;
-    }
-    PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(dashboard, emotion);
-    if (pma) {
-        pma->moveBy(0, - dashboard->boundingRect().height() / 1.5);
-        pma->setZValue(8.0);
+    } else {
+        PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(dashboard, emotion);
+        if (pma) {
+            pma->moveBy(0, -dashboard->boundingRect().height() / 1.5);
+            pma->setZValue(8.0);
+        }
     }
 }
 
@@ -3283,7 +3285,7 @@ void RoomScene::animatePopup(const QString &name, const QStringList &args) {
 
 void RoomScene::doAppearingAnimation(const QString &name, const QStringList &args) {
     if (name == "analeptic" || name == "peach") {
-        setEmotion(args.at(0),name);
+        setEmotion(args.at(0), name);
         return;
     }
     QSanSelectableItem *item = new QSanSelectableItem(QString("image/system/animation/%1.png").arg(name));
@@ -3301,7 +3303,6 @@ void RoomScene::doAppearingAnimation(const QString &name, const QStringList &arg
 }
 
 void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
-    // hide discarded card
     QString word = args.first();
     bool reset_size = word.startsWith("_mini_");
     word = Sanguosha->translate(word);
@@ -3314,8 +3315,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 
     if (!word.startsWith("anim=")) {
         QFont font = Config.BigFont;
-        if (reset_size)
-            font.setPixelSize(100);
+        if (reset_size) font.setPixelSize(100);
         QGraphicsTextItem *line = addText(word, font);
         line->setDefaultTextColor(Qt::white);
 

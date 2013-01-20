@@ -309,6 +309,19 @@
        <string>No indicator</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="noEquipAnimCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>100</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>No equip anim</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="fontSetupGroupBox">
      <property name="geometry">

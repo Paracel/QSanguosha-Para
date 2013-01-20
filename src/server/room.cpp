@@ -1480,14 +1480,18 @@ void Room::installEquip(ServerPlayer *player, const QString &equip_name) {
 
 void Room::resetAI(ServerPlayer *player) {
     AI *smart_ai = player->getSmartAI();
+    int index = -1;
     if (smart_ai) {
-        int index = ais.indexOf(smart_ai);
+        index = ais.indexOf(smart_ai);
         ais.removeOne(smart_ai);
         smart_ai->deleteLater();
-        AI *new_ai = cloneAI(player);
-        player->setAI(new_ai);
-        ais.insert(index, new_ai);
     }
+    AI *new_ai = cloneAI(player);
+    player->setAI(new_ai);
+    if (index == -1)
+        ais.append(new_ai);
+    else
+        ais.insert(index, new_ai);
 }
 
 void Room::changeHero(ServerPlayer *player, const QString &new_general, bool full_state, bool invokeStart,

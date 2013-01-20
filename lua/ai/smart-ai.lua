@@ -3865,7 +3865,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 	end
 
 	if self:aoeIsEffective(card, to) then
-		if to:getHp() > 1 or (getCardsNum("Peach", to) + getCardsNum("Analeptic", to) > 0) then
+		if sgs.isGoodHp(to) then
 			if to:hasSkill("yiji") or to:hasSkill("jianxiong") or (to:hasSkill("guixin") and self.player:aliveCount() >= 3) then
 				value = value + 20
 			end
@@ -3950,7 +3950,7 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 	if player:hasSkill("jizhi") then
-		good = good + 40
+		good = good + 20
 	end
 	return good - bad
 end

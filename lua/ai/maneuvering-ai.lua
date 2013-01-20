@@ -375,8 +375,10 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 				and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(enemy)
 				and self:hasTrickEffective(fire_attack, enemy)
 				and sgs.isGoodTarget(enemy, self.enemies)
-				and not (self:getDamagedEffects(enemy, self.player) and not self.player:hasSkill("jueqing"))
-				and not (enemy:isChained() and not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing"))
+				and (self.player:hasSkill("jueqing")
+					or (not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy))
+						and not (self:getDamagedEffects(enemy, self.player))
+						and not (enemy:isChained() and not self:isGoodChainTarget(enemy))))
 	end
 
 	local targets = {}

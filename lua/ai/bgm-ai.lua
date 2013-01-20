@@ -7,6 +7,12 @@ sgs.ai_skill_invoke.chongzhen = function(self, data)
 	end
 end
 
+sgs.ai_slash_prohibit.chongzhen = function(self, to, card)
+	if self:isFriend(to) then return false end
+	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 then return true end  
+	return false  
+end
+
 local lihun_skill = {}
 lihun_skill.name = "lihun"
 table.insert(sgs.ai_skills, lihun_skill)

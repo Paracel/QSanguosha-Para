@@ -567,7 +567,17 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 	local card, friend = self:getCardNeedPlayer(cards)
 	if card and friend then
 		if friend:objectName() == self.player:objectName() or not self.player:getHandcards():contains(card) then return end
-		use.card = sgs.Card_Parse("@RendeCard=" .. card:getId())
+		if friend:hasSkill("enyuan") and #cards >= 2 then
+			self:sortByUseValue(cards, true)
+			for i = 1, #cards, 1 do
+				if cards[i]:getId() ~= card:getId() then
+					use.card = sgs.Card_Parse("@RendeCard=" .. card:getId() .. "+" .. cards[i]:getId())
+					break
+				end
+			end
+		else
+			use.card = sgs.Card_Parse("@RendeCard=" .. card:getId())
+		end
 		if use.to then use.to:append(friend) end
 		return
 	end

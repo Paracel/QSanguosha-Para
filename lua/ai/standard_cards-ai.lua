@@ -1436,7 +1436,7 @@ function SmartAI:useCardCollateral(card, use)
 	end
 end
 
-sgs.ai_use_value.Collateral = 8.8
+sgs.ai_use_value.Collateral = 5.8
 sgs.ai_use_priority.Collateral = 2.75
 
 sgs.ai_card_intention.Collateral = function(card, from, tos)

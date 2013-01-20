@@ -313,8 +313,8 @@ function SmartAI:getUseValue(card)
 		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
-			if (self.player:getMark("drank") > 0 or self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
-				or self.player:hasFlag("luoyi") or self.player:hasFlag("neoluoyi")) then v = 8.7 end
+			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
+				or self:hasHeavySlashDamage() then v = 8.7 end
 			if self:isEquip("CrossBow") then v = v + 4 end
 			v = v + self:getCardsNum("Slash")
 		elseif card:isKindOf("Jink") then
@@ -2404,6 +2404,14 @@ function SmartAI:getEnemyNumBySeat(from, to)
 	return enemynum
 end
 
+function SmartAI:hasHeavySlashDamage(player, slash)
+	player = player or self.player
+	return (slash and slash:hasFlag("drank")) or player:getMark("drank") > 0
+			or player:hasFlag("luoyi") or player:hasFlag("neoluoyi")
+			or (player:hasSkill("drluoyi") and not player:getWeapon())
+			or (slash and player:hasSkill("jie") and slash:isRed())
+end
+
 function SmartAI:needKongcheng(player)
 	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0))) or
 			(not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
@@ -3157,7 +3165,7 @@ function SmartAI:getDamagedEffects(player, damage_from)
 	end
 
 	if sgs.isGoodHp(player) and not self:hasSkills("qianxi|jueqing", attacker)
-		and attacker:getMark("drank") == 0 and not attacker:hasFlag("luoyi") and not attacker:hasFlag("neoluoyi") then
+		and not self:hasHeavySlashDamage(attacker) then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 			local callback = sgs.ai_need_damaged[askill]
 			if type(callback) == "function" and callback(self, attacker) then return true end

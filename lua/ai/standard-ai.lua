@@ -1084,10 +1084,9 @@ guose_skill.getTurnUseCard = function(self, inclusive)
 end
 
 sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
-
-	local others=self.room:getOtherPlayers(self.player)
+	local others = self.room:getOtherPlayers(self.player)
 	local slash = self.player:getTag("liuli-card"):toCard()
-	others=sgs.QList2Table(others)
+	others = sgs.QList2Table(others)
 	local source
 	for _, player in ipairs(others) do
 		if player:hasFlag("slash_source") then
@@ -1113,7 +1112,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 			end
 		end
 	end
-	if self:isWeak() then
+	if self:isWeak() or self:hasHeavySlashDamage(source, slash) then
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:isWeak(friend) then
 				if self.player:canSlash(friend, slash, true) and not (source:objectName() == friend:objectName()) then

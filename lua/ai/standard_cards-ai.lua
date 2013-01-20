@@ -481,7 +481,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if self.player:isChained() and self:isGoodChainTarget(self.player) then return "." end
 		end
 	else
-		if effect.drank == 0 and not target:hasFlag("luoyi") and not target:hasFlag("neoluoyi") then
+		if not self:hasHeavySlashDamage(target, effect.slash) then
 			if target:hasSkill("mengjin") and not target:hasSkill("qianxi") then
 				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 				if self:canUseJieyuanDecrease(target) then return "." end
@@ -495,12 +495,13 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
 			elseif self:isEquip("Blade", target) then
-				if effect.drank > 0 
-					or (effect.slash:isKindOf("FireSlash") 
-						and not target:hasSkill("jueqing") 
-						and (self:hasArmorEffect("vine") or self:getMark("@gale") > 0))
-					or (target:hasSkill("jie") and effect.slash:isRed()) then
-				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) then return "." end
+				if ((effect.slash:isKindOf("FireSlash") 
+					and not target:hasSkill("jueqing") 
+					and (self:hasArmorEffect("vine") or self:getMark("@gale") > 0))
+					or self:hasHeavySlashDamage(target, effect.slash)) then
+				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) or self:hasSkills("jijiu|qingnang") or self:canUseJieyuanDecrease(target) then
+					return "."
+				end
 			end
 		end
 	end

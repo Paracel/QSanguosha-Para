@@ -813,12 +813,12 @@ QGroupBox *GuhuoDialog::createRight() {
 }
 
 QAbstractButton *GuhuoDialog::createButton(const Card *card) {
-    if (card->objectName() == "slash" && map.contains(card->objectName()) && !map.contains("natural_slash")) {
-        QCommandLinkButton *button = new QCommandLinkButton(Sanguosha->translate("natural_slash"));
-        button->setObjectName("natural_slash");
+    if (card->objectName() == "slash" && map.contains(card->objectName()) && !map.contains("normal_slash")) {
+        QCommandLinkButton *button = new QCommandLinkButton(Sanguosha->translate("normal_slash"));
+        button->setObjectName("normal_slash");
         button->setToolTip(card->getDescription());
 
-        map.insert("natural_slash", card);
+        map.insert("normal_slash", card);
         group->addButton(button);
 
         return button;
@@ -903,7 +903,7 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
             real = card->objectName() == yuji->tag["GuhuoSaveSelf"].toString();
         else if (user_string == "slash")
             real = card->objectName().contains("slash");
-        else if (user_string == "natural_slash")
+        else if (user_string == "normal_slash")
             real = card->objectName() == "slash";
         else
             real = card->match(user_string);
@@ -972,7 +972,7 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
         QStringList guhuo_list;
         guhuo_list << "slash";
         if (!Config.BanPackages.contains("maneuvering"))
-            guhuo_list << "natural_slash" << "thunder_slash" << "fire_slash";
+            guhuo_list << "normal_slash" << "thunder_slash" << "fire_slash";
         to_guhuo = room->askForChoice(yuji, "guhuo_slash", guhuo_list.join("+"));
         yuji->tag["GuhuoSlash"] = QVariant(to_guhuo);
     }
@@ -995,7 +995,7 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
                 user_str = card->objectName();
             else
                 user_str = "slash";
-        } else if (to_guhuo == "natural_slash")
+        } else if (to_guhuo == "normal_slash")
             user_str = "slash";
         else
             user_str = to_guhuo;
@@ -1025,7 +1025,7 @@ const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji, bool &continuable)
         QStringList guhuo_list;
         guhuo_list << "slash";
         if (!Config.BanPackages.contains("maneuvering"))
-            guhuo_list << "natural_slash" << "thunder_slash" << "fire_slash";
+            guhuo_list << "normal_slash" << "thunder_slash" << "fire_slash";
         to_guhuo = room->askForChoice(yuji, "guhuo_slash", guhuo_list.join("+"));
         yuji->tag["GuhuoSlash"] = QVariant(to_guhuo);
     }
@@ -1047,7 +1047,7 @@ const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji, bool &continuable)
                 user_str = card->objectName();
             else
                 user_str = "slash";
-        } else if (to_guhuo == "natural_slash")
+        } else if (to_guhuo == "normal_slash")
             user_str = "slash";
         else
             user_str = to_guhuo;

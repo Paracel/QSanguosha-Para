@@ -83,7 +83,7 @@ return {
 	["$GuhuoResult"] = "%from 发动“<font color=\"yellow\"><b>蛊惑</b></font>”所用的牌是 %card",
 	["guhuo_saveself"] = "“蛊惑”【桃】或【酒】",
 	["guhuo_slash"] = "“蛊惑”【杀】",
-	["natural_slash"] = "无属性杀",
+	["normal_slash"] = "普通杀",
 
 --Lines
 

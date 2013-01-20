@@ -184,9 +184,12 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             str = this->players.at(i)["hand"];
             if (str != QString()) {
                 QStringList hands = str.split(",");
-                room->setPlayerFlag(sp, "NoManjuan");
+                room->setPlayerFlag(sp, "NoManjuan");               
+                DummyCard *dummy = new DummyCard;
                 foreach(QString hand, hands)
-                    room->obtainCard(sp, hand.toInt());
+                    dummy->addSubcard(hand.toInt());
+                room->obtainCard(sp, dummy);
+                dummy->deleteLater();
                 room->setPlayerFlag(sp, "-NoManjuan");
             }
 

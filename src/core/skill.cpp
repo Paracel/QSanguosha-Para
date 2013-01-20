@@ -410,7 +410,7 @@ bool FakeMoveSkill::trigger(TriggerEvent, Room *room, ServerPlayer *player, QVar
         foreach (ServerPlayer *p, room->getAllPlayers())
             if (p->hasFlag(flag)) return true;
     } else if (condition == SourceOnly) {
-        if (player->hasFlag(flag)) return true;
+        if (TriggerSkill::triggerable(player) && player->hasFlag(flag)) return true;
     }
     return false;
 }

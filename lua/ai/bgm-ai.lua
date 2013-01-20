@@ -189,6 +189,11 @@ sgs.ai_skill_askforag.manjuan = function(self, card_ids)
 	return cards[#cards]:getEffectiveId()
 end
 
+
+sgs.ai_cardneed.jie = function(to, card)
+	return card:isRed() and isCard("Slash", card, to)
+end
+
 local dahe_skill = {}
 dahe_skill.name = "dahe"
 table.insert(sgs.ai_skills, dahe_skill)
@@ -262,7 +267,6 @@ end
 sgs.ai_cardneed.dahe = sgs.ai_cardneed.bignumber
 
 sgs.ai_card_intention.DaheCard = 60
-
 sgs.dynamic_value.control_card.DaheCard = true
 
 sgs.ai_use_value.DaheCard = 8.5
@@ -541,6 +545,10 @@ end
 sgs.yanxiao_suit_value = {
 	diamond = 3.9
 }
+
+function sgs.ai_cardneed.yanxiao(to, card)
+	return card:getSuit() == sgs.Card_Diamond
+end
 
 sgs.ai_skill_invoke.anxian = function(self, data)
 	local damage = data:toDamage()

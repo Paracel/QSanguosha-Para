@@ -740,6 +740,11 @@ sgs.longhun_suit_value = {
 	diamond = 3.9,
 }
 
+function sgs.ai_cardneed.longhun(to, card, self)
+	if to:isNude() then return true end
+	return card:getSuit() == sgs.Card_Heart or card:getSuit() == sgs.Card_Spade
+end
+
 sgs.ai_skill_invoke.lianpo = true
 
 function SmartAI:needBear(player)

@@ -166,6 +166,22 @@ sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 	return "."
 end
 
+function sgs.ai_cardneed.guidao(to, card, self)
+	for _, player in ipairs(self.room:getAllPlayers()) do
+		if self:getFinalRetrial(to) == 1 then 
+			if player:containsTrick("lightning") and not player:containsTrick("YanxiaoCard") then
+				return card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 and not self:hasSkills("hongyan|wuyan")
+			end
+			if self:isFriend(player) and self:willSkipDrawPhase(player) then
+				return card:getSuit() == sgs.Card_Club
+			end
+		end
+	end
+	if to:hasSkill("leiji") and self:getFinalRetrial(to) == 1 then
+		return card:getSuit() == sgs.Card_Spade
+	end
+end
+
 sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	local mode = self.room:getMode()
 	if mode:find("_mini_17") or mode:find("_mini_19") or mode:find("_mini_20") or mode:find("_mini_26") then
@@ -367,6 +383,10 @@ sgs.tianxiang_suit_value = {
 	heart = 4.9
 }
 
+function sgs.ai_cardneed.tianxiang(to, card)
+	return card:getSuit() == sgs.Card_Heart or (to:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade)
+end
+
 table.insert(sgs.ai_global_flags, "questioner")
 
 table.insert(sgs.ai_choicemade_filter.cardUsed, guhuo_filter)
@@ -504,4 +524,8 @@ end
 
 sgs.ai_skill_choice.guhuo_slash = function(self, choices)
 	return "slash"
+end
+
+function sgs.ai_cardneed.guhuo(to, card)
+	return card:getSuit() == sgs.Card_Heart and (card:isKindOf("BasicCard") or card:isNDTrick())
 end

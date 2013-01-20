@@ -213,6 +213,10 @@ huoji_skill.getTurnUseCard = function(self)
 	return skillcard
 end
 
+sgs.ai_cardneed.huoji = function(to, card, self)
+	return to:getHandcardNum() >= 2 and card:isRed()
+end
+
 sgs.ai_view_as.kanpo = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
@@ -222,6 +226,10 @@ sgs.ai_view_as.kanpo = function(card, player, card_place)
 			return ("nullification:kanpo[%s:%s]=%d"):format(suit, number, card_id)
 		end
 	end
+end
+
+sgs.ai_cardneed.kanpo = function(to, card, self)
+	return card:isBlack()
 end
 
 sgs.ai_skill_invoke.bazhen = sgs.ai_skill_invoke.eight_diagram
@@ -259,6 +267,10 @@ lianhuan_skill.getTurnUseCard = function(self)
 	local skillcard = sgs.Card_Parse(card_str)
 	assert(skillcard)
 	return skillcard
+end
+
+sgs.ai_cardneed.lianhuan = function(to, card)
+	return card:getSuit() == sgs.Card_Club
 end
 
 sgs.ai_skill_invoke.niepan = function(self, data)
@@ -447,6 +459,10 @@ sgs.ai_skill_invoke.shuangxiong = function(self, data)
 	end
 
 	return self.player:getHandcardNum() >= self.player:getHp() and target > 0
+end
+
+sgs.ai_cardneed.shuangxiong = function(to, card, self)
+	return not self:willSkipDrawPhase(to)
 end
 
 local shuangxiong_skill = {}

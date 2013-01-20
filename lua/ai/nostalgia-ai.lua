@@ -227,6 +227,10 @@ sgs.nosenyuan_suit_value = {
 
 sgs.ai_chaofeng.nos_fazheng = -3
 
+sgs.ai_cardneed.nosxuanhuo = function(to, card)
+	return card:getSuit() == sgs.Card_Heart
+end
+
 sgs.ai_skill_choice.nosxuanfeng = function(self, choices)
 	self:sort(self.enemies, "defense")
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)

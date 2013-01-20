@@ -1329,7 +1329,7 @@ function SmartAI:objectiveLevel(player)
 			else
 				if self.player:isLord() then return 0
 				elseif #players == loyal_num + 1 and loyal_num == 1 and not player:isLord() then return 5
-				elseif not player:isLord() then return 0.5 end
+				elseif not player:isLord() then return 3 end
 			end
 		end
 		if loyal_num == 0 then
@@ -1640,7 +1640,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.TurnStart then
+	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.EventPhaseStart or event == sgs.HpChanged or event == sgs.MaxHpChanged then
 		self:updatePlayers()
 	end
 
@@ -1785,9 +1785,9 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 
-			if move.to_place == sgs.Player_PlaceHand and move.to and place~=sgs.Player_DrawPile then
+			if move.to_place == sgs.Player_PlaceHand and move.to and place ~= sgs.Player_DrawPile then
 				local flag = "visible"
-				if move.from and move.from:objectName()~=move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
+				if move.from and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
 					flag = string.format("%s_%s_%s","visible", move.from:objectName(), move.to:objectName())
 				end
 				global_room:setCardFlag(card_id, flag)
@@ -2431,39 +2431,49 @@ end
 
 function SmartAI:getCardNeedPlayer(cards)
 	cards = cards or sgs.QList2Table(self.player:getHandcards())
-
-	self:sort(self.enemies, "hp")
-
-	-- special move between liubei and xunyu and huatuo
 	local cardtogivespecial = {}
 	local specialnum = 0
 	local keptslash = 0
-	local friends = {} 
+	local friends = {}
+	
+	local cmpByAction = function(a,b)
+		return a:getRoom():getFront(a, b):objectName() == a:objectName()
+ 	end
+	local cmpByNumber = function(a,b)
+		return a:getNumber() > b:getNumber()
+ 	end
+	
 	for _, player in ipairs(self.friends_noself) do
-		if not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
+		local exclude = self:needKongcheng(player) or self:willSkipPlayPhase(player)
+		if self:hasSkills("keji|qiaobian|shensu", player) or player:getHp() - player:getHandcardNum() >= 3
+			or (player:isLord() and self:isWeak(player) and self:getEnemyNumBySeat(self.player, player) >= 1) then
+			exclude = false
+		end
+		if not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) and not exclude then
 			table.insert(friends, player)
 		end
 	end
 
+	-- special move between liubei and xunyu and huatuo
 	for _, player in ipairs(friends) do
 		if player:hasSkill("jieming") or player:hasSkill("jijiu") then
 			specialnum = specialnum + 1
 		end
 	end
-	if specialnum > 1 and #cardtogivespecial == 0 then
+	if specialnum > 1 and #cardtogivespecial == 0 and self.player:hasSkill("rende") and self.player:getPhase() == sgs.Player_Play then
 		local xunyu = self.room:findPlayerBySkillName("jieming")
 		local huatuo = self.room:findPlayerBySkillName("jijiu")
 		local no_distance = self.slash_distance_limit
 		local redcardnum = 0
 		for _, acard in ipairs(cards) do
-			if acard:isKindOf("Slash") then
+			if isCard("Slash", acard, self.player) then
 				if self.player:canSlash(xunyu, nil, not no_distance) and self:slashIsEffective(acard, xunyu) then
 					keptslash = keptslash + 1
 				end
 				if keptslash > 0 then
 					table.insert(cardtogivespecial, acard)
 				end
-			elseif acard:isKindOf("Duel") then
+			elseif isCard("Duel", acard, self.player) then
 				table.insert(cardtogivespecial, acard)
 			end
 		end
@@ -2478,284 +2488,158 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
+	-- keep one jink
 	local cardtogive = {}
 	local keptjink = 0
 	for _, acard in ipairs(cards) do
-		if acard:isKindOf("Jink") and keptjink < 1 then
+		if isCard("Jink", acard, self.player) and keptjink < 1 then
 			keptjink = keptjink + 1
 		else
 			table.insert(cardtogive, acard)
 		end
 	end
 
-	for _, friend in ipairs(friends) do
-		if (friend:hasSkill("haoshi") and not friend:containsTrick("supply_shortage")) and friend:faceUp() then
-			local lususeat = (friend:getSeat() - self.player:getSeat()) % (global_room:alivePlayerCount())
-			local tmpenemy = 999
-			local enemynum = 0
-			local lusu = self.room:findPlayerBySkillName("haoshi")
-			for _, aplayer in ipairs(self.enemies) do
-					tmpenemy = (aplayer:getSeat() - self.player:getSeat()) % (global_room:alivePlayerCount())
-					if tmpenemy < lususeat then enemynum = enemynum + 1 end
-			end
-			if enemynum < 2 then
-				for _, hcard in ipairs(cards) do
-					return hcard, friend
-				end
-			end
-		end
-	end
-
-	if self.player:getLostHp() < 2 then
-		local cannulname = self.player:getGeneralName()
-		for _, friend in ipairs(friends) do
-			if friend:containsTrick("indulgence") and not friend:getGeneralName() == cannulname and friend:faceUp() then
-				for _, hcard in ipairs(cardtogive) do
-					if hcard:isKindOf("Nullification") then
-						return hcard, friend
-					end
-				end
-
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend) then
-				if self:isWeak(friend) and not (friend:containsTrick("indulgence") and not friend:getGeneralName() == cannulname) and
-					friend:getHandcardNum() < 3 then
-					for _, hcard in ipairs(cards) do
-						if hcard:isKindOf("Peach") or hcard:isKindOf("Jink") or hcard:isKindOf("Analeptic") then
-							return hcard, friend
-						end
-					end
-				end
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if friend:hasSkill("shuangxiong") and not friend:containsTrick("indulgence") and not friend:containsTrick("supply_shortage") and friend:faceUp() then
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 1 then
-						return hcard, friend
-					end
-				end
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if friend:hasSkill("xianzhen") or friend:hasSkill("tianyi") and not friend:containsTrick("indulgence") and friend:faceUp() then
-				for _, hcard in ipairs(cardtogive) do
-					local givebigdone = 0
-					if #cardtogive > 1 and givebigdone ~= 1 and hcard:getNumber() > 10 then
-						givebigdone = 1
-						return hcard, friend
-					end
-				end
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 1 and givebigdone == 1 and (giveslashnum < 2 or friend:hasSkill("xianzhen")) and hcard:isKindOf("Slash") then
-						giveslashnum = giveslashnum + 1
-						return hcard, friend
-					end
-				end
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if friend:hasSkill("paoxiao") and not friend:containsTrick("indulgence") and friend:faceUp() then
-			local noweapon
-				if not friend:getWeapon() and giveweapondone ~= 1 then
-					noweapon = 1
-					for _, hcard in ipairs(cardtogive) do
-						if #cardtogive > 1 and hcard:isKindOf("Weapon") and not hcard:isKindOf("Crossbow") then
-							giveweapondone = 1
-							noweapon = 0
-							return hcard, friend
-						end
-					end
-				end
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 1 and (friend:getWeapon() or noweapon == 0) and (self:isEquip("Spear", friend) or hcard:isKindOf("Slash")) then
-						return hcard, friend
-					end
-				end
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if friend:hasSkill("jizhi") and not friend:containsTrick("indulgence") and friend:faceUp() then
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 1 and hcard:isKindOf("TrickCard") then
-						return hcard, friend
-					end
-				end
-			end
-		end
-
-		if self.role == "lord" then
-			for _, friend in ipairs(friends) do
-				if friend:getKingdom() == "shu" and friend:getHandcardNum() < 3 then
-					for _, hcard in ipairs(cardtogive) do
-						if #cardtogive > 1 and hcard:isKindOf("Slash") then
-							return hcard, friend
-						end
-					end
-				end
-			end
-		end
-
-		for _, friend in ipairs(friends) do
-			if friend:hasSkill("zhiheng") and not friend:containsTrick("indulgence") and friend:faceUp() then
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 1 and not hcard:isKindOf("Jink") then
-						return hcard, friend
-					end
-				end
-			end
-		end
-
-	end
-
-	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then
-		if (self.player:getHandcardNum() < 2 and self.player:usedTimes("RendeCard") == 0) then
-			return
-		end
-		if (self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0) or
-			(self.player:getHandcardNum() == 1 and self.player:usedTimes("RendeCard") == 1) then
-			for _, enemy in ipairs(self.enemies) do
-				if self:isEquip("GudingBlade", enemy) and
-				(enemy:canSlash(self.player, nil, true) or enemy:hasSkill("shensu") or enemy:hasSkill("wushen") or enemy:hasSkill("jiangchi")) then return end
-				if enemy:canSlash(self.player, nil, true) and enemy:hasSkill("qianxi") and enemy:distanceTo(self.player) == 1 then return end
-			end
-			for _, friend in ipairs(friends) do
-				local card_id = self:getCardRandomly(self.player, "h")
-				return sgs.Sanguosha:getCard(card_id), friend
-			end
-			for _, enemy in ipairs(self.enemies) do
-				if enemy:hasSkill("manjuan") then
-					return sgs.Sanguosha:getCard(card_id), enemy
-				end
-			end
-		end
-		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend) then
-				for _, hcard in ipairs(cardtogive) do
-					if #cardtogive > 0 then
-						return hcard, friend
-					end
-				end
-			end
-		end
-	end
-
-	for _, friend in ipairs(friends) do
-		if not self:needKongcheng(friend) then
-			for _, hcard in ipairs(cardtogive) do
-				if self:getOverflow() > 0	then
-					return hcard, friend
-				end
-			end
-		end
-	end
-
-	if #self.friends == 1 then
-		for _, enemy in ipairs(self.enemies) do
-			if (self:needKongcheng(enemy) or (self:getLeastHandcardNum(enemy) == 1 and enemy:getHandcardNum() == 1)) and enemy:faceUp() then
-				for _, acard in ipairs(cardtogive) do
-					if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or acard:isKindOf("GodSalvation") then
-						return acard, enemy
-					end
-				end
-			end
-		end
-	end
-
-	self:sortByUseValue(cards, true)
-	local name = self.player:objectName()
-	if #friends > 0 then
+	-- weak friend
+	self:sort(friends, "defense")
+	for _, friend in ipairs(friends) do	
+	if self:isWeak(friend) and friend:getHandcardNum() < 3 then
 		for _, hcard in ipairs(cards) do
-			if hcard:isKindOf("Analeptic") or hcard:isKindOf("Peach") then
-				self:sort(friends, "hp")
-				if #friends > 0 and friends[1]:getHp() == 1 then
-					return hcard, friends[1]
+			if isCard("Peach", hcard, friend)
+				or (isCard("Jink", hcard, friend) and self:getEnemyNumBySeat(self.player, friend) > 0)
+				or isCard("Analeptic", hcard, friend) then
+					return hcard, friend
 				end
 			end
-			self:sort(friends, "handcard")
-			for _, friend in ipairs(friends) do
-				if not self:needKongcheng(friend) then
-					for _, askill in sgs.qlist(friend:getVisibleSkillList()) do
-						local callback = sgs.ai_cardneed[askill:objectName()]
-						if type(callback) == "function" and callback(friend, hcard, self) then
-							return hcard, friend
-						end
-					end
+		end
+	end
+
+	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then 
+		if (self.player:getHandcardNum() < 2 and self.player:usedTimes("RendeCard") == 0) then return end
+
+		if (self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0)
+			or (self.player:getHandcardNum() == 1 and self.player:usedTimes("RendeCard") == 1) then
+			for _, enemy in ipairs(self.enemies) do
+				if self:isEquip("GudingBlade", enemy)
+					and (enemy:canSlash(self.player)
+					or self:hasSkills("shensu|jiangchi|tianyi|wushen|nosgongqi")) then 
+					return
+				end
+				if enemy:canSlash(self.player) and enemy:hasSkill("qianxi") and enemy:distanceTo(self.player) == 1 then return end
+			end
+		end
+	end
+	
+	-- armor,DefensiveHorse
+	for _, friend in ipairs(friends) do		
+		if friend:getHp() <= 2 and friend:faceUp() then
+			for _, hcard in ipairs(cards) do
+				if (hcard:isKindOf("Armor") and not friend:getArmor() and not self:hasSkills("yizhong|bazhen",friend))
+					or (hcard:isKindOf("DefensiveHorse") and not friend:getDefensiveHorse()) then
+					return hcard, friend
 				end
 			end
-			if self:getUseValue(hcard)<6 then
-				for _, friend in ipairs(friends) do
-					if not self:needKongcheng(friend) then
-						for _, askill in sgs.qlist(friend:getVisibleSkillList()) do
-							if sgs[askill:objectName() .. "_suit_value"] and
-								(sgs[askill:objectName() .. "_suit_value"][hcard:getSuitString()] or 0) >= 3.9 then
-								return hcard, friend
+		end
+	end
+
+	-- jijiu, jieyin
+	self:sortByUseValue(cards, true)
+	for _, friend in ipairs(friends) do
+		if self:hasSkills("jijiu|jieyin", friend) and friend:getHandcardNum() < 4 then
+			for _, hcard in ipairs(cards) do
+				if (hcard:isRed() and friend:hasSkill("jijiu")) or friend:hasSkill("jieyin") then
+					return hcard, friend
+				end
+			end
+		end
+	end	
+
+	--Crossbow
+	for _, friend in ipairs(friends) do
+		if self:hasSkills("longdan|wusheng|keji", friend) and not self:hasSkills("paoxiao", friend) and friend:getHandcardNum() >= 3 then
+			for _, hcard in ipairs(cards) do
+				if hcard:isKindOf("Crossbow") then
+					return hcard, friend
+				end
+			end
+		end
+	end
+
+	table.sort(friends, cmpByAction)
+	for _, friend in ipairs(friends) do
+		if friend:faceUp() then
+			local can_slash = false
+			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
+				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) <= friend:getAttackRange() then
+					can_slash = true
+					break
+				end
+			end
+	  
+			if not can_slash then
+				for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
+					if self:isEnemy(p) and sgs.isGoodTarget(p,self.enemies) and friend:distanceTo(p) > friend:getAttackRange() then
+						for _, hcard in ipairs(cardtogive) do
+							if hcard:isKindOf("Weapon")
+								and friend:distanceTo(p) <= friend:getAttackRange() + (sgs.weapon_range[hcard:getClassName()] or 0) and not friend:getWeapon() then
+								return hcard, friend 
+							end
+							if hcard:isKindOf("OffensiveHorse")
+								and friend:distanceTo(p) <= friend:getAttackRange() + 1 and not friend:getOffensiveHorse() then
+								return hcard, friend 
 							end
 						end
 					end
 				end
 			end
-			local dummy_use = { isDummy = true }
-			self:useSkillCard(sgs.Card_Parse("@ZhibaCard=."), dummy_use)
-			if dummy_use.card then
-				local subcard = sgs.Sanguosha:getCard(dummy_use.card:getEffectiveId())
-				if self:getUseValue(subcard) < 6 and #self.friends > 1 then
-					for _, player in ipairs(friends) do
-						if player:getKingdom() == "wu" and not self:needKongcheng(player) then
-							return subcard, player
-						end
-					end
-				end
-			end
-			if hcard:isKindOf("Armor") then
-				self:sort(friends, "defense")
-				local v = 0
-				local target
-				for _, friend in ipairs(friends) do
-					if not friend:getArmor() and self:evaluateArmor(hcard, friend) > v and not friend:containsTrick("indulgence")
-						and not self:needKongcheng(friend) then
-						v = self:evaluateArmor(hcard, friend)
-						target = friend
-					end
-				end
-				if target then
-					return hcard, target
-				end
-			end
-			if hcard:isKindOf("EquipCard") then
-				self:sort(friends)
-				for _, friend in ipairs(friends) do
-					if (not self:getSameEquip(hcard, friend)
-						or (self:hasSkills(sgs.lose_equip_skill, friend) and not friend:containsTrick("indulgence"))) and
-						not self:needKongcheng(friend) then
+		end
+	end
+
+	
+	table.sort(cardtogive, cmpByNumber)
+	for _, friend in ipairs(friends) do
+		if not self:needKongcheng(friend) and friend:faceUp() then
+			for _, hcard in ipairs(cardtogive) do
+				for _, askill in sgs.qlist(friend:getVisibleSkillList()) do
+					local callback = sgs.ai_cardneed[askill:objectName()]
+					if type(callback) == "function" and callback(friend, hcard, self) then
 						return hcard, friend
 					end
 				end
 			end
 		end
 	end
-	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
-	if zhugeliang and zhugeliang:objectName() ~= self.player:objectName() and self:isEnemy(zhugeliang) and zhugeliang:isKongcheng() then
-		local trash = self:getCard("Disaster") or self:getCard("GodSalvation") or self:getCard("AmazingGrace")
-		if trash then
-			return trash, zhugeliang
-		end
-		for _, card in ipairs(self:getCards("EquipCard")) do
-			if (self:getSameEquip(card, zhugeliang) or card:isKindOf("OffensiveHorse")) then
-				return card, zhugeliang
+
+	-- slash
+	if self.role == "lord" and self.player:hasLordSkill("jijiang") then
+		for _, friend in ipairs(friends) do
+			if friend:getKingdom() == "shu" and friend:getHandcardNum() < 3 then
+				for _, hcard in ipairs(cardtogive) do
+					if isCard("Slash", hcard, friend) then
+						return hcard, friend
+					end
+				end
 			end
 		end
-		if zhugeliang:getHp() < 2 then
-			local slash = self:getCard("Slash")
-			if slash then
-				return slash, zhugeliang
+	end
+
+	-- kongcheng
+	self:sort(self.enemies, "defense")
+	if #self.enemies>0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng") then
+		for _,acard in ipairs(cardtogive) do
+			if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or (acard:isKindOf("Slash") and self.player:getPhase() == sgs.Player_Play)
+				or acard:isKindOf("OffensiveHorse") or acard:isKindOf("Weapon") then
+				return acard, self.enemies[1]
+			end
+		end
+	end
+
+	self:sort(friends, "defense")
+	for _, friend in ipairs(self.friends_noself) do
+		if not self:needKongcheng(friend) then
+			for _, hcard in ipairs(cardtogive) do
+				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 then
+					return hcard, friend
+				end
 			end
 		end
 	end
@@ -3214,12 +3098,31 @@ local function getSkillViewCard(card, class_name, player, card_place)
 	end
 end
 
+local function getFilterSkillViewCard(card, player, card_place)
+	local vlist = sgs.getSkillLists(player)
+	for _, askill in ipairs(vlist) do
+		local skill = sgs.Sanguosha:getSkill(askill)
+		if player:hasSkill(askill) and skill and skill:inherits("FilterSkill") then
+			local callback = sgs.ai_view_as[askill]
+			if type(callback) == "function" then
+				local skill_card_str = callback(card, player, card_place, class_name)
+				if skill_card_str then
+					return sgs.Card_Parse(skill_card_str)
+				end
+			end
+		end
+	end
+end
+
+function isCard(class_name, card, player)
+	local cardx = getFilterSkillViewCard(card, player, player:getRoom():getCardPlace(card:getEffectiveId()))
+	if cardx and not cardx:isKindOf(class_name) then return false end
+	return card:isKindOf(class_name) or getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId()))
+end
+
 function SmartAI:getMaxCard(player)
 	player = player or self.player
-
-	if player:isKongcheng() then
-		return nil
-	end
+	if player:isKongcheng() then return nil end
 
 	local cards = player:getHandcards()
 	local max_card, max_point = nil, 0

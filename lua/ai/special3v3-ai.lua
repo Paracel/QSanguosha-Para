@@ -21,6 +21,19 @@ sgs.ai_skill_choice.huanshi = function(self, choices)
 	return "accept"
 end
 
+function sgs.ai_cardneed.huanshi(to, card, self)
+	for _, player in ipairs(self.friends) do
+		if self:getFinalRetrial(to) == 1 then 
+			if self:willSkipDrawPhase(player) then
+				return card:getSuit() == sgs.Card_Club
+			end
+			if self:willSkipPlayPhase(player) then
+				return card:getSuit() == sgs.Card_Heart
+			end
+		end
+	end
+end
+
 sgs.ai_skill_invoke.hongyuan = function(self, data)
 	local count = 0
 	for i = 1, #self.friends_noself do

@@ -135,9 +135,11 @@ duanliang_skill.getTurnUseCard = function(self)
 	local skillcard = sgs.Card_Parse(card_str)
 
 	assert(skillcard)
-
 	return skillcard
+end
 
+sgs.ai_cardneed.duanliang = function(to, card)
+	return card:isBlack() and card:getTypeId() ~= sgs.Card_TypeTrick
 end
 
 sgs.duanliang_suit_value = {
@@ -277,6 +279,10 @@ sgs.ai_skill_use["@@haoshi!"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.HaoshiCard = -80
+
+function sgs.ai_cardneed.haoshi(to, card, self)
+	return not self:willSkipDrawPhase(to)
+end
 
 dimeng_skill = {}
 dimeng_skill.name = "dimeng"

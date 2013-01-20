@@ -211,7 +211,7 @@ void NosXuanhuoCard::onEffect(const CardEffectStruct &effect) const{
     ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "nosxuanhuo");
     if (target != effect.from) {
         CardMoveReason reason2(CardMoveReason::S_REASON_GIVE, effect.from->objectName());
-        reason.m_playerId = target->objectName();
+        reason2.m_playerId = target->objectName();
         room->obtainCard(target, Sanguosha->getCard(card_id), reason2, false);
     }
 }

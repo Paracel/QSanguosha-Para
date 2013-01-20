@@ -679,7 +679,7 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 	local effect = data:toSlashEffect()
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
-	if effect.slash:getMark("drank") > 0 or #allcards - 2 >= self.player:getHp()
+	if effect.slash:hasFlag("drank") or #allcards - 2 >= self.player:getHp()
 		or ((self.player:hasSkill("kuanggu") or self:isEquip("SilverLion")) and self.player:isWounded()) then
 		local cards = self.player:getCards("h")
 		cards = sgs.QList2Table(cards)

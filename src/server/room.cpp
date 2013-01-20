@@ -730,7 +730,7 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
         doBroadcastNotify(S_COMMAND_INVOKE_SKILL, msg);
     }
 
-    QVariant decisionData = QVariant::fromValue("skillInvoke:"+skill_name+":"+(invoked ? "yes" : "no"));
+    QVariant decisionData = QVariant::fromValue("skillInvoke:" + skill_name + ":" + (invoked ? "yes" : "no"));
     thread->trigger(ChoiceMade, this, player, decisionData);
     return invoked;
 }
@@ -1481,9 +1481,12 @@ void Room::installEquip(ServerPlayer *player, const QString &equip_name) {
 void Room::resetAI(ServerPlayer *player) {
     AI *smart_ai = player->getSmartAI();
     if (smart_ai) {
+        int index = ais.indexOf(smart_ai);
         ais.removeOne(smart_ai);
         smart_ai->deleteLater();
-        player->setAI(cloneAI(player));
+        AI *new_ai = cloneAI(player);
+        player->setAI(new_ai);
+        ais.insert(index, new_ai);
     }
 }
 

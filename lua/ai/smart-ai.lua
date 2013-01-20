@@ -1601,8 +1601,8 @@ function SmartAI:filterEvent(event, player, data)
 		sgs.ai_debug_func[event](self, player, data)
 	end
 	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
-			sgs.ai_chat_func[event](self, player, data)
-		end
+		sgs.ai_chat_func[event](self, player, data)
+	end
 
 	sgs.lastevent = event
 	sgs.lasteventdata = eventdata

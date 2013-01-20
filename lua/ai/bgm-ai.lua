@@ -189,7 +189,6 @@ sgs.ai_skill_askforag.manjuan = function(self, card_ids)
 	return cards[#cards]:getEffectiveId()
 end
 
-
 sgs.ai_cardneed.jie = function(to, card)
 	return card:isRed() and isCard("Slash", card, to)
 end

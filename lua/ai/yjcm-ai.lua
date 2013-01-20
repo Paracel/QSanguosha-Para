@@ -580,7 +580,7 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	end
 end
 
-sgs.ai_cardneed.xianzhen=function(to, card, self)
+sgs.ai_cardneed.xianzhen = function(to, card, self)
 	local cards = to:getHandcards()
 	local has_big = false
 	for _, c in sgs.qlist(cards) do

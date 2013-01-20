@@ -47,7 +47,7 @@ sgs.ai_chat_func[sgs.SlashEffected] = function(self, player, data)
 		table.insert(chat, "杀死我也没牌拿，真2")
 	end
 
-	if effect.from:hasFlag("drank") then
+	if effect.from:getMark("drank") > 0 then
 		table.insert(chat, "喝醉了吧，乱砍人？")
 	end
 

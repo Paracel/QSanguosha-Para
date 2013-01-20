@@ -313,7 +313,7 @@ function SmartAI:getUseValue(card)
 		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
-			if (self.player:hasFlag("drank") or self.player:hasFlag("tianyi_success")
+			if (self.player:getMark("drank") > 0 or self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
 				or self.player:hasFlag("luoyi") or self.player:hasFlag("neoluoyi")) then v = 8.7 end
 			if self:isEquip("CrossBow") then v = v + 4 end
 			v = v + self:getCardsNum("Slash")
@@ -3157,7 +3157,7 @@ function SmartAI:getDamagedEffects(player, damage_from)
 	end
 
 	if sgs.isGoodHp(player) and not self:hasSkills("qianxi|jueqing", attacker)
-		and not attacker:hasFlag("drank") and not attacker:hasFlag("luoyi") and not attacker:hasFlag("neoluoyi") then
+		and not attacker:getMark("drank") > 0 and not attacker:hasFlag("luoyi") and not attacker:hasFlag("neoluoyi") then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 			local callback = sgs.ai_need_damaged[askill]
 			if type(callback) == "function" and callback(self, attacker) then return true end

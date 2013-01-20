@@ -375,7 +375,7 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	if has_slash then return "$" .. has_slash:getEffectiveId()
 	elseif has_jink then return "$" .. has_jink:getEffectiveId()
 	elseif has_anal or has_peach then
-		if getCardsNum("Jink", target) == 0 and self.player:hasFlag("drank") and self:getAllPeachNum(target) == 0 then
+		if getCardsNum("Jink", target) == 0 and self.player:getMark("drank") > 0 and self:getAllPeachNum(target) == 0 then
 			if has_anal then return "$" .. has_anal:getEffectiveId()
 			else return "$" .. has_peach:getEffectiveId()
 			end

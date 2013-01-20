@@ -180,7 +180,7 @@ public:
     bool isChained() const;
 
     bool canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0) const;
-	bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const;
+    bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const;
     int getCardCount(bool include_equip) const;
 
     QList<int> getPile(const char *pile_name);
@@ -193,7 +193,7 @@ public:
     int getSlashCount() const;
 
     bool hasEquipSkill(const char *skill_name) const;
-	QSet<const TriggerSkill *> getTriggerSkills() const;
+    QSet<const TriggerSkill *> getTriggerSkills() const;
     QSet<const Skill *> getVisibleSkills(bool include_equip = false) const;
     QList<const Skill *> getVisibleSkillList(bool include_equip = false) const;
     QSet<QString> getAcquiredSkills() const;
@@ -420,9 +420,9 @@ struct DamageStruct {
     Nature nature;
     bool chain;
     bool transfer;
-	QString reason;
-	
-	QString getReason() const;
+    QString reason;
+
+    QString getReason() const;
 };
 
 struct CardEffectStruct {
@@ -440,7 +440,7 @@ struct SlashEffectStruct {
     SlashEffectStruct();
 
     int jink_num;
-	
+
     const Card *slash;
     const Card *jink;
 
@@ -537,21 +537,21 @@ struct PindianStruct {
     const Card *from_card;
     const Card *to_card;
     QString reason;
-	bool success;
+    bool success;
 };
 
 typedef PindianStruct *PindianStar;
 
 struct PhaseChangeStruct {
     PhaseChangeStruct();
-	
+
     Player::Phase from;
     Player::Phase to;
 };
 
 struct CardResponseStruct {
     CardResponseStruct();
-	
+
     const Card *m_card;
     ServerPlayer *m_who;
     bool m_isUse;
@@ -586,10 +586,10 @@ enum TriggerEvent {
     FinishJudge,
 
     PindianVerifying,
-	Pindian,
-	
+    Pindian,
+
     TurnedOver,
-	ChainStateChanged,
+    ChainStateChanged,
 
     ConfirmDamage,    // confirm the damage's count and damage's nature
     Predamage,        // trigger the certain skill -- jueqing
@@ -616,7 +616,7 @@ enum TriggerEvent {
     SlashProceed,
     SlashHit,
     SlashMissed,
-	
+
     JinkEffect, 
 
     CardAsked,
@@ -632,7 +632,7 @@ enum TriggerEvent {
     CardEffect, // for AI to filter events only
     CardEffected,
     CardFinished,
-	TrickCardCanceling,
+    TrickCardCanceling,
 
     ChoiceMade,
 
@@ -744,7 +744,7 @@ public:
 };
 
 %extend Card {
-	EquipCard *toEquipCard() {
+    EquipCard *toEquipCard() {
         return qobject_cast<EquipCard *>($self);
     }
     Weapon *toWeapon() {
@@ -840,7 +840,7 @@ public:
     QList<int> getRandomCards() const;
     QString getRandomGeneralName() const;
     QStringList getLimitedGeneralNames() const;
-	
+
     void playSystemAudioEffect(const char *name) const;
     void playAudioEffect(const char *filename) const;
     void playSkillAudioEffect(const char *skill_name, int index) const;
@@ -848,7 +848,7 @@ public:
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
     int correctDistance(const Player *from, const Player *to) const;
     int correctMaxCards(const Player *target) const;
-	int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
+    int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
 
     Room *currentRoom();
 };
@@ -862,8 +862,7 @@ public:
 
     explicit Skill(const char *name, Frequency frequent = NotFrequent);
     bool isLordSkill() const;
-	bool isAttachedLordSkill() const;
-    bool isSPConvertSkill() const;
+    bool isAttachedLordSkill() const;
     QString getDescription() const;
     QString getText() const;
     bool isVisible() const;
@@ -967,7 +966,7 @@ public:
     void sendDamageLog(const DamageStruct &data);
     void loseHp(ServerPlayer *victim, int lose = 1);
     void loseMaxHp(ServerPlayer *victim, int lose = 1);
-	bool changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude = -1);
+    bool changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude = -1);
     void applyDamage(ServerPlayer *victim, const DamageStruct &damage);
     void recover(ServerPlayer *player, const RecoverStruct &recover, bool set_emotion = false);
     bool cardEffect(const Card *card, ServerPlayer *from, ServerPlayer *to);
@@ -1077,7 +1076,7 @@ public:
     bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason);
-	const Card *askForCard(ServerPlayer *player, const char *pattern,
+    const Card *askForCard(ServerPlayer *player, const char *pattern,
                            const char *prompt, const QVariant &data, const char *skill_name);
     const Card *askForCard(ServerPlayer *player, const char *pattern,
                            const char *prompt, const QVariant &data = QVariant(),

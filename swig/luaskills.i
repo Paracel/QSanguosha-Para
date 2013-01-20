@@ -27,14 +27,6 @@ public:
     virtual bool isProhibited(const Player *from, const Player *to, const Card *card) const = 0;
 };
 
-class SPConvertSkill: public GameStartSkill {
-public:
-    SPConvertSkill(const QString &name, const QString &from, const QString &to);
-
-    virtual bool triggerable(const ServerPlayer *target) const;
-    virtual void onGameStart(ServerPlayer *player) const;
-};
-
 class DistanceSkill: public Skill {
 public:
     DistanceSkill(const QString &name);
@@ -330,7 +322,7 @@ int LuaTargetModSkill::getResidueNum(const Player *from, const Card *card) const
 
     SWIG_NewPointerObj(L, this, SWIGTYPE_p_LuaTargetModSkill, 0);
     SWIG_NewPointerObj(L, from, SWIGTYPE_p_Player, 0);
-	SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
+    SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
 
     int error = lua_pcall(L, 3, 1, 0);
     if (error) {
@@ -354,7 +346,7 @@ int LuaTargetModSkill::getDistanceLimit(const Player *from, const Card *card) co
 
     SWIG_NewPointerObj(L, this, SWIGTYPE_p_LuaTargetModSkill, 0);
     SWIG_NewPointerObj(L, from, SWIGTYPE_p_Player, 0);
-	SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
+    SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
 
     int error = lua_pcall(L, 3, 1, 0);
     if (error) {
@@ -378,7 +370,7 @@ int LuaTargetModSkill::getExtraTargetNum(const Player *from, const Card *card) c
 
     SWIG_NewPointerObj(L, this, SWIGTYPE_p_LuaTargetModSkill, 0);
     SWIG_NewPointerObj(L, from, SWIGTYPE_p_Player, 0);
-	SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
+    SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
 
     int error = lua_pcall(L, 3, 1, 0);
     if (error) {

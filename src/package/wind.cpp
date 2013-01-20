@@ -1122,42 +1122,6 @@ protected:
     }
 };
 
-class CVXiaoqiao: public GameStartSkill {
-public:
-    CVXiaoqiao(): GameStartSkill("cv_xiaoqiao") {
-        default_choice = "wz_xiaoqiao";
-        sp_convert_skill = true;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        if (target == NULL) return false;
-        if (Sanguosha->getBanPackages().contains("sp") && Sanguosha->getBanPackages().contains("hegemony"))
-            return false;
-        bool canInvoke = ServerInfo.GameMode.endsWith("p") || ServerInfo.GameMode.endsWith("pd")
-                         || ServerInfo.GameMode.endsWith("pz");
-        return GameStartSkill::triggerable(target) && target->getGeneralName() == "xiaoqiao" && canInvoke;
-    }
-
-    virtual void onGameStart(ServerPlayer *player) const{
-        if (player->getGeneral()->hasSkill(objectName()) && player->askForSkillInvoke(objectName(), "convert")) {
-            Room *room = player->getRoom();
-            QStringList choicelist;
-            if (!Sanguosha->getBanPackages().contains("sp"))
-                choicelist << "wz_xiaoqiao";
-            if (!Sanguosha->getBanPackages().contains("hegemony"))
-                choicelist << "heg_xiaoqiao";
-            QString choice = room->askForChoice(player, objectName(), choicelist.join("+"));
-
-            LogMessage log;
-            log.type = "#Transfigure";
-            log.from = player;
-            log.arg = choice;
-            room->sendLog(log);
-            room->setPlayerProperty(player, "general", choice);
-        }
-    }
-};
-
 WindPackage::WindPackage()
     :Package("wind")
 {
@@ -1178,7 +1142,7 @@ WindPackage::WindPackage()
     xiaoqiao->addSkill(new TianxiangDraw);
     xiaoqiao->addSkill(new Hongyan);
     related_skills.insertMulti("tianxiang", "#tianxiang");
-    xiaoqiao->addSkill(new CVXiaoqiao);
+    xiaoqiao->addSkill(new SPConvertSkill("xiaoqiao", "wz_xiaoqiao+heg_xiaoqiao"));
 
     General *zhoutai = new General(this, "zhoutai", "wu");
     zhoutai->addSkill(new Buqu);

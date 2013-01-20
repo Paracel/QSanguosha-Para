@@ -992,7 +992,7 @@ ThicketPackage::ThicketPackage()
     caopi->addSkill(new Xingshang);
     caopi->addSkill(new Fangzhu);
     caopi->addSkill(new Songwei);
-    caopi->addSkill(new SPConvertSkill("cv_caopi", "caopi", "heg_caopi"));
+    caopi->addSkill(new SPConvertSkill("caopi", "heg_caopi"));
 
     General *menghuo = new General(this, "menghuo", "shu");
     menghuo->addSkill(new SavageAssaultAvoid("huoshou"));
@@ -1030,7 +1030,7 @@ ThicketPackage::ThicketPackage()
     jiaxu->addSkill(new MarkAssignSkill("@chaos", 1));
     jiaxu->addSkill(new Luanwu);
     jiaxu->addSkill(new Weimu);
-    jiaxu->addSkill(new SPConvertSkill("cv_jiaxu", "jiaxu", "sp_jiaxu"));
+    jiaxu->addSkill(new SPConvertSkill("jiaxu", "sp_jiaxu"));
     related_skills.insertMulti("luanwu", "#@chaos-1");
 
     addMetaObject<DimengCard>();

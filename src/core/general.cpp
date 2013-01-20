@@ -134,7 +134,7 @@ QString General::getSkillDescription() const{
     QString description;
 
     foreach (const Skill *skill, getVisibleSkillList()) {
-        if (skill->isSPConvertSkill())
+        if (skill->inherits("SPConvertSkill"))
             continue;
         QString skill_name = Sanguosha->translate(skill->objectName());
         QString desc = skill->getDescription();

@@ -570,7 +570,6 @@ sgs.ai_skill_choice.weiwudi_guixin = function(self, choices)
 
 	if choices ~= "modify+obtain" then
 		if choices:match("xueyi") and not self.room:getLieges("qun", self.player):isEmpty() then return "xueyi" end
-		if choices:match("weidai") and self:isWeak() then return "weidai" end
 		if choices:match("ruoyu") then return "ruoyu" end
 		local choice_table = choices:split("+")
 		return choice_table[math.random(1, #choice_table)]

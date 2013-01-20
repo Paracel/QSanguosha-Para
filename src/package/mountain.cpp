@@ -244,7 +244,7 @@ public:
 
             QList<const Skill *> skills = death.damage->from->getVisibleSkillList();
             foreach (const Skill *skill, skills ){
-                if (skill->getLocation() == Skill::Right && !skill->isSPConvertSkill() && !skill->isAttachedLordSkill())
+                if (skill->getLocation() == Skill::Right && !skill->inherits("SPConvertSkill") && !skill->isAttachedLordSkill())
                     room->detachSkillFromPlayer(death.damage->from, skill->objectName());
             }
 
@@ -1030,7 +1030,7 @@ public:
         if (room->getMode().endsWith("p")
             || room->getMode().endsWith("pd")
             || room->getMode().endsWith("pz"))
-            all.subtract(Config.value("Banlist/Roles","").toStringList().toSet());
+            all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
         QSet<QString> huashen_set, room_set;
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         foreach(QVariant huashen, huashens)
@@ -1075,7 +1075,7 @@ public:
             foreach (QString general_name, huashen_generals) {
                 const General *general = Sanguosha->getGeneral(general_name);
                 foreach (const Skill *skill, general->getVisibleSkillList()) {
-                    if (skill->isLordSkill() || skill->isSPConvertSkill()
+                    if (skill->isLordSkill() || skill->inherits("SPConvertSkill")
                         || skill->getFrequency() == Skill::Limited
                         || skill->getFrequency() == Skill::Wake)
                         continue;
@@ -1095,7 +1095,7 @@ public:
             general = Sanguosha->getGeneral(general_name);
 
             foreach (const Skill *skill, general->getVisibleSkillList()) {
-                if (skill->isLordSkill() || skill->isSPConvertSkill()
+                if (skill->isLordSkill() || skill->inherits("SPConvertSkill")
                     || skill->getFrequency() == Skill::Limited
                     || skill->getFrequency() == Skill::Wake)
                     continue;
@@ -1300,7 +1300,7 @@ MountainPackage::MountainPackage()
     General *caiwenji = new General(this, "caiwenji", "qun", 3, false);
     caiwenji->addSkill(new Beige);
     caiwenji->addSkill(new Duanchang);
-    caiwenji->addSkill(new SPConvertSkill("cv_caiwenji", "caiwenji", "sp_caiwenji"));
+    caiwenji->addSkill(new SPConvertSkill("caiwenji", "sp_caiwenji"));
 
     addMetaObject<QiaobianCard>();
     addMetaObject<TiaoxinCard>();

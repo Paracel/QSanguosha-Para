@@ -518,17 +518,17 @@ end
 sgs.ai_skill_invoke.cv_daqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_daqiao = "tw_daqiao" return true
-	else sgs.ai_skill_choice.cv_daqiao="wz_daqiao" return true end
+	else sgs.ai_skill_choice.cv_daqiao = "wz_daqiao" return true end
 end
 
 sgs.ai_skill_invoke.cv_xiaoqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "wz_xiaoqiao" return true
-	else sgs.ai_skill_choice.cv_xiaoqiao="heg_xiaoqiao" return true end
+	else sgs.ai_skill_choice.cv_xiaoqiao = "heg_xiaoqiao" return true end
 end
 
 sgs.ai_skill_invoke.cv_zhouyu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "heg_zhouyu" return true
-	else sgs.ai_skill_choice.cv_xiaoqiao="sp_heg_zhouyu" return true end
+	else sgs.ai_skill_choice.cv_xiaoqiao = "sp_heg_zhouyu" return true end
 end

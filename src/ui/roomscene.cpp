@@ -1780,7 +1780,7 @@ void RoomScene::addSkillButton(const Skill *skill, bool from_left) {
     //SPConvertSkill is not important around the game, except on game start.
     //Even it isn't a skill, it's only a temporary product of generals replacement system.
     //So I think it is not necessary to exist in dashboard.
-    if (skill->isSPConvertSkill()) return;
+    if (skill->inherits("SPConvertSkill")) return;
     // check duplication
     QSanSkillButton *btn = dashboard->addSkillButton(skill->objectName());
     if (btn == NULL) return;
@@ -3190,7 +3190,7 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool perm
 
 void RoomScene::showSkillInvocation(const QString &who, const QString &skill_name) {
     const Skill *skill = Sanguosha->getSkill(skill_name);
-    if (skill && skill->isSPConvertSkill())
+    if (skill && skill->inherits("SPConvertSkill"))
         return;
     QString type = "#InvokeSkill";
     const ClientPlayer *player = ClientInstance->findChild<const ClientPlayer *>(who);

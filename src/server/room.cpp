@@ -480,7 +480,7 @@ void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name
         player->loseSkill(skill_name);
 
     const Skill *skill = Sanguosha->getSkill(skill_name);
-    if (skill && skill->isVisible() && !skill->isSPConvertSkill()) {
+    if (skill && skill->isVisible() && !skill->inherits("SPConvertSkill")) {
         Json::Value args;
         args[0] = QSanProtocol::S_GAME_EVENT_DETACH_SKILL;
         args[1] = toJsonString(player->objectName());

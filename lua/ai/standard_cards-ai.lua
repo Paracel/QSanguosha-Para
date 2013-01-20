@@ -543,7 +543,7 @@ function SmartAI:useCardPeach(card, use)
 		return
 	end
 
-	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp()<1) or peaches > self.player:getHp() then
+	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp() < 1) or peaches > self.player:getHp() then
 		use.card = card
 		return
 	end
@@ -554,7 +554,7 @@ function SmartAI:useCardPeach(card, use)
 
 	if self.player:getHp() > getBestHp(self.player) then return end
 
-	local lord= self.room:getLord()
+	local lord = self.room:getLord()
 	if self:isFriend(lord) and lord:getHp() <= 2 and not lord:hasSkill("buqu") then
 		if self.player:isLord() then use.card = card end
 		return
@@ -566,7 +566,7 @@ function SmartAI:useCardPeach(card, use)
 		return
 	end
 
-	if #self.friends > 1 and self.friends[2]:getHp()<3 and not self.friends[2]:hasSkill("buqu") and self:getOverflow() < 1 then
+	if #self.friends > 1 and self.friends[2]:getHp() < 3 and not self.friends[2]:hasSkill("buqu") and self:getOverflow() < 1 then
 		return
 	end
 

@@ -2985,7 +2985,17 @@ end
 
 function SmartAI:getOverflow(player)
 	player = player or self.player
-	return math.max(player:getHandcardNum() - player:getHp(), 0)
+	local kingdom_num = 0
+	if player:hasSkill("yongsi") then
+		local kingdoms = {}
+		for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
+			if not kingdoms[ap:getKingdom()] then
+				kingdoms[ap:getKingdom()] = true
+				kingdom_num = kingdom_num + 1
+			end
+		end
+	end
+	return math.max(player:getHandcardNum() - kingdom_num - player:getHp(), 0)
 end
 
 function SmartAI:isWeak(player)

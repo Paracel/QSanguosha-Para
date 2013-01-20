@@ -386,7 +386,7 @@ duoshi_skill.getTurnUseCard = function(self, inclusive)
 				if dummy_use.card then shouldUse = false end
 			end
 
-			if shouldUse then
+			if shouldUse and not card:isKindOf("Peach") then
 				red_card = card
 				break
 			end
@@ -420,7 +420,11 @@ end
 
 sgs.ai_use_value.DuoshiCard = 3
 sgs.ai_use_priority.DuoshiCard = 2.2
-sgs.ai_card_intention.DuoshiCard = -30
+sgs.ai_card_intention.DuoshiCard = function(card, from, tos)
+	for _, to in ipairs(tos) do
+		sgs.updateIntention(from, to, to:hasSkill("manjuan") and 50 or -50)
+	end
+end
 
 local fenxun_skill = {}
 fenxun_skill.name = "fenxun"

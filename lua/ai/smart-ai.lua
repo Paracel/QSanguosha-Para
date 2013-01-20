@@ -1964,7 +1964,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return nil end
 
 	if from and not from:hasSkill("jueqing") then
-		if (to:hasSkill("wuyan") or (self:getDamagedEffects(to) and self:isFriend(to)))
+		if (to:hasSkill("wuyan") or (self:getDamagedEffects(to, from) and self:isFriend(to)))
 			and (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("AOE")) then
 			return nil
 		end

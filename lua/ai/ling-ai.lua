@@ -100,11 +100,20 @@ function sgs.ai_skill_suit.neofanjian()
 	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
 	return map[math.random(1,8)]
 end
-sgs.ai_skill_invoke.zhongyi = function(self, data)
+sgs.ai_skill_invoke.yishi = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
-	if self:isFriend(target) then return false end
-	return target:getCards("e"):length() > 0
+	if self:isFriend(target) then
+		if damage.damage == 1 and self:getDamagedEffects(target, self.player)
+			and (target:getJudgingArea():isEmpty() or target:containsTrick("YanxiaoCard")) then
+			return false
+		end
+		return true
+	else
+		if self:getDamagedEffects(target, self.player) or (target:getArmor() and not target:getArmor():isKindOf("SilverLion")) then return true end
+		return false
+	end
+	return false
 end
 
 sgs.ai_skill_invoke.zhulou = function(self, data)

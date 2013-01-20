@@ -645,20 +645,19 @@ end
 sgs.ai_skill_invoke.ice_sword = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
-	if damage.card:getMark("drank") > 0 then return false end
 	if self:isFriend(target) then
-		if self:isWeak(target) then return true
+		if self:isWeak(target) or damage.damage > 1 then return true
 		elseif target:getLostHp() < 1 then return false end
 		return true
 	else
-		if self:isWeak(target) then return false end
+		if self:isWeak(target) or damage.damage > 1 then return false end
 		if target:getArmor() and self:evaluateArmor(target:getArmor(), target) > 3 then return true end
 		local num = target:getHandcardNum()
 		if self.player:hasSkill("tieji") or (self.player:hasSkill("liegong")
 			and (num >= self.player:getHp() or num <= self.player:getAttackRange())) then return false end
 		if target:hasSkill("tuntian") then return false end
 		if self:hasSkills(sgs.need_kongcheng, target) then return false end
-		if target:getCards("he"):length()<4 and target:getCards("he"):length() > 1 then return true end
+		if target:getCards("he"):length() < 4 and target:getCards("he"):length() > 1 then return true end
 		return false
 	end
 end

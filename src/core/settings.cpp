@@ -214,7 +214,7 @@ void Settings::init() {
 
     QStringList forbid_packages = value("ForbidPackages").toStringList();
     if (forbid_packages.isEmpty()) {
-        forbid_packages << "New3v3Card";
+        forbid_packages << "New3v3Card" << "test";
 
         setValue("ForbidPackages", forbid_packages);
     }

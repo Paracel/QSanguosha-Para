@@ -719,10 +719,6 @@ public:
     MouduanStart(): GameStartSkill("#mouduan-start") {
     }
 
-    virtual int getPriority() const{
-        return -1;
-    }
-
     virtual void onGameStart(ServerPlayer *lvmeng) const{
         Room *room = lvmeng->getRoom();
         lvmeng->gainMark("@wu");

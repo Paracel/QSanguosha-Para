@@ -705,10 +705,6 @@ public:
     QixingStart(): GameStartSkill("#qixing") {
     }
 
-    virtual int getPriority() const{
-        return -1;
-    }
-
     virtual void onGameStart(ServerPlayer *shenzhuge) const{
         Room *room = shenzhuge->getRoom();
 

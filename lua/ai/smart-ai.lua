@@ -3764,7 +3764,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 
 	if card:isKindOf("SavageAssault") then
 		sj_num = getCardsNum("Slash", to)
-		if to:hasSkill("juxiang") then
+		if to:hasSkill("juxiang") and not card:isVirtualCard() then
 			value = value + 50
 		end
 	end
@@ -3897,8 +3897,7 @@ function SmartAI:useTrickCard(card, use)
 	end
 	if self:needRende() then return end
 	if card:isKindOf("AOE") then
-		if self.player:hasSkill("wuyan") then return end
-		if self.player:hasSkill("noswuyan") then return end
+		if self:hasSkills("wuyan|noswuyan") then return end
 		if self.role == "loyalist" and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") then return end
 		if self.role == "rebel" and sgs.turncount < 2 and card:isKindOf("SavageAssault") then return end
 		local others = self.room:getOtherPlayers(self.player)
@@ -3914,8 +3913,8 @@ function SmartAI:useTrickCard(card, use)
 		if good > 0 then
 			use.card = card
 		end
-		if self:hasSkills("jianxiong|luanji|manjuan", self.player) then
-			if good > -10 then use.card = card end
+		if self:hasSkills("jianxiong|luanji|qice|manjuan", self.player) then
+			if good > -5 then use.card = card end
 		end
 	else
 		self:useCardByClassName(card, use)

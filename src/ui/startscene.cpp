@@ -118,7 +118,7 @@ void StartScene::printServerInfo() {
     if (Config.Enable2ndGeneral) {
         QString scheme_str;
         switch (Config.MaxHpScheme) {
-        case 0: scheme_str = tr("Sum - X"); break;
+        case 0: scheme_str = QString(tr("Sum - %1")).arg(Config.Scheme0Subtraction); break;
         case 1: scheme_str = tr("Minimum"); break;
         case 2: scheme_str = tr("Maximum"); break;
         case 3: scheme_str = tr("Average"); break;

@@ -529,6 +529,10 @@ QString Engine::getSetupString() const{
         flags.append("2");
     else if (Config.MaxHpScheme == 3)
         flags.append("3");
+    else if (Config.MaxHpScheme == 0) {
+        char c = Config.Scheme0Subtraction + 5 + 'a'; // from -5 to 12
+        flags.append(c);
+    }
 
     QString server_name = Config.ServerName.toUtf8().toBase64();
     QStringList setup_items;

@@ -27,7 +27,7 @@ time_t ServerInfoStruct::getCommandTimeout(QSanProtocol::CommandType command, QS
 }
 
 bool ServerInfoStruct::parse(const QString &str) {
-    QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([FSCTBHAM123]*)");
+    QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([FSCTBHAM123a-r]*)");
     if (!rx.exactMatch(str)) {
         // older version, just take the player count
         int count = str.split(":").at(1).toInt();
@@ -72,8 +72,14 @@ bool ServerInfoStruct::parse(const QString &str) {
         MaxHpScheme = 2;
     else if (flags.contains("3"))
         MaxHpScheme = 3;
-    else
+    else {
         MaxHpScheme = 0;
+        for (char c = 'a'; c <= 'r'; c++) {
+            if (flags.contains(c)) {
+                Scheme0Subtraction = int(c) - int('a') - 5;
+            }
+        }
+    }
 
     return true;
 }
@@ -136,7 +142,7 @@ void ServerInfoWidget::fill(const ServerInfoStruct &info, const QString &address
 
     if (info.Enable2ndGeneral) {
         switch (info.MaxHpScheme) {
-        case 0: max_hp_label->setText(tr("Sum - X")); break;
+        case 0: max_hp_label->setText(QString(tr("Sum - %1")).arg(info.Scheme0Subtraction)); break;
         case 1: max_hp_label->setText(tr("Minimum")); break;
         case 2: max_hp_label->setText(tr("Maximum")); break;
         case 3: max_hp_label->setText(tr("Average")); break;
@@ -193,4 +199,3 @@ void ServerInfoWidget::clear() {
     time_limit_label->clear();
     list_widget->clear();
 }
-

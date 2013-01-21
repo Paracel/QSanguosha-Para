@@ -1270,7 +1270,7 @@
         <translation>重复技能: %1</translation>
     </message>
     <message>
-        <location filename="../../src/core/engine.cpp" line="552"/>
+        <location filename="../../src/core/engine.cpp" line="556"/>
         <source>%1 [Scenario mode]</source>
         <translation>%1 【剧情模式】</translation>
     </message>
@@ -3268,132 +3268,132 @@ P = 你自己, R = 你所在的房间</translation>
 <context>
     <name>ServerInfoWidget</name>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="101"/>
+        <location filename="../../src/client/clientstruct.cpp" line="107"/>
         <source>Server name</source>
         <translation>服务器名</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="102"/>
+        <location filename="../../src/client/clientstruct.cpp" line="108"/>
         <source>Address</source>
         <translation>地址</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="103"/>
+        <location filename="../../src/client/clientstruct.cpp" line="109"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="104"/>
+        <location filename="../../src/client/clientstruct.cpp" line="110"/>
         <source>Game mode</source>
         <translation>游戏模式</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="105"/>
+        <location filename="../../src/client/clientstruct.cpp" line="111"/>
         <source>Player count</source>
         <translation>玩家人数</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="106"/>
+        <location filename="../../src/client/clientstruct.cpp" line="112"/>
         <source>2nd general mode</source>
         <translation>双将模式</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="107"/>
+        <location filename="../../src/client/clientstruct.cpp" line="113"/>
         <source>Same Mode</source>
         <translation>同将模式</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="108"/>
+        <location filename="../../src/client/clientstruct.cpp" line="114"/>
         <source>Basara Mode</source>
         <translation>暗将模式</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="109"/>
+        <location filename="../../src/client/clientstruct.cpp" line="115"/>
         <source>Hegemony Mode</source>
         <translation>国战模式</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="110"/>
+        <location filename="../../src/client/clientstruct.cpp" line="116"/>
         <source>Max HP scheme</source>
         <translation>体力上限分配方案</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="112"/>
+        <location filename="../../src/client/clientstruct.cpp" line="118"/>
         <source>Enable AI</source>
         <translation>启用 AI</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="118"/>
+        <location filename="../../src/client/clientstruct.cpp" line="124"/>
         <source>Lack</source>
         <translation>缺人</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="132"/>
-        <location filename="../../src/client/clientstruct.cpp" line="133"/>
-        <location filename="../../src/client/clientstruct.cpp" line="134"/>
-        <location filename="../../src/client/clientstruct.cpp" line="135"/>
-        <location filename="../../src/client/clientstruct.cpp" line="149"/>
-        <location filename="../../src/client/clientstruct.cpp" line="150"/>
+        <location filename="../../src/client/clientstruct.cpp" line="138"/>
+        <location filename="../../src/client/clientstruct.cpp" line="139"/>
+        <location filename="../../src/client/clientstruct.cpp" line="140"/>
+        <location filename="../../src/client/clientstruct.cpp" line="141"/>
+        <location filename="../../src/client/clientstruct.cpp" line="155"/>
+        <location filename="../../src/client/clientstruct.cpp" line="156"/>
         <source>Enabled</source>
         <translation>启用</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="132"/>
-        <location filename="../../src/client/clientstruct.cpp" line="133"/>
-        <location filename="../../src/client/clientstruct.cpp" line="134"/>
-        <location filename="../../src/client/clientstruct.cpp" line="135"/>
-        <location filename="../../src/client/clientstruct.cpp" line="149"/>
-        <location filename="../../src/client/clientstruct.cpp" line="150"/>
+        <location filename="../../src/client/clientstruct.cpp" line="138"/>
+        <location filename="../../src/client/clientstruct.cpp" line="139"/>
+        <location filename="../../src/client/clientstruct.cpp" line="140"/>
+        <location filename="../../src/client/clientstruct.cpp" line="141"/>
+        <location filename="../../src/client/clientstruct.cpp" line="155"/>
+        <location filename="../../src/client/clientstruct.cpp" line="156"/>
         <source>Disabled</source>
         <translation>未启用</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="139"/>
-        <source>Sum - X</source>
-        <translation>和减X</translation>
-    </message>
-    <message>
-        <location filename="../../src/client/clientstruct.cpp" line="111"/>
+        <location filename="../../src/client/clientstruct.cpp" line="117"/>
         <source>Free choose</source>
         <translation>自由选将</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="140"/>
+        <location filename="../../src/client/clientstruct.cpp" line="145"/>
+        <source>Sum - %1</source>
+        <translation>和减%1</translation>
+    </message>
+    <message>
+        <location filename="../../src/client/clientstruct.cpp" line="146"/>
         <source>Minimum</source>
         <translation>较小值</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="141"/>
+        <location filename="../../src/client/clientstruct.cpp" line="147"/>
         <source>Maximum</source>
         <translation>较大值</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="142"/>
+        <location filename="../../src/client/clientstruct.cpp" line="148"/>
         <source>Average</source>
         <translation>平均值</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="145"/>
+        <location filename="../../src/client/clientstruct.cpp" line="151"/>
         <source>2nd general is disabled</source>
         <translation>双将未启用</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="153"/>
+        <location filename="../../src/client/clientstruct.cpp" line="159"/>
         <source>No limit</source>
         <translation>没有限制</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="155"/>
+        <location filename="../../src/client/clientstruct.cpp" line="161"/>
         <source>%1 seconds</source>
         <translation>%1 秒</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="113"/>
+        <location filename="../../src/client/clientstruct.cpp" line="119"/>
         <source>Operation time</source>
         <translation>操作时间</translation>
     </message>
     <message>
-        <location filename="../../src/client/clientstruct.cpp" line="114"/>
+        <location filename="../../src/client/clientstruct.cpp" line="120"/>
         <source>Extension packages</source>
         <translation>扩展包</translation>
     </message>
@@ -3550,8 +3550,8 @@ P = 你自己, R = 你所在的房间</translation>
     </message>
     <message>
         <location filename="../../src/ui/startscene.cpp" line="121"/>
-        <source>Sum - X</source>
-        <translation>和减X</translation>
+        <source>Sum - %1</source>
+        <translation>和减%1</translation>
     </message>
     <message>
         <location filename="../../src/ui/startscene.cpp" line="122"/>

@@ -666,7 +666,7 @@ QStringList Engine::getLords(bool contain_banned) const{
             if (ServerInfo.GameMode.endsWith("p")
                || ServerInfo.GameMode.endsWith("pd")
                || ServerInfo.GameMode.endsWith("pz"))
-                if (Config.value("Banlist/Roles","").toStringList().contains(lord))
+                if (Config.value("Banlist/Roles", "").toStringList().contains(lord))
                     continue;
             if (Config.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
                 continue;
@@ -680,7 +680,7 @@ QStringList Engine::getLords(bool contain_banned) const{
 QStringList Engine::getRandomLords() const{
     QStringList banlist_ban;
     if (Config.EnableBasara)
-        banlist_ban = Config.value("Banlist/basara").toStringList();
+        banlist_ban = Config.value("Banlist/Basara").toStringList();
 
     if (Config.GameMode.endsWith("p")
         || Config.GameMode.endsWith("pz")

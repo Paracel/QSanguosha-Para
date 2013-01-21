@@ -255,8 +255,16 @@ lianhuan_skill.getTurnUseCard = function(self)
 
 	for _, acard in ipairs(cards) do
 		if acard:getSuit() == sgs.Card_Club then
-			card = acard
-			break
+			local shouldUse = true
+			if self:getUseValue(acard) > sgs.ai_use_value.IronChain and acard:getTypeId() == sgs.Card_TypeTrick then
+				local dummy_use = { isDummy = true }
+				self:useTrickCard(card, dummy_use)
+				if dummy_use.card then shouldUse = false end
+			end
+			if shouldUse then
+				card = acard
+				break
+			end
 		end
 	end
 

@@ -77,6 +77,7 @@ bool ServerInfoStruct::parse(const QString &str) {
         for (char c = 'a'; c <= 'r'; c++) {
             if (flags.contains(c)) {
                 Scheme0Subtraction = int(c) - int('a') - 5;
+                break;
             }
         }
     }

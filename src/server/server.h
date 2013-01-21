@@ -107,6 +107,8 @@ private:
     QSpinBox *hegemony_maxchoice_spinbox;
     QLabel *max_hp_label;
     QComboBox *max_hp_scheme_ComboBox;
+    QLabel *scheme0_subtraction_label;
+    QSpinBox *scheme0_subtraction_spinbox;
     QCheckBox *prevent_awaken_below3_checkbox;
     QComboBox *scenario_ComboBox;
     QComboBox *mini_scene_ComboBox;
@@ -128,7 +130,7 @@ private:
     QButtonGroup *mode_group;
 
 private slots:
-    void setPreventAwakenBelow3Box();
+    void setMaxHpSchemeBox();
 
     void onOkButtonClicked();
     void onDetectButtonClicked();

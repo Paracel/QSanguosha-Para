@@ -435,7 +435,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	end
 	
 	if need_slash and target and isCard("Slash", card, to) then return true end
-	return isCard("Duel",card, to)  
+	return isCard("Duel", card, to)  
 end
 
 sgs.luoyi_keep_value = {

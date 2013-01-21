@@ -27,7 +27,7 @@ time_t ServerInfoStruct::getCommandTimeout(QSanProtocol::CommandType command, QS
 }
 
 bool ServerInfoStruct::parse(const QString &str) {
-    QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([FSCTBHAM12]*)");
+    QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([FSCTBHAM123]*)");
     if (!rx.exactMatch(str)) {
         // older version, just take the player count
         int count = str.split(":").at(1).toInt();
@@ -67,11 +67,13 @@ bool ServerInfoStruct::parse(const QString &str) {
     DisableChat = flags.contains("M");
 
     if (flags.contains("1"))
-        MaxHPScheme = 1;
+        MaxHpScheme = 1;
     else if (flags.contains("2"))
-        MaxHPScheme = 2;
+        MaxHpScheme = 2;
+    else if (flags.contains("3"))
+        MaxHpScheme = 3;
     else
-        MaxHPScheme = 0;
+        MaxHpScheme = 0;
 
     return true;
 }
@@ -133,10 +135,11 @@ void ServerInfoWidget::fill(const ServerInfoStruct &info, const QString &address
     hegemony_label->setText(info.EnableHegemony ? tr("Enabled") : tr("Disabled"));
 
     if (info.Enable2ndGeneral) {
-        switch (info.MaxHPScheme) {
-        case 0: max_hp_label->setText(tr("Sum - 3")); break;
+        switch (info.MaxHpScheme) {
+        case 0: max_hp_label->setText(tr("Sum - X")); break;
         case 1: max_hp_label->setText(tr("Minimum")); break;
-        case 2: max_hp_label->setText(tr("Average")); break;
+        case 2: max_hp_label->setText(tr("Maximum")); break;
+        case 3: max_hp_label->setText(tr("Average")); break;
         }
     } else {
         max_hp_label->setText(tr("2nd general is disabled"));

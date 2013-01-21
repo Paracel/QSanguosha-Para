@@ -38,6 +38,7 @@ public:
     bool EnableBasara;
     bool EnableHegemony;
     int MaxHpScheme;
+    int Scheme0Subtraction;
     bool PreventAwakenBelow3;
     QString Address;
     bool EnableAI;

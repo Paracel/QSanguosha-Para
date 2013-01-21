@@ -118,9 +118,10 @@ void StartScene::printServerInfo() {
     if (Config.Enable2ndGeneral) {
         QString scheme_str;
         switch (Config.MaxHpScheme) {
-        case 0: scheme_str = tr("sum - 3"); break;
-        case 1: scheme_str = tr("minimum"); break;
-        case 2: scheme_str = tr("average"); break;
+        case 0: scheme_str = tr("Sum - X"); break;
+        case 1: scheme_str = tr("Minimum"); break;
+        case 2: scheme_str = tr("Maximum"); break;
+        case 3: scheme_str = tr("Average"); break;
         }
         server_log->append(tr("Secondary general is enabled, max hp scheme is %1").arg(scheme_str));
     } else

@@ -167,7 +167,7 @@ sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 end
 
 function sgs.ai_cardneed.guidao(to, card, self)
-	for _, player in ipairs(self.room:getAllPlayers()) do
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if self:getFinalRetrial(to) == 1 then 
 			if player:containsTrick("lightning") and not player:containsTrick("YanxiaoCard") then
 				return card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 and not self:hasSkills("hongyan|wuyan")

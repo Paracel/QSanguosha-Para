@@ -341,9 +341,7 @@ sgs.ai_use_priority.IronChain = 8.5
 sgs.dynamic_value.benefit.IronChain = true
 
 function SmartAI:useCardFireAttack(fire_attack, use)
-	if self.player:hasSkill("wuyan") then return end
-	if self.player:hasSkill("noswuyan") then return end
-	if self.player:hasFlag("LastFireAttackFailed") and self:getOverflow() <= 0 and not self:hasSkills("jizhi") then return end
+	if self:hasSkills("wuyan|noswuyan") then return end
 
 	local lack = {
 		spade = true,
@@ -371,6 +369,9 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	self:sort(self.enemies, "defense")
 
 	local can_attack = function(enemy)
+		if self.player:hasFlag("FireAttackFailed_" .. enemy:objectName()) and self:getOverflow() <= 0 and not self:hasSkill("jizhi") then
+			return false
+		end
 		return self:objectiveLevel(enemy) > 3 and not enemy:isKongcheng() and not self.room:isProhibited(self.player, enemy, fire_attack)
 				and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(enemy)
 				and self:hasTrickEffective(fire_attack, enemy)

@@ -289,12 +289,6 @@ bool FireAttack::targetFilter(const QList<const Player *> &targets, const Player
         return true;
 }
 
-void FireAttack::onUse(Room *room, const CardUseStruct &card_use) const{
-    if (card_use.from->hasFlag("LastFireAttackFailed"))
-        card_use.from->setFlags("-LastFireAttackFailed");
-    SingleTargetTrick::onUse(room, card_use);
-}
-
 void FireAttack::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
     if (effect.to->isKongcheng())
@@ -317,7 +311,7 @@ void FireAttack::onEffect(const CardEffectStruct &effect) const{
 
             room->damage(damage);
         } else {
-            effect.from->setFlags("FireAttackFailed"); // For AI
+            effect.from->setFlags("FireAttackFailed_" + effect.to->objectName()); // For AI
         }
     }
 

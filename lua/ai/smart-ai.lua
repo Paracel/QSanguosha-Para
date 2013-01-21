@@ -2441,10 +2441,10 @@ function SmartAI:getCardNeedPlayer(cards)
 	local keptslash = 0
 	local friends = {}
 	
-	local cmpByAction = function(a,b)
+	local cmpByAction = function(a, b)
 		return a:getRoom():getFront(a, b):objectName() == a:objectName()
  	end
-	local cmpByNumber = function(a,b)
+	local cmpByNumber = function(a, b)
 		return a:getNumber() > b:getNumber()
  	end
 	

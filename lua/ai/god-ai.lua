@@ -741,6 +741,7 @@ sgs.longhun_suit_value = {
 }
 
 function sgs.ai_cardneed.longhun(to, card, self)
+	if to:getCardCount(true) > 3 then return false end
 	if to:isNude() then return true end
 	return card:getSuit() == sgs.Card_Heart or card:getSuit() == sgs.Card_Spade
 end

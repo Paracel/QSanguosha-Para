@@ -1464,12 +1464,15 @@ function SmartAI:updateRoleTargets()
 	end
 end
 
-function SmartAI:updatePlayers()
+function SmartAI:updatePlayers(clear_flags)
+	if clear_flags ~= false then clear_flags = true end
 	if self.role ~= self.player:getRole() then self.role = self.player:getRole() end
-	for _, aflag in ipairs(sgs.ai_global_flags) do
-		sgs[aflag] = nil
+	if clear_flags then
+		for _, aflag in ipairs(sgs.ai_global_flags) do
+			sgs[aflag] = nil
+		end
 	end
-
+	
 	sgs.discard_pile = global_room:getDiscardPile()
 	sgs.draw_pile = global_room:getDrawPile()
 
@@ -1640,8 +1643,10 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.BuryVictim or event == sgs.EventPhaseStart or event == sgs.HpChanged or event == sgs.MaxHpChanged then
+	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.EventPhaseStart then
 		self:updatePlayers()
+	elseif event == sgs.BuryVictim or event == sgs.HpChanged or event == sgs.MaxHpChanged then
+		self:updatePlayers(false)
 	end
 
 	if event == sgs.BuryVictim then

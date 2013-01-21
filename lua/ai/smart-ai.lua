@@ -3906,7 +3906,7 @@ function SmartAI:useTrickCard(card, use)
 		local aval = #others
 		for _, other in ipairs(others) do
 			if self.room:isProhibited(self.player, other, card) then
-				aval = aval -1
+				aval = aval - 1
 			end
 		end
 		if aval < 1 then return end

@@ -266,7 +266,7 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardsMoveOneTime) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->to == player && move->from != NULL && move->from != move->to
+            if (move->to == player && move->from && move->from->isAlive() && move->from != move->to
                 && move->card_ids.size() >= 2
                 && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE
                 && room->askForSkillInvoke(player,objectName(),data)) {

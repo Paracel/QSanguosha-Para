@@ -152,6 +152,7 @@ void Player::clearFlags() {
 
 int Player::getAttackRange() const{
     int original_range = 1;
+	if (hasSkill("zhengfeng")) original_range = hp;
     if (hasFlag("InfinityAttackRange") || getMark("InfinityAttackRange") > 0) original_range = 10000; // Actually infinity
     int weapon_range = 0;
     if (weapon != NULL) {

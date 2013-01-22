@@ -96,9 +96,10 @@ end
 
 sgs.ai_card_intention.NeoFanjianCard = 70
 
-function sgs.ai_skill_suit.neofanjian()
+function sgs.ai_skill_suit.neofanjian(self)
 	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
-	return map[math.random(1,8)]
+	local suit = map[math.random(1, 8)]
+	if self.player:hasSkill("hongyan") and suit == sgs.Card_Spade then return sgs.Card_Heart else return suit end
 end
 sgs.ai_skill_invoke.yishi = function(self, data)
 	local damage = data:toDamage()

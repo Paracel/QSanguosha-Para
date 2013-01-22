@@ -1854,7 +1854,7 @@ function is_a_slash(player, card)
 end
 
 function SmartAI:askForSuit(reason)
-	if not reason then return sgs.ai_skill_suit.fanjian() end -- this line is kept for back-compatibility
+	if not reason then return sgs.ai_skill_suit.fanjian(self) end -- this line is kept for back-compatibility
 	local callback = sgs.ai_skill_suit[reason]
 	if type(callback) == "function" then
 		if callback(self) then return callback(self) end

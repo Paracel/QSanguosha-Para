@@ -1114,9 +1114,10 @@ end
 
 sgs.ai_card_intention.FanjianCard = 70
 
-function sgs.ai_skill_suit.fanjian()
-	local map = {0, 0, 1, 2, 2, 3, 3, 3}
-	return map[math.random(1,8)]
+function sgs.ai_skill_suit.fanjian(self)
+	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
+	local suit = map[math.random(1, 8)]
+	if self.player:hasSkill("hongyan") and suit == sgs.Card_Spade then return sgs.Card_Heart else return suit end
 end
 
 sgs.dynamic_value.damage_card.FanjianCard = true

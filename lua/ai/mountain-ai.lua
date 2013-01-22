@@ -721,9 +721,11 @@ sgs.ai_skill_invoke.beige = function(self, data)
 end
 
 function sgs.ai_slash_prohibit.duanchang(self, to)
-	if self:isFriend(to) and self:isWeak(to) then return true end
 	if self:hasSkills("jueqing|qianxi") then return false end
-	return #self.enemies > 1 and self:isWeak(to) and (self.player:isLord() or not self:isWeak())
+	if to:getHp() > 1 or #self.enemies == 1 then return false end
+	if self.player:getMaxHp() == 3 and self.player:getArmor() and self.player:getDefensiveHorse() then return false end
+	if self.player:getMaxHp() <= 3 or (self.player:isLord() and self:isWeak()) then return true end
+	return false
 end
 
 sgs.ai_chaofeng.caiwenji = -5

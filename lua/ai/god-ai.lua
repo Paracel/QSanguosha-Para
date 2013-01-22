@@ -96,12 +96,10 @@ function SmartAI:cantbeHurt(player)
 			return true
 		end
 	elseif player:hasSkill("duanchang") then
-		if player:getHp() < 2 then
-			if self:isFriend(player) then
-				return true
-			elseif #self.enemies > 2 then
-				return true
-			end
+		if player:getHp() > 1 or #self.enemies == 1 then return false end
+		if player:getHp() <= 1 then
+			if self.player:getMaxHp() == 3 and self.player:getArmor() and self.player:getDefensiveHorse() then return false end
+			if self.player:getMaxHp() <= 3 or (self.player:isLord() and self:isWeak()) then return true end
 		end
 	elseif player:hasSkill("tianxiang") then
 		for _, friend in ipairs(self.friends) do

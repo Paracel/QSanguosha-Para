@@ -259,7 +259,7 @@ function SmartAI:slashIsEffective(slash, to)
 		if armor:objectName() == "renwang_shield" then
 			return not slash:isBlack()
 		elseif armor:objectName() == "vine" then
-			return nature ~= sgs.DamageStruct_Normal or self.player:hasWeapon("fan")
+			return nature ~= sgs.DamageStruct_Normal or self.player:hasWeapon("fan") or (self.player:hasSkill("lihuo") and not self:isWeak())
 		end
 	end
 

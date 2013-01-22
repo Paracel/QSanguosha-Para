@@ -522,13 +522,13 @@ function SmartAI:cardNeed(card)
 	local value
 	if card:isKindOf("Peach") then
 		self:sort(self.friends,"hp")
-		if self.friends[1]:getHp() < 2 then return 10 end
-		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 14 end
+		if self.friends[1]:getHp() < 2 then return 13 end
+		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 15 end
 		return self:getUseValue(card)
 	end
 	local wuguotai = self.room:findPlayerBySkillName("buyi")
 	if wuguotai and self:isFriend(wuguotai) and not card:isKindOf("BasicCard") then
-		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 13 end
+		if (self.player:getHp() < 3 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 11 end
 	end
 	if self:isWeak() and card:isKindOf("Jink") and self:getCardsNum("Jink") < 1 then return 12 end
 	

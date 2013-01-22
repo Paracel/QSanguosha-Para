@@ -60,7 +60,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if self:slashIsEffective(slash, enemy) and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
+			if not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
 				goodtarget = goodtarget + 1
 				break
 			end

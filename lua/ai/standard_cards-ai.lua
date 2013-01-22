@@ -768,8 +768,8 @@ function sgs.ai_cardsview.spear(class_name, player)
 		for _, card in ipairs(cards) do
 			if not card:isKindOf("Peach") then table.insert(newcards, card) end
 		end
-		if #newcards<(player:getHp() + 1) then return nil end
-		if #newcards<2 then return nil end
+		if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
+		if #newcards < 2 then return end
 
 		local card_id1 = newcards[1]:getEffectiveId()
 		local card_id2 = newcards[2]:getEffectiveId()
@@ -789,11 +789,17 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	self:sortByUseValue(cards)
 
 	local newcards = {}
-	for _, card in ipairs(cards) do
-		if self:getUseValue(card) < sgs.ai_use_value.Slash then table.insert(newcards, card) end
+	for _, acard in ipairs(cards) do
+		if acard:isKindOf("Slash") then return end
 	end
-	if #newcards<(self.player:getHp() + 1) then return nil end
-	if #newcards<2 then return nil end
+	local cards = player:getCards("h")
+	cards = sgs.QList2Table(cards)
+	local newcards = {}
+	for _, card in ipairs(cards) do
+		if not card:isKindOf("Peach") then table.insert(newcards, card) end
+	end
+	if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
+	if #newcards < 2 then return end
 
 	local card_id1 = newcards[1]:getEffectiveId()
 	local card_id2 = newcards[2]:getEffectiveId()

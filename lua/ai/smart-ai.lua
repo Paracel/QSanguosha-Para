@@ -2749,7 +2749,7 @@ end
 
 function SmartAI:askForSinglePeach(dying)
 	local card_str
-	local forbid = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuitNoColor, 0)
+	local forbid = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuit, 0)
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
 	if self.role == "renegade" and not dying:isLord() and self.room:getCurrent():objectName() == self.player:objectName() then return "." end
 	if self:isFriend(dying) then
@@ -2795,7 +2795,7 @@ function SmartAI:getTurnUse()
 	cards = sgs.QList2Table(cards)
 
 	local turnUse = {}
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	local slashAvail = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, slash)
 	self.predictedRange = self.player:getAttackRange()
 	self.predictNewHorse = false

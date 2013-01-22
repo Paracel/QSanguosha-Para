@@ -786,7 +786,7 @@ public:
                 if (card_id != -1) {
                     CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "chunlao", QString());
                     room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
-                    Analeptic *analeptic = new Analeptic(Card::NoSuitNoColor, 0);
+                    Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
                     analeptic->setSkillName(objectName());
                     CardUseStruct use;
                     use.card = analeptic;

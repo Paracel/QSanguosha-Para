@@ -141,7 +141,7 @@ bool LijianCard::targetFilter(const QList<const Player *> &targets, const Player
     if (!to_select->isMale())
         return false;
 
-    Duel *duel = new Duel(Card::NoSuitNoColor, 0);
+    Duel *duel = new Duel(Card::NoSuit, 0);
     duel->deleteLater();
     if (targets.isEmpty() && Self->isProhibited(to_select, duel))
         return false;
@@ -181,7 +181,7 @@ void LijianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     ServerPlayer *to = targets.at(0);
     ServerPlayer *from = targets.at(1);
 
-    Duel *duel = new Duel(Card::NoSuitNoColor, 0);
+    Duel *duel = new Duel(Card::NoSuit, 0);
     duel->setCancelable(false);
     duel->setSkillName("lijian");
 
@@ -273,7 +273,7 @@ JijiangCard::JijiangCard() {
 }
 
 bool JijiangCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    Slash *slash= new Slash(NoSuitNoColor, 0);
+    Slash *slash= new Slash(NoSuit, 0);
     return slash->targetFilter(targets, to_select, Self);
 }
 

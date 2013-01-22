@@ -94,7 +94,7 @@ public:
 class Jiushi: public ZeroCardViewAsSkill {
 public:
     Jiushi(): ZeroCardViewAsSkill("jiushi") {
-        Analeptic *analeptic = new Analeptic(Card::NoSuitNoColor, 0);
+        Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
         analeptic->setSkillName("jiushi");
         this->analeptic = analeptic;
     }
@@ -585,7 +585,7 @@ public:
     virtual bool isEnabledAtPlay(const Player *player) const{
         if (!player->hasUsed("XianzhenCard") && !player->isKongcheng())
             return true;
-        Slash *slashx = new Slash(Card::NoSuitNoColor, 0);
+        Slash *slashx = new Slash(Card::NoSuit, 0);
         slashx->deleteLater();
         if (!player->isCardLimited(slashx, Card::MethodUse) && player->hasFlag("xianzhen_success"))
             return true;
@@ -709,7 +709,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     QString choice = room->askForChoice(effect.to, "mingce", choicelist.join("+"));
 
     if (choice == "use") {
-        Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+        Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("mingce");
         CardUseStruct card_use;
         card_use.from = effect.to;

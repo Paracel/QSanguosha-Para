@@ -71,7 +71,7 @@
     </message>
     <message>
         <location filename="../../src/core/card.cpp" line="245"/>
-        <source>NoSuitNoColor</source>
+        <source>NoSuit</source>
         <translation>无色</translation>
     </message>
     <message>

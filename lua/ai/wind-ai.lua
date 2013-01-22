@@ -9,7 +9,7 @@ sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, slash, false) then
@@ -23,7 +23,7 @@ sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, slash, false) then
@@ -77,7 +77,7 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
 	local defense = 6
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, slash, false) then
@@ -389,7 +389,7 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, guhuo_filter)
 sgs.ai_skill_choice.guhuo = function(self, choices)
 	local yuji = self.room:findPlayerBySkillName("guhuo")
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
-	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuitNoColor, 0)
+	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuit, 0)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype) == 0 and self.player:getHp() > 0 then return "question" end
 	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:isEquip("Crossbow", yuji))) then return "noquestion" end
@@ -447,7 +447,7 @@ guhuo_skill.getTurnUseCard = function(self)
 	
 	for i = 1, #guhuos do
 		local forbiden = guhuos[i]
-		forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuitNoColor, 0)
+		forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuit, 0)
 		if self.player:isCardLimited(forbid, sgs.Card_MethodUse, true) then table.remove(forbiden, #guhuos) end
 	end
 

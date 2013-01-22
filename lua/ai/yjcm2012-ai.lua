@@ -72,7 +72,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -83,7 +83,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -517,12 +517,12 @@ sgs.ai_skill_invoke.zhiyu = function(self)
 end
 
 local function get_handcard_suit(cards)
-	if #cards == 0 then return sgs.Card_NoSuitNoColor end
+	if #cards == 0 then return sgs.Card_NoSuit end
 	if #cards == 1 then return cards[1]:getSuit() end
 	local black = false
 	if cards[1]:isBlack() then black = true end
 	for _, c in ipairs(cards) do
-		if black ~= c:isBlack() then return sgs.Card_NoSuitNoColor end
+		if black ~= c:isBlack() then return sgs.Card_NoSuit end
 	end
 	if black then return sgs.Card_NoSuitBlack else return sgs.Card_NoSuitRed end
 end
@@ -578,7 +578,7 @@ qice_skill.getTurnUseCard = function(self)
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuitNoColor, 0)
+				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 				if self:getAoeValue(aoe) > -5 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
 					return parsed_card
@@ -599,7 +599,7 @@ qice_skill.getTurnUseCard = function(self)
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuitNoColor, 0)
+				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 				if self:getAoeValue(aoe) > 0 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
 					return parsed_card
@@ -618,7 +618,7 @@ qice_skill.getTurnUseCard = function(self)
 	if aoe_available then
 		for i = 1, #aoenames do
 			local newqice = aoenames[i]
-			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuitNoColor, 0)
+			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence") then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
 				return parsed_card

@@ -412,7 +412,7 @@ end
 function sgs.ai_cardneed.luoyi(to, card, self)
 	local slash_num = 0
 	local target
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	
 	local cards = to:getHandcards()
 	local need_slash = true
@@ -1040,7 +1040,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 		return sgs.Card_Parse("@KurouCard=.")
 	end
 
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	if self.player:getWeapon() and self.player:getWeapon():isKindOf("Crossbow") then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy, nil, true) and self:slashIsEffective(slash, enemy)
@@ -1522,7 +1522,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 		local males = {}
 		local first, second
 		local zhugeliang_kongcheng
-		local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuitNoColor, 0)
+		local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
 		for _, enemy in ipairs(self.enemies) do
 			--if zhugeliang_kongcheng and #males == 1 and self:damageIsEffective(zhugeliang_kongcheng, sgs.DamageStruct_Normal, males[1])
 				--then table.insert(males, zhugeliang_kongcheng) end

@@ -42,7 +42,7 @@ QString Analeptic::getSubtype() const{
 }
 
 bool Analeptic::IsAvailable(const Player *player, const Card *analeptic){
-    Analeptic *newanal = new Analeptic(Card::NoSuitNoColor, 0);
+    Analeptic *newanal = new Analeptic(Card::NoSuit, 0);
     newanal->deleteLater();
     if (player->isCardLimited(analeptic == NULL ? newanal : analeptic, Card::MethodUse)
         || player->isProhibited(player, analeptic == NULL ? newanal : analeptic))

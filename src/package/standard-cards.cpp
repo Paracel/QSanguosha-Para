@@ -21,7 +21,7 @@ void Slash::setNature(DamageStruct::Nature nature) {
 
 bool Slash::IsAvailable(const Player *player, const Card *slash) {
     if (slash == NULL) {
-        Slash *newslash = new Slash(Card::NoSuitNoColor, 0);
+        Slash *newslash = new Slash(Card::NoSuit, 0);
         newslash->deleteLater();
         if (player->isCardLimited(newslash, Card::MethodUse))
             return false;
@@ -578,7 +578,7 @@ public:
 
                 if (judge.isGood()) {
                     room->setEmotion(player, "armor/eight_diagram");
-                    Jink *jink = new Jink(Card::NoSuitNoColor, 0);
+                    Jink *jink = new Jink(Card::NoSuit, 0);
                     jink->setSkillName(objectName());
                     room->provide(jink);
 

@@ -161,7 +161,7 @@ void TaichenFightCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer 
     room->loseHp(source);
 
     if (source->isAlive()) {
-        Duel *duel = new Duel(Card::NoSuitNoColor, 0);
+        Duel *duel = new Duel(Card::NoSuit, 0);
         duel->setSkillName("taichenfight");
         duel->setCancelable(false);
 
@@ -183,7 +183,7 @@ public:
     virtual bool isEnabledAtPlay(const Player *player) const{
         if (player->hasUsed("TaichenFightCard"))
             return false;
-        Duel *duel = new Duel(Card::NoSuitNoColor, 0);
+        Duel *duel = new Duel(Card::NoSuit, 0);
         duel->deleteLater();
         if (player->isCardLimited(duel, Card::MethodUse)) {
             return false;

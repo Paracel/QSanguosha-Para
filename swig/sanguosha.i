@@ -645,7 +645,7 @@ enum TriggerEvent {
 class Card: public QObject {
 public:
     // enumeration type
-    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor, SuitToBeDecided };
+    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuit, SuitToBeDecided };
     enum HandlingMethod { MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian };
     static const Suit AllSuits[4];
     

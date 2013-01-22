@@ -617,7 +617,7 @@ bool Player::canSlash(const Player *other, const Card *slash, bool distance_limi
         return false;
 
     if (!slash)
-        slash = new Slash(Card::NoSuitNoColor, 0);
+        slash = new Slash(Card::NoSuit, 0);
 
     if (isProhibited(other, slash))
         return false;
@@ -741,7 +741,7 @@ bool Player::isProhibited(const Player *to, const Card *card) const{
 bool Player::canSlashWithoutCrossbow() const{
     int slash_count = getSlashCount();
     int valid_slash_count = 1;
-    Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+    Slash *slash = new Slash(Card::NoSuit, 0);
     slash->deleteLater();
     valid_slash_count += Sanguosha->correctCardTarget(TargetModSkill::Residue, this, slash);
     return slash_count < valid_slash_count;

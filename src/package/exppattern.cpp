@@ -102,7 +102,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
     if (color == ".") return true;
     else if (color == "red" && card->isRed()) return true;
     else if (color == "black" && card->isBlack()) return true;
-    else if (color == "colorless" && card->getSuit() == Card::NoSuitNoColor) return true;
+    else if (color == "colorless" && card->getSuit() == Card::NoSuit) return true;
 
     return false;
 }

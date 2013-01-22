@@ -121,7 +121,7 @@ QString Card::getNumberString() const{
 Card::Suit Card::getSuit() const{
     if (isVirtualCard()) {
         if (subcardsLength() == 0)
-            return NoSuitNoColor;
+            return NoSuit;
         else if (subcardsLength() == 1)
             return Sanguosha->getCard(subcards.first())->getSuit();
         else {
@@ -131,7 +131,7 @@ Card::Suit Card::getSuit() const{
                 if (color == Colorless)
                     color = color2;
                 else if (color != color2)
-                    return NoSuitNoColor;
+                    return NoSuit;
             }
             return (color == Red) ? NoSuitRed : NoSuitBlack;
         }
@@ -182,7 +182,7 @@ bool Card::CompareByColor(const Card *a, const Card *b) {
 }
 
 bool Card::CompareBySuitNumber(const Card *a, const Card *b) {
-    static Suit new_suits[] = {Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor};
+    static Suit new_suits[] = {Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit};
     Suit suit1 = new_suits[a->getSuit()];
     Suit suit2 = new_suits[b->getSuit()];
 
@@ -241,8 +241,8 @@ QString Card::getLogName() const{
             suit_char = tr("NoSuitBlack");
             break;
         }
-    case NoSuitNoColor: {
-            suit_char = tr("NoSuitNoColor");
+    case NoSuit: {
+            suit_char = tr("NoSuit");
             break;
         }
     default:
@@ -329,7 +329,7 @@ const Card *Card::Parse(const QString &str) {
         suit_map.insert("diamond", Card::Diamond);
         suit_map.insert("no_suit_red", Card::NoSuitRed);
         suit_map.insert("no_suit_black", Card::NoSuitBlack);
-        suit_map.insert("no_suit", Card::NoSuitNoColor);
+        suit_map.insert("no_suit", Card::NoSuit);
     }
 
     if (str.startsWith(QChar('@'))) {
@@ -378,7 +378,7 @@ const Card *Card::Parse(const QString &str) {
             card->setSkillName(skillName);
         }
         if (!card_suit.isEmpty())
-            card->setSuit(suit_map.value(card_suit, Card::NoSuitNoColor));
+            card->setSuit(suit_map.value(card_suit, Card::NoSuit));
 
         if (!card_number.isEmpty()) {
             int number = 0;
@@ -430,14 +430,14 @@ const Card *Card::Parse(const QString &str) {
         if (subcard_str != ".")
             subcard_ids = subcard_str.split("+");
 
-        Suit suit = Card::NoSuitNoColor;
+        Suit suit = Card::NoSuit;
         DummyCard *dummy = new DummyCard;
         foreach(QString subcard_id, subcard_ids)
             dummy->addSubcard(subcard_id.toInt());
         if (suit_string == "to_be_decided")
             suit = dummy->getSuit();
         else
-            suit = suit_map.value(suit_string, Card::NoSuitNoColor);
+            suit = suit_map.value(suit_string, Card::NoSuit);
         dummy->deleteLater();
 
         int number = 0;
@@ -669,7 +669,7 @@ void Card::clearFlags() const{
 
 // ---------   Skill card     ------------------
 
-SkillCard::SkillCard(): Card(NoSuitNoColor, 0) {
+SkillCard::SkillCard(): Card(NoSuit, 0) {
 }
 
 void SkillCard::setUserString(const QString &user_string) {

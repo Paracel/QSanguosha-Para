@@ -445,7 +445,7 @@ public:
 
             if (judge.isGood()) {
                 room->setEmotion(wolong, "armor/eight_diagram");
-                Jink *jink = new Jink(Card::NoSuitNoColor, 0);
+                Jink *jink = new Jink(Card::NoSuit, 0);
                 jink->setSkillName(objectName());
                 room->provide(jink);
                 return true;

@@ -111,7 +111,7 @@ LuaSkillCard *LuaSkillCard::Parse(const QString &str) {
         suit_map.insert("diamond", Card::Diamond);
         suit_map.insert("no_suit_red", Card::NoSuitRed);
         suit_map.insert("no_suit_black", Card::NoSuitBlack);
-        suit_map.insert("no_suit", Card::NoSuitNoColor);
+        suit_map.insert("no_suit", Card::NoSuit);
     }
 
     QStringList texts;
@@ -146,7 +146,7 @@ LuaSkillCard *LuaSkillCard::Parse(const QString &str) {
         }
     }
     if (!suit.isEmpty())
-        new_card->setSuit(suit_map.value(suit, Card::NoSuitNoColor));
+        new_card->setSuit(suit_map.value(suit, Card::NoSuit));
     if (!number.isEmpty()) {
         int num = 0;
         if (number == "A")

@@ -1431,7 +1431,7 @@ public:
 
                 ServerPlayer *victim = room->askForPlayerChosen(xiahou, targets, objectName());
 
-                Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+                Slash *slash = new Slash(Card::NoSuit, 0);
                 slash->setSkillName(objectName());
                 CardUseStruct card_use;
                 card_use.from = xiahou;
@@ -1564,7 +1564,7 @@ public:
             room->showAllCards(simazhao);
             ServerPlayer *victim = room->askForPlayerChosen(simazhao, targets, objectName());
 
-            Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+            Slash *slash = new Slash(Card::NoSuit, 0);
             slash->setSkillName("zhaoxin");
             CardUseStruct card_use;
             card_use.from = simazhao;

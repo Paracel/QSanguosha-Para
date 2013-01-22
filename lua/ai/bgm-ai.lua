@@ -354,7 +354,7 @@ sgs.ai_skill_invoke.mouduan = function(self, data)
 	if current:objectName() == self.player:objectName() then
 		if self:isEquip("Crossbow") or self:getCardsNum("Crossbow") > 0 and self:getCardsNum("Slash") >= 3 then
 			local hasTarget = false
-			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 			for _, enemy in ipairs(self.enemies) do
 				if not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
 					hasTarget = true
@@ -835,7 +835,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 8 then
@@ -845,7 +845,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	end
 	if self:isFriend(current) then
 		for _, enemy in ipairs(self.enemies) do
-			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 			local eff = self:slashIsEffective(slash, enemy)
 
 			if self.player:canSlash(enemy, nil , false) and not self:slashProhibit(nil, enemy) then
@@ -877,7 +877,7 @@ sgs.ai_skill_invoke.zhaoxin = function(self, data)
 	local target
 	self:sort(self.enemies,"defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
 			sgs.ai_skill_playerchosen.zhaoxin = enemy

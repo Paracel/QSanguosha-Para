@@ -37,7 +37,7 @@ class Card: public QObject {
 
 public:
     // enumeration type
-    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuitNoColor, SuitToBeDecided = -1 };
+    enum Suit { Spade, Club, Heart, Diamond, NoSuitBlack, NoSuitRed, NoSuit, SuitToBeDecided = -1 };
     enum Color { Red, Black, Colorless };
     enum HandlingMethod { MethodNone, MethodUse, MethodResponse, MethodDiscard, MethodRecast, MethodPindian };
 

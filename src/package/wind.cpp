@@ -257,7 +257,7 @@ bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void ShensuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+    Slash *slash = new Slash(Card::NoSuit, 0);
     slash->setSkillName("shensu");
     CardUseStruct use;
     use.card = slash;
@@ -284,7 +284,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+        Slash *slash = new Slash(Card::NoSuit, 0);
         slash->deleteLater();
         if (pattern.startsWith("@@shensu") && !player->isCardLimited(slash, Card::MethodUse))
             return true;
@@ -759,12 +759,12 @@ QGroupBox *GuhuoDialog::createLeft() {
     foreach (const Card *card, cards) {
         if (card->getTypeId() == Card::TypeBasic && !map.contains(card->objectName())
             && !Config.BanPackages.contains(card->getPackage())) {
-            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuitNoColor, 0);
+            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
             c->setParent(this);
             layout->addWidget(createButton(c));
 
             if (card->objectName() == "slash"  && !Config.BanPackages.contains("maneuvering")) {
-                Card *c2 = Sanguosha->cloneCard(card->objectName(), Card::NoSuitNoColor, 0);
+                Card *c2 = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
                 c2->setParent(this);
                 layout->addWidget(createButton(c2));
             }
@@ -791,7 +791,7 @@ QGroupBox *GuhuoDialog::createRight() {
     foreach (const Card *card, cards) {
         if (card->isNDTrick() && !map.contains(card->objectName())
             && !Config.BanPackages.contains(card->getPackage())){
-            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuitNoColor, 0);
+            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
             c->setSkillName(object_name);
             c->setParent(this);
 
@@ -946,7 +946,7 @@ bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player 
 bool GuhuoCard::targetFixed() const{
     if(Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
         if (!ClientInstance->hasNoTargetResponding()) {
-            CardStar card = Sanguosha->cloneCard(user_string, NoSuitNoColor, 0);
+            CardStar card = Sanguosha->cloneCard(user_string, NoSuit, 0);
             Self->tag["guhuo"] = QVariant::fromValue(card);
             return card && card->targetFixed();
         } else

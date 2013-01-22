@@ -197,7 +197,7 @@ sgs.ai_compare_funcs["defenseSlash"] = function(a, b)
 end
 
 function SmartAI:slashProhibit(card, enemy)
-	card = card or sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+	card = card or sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	for _, askill in sgs.qlist(enemy:getVisibleSkillList()) do
 		local filter = sgs.ai_slash_prohibit[askill:objectName()]
 		if filter and type(filter) == "function" and filter(self, enemy, card) then return true end
@@ -269,7 +269,7 @@ end
 function SmartAI:slashIsAvailable(player)
 	player = player or self.player
 	local slash = self:getCard("Slash", player)
-	if not slash or not slash:isKindOf("Slash") then slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0) end
+	if not slash or not slash:isKindOf("Slash") then slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0) end
 	assert(slash)
 	return slash:isAvailable(player)
 end
@@ -421,7 +421,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 end
 
 sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitNoColor, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	local targetlist=sgs.QList2Table(targets)
 	self:sort(targetlist, "defenseSlash")
 	for _, target in ipairs(targetlist) do
@@ -905,7 +905,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if not self:damageIsEffective(nil, nil, target) then return "." end
 	if target:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 then return "." end
 
-	local aoe = sgs.Sanguosha:cloneCard(name, sgs.Card_NoSuitNoColor, 0)
+	local aoe = sgs.Sanguosha:cloneCard(name, sgs.Card_NoSuit, 0)
 	local menghuo = self.room:findPlayerBySkillName("huoshou")
 	local attacker = target
 	if menghuo and aoe:isKindOf("SavageAssault") then attacker = menghuo end

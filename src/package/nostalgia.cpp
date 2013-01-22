@@ -257,7 +257,7 @@ public:
                     if (lingtong->canSlash(target, NULL, false))
                         targets1 << target;
                 }
-                Slash *slashx = new Slash(Card::NoSuitNoColor, 0);
+                Slash *slashx = new Slash(Card::NoSuit, 0);
                 if (!targets1.isEmpty() && !lingtong->isCardLimited(slashx, Card::MethodUse))
                     choicelist << "slash";
                 slashx->deleteLater();
@@ -272,7 +272,7 @@ public:
                 if (choice == "slash") {
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets1, "nosxuanfeng_slash");
                     room->broadcastSkillInvoke("xuanfeng", 1);
-                    Slash *slash = new Slash(Card::NoSuitNoColor, 0);
+                    Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName("nosxuanfeng");
 
                     CardUseStruct card_use;

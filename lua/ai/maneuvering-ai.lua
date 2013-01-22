@@ -395,7 +395,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
 			and self:hasTrickEffective(fire_attack, self.player)
 			and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
-				or (self.player:hasSkill("niepan") and self.player:getMark("@@nirvana") > 0)) then
+				or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
 		use.card = fire_attack
 		if use.to then use.to:append(self.player) end
 		return

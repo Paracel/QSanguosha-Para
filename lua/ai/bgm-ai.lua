@@ -834,11 +834,11 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	local current = self.room:getCurrent();
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		local def = sgs.getDefense(enemy)
+		local def = sgs.getDefenseSlash(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
-		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 8 then
+		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
 			self.xuehentarget = enemy
 			return "slash"
 		end

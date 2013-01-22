@@ -71,13 +71,13 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 	if goodtarget == 0 or self.player:isSkipped(sgs.Player_Play) then return "jiang" end
 
 	for _, enemy in ipairs(self.enemies) do
-		local def = sgs.getDefense(enemy)
+		local def = sgs.getDefenseSlash(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if not self.player:canSlash(enemy, nil, false) then
 		elseif self:slashProhibit(nil, enemy) then
-		elseif def < 6 and eff and needburst > 0 then return "chi"
+		elseif def < 5 and eff and needburst > 0 then return "chi"
 		end
 	end
 

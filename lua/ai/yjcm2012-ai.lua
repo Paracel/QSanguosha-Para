@@ -382,6 +382,8 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 	end
 end
 
+sgs.ai_use_priority.AnxuCard = 9.6
+
 sgs.ai_card_intention.AnxuCard = function(card, from, to)
 	local more, less
 	if to[1]:getHandcardNum() > to[2]:getHandcardNum() then

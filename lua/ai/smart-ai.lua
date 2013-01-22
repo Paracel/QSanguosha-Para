@@ -2260,8 +2260,13 @@ function SmartAI:askForCardChosen(who, flags, reason)
 end
 
 function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
+	local nature = sgs.DamageStruct_Normal
+	
+	local effect = data:toSlashEffect()
+	if effect and effect.slash then nature = effect.nature end
+	
 	if self.player:isDead() then return "." end
-	if not self:damageIsEffective(nil, nil, target) then return "." end
+	if not self:damageIsEffective(nil, nature, target) then return "." end
 	if target and target:getWeapon() and target:getWeapon():isKindOf("IceSword") and self.player:getCards("he"):length() > 2 then return end
 	if self.player:getHp() > getBestHp(self.player) then return "." end
 	if target and target:hasSkill("jueqing") then return end

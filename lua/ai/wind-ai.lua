@@ -106,20 +106,8 @@ sgs.ai_card_intention.ShensuCard = 80
 sgs.shensu_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
-	Crossbow = 5,
-	Blade = 5,
-	Spear = 5,
-	DoubleSword =5,
-	QinggangSword=5,
-	Axe=5,
-	KylinBow=5,
-	Halberd=5,
-	IceSword=5,
-	Fan=5,
-	MoonSpear=5,
-	GudingBlade=5,
-	DefensiveHorse = 5,
-	OffensiveHorse = 5
+	Weapon = 5,
+	Horse = 5
 }
 
 function sgs.ai_skill_invoke.jushou(self, data)
@@ -198,6 +186,13 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	for _, enemy in ipairs(self.enemies) do
 		if not self:isEquip("SilverLion", enemy) and not enemy:hasSkill("hongyan") and
 			self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
+			return "@LeijiCard=.->" .. enemy:objectName()
+		end
+	end
+	
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:hasSkill("hongyan")
+			and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
 			return "@LeijiCard=.->" .. enemy:objectName()
 		end
 	end

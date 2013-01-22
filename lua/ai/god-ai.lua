@@ -177,7 +177,7 @@ end
 -- @todo: move the AI of GongXin here
 
 sgs.ai_use_value.GongxinCard = 8.5
-sgs.ai_use_priority.GongxinCard = 8.8
+sgs.ai_use_priority.GongxinCard = 9.5
 sgs.ai_card_intention.GongxinCard = 80
 
 sgs.ai_skill_invoke.qinyin = function(self, data)

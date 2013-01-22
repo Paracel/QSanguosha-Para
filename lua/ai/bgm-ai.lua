@@ -756,7 +756,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isKongcheng() and self:hasLoseCardEffective(enemy)
+		if not enemy:isKongcheng() and self:hasLoseHandcardEffective(enemy)
 			and (enemy:getHandcardNum() > enemy:getHp() - 2 or (enemy:getHandcardNum() == 1 and not self:needKongcheng(enemy))) then
 			use.card = card
 			if use.to then

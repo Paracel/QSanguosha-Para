@@ -113,6 +113,10 @@ function sgs.getDefenseSlash(player)
 	if player:hasSkill("rende") and player:getHp() > 2 then
 		defense = defense + 3
  	end
+	
+	if player:hasSkill("tuntian") and getCardsNum("Jink", player) > 0 then
+		defense = defense + 1.5  
+	end
 
 	local hujiaJink = 0
 	if player:hasLordSkill("hujia") then
@@ -1061,7 +1065,7 @@ sgs.ai_card_intention.ExNihilo = -80
 
 sgs.ai_keep_value.ExNihilo = 3.6
 sgs.ai_use_value.ExNihilo = 10
-sgs.ai_use_priority.ExNihilo = 10
+sgs.ai_use_priority.ExNihilo = 9.3
 
 sgs.dynamic_value.benefit.ExNihilo = true
 

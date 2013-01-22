@@ -95,7 +95,7 @@ sgs.ai_skill_use_func.XinzhanCard = function(card, use, self)
 end
 
 sgs.ai_use_value.XinzhanCard = 4.4
-sgs.ai_use_priority.XinzhanCard = 9.2
+sgs.ai_use_priority.XinzhanCard = 9.4
 
 function sgs.ai_slash_prohibit.huilei(self, to)
 	if self.player:hasSkill("jueqing") then return false end

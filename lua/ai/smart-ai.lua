@@ -2158,8 +2158,8 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	else
 		if flags:match("e") and self:hasSkills("jijiu|dimeng|guzheng|qiaobian|jieyin|lijian|beige|miji", who) then
-			if who:getDefensiveHorse() then return who:getDefensiveHorse() end
-			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor() end
+			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
+			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor():getId() end
 			if who:getOffensiveHorse() and ((who:getOffensiveHorse():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then
 				return who:getOffensiveHorse():getId()
 			end
@@ -2732,7 +2732,7 @@ end
 
 function SmartAI:askForPlayerChosen(targets, reason)
 	self:log("askForPlayerChosen:" .. reason)
-	local playerchosen = sgs.ai_skill_playerchosen[string.gsub(reason,"%-","_")]
+	local playerchosen = sgs.ai_skill_playerchosen[string.gsub(reason, "%-", "_")]
 	local target
 	if type(playerchosen) == "function" then
 		target = playerchosen(self, targets)

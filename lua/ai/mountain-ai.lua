@@ -351,7 +351,7 @@ sgs.ai_skill_askforag.jixi = function(self, card_ids)
 end
 
 sgs.ai_skill_playerchosen.jixi = function(self, targets)
-	return self.jixitarget or targets:at(0)
+	return self.jixitarget or targets[1]
 end
 
 sgs.ai_card_intention.JixiCard = sgs.ai_card_intention.Snatch

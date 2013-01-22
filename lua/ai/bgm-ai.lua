@@ -839,7 +839,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 
 		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 8 then
-			self.room:setPlayerFlag(enemy, "XuehenToChoose")
+			self.xuehentarget = enemy
 			return "slash"
 		end
 	end
@@ -849,7 +849,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 			local eff = self:slashIsEffective(slash, enemy)
 
 			if self.player:canSlash(enemy, nil , false) and not self:slashProhibit(nil, enemy) then
-				self.room:setPlayerFlag(enemy, "XuehenToChoose")
+				self.xuehentarget = enemy
 				return "slash"
 			end
 		end
@@ -858,18 +858,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 end
 
 sgs.ai_skill_playerchosen.xuehen = function(self, targets)
-	targets = sgs.QList2Table(targets)
-	for _, enemy in ipairs(targets) do
-		if enemy:hasFlag("XuehenToChoose") then
-			self.room:setPlayerFlag(enemy, "-XuehenToChoose")
-			return enemy
-		end
-	end
-	for _, p in sgs.qlist(self.room:getAllPlayers()) do
-		if p:hasFlag("XuehenToChoose") then
-			self.room:setPlayerFlag(p, "-XuehenToChoose")
-		end
-	end
+	return self.xuehentarget or targets[1]
 end
 
 --AI for DIY generals
@@ -880,11 +869,15 @@ sgs.ai_skill_invoke.zhaoxin = function(self, data)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
-			sgs.ai_skill_playerchosen.zhaoxin = enemy
+			self.zhaoxintarget = enemy
 			return true
 		end
 	end
 	return false
+end
+
+sgs.ai_skill_playerchosen.zhaoxin = function(self, targets)
+	return self.zhaoxintarget or targets[1]
 end
 
 sgs.ai_skill_invoke.langgu = function(self, data)

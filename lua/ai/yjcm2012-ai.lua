@@ -136,7 +136,7 @@ gongqi_skill.getTurnUseCard = function(self, inclusive)
 		return sgs.Card_Parse("@GongqiCard=" .. self.player:getArmor():getEffectiveId())
 	end
 
-	if self.player:getOverflow() > 0 and self:getCardsNum("Slash") >= 1 then
+	if self:getOverflow() > 0 and self:getCardsNum("Slash") >= 1 then
 		self:sortByKeepValue(handcards)
 		for _, c in ipairs(handcards) do
 			if c:isKindOf("Snatch") or c:isKindOf("Dismantlement") then
@@ -165,10 +165,15 @@ sgs.ai_skill_invoke.gongqi = function(self, data)
 	self:sort(self.enemies)
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isNude() and not (enemy:isKongcheng() and self:hasSkills(sgs.lose_equip_skill, enemy)) then
-			sgs.ai_skill_playerchosen.gongqi = enemy
+			self.gongqitarget = enemy
 			return true
 		end
 	end
+	return false
+end
+
+sgs.ai_skill_playerchosen.gonqqi = function(self, targets)
+	return self.gongqitarget or targets[1]
 end
 
 sgs.ai_use_value.GongqiCard = 2

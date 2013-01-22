@@ -832,6 +832,9 @@ end
 
 sgs.ai_skill_choice.xuehen = function(self, choices)
 	local current = self.room:getCurrent();
+	if self:isEnemy(current) then
+		if self:hasSkills("jijiu|tuntian", current) and self.player:getLostHp() >= 2 and current:getCardCount(true) >= 2 then return "discard" end
+	end
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefenseSlash(enemy)

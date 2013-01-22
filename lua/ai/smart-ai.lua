@@ -3787,7 +3787,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 			if to:hasSkill("jieming") then
 				value = value + self:getJiemingChaofeng(to) * 3
 			end
-			if to:hasSkill("ganglie") or to:hasSkill("fankui") or to:hasSkill("enyuan") then
+			if self:hasSkills("ganglie|fankui|enyuan|neoganglie|nosenyuan", to) then
 				if not self:isFriend(from, to) then
 					value = value + 10
 				else

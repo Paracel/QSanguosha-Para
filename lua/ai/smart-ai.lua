@@ -3110,26 +3110,13 @@ local function getSkillViewCard(card, class_name, player, card_place)
 	end
 end
 
-local function getFilterSkillViewCard(card, player, card_place)
-	local vlist = sgs.getSkillLists(player)
-	for _, askill in ipairs(vlist) do
-		local skill = sgs.Sanguosha:getSkill(askill)
-		if player:hasSkill(askill) and skill and skill:inherits("FilterSkill") then
-			local callback = sgs.ai_view_as[askill]
-			if type(callback) == "function" then
-				local skill_card_str = callback(card, player, card_place, class_name)
-				if skill_card_str then
-					return sgs.Card_Parse(skill_card_str)
-				end
-			end
-		end
-	end
-end
-
 function isCard(class_name, card, player)
-	local cardx = getFilterSkillViewCard(card, player, player:getRoom():getCardPlace(card:getEffectiveId()))
-	if cardx and not cardx:isKindOf(class_name) then return false end
-	return card:isKindOf(class_name) or getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId()))
+	if not card:isKindOf(class_name) then
+		if getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId())) then return true end
+	else
+		if not prohibitUseDirectly(card, player) then return true end
+	end
+	return false
 end
 
 function SmartAI:getMaxCard(player)

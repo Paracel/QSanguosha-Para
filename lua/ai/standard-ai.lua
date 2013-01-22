@@ -1064,6 +1064,10 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 			end
 		end
 	end
+	
+	if self.player:getHp() <= 1 and self:getCardsNum("Analeptic") > 1 then
+		return sgs.Card_Parse("@KurouCard=.")
+ 	end
 end
 
 sgs.ai_skill_use_func.KurouCard = function(card, use, self)

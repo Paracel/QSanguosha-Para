@@ -2642,7 +2642,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	end
 
 	self:sort(friends, "defense")
-	for _, friend in ipairs(self.friends_noself) do
+	for _, friend in ipairs(friends) do
 		if not self:needKongcheng(friend) then
 			for _, hcard in ipairs(cardtogive) do
 				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 then
@@ -2679,16 +2679,14 @@ function SmartAI:askForYiji(card_ids)
 	if self.player:hasFlag("lirang_InTempMoving") then
 		local tos = {}
 		for _, target in ipairs(self.friends_noself) do
-			if self:isFriend(target) and not target:hasSkill("manjuan") and not self:needKongcheng(target) then
+			if self:isFriend(target) and not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)
+				and not self:needKongcheng(target) then
 				table.insert(tos, target)
 			end
 		end
 
-		if #tos > 0 then
-			self:sort(tos, "defense")
-		else
-			return
-		end
+		if #tos == 0 then return end
+		self:sort(tos, "defense")
 		local afriend = tos[1]
 		for _, acard_id in ipairs(card_ids) do
 			return afriend, acard_id

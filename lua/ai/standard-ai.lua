@@ -580,6 +580,21 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 		end
 		if use.to then use.to:append(friend) end
 		return
+	else
+		local pangtong = self.room:findPlayerBySkillName("manjuan")
+		if not pangtong then return end
+		if self.player:isWounded() and self.player:getHandcardNum() > 3 and self.player:getMark("rende") < 2 then
+			self:sortByUseValue(cards, true)
+			local to_give = {}
+			for _, card in ipairs(cards) do
+				if not card:isKindOf("Peach") and not card:isKindOf("ExNihilo") then table.insert(to_give, card:getId()) end
+				if #to_give == 2 - self.player:getMark("rende") then break end
+			end
+			if #to_give > 0 then
+				use.card = sgs.Card_Parse("@RendeCard=" .. table.concat(to_give, "+"))
+				if use.to then use.to:append(pangtong) end
+			end
+		end
 	end
 end
 

@@ -766,7 +766,7 @@ function sgs.ai_cardsview.spear(class_name, player)
 		cards = sgs.QList2Table(cards)
 		local newcards = {}
 		for _, card in ipairs(cards) do
-			if not card:isKindOf("Peach") then table.insert(newcards, card) end
+			if not card:isKindOf("Peach") and not (card:isKindOf("ExNihilo") and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 		end
 		if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
 		if #newcards < 2 then return end
@@ -796,7 +796,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	cards = sgs.QList2Table(cards)
 	local newcards = {}
 	for _, card in ipairs(cards) do
-		if not card:isKindOf("Peach") then table.insert(newcards, card) end
+		if not card:isKindOf("Peach") and not (card:isKindOf("ExNihilo") and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
 	if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
 	if #newcards < 2 then return end

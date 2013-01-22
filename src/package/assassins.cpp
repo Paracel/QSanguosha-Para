@@ -115,19 +115,17 @@ bool MizhaoCard::targetFilter(const QList<const Player *> &targets, const Player
 
 void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->obtainCard(effect.card, false);
-    Room *room = effect.from->getRoom();
+    if (effect.to->isKongcheng()) return;
 
-    int index = 1;
-    if (effect.to->getGeneralName().contains("liubei"))
-        index = 2;
-    room->broadcastSkillInvoke("mizhao", index);
+    Room *room = effect.from->getRoom();
+    room->broadcastSkillInvoke("mizhao", effect.to->getGeneralName().contains("liubei") ? 2 : 1);
 
     QList<ServerPlayer *> targets;
     foreach (ServerPlayer *p, room->getOtherPlayers(effect.to))
         if (!p->isKongcheng())
             targets << p;
 
-    if (!effect.to->isKongcheng() && !targets.isEmpty()) {
+    if (!targets.isEmpty()) {
         ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "mizhao");
         effect.to->pindian(target, "mizhao", NULL);
     }

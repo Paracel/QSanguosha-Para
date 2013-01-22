@@ -314,7 +314,7 @@ function SmartAI:getUseValue(card)
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
-				or self:hasHeavySlashDamage() then v = 8.7 end
+				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
 			if self:isEquip("CrossBow") then v = v + 4 end
 			v = v + self:getCardsNum("Slash")
 		elseif card:isKindOf("Jink") then
@@ -1989,7 +1989,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					if self:getDangerousCard(to) or self:getValuableCard(to) or (to:getHandcardNum() == 1 and not self:needKongcheng(to)) then return null_card end
 				else
 					if trick:isKindOf("Snatch") then return null_card end
-					if trick:isKindOf("FireAttack") and (self:isEquip("Vine", to) or to:getMark("@kuangfeng") > 0 or (to:isChained() and not self:isGoodChainTarget(to)))
+					if trick:isKindOf("FireAttack") and (self:isEquip("Vine", to) or to:getMark("@gale") > 0 or (to:isChained() and not self:isGoodChainTarget(to)))
 						and from:objectName() ~= to:objectName() and not from:hasSkill("wuyan") then return null_card end
 					if self:isWeak(to) then
 						if trick:isKindOf("Duel") and not from:hasSkill("wuyan") then
@@ -2264,8 +2264,10 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	if effect and effect.slash then nature = effect.nature end
 	
 	if self.player:isDead() then return "." end
-	if not self:damageIsEffective(nil, nature, target) then return "." end
-	if target and target:getWeapon() and target:getWeapon():isKindOf("IceSword") and self.player:getCards("he"):length() > 2 then return end
+	if not effect or not self:hasHeavySlashDamage(target, effect.slash) then
+		if not self:damageIsEffective(nil, nature, target) then return "." end
+		if target and target:getWeapon() and target:getWeapon():isKindOf("IceSword") and self.player:getCards("he"):length() > 2 then return end
+	end
 	if self.player:getHp() > getBestHp(self.player) then return "." end
 	if target and target:hasSkill("jueqing") then return end
 	if self:getDamagedEffects(self.player) then return "." end
@@ -2413,11 +2415,15 @@ function SmartAI:getEnemyNumBySeat(from, to)
 end
 
 function SmartAI:hasHeavySlashDamage(player, slash)
-	player = player or self.player
+	player = player or self.room:getCurrent()
+	local fireSlash = slash and (slash:isKindOf("FireSlash") or slash:hasFlag("isFireSlash")
+								or (slash:objectName() == "slash" and (self:isEquip("Fan", player) or (self:hasSkill("lihuo") and not self:isWeak())))) 
 	return (slash and slash:hasFlag("drank")) or player:getMark("drank") > 0
 			or player:hasFlag("luoyi") or player:hasFlag("neoluoyi")
 			or (player:hasSkill("drluoyi") and not player:getWeapon())
 			or (slash and player:hasSkill("jie") and slash:isRed())
+			or ((self.player:hasArmorEffect("Vine") or self.player:getMark("@gale")) and fireSlash)
+			or (player:hasWeapon("guding_blade") and slash and self.player:isKongcheng())
 end
 
 function SmartAI:needKongcheng(player)

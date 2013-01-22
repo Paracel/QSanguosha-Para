@@ -1209,7 +1209,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 			end
 		end
 	end
-	if self:isWeak() or self:hasHeavySlashDamage(source, slash) then
+	if (self:isWeak() or self:hasHeavySlashDamage(source, slash)) and self:getCardsNum("Jink") == 0 then
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:isWeak(friend) then
 				if self.player:canSlash(friend, slash, true) and not (source:objectName() == friend:objectName()) then

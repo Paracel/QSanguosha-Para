@@ -877,7 +877,7 @@ function sgs.ai_armor_value.eight_diagram(player, self)
 		return 2
 	end
 	if player:hasSkill("tiandu") then
-		return 5
+		return 6
 	end
 
 	if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong") and self.room:getLord():hasLordSkill("hujia") then

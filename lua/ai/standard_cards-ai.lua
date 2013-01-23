@@ -778,7 +778,7 @@ function sgs.ai_cardsview.spear(class_name, player)
 		local cards = player:getCards("he")
 		cards = sgs.QList2Table(cards)
 		for _, acard in ipairs(cards) do
-			if acard:isKindOf("Slash") then return end
+			if isCard("Slash", acard, player) then return end
 		end
 		local cards = player:getCards("h")
 		cards = sgs.QList2Table(cards)
@@ -808,7 +808,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 
 	local newcards = {}
 	for _, acard in ipairs(cards) do
-		if acard:isKindOf("Slash") then return end
+		if isCard("Slash", acard, player) then return end
 	end
 	local cards = player:getCards("h")
 	cards = sgs.QList2Table(cards)

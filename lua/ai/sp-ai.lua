@@ -534,18 +534,18 @@ end
 
 sgs.ai_skill_invoke.cv_zhouyu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "heg_zhouyu" return true
-	else sgs.ai_skill_choice.cv_xiaoqiao = "sp_heg_zhouyu" return true end
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhouyu = "heg_zhouyu" return true
+	else sgs.ai_skill_choice.cv_zhouyu = "sp_heg_zhouyu" return true end
 end
 
 sgs.ai_skill_invoke.cv_zhenji = function(self, data)
 	if math.random(0, 3) >= 2 then return false
-	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "tw_zhenji" return true
-	else sgs.ai_skill_choice.cv_xiaoqiao = "heg_zhenji" return true end
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhenji = "tw_zhenji" return true
+	else sgs.ai_skill_choice.cv_zhenji = "heg_zhenji" return true end
 end
 
 sgs.ai_skill_invoke.cv_lvbu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "tw_lvbu" return true
-	else sgs.ai_skill_choice.cv_xiaoqiao = "heg_lvbu" return true end
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_lvbu = "tw_lvbu" return true
+	else sgs.ai_skill_choice.cv_lvbu = "heg_lvbu" return true end
 end

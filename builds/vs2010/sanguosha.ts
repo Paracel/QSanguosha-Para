@@ -3430,24 +3430,6 @@ P = 你自己, R = 你所在的房间</translation>
     </message>
 </context>
 <context>
-    <name>Skill</name>
-    <message>
-        <location filename="../../src/core/skill.cpp" line="56"/>
-        <source> [Limited]</source>
-        <translation> [限定技]</translation>
-    </message>
-    <message>
-        <location filename="../../src/core/skill.cpp" line="57"/>
-        <source> [Compulsory]</source>
-        <translation> [锁定技]</translation>
-    </message>
-    <message>
-        <location filename="../../src/core/skill.cpp" line="58"/>
-        <source> [Wake]</source>
-        <translation> [觉醒技]</translation>
-    </message>
-</context>
-<context>
     <name>SkillAssignDialog</name>
     <message>
         <location filename="../../src/dialog/customassigndialog.cpp" line="1709"/>

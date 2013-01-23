@@ -287,7 +287,7 @@ public:
             if (use.from->isMale() != to->isMale()
                 && !to->isSexLess()
                 && use.card->isKindOf("Slash")) {
-                if (use.from->askForSkillInvoke("double_sword")) {
+                if (use.from->askForSkillInvoke(objectName())) {
                     to->getRoom()->setEmotion(use.from,"weapon/double_sword");
 
                     bool draw_card = false;

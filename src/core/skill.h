@@ -34,7 +34,6 @@ public:
     bool isAttachedLordSkill() const;
     QString getDescription() const;
     QString getNotice(int index) const;
-    QString getText() const;
     bool isVisible() const;
 
     virtual QString getDefaultChoice(ServerPlayer *player) const;

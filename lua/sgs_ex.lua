@@ -140,7 +140,9 @@ function sgs.CreateSkillCard(spec)
 		card:setCanRecast(spec.can_recast)	
 	end
 		
-	card:setHandlingMethod(spec.handling_method)
+	if type(spec.handling_method) == "number" then
+		card:setHandlingMethod(spec.handling_method)
+	end
 	
 	card.filter = spec.filter
 	card.feasible = spec.feasible

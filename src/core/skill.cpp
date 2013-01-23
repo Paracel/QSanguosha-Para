@@ -47,22 +47,6 @@ QString Skill::getNotice(int index) const{
     return Sanguosha->translate(QString("~%1%2").arg(objectName()).arg(index));
 }
 
-QString Skill::getText() const{
-    QString skill_name = Sanguosha->translate(objectName());
-
-    switch (frequency) {
-    case Skill::NotFrequent:
-    case Skill::Frequent: break;
-    case Skill::Limited: skill_name.append(tr(" [Limited]")); break;
-    case Skill::Compulsory: skill_name.append(tr(" [Compulsory]")); break;
-    case Skill::Wake: skill_name.append(tr(" [Wake]")); break;
-    default:
-            break;
-    }
-
-    return skill_name;
-}
-
 bool Skill::isVisible() const{
     return !objectName().startsWith("#");
 }

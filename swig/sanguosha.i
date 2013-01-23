@@ -461,7 +461,7 @@ struct CardUseStruct {
 
     CardUseStruct();
     bool isValid(const char *pattern) const;
-    void parse(const char *, Room *room);
+    void parse(const char *str, Room *room);
     bool tryParse(const Json::Value &, Room *room);
 
     const Card *card;
@@ -827,6 +827,8 @@ public:
     const TriggerSkill *getTriggerSkill(const char *skill_name) const;
     const ViewAsSkill *getViewAsSkill(const char *skill_name) const;
     QList<const DistanceSkill *> getDistanceSkills() const;
+    QList<const MaxCardsSkill *> getMaxCardsSkills() const;
+    QList<const TargetModSkill *> getTargetModSkills() const;
     void addSkills(const QList<const Skill *> &skills);
 
     int getCardCount() const;
@@ -864,7 +866,6 @@ public:
     bool isLordSkill() const;
     bool isAttachedLordSkill() const;
     QString getDescription() const;
-    QString getText() const;
     bool isVisible() const;
 
     virtual QString getDefaultChoice(ServerPlayer *player) const;

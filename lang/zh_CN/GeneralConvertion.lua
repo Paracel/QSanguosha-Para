@@ -8,7 +8,7 @@ return {
 	["illustrator:sp_diaochan"] = "巴萨小马",
 	["cv_diaochan:convert"] = "你可以替换为SP貂蝉或台版貂蝉或国战貂蝉",
 	["cv_diaochan:sp_diaochan"] = "SP",
-	["cv_diaochan:tw_diaochan"] = "台湾版SP",
+	["cv_diaochan:tw_diaochan"] = "台湾版",
 	["cv_diaochan:heg_diaochan"] = "国战版",
 
 	["#sp_sunshangxiang"] = "梦醉良缘",
@@ -17,7 +17,7 @@ return {
 	["illustrator:sp_sunshangxiang"] = "木美人",
 	["cv_sunshangxiang:convert"] = "你可以替换为蜀势力SP孙尚香",
 
-	["#sp_pangde"] = "枱榇之悟",
+	["#sp_pangde"] = "抬榇之悟",
 	["sp_pangde"] = "SP庞德",
 	["&sp_pangde"] = "庞德",
 	["illustrator:sp_pangde"] = "天空之城",

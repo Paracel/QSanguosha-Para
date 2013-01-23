@@ -52,9 +52,8 @@ void GeneralOverview::fillGenerals(const QList<const General *> &generals) {
         QTableWidgetItem *nickname_item;
         if (!nickname.startsWith("#"))
             nickname_item = new QTableWidgetItem(nickname);
-        else {
+        else
             nickname_item = new QTableWidgetItem(Sanguosha->translate("UnknowNick"));
-        }
         nickname_item->setData(Qt::UserRole, general->objectName());
         nickname_item->setTextAlignment(Qt::AlignCenter);
 

@@ -2428,6 +2428,7 @@ function SmartAI:needKongcheng(player)
 end
 
 function SmartAI:getLeastHandcardNum(player)
+	player = player or self.player
 	local least = 0
 	if player:hasSkill("lianying") and least < 1 then least = 1 end
 	if player:hasSkill("shangshi") and least < math.min(2, player:getLostHp()) then least = math.min(2, player:getLostHp()) end
@@ -2436,6 +2437,7 @@ function SmartAI:getLeastHandcardNum(player)
 end
 
 function SmartAI:hasLoseHandcardEffective(player)
+	player = player or self.player
 	return player:getHandcardNum() > self:getLeastHandcardNum(player)
 end
 

@@ -172,9 +172,14 @@ void Dashboard::killPlayer() {
     this->setGraphicsEffect(effect);
     refresh();
     _m_deathIcon->show();
+    if (ServerInfo.GameMode == "04_1v3" && Self->getGeneralName() != "shenlvbu2") {
+        _m_votesGot = 6;
+        updateVotes(false);
+    }
 }
 
 void Dashboard::revivePlayer() {
+    _m_votesGot = 0;
     this->setGraphicsEffect(NULL);
     Q_ASSERT(_m_deathIcon);
     _m_deathIcon->hide();

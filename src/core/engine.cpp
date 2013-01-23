@@ -758,7 +758,7 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
     if (ServerInfo.GameMode.endsWith("p")
         || ServerInfo.GameMode.endsWith("pd")
         || ServerInfo.GameMode.endsWith("pz"))
-        general_set.subtract(Config.value("Banlist/Roles","").toStringList().toSet());
+        general_set.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
 
     all_generals = general_set.subtract(ban_set).toList();
 

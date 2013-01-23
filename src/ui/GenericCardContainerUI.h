@@ -96,7 +96,8 @@ public slots:
     void updatePile(const QString &pile_name);
     void updateRole(const QString &role);
     void updateMarks();
-    void updateVotes();
+    void updateVotes(bool need_select = true, bool display_1 = false);
+    void updateReformState();
     void showDistance();
     virtual void refresh();
 

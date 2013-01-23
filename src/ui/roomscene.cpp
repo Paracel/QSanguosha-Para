@@ -448,6 +448,12 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             }
             break;
         }
+    case S_GAME_EVENT_PLAYER_REFORM: {
+            ClientPlayer *player = ClientInstance->getPlayer(arg[1].asCString());
+            PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
+            container->updateReformState();
+            break;
+        }
     default:
         break;
     }
@@ -2883,7 +2889,7 @@ void RoomScene::killPlayer(const QString &who) {
         dashboard->killPlayer();
         general = Self->getGeneral();
         item2player.remove(dashboard);
-        if (ServerInfo.GameMode == "02_1v1") self_box->killPlayer(Self->getGeneralName());
+        if (ServerInfo.GameMode == "02_1v1") self_box->killPlayer(general->objectName());
     } else {
         Photo *photo = name2photo[who];
         photo->killPlayer();

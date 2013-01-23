@@ -2436,7 +2436,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             card_use.from->invoke("addHistory", key + ":");
         }
 
-        broadcastInvoke("addHistory","pushPile");
+        broadcastInvoke("addHistory", "pushPile");
     }
 
     if (card_use.card->getRealCard() == card) {

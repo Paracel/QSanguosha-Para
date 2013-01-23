@@ -690,6 +690,7 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
     return winner;
 }
 
+#include "jsonutils.h"
 HulaoPassMode::HulaoPassMode(QObject *parent)
     : GameRule(parent)
 {
@@ -765,6 +766,8 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             return false;
         }
     case BuryVictim: {
+            if (player->hasFlag("actioned")) room->setPlayerFlag(player, "-actioned");
+
             LogMessage log;
             log.type = "#Reforming";
             log.from = player;
@@ -792,6 +795,31 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                     player->play();
             } else {
                 if (player->isDead()) {
+                    Json::Value arg(Json::arrayValue);
+                    arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_REFORM;
+                    arg[1] = QSanProtocol::Utils::toJsonString(player->objectName());
+                    room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
+
+                    QString choice = player->isWounded() ? "recover" : "draw";
+                    if (player->isWounded() && player->getHp() > 0)
+                        choice = room->askForChoice(player, "Hulaopass", "recover+draw");
+
+                    if (choice == "draw") {
+                        LogMessage log;
+                        log.type = "#ReformingDraw";
+                        log.from = player;
+                        log.arg = "1";
+                        room->sendLog(log);
+                        player->drawCards(1, "reform");
+                    } else {
+                        LogMessage log;
+                        log.type = "#ReformingRecover";
+                        log.from = player;
+                        log.arg = "1";
+                        room->sendLog(log);
+                        room->setPlayerProperty(player, "hp", player->getHp() + 1);
+                    }
+
                     if (player->getHp() + player->getHandcardNum() == 6) {
                         LogMessage log;
                         log.type = "#ReformingRevive";
@@ -799,24 +827,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                         room->sendLog(log);
 
                         room->revivePlayer(player);
-                    } else if(player->isWounded()) {
-                        if (player->getHp() > 0 && (room->askForChoice(player, "Hulaopass", "recover+draw") == "draw")) {
-                            LogMessage log;
-                            log.type = "#ReformingDraw";
-                            log.from = player;
-                            room->sendLog(log);
-                            player->drawCards(1, "reform");
-                            return false;
-                        }
-
-                        LogMessage log;
-                        log.type = "#ReformingRecover";
-                        log.from = player;
-                        room->sendLog(log);
-
-                        room->setPlayerProperty(player, "hp", player->getHp() + 1);
-                    } else
-                        player->drawCards(1);
+                    }
                 } else {
                     LogMessage log;
                     log.type = "$AppendSeparator";
@@ -933,7 +944,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
             foreach (ServerPlayer *sp, room->getAlivePlayers()) {
                 room->setPlayerProperty(sp, "general", "anjiang");
                 sp->setGender(General::SexLess);
-                room->setPlayerProperty(sp,"kingdom","god");
+                room->setPlayerProperty(sp, "kingdom", "god");
 
                 LogMessage log;
                 log.type = "#BasaraGeneralChosen";

@@ -402,11 +402,12 @@ void PlayerCardContainer::refresh() {
         _m_chainIcon->setVisible(false);
         _m_actionIcon->setVisible(false);
         _m_saveMeIcon->setVisible(false);
-    } else if(m_player) {
+    } else if (m_player) {
         if (_m_faceTurnedIcon) _m_faceTurnedIcon->setVisible(!m_player->faceUp());
         if (_m_chainIcon) _m_chainIcon->setVisible(m_player->isChained());
         if (_m_actionIcon) _m_actionIcon->setVisible(m_player->hasFlag("actioned"));
-        if (_m_deathIcon) _m_deathIcon->setVisible(m_player->isDead());
+        if (_m_deathIcon && !(ServerInfo.GameMode == "04_1v3" && m_player->getGeneralName() != "shenlvbu2"))
+            _m_deathIcon->setVisible(m_player->isDead());
     }
     updateHandcardNum();
     _adjustComponentZValues();
@@ -884,10 +885,16 @@ void PlayerCardContainer::killPlayer() {
     effect->setStrength(1.0);
     _m_groupMain->setGraphicsEffect(effect);
     refresh();
-    _m_deathIcon->show();
+    if (ServerInfo.GameMode == "04_1v3" && m_player->getGeneralName() != "shenlvbu2") {
+        _m_deathIcon->hide();
+        _m_votesGot = 6;
+        updateVotes(false, true);
+    } else
+        _m_deathIcon->show();
 }
 
 void PlayerCardContainer::revivePlayer() {
+    _m_votesGot = 0;
     _m_groupMain->setGraphicsEffect(NULL);
     Q_ASSERT(_m_deathIcon);
     _m_deathIcon->hide();
@@ -897,8 +904,8 @@ void PlayerCardContainer::revivePlayer() {
 void PlayerCardContainer::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
-void PlayerCardContainer::updateVotes() {
-    if (!isSelected() || _m_votesGot <= 1)
+void PlayerCardContainer::updateVotes(bool need_select, bool display_1) {
+    if ((need_select && !isSelected()) || _m_votesGot < 1 || (!display_1 && _m_votesGot == 1))
         _clearPixmap(_m_votesItem);
     else {
         _paintPixmap(_m_votesItem, _m_layout->m_votesIconRegion,
@@ -907,6 +914,11 @@ void PlayerCardContainer::updateVotes() {
         _m_votesItem->setZValue(1);
         _m_votesItem->show();
     }
+}
+
+void PlayerCardContainer::updateReformState() {
+    _m_votesGot--;
+    updateVotes(false, true);
 }
 
 void PlayerCardContainer::showDistance() {

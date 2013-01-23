@@ -370,22 +370,36 @@ void RoomThread::run() {
             run3v3();
         } else if (room->getMode() == "04_1v3") {
             ServerPlayer *shenlvbu = room->getLord();
-            try {            
-                QList<ServerPlayer *> league = room->getPlayers();
-                league.removeOne(shenlvbu);
+            QList<ServerPlayer *> league = room->getPlayers();
+            league.removeOne(shenlvbu);
+            QList<ServerPlayer *> alive;
 
+            try {            
                 forever {
                     foreach (ServerPlayer *player, league)
                         if (player->hasFlag("actioned")) room->setPlayerFlag(player, "-actioned");
 
+                    alive.clear();
                     foreach (ServerPlayer *player, league) {
-                        room->setCurrent(player);
-                        trigger(TurnStart, room, room->getCurrent());
+                        if (player->isDead())
+                            trigger(TurnStart, room, player);
+                        else
+                            alive << player;
+                    }
 
-                        if (!player->hasFlag("actioned"))
-                            room->setPlayerFlag(player, "actioned");                                       
-
+                    foreach (ServerPlayer *player, league) {
+                        if (!alive.contains(player)) continue;
+                        bool shenlvbu_turn = false;
                         if (player->isAlive()) {
+                            shenlvbu_turn = true;
+                            room->setCurrent(player);
+                            trigger(TurnStart, room, room->getCurrent());
+
+                            if (player->isAlive() && !player->hasFlag("actioned"))
+                                room->setPlayerFlag(player, "actioned");
+                        }
+
+                        if (shenlvbu_turn) {
                             room->setCurrent(shenlvbu);
                             trigger(TurnStart, room, room->getCurrent());
                         }
@@ -407,11 +421,25 @@ void RoomThread::run() {
                         }
                     }
 
-                    room->setCurrent(shenlvbu);
-
                     forever {
+                        room->setCurrent(shenlvbu);
                         trigger(TurnStart, room, room->getCurrent());
-                        room->setCurrent(room->getCurrent()->getNext());
+
+                        alive.clear();
+                        foreach (ServerPlayer *player, league) {
+                            if (player->isDead())
+                                trigger(TurnStart, room, player);
+                            else
+                                alive << player;
+                        }
+
+                        foreach (ServerPlayer *player, league) {
+                            if (!alive.contains(player)) continue;
+                            if (player->isAlive()) {
+                                room->setCurrent(player);
+                                trigger(TurnStart, room, room->getCurrent());
+                            }
+                        }
                     }
                 }
             }

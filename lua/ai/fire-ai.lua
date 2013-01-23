@@ -9,6 +9,7 @@ quhu_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
+	if #self.enemies == 0 then return end
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
 	self:sort(self.enemies, "handcard")

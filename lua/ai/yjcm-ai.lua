@@ -593,9 +593,9 @@ sgs.ai_cardneed.xianzhen = function(to, card, self)
 		end
 	end
 	if not has_big then
-		return hcard:getNumber() > 10
+		return card:getNumber() > 10
 	else
-		return hcard:isKindOf("Slash") or hcard:isKindOf("Analeptic")
+		return card:isKindOf("Slash") or card:isKindOf("Analeptic")
 	end
 end
 

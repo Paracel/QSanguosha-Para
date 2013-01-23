@@ -452,7 +452,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	end
 	if #canAvoidSlash > 0 then return canAvoidSlash[1] end
 	if #arrBestHp > 0 then return arrBestHp[1] end
-	return targets[#targets]
+	return targetlist[#targetlist]
 end
 
 sgs.ai_card_intention.Slash = function(card, from, tos)

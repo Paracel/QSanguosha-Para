@@ -38,7 +38,6 @@ return {
 	[":yongsi"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。（X为现存势力数）",
 	["weidi"] = "伪帝",
 	[":weidi"] = "<font color=\"blue\"><b>锁定技。</b></font>你拥有且可以发动当前主公的主公技。",
-	["cv_yuanshu:convert"] = "你可以替换为台版袁术",
 	["$yongsi1"] = "玉玺在手，天下我有！",
 	["$yongsi2"] = "大汉天下，已半入我手！",
 	["$weidi1"] = "我才是皇帝！",
@@ -48,22 +47,6 @@ return {
 	["#YongsiBad"] = "%from 的“%arg2”被触发，须弃置 %arg 张牌",
 	["#YongsiJilei"] = "%from 的“%arg2”被触发，由于“<font color=\"yellow\"><b>鸡肋</b></font>”的效果，仅弃置了 %arg 张牌", 
 	["#YongsiWorst"] = "%from 的“%arg2”被触发，弃置了所有牌（共 %arg 张）",
-
-	["#sp_diaochan"] = "绝世的舞姬",
-	["sp_diaochan"] = "SP貂蝉",
-	["&sp_diaochan"] = "貂蝉",
-	["illustrator:sp_diaochan"] = "巴萨小马",
-	["cv_diaochan:convert"] = "你可以替换为SP貂蝉或台版貂蝉或国战貂蝉",
-	["cv_diaochan"] = "SP替换",
-	["cv_diaochan:sp_diaochan"] = "SP",
-	["cv_diaochan:tw_diaochan"] = "台湾版SP",
-	["cv_diaochan:heg_diaochan"] = "国战版",
-
-	["#sp_sunshangxiang"] = "梦醉良缘",
-	["sp_sunshangxiang"] = "SP孙尚香",
-	["&sp_sunshangxiang"] = "孙尚香",
-	["illustrator:sp_sunshangxiang"] = "木美人",
-	["cv_sunshangxiang:convert"] = "你可以替换为蜀势力SP孙尚香",
 
 	["#sp_guanyu"] = "汉寿亭侯",
 	["sp_guanyu"] = "SP关羽",
@@ -76,32 +59,6 @@ return {
 	["$danji"] = "吾兄待我甚厚，誓以共死，今往投之，望曹公见谅。",
 	["$DanjiAnimate"] = "anim=image/animate/danji.png",
 
-	["#sp_caiwenji"] = "金璧之才",
-	["sp_caiwenji"] = "SP蔡文姬",
-	["&sp_caiwenji"] = "蔡文姬",
-	["illustrator:sp_caiwenji"] = "木美人",
-	["cv_caiwenji:convert"] = "你可以替换为魏势力SP蔡文姬",
-	["cv:sp_caiwenji"] = "呼呼",
-	
-	["#sp_jiaxu"] = "算无遗策",
-	["sp_jiaxu"] = "SP贾诩",
-	["&sp_jiaxu"] = "贾诩",
-	["illustrator:sp_jiaxu"] = "雪君S",
-	["cv_jiaxu:convert"] = "你可以替换为魏势力SP贾诩",
-	["$LuanwuAnimateSP"] = "anim=image/animate/luanwuSP.png",
-	
-	["#sp_pangde"] = "枱榇之悟",
-	["sp_pangde"] = "SP庞德",
-	["&sp_pangde"] = "庞德",
-	["illustrator:sp_pangde"] = "天空之城",
-	["cv_pangde:convert"] = "你可以替换为魏势力SP庞德",
-
-	["#sp_machao"] = "西凉的猛狮",
-	["sp_machao"] = "SP马超",
-	["&sp_machao"] = "马超",
-	["illustrator:sp_machao"] = "天空之城",
-	["cv_machao:convert"] = "你可以替换为群雄势力SP马超",
-	
 	["#caohong"] = "福将",
 	["caohong"] = "曹洪",
 	["illustrator:caohong"] = "LiuHeng",
@@ -158,45 +115,6 @@ return {
 	["$songci2"] = "汝众违旅叛，当有此报！",             --discardCards
 	["~chenlin"] = "文未达意，贼不伏诛，吾之过也……",
 	
-	["#tw_diaochan"] = "绝世的舞姬",
-	["tw_diaochan"] = "台版貂蝉",
-	["&tw_diaochan"] = "貂蝉",
-	["illustrator:tw_diaochan"] = "陳俊佐",
-	
-	["#tw_yuanshu"] = "仲家帝",
-	["tw_yuanshu"] = "台版袁术",
-	["&tw_yuanshu"] = "袁术", 
-	["illustrator:tw_yuanshu"] = "湯翔麟",
-	
-	["#tw_zhaoyun"] = "少年将军",
-	["tw_zhaoyun"] = "台版赵云",
-	["&tw_zhaoyun"] = "赵云", 
-	["illustrator:tw_zhaoyun"] = "湯翔麟",
-	["cv_zhaoyun:convert"] = "你可以替换为台版赵云",
-	
-	["#tw_daqiao"] = "矜持之花",
-	["tw_daqiao"] = "台版大乔",
-	["&tw_daqiao"] = "大乔", 
-	["illustrator:tw_daqiao"] = "玄兔",
-	["cv_daqiao:convert"] = "你可以替换为王战大乔或台版大乔",
-	["cv_daqiao"] = "SP替换",
-	["cv_daqiao:wz_daqiao"] = "王战版",
-	["cv_daqiao:tw_daqiao"] = "台湾版",
-	
-	["#wz_daqiao"] = "矜持之花",
-	["wz_daqiao"] = "王战大乔",
-	["&wz_daqiao"] = "大乔", 
-	["illustrator:wz_daqiao"] = "Natsu",
-	
-	["#wz_xiaoqiao"] = "矫情之花",
-	["wz_xiaoqiao"] = "王战小乔",
-	["&wz_xiaoqiao"] = "小乔", 
-	["illustrator:wz_xiaoqiao"] = "Natsu",
-	["cv_xiaoqiao:convert"] = "你可以替换为王战小乔或国战小乔",
-	["cv_xiaoqiao"] = "SP替换",
-	["cv_xiaoqiao:wz_xiaoqiao"] = "王战版",
-	["cv_xiaoqiao:heg_xiaoqiao"] = "国战版",
-	
 --hulao mode
 	["Hulaopass"] = "虎牢关模式",
 
@@ -237,16 +155,4 @@ return {
 	["sp_moonspear"] = "银月枪",
 	[":sp_moonspear"] = "装备牌·武器<br />攻击范围：３<br />武器特效：你的回合外，每当你使用或打出一张黑色手牌时，你可以令你攻击范围内的一名其他角色选择一项：打出一张【闪】，或受到到你对其造成的1点伤害。",
 	["@moon-spear-jink"] = "【银月枪】效果被触发，请打出一张【闪】",
-
---hegemony_sp
-	["hegemony_sp"] = "国战SP",
-	
-	["#sp_heg_zhouyu"] = "大都督",
-	["sp_heg_zhouyu"] = "国战SP周瑜",
-	["&sp_heg_zhouyu"] = "周瑜",
-	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
-	["cv_zhouyu:convert"] = "你可以替换为国战周瑜或台国战SP周瑜",
-	["cv_zhouyu"] = "SP替换",
-	["cv_zhouyu:heg_zhouyu"] = "国战版",
-	["cv_zhouyu:sp_heg_zhouyu"] = "国战SP版",
 }

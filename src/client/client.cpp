@@ -1229,7 +1229,7 @@ void Client::askForKingdom(const Json::Value &) {
 void Client::askForChoice(const Json::Value &ask_str) {
     if (!isStringArray(ask_str, 0, 1)) return;        
     QString skill_name = toQString(ask_str[0]);
-    QStringList options =toQString(ask_str[1]).split("+");
+    QStringList options = toQString(ask_str[1]).split("+");
     emit options_got(skill_name, options);
     setStatus(ExecDialog);
 }

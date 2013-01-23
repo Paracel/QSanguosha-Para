@@ -687,8 +687,5 @@ sgs.ai_skill_invoke.cv_caopi = function(self, data)
 	return false
 end
 
-sgs.ai_skill_invoke.cv_zhenji = sgs.ai_skill_invoke.cv_caopi
 sgs.ai_skill_invoke.cv_zhugeliang = sgs.ai_skill_invoke.cv_caopi
 sgs.ai_skill_invoke.cv_huangyueying = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_zhouyu = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_lvbu = sgs.ai_skill_invoke.cv_caopi

@@ -1257,7 +1257,7 @@ void StandardPackage::addGenerals() {
     General *zhenji = new General(this, "zhenji", "wei", 3, false);
     zhenji->addSkill(new Luoshen);
     zhenji->addSkill(new Qingguo);
-    zhenji->addSkill(new SPConvertSkill("zhenji", "heg_zhenji"));
+    zhenji->addSkill(new SPConvertSkill("zhenji", "heg_zhenji+tw_zhenji"));
 
     // Shu
     General *liubei = new General(this, "liubei$", "shu");
@@ -1298,6 +1298,7 @@ void StandardPackage::addGenerals() {
 
     General *ganning = new General(this, "ganning", "wu");
     ganning->addSkill(new Qixi);
+    ganning->addSkill(new SPConvertSkill("ganning", "tw_ganning"));
 
     General *lvmeng = new General(this, "lvmeng", "wu");
     lvmeng->addSkill(new Keji);
@@ -1331,7 +1332,7 @@ void StandardPackage::addGenerals() {
 
     General *lvbu = new General(this, "lvbu", "qun");
     lvbu->addSkill(new Wushuang);
-    lvbu->addSkill(new SPConvertSkill("lvbu", "heg_lvbu"));
+    lvbu->addSkill(new SPConvertSkill("lvbu", "heg_lvbu+tw_lvbu"));
 
     General *diaochan = new General(this, "diaochan", "qun", 3, false);
     diaochan->addSkill(new Lijian);

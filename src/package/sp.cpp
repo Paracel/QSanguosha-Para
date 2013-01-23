@@ -983,6 +983,16 @@ SPPackage::SPPackage()
     tw_daqiao->addSkill("guose");
     tw_daqiao->addSkill("liuli");
 
+    General *tw_zhenji = new General(this, "tw_zhenji", "wei", 3, false, true);
+    tw_zhenji->addSkill("qingguo");
+    tw_zhenji->addSkill("luoshen");
+
+    General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true);
+    tw_ganning->addSkill("qixi");
+
+    General *tw_lvbu = new General(this, "tw_lvbu", "qun", 4, true, true);
+    tw_lvbu->addSkill("wushuang");
+
     General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true);
     wz_daqiao->addSkill("guose");
     wz_daqiao->addSkill("liuli");

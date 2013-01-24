@@ -345,7 +345,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature > 0 then
 			elseif friend:getHp() >= 2 and dmg.damage < 2 and
 					(self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
-					or (friend:getHandcardNum()<3 and friend:hasSkill("rende")))
+					or (friend:getHandcardNum() < 3 and friend:hasSkill("rende")))
 				then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
 			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
 		end
@@ -367,6 +367,24 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 	end
 
 	return "."
+end
+
+sgs.ai_card_intention.TianxiangCard = function(card, from, tos)
+	local to = tos[1]
+	local intention = 20
+	local friend = false
+	for _, askill in ipairs(("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu"):split("|")) do
+		if to:hasSkill(askill) then
+			friend = true
+			break
+		end
+	end
+	if (to:getHp() >= 2 and friend)
+		or (to:getHandcardNum() < 3 and to:hasSkill("rende"))
+		or to:hasSkill("buqu") then
+		intention = -20
+	end
+	sgs.updateIntention(from, to, intention)
 end
 
 function sgs.ai_slash_prohibit.tianxiang(self, to)

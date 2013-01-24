@@ -13,7 +13,7 @@ end
 
 function debugFunc(self, room, player, data)
 	local owner = room:getOwner()
-	local choices = {"showVisiblecards", "showHandcards", "objectiveLevel", "getDefenseSlash"}
+	local choices = { "showVisiblecards", "showHandcards", "objectiveLevel", "getDefenseSlash" }
 	local debugmsg = function(fmt, ...)
 		if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
 		local msg = string.format(fmt, unpack(arg))

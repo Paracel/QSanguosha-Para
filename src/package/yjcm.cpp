@@ -693,6 +693,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     choicelist << "draw";
     if (can_use && effect.from->isAlive()) {
         target = room->askForPlayerChosen(effect.from, targets, "mingce");
+        target->setFlags("MingceTarget"); // For AI
 
         LogMessage log;
         log.type = "#CollateralSlash";
@@ -705,6 +706,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
 
     effect.to->obtainCard(this);
     QString choice = room->askForChoice(effect.to, "mingce", choicelist.join("+"));
+    if (target && target->hasFlag("MingceTarget")) target->setFlags("-MingceTarget");
 
     if (choice == "use") {
         Slash *slash = new Slash(Card::NoSuit, 0);

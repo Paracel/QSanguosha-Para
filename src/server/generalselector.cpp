@@ -94,7 +94,7 @@ QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &c
         int value = second_general_table.value(key, 0);
         if (value == 0) {
             key = QString("%1+%2").arg(candidate).arg(first);
-            value = second_general_table.value(key, 50);
+            value = second_general_table.value(key, 3/*50*/); // make it work temporarily...
         }
 
         if (value > max) {

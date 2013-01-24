@@ -572,6 +572,7 @@ sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 		if not card:isKindOf("Peach") then
 			return "$" .. card:getEffectiveId()
 		end
+	end
 end
 
 local yinling_skill = {}

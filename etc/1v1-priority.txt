@@ -80,7 +80,7 @@ caozhang				61
 chengpu					54					
 guanxingzhangbao		69					
 handang					48					
-huaxiong				38					
+huaxiong				34					
 liaohua					37					
 liubiao					57					
 madai					68					
@@ -92,6 +92,7 @@ yuanshu					96
 sp_guanyu				56					
 caohong					36					
 guanyinping				42					
+xiahouba				40					
 fuwan					68					
 liuxie					37					
 lingju					66					

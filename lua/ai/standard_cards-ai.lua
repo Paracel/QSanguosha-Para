@@ -521,7 +521,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			elseif self:isEquip("Blade", target) then
 				if ((effect.slash:isKindOf("FireSlash") 
 					and not target:hasSkill("jueqing") 
-					and (self:hasArmorEffect("vine") or self:getMark("@gale") > 0))
+					and (self.player:hasArmorEffect("vine") or self:getMark("@gale") > 0))
 					or self:hasHeavySlashDamage(target, effect.slash)) then
 				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) or self:hasSkills("jijiu|qingnang") or self:canUseJieyuanDecrease(target) then
 					return "."

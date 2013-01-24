@@ -140,7 +140,7 @@ public:
         return GuhuoDialog::getInstance("qice", false);
     }
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
         return !to_select->isEquipped();
     }
 
@@ -495,8 +495,8 @@ public:
         return !player->hasUsed("GongqiCard");
     }
 
-    virtual bool viewFilter(const Card *) const{
-        return true;
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{

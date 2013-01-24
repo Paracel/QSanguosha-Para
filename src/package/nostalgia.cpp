@@ -138,7 +138,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        return selected.length() < 3;
+        return selected.length() < 3 && !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{

@@ -61,7 +61,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        return selected.length() < 2 && to_select->isEquipped();
+        return selected.length() < 2 && to_select->isEquipped() && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
@@ -139,7 +139,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        return selected.length() < 3 && !to_select->isEquipped() && to_select->isBlack();
+        return selected.length() < 3 && !to_select->isEquipped() && to_select->isBlack() && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{

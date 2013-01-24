@@ -231,7 +231,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isKindOf("BasicCard");
+        return !to_select->isKindOf("BasicCard") && !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -660,9 +660,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        Room *room = Sanguosha->currentRoom();
-        Player::Place place = room->getCardPlace(to_select->getEffectiveId());
-        return place == Player::PlaceHand && to_select->objectName() == "analeptic";
+        return to_select->objectName() == "analeptic";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

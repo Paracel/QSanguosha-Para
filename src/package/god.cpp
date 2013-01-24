@@ -352,6 +352,9 @@ public:
         if (to_select->isEquipped())
             return false;
 
+        if (Self->isJilei(to_select))
+            return false;
+
         foreach (const Card *item, selected) {
             if (to_select->getSuit() == item->getSuit())
                 return false;

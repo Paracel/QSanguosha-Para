@@ -244,7 +244,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
+        return !to_select->isEquipped() && !Self->isCardLimited(to_select, Card::MethodResponse);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -744,8 +744,8 @@ public:
     Zhiheng(): ViewAsSkill("zhiheng") {
     }
 
-    virtual bool viewFilter(const QList<const Card *> &, const Card *) const{
-        return true;
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
@@ -949,8 +949,8 @@ public:
         return pattern == "@@liuli";
     }
 
-    virtual bool viewFilter(const Card *) const{
-        return true;
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1020,7 +1020,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        if (selected.length() > 1)
+        if (selected.length() > 1 || Self->isJilei(to_select))
             return false;
 
         return !to_select->isEquipped();
@@ -1125,8 +1125,8 @@ public:
         return !player->hasUsed("LijianCard");
     }
 
-    virtual bool viewFilter(const Card *) const{
-        return true;
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1169,7 +1169,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
+        return !to_select->isEquipped() && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

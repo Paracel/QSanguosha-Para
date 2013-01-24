@@ -4,6 +4,7 @@
 #include "server.h"
 #include "engine.h"
 #include "ai.h"
+#include "clientplayer.h"
 
 class DrLuoyi: public TriggerSkill {
 public:
@@ -72,7 +73,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
-        return !to_select->isEquipped();
+        return !to_select->isEquipped() && !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -391,8 +392,8 @@ public:
         return player->isWounded() && !player->isNude();
     }
 
-    virtual bool viewFilter(const Card *) const{
-        return true;
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

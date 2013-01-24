@@ -450,6 +450,9 @@ public:
         if (to_select == Self->getWeapon())
             return false;
 
+        if (Self->isJilei(to_select))
+            return false;
+
         return true;
     }
 

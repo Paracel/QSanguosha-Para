@@ -5,6 +5,7 @@
 #include "engine.h"
 #include "ai.h"
 #include "maneuvering.h"
+#include "clientplayer.h"
 
 HongyuanCard::HongyuanCard() {
     mute = true;
@@ -115,7 +116,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *card) const{
-        return !card->hasFlag("using");
+        return !Self->isCardLimited(card, Card::MethodResponse);
     }
 
     virtual const Card *viewAs(const Card *to_select) const{

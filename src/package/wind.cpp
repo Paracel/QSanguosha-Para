@@ -30,7 +30,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack();
+        return to_select->isBlack() && !Self->isCardLimited(to_select, Card::MethodResponse);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -280,7 +280,7 @@ public:
         if (Sanguosha->currentRoomState()->getCurrentCardUsePattern().endsWith("1"))
             return false;
         else
-            return selected.isEmpty() && to_select->isKindOf("EquipCard");
+            return selected.isEmpty() && to_select->isKindOf("EquipCard") && !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
@@ -653,7 +653,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && to_select->getSuit() == Card::Heart;
+        return !to_select->isEquipped() && to_select->getSuit() == Card::Heart && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

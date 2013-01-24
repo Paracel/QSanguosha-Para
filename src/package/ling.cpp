@@ -23,7 +23,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *card) const{
-        return card->isKindOf("EquipCard");
+        return card->isKindOf("EquipCard") && !Self->isJilei(card);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

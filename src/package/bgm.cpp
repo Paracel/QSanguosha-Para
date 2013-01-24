@@ -73,8 +73,8 @@ public:
     LihunSelect(): OneCardViewAsSkill("lihun") {
     }
 
-    virtual bool viewFilter(const Card *) const{
-        return true;
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -1185,7 +1185,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack();
+        return to_select->isBlack() && !Self->isJilei(to_select);
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -1600,7 +1600,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
+        return !to_select->isEquipped() && !Self->isCardLimited(to_select, Card::MethodResponse);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1729,6 +1729,9 @@ public:
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *card) const{
         if (selected.length() >= 3)
+            return false;
+
+        if (Self->isJilei(card))
             return false;
 
         if (!selected.isEmpty()) {

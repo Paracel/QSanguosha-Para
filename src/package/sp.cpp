@@ -606,6 +606,51 @@ public:
     }
 };
 
+class Baobian: public TriggerSkill {
+public:
+    Baobian(): TriggerSkill("baobian") {
+        events << GameStart << HpChanged << MaxHpChanged << EventAcquireSkill << EventLoseSkill;
+        frequency = Compulsory;
+    }
+
+    static void BaobianChange(Room *room, ServerPlayer *player, int hp, const QString &skill_name) {
+        QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
+        if (player->getHp() <= hp) {
+            if (!baobian_skills.contains(skill_name)) {
+                room->acquireSkill(player, skill_name);
+                baobian_skills << skill_name;
+            }
+        } else {
+            room->detachSkillFromPlayer(player, skill_name);
+            baobian_skills.removeOne(skill_name);
+        }
+        player->tag["BaobianSkills"] = QVariant::fromValue(baobian_skills);
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == EventLoseSkill) {
+            if (data.toString() == objectName()) {
+                QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
+                foreach (QString skill_name, baobian_skills)
+                    room->detachSkillFromPlayer(player, skill_name);
+                player->tag["BaobianSkills"] = QVariant();
+            }
+            return false;
+        }
+
+        if (!TriggerSkill::triggerable(player)) return false;
+
+        BaobianChange(room, player, 1, "shensu");
+        BaobianChange(room, player, 2, "paoxiao");
+        BaobianChange(room, player, 3, "tiaoxin");
+        return false;
+    }
+};
+
 BifaCard::BifaCard() {
     mute = true;
     will_throw = false;
@@ -960,9 +1005,8 @@ SPPackage::SPPackage()
     related_skills.insertMulti("huxiao", "#huxiao-count");
     related_skills.insertMulti("huxiao", "#huxiao-clear");
 
-    /*
     General *xiahouba = new General(this, "xiahouba", "shu");
-    */
+    xiahouba->addSkill(new Baobian);
 
     General *chenlin = new General(this, "chenlin", "wei", 3);
     chenlin->addSkill(new Bifa);

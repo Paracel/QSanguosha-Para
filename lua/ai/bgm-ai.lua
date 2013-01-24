@@ -698,14 +698,14 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
 				for _ , equip in ipairs(equips) do
 					if equip and equip:isRed() and enemy:hasSkill("jijiu") then 
-						cardchosen = equip
+						cardchosen = equip:getEffectiveId()
 						break
 					end
 				end
 
-				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse() end
+				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse():getEffectiveId() end
 				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then 
-					cardchosen = enemy:getArmor() 
+					cardchosen = enemy:getArmor():getEffectiveId() 
 				end        
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
 					cardchosen = self:getCardRandomly(enemy, "h") 

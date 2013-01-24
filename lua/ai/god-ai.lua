@@ -198,7 +198,9 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 		if self:isWeak(friend) then
 			up = up + 10 + (friend:isLord() and 20 or 0)
 			down = down - 10 - (friend:isLord() and 40 or 0)
-			if friend:getHp() <= 1 then down = down - 20 - (friend:isLord() and 40 or 0) end
+			if friend:getHp() <= 1 and not friend:hasSkill("buqu") or friend:getPile("buqu"):length() > 4 then
+				down = down - 20 - (friend:isLord() and 40 or 0)
+			end
 		end
 	end
 	
@@ -215,7 +217,9 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 		if self:isWeak(enemy) then
 			up = up - 10
 			down = down + 10
-			if enemy:getHp() <= 1 then down = down + 10 + ((enemy:isLord() and #self.enemies > 1) and 20 or 0) end
+			if enemy:getHp() <= 1 and not enemy:hasSkill("buqu") then
+				down = down + 10 + ((enemy:isLord() and #self.enemies > 1) and 20 or 0)
+			end
 		end
 	end
 

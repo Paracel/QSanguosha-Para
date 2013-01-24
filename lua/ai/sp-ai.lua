@@ -482,14 +482,22 @@ sgs.ai_chaofeng.sp_caiwenji = sgs.ai_chaofeng.caiwenji
 
 sgs.ai_skill_invoke.cv_machao = function(self, data)
 	local lord = self.room:getLord()
-	if lord:hasSkill("xueyi") then
-		return self:isFriend(lord)
+	if lord:hasLordSkill("xueyi") and self:isFriend(lord) then
+		sgs.ai_skill_choice.cv_machao = "sp_machao"
+		return true
 	end
-	if lord:hasLordSkill("shichou") then
-		return not self:isFriend(lord)
+	if lord:hasLordSkill("shichou") and not self:isFriend(lord) then
+		sgs.ai_skill_choice.cv_machao = "sp_machao"
+		return true
 	end
-
-	return lord:getKingdom() == "qun"
+	if lord:getKingdom() == "qun" and not lord:hasLordSkill("xueyi") then
+		sgs.ai_skill_choice.cv_machao = "sp_machao"
+		return true
+	end
+	if math.random(0, 2) == 0 then
+		sgs.ai_skill_choice.cv_machao = "tw_machao"
+		return true
+	end
 end
 
 sgs.ai_chaofeng.sp_machao = sgs.ai_chaofeng.machao

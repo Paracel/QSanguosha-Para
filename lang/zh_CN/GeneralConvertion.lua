@@ -33,7 +33,9 @@ return {
 	["sp_machao"] = "SP马超",
 	["&sp_machao"] = "马超",
 	["illustrator:sp_machao"] = "天空之城",
-	["cv_machao:convert"] = "你可以替换为群雄势力SP马超",
+	["cv_machao:convert"] = "你可以替换为群雄势力SP马超或台版马超",
+	["cv_machao:sp_machao"] = "SP",
+	["cv_machao:tw_machao"] = "台湾版",
 
 	["#sp_jiaxu"] = "算无遗策",
 	["sp_jiaxu"] = "SP贾诩",
@@ -69,6 +71,10 @@ return {
 	["cv_zhenji:convert"] = "你可以替换为国战甄姬或台版甄姬",
 	["cv_zhenji:heg_zhenji"] = "国战版",
 	["cv_zhenji:tw_zhenji"] = "台湾版",
+
+	["tw_machao"] = "台版马超",
+	["&tw_machao"] = "马超", 
+	["illustrator:tw_machao"] = "",
 
 	["tw_ganning"] = "台版甘宁",
 	["&tw_ganning"] = "甘宁", 

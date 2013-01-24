@@ -1284,7 +1284,7 @@ void StandardPackage::addGenerals() {
     General *machao = new General(this, "machao", "shu");
     machao->addSkill(new Tieji);
     machao->addSkill(new Mashu);
-    machao->addSkill(new SPConvertSkill("machao", "sp_machao"));
+    machao->addSkill(new SPConvertSkill("machao", "sp_machao+tw_machao"));
 
     General *huangyueying = new General(this, "huangyueying", "shu", 3, false);
     huangyueying->addSkill(new Jizhi);

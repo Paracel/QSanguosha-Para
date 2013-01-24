@@ -987,6 +987,10 @@ SPPackage::SPPackage()
     tw_zhenji->addSkill("qingguo");
     tw_zhenji->addSkill("luoshen");
 
+    General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true);
+    tw_machao->addSkill("mashu");
+    tw_machao->addSkill("tieji");
+
     General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true);
     tw_ganning->addSkill("qixi");
 

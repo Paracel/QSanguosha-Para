@@ -530,6 +530,12 @@ public:
         if (card->isNDTrick()) {
             room->broadcastSkillInvoke(objectName());
 
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+
             int num = player->getMark("@wrath");
             if (num >= 1 && room->askForChoice(player, objectName(), "discard+losehp") == "discard") {
                 player->loseMark("@wrath");

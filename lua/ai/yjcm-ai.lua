@@ -421,31 +421,39 @@ mingce_skill.getTurnUseCard = function(self)
 	return nil
 end
 
-sgs.ai_skill_use_func.MingceCard = function(card, use, self)
+sgs.ai_skill_use_func.MingceCard = function(card,use,self)
 	local target
-	self:sort(self.friends_noself, "defense")
 	local friends = self.friends_noself
-	for _, friend in ipairs(friends) do
-		if friend:getHp() <= 2 and friend:getHandcardNum() < 2 and not (friend:hasSkill("kongcheng") and friend:isKongcheng()) then
-			target = friend
-			break
-		end
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+
+	local canMingceTo = function(player)
+		local canGive = not (player:hasSkill("kongcheng") and player:isKongcheng())
+		return canGive or (not canGive and self:getEnemyNumBySeat(self.player,player) == 0)
 	end
 
-	if not target then
-		local maxAttackRange = 0
-		for _, friend in ipairs(friends) do
-			if friend:getAttackRange() > maxAttackRange and not (friend:hasSkill("kongcheng") and friend:isKongcheng()) then
-				maxAttackRange = friend:getAttackRange()
-				target = friend
+	self:sort(self.enemies, "defense")
+	for _, friend in ipairs(friends) do
+		if canMingceTo(friend) then
+			for _, enemy in ipairs(self.enemies) do
+				if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2
+					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
+					and enemy:objectName() ~= self.player:objectName() then
+					target = friend
+					self.room:setPlayerFlag(enemy, "mingceTarget")
+					break
+				end
 			end
 		end
+		if target then break end
 	end
 
 	if not target then
-		local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
-		if zhugeliang and zhugeliang:isKongcheng() and zhugeliang:getHp() < 2 and zhugeliang:objectName() ~= self.player:objectName() then
-			target = zhugeliang
+		self:sort(friends, "defense")
+		for _, friend in ipairs(friends) do
+			if canMingceTo(friend) then
+				target = friend
+				break
+			end
 		end
 	end
 
@@ -458,19 +466,24 @@ sgs.ai_skill_use_func.MingceCard = function(card, use, self)
 end
 
 sgs.ai_skill_choice.mingce = function(self, choices)
-	local chengong = self.room:findPlayerBySkillName("mingce")
-	if chengong and not self:isFriend(chengong) then return "draw" end
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-	self:sort(self.enemies, "defenseSlash")
-	for _, enemy in ipairs(self.enemies) do
-		if self.player:canSlash(enemy) and not self:slashProhibit(slash , enemy) and self:slashIsEffective(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2 then
-			return "use"
+	local chengong = self.room:getCurrent()
+	if not self:isFriend(chengong) then return "draw" end
+	for _, player in sgs.qlist(self.room:getAlivePlayers()) do
+		if player:hasFlag("mingceTarget") then 
+			self.room:setPlayerFlag(player, "-mingceTarget")
+			return "use" 
 		end
 	end
 	return "draw"
 end
 
-sgs.ai_skill_playerchosen.mingce = sgs.ai_skill_playerchosen.zero_card_as_slash
+sgs.ai_skill_playerchosen.mingce = function(self, targets)
+	for _, player in sgs.qlist(targets) do
+		if player:hasFlag("mingceTarget") then return player end
+	end
+	return sgs.ai_skill_playerchosen.zero_card_as_slash(self, targets)
+end
+
 sgs.ai_playerchosen_intention.mingce = 80
 
 sgs.ai_use_value.MingceCard = 5.9

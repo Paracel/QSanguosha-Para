@@ -1054,12 +1054,28 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 		or (self.player:getHp() - self.player:getHandcardNum() >= 2) then
 		return sgs.Card_Parse("@KurouCard=.")
 	end
+	
+	local function can_kurou_with_cb(self)
+		if self.player:getHp() > 1 then return true end
+		local has_save = false
+		local huatuo = self.room:findPlayerBySkillName("jijiu")
+		if huatuo then
+			for _, equip in sgs.qlist(huatuo:getEquips()) do
+				if equip:isRed() then has_save = true break end
+			end
+			if not has_save then has_save = (huatuo:getHandcardNum() > 3) end
+		end
+		if has_save then return true end
+		local handang = self.room:findPlayerBySkillName("nosjiefan")
+		if handang and getCardsNum("Slash", handang) >= 1 then return true end
+		return false
+	end
 
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-	if self.player:getWeapon() and self.player:getWeapon():isKindOf("Crossbow") then
+	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
 		for _, enemy in ipairs(self.enemies) do
-			if self.player:canSlash(enemy, nil, true) and self:slashIsEffective(slash, enemy)
-				and sgs.isGoodTarget(enemy, self.enemies) and not self:slashProhibit(slash, enemy) and self.player:getHp() > 1 then
+			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
+				and sgs.isGoodTarget(enemy, self.enemies) and not self:slashProhibit(slash, enemy) and can_kurou_with_cb(self) then
 				return sgs.Card_Parse("@KurouCard=.")
 			end
 		end

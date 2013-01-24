@@ -1508,7 +1508,6 @@ void Room::changeHero(ServerPlayer *player, const QString &new_general, bool ful
         changePlayerGeneral2(player, new_general);
     else
         changePlayerGeneral(player, new_general);
-    thread->addPlayerSkills(player, invokeStart);
     player->setMaxHp(player->getGeneralMaxHp());
 
     if (full_state)
@@ -1516,6 +1515,7 @@ void Room::changeHero(ServerPlayer *player, const QString &new_general, bool ful
     broadcastProperty(player, "hp");
     broadcastProperty(player, "maxhp");
 
+    thread->addPlayerSkills(player, invokeStart);
     resetAI(player);
 }
 

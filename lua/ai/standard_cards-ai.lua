@@ -1228,13 +1228,16 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					if trick:isKindOf("Indulgence") then
 						if friend:getHp() <= friend:getHandcardNum() or friend:isLord() or name == "snatch" then
 							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+							break
 						end
 					end
 					if trick:isKindOf("SupplyShortage") then
 						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+						break
 					end
 					if trick:isKindOf("Indulgence") then
 						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+						break
 					end
 				end
 				use.to:append(friend)
@@ -1245,7 +1248,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			return
 		end
 		if self:isEquip("SilverLion", friend) and self:hasTrickEffective(card, friend) and
-		friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
+			friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
 			hasLion = true
 			target = friend
 		end
@@ -1289,32 +1292,35 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and self:hasTrickEffective(card, enemy) then
-			if self:hasSkills("jijiu|dimeng|guzheng|qiaobian|jieyin|lijian|beige", enemy) or (enemy:hasSkill("miji") and enemy:isWounded()) then
-				local cardchosen = self:getValuableCard(enemy)
-				local gethandcard
-				if cardchosen then
-					local card = sgs.Sanguosha:getCard(cardchosen)
-					local isDefenseCard = card:isKindOf("Armor") or card:isKindOf("DefensiveHorse")
-					if enemy:hasSkill("jijiu") and (not isDefenseCard or not card:isRed()) then
-						gethandcard = true
-					elseif enemy:hasSkill("beige") then
-						gethandcard = false
-					elseif not isDefenseCard then
-						gethandcard = true
+			if self:hasSkills("jijiu|qingnang|jieyin", enemy) then
+				local cardchosen
+				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
+				for _ , equip in ipairs(equips) do
+					if equip and equip:isRed() and enemy:hasSkill("jijiu") then 
+						cardchosen = equip
+						break
 					end
 				end
 
-				if not enemy:isKongcheng() and gethandcard then cardchosen = self:getCardRandomly(enemy, "h") end
-				if not cardchosen then cardchosen = self:getCardRandomly(enemy, "he") end
-				use.card = card
-				if use.to then
-					sgs.ai_skill_cardchosen[name] = cardchosen
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				elseif isJixi then
-					self.room:setPlayerFlag(enemy, "JixiTarget")
+				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse() end
+				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then 
+					cardchosen = enemy:getArmor() 
+				end        
+				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
+					cardchosen = self:getCardRandomly(enemy, "h") 
 				end
-				return
+				
+				if cardchosen then        
+					use.card = card
+					if use.to then
+						sgs.ai_skill_cardchosen[name] = cardchosen
+						use.to:append(enemy)
+						self:speak("hostile", self.player:isFemale())
+					elseif isJixi then
+						self.room:setPlayerFlag(enemy, "JixiTarget")
+					end
+					return
+				end
 			end
 		end
 	end
@@ -1327,7 +1333,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					local cardchosen
 					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then
 						cardchosen = enemy:getDefensiveHorse():getEffectiveId()
-					elseif enemy:getArmor() and enemy:getArmor():isKindOf("EightDiagram") then
+					elseif enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then
 						cardchosen = enemy:getArmor():getEffectiveId()
 					else
 						cardchosen = self:getCardRandomly(enemy, "h")

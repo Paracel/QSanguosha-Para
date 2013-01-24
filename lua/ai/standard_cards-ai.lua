@@ -235,7 +235,6 @@ end
 
 function SmartAI:slashIsEffective(slash, to)
 	if not to then self.room:writeToConsole(debug.traceback()) end
-	if not self.player:canSlash(to, slash, true) then return false end
 	if to:hasSkill("zuixiang") and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then
@@ -429,7 +428,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	self:sort(targetlist, "defenseSlash")
 	for _, target in ipairs(targetlist) do
 		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.isGoodTarget(target, targetlist) then
-			if self:slashIsEffective(slash,target) then
+			if self:slashIsEffective(slash, target) then
 				if target:getHp() > getBestHp(target) then
 					table.insert(arrBestHp, target)
 				else
@@ -443,7 +442,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	for i = #targetlist, 1, -1 do
 		local target = targetlist[i]
 		if not self:slashProhibit(slash, target) then
-			if self:slashIsEffective(slash,target) then
+			if self:slashIsEffective(slash, target) then
 				if self:isFriend(target) and (target:getHp() > getBestHp(target) or self:getDamagedEffects(target,self.player)) then
 					return target
 				end

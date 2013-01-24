@@ -560,11 +560,18 @@ end
 
 sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 	local use = data:toCardUse()
-	if self:getCardsNum("Jink") > 0 or self.player:isKongcheng() or not self:slashIsEffective(use.card, self.player) then return "." end
+	if self.player:isKongcheng() or self:getCardsNum("Jink") > 0 or self:getCardsNum("Peach") > 1
+		or not self:slashIsEffective(use.card, self.player)
+		or (not self:hasHeavySlashDamage(use.from, use.card) and self:getDamagedEffects(self.player, use.from)) then
+		return "."
+	end
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
-	return "$" .. cards[1]:getEffectiveId()
+	for _, card in ipairs(cards) do
+		if not card:isKindOf("Peach") then
+			return "$" .. card:getEffectiveId()
+		end
 end
 
 local yinling_skill = {}

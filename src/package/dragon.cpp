@@ -314,9 +314,6 @@ public:
                     count *= 10;
                 }
             }
-            if (use.card->isKindOf("AOE") && TriggerSkill::triggerable(use.from) && use.from == player){
-                can_invoke = true;
-            }
             if (!can_invoke) return false;
 
             LogMessage log;

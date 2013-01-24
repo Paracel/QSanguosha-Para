@@ -689,9 +689,19 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
         if (slash->getSkillName() == "spear") room->setEmotion(effect.to, "weapon/spear");
         room->setEmotion(effect.to, "killer");
     }
-    bool drwushuang_effect = !effect.from->hasSkill("drwushuang")
-                             || (effect.from->hasSkill("drwushuang")
-                                 && room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true));
+
+    // ================================
+    bool drwushuang_effect = false;
+    if (slash && effect.from->hasSkill("drwushuang")) {
+        LogMessage log;
+        log.from = effect.from;
+        log.arg = "drwushuang";
+        log.type = "#TriggerSkill";
+        room->sendLog(log);
+
+        drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
+    }
+    // ================================
     if (!slash || !drwushuang_effect) {
         DamageStruct damage;
         damage.card = this;
@@ -719,9 +729,18 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
     if (jink && jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
         room->setEmotion(effect.to, "jink");
 
-    bool drwushuang_effect = !effect.from->hasSkill("drwushuang")
-                             || (effect.from->hasSkill("drwushuang")
-                                 && room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true));
+    // ================================
+    bool drwushuang_effect = false;
+    if (jink && effect.from->hasSkill("drwushuang")) {
+        LogMessage log;
+        log.from = effect.from;
+        log.arg = "drwushuang";
+        log.type = "#TriggerSkill";
+        room->sendLog(log);
+
+        drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
+    }
+    // ================================
     if (!jink || !drwushuang_effect) {
         DamageStruct damage;
         damage.card = this;

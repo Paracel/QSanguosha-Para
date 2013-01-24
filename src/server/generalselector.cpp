@@ -91,7 +91,11 @@ QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &c
 
     foreach (QString candidate, candidates) {
         QString key = QString("%1+%2").arg(first).arg(candidate);
-        int value = second_general_table.value(key, 3);
+        int value = second_general_table.value(key, 0);
+        if (value == 0) {
+            key = QString("%1+%2").arg(candidate).arg(first);
+            value = second_general_table.value(key, 50);
+        }
 
         if (value > max) {
             max = value;
@@ -109,7 +113,7 @@ QString GeneralSelector::select3v3(ServerPlayer *, const QStringList &candidates
 }
 
 QString GeneralSelector::select1v1(const QStringList &candidates) {
-    return selectHighest(priority_1v1_table, candidates, 5);
+    return selectHighest(priority_1v1_table, candidates, 50);
 }
 
 QString GeneralSelector::selectHighest(const QHash<QString, int> &table, const QStringList &candidates, int default_value){

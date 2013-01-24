@@ -181,32 +181,52 @@ sgs.ai_card_intention.GongxinCard = 80
 sgs.ai_skill_invoke.qinyin = function(self, data)
 	self:sort(self.friends, "hp")
 	self:sort(self.enemies, "hp")
-	local good = 0
-	local bad = 0
+	local up = 0
+	local down = 0
 	
-	for _,friend in ipairs(self.friends) do
-		bad = bad + 10
-		if self:hasSkills(sgs.masochism_skill, friend) then bad = bad + 5 end
-		if friend:getHp() > getBestHp(friend) then bad = bad - 5 end
-		if self:isWeak(friend) then bad = bad + 5 end
-		if friend:isLord() and self:isWeak(friend) then bad = bad + 50 end
+	for _, friend in ipairs(self.friends) do
+		down = down - 10
+		up = up + (friend:isWounded() and 10 or 0)
+		if self:hasSkills(sgs.masochism_skill, friend) then
+			down = down - 5
+			up = up + 5
+		end
+		if friend:getHp() > getBestHp(friend) then
+			down = down + 5
+			up = up - 5
+		end
+		if self:isWeak(friend) then
+			up = up + 10 + (friend:isLord() and 20 or 0)
+			down = down - 10 - (friend:isLord() and 40 or 0)
+			if friend:getHp() <= 1 then down = down - 20 - (friend:isLord() and 40 or 0) end
+		end
 	end
 	
-	for _,enemy in ipairs(self.enemies) do
-		good = good + 10
-		if self:hasSkills(sgs.masochism_skill, enemy) then good = good + 5 end
-		if enemy:getHp() > getBestHp(enemy) then good = good - 5 end
-		if self:isWeak(enemy) then good = good + 5 end
-		if enemy:isLord() and self:isWeak(enemy) then good = good + 10 end
+	for _, enemy in ipairs(self.enemies) do
+		down = down + 10
+		up = up - (enemy:isWounded() and 10 or 0)
+		if self:hasSkills(sgs.masochism_skill, enemy) then 
+			down = down + 10
+			up = up - 15
+		end
+		if enemy:getHp() > getBestHp(enemy) then
+			down = down - 5
+		end
+		if self:isWeak(enemy) then
+			up = up - 10
+			down = down + 10
+			if enemy:getHp() <= 1 then down = down + 10 + ((enemy:isLord() and #self.enemies > 1) and 20 or 0) end
+		end
 	end
 
-	if good - bad >= 5 then 
+	if down > 0 then 
 		sgs.ai_skill_choice.qinyin = "down"
 		return true
-	elseif bad - good >= 5 then
+	elseif up > 0 then
 		sgs.ai_skill_choice.qinyin = "up"
 		return true
 	end
+	return false
 end
 
 local yeyan_skill = {}
@@ -214,7 +234,7 @@ yeyan_skill.name = "yeyan"
 table.insert(sgs.ai_skills, yeyan_skill)
 yeyan_skill.getTurnUseCard = function(self)
 	if self.player:getMark("@flame") == 0 then return end
-	if self.player:getRole() == "lord" and (self.enemies > 1 or sgs.turncount == 1) then return end
+	if self.player:getRole() == "lord" and (#self.enemies > 1 or sgs.turncount == 1) then return end
 	if self.player:getHandcardNum() >= 4 then
 		local spade, club, heart, diamond
 		for _, card in sgs.qlist(self.player:getHandcards()) do

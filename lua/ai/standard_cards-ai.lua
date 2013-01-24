@@ -183,13 +183,13 @@ function sgs.getDefenseSlash(player)
 	if player:containsTrick("supply_shortage") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
 
 	if not hasEightDiagram then
-		if player:hasSkill("jijiu") then defense = defense - 6 end
-		if player:hasSkill("dimeng") then defense = defense - 5.5 end
-		if player:hasSkill("guzheng") and knownJink == 0 then defense = defense - 5.5 end
-		if player:hasSkill("qiaobian") then defense = defense - 5.4 end
-		if player:hasSkill("jieyin") then defense = defense - 5.3 end
-		if player:hasSkill("lijian") then defense = defense - 5.2 end
-		if player:hasSkill("miji") and player:isWounded() then defense = defense - 4.5 end
+		if player:hasSkill("jijiu") then defense = defense - 3 end
+		if player:hasSkill("dimeng") then defense = defense - 2.5 end
+		if player:hasSkill("guzheng") and knownJink == 0 then defense = defense - 2.5 end
+		if player:hasSkill("qiaobian") then defense = defense - 2.4 end
+		if player:hasSkill("jieyin") then defense = defense - 2.3 end
+		if player:hasSkill("lijian") then defense = defense - 2.2 end
+		if player:hasSkill("miji") and player:isWounded() then defense = defense - 1.5 end
 	end
 	return defense
 end

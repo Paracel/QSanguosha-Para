@@ -2453,7 +2453,6 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
         if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
             setPlayerFlag(card_use.from, "MoreSlashInOneTurn");
         card_use.card->onUse(this, card_use);
-        if (card_use.card->isVirtualCard()) delete card_use.card;
         if (card_use.from->hasFlag("MoreSlashInOneTurn")) setPlayerFlag(card_use.from, "-MoreSlashInOneTurn");
     } else if (card) {
         CardUseStruct new_use = card_use;

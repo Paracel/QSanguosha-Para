@@ -2650,13 +2650,36 @@ function SmartAI:getCardNeedPlayer(cards)
 	end
 
 	self:sort(friends, "defense")
-	for _, friend in ipairs(friends) do
-		if not self:needKongcheng(friend) then
-			for _, hcard in ipairs(cardtogive) do
-				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 then
+	for _, hcard in ipairs(cardtogive) do
+		for _, friend in ipairs(self.friends_noself) do
+			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
+					and (self:hasSkills(sgs.priority_skill,friend) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
+				if (self:getOverflow()>0 or self.player:getHandcardNum()>3) and friend:getHandcardNum() <= 3 then
 					return hcard, friend
 				end
 			end
+		end
+	end
+
+	self:sort(friends, "handcard")
+	for _, hcard in ipairs(cardtogive) do
+		for _, friend in ipairs(self.friends_noself) do
+			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
+				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() < 3 then
+					return hcard, friend
+				end
+			end
+		end
+	end
+
+	if self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2 and #cardtogive > 0 then
+		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0) or 
+							(sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0 and sgs.current_mode_players["loyalist"] == 0)
+		if need_rende then
+			local players = sgs.QList2Table(self.room:getOtherPlayers(self.player))
+			self:sort(players, "defense")
+			self:sortByUseValue(cardtogive, true)
+			return cardtogive[1], players[1]
 		end
 	end
 end

@@ -1,5 +1,6 @@
 #include "standard.h"
 #include "standard-equips.h"
+#include "maneuvering.h"
 #include "general.h"
 #include "engine.h"
 #include "client.h"
@@ -65,19 +66,22 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             QVariant data = QVariant::fromValue(use);
             if (player->hasSkill("lihuo"))
                 if (room->askForSkillInvoke(player, "lihuo", data)) {
-                    room->broadcastSkillInvoke("lihuo", 1);
-                    room->setCardFlag(this, "lihuo");
-                    room->setCardFlag(this, "isFireSlash");
+                    FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
+                    fire_slash->addSubcard(this);
+                    fire_slash->setSkillName("lihuo");
+                    use.card = fire_slash;
                 }
-            if (player->hasSkill("fan") && !hasFlag("isFireSlash")) {
+            if (player->hasSkill("fan") && !use.card->isKindOf("FireSlash")) {
                 if (room->askForSkillInvoke(player, "fan", data)) {
-                    room->setEmotion(player, "weapon/fan");
-                    room->setCardFlag(this, "isFireSlash");
+                    FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
+                    fire_slash->addSubcard(this);
+                    fire_slash->setSkillName("fan");
+                    use.card = fire_slash;
                 }
             }
         }
     }
-    if ((isVirtualCard() && subcardsLength() == 0) || (getSkillName() == "guhuo" && hasFlag("isFireSlash"))) {
+    if ((isVirtualCard() && subcardsLength() == 0) || (getSkillName() == "guhuo" && use.card != this)) {
         QList<ServerPlayer *> targets_ts;
         while (true) {
             QList<const Player *> targets_const;
@@ -107,16 +111,16 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     }
     if (use.to.size() > 1 && player->hasSkill("shenji"))
         room->broadcastSkillInvoke("shenji");
-    else if (use.to.size() > 1 && (hasFlag("isFireSlash") || isKindOf("FireSlash")) && player->hasSkill("lihuo") && getSkillName() != "lihuo")
+    else if (use.to.size() > 1 && use.card->isKindOf("FireSlash") && player->hasSkill("lihuo"))
         room->broadcastSkillInvoke("lihuo", 1);
     else if (use.to.size() > 1 && player->hasSkill("duanbing"))
         room->broadcastSkillInvoke("duanbing");
 
-    if (isVirtualCard() && getSkillName() == "spear")
+    if (isVirtualCard() && use.card->getSkillName() == "spear")
         room->setEmotion(player,"weapon/spear");
     else if (use.to.size() > 1 && player->hasWeapon("halberd") && player->isLastHandCard(this))
         room->setEmotion(player,"weapon/halberd");
-    else if (isVirtualCard() && getSkillName() == "fan")
+    else if (isVirtualCard() && use.card->getSkillName() == "fan")
         room->setEmotion(player,"weapon/fan");
     if (player->getPhase() == Player::Play
         && player->hasFlag("MoreSlashInOneTurn")
@@ -124,13 +128,13 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         && !player->hasSkill("paoxiao")
         && !player->hasSkill("huxiao"))
         room->setEmotion(player,"weapon/crossbow");
-    if (isKindOf("ThunderSlash"))
+    if (use.card->isKindOf("ThunderSlash"))
         room->setEmotion(player, "thunder_slash");
-    else if (isKindOf("FireSlash") || hasFlag("isFireSlash"))
+    else if (use.card->isKindOf("FireSlash"))
         room->setEmotion(player, "fire_slash");
-    else if (isRed())
+    else if (use.card->isRed())
         room->setEmotion(player, "slash_red");
-    else if (isBlack())
+    else if (use.card->isBlack())
         room->setEmotion(player, "slash_black");
     else
         room->setEmotion(player, "killer");

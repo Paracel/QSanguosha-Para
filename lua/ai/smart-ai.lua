@@ -2412,7 +2412,7 @@ end
 
 function SmartAI:hasHeavySlashDamage(player, slash)
 	player = player or self.room:getCurrent()
-	local fireSlash = slash and (slash:isKindOf("FireSlash") or slash:hasFlag("isFireSlash")
+	local fireSlash = slash and (slash:isKindOf("FireSlash")
 								or (slash:objectName() == "slash" and (self:isEquip("Fan", player) or (self:hasSkill("lihuo") and not self:isWeak())))) 
 	return (slash and slash:hasFlag("drank")) or player:getMark("drank") > 0
 			or player:hasFlag("luoyi") or player:hasFlag("neoluoyi")
@@ -3109,6 +3109,7 @@ local function getSkillViewCard(card, class_name, player, card_place)
 end
 
 function isCard(class_name, card, player)
+	if not player then global_room:writeToConsole(debug.traceback()) end
 	if not card:isKindOf(class_name) then
 		if getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId())) then return true end
 	else

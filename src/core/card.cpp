@@ -525,7 +525,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     log.from = player;
     log.to = card_use.to;
     log.type = "#UseCard";
-    log.card_str = toString();
+    log.card_str = card_use.card->toString();
     room->sendLog(log);
 
     QList<int> used_cards;

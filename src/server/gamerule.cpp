@@ -203,14 +203,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     room->setPlayerFlag(card_use.from, "-jijiang_failed");
 
                 RoomThread *thread = room->getThread();
-                if (!card->hasFlag("lihuo")) {
-                    if (card->hasFlag("isFireSlash")) {
-                        FireSlash *fire_slash = new FireSlash(card->getSuit(), card->getNumber());
-                        card_use.from->broadcastSkillInvoke(fire_slash);
-                        fire_slash->deleteLater();
-                    } else
-                        card_use.from->broadcastSkillInvoke(card);
-                }
+                card_use.from->broadcastSkillInvoke(card);
 
                 if (card->hasPreAction())
                     card->doPreAction(room, card_use);

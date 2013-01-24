@@ -204,7 +204,7 @@ function SmartAI:slashProhibit(card, enemy)
 	end
 
 	if self:isFriend(enemy) then
-		if card:isKindOf("FireSlash") or card:hasFlag("isFireSlash") or self.player:hasSkill("lihuo") or self.player:hasWeapon("fan") then
+		if card:isKindOf("FireSlash") or self.player:hasSkill("lihuo") or self.player:hasWeapon("fan") then
 			if self:isEquip("Vine", enemy) and not (enemy:isChained() and self:isGoodChainTarget(enemy)) then return true end
 		end
 		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing")) and
@@ -808,7 +808,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 
 	local newcards = {}
 	for _, acard in ipairs(cards) do
-		if isCard("Slash", acard, player) then return end
+		if isCard("Slash", acard, self.player) then return end
 	end
 	local cards = player:getCards("h")
 	cards = sgs.QList2Table(cards)

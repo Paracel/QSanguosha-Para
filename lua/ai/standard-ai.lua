@@ -1120,11 +1120,10 @@ fanjian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
-	self:sort(self.enemies, "hp")
+	self:sort(self.enemies, "defense")
 
 	for _, enemy in ipairs(self.enemies) do
-		if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy) then
-		elseif (not enemy:hasSkill("qingnang")) or (enemy:getHp() == 1 and enemy:getHandcardNum() == 0 and not enemy:getEquips()) then
+		if self:canAttack(enemy) and not self:hasSkills("qingnang|jijiu",enemy) then
 			use.card = card
 			if use.to then use.to:append(enemy) end
 			return

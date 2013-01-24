@@ -204,6 +204,9 @@ function sgs.getDefense(player)
 	if player:hasSkill("longdan") and player:getHandcardNum() > 2 then
 		defense = defense + 0.3
 	end
+	if player:hasSkill("tianxiang") and player:getHandcardNum() > 2 then
+		defense = defense + 0.5
+	end
 
 	if player:getHp() > getBestHp(player) then defense = defense + 0.3 end
 
@@ -1285,12 +1288,13 @@ function SmartAI:objectiveLevel(player)
 			end
 		elseif process == "neutral" or (sgs.turncount <= 1 and sgs.isLordHealthy()) then
 			if sgs.turncount <= 1 and sgs.isLordHealthy() then return 0 end
+			if player:isLord() then return -1 end
 			local renegade_attack_skill = string.format("buqu|%s|%s|%s|%s", sgs.priority_skill, sgs.save_skill, sgs.recover_skill, sgs.drawpeach_skill)
 			for i = 1, #players, 1 do
 				if not players[i]:isLord() and self:hasSkills(renegade_attack_skill, players[i]) then return 5 end
 				if not players[i]:isLord() and math.abs(sgs.ai_chaofeng[players[i]:getGeneralName()] or 0) > 3 then return 5 end
 			end
-			return player:isLord() and 0 or 3
+			return 3
 		elseif process:match("rebel") then
 			if sgs.evaluatePlayerRole(player) == "rebel" then
 				if process == "rebel" then return 5 else return 3 end

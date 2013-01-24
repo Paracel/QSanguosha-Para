@@ -1,3 +1,13 @@
+function SmartAI:canAttack(enemy, attacker, nature)
+	attacker = attacker or self.player
+	nature = nature or sgs.DamageStruct_Normal
+	if #self.enemies == 1 or self:hasSkills("jueqing") then return true end
+	if self:getDamagedEffects(enemy, attacker) or (enemy:getHp() > getBestHp(enemy) and #self.enemies > 2) or not sgs.isGoodTarget(enemy, self.enemies) then return false end
+	if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy, nature , attacker) then return false end
+	if nature ~= sgs.DamageStruct_Normal and enemy:isChained() and not self:isGoodChainTarget(enemy) then return false end
+	return true
+end
+
 local function hasExplicitRebel(room)
 	for _, player in sgs.qlist(room:getAllPlayers()) do
 		if sgs.isRolePredictable() and sgs.evaluatePlayerRole(player) == "rebel" then return true end
@@ -131,6 +141,7 @@ function sgs.getDefenseSlash(player)
 	end
 
 	if player:getHp() > getBestHp(player) then defense = defense + 1.3 end
+	if player:hasSkill("tianxiang") and player:getHandcardNum() > 2 then defense = defense + player:getHandcardNum() * 0.5 end
 
 	if player:getHp() <= 2 then
 		defense = defense - 0.4
@@ -1529,7 +1540,7 @@ local function hp_subtract_handcard(a, b)
 end
 
 function SmartAI:useCardIndulgence(card, use)
-	local enemies
+	local enemies = {}
 	if #self.enemies == 0 then
 		if sgs.turncount == 0 and self.role == "lord" and not sgs.isRolePredictable() 
 			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 30 then

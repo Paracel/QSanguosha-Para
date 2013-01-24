@@ -26,9 +26,7 @@ nosfanjian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.NosFanjianCard = sgs.ai_skill_use_func.FanjianCard
-
 sgs.ai_card_intention.NosFanjianCard = sgs.ai_card_intention.FanjianCard
-
 sgs.dynamic_value.damage_card.NosFanjianCard = true
 
 sgs.ai_chaofeng.noszhouyu = sgs.ai_chaofeng.zhouyu

@@ -130,6 +130,8 @@ function sgs.getDefenseSlash(player)
 			defense = defense + hujiaJink
 	end
 
+	if player:getHp() > getBestHp(player) then defense = defense + 1.3 end
+
 	if player:getHp() <= 2 then
 		defense = defense - 0.4
 	end
@@ -810,13 +812,13 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	for _, acard in ipairs(cards) do
 		if isCard("Slash", acard, self.player) then return end
 	end
-	local cards = player:getCards("h")
+	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
 	local newcards = {}
 	for _, card in ipairs(cards) do
-		if not card:isKindOf("Peach") and not (card:isKindOf("ExNihilo") and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
+		if not card:isKindOf("Peach") and not (card:isKindOf("ExNihilo") and self.player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
-	if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
+	if #newcards <= player:getHp() - 1 and not self.player:hasSkill("paoxiao") then return end
 	if #newcards < 2 then return end
 
 	local card_id1 = newcards[1]:getEffectiveId()
@@ -1522,7 +1524,15 @@ local function hp_subtract_handcard(a, b)
 end
 
 function SmartAI:useCardIndulgence(card, use)
-	local enemies = self:exclude(self.enemies, card)
+	local enemies
+	if #self.enemies == 0 then
+		if sgs.turncount == 0 and self.role == "lord" and not sgs.isRolePredictable() 
+			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 30 then
+			enemies = self:exclude({ self.player:getNextAlive() }, card)
+		end
+	else
+		enemies = self:exclude(self.enemies, card)
+	end
 
 	local zhanghe = self.room:findPlayerBySkillName("qiaobian")
 	local zhanghe_seat = zhanghe and zhanghe:faceUp() and self:isEnemy(zhanghe) and zhanghe:getSeat() or 0

@@ -179,20 +179,33 @@ sgs.ai_use_priority.GongxinCard = 9.5
 sgs.ai_card_intention.GongxinCard = 80
 
 sgs.ai_skill_invoke.qinyin = function(self, data)
-	for _, friend in ipairs(self.friends) do
-		if friend:isWounded() then return true end
-	end
-	if sgs.ai_skill_choice.qinyin(self, "up+down") == "down" then return true end
-	return false
-end
-
-sgs.ai_skill_choice.qinyin = function(self, choices)
 	self:sort(self.friends, "hp")
 	self:sort(self.enemies, "hp")
-	if self.friends[1]:getHp() >= self.enemies[1]:getHp() and self:getAllPeachNum(self.player) > self:getAllPeachNum(self.enemies[1]) then
-		return "down"
-	else
-		return "up"
+	local good = 0
+	local bad = 0
+	
+	for _,friend in ipairs(self.friends) do
+		bad = bad + 10
+		if self:hasSkills(sgs.masochism_skill, friend) then bad = bad + 5 end
+		if friend:getHp() > getBestHp(friend) then bad = bad - 5 end
+		if self:isWeak(friend) then bad = bad + 5 end
+		if friend:isLord() and self:isWeak(friend) then bad = bad + 50 end
+	end
+	
+	for _,enemy in ipairs(self.enemies) do
+		good = good + 10
+		if self:hasSkills(sgs.masochism_skill, enemy) then good = good + 5 end
+		if enemy:getHp() > getBestHp(enemy) then good = good - 5 end
+		if self:isWeak(enemy) then good = good + 5 end
+		if enemy:isLord() and self:isWeak(enemy) then good = good + 10 end
+	end
+
+	if good - bad >= 5 then 
+		sgs.ai_skill_choice.qinyin = "down"
+		return true
+	elseif bad - good >= 5 then
+		sgs.ai_skill_choice.qinyin = "up"
+		return true
 	end
 end
 

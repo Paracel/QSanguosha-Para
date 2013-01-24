@@ -85,7 +85,7 @@ function setInitialTables()
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|jieyin|renjie|zhiheng|rende|jujian|guicai|guidao|jilve|longhun|wusheng|longdan"
 	sgs.drawpeach_skill = "tuxi|qiaobian"
 	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
-	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|zhiheng|mingce"
+	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|zhiheng|mingce|yongsi"
 
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
 		table.insert(sgs.role_evaluation, aplayer:objectName())
@@ -204,6 +204,8 @@ function sgs.getDefense(player)
 	if player:hasSkill("longdan") and player:getHandcardNum() > 2 then
 		defense = defense + 0.3
 	end
+
+	if player:getHp() > getBestHp(player) then defense = defense + 0.3 end
 
 	-- effected by chaofeng
 	if player:hasSkill("jijiu") then defense = defense - 3 end
@@ -1179,7 +1181,7 @@ function sgs.gameProcess(room, ...)
 		end
 		--end
 	end
-	local diff = loyal_value - rebel_value
+	local diff = loyal_value - rebel_value + (loyal_num - rebel_num) * 2
 	if #arg > 0 and arg[1] == 1 then return diff end
 
 	if diff >= 2 then
@@ -1281,8 +1283,8 @@ function SmartAI:objectiveLevel(player)
 					return 5
 				end
 			end
-		elseif process == "neutral" or sgs.turncount  <= 1 then
-			if sgs.turncount <= 1 then return 0 end
+		elseif process == "neutral" or (sgs.turncount <= 1 and sgs.isLordHealthy()) then
+			if sgs.turncount <= 1 and sgs.isLordHealthy() then return 0 end
 			local renegade_attack_skill = string.format("buqu|%s|%s|%s|%s", sgs.priority_skill, sgs.save_skill, sgs.recover_skill, sgs.drawpeach_skill)
 			for i = 1, #players, 1 do
 				if not players[i]:isLord() and self:hasSkills(renegade_attack_skill, players[i]) then return 5 end
@@ -1347,7 +1349,6 @@ function SmartAI:objectiveLevel(player)
 		elseif sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then return 3
 		else return 0 end
 	elseif self.role == "rebel" then
-		if process:match("loyalist") and loyal_num > rebel_num and target_role=='renegade' then return -1 end
 		if #players >= 4 and sgs.role_evaluation[player:objectName()]["rebel"] == 30 and sgs.role_evaluation[player:objectName()]["loyalist"] == 30 then return 0 end
 		if player:isLord() then return 5
 		elseif sgs.evaluatePlayerRole(player) == "loyalist" then return 5

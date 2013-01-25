@@ -143,7 +143,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     log.from = player;
                     log.arg = new_kingdom;
                     room->sendLog(log);
-                }                
+                }
             }
             room->setTag("FirstRound", true);
             room->drawCards(room->getPlayers(), 4, NULL);
@@ -578,6 +578,16 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     player->tag.remove("1v1ChangeGeneral");
     room->revivePlayer(player);
     room->changeHero(player, new_general, true, true);
+    if (player->getGeneral()->getKingdom() == "god") {
+        QString new_kingdom = room->askForKingdom(player);
+        room->setPlayerProperty(player, "kingdom", new_kingdom);
+
+        LogMessage log;
+        log.type = "#ChooseKingdom";
+        log.from = player;
+        log.arg = new_kingdom;
+        room->sendLog(log);
+    }
     player->clearHistory();
 
     if (player->getKingdom() != player->getGeneral()->getKingdom())

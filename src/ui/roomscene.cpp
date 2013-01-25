@@ -416,7 +416,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
     case S_GAME_EVENT_UPDATE_SKILL: {
             updateSkillButtons();
             break;
-    }
+        }
     case S_GAME_EVENT_CHANGE_GENDER: {
             QString player_name = arg[1].asCString();
             General::Gender gender =  (General::Gender)arg[2].asInt();

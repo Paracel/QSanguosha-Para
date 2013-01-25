@@ -360,7 +360,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_card_intention.TuxiCard = function(card, from, tos, source)
+sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 	local lord = from:getRoom():getLord()
 	local tuxi_lord = false
 	for _, to in ipairs(tos) do
@@ -683,9 +683,9 @@ end
 sgs.ai_use_value.JijiangCard = 8.5
 sgs.ai_use_priority.JijiangCard = 2.7
 
-sgs.ai_card_intention.JijiangCard = function(card, from, tos)
+sgs.ai_card_intention.JijiangCard = function(self, card, from, tos)
 	if not from:isLord() and global_room:getCurrent():objectName() == from:objectName() then
-		return sgs.ai_card_intention.Slash(card, from, tos)
+		return sgs.ai_card_intention.Slash(self, card, from, tos)
 	end
 end
 
@@ -1218,7 +1218,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 	self:sort(self.enemies, "defense")
 	for _, enemy in ipairs(self.enemies) do
-		if self.player:canSlash(enemy, slash, true) and not (source and (source:objectName() == enemy:objectName())) then
+		if (not source or source:canSlash(enemy, slash, true)) and not (source and (source:objectName() == enemy:objectName())) then
 			local cards = self.player:getCards("he")
 			cards = sgs.QList2Table(cards)
 			for _, card in ipairs(cards) do
@@ -1258,8 +1258,8 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	return "."
 end
 
-sgs.ai_card_intention.LiuliCard = function(card, from, to)
-	sgs.ai_liuli_effect = true
+sgs.ai_card_intention.LiuliCard = function(self, card, from, to)
+	if not self:isWeak(from) or getCardsNum("Jink", from) > 0 then sgs.updateIntention(from, to[1], 50) end
 end
 
 function sgs.ai_slash_prohibit.liuli(self, to, card)
@@ -1390,7 +1390,7 @@ end
 
 sgs.ai_use_priority.JieyinCard = 2.5
 
-sgs.ai_card_intention.JieyinCard = function(card, from, tos)
+sgs.ai_card_intention.JieyinCard = function(self, card, from, tos)
 	if not from:hasFlag("jieyin_isenemy_" .. tos[1]:objectName()) then
 		sgs.updateIntention(from, tos[1], -80)
 	end
@@ -1631,7 +1631,7 @@ end
 
 table.insert(sgs.ai_choicemade_filter.cardUsed, lijian_filter)
 
-sgs.ai_card_intention.LijianCard = function(card, from, to)
+sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 	if sgs.evaluateRoleTrends(to[1]) == sgs.evaluateRoleTrends(to[2]) then
 		sgs.updateIntentions(from, to, 40)
 	end

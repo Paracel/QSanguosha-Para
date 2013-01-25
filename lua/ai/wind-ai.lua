@@ -373,17 +373,11 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 	return "."
 end
 
-sgs.ai_card_intention.TianxiangCard = function(card, from, tos)
+sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	local to = tos[1]
 	local intention = 10
 	local friend = false
-	for _, askill in ipairs(("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu"):split("|")) do
-		if to:hasSkill(askill) then
-			friend = true
-			break
-		end
-	end
-	if (to:getHp() >= 2 and friend)
+	if (to:getHp() >= 2 and self:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", to))
 		or (to:getHandcardNum() < 3 and to:hasSkill("rende"))
 		or to:hasSkill("buqu") then
 		intention = -10

@@ -244,7 +244,7 @@ sgs.ai_skill_playerchosen.yuanhu = function(self, targets)
 	end
 end
 
-sgs.ai_card_intention.YuanhuCard = function(card, from, to)
+sgs.ai_card_intention.YuanhuCard = function(self, card, from, to)
 	if to[1]:hasSkill("bazhen") or to[1]:hasSkill("yizhong") or (to[1]:hasSkill("kongcheng") and to[1]:isKongcheng()) then
 		if sgs.Sanguosha:getCard(card:getEffectiveId()):isKindOf("SilverLion") then
 			sgs.updateIntention(from, to[1], 10)
@@ -456,7 +456,7 @@ end
 sgs.ai_use_value.SongciCard = 3
 sgs.ai_use_priority.SongciCard = 2.5
 
-sgs.ai_card_intention.SongciCard = function(card, from, to)
+sgs.ai_card_intention.SongciCard = function(self, card, from, to)
 	sgs.updateIntention(from, to[1], to[1]:getHandcardNum() > to[1]:getHp() and 80 or -80)	
 end
 

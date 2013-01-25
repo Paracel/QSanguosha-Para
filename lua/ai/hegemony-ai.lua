@@ -420,7 +420,7 @@ end
 
 sgs.ai_use_value.DuoshiCard = 3
 sgs.ai_use_priority.DuoshiCard = 2.2
-sgs.ai_card_intention.DuoshiCard = function(card, from, tos)
+sgs.ai_card_intention.DuoshiCard = function(self, card, from, tos)
 	for _, to in ipairs(tos) do
 		sgs.updateIntention(from, to, to:hasSkill("manjuan") and 50 or -50)
 	end

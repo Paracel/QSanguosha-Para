@@ -1007,7 +1007,7 @@ sgs.ai_skill_use_func.FuluanCard = function(card, use, self)
 end
 
 sgs.ai_use_priority.FuluanCard = 2.3
-sgs.ai_card_intention.FuluanCard = function(card, from, tos)
+sgs.ai_card_intention.FuluanCard = function(self, card, from, tos)
 	sgs.updateIntention(from, tos[1], tos[1]:faceUp() and 80 or -80)
 end
 
@@ -1083,7 +1083,7 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 	end
 end
 
-sgs.ai_card_intention.HuangenCard = function(card, from, tos)
+sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)
 	local cardx = sgs.Card_Parse(from:getTag("Huangen_user"):toString())
 	if not cardx then return end
 	for _, to in ipairs(tos) do

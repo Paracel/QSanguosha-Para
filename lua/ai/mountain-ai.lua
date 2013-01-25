@@ -284,9 +284,9 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_card_intention.QiaobianCard = function(card, from, tos, source)
+sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
 	if from:getPhase() == sgs.Player_Draw then
-		sgs.ai_card_intention.TuxiCard(card, from, tos, source)
+		sgs.ai_card_intention.TuxiCard(self, card, from, tos)
 	end
 	return 0
 end
@@ -631,7 +631,7 @@ function sgs.ai_skill_pindian.zhiba_pindian(minusecard, self, requestor, maxcard
 	return maxcard or cards[1]
 end
 
-function sgs.ai_card_intention.ZhibaCard(card, from, tos, source)
+function sgs.ai_card_intention.ZhibaCard(self, card, from, tos)
 	assert(#tos == 1)
 	local number = sgs.Sanguosha:getCard(card:getSubcards():first()):getNumber()
 	if number < 6 then sgs.updateIntention(from, tos[1], -60)

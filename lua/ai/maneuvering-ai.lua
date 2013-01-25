@@ -326,12 +326,16 @@ function SmartAI:useCardIronChain(card, use)
 	if use.to then assert(use.to:length() < 3) end
 end
 
-sgs.ai_card_intention.IronChain = function(card, from, tos)
+sgs.ai_card_intention.IronChain = function(self, card, from, tos)
+	local liuxie = from:getRoom():findPlayerBySkillName("huangen")
 	for _, to in ipairs(tos) do
 		if not to:isChained() then
-			sgs.updateIntention(from, to, 80)
+			local enemy = true
+			if to:hasSkill("danlao") and #tos > 1 then enemy = false end
+			if liuxie and liuxie:getHp() >= 1 and #tos > 1 and self:isFriend(to, liuxie) then enemy = false end
+			sgs.updateIntention(from, to, enemy and 60 or -30)
 		else
-			sgs.updateIntention(from, to, -80)
+			sgs.updateIntention(from, to, -60)
 		end
 	end
 end

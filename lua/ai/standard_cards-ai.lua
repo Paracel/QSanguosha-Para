@@ -467,11 +467,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	return targetlist[#targetlist]
 end
 
-sgs.ai_card_intention.Slash = function(card, from, tos)
-	if sgs.ai_liuli_effect then
-		sgs.ai_liuli_effect = false
-		return
-	end
+sgs.ai_card_intention.Slash = function(self, card, from, tos)
 	for _, to in ipairs(tos) do
 		local value = 80
 		if sgs.ai_collateral then sgs.ai_collateral = false value = 0 end
@@ -1064,7 +1060,7 @@ function SmartAI:useCardDuel(duel, use)
 
 end
 
-sgs.ai_card_intention.Duel = function(card, from, tos, source)
+sgs.ai_card_intention.Duel = function(self, card, from, tos)
 	if sgs.ai_lijian_effect then
 		sgs.ai_lijian_effect = false
 		return
@@ -1485,7 +1481,7 @@ end
 sgs.ai_use_value.Collateral = 5.8
 sgs.ai_use_priority.Collateral = 2.75
 
-sgs.ai_card_intention.Collateral = function(card, from, tos)
+sgs.ai_card_intention.Collateral = function(self, card, from, tos)
 	assert(#tos == 1)
 	if sgs.compareRoleEvaluation(tos[1], "rebel", "loyalist") ~= sgs.compareRoleEvaluation(from, "rebel", "loyalist") then
 		sgs.updateIntention(from, tos[1], 80)

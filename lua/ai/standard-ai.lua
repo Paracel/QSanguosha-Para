@@ -700,16 +700,25 @@ end
 sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	if not self:isFriend(sgs.jijiangsource) then return "." end
 	if self:needBear() then return "." end
-	if not sgs.jijiangtarget or (sgs.jijiangtarget and #sgs.jijiangtarget == 0) then
-		return self:getCardId("Slash") or "."
+
+	local jijiangtargets = {}
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:hasFlag("JijiangTarget") then
+			if player:objectName() == self.player:objectName() then return "." end
+			table.insert(jijiangtargets, player)
+		end
 	end
 
-	--only deal with one target now
-	self:sort(sgs.jijiangtarget, "defenseSlash")
-	local target = sgs.jijiangtarget[1]
-
-	if (not target:getArmor() or not target:hasArmorEffect(target:getAmor():objectName())) and not target:hasArmorEffect("bazhen") then
+	if #jijiangtargets == 0 then
 		return self:getCardId("Slash") or "."
+	end
+	
+	self:sort(jijiangtargets, "defenseSlash")
+	for _, target in ipairs(jijiangtargets) do
+		if (not target:getArmor() or not target:hasArmorEffect(target:getAmor():objectName()))
+			and not target:hasArmorEffect("bazhen") and not (target:hasSkill("yizhong") and not target:getArmor()) then
+			return self:getCardId("Slash") or "."
+		end
 	end
 
 	local cards = sgs.QList2Table(self.player:getCards("he"))
@@ -717,13 +726,13 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 
 	for i = 1, #cards , 1 do
 		local card = cards[i]
-		local card_place = self.room:getCardPlace(card:getEffectiveId())
-		local card_str = getSkillViewCard(card, "Slash", self.player, card_place)
-		local carduse = {sgs.Card_Parse(card_str), card, sgs.Card_Parse(cardsView("Slash", player))}
-		local cardstr = {card_str, card:getEffectiveId(), cardsView("Slash", player)}
-		for j = 1, #carduse, 1 do
-			if carduse[j]:isKindOf("Slash") and not self:slashProhibit(carduse[j], target) and self:slashIsEffective(carduse[j], target) then
-				return cardstr[j]
+		local slash_str = self:getCardId("Slash", self.player, card)
+		if slash_str then
+			local slash = sgs.Card_Parse(slash_str)
+			for _, target in ipairs(jijiangtargets) do
+				if not self:slashProhibit(slash, target) and self:slashIsEffective(slash, target) then
+					return slash_str
+				end
 			end
 		end
 	end

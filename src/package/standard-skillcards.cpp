@@ -281,19 +281,25 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
     QList<ServerPlayer *> lieges = room->getLieges("shu", liubei);
     const Card *slash = NULL;
 
-    QVariant toslash = QVariant::fromValue((PlayerStar)targets.first());
+    foreach (ServerPlayer *target, targets)
+        room->setPlayerFlag(target, "JijiangTarget");
     foreach (ServerPlayer *liege, lieges) {
-        slash = room->askForCard(liege, "slash", "@jijiang-slash:" + liubei->objectName(), toslash, Card::MethodResponse, liubei);
+        slash = room->askForCard(liege, "slash", "@jijiang-slash:" + liubei->objectName(), QVariant(), Card::MethodResponse, liubei);
         if (slash) {
+            foreach (ServerPlayer *target, targets)
+                room->setPlayerFlag(target, "-JijiangTarget");
+
             CardUseStruct card_use;
             card_use.card = slash;
             card_use.from = liubei;
-            card_use.to << targets.first();
+            card_use.to << targets;
 
             room->useCard(card_use);
             return;
         }
     }
+    foreach (ServerPlayer *target, targets)
+        room->setPlayerFlag(target, "-JijiangTarget");
     room->setPlayerFlag(liubei, "jijiang_failed");
 }
 

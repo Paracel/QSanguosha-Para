@@ -334,24 +334,21 @@ sgs.ai_skill_invoke.shushen = function(self, data)
 	return #self.friends_noself > 0
 end
 
-sgs.ai_skill_playerchosen.shushen = function(self, targets)
-	local tos = {}
-	local current = self.player:getRoom():getCurrent()
-	for _, target in sgs.qlist(targets) do
-		if self:isFriend(target)
-			and not (target:hasSkill("manjuan") and target:objectName() ~= current:objectName())
+sgs.ai_skill_use["@@shushen"] = function(self, prompt)
+	if #self.friends_noself == 0 then return "." end
+	self:sort(self.friends_noself, "defense")
+	
+	for _, enemy in ipairs(self.enemies) do
+		if not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)
 			and not (target:hasSkill("kongcheng") and target:isKongcheng()) then
-			table.insert(tos, target)
+			return ("@ShushenCard=.->%s"):format(enemy:objectName())
 		end
 	end
 
-	if #tos > 0 then
-		self:sort(tos, "defense")
-		return tos[1]
-	end
+	return "."
 end
 
-sgs.ai_playerchosen_intention.shushen = -80
+sgs.ai_card_intention.ShushenCard = -80
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
 	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())

@@ -187,7 +187,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     card_container->moveBy(-120, 0);
 
-    connect(ClientInstance, SIGNAL(skill_attached(QString, bool)), this, SLOT(attachSkill(QString,bool)));
+    connect(ClientInstance, SIGNAL(skill_attached(QString, bool)), this, SLOT(attachSkill(QString, bool)));
     connect(ClientInstance, SIGNAL(skill_detached(QString)), this, SLOT(detachSkill(QString)));
 
     enemy_box = NULL;
@@ -376,6 +376,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
             if (!player->hasSkill("huashen"))
                 container->stopHuaShen();
+            container->updateAvatarTooltip();
             break;
         }
     case S_GAME_EVENT_ACQUIRE_SKILL: {
@@ -386,6 +387,8 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             player->acquireSkill(skill_name);
             acquireSkill(player, skill_name);
 
+            PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
+            container->updateAvatarTooltip();
             break;
         }
     case S_GAME_EVENT_ADD_SKILL: {
@@ -395,6 +398,8 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             ClientPlayer *player = ClientInstance->getPlayer(player_name);
             player->addSkill(skill_name);
 
+            PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
+            container->updateAvatarTooltip();
             break;
         }
     case S_GAME_EVENT_LOSE_SKILL: {
@@ -404,11 +409,13 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             ClientPlayer *player = ClientInstance->getPlayer(player_name);
             player->loseSkill(skill_name);
 
+            PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
+            container->updateAvatarTooltip();
             break;
         }
     case S_GAME_EVENT_UPDATE_SKILL: {
-        updateSkillButtons();
-        break;
+            updateSkillButtons();
+            break;
     }
     case S_GAME_EVENT_CHANGE_GENDER: {
             QString player_name = arg[1].asCString();

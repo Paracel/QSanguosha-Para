@@ -79,13 +79,14 @@ public:
     virtual QGraphicsItem *getMouseClickReceiver() = 0;
     virtual void startHuaShen(QString generalName, QString skillName);
     virtual void stopHuaShen();
+    virtual void updateAvatarTooltip();
 
     inline void hookMouseEvents();
 
     QPixmap paintByMask(QPixmap& source);
 
 public slots:
-    void updateAvatar();    
+    void updateAvatar();
     void updateSmallAvatar();
     void updateReadyItem(bool visible);
     void updatePhase();

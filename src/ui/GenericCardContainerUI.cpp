@@ -689,6 +689,11 @@ void PlayerCardContainer::stopHuaShen() {
     }
 }
 
+void PlayerCardContainer::updateAvatarTooltip() {
+    if (m_player)
+        _m_avatarArea->setToolTip(m_player->getSkillDescription());
+}
+
 PlayerCardContainer::PlayerCardContainer() {
     _m_layout = NULL;
     _m_avatarArea = _m_smallAvatarArea = NULL;

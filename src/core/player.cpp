@@ -734,6 +734,21 @@ QSet<QString> Player::getAcquiredSkills() const{
     return acquired_skills;
 }
 
+QString Player::getSkillDescription() const{
+    QString description;
+
+    foreach (const Skill *skill, getVisibleSkillList()) {
+        if (skill->inherits("SPConvertSkill") || skill->isAttachedLordSkill() || !hasSkill(skill->objectName()))
+            continue;
+        QString skill_name = Sanguosha->translate(skill->objectName());
+        QString desc = skill->getDescription();
+        desc.replace("\n", "<br/>");
+        description.append(QString("<b>%1</b>: %2 <br/> <br/>").arg(skill_name).arg(desc));
+    }
+
+    return description;
+}
+
 bool Player::isProhibited(const Player *to, const Card *card) const{
     return Sanguosha->isProhibited(this, to, card);
 }

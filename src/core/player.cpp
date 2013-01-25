@@ -735,7 +735,7 @@ QSet<QString> Player::getAcquiredSkills() const{
 }
 
 QString Player::getSkillDescription() const{
-    QString description;
+    QString description = QString();
 
     foreach (const Skill *skill, getVisibleSkillList()) {
         if (skill->inherits("SPConvertSkill") || skill->isAttachedLordSkill() || !hasSkill(skill->objectName()))
@@ -746,6 +746,7 @@ QString Player::getSkillDescription() const{
         description.append(QString("<b>%1</b>: %2 <br/> <br/>").arg(skill_name).arg(desc));
     }
 
+    if (description.isEmpty()) description = tr("No skills");
     return description;
 }
 

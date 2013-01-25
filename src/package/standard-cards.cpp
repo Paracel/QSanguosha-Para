@@ -67,28 +67,30 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             if (player->hasSkill("lihuo"))
                 if (room->askForSkillInvoke(player, "lihuo", data)) {
                     FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    fire_slash->addSubcard(this);
+                    if (subcardsLength() > 0)
+                        fire_slash->addSubcard(this);
                     fire_slash->setSkillName("lihuo");
                     use.card = fire_slash;
                 }
             if (player->hasSkill("fan") && !use.card->isKindOf("FireSlash")) {
                 if (room->askForSkillInvoke(player, "fan", data)) {
                     FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    fire_slash->addSubcard(this);
+                    if (subcardsLength() > 0)
+                        fire_slash->addSubcard(this);
                     fire_slash->setSkillName("fan");
                     use.card = fire_slash;
                 }
             }
         }
     }
-    if ((isVirtualCard() && subcardsLength() == 0) || (getSkillName() == "guhuo" && use.card != this)) {
+    if ((use.card->isVirtualCard() && use.card->subcardsLength() == 0) || (getSkillName() == "guhuo" && use.card != this)) {
         QList<ServerPlayer *> targets_ts;
         while (true) {
             QList<const Player *> targets_const;
             foreach (ServerPlayer *p, use.to)
                 targets_const << qobject_cast<const Player *>(p);
             foreach (ServerPlayer *p, room->getAlivePlayers())
-                if (!use.to.contains(p) && targetFilter(targets_const, p, use.from))
+                if (!use.to.contains(p) && use.card->targetFilter(targets_const, p, use.from))
                     targets_ts << p;
             if (targets_ts.isEmpty())
                 break;
@@ -111,7 +113,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     }
     if (use.to.size() > 1 && player->hasSkill("shenji"))
         room->broadcastSkillInvoke("shenji");
-    else if (use.to.size() > 1 && use.card->isKindOf("FireSlash") && player->hasSkill("lihuo"))
+    else if (use.to.size() > 1 && player->hasSkill("lihuo") && use.card->isKindOf("FireSlash") && use.card->getSkillName() != "lihuo")
         room->broadcastSkillInvoke("lihuo", 1);
     else if (use.to.size() > 1 && player->hasSkill("duanbing"))
         room->broadcastSkillInvoke("duanbing");

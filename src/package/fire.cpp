@@ -386,14 +386,9 @@ public:
                 room->throwCard(trick, reason, NULL);
             }
 
-            room->setPlayerProperty(pangtong, "hp", qMin(3, pangtong->getMaxHp()));
-
-            LogMessage log;
-            log.type = "#GetHp";
-            log.from = pangtong;
-            log.arg = pangtong->getHp();
-            log.arg2 = pangtong->getMaxHp();
-            room->sendLog(log);
+            RecoverStruct recover;
+            recover.recover = qMin(3, pangtong->getMaxHp()) - pangtong->getHp();
+            room->recover(pangtong, recover);
 
             pangtong->drawCards(3);
 

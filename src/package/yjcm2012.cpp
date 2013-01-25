@@ -337,14 +337,10 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             liaohua->loseMark("@laoji");
-            room->setPlayerProperty(liaohua, "hp", qMin(getKingdoms(room), liaohua->getMaxHp()));
 
-            LogMessage log;
-            log.type = "#GetHp";
-            log.from = liaohua;
-            log.arg = liaohua->getHp();
-            log.arg2 = liaohua->getMaxHp();
-            room->sendLog(log);
+            RecoverStruct recover;
+            recover.recover = qMin(getKingdoms(room), liaohua->getMaxHp()) - liaohua->getHp();
+            room->recover(liaohua, recover);
 
             liaohua->turnOver();
         }

@@ -1562,9 +1562,10 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 	elseif sgs.dynamic_value.damage_card[className] then intention = 70
 	elseif sgs.dynamic_value.benefit[className] then intention = -40
 	elseif (className == "Snatch" or className == "Dismantlement") and
-		(to:getCards("j"):isEmpty() and
-		not (to:getArmor() and to:getArmor():isKindOf("SilverLion"))) then
+		(to:getCards("j"):isEmpty() and not (to:getArmor() and to:getArmor():isKindOf("SilverLion"))) then
 		intention = 80
+	elseif className == "Nullification" then
+		intention = 50
 	end
 	if positive then intention = -intention end
 	sgs.updateIntention(player, to, intention)

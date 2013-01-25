@@ -498,9 +498,9 @@ function SmartAI:getDynamicUsePriority(card)
 				if use_card:isKindOf("Slash") and getCardsNum("Jink", probably_hit) == 0 then
 					value = value + 5
 				elseif use_card:isKindOf("FireAttack") then
-					value = value + 0.5 + self:getHandcardNum()
+					value = value + 0.5 + self.player:getHandcardNum()
 				elseif use_card:isKindOf("Duel") then
-					value = value + 2 + (self:getHandcardNum() - getCardsNum("Slash", probably_hit))
+					value = value + 2 + (self.player:getHandcardNum() - getCardsNum("Slash", probably_hit))
 				end
 			end
 		elseif sgs.dynamic_value.control_card[class_name] then
@@ -2546,7 +2546,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	end
 	
 	-- armor,DefensiveHorse
-	for _, friend in ipairs(friends) do		
+	for _, friend in ipairs(friends) do
 		if friend:getHp() <= 2 and friend:faceUp() then
 			for _, hcard in ipairs(cards) do
 				if (hcard:isKindOf("Armor") and not friend:getArmor() and not self:hasSkills("yizhong|bazhen",friend))
@@ -2582,7 +2582,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, friend in ipairs(friends) do
 		if getKnownCard(friend, "Crossbow") then
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if self:isEnemy(p) and sgs.isGoodTarget(p,self.enemies) and friend:distanceTo(p) <= 1 then
+				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) <= 1 then
 					for _, hcard in ipairs(cards) do
 						if isCard("Slash", hcard, friend) then
 							return hcard, friend
@@ -2606,7 +2606,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	  
 			if not can_slash then
 				for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-					if self:isEnemy(p) and sgs.isGoodTarget(p,self.enemies) and friend:distanceTo(p) > friend:getAttackRange() then
+					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) > friend:getAttackRange() then
 						for _, hcard in ipairs(cardtogive) do
 							if hcard:isKindOf("Weapon")
 								and friend:distanceTo(p) <= friend:getAttackRange() + (sgs.weapon_range[hcard:getClassName()] or 0) and not friend:getWeapon() then
@@ -2623,7 +2623,6 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	
 	table.sort(cardtogive, cmpByNumber)
 	for _, friend in ipairs(friends) do
 		if not self:needKongcheng(friend) and friend:faceUp() then

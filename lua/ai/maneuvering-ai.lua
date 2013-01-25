@@ -282,7 +282,7 @@ function SmartAI:useCardIronChain(card, use)
 	local chainSelf = (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player)) and not self.player:isChained()
 						and not self.player:hasSkill("jueqing")
 						and (self:getCardId("NatureSlash") or (self:getCardId("Slash") and (self.player:hasWeapon("fan") or self:hasSkill("lihuo")))
-						or (self:getCardId("FireAttack") and self:getHandcardNum() > 2))
+						or (self:getCardId("FireAttack") and self.player:getHandcardNum() > 2))
 
 	if not self.player:hasSkill("noswuyan") then
 		if #friendtargets > 1 then

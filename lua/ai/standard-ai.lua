@@ -1480,7 +1480,7 @@ sgs.ai_skill_cardask["@double-jink-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
 	if self:hasSkill("kongcheng") then
-		if not (self:getHandcardNum() == 1 and self.player:getCardsNum("Jink") == 1) or target:hasWeapon("guding_blade") then return "." end
+		if not (self.player:getHandcardNum() == 1 and self.player:getCardsNum("Jink") == 1) or target:hasWeapon("guding_blade") then return "." end
 	else
 		if self:getCardsNum("Jink") < 2 and self.player:getHandcardNum() > self:getLeastHandcardNum() then return "." end
 	end

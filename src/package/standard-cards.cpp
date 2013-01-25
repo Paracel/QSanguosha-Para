@@ -691,7 +691,7 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
     }
 
     // ================================
-    bool drwushuang_effect = false;
+    bool drwushuang_effect = true;
     if (slash && effect.from->hasSkill("drwushuang")) {
         LogMessage log;
         log.from = effect.from;
@@ -730,7 +730,7 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
         room->setEmotion(effect.to, "jink");
 
     // ================================
-    bool drwushuang_effect = false;
+    bool drwushuang_effect = true;
     if (jink && effect.from->hasSkill("drwushuang")) {
         LogMessage log;
         log.from = effect.from;

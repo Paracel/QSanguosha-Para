@@ -526,7 +526,7 @@ function SmartAI:cardNeed(card)
 	local suit_string = card:getSuitString()
 	local value
 	if card:isKindOf("Peach") then
-		self:sort(self.friends,"hp")
+		self:sort(self.friends, "hp")
 		if self.friends[1]:getHp() < 2 then return 13 end
 		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not self:hasSkills("longhun|buqu")) or self:hasSkills("kurou|benghuai") then return 15 end
 		return self:getUseValue(card)
@@ -703,7 +703,7 @@ function SmartAI:sortByDynamicUsePriority(cards)
 		if value1 ~= value2 then
 			return value1 > value2
 		else
-			return a and a:getTypeId() ~= sgs.Card_TypeSkill and not (b and b:getTypeId() ~= sgs.Card_Skill)
+			return a and a:getTypeId() ~= sgs.Card_TypeSkill and not (b and b:getTypeId() ~= sgs.Card_TypeSkill)
 		end
 	end
 
@@ -716,9 +716,9 @@ function SmartAI:sortByCardNeed(cards, inverse)
 		local value2 = self:cardNeed(b)
 
 		if value1 ~= value2 then
-			return value1 < value2
+			return value1 > value2
 		else
-			return a:getNumber() < b:getNumber()
+			return a:getNumber() > b:getNumber()
 		end
 	end
 

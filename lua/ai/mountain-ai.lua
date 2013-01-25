@@ -393,9 +393,29 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	if #self.friends == 1 then
 		return false
 	end
+	
+	local shouldUse = 0
+	for _ , card in ipairs(cards) do
+		if card:isKindOf("TrickCard") and self:getUseValue(card) > 3.69 then
+			local dummy_use = { isDummy = true }
+			self:useTrickCard(card, dummy_use)
+			if dummy_use.card then shouldUse = shouldUse + 1 end
+		end
+		if card:isKindOf("Slash") then
+			for _, enemy in ipairs(self.enemies) do
+				if self.player:canSlash(enemy) and not self:slashProhibit(slash, enemy)
+					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
+					shouldUse = shouldUse + 1
+					break
+				end
+			end
+		end
+	end
+	if ahouldUse >= 2 then return false end
 
 	local limit = self.player:getMaxCards()
-	if self.player:getHandcardNum() > limit or self.player:isKongcheng() then return false end
+	if self.player:isKongcheng() then return false end
+	if self:getCardsNum("Peach") >= limit - 2 and self.player:isWounded() then return false end
 
 	local to_discard = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())

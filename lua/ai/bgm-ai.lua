@@ -834,6 +834,7 @@ sgs.yinling_suit_value = {
 }
 
 sgs.ai_skill_invoke.fenyong = function(self, data)
+	if sgs.turncount == 0 and #self.enemies == 0 then return end
 	return true
 end
 

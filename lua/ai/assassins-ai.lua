@@ -1,10 +1,12 @@
 sgs.ai_skill_invoke.moukui = function(self, data)
 	local target = data:toPlayer()
+	self.moukuitarget = target
 	return not self:isFriend(target) 
 end
 
 sgs.ai_skill_choice.moukui = function(self, choices, data)
-	local target = data:toPlayer()
+	local target = self.moukuitarget
+	if not target then return "draw" end
 	local equip_num = target:getEquips():length()
 	if target:isKongcheng() and equip_num > 0 then
 		if self:hasSkills(sgs.lose_equip_skill, target) or (self:isEquip("SilverLion", target) and target:isWounded() and equip_num == 1) then

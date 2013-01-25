@@ -678,6 +678,11 @@ public:
                     room->filterCards(player, player->getCards("he"), true);
             }
         }
+
+        Json::Value args;
+        args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+
         return false;
     }
 };
@@ -719,6 +724,10 @@ void QingchengCard::onEffect(const CardEffectStruct &effect) const{
         effect.to->tag["Qingcheng"] = QVariant::fromValue(Qingchenglist);
         room->setPlayerMark(effect.to, "Qingcheng" + skill_qc, 1);
         room->filterCards(effect.to, effect.to->getCards("he"), true);
+
+        Json::Value args;
+        args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
     }
 }
 
@@ -777,6 +786,10 @@ public:
             }
             player->tag.remove("Qingcheng");
             room->filterCards(player, player->getCards("he"), false);
+
+            Json::Value args;
+            args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
         }
         return false;
     }

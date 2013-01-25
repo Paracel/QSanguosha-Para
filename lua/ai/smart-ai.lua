@@ -2571,10 +2571,23 @@ function SmartAI:getCardNeedPlayer(cards)
 
 	--Crossbow
 	for _, friend in ipairs(friends) do
-		if self:hasSkills("longdan|wusheng|keji", friend) and not self:hasSkills("paoxiao", friend) and friend:getHandcardNum() >= 3 then
+		if self:hasSkills("longdan|wusheng|keji", friend) and not self:hasSkills("paoxiao", friend) and friend:getHandcardNum() >= 2 then
 			for _, hcard in ipairs(cards) do
 				if hcard:isKindOf("Crossbow") then
 					return hcard, friend
+				end
+			end
+		end
+	end
+	for _, friend in ipairs(friends) do
+		if getKnownCard(friend, "Crossbow") then
+			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
+				if self:isEnemy(p) and sgs.isGoodTarget(p,self.enemies) and friend:distanceTo(p) <= 1 then
+					for _, hcard in ipairs(cards) do
+						if isCard("Slash", hcard, friend) then
+							return hcard, friend
+						end
+					end
 				end
 			end
 		end
@@ -2665,7 +2678,19 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() < 3 then
+				if friend:getHandcardNum() <= 3 and (self:getOverflow()>0 or self.player:getHandcardNum()>3 
+					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
+					return hcard, friend
+				end
+			end
+		end
+	end
+	
+	for _, hcard in ipairs(cardtogive) do
+		for _, friend in ipairs(self.friends_noself) do
+			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
+				if (self:getOverflow() > 0 or self.player:getHandcardNum()> 3 
+					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
 					return hcard, friend
 				end
 			end
@@ -2696,7 +2721,7 @@ function SmartAI:askForYiji(card_ids)
 
 	local card, friend = self:getCardNeedPlayer(cards)
 	if card and friend then return friend, card:getId() end
-	if #self.friends > 1 and self:getOverflow() > 0 then
+	if #self.friends > 1 then
 		self:sort(self.friends, "handcard")
 		for _, afriend in ipairs(self.friends) do
 			if not (self:needKongcheng(afriend) or afriend:hasSkill("manjuan")) then

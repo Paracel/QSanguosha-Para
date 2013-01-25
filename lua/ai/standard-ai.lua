@@ -681,8 +681,13 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 end
 
 sgs.ai_use_value.JijiangCard = 8.5
-sgs.ai_use_priority.JijiangCard = 2.6
-sgs.ai_card_intention.JijiangCard = sgs.ai_card_intention.Slash
+sgs.ai_use_priority.JijiangCard = 2.7
+
+sgs.ai_card_intention.JijiangCard = function(card, from, tos)
+	if not from:isLord() and global_room:getCurrent():objectName() == from:objectName() then
+		return sgs.ai_card_intention.Slash(card, from, tos)
+	end
+end
 
 sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then

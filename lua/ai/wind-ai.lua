@@ -334,9 +334,10 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 
 	for _, enemy in ipairs(self.enemies) do
 		if (enemy:getHp() <= dmg.damage and enemy:isAlive()) then
-
-		if (enemy:getHandcardNum() <= 2) or self:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng", enemy)
-			or enemy:containsTrick("indulgence") then return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName() end
+			if (enemy:getHandcardNum() <= 2) or self:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng", enemy)
+				or enemy:containsTrick("indulgence") and self:canAttack(enemy, (dmg.from or self.room:getCurrent()), dmg.nature) then
+				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName() 
+			end
 		end
 	end
 
@@ -345,6 +346,8 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature > 0 then
 			elseif friend:getHp() >= 2 and dmg.damage < 2 and
 					(self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
+					or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
+					or friend:getHp() > getBestHp(friend)
 					or (friend:getHandcardNum() < 3 and friend:hasSkill("rende")))
 				then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
 			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
@@ -355,13 +358,14 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 		if (enemy:getLostHp() <= 1 or dmg.damage > 1) and enemy:isAlive() then
 			if (enemy:getHandcardNum() <= 2)
 				or enemy:containsTrick("indulgence") or self:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng", enemy)
+				and self:canAttack(enemy, (dmg.from or self.room:getCurrent()), dmg.nature)
 			then return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName() end
 		end
 	end
 
 	for i = #self.enemies, 1, -1 do
 		local enemy = self.enemies[i]
-		if not enemy:isWounded() and not self:hasSkills(sgs.masochism_skill, enemy) and enemy:isAlive() then
+		if not enemy:isWounded() and not self:hasSkills(sgs.masochism_skill, enemy) and enemy:isAlive() and self:canAttack(enemy, (dmg.from or self.room:getCurrent()), dmg.nature) then
 			return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName()
 		end
 	end
@@ -371,7 +375,7 @@ end
 
 sgs.ai_card_intention.TianxiangCard = function(card, from, tos)
 	local to = tos[1]
-	local intention = 20
+	local intention = 10
 	local friend = false
 	for _, askill in ipairs(("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu"):split("|")) do
 		if to:hasSkill(askill) then
@@ -382,7 +386,7 @@ sgs.ai_card_intention.TianxiangCard = function(card, from, tos)
 	if (to:getHp() >= 2 and friend)
 		or (to:getHandcardNum() < 3 and to:hasSkill("rende"))
 		or to:hasSkill("buqu") then
-		intention = -20
+		intention = -10
 	end
 	sgs.updateIntention(from, to, intention)
 end

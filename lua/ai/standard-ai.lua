@@ -1148,6 +1148,10 @@ sgs.dynamic_value.damage_card.FanjianCard = true
 
 sgs.ai_chaofeng.zhouyu = 3
 
+sgs.ai_skill_invoke.lianying = function(self, data)
+	return not (self:hasSkill("kongcheng") and self.player:getPhase() ~= sgs.Player_Play)
+end
+
 local guose_skill = {}
 guose_skill.name = "guose"
 table.insert(sgs.ai_skills, guose_skill)

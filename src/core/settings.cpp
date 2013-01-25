@@ -168,7 +168,7 @@ void Settings::init() {
               << "caozhi+bgm_diaochan" << "caozhi+bgm_caoren" << "caozhi+neo_caoren"
               << "gaoshun+zhangchunhua" << "gaoshun+nos_zhangchunhua"
               << "zhangchunhua+guanxingzhangbao" << "zhangchunhua+heg_luxun" << "zhangchunhua+neo_zhangfei"
-              << "guanxingzhangbao+nos_zhangchunhua"
+              << "guanxingzhangbao+bgm_zhangfei" << "guanxingzhangbao+nos_zhangchunhua"
               << "liaohua+bgm_diaochan"
               << "bgm_diaochan+bgm_caoren"
               << "bgm_caoren+neo_caoren"

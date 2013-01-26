@@ -2960,6 +2960,7 @@ function SmartAI:isWeak(player)
 end
 
 function SmartAI:useCardByClassName(card, use)
+	if not card then global_room:writeToConsole(debug.traceback()) return end
 	local class_name = card:getClassName()
 	local use_func = self["useCard" .. class_name]
 
@@ -3670,6 +3671,7 @@ function SmartAI:useSkillCard(card, use)
 end
 
 function SmartAI:useBasicCard(card, use)
+	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if not (card:isKindOf("Peach") and self.player:getLostHp() > 1) and self:needBear() then return end
 	if self:needRende() then return end
 	self:useCardByClassName(card, use)
@@ -3937,6 +3939,7 @@ function SmartAI:hasTrickEffective(card, player)
 end
 
 function SmartAI:useTrickCard(card, use)
+	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if self:needBear() and not ("amazing_grace|ex_nihilo|snatch|iron_chain"):match(card:objectName()) then return end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then
 		if not (card:isKindOf("AOE") or card:isKindOf("DelayedTrick") or card:isKindOf("IronChain")) then return end
@@ -4056,6 +4059,7 @@ function SmartAI:hasSameEquip(card, player) -- obsolete
 end
 
 function SmartAI:useEquipCard(card, use)
+	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if self:hasSkills(sgs.lose_equip_skill) and self:evaluateArmor(card) > -5 then
 		use.card = card
 		return

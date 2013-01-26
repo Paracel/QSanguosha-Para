@@ -286,9 +286,7 @@ xueji_skill.getTurnUseCard = function(self, inclusive)
 		local card_id = red_card:getEffectiveId()
 		local card_str = ("@XuejiCard=" .. card_id)
 		local xueji_card = sgs.Card_Parse(card_str)
-
 		assert(xueji_card)
-
 		return xueji_card
 	end
 end
@@ -373,7 +371,11 @@ sgs.ai_skill_use_func.XuejiCard = function(card, use, self)
 end
 
 sgs.ai_use_value.XuejiCard = 3
-sgs.ai_use_priority.XuejiCard = 2.2
+sgs.ai_use_priority.XuejiCard = 3
+
+sgs.ai_cardneed.xueji = function(to, card)
+	return to:getHandcardNum() < 3 and card:isRed()
+end
 
 sgs.ai_skill_use["@@bifa"] = function(self, prompt)
 	local cards = self.player:getHandcards()

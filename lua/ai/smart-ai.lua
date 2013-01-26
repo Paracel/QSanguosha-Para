@@ -4081,7 +4081,12 @@ function SmartAI:useEquipCard(card, use)
 	if use.card or use.broken then return end
 	if card:isKindOf("Weapon") then
 		if self:needBear() then return end
-		if self:hasSkills("qiangxi|zhulou") and same then return end
+		if self:hasSkill("zhulou") and same then return end
+		if self:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
+			local dummy_use = { isDummy = true }
+			self:useSkillCard(sgs.Card_Parse("@QiangxiCard=" .. same:getEffectiveId()), dummy_use)
+			if dummy_use.card then return end
+		end
 		if self.player:hasSkill("rende") then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getWeapon() then return end
@@ -4180,7 +4185,7 @@ function SmartAI:needRende()
 end
 
 function getBestHp(player)
-	local arr = {baiyin = 1, quhu = 1, ganlu = 1, yinghun = 2, miji = 1, xueji = 1}
+	local arr = { baiyin = 1, quhu = 1, ganlu = 1, yinghun = 2, miji = 1, xueji = 1 }
 
 	if player:hasSkill("longhun") and player:getCards("he"):length() > 2 then return 1 end
 	if player:getMark("@waked") > 0 and not player:hasSkill("xueji") then return player:getMaxHp() end

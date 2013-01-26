@@ -775,6 +775,10 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
+sgs.ai_cardneed.wusheng = function(to, card)
+	return to:getHandcardNum() < 3 and card:isRed()
+end
+
 function sgs.ai_cardneed.paoxiao(to, card, self)
 	local cards = to:getHandcards()
 	local has_weapon = to:getWeapon() and not to:getWeapon():isKindOf("Crossbow")

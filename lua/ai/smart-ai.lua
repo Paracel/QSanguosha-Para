@@ -4185,7 +4185,7 @@ function SmartAI:needRende()
 end
 
 function getBestHp(player)
-	local arr = { baiyin = 1, quhu = 1, ganlu = 1, yinghun = 2, miji = 1, xueji = 1 }
+	local arr = { baiyin = 1, quhu = 1, ganlu = 1, yinghun = 2, miji = 1, xueji = 1, baobian = math.max(0, player:getMaxHp() - 3) }
 
 	if player:hasSkill("longhun") and player:getCards("he"):length() > 2 then return 1 end
 	if player:getMark("@waked") > 0 and not player:hasSkill("xueji") then return player:getMaxHp() end

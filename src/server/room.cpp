@@ -2413,23 +2413,21 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
        && (!card->canRecast() || (card->canRecast() && card_use.from->isCardLimited(card, Card::MethodRecast))))
         return;
 
-    card = card_use.card->validate(&card_use);
-    if (!card) return;
-
+    QString key;
+    if (card->inherits("LuaSkillCard"))
+        key = "#" + card->objectName();
+    else
+        key = card->getClassName();
     int slash_count = card_use.from->getSlashCount();
-
-    if (card_use.from->getPhase() == Player::Play && add_history) {
-        QString key;
-        if (card->inherits("LuaSkillCard"))
-            key = "#" + card->objectName();
-        else
-            key = card->getClassName();
-
-        bool slash_not_record = key.contains("Slash")
+    bool slash_not_record = key.contains("Slash")
                             && slash_count > 0
                             && (card_use.from->hasWeapon("crossbow")
                                 || Sanguosha->correctCardTarget(TargetModSkill::Residue, card_use.from, card) > 500);
 
+    card = card_use.card->validate(&card_use);
+    if (!card) return;
+
+    if (card_use.from->getPhase() == Player::Play && add_history) {
         if (!slash_not_record) {
             card_use.from->addHistory(key);
             card_use.from->invoke("addHistory", key + ":");

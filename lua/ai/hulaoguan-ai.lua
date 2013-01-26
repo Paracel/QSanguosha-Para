@@ -11,6 +11,8 @@ sgs.ai_skill_invoke["draw_1v3"] = function(self, data)
 	return not (self.player:hasSkill("kongcheng") and self.player:isKongcheng())
 end
 
+sgs.ai_skill_choice.Hulaopass = "recover"
+
 sgs.ai_skill_invoke.xiuluo = function(self, data)
 	local hand_card = self.player:getHandcards()
 	local judge_list = self.player:getCards("j")

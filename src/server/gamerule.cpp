@@ -698,7 +698,6 @@ HulaoPassMode::HulaoPassMode(QObject *parent)
     : GameRule(parent)
 {
     setObjectName("hulaopass_mode");
-
     events << HpChanged << StageChange;
     default_choice = "recover";
 }

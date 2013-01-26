@@ -641,7 +641,15 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	players = self:exclude(players, card)
 
 	self:sort(self.enemies, "defenseSlash")
-	local enemies = self:exclude(#self.enemies == 0 and sgs.QList2Table(players) or self.enemies, card)
+	local enemies = {}
+	if #self.enemies == 0 then
+		for _, player in ipairs(players) do
+			if not player:isLord() then table.insert(enemies, player) end
+		end
+		enemies = self:exclude(enemies, card)
+	else
+		enemies = self:exclude(self.enemies, card)
+	end
 	self:sort(self.friends_noself,"defense")
 	local friends = self:exclude(self.friends_noself, card)
 	local hasLion, target

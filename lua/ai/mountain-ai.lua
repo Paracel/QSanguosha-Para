@@ -486,7 +486,7 @@ sgs.ai_skill_playerchosen.fangquan = function(self, targets)
 	return #self.friends_noself > 0 and self.friends_noself[1]
 end
 
-sgs.ai_playerchosen_intention.fangquan = -40
+sgs.ai_playerchosen_intention.fangquan = -120
 
 local tiaoxin_skill = {}
 tiaoxin_skill.name = "tiaoxin"

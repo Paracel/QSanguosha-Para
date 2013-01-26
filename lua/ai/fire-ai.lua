@@ -307,7 +307,7 @@ tianyi_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
-	self:sort(self.enemies, "defense")
+	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
 	local slashcount = self:getCardsNum("Slash")
@@ -322,22 +322,15 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 		end
 	end
 
+	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+
 	local slash = self:getCard("Slash")	
-
 	local dummy_use = { isDummy = true }
-	self:useBasicCard(slash, dummy_use)
+	if slash then self:useBasicCard(slash, dummy_use) end
 
-	if slashcount >= 1 and dummy_use.card then 
+	if slashcount >= 1 and dummy_use.card then
 		for _, enemy in ipairs(self.enemies) do
-			if self:canAttack(enemy, attacker) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) then
-				targetCount = targetCount + 1
-			end
-		end
-	end
-
-	if slashcount >= 1 and targetCount > 0 then
-		for _, enemy in ipairs(self.enemies) do
-			if not enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1 then
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
 				local enemy_max_card = self:getMaxCard(enemy)
 				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
 				if max_point > enemy_max_point then
@@ -348,7 +341,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 			end
 		end
 		for _, enemy in ipairs(self.enemies) do
-			if not enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1 then
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
 				if max_point >= 10 then
 					use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 					if use.to then use.to:append(enemy) end
@@ -371,6 +364,14 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 				end
 			end
 		end
+		
+		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName()~=self.player:objectName() then
+			if max_point >= 7 then
+			use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
+			if use.to then use.to:append(zhugeliang) end
+				return
+			end
+		end
 
 		for index = #self.friends_noself, 1, -1 do
 			local friend = self.friends_noself[index]
@@ -384,9 +385,8 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 		end
 	end
 
-	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1
-		and zhugeliang:objectName()~=self.player:objectName() and self:getEnemyNumBySeat(self.player, zhugeliang) >= 1 then
+		and zhugeliang:objectName() ~= self.player:objectName() and self:getEnemyNumBySeat(self.player, zhugeliang) >= 1 then
 		local cards = sgs.QList2Table(self.player:getHandcards())
 		self:sortByUseValue(cards,true)
 		if isCard("Jink", cards[1], self.player) and self:getCardsNum("Jink") == 1 then return end
@@ -481,7 +481,7 @@ end
 sgs.ai_chaofeng.yuanshao = 1
 
 sgs.ai_skill_invoke.shuangxiong = function(self, data)
-	if self.player:isSkipped(sgs.Player_Play) or self.player:getHp() < 2 then
+	if self.player:isSkipped(sgs.Player_Play) or self.player:getHp() < 2 or #self.enemies == 0 then
 		return false
 	end
 	local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
@@ -489,7 +489,7 @@ sgs.ai_skill_invoke.shuangxiong = function(self, data)
 	local dummy_use = { isDummy = true }
 	self:useTrickCard(duel, dummy_use)
 
-	return self.player:getHandcardNum() >= 3 and dummy_use.card and #self:enemies > 0
+	return self.player:getHandcardNum() >= 3 and dummy_use.card
 end
 
 sgs.ai_cardneed.shuangxiong = function(to, card, self)

@@ -721,18 +721,11 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 		end
 	end
 
-	local cards = sgs.QList2Table(self.player:getCards("he"))
-	self:sortByUsePriority(cards, self.player)
-
-	for i = 1, #cards , 1 do
-		local card = cards[i]
-		local slash_str = self:getCardId("Slash", self.player, card)
-		if slash_str then
-			local slash = sgs.Card_Parse(slash_str)
-			for _, target in ipairs(jijiangtargets) do
-				if not self:slashProhibit(slash, target) and self:slashIsEffective(slash, target) then
-					return slash_str
-				end
+	local slashes = self:getCards("Slash")
+	for _, slash in ipairs(slashes) do
+		for _, target in ipairs(jijiangtargets) do
+			if not self:slashProhibit(slash, target) and self:slashIsEffective(slash, target) then
+				return slash:toString()
 			end
 		end
 	end

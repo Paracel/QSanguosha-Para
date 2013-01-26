@@ -355,6 +355,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	end
 end
 
+sgs.ai_use_priority.GanluCard = 9
 sgs.dynamic_value.control_card.GanluCard = true
 
 sgs.ai_card_intention.GanluCard = function(self, card, from, to)

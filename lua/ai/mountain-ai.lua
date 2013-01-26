@@ -419,7 +419,6 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	if self:getCardsNum("Peach") >= limit - 2 and self.player:isWounded() then return false end
 
 	local to_discard = {}
-	local cards = sgs.QList2Table(self.player:getHandcards())
 
 	local index = 0
 	local all_peaches = 0

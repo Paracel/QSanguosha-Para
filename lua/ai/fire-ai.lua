@@ -323,12 +323,11 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 	end
 
 	local slash = self:getCard("Slash")	
-	local targetCount = 0
 
 	local dummy_use = { isDummy = true }
 	self:useBasicCard(slash, dummy_use)
 
-	if dummy_use.card then 
+	if slashcount >= 1 and dummy_use.card then 
 		for _, enemy in ipairs(self.enemies) do
 			if self:canAttack(enemy, attacker) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) then
 				targetCount = targetCount + 1
@@ -485,27 +484,12 @@ sgs.ai_skill_invoke.shuangxiong = function(self, data)
 	if self.player:isSkipped(sgs.Player_Play) or self.player:getHp() < 2 then
 		return false
 	end
-	local target = 0
-	local cards = self.player:getCards("h")
-	cards = sgs.QList2Table(cards)
+	local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
 
-	local handnum = 0
-	for _, card in ipairs(cards) do
-		if self:getUseValue(card) < 8 then
-			handnum = handnum + 1
-		end
-	end
+	local dummy_use = { isDummy = true }
+	self:useTrickCard(duel, dummy_use)
 
-	handnum = handnum / 2
-	self:sort(self.enemies, "hp")
-	for _, enemy in ipairs(self.enemies) do
-		if (getCardsNum("Slash", enemy) + enemy:getHp() <= handnum) and (self:getCardsNum("Slash") >= getCardsNum("Slash", enemy))
-			and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
-			target = target + 1
-		end
-	end
-
-	return self.player:getHandcardNum() >= self.player:getHp() and target > 0
+	return self.player:getHandcardNum() >= 3 and dummy_use.card and #self:enemies > 0
 end
 
 sgs.ai_cardneed.shuangxiong = function(to, card, self)
@@ -516,15 +500,15 @@ local shuangxiong_skill = {}
 shuangxiong_skill.name = "shuangxiong"
 table.insert(sgs.ai_skills, shuangxiong_skill)
 shuangxiong_skill.getTurnUseCard = function(self)
-	if not self.player:getMark("shuangxiong") then return nil end
+	if self.player:getMark("shuangxiong") == 0 then return nil end
 	local mark = self.player:getMark("shuangxiong")
 
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards, true)
+	self:sortByUseValue(cards,true)
 
 	local card
-	for _, acard in ipairs(cards) do
+	for _,acard in ipairs(cards) do
 		if (acard:isRed() and mark == 2) or (acard:isBlack() and mark == 1) then
 			card = acard
 			break

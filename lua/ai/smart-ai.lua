@@ -2312,8 +2312,8 @@ function SmartAI:askForCard(pattern, prompt, data)
 	end
 	if self.player:hasSkill("hongyan") then
 		local card
-		if (pattern == ".S" or pattern == " .. S") then return "."
-		elseif pattern == " .. H" then card = self.lua_ai:askForCard(".|spade,heart", prompt, data)
+		if (pattern == ".S" or pattern == "..S") then return "."
+		elseif pattern == "..H" then card = self.lua_ai:askForCard(".|spade,heart", prompt, data)
 		elseif pattern == ".H" then card = self.lua_ai:askForCard(".|spade,heart|.|hand", prompt, data) end
 		if card then return card:toString() end
 	end

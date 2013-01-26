@@ -741,9 +741,11 @@ end
 
 sgs.ai_chaofeng.erzhang = 5
 
-sgs.ai_skill_invoke.beige = function(self, data)
+sgs.ai_skill_cardask["@beige"] = function(self, data)
 	local damage = data:toDamage()
-	return self:isFriend(damage.to) and not self:isFriend(damage.from)
+	if not self:isFriend(damage.to) or self:isFriend(damage.from) then return "." end
+	local to_discard = self:askForDiscard("beige", 1, 1, false, true)
+	if #to_discard > 0 then return "$" .. to_discard[1] else return "." end
 end
 
 function sgs.ai_slash_prohibit.duanchang(self, to)

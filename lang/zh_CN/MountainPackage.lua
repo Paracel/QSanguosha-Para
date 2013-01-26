@@ -83,6 +83,7 @@ return {
 	["illustrator:caiwenji"] = "SoniaTang",
 	["beige"] = "悲歌",
 	[":beige"] = "每当一名角色受到一次【杀】的伤害后，你可以弃置一张手牌令该角色进行一次判定：若判定结果为<font color=\"red\">♥</font>，该角色回复1点体力；<font color=\"red\">♦</font>，该角色摸两张牌；♠，伤害来源将其武将牌翻面；♣，伤害来源弃置两张牌。",
+	["@beige"] = "你可以弃置一张牌发动“悲歌”",
 	["duanchang"] = "断肠",
 	[":duanchang"] = "<font color=\"blue\"><b>锁定技。</b></font>杀死你的角色失去所有武将技能。",
 	["#DuanchangLoseSkills"] = "%from 的“%arg”被触发， %to 失去所有武将技能",

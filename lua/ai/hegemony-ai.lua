@@ -204,9 +204,9 @@ if sgs.GetConfig("EnableHegemony", false) then
 		for _, akingdom in ipairs(kingdoms) do
 			local list = sgs.ai_loyalty[akingdom]
 			if not max_loyalty then max_loyalty = (list[player:objectName()] or 0) max_kingdom = akingdom end
-			if (list[player:objectName()] or 0)< 0 then
+			if (list[player:objectName()] or 0) < 0 then
 				neg_loyalty_count = neg_loyalty_count + 1
-			elseif (list[player:objectName()] or 0)> 0 then
+			elseif (list[player:objectName()] or 0) > 0 then
 				pos_loyalty_count = pos_loyalty_count + 1
 			end
 			if max_loyalty < (list[player:objectName()] or 0) then
@@ -282,7 +282,7 @@ local function xiaoguo_card(self, target)
 	end
 end
 
-sgs.ai_skill_use["@xiaoguo"] = function(self, prompt)
+sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 	local currentplayer = self.room:getCurrent()
 	if self:isFriend(currentplayer) then
 		if currentplayer:hasArmorEffect("silver_lion") and current:isWounded() then 

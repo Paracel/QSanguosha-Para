@@ -763,8 +763,7 @@ public:
                 room->acquireSkill(player, "keji");
             }
         } else if (player->getPhase() == Player::RoundStart && lvmeng && lvmeng->getMark("@wen") > 0
-                   && !lvmeng->isNude() && lvmeng->askForSkillInvoke(objectName())) {
-            room->askForDiscard(lvmeng, "mouduan", 1, 1, false, true);
+                   && !lvmeng->isNude() && room->askForCard(lvmeng, ".", "@mouduan", QVariant(), objectName())) {
             if (lvmeng->getHandcardNum() > 2) {
                 room->broadcastSkillInvoke(objectName());
                 lvmeng->loseMark("@wen");

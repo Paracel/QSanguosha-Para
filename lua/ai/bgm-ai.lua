@@ -347,7 +347,7 @@ sgs.ai_card_intention.TanhuCard = 30
 sgs.dynamic_value.control_card.TanhuCard = true
 sgs.ai_use_priority.TanhuCard = 8
 
-sgs.ai_skill_invoke.mouduan = function(self, data)
+local function need_mouduan(self)
 	local cardsCount = self.player:getHandcardNum()
 	if cardsCount <= 3 then return false end
 	local current = self.room:getCurrent()
@@ -367,6 +367,12 @@ sgs.ai_skill_invoke.mouduan = function(self, data)
 		return true
 	end
 	return false
+end
+
+sgs.ai_skill_cardask["@mouduan"] = function(self, data)
+	if not need_mouduan(self) then return "." end
+	local to_discard = self:askForDiscard("mouduan", 1, 1, false, true)
+	if #to_discard > 0 then return "$" .. to_discard[1] else return "." end
 end
 
 sgs.ai_skill_invoke.zhaolie = function(self, data)

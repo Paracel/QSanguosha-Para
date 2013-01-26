@@ -960,25 +960,11 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             card = ai->askForCard(pattern, prompt, data);
             if (card) thread->delay();
         } else {
-            QString method_str;
-            switch (method) {
-            case Card::MethodNone: {
-                    method_str = "none";
-                    break;
-                }
-            case Card::MethodDiscard: {
-                    method_str = "discard";
-                    break;
-                }
-            case Card::MethodUse: {
-                    method_str = "use";
-                    break;
-                }
-            default:
-                    method_str = "response";
-            }
-
-            bool success = doRequest(player, S_COMMAND_RESPONSE_CARD, toJsonArray(pattern, prompt, method_str), true);
+            Json::Value arg(Json::arrayValue);
+            arg[0] = toJsonString(pattern);
+            arg[1] = toJsonString(prompt);
+            arg[2] = int(method);
+            bool success = doRequest(player, S_COMMAND_RESPONSE_CARD, arg, true);
             Json::Value clientReply = player->getClientReply();
             if (success && !clientReply.isNull())
                 card = Card::Parse(toQString(clientReply));
@@ -1092,24 +1078,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
         Json::Value ask_str(Json::arrayValue);
         ask_str[0] = toJsonString(pattern);
         ask_str[1] = toJsonString(prompt);
-        QString event;
-        switch (method) {
-        case Card::MethodResponse: {
-                event = "response";
-                break;
-            }
-        case Card::MethodDiscard: {
-                event = "discard";
-                break;
-            }
-        case Card::MethodUse: {
-                event = "use";
-                break;
-        }
-        default:
-                event = "none";
-        }
-        ask_str[2] = toJsonString(event);
+        ask_str[2] = int(method);
         ask_str[3] = notice_index;
         bool success = doRequest(player, S_COMMAND_USE_CARD, ask_str, true);
         if (success) {

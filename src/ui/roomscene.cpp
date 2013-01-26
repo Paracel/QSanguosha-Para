@@ -2155,13 +2155,13 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             } else {
                 response_skill->setPattern(pattern);
                 if (newStatus == Client::RespondingForDiscard)
-                    response_skill->setRequire(Card::MethodDiscard);
+                    response_skill->setRequest(Card::MethodDiscard);
                 else if (newStatus == Client::RespondingNonTrigger)
-                    response_skill->setRequire(Card::MethodNone);
+                    response_skill->setRequest(Card::MethodNone);
                 else if (newStatus == Client::RespondingUse)
-                    response_skill->setRequire(Card::MethodUse);
+                    response_skill->setRequest(Card::MethodUse);
                 else
-                    response_skill->setRequire(Card::MethodResponse);
+                    response_skill->setRequest(Card::MethodResponse);
                 dashboard->startPending(response_skill);
                 if (Config.EnableIntellectualSelection)
                     dashboard->selectCard(".", true, false, true);

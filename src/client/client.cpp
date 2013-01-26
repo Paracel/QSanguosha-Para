@@ -787,18 +787,17 @@ void Client::_askForCardOrUseCard(const Json::Value &cardUsage) {
         }
     }
 
-    QString trigger_event;
-    if (cardUsage[2].isString())
-        trigger_event = toQString(cardUsage[2]);
-
-    if (trigger_event == "discard")
-        setStatus(RespondingForDiscard);
-    else if (trigger_event == "use")
-        setStatus(RespondingUse);
-    else if (trigger_event == "none")
-        setStatus(RespondingNonTrigger);
-    else
-        setStatus(Responding);
+    Status status = Responding;
+    if (cardUsage[2].isInt()) {
+        Card::HandlingMethod method = (Card::HandlingMethod)(cardUsage[2].asInt());
+        switch (method) {
+        case Card::MethodDiscard: status = RespondingForDiscard; break;
+        case Card::MethodUse: status = RespondingUse; break;
+        case Card::MethodResponse: status = Responding; break;
+        default: status = RespondingNonTrigger; break;
+        }
+    }
+    setStatus(status);
 }
 
 void Client::askForCard(const Json::Value &req) {

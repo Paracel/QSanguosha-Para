@@ -55,19 +55,19 @@ const Card *DiscardSkill::viewAs(const QList<const Card *> &cards) const{
 ResponseSkill::ResponseSkill()
     : OneCardViewAsSkill("response-skill")
 {
-    require = Card::MethodResponse;
+    request = Card::MethodResponse;
 }
 
 void ResponseSkill::setPattern(const QString &pattern) {
     this->pattern = Sanguosha->getPattern(pattern);
 }
 
-void ResponseSkill::setRequire(const Card::HandlingMethod require) {
-    this->require = require;
+void ResponseSkill::setRequest(const Card::HandlingMethod require) {
+    this->request = require;
 }
 
 bool ResponseSkill::matchPattern(const Player *player, const Card *card) const{
-    if (require != Card::MethodNone && player->isCardLimited(card, require))
+    if (request != Card::MethodNone && player->isCardLimited(card, request))
         return false;
 
     return pattern && pattern->match(player, card);

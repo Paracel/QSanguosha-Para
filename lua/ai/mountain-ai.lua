@@ -537,7 +537,7 @@ sgs.ai_card_intention.TiaoxinCard = 80
 sgs.ai_use_priority.TiaoxinCard = 8
 
 sgs.ai_skill_choice.zhiji = function(self, choice)
-	if self.player:getHp() < self.player:getMaxHp()-1 then return "recover" end
+	if self.player:getHp() < self.player:getMaxHp() - 1 then return "recover" end
 	return "draw"
 end
 
@@ -545,10 +545,12 @@ local zhiba_pindian_skill = {}
 zhiba_pindian_skill.name = "zhiba_pindian"
 table.insert(sgs.ai_skills, zhiba_pindian_skill)
 zhiba_pindian_skill.getTurnUseCard = function(self)
-	if self.player:isKongcheng() or self.player:getHandcardNum() < self.player:getHp() or self.player:getKingdom() ~= "wu"
+	if self.player:isKongcheng() or self.player:getOverflow() <= 0 or self.player:getKingdom() ~= "wu"
 		or self.player:hasFlag("ForbidZhiba") then return end
 	return sgs.Card_Parse("@ZhibaCard=.")
 end
+
+sgs.ai_use_priority.ZhibaCard = 0.8
 
 sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 	local lords = {}
@@ -557,6 +559,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 	end
 	if #lords == 0 then return end
 	if self:needBear() then return end
+	if self:getOverflow() <= 0 then return end
 	self:sort(lords, "defense")
 	for _, lord in ipairs(lords) do
 		local zhiba_str
@@ -598,10 +601,13 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 			end
 		end
 
-		if self:isEnemy(lord) and max_num > 9 and max_num > lord_max_num then
+		if self:isEnemy(lord) and max_num > 10 and max_num > lord_max_num then
+			if isCard("Jink", max_card, self.player) and self:getCardsNum("Jink") == 1 then return end
+			if isCard("Peach", max_card, self.player) or isCard("Analeptic", max_card, self.player) then return end
 			zhiba_str = "@ZhibaCard=" .. max_card:getEffectiveId()
 		end
-		if self:isFriend(lord) and not lord:hasSkill("manjuan") and ((lord_max_num > 0 and min_num <= lord_max_num) or min_num < 8) then
+		if self:isFriend(lord) and not lord:hasSkill("manjuan") and ((lord_max_num > 0 and min_num <= lord_max_num) or min_num < 7) then
+			if isCard("Jink", min_card, self.player) and self:getCardsNum("Jink") == 1 then return end
 			zhiba_str = "@ZhibaCard=" .. min_card:getEffectiveId()
 		end
 

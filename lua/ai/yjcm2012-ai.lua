@@ -470,7 +470,7 @@ lihuo_skill.getTurnUseCard = function(self)
 	end
 
 	if not slash_card then return nil end
-	if self.player:getHp() == 1 then return nil end
+	if self:isWeak() then return nil end
 	local suit = slash_card:getSuitString()
 	local number = slash_card:getNumberString()
 	local card_id = slash_card:getEffectiveId()
@@ -536,6 +536,7 @@ local qice_skill = {}
 qice_skill.name = "qice"
 table.insert(sgs.ai_skills, qice_skill)
 qice_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("QiceCard") or self.player:isKongcheng() then return end
 	local cards = self.player:getHandcards()
 	local allcard = {}
 	cards = sgs.QList2Table(cards)

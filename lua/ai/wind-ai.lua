@@ -18,7 +18,6 @@ sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 
 		elseif selfSub >= 2 then return "."
 		elseif selfDef < 6 then return "." end
-
 	end
 
 	for _, enemy in ipairs(self.enemies) do
@@ -28,7 +27,7 @@ sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 
 		if not self.player:canSlash(enemy, slash, false) then
 		elseif self:slashProhibit(nil, enemy) then
-		elseif eff and def<8 then return "@ShensuCard=.->" .. enemy:objectName()
+		elseif eff and def < 8 then return "@ShensuCard=.->" .. enemy:objectName()
 		else return "." end
 	end
 	return "."
@@ -53,7 +52,7 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
 	cards = sgs.QList2Table(cards)
 
 	local eCard
-	local hasCard={0, 0, 0, 0}
+	local hasCard = { 0, 0, 0, 0 }
 
 	for _, card in ipairs(cards) do
 		if card:isKindOf("EquipCard") then
@@ -100,7 +99,6 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
 end
 
 sgs.ai_cardneed.shensu = sgs.ai_cardneed.equip
-
 sgs.ai_card_intention.ShensuCard = 80
 
 sgs.shensu_keep_value = {

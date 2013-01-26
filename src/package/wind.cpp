@@ -250,10 +250,9 @@ ShensuCard::ShensuCard(){
 }
 
 bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if(!targets.isEmpty() || !Self->canSlash(to_select, NULL, false))
-        return false;
-
-    return true;
+    Slash *slash = new Slash(NoSuit, 0);
+    slash->deleteLater();
+    return slash->targetFilter(targets, to_select, Self);
 }
 
 void ShensuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -284,12 +283,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        Slash *slash = new Slash(Card::NoSuit, 0);
-        slash->deleteLater();
-        if (pattern.startsWith("@@shensu") && !player->isCardLimited(slash, Card::MethodUse))
-            return true;
-
-        return false;
+        return pattern.startsWith("@@shensu") && Slash::IsAvailable(player);
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{

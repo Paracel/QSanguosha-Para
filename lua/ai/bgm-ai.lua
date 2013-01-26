@@ -891,23 +891,20 @@ sgs.ai_skill_playerchosen.xuehen = function(self, targets)
 end
 
 --AI for DIY generals
-sgs.ai_skill_invoke.zhaoxin = function(self, data)
+sgs.ai_skill_use["@@zhaoxin"] = function(self, prompt)
 	local target
-	self:sort(self.enemies,"defenseSlash")
+	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
-			self.zhaoxintarget = enemy
-			return true
+			return "@ZhaoxinCard=.->" .. enemy:objectName()
 		end
 	end
-	return false
+	return "."
 end
 
-sgs.ai_skill_playerchosen.zhaoxin = function(self, targets)
-	return self.zhaoxintarget or targets[1]
-end
+sgs.ai_card_intention.ZhaoxinCard = 80
 
 sgs.ai_skill_invoke.langgu = function(self, data)
 	local damage = data:toDamage()

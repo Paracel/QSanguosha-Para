@@ -1541,14 +1541,59 @@ BGMPackage::BGMPackage(): Package("BGM") {
 
 ADD_PACKAGE(BGM)
 
+// DIY Generals
+ZhaoxinCard::ZhaoxinCard(){
+    mute = true;
+}
+
+bool ZhaoxinCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    Slash *slash = new Slash(NoSuit, 0);
+    slash->deleteLater();
+    return slash->targetFilter(targets, to_select, Self);
+}
+
+void ZhaoxinCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    room->showAllCards(source);
+
+    Slash *slash = new Slash(Card::NoSuit, 0);
+    slash->setSkillName("zhaoxin");
+    CardUseStruct use;
+    use.card = slash;
+    use.from = source;
+    use.to = targets;
+
+    room->useCard(use);
+}
+
+class ZhaoxinViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    ZhaoxinViewAsSkill(): ZeroCardViewAsSkill("zhaoxin") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        return pattern == "@@zhaoxin" && Slash::IsAvailable(player);
+    }
+
+    virtual const Card *viewAs() const{
+        return new ZhaoxinCard;
+    }
+};
+
 class Zhaoxin: public TriggerSkill {
 public:
     Zhaoxin(): TriggerSkill("zhaoxin") {
         events << EventPhaseEnd;
+        view_as_skill = new ZhaoxinViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *simazhao, QVariant &) const{
         if (simazhao->getPhase() != Player::Draw)
+            return false;
+        if (!Slash::IsAvailable(simazhao))
             return false;
 
         QList<ServerPlayer *> targets;
@@ -1559,19 +1604,7 @@ public:
         if (targets.isEmpty())
             return false;
 
-        if (room->askForSkillInvoke(simazhao, objectName())) {
-            room->showAllCards(simazhao);
-            ServerPlayer *victim = room->askForPlayerChosen(simazhao, targets, objectName());
-
-            Slash *slash = new Slash(Card::NoSuit, 0);
-            slash->setSkillName("zhaoxin");
-            CardUseStruct card_use;
-            card_use.from = simazhao;
-            card_use.to << victim;
-            card_use.card = slash;
-            room->useCard(card_use);
-        }
-
+        room->askForUseCard(simazhao, "@@zhaoxin", "@zhaoxin");
         return false;
     }
 };
@@ -2240,6 +2273,7 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     related_skills.insertMulti("diyyicong", "#diyyicong-dist");
     related_skills.insertMulti("tuqi", "#tuqi-dist");
 
+    addMetaObject<ZhaoxinCard>();
     addMetaObject<LangguCard>();
     addMetaObject<FuluanCard>();
     addMetaObject<HuangenCard>();

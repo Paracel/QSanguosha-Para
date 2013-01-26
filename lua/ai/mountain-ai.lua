@@ -394,6 +394,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 		return false
 	end
 	
+	local cards = sgs.QList2Table(self.player:getHandcards())
 	local shouldUse = 0
 	for _ , card in ipairs(cards) do
 		if card:isKindOf("TrickCard") and self:getUseValue(card) > 3.69 then

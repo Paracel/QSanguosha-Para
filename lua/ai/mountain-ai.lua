@@ -496,7 +496,6 @@ tiaoxin_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse("@TiaoxinCard=.")
 end
 
-sgs.slash_property = {}
 sgs.ai_skill_use_func.TiaoxinCard = function(card, use, self)
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
@@ -519,15 +518,20 @@ end
 sgs.ai_skill_cardask["tiaoxin-slash"] = function(self, data, pattern, target)
 	if target then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target, self.player) or target:getHp()>getBestHp(target)))
+			if (self:slashIsEffective(slash, target) and not (self.getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)))
 				and self:isEnemy(target) then
 				return slash:toString()
 			end
-			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target, self.player) or target:getHp()>getBestHp(target))
+			if (not self:slashIsEffective(slash, target) or self.getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target))
 				and self:isFriend(target) then
 				return slash:toString()
 			end
-
+		end
+		for _, slash in ipairs(self:getCards("Slash")) do
+			if (not (self.getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)) or not self:slashIsEffective(slash, target))
+				and self:isEnemy(target) then
+				return slash:toString()
+			end
 		end
 	end
 	return "."

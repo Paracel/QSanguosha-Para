@@ -606,8 +606,10 @@ bool TiaoxinCard::targetFilter(const QList<const Player *> &targets, const Playe
 
 void TiaoxinCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-    if (!room->askForUseSlashTo(effect.to, effect.from, "@tiaoxin-slash:" + effect.from->objectName())
-        && !effect.to->isNude())
+    bool use_slash = false;
+    if (effect.to->canSlash(effect.from, NULL, false))
+        use_slash = room->askForUseSlashTo(effect.to, effect.from, "@tiaoxin-slash:" + effect.from->objectName());
+    if (!use_slash && !effect.to->isNude())
         room->throwCard(room->askForCardChosen(effect.from, effect.to, "he", "tiaoxin"), effect.to, effect.from);
 }
 

@@ -100,7 +100,7 @@ return {
 	["cv_xiaoqiao:wz_xiaoqiao"] = "王战版",
 	["cv_xiaoqiao:heg_xiaoqiao"] = "国战版",
 
---hegemony_sp
+	-- Hegemony SP
 	["hegemony_sp"] = "国战SP",
 
 	["sp_heg_zhouyu"] = "国战SP周瑜",

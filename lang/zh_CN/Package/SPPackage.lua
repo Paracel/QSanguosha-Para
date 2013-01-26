@@ -7,29 +7,21 @@ return {
 	["yangxiu"] = "杨修",
 	["illustrator:yangxiu"] = "张可",
 	["jilei"] = "鸡肋",
-	["danlao"] = "啖酪",
 	[":jilei"] = "每当你受到一次伤害时，你可以选择一种牌的类别，伤害来源不能使用、打出或弃置其该类别的手牌，直到回合结束。",
-	[":danlao"] = "每当一张锦囊牌指定了包括你在内的至少两名目标时，你可以摸一张牌，然后该锦囊牌对你无效。",
-	["$jilei1"] = "食之无肉，弃之有味。",
-	["$jilei2"] = "曹公之意我已了然。",
-	["$danlao1"] = "来来，一人一口。",
-	["$danlao2"] = "我喜欢。", 
-	["~yangxiu"] = "我固自以死之晚也。",
-	["#DanlaoAvoid"] = "“%arg2”效果被触发，【%arg】 对 %from 无效",
-	["#Jilei"] = "%from 对 %to 发动“<font color=\"yellow\"><b>鸡肋</b></font>”，限制了 %arg",
-	["#JileiClear"] = "%from 的“<font color=\"yellow\"><b>鸡肋</b></font>”效果消失",
 	["@jilei_basic"] = "鸡肋（基本牌）",
 	["@jilei_equip"] = "鸡肋（装备牌）",
 	["@jilei_trick"] = "鸡肋（锦囊牌）",
+	["danlao"] = "啖酪",
+	[":danlao"] = "每当一张锦囊牌指定了包括你在内的至少两名目标时，你可以摸一张牌，然后该锦囊牌对你无效。",
+	["#Jilei"] = "%from 对 %to 发动“<font color=\"yellow\"><b>鸡肋</b></font>”，限制了 %arg",
+	["#JileiClear"] = "%from 的“<font color=\"yellow\"><b>鸡肋</b></font>”效果消失",
+	["#DanlaoAvoid"] = "“%arg2”效果被触发，【%arg】 对 %from 无效",
 
 	["#gongsunzan"] = "白马将军",
 	["gongsunzan"] = "公孙瓒",
 	["illustrator:gongsunzan"] = "Vincent",
 	["yicong"] = "义从",
 	[":yicong"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的体力值大于2，你与其他角色的距离-1；若你的体力值小于或等于2，其他角色与你的距离+1。",
-	["$yicong1"] = "冲啊！",
-	["$yicong2"] = "众将听令，摆好阵势，御敌！",
-	["~gongsunzan"] = "我军将败，我已无颜苟活于世……",
 
 	["#yuanshu"] = "仲家帝",
 	["yuanshu"] = "袁术",
@@ -38,11 +30,6 @@ return {
 	[":yongsi"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。（X为现存势力数）",
 	["weidi"] = "伪帝",
 	[":weidi"] = "<font color=\"blue\"><b>锁定技。</b></font>你拥有且可以发动当前主公的主公技。",
-	["$yongsi1"] = "玉玺在手，天下我有！",
-	["$yongsi2"] = "大汉天下，已半入我手！",
-	["$weidi1"] = "我才是皇帝！",
-	["$weidi2"] = "你们都得听我的号令！",
-	["~yuanshu"] = "可恶，就差一步了！",
 	["#YongsiGood"] = "%from 的“%arg2”被触发，额外摸了 %arg 张牌",
 	["#YongsiBad"] = "%from 的“%arg2”被触发，须弃置 %arg 张牌",
 	["#YongsiJilei"] = "%from 的“%arg2”被触发，由于“<font color=\"yellow\"><b>鸡肋</b></font>”的效果，仅弃置了 %arg 张牌", 
@@ -52,53 +39,37 @@ return {
 	["sp_guanyu"] = "SP关羽",
 	["&sp_guanyu"] = "关羽",
 	["illustrator:sp_guanyu"] = "LiuHeng",
-	["cv:sp_guanyu"] = "喵小林，官方",
 	["danji"] = "单骑",
 	[":danji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的手牌数大于体力值，且本局游戏主公为曹操，你失去1点体力上限，然后获得技能“马术”。",
-	["#DanjiWake"] = "%from 的手牌数(%arg)大于体力值(%arg2)，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
-	["$danji"] = "吾兄待我甚厚，誓以共死，今往投之，望曹公见谅。",
 	["$DanjiAnimate"] = "anim=image/animate/danji.png",
+	["#DanjiWake"] = "%from 的手牌数(%arg)大于体力值(%arg2)，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
 
 	["#caohong"] = "福将",
 	["caohong"] = "曹洪",
 	["illustrator:caohong"] = "LiuHeng",
-	["cv:caohong"] = "喵小林",
 	["yuanhu"] = "援护",
 	[":yuanhu"] = "回合结束阶段开始时，你可以将一张装备牌置于一名角色装备区内：若此牌为武器牌，你弃置该角色距离1的一名角色区域内的一张牌；若此牌为防具牌，该角色摸一张牌；若此牌为坐骑牌，该角色回复1点体力。",
 	["@yuanhu-equip"] = "你可以发动“援护”",
 	["~yuanhu"] = "选择一张装备牌→选择一名角色→点击确定",
-	["$yuanhu1"] = "持吾兵戈，随我杀敌！", --武器
-	["$yuanhu2"] = "汝今势微，吾当助汝。", --防具
-	["$yuanhu3"] = "公急上马，洪敌贼军！", --坐骑
-	["$yuanhu4"] = "天下可无洪，不可无公。", --对曹操
-	["$yuanhu5"] = "持戈整兵，列阵御敌！", --对自己
-	["~caohong"] = "主公已安，洪纵死亦何惜……", 
-	
+
 	["#guanyinping"] = "武姬",
 	["guanyinping"] = "关银屏",
 	["illustrator:guanyinping"] = "木美人",
-	["cv:guanyinping"] = "蒲小猫",
 	["xueji"] = "血祭",
 	[":xueji"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张红色牌并选择你攻击范围内的至多X名其他角色：若如此做，你对这些角色各造成1点伤害，然后这些角色各摸一张牌。（X为你已损失的体力值）",
 	["huxiao"] = "虎啸",
 	[":huxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>若你于出牌阶段使用【杀】被【闪】抵消，本阶段你可以额外使用一张【杀】。",
 	["wuji"] = "武继",
 	[":wuji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合结束阶段开始时，若你于此回合内造成了至少3点伤害，你增加1点体力上限，回复1点体力，然后失去技能“虎啸”。",
-	["#WujiWake"] = "%from 本回合已造成 %arg 点伤害，触发“%arg2”觉醒",
 	["$WujiAnimate"] = "anim=image/animate/wuji.png",
-	["$xueji1"] = "陷坚摧锋，以报家仇！",
-	["$xueji2"] = "踏平南土，以消国恨！",
-	["$huxiao1"] = "若无后手，何言为将？",
-	["$huxiao2"] = "刀行如流水，杀你个措手不及！",
-	["$wuji"] = "武圣虽死，血脉尚存。先父佑我，再现武魂！",
-	["~guanyinping"] = "父亲……",
-	
+	["#WujiWake"] = "%from 本回合已造成 %arg 点伤害，触发“%arg2”觉醒",
+
 	["#xiahouba"] = "棘途壮志",
 	["xiahouba"] = "夏侯霸",
 	["illustrator:xiahouba"] = "",
 	["baobian"] = "豹变",
 	[":baobian"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的体力值为3或更低，你拥有技能“挑衅”。若你的体力值为2或更低，你拥有技能“咆哮”。若你的体力值为1或更低，你拥有技能“神速”。",
-	
+
 	["#chenlin"] = "破竹之咒",
 	["chenlin"] = "陈琳",
 	["illustrator:chenlin"] = "木美人",
@@ -110,15 +81,8 @@ return {
 	["songci"] = "颂词",
 	[":songci"] = "出牌阶段，你可以令一名手牌数大于体力值的角色弃置两张牌，或令一名手牌数小于体力值的角色摸两张牌。对每名角色限一次。",
 	["@songci"] = "颂词",
-	["cv:chenlin"] = "苏遥东",
-	["$bifa1"] = "文人岂无用，笔墨亦作兵。",
-	["$bifa2"] = "将军可否直视此言？",                   --get
-	["$bifa3"] = "行文如刀，笔墨诛心！",                 --throw
-	["$songci1"] = "广宜恩信，班扬符赏。",               --drawCards
-	["$songci2"] = "汝众违旅叛，当有此报！",             --discardCards
-	["~chenlin"] = "文未达意，贼不伏诛，吾之过也……",
-	
---hulao mode
+
+	-- HuLao Pass
 	["Hulaopass"] = "虎牢关模式",
 
 	["#shenlvbu1"] = "最强神话",
@@ -145,15 +109,8 @@ return {
 	["weapon_recast"] = "武器重铸",
 	["Hulaopass:recover"] = "回复1点体力",
 	["Hulaopass:draw"] = "摸一张牌",
-	
-	["cv:shenlvbu2"] = "风叹息",
-	["$shenwei"] = "飞将之威，上天亦知！",
-	["$shenji"] = "神戟在手，何人能及！",
-	["$xiuluo"] = "哼！鬼蜮伎俩，休想阻我！",
-	["~shenlvbu2"] = "什么？我败了？！",
 	["$StageChangeAnimate"] = "anim=image/animate/StageChange.png",
-	
---sp_card
+
 	["sp_cards"] = "SP卡牌包",
 	["sp_moonspear"] = "银月枪",
 	[":sp_moonspear"] = "装备牌·武器<br />攻击范围：３<br />武器特效：你的回合外，每当你使用或打出一张黑色手牌时，你可以令你攻击范围内的一名其他角色选择一项：打出一张【闪】，或受到到你对其造成的1点伤害。",

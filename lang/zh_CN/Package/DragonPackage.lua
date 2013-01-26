@@ -2,8 +2,7 @@
 
 return {
 	["dragon"] = "龙版",
-	
-	["#dr_xuchu"] = "虎痴",
+
 	["dr_xuchu"] = "龙版许褚",
 	["$dr_xuchu"] = "许褚",
 	["drluoyi"] = "裸衣",
@@ -14,24 +13,24 @@ return {
 	["&dr_machao"] = "马超",
 	["drmashu"] = "马术",
 	[":drmashu"] = "<font color=\"blue\"><b>锁定技。</b></font>你与其他角色的距离-1。其他角色与你的距离+1。你的装备区只能有一张坐骑牌。",
-	
+
 	["#dr_sunquan"] = "年轻的贤君",
 	["dr_sunquan"] = "龙版孙权",
 	["&dr_sunquan"] = "孙权",
 	["drzhiheng"] = "制衡",
 	[":drzhiheng"] = "回合结束阶段，你可以弃置任意数量的手牌，然后将手牌数补至等于当前体力值的张数。",
+	["@drzhiheng-card"] = "你可以发动“制衡”",
+	["~drzhiheng"] = "选择需要弃置的牌→点击确定",
 	["drjiuyuan"] = "救援",
 	[":drjiuyuan"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"green\"><b>阶段技。</b></font>其他吴势力角色的出牌阶段，该角色可以交给你一张手牌。",
 	["drjiuyuanv"] = "救援送牌",
-	["@drzhiheng-card"] = "你可以发动“制衡”",
-	["~drzhiheng"] = "选择需要弃置的牌→点击确定",
-	
+
 	["#dr_zhouyu"] = "大都督",
 	["dr_zhouyu"] = "龙版周瑜",
 	["&dr_zhouyu"] = "周瑜",
 	["drjiedao"] = "借刀",
 	[":drjiedao"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以将一名其他角色的武器牌移动至你的装备区：若如此做，回合结束时将此武器牌移动回该角色装备区。",
-	
+
 	["#dr_lvbu"] = "武的化身",
 	["dr_lvbu"] = "龙版吕布",
 	["&dr_lvbu"] = "吕布",

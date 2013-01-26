@@ -1,4 +1,4 @@
--- translation for MountainPackage
+-- translation for Mountain Package
 
 return {
 	["mountain"] = "山包",
@@ -22,38 +22,41 @@ return {
 	["dengai"] = "邓艾",
 	["tuntian"] = "屯田",
 	[":tuntian"] = "你的回合外，每当你失去一次手牌后，你可以进行一次判定：若判定结果不为<font color=\"red\">♥</font>，将判定牌置于武将牌上，称为“田”。你每拥有一张“田”，你与其他角色的距离-1。",
-	["jixi"] = "急袭",
-	[":jixi"] = "你可以将一张“田”当【顺手牵羊】使用。",
+	["field"] = "田",
 	["zaoxian"] = "凿险",
 	[":zaoxian"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的“田”大于或等于三张，你失去1点体力上限，然后获得技能“急袭”（你可以将一张“田”当【顺手牵羊】使用）。",
+	["$ZaoxianAnimate"] = "anim=image/animate/zaoxian.png",
+	["jixi"] = "急袭",
+	[":jixi"] = "你可以将一张“田”当【顺手牵羊】使用。",
 	["#ZaoxianWake"] = "%from 的“田”为 %arg 张，触发“%arg2”觉醒",
-	["field"] = "田",
+
+	["#jiangwei"] = "龙的衣钵",
+	["jiangwei"] = "姜维",
+	["tiaoxin"] = "挑衅",
+	[":tiaoxin"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以令攻击范围内包含你的一名其他角色对你使用一张【杀】，否则你弃置其一张牌。",
+	["@tiaoxin-slash"] = "%src 对你发动“挑衅”，请对其使用一张【杀】",
+	["zhiji"] = "志继",
+	[":zhiji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你没有手牌，你失去1点体力上限，然后回复1点体力或摸两张牌，并获得技能“观星”。",
+	["zhiji:draw"] = "摸2张牌",
+	["zhiji:recover"] = "回复1点体力",
+	["$ZhijiAnimate"] = "anim=image/animate/zhiji.png",
+	["#ZhijiWake"] = "%from 没有手牌，触发“%arg”觉醒",
 
 	["#liushan"] = "无为的真命主",
 	["liushan"] = "刘禅",
 	["illustrator:liushan"] = "LiuHeng",
 	["xiangle"] = "享乐",
 	[":xiangle"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你被指定为【杀】的目标时，【杀】的使用者须弃置一张基本牌，否则此【杀】对你无效。",
+	["@xiangle-discard"] = "你须再弃置一张基本牌使此【杀】生效",
 	["fangquan"] = "放权",
 	[":fangquan"] = "你可以跳过你的出牌阶段并在回合结束阶段开始时弃置一张手牌：若如此做，令一名其他角色进行一个额外的回合。",
 	["ruoyu"] = "若愚",
 	[":ruoyu"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的体力值为场上最少（或之一），你增加1点体力上限，回复1点体力，然后获得技能“激将”。",
+	["$RuoyuAnimate"] = "anim=image/animate/ruoyu.png",
 	["#Xiangle"] = "%to 的“%arg”被触发， %from 须弃置一张基本牌使此【<font color=\"yellow\"><b>杀</b></font>】生效",
 	["#XiangleAvoid"] = "%to 的“%arg”效果被触发，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】无效",
 	["#Fangquan"] = "%from 发动了“<font color=\"yellow\"><b>放权</b></font>”，%to 将进行一个额外的回合",
 	["#RuoyuWake"] = "%from 的体力值(%arg)为场上最少，触发“%arg2”觉醒",
-	["@xiangle-discard"] = "你须再弃置一张基本牌使此【杀】生效",
-
-	["#jiangwei"] = "龙的衣钵",
-	["jiangwei"] = "姜维",
-	["tiaoxin"] = "挑衅",
-	[":tiaoxin"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以令攻击范围内包含你的一名其他角色对你使用一张【杀】，否则你弃置其一张牌。",
-	["zhiji"] = "志继",
-	[":zhiji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你没有手牌，你失去1点体力上限，然后回复1点体力或摸两张牌，并获得技能“观星”。",
-	["zhiji:draw"] = "摸2张牌",
-	["zhiji:recover"] = "回复1点体力",
-	["#ZhijiWake"] = "%from 没有手牌，触发“%arg”觉醒",
-	["@tiaoxin-slash"] = "%src 对你发动“挑衅”，请对其使用一张【杀】",
 
 	["#sunce"] = "江东的小霸王",
 	["sunce"] = "孙策",
@@ -61,12 +64,13 @@ return {
 	[":jiang"] = "每当你指定或被指定为红色【杀】或【决斗】的目标后，你可以摸一张牌。",
 	["hunzi"] = "魂姿",
 	[":hunzi"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的体力值为1，你失去1点体力上限，然后获得技能“英姿”和“英魂”。",
+	["$HunziAnimate"] = "anim=image/animate/hunzi.png",
 	["zhiba"] = "制霸",
 	["zhiba_pindian"] = "制霸拼点",
 	[":zhiba"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"green\"><b>阶段技。</b></font>其他吴势力角色的出牌阶段，该角色可以与你拼点：若该角色没赢，你可以获得你与该角色的拼点牌。若你已发动“魂姿”，你可以拒绝此拼点。",
-	["#HunziWake"] = "%from 的体力值为 <font color=\"yellow\"><b>1</b></font>，触发“%arg”觉醒",
 	["zhiba_pindian:accept"] = "接受",
 	["zhiba_pindian:reject"] = "拒绝",
+	["#HunziWake"] = "%from 的体力值为 <font color=\"yellow\"><b>1</b></font>，触发“%arg”觉醒",
 
 	["#erzhang"] = "经天纬地",
 	["erzhang"] = "张昭·张纮",
@@ -86,8 +90,8 @@ return {
 	["@beige"] = "你可以弃置一张牌发动“悲歌”",
 	["duanchang"] = "断肠",
 	[":duanchang"] = "<font color=\"blue\"><b>锁定技。</b></font>杀死你的角色失去所有武将技能。",
-	["#DuanchangLoseSkills"] = "%from 的“%arg”被触发， %to 失去所有武将技能",
 	["@duanchang"] = "断肠",
+	["#DuanchangLoseSkills"] = "%from 的“%arg”被触发， %to 失去所有武将技能",
 
 	["#zuoci"] = "谜之仙人",
 	["zuoci"] = "左慈",
@@ -97,94 +101,4 @@ return {
 	["xinsheng"] = "新生",
 	[":xinsheng"] = "每当你受到1点伤害后，你可以获得一张“化身牌”。",
 	["#GetHuashen"] = "%from 获得了 %arg 张“化身牌”，现在共有 %arg2 张“化身牌”",
-
--- Lines
-
---张郃
-	["cv:zhanghe"] = "爪子",
-	["$qiaobian1"] = "虚招令旗，以之惑敌。", -- judge
-	["$qiaobian2"] = "绝其汲道，困其刍粮。", -- draw
-	["$qiaobian3"] = "以守为攻，后发制人。", -- play
-	["$qiaobian4"] = "停止前进，扎营御敌！", -- discard
-	["~zhanghe"] = "归兵勿追，追兵难归啊……",
-
---邓艾
-	["$tuntian1"] = "休养生息，备战待敌。",
-	["$tuntian2"] = "锄禾日当午，汗滴禾下土。",
-	["$zaoxian1"] = "屯田日久，当建奇功！",
-	["$zaoxian2"] = "开辟险路，奇袭敌军！",
-	["$ZaoxianAnimate"] = "anim=image/animate/zaoxian.png",
-	["$jixi1"] = "攻其无备，出其不意。",
-	["$jixi2"] = "偷渡阴平，直取蜀汉！",
-	["~dengai"] = "吾破蜀克敌，竟葬于奸贼之手！",
-
---刘禅
-	["$fangquan1"] = "这可如何是好啊！",
-	["$fangquan2"] = "你办事儿，我放心！",
-	["$ruoyu1"] = "不装疯卖傻，岂能安然无恙？",
-	["$ruoyu2"] = "世人皆错看我，唉……",
-	["$RuoyuAnimate"] = "anim=image/animate/ruoyu.png",
-	["$xiangle1"] = "嗯……打打杀杀，真没意思！",
-	["$xiangle2"] = "我爸爸是刘备！",
-	["$jijiang3"] = "匡扶汉室，谁敢出战？",
-	["$jijiang4"] = "我蜀汉岂无人乎！",
-	["~liushan"] = "别打脸，我投降还不行吗？",
-
---姜维
-	["$tiaoxin1"] = "汝等小儿，可敢杀我。",
-	["$tiaoxin2"] = "贼将早降，可免一死。",
-	["$zhiji1"] = "先帝之志，丞相之托，不可忘也！",
-	["$zhiji2"] = "丞相厚恩，维万死不能相报！",
-	["$ZhijiAnimate"] = "anim=image/animate/zhiji.png",
-	["$guanxing3"] = "继丞相之遗志，讨篡汉之逆贼！",
-	["$guanxing4"] = "克复中原，指日可待！",
-	["~jiangwei"] = "我计不成，乃天命也……",
-
---孙策
-	["cv:sunce"] = "官方，猎狐",
-	["$jiang1"] = "吾乃江东小霸王孙伯符！",
-	["$jiang2"] = "江东子弟，何惧于天下!",
-	["$hunzi1"] = "父亲在上，魂佑江东；公瑾在旁，智定天下！",
-	["$hunzi2"] = "愿承父志，与公瑾共谋天下！",
-	["$HunziAnimate"] = "anim=image/animate/hunzi.png",
-	["$Hunzi2"] = "愿承父志，与公瑾共谋天下！",
-	["$yingzi3"] = "公瑾，助我决一死战！",
-	["$yingzi4"] = "尔等看好了！",
-	["$yinghun3"] = "孙氏英烈，庇佑江东。",
-	["$yinghun4"] = "父亲，助我背水一战！",
-	["$zhiba1"] = "是友是敌，一探便知。",
-	["$zhiba2"] = "我若怕你，非孙伯符也！",
-	["$zhiba3"] = "哈哈，汝乃吾之真卿也！",
-	["$zhiba4"] = "哼，错当佞臣做忠臣，誓不饶你！",
-	["$zhiba5"] = "且慢！莫不是你欲用诈降之计赚我。",
-	["~sunce"] = "内事不决问张昭，外事不决问周瑜……",
-
---张昭张纮
-	["$zhijian1"] = "请恕老臣直言。",
-	["$zhijian2"] = "为臣者，当冒死以谏。",
-	["$guzheng1"] = "今当稳固内政，以御外患。",
-	["$guzheng2"] = "固国安邦，须当如是。",
-	["~erzhang"] = "竭力尽智，死而无憾……",
-
---蔡文姬
-	["cv:caiwenji"] = "呼呼",
-	["$beige1"] = "欲死不能得，欲生无一可。", -- club
-	["$beige2"] = "此行远兮，君尚珍重！", -- spade
-	["$beige3"] = "翩翩吹我衣，肃肃入我耳。", -- diamond
-	["$beige4"] = "岂偕老之可期，庶尽欢于余年。", -- heart
-	["$duanchang1"] = "雁飞高兮邈难寻，空断肠兮思愔愔。",
-	["$duanchang2"] = "胡人落泪沾边草，汉使断肠对归客。",
-
---左慈
-	["cv:zuoci"] = "东方胤弘，眠眠",
-	["$huashen1"] = "藏形变身，自在吾心。",
-	["$huashen2"] = "遁形幻千，随意所欲。",
-	["$xinsheng1"] = "吐故纳新，师法天地。",
-	["$xinsheng2"] = "灵根不灭，连绵不绝。",
-	["~zuoci"] = "释知遗形，神灭形消。",
-
-	["$huashen3"] = "藏形变身，自在吾心。(女声)",
-	["$huashen4"] = "遁形幻千，随意所欲。(女声)",
-	["$xinsheng3"] = "吐故纳新，师法天地。(女声)",
-	["$xinsheng4"] = "灵根不灭，连绵不绝。(女声)",
 }

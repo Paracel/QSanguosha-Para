@@ -1,4 +1,4 @@
--- translation for NostalgiaPackage
+-- translation for Nostalgia Package
 
 return {
 	["nostalgia"] = "怀旧卡牌",
@@ -11,15 +11,15 @@ return {
 	["nostal_yjcm"] = "怀旧一将",
 	["nostal_yjcm2012"] = "怀旧一将2",
 	
-	["#nos_zhouyu"] = "大都督",
 	["nos_zhouyu"] = "周瑜-旧",
 	["&nos_zhouyu"] = "周瑜",
 	["nosfanjian"] = "反间",
 	[":nosfanjian"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以令一名其他角色选择一种花色，然后展示你的一张手牌。若此牌花色与该角色所选花色不同，你对其造成1点伤害。伤害结算完毕后该角色获得此牌。",
 
-	["#nos_fazheng"] = "蜀汉的辅翼",
 	["nos_fazheng"] = "法正-旧",
 	["&nos_fazheng"] = "法正",
+	["designer:nos_fazheng"] = "Michael_Lee",
+	["illustrator:nos_fazheng"] = "雷没才",
 	["nosenyuan"] = "恩怨",
 	[":nosenyuan"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你回复1点体力后，令你回复体力的角色摸一张牌；每当你受到一次伤害后，伤害来源选择一项：交给你一张<font color=\"red\">♥</font>手牌，或失去1点体力。",
 	["nosxuanhuo"] = "眩惑",
@@ -27,9 +27,10 @@ return {
 	["#EnyuanRecover"] = "%from 的“%arg2”被触发，令其回复体力的角色 %to 将摸 %arg 张牌",
 	["@enyuanheart"] = "请给出一张<font color=\"red\">♥</font>手牌",
 
-	["#nos_xushu"] = "忠孝的侠士",
 	["nos_xushu"] = "徐庶-旧",
 	["&nos_xushu"] = "徐庶",
+	["designer:nos_xushu"] = "双叶松",
+	["illustrator:nos_xushu"] = "XINA",
 	["noswuyan"] = "无言",
 	[":noswuyan"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用的非延时类锦囊牌对其他角色无效。其他角色使用的非延时类锦囊牌对你无效",
 	["nosjujian"] = "举荐",
@@ -38,35 +39,27 @@ return {
 	["#WuyanGooD"] = "%from 的“%arg2”被触发， %to 的锦囊【%arg】对其无效",
 	["#JujianRecover"] = "%from 发动“<font color=\"yellow\"><b>举荐</b></font>”弃置了三张 %arg ，回复1点体力",
 
-	["#nos_lingtong"] = "豪情烈胆",
 	["nos_lingtong"] = "凌统-旧",
 	["&nos_lingtong"] = "凌统", 
+	["designer:nos_lingtong"] = "ShadowLee",
+	["illustrator:nos_lingtong"] = "绵Myan",
 	["nosxuanfeng"] = "旋风",
 	[":nosxuanfeng"] = "每当你失去一次装备区里的牌后，你可以选择一项：1.视为对一名其他角色使用一张【杀】。（此【杀】无距离限制且不计入每回合的使用限制）2.对与你距离1的一名其他角色造成1点伤害",
 	["nosxuanfeng:nothing"] = "不发动",
 	["nosxuanfeng:damage"] = "对距离1的其他角色造成1点伤害",
 	["nosxuanfeng:slash"] = "视为对一名其他角色使用一张【杀】",
-	
-	["#nos_zhangchunhua"] = "冷血皇后",
-	["nos_zhangchunhua"] = "张春华-旧",	
-	["&nos_zhangchunhua"] = "张春华",	
+
+	["nos_zhangchunhua"] = "张春华-旧",
+	["&nos_zhangchunhua"] = "张春华",
+	["designer:nos_zhangchunhua"] = "JZHIEI",
+	["illustrator:nos_zhangchunhua"] = "樱花闪乱",
 	["nosshangshi"] = "伤逝",
 	[":nosshangshi"] = "每当你于弃牌阶段外手牌数改变后，或已损失体力值改变后，或弃牌阶段结束后，若你的手牌数小于X，你可以将手牌补至X张。（X为你已损失的体力值）",
-	
-	["designer:nos_fazheng"] = "Michael_Lee",
-	["designer:nos_xushu"] = "双叶松",
-	["designer:nos_lingtong"] = "奇迹之瞳",
 
-	["illustrator:nos_fazheng"] = "雷没才",
-	["illustrator:nos_xushu"] = "XINA",
-	["illustrator:nos_lingtong"] = "绵Myan",
-	
-	["#nos_handang"] = "石城侯",
 	["nos_handang"] = "韩当-旧",
 	["&nos_handang"] = "韩当",
 	["designer:nos_handang"] = "ByArt",
 	["illustrator:nos_handang"] = "DH",
-	["cv:nos_handang"] = "风叹息",
 	["nosgongqi"] = "弓骑",
 	[":nosgongqi"] = "你可以将一张装备牌当【杀】使用或打出。你以此法使用的【杀】无距离限制。",
 	["nosjiefan"] = "解烦",
@@ -76,11 +69,7 @@ return {
  	["#NosJiefanNull1"] = "%from 已经脱离濒死状态，“<font color=\"yellow\"><b>解烦</b></font>”第二项效果无法执行",
  	["#NosJiefanNull2"] = "%from 已经死亡，“<font color=\"yellow\"><b>解烦</b></font>”第二项效果无法执行",
  	["#NosJiefanNull3"] = "因为当前回合角色 %from 拥有“<font color=\"yellow\"><b>完杀</b></font>”技能， %to 不处于濒死状态，“<font color=\"yellow\"><b>解烦</b></font>”第二项效果无法执行",
-	["$nosgongqi"] = "弓马齐备，远射近突！",
-	["$nosjiefan1"] = "解烦军至，此危自解！",
-	["$nosjiefan2"] = "吾主莫慌，韩义公在此！",
-	
-	["#nos_zhonghui"] = "桀骜的野心家",
+
 	["nos_zhonghui"] = "钟会-内测",
 	["&nos_zhonghui"] = "钟会",
 	["illustrator:nos_zhonghui"] = "雪君S",
@@ -97,22 +86,20 @@ return {
 	["nospower"] = "权",
 	["nosbaijiang"] = "拜将",
 	[":nosbaijiang"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的装备区的装备牌大于或等于三张，你增加1点体力上限，回复1点体力，然后失去技能“权计”和“争功”并获得技能“野心”（每当你造成或受到一次伤害后，你可以将牌堆顶的一张牌置于武将牌上，称为“权”。<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以获得任意数量的“权”，然后将等数量的手牌加入“权”）。",
-	["#NosBaijiangWake"] = "%from 的装备区有 %arg 张装备牌，触发“%arg2”觉醒",
+	["$NosBaijiangAnimate"] = "anim=image/animate/nosbaijiang.png",
 	["nosyexin"] = "野心",
 	[":nosyexin"] = "每当你造成或受到一次伤害后，你可以将牌堆顶的一张牌置于武将牌上，称为“权”。<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以获得任意数量的“权”，然后将等数量的手牌加入“权”。",
 	["noszili"] = "自立",
 	[":noszili"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的“权”大于或等于四张，你失去1点体力上限，然后获得技能“排异”（回合结束阶段开始时，你可以将一张“权”移动到一个合理的区域。若不是你的区域，你摸一张牌）。",
 	["#NosZiliWake"] = "%from 的“权”为 %arg 张，触发“%arg2”觉醒",
+	["$NosZiliAnimate"] = "anim=image/animate/noszili.png",
 	["nospaiyi"] = "排异",
 	[":nospaiyi"] = "回合结束阶段开始时，你可以将一张“权”移动到一个合理的区域。若不是你的区域，你摸一张牌。",
 	["nospaiyi:Judging"] = "判定区",
 	["nospaiyi:Equip"] = "装备区",
 	["nospaiyi:Hand"] = "手牌",
-	["@wake"] = "觉醒",
-	["$NosBaijiangAnimate"] = "anim=image/animate/nosbaijiang.png",
-	["$NosZiliAnimate"] = "anim=image/animate/noszili.png",
-	
-	["#nos_shencaocao"] = "超世之英杰",
+	["#NosBaijiangWake"] = "%from 的装备区有 %arg 张装备牌，触发“%arg2”觉醒",
+
 	["nos_shencaocao"] = "神曹操-内测",
 	["&nos_shencaocao"] = "神曹操", 
 	["nosguixin"] = "归心",

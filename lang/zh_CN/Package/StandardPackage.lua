@@ -113,11 +113,10 @@ local t = {
 
 	["lightning"] = "闪电",
 	[":lightning"] = "延时锦囊牌<br />出牌时机：出牌阶段<br />使用目标：你<br />作用效果：将【闪电】置于你判定区内，目标角色下个判定阶段进行一次判定；若判定结果为♠2-9，则该角色受到3点雷电伤害，将闪电置入弃牌堆，否则将【闪电】移动到当前目标角色下家判定区内。",
-
 }
 
-local ohorses = {"chitu", "dayuan", "zixing"}
-local dhorses = {"zhuahuangfeidian", "dilu", "jueying", "hualiu"}
+local ohorses = { "chitu", "dayuan", "zixing" }
+local dhorses = { "zhuahuangfeidian", "dilu", "jueying", "hualiu" }
 
 for _, horse in ipairs(ohorses) do
 	t[":" .. horse] = t[":-1 horse"]

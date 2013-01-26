@@ -780,10 +780,10 @@ QGroupBox *GuhuoDialog::createRight() {
     QGroupBox *box = new QGroupBox(Sanguosha->translate("ndtrick"));
     QHBoxLayout *layout = new QHBoxLayout;
 
-    QGroupBox *box1 = new QGroupBox(Sanguosha->translate("single_target"));
+    QGroupBox *box1 = new QGroupBox(Sanguosha->translate("single_target_trick"));
     QVBoxLayout *layout1 = new QVBoxLayout;
 
-    QGroupBox *box2 = new QGroupBox(Sanguosha->translate("multiple_targets"));
+    QGroupBox *box2 = new QGroupBox(Sanguosha->translate("multiple_target_trick"));
     QVBoxLayout *layout2 = new QVBoxLayout;
 
 

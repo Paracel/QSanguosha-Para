@@ -26,10 +26,10 @@ return {
 	["judge"] = "判定",
 	["retrial"] = "改判",
 	["judgedone"] = "的判定结果",
- 	["put"] = "置入",
- 	["throw"] = "弃置",
- 	["enter"] = "置入",
- 	["backinto"] = "移回弃牌堆",    
+	["put"] = "置入",
+	["throw"] = "弃置",
+	["enter"] = "置入",
+	["backinto"] = "移回弃牌堆",    
 	["draw"] = "摸牌",
 	["play"] = "出牌",
 	["discard"] = "弃牌",
@@ -152,17 +152,15 @@ return {
 	["$CheatCard"] = "%from 作弊，获得了 %card",
 	["#FilterJudge"] = "%from 的“%arg”效果被触发，判定牌被改变",
 
-	["3v3:cw"] = "顺时针",
-	["3v3:ccw"] = "逆时针",
 	["cw"] = "顺时针",
 	["ccw"] = "逆时针",
 	["#TrickDirection"] = "%from 选择了 %arg 作为结算顺序",
 	["custom"] = "自定义模式",
 	["UnknowNick"] = "",
 	["DefaultIllustrator"] = "KayaK",
-	
+
 	["@waked"] = "觉醒",
-	
+
 	["CAPITAL(1)"] = "一",
 	["CAPITAL(2)"] = "二",
 	["CAPITAL(3)"] = "三",

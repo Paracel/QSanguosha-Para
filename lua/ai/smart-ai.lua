@@ -2159,7 +2159,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 	else
-		if flags:match("e") and self:hasSkills("jijiu|dimeng|guzheng|qiaobian|jieyin|lijian|beige|miji", who) then
+		if flags:match("e") and self:hasSkills("jijiu|beige", who) then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor():getId() end
 			if who:getOffensiveHorse() and ((who:getOffensiveHorse():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then
@@ -2167,11 +2167,6 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 			if who:getWeapon() and ((who:getWeapon():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then
 				return who:getWeapon():getId()
-			end
-		end
-		if flags:match("h") then
-			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", who) then
-				return self:getCardRandomly(who, "h")
 			end
 		end
 		if flags:match("e") then
@@ -2195,12 +2190,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 					end
 				end
 			end
-
-			if who:getArmor() and self:evaluateArmor(who:getArmor(), who) > 0 then
-				return who:getArmor():getId()
-			end
 		end
-
 		if flags:match("j") then
 			local tricks = who:getCards("j")
 			local lightning, yanxiao
@@ -2218,10 +2208,9 @@ function SmartAI:askForCardChosen(who, flags, reason)
 				return yanxiao
 			end
 		end
-
 		if flags:match("e") then
 			if who:getArmor() and self:evaluateArmor(who:getArmor(), who) > 0
-				and not (who:getArmor():isKindOf("SilverLion") and self:isWeak(who)) then
+				and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then
 				return who:getArmor():getId()
 			end
 
@@ -2240,7 +2229,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 				else
 					for _, friend in ipairs(self.friends) do
 						if who:distanceTo(friend) == who:getAttackRange() and
-						who:getAttackRange() > 1 then
+							who:getAttackRange() > 1 then
 							return who:getOffensiveHorse():getId()
 						end
 					end
@@ -2248,8 +2237,8 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 		if flags:match("h") then
-			if not who:isKongcheng() then
-				return -1
+			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", who) then
+				return self:getCardRandomly(who, "h")
 			end
 		end
 	end

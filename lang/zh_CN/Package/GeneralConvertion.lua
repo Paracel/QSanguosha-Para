@@ -83,7 +83,7 @@ return {
 
 	["tw_lvbu"] = "台版吕布",
 	["&tw_lvbu"] = "吕布", 
-	["illustrator:tw_lvbu"] = "",
+	["illustrator:tw_lvbu"] = "焚烧的大葱",
 	["cv_lvbu:convert"] = "你可以替换为国战吕布或台版吕布",
 	["cv_lvbu:heg_lvbu"] = "国战版",
 	["cv_lvbu:tw_lvbu"] = "台湾版",

@@ -1197,7 +1197,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
-	self:sort(self.enemies,"defense")
+	self:sort(self.enemies, "defense")
 	local enemies = {}
 	if #self.enemies == 0 then
 		for _, player in ipairs(players) do
@@ -1207,7 +1207,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	else
 		enemies = self:exclude(self.enemies, card)
 	end
-	self:sort(self.friends_noself,"defense")
+	self:sort(self.friends_noself, "defense")
 	local friends = self:exclude(self.friends_noself, card)
 	local hasLion, target
 	for _, enemy in ipairs(enemies) do

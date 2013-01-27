@@ -3761,8 +3761,16 @@ function SmartAI:exclude(players, card)
 	local excluded = {}
 	local limit = self:getDistanceLimit(card)
 	local range_fix = 0
-	if self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == card:getEffectiveId() then range_fix = 1 end
-	if card:getSkillName() == "jixi" then range_fix = 1 end
+	if card:isVirtualCard() then
+		for _, id in sgs.qlist(card:getSubcards()) do
+			if self.player:getWeapon() and self.player:getWeapon():getId() == id then
+				range_fix = range_fix + sgs.weapon_range[self.player:getWeapon():getClassName() - 1]
+			end
+			if self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == id then range_fix = range_fix + 1 end
+		end
+		if card:getSkillName() == "jixi" then range_fix = range_fix + 1 end
+	end
+	
 	for _, player in sgs.list(players) do
 		if not self.room:isProhibited(self.player, player, card) then
 			local should_insert = true

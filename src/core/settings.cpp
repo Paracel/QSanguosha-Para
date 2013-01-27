@@ -158,7 +158,7 @@ void Settings::init() {
               << "lvmeng+yuanshu"
               << "huanggai+sunshangxiang" << "huanggai+yuanshao" << "huanggai+yanliangwenchou" << "huanggai+dongzhuo" << "huanggai+wuguotai" << "huanggai+guanxingzhangbao" << "huanggai+huaxiong" << "huanggai+neo_zhangfei"
               << "luxun+yuji" << "luxun+yanliangwenchou" << "luxun+guanxingzhangbao" << "luxun+heg_luxun"
-              << "sunshangxiang+heg_luxun"
+              << "sunshangxiang+shensimayi" << "sunshangxiang+heg_luxun"
               << "sunce+guanxingzhangbao"
               << "yanliangwenchou+zhangchunhua" << "yanliangwenchou+nos_zhangchunhua"
               << "dongzhuo+shenzhaoyun" << "dongzhuo+nos_zhangchunhua" << "dongzhuo+diy_wangyuanji"

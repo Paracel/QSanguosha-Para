@@ -943,7 +943,7 @@ public:
         if (event == GameStart) {
             foreach(ServerPlayer *p, room->getAlivePlayers())
                 if (p->hasLordSkill("shichou"))
-                    room->setPlayerMark(p, "@hate", 1);
+                    room->setPlayerMark(p, "@hate", player->getMark("@hate") + 1);
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
                   && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
             QList<ServerPlayer *> targets = room->getOtherPlayers(player);

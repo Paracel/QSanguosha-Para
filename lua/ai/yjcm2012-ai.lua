@@ -306,6 +306,14 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 			end
 			return
 		end
+		if most_enemy and most_enemy:getHandcardNum() > least_friend:getHandcardNum() then
+			use.card = card
+			if use.to then
+				use.to:append(most_enemy)
+				use.to:append(least_friend)
+			end
+			return
+		end
 	end
 
 	-- Friend -> Friend

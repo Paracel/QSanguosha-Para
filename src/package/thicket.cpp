@@ -762,8 +762,8 @@ void LuanwuCard::onEffect(const CardEffectStruct &effect) const{
 
     QList<ServerPlayer *> luanwu_targets;
     for (int i = 0; i < distance_list.length(); i++) {
-        if (distance_list[i] == nearest && effect.to->canSlash(players[i]))
-            luanwu_targets << players.at(i);
+        if (distance_list[i] == nearest && effect.to->canSlash(players[i], NULL, false))
+            luanwu_targets << players[i];
     }
 
     if (luanwu_targets.isEmpty() || !room->askForUseSlashTo(effect.to, luanwu_targets, "@luanwu-slash"))

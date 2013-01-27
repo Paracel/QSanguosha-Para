@@ -602,7 +602,7 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
         ServerPlayer *target = damage.to;
         if (damage.card && damage.card->isKindOf("Slash") && target->hasEquip() && !damage.chain && !damage.transfer) {
-            if (!panfeng->askForSkillInvoke(objectName()))
+            if (!panfeng->askForSkillInvoke(objectName(), data))
                 return false;
             int card_id = room->askForCardChosen(panfeng, target , "e", "kuangfu");
             const Card *card = Sanguosha->getCard(card_id);
@@ -622,7 +622,7 @@ public:
                 room->broadcastSkillInvoke(objectName(), 1);
                 room->moveCardTo(card, panfeng, Player::PlaceEquip);
             } else {
-                room->broadcastSkillInvoke(objectName() ,2);
+                room->broadcastSkillInvoke(objectName(), 2);
                 room->throwCard(card, target, panfeng);
             }
         }

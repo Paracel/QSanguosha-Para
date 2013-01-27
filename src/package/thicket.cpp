@@ -766,7 +766,7 @@ void LuanwuCard::onEffect(const CardEffectStruct &effect) const{
             luanwu_targets << players.at(i);
     }
 
-    if (!luanwu_targets.isEmpty() || !room->askForUseSlashTo(effect.to, luanwu_targets, "@luanwu-slash"))
+    if (luanwu_targets.isEmpty() || !room->askForUseSlashTo(effect.to, luanwu_targets, "@luanwu-slash"))
         room->loseHp(effect.to);
 }
 

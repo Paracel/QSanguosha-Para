@@ -1494,7 +1494,17 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
-	if target and target2 and (self.getDamagedEffects(target2, self.player) or target2:getHp()>getBestHp(target2)) then
+	if self:isFriend(target2) and target2:hasSkill("leiji") 
+		and (self:hasSuit("spade", true, target2) or target2:getHandcardNum() >= 3)
+		and (getKnownCard(target2, "Jink", true) >= 1
+		or (not self:isWeak(friend) and not self:isEquip("QinggangSword", self.player) and self:isEquip("EightDiagram", friend))) then
+		for _, slash in ipairs(self:getCards("Slash")) do
+			if self:slashIsEffective(slash, target2) then 
+				return slash:toString()
+			end
+		end
+	end
+	if target and target2 and (self.getDamagedEffects(target2, self.player) or target2:getHp() > getBestHp(target2)) then   
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, target2) and self:isFriend(target2) then
 				return slash:toString()
@@ -1502,7 +1512,11 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 			if not self:slashIsEffective(slash, target2) and self:isEnemy(target2) then
 				return slash:toString()
 			end
-
+		end
+		for _, slash in ipairs(self:getCards("Slash")) do
+			if not self.getDamagedEffects(target2, self.player) and self:isEnemy(target2) then 
+				return slash:toString()
+			end
 		end
 	end
 

@@ -182,7 +182,7 @@ bool Card::CompareByColor(const Card *a, const Card *b) {
 }
 
 bool Card::CompareBySuitNumber(const Card *a, const Card *b) {
-    static Suit new_suits[] = {Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit};
+    static Suit new_suits[] = { Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit };
     Suit suit1 = new_suits[a->getSuit()];
     Suit suit2 = new_suits[b->getSuit()];
 

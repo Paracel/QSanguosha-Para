@@ -51,7 +51,6 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     int aver = (color.red() + color.green() + color.blue()) / 3;
     palette.setColor(QPalette::Base, aver >= 208 ? Qt::black : Qt::white);
     ui->textEditFontLineEdit->setPalette(palette);
-
 }
 
 void ConfigDialog::showFont(QLineEdit *lineedit, const QFont &font) {

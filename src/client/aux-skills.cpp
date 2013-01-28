@@ -62,8 +62,8 @@ void ResponseSkill::setPattern(const QString &pattern) {
     this->pattern = Sanguosha->getPattern(pattern);
 }
 
-void ResponseSkill::setRequest(const Card::HandlingMethod require) {
-    this->request = require;
+void ResponseSkill::setRequest(const Card::HandlingMethod request) {
+    this->request = request;
 }
 
 bool ResponseSkill::matchPattern(const Player *player, const Card *card) const{

@@ -551,11 +551,11 @@ bool Player::isKongcheng() const{
 }
 
 bool Player::isNude() const{
-    return getHandcardNum() == 0 && !hasEquip();
+    return isKongcheng() && !hasEquip();
 }
 
 bool Player::isAllNude() const{
-    return getHandcardNum() == 0 && !hasEquip() && judging_area.isEmpty();
+    return isNude() && judging_area.isEmpty();
 }
 
 void Player::addDelayedTrick(const Card *trick) {

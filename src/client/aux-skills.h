@@ -35,7 +35,7 @@ public:
     virtual bool matchPattern(const Player *player, const Card *card) const;
 
     virtual void setPattern(const QString &pattern);
-    virtual void setRequest(const Card::HandlingMethod require);
+    virtual void setRequest(const Card::HandlingMethod request);
     virtual bool viewFilter(const Card *to_select) const;
     virtual const Card *viewAs(const Card *originalCard) const;
 

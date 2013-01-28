@@ -153,12 +153,6 @@ void General::lastWord() const{
         if (origin_generals.length() > 1)
             filename = QString("audio/death/%1.ogg").arg(origin_generals.last());
     }
-    if (!fileExists && objectName().endsWith("f")) {
-        QString origin_general = objectName();
-        origin_general.chop(1);
-        if (Sanguosha->getGeneral(origin_general))
-            filename = QString("audio/death/%1.ogg").arg(origin_general);
-    }
     Sanguosha->playAudioEffect(filename);
 }
 

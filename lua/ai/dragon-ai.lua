@@ -176,37 +176,5 @@ sgs.ai_use_priority.DrQingnangCard = 4.2
 sgs.ai_card_intention.DrQingnangCard = -80
 
 sgs.ai_skill_discard.drwushuang = function(self, discard_num, min_num, optional, include_equip)
-	local lvbu = self.room:findPlayerBySkillName("drwushuang")
-	if not lvbu or lvbu:hasSkill("wuyan") then return {} end
-	local cards = self.player:getCards("he")
-	local to_discard = {}
-	cards = sgs.QList2Table(cards)
-	local aux_func = function(card)
-		local place = self.room:getCardPlace(card:getEffectiveId())
-		if place == sgs.Player_PlaceEquip then
-			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
-			elseif card:isKindOf("OffensiveHorse") then return 1
-			elseif card:isKindOf("Weapon") then return 2
-			elseif card:isKindOf("DefensiveHorse") then return 3
-			elseif card:isKindOf("Armor") then return 4 
-			end
-		elseif self:hasSkills(sgs.lose_equip_skill) then return 5
-		else return 0 
-		end
-	end
-	local compare_func = function(a, b)
-		if aux_func(a) ~= aux_func(b) then return aux_func(a) < aux_func(b) end
-		return self:getKeepValue(a) < self:getKeepValue(b)
-	end
-
-	table.sort(cards, compare_func)
-	local can_discard
-	for _, card in ipairs(cards) do
-		if not self.player:isJilei(card) then table.insert(can_discard, card) end
-	end
-	if #can_discard > 0 then
-		table.insert(to_discard, can_discard[1]:getEffectiveId())
-		return to_discard
-	end
-	return {}
+	return self:askForDiscard("drwushuang", discard_num, min_num, false, true)
 end

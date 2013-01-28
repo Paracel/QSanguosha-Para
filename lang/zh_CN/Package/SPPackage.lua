@@ -66,7 +66,7 @@ return {
 
 	["#xiahouba"] = "棘途壮志",
 	["xiahouba"] = "夏侯霸",
-	["illustrator:xiahouba"] = "",
+	["illustrator:xiahouba"] = "熊猫探员",
 	["baobian"] = "豹变",
 	[":baobian"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的体力值为3或更低，你拥有技能“挑衅”。若你的体力值为2或更低，你拥有技能“咆哮”。若你的体力值为1或更低，你拥有技能“神速”。",
 

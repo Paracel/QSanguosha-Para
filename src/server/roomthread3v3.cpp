@@ -1,5 +1,4 @@
 #include "roomthread3v3.h"
-#include "protocol.h"
 #include "room.h"
 #include "engine.h"
 #include "ai.h"

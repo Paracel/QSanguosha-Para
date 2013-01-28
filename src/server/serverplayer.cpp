@@ -290,11 +290,10 @@ void ServerPlayer::clearSelected() {
 
 void ServerPlayer::sendMessage(const QString &message) {
     if (socket) {
-        socket->send(message);
-
 #ifndef QT_NO_DEBUG
-        qDebug("%s: %s", qPrintable(objectName()), qPrintable(message));
+        printf("%s", qPrintable(objectName()));
 #endif
+        socket->send(message);
     }
 }
 
@@ -692,7 +691,7 @@ void ServerPlayer::gainMark(const QString &mark, int n) {
 void ServerPlayer::loseMark(const QString &mark, int n) {
     if (getMark(mark) == 0) return;
     int value = getMark(mark) - n;
-    if (value < 0) {value = 0; n = getMark(mark);}
+    if (value < 0) { value = 0; n = getMark(mark); }
 
     LogMessage log;
     log.type = "#LoseMark";

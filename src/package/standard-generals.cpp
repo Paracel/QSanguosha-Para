@@ -129,52 +129,50 @@ public:
     }
 };
 
-class Yiji: public MasochismSkill {
-public:
-    Yiji(): MasochismSkill("yiji") {
-        frequency = Frequent;
-    }
+Yiji::Yiji(): MasochismSkill("yiji") {
+    frequency = Frequent;
+    n = 2;
+}
 
-    virtual void onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
-        Room *room = guojia->getRoom();
-        int x = damage.damage, i;
-        for (i = 0; i < x; i++) {
-            if(!room->askForSkillInvoke(guojia, objectName()))
-                return;
-            room->broadcastSkillInvoke(objectName());
-            room->setPlayerFlag(guojia, "yiji_InTempMoving");
-            QList<int> yiji_cards;
+void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
+    Room *room = guojia->getRoom();
+    int x = damage.damage, i;
+    for (i = 0; i < x; i++) {
+        if(!room->askForSkillInvoke(guojia, objectName()))
+            return;
+        room->broadcastSkillInvoke("yiji");
+        room->setPlayerFlag(guojia, "yiji_InTempMoving");
+        QList<int> yiji_cards;
+        for (int j = 0; j < n; j++)
             yiji_cards.append(room->drawCard());
-            yiji_cards.append(room->drawCard());
-            CardsMoveStruct move;
-            move.card_ids = yiji_cards;
-            move.to = guojia;
-            move.to_place = Player::PlaceHand;
-            move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), "yiji", QString());
-            room->moveCardsAtomic(move, false);
+        CardsMoveStruct move;
+        move.card_ids = yiji_cards;
+        move.to = guojia;
+        move.to_place = Player::PlaceHand;
+        move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
+        room->moveCardsAtomic(move, false);
 
-            if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-                continue;
-            }
-
-            while (room->askForYiji(guojia, yiji_cards)) {}
-
-            if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-                continue;
-            }
-
-            guojia->addToPile("#yiji_tempPile", yiji_cards, false);
-            DummyCard *dummy = new DummyCard;
-            foreach (int id, yiji_cards)
-                dummy->addSubcard(id);
+        if (yiji_cards.isEmpty()) {
             room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-            guojia->obtainCard(dummy, false);
-            dummy->deleteLater();
+            continue;
         }
+
+        while (room->askForYiji(guojia, yiji_cards)) {}
+
+        if (yiji_cards.isEmpty()) {
+            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
+            continue;
+        }
+
+        guojia->addToPile("#yiji_tempPile", yiji_cards, false);
+        DummyCard *dummy = new DummyCard;
+        foreach (int id, yiji_cards)
+            dummy->addSubcard(id);
+        room->setPlayerFlag(guojia, "-yiji_InTempMoving");
+        guojia->obtainCard(dummy, false);
+        dummy->deleteLater();
     }
-};
+}
 
 class Ganglie: public MasochismSkill {
 public:

@@ -392,7 +392,6 @@ EquipCard::Location Horse::location() const{
         return OffensiveHorseLocation;
 }
 
-
 StandardPackage::StandardPackage()
     : Package("standard")
 {

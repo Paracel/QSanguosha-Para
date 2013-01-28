@@ -18,51 +18,11 @@ void ZhanShuangxiongCard::use(Room *room, ServerPlayer *source, QList<ServerPlay
     source->pindian(targets.first(), "zhanshuangxiong");
 }
 
-class GreatYiji: public MasochismSkill {
+class GreatYiji: public Yiji {
 public:
-    GreatYiji(): MasochismSkill("greatyiji") {
-        frequency = Frequent;
-    }
-
-    virtual void onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
-        Room *room = guojia->getRoom();
-        int x = damage.damage;
-        for (int i = 0; i < x; i++) {
-            if (!room->askForSkillInvoke(guojia, objectName()))
-                return;
-            room->broadcastSkillInvoke("yiji");
-            room->setPlayerFlag(guojia, "yiji_InTempMoving");
-            QList<int> yiji_cards;
-            yiji_cards.append(room->drawCard());
-            yiji_cards.append(room->drawCard());
-            yiji_cards.append(room->drawCard());
-            CardsMoveStruct move;
-            move.card_ids = yiji_cards;
-            move.to = guojia;
-            move.to_place = Player::PlaceHand;
-            move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), "greatyiji", QString());
-            room->moveCardsAtomic(move, false);
-
-            if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-                continue;
-            }
-
-            while (room->askForYiji(guojia, yiji_cards)) {}
-
-            if (yiji_cards.isEmpty()) {
-                room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-                continue;
-            }
-
-            guojia->addToPile("#greatyiji_tempPile", yiji_cards, false);
-            DummyCard *dummy = new DummyCard;
-            foreach (int id, yiji_cards)
-                dummy->addSubcard(id);
-            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-            guojia->obtainCard(dummy, false);
-            dummy->deleteLater();
-        }
+    GreatYiji(): Yiji() {
+        setObjectName("greatyiji");
+        n = 3;
     }
 };
 

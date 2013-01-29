@@ -176,5 +176,5 @@ sgs.ai_use_priority.DrQingnangCard = 4.2
 sgs.ai_card_intention.DrQingnangCard = -80
 
 sgs.ai_skill_discard.drwushuang = function(self, discard_num, min_num, optional, include_equip)
-	return self:askForDiscard("drwushuang", discard_num, min_num, false, true)
+	return self:askForDiscard("dummyreason", discard_num, min_num, false, true)
 end

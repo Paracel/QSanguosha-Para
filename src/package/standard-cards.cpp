@@ -695,6 +695,8 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
     // ================================
     bool drwushuang_effect = true;
     if (slash && effect.from->hasSkill("drwushuang")) {
+        room->broadcastSkillInvoke("wushuang");
+
         LogMessage log;
         log.from = effect.from;
         log.arg = "drwushuang";
@@ -734,6 +736,8 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
     // ================================
     bool drwushuang_effect = true;
     if (jink && effect.from->hasSkill("drwushuang")) {
+        room->broadcastSkillInvoke("wushuang");
+
         LogMessage log;
         log.from = effect.from;
         log.arg = "drwushuang";

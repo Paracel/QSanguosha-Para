@@ -14,17 +14,17 @@ sgs.ai_skill_askforag.luoying = function(self, card_ids)
 	return -1
 end
 
-sgs.ai_skill_use["@@jujian"] = function(self, prompt)
+sgs.ai_skill_use["@@jujian"] = function(self, prompt, method)
 	local needfriend = 0
 	local nobasiccard = -1
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
-	if self:isEquip("SilverLion") and self.player:isWounded() then
-			nobasiccard = self.player:getArmor():getId()
+	if self:isEquip("SilverLion") and self.player:isWounded() and not self:isCardLimited(self.player:getArmor(), method) then
+		nobasiccard = self.player:getArmor():getId()
 	else
 		self:sortByKeepValue(cards)
 		for _, card in ipairs(cards) do
-			if card:getTypeId() ~= sgs.Card_TypeBasic then nobasiccard = card:getEffectiveId() end
+			if card:getTypeId() ~= sgs.Card_TypeBasic and not self:isCardLimited(card, method) then nobasiccard = card:getEffectiveId() end
 		end
 	end
 	for _, friend in ipairs(self.friends_noself) do

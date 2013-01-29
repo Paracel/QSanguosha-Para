@@ -40,9 +40,9 @@ sgs.ai_get_cardType = function(card)
 	if card:isKindOf("DefensiveHorse") then return 4 end
 end
 
-sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
+sgs.ai_skill_use["@@shensu2"] = function(self, prompt, method)
 	self:updatePlayers()
-	self:sort(self.enemies,"defenseSlash")
+	self:sort(self.enemies, "defenseSlash")
 
 	local selfSub = self.player:getHp() - self.player:getHandcardNum()
 	local selfDef = sgs.getDefense(self.player)
@@ -66,7 +66,7 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt)
 				eCard = card
 				break
 			end
-			if not eCard and not card:isKindOf("Armor") then eCard = card end
+			if not self.player:isCardLimited(card, method) and not eCard and not card:isKindOf("Armor") then eCard = card end
 		end
 	end
 
@@ -303,7 +303,7 @@ function sgs.ai_filterskill_filter.hongyan(card, card_place)
 	end
 end
 
-sgs.ai_skill_use["@@tianxiang"] = function(self, data)
+sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	local friend_lost_hp = 10
 	local friend_hp = 0
 	local card_id
@@ -321,7 +321,8 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data)
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
-		if ((card:getSuit() == sgs.Card_Spade and self:hasSkill("hongyan")) or card:getSuit() == sgs.Card_Heart) and not card:isKindOf("Peach") then
+		if not self.player:isCardLimited(card, method)
+			and ((card:getSuit() == sgs.Card_Spade and self:hasSkill("hongyan")) or card:getSuit() == sgs.Card_Heart) and not card:isKindOf("Peach") then
 			card_id = card:getId()
 			break
 		end

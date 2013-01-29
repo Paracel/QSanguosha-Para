@@ -409,13 +409,16 @@ public:
 
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (effect.card->isKindOf("Slash")) return false; // we'll judge it later
-            QList<Card::CardType> type_list;
+            bool eff = true;
             foreach (int card_id, zuixiang) {
                 const Card *c = Sanguosha->getCard(card_id);
-                type_list << c->getTypeId();
+                if (c->getTypeId() == effect.card->getTypeId()) {
+                    eff = false;
+                    break;
+                }
             }
 
-            if (type_list.contains(effect.card->getTypeId())) {
+            if (!eff) {
                 LogMessage log;
                 log.type = effect.from ? "#ZuiXiang1" : "#ZuiXiang2";
                 log.from = effect.to;

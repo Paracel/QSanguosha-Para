@@ -399,6 +399,12 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			and self:hasTrickEffective(fire_attack, self.player)
 			and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
 				or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
+
+		if self:willUseGodSalvation() then
+			local godsalvation = self:getCard("GodSalvation")
+			if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end
+		end
+
 		use.card = fire_attack
 		if use.to then use.to:append(self.player) end
 		return
@@ -413,6 +419,10 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			if handcards[1]:hasFlag("visible") or handcards[1]:hasFlag(flag) then
 				local suitstring = handcards[1]:getSuitString()
 				if not lack[suitstring] then
+					if self:willUseGodSalvation() then
+						local godsalvation = self:getCard("GodSalvation")
+						if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end
+					end
 					use.card = fire_attack
 					if use.to then use.to:append(enemy) end
 					return
@@ -425,12 +435,20 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 
 	for _, enemy in ipairs(targets) do
 		if self:isEquip("Vine", enemy) or enemy:getMark("@gale") > 0 then
+			if self:willUseGodSalvation() then
+				local godsalvation = self:getCard("GodSalvation")
+				if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end
+			end
 			use.card = fire_attack
 			if use.to then use.to:append(enemy) end
 			return
 		end
 	end
 	for _, enemy in ipairs(targets) do
+		if self:willUseGodSalvation() then
+			local godsalvation = self:getCard("GodSalvation")
+			if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end
+		end
 		use.card = fire_attack
 		if use.to then use.to:append(enemy) end
 		return

@@ -74,11 +74,11 @@ return {
 
 	["tw_machao"] = "台版马超",
 	["&tw_machao"] = "马超", 
-	["illustrator:tw_machao"] = "",
+	["illustrator:tw_machao"] = "greey",
 
 	["tw_ganning"] = "台版甘宁",
 	["&tw_ganning"] = "甘宁", 
-	["illustrator:tw_ganning"] = "",
+	["illustrator:tw_ganning"] = "greey",
 	["cv_ganning:convert"] = "你可以替换为台版甘宁",
 
 	["tw_lvbu"] = "台版吕布",

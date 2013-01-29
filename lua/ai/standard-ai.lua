@@ -11,10 +11,9 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 		if friend:getKingdom() == "wei" and self:isEquip("EightDiagram", friend) then return true end
 	end
 
-	local wei_num = 0
-	local others = self.room:getOtherPlayers(self.player)
-	for _, other in sgs.qlist(others) do
-		if other:getKingdom() == "wei" and other:isAlive() then wei_num = wei_num + 1 end
+	local current = self.room:getCurrent()
+	if self:isFriend(current) and current:getKingdom() == "wei" and self:getOverFlow(current) >2 then
+		return true
 	end
 
 	for _, card in sgs.qlist(cards) do
@@ -22,7 +21,7 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 			return false
 		end
 	end
-	return wei_num > 0 and others:length() > 1
+	return self.room:getLieges("wei", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
 end
 
 sgs.ai_choicemade_filter.skillInvoke.hujia = function(player, promptlist)
@@ -475,10 +474,10 @@ function sgs.ai_slash_prohibit.tiandu(self, to)
 	if self:isEnemy(to) and self:isEquip("EightDiagram", to) then return true end
 end
 
-sgs.ai_need_damaged.yiji = function (self, attacker)
+sgs.ai_need_damaged.yiji = function(self, attacker)
 	local need_card = false
 	local current = self.room:getCurrent()
-	if current:isEquip("Crossbow") or current:hasSkill("paoxiao") or current:hasFlag("shuangxiong") then need_card = true end
+	if current:hasWeapon("crossbow") or current:hasSkill("paoxiao") or current:hasFlag("shuangxiong") then need_card = true end
 	if self:hasSkills("jieyin|jijiu", current) and self:getOverflow(current) <= 0 then need_card = true end
 	if self:isFriend(current) and need_card then return true end
 
@@ -627,6 +626,11 @@ end
 table.insert(sgs.ai_choicemade_filter.cardUsed, jijiang_filter)
 
 sgs.ai_skill_invoke.jijiang = function(self, data)
+	local current = self.room:getCurrent()
+	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverFlow(current) >2 and not self:isEquip("Crossbow", current) then
+		return true
+	end
+
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
 		if card:isKindOf("Slash") then
@@ -634,16 +638,10 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 		end
 	end
 
-	local shu_num = 0
-	local others = self.room:getOtherPlayers(self.player)
-	for _, other in sgs.qlist(others) do
-		if other:getKingdom() == "shu" and other:isAlive() then shu_num = shu_num + 1 end
-	end
-
 	if sgs.jijiangsource then
 		return false
 	else
-		return shu_num > 0 and others:length() > 1
+		return self.room:getLieges("shu", self.player) > 0 and self.room:alivePlayerCount() >= 3
 	end
 end
 

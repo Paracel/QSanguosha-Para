@@ -18,7 +18,7 @@ neoluoyi_skill.getTurnUseCard = function(self)
 		if card:isKindOf("Slash") then
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
-					if getCardsNum("Jink", enemy) < 1 or (self:isEquip("Axe") and self.player:getCards("he"):length() > 4) then
+					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
 					end
 				end

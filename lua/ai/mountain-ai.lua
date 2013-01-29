@@ -361,7 +361,7 @@ sgs.dynamic_value.control_card.JixiCard = true
 sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	local target = data:toPlayer()
 	if self:isFriend(target) and not
-		(target:hasSkill("leiji") and (getCardsNum("Jink", target) > 0 or (not self:isWeak(target) and self:isEquip("EightDiagram", target))))
+		(target:hasSkill("leiji") and (getCardsNum("Jink", target) > 0 or (not self:isWeak(target) and self:hasEightDiagramEffect(target))))
 		then return "." end
 	local has_peach, has_anal, has_slash, has_jink
 	for _, card in sgs.qlist(self.player:getHandcards()) do

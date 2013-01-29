@@ -299,7 +299,7 @@ sgs.ai_skill_invoke.nosjiefan = function(self, data)
 		end
 	end
 	return self:isFriend(friend) and not (self:isEnemy(currentplayer) and (currentplayer:hasSkill("leiji") or currentplayer:hasSkill("wansha"))
-		and (currentplayer:getHandcardNum() > 2 or self:isEquip("EightDiagram", currentplayer))) and slashnum > 0
+		and (currentplayer:getHandcardNum() > 2 or self:hasEightDiagramEffect(currentplayer))) and slashnum > 0
 end
 
 sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
@@ -316,7 +316,7 @@ sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
 	if self:isFriend(target) then
-		return (self:hasSkills(sgs.lose_equip_skill, target) and not self:isWeak(target)) or (self:isEquip("SilverLion", target) and target:isWounded())
+		return (self:hasSkills(sgs.lose_equip_skill, target) and not self:isWeak(target)) or (target:hasArmorEffect("silver_lion") and target:isWounded())
 	end
 
 	return true

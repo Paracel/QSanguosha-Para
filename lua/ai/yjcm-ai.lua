@@ -19,7 +19,7 @@ sgs.ai_skill_use["@@jujian"] = function(self, prompt, method)
 	local nobasiccard = -1
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
-	if self:isEquip("SilverLion") and self.player:isWounded() and not self:isCardLimited(self.player:getArmor(), method) then
+	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() and not self:isCardLimited(self.player:getArmor(), method) then
 		nobasiccard = self.player:getArmor():getId()
 	else
 		self:sortByKeepValue(cards)
@@ -55,7 +55,7 @@ end
 
 sgs.ai_skill_choice.jujian = function(self, choices)
 	if not self.player:faceUp() then return "reset" end
-	if self:isEquip("Vine") and self.player:isChained() and not self:isGoodChainPartner() then
+	if self.player:hasArmorEffect("vine") and self.player:isChained() and not self:isGoodChainPartner() then
 		return "reset"
 	end
 	if self:isWeak() and self.player:isWounded() then return "recover" end
@@ -343,7 +343,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 
 	target = nil
 	for _, friend in ipairs(self.friends) do
-		if (self:isEquip("SilverLion", friend) and friend:isWounded()) or (self:hasSkills(sgs.lose_equip_skill, friend)
+		if (friend:hasArmorEffect("silver_lion") and friend:isWounded()) or (self:hasSkills(sgs.lose_equip_skill, friend)
 			and not friend:getEquips():isEmpty()) then target = friend break end
 	end
 	if not target then return end

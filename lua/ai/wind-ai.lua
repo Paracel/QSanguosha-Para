@@ -182,7 +182,7 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	self:updatePlayers()
 	self:sort(self.enemies,"hp")
 	for _, enemy in ipairs(self.enemies) do
-		if not self:isEquip("SilverLion", enemy) and not enemy:hasSkill("hongyan") and
+		if not enemy:hasArmorEffect("silver_lion") and not enemy:hasSkill("hongyan") and
 			self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
 			return "@LeijiCard=.->" .. enemy:objectName()
 		end
@@ -205,7 +205,7 @@ function sgs.ai_slash_prohibit.leiji(self, to, card)
 	if self.player:hasSkill("liegong") and (hcard >= self.player:getHp() or hcard <= self.player:getAttackRange()) then return false end
 
 	if getKnownCard(to, "Jink", true) >= 1 or (self:hasSuit("spade", true, to) and hcard >= 2) then return true end
-	if self:isEquip("EightDiagram", to) then return true end
+	if self:hasEightDiagramEffect(to) then return true end
 end
 
 function sgs.ai_cardneed.leiji(to, card, self)
@@ -407,7 +407,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuit, 0)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype) == 0 and self.player:getHp() > 0 then return "question" end
-	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:isEquip("Crossbow", yuji))) then return "noquestion" end
+	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:hasCrossbowEffect(yuji))) then return "noquestion" end
 	local players = self.room:getOtherPlayers(self.player)
 	players = sgs.QList2Table(players)
 	local yuji
@@ -479,7 +479,7 @@ guhuo_skill.getTurnUseCard = function(self)
 
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
-		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h") >= 2 and not self:isEquip("Crossbow"))
+		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h") >= 2 and not self:hasCrossbowEffect())
 		or (card:isKindOf("Jink") and self:getCardsNum("Jink", self.player, "h") >= 3)
 		or (card:isKindOf("Weapon") and self.player:getWeapon())
 		or card:isKindOf("Disaster") then

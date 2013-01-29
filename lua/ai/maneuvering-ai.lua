@@ -71,13 +71,13 @@ fan_skill.getTurnUseCard = function(self)
 end
 
 function sgs.ai_weapon_value.fan(self, enemy)
-	if enemy and self:isEquip("Vine", enemy) then return 3 end
+	if enemy and enemy:hasArmorEffect("vine") then return 3 end
 end
 
 function sgs.ai_armor_value.vine(player, self)
 	if not self:damageIsEffective(nil, sgs.DamageStruct_Fire) then return 6 end
 	for _, enemy in ipairs(self:getEnemies(player)) do
-		if (enemy:canSlash(player) and (self:isEquip("Fan", enemy) or enemy:hasSkill("lihuo"))) or enemy:hasSkill("huoji") then return -1 end
+		if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkill("huoji") then return -1 end
 		if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -1 end
 		if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 then return -1 end
 	end
@@ -434,7 +434,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	if (suitnum == 2 and not lack.diamond and not lack.spade and self:getOverflow() <= 0) or suitnum <= 1 then return end
 
 	for _, enemy in ipairs(targets) do
-		if self:isEquip("Vine", enemy) or enemy:getMark("@gale") > 0 then
+		if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
 			if self:willUseGodSalvation() then
 				local godsalvation = self:getCard("GodSalvation")
 				if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end

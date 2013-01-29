@@ -8,7 +8,7 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 	local cards = self.player:getHandcards()
 	if sgs.hujiasource then return false end
 	for _, friend in ipairs(self.friends_noself) do
-		if friend:getKingdom() == "wei" and self:isEquip("EightDiagram", friend) then return true end
+		if friend:getKingdom() == "wei" and self:hasEightDiagramEffect(friend) then return true end
 	end
 
 	local current = self.room:getCurrent()
@@ -64,7 +64,7 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 
 	if self:isFriend(target) then
 		if self:getOverflow(target) > 2 then return true end
-		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or (self:isEquip("SilverLion", target) and target:isWounded())
+		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or (target:hasArmorEffect("silver_lion") and target:isWounded())
 	end
 	if self:isEnemy(target) then				---fankui without zhugeliang and luxun
 		if target:hasSkill("tuntian") then return false end
@@ -395,7 +395,7 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 		if card:isKindOf("Slash") then
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
-					if getCardsNum("Jink", enemy) < 1 or (self:isEquip("Axe") and self.player:getCards("he"):length() > 4) then
+					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
 					end
 				end
@@ -471,7 +471,7 @@ sgs.ai_chaofeng.xuchu = 3
 sgs.ai_skill_invoke.tiandu = sgs.ai_skill_invoke.jianxiong
 
 function sgs.ai_slash_prohibit.tiandu(self, to)
-	if self:isEnemy(to) and self:isEquip("EightDiagram", to) then return true end
+	if self:isEnemy(to) and self:hasEightDiagramEffect(to) then return true end
 end
 
 sgs.ai_need_damaged.yiji = function(self, attacker)
@@ -627,7 +627,7 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, jijiang_filter)
 
 sgs.ai_skill_invoke.jijiang = function(self, data)
 	local current = self.room:getCurrent()
-	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverFlow(current) >2 and not self:isEquip("Crossbow", current) then
+	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverFlow(current) > 2 and not self:hasCrossbowEffect(current) then
 		return true
 	end
 
@@ -803,7 +803,7 @@ function sgs.ai_cardneed.paoxiao(to, card, self)
 	if not has_weapon then
 		return card:isKindOf("Weapon") and not card:isKindOf("Crossbow")
 	else
-		return self:isEquip("Spear", to) or card:isKindOf("Slash") or (slash_num > 1 and card:isKindOf("Analeptic"))
+		return to:hasWeapon("spear") or card:isKindOf("Slash") or (slash_num > 1 and card:isKindOf("Analeptic"))
 	end
 end
 
@@ -963,7 +963,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
 
-		if (self:isEquip("SilverLion") and self.player:isWounded()) then
+		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
 		end
 
@@ -1239,7 +1239,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	local doLiuli = function(who)
 		if not self:isFriend(who) and who:hasSkill("leiji") 
 			and (self:hasSuit("spade", true, who) or who:getHandcardNum() >= 3)
-			and (getKnownCard(who, "Jink", true) >= 1 or (not self:isEquip("QinggangSword", source) and self:isEquip("EightDiagram",who))) then
+			and (getKnownCard(who, "Jink", true) >= 1 or self:hasEightDiagramEffect(who)) then
 			return "."
 		end
 
@@ -1549,7 +1549,7 @@ lijian_skill.getTurnUseCard = function(self)
 	if not self.player:isNude() then
 		local card
 		local card_id
-		if self:isEquip("SilverLion") and self.player:isWounded() then
+		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
 			card_id = self.player:getArmor():getId()
 		elseif self.player:getHandcardNum() > self.player:getHp() then
 			local cards = self.player:getHandcards()

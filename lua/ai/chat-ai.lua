@@ -41,7 +41,7 @@ sgs.ai_chat_func[sgs.SlashEffected] = function(self, player, data)
 			}
 	if not effect.from then return end
 
-	if self:isEquip("Crossbow", effect.from) then
+	if effect.from:hasWeapon("crossbow") then
 		table.insert(chat, "快闪，药家鑫来了。")
 		table.insert(chat, "果然是连弩降智商呀。")
 		table.insert(chat, "杀死我也没牌拿，真2")

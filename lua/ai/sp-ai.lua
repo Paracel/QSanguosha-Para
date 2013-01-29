@@ -38,7 +38,7 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 		if place == sgs.Player_PlaceEquip then
 			if card:isKindOf("SilverLion") then
 				for _, enemy in ipairs(self.enemies) do
-					if enemy:canSlash(self.player) and self:isEquip("GudingBlade", enemy) then return 6 end
+					if enemy:canSlash(self.player) and enemy:hasWeapon("guding_blade") then return 6 end
 				end
 				if self.player:isWounded() then
 					return -2
@@ -100,7 +100,7 @@ end
 
 sgs.ai_skill_choice.jilei = function(self, choices)
 	local tmptrick = sgs.Sanguosha:cloneCard("ex_nihilo", sgs.Card_NoSuit, 0)
-	if (self:isEquip("Crossbow", self.jilei_source) and self.jilei_source:inMyAttackRange(self.player)) or
+	if (self:hasCrossbowEffect(self.jilei_source)) and self.jilei_source:inMyAttackRange(self.player)) or
 		 self.jilei_source:isJilei(tmptrick) then
 		return "basic"
 	else
@@ -135,7 +135,14 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 			end
 		end
 		for _, friend in ipairs(targets) do
-			if not self:isEquip(equip_type, friend) then
+			local has_equip = false
+			for _, equip in sgs.qlist(friend:getEquips()) do
+				if equip:isKindOf(equip_type) then
+					has_equip = true
+					break
+				end
+			end
+			if not has_equip then
 				if equip_type == "Armor" then
 					if not self:needKongcheng(friend) and not self:hasSkills("bazhen|yizhong", friend) then return friend end
 				else
@@ -145,7 +152,14 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 		end
 	else
 		for _, friend in ipairs(targets) do
-			if not self:isEquip(equip_type, friend) then
+			local has_equip = false
+			for _, equip in sgs.qlist(friend:getEquips()) do
+				if equip:isKindOf(equip_type) then
+					has_equip = true
+					break
+				end
+			end
+			if not has_equip then
 				for _, aplayer in sgs.qlist(self.room:getAllPlayers()) do
 					if friend:distanceTo(aplayer) == 1 then
 						if self:isFriend(aplayer) and not aplayer:containsTrick("YanxiaoCard")
@@ -173,7 +187,7 @@ sgs.ai_skill_use["@@yuanhu"] = function(self, prompt)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
-	if self:isEquip("SilverLion") and yuanhu_validate(self, "SilverLion", false) then
+	if self.player:hasArmorEffect("silver_lion") and yuanhu_validate(self, "SilverLion", false) then
 		local player = yuanhu_validate(self, "SilverLion", false)
 		local card_id = self.player:getArmor():getEffectiveId()
 		return "@YuanhuCard=" .. card_id .. "->" .. player:objectName()
@@ -446,7 +460,7 @@ sgs.ai_skill_use_func.SongciCard = function(card, use, self)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
 			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0)
-					or (self:isEquip("SilverLion", enemy) and enemy:isWounded())) then
+					or (enemy:hasArmorEffect("silver_lion") and enemy:isWounded())) then
 				use.card = sgs.Card_Parse("@SongciCard=.")
 				if use.to then use.to:append(enemy) end
 				return

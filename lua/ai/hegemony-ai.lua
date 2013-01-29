@@ -431,7 +431,7 @@ fenxun_skill.getTurnUseCard = function(self)
 	if not self.player:isNude() then
 		local card
 		local card_id
-		if self:isEquip("SilverLion") and self.player:isWounded() then
+		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
 			card = sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
 		elseif self.player:getHandcardNum() > self.player:getHp() then
 			local cards = self.player:getHandcards()

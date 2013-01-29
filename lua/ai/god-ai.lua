@@ -452,7 +452,7 @@ end
 sgs.ai_skill_use["@@kuangfeng"] = function(self, prompt)
 	local friendly_fire
 	for _, friend in ipairs(self.friends) do
-		if friend:hasSkill("huoji") or self:isEquip("Fan", friend) or (friend:hasSkill("yeyan") and friend:getMark("@flame") > 0) then
+		if friend:hasSkill("huoji") or friend:hasWeapon("fan") or (friend:hasSkill("yeyan") and friend:getMark("@flame") > 0) then
 			friendly_fire = true
 			break
 		end

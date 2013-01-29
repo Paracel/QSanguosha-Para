@@ -67,7 +67,7 @@ return {
 
 	["tw_zhenji"] = "台版甄姬",
 	["&tw_zhenji"] = "甄姬", 
-	["illustrator:tw_zhenji"] = "",
+	["illustrator:tw_zhenji"] = "greey",
 	["cv_zhenji:convert"] = "你可以替换为国战甄姬或台版甄姬",
 	["cv_zhenji:heg_zhenji"] = "国战版",
 	["cv_zhenji:tw_zhenji"] = "台湾版",

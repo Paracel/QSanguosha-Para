@@ -154,6 +154,10 @@ sgs.ai_need_damaged.enyuan = function (self, attacker)
 	return false
 end
 
+function sgs.ai_cardneed.enyuan(to, card)
+	return getKnownCard(to, "Card", false) < 2
+end
+
 sgs.ai_skill_use["@@xuanhuo"] = function(self, prompt)
 	local lord = self.room:getLord()
 	local killloyal = 0

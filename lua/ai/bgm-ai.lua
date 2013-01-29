@@ -499,20 +499,37 @@ sgs.ai_skill_discard.shichou = sgs.ai_skill_discard.lihun
 function SmartAI:useCardYanxiaoCard(card, use)
 	local players = self.room:getOtherPlayers(self.player)
 	local tricks
+	self:sort(self.friends_noself, "defense")
 	for _, friend in ipairs(self.friends_noself) do
 		local judges = friend:getJudgingArea()
-		if not judges:isEmpty() and not friend:containsTrick("YanxiaoCard") then
+		local need_yanxiao = (friend:containsTrick("lightning") and self:getFinalRetrial(player) == 2) 
+							or friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")
+		if need_yanxiao and not friend:containsTrick("YanxiaoCard") then
 			use.card = card
 			if use.to then use.to:append(friend) end
 			return
 		end
 	end
-	self:sort(self.friends, "defense")
-	for _, friend in ipairs(self.friends) do
-		if not friend:containsTrick("YanxiaoCard") then
+	if self:getOverflow() > 0 then
+		if not self.player:containsTrick("YanxiaoCard") then
 			use.card = card
-			if use.to then use.to:append(friend) end
+			if use.to then use.to:append(self.player) end
 			return
+		end
+		local lord = self.room:getLord()
+		if self:isFriend(lord) and not lord:containsTrick("YanxiaoCard") then
+			use.card = card
+			if use.to then use.to:append(lord) end
+			return
+		end
+
+		for _, friend in ipairs(self.friends_noself) do
+			local judges = friend:getJudgingArea()
+			if not friend:containsTrick("YanxiaoCard") then
+				use.card = card
+				if use.to then use.to:append(friend) end
+				return
+			end
 		end
 	end
 end
@@ -575,7 +592,7 @@ sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
 	for _, card in ipairs(cards) do
-		if not card:isKindOf("Peach") then
+		if not isCard("Peach", card, self.player) then
 			return "$" .. card:getEffectiveId()
 		end
 	end

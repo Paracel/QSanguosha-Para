@@ -511,9 +511,17 @@ function SmartAI:getDynamicUsePriority(card)
 		elseif sgs.dynamic_value.lucky_chance[class_name] then
 			value = value + (#self.enemies - #self.friends)
 		end
-		if use_card:isKindOf("DelayedTrick") or use_card:isKindOf("GodSalvation") then value = 1.01 end
-		if self.player:hasSkill("jieyin|qingnang|kuanggu") and use_card.card:isKindOf("Peach") then
+		if use_card:isKindOf("AmazingGrace") then
+			local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+			if zhugeliang and self:isEnemy(zhugeliang) and zhugeliang:isKongcheng() and self.player:canSlash(zhugeliang, nil, true) then
+				value = math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
+			end
+		end
+		if self.player:hasSkill("kuanggu") and use_card.card:isKindOf("Peach") then
 			value = 1.01
+		end
+		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then
+			value = 0.1
 		end
 	end
 

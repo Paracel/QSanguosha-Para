@@ -713,7 +713,7 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 		cards = sgs.QList2Table(cards)
 		local armor_used = false
 		local index
-		if self.player:getArmor() and self.player:getArmor():isKindOf("SilverLion") and self.player:isWounded() then
+		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
 			armor_used = true
 		end
 		if self:hasSkills(sgs.need_kongcheng) then index = #cards end
@@ -1158,7 +1158,7 @@ function SmartAI:getDangerousCard(who)
 	local armor = who:getArmor()
 	if weapon and weapon:isKindOf("Spear") and who:getHandcardNum() >= 3 and who:hasSkill("paoxiao") then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Axe") and self:hasSkills("luoyi|pojun|jiushi|jiuchi", who) then return weapon:getEffectiveId() end
-	if armor and who:getArmor():isKindOf("EightDiagram") and who:getArmor():getSuit() == sgs.Card_Spade and who:hasSkill("leiji") then return who:getArmor():getEffectiveId() end
+	if armor and armor:isKindOf("EightDiagram") and armor:getSuit() == sgs.Card_Spade and who:hasSkill("leiji") then return armor:getEffectiveId() end
 	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and self:hasSkills("guidao|chongzhen|guicai|jilve", who) then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Crossbow") and getCardsNum("Slash", who) > 1 then return weapon:getEffectiveId() end

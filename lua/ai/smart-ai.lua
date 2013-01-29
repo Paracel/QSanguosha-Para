@@ -189,7 +189,7 @@ function sgs.getDefense(player)
 			defense = defense + 1
 		end
 	end
-	if player:getArmor() and player:getArmor():isKindOf("EightDiagram") and player:hasSkill("tiandu") then
+	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and player:hasSkill("tiandu") then
 		defense = defense + 0.5
 	end
 	if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then
@@ -1570,7 +1570,7 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 	elseif sgs.dynamic_value.damage_card[className] then intention = 70
 	elseif sgs.dynamic_value.benefit[className] then intention = -40
 	elseif (className == "Snatch" or className == "Dismantlement") and
-		(to:getCards("j"):isEmpty() and not (to:getArmor() and to:getArmor():isKindOf("SilverLion"))) then
+		(to:getCards("j"):isEmpty() and not to:hasArmorEffect("silver_lion")) then
 		intention = 80
 	elseif className == "Nullification" then
 		intention = 50
@@ -1677,12 +1677,12 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.ai_snat_disma_effect = true
 			sgs.ai_snat_dism_from = struct.from
 			if to:getCards("j"):isEmpty() and
-				not (to:getArmor() and to:getArmor():isKindOf("SilverLion")) then
+				not to:hasArmorEffect("silver_lion") then
 				sgs.updateIntention(from, to, 80)
 			end
 		end
 		if card:isKindOf("Slash") and to:hasSkill("leiji") and
-			(getCardsNum("Jink", to) > 0 or (to:getArmor() and to:getArmor():isKindOf("EightDiagram")))
+			(getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to))
 			and (to:getHandcardNum() > 2 or from:getState() == "robot") then
 			sgs.ai_leiji_effect = true
 		end
@@ -2162,7 +2162,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			if self:evaluateArmor(who:getArmor(), who) < -5 then return who:getArmor():getId() end
 			if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
 				if who:getWeapon() then return who:getWeapon():getId() end
-				if who:getArmor() and who:getArmor():isKindOf("Vine") then return who:getArmor():getId() end
+				if who:hasArmorEffect("vine") then return who:getArmor():getId() end
 				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
 			end
 		end

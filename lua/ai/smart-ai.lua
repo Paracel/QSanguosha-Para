@@ -3080,7 +3080,7 @@ end
 
 function SmartAI:damageIsEffective(player, nature, source)
 	player = player or self.player
-	source = source or self.player
+	source = source or self.room:getCurrent()
 	nature = nature or sgs.DamageStruct_Normal
 
 	if source:hasSkill("jueqing") then return true end
@@ -3672,7 +3672,7 @@ function SmartAI:useBasicCard(card, use)
 	self:useCardByClassName(card, use)
 end
 
-function SmartAI:aoeIsEffective(card, to)
+function SmartAI:aoeIsEffective(card, to, source)
 	local players = self.room:getAlivePlayers()
 	players = sgs.QList2Table(players)
 
@@ -3715,6 +3715,10 @@ function SmartAI:aoeIsEffective(card, to)
 	end
 
 	if to:getMark("@fog") > 0 then
+		return false
+	end
+	
+	if not self:damageIsEffective(to, sgs.DamageStruct_Normal, source) then
 		return false
 	end
 
@@ -3798,119 +3802,92 @@ end
 
 function SmartAI:getAoeValueTo(card, to, from)
 	if not from then from = self.player end
-	local value = 0
-	local sj_num
+	local value, sj_num = 0, 0
 
-	if to:hasSkill("buqu") then
-		value = value + 10
-	end
+	if card:isKindOf("ArcheryAttack") then sj_num = getCardsNum("Jink", to) end
+	if card:isKindOf("SavageAssault") then sj_num = getCardsNum("Slash", to) end
 
-	if to:hasSkill("longdan") then
-		value = value + 10
-	end
+	if self:aoeIsEffective(card, to, from) then
+		value = value - (sj_num < 1 and 30 or 0) 
+		value = value - (self:isWeak(to) and 40 or 20)
 
-	if to:hasSkill("danlao") and self.player:aliveCount() >= 3 then
-		value = value + 20
-	end
-
-	if card:isKindOf("SavageAssault") then
-		sj_num = getCardsNum("Slash", to)
-		if to:hasSkill("juxiang") and not card:isVirtualCard() then
-			value = value + 50
-		end
-	end
-	if card:isKindOf("ArcheryAttack") then
-		sj_num = getCardsNum("Jink", to)
-	end
-
-	if self:aoeIsEffective(card, to) then
-		if sgs.isGoodHp(to) then
-			if to:hasSkill("yiji") or to:hasSkill("jianxiong") or (to:hasSkill("guixin") and self.player:aliveCount() >= 3) then
-				value = value + 20
-			end
-			if to:hasSkill("jieming") then
-				value = value + self:getJiemingChaofeng(to) * 3
-			end
-			if self:hasSkills("ganglie|fankui|enyuan|neoganglie|nosenyuan", to) then
-				if not self:isFriend(from, to) then
-					value = value + 10
-				else
-					value = value - 10
-				end
-			end
-		end
-
+		if self:getDamagedEffects(to, from) then value = value + 50 end
+		if to:hasSkill("jianxiong") and sgs.isGoodHp(to) then value = value + 30 end
 		if card:isKindOf("ArcheryAttack") then
 			sj_num = getCardsNum("Jink", to)
-			if (to:hasSkill("leiji") and getCardsNum("Jink", to) > 0) or self:isEquip("EightDiagram", to) then
-				value = value + 30
-				if self:hasSuit("spade", true, to) then
-					value = value + 20
-				end
-			end
-			if to:hasSkill("qingguo") or self:isEquip("EightDiagram", to) then
+			if (to:hasSkill("leiji") and sj_num >= 1) or self:isEquip("EightDiagram", to) then
 				value = value + 20
+				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 40 end
 			end
-		end
-
-		if to:getHp() > 1 then
-			value = value - 20
-		else
-			value = value - 30
-		end
-
-		if self:isFriend(from, to) then
-			if (to:isLord() or from:isLord()) and not (to:hasSkill("buqu") and to:getPile("buqu"):length() < 5) then
-				if to:getHp() <= 1 and getCardsNum("Peach", from) == 0 and sj_num == 0 then
-					if sgs.evaluatePlayerRole(to) == "renegade" then
-						value = value - 50
-					else
-						value = value - 150
-					end
-				end
-			end
-			value = value + getCardsNum("Peach", from) * 2
-		elseif sgs.evaluatePlayerRole(to) == "rebel" or (to:isLord() and sgs.evaluatePlayerRole(from) == "rebel") then
-			if to:getHp() <= 1 and getCardsNum("Peach", to) == 0 and sj_num == 0 then
-				value = value - 50
-			end
+			if self:isEquip("EightDiagram", to) then value = value + 30 end
 		end
 	else
-		value = value + 20
+		if to:hasSkill("juxiang") and card:isKindOf("SavageAssault") and not card:isVirtualCard() then value = value + 50 end
+		if to:hasSkill("danlao") and self.player:aliveCount() > 2 then value = value + 20 end
 	end
 	return value
 end
 
 function SmartAI:getAoeValue(card, player)
-	player = player or self.player
-	friends_noself = self:getFriendsNoself(player)
-	enemies = self:getEnemies(player)
+	local attacker = player or self.player
 	local good, bad = 0, 0
-	for _, friend in ipairs(friends_noself) do
-		good = good + self:getAoeValueTo(card, friend, player)
+	local lord = self.room:getLord()
+
+	local canHelpLord = function()
+		local goodnull, badnull = 0, 0
+		if not self:isFriend(lord) then return false end
+		if card:isKindOf("SavageAssault") then
+			return lord:hasSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > 0
+		end
+		if card:isKindOf("ArcheryAttack") then
+			return lord:hasSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > 0
+		end
+
+		if self:getCardsNum("Peach") > 0 then return true end
+
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			if self:isFriend(lord, p) then 
+				goodnull = goodnull +  getCardsNum("Nullification", p) 
+			else
+				badnull = badnull +  getCardsNum("Nullification", p) 
+			end
+		end
+		return goodnull - badnull >= 2
 	end
 
-	for _, enemy in ipairs(enemies) do
-		bad = bad + self:getAoeValueTo(card, enemy, player)
+	if card:isKindOf("SavageAssault") then
+		local menghuo = self.room:findPlayerBySkillName("huoshou")
+		attacker = attacker and menghuo
+	end
+
+	for _, friend in ipairs(self.friends_noself) do
+		good = good + self:getAoeValueTo(card, friend, attacker)
+	end
+
+	for _, enemy in ipairs(self.enemies) do
+		bad = bad + self:getAoeValueTo(card, enemy, attacker)
 	end
 
 	local liuxie = self.room:findPlayerBySkillName("huangen")
 	if liuxie then
-		if self:isFriend(player, liuxie) then
-			good = good + 100 * liuxie:getHp()
+		if self:isFriend(liuxie) then
+			good = good + 30 * liuxie:getHp()
 		else
-			bad = bad + 150 * liuxie:getHp()
+			bad = bad + 30 * liuxie:getHp()
 		end
 	end
 
-	for _, player in sgs.qlist(self.room:getAlivePlayers()) do
-		if self:cantbeHurt(player) and self:aoeIsEffective(card, player) then
-			bad = bad + 150
+	if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) and not canHelpLord() then
+		good = good + (self:isEnemy(lord) and 150 or -250)
+	end
+
+	for _, player in sgs.qlist(self.room:getOtherPlayers()) do
+		if self:cantbeHurt(player) and self:aoeIsEffective(card, player, attacker) then
+			bad = bad + 250
 		end
 	end
-	if player:hasSkill("jizhi") then
-		good = good + 20
-	end
+	if self.player:hasSkill("jizhi") then good = good + 25 end
+
 	return good - bad
 end
 

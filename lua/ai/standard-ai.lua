@@ -263,6 +263,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 
 	local add_player = function (player, isfriend)
 		if player:getHandcardNum() == 0 or player:objectName() == self.player:objectName() then return #targets end
+		if self:objectiveLevel(player) == 0 and player:isLord() and sgs.current_mode_players["rebel"] > 1 then return #targets end
 		if #targets == 0 then
 			table.insert(targets, player:objectName())
 		elseif #targets == 1 then

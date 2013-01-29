@@ -106,7 +106,6 @@ return {
 	["@anxian-discard"] = "你可以弃置一张手牌令此【杀】对你无效",
 	["$YanxiaoGot"] = "%from 判定阶段开始时，获得其判定区内所有牌：%card",
 	["#Anxian"] = "%from 发动了“%arg”，防止此伤害",
-	["#AnxianDiscard"] = "%to 发动了“%arg”，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】将无效",
 	["#AnxianAvoid"] = "%to 的“%arg”效果被触发，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】无效",
 
 	["#bgm_ganning"] = "怀铃的乌羽",

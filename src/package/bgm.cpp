@@ -1139,12 +1139,6 @@ public:
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");
                     use.from->drawCards(1);
-                    LogMessage log;
-                    log.type = "#AnxianDiscard";
-                    log.from = use.from;
-                    log.to << daqiao;
-                    log.arg = objectName();
-                    room->sendLog(log);
                 }
             }
         } else if (event == SlashEffected) {

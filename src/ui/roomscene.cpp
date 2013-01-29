@@ -3206,9 +3206,9 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool perm
 }
 
 void RoomScene::showSkillInvocation(const QString &who, const QString &skill_name) {
+    if (skill_name == "songwei" || skill_name == "baonue") return; // limitations at the UI side to avoid duplicate log messages
     const Skill *skill = Sanguosha->getSkill(skill_name);
-    if (skill && skill->inherits("SPConvertSkill"))
-        return;
+    if (skill && skill->inherits("SPConvertSkill")) return;
     QString type = "#InvokeSkill";
     const ClientPlayer *player = ClientInstance->findChild<const ClientPlayer *>(who);
     QString from_general = player->objectName();

@@ -939,6 +939,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const QString &prompt,
                              const QVariant &data, Card::HandlingMethod method, ServerPlayer *to,
                              bool isRetrial, const QString &skill_name) {
+    Q_ASSERT(pattern != "slash" || method != Card::MethodUse); // use askForUseSlashTo instead
     notifyMoveFocus(player, S_COMMAND_RESPONSE_CARD);
     const Card *card = NULL;
 
@@ -983,16 +984,14 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 
     if (card) {
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
-            if (!(method == Card::MethodUse && pattern == "slash")) {
-                LogMessage log;
-                log.card_str = card->toString();
-                log.from = player;
-                log.type = QString("#%1").arg(card->getClassName());
-                if (method == Card::MethodResponse)
-                    log.type += "_Resp";
-                sendLog(log);
-                player->broadcastSkillInvoke(card);
-            }
+            LogMessage log;
+            log.card_str = card->toString();
+            log.from = player;
+            log.type = QString("#%1").arg(card->getClassName());
+            if (method == Card::MethodResponse)
+                log.type += "_Resp";
+            sendLog(log);
+            player->broadcastSkillInvoke(card);
         } else if (method == Card::MethodDiscard) {
             LogMessage log;
             log.type = skill_name.isEmpty()? "$DiscardCard" : "$DiscardCardWithSkill";
@@ -1010,14 +1009,12 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
     }
 
     if (card) {
-        QVariant decisionData = QVariant::fromValue("cardResponded:"+pattern+":"+prompt+":_"+card->toString()+"_");
+        QVariant decisionData = QVariant::fromValue(QString("cardResponded:%1:%2:_%3_").arg(pattern).arg(prompt).arg(card->toString()));
         thread->trigger(ChoiceMade, this, player, decisionData);
 
         if (method == Card::MethodUse) {
-            if (pattern != "slash") {
-                CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(), QString(), card->getSkillName(), QString());
-                moveCardTo(card, player, NULL, Player::PlaceTable, reason, true);
-            }
+            CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(), QString(), card->getSkillName(), QString());
+            moveCardTo(card, player, NULL, Player::PlaceTable, reason, true);
         } else if (method == Card::MethodDiscard) {
             CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName());
             moveCardTo(card, player, NULL, Player::DiscardPile, reason);
@@ -1028,23 +1025,21 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         }
 
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
-            if (!(method == Card::MethodUse && pattern == "slash")) {
-                CardResponseStruct resp(card, to, method == Card::MethodUse);
-                QVariant data = QVariant::fromValue(resp);
-                thread->trigger(CardResponded, this, player, data);
-                if (method == Card::MethodUse) {
-                    if (getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
-                        CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(),
-                                              QString(), card->getSkillName(), QString());
-                        moveCardTo(card, player, NULL, Player::DiscardPile, reason, true);
-                    }
-                    CardUseStruct card_use;
-                    card_use.card = card;
-                    card_use.from = player;
-                    if (to) card_use.to << to;
-                    QVariant data2 = QVariant::fromValue(card_use);
-                    thread->trigger(CardFinished, this, player, data2);
+            CardResponseStruct resp(card, to, method == Card::MethodUse);
+            QVariant data = QVariant::fromValue(resp);
+            thread->trigger(CardResponded, this, player, data);
+            if (method == Card::MethodUse) {
+                if (getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
+                    CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(),
+                                          QString(), card->getSkillName(), QString());
+                    moveCardTo(card, player, NULL, Player::DiscardPile, reason, true);
                 }
+                CardUseStruct card_use;
+                card_use.card = card;
+                card_use.from = player;
+                if (to) card_use.to << to;
+                QVariant data2 = QVariant::fromValue(card_use);
+                thread->trigger(CardFinished, this, player, data2);
             }
         }
         result = card;
@@ -1102,13 +1097,15 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
     return false;
 }
 
-bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const QString &prompt, bool distance_limit){
+bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const QString &prompt, bool distance_limit, bool disable_extra) {
     Q_ASSERT(!victims.isEmpty());
 
     //The realization of this function in the Slash::onUse and Slash::targetFilter.
     setPlayerFlag(slasher, "slashTargetFix");
     if (!distance_limit)
         setPlayerFlag(slasher, "slashNoDistanceLimit");
+    if (disable_extra)
+        setPlayerFlag(slasher, "slashDisableExtraTarget");
     if (victims.length() == 1)
         setPlayerFlag(slasher, "slashTargetFixToOne");
     foreach(ServerPlayer *victim, victims)
@@ -1136,18 +1133,20 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
         setPlayerFlag(slasher, "-slashTargetFixToOne");
         foreach(ServerPlayer *victim, victims)
             setPlayerFlag(victim, "-SlashAssignee");
+        if (slasher->hasFlag("slashNoDistanceLimit"))
+            setPlayerFlag(slasher, "-slashNoDistanceLimit");
+        if (slasher->hasFlag("slashDisableExtraTarget"))
+            setPlayerFlag(slasher, "-slashDisableExtraTarget");
     }
-    if (slasher->hasFlag("slashNoDistanceLimit"))
-        setPlayerFlag(slasher, "-slashNoDistanceLimit");
 
     return use;
 }
 
-bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const QString &prompt, bool distance_limit) {
+bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const QString &prompt, bool distance_limit, bool disable_extra) {
     Q_ASSERT(victim != NULL);
     QList<ServerPlayer *> victims;
     victims << victim;
-    return askForUseSlashTo(slasher, victims, prompt, distance_limit);
+    return askForUseSlashTo(slasher, victims, prompt, distance_limit, disable_extra);
 }
 
 int Room::askForAG(ServerPlayer *player, const QList<int> &card_ids, bool refusable, const QString &reason) {

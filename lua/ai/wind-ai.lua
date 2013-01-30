@@ -1,6 +1,6 @@
 sgs.ai_skill_use["@@shensu1"] = function(self, prompt)
 	self:updatePlayers()
-	self:sort(self.enemies,"defenseSlash")
+	self:sort(self.enemies, "defenseSlash")
 	if self.player:containsTrick("lightning") and self.player:getCards("j"):length() == 1
 		and self:hasWizard(self.friends) and not self:hasWizard(self.enemies, true) then return false end
 
@@ -180,7 +180,7 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	end
 
 	self:updatePlayers()
-	self:sort(self.enemies,"hp")
+	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:hasArmorEffect("silver_lion") and not enemy:hasSkill("hongyan") and
 			self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then

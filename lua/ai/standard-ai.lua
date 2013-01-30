@@ -17,7 +17,7 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 	end
 
 	for _, card in sgs.qlist(cards) do
-		if card:isKindOf("Jink") then
+		if isCard("Jink", card, self.player) then
 			return false
 		end
 	end
@@ -222,7 +222,7 @@ sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, in
 	local index = 0
 	local all_peaches = 0
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Peach") then
+		if isCard("Peach", card, self.player) then
 			all_peaches = all_peaches + 1
 		end
 	end
@@ -232,7 +232,7 @@ sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, in
 
 	for i = #cards, 1, -1 do
 		local card = cards[i]
-		if not card:isKindOf("Peach") and not self.player:isJilei(card) then
+		if not isCard("Peach", card, self.player) and not self.player:isJilei(card) then
 			table.insert(to_discard, card:getEffectiveId())
 			table.remove(cards, i)
 			index = index + 1
@@ -284,7 +284,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		if zhugeliang:getHp() <= 2 then
 			if add_player(zhugeliang, 1) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 		else
-			local flag = string.format("%s_%s_%s","visible", self.player:objectName(), zhugeliang:objectName())
+			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), zhugeliang:objectName())
 			local cards = sgs.QList2Table(zhugeliang:getHandcards())
 			if #cards == 1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
 				if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
@@ -295,7 +295,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	end
 
 	if luxun and self:isFriend(luxun) and luxun:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, luxun) > 0 then
-		local flag = string.format("%s_%s_%s","visible", self.player:objectName(), luxun:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), luxun:objectName())
 		local cards = sgs.QList2Table(luxun:getHandcards())
 		if #cards == 1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
 			if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
@@ -307,7 +307,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	for i = 1, #self.enemies, 1 do
 		local p = self.enemies[i]
 		local cards = sgs.QList2Table(p:getHandcards())
-		local flag = string.format("%s_%s_%s","visible", self.player:objectName(), p:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), p:objectName())
 		for _, card in ipairs(cards) do
 			if (card:hasFlag("visible") or card:hasFlag(flag)) and (card:isKindOf("Peach") or card:isKindOf("Nullification") or card:isKindOf("Analeptic")) then
 				if add_player(p) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
@@ -390,11 +390,12 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 	cards = sgs.QList2Table(cards)
 	local slashtarget = 0
 	local dueltarget = 0
-	self:sort(self.enemies,"hp")
+	self:sort(self.enemies, "hp")
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Slash") then
+		if isCard("Slash", card, self.player) then
+			local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
-				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
+				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 then
 					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
 					end
@@ -402,10 +403,10 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 			end
 		end
 		if card:isKindOf("Duel") then
+			local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
-				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy)
-				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy)
-				and self:damageIsEffective(enemy) and enemy:getMark("@late") < 1 then
+				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) and self:hasTrickEffective(duel, enemy)
+					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
 					dueltarget = dueltarget + 1
 				end
 			end
@@ -426,7 +427,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	local cards = to:getHandcards()
 	local need_slash = true
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s","visible",self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible",self.room:getCurrent():objectName(),to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if isCard("Slash", c, to) then
 				need_slash = false
@@ -596,7 +597,7 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 			self:sortByUseValue(cards, true)
 			local to_give = {}
 			for _, card in ipairs(cards) do
-				if not card:isKindOf("Peach") and not card:isKindOf("ExNihilo") then table.insert(to_give, card:getId()) end
+				if isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
 				if #to_give == 2 - self.player:getMark("rende") then break end
 			end
 			if #to_give > 0 then
@@ -633,7 +634,7 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
-		if card:isKindOf("Slash") then
+		if isCard("Slash", card, self.player) then
 			return false
 		end
 	end
@@ -763,7 +764,7 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
-		if card:isRed() and not card:isKindOf("Slash") and not card:isKindOf("Peach") 				--not peach
+		if card:isRed() and not card:isKindOf("Slash") and not isCard("Peach", card, self.player) 				--not peach
 			and ((self:getUseValue(card)<sgs.ai_use_value.Slash) or inclusive) then
 			red_card = card
 			break
@@ -792,7 +793,7 @@ function sgs.ai_cardneed.paoxiao(to, card, self)
 	local has_weapon = to:getWeapon() and not to:getWeapon():isKindOf("Crossbow")
 	local slash_num = 0
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s","visible",self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible",self.room:getCurrent():objectName(),to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if c:isKindOf("Weapon") and not c:isKindOf("Crossbow") then
 				has_weapon = true
@@ -927,7 +928,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 	if self.player:getHp() < 3 then
 		local zcards = self.player:getCards("he")
 		for _, zcard in sgs.qlist(zcards) do
-			if not zcard:isKindOf("Peach") and not zcard:isKindOf("ExNihilo") then
+			if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
 				table.insert(unpreferedCards, zcard:getId())
 			end
 		end
@@ -942,8 +943,8 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 			table.remove(unpreferedCards, 1)
 		end
 
-		local num=self:getCardsNum("Jink")-1
-		if self.player:getArmor() then num=num + 1 end
+		local num=self:getCardsNum("Jink") - 1
+		if self.player:getArmor() then num = num + 1 end
 		if num > 0 then
 			for _, card in ipairs(cards) do
 				if card:isKindOf("Jink") and num > 0 then
@@ -953,8 +954,8 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 			end
 		end
 		for _, card in ipairs(cards) do
-			if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse") or
-				self:getSameEquip(card, self.player) or	card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
+			if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse")
+				or self:getSameEquip(card, self.player) or	card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
 				table.insert(unpreferedCards, card:getId())
 			end
 		end
@@ -977,7 +978,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 	end
 
 	if #unpreferedCards > 0 then
-		use.card = sgs.Card_Parse("@ZhihengCard=" .. table.concat(unpreferedCards,"+"))
+		use.card = sgs.Card_Parse("@ZhihengCard=" .. table.concat(unpreferedCards, "+"))
 		return
 	end
 end
@@ -1321,7 +1322,7 @@ function sgs.ai_slash_prohibit.liuli(self, to, card)
 end
 
 function sgs.ai_cardneed.liuli(to, card)
-	return to:getCards("he"):length() <= 2 and not card:isKindOf("Jink")
+	return to:getCards("he"):length() <= 2 and isCard("Jink", card, to)
 end
 
 sgs.guose_suit_value = {
@@ -1567,14 +1568,14 @@ lijian_skill.getTurnUseCard = function(self)
 			if player:getWeapon() then card_id=player:getWeapon():getId()
 			elseif player:getOffensiveHorse() then card_id=player:getOffensiveHorse():getId()
 			elseif player:getDefensiveHorse() then card_id=player:getDefensiveHorse():getId()
-			elseif player:getArmor() and player:getHandcardNum() <= 1 then card_id=player:getArmor():getId()
+			elseif player:getArmor() and player:getHandcardNum() <= 1 then card_id = player:getArmor():getId()
 			end
 		end
 		if not card_id then
 			cards = sgs.QList2Table(self.player:getHandcards())
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then
+					and isCard("Peach", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -1696,7 +1697,10 @@ function SmartAI:canUseJieyuanDecrease(damage_from, player)
 	local player = player or self.player
 	if player:hasSkill("jieyuan") and damage_from:getHp() >= player:getHp() then
 		for _, card in sgs.qlist(player:getHandcards()) do
-			if card:isRed() and not card:isKindOf("Peach") and not card:isKindOf("ExNihilo") then return true end
+			local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(), player:objectName())
+			if player:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
+				if card:isRed() and not isCard("Peach", card, player) then return true end
+			end
 		end
 	end
 	return false

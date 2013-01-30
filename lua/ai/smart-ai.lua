@@ -379,7 +379,7 @@ function SmartAI:adjustUsePriority(card, v)
 	if card:isKindOf("Slash") then
 		if card:isRed() then v = v - 0.05 end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
-		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.11 end
+		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.21 end
 		if self.player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then v = v + 0.11 end
 		if self.player:hasSkill("jinjiu") and card:getEffectiveId() >= 0 and sgs.Sanguosha:getEngineCard(card:getEffectiveId()):isKindOf("Analeptic") then v = v + 0.11 end
 	end
@@ -1801,7 +1801,7 @@ function SmartAI:filterEvent(event, player, data)
 			if move.to_place == sgs.Player_PlaceHand and move.to and place ~= sgs.Player_DrawPile then
 				local flag = "visible"
 				if move.from and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
-					flag = string.format("%s_%s_%s","visible", move.from:objectName(), move.to:objectName())
+					flag = string.format("%s_%s_%s", "visible", move.from:objectName(), move.to:objectName())
 				end
 				global_room:setCardFlag(card_id, flag)
 			end
@@ -2113,7 +2113,7 @@ end
 
 function SmartAI:askForCardChosen(who, flags, reason)
 	self.room:output(reason)
-	local cardchosen = sgs.ai_skill_cardchosen[string.gsub(reason,"%-","_")]
+	local cardchosen = sgs.ai_skill_cardchosen[string.gsub(reason, "%-", "_")]
 	local card
 	if type(cardchosen) == "function" then
 		card = cardchosen(self, who, flags)
@@ -2774,7 +2774,7 @@ end
 
 sgs.ai_skill_playerchosen.damage = function(self, targets)
 	local targetlist=sgs.QList2Table(targets)
-	self:sort(targetlist,"hp")
+	self:sort(targetlist, "hp")
 	for _, target in ipairs(targetlist) do
 		if self:isEnemy(target) then return target end
 	end
@@ -3180,7 +3180,7 @@ function SmartAI:getMaxCard(player)
 	local cards = player:getHandcards()
 	local max_card, max_point = nil, 0
 	for _, card in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), player:objectName())
+		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 		if player:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
 			local point = card:getNumber()
 			if point > max_point then
@@ -3211,7 +3211,7 @@ function SmartAI:getMinCard(player)
 	local cards = player:getHandcards()
 	local min_card, min_point = nil, 14
 	for _, card in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), player:objectName())
+		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 		if player:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
 			local point = card:getNumber()
 			if point < min_point then
@@ -3232,7 +3232,7 @@ function SmartAI:getKnownNum(player)
 		local cards = player:getHandcards()
 		local known = 0
 		for _, card in sgs.qlist(cards) do
-			local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), player:objectName())
+			local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 			if card:hasFlag("visible") or card:hasFlag(flag) then
 				known = known + 1
 			end
@@ -3246,7 +3246,7 @@ function getKnownCard(player, class_name, viewas)
 	local known = 0
 	local suits={ ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }
 	for _, card in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), player:objectName())
+		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 		if card:hasFlag("visible") or card:hasFlag(flag) or player:objectName() == global_room:getCurrent():objectName() then
 			if (viewas and isCard(class_name, card, player)) or card:isKindOf(class_name)
 				or (suits[class_name] and card:getSuitString() == class_name) then
@@ -3334,7 +3334,7 @@ function getCardsNum(class_name, player)
 		return #getCards(class_name, player)
 	else
 		for _, card in ipairs(cards) do
-			local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), player:objectName())
+			local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 			if card:hasFlag("visible") or card:hasFlag(flag) then
 				shownum = shownum + 1
 				if card:isKindOf(class_name) then
@@ -3596,7 +3596,7 @@ function SmartAI:getSuitNum(suit_strings, include_equip, player)
 	else
 		allcards = include_equip and sgs.QList2Table(player:getEquips()) or {}
 		local handcards = sgs.QList2Table(player:getHandcards())
-		local flag = string.format("%s_%s_%s","visible", current:objectName(), player:objectName())
+		local flag = string.format("%s_%s_%s", "visible", current:objectName(), player:objectName())
 		for i = 1, #handcards, 1 do
 			if handcards[i]:hasFlag("visible") or handcards[i]:hasFlag(flag) then
 				table.insert(allcards, handcards[i])
@@ -4010,8 +4010,8 @@ function SmartAI:evaluateWeapon(card)
 	end
 
 	if card:isKindOf("Crossbow") and deltaSelfThreat ~= 0 then
-		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat * 3 + 10 end
-		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 3 - 2
+		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat * 2 + 10 end
+		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 2 - 2
 	end
 	local callback = sgs.ai_weapon_value[card:objectName()]
 	if type(callback) == "function" then

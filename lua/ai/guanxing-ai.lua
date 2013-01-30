@@ -94,12 +94,10 @@ local function getOwnCards(self, up, bottom, next_judge)
 						table.insert(up, gcard) 
 						table.remove(bottom, index)
 					end
-				else
-					if isCard("Slash", gcard, self.player) then 
-						table.insert(up, gcard) 
-						table.remove(bottom, index)
-						has_slash = true 
-					end
+				elseif isCard("Slash", gcard, self.player) then 
+					table.insert(up, gcard) 
+					table.remove(bottom, index)
+					has_slash = true 
 				end
 			end
 		end

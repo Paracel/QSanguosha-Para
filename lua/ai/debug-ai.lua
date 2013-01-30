@@ -33,7 +33,7 @@ function debugFunc(self, room, player, data)
 				local msg = string.format("%s已知牌:", sgs.Sanguosha:translate(players[i]:getGeneralName()))
 				local cards = sgs.QList2Table(players[i]:getHandcards())
 				for _, card in ipairs(cards) do
-					local flag = string.format("%s_%s_%s","visible", player:objectName(), players[i]:objectName())
+					local flag = string.format("%s_%s_%s", "visible", player:objectName(), players[i]:objectName())
 					if card:hasFlag("visible") or card:hasFlag(flag) then
 						msg = msg .. card:getLogName() .. ", "
 					end

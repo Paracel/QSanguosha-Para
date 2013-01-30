@@ -13,7 +13,7 @@ function speakTrigger(card, from, to, event)
 
 	if not card then return end
 
-	if card:isKindOf("Indulgence") and (to:getHandcardNum()>to:getHp()) then
+	if card:isKindOf("Indulgence") and (to:getHandcardNum() > to:getHp()) then
 		speak(to, "indulgence")
 	elseif card:isKindOf("LeijiCard") then
 		speak(from, "leiji_jink")

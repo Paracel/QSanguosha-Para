@@ -38,7 +38,7 @@ sgs.ai_view_as.fan = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:isKindOf("Slash") and not (card:isKindOf("FireSlash") or card:isKindOf("ThunderSlash")) then
+	if card:objectName() == "slash" then
 		return ("fire_slash:fan[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end
@@ -71,7 +71,7 @@ fan_skill.getTurnUseCard = function(self)
 end
 
 function sgs.ai_weapon_value.fan(self, enemy)
-	if enemy and enemy:hasArmorEffect("vine") then return 3 end
+	if enemy and enemy:hasArmorEffect("vine") then return 6 end
 end
 
 function sgs.ai_armor_value.vine(player, self)
@@ -259,7 +259,7 @@ function SmartAI:useCardIronChain(card, use)
 	local enemytargets = {}
 	local yangxiu = self.room:findPlayerBySkillName("danlao")
 	local liuxie = self.room:findPlayerBySkillName("huangen")
-	self:sort(self.friends,"defense")
+	self:sort(self.friends, "defense")
 	for _, friend in ipairs(self.friends) do
 		if friend:isChained() and not self:isGoodChainPartner(friend) and self:hasTrickEffective(card, friend) and not friend:hasSkill("danlao") then
 			table.insert(friendtargets, friend)
@@ -268,7 +268,7 @@ function SmartAI:useCardIronChain(card, use)
 		end
 	end
 	if not (liuxie and self:isEnemy(liuxie)) then
-		self:sort(self.enemies,"defense")
+		self:sort(self.enemies, "defense")
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isChained() and not self.room:isProhibited(self.player, enemy, card) and not enemy:hasSkill("danlao")
 				and self:hasTrickEffective(card, enemy) and not (self:objectiveLevel(enemy) <= 3)
@@ -415,7 +415,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	for _, enemy in ipairs(targets) do
 		if enemy:getHandcardNum() == 1 then
 			local handcards = sgs.QList2Table(enemy:getHandcards())
-			local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
+			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
 			if handcards[1]:hasFlag("visible") or handcards[1]:hasFlag(flag) then
 				local suitstring = handcards[1]:getSuitString()
 				if not lack[suitstring] then

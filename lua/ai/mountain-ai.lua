@@ -82,7 +82,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 					self:sort(targets, "threat")
 					target = targets[#targets]
 				else
-					self:sort(targets,"defense")
+					self:sort(targets, "defense")
 					target = targets[1]
 				end
 			end
@@ -203,7 +203,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 		local top_value = 0
 		for _, hcard in ipairs(cards) do
 			if not hcard:isKindOf("Jink") then
-				if self:getUseValue(hcard) > top_value then	top_value = self:getUseValue(hcard) end
+				if self:getUseValue(hcard) > top_value then top_value = self:getUseValue(hcard) end
 			end
 		end
 		if top_value >= 3.7 and #(self:getTurnUse()) > 0 then return {} end
@@ -423,7 +423,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	local index = 0
 	local all_peaches = 0
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Peach") then
+		if isCard("Peach", card, self.player) then
 			all_peaches = all_peaches + 1
 		end
 	end
@@ -433,7 +433,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 
 	for i = #cards, 1, -1 do
 		local card = cards[i]
-		if not card:isKindOf("Peach") and not self.player:isJilei(card) then
+		if not isCard("Peach", card, self.player) and not self.player:isJilei(card) then
 			table.insert(to_discard, card:getEffectiveId())
 			table.remove(cards, i)
 			break
@@ -596,7 +596,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		local lord_max_num = 0, lord_max_card
 		local lord_min_num = 14, lord_min_card
 		local lord_cards = lord:getHandcards()
-		local flag = string.format("%s_%s_%s","visible", global_room:getCurrent():objectName(), lord:objectName())
+		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), lord:objectName())
 		for _, lcard in sgs.qlist(lord_cards) do
 			if (lcard:hasFlag("visible") or lcard:hasFlag(flag)) and lcard:getNumber() > lord_max_num then
 				lord_max_card = lcard

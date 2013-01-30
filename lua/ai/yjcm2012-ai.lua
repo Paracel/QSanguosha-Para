@@ -67,7 +67,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 		end
 	end
 	if slashnum > 1 or (slashnum > 0 and goodtarget == 0) then needburst = 1 end
-	self:sort(self.enemies,"defenseSlash")
+	self:sort(self.enemies, "defenseSlash")
 	if goodtarget == 0 or self.player:isSkipped(sgs.Player_Play) then return "jiang" end
 
 	for _, enemy in ipairs(self.enemies) do
@@ -143,12 +143,12 @@ gongqi_skill.getTurnUseCard = function(self, inclusive)
 				local use = { isDummy = true }
 				self:useCardSnatch(c, use)
 				if use.card then return end
-			elseif c:isKindOf("Peach")
-				or c:isKindOf("ExNihilo")
-				or (c:isKindOf("Analeptic") and self.player:getHp() <= 2)
-				or (c:isKindOf("Jink") and self:getCardsNum("Jink") < 2)
-				or (c:isKindOf("Nullification") and self:getCardsNum("Nullification") < 2)
-				or (c:isKindOf("Slash") and self:getCardsNum("Slash") == 1) then
+			elseif isCard("Peach", c, self.player)
+				or isCard("ExNihilo", c, self.player)
+				or (isCard("Analeptic", c, self.player) and self.player:getHp() <= 2)
+				or (isCard("Jink", c, self.player) and self:getCardsNum("Jink") < 2)
+				or (isCard("Nullification", c, self.player) and self:getCardsNum("Nullification") < 2)
+				or (isCard("Slash", c, self.player) and self:getCardsNum("Slash") == 1) then
 				-- do nothing
 			else
 				return sgs.Card_Parse("@GongqiCard=" .. c:getEffectiveId())
@@ -436,7 +436,7 @@ end
 
 sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 	targets = sgs.QList2Table(targets)
-	self:sort(targets,"defense")
+	self:sort(targets, "defense")
 	for _, friend in ipairs(targets) do
 		if self:isFriend(friend) then
 			return friend
@@ -457,7 +457,7 @@ sgs.ai_view_as.lihuo = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:isKindOf("Slash") and not (card:isKindOf("FireSlash") or card:isKindOf("ThunderSlash")) then
+	if card:objectName() == "slash" then
 		return ("fire_slash:lihuo[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end
@@ -471,7 +471,7 @@ lihuo_skill.getTurnUseCard = function(self)
 	local slash_card
 
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Slash") and not (card:isKindOf("FireSlash") or card:isKindOf("ThunderSlash")) then
+		if card:objectName() == "slash" then
 			slash_card = card
 			break
 		end
@@ -501,7 +501,7 @@ sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
 		end
 	end
 	if #slashcards > 0 and chunlao:isEmpty() then
-		return "@ChunlaoCard=" .. table.concat(slashcards,"+") .. "->" .. "."
+		return "@ChunlaoCard=" .. table.concat(slashcards, "+") .. "->" .. "."
 	end
 	return "."
 end
@@ -594,17 +594,17 @@ qice_skill.getTurnUseCard = function(self)
 				local newqice = aoenames[i]
 				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 				if self:getAoeValue(aoe) > -5 then
-					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
+					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
 				end
 			end
 		end
 		if ge_available and good > bad then
-			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "god_salvation")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end
 		if ex_available and self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 then
-			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "ex_nihilo")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "ex_nihilo")
 			return parsed_card
 		end
 	end
@@ -615,17 +615,17 @@ qice_skill.getTurnUseCard = function(self)
 				local newqice = aoenames[i]
 				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 				if self:getAoeValue(aoe) > 0 then
-					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
+					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
 				end
 			end
 		end
 		if ge_available and good > bad and self.player:isWounded() then
-			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "god_salvation")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end
 		if ex_available and self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 and self:getCardsNum("Analeptic") == 0 and self:getCardsNum("Nullification") == 0 then
-			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "ex_nihilo")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "ex_nihilo")
 			return parsed_card
 		end
 	end
@@ -634,18 +634,18 @@ qice_skill.getTurnUseCard = function(self)
 			local newqice = aoenames[i]
 			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence") then
-				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. newqice)
+				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 				return parsed_card
 			end
 		end
 	end
 	if self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 and self:getCardsNum("Analeptic") == 0 and self:getCardsNum("Nullification") == 0 then
 		if ge_available and good > bad and self.player:isWounded() then
-			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "god_salvation")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end
 		if ex_available then
-			local parsed_card=sgs.Card_Parse("@QiceCard=" .. table.concat(allcard,"+") .. ":" .. "ex_nihilo")
+			local parsed_card=sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "ex_nihilo")
 			return parsed_card
 		end
 	end

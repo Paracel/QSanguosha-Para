@@ -27,7 +27,7 @@ lihun_skill.getTurnUseCard = function(self)
 
 		for _, acard in ipairs(cards) do
 			if (acard:getTypeId() ~= sgs.Card_TypeTrick or acard:isKindOf("AmazingGrace"))
-				and not acard:isKindOf("Peach") then
+				and not isCard("Peach", acard, self.player) then
 				card_id = acard:getEffectiveId()
 				break
 			end
@@ -44,7 +44,7 @@ lihun_skill.getTurnUseCard = function(self)
 		cards = sgs.QList2Table(self.player:getHandcards())
 		for _, acard in ipairs(cards) do
 			if (acard:getTypeId() ~= sgs.Card_TypeTrick or acard:isKindOf("AmazingGrace"))
-				and not acard:isKindOf("Peach") then
+				and not isCard("Peach", acard, self.player) then
 				card_id = acard:getEffectiveId()
 				break
 			end
@@ -169,7 +169,7 @@ sgs.ai_skill_askforag.manjuan = function(self, card_ids)
 	end
 	for _, card in ipairs(cards) do
 		if card:isKindOf("Snatch") and #self.enemies > 0 then
-			self:sort(self.enemies,"defense")
+			self:sort(self.enemies, "defense")
 			if sgs.getDefense(self.enemies[1]) >= 8 then self:sort(self.enemies, "threat") end
 			local enemies = self:exclude(self.enemies, card)
 			for _, enemy in ipairs(enemies) do
@@ -676,7 +676,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 		enemies = self:exclude(self.enemies, card)
 		self:sort(enemies, "defense")
 	end
-	self:sort(self.friends_noself,"defense")
+	self:sort(self.friends_noself, "defense")
 	local friends = self:exclude(self.friends_noself, card)
 	local hasLion, target
 	for _, enemy in ipairs(enemies) do
@@ -717,7 +717,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
-		local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
 		if #cards <= 2 and not enemy:isKongcheng() then
 			for _, cc in ipairs(cards) do
 				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
@@ -975,17 +975,17 @@ fuluan_skill.getTurnUseCard = function(self)
 		local same_suit = false
 		cards = sgs.QList2Table(cards)
 		for _, fcard in ipairs(cards) do
-			if not (fcard:isKindOf("Peach") or fcard:isKindOf("ExNihilo")) then
+			if not isCard("Peach", fcard, self.player) and not isCard("ExNihilo", fcard, self.player) then
 				first_card = fcard
 				first_found = true
 				for _, scard in ipairs(cards) do
-					if first_card ~= scard and scard:getSuitString() == first_card:getSuitString() and
-						not (scard:isKindOf("Peach") or scard:isKindOf("ExNihilo")) then
+					if first_card ~= scard and scard:getSuit() == first_card:getSuit()
+						and not isCard("Peach", scard, self.player) and not isCard("ExNihilo", scard, self.player) then
 						second_card = scard
 						second_found = true
 						for _, tcard in ipairs(cards) do
-							if first_card ~= tcard and second_card ~= tcard and tcard:getSuitString() == first_card:getSuitString() and
-								not (tcard:isKindOf("Peach") or tcard:isKindOf("ExNihilo")) then
+							if first_card ~= tcard and second_card ~= tcard and tcard:getSuit() == first_card:getSuit()
+								and not isCard("Peach", tcard, self.player) and not isCard("ExNihilo", tcard, self.player) then
 								third_card = tcard
 								third_found = true
 								break

@@ -439,7 +439,7 @@ fenxun_skill.getTurnUseCard = function(self)
 
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then
+					and not isCard("Peach", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -456,7 +456,7 @@ fenxun_skill.getTurnUseCard = function(self)
 			cards = sgs.QList2Table(self.player:getHandcards())
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then
+					and not isCard("Peach", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end

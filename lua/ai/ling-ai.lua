@@ -8,26 +8,28 @@ neoluoyi_skill.getTurnUseCard = function(self)
 	local slashtarget = 0
 	local dueltarget = 0
 	local equipnum = 0
-	self:sort(self.enemies,"hp")
+	self:sort(self.enemies, "hp")
 	for _, card in sgs.qlist(self.player:getCards("he")) do
 		if card:isKindOf("EquipCard") and not (card:isKindOf("Weapon") and self:hasEquip(card)) then
 			equipnum = equipnum + 1
 		end
 	end
 	for _, card in ipairs(cards) do
-		if card:isKindOf("Slash") then
+		if isCard("Slash", card, self.player) then
+			local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
-				if self.player:canSlash(enemy, card, true) and self:slashIsEffective(card, enemy) and self:objectiveLevel(enemy) > 3 then
+				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 then
 					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
 					end
 				end
 			end
 		end
-		if card:isKindOf("Duel") then
+		if isCard("Duel", card, self.player) then
+			local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
-				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy)
-				and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) and enemy:getMark("@late") == 0 then
+				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) and self:hasTrickEffective(duel, enemy)
+					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
 					dueltarget = dueltarget + 1
 				end
 			end

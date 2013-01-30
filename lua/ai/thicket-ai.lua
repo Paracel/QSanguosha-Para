@@ -310,18 +310,18 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 		if not self.player:isJilei(c) then cardNum = cardNum + 1 end
 	end
 
-	self:sort(self.enemies,"handcard")
+	self:sort(self.enemies, "handcard")
 	local friends = {} 
 	for _, player in ipairs(self.friends_noself) do
 		if not player:hasSkill("manjuan") then
 			table.insert(friends, player)
 		end
 	end
-	self:sort(friends,"handcard")
+	self:sort(friends, "handcard")
 
 	local lowest_friend=friends[1]
 
-	self:sort(self.enemies,"defense")
+	self:sort(self.enemies, "defense")
 	if lowest_friend then
 		local hand2=lowest_friend:getHandcardNum()
 		for _, enemy in ipairs(self.enemies) do

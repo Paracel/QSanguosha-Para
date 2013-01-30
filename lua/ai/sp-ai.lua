@@ -419,7 +419,7 @@ sgs.ai_skill_cardask["@bifa-give"] = function(self, data)
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards)
 	for _, c in ipairs(cards) do
-		if c:isKindOf(card_type) and not c:isKindOf("Peach") and not c:isKindOf("ExNihilo") then
+		if c:isKindOf(card_type) and not isCard("Peach", c, self.player) and not isCard("ExNihilo", c, self.player) then
 			return "$" .. c:getEffectiveId()
 		end
 	end

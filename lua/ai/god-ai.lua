@@ -159,7 +159,7 @@ end
 
 sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 	if self.player:usedTimes("GongxinCard") > 0 then return end
-	self:sort(self.enemies,"handcard")
+	self:sort(self.enemies, "handcard")
 
 	for index = #self.enemies, 1, -1 do
 		if not self.enemies[index]:isKongcheng() and self:objectiveLevel(self.enemies[index]) > 0 then
@@ -490,7 +490,7 @@ sgs.ai_skill_use["@@dawu"] = function(self, prompt)
 	self:sort(self.friends_noself, "hp")
 	local targets = {}
 	local lord = self.room:getLord()
-	self:sort(self.friends_noself,"defense")
+	self:sort(self.friends_noself, "defense")
 	if self:isFriend(lord) and not sgs.isLordHealthy() and not self.player:isLord() and not lord:hasSkill("buqu") then table.insert(targets, lord:objectName())
 	else
 		for _, friend in ipairs(self.friends_noself) do
@@ -542,23 +542,31 @@ wuqian_skill.getTurnUseCard = function(self)
 	local has_enemy
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy) < 2 and self.player:distanceTo(enemy) <= self.player:getAttackRange() then
-			has_enemy = enemy break end
+			has_enemy = enemy
+			break
+		end
 	end
 
 	if has_enemy and self:getCardsNum("Slash") > 0 then
 		for _, card in sgs.qlist(self.player:getHandcards()) do
-			if card:isKindOf("Slash") and self:slashIsEffective(card, has_enemy) and self.player:canSlash(has_enemy, card)
-				and (self:getCardsNum("Analeptic") > 0 or has_enemy:getHp() <= 1) and card:isAvailable(self.player) then
-				return sgs.Card_Parse(card_str)
-			elseif card:isKindOf("Duel") then
-				return sgs.Card_Parse(card_str)
+			if isCard("Slash", card, self.player) then
+				local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
+				if self:slashIsEffective(slash, has_enemy) and self.player:canSlash(has_enemy, slash)
+					and (self:getCardsNum("Analeptic") > 0 or has_enemy:getHp() <= 1) and slash:isAvailable(self.player) then
+					return sgs.Card_Parse(card_str)
+				end
+			elseif isCard("Duel", card, self.player) then
+				local dummy_use = { isDummy = true }
+				local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
+				self:useCardDuel(duel, dummy_use)
+				if dummy_use.card then return sgs.Card_Parse(card_str) end
 			end
 		end
 	end
 end
 
 sgs.ai_skill_use_func.WuqianCard = function(card, use, self)
-	self:sort(self.enemies,"hp")
+	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy) < 2 and self.player:inMyAttackRange(enemy) then
 			if (not enemy:getArmor() or enemy:hasArmorEffect("silver_lion")) and getCardsNum("Jink", enemy) < 1 then

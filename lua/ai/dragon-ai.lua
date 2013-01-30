@@ -2,7 +2,7 @@ sgs.ai_skill_use["@@drzhiheng"] = function(self, prompt)
 	if self.player:getHandcardNum() > self.player:getHp() then return "." end
 	local to_discard = {}
 	for _, zcard in sgs.qlist(self.player:getHandcards()) do
-		if not zcard:isKindOf("Peach") and not zcard:isKindOf("Jink") and not zcard:isKindOf("Nullification") then
+		if not isCard("Peach", zcard, self.player) and not isCard("Jink", zcard, self.player) and not isCard("Nullification", zcard, self.player) then
 			table.insert(to_discard, zcard:getId())
 		end
 	end
@@ -10,7 +10,7 @@ sgs.ai_skill_use["@@drzhiheng"] = function(self, prompt)
 		if self.player:isJilei(sgs.Sanguosha:getCard(to_discard[index])) then table.remove(to_discard, index) end
 	end
 	if #to_discard > 0 then 
-		return ("@DrZhihengCard=" .. table.concat(to_discard,"+"))
+		return ("@DrZhihengCard=" .. table.concat(to_discard, "+"))
 	else
 		return ("@DrZhihengCard=.")
 	end
@@ -44,7 +44,19 @@ sgs.ai_skill_use_func.DrJiuyuanCard = function(card, use, self)
 		
 		self:sortByKeepValue(cards)
 		for _, acard in sgs.qlist(cards) do
-			if lord:isWeak() and (acard:isKindOf("Peach") or acard:isKindOf("Jink")) then 
+			if self:isWeak(lord) and isCard("Analeptic", acard, lord) then 
+				card_id = acard:getEffectiveId()
+				break
+			end
+		end
+		if card_id == -1 then
+			if self:isWeak(lord) and isCard("Jink", acard, lord) then 
+				card_id = acard:getEffectiveId()
+				break
+			end
+		end
+		if card_id == -1 then
+			if self:isWeak(lord) and isCard("Nullification", acard, lord) then 
 				card_id = acard:getEffectiveId()
 				break
 			end
@@ -116,7 +128,7 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 			elseif self.player:distanceTo(enemy) <= 2 and enemy:isKongcheng() then equip_need = "GudingBlade"
 			elseif self.player:distanceTo(enemy) <= 4 and enemy:hasArmorEffect("vine") then equip_need = "Fan"
 			elseif self.player:distanceTo(enemy) <= 5 and (enemy:getOffensiveHorse() or enemy:getDefensiveHorse()) then equip_need = "KylinBow"
-			elseif self.player:getHandcardNum() == 1 and self.player:getHandcards():first():isKindOf("Slash") then equip_need = "Halberd"
+			elseif self.player:getHandcardNum() == 1 and isCard("Slash", self.player:getHandcards():first(), self.player) then equip_need = "Halberd"
 			elseif self.player:distanceTo(enemy) <= 3 and self.player:getCardCount(true) >= 5 then equip_need = "Axe"
 			end
 		end

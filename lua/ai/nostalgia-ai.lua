@@ -131,7 +131,8 @@ sgs.dynamic_value.benefit.NosJujianCard = true
 sgs.ai_skill_cardask["@enyuanheart"] = function(self)
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
-		if card:getSuit() == sgs.Card_Heart and not (card:isKindOf("Peach") or card:isKindOf("ExNihilo")) then
+		if card:getSuit() == sgs.Card_Heart
+			and not (isCard("Peach", card, self.player) or (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play)) then
 			return card:getEffectiveId()
 		end
 	end
@@ -180,7 +181,8 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isKongcheng() then
 				for _, card in ipairs(cards)do
-					if card:getSuit() == sgs.Card_Heart and not card:isKindOf("Peach") and self.player:getHandcardNum() > 1 then
+					if card:getSuit() == sgs.Card_Heart
+						and not isCard("Peach", card, self.player) and not isCard("Peach", card, enemy) and self.player:getHandcardNum() > 1 then
 						use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
 						target = enemy
 						break

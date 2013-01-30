@@ -197,7 +197,8 @@ huoji_skill.getTurnUseCard = function(self)
 	self:sortByUseValue(cards, true)
 
 	for _, acard in ipairs(cards) do
-		if acard:isRed() and not acard:isKindOf("Peach") and (self:getDynamicUsePriority(acard) < sgs.ai_use_value.FireAttack or self:getOverflow() > 0) then
+		if acard:isRed() and not isCard("Peach", acard, self.player)
+			and (self:getDynamicUsePriority(acard) < sgs.ai_use_value.FireAttack or self:getOverflow() > 0) then
 			card = acard
 			break
 		end
@@ -289,7 +290,7 @@ sgs.ai_skill_invoke.niepan = function(self, data)
 	local cards = self.player:getHandcards()
 	local n = 0
 	for _, card in sgs.qlist(cards) do
-		if card:isKindOf("Peach") or card:isKindOf("Analeptic") then
+		if isCard("Peach", card, self.player) or isCard("Analeptic", card, self.player) then
 			n = n + 1
 		end
 	end
@@ -451,12 +452,12 @@ luanji_skill.getTurnUseCard = function(self)
 		local same_suit = false
 		cards = sgs.QList2Table(cards)
 		for _, fcard in ipairs(cards) do
-			if not (fcard:isKindOf("Peach") or fcard:isKindOf("ExNihilo") or fcard:isKindOf("AOE")) then
+			if not (isCard("Peach", fcard, self.player) or isCard("ExNihilo", fcard, self.player) or isCard("AOE", fcard, self.player)) then
 				first_card = fcard
 				first_found = true
 				for _, scard in ipairs(cards) do
-					if first_card ~= scard and scard:getSuitString() == first_card:getSuitString() and
-						not (scard:isKindOf("Peach") or scard:isKindOf("ExNihilo") or scard:isKindOf("AOE")) then
+					if first_card ~= scard and scard:getSuit() == first_card:getSuit()
+						and not (isCard("Peach", scard, self.player) or isCard("ExNihilo", scard, self.player) or isCard("AOE", scard, self.player)) then
 						second_card = scard
 						second_found = true
 						break

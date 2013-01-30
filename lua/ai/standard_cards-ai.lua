@@ -961,7 +961,7 @@ sgs.ai_use_value.Nullification = 8
 
 function SmartAI:useCardAmazingGrace(card, use)
 	if self.player:hasSkill("noswuyan") then use.card = card end
-	if self.player:getRole() == "loyalist" and self.player:getSeat() == 2 and sgs.turncount == 1 or self.player:getRole() == "lord" and sgs.turncount == 0 then return end
+	if (self.role == "lord" or self.role == "loyalist") and sgs.turncount <= 2 and self.player:getSeat() <= 3 and self.player:aliveCount() > 5 then return end
 	local value = 1
 	local suf, coeff = 0.8, 0.8
 	if self:hasSkills(sgs.need_kongcheng) and self.player:getHandcardNum() == 1 or self.player:hasSkill("jizhi") then
@@ -1255,15 +1255,15 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
-	self:sort(self.enemies, "defense")
-	local enemies = {}
-	if #self.enemies == 0 then
+	if #self.enemies == 0 and self:getOverflow() > 0 then
 		for _, player in ipairs(players) do
 			if not player:isLord() then table.insert(enemies, player) end
 		end
 		enemies = self:exclude(enemies, card)
+		self:sort(enemies, "defense", true)
 	else
 		enemies = self:exclude(self.enemies, card)
+		self:sort(enemies, "defense")
 	end
 	self:sort(self.friends_noself, "defense")
 	local friends = self:exclude(self.friends_noself, card)

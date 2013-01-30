@@ -665,15 +665,16 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	local players = self.room:getOtherPlayers(self.player)
 	players = self:exclude(players, card)
 
-	self:sort(self.enemies, "defenseSlash")
 	local enemies = {}
-	if #self.enemies == 0 then
+	if #self.enemies == 0 and self:getOverflow() > 0 then
 		for _, player in ipairs(players) do
 			if not player:isLord() then table.insert(enemies, player) end
 		end
 		enemies = self:exclude(enemies, card)
+		self:sort(enemies, "defense", true)
 	else
 		enemies = self:exclude(self.enemies, card)
+		self:sort(enemies, "defense")
 	end
 	self:sort(self.friends_noself,"defense")
 	local friends = self:exclude(self.friends_noself, card)

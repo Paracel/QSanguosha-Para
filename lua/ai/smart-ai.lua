@@ -2800,11 +2800,11 @@ function SmartAI:askForSinglePeach(dying)
 	local card_str
 	local forbid = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuit, 0)
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
-	if self.role == "renegade" and not dying:isLord()
+	if self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
 		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
 		return "."
 	end
-	if self.role == "loyalist" and not dying:isLord() and sgs.current_mode_players["loyalist"] == 2 then return "." end
+	if self.role == "loyalist" and not (dying:isLord() or dying:objectName() == self.player:objectName()) and sgs.current_mode_players["loyalist"] == 2 then return "." end
 	if self:isFriend(dying) then
 		if self:needDeath(dying) then return "." end
 		local buqu = dying:getPile("buqu")
@@ -3186,6 +3186,14 @@ function SmartAI:getMaxCard(player)
 			if point > max_point then
 				max_point = point
 				max_card = card
+			end
+		end
+	end
+
+	if self:hasSkills("tianyi|dahe|xianzhen") and max_point > 0 then
+		for _, card in sgs.qlist(cards) do
+			if card:getNumber() == max_point and not isCard("Slash", card, self.player) then
+				return card
 			end
 		end
 	end
@@ -3895,6 +3903,10 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 	if self.player:hasSkill("jizhi") then good = good + 25 end
+
+	if sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
+		if self.role ~= "rebel" then good = good + 50 else bad = bad + 50 end
+	end
 
 	return good - bad
 end

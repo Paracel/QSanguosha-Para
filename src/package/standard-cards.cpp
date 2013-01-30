@@ -192,12 +192,12 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
         else {
             bool canSelect = false;
             foreach (const Player *p, targets) {
-                if(p->hasFlag("SlashAssignee")){
+                if (p->hasFlag("SlashAssignee")){
                     canSelect = true;
                     break;
                 }
             }
-            if(!canSelect) return false;
+            if (!canSelect) return false;
         }
     }
 

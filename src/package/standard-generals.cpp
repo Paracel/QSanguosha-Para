@@ -671,11 +671,8 @@ public:
     Kongcheng(): ProhibitSkill("kongcheng") {
     }
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *card) const{
-        if (card->isKindOf("Slash") || card->isKindOf("Duel"))
-            return to->isKongcheng();
-        else
-            return false;
+    virtual bool isProhibited(const Player *, const Player *to, const Card *card) const{
+        return (card->isKindOf("Slash") || card->isKindOf("Duel")) && to->isKongcheng();
     }
 };
 
@@ -1215,7 +1212,7 @@ public:
     }
 
     virtual int getCorrect(const Player *from, const Player *) const{
-        if(from->hasSkill(objectName()))
+        if (from->hasSkill(objectName()))
             return -1;
         else
             return 0;

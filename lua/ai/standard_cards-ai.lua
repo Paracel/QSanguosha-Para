@@ -1585,7 +1585,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 			end
 		end
 	end
-	if target and target2 and (self.getDamagedEffects(target2, self.player) or target2:getHp() > getBestHp(target2)) then   
+	if target and target2 and (self:getDamagedEffects(target2, self.player) or target2:getHp() > getBestHp(target2)) then   
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, target2) and self:isFriend(target2) then
 				return slash:toString()
@@ -1595,7 +1595,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 			end
 		end
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if not self.getDamagedEffects(target2, self.player) and self:isEnemy(target2) then 
+			if not self:getDamagedEffects(target2, self.player) and self:isEnemy(target2) then 
 				return slash:toString()
 			end
 		end

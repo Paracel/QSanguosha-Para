@@ -98,7 +98,7 @@ end
 sgs.ai_need_damaged.fankui = function (self, attacker)
 	if not self.player:hasSkill("guicai") then return false end
 	local need_retrial = function(player)
-		local alive_num=self.room:alivePlayerCount()
+		local alive_num = self.room:alivePlayerCount()
 		return alive_num + player:getSeat() % alive_num > self.room:getCurrent():getSeat()
 				and player:getSeat() < alive_num + self.player:getSeat() % alive_num
 	end
@@ -141,11 +141,9 @@ sgs.ai_need_damaged.fankui = function (self, attacker)
 		end
 
 		if self:isFriend(player) and not player:containsTrick("YanxiaoCard") and not player:hasSkill("qiaobian") then
-
 			if player:containsTrick("indulgence") and self:getFinalRetrial(player) == 1 and need_retrial(player) and player:getHandcardNum() >= player:getHp() then
 				if not retrial_card.heart and attacker_card.heart then return attacker_card.heart end
 			end
-
 			if player:containsTrick("supply_shortage") and self:getFinalRetrial(player) == 1 and need_retrial(player) and self:hasSkills("yongshi", player) then
 				if not retrial_card.club and attacker_card.club then return attacker_card.club end
 			end

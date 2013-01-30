@@ -1649,7 +1649,10 @@ function SmartAI:useCardIndulgence(card, use)
 	if #enemies == 0 then return end
 
 	local getvalue = function(enemy)
-		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", enemy) then return -100 end
+		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard")
+			or (self:hasSkills("qiaobian", enemy) and not enemy:isKongcheng()) then
+			return -100
+		end
 		if zhanghe_seat > 0 then
 			local gap1 = (enemy:getSeat() - self.player:getSeat()) % self.room:alivePlayerCount()
 			local gap2 = (zhanghe_seat - self.player:getSeat()) % self.room:alivePlayerCount()

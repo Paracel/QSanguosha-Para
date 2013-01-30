@@ -469,7 +469,7 @@ sgs.ai_skill_playerchosen.shichou = function(self, targets)
 	return targets[1]
 end
 
-sgs.ai_need_damaged.shichou = function (self, attacker)
+sgs.ai_need_damaged.shichou = function(self, attacker)
 	local player = self.player
 	if player:hasLordSkill("shichou") then
 		local victim
@@ -855,7 +855,7 @@ sgs.ai_skill_playerchosen.junweigive = function(self, targets)
 	end
 end
 
-sgs.ai_playerchosen.intention.junweigive = -80
+sgs.ai_playerchosen_intention.junweigive = -80
 
 sgs.ai_skill_cardask["@junwei-show"] = function(self, data)
 	if self.player:hasArmorEffect("silver_lion") and self.player:getEquips():length() == 1 then return "." end

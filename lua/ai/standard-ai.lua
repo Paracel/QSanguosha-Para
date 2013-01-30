@@ -641,7 +641,7 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 	if sgs.jijiangsource then
 		return false
 	else
-		return self.room:getLieges("shu", self.player) > 0 and self.room:alivePlayerCount() >= 3
+		return self.room:getLieges("shu", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
 	end
 end
 

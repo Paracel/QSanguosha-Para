@@ -1555,7 +1555,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 	if self:isFriend(target2) and target2:hasSkill("leiji") 
 		and (self:hasSuit("spade", true, target2) or target2:getHandcardNum() >= 3)
 		and (getKnownCard(target2, "Jink", true) >= 1
-		or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)) then
+			or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend))) then
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, target2) then 
 				return slash:toString()

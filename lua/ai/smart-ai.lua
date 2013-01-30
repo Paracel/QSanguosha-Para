@@ -320,7 +320,7 @@ function SmartAI:getUseValue(card)
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
-			if self:hasWeapon("crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
+			if self.player:hasWeapon("crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
 			v = v + self:getCardsNum("Slash")
 		elseif card:isKindOf("Jink") then
 			if self:getCardsNum("Jink") > 1 then v = v - 6 end
@@ -2864,7 +2864,7 @@ function SmartAI:getTurnUse()
 
 	self:sortByUseValue(cards)
 
-	if self:hasWeapon("crossbow") then
+	if self.player:hasWeapon("crossbow") then
 		slashAvail = 100
 	end
 
@@ -3897,7 +3897,7 @@ function SmartAI:getAoeValue(card, player)
 		good = good + (self:isEnemy(lord) and 150 or -250)
 	end
 
-	for _, player in sgs.qlist(self.room:getOtherPlayers()) do
+	for _, player in sgs.qlist(self.room:getOtherPlayers(attacker)) do
 		if self:cantbeHurt(player) and self:aoeIsEffective(card, player, attacker) then
 			bad = bad + 250
 		end

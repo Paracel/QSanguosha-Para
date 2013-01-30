@@ -424,12 +424,28 @@ function SmartAI:useCardSlash(card, use)
 end
 
 sgs.ai_skill_use.slash = function(self, prompt)
-	local slash = self:getCard("Slash")
-	local no_distance_limit = self.player:hasFlag("slashNoDistanceLimit")
+	local parsedPrompt = prompt:split(":")
+	local callback = sgs.ai_skill_cardask[parsedPrompt[1]] -- for askForUseSlashTo
+	local slash
+	if type(callback) == "function" then
+		local target
+		if self.player:hasFlag("slashTargetFix") then
+			for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+				if player:hasFlag("SlashAssignee") then target = player break end
+			end
+		end
+		if not target then return "." end
+		local ret = callback(self, nil, nil, target)
+		if ret == nil or ret == "." then return "." end
+		slash = sgs.Card_Parse(ret)
+		if self.player:canSlash(target, slash) then return ret .. "->" .. target:objectName() end
+		return "."
+	end
+	slash = self:getCard("Slash")
 	if not slash then return "." end
 	for _, enemy in ipairs(self.enemies) do
-		if self.player:canSlash(enemy, slash, not no_distance_limit) and not self:slashProhibit(slash, enemy)
-		and self:slashIsEffective(slash, enemy) and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+		if self.player:canSlash(enemy, slash) and not self:slashProhibit(slash, enemy)
+			and self:slashIsEffective(slash, enemy) and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
 			return ("%s->%s"):format(slash:toString(), enemy:objectName())
 		end
 	end

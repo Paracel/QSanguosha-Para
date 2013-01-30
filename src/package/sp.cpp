@@ -1020,26 +1020,26 @@ SPPackage::SPPackage()
     tw_yuanshu->addSkill("yongsi");
     tw_yuanshu->addSkill("weidi");
 
-    General *tw_zhaoyun = new General(this, "tw_zhaoyun", "shu", 4, true, true);
-    tw_zhaoyun->addSkill("longdan");
-
     General *tw_daqiao = new General(this, "tw_daqiao", "wu", 3, false, true);
     tw_daqiao->addSkill("guose");
     tw_daqiao->addSkill("liuli");
+
+    General *tw_zhaoyun = new General(this, "tw_zhaoyun", "shu", 4, true, true);
+    tw_zhaoyun->addSkill("longdan");
 
     General *tw_zhenji = new General(this, "tw_zhenji", "wei", 3, false, true);
     tw_zhenji->addSkill("qingguo");
     tw_zhenji->addSkill("luoshen");
 
-    General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true);
-    tw_machao->addSkill("mashu");
-    tw_machao->addSkill("tieji");
+    General *tw_lvbu = new General(this, "tw_lvbu", "qun", 4, true, true);
+    tw_lvbu->addSkill("wushuang");
 
     General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true);
     tw_ganning->addSkill("qixi");
 
-    General *tw_lvbu = new General(this, "tw_lvbu", "qun", 4, true, true);
-    tw_lvbu->addSkill("wushuang");
+    General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true);
+    tw_machao->addSkill("mashu");
+    tw_machao->addSkill("tieji");
 
     General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true);
     wz_daqiao->addSkill("guose");

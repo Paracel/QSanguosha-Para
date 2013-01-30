@@ -395,9 +395,10 @@ function SmartAI:useCardSlash(card, use)
 						if slash and self:slashIsEffective(slash, target) and not self:slashProhibit(slash, target) then usecard = slash end
 					end
 				end
-				if self:willUseGodSalvation() then
-					local godsalvation = self:getCard("GodSalvation")
-					if godsalvation and godsalvation:getId() ~= fire_attack:getId() then use.card = godsalvation return end
+				local godsalvation = self:getCard("GodSalvation")
+				if godsalvation and godsalvation:getId() ~= card:getId() and self:willUseGodSalvation(godsalvation) then
+					use.card = godsalvation
+					return
 				end
 				local anal = self:searchForAnaleptic(use, target, card)
 				if anal and not target:hasArmorEffect("silver_lion") and not self:isWeak() then
@@ -1005,7 +1006,8 @@ sgs.ai_use_value.AmazingGrace = 3
 sgs.ai_keep_value.AmazingGrace = -1
 sgs.ai_use_priority.AmazingGrace = 1
 
-function SmartAI:willUseGodSalvation()
+function SmartAI:willUseGodSalvation(card)
+	if not card then self.room:writeToConsole(debug.traceback()) return false end
 	local good, bad = 0, 0
 	if self.player:hasSkill("noswuyan") and self.player:isWounded() then return true end
 	if self.player:hasSkill("jizhi") then good = good + 6 end
@@ -1064,7 +1066,7 @@ function SmartAI:willUseGodSalvation()
 end
 
 function SmartAI:useCardGodSalvation(card, use)
-	if self:willUseGodSalvation() then
+	if self:willUseGodSalvation(card) then
 		use.card = card
 	end
 end
@@ -1097,9 +1099,10 @@ function SmartAI:useCardDuel(duel, use)
 
 	for _, enemy in ipairs(enemies) do
 		if self.player:hasFlag("duelTo" .. enemy:objectName()) and canUseDuelTo(enemy) then
-			if self:willUseGodSalvation() and not enemy:isWounded() then
-				local godsalvation = self:getCard("GodSalvation")
-				if godsalvation and godsalvation:getId() ~= duel:getId() then use.card = godsalvation return end
+			local godsalvation = self:getCard("GodSalvation")
+			if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
+				use.card = godsalvation
+				return
 			end
 			use.card = duel
 			if use.to then
@@ -1118,9 +1121,10 @@ function SmartAI:useCardDuel(duel, use)
 		useduel = useduel and not (enemy:getHp()>getBestHp(enemy)) and not self:getDamagedEffects(enemy,self.player)
 		useduel = useduel and not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy) and not self.player:hasSkill("jueqing"))
 		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy,enemies) then
-			if self:willUseGodSalvation() and not enemy:isWounded() then
-				local godsalvation = self:getCard("GodSalvation")
-				if godsalvation and godsalvation:getId() ~= duel:getId() then use.card = godsalvation return end
+			local godsalvation = self:getCard("GodSalvation")
+			if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
+				use.card = godsalvation
+				return
 			end
 			use.card = duel
 			if use.to then

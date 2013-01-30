@@ -825,7 +825,7 @@ end
 sgs.ai_skill_playerchosen.junwei = function(self, targets)
 	local tos = {}
 	for _, target in sgs.qlist(targets) do
-		if self:isEnemy(target) and not (target:hasArmorEffect("silver_lion") and target:getCards("e"):length() == 1)then
+		if self:isEnemy(target) and not (target:hasArmorEffect("silver_lion") and target:getEquips():length() == 1)then
 			table.insert(tos, target)
 		end
 	end
@@ -835,6 +835,8 @@ sgs.ai_skill_playerchosen.junwei = function(self, targets)
 		return tos[1]
 	end
 end
+
+sgs.ai_playerchosen_intention.junwei = 80
 
 sgs.ai_skill_playerchosen.junweigive = function(self, targets)
 	local tos = {}
@@ -853,7 +855,10 @@ sgs.ai_skill_playerchosen.junweigive = function(self, targets)
 	end
 end
 
+sgs.ai_playerchosen.intention.junweigive = -80
+
 sgs.ai_skill_cardask["@junwei-show"] = function(self, data)
+	if self.player:hasArmorEffect("silver_lion") and self.player:getEquips():length() == 1 then return "." end
 	local ganning = data:toPlayer()
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)

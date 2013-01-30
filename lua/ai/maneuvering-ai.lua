@@ -154,7 +154,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 		if zhanghe_seat > 0 then
 			local gap1 = (enemy:getSeat() - self.player:getSeat()) % self.room:alivePlayerCount()
 			local gap2 = (zhanghe_seat - self.player:getSeat()) % self.room:alivePlayerCount()
-			if gap1 >= gap2 then return -100 end
+			if gap1 > gap2 then return -100 end
 		end
 
 		local value = 0 - enemy:getHandcardNum()

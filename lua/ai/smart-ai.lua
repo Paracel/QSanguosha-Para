@@ -4080,8 +4080,8 @@ function SmartAI:useEquipCard(card, use)
 	if use.card or use.broken then return end
 	if card:isKindOf("Weapon") then
 		if self:needBear() then return end
-		if self:hasSkill("zhulou") and same then return end
-		if self:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
+		if same and self:hasSkill("zhulou") then return end
+		if same and self:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
 			local dummy_use = { isDummy = true }
 			self:useSkillCard(sgs.Card_Parse("@QiangxiCard=" .. same:getEffectiveId()), dummy_use)
 			if dummy_use.card then return end

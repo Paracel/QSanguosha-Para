@@ -516,7 +516,7 @@ function SmartAI:willSkipPlayPhase(player)
 	end
 	friend_null = friend_null + self:getCardsNum("Nullification")
 	if self.player:containsTrick("indulgence") then
-		if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji|qiaobian") then return false end
+		if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji") or (self:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
 		if friend_null > 1 then return false end
 		return true
 	end
@@ -532,7 +532,7 @@ function SmartAI:willSkipDrawPhase(player)
 	end
 	friend_null = friend_null + self:getCardsNum("Nullification")
 	if self.player:containsTrick("supply_shortage") then
-		if self.player:containsTrick("YanxiaoCard") or self:hasSkills("shensu|qiaobian") then return false end
+		if self.player:containsTrick("YanxiaoCard") or (self:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
 		if friend_null > 1 then return false end
 		return true
 	end

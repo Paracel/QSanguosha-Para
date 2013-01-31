@@ -1304,10 +1304,7 @@ function SmartAI:objectiveLevel(player)
 			end
 			return 3
 		elseif process:match("rebel") then
-			if sgs.evaluatePlayerRole(player) == "rebel" then
-				if process == "rebel" then return 5 else return 3 end
-			elseif sgs.evaluateRoleTrends(player) == "rebel" then return 3
-			else return -1 end
+			return target_role == "rebel" and 5 or -1
 		elseif process:match("dilemma") then
 			if sgs.evaluatePlayerRole(player) == "rebel" then return 5
 			elseif sgs.evaluateRoleTrends(player) == "rebel" then return 3
@@ -1315,21 +1312,14 @@ function SmartAI:objectiveLevel(player)
 			elseif sgs.evaluatePlayerRole(player) == "renegade" then return 0
 			else return 5 end
 		else
-			if sgs.evaluatePlayerRole(player) == "rebel" then return -2
-			elseif sgs.evaluateRoleTrends(player) == "rebel" then return -1
-			else
-				if player:isLord() then
-					if not sgs.isLordHealthy() then return 0
-						else return 3 end
-				else
-					if process == "loyalist" then return 5 else return 3 end
-				end
-			end
+			if player:isLord() or target_role == "renegade" then return 0 end
+			return target_role == "rebel" and -2 or 5
 		end
 	end
 
 	if self.player:isLord() or self.role == "loyalist" then
 		if player:isLord() then return -2 end
+		if self.role == "loyalist" and loyal_num == 1 and renegade_num == 0 then return 5 end
 		if process:match("rebel") and rebel_num > 1 and target_role == "renegade" then return -1 end
 		if #players >= 4 and sgs.role_evaluation[player:objectName()]["rebel"] == 30 and sgs.role_evaluation[player:objectName()]["loyalist"] == 30 then return 0 end
 
@@ -1337,7 +1327,7 @@ function SmartAI:objectiveLevel(player)
 			if #players == 2 and self.role == "loyalist" then return 5 end
 			self:sort(players, "hp")
 			local maxhp = players[#players]:getHp()
-			if maxhp > 2 then return player:getHp() == maxhp and 5 or 1 end
+			if maxhp > 2 then return player:getHp() == maxhp and 5 or 0 end
 			if maxhp == 2 then return self.player:isLord() and 0 or (player:getHp() == maxhp and 5 or 1) end      
 			return self.player:isLord() and 0 or 5
 		end
@@ -1362,6 +1352,7 @@ function SmartAI:objectiveLevel(player)
 		elseif sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then return 3
 		else return 0 end
 	elseif self.role == "rebel" then
+		if loyal_num == 0 and renegade_num == 0 then return player:isLord() and 5 or -2 end
 		if #players >= 4 and sgs.role_evaluation[player:objectName()]["rebel"] == 30 and sgs.role_evaluation[player:objectName()]["loyalist"] == 30 then return 0 end
 		if player:isLord() then return 5
 		elseif sgs.evaluatePlayerRole(player) == "loyalist" then return 5

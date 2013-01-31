@@ -1131,7 +1131,7 @@ public:
             if (!use.to.contains(daqiao) || daqiao->isKongcheng())
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
-			    room->setPlayerMark(daqiao, "anxian", 0);
+                room->setPlayerMark(daqiao, "anxian", 0);
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");

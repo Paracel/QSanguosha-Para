@@ -2249,24 +2249,24 @@ function SmartAI:askForCardChosen(who, flags, reason)
 end
 
 function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
-	local nature = sgs.DamageStruct_Normal
+	local damage_nature = sgs.DamageStruct_Normal
 	
 	local effect = data:toSlashEffect()
-	if effect and effect.slash then nature = effect.nature end
+	if effect and effect.slash then damage_nature = effect.nature end
 	
 	if self.player:isDead() then return "." end
-	if not self:damageIsEffective(nil, nature, target) then return "." end
+	if target and target:hasSkill("jueqing") then return end
+	if not self:damageIsEffective(nil, damage_nature, target) then return "." end
 	if target and target:hasSkill("guagu") and self.player:isLord() then return "." end
 	
 	if effect and self:hasHeavySlashDamage(target, effect.slash) then return end
 	if self.player:getHp() > getBestHp(self.player) then return "." end
-	if target and target:hasSkill("jueqing") then return end
-	if self:getDamagedEffects(self.player) then return "." end
+	if self:getDamagedEffects(self.player, target) then return "." end
 	if self:needBear() and self.player:getLostHp() < 2 then return "." end
 	if self.player:hasSkill("zili") and not self.player:hasSkill("paiyi") and self.player:getLostHp() < 2 then return "." end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 and self.player:getHp() > 2 then return "." end
 	if self.player:hasSkill("tianxiang") then
-		local dmgStr = {damage = 1, nature = 0}
+		local dmgStr = { damage = 1, nature = damage_nature }
 		local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr)
 		if willTianxiang ~= "." then return "." end
 	elseif self.player:hasSkill("longhun") and self.player:getHp() > 1 then

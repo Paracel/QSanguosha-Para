@@ -3893,9 +3893,23 @@ function SmartAI:getAoeValue(card, player)
 			bad = bad + 250
 		end
 	end
-	if self.player:hasSkill("jizhi") then good = good + 25 end
+	
+	local forbid_start = true
+	if self.player:hasSkill("jizhi") then
+		forbid_start = false
+		good = good + 25
+	end
+	if self.player:hasSkill("shenfen") and self.player:hasSkill("kuangbao") then
+		forbid_start = false
+		good = good + 15
+		if not self.player:hasSkill("wumou") then
+			good = good + 10
+		elseif self.player:getMark("@wrath") > 0 then
+			good = good + 5
+		end
+	end
 
-	if sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
+	if forbid_start and sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
 		if self.role ~= "rebel" then good = good + 50 else bad = bad + 50 end
 	end
 

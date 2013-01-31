@@ -1004,10 +1004,10 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
     ServerPlayer *shensimayi = card_use.from;
 
     QStringList choices;
-    if (!shensimayi->hasUsed("ZhihengCard"))
+    if (!shensimayi->hasFlag("JilveZhiheng"))
         choices << "zhiheng";
 
-    if (!shensimayi->tag.value("JilveWansha", false).toBool())
+    if (!shensimayi->hasFlag("JilveWansha"))
         choices << "wansha";
 
     if (choices.isEmpty())
@@ -1018,9 +1018,10 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
     shensimayi->loseMark("@bear");
 
     if (choice == "wansha") {
+        room->setPlayerFlag(shensimayi, "JilveWansha");
         room->acquireSkill(shensimayi, "wansha");
-        shensimayi->tag["JilveWansha"] = true;
     } else {
+        room->setPlayerFlag(shensimayi, "JilveZhiheng");
         room->askForUseCard(shensimayi, "@zhiheng", "@jilve-zhiheng", -1, Card::MethodDiscard);
     }
 }
@@ -1096,7 +1097,7 @@ public:
 
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL && TriggerSkill::triggerable(target)
-               && target->tag.value("JilveWansha").toBool();
+               && target->hasFlag("JilveWansha");
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *target, QVariant &data) const{
@@ -1104,7 +1105,6 @@ public:
         if (change.to != Player::NotActive)
             return false;
         room->detachSkillFromPlayer(target, "wansha");
-        target->tag.remove("JilveWansha");
         return false;
     }
 };

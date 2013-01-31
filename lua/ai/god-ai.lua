@@ -822,7 +822,7 @@ jilve_skill.name = "jilve"
 table.insert(sgs.ai_skills, jilve_skill)
 jilve_skill.getTurnUseCard = function(self)
 	if self.player:getMark("@bear") < 1 or self.player:usedTimes("JilveCard") >= 2 then return end
-	local wanshadone = self.player:getTag("JilveWansha"):toPlayer()
+	local wanshadone = self.player:hasFlag("JilveWansha")
 	if not self.player:hasUsed("JilveCard") and not wanshadone then
 		sgs.ai_skill_choice.jilve = "zhiheng"
 		local card = sgs.Card_Parse("@ZhihengCard=.")
@@ -830,6 +830,7 @@ jilve_skill.getTurnUseCard = function(self)
 		self:useSkillCard(card, dummy_use)
 		if dummy_use.card then return sgs.Card_Parse("@JilveCard=.") end
 	elseif not wanshadone then
+		if #self.enemies <= 1 then return end
 		local cards = self.player:getHandcards()
 		cards = sgs.QList2Table(cards)
 		local slashes = self:getCards("Slash")

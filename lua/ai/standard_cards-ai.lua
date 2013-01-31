@@ -296,6 +296,7 @@ function SmartAI:useCardSlash(card, use)
 	end
 	local no_distance = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50)
 	self.slash_targets = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card)
+	if self.player:hasSkill("duanbing") then self.slash_targets = self.slash_targets + 1 end
 
 	self.predictedRange = self.player:getAttackRange()
 
@@ -331,9 +332,16 @@ function SmartAI:useCardSlash(card, use)
 					self:slashIsEffective(card, friend) then
 					use.card = card
 					if use.to then
-						if use.to:length() == self.slash_targets then
+						if use.to:length() == self.slash_targets - 1 then
 							if self.player:hasSkill("duanbing") then
-								if self.player:distanceTo(friend, rangefix) == 1 then
+								local has_extra = false
+								for _, tg in sgs.qlist(use.to) do
+									if self.player:distanceTo(tg, rangefix) == 1 then
+										has_extra = true
+										break
+									end
+								end
+								if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
 									use.to:append(friend)
 								end
 							else
@@ -407,16 +415,23 @@ function SmartAI:useCardSlash(card, use)
 			end
 			use.card = use.card or usecard
 			if use.to and not use.to:contains(target) then
-				if use.to:length() == self.slash_targets then
+				if use.to:length() == self.slash_targets - 1 then
 					if self.player:hasSkill("duanbing") then
-						if self.player:distanceTo(target) == 1 then
+						local has_extra = false
+						for _, tg in sgs.qlist(use.to) do
+							if self.player:distanceTo(tg, rangefix) == 1 then
+								has_extra = true
+								break
+							end
+						end
+						if has_extra or self.player:distanceTo(target, rangefix) == 1 then
 							use.to:append(target)
 						end
 					else
 						use.to:append(target)
 					end
 				else
-						use.to:append(target)
+					use.to:append(target)
 				end
 				if self.slash_targets <= use.to:length() then return end
 			end

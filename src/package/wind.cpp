@@ -189,7 +189,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getKingdom() == "qun" && !player->hasFlag("ForbidHuangtian") && !player->isKongcheng();
+        return player->getKingdom() == "qun" && !player->hasFlag("ForbidHuangtian");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1053,9 +1053,9 @@ const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji, bool &continuable)
         return NULL;
 }
 
-class Guhuo: public ViewAsSkill {
+class Guhuo: public OneCardViewAsSkill {
 public:
-    Guhuo(): ViewAsSkill("guhuo") {
+    Guhuo(): OneCardViewAsSkill("guhuo") {
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
@@ -1066,14 +1066,16 @@ public:
         }
         return true;
     }
-
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        return selected.isEmpty() && !to_select->isEquipped();
+	
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->isKongcheng();
     }
 
-    virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (cards.length() != 1) return NULL;
-        const Card *originalCard = cards.first();
+    virtual bool viewFilter(const Card* to_select) const{
+        return !to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
         if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
             GuhuoCard *card = new GuhuoCard;
             card->setUserString(Sanguosha->currentRoomState()->getCurrentCardUsePattern());
@@ -1089,7 +1091,6 @@ public:
             else
                 card->setUserString(Self->tag["GuhuoSlash"].toString());
             card->addSubcard(originalCard);
-
             return card;
         } else
             return NULL;
@@ -1107,11 +1108,6 @@ public:
     }
 
     virtual bool isEnabledAtNullification(const ServerPlayer *player) const{
-        return !player->isKongcheng();
-    }
-
-protected:
-    virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->isKongcheng();
     }
 };

@@ -143,7 +143,7 @@ public:
         if (event == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.to.length() <= 1 || !use.to.contains(player)
-                || !use.card->isKindOf("TrickCard") || use.card->isKindOf("Collateral")
+                || !use.card->isKindOf("TrickCard")
                 || !room->askForSkillInvoke(player, objectName(), data))
                 return false;
 
@@ -592,7 +592,7 @@ public:
         room->broadcastInvoke("animate", "lightbox:$WujiAnimate:4000");
         room->getThread()->delay(4000);
 
-        room->setPlayerMark(player, "wuji", 1);
+        player->addMark("wuji");
 
         if (room->changeMaxHpForAwakenSkill(player, 1)) {
             RecoverStruct recover;
@@ -661,12 +661,11 @@ bool BifaCard::targetFilter(const QList<const Player *> &targets, const Player *
     return targets.isEmpty() && to_select != Self;
 }
 
-void BifaCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+void BifaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *target = targets.first();
     target->tag["BifaSource" + QString::number(getEffectiveId())] = QVariant::fromValue((PlayerStar)source);
-    source->getRoom()->broadcastSkillInvoke("bifa", 1);
-    foreach (int id, this->subcards)
-        target->addToPile("bifa", id, false);
+    room->broadcastSkillInvoke("bifa", 1);
+    target->addToPile("bifa", this, false);
 }
 
 class BifaViewAsSkill: public OneCardViewAsSkill {

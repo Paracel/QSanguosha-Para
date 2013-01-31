@@ -438,8 +438,7 @@ public:
         QList<ServerPlayer *> players = room->getOtherPlayers(shencc);
         for (int i = 0; i < damage.damage; i++) {
             if (shencc->askForSkillInvoke(objectName())) {
-                int index = qrand() % 2 + 1;
-                room->broadcastSkillInvoke(objectName(), index);
+                room->broadcastSkillInvoke(objectName());
 
                 if (players.length() >= 4)
                     room->broadcastInvoke("animate", "lightbox:$GuixinAnimate");
@@ -1273,13 +1272,13 @@ bool Longhun::viewFilter(const QList<const Card *> &selected, const Card *card) 
     case CardUseStruct::CARD_USE_REASON_PLAY: {
             if (Self->isWounded() && card->getSuit() == Card::Heart)
                 return true;
-            else if (Slash::IsAvailable(Self) && card->getSuit() == Card::Diamond)
+            else if (Slash::IsAvailable(Self) && card->getSuit() == Card::Diamond) {
                 if (Self->getWeapon() && card->getEffectiveId() == Self->getWeapon()->getId()
                     && card->objectName() == "crossbow")
                     return Self->canSlashWithoutCrossbow();
                 else
                     return true;
-            else
+            } else
                 return false;
         }
     case CardUseStruct::CARD_USE_REASON_RESPONSE: {

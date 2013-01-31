@@ -167,10 +167,7 @@ void Slash::onEffect(const CardEffectStruct &card_effect) const{
 
     SlashEffectStruct effect;
     effect.from = card_effect.from;
-    if (hasFlag("isFireSlash") && nature == DamageStruct::Normal)
-        effect.nature = DamageStruct::Fire;
-    else
-        effect.nature = nature;
+    effect.nature = nature;
     effect.slash = this;
 
     effect.to = card_effect.to;

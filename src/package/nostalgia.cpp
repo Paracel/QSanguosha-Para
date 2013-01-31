@@ -369,7 +369,8 @@ public:
                 room->setPlayerFlag(handang, "-nosjiefanUsed");
                 room->setCardFlag(use.card, "nosjiefan-slash");
             }
-        } else if (event == AskForPeaches && current->objectName() != handang->objectName()) {
+        } else if (event == AskForPeaches && current != handang
+                   && room->askForSkillInvoke(handang, objectName(), data)) {
             DyingStruct dying = data.value<DyingStruct>();
 
             forever {
@@ -379,8 +380,7 @@ public:
                 }
 
                 if (dying.who->getHp() > 0 || handang->isNude()
-                    || !handang->canSlash(current, NULL, false) || !current
-                    || current->isDead() || !room->askForSkillInvoke(handang, objectName(), data))
+                    || !current || current->isDead() || !handang->canSlash(current, NULL, false))
                     break;
 
                 room->setPlayerFlag(handang, "nosjiefanUsed");

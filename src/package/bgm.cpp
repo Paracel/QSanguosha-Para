@@ -837,10 +837,6 @@ public:
         events << AfterDrawNCards;
     }
 
-    virtual bool triggerable(const ServerPlayer *player) const{
-        return player != NULL;
-    }
-
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liubei, QVariant &) const{
         if (!liubei->hasFlag("zhaolie")) return false;
         room->setPlayerFlag(liubei, "-zhaolie");
@@ -853,6 +849,7 @@ public:
             if (liubei->inMyAttackRange(p))
                 victims << p;
         }
+        if (victims.isEmpty()) return false;
         ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie");
         QList<int> cardIds;
         for (int i = 0; i < 3; i++) {
@@ -1053,8 +1050,7 @@ void YanxiaoCard::onUse(Room *room, const CardUseStruct &card_use) const{
             has_sunce = true;
             break;
         }
-    int index = has_sunce ? 2 : 1;
-    room->broadcastSkillInvoke("yanxiao", index);
+    room->broadcastSkillInvoke("yanxiao", has_sunce ? 2 : 1);
     DelayedTrick::onUse(room, card_use);
 }
 
@@ -1135,6 +1131,7 @@ public:
             if (!use.to.contains(daqiao) || daqiao->isKongcheng())
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
+			    room->setPlayerMark(daqiao, "anxian", 0);
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");
@@ -1153,8 +1150,6 @@ public:
                 room->setPlayerMark(daqiao, "anxian", daqiao->getMark("anxian") - 1);
                 return true;
             }
-        } else {
-            room->setPlayerMark(daqiao, "anxian", 0);
         }
         return false;
     }

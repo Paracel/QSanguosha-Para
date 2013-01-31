@@ -148,7 +148,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && TriggerSkill::triggerable(target) && !target->isNude();
+        return TriggerSkill::triggerable(target) && !target->isNude();
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -157,7 +157,7 @@ public:
         bool can_invoke = false;
         if (ServerInfo.GameMode == "06_3v3") {
             foreach (ServerPlayer *teammate, getTeammates(player)) {
-                if (teammate->objectName() == judge->who->objectName()) {
+                if (teammate == judge->who) {
                     can_invoke = true;
                     break;
                 }

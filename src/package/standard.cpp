@@ -259,18 +259,16 @@ void DelayedTrick::onEffect(const CardEffectStruct &effect) const{
     judge_struct.who = effect.to;
     room->judge(judge_struct);
 
-    if(judge_struct.isBad()){
+    if (judge_struct.isBad()) {
         takeEffect(effect.to);
-        if(room->getCardOwner(getEffectiveId()) == NULL)
-        {
+        if (room->getCardOwner(getEffectiveId()) == NULL) {
             CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
             room->throwCard(this, reason, NULL);
         }
-    }else if (movable) {
+    } else if (movable) {
         onNullified(effect.to);
-    }else if (!movable) {
-        if(room->getCardOwner(getEffectiveId()) == NULL)
-        {
+    } else if (!movable) {
+        if (room->getCardOwner(getEffectiveId()) == NULL) {
             CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
             room->throwCard(this, reason, NULL);
         }

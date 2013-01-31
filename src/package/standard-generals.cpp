@@ -184,7 +184,7 @@ public:
         Room *room = xiahou->getRoom();
         QVariant source = QVariant::fromValue(from);
 
-        if (from && room->askForSkillInvoke(xiahou, "ganglie", source)) {
+        if(from && from->isAlive() && room->askForSkillInvoke(xiahou, "ganglie", source)) {
             room->broadcastSkillInvoke(objectName());
 
             JudgeStruct judge;

@@ -691,8 +691,7 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == DamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.card && damage.card->isKindOf("Slash")
-                && (damage.card->getSkillName() == objectName() || damage.card->hasFlag("lihuo")))
+            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()))
                 damage.from->tag["Invokelihuo"] = true;
         } else if(TriggerSkill::triggerable(player) && player->tag.value("Invokelihuo", false).toBool()) {
             LogMessage log;

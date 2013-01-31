@@ -48,7 +48,7 @@ bool Analeptic::IsAvailable(const Player *player, const Card *analeptic){
         || player->isProhibited(player, analeptic == NULL ? newanal : analeptic))
             return false;
 
-    return player->usedTimes("Analeptic") <= Sanguosha->correctCardTarget(TargetModSkill::Residue, player, newanal);
+    return player->usedTimes("Analeptic") <= Sanguosha->correctCardTarget(TargetModSkill::Residue, player, analeptic == NULL ? newanal : analeptic);
 }
 
 bool Analeptic::isAvailable(const Player *player) const{

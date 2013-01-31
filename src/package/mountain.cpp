@@ -441,10 +441,7 @@ public:
                     int index = 1;
                     if (!sunce->hasInnateSkill(objectName()) && sunce->hasSkill("mouduan"))
                         index += 2;
-                    if (use.from == sunce)
-                        room->broadcastSkillInvoke(objectName(), index);
-                    else
-                        room->broadcastSkillInvoke(objectName(), index + 1);
+                    room->broadcastSkillInvoke(objectName(), index + (use.from == sunce ? 0 : 1));
                     sunce->drawCards(1);
                 }
             }
@@ -823,7 +820,7 @@ public:
 class Xiangle: public TriggerSkill {
 public:
     Xiangle(): TriggerSkill("xiangle") {
-        events << SlashEffected << CardFinished << TargetConfirming;
+        events << SlashEffected << TargetConfirming;
         frequency = Compulsory;
     }
 
@@ -831,6 +828,7 @@ public:
         if (event == TargetConfirming) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card && use.card->isKindOf("Slash")) {
+                liushan->setMark("xiangle", 0);
                 room->broadcastSkillInvoke(objectName());
 
                 LogMessage log;
@@ -844,8 +842,6 @@ public:
                 if (!room->askForCard(use.from, ".Basic", "@xiangle-discard", dataforai))
                     liushan->addMark("xiangle");
             }
-        } else if (event == CardFinished) {
-            liushan->setMark("xiangle", 0);
         } else {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             if (liushan->getMark("xiangle") > 0) {

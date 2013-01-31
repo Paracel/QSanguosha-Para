@@ -2858,11 +2858,8 @@ function SmartAI:getTurnUse()
 	self.slash_distance_limit = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50)
 
 	self.weaponUsed = false
-
 	if self.player:isLord() then self.retain_thresh = 6 end
-
 	self:fillSkillCards(cards)
-
 	self:sortByUseValue(cards)
 
 	if self.player:hasWeapon("crossbow") then
@@ -2892,7 +2889,7 @@ function SmartAI:getTurnUse()
 		if dummy_use.card then
 			if (card:isKindOf("Slash")) then
 				if slashAvail > 0 then
-					slashAvail = slashAvail-1
+					slashAvail = slashAvail - 1
 					table.insert(turnUse, card)
 				end
 			else

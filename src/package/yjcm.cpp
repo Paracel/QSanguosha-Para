@@ -269,7 +269,7 @@ public:
             if (move->to == player && move->from && move->from->isAlive() && move->from != move->to
                 && move->card_ids.size() >= 2
                 && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE
-                && room->askForSkillInvoke(player,objectName(),data)) {
+                && room->askForSkillInvoke(player, objectName(), data)) {
                 room->drawCards((ServerPlayer *)move->from, 1);
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
             }
@@ -540,7 +540,7 @@ public:
 
 XianzhenCard::XianzhenCard() {
     will_throw = false;
-    handling_method = Card::MethodNone;
+    handling_method = Card::MethodPindian;
 }
 
 bool XianzhenCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{

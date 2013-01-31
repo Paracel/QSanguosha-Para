@@ -347,6 +347,21 @@ sgs.ai_use_priority.IronChain = 8.5
 
 sgs.dynamic_value.benefit.IronChain = true
 
+sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	local convert = { [".S"] = "spade", [".D"] = "diamond", [".H"] = "heart", [".C"] = "club" }
+	local card
+	self:sortByUseValue(cards, true)
+	for _, acard in ipairs(cards) do
+		if acard:getSuitString() == convert[pattern]
+			and not (isCard("Peach", acard, self.player) and (not self:isWeak(target) or (self:isWeak() and self.player:isLord()))) then
+			card = acard
+			break
+		end
+	end
+	return card and card:getId() or "."
+end
+
 function SmartAI:useCardFireAttack(fire_attack, use)
 	if self:hasSkills("wuyan|noswuyan") then return end
 

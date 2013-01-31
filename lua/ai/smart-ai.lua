@@ -321,9 +321,10 @@ function SmartAI:getUseValue(card)
 			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
 			if self.player:hasWeapon("crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
-			v = v + self:getCardsNum("Slash")
+			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
 		elseif card:isKindOf("Jink") then
 			if self:getCardsNum("Jink") > 1 then v = v - 6 end
+			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
 		elseif card:isKindOf("Peach") then
 			if self.player:isWounded() then v = v + 6 end
 		end
@@ -340,7 +341,7 @@ function SmartAI:getUseValue(card)
 	if self:hasSkills(sgs.need_kongcheng) then
 		if self.player:getHandcardNum() == 1 then v = 10 end
 	end
-	if self:hasSkill("halberd") and card:isKindOf("Slash") and self.player:getHandcardNum() == 1 then v = 10 end
+	if self.player:hasWeapon("halberd") and card:isKindOf("Slash") and self.player:getHandcardNum() == 1 then v = 10 end
 	if card:getTypeId() == sgs.Card_TypeSkill then
 		if v == 0 then v = 10 end
 	end
@@ -379,6 +380,7 @@ function SmartAI:adjustUsePriority(card, v)
 	if card:isKindOf("Slash") then
 		if card:isRed() then v = v - 0.05 end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
+		if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 0.21 end
 		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.21 end
 		if self.player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then v = v + 0.11 end
 		if self.player:hasSkill("jinjiu") and card:getEffectiveId() >= 0 and sgs.Sanguosha:getEngineCard(card:getEffectiveId()):isKindOf("Analeptic") then v = v + 0.11 end

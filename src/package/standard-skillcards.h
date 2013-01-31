@@ -109,6 +109,18 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+class JijiangViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    JijiangViewAsSkill();
+
+    virtual bool isEnabledAtPlay(const Player *player) const;
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const;
+    virtual const Card *viewAs() const;
+
+private:
+    static bool hasShuGenerals(const Player *player);
+};
+
 class Yiji: public MasochismSkill {
 public:
     Yiji();

@@ -1182,22 +1182,6 @@ sgs.ai_skill_use_func.HantongCard = function(card, use, self)
 	if dummy_use.card then use.card = card end
 end
 
-sgs.ai_skill_use["@jijiang"] = function(self, prompt)
-	local card = sgs.Card_Parse("@JijiangCard=.")
-	local dummy_use = { isDummy = true }
-	self:useSkillCard(card, dummy_use)
-	if dummy_use.card then
-		local jijiang = {}
-		if sgs.jijiangtarget then
-			for _, p in ipairs(sgs.jijiangtarget) do
-				table.insert(jijiang, p:objectName())
-			end
-			return "@JijiangCard=.->" .. table.concat(jijiang, "+")
-		end
-	end
-	return "."
-end
-
 sgs.ai_use_value.HantongCard = sgs.ai_use_value.JijiangCard
 sgs.ai_use_priority.HantongCard = sgs.ai_use_priority.JijiangCard
 sgs.ai_card_intention.HantongCard = sgs.ai_card_intention.JijiangCard

@@ -428,34 +428,30 @@ public:
     }
 };
 
-class JijiangViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    JijiangViewAsSkill(): ZeroCardViewAsSkill("jijiang$") {
-    }
+JijiangViewAsSkill::JijiangViewAsSkill(): ZeroCardViewAsSkill("jijiang$") {
+}
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
-        return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("jijiang_failed")
-               && Slash::IsAvailable(player);
-    }
+bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
+    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("jijiang_failed")
+           && Slash::IsAvailable(player);
+}
 
-    virtual const Card *viewAs() const{
-        return new JijiangCard;
-    }
+bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    return hasShuGenerals(player)
+           && pattern == "slash" && !ClientInstance->hasNoTargetResponding()
+           && !player->hasFlag("jijiang_failed");
+}
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return hasShuGenerals(player)
-               && pattern == "slash" && !ClientInstance->hasNoTargetResponding()
-               && !player->hasFlag("jijiang_failed");
-    }
+const Card *JijiangViewAsSkill::viewAs() const{
+    return new JijiangCard;
+}
 
-private:
-    static bool hasShuGenerals(const Player *player) {
-        foreach (const Player *p, player->getSiblings())
-            if (p->getKingdom() == "shu")
-                return true;
-        return false;
-    }
-};
+bool JijiangViewAsSkill::hasShuGenerals(const Player *player) {
+    foreach (const Player *p, player->getSiblings())
+        if (p->getKingdom() == "shu")
+            return true;
+    return false;
+}
 
 class Jijiang: public TriggerSkill {
 public:

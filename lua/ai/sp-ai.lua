@@ -24,6 +24,22 @@ function sgs.ai_slash_prohibit.weidi(self, to, card)
 	end
 end
 
+sgs.ai_skill_use["@jijiang"] = function(self, prompt)
+	local card = sgs.Card_Parse("@JijiangCard=.")
+	local dummy_use = { isDummy = true }
+	self:useSkillCard(card, dummy_use)
+	if dummy_use.card then
+		local jijiang = {}
+		if sgs.jijiangtarget then
+			for _, p in ipairs(sgs.jijiangtarget) do
+				table.insert(jijiang, p:objectName())
+			end
+			return "@JijiangCard=.->" .. table.concat(jijiang, "+")
+		end
+	end
+	return "."
+end
+
 sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, include_equip)
 	self:assignKeep(self.player:getHp(), true)
 	if optional then return {} end

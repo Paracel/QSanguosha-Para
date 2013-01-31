@@ -218,40 +218,14 @@ bool Yongsi::trigger(TriggerEvent event, Room *room, ServerPlayer *yuanshu, QVar
     return false;
 }
 
+#include "standard-skillcards.h"
 WeidiCard::WeidiCard() {
     target_fixed = true;
 }
 
-void WeidiCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    ServerPlayer *yuanshu = card_use.from;
-
-    QStringList choices;
-    if (yuanshu->hasLordSkill("jijiang") && Slash::IsAvailable(yuanshu))
-        choices << "jijiang";
-
-    if (choices.isEmpty())
-        return;
-
-    QString choice = room->askForChoice(yuanshu, "weidi", choices.join("+"));
-
-    if (choice == "jijiang") {
-        QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *target, room->getOtherPlayers(yuanshu)) {
-            if (yuanshu->canSlash(target))
-                targets << target;
-        }
-
-        ServerPlayer *target = room->askForPlayerChosen(yuanshu, targets, "jijiang");
-        if (target) {
-            JijiangCard *jijiang = new JijiangCard;
-            jijiang->setSkillName("weidi");
-            CardUseStruct use;
-            use.card = jijiang;
-            use.from = yuanshu;
-            use.to << target;
-            room->useCard(use);
-        }
-    }
+void WeidiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    if (!room->askForUseCard(source, "@jijiang", "@weidi-jijiang"))
+        room->setPlayerFlag(source, "jijiang_failed");
 }
 
 class WeidiViewAsSkill: public ZeroCardViewAsSkill {
@@ -260,7 +234,15 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->hasLordSkill("jijiang") && Slash::IsAvailable(player);
+        JijiangViewAsSkill *jijiang = new JijiangViewAsSkill;
+        jijiang->deleteLater();
+        return jijiang->isEnabledAtPlay(player);
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        JijiangViewAsSkill *jijiang = new JijiangViewAsSkill;
+        jijiang->deleteLater();
+        return jijiang->isEnabledAtResponse(player, pattern);
     }
 
     virtual const Card *viewAs() const{

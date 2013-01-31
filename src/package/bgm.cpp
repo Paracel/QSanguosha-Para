@@ -1893,6 +1893,7 @@ public:
     }
 };
 
+#include "standard-skillcards.h"
 HantongCard::HantongCard() {
     target_fixed = true;
 }
@@ -1930,12 +1931,19 @@ public:
     }
 
     virtual const Card *viewAs() const{
-        HantongCard *card = new HantongCard;
-        return card;
+        return new HantongCard;
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getPile("edict").length() > 0 && !player->hasLordSkill("jijiang") && Slash::IsAvailable(player);
+        JijiangViewAsSkill *jijiang = new JijiangViewAsSkill;
+        jijiang->deleteLater();
+        return player->getPile("edict").length() > 0 && jijiang->isEnabledAtPlay(player);
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        JijiangViewAsSkill *jijiang = new JijiangViewAsSkill;
+        jijiang->deleteLater();
+        return player->getPile("edict").length() > 0 && jijiang->isEnabledAtResponse(player, pattern);
     }
 };
 

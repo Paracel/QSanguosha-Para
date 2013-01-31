@@ -656,16 +656,14 @@ table.insert(sgs.ai_skills, jijiang_skill)
 jijiang_skill.getTurnUseCard = function(self)
 	local lieges = self.room:getLieges("shu", self.player)
 	if lieges:isEmpty() then return end
-	if self.player:hasUsed("JijiangCard") or not self:slashIsAvailable() then return end
+	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("jijiang_failed") or not self:slashIsAvailable() then return end
 	local card_str = "@JijiangCard=."
 	local slash = sgs.Card_Parse(card_str)
 	assert(slash)
-
 	return slash
 end
 
 sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
-	if self.player:hasFlag("jijiang_failed") then return end
 	self:sort(self.enemies, "defenseSlash")
 
 	if not sgs.jijiangtarget then table.insert(sgs.ai_global_flags, "jijiangtarget") end

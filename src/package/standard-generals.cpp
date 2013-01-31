@@ -182,9 +182,9 @@ public:
     virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
         ServerPlayer *from = damage.from;
         Room *room = xiahou->getRoom();
-        QVariant source = QVariant::fromValue(from);
+        QVariant data = QVariant::fromValue(damage);
 
-        if(from && from->isAlive() && room->askForSkillInvoke(xiahou, "ganglie", source)) {
+        if (room->askForSkillInvoke(xiahou, "ganglie", data)) {
             room->broadcastSkillInvoke(objectName());
 
             JudgeStruct judge;
@@ -194,6 +194,7 @@ public:
             judge.who = xiahou;
 
             room->judge(judge);
+            if (!from || from->isDead()) return;
             if (judge.isGood()) {
                 if (!room->askForDiscard(from, objectName(), 2, 2, true)) {
                     DamageStruct damage;

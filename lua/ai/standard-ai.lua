@@ -194,15 +194,19 @@ sgs.ai_chaofeng.simayi = -2
 sgs.ai_skill_invoke.ganglie = function(self, data)
 	local mode = self.room:getMode()
 	if mode:find("_mini_40") then return true end
-	local who = data:toPlayer()
-	if self:getDamagedEffects(who, self.player) then
-		if self:isFriend(who) then
-			sgs.ai_ganglie_effect = string.format("%s_%s_%d", self.player:objectName(), who:objectName(), sgs.turncount)
+	local damage = data:toDamage()
+	if not damage.from then
+		local zhangjiao = self.room:findPlayerBySkillName("guidao")
+		return zhangjiao and self:isFriend(zhangjiao)
+	end
+	if self:getDamagedEffects(damage.from, self.player) then
+		if self:isFriend(damage.from) then
+			sgs.ai_ganglie_effect = string.format("%s_%s_%d", self.player:objectName(), damage.from:objectName(), sgs.turncount)
 			return true
 		end
 		return false
 	end
-	return not self:isFriend(who)
+	return not self:isFriend(damage.from)
 end
 
 sgs.ai_need_damaged.ganglie = function (self, attacker)

@@ -159,7 +159,12 @@ function sgs.ai_skill_invoke.neojushou(self, data)
 end
 
 sgs.ai_skill_invoke.neoganglie = function(self, data)
-	local target = data:toPlayer()
+	local damage = data:toDamage()
+	if not damage.from then
+		local zhangjiao = self.room:findPlayerBySkillName("guidao")
+		return zhangjiao and self:isFriend(zhangjiao)
+	end
+	local target = damage.from
 	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target, self.player)) and target:getHandcardNum() <= 1 then return false end
 	if not self:isFriend(target) then
 		self.room:setPlayerFlag(target, "ganglie_target")
@@ -175,7 +180,6 @@ end
 
 sgs.ai_need_damaged.neoganglie = function (self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
-
 	if self:isEnemy(attacker) and attacker:getHp() <= 2 and not attacker:hasSkill("buqu") and sgs.isGoodTarget(attacker, self.enemies) then
 		return true
 	end

@@ -480,13 +480,6 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     pindian_struct.to_number = card2->getNumber();
     pindian_struct.reason = reason;
 
-    PindianStar pindian_star = &pindian_struct;
-    QVariant data = QVariant::fromValue(pindian_star);
-    room->getThread()->trigger(PindianVerifying, room, this, data);
-
-    PindianStar new_star = data.value<PindianStar>();
-    pindian_struct.success = (new_star->from_number > new_star->to_number);
-
     CardMoveReason reason1(CardMoveReason::S_REASON_PINDIAN, pindian_struct.from->objectName(), pindian_struct.to->objectName(),
                            pindian_struct.reason, QString());
     room->moveCardTo(pindian_struct.from_card, pindian_struct.from, NULL, Player::PlaceTable, reason1, true);
@@ -504,6 +497,13 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     log2.from = pindian_struct.to;
     log2.card_str = QString::number(pindian_struct.to_card->getEffectiveId());
     room->sendLog(log2);
+
+    PindianStar pindian_star = &pindian_struct;
+    QVariant data = QVariant::fromValue(pindian_star);
+    room->getThread()->trigger(PindianVerifying, room, this, data);
+
+    PindianStar new_star = data.value<PindianStar>();
+    pindian_struct.success = (new_star->from_number > new_star->to_number);
 
     log.type = pindian_struct.success ? "#PindianSuccess" : "#PindianFailure";
     log.from = this;

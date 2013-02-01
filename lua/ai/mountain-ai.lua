@@ -305,11 +305,11 @@ jixi_skill.getTurnUseCard = function(self)
 	end
 	local can_use = false
 	for i = 0, self.player:getPile("field"):length() - 1, 1 do
-		local snatch=sgs.Sanguosha:getCard(self.player:getPile("field"):at(i))
+		local snatch = sgs.Sanguosha:getCard(self.player:getPile("field"):at(i))
 		self.jixisnatch = sgs.Sanguosha:cloneCard("snatch", snatch:getSuit(), snatch:getNumber())
 
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, snatch))
+			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, self.jixisnatch))
 				and not self.room:isProhibited(self.player, player, snatch) and self:hasTrickEffective(snatch, player) then
 				can_use = true
 				self.jixi = i + 1

@@ -137,10 +137,7 @@ void DuoshiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     CardUseStruct use = card_use;
     if (!use.to.contains(use.from))
         use.to << use.from;
-    if (use.to.length() == 1)
-        use.from->getRoom()->broadcastSkillInvoke("duoshi", 1);
-    else
-        use.from->getRoom()->broadcastSkillInvoke("duoshi", 2);
+    use.from->getRoom()->broadcastSkillInvoke("duoshi", qMin(2, use.to.length()));
     SkillCard::onUse(room, use);
 }
 
@@ -162,7 +159,6 @@ public:
     virtual const Card *viewAs(const Card *originalcard) const{
         DuoshiCard *await = new DuoshiCard;
         await->addSubcard(originalcard->getId());
-        await->setSkillName(objectName());
         return await;
     }
 };

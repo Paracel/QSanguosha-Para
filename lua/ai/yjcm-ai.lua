@@ -714,7 +714,7 @@ sgs.ai_skill_use_func.PaiyiCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 	if not target then
 		for _, enemy in ipairs(self.enemies) do
-			if not self:hasSkills(sgs.masochism_skill, enemy) and not self:hasSkills("rende|jijiu", enemy)
+			if not self:hasSkills(sgs.masochism_skill, enemy) and not self:hasSkills("rende|jijiu|tianxiang", enemy)
 				and enemy:getHandcardNum() + 2 > self.player:getHandcardNum() then
 				target = enemy
 			end

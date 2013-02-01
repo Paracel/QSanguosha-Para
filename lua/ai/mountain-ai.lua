@@ -163,7 +163,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	end
 
 	if current_phase == sgs.Player_Draw then
-		if self.player:hasSkill("tuxi") then return {} end
+		if self.player:hasSkill("tuxi") and not self:willSkipDrawPhase() then return {} end
 		local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
 		if cardstr:match("->") then
 			local targetstr = cardstr:split("->")[2]
@@ -289,6 +289,10 @@ sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
 		sgs.ai_card_intention.TuxiCard(self, card, from, tos)
 	end
 	return 0
+end
+
+function sgs.ai_cardneed.qiaobian(to, card)
+	return to:getCardCount(true) <= 2
 end
 
 sgs.ai_skill_invoke.tuntian = true
@@ -753,6 +757,10 @@ sgs.ai_skill_cardask["@beige"] = function(self, data)
 	if not self:isFriend(damage.to) or self:isFriend(damage.from) then return "." end
 	local to_discard = self:askForDiscard("beige", 1, 1, false, true)
 	if #to_discard > 0 then return "$" .. to_discard[1] else return "." end
+end
+
+function sgs.ai_cardneed.beige(to, card)
+	return to:getCardCount(true) <= 2
 end
 
 function sgs.ai_slash_prohibit.duanchang(self, to)

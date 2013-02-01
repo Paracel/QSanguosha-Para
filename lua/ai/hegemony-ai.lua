@@ -330,10 +330,6 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	return "."
 end
 
-sgs.ai_skill_invoke.shushen = function(self, data)
-	return #self.friends_noself > 0
-end
-
 sgs.ai_skill_use["@@shushen"] = function(self, prompt)
 	if #self.friends_noself == 0 then return "." end
 	self:sort(self.friends_noself, "defense")
@@ -353,6 +349,10 @@ sgs.ai_card_intention.ShushenCard = -80
 sgs.ai_skill_invoke.shenzhi = function(self, data)
 	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
 			and self.player:getLostHp() > 0 and self:getCardsNum("Peach") == 0
+end
+
+function sgs.ai_cardneed.shenzhi(to, card)
+	return to:getHandcardNum() < to:getHp()
 end
 
 local duoshi_skill = {}

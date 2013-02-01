@@ -509,6 +509,7 @@ end
 
 function SmartAI:willSkipPlayPhase(player)
 	local player = player or self.player
+	if player:isSkipped(sgs.Player_Play) then return false end
 	local friend_null = 0
 	for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if self:isFriend(p) then friend_null = friend_null + getCardsNum("Nullification", p) end
@@ -525,6 +526,7 @@ end
 
 function SmartAI:willSkipDrawPhase(player)
 	local player = player or self.player
+	if player:isSkipped(sgs.Player_Draw) then return false end
 	local friend_null = 0
 	for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if self:isFriend(p) then friend_null = friend_null + getCardsNum("Nullification", p) end

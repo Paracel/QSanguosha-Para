@@ -1263,10 +1263,11 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 		cards = sgs.QList2Table(cards)
 		self:sortByKeepValue(cards)
 		for _, card in ipairs(cards) do
-			if (self.player:getWeapon() and card:getId() == self.player:getWeapon():getId()) and self.player:distanceTo(who) > 1 then
-			elseif card:isKindOf("OffensiveHorse") and self.player:getAttackRange() == self.player:distanceTo(who) and self.player:distanceTo(who) > 1 then
-			elseif not self.player:isCardLimited(card, method) then
-				return "@LiuliCard="..card:getEffectiveId().."->"..who:objectName()
+			local range_fix = 0
+			if card:isKindOf("Weapon") then range_fix = range_fix + sgs.weapon_range[card:getClassName()] - 1 end
+			if card:isKindOf("OffensiveHorse") then range_fix = range_fix + 1 end
+			if not self.player:isCardLimited(card, method) and self.player:distanceTo(who, range_fix) <= self.player:getAttackRange() then
+				return "@LiuliCard=" .. card:getEffectiveId() .. "->" .. who:objectName()
 			end
 		end
 		return "."

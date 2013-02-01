@@ -354,7 +354,8 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	self:sortByUseValue(cards, true)
 	for _, acard in ipairs(cards) do
 		if acard:getSuitString() == convert[pattern]
-			and not (isCard("Peach", acard, self.player) and (not self:isWeak(target) or (self:isWeak() and self.player:isLord()))) then
+			and (not isCard("Peach", acard, self.player)
+				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0) and not (self:isWeak() and self.player:isLord())) then
 			card = acard
 			break
 		end
@@ -417,7 +418,6 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			and self:hasTrickEffective(fire_attack, self.player)
 			and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
 				or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
-
 		local godsalvation = self:getCard("GodSalvation")
 		if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
 			use.card = godsalvation

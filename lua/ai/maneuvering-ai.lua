@@ -355,7 +355,7 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	for _, acard in ipairs(cards) do
 		if acard:getSuitString() == convert[pattern]
 			and (not isCard("Peach", acard, self.player)
-				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0) and not (self:isWeak() and self.player:isLord())) then
+				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0) and not (self:isWeak() and self.player:isLord()))) then
 			card = acard
 			break
 		end

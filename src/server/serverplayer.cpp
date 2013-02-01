@@ -476,6 +476,8 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     pindian_struct.to = target;
     pindian_struct.from_card = card1;
     pindian_struct.to_card = card2;
+    pindian_struct.from_number = card1->getNumber();
+    pindian_struct.to_number = card2->getNumber();
     pindian_struct.reason = reason;
 
     PindianStar pindian_star = &pindian_struct;
@@ -483,7 +485,7 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     room->getThread()->trigger(PindianVerifying, room, this, data);
 
     PindianStar new_star = data.value<PindianStar>();
-    pindian_struct.success = new_star->success;
+    pindian_struct.success = (new_star->from_number > new_star->to_number);
 
     CardMoveReason reason1(CardMoveReason::S_REASON_PINDIAN, pindian_struct.from->objectName(), pindian_struct.to->objectName(),
                            pindian_struct.reason, QString());

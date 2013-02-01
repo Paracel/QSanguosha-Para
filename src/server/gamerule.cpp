@@ -24,8 +24,7 @@ GameRule::GameRule(QObject *)
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
            << SlashEffectStart << SlashHit << SlashEffected << SlashProceed
            << ConfirmDamage << DamageDone << DamageComplete
-           << StartJudge << FinishRetrial << FinishJudge
-           << PindianVerifying;
+           << StartJudge << FinishRetrial << FinishJudge;
 
     skill_mark["niepan"] = "@nirvana";
     skill_mark["yeyan"] = "@flame";
@@ -557,14 +556,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
             break;
         }
-    case PindianVerifying: {
-            PindianStar pindian_star = data.value<PindianStar>();
-            pindian_star->success = pindian_star->from_card->getNumber() > pindian_star->to_card->getNumber();
-            data = QVariant::fromValue(pindian_star);
-            return true;
-    }
     default:
-            ;
+            break;
     }
 
     return false;

@@ -269,12 +269,6 @@ public:
             room->judge(judge);
             if (judge.isGood()) {
                 room->broadcastSkillInvoke(objectName(), 2);
-                LogMessage log;
-                log.type = "#Qianxi";
-                log.from = player;
-                log.arg = objectName();
-                log.to << damage.to;
-                room->sendLog(log);
                 room->loseMaxHp(damage.to);
                 return true;
             } else

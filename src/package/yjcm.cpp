@@ -691,7 +691,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     ServerPlayer *target;
     QStringList choicelist;
     choicelist << "draw";
-    if (can_use && effect.from->isAlive() && Slash::IsAvailable(effect.from)) {
+    if (can_use && effect.from->isAlive() && Slash::IsAvailable(effect.to)) {
         target = room->askForPlayerChosen(effect.from, targets, "mingce");
         target->setFlags("MingceTarget"); // For AI
 

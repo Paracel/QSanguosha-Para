@@ -165,7 +165,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 		if self:isWeak(enemy) then value = value + 5 end
 		if enemy:isLord() then value = value + 3 end
 
-		if self:objectiveLevel(enemy)<3 then value = value -10 end
+		if self:objectiveLevel(enemy) < 3 then value = value -10 end
 		if not enemy:faceUp() then value = value -10 end
 		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
 		if self:hasSkills("guanxing|xiuluo|tiandu|guidao", enemy) then value = value - 5 end

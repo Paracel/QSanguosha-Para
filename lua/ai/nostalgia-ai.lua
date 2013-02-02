@@ -61,7 +61,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		end
 		local f
 		for _, friend in ipairs(self.friends_noself) do
-			if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp() + 1) and not friend:hasSkill("manjuan") then
+			if (friend:getHandcardNum() < 2) or (friend:getHandcardNum() < friend:getHp() + 1) and not friend:hasSkill("manjuan") then
 				for _, fcard in ipairs(cards) do
 					if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
 						table.insert(abandon_handcard, fcard:getId())
@@ -84,7 +84,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	local slash_num = self:getCardsNum("Slash")
 	local jink_num = self:getCardsNum("Jink")
 	for _, friend in ipairs(self.friends_noself) do
-		if (friend:getHandcardNum()<2) or (friend:getHandcardNum()<friend:getHp() + 1) or self.player:isWounded() then
+		if (friend:getHandcardNum() < 2) or (friend:getHandcardNum() < friend:getHp() + 1) or self.player:isWounded() then
 			for _, card in ipairs(cards) do
 				if #abandon_handcard >= 3 then break end
 				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard") and
@@ -271,7 +271,7 @@ nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
-		if card:getTypeId() == sgs.Card_TypeEquip and ((self:getUseValue(card)<sgs.ai_use_value.Slash) or inclusive) then
+		if card:getTypeId() == sgs.Card_TypeEquip and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
 			equip_card = card
 			break
 		end

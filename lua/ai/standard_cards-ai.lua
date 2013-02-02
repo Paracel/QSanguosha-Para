@@ -134,7 +134,7 @@ function sgs.getDefenseSlash(player)
 			for _, liege in sgs.qlist(lieges) do
 				if sgs.compareRoleEvaluation(liege, "rebel", "loyalist") == sgs.compareRoleEvaluation(player, "rebel", "loyalist") then
 					hujiaJink = hujiaJink + getCardsNum("Jink", liege)
-					if liege:hasArmorEffect("eight_diagram") then hujiaJink=hujiaJink + 0.8 end
+					if liege:hasArmorEffect("eight_diagram") then hujiaJink = hujiaJink + 0.8 end
 				end
 			end
 			defense = defense + hujiaJink
@@ -628,7 +628,7 @@ function SmartAI:useCardPeach(card, use)
 	end
 
 	self:sort(self.friends, "hp")
-	if self.friends[1]:objectName() == self.player:objectName() or self.player:getHp()<2 then
+	if self.friends[1]:objectName() == self.player:objectName() or self.player:getHp() < 2 then
 		use.card = card
 		return
 	end
@@ -679,7 +679,7 @@ sgs.weapon_range.KylinBow = 5
 sgs.ai_skill_invoke.double_sword = true
 
 function sgs.ai_slash_weaponfilter.double_sword(to, self)
-	return self.player:getGender()~=to:getGender()
+	return self.player:getGender() ~= to:getGender()
 end
 
 function sgs.ai_weapon_value.double_sword(self, enemy)
@@ -910,7 +910,7 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 	if self:hasSkills("guidao", self.enemies) and self:getFinalRetrial(sgs.hujiasource) == 2 then
 		return false
 	end
-	if self:getDamagedEffects(self.player) or self.player:getHp()>getBestHp(self.player) then return false end
+	if self:getDamagedEffects(self.player) or self.player:getHp() > getBestHp(self.player) then return false end
 	return true
 end
 
@@ -1132,8 +1132,8 @@ function SmartAI:useCardDuel(duel, use)
 		local useduel 
 		local n2 = getCardsNum("Slash",enemy)
 		if sgs.card_lack[enemy:objectName()]["Slash"] == 1 then n2 = 0 end
-		useduel = n1 >= n2 or self.player:getHp()>getBestHp(self.player) or self:getDamagedEffects(self.player,enemy) or (n2<1 and sgs.isGoodHp(self.player))
-		useduel = useduel and not (enemy:getHp()>getBestHp(enemy)) and not self:getDamagedEffects(enemy,self.player)
+		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
+		useduel = useduel and not (enemy:getHp() > getBestHp(enemy)) and not self:getDamagedEffects(enemy, self.player)
 		useduel = useduel and not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy) and not self.player:hasSkill("jueqing"))
 		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy,enemies) then
 			local godsalvation = self:getCard("GodSalvation")
@@ -1171,7 +1171,7 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
-	if self:getDamagedEffects(self.player, target) or self.player:getHp()>getBestHp(self.player) then return "." end
+	if self:getDamagedEffects(self.player, target) or self.player:getHp() > getBestHp(self.player) then return "." end
 	if self:isFriend(target) and target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
 	if self.player:getMark("@fenyong") > 0 and not target:hasSkill("jueqing") then return "." end
 	if (not self:isFriend(target) and self:getCardsNum("Slash")* 2 >= target:getHandcardNum())
@@ -1684,7 +1684,7 @@ function SmartAI:useCardIndulgence(card, use)
 		if self:isWeak(enemy) then value = value + 3 end
 		if enemy:isLord() then value = value + 3 end
 
-		if self:objectiveLevel(enemy)<3 then value = value -10 end
+		if self:objectiveLevel(enemy) < 3 then value = value -10 end
 		if not enemy:faceUp() then value = value -10 end
 		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
 		if self:hasSkills("guanxing|xiuluo", enemy) then value = value - 5 end
@@ -1698,7 +1698,7 @@ function SmartAI:useCardIndulgence(card, use)
 
 	table.sort(enemies, cmp)
 
-	local target=enemies[1]
+	local target = enemies[1]
 	if getvalue(target) > -100 then
 		use.card = card
 		if use.to then use.to:append(target) end

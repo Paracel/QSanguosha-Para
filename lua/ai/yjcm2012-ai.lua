@@ -88,7 +88,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 		if not self.player:canSlash(enemy, nil, false) then
 		elseif self:slashProhibit(nil, enemy) then
-		elseif eff and def<8 and needburst > 0 then return "chi"
+		elseif eff and def < 8 and needburst > 0 then return "chi"
 		end
 	end
 
@@ -247,7 +247,7 @@ anxu_skill.name = "anxu"
 table.insert(sgs.ai_skills, anxu_skill)
 anxu_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("AnxuCard") then return nil end
-	card=sgs.Card_Parse("@AnxuCard=.")
+	card = sgs.Card_Parse("@AnxuCard=.")
 	return card
 
 end
@@ -645,7 +645,7 @@ qice_skill.getTurnUseCard = function(self)
 			return parsed_card
 		end
 		if ex_available then
-			local parsed_card=sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "ex_nihilo")
+			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "ex_nihilo")
 			return parsed_card
 		end
 	end
@@ -654,7 +654,7 @@ end
 sgs.ai_skill_use_func.QiceCard = function(card, use, self)
 	local userstring = card:toString()
 	userstring = (userstring:split(":"))[3]
-	local qicecard=sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
+	local qicecard = sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
 	self:useTrickCard(qicecard, use)
 	if not use.card then return end
 	use.card = card

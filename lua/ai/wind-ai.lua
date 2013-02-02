@@ -455,7 +455,7 @@ guhuo_skill.getTurnUseCard = function(self)
 			local dummyuse = { isDummy = true } 
 			self:useTrickCard(card, dummyuse)
 			if dummyuse.card then
-				local parsed_card=sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. card:objectName())
+				local parsed_card = sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. card:objectName())
 				return parsed_card
 			end
 		end
@@ -490,7 +490,7 @@ guhuo_skill.getTurnUseCard = function(self)
 				local dummyuse = { isDummy = true }
 				if newguhuo == "peach" then self:useBasicCard(guhuocard, dummyuse) else self:useTrickCard(guhuocard, dummyuse) end
 				if dummyuse.card then
-					local parsed_card=sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. newguhuo)
+					local parsed_card = sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. newguhuo)
 					return parsed_card
 				end
 			end

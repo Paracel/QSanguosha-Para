@@ -296,7 +296,7 @@ dimeng_skill.name = "dimeng"
 table.insert(sgs.ai_skills, dimeng_skill)
 dimeng_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("DimengCard") then return end
-	card=sgs.Card_Parse("@DimengCard=.")
+	card = sgs.Card_Parse("@DimengCard=.")
 	return card
 
 end
@@ -319,13 +319,13 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	end
 	self:sort(friends, "handcard")
 
-	local lowest_friend=friends[1]
+	local lowest_friend = friends[1]
 
 	self:sort(self.enemies, "defense")
 	if lowest_friend then
-		local hand2=lowest_friend:getHandcardNum()
+		local hand2 = lowest_friend:getHandcardNum()
 		for _, enemy in ipairs(self.enemies) do
-			local hand1=enemy:getHandcardNum()
+			local hand1 = enemy:getHandcardNum()
 
 			if enemy:hasSkill("manjuan") and (hand1 > hand2 - 1) and (hand1 - hand2) <= cardNum then
 				use.card = card
@@ -337,7 +337,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 			end
 		end
 		for _, enemy in ipairs(self.enemies) do
-			local hand1=enemy:getHandcardNum()
+			local hand1 = enemy:getHandcardNum()
 
 			if (hand1 > hand2) then
 				if (hand1 - hand2) <= cardNum then
@@ -364,7 +364,7 @@ sgs.ai_card_intention.DimengCard = function(self, card, from, to)
 end
 
 sgs.ai_use_value.DimengCard = 3.5
-sgs.ai_use_priority.DimengCard = 2.3
+sgs.ai_use_priority.DimengCard = 2.5
 
 sgs.dynamic_value.control_card.DimengCard = true
 

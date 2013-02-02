@@ -304,7 +304,7 @@ jixi_skill.getTurnUseCard = function(self)
 	if self.player:hasFlag("ForbidJixi")
 		or self.player:getPile("field"):isEmpty()
 		or (self.player:getHandcardNum() >= self.player:getHp() and
-		self.player:getPile("field"):length()<= self.room:getAlivePlayers():length() / 2) then
+		self.player:getPile("field"):length() <= self.room:getAlivePlayers():length() / 2) then
 		return
 	end
 	local can_use = false

@@ -279,7 +279,7 @@ local function XinZhan(self, cards)
 	end
 
 	if has_judged then
-		for index=1, #judged_list do
+		for index = 1, #judged_list do
 			if judged_list[index] == 0 then
 				table.insert(up, index, table.remove(bottom))
 			end

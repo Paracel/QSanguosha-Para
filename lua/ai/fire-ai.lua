@@ -366,7 +366,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 			end
 		end
 		
-		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName()~=self.player:objectName() then
+		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
 			if max_point >= 7 then
 			use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 			if use.to then use.to:append(zhugeliang) end

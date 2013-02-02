@@ -142,7 +142,7 @@ sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, inc
 end
 
 function sgs.ai_slash_prohibit.enyuan(self)
-	local num=self.player:getHandcardNum()
+	local num = self.player:getHandcardNum()
 	if num >= 3 or self:hasSkill("lianying") or (self:hasSkill("kongcheng") and num == 2) then return false end
 	return true
 end
@@ -348,7 +348,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	end
 	if not target then return end
 	for _, friend in ipairs(self.friends) do
-		if friend~=target and math.abs(self:getCardsNum(".", friend, "e")-self:getCardsNum(".", target, "e")) <= lost_hp then
+		if friend ~= target and math.abs(self:getCardsNum(".", friend, "e")-self:getCardsNum(".", target, "e")) <= lost_hp then
 			use.card = sgs.Card_Parse("@GanluCard=.")
 			if use.to then
 				use.to:append(friend)

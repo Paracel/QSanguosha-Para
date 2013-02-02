@@ -1380,7 +1380,7 @@ end
 
 function SmartAI:isEnemy(other, another)
 	if not other then self.room:writeToConsole(debug.traceback()) return end
-	if another then return self:isFriend(other)~=self:isFriend(another) end
+	if another then return self:isFriend(other) ~= self:isFriend(another) end
 	if sgs.isRolePredictable() and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isEnemy(other) end
 	if self.player:objectName() == other:objectName() then return false end
 	if self:objectiveLevel(other) > 0 then return true end
@@ -1431,7 +1431,7 @@ function SmartAI:sortEnemies(players)
 		local blevel = self:objectiveLevel(b)
 
 		if alevel~= blevel then return alevel > blevel end
-		if alevel == 3 then return sgs.getDefense(a) >sgs.getDefense(b) end
+		if alevel == 3 then return sgs.getDefense(a) > sgs.getDefense(b) end
 
 		alevel = sgs.ai_chaofeng[a:getGeneralName()] or 0
 		blevel = sgs.ai_chaofeng[b:getGeneralName()] or 0
@@ -1769,7 +1769,7 @@ function SmartAI:filterEvent(event, player, data)
 					end
 					if self:hasSkills(sgs.lose_equip_skill, player) then
 						if self:isWeak(player) and (card:isKindOf("DefensiveHorse") or card:isKindOf("Armor")) then
-							intention=math.abs(intention)
+							intention = math.abs(intention)
 						else
 							intention = 0
 						end
@@ -2644,7 +2644,7 @@ function SmartAI:getCardNeedPlayer(cards)
 
 	-- kongcheng
 	self:sort(self.enemies, "defense")
-	if #self.enemies>0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng") then
+	if #self.enemies > 0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng") then
 		for _,acard in ipairs(cardtogive) do
 			if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or (acard:isKindOf("Slash") and self.player:getPhase() == sgs.Player_Play)
 				or acard:isKindOf("OffensiveHorse") or acard:isKindOf("Weapon") then
@@ -2658,7 +2658,7 @@ function SmartAI:getCardNeedPlayer(cards)
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
 					and (self:hasSkills(sgs.priority_skill,friend) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
-				if (self:getOverflow()>0 or self.player:getHandcardNum()>3) and friend:getHandcardNum() <= 3 then
+				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() <= 3 then
 					return hcard, friend
 				end
 			end
@@ -2669,7 +2669,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if friend:getHandcardNum() <= 3 and (self:getOverflow()>0 or self.player:getHandcardNum()>3 
+				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 
 					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
 					return hcard, friend
 				end
@@ -2680,7 +2680,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if (self:getOverflow() > 0 or self.player:getHandcardNum()> 3 
+				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 
 					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
 					return hcard, friend
 				end
@@ -2767,7 +2767,7 @@ function SmartAI:askForPindian(requestor, reason)
 end
 
 sgs.ai_skill_playerchosen.damage = function(self, targets)
-	local targetlist=sgs.QList2Table(targets)
+	local targetlist = sgs.QList2Table(targets)
 	self:sort(targetlist, "hp")
 	for _, target in ipairs(targetlist) do
 		if self:isEnemy(target) then return target end
@@ -3047,7 +3047,7 @@ function SmartAI:getFinalRetrial(player)
 		end
 	end
 	if maxfriendseat == -1 and maxenemyseat == -1 then return 0
-	elseif maxfriendseat>maxenemyseat then return 1
+	elseif maxfriendseat > maxenemyseat then return 1
 	else return 2 end
 end
 
@@ -4111,7 +4111,7 @@ function SmartAI:useEquipCard(card, use)
 			use.card = lion
 			return
 		end
-		if self.player:hasSkill("rende") and self:evaluateArmor(card)<4 then
+		if self.player:hasSkill("rende") and self:evaluateArmor(card) < 4 then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getArmor() then return end
 			end

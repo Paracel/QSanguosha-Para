@@ -1561,13 +1561,13 @@ lijian_skill.getTurnUseCard = function(self)
 
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then
+					and not isCard("Peach", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end
 			end
 		elseif not self.player:getEquips():isEmpty() then
-			local player=self.player
+			local player = self.player
 			if player:getWeapon() then card_id=player:getWeapon():getId()
 			elseif player:getOffensiveHorse() then card_id=player:getOffensiveHorse():getId()
 			elseif player:getDefensiveHorse() then card_id=player:getDefensiveHorse():getId()
@@ -1578,7 +1578,7 @@ lijian_skill.getTurnUseCard = function(self)
 			cards = sgs.QList2Table(self.player:getHandcards())
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and isCard("Peach", acard, self.player) then
+					and not isCard("Peach", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -1600,16 +1600,18 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 		local maxSlash = 0
 		local friend_maxSlash
 		for _, friend in ipairs(self.friends_noself) do
-			if (getCardsNum("Slash", friend)> maxSlash) and friend:isMale() then
-				maxSlash=getCardsNum("Slash", friend)
+			if (getCardsNum("Slash", friend) > maxSlash) and friend:isMale() and not self:hasSkills("wuyan|noswuyan", friend) then
+				maxSlash = getCardsNum("Slash", friend)
 				friend_maxSlash = friend
 			end
 		end
 		if friend_maxSlash then
 			local safe = false
-			if (first:hasSkill("ganglie") or first:hasSkill("fankui") or first:hasSkill("enyuan")) then
-				if (first:getHp() <= 1 and first:getHandcardNum() == 0) then safe = true end
-			elseif (getCardsNum("Slash", friend_maxSlash) >= getCardsNum("Slash", first)) then safe = true end
+			if not self:hasSkills("wuyan|noswuyan", first) then
+				if self:hasSkills("ganglie|fankui|enyuan|neoganglie|nosenyuan", first) then
+					if (first:getHp() <= 1 and first:getHandcardNum() == 0) then safe = true end
+				elseif (getCardsNum("Slash", friend_maxSlash) >= getCardsNum("Slash", first)) then safe = true end
+			end
 			if safe then return friend_maxSlash end
 		else self:log("unfound")
 		end

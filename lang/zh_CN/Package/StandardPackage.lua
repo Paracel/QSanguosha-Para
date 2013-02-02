@@ -7,8 +7,7 @@ local t = {
 	[":slash"] = "基本牌<br />出牌时机：出牌阶段<br />使用目标：攻击范围内的一名其他角色<br />作用效果：对目标角色造成1点伤害",
 	["slash-jink"] = "%src 使用了【杀】，请使用一张【闪】",
 	["slash_extra_targets"] = "【杀】的额外目标",
-	["slash_extra_targets:yes"] = "增加额外目标",
-	["slash_extra_targets:no"] = "取消",
+	["slash_extra_targets:yes"] = "你想为此【杀】选择额外的目标吗？",
 
 	["jink"] = "闪",
 	[":jink"] = "基本牌<br />出牌时机：以你为目标的【杀】结算时<br />使用目标：以你为目标的【杀】<br />作用效果：抵消目标【杀】的效果",

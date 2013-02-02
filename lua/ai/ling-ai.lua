@@ -69,13 +69,20 @@ neofanjian_skill.getTurnUseCard = function(self)
 
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
+	local acard
+	for _, card in ipairs(cards) do
+		if not card:isKindOf("Peach") and not card:isKindOf("Analeptic") then
+			acard = card
+			break
+		end
+	end
+	if not acard then return end
 
-	local keep_value = self:getKeepValue(cards[1])
-	if cards[1]:getSuit() == sgs.Card_Diamond then keep_value = keep_value + 1 end
+	local keep_value = self:getKeepValue(acard)
+	if acard:getSuit() == sgs.Card_Diamond then keep_value = keep_value + 0.5 end
 
 	if keep_value < 6 then
-		if cards[1]:isKindOf("Peach") or cards[1]:isKindOf("Analeptic") then return nil end
-		local card_id = cards[1]:getEffectiveId()
+		local card_id = acard:getEffectiveId()
 		local card_str = "@NeoFanjianCard=" .. card_id
 		local fanjianCard = sgs.Card_Parse(card_str)
 		assert(fanjianCard)

@@ -359,7 +359,7 @@ sgs.ai_card_intention.DimengCard = function(self, card, from, to)
 	end
 	table.sort(to, compare_func)
 	if to[1]:getHandcardNum() < to[2]:getHandcardNum() then
-		sgs.updateIntention(from, to[1], (to[2]:getHandcardNum() - to[1]:getHandcardNum()) * 20 + 40)
+		sgs.updateIntention(from, to[2], (to[2]:getHandcardNum() - to[1]:getHandcardNum()) * 20 + 40)
 	end
 end
 

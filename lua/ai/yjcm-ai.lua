@@ -373,8 +373,8 @@ sgs.ai_card_intention.GanluCard = function(self, card, from, to)
 			break
 		end
 	end
-	if to[1]:getHandcardNum() < to[2]:getHandcardNum() then
-		sgs.updateIntention(from, to[1], (to[2]:getEquips():length() - to[1]:getEquips():length()) * 20 + 40)
+	if to[1]:getEquips():length() < to[2]:getEquips():length() then
+		sgs.updateIntention(from, to[2], (to[2]:getEquips():length() - to[1]:getEquips():length()) * 10 + 20)
 	end
 end
 

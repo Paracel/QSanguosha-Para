@@ -1413,7 +1413,7 @@ public:
                 if (xiahou->canSlash(p, NULL, false))
                     targets << p;
             QString choice;
-            if (targets.isEmpty())
+            if (!Slash::IsAvailable(xiahou) || targets.isEmpty())
                 choice = "discard";
             else
                 choice = room->askForChoice(xiahou, objectName(), "discard+slash");

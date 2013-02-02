@@ -325,7 +325,7 @@ public:
     }
 };
 
-Jushou::Jushou():PhaseChangeSkill("jushou") {
+Jushou::Jushou(): PhaseChangeSkill("jushou") {
 }
 
 int Jushou::getJushouDrawNum(ServerPlayer *) const{

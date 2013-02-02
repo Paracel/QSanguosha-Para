@@ -99,6 +99,8 @@ signals:
 
 #include "skill.h"
 class Jushou: public PhaseChangeSkill {
+    Q_OBJECT
+
 public:
     Jushou();
     virtual bool onPhaseChange(ServerPlayer *target) const;

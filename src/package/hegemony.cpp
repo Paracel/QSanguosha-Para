@@ -852,6 +852,8 @@ HegemonyPackage::HegemonyPackage()
 
     General *jiling = new General(this, "jiling", "qun", 4);
     jiling->addSkill(new Shuangren);
+    jiling->addSkill(new SlashNoDistanceLimitSkill("shuangren"));
+    related_skills.insertMulti("shuangren", "#shuangren-slash-ndl");
 
     General *tianfeng = new General(this, "tianfeng", "qun", 3);
     tianfeng->addSkill(new Sijian);

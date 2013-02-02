@@ -270,7 +270,7 @@ public:
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets1, "nosxuanfeng_slash");
                     room->broadcastSkillInvoke("xuanfeng", 1);
                     Slash *slash = new Slash(Card::NoSuit, 0);
-                    slash->setSkillName("nosxuanfeng");
+                    slash->setSkillName(objectName());
 
                     CardUseStruct card_use;
                     card_use.card = slash;
@@ -945,6 +945,8 @@ NostalYJCMPackage::NostalYJCMPackage()
 
     General *nos_lingtong = new General(this, "nos_lingtong", "wu");
     nos_lingtong->addSkill(new NosXuanfeng);
+    nos_lingtong->addSkill(new SlashNoDistanceLimitSkill("nosxuanfeng"));
+    related_skills.insertMulti("nosxuanfeng", "#nosxuanfeng-slash-ndl");
 
     General *nos_xushu = new General(this, "nos_xushu", "shu", 3);
     nos_xushu->addSkill(new NosWuyan);

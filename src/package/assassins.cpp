@@ -190,6 +190,19 @@ public:
     }
 };
 
+class MizhaoSlashNoDistanceLimit: public TargetModSkill {
+public:
+    MizhaoSlashNoDistanceLimit(): TargetModSkill("#mizhao-slash-ndl") {
+    }
+
+    virtual int getDistanceLimit(const Player *, const Card *card) const{
+        if (card->isKindOf("Slash") && card->getSkillName() == "mizhao")
+            return 1000;
+        else
+            return 0;
+    }
+};
+
 class Jieyuan: public TriggerSkill {
 public:
     Jieyuan(): TriggerSkill("jieyuan") {
@@ -282,6 +295,8 @@ AssassinsPackage::AssassinsPackage(): Package("assassins") {
     General *liuxie = new General(this, "liuxie", "qun", 3);
     liuxie->addSkill(new Tianming);
     liuxie->addSkill(new Mizhao);
+    liuxie->addSkill(new MizhaoSlashNoDistanceLimit);
+    related_skills.insertMulti("mizhao", "#mizhao-slash-ndl");
 
     General *lingju = new General(this, "lingju", "qun", 3, false);
     lingju->addSkill(new Jieyuan);

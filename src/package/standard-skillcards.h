@@ -110,6 +110,8 @@ public:
 };
 
 class JijiangViewAsSkill: public ZeroCardViewAsSkill {
+    Q_OBJECT
+
 public:
     JijiangViewAsSkill();
 
@@ -122,6 +124,8 @@ private:
 };
 
 class Yiji: public MasochismSkill {
+    Q_OBJECT
+
 public:
     Yiji();
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const;

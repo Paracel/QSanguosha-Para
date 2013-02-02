@@ -245,12 +245,13 @@ public:
     }
 };
 
-ShensuCard::ShensuCard(){
+ShensuCard::ShensuCard() {
     mute = true;
 }
 
 bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     Slash *slash = new Slash(NoSuit, 0);
+    slash->setSkillName("shensu");
     slash->deleteLater();
     return slash->targetFilter(targets, to_select, Self);
 }
@@ -1117,6 +1118,8 @@ WindPackage::WindPackage()
 {
     General *xiahouyuan = new General(this, "xiahouyuan", "wei");
     xiahouyuan->addSkill(new Shensu);
+    xiahouyuan->addSkill(new SlashNoDistanceLimitSkill("shensu"));
+    related_skills.insertMulti("shensu", "#shensu-slash-ndl");
 
     General *caoren = new General(this, "caoren", "wei");
     caoren->addSkill(new Jushou);

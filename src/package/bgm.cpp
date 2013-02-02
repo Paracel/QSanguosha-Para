@@ -1519,9 +1519,11 @@ BGMPackage::BGMPackage(): Package("BGM") {
     bgm_xiahoudun->addSkill(new FenyongClear);
     bgm_xiahoudun->addSkill(new FenyongForHuashen);
     bgm_xiahoudun->addSkill(new Xuehen);
+    bgm_xiahoudun->addSkill(new SlashNoDistanceLimitSkill("xuehen"));
     bgm_xiahoudun->addSkill(new FakeMoveSkill("xuehen"));
     related_skills.insertMulti("fenyong", "#fenyong-clear");
     related_skills.insertMulti("fenyong", "#fenyong-for-huashen");
+    related_skills.insertMulti("xuehen", "#xuehen-slash-ndl");
     related_skills.insertMulti("xuehen", "#xuehen-fake-move");
 
     addMetaObject<LihunCard>();

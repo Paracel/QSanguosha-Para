@@ -845,7 +845,7 @@ void Collateral::onEffect(const CardEffectStruct &effect) const{
 
     WrappedCard *weapon = killer->getWeapon();
 
-    QString prompt = QString("collateral-slash:%1:%2").arg(source->objectName()).arg(victim->objectName());
+    QString prompt = QString("collateral-slash:%1:%2").arg(victim->objectName()).arg(source->objectName());
 
     if (victim->isDead()) {
         if (source->isAlive() && killer->isAlive() && killer->getWeapon())

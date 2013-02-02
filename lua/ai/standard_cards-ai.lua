@@ -1594,47 +1594,47 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
-	if self:isFriend(target2) and target2:hasSkill("leiji") 
-		and (self:hasSuit("spade", true, target2) or target2:getHandcardNum() >= 3)
-		and (getKnownCard(target2, "Jink", true) >= 1
+	if self:isFriend(target) and target:hasSkill("leiji") 
+		and (self:hasSuit("spade", true, target) or target:getHandcardNum() >= 3)
+		and (getKnownCard(target, "Jink", true) >= 1
 			or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend))) then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if self:slashIsEffective(slash, target2) then 
+			if self:slashIsEffective(slash, target) then 
 				return slash:toString()
 			end
 		end
 	end
-	if target and target2 and (self:getDamagedEffects(target2, self.player) or target2:getHp() > getBestHp(target2)) then   
+	if target and (self:getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)) then   
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if self:slashIsEffective(slash, target2) and self:isFriend(target2) then
+			if self:slashIsEffective(slash, target) and self:isFriend(target) then
 				return slash:toString()
 			end
-			if not self:slashIsEffective(slash, target2) and self:isEnemy(target2) then
+			if not self:slashIsEffective(slash, target) and self:isEnemy(target) then
 				return slash:toString()
 			end
 		end
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if not self:getDamagedEffects(target2, self.player) and self:isEnemy(target2) then 
+			if not self:getDamagedEffects(target, self.player) and self:isEnemy(target) then 
 				return slash:toString()
 			end
 		end
 	end
 
 	if self:needBear() then return "." end
-	if target and target2 and not self:hasSkills(sgs.lose_equip_skill) and self:isEnemy(target2) then
+	if target and not self:hasSkills(sgs.lose_equip_skill) and self:isEnemy(target) then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if self:slashIsEffective(slash, target2) then
+			if self:slashIsEffective(slash, target) then
 				return slash:toString()
 			end
 		end
 	end
-	if target and target2 and not self:hasSkills(sgs.lose_equip_skill) and self:isFriend(target2) then
+	if target and not self:hasSkills(sgs.lose_equip_skill) and self:isFriend(target) then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if not self:slashIsEffective(slash, target2) then
+			if not self:slashIsEffective(slash, target) then
 				return slash:toString()
 			end
 		end
-		if (target2:getHp() > 2 or getCardsNum("Jink", target2) > 1) and not target2:getRole() == "lord" and self.player:getHandcardNum() > 1 then
+		if (target:getHp() > 2 or getCardsNum("Jink", target) > 1) and not target:getRole() == "lord" and self.player:getHandcardNum() > 1 then
 			for _, slash in ipairs(self:getCards("Slash")) do
 				return slash:toString()
 			end

@@ -8,9 +8,9 @@ function sgs.CreateTriggerSkill(spec)
 	local frequency = spec.frequency or sgs.Skill_NotFrequent
 	local skill = sgs.LuaTriggerSkill(spec.name, frequency)
 	
-	if(type(spec.events) == "number") then
+	if (type(spec.events) == "number") then
 		skill:addEvent(spec.events)
-	elseif(type(spec.events) == "table") then
+	elseif (type(spec.events) == "table") then
 		for _, event in ipairs(spec.events) do
 			skill:addEvent(event)
 		end
@@ -21,11 +21,9 @@ function sgs.CreateTriggerSkill(spec)
 	if spec.can_trigger then
 		skill.can_trigger = spec.can_trigger
 	end
-	
 	if spec.view_as_skill then
 		skill:setViewAsSkill(spec.view_as_skill)
 	end
-
 	if type(spec.priority) == "number" then
 		skill.priority = spec.priority
 	end
@@ -90,14 +88,18 @@ end
 
 function sgs.CreateTargetModSkill(spec)
 	assert(type(spec.name) == "string")
-	assert(type(spec.residue_func) == "function")
-	assert(type(spec.distance_limit_func) == "function")
-	assert(type(spec.extra_target_func) == "function")
+	assert(type(spec.residue_func) == "function" or type(spec.distance_limit_func) == "function" or type(spec.extra_target_func) == "function")
 
 	local skill = sgs.LuaTargetModSkill(spec.name)
-	skill.residue_func = spec.residue_func
-	skill.distance_limit_func = spec.distance_limit_func
-	skill.extra_target_func = spec.extra_target_func
+	if spec.residue_func then
+		skill.residue_func = spec.residue_func
+	end
+	if spec.distance_limit_func then
+		skill.distance_limit_func = spec.distance_limit_func
+	end
+	if spec.extra_target_func then
+		skill.extra_target_func = spec.extra_target_func
+	end
 	
 	if type(spec.pattern) == "string" then
 		skill:setPattern(pattern)

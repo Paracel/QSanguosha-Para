@@ -246,7 +246,7 @@ end
 
 function SmartAI:slashIsEffective(slash, to)
 	if not slash or not to then self.room:writeToConsole(debug.traceback()) end
-	if to:hasSkill("zuixiang") and to:isLocked(slash) then return false end
+	if to:getPile("dream"):length() > 0 and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then
 			return false

@@ -3707,7 +3707,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 	if self.room:isProhibited(self.player, to, card) then
 		return false
 	end
-	if to:isLocked(card) then
+	if to:getPile("dream"):length() > 0 and to:isLocked(card) then
 		return false
 	end
 
@@ -3942,18 +3942,18 @@ function SmartAI:hasTrickEffective(card, player)
 		if player:hasSkill("wuyan") then
 			if card and (card:isKindOf("Duel") or card:isKindOf("FireAttack")) then return false end
 		end
-		if (player:getMark("@fog") > 0 or player:getMark("@fenyong") > 0) and
-			sgs.dynamic_value.damage_card[card:getClassName()] then return false end
-		if player:hasSkill("zuixiang") and player:isLocked(card) then return false end
+		if (player:getMark("@fog") > 0 or player:getMark("@fenyong") > 0)
+			and card and (card:isKindOf("Duel") or card:isKindOf("FireAttack")) then return false end
+		if player:getPile("dream"):length() > 0 and player:isLocked(card) then return false end
 	else
 		if self.player:hasSkill("wuyan") then
-			if card:isKindOf("TrickCard") and
-				(card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+			if card:isKindOf("TrickCard")
+				and (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
 			return false end
 		end
 		if self.player:hasSkill("noswuyan") then
-			if card:isKindOf("TrickCard") and not
-				(card:isKindOf("DelayedTrick") or card:isKindOf("GodSalvation") or card:isKindOf("AmazingGrace")) then
+			if card:isKindOf("TrickCard")
+				and not (card:isKindOf("DelayedTrick") or card:isKindOf("GodSalvation") or card:isKindOf("AmazingGrace")) then
 			return false end
 		end
 	end

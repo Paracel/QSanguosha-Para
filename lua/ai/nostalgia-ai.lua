@@ -250,6 +250,8 @@ sgs.ai_skill_playerchosen.nosxuanfeng_slash = sgs.ai_skill_playerchosen.zero_car
 sgs.ai_playerchosen_intention.nosxuanfeng_damage = 80
 sgs.ai_playerchosen_intention.nosxuanfeng_slash = 80
 
+sgs.nosxuanfeng_keep_value = sgs.xiaoji_keep_value
+
 sgs.ai_view_as.nosgongqi = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()

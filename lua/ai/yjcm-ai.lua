@@ -287,6 +287,8 @@ sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)
 	end
 end
 
+sgs.xuanfeng_keep_value = sgs.xiaoji_keep_value
+
 sgs.ai_skill_invoke.pojun = function(self, data)
 	local damage = data:toDamage()
 

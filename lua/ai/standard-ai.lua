@@ -1177,9 +1177,7 @@ guose_skill.getTurnUseCard = function(self, inclusive)
 	cards = sgs.QList2Table(cards)
 
 	local card
-
 	self:sortByUseValue(cards, true)
-
 	local has_weapon, has_armor = false, false
 
 	for _, acard in ipairs(cards) do

@@ -386,10 +386,10 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 		end
 	end
 
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByUseValue(cards, true)
 	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1
 		and zhugeliang:objectName() ~= self.player:objectName() and self:getEnemyNumBySeat(self.player, zhugeliang) >= 1 then
-		local cards = sgs.QList2Table(self.player:getHandcards())
-		self:sortByUseValue(cards,true)
 		if isCard("Jink", cards[1], self.player) and self:getCardsNum("Jink") == 1 then return end
 		use.card = sgs.Card_Parse("@TianyiCard=" .. cards[1]:getId())
 		if use.to then use.to:append(zhugeliang) end

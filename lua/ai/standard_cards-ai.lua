@@ -1478,7 +1478,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	
 	for _, enemy in ipairs(enemies) do
 		local yanxiao
-		tricks = friend:getJudgingArea()
+		tricks = enemy:getJudgingArea()
 		for _, trick in sgs.qlist(tricks) do
 			if trick:isKindOf("YanxiaoCard") then
 				yanxiao = trick

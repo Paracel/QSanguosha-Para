@@ -2089,7 +2089,11 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             else if (newStatus == Client::Playing)
                 reason = CardUseStruct::CARD_USE_REASON_PLAY;
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-            button->setEnabled(vsSkill->isAvailable(Self, reason, pattern) && !pattern.endsWith("!"));
+            if (newStatus != Client::RespondingUse // temp way to avoid these two skills in responding
+                && (vsSkill->objectName() == "lihuo" || vsSkill->objectName() == "fan"))
+                button->setEnabled(false);
+            else
+                button->setEnabled(vsSkill->isAvailable(Self, reason, pattern) && !pattern.endsWith("!"));
         } else {
             const Skill *skill = button->getSkill();
             if (skill->getFrequency() == Skill::Wake)

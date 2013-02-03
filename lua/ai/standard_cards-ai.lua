@@ -713,7 +713,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		elseif target:getLostHp() < 1 then return false end
 		return true
 	else
-		if self:isWeak(target) or damage.damage > 1 then return false end
+		if self:isWeak(target) or damage.damage > 1 or self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
 		if target:getArmor() and self:evaluateArmor(target:getArmor(), target) > 3 then return true end
 		local num = target:getHandcardNum()
 		if self.player:hasSkill("tieji") or (self.player:hasSkill("liegong")

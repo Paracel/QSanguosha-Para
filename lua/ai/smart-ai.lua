@@ -1678,8 +1678,8 @@ function SmartAI:filterEvent(event, player, data)
 			end
 		end
 		if card:isKindOf("Slash") and to:hasSkill("leiji") and
-			(getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to))
-			and (to:getHandcardNum() > 2 or from:getState() == "robot") then
+			(getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to)) then
+			sgs.updateIntention(from, to, 3)
 			sgs.ai_leiji_effect = true
 		end
 	elseif event == sgs.Damaged then
@@ -3825,8 +3825,8 @@ function SmartAI:getAoeValueTo(card, to, from)
 		if card:isKindOf("ArcheryAttack") then
 			sj_num = getCardsNum("Jink", to)
 			if (to:hasSkill("leiji") and sj_num >= 1) or self:hasEightDiagramEffect(to) then
-				value = value + 20
-				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 40 end
+				value = value + 40
+				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 70 end
 			end
 			if self:hasEightDiagramEffect(to) then value = value + 30 end
 		end

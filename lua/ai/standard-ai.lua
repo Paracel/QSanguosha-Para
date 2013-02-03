@@ -1454,20 +1454,10 @@ sgs.dynamic_value.benefit.JieyinCard = true
 sgs.xiaoji_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
-	Crossbow = 5,
-	Blade = 5,
-	Spear = 5,
-	DoubleSword = 5,
-	QinggangSword = 5,
-	Axe = 5,
-	KylinBow = 5,
-	Halberd = 5,
-	IceSword = 5,
-	Fan = 5,
-	MoonSpear = 5,
-	GudingBlade = 5,
-	DefensiveHorse = 5,
-	OffensiveHorse = 5
+	Weapon = 4.9,
+	Armor = 5,
+	OffensiveHorse = 4.8,
+	DefensiveHorse = 5
 }
 
 sgs.ai_chaofeng.sunshangxiang = 6

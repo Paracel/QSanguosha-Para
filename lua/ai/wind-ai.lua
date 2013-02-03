@@ -104,8 +104,10 @@ sgs.ai_card_intention.ShensuCard = 80
 sgs.shensu_keep_value = {
 	Peach = 6,
 	Jink = 5.1,
-	Weapon = 5,
-	Horse = 5
+	Weapon = 4.9,
+	Armor = 5,
+	OffensiveHorse = 4.8,
+	DefensiveHorse = 5
 }
 
 function sgs.ai_skill_invoke.jushou(self, data)

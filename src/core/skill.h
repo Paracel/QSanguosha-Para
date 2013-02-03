@@ -59,7 +59,7 @@ private:
     QStringList sources;
 };
 
-class ViewAsSkill:public Skill {
+class ViewAsSkill: public Skill {
     Q_OBJECT
 
 public:

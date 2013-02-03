@@ -90,7 +90,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return  pattern == "slash" && player->getMark("Equips_Nullified_to_Yourself") == 0;
+        return pattern == "slash" && player->getMark("Equips_Nullified_to_Yourself") == 0;
     }
 
     virtual bool viewFilter(const Card *to_select) const{

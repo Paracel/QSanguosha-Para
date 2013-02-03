@@ -72,11 +72,11 @@ public:
         return new TuxiCard;
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "@@tuxi";
     }
 };
@@ -232,11 +232,11 @@ public:
     GuicaiViewAsSkill() :OneCardViewAsSkill("guicai") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@guicai";
     }
 
@@ -377,11 +377,11 @@ public:
         return jink;
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "jink";
     }
 };
@@ -571,7 +571,7 @@ public:
         return Slash::IsAvailable(player);
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "jink" || pattern == "slash";
     }
 
@@ -748,7 +748,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("ZhihengCard");
+        return !player->isNude() && !player->hasUsed("ZhihengCard");
     }
 };
 
@@ -1005,7 +1005,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("JieyinCard");
+        return player->getHandcardNum() >= 2 && !player->hasUsed("JieyinCard");
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
@@ -1111,7 +1111,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("LijianCard");
+        return !player->isNude() && !player->hasUsed("LijianCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1154,7 +1154,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("QingnangCard");
+        return !player->isKongcheng() && !player->hasUsed("QingnangCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1349,7 +1349,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->usedTimes("ZhihengCard") < (player->getLostHp() + 1);
+        return !player->isNude() && player->usedTimes("ZhihengCard") < (player->getLostHp() + 1);
     }
 };
 

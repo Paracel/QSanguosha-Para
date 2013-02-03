@@ -158,7 +158,6 @@ public:
             return NULL;
     }
 
-protected:
     virtual bool isEnabledAtPlay(const Player *player) const{
         if (player->isKongcheng())
             return false;
@@ -600,13 +599,8 @@ public:
         return new AnxuCard;
     }
 
-protected:
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("AnxuCard");
-    }
-
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return false;
     }
 };
 
@@ -655,7 +649,7 @@ public:
         return Slash::IsAvailable(player);
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "slash";
     }
 
@@ -735,7 +729,7 @@ public:
     ChunlaoViewAsSkill(): ViewAsSkill("chunlao") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 

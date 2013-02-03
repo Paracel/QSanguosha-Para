@@ -182,11 +182,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("FenxunCard");
-    }
-
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return false;
+        return !player->isNude() && !player->hasUsed("FenxunCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -472,11 +468,11 @@ public:
     ShuangrenViewAsSkill(): OneCardViewAsSkill("shuangren") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "@@shuangren";
     }
 
@@ -760,11 +756,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return true;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return false;
+        return !player->isNude();
     }
 
     virtual bool viewFilter(const Card *to_select) const{

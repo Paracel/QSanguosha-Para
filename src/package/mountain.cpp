@@ -102,11 +102,11 @@ public:
         return card;
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@qiaobian";
     }
 };
@@ -414,7 +414,9 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->getPile("field").isEmpty();
+        Snatch *snatch = new Snatch(Card::NoSuit, 0);
+        snatch->deleteLater();
+        return !player->getPile("field").isEmpty() && snatch->isAvailable(player);
     }
 
     virtual const Card *viewAs() const{

@@ -104,7 +104,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return  pattern.contains("analeptic") && player->faceUp();
+        return pattern.contains("analeptic") && player->faceUp();
     }
 
     virtual const Card *viewAs() const{
@@ -234,11 +234,11 @@ public:
         return !to_select->isKindOf("BasicCard") && !Self->isJilei(to_select);
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@jujian";
     }
 };
@@ -384,12 +384,11 @@ public:
         return new XuanhuoCard;
     }
 
-protected:
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "@@xuanhuo";
     }
 };
@@ -1143,7 +1142,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->getPile("power").isEmpty()&&!player->hasUsed("PaiyiCard");
+        return !player->getPile("power").isEmpty() && !player->hasUsed("PaiyiCard");
     }
 
     virtual const Card *viewAs() const{

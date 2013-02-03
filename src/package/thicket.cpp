@@ -481,7 +481,7 @@ public:
         return card;
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
@@ -790,7 +790,7 @@ public:
         return Analeptic::IsAvailable(player);
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern.contains("analeptic");
     }
 

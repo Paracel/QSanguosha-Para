@@ -91,7 +91,7 @@ public:
     JiemingViewAsSkill(): ZeroCardViewAsSkill("jieming") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
@@ -251,7 +251,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getMark("shuangxiong") != 0;
+        return player->getMark("shuangxiong") != 0 && !player->isKongcheng();
     }
 
     virtual bool viewFilter(const Card *card) const{
@@ -468,11 +468,11 @@ public:
         return to_select->isBlack() && !to_select->isEquipped();
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "nullification";
     }
 

@@ -107,7 +107,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isKongcheng() && ! player->hasUsed("NeoFanjianCard");
+        return !player->isKongcheng() && !player->hasUsed("NeoFanjianCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{

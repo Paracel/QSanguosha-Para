@@ -78,7 +78,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("LihunCard");
+        return !player->isNude() && !player->hasUsed("LihunCard");
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -194,7 +194,7 @@ public:
     Yanzheng(): OneCardViewAsSkill("yanzheng") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
@@ -1617,11 +1617,11 @@ public:
     LangguViewAsSkill(): OneCardViewAsSkill("langgu") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@langgu";
     }
 
@@ -1745,12 +1745,8 @@ public:
     Fuluan(): ViewAsSkill("fuluan") {
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return false;
-    }
-
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("FuluanCard") && !player->hasFlag("ForbidFuluan");
+        return player->getCardCount(true) >= 3 && !player->hasUsed("FuluanCard") && !player->hasFlag("ForbidFuluan");
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *card) const{
@@ -1834,11 +1830,11 @@ public:
         return card;
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@huangen";
     }
 };
@@ -2133,7 +2129,7 @@ public:
     DIYYicongViewAsSkill(): ViewAsSkill("diyyicong") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 

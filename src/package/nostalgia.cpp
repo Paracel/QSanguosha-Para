@@ -142,7 +142,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("NosJujianCard");
+        return !player->isNude() && !player->hasUsed("NosJujianCard");
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
@@ -222,7 +222,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("NosXuanhuoCard");
+        return !player->isKongcheng() && !player->hasUsed("NosXuanhuoCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -314,7 +314,7 @@ public:
         return Slash::IsAvailable(player);
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "slash";
     }
 
@@ -574,7 +574,7 @@ public:
     NosQuanjiViewAsSkill(): OneCardViewAsSkill("nosquanji") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 

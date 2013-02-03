@@ -21,11 +21,11 @@ public:
     GuidaoViewAsSkill(): OneCardViewAsSkill("guidao") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@guidao";
     }
 
@@ -124,11 +124,11 @@ public:
     LeijiViewAsSkill(): ZeroCardViewAsSkill("leiji") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return  pattern == "@@leiji";
     }
 
@@ -272,7 +272,7 @@ public:
     ShensuViewAsSkill(): ViewAsSkill("shensu") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
@@ -643,7 +643,7 @@ public:
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@tianxiang";
     }
 

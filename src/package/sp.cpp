@@ -456,7 +456,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getLostHp() > 0 && !player->hasUsed("XuejiCard");
+        return player->getLostHp() > 0 && !player->isNude() && !player->hasUsed("XuejiCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -655,11 +655,11 @@ public:
     BifaViewAsSkill(): OneCardViewAsSkill("bifa") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@bifa";
     }
 

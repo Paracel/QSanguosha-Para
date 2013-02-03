@@ -752,11 +752,11 @@ public:
     KuangfengViewAsSkill(): ZeroCardViewAsSkill("kuangfeng") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@kuangfeng";
     }
 
@@ -873,11 +873,11 @@ public:
     DawuViewAsSkill(): ZeroCardViewAsSkill("dawu") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@dawu";
     }
 
@@ -1246,7 +1246,7 @@ public:
 Longhun::Longhun(): ViewAsSkill("longhun") {
 }
 
-bool Longhun::isEnabledAtResponse(const Player *player, const QString &pattern) const{
+bool Longhun::isEnabledAtResponse(const Player *, const QString &pattern) const{
     return pattern == "slash"
            || pattern == "jink"
            || pattern.contains("peach")

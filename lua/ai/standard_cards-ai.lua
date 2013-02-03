@@ -486,21 +486,27 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 			end
 		end
 	end
-	for i = #targetlist, 1, -1 do
-		local target = targetlist[i]
+	for _, target in ipairs(targetlist) do
 		if not self:slashProhibit(slash, target) then
 			if self:slashIsEffective(slash, target) then
 				if self:isFriend(target) and (target:getHp() > getBestHp(target) or self:getDamagedEffects(target,self.player)) then
 					return target
 				end
 			else
-				table.insert(canAvoidSlash,target)
+				table.insert(canAvoidSlash, target)
 			end
 		end
 	end
 	if #canAvoidSlash > 0 then return canAvoidSlash[1] end
 	if #arrBestHp > 0 then return arrBestHp[1] end
-	return targetlist[#targetlist]
+	
+	self:sort(targetlist, "defenseSlash", true)
+	for _, target in ipairs(targetlist) do
+		if target:objectName() ~= self.player:objectName() and not self:isFriend(target) then
+			return target
+		end
+	end
+	return targetlist[1]
 end
 
 sgs.ai_card_intention.Slash = function(self, card, from, tos)
@@ -1468,6 +1474,25 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			self.room:setPlayerFlag(target, "JixiTarget")
 		end
 		return
+	end
+	
+	for _, enemy in ipairs(enemies) do
+		local yanxiao
+		tricks = friend:getJudgingArea()
+		for _, trick in sgs.qlist(tricks) do
+			if trick:isKindOf("YanxiaoCard") then
+				yanxiao = trick
+				break
+			end
+		end
+		if yanxiao then
+			use.card = card
+			if use.to then
+				sgs.ai_skill_cardchosen[name] = yanxiao:getEffectiveId()
+				use.to:append(enemy)
+			end
+			return
+		end
 	end
 
 	if name == "snatch" or self:getOverflow() > 0 then

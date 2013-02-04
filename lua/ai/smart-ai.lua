@@ -1328,6 +1328,19 @@ function SmartAI:objectiveLevel(player)
 
 		if rebel_num == 0 then
 			if #players == 2 and self.role == "loyalist" then return 5 end
+			
+			if self.room:getLord():hasSkill("benghuai") then
+				if self.player:isLord() then
+					if (sgs.evaluatePlayerRole(player) == "renegade" or sgs.evaluateRoleTrends(player) == "renegade") and player:getHp() > 1 then
+						return 5            
+					else
+						return player:getHp() > 1 and 1 or 0
+					end
+				else
+					return (sgs.evaluatePlayerRole(player) == "renegade" or sgs.evaluateRoleTrends(player) == "renegade") and 5 or 0
+				end
+			end
+			
 			self:sort(players, "hp")
 			local maxhp = players[#players]:isLord() and players[#players - 1]:getHp() or players[#players]:getHp()
 			if maxhp > 2 then return player:getHp() == maxhp and 5 or 0 end

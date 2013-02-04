@@ -268,6 +268,11 @@ lianhuan_skill.getTurnUseCard = function(self)
 				self:useTrickCard(acard, dummy_use)
 				if dummy_use.card then shouldUse = false end
 			end
+			if acard:getTypeId() == sgs.sgs.Card_TypeEquip then
+				local dummy_use = { isDummy = true }
+				self:useEquipCard(acard, dummy_use)
+				if dummy_use.card then shouldUse = false end
+			end
 			if shouldUse then
 				card = acard
 				break

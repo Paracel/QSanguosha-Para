@@ -802,7 +802,7 @@ function sgs.backwardEvaluation(player)
 	if sgs.evaluatePlayerRole(player) ~= "unknown" then return sgs.evaluatePlayerRole(player) end
 	local players = global_room:getOtherPlayers(player)
 	local rest_players = {}
-	for _, arole in ipairs({"loyalist", "rebel", "renegade"}) do
+	for _, arole in ipairs({ "loyalist", "rebel", "renegade" }) do
 		rest_players[arole] = sgs.current_mode_players[arole]
 	end
 	local unknowns = {}
@@ -1239,8 +1239,8 @@ function SmartAI:objectiveLevel(player)
 				if rebel_num > 1 then
 					if player:isLord() then
 						return -2
-					elseif sgs.evaluatePlayerRole(player) == "rebel" or
-						sgs.evaluateRoleTrends(player) == "rebel" then
+					elseif sgs.evaluatePlayerRole(player) == "rebel"
+							or sgs.evaluateRoleTrends(player) == "rebel" then
 						return 5
 					else
 						return 0
@@ -1266,7 +1266,7 @@ function SmartAI:objectiveLevel(player)
 						end
 					elseif process:match("rebel") then
 						if sgs.evaluatePlayerRole(player) == "rebel" then
-						if process == "rebel" then return 5 else return 3 end
+							if process == "rebel" then return 5 else return 3 end
 						elseif sgs.evaluateRoleTrends(player) == "rebel" then return 3
 						else return -1 end
 					else
@@ -1480,12 +1480,12 @@ function SmartAI:updatePlayers(clear_flags)
 	sgs.draw_pile = global_room:getDrawPile()
 
 	if sgs.isRolePredictable() then
-		local friends= sgs.QList2Table(self.lua_ai:getFriends())
+		local friends = sgs.QList2Table(self.lua_ai:getFriends())
 		for i = 1, #friends, 1 do
 			if friends[i]:isDead() or friends[i]:objectName() == self.player:objectName() then table.remove(friends, i) end
 		end
 
-		local enemies= sgs.QList2Table(self.lua_ai:getEnemies())
+		local enemies = sgs.QList2Table(self.lua_ai:getEnemies())
 		for i = 1, #enemies, 1 do
 			if enemies[i]:isDead() or enemies[i]:objectName() == self.player:objectName() then table.remove(enemies, i) end
 		end
@@ -3598,7 +3598,7 @@ function SmartAI:getSuitNum(suit_strings, include_equip, player)
 	local flag = "h"
 	if include_equip then flag = "he" end
 	local allcards
-	local current= self.room:getCurrent()
+	local current = self.room:getCurrent()
 	if player:objectName() == current:objectName() then
 		allcards = sgs.QList2Table(player:getCards(flag))
 	else

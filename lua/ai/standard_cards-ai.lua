@@ -789,7 +789,7 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 					end
 				end
 			end
-			if #card < 2 then return end
+			if #cards < 2 then return end
 			self:sortByUseValue(cards, true)
 			return "$" .. cards[1]:getEffectiveId() .. "+" .. cards[2]:getEffectiveId()
 		end

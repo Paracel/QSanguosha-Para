@@ -331,7 +331,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 
 	for i = 1, #self.enemies, 1 do
 		local p = self.enemies[i]
-		local x= p:getHandcardNum()
+		local x = p:getHandcardNum()
 		local good_target = true
 		if x == 1 and self:hasSkills(sgs.need_kongcheng, p) then good_target = false end
 		if x >= 2 and self:hasSkills("tuntian", p) then good_target = false end

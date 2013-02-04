@@ -223,7 +223,7 @@ sgs.ai_chat.indulgence =
 }
 
 --leiji
-sgs.ai_chat.leiji_jink=
+sgs.ai_chat.leiji_jink =
 {
 	"我有闪我会到处乱说么？",
 	"你觉得我有木有闪啊",

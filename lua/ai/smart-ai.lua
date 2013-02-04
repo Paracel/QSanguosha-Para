@@ -1232,6 +1232,7 @@ function SmartAI:objectiveLevel(player)
 	local loyal_num = sgs.current_mode_players["loyalist"]
 	local renegade_num = sgs.current_mode_players["renegade"]
 	local process = sgs.gameProcess(self.room)
+	local target_role = player:getRole()
 
 	if self.role == "renegade" then
 		if rebel_num == 0 or loyal_num == 0 then
@@ -1480,7 +1481,7 @@ function SmartAI:updatePlayers(clear_flags)
 	sgs.draw_pile = global_room:getDrawPile()
 
 	if sgs.isRolePredictable() then
-		local friends = sgs.QList2Table(self.lua_ai:getFriends())
+		local friends = sgs.QList2Table(self.lua_ai:getFriends())		
 		for i = 1, #friends, 1 do
 			if friends[i]:isDead() or friends[i]:objectName() == self.player:objectName() then table.remove(friends, i) end
 		end
@@ -1501,7 +1502,7 @@ function SmartAI:updatePlayers(clear_flags)
 			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 				if self.lua_ai:relationTo(aplayer) == sgs.AI_Neutrality and not aplayer:isDead() then table.insert(neutrality, aplayer) end
 			end
-			local function compare_func(a, b)
+			local function compare_func(a,b)
 				return self:objectiveLevel(a) > self:objectiveLevel(b)
 			end
 			table.sort(neutrality, compare_func)
@@ -1510,46 +1511,25 @@ function SmartAI:updatePlayers(clear_flags)
 		end
 	end
 
-	local flist = {}
-	local elist = {}
-	self.enemies = elist
-	self.friends = flist
+	self.enemies = {}
+	self.friends = {}
+	self.friends_noself = {}
+
 	local lord = self.room:getLord()
 	local role = self.role
 	self.retain = 2
 	self.harsh_retain = true
 
-	local players = self.room:getOtherPlayers(self.player)
-	players = sgs.QList2Table(players)
-
-	for i = 1, #players, 1 do
-		if players[i]:isDead() then table.remove(players, i) end
-	end
-
-	for _, player in ipairs(players) do
-		if #players == 1 then break end
-		if self:objectiveLevel(player) < 0 then table.insert(flist, player) end
-	end
-
-	self.friends_noself = {}
-	for _, player in ipairs(flist) do
-		table.insert(self.friends_noself, player)
-	end
-	table.insert(self.friends, self.player)
-
-	if self.role == "rebel" then self.retain = 2 end
-
-	if self.player:getHp() < 2 then self.retain = 0 end
-	self:sortEnemies(players)
-	for _, player in ipairs(players) do
-		if self:objectiveLevel(player) >= 4 then self.harsh_retain = false end
-		if #elist == 0 then
-			if self:objectiveLevel(player) < 4 then self.retain = 0 end
-		else
-			if self:objectiveLevel(player) <= 0 then return end
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if self:objectiveLevel(player) < 0 and player:isAlive() then 
+			table.insert(self.friends_noself, player)
+			table.insert(self.friends, player)
 		end
-		table.insert(elist, player)
-	end
+		if self:objectiveLevel(player) > 0 and player:isAlive() then
+			table.insert(self.enemies, player)
+		end
+	end	
+	table.insert(self.friends, self.player)
 end
 
 sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)

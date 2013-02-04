@@ -182,7 +182,7 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 			return "@LeijiCard=.->" .. enemy:objectName()
 		end
 	end
-	
+
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:hasSkill("hongyan")
 			and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
@@ -429,7 +429,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
 	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill,self.player) then return "question" end
-	
+
 	local questioner
 	for _, friend in ipairs(self.friends) do
 		if friend:getHp() == self.friends[#self.friends]:getHp() then
@@ -477,7 +477,7 @@ guhuo_skill.getTurnUseCard = function(self)
 	local guhuo = "peach|ex_nihilo|snatch|amazing_grace|archery_attack"
 	local ban = sgs.GetConfig("BanPackages", "")
 	if not ban:match("maneuvering") then guhuo = guhuo .. "|fire_attack" end
-	
+
 	for i = 1, #guhuos do
 		local forbiden = guhuos[i]
 		forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuit, 0)

@@ -425,7 +425,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	local slash_num = 0
 	local target
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-	
+
 	local cards = to:getHandcards()
 	local need_slash = true
 	for _, c in sgs.qlist(cards) do
@@ -437,7 +437,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 			end      
 		end
 	end
-	
+
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		if to:canSlash(enemy) and not self:slashProhibit(slash ,enemy) and self:slashIsEffective(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2 then
@@ -445,7 +445,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 			break
 		end
 	end
-	
+
 	if need_slash and target and isCard("Slash", card, to) then return true end
 	return isCard("Duel", card, to)  
 end
@@ -723,7 +723,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	if #jijiangtargets == 0 then
 		return self:getCardId("Slash") or "."
 	end
-	
+
 	self:sort(jijiangtargets, "defenseSlash")
 	for _, target in ipairs(jijiangtargets) do
 		if (not target:getArmor() or not target:hasArmorEffect(target:getAmor():objectName()))
@@ -1076,7 +1076,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 		or (self.player:getHp() - self.player:getHandcardNum() >= 2) then
 		return sgs.Card_Parse("@KurouCard=.")
 	end
-	
+
 	local function can_kurou_with_cb(self)
 		if self.player:getHp() > 1 then return true end
 		local has_save = false
@@ -1102,7 +1102,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 			end
 		end
 	end
-	
+
 	if self.player:getHp() <= 1 and self:getCardsNum("Analeptic") > 1 then
 		return sgs.Card_Parse("@KurouCard=.")
  	end

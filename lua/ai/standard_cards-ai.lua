@@ -119,11 +119,11 @@ function sgs.getDefenseSlash(player)
 	if not sgs.isGoodTarget(player) then
 		defense = defense + 10
 	end
-	
+
 	if player:hasSkill("rende") and player:getHp() > 2 then
 		defense = defense + 3
- 	end
-	
+	end
+
 	if player:hasSkill("tuntian") and getCardsNum("Jink", player) > 0 then
 		defense = defense + 1.5  
 	end
@@ -499,7 +499,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	end
 	if #canAvoidSlash > 0 then return canAvoidSlash[1] end
 	if #arrBestHp > 0 then return arrBestHp[1] end
-	
+
 	self:sort(targetlist, "defenseSlash", true)
 	for _, target in ipairs(targetlist) do
 		if target:objectName() ~= self.player:objectName() and not self:isFriend(target) then
@@ -1156,7 +1156,7 @@ function SmartAI:useCardDuel(duel, use)
 			end
 			return
 		end
-	end	
+	end
 
 end
 sgs.ai_card_intention.Duel = function(self, card, from, tos)
@@ -1422,7 +1422,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
 					cardchosen = self:getCardRandomly(enemy, "h") 
 				end
-				
+
 				if cardchosen then        
 					use.card = card
 					if use.to then
@@ -1475,7 +1475,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 		return
 	end
-	
+
 	for _, enemy in ipairs(enemies) do
 		local yanxiao
 		tricks = enemy:getJudgingArea()
@@ -1791,7 +1791,7 @@ sgs.ai_keep_value.Lightning = -1
 
 sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	local wuguotai = self.room:findPlayerBySkillName(wuguotai)
-	
+
 	local cards = {}
 	for _, id in ipairs(card_ids) do
 		table.insert(cards, sgs.Sanguosha:getCard(id))

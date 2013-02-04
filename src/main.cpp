@@ -22,11 +22,11 @@ static bool callback(const wchar_t *dump_path, const wchar_t *id,
                      MDRawAssertionInfo *assertion,
                      bool succeeded) {
     if (succeeded)
-        qWarning("Dump file created in %s, dump guid is %ws\n", dump_path, id);   
+        qWarning("Dump file created in %s, dump guid is %ws\n", dump_path, id);
     else
         qWarning("Dump failed\n");
     return succeeded;
-} 
+}
 
 int main(int argc, char *argv[]) {
     ExceptionHandler eh(L"./dmp", NULL, callback, NULL,

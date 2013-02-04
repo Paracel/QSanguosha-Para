@@ -59,7 +59,7 @@ public:
     inline virtual void onNullified(ServerPlayer *target) const{
         Q_ASSERT(m_card != NULL);
         m_card->onNullified(target);
-    
+
     }
     inline virtual bool isModified() const{ return m_isModified; }
     inline virtual QString getClassName() const{
@@ -106,12 +106,12 @@ public:
     //inline virtual bool isEquipped() const { return m_card->isEquipped(); }
     inline virtual QString getCommonEffectName() const{
         Q_ASSERT(m_card != NULL);
-        return m_card->getCommonEffectName(); 
+        return m_card->getCommonEffectName();
     }
 
     inline virtual bool match(const QString &pattern) const{
         Q_ASSERT(m_card != NULL);
-        return m_card->match(pattern); 
+        return m_card->match(pattern);
     }
 
     virtual void setFlags(const QString &flag) const;
@@ -151,7 +151,7 @@ public:
 
     inline virtual const Card *validate(const CardUseStruct *cardUse) const{
         Q_ASSERT(m_card != NULL);
-        return m_card->validate(cardUse); 
+        return m_card->validate(cardUse);
     }
 
     inline virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const{

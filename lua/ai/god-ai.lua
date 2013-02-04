@@ -183,7 +183,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 	self:sort(self.enemies, "hp")
 	local up = 0
 	local down = 0
-	
+
 	for _, friend in ipairs(self.friends) do
 		down = down - 10
 		up = up + (friend:isWounded() and 10 or 0)
@@ -203,7 +203,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 			end
 		end
 	end
-	
+
 	for _, enemy in ipairs(self.enemies) do
 		down = down + 10
 		up = up - (enemy:isWounded() and 10 or 0)

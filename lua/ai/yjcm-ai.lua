@@ -201,7 +201,7 @@ sgs.ai_skill_use["@@xuanhuo"] = function(self, prompt)
 			return "@XuanhuoCard=.->" .. friend:objectName()
 		end
 	end
-	
+
 	if #self.friends_noself == 0 then return end
 	self:sort(self.friends_noself, "defense")
 	self.room:setPlayerFlag(self.friends_noself[1], "xuanhuo_target")

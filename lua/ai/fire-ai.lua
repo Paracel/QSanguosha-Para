@@ -335,7 +335,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 
-	local slash = self:getCard("Slash")	
+	local slash = self:getCard("Slash")
 	local dummy_use = { isDummy = true }
 	if slash then self:useBasicCard(slash, dummy_use) end
 
@@ -375,7 +375,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 				end
 			end
 		end
-		
+
 		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
 			if max_point >= 7 then
 			use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())

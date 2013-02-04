@@ -1067,7 +1067,7 @@ public:
         }
         return true;
     }
-	
+
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->isKongcheng();
     }

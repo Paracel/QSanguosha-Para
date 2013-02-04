@@ -37,12 +37,12 @@ public:
     }
 
     virtual void resizeEvent(QResizeEvent *event) {
-        QGraphicsView::resizeEvent(event);        
+        QGraphicsView::resizeEvent(event);
         MainWindow *main_window = qobject_cast<MainWindow *>(parentWidget());
         if (scene()->inherits("RoomScene")) {
-            RoomScene *room_scene = qobject_cast<RoomScene *>(scene());            
+            RoomScene *room_scene = qobject_cast<RoomScene *>(scene());
             QRectF newSceneRect(0, 0, event->size().width(), event->size().height());
-            room_scene->setSceneRect(newSceneRect);            
+            room_scene->setSceneRect(newSceneRect);
             room_scene->adjustItems();
             setSceneRect(room_scene->sceneRect());
             if (newSceneRect != room_scene->sceneRect())
@@ -61,7 +61,7 @@ public:
                 fitInView(start_scene->sceneRect(), Qt::KeepAspectRatio);
         }
         if(main_window)
-            main_window->setBackgroundBrush(true);           
+            main_window->setBackgroundBrush(true);
     }
 };
 
@@ -427,11 +427,10 @@ void MainWindow::on_actionAbout_triggered() {
 
 void MainWindow::setBackgroundBrush(bool centerAsOrigin) {
     if (scene) {
-        QPixmap pixmap(Config.BackgroundImage);        
+        QPixmap pixmap(Config.BackgroundImage);
         QBrush brush(pixmap);
         qreal sx = (qreal)width() / qreal(pixmap.width());
         qreal sy = (qreal)height() / qreal(pixmap.height());
-               
 
         QTransform transform;
         if (centerAsOrigin)

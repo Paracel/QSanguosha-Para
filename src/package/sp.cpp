@@ -785,7 +785,7 @@ public:
         foreach (ServerPlayer *p, room->getAllPlayers())
             if (p->getMark("@songci") > 0)
                 room->setPlayerMark(p, "@songci", 0);
-		return false;
+        return false;
     }
 };
 

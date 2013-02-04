@@ -469,7 +469,7 @@ public:
         QString pattern = data.toStringList().first();
         if (pattern != "slash")
             return false;
-                
+
         QList<ServerPlayer *> lieges = room->getLieges("shu", liubei);
         if (lieges.isEmpty())
             return false;
@@ -1540,7 +1540,7 @@ TestPackage::TestPackage()
     super_caoren->addSkill(new SuperJushou);
     super_caoren->addSkill(new MarkAssignSkill("@jushou_test", 5));
     related_skills.insertMulti("super_jushou", "#@jushou_test-5");
-    
+
     General *gd_shenzhaoyun = new General(this, "gaodayihao", "god", 1, true, true);
     gd_shenzhaoyun->addSkill(new NosJuejing);
     gd_shenzhaoyun->addSkill(new NosLonghun);

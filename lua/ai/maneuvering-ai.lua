@@ -83,7 +83,7 @@ function sgs.ai_armor_value.vine(player, self)
 	end
 
 	if #self.enemies < 3 or player:getHp() <= 2 then return 5 end
-	
+
 	if (self:needKongcheng(player) and player:getHandcardNum() == 1) or not self:hasLoseHandcardEffective(player) then
 		return player:hasSkill("kongcheng") and 5 or 3.8
 	end

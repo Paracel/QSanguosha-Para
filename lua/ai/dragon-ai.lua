@@ -41,7 +41,7 @@ sgs.ai_skill_use_func.DrJiuyuanCard = function(card, use, self)
 		local card_str
 		local cards = self.player:getHandcards()
 		local card_id = -1
-		
+
 		self:sortByKeepValue(cards)
 		for _, acard in sgs.qlist(cards) do
 			if self:isWeak(lord) and isCard("Analeptic", acard, lord) then 

@@ -120,9 +120,9 @@ void MagatamasBoxItem::_doHpChangeAnimation(int newHp) {
 
     for (int i = newHp; i < m_hp; i++) {
         Sprite *aniMaga = new Sprite();
-        aniMaga->setPixmap(_icons[qBound(0,i,5)]);
+        aniMaga->setPixmap(_icons[qBound(0, i, 5)]);
         aniMaga->setParentItem(this);
-        aniMaga->setOffset(QPoint(-m_iconSize.width()/2,-m_iconSize.height()/2));
+        aniMaga->setOffset(QPoint(-m_iconSize.width() / 2, -m_iconSize.height() / 2));
 
         int pos = m_maxHp > 5 ? 0 : i;
         aniMaga->setPos(QPoint(xStep * pos - aniMaga->offset().x(), yStep * pos - aniMaga->offset().y()));
@@ -134,7 +134,7 @@ void MagatamasBoxItem::_doHpChangeAnimation(int newHp) {
         grow->setEndValue(4);
         grow->setDuration(500);
 
-        aniMaga->connect(fade,SIGNAL(finished()),aniMaga,SLOT(deleteLater()));
+        connect(fade, SIGNAL(finished()), aniMaga, SLOT(deleteLater()));
 
         QParallelAnimationGroup *group = new QParallelAnimationGroup;
         group->addAnimation(fade);

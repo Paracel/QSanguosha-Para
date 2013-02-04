@@ -26,7 +26,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 	for _, zcard in sgs.qlist(zcards) do
 		if not isCard("Peach", zcard, self.player) then
 			table.insert(unpreferedCards, zcard:getId())
-		end	
+		end
 	end
 
 	if #unpreferedCards == 0 then
@@ -80,14 +80,14 @@ end
 sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, include_equip)
 	local unpreferedCards = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
-	
+
 	local zcards = self.player:getCards("he")
 	for _, zcard in sgs.qlist(zcards) do
 		if not isCard("Peach", zcard, self.player) then
 			table.insert(unpreferedCards, zcard:getId())
 		end
 	end
-	
+
 	if #unpreferedCards == 0 then
 		if self:getCardsNum("Slash") > 1 then
 			self:sortByKeepValue(cards)
@@ -96,7 +96,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 			end
 			table.remove(unpreferedCards, 1)
 		end
-		
+
 		local num = self:getCardsNum("Jink") - 1
 		if self.player:getArmor() then num = num + 1 end
 		if num > 0 then
@@ -113,24 +113,24 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 				table.insert(unpreferedCards, card:getId())
 			end
 		end
-	
+
 		if self.player:getWeapon() and self.player:getHandcardNum() < 3 then
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
-				
+
 		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
-		end	
+		end
 
 		if self.player:getOffensiveHorse() and self.player:getWeapon() then
 			table.insert(unpreferedCards, self.player:getOffensiveHorse():getId())
 		end
-	end	
-	
+	end
+
 	for index = #unpreferedCards, 1, -1 do
 		if self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.remove(unpreferedCards, index) end
 	end
-	
+
 	local to_discard = {}
 	local count = 0
 	for index = #unpreferedCards, 1, -1 do

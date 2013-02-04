@@ -752,7 +752,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
 					cardchosen = self:getCardRandomly(enemy, "h") 
 				end
-				
+
 				if cardchosen then        
 					use.card = card
 					if use.to then
@@ -1091,7 +1091,7 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 		i = i + 1
 	end
 	if not first_index then return "." end
-	
+
 	local first, second, third, forth, fifth
 	if first_index then
 		first = players[first_index]:objectName()

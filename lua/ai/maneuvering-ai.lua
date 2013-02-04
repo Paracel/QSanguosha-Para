@@ -509,3 +509,5 @@ sgs.ai_use_value.FireAttack = 4.8
 sgs.ai_use_priority.FireAttack = 2
 
 sgs.ai_card_intention.FireAttack = 80
+
+sgs.dynamic_value.damage_card.FireAttack = true

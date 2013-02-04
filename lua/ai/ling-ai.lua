@@ -150,12 +150,7 @@ sgs.ai_skill_cardask["@zhulou-discard"] = function(self, data)
 end
 
 sgs.ai_cardneed.zhulou = sgs.ai_cardneed.weapon
-
-sgs.zhulou_keep_value = {
-	Peach = 6,
-	Jink = 5.1,
-	Weapon = 5
-}
+sgs.zhulou_keep_value = sgs.qiangxi_keep_value
 
 function sgs.ai_skill_invoke.neojushou(self, data)
 	if not self.player:faceUp() then return true end

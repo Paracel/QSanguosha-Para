@@ -491,7 +491,6 @@ void RecAnalysis::initialDesignation() {
             maxKillPlayer << objectName;
         }
 
-
         if (s->m_damage <= least_damage) {
             if (s->m_damage < least_damage) {
                 least_damage = s->m_damage;

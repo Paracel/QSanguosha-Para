@@ -10,6 +10,7 @@ simayi wolong							80
 simayi sunshangxiang					52
 simayi huatuo							53
 xiahoudun guojia						65
+xiahoudun xiaoqiao						30
 zhangliao xuchu							15
 zhangliao zhouyu						35
 zhangliao lusu							20
@@ -49,6 +50,7 @@ xiahouyuan nos_lingtong					58
 zhanghe huatuo							63
 zhanghe bgm_caoren						70
 xuhuang sunshangxiang					56
+xuhuang xiaoqiao						25
 xuhuang lingtong						55
 xuhuang nos_lingtong					55
 caoren huangyueying						53
@@ -62,6 +64,7 @@ xunyu huatuo							53
 xunyu xunyou							70
 xunyu yuanshu							60
 dengai huangyueying						75
+dengai xiaoqiao							25
 dengai zhonghui							80
 liubei zhangfei							15
 liubei zhugeliang						85
@@ -80,6 +83,7 @@ liubei neo_zhangfei						15
 guanyu zhangfei							77
 guanyu sunshangxiang					52
 guanyu sunce							79
+guanyu xiaoqiao							53
 guanyu lingtong							52
 guanyu guanxingzhangbao					15
 guanyu bgm_zhangfei						77
@@ -174,6 +178,7 @@ pangtong liaohua						53
 pangtong diy_liuxie						57
 pangtong ganfuren						51
 pangtong nos_xushu						30
+wolong xiaoqiao							51
 jiangwei lvmeng							31
 jiangwei luxun							33
 jiangwei xunyou							56
@@ -188,6 +193,7 @@ sunquan lingtong						54
 sunquan liaohua							60
 sunquan nos_lingtong					53
 ganning sunshangxiang					54
+ganning xiaoqiao						22
 ganning lingtong						53
 ganning nos_lingtong					53
 ganning nos_xushu						2
@@ -228,13 +234,22 @@ sunshangxiang nos_handang				56
 sunshangxiang neo_guanyu				53
 sunjian zhoutai							60
 sunjian neo_zhoutai						65
+sunce xiaoqiao							56
 sunce yujin								75
 sunce bgm_zhaoyun						77
 sunce sp_guanyu							79
 sunce neo_guanyu						80
 sunce neo_zhaoyun						75
 xiaoqiao erzhang						53
+xiaoqiao yanliangwenchou				24
 xiaoqiao zhangjiao						20
+xiaoqiao shenguanyu						59
+xiaoqiao guanxingzhangbao				64
+xiaoqiao madai							35
+xiaoqiao wangyi							27
+xiaoqiao guanyinping					55
+xiaoqiao bgm_ganning					24
+xiaoqiao neo_xiahoudun					35
 taishici dingfeng						62
 zhoutai shensimayi						52
 zhoutai bgm_lvmeng						59

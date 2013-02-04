@@ -1950,7 +1950,6 @@ void RoomScene::onEnabledChange() {
         animations->sendBack(photo);
 }
 
-
 void RoomScene::useCard(const Card *card) {
     if (card->targetFixed() || card->targetsFeasible(selected_targets, Self))
         ClientInstance->onPlayerUseCard(card, selected_targets);
@@ -2252,7 +2251,6 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                                                            .arg(description));
             else
                 ClientInstance->getPromptDoc()->setHtml(tr("Please choose a player"));
-
 
             choose_skill->setPlayerNames(ClientInstance->players_to_choose);
             dashboard->startPending(choose_skill);

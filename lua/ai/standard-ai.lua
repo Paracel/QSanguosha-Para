@@ -12,7 +12,7 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 	end
 
 	local current = self.room:getCurrent()
-	if self:isFriend(current) and current:getKingdom() == "wei" and self:getOverFlow(current) > 2 then
+	if self:isFriend(current) and current:getKingdom() == "wei" and self:getOverflow(current) > 2 then
 		return true
 	end
 
@@ -632,7 +632,7 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, jijiang_filter)
 
 sgs.ai_skill_invoke.jijiang = function(self, data)
 	local current = self.room:getCurrent()
-	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverFlow(current) > 2 and not self:hasCrossbowEffect(current) then
+	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverflow(current) > 2 and not self:hasCrossbowEffect(current) then
 		return true
 	end
 

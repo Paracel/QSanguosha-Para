@@ -4141,6 +4141,8 @@ function SmartAI:useEquipCard(card, use)
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getOffensiveHorse() then return end
 			end
+			use.card = card
+			return
 		else
 			if not self:hasSkills(sgs.lose_equip_skill) and self:getOverflow() <= 0 and not (canUseSlash or self:getCardId("Snatch")) then
 				return

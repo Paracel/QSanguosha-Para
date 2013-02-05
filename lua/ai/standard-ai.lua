@@ -1248,7 +1248,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 		cards = sgs.QList2Table(cards)
 		self:sortByKeepValue(cards)
 		for _, card in ipairs(cards) do
-			if not self.player:isCardLimited(card, method) and self.player:distanceTo(who) <= self.player:getAttackRange() then
+			if not self.player:isCardLimited(card, method) and self.player:canSlash(who) then
 				if self:isFriend(who) and not (isCard("Peach", card, self.player) or isCard("Analeptic", card, self.player)) then
 					return "@LiuliCard=" .. card:getEffectiveId() .. "->" .. who:objectName()
 				else
@@ -1264,7 +1264,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 			local range_fix = 0
 			if card:isKindOf("Weapon") then range_fix = range_fix + sgs.weapon_range[card:getClassName()] - 1 end
 			if card:isKindOf("OffensiveHorse") then range_fix = range_fix + 1 end
-			if not self.player:isCardLimited(card, method) and self.player:distanceTo(who, range_fix) <= self.player:getAttackRange() then
+			if not self.player:isCardLimited(card, method) and self.player:canSlash(who, nil, true, range_fix) then
 				return "@LiuliCard=" .. card:getEffectiveId() .. "->" .. who:objectName()
 			end
 		end
@@ -1272,7 +1272,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 
 	for _, enemy in ipairs(self.enemies) do
-		if not (source and (source:objectName() == enemy:objectName())) then
+		if not (source and source:objectName() == enemy:objectName()) then
 			local ret = doLiuli(enemy)
 			if ret ~= "." then return ret end
 		end
@@ -1282,7 +1282,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 
 	for _, friend in ipairs(self.friends_noself) do
 		if not self:slashIsEffective(slash,friend) then
-			if not (source and (source:objectName() == friend:objectName())) then
+			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end
 			end
@@ -1291,7 +1291,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 
 	for _, friend in ipairs(self.friends_noself) do
 		if friend:getHp() > getBestHp(friend) or self:getDamagedEffects(friend, source) then
-			if not (source and (source:objectName() == friend:objectName())) then
+			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end
 			end
@@ -1301,7 +1301,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	if (self:isWeak() or self:hasHeavySlashDamage(source, slash)) and not self:getCardId("Jink") then
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:isWeak(friend) then
-				if not (source and (source:objectName() == friend:objectName())) then
+				if not (source and source:objectName() == friend:objectName()) then
 					local ret = doLiuli(friend)
 					if ret ~= "." then return ret end
 				end
@@ -1317,8 +1317,9 @@ end
 
 function sgs.ai_slash_prohibit.liuli(self, to, card)
 	if self:isFriend(to) then return false end
+	if to:isNude() then return false end
 	for _, friend in ipairs(self.friends_noself) do
-		if to:canSlash(friend, card, true) and self:slashIsEffective(card, friend) then return true end
+		if to:canSlash(friend, card) and self:slashIsEffective(card, friend) then return true end
 	end
 end
 

@@ -222,7 +222,7 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 		self:useBasicCard(slash, dummy_use)
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1 and enemy:getHp() > self.player:getHp())
-				and not enemy:isKongcheng() and self.player:canSlash(enemy, nil, true) then
+				and not enemy:isKongcheng() and self.player:canSlash(enemy) then
 				local enemy_max_card = self:getMaxCard(enemy)
 				local allknown = 0
 				if self:getKnownNum(enemy) == enemy:getHandcardNum() then
@@ -288,8 +288,8 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	if not ptarget then return end
 	local slashcount = self:getCardsNum("Slash")
 	if max_card:isKindOf("Slash") then slashcount = slashcount - 1 end
-	if not ptarget:isKongcheng() and slashcount > 0 and self.player:canSlash(ptarget, nil, true)
-	and not ptarget:hasSkill("kongcheng") and ptarget:getHandcardNum() == 1 then
+	if not ptarget:isKongcheng() and slashcount > 0 and self.player:canSlash(ptarget, nil, false)
+		and not (ptarget:hasSkill("kongcheng") and ptarget:getHandcardNum() == 1) then
 		local card_id = max_card:getEffectiveId()
 		local card_str = "@TanhuCard=" .. card_id
 		if use.to then
@@ -905,7 +905,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 			local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 			local eff = self:slashIsEffective(slash, enemy)
 
-			if self.player:canSlash(enemy, nil , false) and not self:slashProhibit(nil, enemy) then
+			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) then
 				self.xuehentarget = enemy
 				return "slash"
 			end

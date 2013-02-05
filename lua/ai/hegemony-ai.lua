@@ -477,7 +477,7 @@ sgs.ai_skill_use_func.FenxunCard = function(card, use, self)
 		self:sort(self.enemies, "defense")
 		local target
 		for _, enemy in ipairs(self.enemies) do
-			if self.player:distanceTo(enemy) > 1 and self.player:canSlash(enemy, nil, true) then
+			if self.player:distanceTo(enemy) > 1 and self.player:canSlash(enemy, nil, false) then
 				target = enemy
 				break
 			end

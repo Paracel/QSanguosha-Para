@@ -3268,15 +3268,20 @@ function SmartAI:getCardId(class_name, player, acard)
 	local guhuo_str = self:getGuhuoCard(class_name, player)
 	if guhuo_str then return guhuo_str end
 
-	local viewas, cardid
+	local viewArr, cardArr = {}, {}
 
 	for _, card in ipairs(cards) do
+		local viewas, cardid
 		local card_place = self.room:getCardPlace(card:getEffectiveId())
 		viewas = getSkillViewCard(card, class_name, player, card_place)
-		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then cardid = card:getEffectiveId() end
-		if viewas or cardid then
-			return self:hasSkills("chongzhen|wusheng|wushen|jinjiu", player) and (viewas or cardid) or (cardid or viewas)
-		end
+		if viewas then table.insert(viewArr, viewas) end
+		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cardArr,card:getEffectiveId()) end
+	end
+	if #viewArr >0 or #cardArr > 0 then
+		local viewas, cardid
+		viewas = #viewArr >0 and viewArr[1]
+		cardid = #cardArr >0 and cardArr[1]
+		return self:hasSkills("chongzhen|jinjiu", player) and (viewas or cardid) or (cardid or viewas)
 	end
 	return cardsView(class_name, player)
 end

@@ -1,3 +1,7 @@
+function sgs.ai_cardneed.dangxian(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
+end
+
 sgs.ai_skill_invoke.zishou = function(self, data)
 	local chance_value = 1
 	if (self.player:getHp() <= 2) then chance_value = chance_value + 1 end
@@ -42,6 +46,10 @@ sgs.ai_skill_playerchosen.miji = function(self, targets)
 	for _, target in ipairs(targets) do
 		if self:isFriend(target) then return target end
 	end
+end
+
+function sgs.ai_cardneed.jiangchi(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) < 2
 end
 
 sgs.ai_skill_choice.jiangchi = function(self, choices)

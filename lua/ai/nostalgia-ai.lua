@@ -292,6 +292,10 @@ nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
+function sgs.ai_cardneed.nosgongqi(to, card)
+	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, "EquipCard", true) == 0
+end
+
 sgs.ai_skill_invoke.nosjiefan = function(self, data)
 	local dying = data:toDying()
 	local slashnum = 0
@@ -314,6 +318,10 @@ sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
 		end
 	end
 	return "."
+end
+
+function sgs.ai_cardneed.nosjiefan(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end
 
 sgs.ai_skill_invoke.noszhenggong = function(self, data)

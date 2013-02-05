@@ -237,7 +237,7 @@ sgs.ai_skill_choice.nosxuanfeng = function(self, choices)
 	for _, enemy in ipairs(self.enemies) do
 		if self.player:distanceTo(enemy) <= 1 then
 			return "damage"
-		elseif not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
+		elseif not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			return "slash"
 		end
 	end

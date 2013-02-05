@@ -409,7 +409,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 		if card:isKindOf("Slash") then
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy) and not self:slashProhibit(slash, enemy)
-					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
+					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 					shouldUse = shouldUse + 1
 					break
 				end

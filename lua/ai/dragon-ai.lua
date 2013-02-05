@@ -121,7 +121,7 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 	local equip_need
 	for _, enemy in ipairs(self.enemies) do
 		if self:getCardsNum("Slash") > 0 
-			and self.player:canSlash(enemy, nil, false) and not self:cantbeHurt(enemy) and sgs.isGoodTarget(enemy, self.enemies)
+			and self.player:canSlash(enemy, nil, false) and not self:cantbeHurt(enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 			and self:damageIsEffective(self.player, sgs.DamageStruct_Normal, enemy) then
 			if self.player:distanceTo(enemy) == 1 and self:getCardsNum("Slash") > 3 then equip_need = "Crossbow"
 			elseif self.player:distanceTo(enemy) <= 2 and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then equip_need = "QinggangSword"

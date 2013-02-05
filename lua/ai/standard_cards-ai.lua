@@ -2,7 +2,7 @@ function SmartAI:canAttack(enemy, attacker, nature)
 	attacker = attacker or self.player
 	nature = nature or sgs.DamageStruct_Normal
 	if #self.enemies == 1 or self:hasSkills("jueqing") then return true end
-	if self:getDamagedEffects(enemy, attacker) or (enemy:getHp() > getBestHp(enemy) and #self.enemies > 1) or not sgs.isGoodTarget(enemy, self.enemies) then return false end
+	if self:getDamagedEffects(enemy, attacker) or (enemy:getHp() > getBestHp(enemy) and #self.enemies > 1) or not sgs.isGoodTarget(enemy, self.enemies, self) then return false end
 	if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy, nature , attacker) then return false end
 	if nature ~= sgs.DamageStruct_Normal and enemy:isChained() and not self:isGoodChainTarget(enemy) then return false end
 	return true
@@ -34,8 +34,8 @@ function sgs.isGoodHp(player)
 	end
 end
 
-function sgs.isGoodTarget(player, targets)
-	local arr = {"jieming", "yiji", "guixin", "fangzhu", "neoganglie", "miji"}
+function sgs.isGoodTarget(player, targets, self)
+	local arr = { "jieming", "yiji", "guixin", "fangzhu", "neoganglie", "miji" }
 	local m_skill = false
 	local attacker = global_room:getCurrent()
 	if attacker:hasSkill("jueqing") then return true end
@@ -44,7 +44,7 @@ function sgs.isGoodTarget(player, targets)
 		if #targets == 1 then return true end
 		local foundtarget = false
 		for i = 1, #targets, 1 do
-			if sgs.isGoodTarget(targets[i]) then
+			if sgs.isGoodTarget(targets[i]) and not self:cantbeHurt(targets[i]) then
 				foundtarget = true
 				break
 			end
@@ -80,7 +80,7 @@ function sgs.isGoodTarget(player, targets)
 		end
 	end
 
-	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and player:isLord() and player:getHp() < 3 then
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and player:isLord() and player:getHp() < 3 and sgs.current_mode_players["loyalist"] > 0 then
 		return false
 	end
 
@@ -361,7 +361,7 @@ function SmartAI:useCardSlash(card, use)
 	local targets = {}
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		if not self:slashProhibit(card, enemy) and sgs.isGoodTarget(enemy, self.enemies) then table.insert(targets, enemy) end
+		if not self:slashProhibit(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then table.insert(targets, enemy) end
 	end
 
 	for _, target in ipairs(targets) do
@@ -474,7 +474,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	local arrBestHp, canAvoidSlash = {}, {}
 	self:sort(targetlist, "defenseSlash")
 	for _, target in ipairs(targetlist) do
-		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.isGoodTarget(target, targetlist) then
+		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.isGoodTarget(target, targetlist, self) then
 			if self:slashIsEffective(slash, target) then
 				if target:getHp() > getBestHp(target) then
 					table.insert(arrBestHp, target)
@@ -1140,7 +1140,7 @@ function SmartAI:useCardDuel(duel, use)
 		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
 		useduel = useduel and not (enemy:getHp() > getBestHp(enemy)) and not self:getDamagedEffects(enemy, self.player)
 		useduel = useduel and not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy) and not self.player:hasSkill("jueqing"))
-		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy,enemies) then
+		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy, enemies, self) then
 			local godsalvation = self:getCard("GodSalvation")
 			if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
 				use.card = godsalvation
@@ -1712,7 +1712,7 @@ function SmartAI:useCardIndulgence(card, use)
 		if not enemy:faceUp() then value = value -10 end
 		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
 		if self:hasSkills("guanxing|xiuluo", enemy) then value = value - 5 end
-		if not sgs.isGoodTarget(enemy) then value = value - 1 end
+		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 1 end
 		return value
 	end
 

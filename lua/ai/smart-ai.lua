@@ -2584,7 +2584,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, friend in ipairs(friends) do
 		if getKnownCard(friend, "Crossbow") then
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) <= 1 then
+				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) <= 1 then
 					for _, hcard in ipairs(cards) do
 						if isCard("Slash", hcard, friend) then
 							return hcard, friend
@@ -2600,7 +2600,7 @@ function SmartAI:getCardNeedPlayer(cards)
 		if friend:faceUp() then
 			local can_slash = false
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) <= friend:getAttackRange() then
+				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) <= friend:getAttackRange() then
 					can_slash = true
 					break
 				end
@@ -2608,7 +2608,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	  
 			if not can_slash then
 				for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies) and friend:distanceTo(p) > friend:getAttackRange() then
+					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) > friend:getAttackRange() then
 						for _, hcard in ipairs(cardtogive) do
 							if hcard:isKindOf("Weapon")
 								and friend:distanceTo(p) <= friend:getAttackRange() + (sgs.weapon_range[hcard:getClassName()] or 0) and not friend:getWeapon() then

@@ -212,7 +212,7 @@ end
 sgs.ai_need_damaged.ganglie = function (self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3 and
-		not self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and sgs.isGoodTarget(attacker, self.enemies) then
+		not self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and sgs.isGoodTarget(attacker, self.enemies, self) then
 		return true
 	end
 	return false
@@ -679,7 +679,7 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 	for _, enemy in ipairs(self.enemies) do
 		if (self.player:canSlash(enemy, nil, not no_distance) or
 			(use.isDummy and self.player:distanceTo(enemy) <= (self.predictedRange or self.player:getAttackRange())))
-			and self:objectiveLevel(enemy) > 3 and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
+			and self:objectiveLevel(enemy) > 3 and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			use.card = card
 			if use.to then
 				use.to:append(enemy)
@@ -1097,7 +1097,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
-				and sgs.isGoodTarget(enemy, self.enemies) and not self:slashProhibit(slash, enemy) and can_kurou_with_cb(self) then
+				and sgs.isGoodTarget(enemy, self.enemies, self) and not self:slashProhibit(slash, enemy) and can_kurou_with_cb(self) then
 				return sgs.Card_Parse("@KurouCard=.")
 			end
 		end

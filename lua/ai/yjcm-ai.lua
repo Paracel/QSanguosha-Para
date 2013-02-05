@@ -440,7 +440,7 @@ sgs.ai_skill_use_func.MingceCard = function(card,use,self)
 		if canMingceTo(friend) then
 			for _, enemy in ipairs(self.enemies) do
 				if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2
-					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
+					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 					and enemy:objectName() ~= self.player:objectName() then
 					target = friend
 					break
@@ -475,7 +475,7 @@ sgs.ai_skill_choice.mingce = function(self, choices)
 	for _, player in sgs.qlist(self.room:getAlivePlayers()) do
 		if player:hasFlag("MingceTarget") then 
 			if self:isEnemy(player) and not self:slashProhibit(slash, player) and sgs.getDefenseSlash(player) <= 2
-				and self:slashIsEffective(slash, player) and sgs.isGoodTarget(player, self.enemies) then
+				and self:slashIsEffective(slash, player) and sgs.isGoodTarget(player, self.enemies, self) then
 				return "use"
 			else
 				return "draw"
@@ -488,7 +488,7 @@ end
 sgs.ai_skill_playerchosen.mingce = function(self, targets)
 	for _, target in ipairs(targets) do
 		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.getDefenseSlash(target) <= 2
-			and self:slashIsEffective(slash, target) and sgs.isGoodTarget(target, self.enemies)
+			and self:slashIsEffective(slash, target) and sgs.isGoodTarget(target, self.enemies, self)
 			and target:objectName() ~= self.player:objectName() then
 			return target
 		end

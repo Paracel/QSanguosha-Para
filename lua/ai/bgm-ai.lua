@@ -358,7 +358,7 @@ local function need_mouduan(self)
 			and (not self:willSkipPlayPhase() or self.player:hasSkill("dangxian")) then
 			local hasTarget = false
 			for _, enemy in ipairs(self.enemies) do
-				if not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies) then
+				if not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 					hasTarget = true
 					break
 				end
@@ -893,7 +893,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefenseSlash(enemy)
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
+		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
 			self.xuehentarget = enemy
@@ -924,7 +924,7 @@ sgs.ai_skill_use["@@zhaoxin"] = function(self, prompt)
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies)
+		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
 			return "@ZhaoxinCard=.->" .. enemy:objectName()
 		end

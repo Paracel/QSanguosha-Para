@@ -868,6 +868,36 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	local card_id1 = newcards[1]:getEffectiveId()
 	local card_id2 = newcards[2]:getEffectiveId()
 
+	if newcards[1]:isBlack() and newCards[2]:isBlack() then
+		local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitBlack, 0)
+		local nosuit_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+
+		self:sort(self.enemies, "defenseSlash")
+		for _, enemy in ipairs(self.enemies) do
+			if not self:slashProhibit(nosuit_slash, enemy) and self:slashIsEffective(nosuit_slash, enemy) and self:canAttack(enemy)
+				and self:slashProhibit(black_slash, enemy) and self:isWeak(enemy) then
+				local redcards, blackcards = {}, {}
+				for _, acard in ipairs(newcards) do
+					if acard:isBlack() then table.insert(blackcards, acard) else table.insert(redcards, acard) end
+				end
+				if #redcards == 0 then break end
+
+				local redcard, othercard
+
+				self:sortByUseValue(blackcards, true)
+				self:sortByUseValue(redcards, true)
+				redcard = redcards[1]
+
+				othercard = #blackcards > 0 and blackcards[1] or redcards[2]
+				if redcard and othercard then
+					card_id1 = redcard:getEffectiveId()
+					card_id2 = othercard:getEffectiveId()
+					break
+				end
+			end
+		end
+	end
+
 	local card_str = ("slash:spear[%s:%s]=%d+%d"):format("to_be_decided", 0, card_id1, card_id2)
 	local slash = sgs.Card_Parse(card_str)
 	return slash

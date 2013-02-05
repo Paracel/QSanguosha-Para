@@ -1539,8 +1539,7 @@ void RoomScene::getCards(int moveId, QList<CardsMoveStruct> card_moves) {
             if (!card_moves[i].card_ids.contains(card_id)) {
                 cards.removeAt(j);
                 j--;
-            }
-            else
+            } else
                 card->setEnabled(true);
             card->setFootnote(_translateMovement(movement));
             card->hideFootnote();
@@ -1584,10 +1583,9 @@ QString RoomScene::_translateMovement(const CardsMoveStruct &move) {
     if (dstPhoto != NULL)
         targetName = Sanguosha->translate("use upon").append(Sanguosha->translate(dstPhoto->getPlayer()->getGeneralName()));
     else if (reason.m_targetId == Self->objectName())
-        targetName = QString("%1%2(%3)")
-                             .arg(Sanguosha->translate("use upon"))
-                             .arg(Sanguosha->translate(Self->getGeneralName()))
-                             .arg(Sanguosha->translate("yourself"));
+        targetName = QString("%1%2(%3)").arg(Sanguosha->translate("use upon"))
+                                        .arg(Sanguosha->translate(Self->getGeneralName()))
+                                        .arg(Sanguosha->translate("yourself"));
 
     QString result(playerName + targetName);
     result.append(Sanguosha->translate(reason.m_eventName));
@@ -1660,7 +1658,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
             if (flag.endsWith("_InTempMoving"))
                 return;
     }
-    //private pile
+    // private pile
     if (move.to_place == Player::PlaceSpecial && !move.to_pile_name.isNull() && !move.to_pile_name.startsWith('#')) {
         bool hiden = false;
         foreach (int card_id, move.card_ids)
@@ -1731,7 +1729,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         QString card_str = QString();
         foreach (int card_id, move.card_ids) {
             if (card_id != Card::S_UNKNOWN_CARD_ID) {
-                if(card_str.isEmpty())
+                if (card_str.isEmpty())
                     card_str = QString::number(card_id);
                 else
                     card_str += "+" + QString::number(card_id);
@@ -1779,24 +1777,11 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         foreach (int card_id, move.card_ids)
             log_box->appendLog(type, to_general, QStringList(), QString::number(card_id));
     }
-    if (move.reason.m_reason == CardMoveReason::S_REASON_TURNOVER) {
-        QString type = "$TurnOver";
-        Photo *srcphoto = name2photo[move.reason.m_playerId];
-        QString to_general;
-        if (srcphoto != NULL)
-            to_general = srcphoto->getPlayer()->objectName();
-        else if (move.reason.m_playerId == Self->objectName())
-            to_general = Self->objectName();
-        log_box->appendLog(type, to_general, QStringList(), Card::IdsToStrings(move.card_ids).join("+"));
-    }
+    if (move.reason.m_reason == CardMoveReason::S_REASON_TURNOVER)
+        log_box->appendLog("$TurnOver", move.reason.m_playerId, QStringList(), Card::IdsToStrings(move.card_ids).join("+"));
 }
 
-inline uint qHash(const QPointF p) { return qHash((int)p.x() + (int)p.y()); }
-
-void RoomScene::addSkillButton(const Skill *skill, bool from_left) {
-    //SPConvertSkill is not important around the game, except on game start.
-    //Even it isn't a skill, it's only a temporary product of generals replacement system.
-    //So I think it is not necessary to exist in dashboard.
+void RoomScene::addSkillButton(const Skill *skill, bool) {
     if (skill->inherits("SPConvertSkill")) return;
     // check duplication
     QSanSkillButton *btn = dashboard->addSkillButton(skill->objectName());

@@ -1013,10 +1013,10 @@ local function can_be_selected_as_target_fuluan(self, card, who)
 		if self.player:getOffensiveHorse() and subcards:contains(self.player:getOffensiveHorse():getId()) then
 			distance_fix = distance_fix + 1
 		end
-		return self.player:distanceTo(enemy, distance_fix) <= self.player:getAttackRange()
+		return self.player:distanceTo(who, distance_fix) <= self.player:getAttackRange()
 	elseif self.player:getOffensiveHorse() and subcards:contains(self.player:getOffensiveHorse():getId()) then
-		return self.player:distanceTo(enemy, 1) <= self.player:getAttackRange()
-	elseif self.player:inMyAttackRange(enemy) then
+		return self.player:distanceTo(who, 1) <= self.player:getAttackRange()
+	elseif self.player:inMyAttackRange(who) then
 		return true
 	end
 	return false

@@ -16,24 +16,38 @@ public:
 
         switch (event) {
         case GameStart: {
+                if (player != NULL) return false;
                 foreach (ServerPlayer *player, room->getPlayers()) {
                     if (player->isLord()) {
-                        scenario->marryAll(room);
-                        room->setTag("SkipNormalDeathProcess", true);
-                    } else if(player->getGeneralName() == "lvbu") {
-                        if (player->askForSkillInvoke("reselect"))
-                            room->changeHero(player, "dongzhuo", true);
-                    } else if (player->getGeneralName() == "zhugeliang") {
-                        if (player->askForSkillInvoke("reselect"))
-                            room->changeHero(player, "wolong", true);
-                    }else if(player->getGeneralName() == "caopi"){
-                        if (player->askForSkillInvoke("reselect"))
-                            room->changeHero(player, "caozhi", true);
-                    }else if(player->getGeneralName() == "ganfuren"){
-                        if (player->askForSkillInvoke("reselect"))
-                            room->changeHero(player, "sp_sunshangxiang", true);
+                        continue;
+                    } else {
+                        QMap<QString, QString> OH_map = scenario->getOriginalMap(true);
+                        QMap<QString, QString> OW_map = scenario->getOriginalMap(false);
+                        QMap<QString, QStringList> H_map = scenario->getMap(true);
+                        QMap<QString, QStringList> W_map = scenario->getMap(false);
+                        if (OH_map.contains(player->getGeneralName())) {
+                            QStringList h_list = W_map.value(OH_map.value(player->getGeneralName()));
+                            if (h_list.length() > 1) {
+                                if (player->askForSkillInvoke("reselect")) {
+                                    h_list.removeOne(player->getGeneralName());
+                                    QString general_name = room->askForChoice(player, "reselect", h_list.join("+"));
+                                    room->changeHero(player, general_name, true, false);
+                                }
+                            }
+                        } else if (OW_map.contains(player->getGeneralName())) {
+                            QStringList w_list = H_map.value(OW_map.value(player->getGeneralName()));
+                            if (w_list.length() > 1) {
+                                if (player->askForSkillInvoke("reselect")) {
+                                    w_list.removeOne(player->getGeneralName());
+                                    QString general_name = room->askForChoice(player, "reselect", w_list.join("+"));
+                                    room->changeHero(player, general_name, true, false);
+                                }
+                            }
+                        }
                     }
                 }
+                scenario->marryAll(room);
+                room->setTag("SkipNormalDeathProcess", true);
                 break;
             }
         case GameOverJudge: {
@@ -116,39 +130,42 @@ public:
 CoupleScenario::CoupleScenario()
     : Scenario("couple")
 {
-    lord = "caocao";
-    renegades << "lvbu" << "diaochan";
+    lua_State *lua = Sanguosha->getLuaState();
+    lord = GetConfigFromLuaState(lua, "couple_lord").toString();
+    loadCoupleMap();
+
     rule = new CoupleScenarioRule(this);
+}
 
-    map["caopi"] = "zhenji";
-    map["simayi"] = "zhangchunhua";
-    map["diy_simazhao"] = "diy_wangyuanji";
-    map["liubei"] = "ganfuren";
-    map["zhugeliang"] = "huangyueying";
-    map["menghuo"] = "zhurong";
-    map["zhouyu"] = "xiaoqiao";
-    map["lvbu"] = "diaochan";
-    map["sunjian"] = "wuguotai";
-    map["sunce"] = "daqiao";
-    map["sunquan"] = "bulianshi";
-    //map["liuxie"] = "fuhuanghou"
-
-    full_map = map;
-    full_map["dongzhuo"] = "diaochan";
-    full_map["wolong"] = "huangyueying";
-    full_map["caozhi"] = "zhenji";
+void CoupleScenario::loadCoupleMap() {
+    QStringList couple_list = GetConfigFromLuaState(Sanguosha->getLuaState(), "couple_couples").toStringList();
+    foreach (QString couple, couple_list) {
+        QStringList husbands = couple.split("+").first().split("|");
+        QStringList wifes = couple.split("+").last().split("|");
+        foreach (QString husband, husbands)
+            husband_map[husband] = wifes;
+        original_husband_map[husbands.first()] = wifes.first();
+        foreach (QString wife, wifes)
+            wife_map[wife] = husbands;
+        original_wife_map[wifes.first()] = husbands.first();
+    }
 }
 
 void CoupleScenario::marryAll(Room *room) const{
-    foreach (QString husband_name, full_map.keys()) {
+    foreach (QString husband_name, husband_map.keys()) {
         ServerPlayer *husband = room->findPlayer(husband_name, true);
         if (husband == NULL)
             continue;
 
-        QString wife_name = map.value(husband_name, QString());
-        if (!wife_name.isNull()) {
-            ServerPlayer *wife = room->findPlayer(wife_name, true);
-            marry(husband, wife);
+        QStringList wife_names = husband_map.value(husband_name, QStringList());
+        if (!wife_names.isEmpty()) {
+            foreach (QString wife_name, wife_names) {
+                ServerPlayer *wife = room->findPlayer(wife_name, true);
+                if (wife != NULL) {
+                    marry(husband, wife);
+                    break;
+                }
+            }
         }
     }
 }
@@ -197,6 +214,7 @@ void CoupleScenario::remarry(ServerPlayer *enkemann, ServerPlayer *widow) const{
 
     marry(enkemann, widow);
     room->setPlayerProperty(widow, "role", "loyalist");
+    room->resetAI(widow);
 }
 
 ServerPlayer *CoupleScenario::getSpouse(const ServerPlayer *player) const{
@@ -214,20 +232,20 @@ bool CoupleScenario::isWidow(ServerPlayer *player) const{
 void CoupleScenario::assign(QStringList &generals, QStringList &roles) const{
     generals << lord;
 
-    QStringList husbands = map.keys();
+    QStringList husbands = original_husband_map.keys();
     qShuffle(husbands);
     husbands = husbands.mid(0, 4);
 
     QStringList others;
     foreach (QString husband, husbands)
-        others << husband << map.value(husband);
+        others << husband << original_husband_map.value(husband);
 
     generals << others;
     qShuffle(generals);
 
     // roles
     for (int i = 0; i < 9; i++) {
-        if(generals.at(i) == "caocao")
+        if (generals.at(i) == lord)
             roles << "lord";
         else
             roles << "renegade";
@@ -255,3 +273,10 @@ AI::Relation CoupleScenario::relationTo(const ServerPlayer *a, const ServerPlaye
     return AI::Enemy;
 }
 
+QMap<QString, QStringList> CoupleScenario::getMap(bool isHusband) const{
+    return isHusband ? husband_map : wife_map;
+}
+
+QMap<QString, QString> CoupleScenario::getOriginalMap(bool isHusband) const{
+    return isHusband ? original_husband_map : original_wife_map;
+}

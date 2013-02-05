@@ -113,4 +113,19 @@ config = {
 		"bgm_caoren+neo_caoren",
 		"nos_zhangchunhua+heg_luxun", "nos_zhangchunhua+neo_zhangfei",
 	},
+	
+	couple_lord = "caocao",
+	couple_couples = {
+		"caopi|caozhi+zhenji",
+		"simayi|shensimayi+zhangchunhua",
+		"diy_simazhao+diy_wangyuanji",
+		"liubei|bgm_liubei+ganfuren|sp_sunshangxiang",
+		"zhugeliang|wolong|shenzhugeliang+huangyueying",
+		"menghuo+zhurong",
+		"zhouyu|shenzhouyu+xiaoqiao",
+		"lvbu|shenlvbu|dongzhuo+diaochan|bgm_diaochan",
+		"sunjian+wuguotai",
+		"sunce+daqiao",
+		"sunquan+bulianshi"
+	}
 }

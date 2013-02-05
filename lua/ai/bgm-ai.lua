@@ -378,20 +378,19 @@ sgs.ai_skill_cardask["@mouduan"] = function(self, data)
 end
 
 sgs.ai_skill_invoke.zhaolie = function(self, data)
-	local enemynum = 0
 	for _, enemy in ipairs(self.enemies) do
-		if self.player:distanceTo(enemy) <= self.player:getAttackRange() then
-			enemynum = enemynum + 1
+		if self.player:distanceTo(enemy) <= self.player:getAttackRange() and sgs.isGoodTarget(enemy, self.enemies, self) then
+			return true
 		end
 	end
-	return enemynum > 0
+	return false
 end
 
 sgs.ai_skill_playerchosen.zhaolie = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "hp")
 	for _, target in ipairs(targets) do
-		if self:isEnemy(target) then
+		if self:isEnemy(target) and sgs.isGoodTarget(target, targets, self) then
 			return target
 		end
 	end
@@ -400,9 +399,23 @@ end
 
 sgs.ai_skill_choice.zhaolie = function(self, choices, data)
 	local nobasic = data:toInt()
-	if self.player:hasSkill("manjuan") then	return "throw" end
+	local spliubei = self.room:getCurrent()
+	if not spliubei or not spliubei:isAlive() then return "throw" end
+	if self.player:hasSkill("wuhun") and self.role == "rebel" then
+		local mark = 0
+		local spmark = spliubei:isLord() and spliubei:getMark("@nightmare") or 0
+		for _, ap in sgs.qlist(self.room:getOtherPlayer(spliubei)) do
+			if ap:getMark("@nightmare") > mark then
+				mark = ap:getMark("@nightmare")
+			end
+		end
+		if mark == 0 and spliubei:isLord() then return "damage" end
+		if mark < nobasic + spmark then return "damage" end
+	end
+	if not self:damageIsEffective() then return "damage" end
+	if self.player:hasSkill("manjuan") then return "throw" end
 	if nobasic == 0 then return "damage" end
-	if nobasic < 2 and self.player:getHp() > 1 then	return "damage" else return "throw" end
+	if nobasic < 2 and self.player:getHp() > 1 then return "damage" else return "throw" end
 end
 
 sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, include_equip)

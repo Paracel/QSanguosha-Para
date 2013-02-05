@@ -115,7 +115,8 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 		return
 	end
 
-	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, enemy) and self:hasSkills("qianxi") then
+	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, enemy)
+		and self.player:hasSkill("qianxi") and self.player:distanceTo(enemy) == 1 then
 		return
 	end
 

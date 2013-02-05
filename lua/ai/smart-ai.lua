@@ -2253,6 +2253,7 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 
 	if self.player:isDead() then return "." end
 	if target and target:hasSkill("jueqing") then return end
+	if effect and target:hasSkill("qianxi") and target:distanceTo(self.player) == 1 then return end
 	if not self:damageIsEffective(nil, damage_nature, target) then return "." end
 	if target and target:hasSkill("guagu") and self.player:isLord() then return "." end
 
@@ -3110,11 +3111,11 @@ end
 function SmartAI:getDamagedEffects(player, damage_from)
 	local attacker = damage_from or self.room:getCurrent()
 
-	if not self:hasSkills("jueqing|qianxi", attacker) and player:hasLordSkill("shichou") then
+	if not attacker:hasSkill("jueqing") and not (attacker:hasSkill("qianxi") and attacker:distanceTo(player) == 1) and player:hasLordSkill("shichou") then
 		return sgs.ai_need_damaged.shichou(self, attacker) == 1
 	end
 
-	if sgs.isGoodHp(player) and not self:hasSkills("qianxi|jueqing", attacker)
+	if sgs.isGoodHp(player) and not attacker:hasSkill("jueqing")
 		and not self:hasHeavySlashDamage(attacker) then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 			local callback = sgs.ai_need_damaged[askill]

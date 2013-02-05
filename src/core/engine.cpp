@@ -61,10 +61,6 @@ void Engine::addPackage(const QString &name) {
         qWarning("Package %s cannot be loaded!", qPrintable(name));
 }
 
-static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key) {
-    return GetValueFromLuaState(L, "config", key);
-}
-
 Engine::Engine()
 {
     Sanguosha = this;

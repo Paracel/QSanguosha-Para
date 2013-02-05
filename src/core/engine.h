@@ -139,6 +139,10 @@ private:
     lua_State *lua;
 };
 
+static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key) {
+    return GetValueFromLuaState(L, "config", key);
+}
+
 extern Engine *Sanguosha;
 
 #endif

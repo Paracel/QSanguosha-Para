@@ -128,51 +128,18 @@ void Settings::init() {
 
     BackgroundImage = value("BackgroundImage", "backdrop/default.jpg").toString();
 
+    lua_State *lua = Sanguosha->getLuaState();
     QStringList roles_ban, kof_ban, basara_ban, hegemony_ban, pairs_ban;
 
-    kof_ban << "sunquan" << "huatuo";
-
-    basara_ban << "dongzhuo" << "zuoci" << "shenzhugeliang" << "shenlvbu" << "bgm_lvmeng";
-
+    roles_ban = GetConfigFromLuaState(lua, "roles_ban").toStringList();
+    kof_ban = GetConfigFromLuaState(lua, "kof_ban").toStringList();
+    basara_ban = GetConfigFromLuaState(lua, "basara_ban").toStringList();
     hegemony_ban.append(basara_ban);
     foreach (QString general, Sanguosha->getLimitedGeneralNames()) {
         if (Sanguosha->getGeneral(general)->getKingdom() == "god" && !hegemony_ban.contains(general))
             hegemony_ban << general;
     }
-
-    pairs_ban << "huatuo" << "zhoutai" << "zuoci" << "bgm_pangtong" << "neo_zhoutai"
-              << "simayi+zhenji" << "simayi+dengai"
-              << "caoren+shenlvbu" << "caoren+caozhi" << "caoren+bgm_diaochan" << "caoren+bgm_caoren" << "caoren+neo_caoren"
-              << "guojia+dengai"
-              << "zhenji+zhangjiao" << "zhenji+shensimayi" << "zhenji+wangyi" << "zhenji+zhugejin"
-              << "zhanghe+yuanshu"
-              << "dianwei+weiyan"
-              << "dengai+zhangjiao" << "dengai+shensimayi" << "dengai+zhugejin"
-              << "liubei+luxun" << "liubei+zhangchunhua" << "liubei+nos_zhangchunhua"
-              << "zhangfei+huanggai" << "zhangfei+zhangchunhua" << "zhangfei+nos_zhangchunhua"
-              << "zhugeliang+xushu" << "zhugeliang+nos_xushu"
-              << "huangyueying+wolong" << "huangyueying+ganning" << "huangyueying+huanggai" << "huangyueying+yuanshao" << "huangyueying+yanliangwenchou"
-              << "huangzhong+xusheng"
-              << "wolong+luxun" << "wolong+zhangchunhua" << "wolong+nos_zhangchunhua"
-              << "sunquan+sunshangxiang"
-              << "lvmeng+yuanshu"
-              << "huanggai+sunshangxiang" << "huanggai+yuanshao" << "huanggai+yanliangwenchou" << "huanggai+dongzhuo" << "huanggai+wuguotai" << "huanggai+guanxingzhangbao" << "huanggai+huaxiong" << "huanggai+neo_zhangfei"
-              << "luxun+yuji" << "luxun+yanliangwenchou" << "luxun+guanxingzhangbao" << "luxun+heg_luxun"
-              << "sunshangxiang+shensimayi" << "sunshangxiang+heg_luxun"
-              << "sunce+guanxingzhangbao"
-              << "yanliangwenchou+zhangchunhua" << "yanliangwenchou+nos_zhangchunhua"
-              << "dongzhuo+shenzhaoyun" << "dongzhuo+nos_zhangchunhua" << "dongzhuo+diy_wangyuanji"
-              << "yuji+zhangchunhua" << "yuji+nos_zhangchunhua"
-              << "shenlvbu+caozhi" << "shenlvbu+liaohua" << "shenlvbu+bgm_diaochan" << "shenlvbu+bgm_caoren" << "shenlvbu+neo_caoren"
-              << "shenzhaoyun+huaxiong"
-              << "caozhi+bgm_diaochan" << "caozhi+bgm_caoren" << "caozhi+neo_caoren"
-              << "gaoshun+zhangchunhua" << "gaoshun+nos_zhangchunhua"
-              << "zhangchunhua+guanxingzhangbao" << "zhangchunhua+heg_luxun" << "zhangchunhua+neo_zhangfei"
-              << "guanxingzhangbao+bgm_zhangfei" << "guanxingzhangbao+nos_zhangchunhua"
-              << "liaohua+bgm_diaochan"
-              << "bgm_diaochan+bgm_caoren"
-              << "bgm_caoren+neo_caoren"
-              << "nos_zhangchunhua+heg_luxun" << "nos_zhangchunhua+neo_zhangfei";
+    pairs_ban = GetConfigFromLuaState(lua, "pairs_ban").toStringList();
 
     QStringList banlist = value("Banlist/Roles").toStringList();
     if (banlist.isEmpty()) {
@@ -220,4 +187,3 @@ void Settings::init() {
         setValue("ForbidPackages", forbid_packages);
     }
 }
-

@@ -98,7 +98,10 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt, method)
 	return "."
 end
 
-sgs.ai_cardneed.shensu = sgs.ai_cardneed.equip
+sgs.ai_cardneed.shensu = function(to, card)
+	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, "EquipCard", false) < 2
+end
+
 sgs.ai_card_intention.ShensuCard = 80
 
 sgs.shensu_keep_value = sgs.xiaoji_keep_value
@@ -116,7 +119,16 @@ sgs.ai_skill_invoke.liegong = function(self, data)
 	return not self:isFriend(target)
 end
 
+function sgs.ai_cardneed.liegong(to, card)
+	return (isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0) or (card:isKindOf("Weapon") and not (to:getWeapon() or getKnownCard(to, "Weapon") > 0))
+end
+
 sgs.ai_chaofeng.huangzhong = 1
+
+function sgs.ai_cardneed.kuanggu(to, card)
+	return card:isKindOf("OffensiveHorse") and not (to:getOffensiveHorse() or getKnownCard(to, "OffensiveHorse", false) > 0)
+end
+
 sgs.ai_chaofeng.weiyan = -2
 
 sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
@@ -154,7 +166,7 @@ function sgs.ai_cardneed.guidao(to, card, self)
 				return card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 and not self:hasSkills("hongyan|wuyan")
 			end
 			if self:isFriend(player) and self:willSkipDrawPhase(player) then
-				return card:getSuit() == sgs.Card_Club
+				return card:getSuit() == sgs.Card_Club and not self:hasSuit("club", true, to)
 			end
 		end
 	end
@@ -216,7 +228,8 @@ function sgs.ai_slash_prohibit.leiji(self, to, card)
 end
 
 function sgs.ai_cardneed.leiji(to, card, self)
-	return card:isKindOf("Jink") and self:getCardsNum("Jink") > 1
+	return  ((isCard("Jink", card, to) and getKnownCard(to, "Jink", true) == 0)
+			or (card:isKindOf("EightDiagram") and not (self:hasEightDiagramEffect(to) or getKnownCard(to, "EightDiagram", false) > 0)))
 end
 
 local huangtianv_skill = {}

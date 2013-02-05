@@ -25,10 +25,10 @@ function sgs.ai_cardneed.huanshi(to, card, self)
 	for _, player in ipairs(self.friends) do
 		if self:getFinalRetrial(to) == 1 then 
 			if self:willSkipDrawPhase(player) then
-				return card:getSuit() == sgs.Card_Club
+				return card:getSuit() == sgs.Card_Club and not self:hasSuit("club", true, to)
 			end
 			if self:willSkipPlayPhase(player) then
-				return card:getSuit() == sgs.Card_Heart
+				return card:getSuit() == sgs.Card_Heart and not self:hasSuit("heart", true, to)
 			end
 		end
 	end
@@ -47,7 +47,9 @@ sgs.ai_skill_invoke.hongyuan = function(self, data)
 	return false
 end
 
-sgs.ai_skill_invoke.mingzhe = true
+function sgs.ai_cardneed.mingzhe(to, card, self)
+	return card:isRed() and getKnownCard(to, "heart", false) + getKnownCard(to, "diamond", false) < 2
+end
 
 sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)
 	self:sort(self.friends_noself, "handcard")

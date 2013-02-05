@@ -2698,14 +2698,14 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	if self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2 and #cardtogive > 0 then
+	if self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2 and #cards > 0 then
 		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0) or 
 							(sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0 and sgs.current_mode_players["loyalist"] == 0)
 		if need_rende then
 			local players = sgs.QList2Table(self.room:getOtherPlayers(self.player))
 			self:sort(players, "defense")
-			self:sortByUseValue(cardtogive, true)
-			return cardtogive[1], players[1]
+			self:sortByUseValue(cards, true)
+			return cards[1], players[1]
 		end
 	end
 end

@@ -23,6 +23,10 @@ sgs.ai_skill_invoke.qianxi = function(self, data)
 	return (target:getMaxHp() - target:getHp()) < 2
 end
 
+function sgs.ai_cardneed.qianxi(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
+end
+
 sgs.ai_skill_invoke.fuli = true
 
 sgs.ai_skill_invoke.fuhun = function(self, data)
@@ -495,7 +499,10 @@ lihuo_skill.getTurnUseCard = function(self)
 	assert(fireslash)
 
 	return fireslash
+end
 
+function sgs.ai_cardneed.lihuo(to, card)
+	return (card:isKindOf("FireSlash") and getKnownCard(to, "FireSlash", false) == 0) or (card:objectName() == "slash" and getKnownCard(to, "Slash", false) == 0)
 end
 
 sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
@@ -517,6 +524,10 @@ end
 sgs.ai_skill_invoke.chunlao = function(self, data)
 	local dying = data:toDying()
 	return self:isFriend(dying.who) and self.player:getPile("wine"):length() > 0
+end
+
+function sgs.ai_cardneed.chunlao(to, card)
+	return to:getPile("wine"):isEmpty() and card:isKindOf("Slash")
 end
 
 sgs.chunlao_keep_value = {

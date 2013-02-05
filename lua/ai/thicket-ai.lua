@@ -142,7 +142,7 @@ duanliang_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_cardneed.duanliang = function(to, card)
-	return card:isBlack() and card:getTypeId() ~= sgs.Card_TypeTrick
+	return card:isBlack() and card:getTypeId() ~= sgs.Card_TypeTrick and getKnownCard(to, "club", false) + getKnownCard(to, "spade", false) < 2
 end
 
 sgs.duanliang_suit_value = {
@@ -178,6 +178,10 @@ function sgs.ai_skill_pindian.lieren(minusecard, self, requestor)
 		return cards[1]:getId()
 	end
 	return self:getMaxCard(self.player):getId()
+end
+
+sgs.ai_cardneed.lieren = function(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end
 
 sgs.ai_skill_choice.yinghun = function(self, choices)
@@ -471,6 +475,19 @@ sgs.ai_view_as.jiuchi = function(card, player, card_place)
 	if card_place ~= sgs.Player_PlaceEquip then
 		if card:getSuit() == sgs.Card_Spade then
 			return ("analeptic:jiuchi[%s:%s]=%d"):format(suit, number, card_id)
+		end
+	end
+end
+
+function sgs.ai_cardneed.jiuchi(to, card, self)
+	return card:getSuit() == sgs.Card_Spade and getKnownCard(to, "spade") < 2
+end
+
+function sgs.ai_cardneed.roulin(to, card, self)
+	for _, enemy in ipairs(self.enemies) do
+		if isCard("Slash", card, to) and to:canSlash(enemy) and self:slashIsEffective(card, enemy)
+			and sgs.isGoodTarget(enemy, self.enemies, self) and not self:slashProhibit(card, enemy) and enemy:isFemale() then
+			return getKnownCard(to, "Slash", true) == 0
 		end
 	end
 end

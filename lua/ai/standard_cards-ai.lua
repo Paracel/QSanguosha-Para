@@ -192,6 +192,10 @@ function sgs.getDefenseSlash(player)
 
 	if player:containsTrick("indulgence") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
 	if player:containsTrick("supply_shortage") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
+	
+	if (attacker:hasSkill("roulin") and player:isFemale()) or (attacker:isFemale() and player:hasSkill("roulin")) then
+		defense = defense - 1.4
+	end
 
 	if not hasEightDiagram then
 		if player:hasSkill("jijiu") then defense = defense - 3 end
@@ -874,8 +878,8 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 
 		self:sort(self.enemies, "defenseSlash")
 		for _, enemy in ipairs(self.enemies) do
-			if not self:slashProhibit(nosuit_slash, enemy) and self:slashIsEffective(nosuit_slash, enemy) and self:canAttack(enemy)
-				and self:slashProhibit(black_slash, enemy) and self:isWeak(enemy) then
+			if self.player:canSlash(enemy) and not self:slashProhibit(nosuit_slash, enemy) and self:slashIsEffective(nosuit_slash, enemy)
+				and self:canAttack(enemy) and self:slashProhibit(black_slash, enemy) and self:isWeak(enemy) then
 				local redcards, blackcards = {}, {}
 				for _, acard in ipairs(newcards) do
 					if acard:isBlack() then table.insert(blackcards, acard) else table.insert(redcards, acard) end

@@ -31,7 +31,11 @@ sgs.ai_skill_invoke.fan = function(self, data)
 			if target:isChained() and not self:isGoodChainTarget(target) then return false end
 		end
 	end
-	return true
+	if not self:damageIsEffective(target, sgs.DamageStruct_Fire) then return self:isFriend(target) end
+	if target:hasArmorEffect("vine") or target:getMark("@gale") > 0 then
+		return true
+	end
+	return false
 end
 
 sgs.ai_view_as.fan = function(card, player, card_place)

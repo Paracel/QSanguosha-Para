@@ -110,7 +110,7 @@ sgs.ai_skill_invoke.enyuan = function(self, data)
 		end
 	else
 		local move = data:toMoveOneTime()
-		return move and move.from and self:isFriend(move.from)
+		return move and move.from and (self:isFriend(move.from) and not(move.from:hasSkill("kongcheng") and move.from:isKongcheng()))
 	end
 end
 

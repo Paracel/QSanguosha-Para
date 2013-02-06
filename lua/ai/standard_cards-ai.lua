@@ -838,7 +838,7 @@ function sgs.ai_cardsview.spear(class_name, player)
 		for _, card in ipairs(cards) do
 			if not isCard("Peach", card, player) and not (isCard("ExNihilo", card, player) and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 		end
-		if #newcards <= player:getHp() - 1 and not player:hasSkill("paoxiao") then return end
+		if #newcards <= player:getHp() - 1 and not (player:hasSkill("paoxiao") or player:hasSkill("lianying") or player:hasSkill("kongcheng")) then return end
 		if #newcards < 2 then return end
 
 		local card_id1 = newcards[1]:getEffectiveId()
@@ -866,7 +866,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	for _, card in ipairs(cards) do
 		if not isCard("Peach", card, self.player) and not (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
-	if #newcards <= self.player:getHp() - 1 and not self.player:hasSkill("paoxiao") then return end
+	if #newcards <= self.player:getHp() - 1 and not self:hasHeavySlashDamage(self.player) and not self:hasSkills("kongcheng|lianying|paoxiao") then return end
 	if #newcards < 2 then return end
 
 	local card_id1 = newcards[1]:getEffectiveId()

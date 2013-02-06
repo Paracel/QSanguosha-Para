@@ -154,3 +154,7 @@ sgs.ai_skill_use["@@smalltuxi"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.SmallTuxiCard = 80
+
+sgs.ai_skill_invoke.reselect = function(self)
+	return math.random(0, 2) == 0
+end

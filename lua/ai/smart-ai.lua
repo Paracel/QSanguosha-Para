@@ -3190,7 +3190,7 @@ local function getSkillViewCard(card, class_name, player, card_place)
 				local skill_card_str = callback(card, player, card_place, class_name)
 				if skill_card_str then
 					local skill_card = sgs.Card_Parse(skill_card_str)
-					if skill_card:isKindOf(class_name) and not player:isCardLimited(card, card:getHandlingMethod()) then return skill_card_str end
+					if skill_card:isKindOf(class_name) and not player:isCardLimited(skill_card, skill_card:getHandlingMethod()) then return skill_card_str end
 				end
 			end
 		end

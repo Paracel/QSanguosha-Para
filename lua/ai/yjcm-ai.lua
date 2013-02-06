@@ -19,12 +19,12 @@ sgs.ai_skill_use["@@jujian"] = function(self, prompt, method)
 	local nobasiccard = -1
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
-	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() and not self:isCardLimited(self.player:getArmor(), method) then
+	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() and not self.player:isCardLimited(self.player:getArmor(), method) then
 		nobasiccard = self.player:getArmor():getId()
 	else
 		self:sortByKeepValue(cards)
 		for _, card in ipairs(cards) do
-			if card:getTypeId() ~= sgs.Card_TypeBasic and not self:isCardLimited(card, method) then nobasiccard = card:getEffectiveId() end
+			if card:getTypeId() ~= sgs.Card_TypeBasic and not self.player:isCardLimited(card, method) then nobasiccard = card:getEffectiveId() end
 		end
 	end
 	for _, friend in ipairs(self.friends_noself) do

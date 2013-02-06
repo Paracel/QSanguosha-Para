@@ -2809,7 +2809,6 @@ function SmartAI:askForSinglePeach(dying)
 		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
 		return "."
 	end
-	if self.role == "loyalist" and not (dying:isLord() or dying:objectName() == self.player:objectName()) and sgs.current_mode_players["loyalist"] == 2 then return "." end
 	if self:isFriend(dying) then
 		if self:needDeath(dying) then return "." end
 		local buqu = dying:getPile("buqu")

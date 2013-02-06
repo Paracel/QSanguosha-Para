@@ -3764,18 +3764,8 @@ function SmartAI:canAvoidAOE(card)
 end
 
 function SmartAI:getDistanceLimit(card)
-	if self.player:hasSkill("qicai") then
-		return 100
-	end
-
-	if card:isKindOf("Snatch") then
-		return 1
-	elseif card:isKindOf("SupplyShortage") then
-		if self.player:hasSkill("duanliang") then
-			return 2
-		else
-			return 1
-		end
+	if card:isKindOf("Snatch") or card:isKindOf("SupplyShortage") then
+		return 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card)
 	end
 end
 
@@ -3785,9 +3775,6 @@ function SmartAI:exclude(players, card)
 	local range_fix = 0
 	if card:isVirtualCard() then
 		for _, id in sgs.qlist(card:getSubcards()) do
-			if self.player:getWeapon() and self.player:getWeapon():getId() == id then
-				range_fix = range_fix + sgs.weapon_range[self.player:getWeapon():getClassName()] - 1
-			end
 			if self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == id then range_fix = range_fix + 1 end
 		end
 		if card:getSkillName() == "jixi" then range_fix = range_fix + 1 end

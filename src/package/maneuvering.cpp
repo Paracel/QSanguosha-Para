@@ -329,7 +329,7 @@ QString IronChain::getSubtype() const{
     return "damage_spread";
 }
 
-bool IronChain::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+bool IronChain::targetFilter(const QList<const Player *> &targets, const Player *, const Player *Self) const{
     int total_num = 2 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
     if (targets.length() >= total_num)
         return false;
@@ -342,10 +342,11 @@ bool IronChain::targetFilter(const QList<const Player *> &targets, const Player 
 bool IronChain::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
     if (Self->isCardLimited(this, Card::MethodUse))
         return targets.length() == 0;
+    int total_num = 2 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
     if (getSkillName() == "guhuo" || getSkillName() == "qice")
-        return targets.length() == 1 || targets.length() == 2;
+        return targets.length() > 0 && targets.length() <= total_num;
     else
-        return targets.length() <= 2;
+        return targets.length() <= total_num;
 }
 
 void IronChain::onUse(Room *room, const CardUseStruct &card_use) const{
@@ -403,11 +404,6 @@ bool SupplyShortage::targetFilter(const QList<const Player *> &targets, const Pl
 
     int distance_limit = 1 + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, Self, this);
     int rangefix = 0;
-    if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())){
-        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        rangefix += weapon->getRange() - 1;
-    }
-
     if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
         rangefix += 1;
 

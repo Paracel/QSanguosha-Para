@@ -408,15 +408,15 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 		end
 		if card:isKindOf("Slash") then
 			for _, enemy in ipairs(self.enemies) do
-				if self.player:canSlash(enemy) and not self:slashProhibit(slash, enemy)
-					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
+				if self.player:canSlash(enemy) and not self:slashProhibit(card, enemy)
+					and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 					shouldUse = shouldUse + 1
 					break
 				end
 			end
 		end
 	end
-	if ahouldUse >= 2 then return false end
+	if shouldUse >= 2 then return false end
 
 	local limit = self.player:getMaxCards()
 	if self.player:isKongcheng() then return false end

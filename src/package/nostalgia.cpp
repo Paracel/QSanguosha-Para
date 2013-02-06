@@ -284,7 +284,7 @@ public:
                     DamageStruct damage;
                     damage.from = lingtong;
                     damage.to = target;
-                    damage.reason = "xuanfeng";
+                    damage.reason = "nosxuanfeng";
                     room->damage(damage);
                 }
             }

@@ -1743,6 +1743,8 @@ function SmartAI:filterEvent(event, player, data)
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		local from = move.from
+		local reason = move.reason
+		
 		for i = 1, move.card_ids:length() do
 			local place = move.from_places:at(i - 1)
 			local card_id = move.card_ids:at(i - 1)
@@ -1799,6 +1801,35 @@ function SmartAI:filterEvent(event, player, data)
 				global_room:clearCardFlag(card)
 			end
 
+			if player:hasFlag("PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
+				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD then
+				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
+					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
+						if player:canSlash(target, card, true) and self:slashIsEffective(card, target) 
+							and not self:slashProhibit(card, target) and sgs.isGoodTarget(target,self.enemies, self) then
+							if sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+						end
+					end
+				end
+
+				if isCard("Indulgence", card, player) and not self.room:getLord():hasSkill("qiaobian") then
+					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
+						if not (target:containsTrick("indulgence") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
+							local aplayer = self:exclude({ target }, card)
+							if #aplayer == 1 and sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+						end
+					end
+				end
+
+				if isCard("SupplyShortage", card, player) and not self.room:getLord():hasSkill("qiaobian") then
+					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
+						if not (target:containsTrick("supply_shortage") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
+							local aplayer = self:exclude({ target }, card)
+							if #aplayer == 1 and sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+						end
+					end
+				end
+			end
 		end
 	elseif event == sgs.StartJudge then
 		local judge = data:toJudge()
@@ -1809,6 +1840,8 @@ function SmartAI:filterEvent(event, player, data)
 			if player:objectName() == caiwenji:objectName() then intention = 0 end
 			sgs.ai_card_intention.general(caiwenji, player, intention)
 		end
+	elseif event == sgs.EventPhaseEnd and player:getPhase() ==  sgs.Player_Play then
+		self.room:setPlayerFlag(player, "PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() ==  sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 

@@ -104,29 +104,39 @@ sgs.ai_chaofeng.masu = -4
 
 sgs.ai_skill_invoke.enyuan = function(self, data)
 	local damage = data:toDamage()
-	local from = damage.from
-	local source = self.room:getCurrent()
-	local xuanhuotarget
-	if from then
-		return from:isAlive() and not self:isFriend(from)
+	if damage then
+		if damage.from and damage.from:isAlive() then
+			return self:isFriend(damage.from) and self:getOverflow(damage.from) > 2 or true
+		end
 	else
-		for _, player in sgs.qlist(self.room:getAlivePlayers()) do
-			if player:hasFlag("xuanhuo_target") then
-				xuanhuotarget = player
-			end
-		end
-		if xuanhuotarget then
-			return self:isFriend(xuanhuotarget)
-		else
-			return self:isFriend(source)
-		end
+		local move = data:toMoveOneTime()
+		return move and move.from and self:isFriend(move.from)
 	end
 end
 
 sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, include_equip)
 	local to_discard = {}
 	local cards = self.player:getHandcards()
+	local fazheng = self.room:findPlayerBySkillName("enyuan")
 	cards = sgs.QList2Table(cards)
+
+	if fazheng and self:isFriend(fazheng) then
+		for _, card in ipairs(cards) do
+			if isCard("Peach", card, fazheng) and ((not self:isWeak() and self:getCardsNum("Peach") > 0) or self:getCardsNum("Peach") > 1) then
+				table.insert(to_discard, card:getEffectiveId())
+				return to_discard
+			end
+			if isCard("Analeptic", card, fazheng) and self:getCardsNum("Analeptic") > 1 then
+				table.insert(to_discard, card:getEffectiveId())
+				return to_discard
+			end
+			if isCard("Jink", card, fazheng) and self:getCardsNum("Jink") > 1 then
+				table.insert(to_discard, card:getEffectiveId())
+				return to_discard
+			end
+		end
+	end
+
 	self:sortByKeepValue(cards)
 	for _, card in ipairs(cards) do
 		if not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then

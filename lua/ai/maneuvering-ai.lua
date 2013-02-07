@@ -356,11 +356,13 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local convert = { [".S"] = "spade", [".D"] = "diamond", [".H"] = "heart", [".C"] = "club" }
 	local card
+	local lord = self.room:getLord()
 	self:sortByUseValue(cards, true)
 	for _, acard in ipairs(cards) do
 		if acard:getSuitString() == convert[pattern]
 			and (not isCard("Peach", acard, self.player)
-				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0) and not (self:isWeak() and self.player:isLord()))) then
+				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0)
+					and not ((self:isWeak() and self.player:isLord()) or (not self:isEnemy(lord) and sgs.isLordInDanger())))) then
 			card = acard
 			break
 		end

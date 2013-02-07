@@ -1803,11 +1803,12 @@ function SmartAI:filterEvent(event, player, data)
 
 			if player:hasFlag("PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
 				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD then
+				local is_neutral = (sgs.evaluateRoleTrends(player) == "neutral")
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if player:canSlash(target, card, true) and self:slashIsEffective(card, target) 
 							and not self:slashProhibit(card, target) and sgs.isGoodTarget(target,self.enemies, self) then
-							if sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+							if is_neutral then sgs.updateIntention(player, target, -5) end
 						end
 					end
 				end
@@ -1816,7 +1817,7 @@ function SmartAI:filterEvent(event, player, data)
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if not (target:containsTrick("indulgence") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
 							local aplayer = self:exclude({ target }, card)
-							if #aplayer == 1 and sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -5) end
 						end
 					end
 				end
@@ -1825,7 +1826,7 @@ function SmartAI:filterEvent(event, player, data)
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if not (target:containsTrick("supply_shortage") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
 							local aplayer = self:exclude({ target }, card)
-							if #aplayer == 1 and sgs.evaluateRoleTrends(player) == "neutral" then sgs.updateIntention(player, target, -5) end
+							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -5) end
 						end
 					end
 				end
@@ -2041,7 +2042,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 		if self:isFriend(to) then
 			if not (to:hasSkill("guanxing") and global_room:alivePlayerCount() > 4) then
 				if trick:isKindOf("Indulgence") then
-					if to:hasSkill("tuxi") and to:getHp() >= 2 then return nil end
+					if to:getHp() - to:getHandcardNum() >= 2 then return nil end
+					if to:hasSkill("tuxi") and to:getHp() > 2 then return nil end
 					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
 					if to:hasSkill("shensu") and not self:isWeak(to) then return nil end
 					return null_card
@@ -3030,23 +3032,67 @@ end
 -- @return True if it is needed to retrial
 function SmartAI:needRetrial(judge)
 	local reason = judge.reason
+	local lord = self.room:getLord()
+	local who = judge.who
 	if reason == "lightning" then
-		if self:isFriend(judge.who) then
-			if judge.who:isChained() and self:isGoodChainTarget(judge.who) then
-				return false
-			end
+		if self:hasSkills("wuyan|hongyan", who) then return false end
+
+		if (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
+			if self:isEquip("SilverLion", lord) and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
+			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not judge:isGood()
+		end
+
+		if self:isFriend(who) then
+			if who:isChained() and self:isGoodChainTarget(who) then return false end
 		else
-			if judge.who:isChained() and not self:isGoodChainTarget(judge.who) then
-				return judge:isGood()
+			if who:isChained() and not self:isGoodChainTarget(who) then return judge:isGood() end
+		end
+	end
+
+	if reason == "indulgence" then
+		if self:isFriend(who) then
+			if who:getHp() - who:getHandcardNum() >= 2 then return false end
+			if who:hasSkill("tuxi") and who:getHp()>2 then return false end
+			return not judge:isGood()
+		else
+			return judge:isGood()
+		end
+	end
+
+	if reason == "supply_shortage" then
+		if self:isFriend(who) then
+			if who:hasSkill("tiandu") or (who:hasSkill("guidao") and getKnownCard(who, "club") > 0) then return false end
+			return not judge:isGood()
+		else
+			return judge:isGood()
+		end
+	end
+
+	if reason == "luoshen" then
+		if self:isFriend(who) then
+			if who:getHandcardNum() > 30 then return false end  
+			if self:isEquip("Crossbow", who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
+			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
+			return not judge:isGood()
+		else
+			return judge:isGood()
+		end
+	end
+	
+	if reason == "tieji" then
+		local target
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			if p:hasFlag("TiejiTarget") then
+				target = p
+				break
 			end
 		end
-		if self:hasSkills("wuyan|hongyan", judge.who) then return false end
+		if target and target:isKongcheng() and not self:hasEightDiagramEffect(target) and not self.player:hasSkill("guidao") then return false end
 	end
-	if self:isFriend(judge.who) then
-		if judge.reason == "luoshen" and self:getOverflow(judge.who) > 1 and self.player:getHandcardNum() < 3
-			and not self:hasCrossbowEffect(judge.who) then return false end
+
+	if self:isFriend(who) then
 		return not judge:isGood()
-	elseif self:isEnemy(judge.who) then
+	elseif self:isEnemy(who) then
 		return judge:isGood()
 	else
 		return false

@@ -612,6 +612,8 @@ public:
                 if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
                     room->broadcastSkillInvoke(objectName());
 
+                    p->setFlags("TiejiTarget"); // For AI
+
                     JudgeStruct judge;
                     judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
                     judge.good = true;
@@ -628,6 +630,8 @@ public:
                         mark_n += count;
                         room->setPlayerMark(player, "no_jink" + use.card->toString(), mark_n);
                     }
+
+                    p->setFlags("-TiejiTarget");
                 }
                 count *= 10;
             }

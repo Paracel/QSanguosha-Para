@@ -1607,6 +1607,7 @@ LangguCard::LangguCard() {
     target_fixed = true;
     will_throw = false;
     handling_method = Card::MethodResponse;
+    mute = true;
 }
 
 void LangguCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -1650,6 +1651,7 @@ public:
             for (int i = 0; i < damage.damage; i++) {
                 if (!simazhao->askForSkillInvoke(objectName(), data))
                     return false;
+                room->broadcastSkillInvoke(objectName());
 
                 JudgeStruct judge;
                 judge.pattern = QRegExp("(.*):(.*):(.*)");
@@ -1800,8 +1802,10 @@ public:
         if (wangyuanji->getPhase() == Player::Finish) {
             int upper = wangyuanji->getMaxHp();
             int handcard = wangyuanji->getHandcardNum();
-            if (handcard < upper && room->askForSkillInvoke(wangyuanji, objectName()))
+            if (handcard < upper && room->askForSkillInvoke(wangyuanji, objectName())) {
+                room->broadcastSkillInvoke(objectName());
                 wangyuanji->drawCards(upper - handcard);
+            }
         }
 
         return false;
@@ -1894,11 +1898,11 @@ public:
 #include "standard-skillcards.h"
 HantongCard::HantongCard() {
     target_fixed = true;
+    mute = true;
 }
 
 void HantongCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     QList<int> edict = source->getPile("edict");
-    room->broadcastSkillInvoke("hantong");
 
     int ai_delay = Config.AIDelay;
     Config.AIDelay = 0;
@@ -1963,6 +1967,7 @@ public:
         if (move->to_place == Player::DiscardPile
             && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
             if (liuxie->askForSkillInvoke(objectName())) {
+                room->broadcastSkillInvoke(objectName(), 1);
                 int i = 0;
                 DummyCard *dummy = new DummyCard;
                 foreach (int card_id, move->card_ids) {
@@ -2057,6 +2062,7 @@ public:
                     return false;
                 QVariant data_for_ai = "xueyi";
                 if (room->askForSkillInvoke(liuxie, "hantong_acquire", data_for_ai)) {
+                    room->broadcastSkillInvoke("hantong", 2);
                     RemoveEdict(liuxie);
                     room->acquireSkill(liuxie, "xueyi");
                 }
@@ -2214,8 +2220,14 @@ public:
                 int n = gongsunzan->getPile("retinue").length();
                 room->setPlayerMark(gongsunzan, "tuqi_dist", n);
                 gongsunzan->clearOnePrivatePile("retinue");
-                if (n <= 2)
+
+                int index = 1;
+
+                if (n <= 2) {
+                    index++;
                     gongsunzan->drawCards(1);
+                }
+                room->broadcastSkillInvoke(objectName(), index);
             }
         } else {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();

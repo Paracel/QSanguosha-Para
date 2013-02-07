@@ -599,6 +599,7 @@ public:
         QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
         if (player->getHp() <= hp) {
             if (!baobian_skills.contains(skill_name)) {
+                room->broadcastSkillInvoke("baobian", 4 - hp);
                 room->acquireSkill(player, skill_name);
                 baobian_skills << skill_name;
             }

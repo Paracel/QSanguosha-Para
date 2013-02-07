@@ -458,7 +458,7 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
         card_use.to << target;
         room->useCard(card_use, false);
     } else {
-        room->broadcastSkillInvoke("shuangren", 2);
+        room->broadcastSkillInvoke("shuangren", 3);
         room->setPlayerFlag(effect.from, "SkipPlay");
     }
 }
@@ -516,7 +516,7 @@ public:
 
     virtual int getEffectIndex(const ServerPlayer *, const Card *card) const {
         if (card->isKindOf("Slash"))
-            return -2;
+            return 2;
         else
             return 1;
     }
@@ -540,8 +540,8 @@ void XiongyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
         use.to << use.from;
     use.from->loseMark("@arise");
     room->broadcastSkillInvoke("xiongyi");
-    room->broadcastInvoke("animate", "lightbox:$XiongyiAnimate");
-    room->getThread()->delay(2000);
+    room->broadcastInvoke("animate", "lightbox:$XiongyiAnimate:4500");
+    room->getThread()->delay(4000);
     SkillCard::onUse(room, use);
 }
 

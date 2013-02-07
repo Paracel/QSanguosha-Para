@@ -526,6 +526,7 @@ public:
                 return;
 
             Room *room = zhonghui->getRoom();
+            room->broadcastSkillInvoke(objectName());
             int equip = room->askForCardChosen(zhonghui, damage.from, "e", objectName());
             const Card *card = Sanguosha->getCard(equip);
 
@@ -624,14 +625,21 @@ public:
                 && zhonghui->hasFlag("quanji_win")) {
                 zhonghui->setFlags("-quanji_win");
                 if (!skip) {
+                    room->broadcastSkillInvoke(objectName(), 2);
                     player->skip(Player::Start);
                     player->skip(Player::Judge);
                     skip = true;
+                } else {
+                    room->broadcastSkillInvoke(objectName(), 3);
                 }
             }
         }
         room->removeTag("QuanjiTarget");
         return skip;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
+        return 1;
     }
 };
 
@@ -657,9 +665,9 @@ public:
         log.arg = QString::number(zhonghui->getEquips().length());
         log.arg2 = objectName();
         room->sendLog(log);
-
-        room->broadcastInvoke("animate", "lightbox:$NosBaijiangAnimate");
-        room->getThread()->delay(1500);
+        room->broadcastSkillInvoke(objectName());
+        room->broadcastInvoke("animate", "lightbox:$NosBaijiangAnimate:5000");
+        room->getThread()->delay(4500);
         room->setPlayerMark(zhonghui, "nosbaijiang", 1);
 
         if (room->changeMaxHpForAwakenSkill(zhonghui, 1)) {
@@ -717,11 +725,14 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhonghui, QVariant &) const{
         if (!zhonghui->askForSkillInvoke(objectName()))
             return false;
-
-        int card_id = room->drawCard();
-        zhonghui->addToPile("nospower", card_id);
+        room->broadcastSkillInvoke(objectName(), 1);
+        zhonghui->addToPile("nospower", room->drawCard());
 
         return false;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
+        return 2;
     }
 };
 
@@ -792,8 +803,12 @@ public:
         } else
             room->moveCardTo(card, zhonghui, target, _m_place[getPlace(room, zhonghui, places)], reason, true);
 
-        if (target != zhonghui)
+        int index = 1;
+        if (target != zhonghui) {
+            index++;
             room->drawCards(zhonghui, 1);
+        }
+        room->broadcastSkillInvoke(objectName(), index);
 
         return false;
     }
@@ -824,8 +839,9 @@ public:
         log.arg = QString::number(zhonghui->getPile("nospower").length());
         log.arg2 = objectName();
         room->sendLog(log);
-        room->broadcastInvoke("animate", "lightbox:$NosZiliAnimate");
-        room->getThread()->delay(1500);
+        room->broadcastSkillInvoke(objectName());
+        room->broadcastInvoke("animate", "lightbox:$NosZiliAnimate:5000");
+        room->getThread()->delay(5000);
 
         room->setPlayerMark(zhonghui, "noszili", 1);
         if (room->changeMaxHpForAwakenSkill(zhonghui))
@@ -850,6 +866,8 @@ public:
 
         QString choice = room->askForChoice(weiwudi, objectName(), "modify+obtain");
 
+        int index = qrand() % 2;
+
         if (choice == "modify") {
             PlayerStar to_modify = room->askForPlayerChosen(weiwudi, room->getOtherPlayers(weiwudi), objectName());
             room->setTag("Guixin2Modify", QVariant::fromValue(to_modify));
@@ -860,7 +878,7 @@ public:
             QString old_kingdom = to_modify->getKingdom();
             room->setPlayerProperty(to_modify, "kingdom", kingdom);
 
-            room->broadcastSkillInvoke("guixin", 2);
+            room->broadcastSkillInvoke("guixin", index);
 
             LogMessage log;
             log.type = "#ChangeKingdom";
@@ -869,8 +887,8 @@ public:
             log.arg = old_kingdom;
             log.arg2 = kingdom;
             room->sendLog(log);
-        } else if(choice == "obtain") {
-            room->broadcastSkillInvoke("guixin", 1);
+        } else if (choice == "obtain") {
+            room->broadcastSkillInvoke("guixin", index + 2);
             QStringList lords = Sanguosha->getLords();
             QList<ServerPlayer *> players = room->getOtherPlayers(weiwudi);
             foreach (ServerPlayer *player, players) {

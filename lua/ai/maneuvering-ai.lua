@@ -31,9 +31,9 @@ sgs.ai_skill_invoke.fan = function(self, data)
 			if target:isChained() and not self:isGoodChainTarget(target) then return false end
 		end
 	end
-	if not self:damageIsEffective(target, sgs.DamageStruct_Fire) then return self:isFriend(target) end
-	if target:hasArmorEffect("vine") or target:getMark("@gale") > 0 then
-		return true
+	for _, target in sgs.qlist(use.to) do
+		if not self:damageIsEffective(target, sgs.DamageStruct_Fire) then return self:isFriend(target) end
+		if target:hasArmorEffect("vine") or target:getMark("@gale") > 0 then return self:isEnemy(target) end
 	end
 	return false
 end

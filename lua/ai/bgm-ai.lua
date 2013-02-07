@@ -379,7 +379,7 @@ end
 
 sgs.ai_skill_invoke.zhaolie = function(self, data)
 	for _, enemy in ipairs(self.enemies) do
-		if self.player:distanceTo(enemy) <= self.player:getAttackRange() and sgs.isGoodTarget(enemy, self.enemies, self) then
+		if self.player:distanceTo(enemy) <= self.player:getAttackRange() and self:damageIsEffective(enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			return true
 		end
 	end
@@ -390,7 +390,7 @@ sgs.ai_skill_playerchosen.zhaolie = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "hp")
 	for _, target in ipairs(targets) do
-		if self:isEnemy(target) and sgs.isGoodTarget(target, targets, self) then
+		if self:isEnemy(target) and self:damageIsEffective(target) and sgs.isGoodTarget(target, targets, self) then
 			return target
 		end
 	end
@@ -415,6 +415,7 @@ sgs.ai_skill_choice.zhaolie = function(self, choices, data)
 	if not self:damageIsEffective() then return "damage" end
 	if self.player:hasSkill("manjuan") then return "throw" end
 	if nobasic == 0 then return "damage" end
+	if self.player:hasArmorEffect("silver_lion") and not (spliubei and spliubei:hasSkill("jueqing")) then return "damage" end
 	if nobasic < 2 and self.player:getHp() > 1 then return "damage" else return "throw" end
 end
 

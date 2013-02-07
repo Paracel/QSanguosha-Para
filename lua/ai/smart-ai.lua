@@ -1854,7 +1854,6 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.debugmode = false
 		end
 	elseif event == sgs.GameStart then
-		sgs.turncount = 0
 		local file = io.open("lua/ai/AIDebug.Readme")
 		if file then
 			file:close()
@@ -2300,7 +2299,7 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 and self.player:getHp() > 2 then return "." end
 	if self.player:hasSkill("tianxiang") then
 		local dmgStr = { damage = 1, nature = damage_nature }
-		local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr)
+		local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr, sgs.Card_MethodDiscard)
 		if willTianxiang ~= "." then return "." end
 	elseif self.player:hasSkill("longhun") and self.player:getHp() > 1 then
 		return "."

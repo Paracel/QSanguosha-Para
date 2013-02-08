@@ -54,7 +54,7 @@ sgs.dynamic_value = {
 	lucky_chance = {},
 	benefit = {}
 }
-sgs.ai_choicemade_filter = 	{
+sgs.ai_choicemade_filter = {
 	cardUsed = {},
 	cardResponded = {},
 	skillInvoke = {},
@@ -1843,7 +1843,7 @@ function SmartAI:filterEvent(event, player, data)
 		end
 	elseif event == sgs.EventPhaseEnd and player:getPhase() ==  sgs.Player_Play then
 		self.room:setPlayerFlag(player, "PlayPhaseNotSkipped")
-	elseif event == sgs.EventPhaseStart and player:getPhase() ==  sgs.Player_NotActive then
+	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 
 		local file = io.open("lua/ai/AIDebug.Readme")

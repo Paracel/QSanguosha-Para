@@ -125,7 +125,7 @@ config = {
 		"zhouyu|shenzhouyu+xiaoqiao",
 		"lvbu|shenlvbu|dongzhuo+diaochan|bgm_diaochan",
 		"sunjian+wuguotai",
-		"sunce+daqiao",
+		"sunce+daqiao|bgm_daqiao",
 		"sunquan+bulianshi"
 	}
 }

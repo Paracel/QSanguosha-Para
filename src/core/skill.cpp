@@ -362,8 +362,9 @@ MaxCardsSkill::MaxCardsSkill(const QString &name)
 }
 
 TargetModSkill::TargetModSkill(const QString &name)
-    : Skill(name, Skill::Compulsory), pattern("Slash")
+    : Skill(name, Skill::Compulsory)
 {
+    pattern = "Slash";
 }
 
 QString TargetModSkill::getPattern() const{

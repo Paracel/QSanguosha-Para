@@ -102,7 +102,7 @@ function sgs.CreateTargetModSkill(spec)
 	end
 	
 	if type(spec.pattern) == "string" then
-		skill:setPattern(pattern)
+		skill.pattern = spec.pattern
 	end
 
 	return skill
@@ -135,11 +135,11 @@ function sgs.CreateSkillCard(spec)
 	end
 
 	if type(spec.will_throw) == "boolean" then
-		card:setWillThrow(spec.will_throw)	
+		card:setWillThrow(spec.will_throw)
 	end
 	
 	if type(spec.can_recast) == "boolean" then
-		card:setCanRecast(spec.can_recast)	
+		card:setCanRecast(spec.can_recast)
 	end
 		
 	if type(spec.handling_method) == "number" then

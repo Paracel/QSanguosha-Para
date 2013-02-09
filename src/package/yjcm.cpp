@@ -945,7 +945,7 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
         const Card *card = Sanguosha->getCard(card_id);
         if (card->getSuit() == Card::Heart)
             hearts << card_id;
-		else
+        else
             non_hearts << card_id;
     }
     DummyCard *dummy = new DummyCard;

@@ -206,7 +206,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             }
 
             if (this->players.at(i)["turned"] != QString()) {
-                if(sp->faceUp())
+                if (sp->faceUp())
                     sp->turnOver();
             }
 

@@ -1494,18 +1494,22 @@ function SmartAI:updatePlayers(clear_flags)
 	sgs.draw_pile = global_room:getDrawPile()
 
 	if sgs.isRolePredictable() then
+		self.friends = {}
+		self.friends_noself = {}
 		local friends = sgs.QList2Table(self.lua_ai:getFriends())
 		for i = 1, #friends, 1 do
-			if friends[i]:isDead() or friends[i]:objectName() == self.player:objectName() then table.remove(friends, i) end
+			if friends[i]:isAlive() then
+				table.insert(self.friends, player)
+				if friends[i]:objectName() ~= self.player:objectName() then
+					table.insert(self.friends_noself, player)
+				end
+			end
 		end
 
 		local enemies = sgs.QList2Table(self.lua_ai:getEnemies())
 		for i = 1, #enemies, 1 do
 			if enemies[i]:isDead() or enemies[i]:objectName() == self.player:objectName() then table.remove(enemies, i) end
 		end
-		self.friends = friends
-		table.insert(self.friends, self.player)
-		self.friends_noself = friends
 		self.enemies = enemies
 
 		self.retain = 2
@@ -1522,6 +1526,7 @@ function SmartAI:updatePlayers(clear_flags)
 			table.insert(self.enemies, neutrality[1])
 			return
 		end
+		return
 	end
 
 	self.enemies = {}

@@ -65,15 +65,14 @@ void Settings::init() {
     GameMode = value("GameMode", "02p").toString();
 
 
-    if (!contains("BanPackages")) {
-        QStringList banlist;
-        banlist << "nostalgia" << "nostal_general" << "nostal_yjcm" << "nostal_yjcm2012"
-                << "test" << "GreenHand" << "dragon"
-                << "sp_cards" << "ling" << "GreenHandCard"
-                << "New3v3Card";
-
-        setValue("BanPackages", banlist);
+    QStringList banpackagelist = value("BanPackages").toStringList();
+    if (banpackagelist.isEmpty()) {
+        banpackagelist << "nostalgia" << "nostal_general" << "nostal_yjcm" << "nostal_yjcm2012"
+                       << "test" << "GreenHand" << "dragon"
+                       << "sp_cards" << "ling" << "GreenHandCard"
+                       << "New3v3Card";
     }
+    setValue("BanPackages", banpackagelist);
 
     BanPackages = value("BanPackages").toStringList();
 

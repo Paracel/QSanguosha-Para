@@ -940,30 +940,40 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
     QList<int> cards = room->getNCards(3), left;
     left = cards;
 
-    QList<int> hearts;
+    QList<int> hearts, non_hearts;
     foreach (int card_id, cards) {
         const Card *card = Sanguosha->getCard(card_id);
         if (card->getSuit() == Card::Heart)
             hearts << card_id;
+		else
+            non_hearts << card_id;
     }
+    DummyCard *dummy = new DummyCard;
 
     if (!hearts.isEmpty()) {
         room->fillAG(cards, source);
         while (!hearts.isEmpty()) {
+            room->fillAG(left, source, non_hearts);
             int card_id = room->askForAG(source, hearts, true, "xinzhan");
-            if (card_id == -1)
+            if (card_id == -1) {
+                source->invoke("clearAG");
                 break;
-            if (!hearts.contains(card_id))
-                continue;
+            }
 
             hearts.removeOne(card_id);
             left.removeOne(card_id);
 
-            source->obtainCard(Sanguosha->getCard(card_id));
-            room->showCard(source, card_id);
+            dummy->addSubcard(card_id);
+            source->invoke("clearAG");
         }
 
-        source->invoke("clearAG");
+        if (dummy->subcardsLength() > 0) {
+            source->obtainCard(dummy);
+            source->invoke("clearAG"); // strange bug occurs with Manjuan
+            foreach (int id, dummy->getSubcards())
+                room->showCard(source, id);
+        }
+        dummy->deleteLater();
     }
 
     if (!left.isEmpty())

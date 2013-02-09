@@ -224,8 +224,8 @@ function SmartAI:slashProhibit(card, enemy)
 		if card:isKindOf("FireSlash") or self.player:hasSkill("lihuo") or self.player:hasWeapon("fan") then
 			if enemy:hasArmorEffect("vine") and not (enemy:isChained() and self:isGoodChainTarget(enemy)) then return true end
 		end
-		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing")) and
-			self:slashIsEffective(card, enemy) then return true end
+		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing"))
+			and self:slashIsEffective(card, enemy) then return true end
 		if getCardsNum("Jink", enemy) == 0 and enemy:getHp() < 2 and self:slashIsEffective(card, enemy) then return true end
 		if enemy:isLord() and self:isWeak(enemy) and self:slashIsEffective(card, enemy) then return true end
 		if self.player:hasWeapon("guding_blade") and enemy:isKongcheng() then return true end
@@ -331,9 +331,9 @@ function SmartAI:useCardSlash(card, use)
 		or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))
 		then
 			if not slash_prohibit then
-				if ((self.player:canSlash(friend, card, not no_distance, rangefix)) or
-					(use.isDummy and (self.player:distanceTo(friend, rangefix) <= self.predictedRange))) and
-					self:slashIsEffective(card, friend) then
+				if ((self.player:canSlash(friend, card, not no_distance, rangefix))
+					or (use.isDummy and (self.player:distanceTo(friend, rangefix) <= self.predictedRange)))
+					and self:slashIsEffective(card, friend) then
 					use.card = card
 					if use.to then
 						if use.to:length() == self.slash_targets - 1 then
@@ -373,12 +373,12 @@ function SmartAI:useCardSlash(card, use)
 		for _, friend in ipairs(self.friends_noself) do
 			if self:canLiuli(target, friend) and self:slashIsEffective(card, friend) and #targets > 1 and friend:getHp() < 3 then canliuli = true end
 		end
-		if (self.player:canSlash(target, card, not no_distance, rangefix) or
-		(use.isDummy and self.predictedRange and (self.player:distanceTo(target) <= self.predictedRange))) and
-		self:objectiveLevel(target) > 3
-		and self:slashIsEffective(card, target) and
-		not (target:hasSkill("xiangle") and basicnum < 2) and not canliuli and
-		not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
+		if (self.player:canSlash(target, card, not no_distance, rangefix)
+			or (use.isDummy and self.predictedRange and (self.player:distanceTo(target) <= self.predictedRange)))
+			and self:objectiveLevel(target) > 3
+			and self:slashIsEffective(card, target)
+			and not (target:hasSkill("xiangle") and basicnum < 2) and not canliuli
+			and not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
 			and self:getOverflow() > 0 and not self:hasCrossbowEffect()) then
 			-- fill the card use struct
 			local usecard = card
@@ -386,8 +386,8 @@ function SmartAI:useCardSlash(card, use)
 				local equips = self:getCards("EquipCard", self.player, "h")
 				for _, equip in ipairs(equips) do
 					local callback = sgs.ai_slash_weaponfilter[equip:objectName()]
-					if callback and type(callback) == "function" and callback(target, self) and
-						self.player:distanceTo(target) <= (sgs.weapon_range[equip:getClassName()] or 0) then
+					if callback and type(callback) == "function" and callback(target, self)
+						and self.player:distanceTo(target) <= (sgs.weapon_range[equip:getClassName()] or 0) then
 						self:useEquipCard(equip, use)
 						if use.card then return end
 					end
@@ -597,8 +597,8 @@ sgs.ai_use_priority.Slash = 2.4
 function SmartAI:useCardPeach(card, use)
 	local mustusepeach = false
 	if not self.player:isWounded() then return end
-	if self.player:hasSkill("longhun") and not self.player:isLord() and
-		math.min(self.player:getMaxCards(), self.player:getHandcardNum()) + self.player:getCards("e"):length() > 3 then return end
+	if self.player:hasSkill("longhun") and not self.player:isLord()
+		and math.min(self.player:getMaxCards(), self.player:getHandcardNum()) + self.player:getCards("e"):length() > 3 then return end
 	local peaches = 0
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
@@ -1301,8 +1301,7 @@ function SmartAI:getValuableCard(who)
 		if self:hasSkills(sgs.lose_equip_skill, who) then
 		else
 			for _, friend in ipairs(self.friends) do
-				if who:distanceTo(friend) == who:getAttackRange() and
-				who:getAttackRange() > 1 then
+				if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
 					return offhorse:getEffectiveId()
 				end
 			end
@@ -1531,8 +1530,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	if name == "snatch" or self:getOverflow() > 0 then
 		for _, enemy in ipairs(enemies) do
 			local equips = enemy:getEquips()
-			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not enemy:hasSkill("tuntian") and
-				not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng()) then
+			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not enemy:hasSkill("tuntian")
+				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng()) then
 				if enemy:getHandcardNum() == 1 then
 					if self:needKongcheng(enemy) or not self:hasLoseHandcardEffective(enemy) then return end
 				end

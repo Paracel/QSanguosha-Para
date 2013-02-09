@@ -136,8 +136,8 @@ function SmartAI:needDeath(player)
 end
 
 function SmartAI:doNotSave(player)
-	if (player:hasSkill("niepan") and player:getMark("@nirvana") > 0 and player:getCards("e"):length() < 2) or
-		(player:hasSkill("fuli") and player:getMark("@laoji") > 0 and player:getCards("e"):length() < 2) then
+	if (player:hasSkill("niepan") and player:getMark("@nirvana") > 0 and player:getCards("e"):length() < 2)
+		or (player:hasSkill("fuli") and player:getMark("@laoji") > 0 and player:getCards("e"):length() < 2) then
 		return true
 	end
 	return false
@@ -309,9 +309,9 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasArmorEffect("silver_lion") and
-			not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and
-			self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
+		if not enemy:hasArmorEffect("silver_lion")
+			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
+			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if enemy:isChained() and self:isGoodChainTarget(enemy) then
 					if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
 						use.card = greatyeyan
@@ -326,8 +326,8 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasArmorEffect("silver_lion") and
-			not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
+		if not enemy:hasArmorEffect("silver_lion")
+			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if enemy:isChained() and self:isGoodChainTarget(enemy) then
 					use.card = greatyeyan
@@ -341,8 +341,8 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if not (enemy:getArmor() and enemy:getArmor():objectName() == "silver_lion") and
-			not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
+		if not enemy:hasArmorEffect("silver_lion")
+			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if not enemy:isChained() then
 					if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
@@ -358,8 +358,8 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if not (enemy:getArmor() and enemy:getArmor():objectName() == "silver_lion") and
-			not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
+		if not enemy:hasArmorEffect("silver_lion")
+			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if not enemy:isChained() then
 					use.card = greatyeyan

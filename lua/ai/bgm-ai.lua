@@ -708,8 +708,8 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 	end
 
 	for _, friend in ipairs(friends) do
-		if friend:hasArmorEffect("silver_lion") and
-			friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
+		if friend:hasArmorEffect("silver_lion")
+			and friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
 			hasLion = true
 			target = friend
 		end

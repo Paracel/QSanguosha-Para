@@ -87,8 +87,8 @@ sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
 	if #handcards == 1 and handcards[1]:hasFlag("visible") then table.insert(cards, handcards[1]) end
 
 	for i = 1, #cards, 1 do
-		if (cards[i]:getSuit() == suit and suit ~= sgs.Card_Spade) or
-			(cards[i]:getSuit() == suit and suit == sgs.Card_Spade and cards[i]:getNumber() >= 2 and cards[i]:getNumber() <= 9) then
+		if (cards[i]:getSuit() == suit and suit ~= sgs.Card_Spade)
+			or (cards[i]:getSuit() == suit and suit == sgs.Card_Spade and cards[i]:getNumber() >= 2 and cards[i]:getNumber() <= 9) then
 			return cards[i]
 		end
 	end
@@ -211,8 +211,8 @@ end
 
 sgs.ai_need_damaged.ganglie = function (self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
-	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3 and
-		not self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and sgs.isGoodTarget(attacker, self.enemies, self) then
+	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
+		and not self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and sgs.isGoodTarget(attacker, self.enemies, self) then
 		return true
 	end
 	return false
@@ -677,8 +677,8 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 
 	local target_count = 0
 	for _, enemy in ipairs(self.enemies) do
-		if (self.player:canSlash(enemy, nil, not no_distance) or
-			(use.isDummy and self.player:distanceTo(enemy) <= (self.predictedRange or self.player:getAttackRange())))
+		if (self.player:canSlash(enemy, nil, not no_distance)
+			or (use.isDummy and self.player:distanceTo(enemy) <= (self.predictedRange or self.player:getAttackRange())))
 			and self:objectiveLevel(enemy) > 3 and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			use.card = card
 			if use.to then

@@ -756,8 +756,8 @@ function sgs.evaluatePlayerRole(player)
 		if sgs.current_mode_players["rebel"] == 0 and not sgs.current_mode_players["renegade"] == 0 then return "renegade" end
 	end
 
-	if sgs.role_evaluation[player:objectName()]["loyalist"] == sgs.role_evaluation[player:objectName()]["renegade"] and
-		sgs.role_evaluation[player:objectName()]["rebel"] == sgs.role_evaluation[player:objectName()]["renegade"] then
+	if sgs.role_evaluation[player:objectName()]["loyalist"] == sgs.role_evaluation[player:objectName()]["renegade"]
+		and sgs.role_evaluation[player:objectName()]["rebel"] == sgs.role_evaluation[player:objectName()]["renegade"] then
 		return "unknown"
 	end
 
@@ -909,9 +909,9 @@ function sgs.evaluateRoleTrends(player)
 	local renegade_value = sgs.role_evaluation[player:objectName()]["renegade"]
 	local loyalist_value = sgs.role_evaluation[player:objectName()]["loyalist"]
 
-	if (rebel_value == renegade_value and max_value == rebel_value) or
-		(rebel_value == loyalist_value and max_value == loyalist_value) or
-		(renegade_value == loyalist_value and max_value == renegade_value) then return "neutral"
+	if (rebel_value == renegade_value and max_value == rebel_value)
+		or (rebel_value == loyalist_value and max_value == loyalist_value)
+		or (renegade_value == loyalist_value and max_value == renegade_value) then return "neutral"
 	elseif max_value == loyalist_value then return "loyalist"
 	elseif max_value == renegade_value then return "renegade"
 	elseif max_value == rebel_value then return "rebel"
@@ -1259,8 +1259,8 @@ function SmartAI:objectiveLevel(player)
 						if player:isLord() then
 							if not sgs.isLordHealthy() then return -1
 							else return 3.5 end
-						elseif sgs.evaluatePlayerRole(player) == "rebel" or
-							sgs.evaluateRoleTrends(player) == "rebel" then
+						elseif sgs.evaluatePlayerRole(player) == "rebel"
+								or sgs.evaluateRoleTrends(player) == "rebel" then
 							return 0
 						else
 							return 5
@@ -1563,8 +1563,8 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 	if type(sgs.ai_card_intention[className]) == "number" then intention = sgs.ai_card_intention[className]
 	elseif sgs.dynamic_value.damage_card[className] then intention = 70
 	elseif sgs.dynamic_value.benefit[className] then intention = -40
-	elseif (className == "Snatch" or className == "Dismantlement") and
-		(to:getCards("j"):isEmpty() and not to:hasArmorEffect("silver_lion")) then
+	elseif (className == "Snatch" or className == "Dismantlement")
+			and (to:getCards("j"):isEmpty() and not to:hasArmorEffect("silver_lion")) then
 		intention = 80
 	elseif className == "Nullification" then
 		intention = 50
@@ -1670,13 +1670,13 @@ function SmartAI:filterEvent(event, player, data)
 			or card:isKindOf("YinlingCard") then
 			sgs.ai_snat_disma_effect = true
 			sgs.ai_snat_dism_from = struct.from
-			if to:getCards("j"):isEmpty() and
-				not to:hasArmorEffect("silver_lion") then
+			if to:getCards("j"):isEmpty()
+				and not to:hasArmorEffect("silver_lion") then
 				sgs.updateIntention(from, to, 80)
 			end
 		end
-		if card:isKindOf("Slash") and to:hasSkill("leiji") and
-			(getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to)) then
+		if card:isKindOf("Slash") and to:hasSkill("leiji")
+			and (getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to)) then
 			sgs.updateIntention(from, to, 3)
 			sgs.ai_leiji_effect = true
 		end
@@ -2063,15 +2063,15 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if trick:isKindOf("AOE") and not (from:hasSkill("wuyan") and not (menghuo and trick:isKindOf("SavageAssault"))) then
 				local lord = self.room:getLord()
 				local currentplayer = self.room:getCurrent()
-				if self:isFriend(lord) and self:isWeak(lord) and self:aoeIsEffective(trick, lord) and
-					((lord:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount())) >
-					((to:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))	and not
-					(self.player:objectName() == to:objectName() and self.player:getHp() == 1 and not self:canAvoidAOE(trick)) then
+				if self:isFriend(lord) and self:isWeak(lord) and self:aoeIsEffective(trick, lord)
+					and ((lord:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))
+						> ((to:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))
+					and not (self.player:objectName() == to:objectName() and self.player:getHp() == 1 and not self:canAvoidAOE(trick)) then
 					return nil
 				end
 				if self.player:objectName() == to:objectName() then
-					if self:hasSkills("jieming|yiji|guixin", self.player) and
-						(self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
+					if self:hasSkills("jieming|yiji|guixin", self.player)
+						and (self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
 						return nil
 					elseif not self:canAvoidAOE(trick) then
 						return null_card
@@ -2088,8 +2088,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			end
 			if trick:isKindOf("Duel") and not from:hasSkill("wuyan") then
 				if self.player:objectName() == to:objectName() then
-					if self:hasSkills(sgs.masochism_skill, self.player) and
-						(self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
+					if self:hasSkills(sgs.masochism_skill, self.player)
+						and (self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
 						return nil
 					elseif self:getCardsNum("Slash") == 0 then
 						return null_card
@@ -2264,8 +2264,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 				if who:hasSkill("xiaoji") and who:getHandcardNum() >= who:getHp() then
 				else
 					for _, friend in ipairs(self.friends) do
-						if who:distanceTo(friend) == who:getAttackRange() and
-							who:getAttackRange() > 1 then
+						if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
 							return who:getOffensiveHorse():getId()
 						end
 					end
@@ -2469,8 +2468,8 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 end
 
 function SmartAI:needKongcheng(player)
-	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0))) or
-			(not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
+	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)))
+			or (not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
 end
 
 function SmartAI:getLeastHandcardNum(player)
@@ -4196,8 +4195,8 @@ function SmartAI:useEquipCard(card, use)
 	elseif card:isKindOf("Armor") then
 			if self:needBear() and self.player:getLostHp() == 0 then return end
 		local lion = self:getCard("SilverLion")
-		if lion and self.player:isWounded() and not self.player:hasArmorEffect("silver_lion") and not card:isKindOf("SilverLion") and
-			not (self:hasSkills("bazhen|yizhong") and not self.player:getArmor()) then
+		if lion and self.player:isWounded() and not self.player:hasArmorEffect("silver_lion") and not card:isKindOf("SilverLion")
+			and not (self:hasSkills("bazhen|yizhong") and not self.player:getArmor()) then
 			use.card = lion
 			return
 		end
@@ -4258,7 +4257,7 @@ function SmartAI:damageMinusHp(self, enemy, type)
 				and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
 				if not (enemy:hasSkill("xiangle") and basicnum < 2) then slash_damagenum = slash_damagenum + 1 end
 				if self:getCardsNum("Analeptic") > 0 and analepticpowerup == 0 and
-					not (enemy:hasArmorEffect("silver_lion") or self:hasEightDiagramEffect(enemy)) then
+					and not (enemy:hasArmorEffect("silver_lion") or self:hasEightDiagramEffect(enemy))
 						slash_damagenum = slash_damagenum + 1
 						analepticpowerup = analepticpowerup + 1
 				end

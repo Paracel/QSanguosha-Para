@@ -290,8 +290,8 @@ sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)
 	self:sort(targets, "defense")
 	for _, enemy in ipairs(self.enemies) do
 		if ((not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy)) 
-			or self:getDangerousCard(enemy) or self:getValuableCard(enemy)) and not enemy:isNude() and
-			not (enemy:hasSkill("guzheng") and self.room:getCurrent():getPhase() == sgs.Player_Discard) then
+			or self:getDangerousCard(enemy) or self:getValuableCard(enemy)) and not enemy:isNude()
+			and not (enemy:hasSkill("guzheng") and self.room:getCurrent():getPhase() == sgs.Player_Discard) then
 			return enemy
 		end
 	end
@@ -335,10 +335,10 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 				local fe = self:getCardsNum(".", friend, "e")
 				if self:hasSkills(sgs.lose_equip_skill, friend) then ee = ee + fe end
 				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(), enemy)
-					- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(), enemy)
-				if math.abs(self:getCardsNum(".", enemy, "e")-self:getCardsNum(".", friend, "e")) <= lost_hp and
-					self:getCardsNum(".", enemy, "e") > 0 and
-					(ee > fe or (ee == fe and value > 0)) then
+								- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(), enemy)
+				if math.abs(self:getCardsNum(".", enemy, "e") - self:getCardsNum(".", friend, "e")) <= lost_hp
+					and self:getCardsNum(".", enemy, "e") > 0
+					and (ee > fe or (ee == fe and value > 0)) then
 					use.card = sgs.Card_Parse("@GanluCard=.")
 					if use.to then
 						use.to:append(friend)

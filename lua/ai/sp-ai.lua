@@ -100,8 +100,8 @@ sgs.ai_skill_invoke.danlao = function(self, data)
 	local current = self.room:getCurrent()
 	if effect.card:isKindOf("GodSalvation") and self.player:isWounded() then
 		return false
-	elseif effect.card:isKindOf("AmazingGrace") and
-		(self.player:getSeat() - current:getSeat()) % (global_room:alivePlayerCount()) < global_room:alivePlayerCount() / 2 then
+	elseif effect.card:isKindOf("AmazingGrace")
+		and (self.player:getSeat() - current:getSeat()) % (global_room:alivePlayerCount()) < global_room:alivePlayerCount() / 2 then
 		return false
 	else
 		return true

@@ -87,14 +87,14 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		if (friend:getHandcardNum() < 2) or (friend:getHandcardNum() < friend:getHp() + 1) or self.player:isWounded() then
 			for _, card in ipairs(cards) do
 				if #abandon_handcard >= 3 then break end
-				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard") and
-					not card:isKindOf("Peach") and not card:isKindOf("Jink") and
-					not card:isKindOf("Indulgence") and not card:isKindOf("SupplyShortage") then
+				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard")
+					and not card:isKindOf("Peach") and not card:isKindOf("Jink")
+					and not card:isKindOf("Indulgence") and not card:isKindOf("SupplyShortage") then
 					table.insert(abandon_handcard, card:getId())
 					index = 5
 				elseif card:isKindOf("Slash") and slash_num > 1 then
-					if (self.player:getWeapon() and not self.player:getWeapon():objectName() == "crossbow") or
-						not self.player:getWeapon() then
+					if (self.player:getWeapon() and not self.player:getWeapon():objectName() == "crossbow")
+						or not self.player:getWeapon() then
 						table.insert(abandon_handcard, card:getId())
 						index = 5
 						slash_num = slash_num - 1
@@ -469,8 +469,8 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 
 		local enemies = self.enemies
 		for _, enemy in ipairs(enemies) do
-			if (self:hasSkills("yongsi|haoshi|tuxi", enemy) or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1)) and
-				not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if (self:hasSkills("yongsi|haoshi|tuxi", enemy) or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1))
+				and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy

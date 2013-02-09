@@ -189,8 +189,8 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 	self:updatePlayers()
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasArmorEffect("silver_lion") and not enemy:hasSkill("hongyan") and
-			self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
+		if not enemy:hasArmorEffect("silver_lion") and not enemy:hasSkill("hongyan")
+			and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not (enemy:isChained() and not self:isGoodChainTarget(enemy)) then
 			return "@LeijiCard=.->" .. enemy:objectName()
 		end
 	end
@@ -363,12 +363,12 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	for _, friend in ipairs(self.friends_noself) do
 		if (friend:getLostHp() + dmg.damage > 1 and friend:isAlive()) then
 			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature > 0 then
-			elseif friend:getHp() >= 2 and dmg.damage < 2 and
-					(self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
-					or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
-					or friend:getHp() > getBestHp(friend)
-					or (friend:getHandcardNum() < 3 and friend:hasSkill("rende")))
-				then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
+			elseif friend:getHp() >= 2 and dmg.damage < 2
+					and (self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
+						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
+						or friend:getHp() > getBestHp(friend)
+						or (friend:getHandcardNum() < 3 and friend:hasSkill("rende"))) then
+				return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
 			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
 		end
 	end

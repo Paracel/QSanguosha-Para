@@ -362,7 +362,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 
 	for _, friend in ipairs(self.friends_noself) do
 		if (friend:getLostHp() + dmg.damage > 1 and friend:isAlive()) then
-			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature > 0 then
+			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature ~= sgs.DamageStruct_Normal then
 			elseif friend:getHp() >= 2 and dmg.damage < 2
 					and (self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
 						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())

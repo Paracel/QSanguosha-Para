@@ -237,12 +237,7 @@ sgs.ai_skill_invoke.fenxin = function(self, data)
 	local target_role = sgs.evaluatePlayerRole(target)
 	local self_role = self.player:getRole()
 	if target_role == "renegade" or target_role == "unknown" then return false end
-	local count1, count2 = 1, 0
-	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if target_role == "loyalist" then count1 = count1 + 1 end
-		if target_role == "rebel" then count2 = count2 + 1 end
-	end
-	if self_role ~= "loyalist" and target_role == "loyalist" and count1 >= count2 then return true end
-	if self_role ~= "rebel" and target_role == "rebel" and count1 < count2 then return true end
-	return false
+	local process = sgs.gameProcess(self.room)
+	return (target_role == "rebel" and self.role ~= "rebel" and process:match("rebel"))
+			or (target_role == "loyalist" and self.role ~= "loyalist" and process:match("loyal"))
 end

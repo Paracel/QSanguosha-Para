@@ -1499,9 +1499,9 @@ function SmartAI:updatePlayers(clear_flags)
 		local friends = sgs.QList2Table(self.lua_ai:getFriends())
 		for i = 1, #friends, 1 do
 			if friends[i]:isAlive() then
-				table.insert(self.friends, player)
+				table.insert(self.friends, friends[i])
 				if friends[i]:objectName() ~= self.player:objectName() then
-					table.insert(self.friends_noself, player)
+					table.insert(self.friends_noself, friends[i])
 				end
 			end
 		end

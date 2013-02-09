@@ -182,7 +182,7 @@ bool HuangtianCard::targetFilter(const QList<const Player *> &targets, const Pla
            && to_select != Self && !to_select->hasFlag("HuangtianInvoked");
 }
 
-class HuangtianViewAsSkill: public OneCardViewAsSkill{
+class HuangtianViewAsSkill: public OneCardViewAsSkill {
 public:
     HuangtianViewAsSkill():OneCardViewAsSkill("huangtianv") {
         attached_lord_skill = true;
@@ -205,7 +205,7 @@ public:
     }
 };
 
-class Huangtian: public TriggerSkill{
+class Huangtian: public TriggerSkill {
 public:
     Huangtian():TriggerSkill("huangtian$") {
         events << GameStart << EventPhaseChanging;
@@ -405,7 +405,7 @@ public:
         if (event == DamageDone && damage.from && damage.from->hasSkill("kuanggu") && damage.from->isAlive()) {
             ServerPlayer *weiyan = damage.from;
             weiyan->tag["InvokeKuanggu"] = weiyan->distanceTo(damage.to) <= 1;
-        }else if (event == Damage && player->hasSkill("kuanggu") && player->isAlive()) {
+        } else if (event == Damage && player->hasSkill("kuanggu") && player->isAlive()) {
             bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
             player->tag["InvokeKuanggu"] = false;
             if (invoke && player->isWounded()) {

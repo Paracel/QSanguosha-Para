@@ -245,7 +245,7 @@ public:
     }
 };
 
-class ShuangxiongViewAsSkill: public OneCardViewAsSkill{
+class ShuangxiongViewAsSkill: public OneCardViewAsSkill {
 public:
     ShuangxiongViewAsSkill():OneCardViewAsSkill("shuangxiong") {
     }
@@ -357,7 +357,7 @@ public:
     }
 };
 
-class Niepan: public TriggerSkill{
+class Niepan: public TriggerSkill {
 public:
     Niepan(): TriggerSkill("niepan") {
         events << AskForPeaches;

@@ -56,7 +56,7 @@ public:
     CustomScenario(): MiniScene("custom_scenario") { setupCustom(NULL); }
 };
 
-class LoadedScenario: public MiniScene{
+class LoadedScenario: public MiniScene {
     Q_OBJECT
 
 public:

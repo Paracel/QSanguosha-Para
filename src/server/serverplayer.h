@@ -14,7 +14,7 @@ class Recorder;
 #include <QSemaphore>
 #include <QDateTime>
 
-class ServerPlayer: public Player{
+class ServerPlayer: public Player {
     Q_OBJECT
     Q_PROPERTY(QString ip READ getIp)
 

@@ -1189,7 +1189,7 @@ public:
     }
 };
 
-class LianpoDo: public PhaseChangeSkill{
+class LianpoDo: public PhaseChangeSkill {
 public:
     LianpoDo(): PhaseChangeSkill("#lianpo-do") {
     }

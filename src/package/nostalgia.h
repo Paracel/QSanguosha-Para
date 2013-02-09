@@ -66,7 +66,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class NosQuanjiCard: public SkillCard{
+class NosQuanjiCard: public SkillCard {
     Q_OBJECT
 
 public:
@@ -76,7 +76,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class NosYexinCard: public SkillCard{
+class NosYexinCard: public SkillCard {
     Q_OBJECT
 
 public:

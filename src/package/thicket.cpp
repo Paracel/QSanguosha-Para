@@ -77,7 +77,7 @@ public:
     }
 };
 
-class Fangzhu: public MasochismSkill{
+class Fangzhu: public MasochismSkill {
 public:
     Fangzhu(): MasochismSkill("fangzhu") {
         view_as_skill = new FangzhuViewAsSkill;
@@ -490,7 +490,7 @@ public:
     }
 };
 
-class HaoshiGive: public TriggerSkill{
+class HaoshiGive: public TriggerSkill {
 public:
     HaoshiGive(): TriggerSkill("#haoshi-give") {
         events << AfterDrawNCards;

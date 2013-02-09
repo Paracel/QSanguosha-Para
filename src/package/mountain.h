@@ -27,7 +27,7 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class ZhijianCard: public SkillCard{
+class ZhijianCard: public SkillCard {
     Q_OBJECT
 
 public:

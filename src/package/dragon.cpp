@@ -227,7 +227,7 @@ void DrJiedaoCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->getRoom()->moveCardsAtomic(exchangeMove, true);
 }
 
-class DrJiedaoViewAsSkill: public ZeroCardViewAsSkill{
+class DrJiedaoViewAsSkill: public ZeroCardViewAsSkill {
 public:
     DrJiedaoViewAsSkill():ZeroCardViewAsSkill("drjiedao") {
     }

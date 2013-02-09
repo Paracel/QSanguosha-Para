@@ -83,7 +83,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
                 to =params.at(1).toInt();
 
             if (from <= cdn && cdn <= to) checkpoint = true;
-        }else if (number.toInt() == cdn)
+        } else if (number.toInt() == cdn)
             checkpoint = true;
         if (checkpoint) break;
     }

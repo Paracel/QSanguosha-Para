@@ -13,7 +13,7 @@ void LuoyiCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) const
     source->setFlags("neoluoyi");
 }
 
-class NeoLuoyi: public OneCardViewAsSkill{
+class NeoLuoyi: public OneCardViewAsSkill {
 public:
     NeoLuoyi(): OneCardViewAsSkill("neoluoyi") {
     }

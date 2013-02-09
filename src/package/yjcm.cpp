@@ -273,7 +273,7 @@ public:
                 room->drawCards((ServerPlayer *)move->from, 1);
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
             }
-        }else if (event == Damaged) {
+        } else if (event == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
             ServerPlayer *source = damage.from;
             if (!source || source == player) return false;
@@ -408,7 +408,7 @@ public:
     }
 };
 
-class Huilei: public TriggerSkill{
+class Huilei: public TriggerSkill {
 public:
     Huilei():TriggerSkill("huilei") {
         events << Death;
@@ -611,7 +611,7 @@ public:
             card->addSubcards(cards);
 
             return card;
-        }else if (Self->hasFlag("xianzhen_success")) {
+        } else if (Self->hasFlag("xianzhen_success")) {
             if (!cards.isEmpty())
                 return NULL;
 

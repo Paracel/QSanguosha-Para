@@ -156,7 +156,7 @@ void EffectAnimation::deleteEffect(QAnimatedEffect *effect) {
     QGraphicsItem *pix = effects.key(effect);
     if (pix) {
         QAnimatedEffect *effect = registered.value(pix);
-        if (effect)effect->reset();
+        if (effect) effect->reset();
         pix->setGraphicsEffect(registered.value(pix));
         effects.insert(pix,registered.value(pix));
         registered.insert(pix,NULL);

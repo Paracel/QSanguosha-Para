@@ -28,8 +28,7 @@ void RecAnalysis::initialize(QString dir) {
                 records_line << line;
             }
         }
-    }
-    else{
+    } else {
         QMessageBox::warning(NULL, tr("Warning"), tr("The file is unreadable"));
         return;
     }

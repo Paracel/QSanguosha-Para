@@ -625,7 +625,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
             connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
             item_list << button << box;
-        }else {
+        } else {
             item_list << button;
         }
 

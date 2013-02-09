@@ -64,7 +64,7 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
-class WuqianCard: public SkillCard{
+class WuqianCard: public SkillCard {
     Q_OBJECT
 
 public:

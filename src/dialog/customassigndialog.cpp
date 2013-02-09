@@ -1194,12 +1194,12 @@ void CustomAssignDialog::load() {
             features = line.split(" ");
         foreach (QString str, features) {
             QStringList keys = str.split(":");
-            if (keys.size() < 2)continue;
-            if (keys.first().size() < 1)continue;
+            if (keys.size() < 2) continue;
+            if (keys.first().size() < 1) continue;
             player.insert(keys.at(0),keys.at(1));
         }
 
-        if (player["role"]!= QString())role_mapping[name] = player["role"];
+        if (player["role"]!= QString()) role_mapping[name] = player["role"];
 
         if (player["general"] == "select")
             free_choose_general[name] = true;
@@ -1465,21 +1465,21 @@ bool CustomAssignDialog::save(QString path) {
 
         if (player_equips[name].length()) {
             line.append("equip:");
-            foreach (int equip,player_equips[name])line.append(QString("%1,").arg(equip));
+            foreach (int equip,player_equips[name]) line.append(QString("%1,").arg(equip));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_handcards[name].length()) {
             line.append("hand:");
-            foreach (int hand,player_handcards[name])line.append(QString("%1,").arg(hand));
+            foreach (int hand,player_handcards[name]) line.append(QString("%1,").arg(hand));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_judges[name].length()) {
             line.append("judge:");
-            foreach (int judge,player_judges[name])line.append(QString("%1,").arg(judge));
+            foreach (int judge,player_judges[name]) line.append(QString("%1,").arg(judge));
             line.chop(1);
             line.append(" ");
         }

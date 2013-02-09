@@ -17,7 +17,7 @@ public:
         if (judge->who != player)
             return false;
 
-        if (player->askForSkillInvoke(objectName(), data) ){
+        if (player->askForSkillInvoke(objectName(), data) ) {
             int card_id = room->drawCard();
             room->broadcastSkillInvoke(objectName(), room->getCurrent() == player ? 2 : 1);
             room->getThread()->delay();
@@ -257,7 +257,7 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
 
         if (player->distanceTo(damage.to) == 1 && damage.card && damage.card->isKindOf("Slash")
-            && !damage.chain && !damage.transfer && player->askForSkillInvoke(objectName(), data)){
+            && !damage.chain && !damage.transfer && player->askForSkillInvoke(objectName(), data)) {
             room->broadcastSkillInvoke(objectName(), 1);
             JudgeStruct judge;
             judge.pattern = QRegExp("(.*):(heart):(.*)");
@@ -681,7 +681,7 @@ public:
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName())
                 damage.from->tag["Invokelihuo"] = true;
-        } else if(TriggerSkill::triggerable(player) && player->tag.value("Invokelihuo", false).toBool()) {
+        } else if (TriggerSkill::triggerable(player) && player->tag.value("Invokelihuo", false).toBool()) {
             LogMessage log;
             log.type = "#TriggerSkill";
             log.from = player;

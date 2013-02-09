@@ -15,7 +15,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (damage.to->isLord() ){
+        if (damage.to->isLord() ) {
             int x = damage.damage;
             Room *room = player->getRoom();
 

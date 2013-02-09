@@ -87,7 +87,7 @@ void CardContainer::fillCards(const QList<int> &card_ids, const QList<int> &disa
     }    
 }
 
-bool CardContainer::_addCardItems(QList<CardItem *> &, const CardsMoveStruct &){
+bool CardContainer::_addCardItems(QList<CardItem *> &, const CardsMoveStruct &) {
     return true;    
 }
 
@@ -273,13 +273,13 @@ void GuanxingBox::adjust() {
     c = qBound(0, c, items->length());
     items->insert(c, item);
 
-    for(int i = 0; i < up_items.length(); i++) {
+    for (int i = 0; i < up_items.length(); i++) {
         QPointF pos(start_x + i * skip, start_y1);
         up_items.at(i)->setHomePos(pos);
         up_items.at(i)->goBack(true);
     }
 
-    for(int i = 0; i < down_items.length(); i++) {
+    for (int i = 0; i < down_items.length(); i++) {
         QPointF pos(start_x + i * skip, start_y2);
         down_items.at(i)->setHomePos(pos);
         down_items.at(i)->goBack(true);
@@ -287,9 +287,9 @@ void GuanxingBox::adjust() {
 }
 
 void GuanxingBox::clear() {
-    foreach(CardItem *card_item, up_items)
+    foreach (CardItem *card_item, up_items)
         card_item->deleteLater();
-    foreach(CardItem *card_item, down_items)
+    foreach (CardItem *card_item, down_items)
         card_item->deleteLater();
 
     up_items.clear();
@@ -300,10 +300,10 @@ void GuanxingBox::clear() {
 
 void GuanxingBox::reply() {
     QList<int> up_cards, down_cards;
-    foreach(CardItem *card_item, up_items)
+    foreach (CardItem *card_item, up_items)
         up_cards << card_item->getCard()->getId();
 
-    foreach(CardItem *card_item, down_items)
+    foreach (CardItem *card_item, down_items)
         down_cards << card_item->getCard()->getId();
 
     ClientInstance->onPlayerReplyGuanxing(up_cards, down_cards);

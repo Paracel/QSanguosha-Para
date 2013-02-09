@@ -48,7 +48,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
 
-        if (damage.from && damage.from != player ){
+        if (damage.from && damage.from != player) {
             player->tag["Wuhun"] = true;
             damage.from->gainMark("@nightmare", damage.damage);
             damage.from->getRoom()->broadcastSkillInvoke(objectName(), 1);
@@ -271,7 +271,7 @@ bool GreatYeyanCard::targetsFeasible(const QList<const Player *> &targets, const
 bool GreatYeyanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select,
                                   const Player *, int &maxVotes) const{
     int i = 0;
-    foreach(const Player *player, targets)
+    foreach (const Player *player, targets)
         if (player == to_select) i++;
     maxVotes = qMax(3 - targets.size(),0) + i;
     return maxVotes > 0;
@@ -282,15 +282,14 @@ void GreatYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlaye
     int totalvictim = 0;
     QMap<ServerPlayer *, int> map;
 
-    foreach(ServerPlayer *sp, targets)
+    foreach (ServerPlayer *sp, targets)
         map[sp]++;
 
     if (targets.size() == 1)
         map[targets.first()] += 2;
 
-    foreach(ServerPlayer *sp, map.keys()){
-        if(map[sp] > 1)
-            criticaltarget++;
+    foreach (ServerPlayer *sp, map.keys()) {
+        if (map[sp] > 1) criticaltarget++;
         totalvictim++;
     }
     if (criticaltarget > 0) {
@@ -837,7 +836,7 @@ public:
             if (!invoke)
                 return false;
             QList<ServerPlayer *> players = room->getAllPlayers();
-            foreach(ServerPlayer *player, players){
+            foreach (ServerPlayer *player, players) {
                 player->loseAllMarks("@gale");
                 player->loseAllMarks("@fog");
             }
@@ -1140,7 +1139,7 @@ public:
                 }
             }
         } else if (player->getPhase() == Player::NotActive)
-                foreach(ServerPlayer *p, room->getAlivePlayers())
+                foreach (ServerPlayer *p, room->getAlivePlayers())
                     room->setPlayerMark(p, "lianpo", 0);
 
         return false;
@@ -1236,7 +1235,7 @@ public:
     }
 
     virtual int getExtra(const Player *target) const{
-        if(target->hasSkill(objectName()))
+        if (target->hasSkill(objectName()))
             return 2;
         else
             return 0;

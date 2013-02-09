@@ -112,7 +112,7 @@ bool NativeClientSocket::isConnected() const{
 
 QString NativeClientSocket::peerName() const{
     QString peer_name = socket->peerName();
-    if(peer_name.isEmpty())
+    if (peer_name.isEmpty())
         peer_name = QString("%1:%2").arg(socket->peerAddress().toString()).arg(socket->peerPort());
 
     return peer_name;
@@ -122,7 +122,7 @@ QString NativeClientSocket::peerAddress() const{
     return socket->peerAddress().toString();
 }
 
-void NativeClientSocket::raiseError(QAbstractSocket::SocketError socket_error){
+void NativeClientSocket::raiseError(QAbstractSocket::SocketError socket_error) {
     // translate error message
     QString reason;
     switch (socket_error) {

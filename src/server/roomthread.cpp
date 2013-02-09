@@ -268,7 +268,7 @@ void RoomThread::addPlayerSkills(ServerPlayer *player, bool invoke_game_start) {
     }
 
     //We should make someone trigger a whole GameStart event instead of trigger a skill only.
-    if(invoke_verify)
+    if (invoke_verify)
         trigger(GameStart, room, player, void_data);
 }
 
@@ -463,7 +463,7 @@ void RoomThread::run() {
     }
 }
 
-static bool CompareByPriority(const TriggerSkill *a, const TriggerSkill *b){
+static bool CompareByPriority(const TriggerSkill *a, const TriggerSkill *b) {
     if (a->getPriority() == b->getPriority())
         return b->inherits("WeaponSkill") || b->inherits("ArmorSkill") || b->inherits("GameRule");
     return a->getPriority() > b->getPriority();
@@ -487,7 +487,7 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
     }
 
     if (target) {
-        foreach(AI *ai, room->ais)
+        foreach (AI *ai, room->ais)
             ai->filterEvent(event, target, data);
     }
 
@@ -501,19 +501,19 @@ const QList<EventTriplet> *RoomThread::getEventStack() const{
     return &event_stack;
 }
 
-bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target){
+bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target) {
     QVariant data;
     return trigger(event, room, target, data);
 }
 
-void RoomThread::addTriggerSkill(const TriggerSkill *skill){
+void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
     if (skill == NULL || skillSet.contains(skill->objectName()))
         return;
 
     skillSet << skill->objectName();
 
     QList<TriggerEvent> events = skill->getTriggerEvents();
-    foreach(TriggerEvent event, events){
+    foreach (TriggerEvent event, events) {
         QList<const TriggerSkill *> &table = skill_table[event];
         table << skill;
         qStableSort(table.begin(), table.end(), CompareByPriority);

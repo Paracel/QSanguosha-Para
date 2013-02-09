@@ -63,7 +63,7 @@ void DoLuaScript(lua_State *L, const char *script) {
 }
 
 void DoLuaScripts(lua_State *L, const QStringList &scripts) {
-    foreach(QString script, scripts){
+    foreach (QString script, scripts) {
         DoLuaScript(L, script.toLocal8Bit());
     }
 }

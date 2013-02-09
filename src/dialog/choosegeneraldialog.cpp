@@ -51,7 +51,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
     QString lord_name;
 
     QList<const General *> generals;
-    foreach(QString general_name, general_names) {
+    foreach (QString general_name, general_names) {
         if (general_name.contains("(lord)")) {
             general_name.chop(6);
             lord_name = general_name;
@@ -125,7 +125,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
             layout->addWidget(label);
         }
 
-        foreach(OptionButton *button, buttons)
+        foreach (OptionButton *button, buttons)
             layout->addWidget(button);
     } else {
         QGridLayout *grid_layout = new QGridLayout;
@@ -283,7 +283,7 @@ void FreeChooseDialog::chooseGeneral() {
     if (pair_choose) {
         QList<QAbstractButton *> buttons = group->buttons();
         QString first, second;
-        foreach(QAbstractButton *button, buttons) {
+        foreach (QAbstractButton *button, buttons) {
             if (!button->isChecked())
                 continue;
 
@@ -350,7 +350,7 @@ QWidget *FreeChooseDialog::createTab(const QList<const General *> &generals) {
 void FreeChooseDialog::uncheckExtraButton(QAbstractButton *click_button) {
     QAbstractButton *first = NULL;
     QList<QAbstractButton *> buttons = group->buttons();
-    foreach (QAbstractButton *button, buttons){
+    foreach (QAbstractButton *button, buttons) {
         if (!button->isChecked())
             continue;
 

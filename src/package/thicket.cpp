@@ -24,11 +24,11 @@ public:
 
             DummyCard *dummy = new DummyCard;
             QList <const Card *> handcards = player->getHandcards();
-            foreach(const Card *card, handcards)
+            foreach (const Card *card, handcards)
                 dummy->addSubcard(card);
 
             QList <const Card *> equips = player->getEquips();
-            foreach(const Card *card, equips)
+            foreach (const Card *card, equips)
                 dummy->addSubcard(card);
 
             if (dummy->subcardsLength() > 0) {
@@ -224,7 +224,7 @@ public:
             ServerPlayer *menghuo = room->getTag("HuoshouSource").value<PlayerStar>();
             damage.from = menghuo->isAlive() ? menghuo : NULL;
             data = QVariant::fromValue(damage);
-        } else if(triggerEvent == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("SavageAssault"))
                 room->removeTag("HuoshouSource");
@@ -449,7 +449,7 @@ HaoshiCard::HaoshiCard() {
 }
 
 bool HaoshiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if(!targets.isEmpty() || to_select == Self)
+    if (!targets.isEmpty() || to_select == Self)
         return false;
 
     return to_select->getHandcardNum() == Self->getMark("haoshi");
@@ -505,12 +505,12 @@ public:
 
             QList<ServerPlayer *> other_players = room->getOtherPlayers(lusu);
             int least = 1000;
-            foreach(ServerPlayer *player, other_players)
+            foreach (ServerPlayer *player, other_players)
                 least = qMin(player->getHandcardNum(), least);
             room->setPlayerMark(lusu, "haoshi", least);
             bool used = room->askForUseCard(lusu, "@@haoshi!", "@haoshi", -1, Card::MethodNone);
 
-            if(!used){
+            if (!used) {
                 // force lusu to give his half cards
                 ServerPlayer *beggar = NULL;
                 foreach (ServerPlayer *player, other_players) {
@@ -590,7 +590,7 @@ const Card *DimengCard::validate(const CardUseStruct *card_use) const{
         if (!player->isJilei(card))
             to_discard++;
     }
-    foreach(const Card *card, player->getEquips()) {
+    foreach (const Card *card, player->getEquips()) {
         if (!player->isJilei(card))
             to_discard++;
     }
@@ -869,7 +869,7 @@ public:
                     }
                 }
             }
-        } else if(event == CardFinished) {
+        } else if (event == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
                 room->setPlayerMark(use.from, "double_jink" + use.card->toString(), 0);

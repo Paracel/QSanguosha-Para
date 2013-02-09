@@ -379,7 +379,7 @@ void RecAnalysis::setDesignation() {
     addDesignation(tr("War Spirit"), MostDamaged, findPlayerOfDamaged(10), true, QString(), true, false, false, true);
 
     int loyal_num = 0, rebel_num = 0;
-    foreach(PlayerRecordStruct *s, m_recordMap.values()) {
+    foreach (PlayerRecordStruct *s, m_recordMap.values()) {
         if (s->m_role == "loyalist" && s->m_isAlive) loyal_num ++;
         if (s->m_role == "rebel" && s->m_isAlive) rebel_num ++;
     }

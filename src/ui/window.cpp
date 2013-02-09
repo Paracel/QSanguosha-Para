@@ -147,7 +147,7 @@ void Window::disappear() {
 
     group->start();
 
-    if(!keep_when_disappear)
+    if (!keep_when_disappear)
         connect(group, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 

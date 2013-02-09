@@ -71,7 +71,7 @@ void RoleComboBox::collapse() {
 }
 
 void RoleComboBox::expand() {
-    foreach(RoleComboBoxItem *item, items)
+    foreach (RoleComboBoxItem *item, items)
         item->show();
     m_currentRole->setRole("unknown");
     connect(m_currentRole, SIGNAL(clicked()), this, SLOT(collapse()));
@@ -95,7 +95,7 @@ void RoleComboBox::fix(const QString &role) {
     m_currentRole->setRole(role);
     _m_fixedRole = role;
     // delete all
-    foreach(RoleComboBoxItem *item, items)
+    foreach (RoleComboBoxItem *item, items)
         delete item;
    items.clear();
 }

@@ -294,7 +294,7 @@ void QSanInvokeSkillDock::setWidth(int width) {
 void QSanInvokeSkillDock::update() {
     if (!_m_buttons.isEmpty()) {
         QList<QSanInvokeSkillButton *> regular_buttons, lordskill_buttons, all_buttons;
-        foreach(QSanInvokeSkillButton *btn, _m_buttons) {
+        foreach (QSanInvokeSkillButton *btn, _m_buttons) {
             if (btn->getSkill()->isAttachedLordSkill())
                 lordskill_buttons << btn;
             else

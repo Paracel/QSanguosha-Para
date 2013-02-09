@@ -53,7 +53,7 @@ public:
         case GameOverJudge: {
                 if (player->isLord()) {
                     scenario->marryAll(room);
-                } else if(player->isMale()) {
+                } else if (player->isMale()) {
                     ServerPlayer *loyalist = NULL;
                     foreach (ServerPlayer *player, room->getAlivePlayers()) {
                         if (player->getRoleEnum() == Player::Loyalist) {
@@ -69,7 +69,7 @@ public:
 
                     QList<ServerPlayer *> players = room->getAllPlayers();
                     QList<ServerPlayer *> widows;
-                    foreach(ServerPlayer *player, players){
+                    foreach (ServerPlayer *player, players) {
                         if (scenario->isWidow(player))
                             widows << player;
                     }

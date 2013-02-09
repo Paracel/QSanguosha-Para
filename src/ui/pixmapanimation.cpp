@@ -68,7 +68,7 @@ PixmapAnimation *PixmapAnimation::GetPixmapAnimation(QGraphicsItem *parent, cons
     PixmapAnimation *pma = new PixmapAnimation();
     pma->setPath(QString("image/system/emotion/%1/").arg(emotion));
     if (pma->valid()) {
-        if(emotion == "no-success") {
+        if (emotion == "no-success") {
             pma->moveBy(pma->boundingRect().width() * 0.15,
                         pma->boundingRect().height() * 0.15);
             pma->setScale(0.7);

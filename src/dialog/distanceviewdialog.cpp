@@ -28,7 +28,7 @@ public:
         in_attack = new QLineEdit;
 
         QList<const DistanceSkill *> skills = Sanguosha->getDistanceSkills();
-        foreach(const DistanceSkill *skill, skills){
+        foreach (const DistanceSkill *skill, skills) {
             bool show_skill = false;
             foreach (const ClientPlayer *p, ClientInstance->getPlayers()) {
                 if (p->hasSkill(skill->objectName())) {
@@ -138,7 +138,7 @@ void DistanceViewDialog::showDistance() {
 
         if (correct > 0)
             edit->setText(QString("+%1").arg(correct));
-        else if(correct < 0)
+        else if (correct < 0)
             edit->setText(QString::number(correct));
     }
 

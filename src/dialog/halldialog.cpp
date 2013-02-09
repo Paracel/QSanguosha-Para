@@ -107,7 +107,7 @@ void HallDialog::joinRoom(int room_id) {
     ClientInstance->request("joinRoom " + QString::number(room_id));
 }
 
-void HallDialog::roomBegin(int total, int pagelimit){
+void HallDialog::roomBegin(int total, int pagelimit) {
     table->clearContents();
     table->setRowCount(total);
     room_row = 0;
@@ -139,13 +139,13 @@ void Client::roomBegin(const QString &begin_str) {
     int total = texts.at(0).toInt();
     int pagelimit = texts.at(1).toInt();
 
-    if(HallDialogInstance)
+    if (HallDialogInstance)
         HallDialogInstance->roomBegin(total, pagelimit);
 }
 
 void Client::room(const QString &room_str) {
     QRegExp rx("^(\\d+):(\\d+):(.+)$");
-    if(!rx.exactMatch(room_str)){
+    if (!rx.exactMatch(room_str)) {
         commandFormatWarning(room_str, rx, __FUNCTION__);
         return;
     }

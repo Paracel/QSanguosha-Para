@@ -43,8 +43,8 @@ void ServerPlayer::broadcastSkillInvoke(const Card *card) const{
 
     QString skill_name = card->getSkillName();
     const Skill *skill = Sanguosha->getSkill(skill_name);
-    if (skill == NULL){
-        if(card->getCommonEffectName().isNull())
+    if (skill == NULL) {
+        if (card->getCommonEffectName().isNull())
             broadcastSkillInvoke(card->objectName());
         else
             room->broadcastSkillInvoke(card->getCommonEffectName(), "common");
@@ -53,7 +53,7 @@ void ServerPlayer::broadcastSkillInvoke(const Card *card) const{
         int index = skill->getEffectIndex(this, card);
         if (index == 0) return;
 
-        if ((index == -1 && skill->getSources().isEmpty()) || index == -2){
+        if ((index == -1 && skill->getSources().isEmpty()) || index == -2) {
             if (card->getCommonEffectName().isNull())
                 broadcastSkillInvoke(card->objectName());
             else
@@ -89,12 +89,12 @@ void ServerPlayer::throwAllEquips() {
     card->deleteLater();
 }
 
-void ServerPlayer::throwAllHandCards(){
+void ServerPlayer::throwAllHandCards() {
     int card_length = getCardCount(false);
     room->askForDiscard(this, QString(), card_length, card_length);
 }
 
-void ServerPlayer::throwAllHandCardsAndEquips(){
+void ServerPlayer::throwAllHandCardsAndEquips() {
     int card_length = getCardCount(true);
     room->askForDiscard(this, QString(), card_length, card_length, false, true);
 }
@@ -255,9 +255,9 @@ QString ServerPlayer::findReasonable(const QStringList &generals, bool no_unreas
     foreach (QString name, generals) {
         if (Config.Enable2ndGeneral) {
             if (getGeneral()) {
-                if(BanPair::isBanned(getGeneralName(), name)) continue;
+                if (BanPair::isBanned(getGeneralName(), name)) continue;
             } else {
-                if(BanPair::isBanned(name)) continue;
+                if (BanPair::isBanned(name)) continue;
             }
 
             if (Config.EnableHegemony && getGeneral()
@@ -569,7 +569,7 @@ bool ServerPlayer::changePhase(Player::Phase from, Player::Phase to) {
         phases.removeFirst();
 
     if (!thread->trigger(EventPhaseStart, room, this)) {
-        if(getPhase() != NotActive)
+        if (getPhase() != NotActive)
             thread->trigger(EventPhaseProceeding, room, this);
     }
     if (getPhase() != NotActive)
@@ -634,7 +634,7 @@ QList<Player::Phase> &ServerPlayer::getPhases() {
 }
 
 void ServerPlayer::skip() {
-    for(int i = 0; i < _m_phases_state.size(); i++)
+    for (int i = 0; i < _m_phases_state.size(); i++)
         _m_phases_state[i].finished = true;
 
     LogMessage log;
@@ -854,7 +854,7 @@ void ServerPlayer::marshal(ServerPlayer *player) const{
 
     if (isAlive()) {
         room->notifyProperty(player, this, "seat");
-        if(getPhase() != Player::NotActive)
+        if (getPhase() != Player::NotActive)
             room->notifyProperty(player, this, "phase");
     } else {
         room->notifyProperty(player, this, "alive");
@@ -868,7 +868,7 @@ void ServerPlayer::marshal(ServerPlayer *player) const{
     if (isChained())
         room->notifyProperty(player, this, "chained");
 
-    if (!isKongcheng()){
+    if (!isKongcheng()) {
         if (player != this) {
             player->invoke("drawNCards", QString("%1:%2").arg(objectName()).arg(getHandcardNum()));
         } else {
@@ -921,7 +921,7 @@ void ServerPlayer::addToPile(const QString &pile_name, int card_id, bool open) {
     return addToPile(pile_name, card_ids, open);
 }
 
-void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open){
+void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open) {
     piles[pile_name].append(card_ids);
 
     CardsMoveStruct move;

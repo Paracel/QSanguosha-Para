@@ -132,8 +132,7 @@ public:
 
         if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSuit() == Card::Heart
             && !damage.chain && !damage.transfer && !damage.to->isAllNude()
-            && player->askForSkillInvoke(objectName(), data)){
-
+            && player->askForSkillInvoke(objectName(), data)) {
             room->broadcastSkillInvoke(objectName(), 1);
             LogMessage log;
             log.type = "#Yishi";
@@ -166,7 +165,7 @@ public:
         if (gongsun->getPhase() == Player::Finish && gongsun->askForSkillInvoke(objectName())) {
             gongsun->drawCards(2);
             room->broadcastSkillInvoke("zhulou");
-            if(!room->askForCard(gongsun, ".Weapon", "@zhulou-discard", QVariant()))
+            if (!room->askForCard(gongsun, ".Weapon", "@zhulou-discard", QVariant()))
                 room->loseHp(gongsun);
         }
         return false;

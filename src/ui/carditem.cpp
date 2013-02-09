@@ -179,14 +179,14 @@ void CardItem::setFrozen(bool is_frozen) {
 }
 
 CardItem *CardItem::FindItem(const QList<CardItem *> &items, int card_id) {
-    foreach(CardItem *item, items) {
+    foreach (CardItem *item, items) {
         if (item->getCard() == NULL) {
             if (card_id == Card::S_UNKNOWN_CARD_ID)
                 return item;
             else
                 continue;
         }
-        if(item->getCard()->getId() == card_id)
+        if (item->getCard()->getId() == card_id)
             return item;
     }
 
@@ -219,7 +219,7 @@ void CardItem::mouseMoveEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     if (!(flags() & QGraphicsItem::ItemIsMovable)) return;
     QPointF newPos = mapToParent(mouseEvent->pos());
     QPointF totalMove = newPos - _m_lastMousePressScenePos;
-    if(totalMove.x() * totalMove.x() + totalMove.y() * totalMove.y() >= _S_CLICK_JITTER_TOLERANCE) {
+    if (totalMove.x() * totalMove.x() + totalMove.y() * totalMove.y() >= _S_CLICK_JITTER_TOLERANCE) {
         QPointF down_pos = mouseEvent->buttonDownPos(Qt::LeftButton);
         setPos(newPos - this->transform().map(down_pos));
     }

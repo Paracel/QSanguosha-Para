@@ -845,7 +845,7 @@ bool Player::isCardLimited(const Card *card, Card::HandlingMethod method, bool i
     if (method == Card::MethodNone)
         return false;
     if (card->getTypeId() == Card::TypeSkill && method == card->getHandlingMethod()) {
-        foreach(int card_id, card->getSubcards()) {
+        foreach (int card_id, card->getSubcards()) {
             const Card *c = Sanguosha->getCard(card_id);
             foreach (QString pattern, card_limitation[method]) {
                 QString _pattern = pattern.split("$").first();

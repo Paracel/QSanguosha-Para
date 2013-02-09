@@ -33,7 +33,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                     if (ex_options["beforeStartRound"].toInt() == room->getTag("Round").toInt())
                         room->gameOver(ex_options["beforeStartRoundWinner"].toString());
                 }
-            } else if(player->getPhase() == Player::NotActive) {
+            } else if (player->getPhase() == Player::NotActive) {
                 if (!ex_options["afterRound"].isNull()) {
                     if (ex_options["afterRound"].toInt() == room->getTag("Round").toInt())
                         room->gameOver(ex_options["afterRoundWinner"].toString());
@@ -42,7 +42,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
         }
 
         if (player->getPhase() == Player::Start && this->players.first()["beforeNext"] != QString()) {
-            if(player->tag["playerHasPlayed"].toBool())
+            if (player->tag["playerHasPlayed"].toBool())
                 room->gameOver(this->players.first()["beforeNext"]);
             else player->tag["playerHasPlayed"] = true;
         }
@@ -143,7 +143,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                      }
                      general = room->askForGeneral(sp, available);
                  }
-                 if(general == sp->getGeneralName()) general = this->players.at(i)["general3"];
+                 if (general == sp->getGeneralName()) general = this->players.at(i)["general3"];
                  room->changeHero(sp, general, false, false, true, false);
             }
 
@@ -159,7 +159,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             str = QString::number(sp->getMaxHp());
 
             QString str2 = this->players.at(i)["hp"];
-            if(str2 != QString()) str = str2;
+            if (str2 != QString()) str = str2;
             room->setPlayerProperty(sp, "hp", str.toInt());
 
             str = this->players.at(i)["equip"];
@@ -177,7 +177,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             str = this->players.at(i)["judge"];
             if (str != QString()) {
                 QStringList judges = str.split(",");
-                foreach(QString judge,judges)
+                foreach (QString judge,judges)
                     room->moveCardTo(Sanguosha->getCard(judge.toInt()),NULL,sp,Player::PlaceDelayedTrick, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
             }
 
@@ -186,7 +186,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                 QStringList hands = str.split(",");
                 room->setPlayerFlag(sp, "NoManjuan");               
                 DummyCard *dummy = new DummyCard;
-                foreach(QString hand, hands)
+                foreach (QString hand, hands)
                     dummy->addSubcard(hand.toInt());
                 room->obtainCard(sp, dummy);
                 dummy->deleteLater();
@@ -228,7 +228,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             if (this->players[i]["marks"] != QString()) {
                 QStringList marks = this->players[i]["marks"].split(",");
-                foreach(QString qs, marks) {
+                foreach (QString qs, marks) {
                     QStringList keys = qs.split("*");
                     str = keys[1];
                     room->setPlayerMark(sp, keys[0], str.toInt());

@@ -24,7 +24,7 @@ public:
 
             if (card == player->tag["MoonSpearSlash"].value<CardStar>())
                 card = NULL;
-        } else if(event == CardResponded) {
+        } else if (event == CardResponded) {
             card = data.value<CardResponseStruct>().m_card;
             player->tag["MoonSpearSlash"] = data;
         }
@@ -163,7 +163,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == HpRecover ){
+        if (event == HpRecover ) {
             RecoverStruct recover = data.value<RecoverStruct>();
             if (recover.who && recover.who != player) {
                 recover.who->drawCards(recover.recover);
@@ -177,7 +177,7 @@ public:
                 room->sendLog(log);
                 room->broadcastSkillInvoke("enyuan", qrand() % 2 + 1);
             }
-        } else if(event == Damaged) {
+        } else if (event == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
             ServerPlayer *source = damage.from;
             if (source && source != player) {
@@ -250,7 +250,7 @@ public:
                 QStringList choicelist;
                 choicelist << "nothing";
                 QList<ServerPlayer *> targets1;
-                foreach(ServerPlayer *target, room->getAlivePlayers()){
+                foreach (ServerPlayer *target, room->getAlivePlayers()) {
                     if (lingtong->canSlash(target, NULL, false))
                         targets1 << target;
                 }
@@ -392,7 +392,7 @@ public:
                     break;
                 }
             }
-        } else if(event == DamageCaused) {
+        } else if (event == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->hasFlag("nosjiefan-slash")) {
                 LogMessage log2;
@@ -415,7 +415,7 @@ public:
                     log.from = dying.who;
                     log.to << handang;
                     room->sendLog(log);
-                } else if(current && current->hasSkill("wansha") && current->isAlive() && target != handang) {
+                } else if (current && current->hasSkill("wansha") && current->isAlive() && target != handang) {
                     LogMessage log;
                     log.type = "#NosJiefanNull3";
                     log.from = current;
@@ -617,8 +617,8 @@ public:
         bool skip = false;
         room->setTag("QuanjiTarget", QVariant::fromValue((PlayerStar)player));
         foreach (ServerPlayer *zhonghui, room->findPlayersBySkillName(objectName())) {
-            if(zhonghui == player || zhonghui->isKongcheng()
-               || zhonghui->getMark("nosbaijiang") > 0 || player->isKongcheng())
+            if (zhonghui == player || zhonghui->isKongcheng()
+                || zhonghui->getMark("nosbaijiang") > 0 || player->isKongcheng())
                 continue;
 
             if (room->askForUseCard(zhonghui, "@@nosquanji", "@quanji-pindian", -1, Card::MethodPindian)
@@ -684,7 +684,7 @@ public:
     }
 };
 
-NosYexinCard::NosYexinCard(){
+NosYexinCard::NosYexinCard() {
     target_fixed = true;
 }
 

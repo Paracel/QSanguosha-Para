@@ -38,13 +38,13 @@ bool QiaobianCard::targetFilter(const QList<const Player *> &targets, const Play
 void QiaobianCard::use(Room *room, ServerPlayer *zhanghe, QList<ServerPlayer *> &targets) const{
     Player::Phase phase = (Player::Phase)zhanghe->getMark("qiaobianPhase");
     if (phase == Player::Draw) {
-        if(targets.isEmpty())
+        if (targets.isEmpty())
             return;
 
         foreach (ServerPlayer *target, targets) {
             room->cardEffect(this, zhanghe, target);
         }
-    } else if(phase == Player::Play) {
+    } else if (phase == Player::Play) {
         if (targets.isEmpty())
             return;
 
@@ -63,7 +63,7 @@ void QiaobianCard::use(Room *room, ServerPlayer *zhanghe, QList<ServerPlayer *> 
         }
 
         QList<ServerPlayer *> tos;
-        foreach(ServerPlayer *p, room->getAlivePlayers()){
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
             if (equip_index != -1) {
                 if (p->getEquip(equip_index) == NULL)
                     tos << p;
@@ -241,7 +241,7 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             QList<const Skill *> skills = death.damage->from->getVisibleSkillList();
-            foreach (const Skill *skill, skills ){
+            foreach (const Skill *skill, skills ) {
                 if (skill->getLocation() == Skill::Right && !skill->inherits("SPConvertSkill") && !skill->isAttachedLordSkill())
                     room->detachSkillFromPlayer(death.damage->from, skill->objectName());
             }
@@ -283,10 +283,10 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardsMoveOneTime) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if(move->from == player
-               && (move->from_places.contains(Player::PlaceHand)
-                   || move->from_places.contains(Player::PlaceEquip))
-               && player->askForSkillInvoke("tuntian", data)) {
+            if (move->from == player
+                && (move->from_places.contains(Player::PlaceHand)
+                    || move->from_places.contains(Player::PlaceEquip))
+                && player->askForSkillInvoke("tuntian", data)) {
                 room->broadcastSkillInvoke("tuntian");
                 JudgeStruct judge;
                 judge.pattern = QRegExp("(.*):(heart):(.*)");
@@ -386,7 +386,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
 
     QList<ServerPlayer *> targets;
     QList<const Player *> empty_list;
-    foreach(ServerPlayer *p, room->getAlivePlayers()){
+    foreach (ServerPlayer *p, room->getAlivePlayers()) {
         if (!snatch->targetFilter(empty_list, p, dengai))
             continue;
         if (dengai->isProhibited(p, snatch))
@@ -559,7 +559,7 @@ public:
                 if (p->hasLordSkill(objectName()))
                     lords << p;
 
-            foreach (ServerPlayer *lord, lords){
+            foreach (ServerPlayer *lord, lords) {
                 QList<ServerPlayer *> players = room->getOtherPlayers(lord);
                 foreach (ServerPlayer *p, players) {
                     if (!p->hasSkill("zhiba_pindian"))
@@ -736,7 +736,7 @@ public:
             QVariantList guzhengToGet = erzhang->tag["GuzhengToGet"].toList();
             QVariantList guzhengOther = erzhang->tag["GuzhengOther"].toList();
 
-            foreach (int card_id, move->card_ids){
+            foreach (int card_id, move->card_ids) {
                 if ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                     if (move->from == current)
                         guzhengToGet << card_id;
@@ -777,7 +777,7 @@ public:
         erzhang->tag.remove("GuzhengOther");
 
         QList<int> cardsToGet;
-        foreach (QVariant card_data, guzheng_cardsToGet){
+        foreach (QVariant card_data, guzheng_cardsToGet) {
             int card_id = card_data.toInt();
             if (room->getCardPlace(card_id) == Player::DiscardPile)
                 cardsToGet << card_id;
@@ -1031,7 +1031,7 @@ public:
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
         QSet<QString> huashen_set, room_set;
         QVariantList huashens = zuoci->tag["Huashens"].toList();
-        foreach(QVariant huashen, huashens)
+        foreach (QVariant huashen, huashens)
             huashen_set << huashen.toString();
         QList<const ServerPlayer *> players = room->findChildren<const ServerPlayer *>();
         foreach (const ServerPlayer *player, players) {

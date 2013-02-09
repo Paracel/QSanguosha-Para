@@ -46,7 +46,7 @@ QList<QString> Recorder::getRecords() const{
     return records;
 }
 
-QImage Recorder::TXT2PNG(QByteArray txtData){
+QImage Recorder::TXT2PNG(QByteArray txtData) {
     QByteArray data = qCompress(txtData, 9);
     qint32 actual_size = data.size();
     data.prepend((const char *)&actual_size, sizeof(qint32));
@@ -72,7 +72,7 @@ Replayer::Replayer(QObject *parent, const QString &filename)
         QByteArray *data = new QByteArray(PNG2TXT(filename));
         QBuffer *buffer = new QBuffer(data);
         device = buffer;
-    } else if(filename.endsWith(".txt")) {
+    } else if (filename.endsWith(".txt")) {
         QFile *file = new QFile(filename);
         device = file;
     }
@@ -169,7 +169,7 @@ void Replayer::uniform() {
 void Replayer::speedUp() {
     mutex.lock();
 
-    if(speed < 6.0){
+    if (speed < 6.0) {
         qreal inc = speed >= 2.0 ? 1.0 : 0.5;
         speed += inc;
         emit speed_changed(speed);
@@ -178,7 +178,7 @@ void Replayer::speedUp() {
     mutex.unlock();
 }
 
-void Replayer::slowDown(){
+void Replayer::slowDown() {
     mutex.lock();
 
     if (speed >= 1.0) {

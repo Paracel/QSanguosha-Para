@@ -121,9 +121,8 @@ void DrJiuyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
         QList<ServerPlayer *> sunquans;
         QList<ServerPlayer *> players = room->getOtherPlayers(source);
         foreach (ServerPlayer *p, players) {
-            if(p->hasLordSkill("drjiuyuan") && !p->hasFlag("DrJiuyuanInvoked")){
+            if (p->hasLordSkill("drjiuyuan") && !p->hasFlag("DrJiuyuanInvoked"))
                 sunquans << p;
-            }
         }
         if (sunquans.empty())
             room->setPlayerFlag(source, "ForbidDrJiuyuan");
@@ -180,7 +179,7 @@ public:
                         room->attachSkillToPlayer(p, "drjiuyuanv");
                 }
             }
-        } else if(event == EventPhaseChanging) {
+        } else if (event == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
             if (phase_change.from != Player::Play)
                   return false;
@@ -230,7 +229,7 @@ void DrJiedaoCard::onEffect(const CardEffectStruct &effect) const{
 
 class DrJiedaoViewAsSkill: public ZeroCardViewAsSkill{
 public:
-    DrJiedaoViewAsSkill():ZeroCardViewAsSkill("drjiedao"){
+    DrJiedaoViewAsSkill():ZeroCardViewAsSkill("drjiedao") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{

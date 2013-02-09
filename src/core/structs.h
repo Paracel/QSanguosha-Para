@@ -342,8 +342,8 @@ struct PhaseChangeStruct {
     Player::Phase to;
 };
 
-struct PhaseStruct{
-    inline PhaseStruct(){
+struct PhaseStruct {
+    inline PhaseStruct() {
         phase = Player::PhaseNone;
         finished = false;
     }

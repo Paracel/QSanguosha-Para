@@ -346,10 +346,10 @@ QString QSanRoomSkin::getPlayerAudioEffectPath(const QString &eventName, const Q
         }
     }
 
-    if(fileName.isEmpty()) {
+    if (fileName.isEmpty()) {
         const Skill *skill = Sanguosha->getSkill(eventName);
         QStringList fileNames;
-        if(skill) fileNames = skill->getSources();
+        if (skill) fileNames = skill->getSources();
         if (!fileNames.isEmpty()) {
             if (index < 0)
                 fileName = fileNames.at(qrand() % fileNames.length());
@@ -365,7 +365,7 @@ QString QSanRoomSkin::getPlayerAudioEffectPath(const QString &eventName, const Q
         }
     }
 
-    if(fileName.isEmpty()) {
+    if (fileName.isEmpty()) {
         fileName = toQString(_m_audioConfig[QString(S_SKIN_KEY_PLAYER_AUDIO_EFFECT)
                              .arg(category).arg("default").toAscii().constData()]).arg(eventName);
     }

@@ -221,7 +221,7 @@ void QingnangCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->getRoom()->recover(effect.to, recover);
 }
 
-GuicaiCard::GuicaiCard(){
+GuicaiCard::GuicaiCard() {
     target_fixed = true;
     will_throw = false;
     handling_method = Card::MethodResponse;
@@ -257,7 +257,7 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
     if (Self->getWeapon() && Self->getWeapon()->getId() == card_id) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         range_fix += weapon->getRange() - 1;
-    } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getId() == card_id){
+    } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getId() == card_id) {
         range_fix += 1;
     }
 

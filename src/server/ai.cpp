@@ -204,7 +204,7 @@ bool TrustAI::useCard(const Card *card) {
     return false;
 }
 
-Card::Suit TrustAI::askForSuit(const QString &){
+Card::Suit TrustAI::askForSuit(const QString &) {
     return Card::AllSuits[qrand() % 4];
 }
 
@@ -212,7 +212,7 @@ QString TrustAI::askForKingdom() {
     QString role;
     ServerPlayer *lord = room->getLord();
     QStringList kingdoms = Sanguosha->getKingdoms();
-    switch(self->getRoleEnum()){
+    switch(self->getRoleEnum()) {
     case Player::Lord: role = kingdoms.at(qrand() % kingdoms.length()); break;
     case Player::Renegade:
     case Player::Rebel: {
@@ -246,7 +246,7 @@ QString TrustAI::askForChoice(const QString &skill_name, const QString &choice, 
     const Skill *skill = Sanguosha->getSkill(skill_name);
     if (skill) {
         QString default_choice = skill->getDefaultChoice(self);
-        if(choice.contains(default_choice))
+        if (choice.contains(default_choice))
             return default_choice;
     }
 
@@ -349,7 +349,7 @@ ServerPlayer *TrustAI::askForYiji(const QList<int> &, int &) {
     return NULL;
 }
 
-void TrustAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only){
+void TrustAI::askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only) {
     Q_UNUSED(bottom);
     Q_UNUSED(up_only);
 

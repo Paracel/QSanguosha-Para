@@ -139,7 +139,7 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
     Room *room = guojia->getRoom();
     int x = damage.damage, i;
     for (i = 0; i < x; i++) {
-        if(!room->askForSkillInvoke(guojia, objectName()))
+        if (!room->askForSkillInvoke(guojia, objectName()))
             return;
         room->broadcastSkillInvoke("yiji");
         room->setPlayerFlag(guojia, "yiji_InTempMoving");
@@ -583,7 +583,7 @@ public:
             jink->addSubcard(originalCard);
             jink->setSkillName(objectName());
             return jink;
-        } else if(originalCard->isKindOf("Jink")) {
+        } else if (originalCard->isKindOf("Jink")) {
             Slash *slash = new Slash(originalCard->getSuit(), originalCard->getNumber());
             slash->addSubcard(originalCard);
             slash->setSkillName(objectName());
@@ -744,7 +744,7 @@ public:
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if(cards.isEmpty())
+        if (cards.isEmpty())
             return NULL;
 
         ZhihengCard *zhiheng_card = new ZhihengCard;
@@ -847,7 +847,7 @@ public:
             CardStar card_star = data.value<CardResponseStruct>().m_card;
             if (card_star->isKindOf("Slash"))
                 lvmeng->setFlags("keji_use_slash");
-        } else if(event == EventPhaseChanging) {
+        } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Discard) {
                 if (!lvmeng->hasFlag("keji_use_slash")
@@ -1101,7 +1101,7 @@ public:
                 if (player->hasSkill(objectName()))
                     room->setPlayerMark(player, "double_jink" + use.card->toString(), 0);
             } else if (use.card->isKindOf("Duel")) {
-                foreach(ServerPlayer *lvbu, room->getAllPlayers())
+                foreach (ServerPlayer *lvbu, room->getAllPlayers())
                     if (lvbu->getMark("WushuangTarget") > 0)
                         room->setPlayerMark(lvbu, "WushuangTarget", 0);
             }
@@ -1449,7 +1449,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *gaodayihao, QVariant &data) const{
-        if (event == CardsMoveOneTime){
+        if (event == CardsMoveOneTime) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->from != gaodayihao && move->to != gaodayihao)
                 return false;
@@ -1476,7 +1476,7 @@ public:
             log.arg = objectName();
             room->sendLog(log);
             gaodayihao->drawCards(diff);
-        } else if (gaodayihao->getHandcardNum() > 4){
+        } else if (gaodayihao->getHandcardNum() > 4) {
             LogMessage log;
             log.type = "#TriggerSkill";
             log.from = gaodayihao;

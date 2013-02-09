@@ -41,7 +41,7 @@ QString Analeptic::getSubtype() const{
     return "buff_card";
 }
 
-bool Analeptic::IsAvailable(const Player *player, const Card *analeptic){
+bool Analeptic::IsAvailable(const Player *player, const Card *analeptic) {
     Analeptic *newanal = new Analeptic(Card::NoSuit, 0);
     newanal->deleteLater();
     if (player->isCardLimited(analeptic == NULL ? newanal : analeptic, Card::MethodUse)
@@ -82,7 +82,7 @@ void Analeptic::onEffect(const CardEffectStruct &effect) const{
 
 class FanSkill: public OneCardViewAsSkill {
 public:
-    FanSkill(): OneCardViewAsSkill("fan"){
+    FanSkill(): OneCardViewAsSkill("fan") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -178,7 +178,7 @@ public:
 
                 return true;
             }
-        } else if(event == DamageInflicted) {
+        } else if (event == DamageInflicted) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.nature == DamageStruct::Fire) {
                 room->setEmotion(player, "armor/vineburn");
@@ -230,7 +230,7 @@ public:
                 damage.damage = 1;
                 data = QVariant::fromValue(damage);
             }
-        } else if(player->hasFlag("lion_rec")) {
+        } else if (player->hasFlag("lion_rec")) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->from != player || !move->from_places.contains(Player::PlaceEquip))
                 return false;
@@ -263,7 +263,7 @@ SilverLion::SilverLion(Suit suit, int number)
 void SilverLion::onUninstall(ServerPlayer *player) const{
     if (player->isAlive()
         && player->getMark("Qinggang_Armor_Nullified") == 0 && player->getMark("Armor_Nullified") == 0
-        && player->getMark("Equips_Nullified_to_Yourself") == 0){
+        && player->getMark("Equips_Nullified_to_Yourself") == 0) {
         player->getRoom()->setPlayerFlag(player, "lion_rec");
     }
 }
@@ -485,7 +485,7 @@ ManeuveringPackage::ManeuveringPackage()
 
     cards << hualiu;
 
-    foreach(Card *card, cards)
+    foreach (Card *card, cards)
         card->setParent(this);
 
     type = CardPack;

@@ -69,7 +69,7 @@ Engine::Engine()
     DoLuaScript(lua, "lua/config.lua");
 
     QStringList package_names = GetConfigFromLuaState(lua, "package_names").toStringList();
-    foreach(QString name, package_names)
+    foreach (QString name, package_names)
         addPackage(name);
 
     _loadMiniScenarios();
@@ -104,7 +104,7 @@ Engine::Engine()
         addBanPackage(ban);
     }
 
-    foreach(const Skill *skill, skills.values()) {
+    foreach (const Skill *skill, skills.values()) {
         Skill *mutable_skill = const_cast<Skill *>(skill);
         mutable_skill->initMediaSource();
     }
@@ -194,7 +194,7 @@ void Engine::addPackage(Package *package) {
     addSkills(package->getSkills());
 
     QList<General *> all_generals = package->findChildren<General *>();
-    foreach(General *general, all_generals) {
+    foreach (General *general, all_generals) {
         addSkills(general->findChildren<const Skill *>());
 
         if (general->isHidden()) {
@@ -211,7 +211,7 @@ void Engine::addPackage(Package *package) {
     }
 
     QList<const QMetaObject *> metas = package->getMetaObjects();
-    foreach(const QMetaObject *meta, metas)
+    foreach (const QMetaObject *meta, metas)
         metaobjects.insert(meta->className(), meta);
 
     patterns.unite(package->getPatterns());
@@ -268,7 +268,7 @@ const Card::HandlingMethod Engine::getCardHandlingMethod(const QString &method_n
 
 QList<const Skill *> Engine::getRelatedSkills(const QString &skill_name) const{
     QList<const Skill *> skills;
-    foreach(QString name, related_skills.values(skill_name))
+    foreach (QString name, related_skills.values(skill_name))
         skills << getSkill(name);
 
     return skills;
@@ -720,7 +720,7 @@ QStringList Engine::getRandomLords() const{
     int extra = Config.value("NonLordMaxChoice", 2).toInt();
     if (lord_num == 0 && extra == 0)
         extra = 1;
-    for(i = 0; i < extra; i++)
+    for (i = 0; i < extra; i++)
         lords << nonlord_list.at(i);
 
     return lords;

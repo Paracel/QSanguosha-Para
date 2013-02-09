@@ -395,7 +395,7 @@ void ServerDialog::updateButtonEnablility(QAbstractButton *button) {
 void BanlistDialog::switchTo(int item) {
     this->item = item;
     list = lists.at(item);
-    if(add2nd) add2nd->setVisible((list->objectName()=="Pairs"));
+    if (add2nd) add2nd->setVisible((list->objectName()=="Pairs"));
 }
 
 BanlistDialog::BanlistDialog(QWidget *parent, bool view)
@@ -411,7 +411,7 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     layout->addWidget(tab);
     connect(tab, SIGNAL(currentChanged(int)), this, SLOT(switchTo(int)));
 
-    foreach(QString item, ban_list) {
+    foreach (QString item, ban_list) {
         if (item == "Pairs") continue;
         QWidget *apage = new QWidget;
 
@@ -581,7 +581,7 @@ QGroupBox *ServerDialog::create3v3Box() {
     QString scheme = Config.value("3v3/RoleChoose", "Normal").toString();
     if (scheme == "Random")
         roleChooseComboBox->setCurrentIndex(1);
-    else if(scheme == "AllRoles")
+    else if (scheme == "AllRoles")
         roleChooseComboBox->setCurrentIndex(2);
 
     vlayout->addWidget(standard_3v3_radiobutton);
@@ -595,7 +595,7 @@ QGroupBox *ServerDialog::create3v3Box() {
     bool using_new_mode = Config.value("3v3/UsingNewMode", false).toBool();
     if (using_extension)
         extend->setChecked(true);
-    else if(using_new_mode)
+    else if (using_new_mode)
         new_3v3_radiobutton->setChecked(true);
     else
         standard_3v3_radiobutton->setChecked(true);
@@ -679,7 +679,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
     if (index >= 0) {
         mini_scene_ComboBox->setCurrentIndex(index);
         mini_scenes->setChecked(true);
-    } else if(Config.GameMode == "custom_scenario")
+    } else if (Config.GameMode == "custom_scenario")
         mini_scenes->setChecked(true);
 
     mini_scene_button = new QPushButton(tr("Custom Mini Scene"));
@@ -861,7 +861,7 @@ void Select3v3GeneralDialog::toggleCheck() {
 
     bool checked = list->item(0)->checkState() != Qt::Checked;
 
-    for(int i = 0; i < list->count(); i++)
+    for (int i = 0; i < list->count(); i++)
         list->item(i)->setCheckState(checked ? Qt::Checked : Qt::Unchecked);
 }
 

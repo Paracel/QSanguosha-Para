@@ -47,7 +47,7 @@ int GameRule::getPriority() const{
 
 void GameRule::onPhaseProceed(ServerPlayer *player) const{
     Room *room = player->getRoom();
-    switch(player->getPhase()){
+    switch(player->getPhase()) {
     case Player::PhaseNone: {
         Q_ASSERT(false);
         }
@@ -223,7 +223,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
                 card_use = data.value<CardUseStruct>();
                 if (card_use.from && !card_use.to.isEmpty()) {
-                    foreach(ServerPlayer *p, room->getAllPlayers())
+                    foreach (ServerPlayer *p, room->getAllPlayers())
                         thread->trigger(TargetConfirmed, room, p, data);
                 }
                 card->use(room, card_use.from, card_use.to);
@@ -314,7 +314,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (damage.from && !damage.from->isAlive())
                 damage.from = NULL;
             data = QVariant::fromValue(damage);
-            if(damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified") > 0) {
+            if (damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified") > 0) {
                 room->setPlayerMark(player, "Qinggang_Armor_Nullified", player->getMark("Qinggang_Armor_Nullified") - 1);
                 room->setPlayerMark(player, "Qinggang_Armor_Nullified_Clear",
                                     player->getMark("Qinggang_Armor_Nullified_Clear") + 1);
@@ -345,7 +345,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             }
             if (room->getTag("is_chained").toInt() > 0) {
                 DamageStruct damage = data.value<DamageStruct>();
-                if(damage.nature != DamageStruct::Normal && !damage.chain){
+                if (damage.nature != DamageStruct::Normal && !damage.chain) {
                     // iron chain effect
                     int n = room->getTag("is_chained").toInt();
                     n--;
@@ -466,7 +466,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
     case GameOverJudge: {
             if (room->getMode() == "02_1v1") {
                 QStringList list = player->tag["1v1Arrange"].toStringList();
-                if(!list.isEmpty())
+                if (!list.isEmpty())
                     return false;
             }
 
@@ -705,7 +705,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             room->getThread()->delay(5000);
 
             QList<const Card *> tricks = lord->getJudgingArea();
-            foreach(const Card *trick, tricks) {
+            foreach (const Card *trick, tricks) {
                 CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
                 room->throwCard(trick, reason, NULL);
             }
@@ -755,7 +755,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             if (player->isLord())
                 room->gameOver("rebel");
             else
-                if(room->aliveRoles(player).length() == 1)
+                if (room->aliveRoles(player).length() == 1)
                     room->gameOver("lord");
 
             return false;
@@ -945,7 +945,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
                 log.type = "#BasaraGeneralChosen";
                 log.arg = room->getTag(sp->objectName()).toStringList().at(0);
 
-                if(Config.Enable2ndGeneral) {
+                if (Config.Enable2ndGeneral) {
                     room->setPlayerProperty(sp, "general2", "anjiang");
                     log.arg2 = room->getTag(sp->objectName()).toStringList().at(1);
                 }
@@ -994,7 +994,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
         }
     case GameOverJudge: {
             if (Config.EnableHegemony) {
-                if (player->getGeneralName() == "anjiang"){
+                if (player->getGeneralName() == "anjiang") {
                     QStringList generals = room->getTag(player->objectName()).toStringList();
                     room->changePlayerGeneral(player, generals.at(0));
                     room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());

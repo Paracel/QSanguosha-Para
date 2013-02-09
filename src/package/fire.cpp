@@ -184,7 +184,7 @@ public:
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if(cards.isEmpty())
+        if (cards.isEmpty())
             return new QiangxiCard;
         else if (cards.length() == 1) {
             QiangxiCard *card = new QiangxiCard;
@@ -206,7 +206,7 @@ public:
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        if(selected.isEmpty())
+        if (selected.isEmpty())
             return !to_select->isEquipped();
         else if (selected.length() == 1) {
             const Card *card = selected.first();
@@ -247,7 +247,7 @@ public:
 
 class ShuangxiongViewAsSkill: public OneCardViewAsSkill{
 public:
-    ShuangxiongViewAsSkill():OneCardViewAsSkill("shuangxiong"){
+    ShuangxiongViewAsSkill():OneCardViewAsSkill("shuangxiong") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -255,7 +255,7 @@ public:
     }
 
     virtual bool viewFilter(const Card *card) const{
-        if(card->isEquipped())
+        if (card->isEquipped())
             return false;
 
         int value = Self->getMark("shuangxiong");
@@ -290,7 +290,7 @@ public:
         if (event == EventPhaseStart) {
             if (shuangxiong->getPhase() == Player::Start) {
                 room->setPlayerMark(shuangxiong, "shuangxiong", 0);
-            } else if(shuangxiong->getPhase() == Player::Draw) {
+            } else if (shuangxiong->getPhase() == Player::Draw) {
                 if (shuangxiong->askForSkillInvoke(objectName())) {
                     room->setPlayerFlag(shuangxiong, "shuangxiong");
 
@@ -307,7 +307,7 @@ public:
 
                     return true;
                 }
-            } else if(shuangxiong->getPhase() == Player::NotActive && shuangxiong->hasFlag("shuangxiong")) {
+            } else if (shuangxiong->getPhase() == Player::NotActive && shuangxiong->hasFlag("shuangxiong")) {
                 room->setPlayerFlag(shuangxiong, "-shuangxiong");
             }
         } else if (event == FinishJudge) {
@@ -322,7 +322,7 @@ public:
 
 class Mengjin: public TriggerSkill {
 public:
-    Mengjin():TriggerSkill("mengjin"){
+    Mengjin():TriggerSkill("mengjin") {
         events << SlashMissed;
     }
 
@@ -437,7 +437,7 @@ public:
         if (pattern != "jink")
             return false;
 
-        if (wolong->askForSkillInvoke(objectName())){
+        if (wolong->askForSkillInvoke(objectName())) {
             JudgeStruct judge;
             judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
             judge.good = true;

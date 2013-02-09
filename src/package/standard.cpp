@@ -128,7 +128,7 @@ QString GlobalEffect::getSubtype() const{
 void GlobalEffect::onUse(Room *room, const CardUseStruct &card_use) const{
     ServerPlayer *source = card_use.from;
     QList<ServerPlayer *> targets, all_players = room->getAllPlayers();
-    foreach(ServerPlayer *player, all_players){
+    foreach (ServerPlayer *player, all_players) {
         const ProhibitSkill *skill = room->isProhibited(source, player, this);
         if (skill) {
             LogMessage log;
@@ -152,7 +152,7 @@ bool GlobalEffect::isAvailable(const Player *player) const{
     bool canUse = false;
     QList<const Player *> players = player->getSiblings();
     players << player;
-    foreach(const Player *p, players){
+    foreach (const Player *p, players) {
         if (p->isDead() || player->isProhibited(p, this))
             continue;
 
@@ -171,7 +171,7 @@ bool AOE::isAvailable(const Player *player) const{
     bool canUse = false;
     QList<const Player *> players = player->getSiblings();
     foreach (const Player *p, players) {
-        if(p->isDead() || player->isProhibited(p, this))
+        if (p->isDead() || player->isProhibited(p, this))
             continue;
 
         canUse = true;
@@ -184,7 +184,7 @@ bool AOE::isAvailable(const Player *player) const{
 void AOE::onUse(Room *room, const CardUseStruct &card_use) const{
     ServerPlayer *source = card_use.from;
     QList<ServerPlayer *> targets, other_players = room->getOtherPlayers(source);
-    foreach(ServerPlayer *player, other_players){
+    foreach (ServerPlayer *player, other_players) {
         const ProhibitSkill *skill = room->isProhibited(source, player, this);
         if (skill) {
             LogMessage log;
@@ -281,7 +281,7 @@ void DelayedTrick::onNullified(ServerPlayer *target) const{
         QList<ServerPlayer *> players = room->getOtherPlayers(target);
         players << target;
 
-        foreach(ServerPlayer *player, players){
+        foreach (ServerPlayer *player, players) {
             if (player->containsTrick(objectName()))
                 continue;
 

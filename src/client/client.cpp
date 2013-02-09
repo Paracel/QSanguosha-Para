@@ -1169,7 +1169,7 @@ void Client::killPlayer(const QString &player_name) {
     alive_count--;
     ClientPlayer *player = getPlayer(player_name);
     if (player == Self) {
-        foreach(const Skill *skill, Self->getVisibleSkills())
+        foreach (const Skill *skill, Self->getVisibleSkills())
             emit skill_detached(skill->objectName());
     }
 

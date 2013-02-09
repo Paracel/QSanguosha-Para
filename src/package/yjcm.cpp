@@ -50,7 +50,7 @@ public:
             return false;
         if (move->to_place == Player::DiscardPile
             && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
-                ||move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE)){
+                ||move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE)) {
             QList<CardsMoveStruct> exchangeMove;
             CardsMoveStruct luoyingget;
             luoyingget.from = move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE ? NULL : move->from;
@@ -132,7 +132,7 @@ public:
                 player->turnOver();
         } else if (event == DamageDone) {
             player->tag["PredamagedFace"] = player->faceUp();
-        } else if(event == DamageComplete) {
+        } else if (event == DamageComplete) {
             bool faceup = player->tag.value("PredamagedFace").toBool();
             player->tag.remove("PredamagedFace");
             if (!faceup && !player->faceUp() && player->askForSkillInvoke("jiushi", data)) {
@@ -344,7 +344,7 @@ void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
             DummyCard *dummy = new DummyCard;
             dummy->addSubcard(first_id);
             effect.to->addToPile("#xuanhuo", dummy, false);
-            if (!effect.to->isNude()){
+            if (!effect.to->isNude()) {
                 int second_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
                 dummy->addSubcard(second_id);
             }
@@ -410,7 +410,7 @@ public:
 
 class Huilei: public TriggerSkill{
 public:
-    Huilei():TriggerSkill("huilei"){
+    Huilei():TriggerSkill("huilei") {
         events << Death;
         frequency = Compulsory;
     }
@@ -424,7 +424,7 @@ public:
         if (death.who != player)
             return false;
         ServerPlayer *killer = death.damage ? death.damage->from : NULL;
-        if(killer){
+        if (killer) {
             LogMessage log;
             log.type = "#HuileiThrow";
             log.from = player;
@@ -435,7 +435,7 @@ public:
             killer->throwAllHandCardsAndEquips();
 
             QString killer_name = killer->getGeneralName();
-            if(killer_name == "zhugeliang" || killer_name == "wolong" || killer_name == "shenzhugeliang")
+            if (killer_name == "zhugeliang" || killer_name == "wolong" || killer_name == "shenzhugeliang")
                 room->broadcastSkillInvoke(objectName(), 1);
             else
                 room->broadcastSkillInvoke(objectName(), 2);
@@ -714,7 +714,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
         card_use.to << target;
         card_use.card = slash;
         room->useCard(card_use, false);
-    } else if(choice == "draw") {
+    } else if (choice == "draw") {
         effect.to->drawCards(1);
     }
 }
@@ -814,14 +814,14 @@ public:
         if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive) {
-                foreach(ServerPlayer *p, room->getAllPlayers())
+                foreach (ServerPlayer *p, room->getAllPlayers())
                     p->loseMark("@late");
             }
         } else {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player || player != room->getCurrent())
                 return false;
-            foreach(ServerPlayer *p, room->getAllPlayers())
+            foreach (ServerPlayer *p, room->getAllPlayers())
                 p->loseMark("@late");
         }
 
@@ -1004,7 +1004,7 @@ public:
         Room *room = zhonghui->getRoom();
 
         int x = damage.damage;
-        for(int i = 0; i < x; i++){
+        for (int i = 0; i < x; i++) {
             if (zhonghui->askForSkillInvoke("quanji")) {
                 room->broadcastSkillInvoke("quanji");
                 room->drawCards(zhonghui, 1);
@@ -1237,7 +1237,7 @@ bool Shangshi::trigger(TriggerEvent event, Room *room, ServerPlayer *zhangchunhu
     }
 
     if (zhangchunhua->getHandcardNum()<losthp && zhangchunhua->getPhase() != Player::Discard
-        && zhangchunhua->askForSkillInvoke(objectName())){
+        && zhangchunhua->askForSkillInvoke(objectName())) {
         zhangchunhua->drawCards(losthp - zhangchunhua->getHandcardNum());
         room->broadcastSkillInvoke("shangshi");
     }

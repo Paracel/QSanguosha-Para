@@ -20,7 +20,7 @@ public:
         if (event == CardUsed) {
             CardUseStruct card_use = data.value<CardUseStruct>();
             card = card_use.card;
-        } else if(event == CardResponded) {
+        } else if (event == CardResponded) {
             card = data.value<CardResponseStruct>().m_card;
         }
 

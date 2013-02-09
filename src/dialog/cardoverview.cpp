@@ -11,7 +11,7 @@
 static CardOverview *Overview;
 
 CardOverview *CardOverview::getInstance(QWidget *main_window) {
-    if(Overview == NULL)
+    if (Overview == NULL)
         Overview = new CardOverview(main_window);
 
     return Overview;

@@ -641,10 +641,10 @@ void CustomAssignDialog::updatePlayerInfo(QString name) {
     hand_list->setCurrentRow(0);
     judge_list->setCurrentRow(0);
 
-    for(int i = 0; i < mark_icons.length(); i++)
+    for (int i = 0; i < mark_icons.length(); i++)
         mark_icons.at(i)->hide();
 
-    foreach(QString mark, player_marks[name].keys()) {
+    foreach (QString mark, player_marks[name].keys()) {
         if (player_marks[name][mark] > 0) {
             for (int i = 0; i < mark_icons.length(); i++) {
                 if (mark_icons.at(i)->objectName() == mark) {
@@ -1058,7 +1058,7 @@ void CustomAssignDialog::on_list_itemSelectionChanged(QListWidgetItem *current) 
 }
 
 void CustomAssignDialog::checkBeforeNextBox(bool toggled) {
-    if (toggled ){
+    if (toggled) {
         before_next->setChecked(false);
         is_before_next = false;
         is_single_turn = true;
@@ -1171,10 +1171,10 @@ void CustomAssignDialog::load() {
 
         if (line.startsWith("setPile:")) {
             QStringList list = line.remove("setPile:").split(",");
-            foreach(QString id,list)
+            foreach (QString id,list)
                 set_pile.prepend(id.toInt());
             continue;
-        } else if(line.startsWith("extraOptions:")) {
+        } else if (line.startsWith("extraOptions:")) {
             line.remove("extraOptions:");
 
             foreach (QString option, line.split(" ")) {
@@ -1234,7 +1234,7 @@ void CustomAssignDialog::load() {
         }
         if (player["acquireSkills"] != QString()) {
             QStringList skills;
-            foreach(QString skill_name, player["acquireSkills"].split(","))
+            foreach (QString skill_name, player["acquireSkills"].split(","))
                 skills << skill_name;
 
             player_exskills[name].append(skills);
@@ -1347,7 +1347,7 @@ bool CustomAssignDialog::save(QString path) {
         if (!has_diff_roles) {
             int role_int = role_index.value(role_mapping[name], 3);
             if (role_int != 3) {
-                if (role_index_check != -1 && role_int != role_index_check){
+                if (role_index_check != -1 && role_int != role_index_check) {
                     has_diff_roles = true;
                 } else if (role_index_check == -1) {
                     role_index_check = role_int;
@@ -1465,21 +1465,21 @@ bool CustomAssignDialog::save(QString path) {
 
         if (player_equips[name].length()) {
             line.append("equip:");
-            foreach(int equip,player_equips[name])line.append(QString("%1,").arg(equip));
+            foreach (int equip,player_equips[name])line.append(QString("%1,").arg(equip));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_handcards[name].length()) {
             line.append("hand:");
-            foreach(int hand,player_handcards[name])line.append(QString("%1,").arg(hand));
+            foreach (int hand,player_handcards[name])line.append(QString("%1,").arg(hand));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_judges[name].length()) {
             line.append("judge:");
-            foreach(int judge,player_judges[name])line.append(QString("%1,").arg(judge));
+            foreach (int judge,player_judges[name])line.append(QString("%1,").arg(judge));
             line.chop(1);
             line.append(" ");
         }
@@ -1604,7 +1604,7 @@ void GeneralAssignDialog::chooseGeneral() {
     this->reject();
 }
 
-void GeneralAssignDialog::clearGeneral(){
+void GeneralAssignDialog::clearGeneral() {
     emit general_cleared();
     this->reject();
 }
@@ -1673,7 +1673,7 @@ void CardAssignDialog::updateCardList() {
     QList<const Card *> reasonable_cards;
     if (!card_type.isEmpty() || !class_name.isEmpty()) {
         for (int i = 0; i < n; i++) {
-            if(excluded_card.contains(i))
+            if (excluded_card.contains(i))
                 continue;
 
             const Card *card = Sanguosha->getEngineCard(i);
@@ -1683,7 +1683,7 @@ void CardAssignDialog::updateCardList() {
                 reasonable_cards << card;
         }
     } else {
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             if (excluded_card.contains(i))
                 continue;
 

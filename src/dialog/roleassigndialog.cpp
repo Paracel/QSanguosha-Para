@@ -96,7 +96,7 @@ void RoleAssignDialog::accept() {
 
     QList<QString> names;
     QList<QString> roles;
-    if (Config.FreeAssignSelf ){
+    if (Config.FreeAssignSelf) {
         QString name = list->item(0)->data(Qt::UserRole).toString();
         QString role = role_mapping.value(name);
         names.push_back(name);
@@ -106,11 +106,11 @@ void RoleAssignDialog::accept() {
         return;
     }
     
-    for(int i = 0; i < list->count(); i++){
+    for (int i = 0; i < list->count(); i++) {
         QString name = list->item(i)->data(Qt::UserRole).toString();
         QString role = role_mapping.value(name);
 
-        if(i == 0 && role != "lord"){
+        if (i == 0 && role != "lord") {
             QMessageBox::warning(this, tr("Warning"), tr("The first assigned role must be lord!"));
             return;
         }

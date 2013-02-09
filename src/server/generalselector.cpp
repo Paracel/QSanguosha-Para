@@ -116,7 +116,7 @@ QString GeneralSelector::select1v1(const QStringList &candidates) {
     return selectHighest(priority_1v1_table, candidates, 50);
 }
 
-QString GeneralSelector::selectHighest(const QHash<QString, int> &table, const QStringList &candidates, int default_value){
+QString GeneralSelector::selectHighest(const QHash<QString, int> &table, const QStringList &candidates, int default_value) {
     int max = -1;
     QString max_general;
 
@@ -156,7 +156,7 @@ static bool CompareFunction(const QString &first, const QString &second) {
     return Selector->get1v1ArrangeValue(first) > Selector->get1v1ArrangeValue(second);
 }
 
-int GeneralSelector::get1v1ArrangeValue(const QString &name){
+int GeneralSelector::get1v1ArrangeValue(const QString &name) {
     int value = priority_1v1_table.value(name, 5);
     if (sacrifice.contains(name))
         value += 1000;
@@ -261,7 +261,7 @@ void GeneralSelector::load1v1Table() {
     QFile file("etc/1v1-priority.txt");
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        while (!stream.atEnd()){
+        while (!stream.atEnd()) {
             QString line = stream.readLine();
             if (!rx.exactMatch(line))
                 continue;

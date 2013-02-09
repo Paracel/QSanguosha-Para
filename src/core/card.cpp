@@ -366,7 +366,7 @@ const Card *Card::Parse(const QString &str) {
         if (card == NULL)
             return NULL;
 
-        foreach(QString subcard_id, subcard_ids)
+        foreach (QString subcard_id, subcard_ids)
             card->addSubcard(subcard_id.toInt());
 
         // skill name
@@ -432,7 +432,7 @@ const Card *Card::Parse(const QString &str) {
 
         Suit suit = Card::NoSuit;
         DummyCard *dummy = new DummyCard;
-        foreach(QString subcard_id, subcard_ids)
+        foreach (QString subcard_id, subcard_ids)
             dummy->addSubcard(subcard_id.toInt());
         if (suit_string == "to_be_decided")
             suit = dummy->getSuit();
@@ -456,7 +456,7 @@ const Card *Card::Parse(const QString &str) {
         if (card == NULL)
             return NULL;
 
-        foreach(QString subcard_id, subcard_ids)
+        foreach (QString subcard_id, subcard_ids)
             card->addSubcard(subcard_id.toInt());
 
         card->setSkillName(m_skillName);

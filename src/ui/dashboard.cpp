@@ -189,7 +189,7 @@ void Dashboard::revivePlayer() {
 bool Dashboard::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo) {
     Player::Place place = moveInfo.to_place;
     if (place == Player::PlaceSpecial) {
-        foreach(CardItem *card, card_items)
+        foreach (CardItem *card, card_items)
             card->setHomeOpacity(0.0);
         QPointF center = mapFromItem(_getAvatarParent(), _dlayout->m_avatarArea.center());
         QRectF rect = QRectF(0, 0, _dlayout->m_disperseWidth, 0);
@@ -449,7 +449,7 @@ void Dashboard::_createExtraButtons() {
 void Dashboard::skillButtonActivated() {
     QSanSkillButton *button = qobject_cast<QSanSkillButton *>(sender());
     foreach (QSanSkillButton *btn, _m_skillDock->getAllSkillButtons()) {
-        if(button == btn) continue;
+        if (button == btn) continue;
 
         if (btn->getViewAsSkill() != NULL && btn->isDown())
             btn->setState(QSanButton::S_STATE_UP);
@@ -504,7 +504,7 @@ void Dashboard::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
     CardItem *to_select = NULL;
     int i;
     for (i = 0; i < 4; i++) {
-        if(_m_equipRegions[i]->isUnderMouse()){
+        if (_m_equipRegions[i]->isUnderMouse()) {
             to_select = _m_equipCards[i];
             break;
         }
@@ -658,7 +658,7 @@ QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids) {
         card_item = CardItem::FindItem(m_handCards, card_id);
         new_card = _createCard(card_id);
         Q_ASSERT(card_item);
-        if(card_item)
+        if (card_item)
         {
             new_card->setPos(card_item->pos());
             new_card->setHomePos(card_item->homePos());
@@ -694,9 +694,9 @@ QList<CardItem *> Dashboard::removeCardItems(const QList<int> &card_ids, Player:
     QList<CardItem *> result;
     if (place == Player::PlaceHand)
         result = removeHandCards(card_ids);
-    else if(place == Player::PlaceEquip)
+    else if (place == Player::PlaceEquip)
         result = removeEquips(card_ids);
-    else if(place == Player::PlaceDelayedTrick)
+    else if (place == Player::PlaceDelayedTrick)
         result = removeDelayedTricks(card_ids);
     else if (place == Player::PlaceSpecial) {
         foreach (int card_id, card_ids) {

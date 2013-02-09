@@ -21,7 +21,7 @@ void MyPixmapItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     setVisible(false);
     QString msg = "";
     int result = mouseCanClick(event->pos().x(), event->pos().y());
-    if(result == -1) return;
+    if (result == -1) return;
     if (this->itemName == "faceboard")
         msg = "<#" + QString::number(result + 1) + "#>";
     else if (this->itemName == "easytextboard")
@@ -156,7 +156,7 @@ void ChatWidget::showEasyTextBoard() {
 }
 
 
-void ChatWidget::showFaceBoard(){
+void ChatWidget::showFaceBoard() {
     chat_face_board->setVisible(!chat_face_board->isVisible());
     easy_text_board->setVisible(false);
 }

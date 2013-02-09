@@ -84,7 +84,7 @@ public:
         QStringList names = room->getTag("HongyuanTargets").toStringList();
         room->removeTag("HongyuanTargets");
         if (!names.isEmpty())
-            foreach(QString name, names)
+            foreach (QString name, names)
                 room->findPlayer(name)->drawCards(1);
         else
             room->askForUseCard(player, "@@hongyuan", "@hongyuan");
@@ -203,14 +203,14 @@ public:
 
         if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_USE
             || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
-            || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE){
+            || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE) {
             const Card *card;
             int i = 0;
-            foreach(int card_id, move->card_ids){
+            foreach (int card_id, move->card_ids) {
                 card = Sanguosha->getCard(card_id);
                 if (card->isRed() && (move->from_places[i] == Player::PlaceHand
                                       || move->from_places[i] == Player::PlaceEquip)
-                    && player->askForSkillInvoke(objectName(), data)){
+                    && player->askForSkillInvoke(objectName(), data)) {
                     room->broadcastSkillInvoke(objectName());
                     player->drawCards(1);
                 }
@@ -229,7 +229,7 @@ New3v3CardPackage::New3v3CardPackage()
           << new SupplyShortage(Card::Club, 12)
           << new Nullification(Card::Heart, 12);
 
-    foreach(Card *card, cards)
+    foreach (Card *card, cards)
         card->setParent(this);
 
     type = CardPack;

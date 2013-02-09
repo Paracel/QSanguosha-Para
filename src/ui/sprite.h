@@ -53,7 +53,7 @@ class QAnimatedEffect: public QGraphicsEffect{
 
 public:
     void setStay(bool stay);
-    void reset( ){ index = 0; }
+    void reset( ) { index = 0; }
     int getIndex() { return index; }
     void setIndex(int ind)  {index = ind; }
 
@@ -93,7 +93,7 @@ public:
 
 protected:
     virtual void draw(QPainter *painter);
-    virtual QRectF boundingRectFor(const QRectF &sourceRect) const;
+    virtual QRectF boundingRectfor (const QRectF &sourceRect) const;
 };
 
 class SentbackEffect: public QAnimatedEffect {
@@ -104,7 +104,7 @@ public:
 
 protected:
     virtual void draw(QPainter *painter);
-    virtual QRectF boundingRectFor(const QRectF &sourceRect) const;
+    virtual QRectF boundingRectfor (const QRectF &sourceRect) const;
 
 private:
     QImage *grayed;

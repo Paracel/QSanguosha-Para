@@ -60,7 +60,7 @@ public:
             if (newSceneRect != start_scene->sceneRect())
                 fitInView(start_scene->sceneRect(), Qt::KeepAspectRatio);
         }
-        if(main_window)
+        if (main_window)
             main_window->setBackgroundBrush(true);
     }
 };
@@ -95,7 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
             << ui->actionAbout
             << ui->actionAcknowledgement;
 
-    foreach(QAction *action, actions)
+    foreach (QAction *action, actions)
         start_scene->addButton(action);
     view = new FitView(scene);
 
@@ -222,7 +222,7 @@ void MainWindow::startConnection() {
 void MainWindow::on_actionReplay_triggered() {
     QString location = QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
     QString last_dir = Config.value("LastReplayDir").toString();
-    if(!last_dir.isEmpty())
+    if (!last_dir.isEmpty())
         location = last_dir;
 
     QString filename = QFileDialog::getOpenFileName(this,
@@ -230,7 +230,7 @@ void MainWindow::on_actionReplay_triggered() {
                                                     location,
                                                     tr("Pure text replay file (*.txt);; Image replay file (*.png)"));
 
-    if(filename.isEmpty())
+    if (filename.isEmpty())
         return;
 
     QFileInfo file_info(filename);
@@ -445,7 +445,7 @@ void MainWindow::changeBackground() {
     bool centerAsOrigin = scene != NULL && !scene->inherits("RoomScene");
     setBackgroundBrush(centerAsOrigin);
 
-    if(scene->inherits("StartScene")){
+    if (scene->inherits("StartScene")) {
         StartScene *start_scene = qobject_cast<StartScene *>(scene);
         start_scene->setServerLogBackground();
     }
@@ -453,7 +453,7 @@ void MainWindow::changeBackground() {
 
 void MainWindow::on_actionFullscreen_triggered()
 {
-    if(isFullScreen())
+    if (isFullScreen())
         showNormal();
     else
         showFullScreen();
@@ -467,7 +467,7 @@ void MainWindow::on_actionShow_Hide_Menu_triggered()
 
 void MainWindow::on_actionMinimize_to_system_tray_triggered()
 {
-    if(systray == NULL){
+    if (systray == NULL) {
         QIcon icon("image/system/magatamas/5.png");
         systray = new QSystemTrayIcon(icon, this);
 
@@ -496,7 +496,7 @@ void MainWindow::on_actionRole_assign_table_triggered()
 
     QStringList headers;
     headers << tr("Count") << tr("Lord") << tr("Loyalist") << tr("Rebel") << tr("Renegade");
-    foreach(QString header, headers)
+    foreach (QString header, headers)
         content += QString("<th>%1</th>").arg(header);
 
     content = QString("<tr>%1</tr>").arg(content);
@@ -508,10 +508,10 @@ void MainWindow::on_actionRole_assign_table_triggered()
             << "8z 1 3 4 0" << "9 1 3 4 1" << "10 1 3 4 2"
             << "10z 1 4 5 0" << "10o 1 3 5 1";
 
-    foreach(QString row, rows){
+    foreach (QString row, rows) {
         QStringList cells = row.split(" ");
         QString header = cells.takeFirst();
-        if(header.endsWith("d")){
+        if (header.endsWith("d")) {
             header.chop(1);
             header += tr(" (double renegade)");
         }
@@ -526,9 +526,8 @@ void MainWindow::on_actionRole_assign_table_triggered()
 
         QString row_content;
         row_content = QString("<td>%1</td>").arg(header);
-        foreach(QString cell, cells){
+        foreach (QString cell, cells)
             row_content += QString("<td>%1</td>").arg(cell);
-        }
 
         content += QString("<tr>%1</tr>").arg(row_content);
     }
@@ -656,14 +655,14 @@ void MainWindow::on_actionReplay_file_convert_triggered() {
             // txt to png
             Recorder::TXT2PNG(file.readAll()).save(tosave);
 
-        } else if(filename.endsWith(".png")) {
+        } else if (filename.endsWith(".png")) {
             tosave.append(".txt");
 
             // png to txt
             QByteArray data = Replayer::PNG2TXT(filename);
 
             QFile tosave_file(tosave);
-            if(tosave_file.open(QIODevice::WriteOnly))
+            if (tosave_file.open(QIODevice::WriteOnly))
                 tosave_file.write(data);
         }
     }
@@ -676,7 +675,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
                                                     location,
                                                     tr("Pure text replay file (*.txt);; Image replay file (*.png)"));
 
-    if(filename.isEmpty()) return;
+    if (filename.isEmpty()) return;
 
     QDialog *rec_dialog = new QDialog(this);
     rec_dialog->setWindowTitle(tr("Record Analysis"));
@@ -698,7 +697,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     table->setSelectionBehavior(QTableWidget::SelectRows);
 
     int i = 0;
-    foreach(PlayerRecordStruct *rec, record_map.values()){
+    foreach (PlayerRecordStruct *rec, record_map.values()) {
         QTableWidgetItem *item = new QTableWidgetItem;
         QString screen_name = Sanguosha->translate(rec->m_screenName);
         if (rec->m_statue == "robot")
@@ -783,7 +782,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
 
 void MainWindow::sendLowLevelCommand() {
     QString command = QInputDialog::getText(this, tr("Send low level command"), tr("Please input the raw low level command"));
-    if(!command.isEmpty())
+    if (!command.isEmpty())
         ClientInstance->request(command);
 }
 

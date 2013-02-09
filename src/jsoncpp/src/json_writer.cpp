@@ -81,12 +81,12 @@ std::string valueToString( double value )
 #endif
    char* ch = buffer + strlen(buffer) - 1;
    if (*ch != '0') return buffer; // nothing to truncate, so save time
-   while(ch > buffer && *ch == '0'){
+   while(ch > buffer && *ch == '0') {
      --ch;
    }
    char* last_nonzero = ch;
-   while(ch >= buffer){
-     switch(*ch){
+   while(ch >= buffer) {
+     switch(*ch) {
      case '0':
      case '1':
      case '2':

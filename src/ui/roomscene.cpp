@@ -74,7 +74,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     _m_commonLayout = &(G_ROOM_SKIN.getCommonLayout());
 
     // create photos
-    for(int i = 0; i < player_count - 1;i++){
+    for (int i = 0; i < player_count - 1;i++) {
         Photo *photo = new Photo;
         photos << photo;
         addItem(photo);
@@ -950,7 +950,7 @@ void RoomScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     /*
     QGraphicsObject *obj = static_cast<QGraphicsObject *>(focusItem());
     CardItem *card_item = qobject_cast<CardItem *>(obj);
-    if(!card_item || !card_item->isUnderMouse())
+    if (!card_item || !card_item->isUnderMouse())
         return;
     PlayerCardContainer *victim = NULL;
 
@@ -998,7 +998,7 @@ void RoomScene::enableTargets(const Card *card) {
     selected_targets.clear();
 
     // unset avatar and all photo
-    foreach(QGraphicsItem *item, item2player.keys())
+    foreach (QGraphicsItem *item, item2player.keys())
         item->setSelected(false);
 
     if (card == NULL) {
@@ -1030,9 +1030,9 @@ void RoomScene::enableTargets(const Card *card) {
     if (selected_targets.isEmpty()) {
         if (card->isKindOf("Slash") && Self->hasFlag("slashTargetFixToOne")) {
             unselectAllTargets();
-            foreach(Photo *photo, photos){
-                if(photo->flags() & QGraphicsItem::ItemIsSelectable)
-                    if(!photo->isSelected()){
+            foreach (Photo *photo, photos) {
+                if (photo->flags() & QGraphicsItem::ItemIsSelectable)
+                    if (!photo->isSelected()) {
                         photo->setSelected(true);
                         break;
                     }
@@ -1600,7 +1600,7 @@ QString RoomScene::_translateMovement(const CardsMoveStruct &move) {
     } else if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
         if (reason.m_reason == CardMoveReason::S_REASON_RULEDISCARD)
             result.append(Sanguosha->translate("discard"));
-        else if(reason.m_reason == CardMoveReason::S_REASON_THROW)
+        else if (reason.m_reason == CardMoveReason::S_REASON_THROW)
             result.append(Sanguosha->translate("throw"));
         else if (reason.m_reason == CardMoveReason::S_REASON_CHANGE_EQUIP)
             result.append(Sanguosha->translate("change equip"));
@@ -1706,7 +1706,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         QString card_str = QString();
         foreach (int card_id, move.card_ids) {
             if (card_id != Card::S_UNKNOWN_CARD_ID) {
-                if(card_str.isEmpty())
+                if (card_str.isEmpty())
                     card_str = QString::number(card_id);
                 else
                     card_str += "+" + QString::number(card_id);
@@ -2281,7 +2281,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         }
     }
 
-    if(ServerInfo.OperationTimeout == 0)
+    if (ServerInfo.OperationTimeout == 0)
         return;
 
     // do timeout
@@ -2358,7 +2358,7 @@ void RoomScene::doCancelButton() {
                 }
             }
 
-            if(ClientInstance->hasNoTargetResponding())
+            if (ClientInstance->hasNoTargetResponding())
                 ClientInstance->onPlayerResponseCard(NULL);
             else
                 ClientInstance->onPlayerUseCard(NULL);
@@ -2509,8 +2509,8 @@ void RoomScene::onGameOver() {
     QString win_effect;
     if (victory) {
         win_effect = "win";
-        foreach(const Player *player, ClientInstance->getPlayers()){
-            if(player->property("win").toBool() && player->getGeneralName().contains("caocao")){
+        foreach (const Player *player, ClientInstance->getPlayers()) {
+            if (player->property("win").toBool() && player->getGeneralName().contains("caocao")) {
                 Audio::stop();
                 win_effect = "win-cc";
                 break;
@@ -3517,7 +3517,7 @@ void RoomScene::fillGenerals1v1(const QStringList &names) {
     }
 }
 
-void RoomScene::fillGenerals3v3(const QStringList &names){
+void RoomScene::fillGenerals3v3(const QStringList &names) {
     QString temperature;
     if (Self->getRole().startsWith("l"))
         temperature = "warm";

@@ -39,7 +39,7 @@ void Sprite::start(int loops) {
             QPropertyAnimation *trans = new QPropertyAnimation(this,name);
             trans->setStartValue(j.value());
             trans->setEasingCurve(line->easings[j.key()]);
-            if(j.hasNext()) {
+            if (j.hasNext()) {
                 trans->setEndValue(j.peekNext().value());
                 trans->setDuration(j.peekNext().key()-j.key());
             } else {
@@ -156,7 +156,7 @@ void EffectAnimation::deleteEffect(QAnimatedEffect *effect) {
     QGraphicsItem *pix = effects.key(effect);
     if (pix) {
         QAnimatedEffect *effect = registered.value(pix);
-        if(effect)effect->reset();
+        if (effect)effect->reset();
         pix->setGraphicsEffect(registered.value(pix));
         effects.insert(pix,registered.value(pix));
         registered.insert(pix,NULL);
@@ -191,7 +191,7 @@ void EmphasizeEffect::draw(QPainter *painter) {
     painter->drawPixmap(target, pixmap, source);
 }
 
-QRectF EmphasizeEffect::boundingRectFor(const QRectF &sourceRect) const{
+QRectF EmphasizeEffect::boundingRectfor (const QRectF &sourceRect) const{
     qreal scale = 0.1;
     QRectF rect(sourceRect);
     rect.adjust(-sourceRect.width() * scale,
@@ -227,7 +227,7 @@ SentbackEffect::SentbackEffect(bool stay, QObject *parent) {
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-QRectF SentbackEffect::boundingRectFor(const QRectF &sourceRect) const{
+QRectF SentbackEffect::boundingRectfor (const QRectF &sourceRect) const{
     qreal scale = 0.05;
     QRectF rect(sourceRect);
     rect.adjust(-sourceRect.width() * scale,

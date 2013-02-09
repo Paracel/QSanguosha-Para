@@ -202,7 +202,7 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
             if (Self->hasFlag("slashDisableExtraTarget")) return false;
             bool canSelect = false;
             foreach (const Player *p, targets) {
-                if (p->hasFlag("SlashAssignee")){
+                if (p->hasFlag("SlashAssignee")) {
                     canSelect = true;
                     break;
                 }
@@ -941,7 +941,7 @@ void Duel::onEffect(const CardEffectStruct &effect) const{
                                      QVariant(),
                                      Card::MethodResponse,
                                      second);
-            if(slash == NULL)
+            if (slash == NULL)
                 break;
         } else {
             const Card *slash = room->askForCard(first,
@@ -1079,7 +1079,7 @@ bool Disaster::isAvailable(const Player *player) const{
     return !player->isProhibited(player, this) && DelayedTrick::isAvailable(player);
 }
 
-Lightning::Lightning(Suit suit, int number):Disaster(suit, number){
+Lightning::Lightning(Suit suit, int number):Disaster(suit, number) {
     setObjectName("lightning");
 
     judge.pattern = QRegExp("(.*):(spade):([2-9])");
@@ -1112,7 +1112,7 @@ public:
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
             && !damage.to->isNude()
-            && !damage.chain && !damage.transfer && player->askForSkillInvoke("ice_sword", data)){
+            && !damage.chain && !damage.transfer && player->askForSkillInvoke("ice_sword", data)) {
                 room->setEmotion(player, "weapon/ice_sword");
                 int card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword");
                 room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);

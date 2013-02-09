@@ -214,8 +214,8 @@ public:
     }
 
     virtual bool isEnabledAtNullification(const ServerPlayer *player) const{
-        foreach(const Card *card, player->getHandcards()){
-            if(card->objectName() == "nullification")
+        foreach (const Card *card, player->getHandcards()) {
+            if (card->objectName() == "nullification")
                 return true;
         }
 
@@ -264,7 +264,7 @@ public:
             if (move->to != sp_pangtong || move->to_place != Player::PlaceHand)
                 return false;
             room->broadcastSkillInvoke(objectName());
-            foreach (int card_id, move->card_ids){
+            foreach (int card_id, move->card_ids) {
                 const Card *card = Sanguosha->getCard(card_id);
                 room->moveCardTo(card, NULL, NULL, Player::DiscardPile, reason);
             }
@@ -422,7 +422,7 @@ public:
                 LogMessage log;
                 log.type = effect.from ? "#ZuiXiang1" : "#ZuiXiang2";
                 log.from = effect.to;
-                if(effect.from)
+                if (effect.from)
                     log.to << effect.from;
                 log.arg = effect.card->objectName();
                 log.arg2 = objectName();
@@ -449,7 +449,7 @@ public:
                 LogMessage log;
                 log.type = effect.from ? "#ZuiXiang1" : "#ZuiXiang2";
                 log.from = effect.to;
-                if(effect.from)
+                if (effect.from)
                     log.to << effect.from;
                 log.arg = effect.slash->objectName();
                 log.arg2 = objectName();
@@ -941,7 +941,7 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == GameStart) {
-            foreach(ServerPlayer *p, room->getAlivePlayers())
+            foreach (ServerPlayer *p, room->getAlivePlayers())
                 if (p->hasLordSkill("shichou"))
                     room->setPlayerMark(p, "@hate", player->getMark("@hate") + 1);
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
@@ -950,7 +950,7 @@ public:
             QList<ServerPlayer *> victims;
 
             foreach (ServerPlayer *p, targets) {
-                if(p->getKingdom() == "shu")
+                if (p->getKingdom() == "shu")
                     victims << p;
             }
             if (victims.empty())
@@ -1017,7 +1017,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (player->isAlive() && player->hasFlag("ShichouTarget") && damage.transfer){
+        if (player->isAlive() && player->hasFlag("ShichouTarget") && damage.transfer) {
             player->drawCards(damage.damage);
             room->setPlayerFlag(player, "-ShichouTarget");
         }
@@ -1536,7 +1536,7 @@ BGMPackage::BGMPackage(): Package("BGM") {
 ADD_PACKAGE(BGM)
 
 // DIY Generals
-ZhaoxinCard::ZhaoxinCard(){
+ZhaoxinCard::ZhaoxinCard() {
     mute = true;
 }
 
@@ -1689,7 +1689,7 @@ public:
 
                     if (!langgu_discard.empty()) {
                         DummyCard *dummy = new DummyCard;
-                        foreach(int card_id, langgu_discard)
+                        foreach (int card_id, langgu_discard)
                             dummy->addSubcard(card_id);
                         room->throwCard(dummy, damage.from, simazhao);
                         dummy->deleteLater();
@@ -1718,7 +1718,7 @@ FuluanCard::FuluanCard() {
 }
 
 bool FuluanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if(!targets.isEmpty())
+    if (!targets.isEmpty())
         return false;
 
     if (!Self->inMyAttackRange(to_select) || Self == to_select)
@@ -1826,7 +1826,7 @@ void HuangenCard::onEffect(const CardEffectStruct &effect) const{
 
 class HuangenViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    HuangenViewAsSkill():ZeroCardViewAsSkill("huangen"){
+    HuangenViewAsSkill():ZeroCardViewAsSkill("huangen") {
     }
 
     virtual const Card *viewAs() const{
@@ -1986,7 +1986,7 @@ public:
 
 class HantongAcquire: public TriggerSkill {
 public:
-    HantongAcquire(): TriggerSkill("#hantong-acquire"){
+    HantongAcquire(): TriggerSkill("#hantong-acquire") {
         events << CardAsked //For JiJiang and HuJia
                << TargetConfirmed //For JiuYuan
                << EventPhaseStart; //For XueYi

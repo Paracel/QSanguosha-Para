@@ -63,12 +63,12 @@ void GeneralOverview::fillGenerals(const QList<const General *> &generals) {
         QTableWidgetItem *name_item = new QTableWidgetItem(name);
         name_item->setTextAlignment(Qt::AlignCenter);
         name_item->setData(Qt::UserRole, general->objectName());
-        if(general->isLord()){
+        if (general->isLord()) {
             name_item->setIcon(lord_icon);
             name_item->setTextAlignment(Qt::AlignCenter);
         }
 
-        if(general->isHidden())
+        if (general->isHidden())
             name_item->setBackgroundColor(Qt::gray);
 
         QTableWidgetItem *kingdom_item = new QTableWidgetItem(kingdom);
@@ -179,7 +179,7 @@ void GeneralOverview::on_tableWidget_itemSelectionChanged() {
 
     foreach (QString skill_name, general->getRelatedSkillNames()) {
         const Skill *skill = Sanguosha->getSkill(skill_name);
-        if(skill && skill->isVisible()) skills << skill;
+        if (skill && skill->isVisible()) skills << skill;
     }
 
     ui->skillTextEdit->clear();
@@ -192,7 +192,7 @@ void GeneralOverview::on_tableWidget_itemSelectionChanged() {
     QString last_word = Sanguosha->translate("~" + general->objectName());
     if (last_word.startsWith("~")) {
         QStringList origin_generals = general->objectName().split("_");
-        if(origin_generals.length() > 1)
+        if (origin_generals.length() > 1)
             last_word = Sanguosha->translate(("~") + origin_generals.last());
     }
 

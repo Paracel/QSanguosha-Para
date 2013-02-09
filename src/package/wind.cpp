@@ -184,7 +184,7 @@ bool HuangtianCard::targetFilter(const QList<const Player *> &targets, const Pla
 
 class HuangtianViewAsSkill: public OneCardViewAsSkill{
 public:
-    HuangtianViewAsSkill():OneCardViewAsSkill("huangtianv"){
+    HuangtianViewAsSkill():OneCardViewAsSkill("huangtianv") {
         attached_lord_skill = true;
     }
 
@@ -207,7 +207,7 @@ public:
 
 class Huangtian: public TriggerSkill{
 public:
-    Huangtian():TriggerSkill("huangtian$"){
+    Huangtian():TriggerSkill("huangtian$") {
         events << GameStart << EventPhaseChanging;
     }
 
@@ -516,7 +516,7 @@ public:
                     return true;
                 }
             }
-        } else if(event == AskForPeachesDone) {
+        } else if (event == AskForPeachesDone) {
             const QList<int> &buqu = zhoutai->getPile("buqu");
 
             if (zhoutai->getHp() > 0)
@@ -785,7 +785,7 @@ QGroupBox *GuhuoDialog::createRight() {
     QList<const Card *> cards = Sanguosha->findChildren<const Card *>();
     foreach (const Card *card, cards) {
         if (card->isNDTrick() && !map.contains(card->objectName())
-            && !Config.BanPackages.contains(card->getPackage())){
+            && !Config.BanPackages.contains(card->getPackage())) {
             Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
             c->setSkillName(object_name);
             c->setParent(this);
@@ -939,7 +939,7 @@ bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 bool GuhuoCard::targetFixed() const{
-    if(Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
         if (!ClientInstance->hasNoTargetResponding()) {
             CardStar card = Sanguosha->cloneCard(user_string, NoSuit, 0);
             Self->tag["guhuo"] = QVariant::fromValue(card);

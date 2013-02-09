@@ -932,7 +932,7 @@ end
 function sgs.isRolePredictable()
 	if sgs.GetConfig("RolePredictable", true) then return true end
 	local mode = string.lower(global_room:getMode())
-	if not mode:find("0") or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3") or mode == "06_3v3" or mode:find("mini") then return true end
+	if not mode:find("0") or mode:find("02_1v1") or mode:find("04_1v3") or mode == "06_3v3" or mode:find("mini") then return true end
 	return false
 end
 
@@ -4256,8 +4256,8 @@ function SmartAI:damageMinusHp(self, enemy, type)
 			elseif acard:isKindOf("Slash") and self:slashIsEffective(acard, enemy) and (slash_damagenum == 0 or self:hasCrossbowEffect())
 				and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
 				if not (enemy:hasSkill("xiangle") and basicnum < 2) then slash_damagenum = slash_damagenum + 1 end
-				if self:getCardsNum("Analeptic") > 0 and analepticpowerup == 0 and
-					and not (enemy:hasArmorEffect("silver_lion") or self:hasEightDiagramEffect(enemy))
+				if self:getCardsNum("Analeptic") > 0 and analepticpowerup == 0
+					and not (enemy:hasArmorEffect("silver_lion") or self:hasEightDiagramEffect(enemy)) then
 						slash_damagenum = slash_damagenum + 1
 						analepticpowerup = analepticpowerup + 1
 				end

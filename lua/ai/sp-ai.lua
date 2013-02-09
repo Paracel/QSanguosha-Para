@@ -335,7 +335,7 @@ local function can_be_selected_as_target(self, card, who)
 	if self:cantbeHurt(who) or self:damageIsEffective(who) then return false end
 	if self:isEnemy(who) then
 		if not self.player:hasSkill("jueqing") then
-			if who:hasSkill("guixin") and (self.room:getAliveCount() >= 4 or not who:faceUp()) then return false end
+			if who:hasSkill("guixin") and (self.room:getAliveCount() >= 4 or not who:faceUp()) and not who:hasSkill("manjuan") then return false end
 			if (who:hasSkill("ganglie") or who:hasSkill("neoganglie")) and (self.player:getHp() == 1 and self.player:getHandcardNum() <= 2) then return false end
 			if who:hasSkill("jieming") then
 				for _, enemy in ipairs(self.enemies) do
@@ -357,7 +357,8 @@ local function can_be_selected_as_target(self, card, who)
 				return true
 			end
 		end
-		if who:hasSkill("hunzi") and who:getMark("hunzi") == 0 and who == self.player:getNextAlive() and who:getHp() == 2 then return true end
+		if who:hasSkill("hunzi") and who:getMark("hunzi") == 0
+			and who:objectName() == self.player:getNextAlive():objectName() and who:getHp() == 2 then return true end
 		return false
 	end
 	return false

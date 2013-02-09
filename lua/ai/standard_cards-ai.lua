@@ -125,7 +125,7 @@ function sgs.getDefenseSlash(player)
 	end
 
 	if player:hasSkill("tuntian") and getCardsNum("Jink", player) > 0 then
-		defense = defense + 1.5  
+		defense = defense + 1.5
 	end
 
 	local hujiaJink = 0
@@ -983,7 +983,7 @@ sgs.ai_use_priority.Halberd = 2.685
 sgs.ai_use_priority.KylinBow = 2.68
 sgs.ai_use_priority.Blade = 2.675
 sgs.ai_use_priority.GudingBlade = 2.67
-sgs.ai_use_priority.DoubleSword  = 2.665
+sgs.ai_use_priority.DoubleSword = 2.665
 sgs.ai_use_priority.Spear = 2.66
 sgs.ai_use_priority.IceSword = 2.65
 sgs.ai_use_priority.QinggangSword = 2.645
@@ -1128,7 +1128,7 @@ sgs.ai_use_priority.GodSalvation = 3.9
 sgs.dynamic_value.benefit.GodSalvation = true
 
 function SmartAI:useCardDuel(duel, use)
-	if self.player:hasSkill("wuyan") then return end
+	if self.player:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return end
 	if self.player:hasSkill("noswuyan") then return end
 	self:sort(self.enemies, "defense")
 	local enemies = self:exclude(self.enemies, duel)
@@ -1211,8 +1211,8 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
 	if self:getDamagedEffects(self.player, target) or self.player:getHp() > getBestHp(self.player) then return "." end
 	if self:isFriend(target) and target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
-	if self.player:getMark("@fenyong") > 0 and not target:hasSkill("jueqing") then return "." end
-	if (not self:isFriend(target) and self:getCardsNum("Slash")* 2 >= target:getHandcardNum())
+	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, target) then return "." end
+	if (not self:isFriend(target) and self:getCardsNum("Slash") * 2 >= target:getHandcardNum())
 		or (target:getHp() > 2 and self.player:getHp() <= 1 and self:getCardsNum("Peach") == 0 and not self.player:hasSkill("buqu")) then
 		return self:getCardId("Slash")
 	else return "." end
@@ -1451,12 +1451,12 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse():getEffectiveId() end
 				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then 
 					cardchosen = enemy:getArmor():getEffectiveId() 
-				end        
+				end
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
 					cardchosen = self:getCardRandomly(enemy, "h") 
 				end
 
-				if cardchosen then        
+				if cardchosen then
 					use.card = card
 					if use.to then
 						sgs.ai_skill_cardchosen[name] = cardchosen
@@ -1661,7 +1661,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 			end
 		end
 	end
-	if target and (self:getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)) then   
+	if target and (self:getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)) then
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, target) and self:isFriend(target) then
 				return slash:toString()

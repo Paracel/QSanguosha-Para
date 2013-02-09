@@ -364,7 +364,7 @@ end
 
 sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 	local lord = from:getRoom():getLord()
-	local tuxi_lord = false  
+	local tuxi_lord = false
 	if from:getState() == "online" then
 		for _, to in ipairs(tos) do
 			if (self:hasSkills("kongcheng|zhiji|lianying", to) and to:getHandcardNum() == 1 ) or to:hasSkill("tuntian") then
@@ -434,7 +434,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 			if isCard("Slash", c, to) then
 				need_slash = false
 				break
-			end      
+			end
 		end
 	end
 
@@ -447,7 +447,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	end
 
 	if need_slash and target and isCard("Slash", card, to) then return true end
-	return isCard("Duel", card, to)  
+	return isCard("Duel", card, to)
 end
 
 sgs.luoyi_keep_value = {

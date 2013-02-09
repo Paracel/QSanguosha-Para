@@ -1332,7 +1332,7 @@ function SmartAI:objectiveLevel(player)
 			if self.room:getLord():hasSkill("benghuai") then
 				if self.player:isLord() then
 					if (sgs.evaluatePlayerRole(player) == "renegade" or sgs.evaluateRoleTrends(player) == "renegade") and player:getHp() > 1 then
-						return 5            
+						return 5
 					else
 						return player:getHp() > 1 and 1 or 0
 					end
@@ -1344,7 +1344,7 @@ function SmartAI:objectiveLevel(player)
 			self:sort(players, "hp")
 			local maxhp = players[#players]:isLord() and players[#players - 1]:getHp() or players[#players]:getHp()
 			if maxhp > 2 then return player:getHp() == maxhp and 5 or 0 end
-			if maxhp == 2 then return self.player:isLord() and 0 or (player:getHp() == maxhp and 5 or 1) end      
+			if maxhp == 2 then return self.player:isLord() and 0 or (player:getHp() == maxhp and 5 or 1) end
 			return self.player:isLord() and 0 or 5
 		end
 		if loyal_num == 0 then
@@ -1846,7 +1846,7 @@ function SmartAI:filterEvent(event, player, data)
 			if player:objectName() == caiwenji:objectName() then intention = 0 end
 			sgs.ai_card_intention.general(caiwenji, player, intention)
 		end
-	elseif event == sgs.EventPhaseEnd and player:getPhase() ==  sgs.Player_Play then
+	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
 		self.room:setPlayerFlag(player, "PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
@@ -2645,7 +2645,7 @@ function SmartAI:getCardNeedPlayer(cards)
 					break
 				end
 			end
-	  
+
 			if not can_slash then
 				for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
 					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) > friend:getAttackRange() then
@@ -3074,7 +3074,7 @@ function SmartAI:needRetrial(judge)
 
 	if reason == "luoshen" then
 		if self:isFriend(who) then
-			if who:getHandcardNum() > 30 then return false end  
+			if who:getHandcardNum() > 30 then return false end
 			if self:isEquip("Crossbow", who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
 			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
 			return not judge:isGood()
@@ -3778,6 +3778,15 @@ function SmartAI:useBasicCard(card, use)
 end
 
 function SmartAI:aoeIsEffective(card, to, source)
+	source = source or self.player
+	
+	if source:hasSkill("noswuyan") or to:hasSkill("noswuyan") then
+		return false
+	end
+	if source:hasSkill("wuyan") and not source:hasSkill("jueqing") then
+		return false
+	end
+
 	local players = self.room:getAlivePlayers()
 	players = sgs.QList2Table(players)
 
@@ -3792,7 +3801,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 		return false
 	end
 
-	if self:hasSkills("wuyan|noswuyan") or self:hasSkills("wuyan|noswuyan", to) then
+	if to:hasSkill("wuyan") and not source:hasSkill("jueqing") then
 		return false
 	end
 
@@ -3802,7 +3811,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 		end
 	end
 
-	if (to:getMark("@late") > 0 or to:getMark("@fenyong") > 0) then
+	if to:getMark("@late") > 0 then
 		return false
 	end
 
@@ -3811,15 +3820,11 @@ function SmartAI:aoeIsEffective(card, to, source)
 	end
 
 	local liuxie = self.room:findPlayerBySkillName("huangen")
-	if liuxie ~= nil and self:isFriend(to, liuxie) then
+	if liuxie and self:isFriend(to, liuxie) and #players > 2 and liuxie:getHp() > 1 then
 		return false
 	end
 
 	if to:hasSkill("mingshi") and self:isFriend(to) then
-		return false
-	end
-
-	if to:getMark("@fog") > 0 then
 		return false
 	end
 
@@ -3939,9 +3944,9 @@ function SmartAI:getAoeValue(card, player)
 
 		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
 			if self:isFriend(lord, p) then 
-				goodnull = goodnull +  getCardsNum("Nullification", p) 
+				goodnull = goodnull + getCardsNum("Nullification", p) 
 			else
-				badnull = badnull +  getCardsNum("Nullification", p) 
+				badnull = badnull + getCardsNum("Nullification", p) 
 			end
 		end
 		return goodnull - badnull >= 2

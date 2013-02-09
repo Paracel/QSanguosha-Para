@@ -44,7 +44,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	local hasPeach = (self:getCardsNum("Peach") > 0)
 
 	local trick_num, basic_num, equip_num = 0, 0, 0
-	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum()  >= 3 then
+	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum() >= 3 then
 		local cards = self.player:getCards("he")
 		cards = sgs.QList2Table(cards)
 		self:sortByUseValue(cards, true)

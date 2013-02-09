@@ -371,7 +371,8 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 end
 
 function SmartAI:useCardFireAttack(fire_attack, use)
-	if self:hasSkills("wuyan|noswuyan") then return end
+	if self.player:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return end
+	if self.player:hasSkill("noswuyan") then return end
 
 	local lack = {
 		spade = true,

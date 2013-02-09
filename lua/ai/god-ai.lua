@@ -388,7 +388,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num  >= 3 then break end
+					if num >= 3 then break end
 				end
 			end
 		end
@@ -399,7 +399,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if enemy:isChained() and self:isGoodChainTarget(enemy) and not enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num  >= 3 then break end
+					if num >= 3 then break end
 				end
 			end
 		end
@@ -411,7 +411,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 					if enemy:hasArmorEffect("vine") then
 						if use.to then use.to:append(enemy) end
 						num = num + 1
-						if num  >= 3 then break end
+						if num >= 3 then break end
 					end
 				end
 			end
@@ -423,7 +423,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 				if not enemy:isChained() and not enemy:hasArmorEffect("vine") then
 					if use.to then use.to:append(enemy) end
 					num = num + 1
-					if num  >= 3 then break end
+					if num >= 3 then break end
 				end
 			end
 		end

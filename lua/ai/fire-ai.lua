@@ -368,7 +368,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 				local friend_min_card = self:getMinCard(enemy)
 				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
 
-				if  max_point > friend_min_point then
+				if max_point > friend_min_point then
 					use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 					if use.to then use.to:append(friend) end
 					return

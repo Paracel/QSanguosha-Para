@@ -158,7 +158,7 @@ end
 
 sgs.ai_skill_invoke.lieren = function(self, data)
 	if self.player:getHandcardNum() == 1 then
-		local card  = self.player:getHandcards():first()
+		local card = self.player:getHandcards():first()
 		if card:isKindOf("Jink") or card:isKindOf("Peach") then return end
 	end
 	local damage = data:toDamage()

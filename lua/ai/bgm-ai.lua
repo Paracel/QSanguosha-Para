@@ -9,8 +9,8 @@ end
 
 sgs.ai_slash_prohibit.chongzhen = function(self, to, card)
 	if self:isFriend(to) then return false end
-	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 then return true end  
-	return false  
+	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 then return true end
+	return false
 end
 
 local lihun_skill = {}
@@ -762,12 +762,12 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse():getEffectiveId() end
 				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then 
 					cardchosen = enemy:getArmor():getEffectiveId() 
-				end        
+				end
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
 					cardchosen = self:getCardRandomly(enemy, "h") 
 				end
 
-				if cardchosen then        
+				if cardchosen then
 					use.card = card
 					if use.to then
 						sgs.ai_skill_cardchosen[name] = cardchosen

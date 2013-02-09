@@ -37,8 +37,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *caocao, QVariant &data) const{
-        QString pattern = data.toStringList().first();
-        if (pattern != "jink")
+		QString pattern = data.toStringList().first();
+        QString prompt = data.toStringList().at(1);
+        if (pattern != "jink" || prompt.startsWith("@hujia-jink"))
             return false;
 
         QList<ServerPlayer *> lieges = room->getLieges("wei", caocao);
@@ -467,7 +468,8 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liubei, QVariant &data) const{
         QString pattern = data.toStringList().first();
-        if (pattern != "slash")
+        QString prompt = data.toStringList().at(1);
+        if (pattern != "slash" || prompt.startsWith("@jijiang-slash"))
             return false;
 
         QList<ServerPlayer *> lieges = room->getLieges("shu", liubei);

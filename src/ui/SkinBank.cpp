@@ -389,7 +389,7 @@ QRect IQSanComponentSkin::AnchoredRect::getTranslatedRect(QRect parentRect, QSiz
     if (vAlign & Qt::AlignBottom)
         parentAnchor.setY(parentRect.bottom());
     else if (vAlign & Qt::AlignVCenter) 
-        parentAnchor.setY(parentRect.center().y() );
+        parentAnchor.setY(parentRect.center().y());
     else
         parentAnchor.setY(parentRect.top());
 

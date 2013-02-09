@@ -17,7 +17,7 @@ public:
         if (judge->who != player)
             return false;
 
-        if (player->askForSkillInvoke(objectName(), data) ) {
+        if (player->askForSkillInvoke(objectName(), data)) {
             int card_id = room->drawCard();
             room->broadcastSkillInvoke(objectName(), room->getCurrent() == player ? 2 : 1);
             room->getThread()->delay();

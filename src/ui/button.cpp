@@ -114,7 +114,7 @@ void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
 #ifdef AUDIO_SUPPORT
     if (!mute) Sanguosha->playSystemAudioEffect("button-hover");
 #endif
-    if (!timer_id )timer_id = QObject::startTimer(40);
+    if (!timer_id) timer_id = QObject::startTimer(40);
 }
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *event) {

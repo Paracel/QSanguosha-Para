@@ -23,8 +23,8 @@ public:
     QString itemName;
 
 private:
-    virtual void mousePressEvent ( QGraphicsSceneMouseEvent *event);
-    virtual void hoverMoveEvent ( QGraphicsSceneHoverEvent *event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
     void initFaceBoardPos();
     void initEasyTextPos();
     int mouseCanClick(int x, int y);

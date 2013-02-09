@@ -263,7 +263,7 @@ void PlayerCardContainer::updateReadyItem(bool visible) {
 void PlayerCardContainer::updatePhase() {
     if (!m_player || !m_player->isAlive())
         _clearPixmap(_m_phaseIcon);
-    else if (m_player->getPhase() != Player::NotActive ) {
+    else if (m_player->getPhase() != Player::NotActive) {
         if (m_player->getPhase() == Player::PhaseNone)
             return;
         int index = static_cast<int>(m_player->getPhase());

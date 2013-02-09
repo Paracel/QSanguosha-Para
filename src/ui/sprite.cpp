@@ -69,7 +69,7 @@ void Sprite::setResetTime(int time) {
 
 void Sprite::setPixmapAtMid(const QPixmap &pixmap) {
     QGraphicsPixmapItem::setPixmap(pixmap);
-    this->setOffset( - pixmap.width() / 2, - pixmap.height() / 2);
+    this->setOffset(-pixmap.width() / 2, -pixmap.height() / 2);
 }
 
 qreal Sprite::getX() const{
@@ -191,7 +191,7 @@ void EmphasizeEffect::draw(QPainter *painter) {
     painter->drawPixmap(target, pixmap, source);
 }
 
-QRectF EmphasizeEffect::boundingRectfor (const QRectF &sourceRect) const{
+QRectF EmphasizeEffect::boundingRectFor(const QRectF &sourceRect) const{
     qreal scale = 0.1;
     QRectF rect(sourceRect);
     rect.adjust(-sourceRect.width() * scale,
@@ -227,7 +227,7 @@ SentbackEffect::SentbackEffect(bool stay, QObject *parent) {
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
-QRectF SentbackEffect::boundingRectfor (const QRectF &sourceRect) const{
+QRectF SentbackEffect::boundingRectFor(const QRectF &sourceRect) const{
     qreal scale = 0.05;
     QRectF rect(sourceRect);
     rect.adjust(-sourceRect.width() * scale,

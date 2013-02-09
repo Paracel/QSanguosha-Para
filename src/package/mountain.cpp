@@ -241,7 +241,7 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             QList<const Skill *> skills = death.damage->from->getVisibleSkillList();
-            foreach (const Skill *skill, skills ) {
+            foreach (const Skill *skill, skills) {
                 if (skill->getLocation() == Skill::Right && !skill->inherits("SPConvertSkill") && !skill->isAttachedLordSkill())
                     room->detachSkillFromPlayer(death.damage->from, skill->objectName());
             }

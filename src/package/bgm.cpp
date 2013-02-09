@@ -970,7 +970,7 @@ public:
                 reason.m_playerId = victim->objectName();
                 room->obtainCard(victim, card, reason, false);
             }
-        } else if(event == DamageInflicted && player->hasLordSkill(objectName()) && !player->hasFlag("ShichouTarget")) {
+        } else if (event == DamageInflicted && player->hasLordSkill(objectName()) && !player->hasFlag("ShichouTarget")) {
             ServerPlayer *target = NULL;
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (p->getMark("hate_" + player->objectName()) > 0 && p->getMark("@hate_to") > 0) {

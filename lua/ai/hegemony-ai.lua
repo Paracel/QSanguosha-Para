@@ -265,6 +265,7 @@ end
 
 -- AI for general
 local function xiaoguo_card(self, target)
+	local has_peach, has_anal, has_slash, has_jink
 	for _, card in sgs.qlist(self.player:getHandcards()) do
 		if card:isKindOf("Peach") then has_peach = card
 		elseif card:isKindOf("Analeptic") then has_anal = card
@@ -280,6 +281,7 @@ local function xiaoguo_card(self, target)
 			return has_anal or has_peach
 		end
 	end
+	return nil
 end
 
 sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)

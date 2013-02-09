@@ -1488,7 +1488,7 @@ sgs.ai_skill_use_func.QingnangCard = function(card, use, self)
 	local arr1, arr2 = self:getWoundedFriend()
 	local target = nil
 
-	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) then target = arr1[1] end
+	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
 	if target then
 		use.card = card
 		if use.to then

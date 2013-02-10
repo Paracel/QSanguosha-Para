@@ -1414,6 +1414,34 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			end
 		end
 	end
+	
+	local new_enemies = table.copyFrom(enemies)
+	local compare_JudgingArea = function(a, b)
+		return a:getJudgingArea():length() > b:getJudgingArea():length()
+	end
+	table.sort(new_enemies, compare_JudgingArea)  
+	local yanxiao_card, yanxiao_target, yanxiao_prior
+	for _, enemy in ipairs(new_enemies) do
+		for _, acard in sgs.qlist(enemy:getJudgingArea()) do
+			if acard:isKindOf("YanxiaoCard") and self:hasTrickEffective(card, enemy) then
+				yanxiao_card = acard
+				yanxiao_target = enemy
+				if enemy:containsTrick("indulgence") or enemy:containsTrick("supply_shortage") then yanxiao_prior = true end
+				break
+			end
+		end
+		if yanxiao_card and yanxiao_target then break end
+	end
+	if yanxiao_prior and yanxiao_card and yanxiao_target then
+		use.card = card
+		if use.to then 
+			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
+			use.to:append(yanxiao_target)
+		elseif isJixi then
+			self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
+		end
+		return
+	end
 
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
@@ -1469,7 +1497,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			end
 		end
 	end
-
+	
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() and self:hasTrickEffective(card, enemy)
@@ -1508,23 +1536,15 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		return
 	end
 
-	for _, enemy in ipairs(enemies) do
-		local yanxiao
-		tricks = enemy:getJudgingArea()
-		for _, trick in sgs.qlist(tricks) do
-			if trick:isKindOf("YanxiaoCard") then
-				yanxiao = trick
-				break
-			end
+	if yanxiao_card and yanxiao_target then
+		use.card = card
+		if use.to then 
+			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
+			use.to:append(yanxiao_target)
+		elseif isJixi then
+			self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
 		end
-		if yanxiao then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = yanxiao:getEffectiveId()
-				use.to:append(enemy)
-			end
-			return
-		end
+		return
 	end
 
 	if name == "snatch" or self:getOverflow() > 0 then

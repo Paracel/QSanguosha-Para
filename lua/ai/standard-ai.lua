@@ -429,7 +429,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	local cards = to:getHandcards()
 	local need_slash = true
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible",self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(),to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if isCard("Slash", c, to) then
 				need_slash = false
@@ -795,7 +795,7 @@ function sgs.ai_cardneed.paoxiao(to, card, self)
 	local has_weapon = to:getWeapon() and not to:getWeapon():isKindOf("Crossbow")
 	local slash_num = 0
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible",self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(),to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if c:isKindOf("Weapon") and not c:isKindOf("Crossbow") then
 				has_weapon = true

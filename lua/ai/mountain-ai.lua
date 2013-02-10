@@ -19,19 +19,26 @@ local function card_for_qiaobian(self, who, return_prompt)
 		end
 
 		local equips = who:getCards("e")
+		local weak = false
 		if not target and not equips:isEmpty() and self:hasSkills(sgs.lose_equip_skill, who) then
 			for _, equip in sgs.qlist(equips) do
 				if equip:isKindOf("OffensiveHorse") then card = equip break
-				elseif equip:isKindOf("DefensiveHorse") then card = equip break
+				elseif equip:isKindOf("DefensiveHorse") then
+					card = equip
+					weak = self:isWeak(who)
+					break
 				elseif equip:isKindOf("Weapon") then card = equip break
-				elseif equip:isKindOf("Armor") then card = equip break
+				elseif equip:isKindOf("Armor") then
+					card = equip
+					weak = self:isWeak(who)
+					break
 				end
 			end
 
 			if card then
 				for _, friend in ipairs(self.friends) do
 					if friend == who then
-					elseif friend:getCards("e"):isEmpty() or not self:getSameEquip(card, friend) then
+					elseif not weak and (friend:getCards("e"):isEmpty() or not self:getSameEquip(card, friend)) then
 						target = friend
 						break
 					end
@@ -140,7 +147,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 		local isPeach = cards[i]:isKindOf("Peach")
 		if isPeach then
 			local stealer = self.room:findPlayerBySkillName("tuxi")
-			if stealer and self:isEnemy(stealer) and self.player:getHandcardNum() <= 2 and not stealer:containsTrick("supply_shortage") then
+			if stealer and self:isEnemy(stealer) and self.player:getHandcardNum() <= 2 and not self:willSkipDrawPhase(stealer) then
 				card = cards[i]
 				break
 			end

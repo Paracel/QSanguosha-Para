@@ -104,13 +104,13 @@ sgs.ai_chaofeng.masu = -4
 
 sgs.ai_skill_invoke.enyuan = function(self, data)
 	local damage = data:toDamage()
-	if damage then
+	if damage and damage.from then
 		if damage.from and damage.from:isAlive() then
 			return self:isFriend(damage.from) and self:getOverflow(damage.from) > 2 or true
 		end
 	else
 		local move = data:toMoveOneTime()
-		return move and move.from and self:isFriend(move.from) and not(move.from:hasSkill("kongcheng") and move.from:isKongcheng())
+		return move and move.from and self:isFriend(move.from) and not (move.from:hasSkill("kongcheng") and move.from:isKongcheng())
 	end
 end
 

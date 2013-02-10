@@ -404,26 +404,42 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	if #self.friends == 1 then
 		return false
 	end
-	
+
 	local cards = sgs.QList2Table(self.player:getHandcards())
-	local shouldUse = 0
+	local shouldUse, range_fix = 0, 0
+	local hasCrossbow, slashTo = false, false
 	for _ , card in ipairs(cards) do
 		if card:isKindOf("TrickCard") and self:getUseValue(card) > 3.69 then
 			local dummy_use = { isDummy = true }
 			self:useTrickCard(card, dummy_use)
-			if dummy_use.card then shouldUse = shouldUse + 1 end
+			if dummy_use.card then shouldUse = shouldUse + (card:isKindOf("ExNihilo") and 2 or 1) end
 		end
-		if card:isKindOf("Slash") then
-			for _, enemy in ipairs(self.enemies) do
-				if self.player:canSlash(enemy) and not self:slashProhibit(card, enemy)
-					and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
-					shouldUse = shouldUse + 1
-					break
-				end
+		if card:isKindOf("Weapon") then
+			local new_range = sgs.weapon_range[card:getClassName()]
+			local current_range = self.player:getAttackRange()
+			range_fix = math.min(current_range - new_range, 0)
+		end
+		if card:isKindOf("OffensiveHorse") and not self.player:getOffensiveHorse() then range_fix = range_fix - 1 end
+		if card:isKindOf("DefensiveHorse") or card:isKindOf("Armor") and not self:getSameEquip(card) and (self:isWeak() or self:getCardsNum("Jink") == 0) then shouldUse = shouldUse + 1 end
+		if card:isKindOf("Crossbow") or self:hasCrossbowEffect() then hasCrossbow = true end
+	end
+
+	local slashs = self:getCards("Slash")
+	for _, enemy in ipairs(self.enemies) do
+		for _, slash in ipairs(slashs) do
+			if hasCrossbow and self:getCardsNum("Slash") > 1 and self:slashIsEffective(slash, enemy)
+				and self.player:canSlash(enemy, slash, true, range_fix) then
+				shouldUse = shouldUse + 2
+				hasCrossbow = false
+				break
+			elseif not slashTo and self:slashIsAvailable() and self:slashIsEffective(slash, enemy)
+				and self.player:canSlash(enemy, slash, true, range_fix) and self:getCardsNum("Jink", enemy) < 1 then
+				shouldUse = shouldUse + 1
+				slashTo = true
 			end
 		end
 	end
-	if shouldUse >= 2 then return false end
+	if shouldUse >= 2 then return end
 
 	local limit = self.player:getMaxCards()
 	if self.player:isKongcheng() then return false end

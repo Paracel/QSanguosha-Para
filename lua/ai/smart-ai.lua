@@ -2324,14 +2324,14 @@ function SmartAI:askForCard(pattern, prompt, data)
 	local target, target2
 	local parsedPrompt = prompt:split(":")
 	if parsedPrompt[2] then
-		local others = self.room:getOtherPlayers(self.player, true)
-		others = sgs.QList2Table(others)
-		for _, other in ipairs(others) do
-			if other:getGeneralName() == parsedPrompt[2] or other:objectName() == parsedPrompt[2] then target = other break end
+		local players = self.room:getPlayers()
+		players = sgs.QList2Table(players)
+		for _, player in ipairs(players) do
+			if player:getGeneralName() == parsedPrompt[2] or player:objectName() == parsedPrompt[2] then target = player break end
 		end
 		if parsedPrompt[3] then
-			for _, other in ipairs(others) do
-				if other:getGeneralName() == parsedPrompt[3] or other:objectName() == parsedPrompt[3] then target2 = other break end
+			for _, player in ipairs(players) do
+				if player:getGeneralName() == parsedPrompt[3] or player:objectName() == parsedPrompt[3] then target2 = player break end
 			end
 		end
 	end

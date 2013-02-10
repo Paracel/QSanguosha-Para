@@ -2964,7 +2964,8 @@ function SmartAI:activate(use)
 	self.toUse = self:getTurnUse()
 	self:sortByDynamicUsePriority(self.toUse)
 	for _, card in ipairs(self.toUse) do
-		if not self.player:isCardLimited(card, card:getHandlingMethod()) then
+		if not self.player:isCardLimited(card, card:getHandlingMethod())
+			or (card:canRecast() and not self.player:isCardLimited(card, sgs.Card_MethodRecast)) then
 			local type = card:getTypeId()
 			self["use" .. sgs.ai_type_name[type + 1] .. "Card"](self, card, use)
 

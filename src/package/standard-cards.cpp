@@ -310,7 +310,7 @@ public:
                     if (to->isKongcheng())
                         draw_card = true;
                     else {
-                        QString prompt = "double-sword-card:" + use.from->getGeneralName();
+                        QString prompt = "double-sword-card:" + use.from->objectName();
                         const Card *card = room->askForCard(to, ".", prompt);
                         if (!card) draw_card = true;
                     }

@@ -298,7 +298,7 @@ void FireAttack::onEffect(const CardEffectStruct &effect) const{
 
     QString suit_str = card->getSuitString();
     QString pattern = QString(".%1").arg(suit_str.at(0).toUpper());
-    QString prompt = QString("@fire-attack:%1::%2").arg(effect.to->getGeneralName()).arg(suit_str);
+    QString prompt = QString("@fire-attack:%1::%2").arg(effect.to->objectName()).arg(suit_str);
     if (effect.from->isAlive()) {
         const Card *card_to_throw = room->askForCard(effect.from, pattern, prompt);
         if (card_to_throw) {

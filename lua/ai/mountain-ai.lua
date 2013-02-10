@@ -405,6 +405,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 		return false
 	end
 
+	-- First we'll judge whether it's worth skipping the Play Phase
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local shouldUse, range_fix = 0, 0
 	local hasCrossbow, slashTo = false, false
@@ -441,6 +442,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	end
 	if shouldUse >= 2 then return end
 
+	-- Then we need to find the card to be discarded
 	local limit = self.player:getMaxCards()
 	if self.player:isKongcheng() then return false end
 	if self:getCardsNum("Peach") >= limit - 2 and self.player:isWounded() then return false end

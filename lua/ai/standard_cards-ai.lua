@@ -1881,6 +1881,16 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			if isCard("Jink", c, self.player) or isCard("Peach", c, self.player) then return c:getEffectiveId() end
 		end
 	end
+
+	local peach
+	local peach_num = 0
+	for _, c in ipairs(cards) do
+		if c:isKindOf("Peach") then
+			peach = c:getEffectiveId()
+			peach_num = peach_num + 1
+		end
+	end
+	if peach_num > 1 or self:isEnemy(next_alive) then return peach end
 	self:sortByCardNeed(cards, true)
 	return cards[1]:getEffectiveId()
 end

@@ -101,8 +101,6 @@ public:
     void networkDelayTest(const QString &);
     void addPlayer(const QString &player_info);
     void removePlayer(const QString &player_name);
-    void drawCards(const QString &cards_str);
-    void drawNCards(const QString &draw_str);    
     void startInXs(const QString &);
     void arrangeSeats(const QString &seats);
     void activate(const Json::Value &playerId);
@@ -132,7 +130,6 @@ public:
     void cardLock(const QString &card_str);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const QString &set_str);
-    void pile(const QString &pile_str);
     void updateStateItem(const QString &state_str);
     void setCardFlag(const QString &pattern_str);
     void playSystemAudioEffect(const QString &effect_str);

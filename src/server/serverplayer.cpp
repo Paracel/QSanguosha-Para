@@ -119,12 +119,12 @@ void ServerPlayer::clearOnePrivatePile(QString pile_name) {
         return;
     QList<int> &pile = piles[pile_name];
 
-    foreach (int card_id, pile) {
-        CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, this->objectName());
-        room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
-        QString pile_command = QString("%1:%2-%3").arg(objectName()).arg(pile_name).arg(card_id);
-        room->broadcastInvoke("pile", pile_command);
-    }
+    DummyCard *dummy = new DummyCard;
+    foreach (int card_id, pile)
+        dummy->addSubcard(card_id);
+    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, this->objectName());
+    room->throwCard(dummy, reason, NULL);
+    dummy->deleteLater();
     piles.remove(pile_name);
 }
 

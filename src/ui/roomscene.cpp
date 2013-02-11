@@ -977,8 +977,7 @@ void RoomScene::enableTargets(const Card *card) {
     bool enabled = true;
     if (card != NULL) {
         Client::Status status = ClientInstance->getStatus();
-        if (status == Client::Playing && Self->isCardLimited(card, card->getHandlingMethod())
-            && (!card->canRecast() || (card->canRecast() && Self->isCardLimited(card, Card::MethodRecast))))
+        if (status == Client::Playing && !card->isAvailable(Self))
             enabled = false;
         if (status == Client::Responding || status == Client::RespondingUse) {
             Card::HandlingMethod method = card->getHandlingMethod();

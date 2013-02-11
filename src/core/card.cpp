@@ -609,10 +609,8 @@ void Card::clearSubcards() {
 }
 
 bool Card::isAvailable(const Player *player) const{
-    if (!can_recast)
-        return !player->isCardLimited(this, handling_method);
-    else
-        return !player->isCardLimited(this, handling_method) || !player->isCardLimited(this, Card::MethodRecast);
+    return !player->isCardLimited(this, handling_method)
+           || (can_recast && !player->isCardLimited(this, Card::MethodRecast));
 }
 
 const Card *Card::validate(const CardUseStruct *) const{

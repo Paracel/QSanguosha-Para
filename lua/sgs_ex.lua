@@ -7,7 +7,7 @@ function sgs.CreateTriggerSkill(spec)
 
 	local frequency = spec.frequency or sgs.Skill_NotFrequent
 	local skill = sgs.LuaTriggerSkill(spec.name, frequency)
-	
+
 	if (type(spec.events) == "number") then
 		skill:addEvent(spec.events)
 	elseif (type(spec.events) == "table") then
@@ -15,9 +15,9 @@ function sgs.CreateTriggerSkill(spec)
 			skill:addEvent(event)
 		end
 	end
-	
+
 	skill.on_trigger = spec.on_trigger
-	
+
 	if spec.can_trigger then
 		skill.can_trigger = spec.can_trigger
 	end
@@ -33,24 +33,24 @@ end
 
 function sgs.CreateGameStartSkill(spec)
 	assert(type(spec.on_gamestart) == "function")
-	
+
 	spec.events = sgs.GameStart
-	
+
 	function spec.on_trigger(skill, event, player, data)
 		spec.on_gamestart(skill, player)
 		return false
 	end
-	
+
 	return sgs.CreateTriggerSkill(spec)
 end
 
 function sgs.CreateProhibitSkill(spec)
 	assert(type(spec.name) == "string")
 	assert(type(spec.is_prohibited) == "function")
-	
-	local skill = sgs.LuaProhibitSkill(spec.name)	
+
+	local skill = sgs.LuaProhibitSkill(spec.name)
 	skill.is_prohibited = spec.is_prohibited
-	
+
 	return skill
 end
 
@@ -127,9 +127,9 @@ end
 
 function sgs.CreateSkillCard(spec)
 	assert(spec.name)
-	
+
 	local card = sgs.LuaSkillCard(spec.name)
-	
+
 	if type(spec.target_fixed) == "boolean" then
 		card:setTargetFixed(spec.target_fixed)
 	end
@@ -137,7 +137,7 @@ function sgs.CreateSkillCard(spec)
 	if type(spec.will_throw) == "boolean" then
 		card:setWillThrow(spec.will_throw)
 	end
-	
+
 	if type(spec.can_recast) == "boolean" then
 		card:setCanRecast(spec.can_recast)
 	end
@@ -145,25 +145,25 @@ function sgs.CreateSkillCard(spec)
 	if type(spec.handling_method) == "number" then
 		card:setHandlingMethod(spec.handling_method)
 	end
-	
+
 	card.filter = spec.filter
 	card.feasible = spec.feasible
 	card.on_use = spec.on_use
 	card.on_effect = spec.on_effect
-	
+
 	return card
 end
 
 function sgs.CreateViewAsSkill(spec)
 	assert(spec.name)
-	
+
 	local skill = sgs.LuaViewAsSkill(spec.name)
 	local n = spec.n or 0
-	
+
 	function skill:view_as(cards)
 			return spec.view_as(self,cards)
 	end
-	
+
 	function skill:view_filter(selected, to_select)
 			if #selected>=n then
 				return false
@@ -171,11 +171,11 @@ function sgs.CreateViewAsSkill(spec)
 			
 			return spec.view_filter(self, selected, to_select)
 	end
-	
+
 	skill.enabled_at_play = spec.enabled_at_play
 	skill.enabled_at_response = spec.enabled_at_response
 	skill.enabled_at_nullification = spec.enabled_at_nullification
-	
+
 	return skill
 end
 
@@ -213,7 +213,7 @@ function sgs.list(list)
 	else
 		return sgs.qlist(list)
 	end
-end	
+end
 
 function sgs.reverse(list)
 	local new = {}
@@ -227,22 +227,20 @@ end
 -- copied from "Well House Consultants"
 -- used to split string into a table, similar with php' explode function
 function string:split(delimiter)
-  local result = {}
-  local from = 1
-  local delim_from, delim_to = string.find(self, delimiter, from)
-  while delim_from do
-    table.insert( result, string.sub(self, from, delim_from - 1))
-    from  = delim_to + 1
-    delim_from, delim_to = string.find(self, delimiter, from)
-  end
-  table.insert( result, string.sub(self, from))
-  return result
+	local result = {}
+	local from = 1
+	local delim_from, delim_to = string.find(self, delimiter, from)
+	while delim_from do
+		table.insert( result, string.sub(self, from, delim_from - 1))
+		from  = delim_to + 1
+		delim_from, delim_to = string.find(self, delimiter, from)
+	end
+	table.insert(result, string.sub(self, from))
+	return result
 end
 
 function table:contains(element)
-	if #self == 0 or type(self[1]) ~= type(element) then return false
-	end
-	
+	if #self == 0 or type(self[1]) ~= type(element) then return false end
 	for _, e in ipairs(self) do
 		if e == element then return true end
 	end
@@ -250,8 +248,8 @@ end
 
 function table:removeOne(element)
 	if #self == 0 or type(self[1]) ~= type(element) then return false end
-	
-	for i=1, #self do
+
+	for i = 1, #self do
 		if self[i] == element then 
 			table.remove(self, i)
 			return true
@@ -263,7 +261,7 @@ end
 function table:removeAll(element)
 	if #self == 0 or type(self[1]) ~= type(element) then return 0 end
 	local n = 0
-	for i=1, #self do
+	for i = 1, #self do
 		if self[i] == element then 
 			table.remove(self, i)
 			n = n + 1

@@ -121,7 +121,7 @@
 "kingdomIcon-default": "image/kingdom/icon/%1.png",
 
 // cards
-"handCardMainPhoto-default": "image/card/%1.jpg",
+"handCardMainPhoto-default": "image/card/%1.png",
 "handCardMainPhoto-default2": "image/generals/card/%1.jpg",
 "handCardMainPhoto-unknown": "image/system/card-back.png",
 

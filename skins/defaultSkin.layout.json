@@ -194,9 +194,9 @@
     "duanchangMaskColor": [255, 255, 255, 128],
     "buttonSetSize": [106, 168],
     "confirmButtonArea": [5, 3, 61, 75],
-    "cancelButtonArea":	[5, 92, 61, 75],
+    "cancelButtonArea": [5, 92, 61, 75],
     "discardButtonArea": [70, 45, 33, 81],
-    "trustButtonArea":	[69, 133, 36, 35]	
+    "trustButtonArea": [69, 133, 36, 35]
 },
 "skillButton":
 {

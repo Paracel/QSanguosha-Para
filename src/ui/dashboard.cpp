@@ -620,7 +620,7 @@ void Dashboard::_adjustCards() {
     int leftWidth = layout->m_leftWidth;
     int cardHeight = G_COMMON_LAYOUT.m_cardNormalHeight;
     int middleWidth = _m_width - layout->m_leftWidth - layout->m_rightWidth - this->getButtonWidgetWidth();
-    QRect rowRect = QRect(leftWidth, layout->m_normalHeight - cardHeight, middleWidth, cardHeight);
+    QRect rowRect = QRect(leftWidth, layout->m_normalHeight - cardHeight - 3, middleWidth, cardHeight);
     for (int i = 0; i < maxCards; i++)
         row.push_back(m_handCards[i]);
 

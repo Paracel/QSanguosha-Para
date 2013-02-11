@@ -99,7 +99,7 @@ function sgs.getDefenseSlash(player)
 	if sgs.card_lack[player:objectName()]["Jink"] == 1 and knownJink == 0 then defense = 0 end
  	defense = defense + knownJink * 1.2
 
-	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
+	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and not attacker:hasWeapon("qinggang_sword") then
 		hasEightDiagram = true
 	end
 
@@ -130,18 +130,18 @@ function sgs.getDefenseSlash(player)
 
 	local hujiaJink = 0
 	if player:hasLordSkill("hujia") then
-			local lieges = global_room:getLieges("wei", player)
-			for _, liege in sgs.qlist(lieges) do
-				if sgs.compareRoleEvaluation(liege, "rebel", "loyalist") == sgs.compareRoleEvaluation(player, "rebel", "loyalist") then
-					hujiaJink = hujiaJink + getCardsNum("Jink", liege)
-					if liege:hasArmorEffect("eight_diagram") then hujiaJink = hujiaJink + 0.8 end
-				end
+		local lieges = global_room:getLieges("wei", player)
+		for _, liege in sgs.qlist(lieges) do
+			if sgs.compareRoleEvaluation(liege, "rebel", "loyalist") == sgs.compareRoleEvaluation(player, "rebel", "loyalist") then
+				hujiaJink = hujiaJink + getCardsNum("Jink", liege)
+				if liege:hasArmorEffect("eight_diagram") or liege:hasArmorEffect("bazhen") then hujiaJink = hujiaJink + 0.8 end
 			end
-			defense = defense + hujiaJink
+		end
+		defense = defense + hujiaJink
 	end
 
 	if player:getHp() > getBestHp(player) then defense = defense + 1.3 end
-	if player:hasSkill("tianxiang") and player:getHandcardNum() > 2 then defense = defense + player:getHandcardNum() * 0.5 end
+	if player:hasSkill("tianxiang") then defense = defense + player:getHandcardNum() * 0.5 end
 
 	if player:getHp() <= 2 then
 		defense = defense - 0.4

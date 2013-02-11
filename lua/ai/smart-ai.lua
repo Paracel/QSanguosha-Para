@@ -1502,8 +1502,8 @@ function SmartAI:updatePlayers(clear_flags)
 				table.insert(self.friends, friends[i])
 				table.insert(self.friends_noself, friends[i])
 			end
-			table.insert(self.friends, self.player)
 		end
+		table.insert(self.friends, self.player)
 
 		local enemies = sgs.QList2Table(self.lua_ai:getEnemies())
 		for i = 1, #enemies, 1 do

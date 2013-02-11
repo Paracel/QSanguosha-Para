@@ -410,7 +410,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
 
 class Jixi: public ZeroCardViewAsSkill {
 public:
-    Jixi():ZeroCardViewAsSkill("jixi") {
+    Jixi(): ZeroCardViewAsSkill("jixi") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{

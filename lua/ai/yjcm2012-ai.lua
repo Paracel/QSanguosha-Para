@@ -440,10 +440,7 @@ sgs.ai_skill_invoke.zhuiyi = function(self, data)
 	local damage = data:toDamageStar()
 	local exclude = self.player
 	if damage and damage.from then exclude = damage.from end
-
-	local friends = self:getFriendsNoself()
-	table.removeOne(friends, exclude)
-	return #friends > 0
+	return #self.friends_noself > (table.contains(self.friends_noself, exclude) and 1 or 0)
 end
 
 sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)

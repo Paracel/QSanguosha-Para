@@ -110,7 +110,14 @@ sgs.ai_skill_invoke.enyuan = function(self, data)
 		end
 	else
 		local move = data:toMoveOneTime()
-		return move and move.from and self:isFriend(move.from) and not (move.from:hasSkill("kongcheng") and move.from:isKongcheng())
+		if move and move.from then
+			local from
+			for _, player in sgs.qlist(self.room:getAlivePlayers()) do
+				if player:objectName() == move.from:objectName() then from = move.from break end
+			end
+			if from then return self:isFriend(from) and not (from:hasSkill("kongcheng") and from:isKongcheng()) end
+		end
+		return false
 	end
 end
 

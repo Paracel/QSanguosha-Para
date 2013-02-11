@@ -1317,7 +1317,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local tricks
 	players = self:exclude(players, card)
 	for _, player in ipairs(players) do
-		if (player:containsTrick("lightning") and self:getFinalRetrial(player) == 2 and self:hasTrickEffective(card, player)) or #self.enemies == 0 then
+		if not player:getJudgingArea():isEmpty() and self:hasTrickEffective(card, player)
+			and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
 			use.card = card
 			if use.to then
 				tricks = player:getCards("j")
@@ -1389,7 +1390,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			elseif isJixi then
 				self.room:setPlayerFlag(friend, "JixiTarget")
 			end
-
 			return
 		end
 		if friend:hasArmorEffect("silver_lion") and self:hasTrickEffective(card, friend)

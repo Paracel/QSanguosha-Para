@@ -4002,6 +4002,8 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
         Json::Value clientReply = player->getClientReply();
         if (success && clientReply.isString())
             choice = findChild<ServerPlayer *>(clientReply.asCString());
+        if (choice == NULL)
+            choice = targets.at(qrand() % targets.length());
     }
     if (choice) {
         QVariant data = QString("%1:%2:%3").arg("playerChosen").arg(skillName).arg(choice->objectName());

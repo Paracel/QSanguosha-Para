@@ -1509,17 +1509,7 @@ void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPla
     } else {
         //@todo: nice if this thing is encapsulated in AI
         const TrickCard *trick = qobject_cast<const TrickCard *>(card);
-        if (trick->isAggressive()) {
-            if (AI::GetRelation3v3(player, player->getNextAlive()) == AI::Enemy)
-                isClockwise = false;
-            else
-                isClockwise = true;
-        } else {
-            if (AI::GetRelation3v3(player, player->getNextAlive()) == AI::Friend)
-                isClockwise = false;
-            else
-                isClockwise = true;
-        }
+        isClockwise = (AI::GetRelation3v3(player, player->getNextAlive()) == (trick->isAggressive() ? AI::Friend : AI::Enemy));
     }
 
     LogMessage log;
@@ -3987,7 +3977,7 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
 
     notifyMoveFocus(player, S_COMMAND_CHOOSE_PLAYER);
     AI *ai = player->getAI();
-    ServerPlayer *choice;
+    ServerPlayer *choice = NULL;
     if (ai)
         choice = ai->askForPlayerChosen(targets, skillName);
     else {
@@ -3998,7 +3988,6 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
             req[0].append(toJsonString(target->objectName()));
         bool success = doRequest(player, S_COMMAND_CHOOSE_PLAYER, req, true);
 
-        choice = NULL;
         Json::Value clientReply = player->getClientReply();
         if (success && clientReply.isString())
             choice = findChild<ServerPlayer *>(clientReply.asCString());

@@ -50,7 +50,7 @@ public:
     enum Phase {RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone};
     enum Place { PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge,
                  PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown,
-                 PlaceWuGu};
+                 PlaceWuGu };
     enum Role {Lord, Loyalist, Rebel, Renegade};
 
     explicit Player(QObject *parent);

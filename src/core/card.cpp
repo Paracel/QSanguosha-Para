@@ -372,8 +372,7 @@ const Card *Card::Parse(const QString &str) {
         // skill name
         // @todo: This is extremely dirty and would cause endless troubles.
         QString skillName = card->getSkillName();
-        if (skillName.isNull())
-        {
+        if (skillName.isNull()) {
             skillName = card_name.remove("Card").toLower();
             card->setSkillName(skillName);
         }
@@ -538,7 +537,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
  
-    if (getTypeId() != Card::TypeSkill) {
+    if (getTypeId() != TypeSkill) {
         CardMoveReason reason(CardMoveReason::S_REASON_USE, player->objectName(), QString(), card_use.card->getSkillName(), QString());
         if (card_use.to.size() == 1)
             reason.m_targetId = card_use.to.first()->objectName();

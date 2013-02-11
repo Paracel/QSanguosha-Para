@@ -371,7 +371,6 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(QPainter *painter, QSt
         newImage[i++] = 0;
     }
 
-
     // we do not do kerning for vertical layout for now
     bool useKerning = (!(align & Qt::AlignJustify));
     FT_UInt previous = 0;
@@ -393,7 +392,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(QPainter *painter, QSt
             currentX = 0;
         }
 
-        FT_Vector  delta;       
+        FT_Vector delta;
         FT_UInt glyph_index = FT_Get_Char_Index(face, charcodes[i]);
         error = FT_Load_Glyph(face, glyph_index, FT_LOAD_RENDER); 
         if (error) continue;
@@ -412,7 +411,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(QPainter *painter, QSt
         currentY = currentY + tmpYOffset;
 
         Q_ASSERT(bitmap.pitch == bitmap.width || bitmap.pitch == (bitmap.width - 1) / 8 + 1);
-        //@todo putitback
+        //@todo put it back
         bool mono = true;
         if (bitmap.pitch == bitmap.width) 
             mono = false;

@@ -255,20 +255,6 @@ QPixmap QSanRoomSkin::getProgressBarPixmap(int percentile) const{
     return QPixmap();
 }
 
-QString QSanRoomSkin::getCardMainPixmapPath(const QString &cardName) const{
-    QString key = QString(QSanRoomSkin::S_SKIN_KEY_HAND_CARD_MAIN_PHOTO).arg(cardName);
-    if (isImageKeyDefined(key))
-        return toQString(_m_imageConfig[key.toAscii().constData()]);
-    else {
-        QString fileName = toQString(_m_imageConfig[QString(S_SKIN_KEY_HAND_CARD_MAIN_PHOTO)
-                                     .arg("default").toAscii().constData()]).arg(cardName);
-        if (!QFile::exists(fileName))
-            fileName = toQString(_m_imageConfig[QString(S_SKIN_KEY_HAND_CARD_MAIN_PHOTO)
-                                 .arg("default2").toAscii().constData()]).arg(cardName);
-        return fileName;
-    }
-}
-
 QPixmap QSanRoomSkin::getCardMainPixmap(const QString &cardName) const{
     if (cardName == "unknown") return getPixmap("handCardBack");
     return getPixmap(S_SKIN_KEY_HAND_CARD_MAIN_PHOTO, cardName);
@@ -289,28 +275,6 @@ QPixmap QSanRoomSkin::getCardJudgeIconPixmap(const QString &judgeName) const{
 
 QPixmap QSanRoomSkin::getCardAvatarPixmap(const QString &generalName) const{
     return getGeneralPixmap(generalName, S_GENERAL_ICON_SIZE_TINY);
-}
-
-QString QSanRoomSkin::getGeneralPixmapPath(const QString &generalName, GeneralIconSize size) const{
-    if (size == S_GENERAL_ICON_SIZE_CARD)
-        return getCardMainPixmapPath(generalName);
-    else {
-        QString key = QString(S_SKIN_KEY_PLAYER_GENERAL_ICON).arg(size).arg(generalName);
-        if (isImageKeyDefined(key))
-            return toQString(_m_imageConfig[key.toAscii().constData()]);
-        else {
-            QByteArray arr = QString(S_SKIN_KEY_PLAYER_GENERAL_ICON).arg(size).arg(S_SKIN_KEY_DEFAULT).toAscii();
-            const char *ckey = arr.constData();
-            Json::Value imageMap = _m_imageConfig[ckey];
-            QString fileName;
-            if (imageMap.isString())
-                fileName = toQString(imageMap).arg(generalName);
-            else if (imageMap.isArray())
-                fileName = toQString(imageMap[0]).arg(generalName);
-
-            return fileName;
-        }
-    }
 }
 
 QPixmap QSanRoomSkin::getGeneralPixmap(const QString &generalName, GeneralIconSize size) const{

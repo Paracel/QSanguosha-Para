@@ -283,11 +283,6 @@ public:
     const PhotoLayout &getPhotoLayout() const;
     const CommonLayout &getCommonLayout() const;
     const DashboardLayout &getDashboardLayout() const;
-    
-    // @todo: these two functions are currently only used to generate HTML when prompt whether to
-    // use Nullification. Get rid of them in the future.
-    QString getCardMainPixmapPath(const QString &cardName) const;
-    QString getGeneralPixmapPath(const QString &generalName, GeneralIconSize size) const;
 
     QString getButtonPixmapPath(const QString &groupName, const QString &buttonName, QSanButton::ButtonState state) const;
     QPixmap getButtonPixmap(const QString &groupName, const QString &buttonName, QSanButton::ButtonState state) const;

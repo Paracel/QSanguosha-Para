@@ -2205,7 +2205,6 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
     case Client::AskForSkillInvoke: {
             QString skill_name = ClientInstance->getSkillNameToInvoke();
             dashboard->highlightEquip(skill_name, true);
-            // @todo: refactor this
             foreach (QSanSkillButton *button, m_skillButtons) {
                 if (button->getSkill()->objectName() == skill_name) {
                     if (button->getStyle() == QSanSkillButton::S_STYLE_TOGGLE

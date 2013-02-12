@@ -347,6 +347,12 @@ local function can_be_selected_as_target(self, card, who)
 					if not enemy:faceUp() then return false end
 				end
 			end
+			if who:hasSkill("yiji") then
+				local huatuo = self.room:findPlayerBySkillName("jijiu")
+				if huatuo and self:isEnemy(huatuo) and huatuo:getHandcardNum() >= 3 then
+					return false
+				end
+			end
 		end
 		return true
 	elseif self:isFriend(who) then
@@ -404,6 +410,24 @@ end
 
 sgs.ai_use_value.XuejiCard = 3
 sgs.ai_use_priority.XuejiCard = 3
+
+sgs.ai_card_intention.XuejiCard = function(self, card, from, tos)
+	local huatuo = self.room:findPlayerBySkillName("jijiu")
+	for _, to in ipairs(tos) do
+		local intention = 60
+		if to:hasSkill("yiji") and not from:hasSkill("jueqing") then
+			if (huatuo and self:isFriend(huatuo) and huatuo:getHandcardNum() >= 3 and huatuo:objectName() ~= from:objectName()) then
+				intention = -30
+			end
+			if to:getLostHp() == 0 and to:getMaxHp() >= 3 then
+				intention = -10
+			end
+		end
+		if to:hasSkill("hunzi") and to:getMark("hunzi") == 0
+			and to:objectName() == to:getNextAlive():objectName() and to:getHp() == 2 then intention = -20 end
+		sgs.updateIntention(from, to, intention)
+	end
+end
 
 sgs.ai_cardneed.xueji = function(to, card)
 	return to:getHandcardNum() < 3 and card:isRed()

@@ -239,6 +239,7 @@ public:
             log.arg = objectName();
             room->sendLog(log);
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
 
             QList<const Skill *> skills = death.damage->from->getVisibleSkillList();
             foreach (const Skill *skill, skills) {
@@ -344,7 +345,8 @@ public:
         log.arg2 = objectName();
         room->sendLog(log);
 
-        room->broadcastSkillInvoke("zaoxian");
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(dengai, objectName());
         room->broadcastInvoke("animate", "lightbox:$ZaoxianAnimate:4000");
         room->getThread()->delay(4000);
 
@@ -476,6 +478,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(sunce, objectName());
         room->broadcastInvoke("animate", "lightbox:$HunziAnimate:5000");
         room->getThread()->delay(5000);
 
@@ -503,6 +506,7 @@ bool ZhibaCard::targetFilter(const QList<const Player *> &targets, const Player 
 void ZhibaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *sunce = targets.first();
     room->setPlayerFlag(sunce, "ZhibaInvoked");
+    room->notifySkillInvoked(sunce, "zhiba");
     if (sunce->getMark("hunzi") > 0 && room->askForChoice(sunce, "zhiba_pindian", "accept+reject") == "reject") {
         room->broadcastSkillInvoke("zhiba", 5);
         return;
@@ -648,7 +652,8 @@ public:
         log.arg = objectName();
         room->sendLog(log);
 
-        room->broadcastSkillInvoke("zhiji");
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(jiangwei, objectName());
         room->broadcastInvoke("animate", "lightbox:$ZhijiAnimate:4000");
         room->getThread()->delay(4000);
 
@@ -832,6 +837,7 @@ public:
             if (use.card && use.card->isKindOf("Slash")) {
                 liushan->setMark("xiangle", 0);
                 room->broadcastSkillInvoke(objectName());
+                room->notifySkillInvoked(liushan, objectName());
 
                 LogMessage log;
                 log.type = "#Xiangle";
@@ -959,6 +965,7 @@ public:
 
         if (can_invoke) {
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(liushan, objectName());
             room->broadcastInvoke("animate", "lightbox:$RuoyuAnimate");
             room->getThread()->delay(1500);
 

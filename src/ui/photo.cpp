@@ -135,7 +135,7 @@ void Photo::showSkillName(const QString &skill_name) {
                                              Qt::AlignLeft,
                                              Sanguosha->translate(skill_name));
     _m_skillNameItem->show();
-    QTimer::singleShot(2000, this, SLOT(hideSkillName()));
+    QTimer::singleShot(1000, this, SLOT(hideSkillName()));
 }
 
 void Photo::hideSkillName() {

@@ -22,6 +22,7 @@ public:
         SlashEffectStruct effect = data.value<SlashEffectStruct>();
         if (effect.slash->isBlack()) {
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
 
             LogMessage log;
             log.type = "#SkillNullify";
@@ -166,18 +167,18 @@ public:
                 log.arg = damage.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
+                room->notifySkillInvoked(player, objectName());
                 room->broadcastSkillInvoke(objectName());
 
                 return true;
-            }
-
-            if (event == DamageCaused && damage.from && damage.from->isAlive() && damage.from->hasSkill(objectName())) {
+            }else if (event == DamageCaused && damage.from && TriggerSkill::triggerable(damage.from)) {
                 LogMessage log;
                 log.type = "#WuyanBad";
                 log.from = player;
                 log.arg = damage.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
+                room->notifySkillInvoked(player, objectName());
                 room->broadcastSkillInvoke(objectName());
 
                 return true;
@@ -431,6 +432,7 @@ public:
             log.to << killer;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             killer->throwAllHandCardsAndEquips();
 
@@ -761,6 +763,7 @@ public:
 
         if (room->getCurrent() && room->getCurrent()->isAlive()) {
             room->broadcastSkillInvoke(objectName(), 1);
+            room->notifySkillInvoked(player, objectName());
             if (player->getMark("@late") == 0)
                 player->gainMark("@late");
 
@@ -788,6 +791,7 @@ public:
         CardEffectStruct effect = data.value<CardEffectStruct>();
         if ((effect.card->isKindOf("Slash") || effect.card->isNDTrick()) && effect.to->getMark("@late") > 0) {
             room->broadcastSkillInvoke("zhichi", 2);
+            room->notifySkillInvoked(effect.to, "zhichi");
             LogMessage log;
             log.type = "#ZhichiAvoid";
             log.from = effect.to;
@@ -1077,6 +1081,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(zhonghui, objectName());
         room->broadcastInvoke("animate", "lightbox:$ZiliAnimate:3000");
         room->getThread()->delay(3000);
 
@@ -1179,6 +1184,7 @@ public:
             log.from = zhangchunhua;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(zhangchunhua, objectName());
             room->broadcastSkillInvoke(objectName());
             room->loseHp(damage.to, damage.damage);
 

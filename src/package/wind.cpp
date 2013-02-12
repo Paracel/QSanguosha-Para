@@ -165,6 +165,7 @@ void HuangtianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
     if (zhangjiao->hasLordSkill("huangtian")) {
         room->setPlayerFlag(zhangjiao, "HuangtianInvoked");
         room->broadcastSkillInvoke("huangtian");
+        room->notifySkillInvoked(zhangjiao, "huangtian");
         zhangjiao->obtainCard(this);
         QList<ServerPlayer *> zhangjiaos;
         QList<ServerPlayer *> players = room->getOtherPlayers(source);
@@ -416,6 +417,7 @@ public:
                 log.from = player;
                 log.arg = objectName();
                 room->sendLog(log);
+                room->notifySkillInvoked(player, objectName());
 
                 RecoverStruct recover;
                 recover.who = player;

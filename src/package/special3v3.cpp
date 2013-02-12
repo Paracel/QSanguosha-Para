@@ -161,9 +161,8 @@ public:
                     break;
                 }
             }
-         } else if ((judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept")
-                   && !player->isNude())
-                can_invoke = true;
+         } else if (!player->isNude())
+            can_invoke = (judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept");
 
         if (!can_invoke)
             return false;

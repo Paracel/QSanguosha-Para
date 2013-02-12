@@ -992,6 +992,7 @@ public:
     void showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer = NULL);
     void showAllCards(ServerPlayer *player, ServerPlayer *to = NULL);
     void retrial(const Card *card, ServerPlayer *player, JudgeStar judge, const char *skill_name, bool exchange = false);
+    void notifySkillInvoked(ServerPlayer *player, const char *skill_name);
     bool broadcastSkillInvoke(const char *skillName);
     bool broadcastSkillInvoke(const char *skillName, const char *category);
     bool broadcastSkillInvoke(const char *skillName, int type);

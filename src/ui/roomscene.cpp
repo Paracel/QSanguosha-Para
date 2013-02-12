@@ -464,6 +464,21 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             container->updateReformState();
             break;
         }
+    case S_GAME_EVENT_SKILL_INVOKED: {
+            QString player_name = arg[1].asCString();
+            QString skill_name =  arg[2].asCString();
+            const Skill *skill = Sanguosha->getSkill(skill_name);
+            if (skill && skill->isAttachedLordSkill())
+                break;
+
+            ClientPlayer *player = ClientInstance->getPlayer(player_name);
+            if (player != Self) {
+                PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
+                Photo *photo = qobject_cast<Photo *>(container);
+                if (photo) photo->showSkillName(skill_name);
+            }
+            break;
+        }
     default:
         break;
     }

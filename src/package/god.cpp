@@ -45,13 +45,14 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
 
         if (damage.from && damage.from != player) {
             player->tag["Wuhun"] = true;
             damage.from->gainMark("@nightmare", damage.damage);
             damage.from->getRoom()->broadcastSkillInvoke(objectName(), 1);
+            room->notifySkillInvoked(player, objectName());
         }
 
         return false;
@@ -94,6 +95,8 @@ public:
             foe = foes.first();
         else
             foe = room->askForPlayerChosen(shenguanyu, foes, "wuhun");
+
+        room->notifySkillInvoked(shenguanyu, "wuhun");
 
         JudgeStruct judge;
         judge.pattern = QRegExp("(Peach|GodSalvation):(.*):(.*)");
@@ -487,6 +490,7 @@ public:
         log.arg = QString::number(damage.damage);
         log.arg2 = objectName();
         room->sendLog(log);
+        room->notifySkillInvoked(player, objectName());
 
         player->gainMark("@wrath", damage.damage);
         room->broadcastSkillInvoke(objectName(), event == Damage ? 1 : 2);
@@ -533,6 +537,7 @@ public:
             log.from = player;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             int num = player->getMark("@wrath");
             if (num >= 1 && room->askForChoice(player, objectName(), "discard+losehp") == "discard") {
@@ -931,12 +936,14 @@ public:
                     int n = move->card_ids.length();
                     if (n > 0) {
                         room->broadcastSkillInvoke(objectName());
+                        room->notifySkillInvoked(player, objectName());
                         player->gainMark("@bear", n);
                     }
                 }
             }
         } else if (event == Damaged) {
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
             DamageStruct damage = data.value<DamageStruct>();
             player->gainMark("@bear", damage.damage);
         }
@@ -977,6 +984,7 @@ public:
     virtual bool onPhaseChange(ServerPlayer *shensimayi) const{
         Room *room = shensimayi->getRoom();
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(shensimayi, objectName());
         room->broadcastInvoke("animate", "lightbox:$BaiyinAnimate");
         room->getThread()->delay(2000);
 
@@ -1223,8 +1231,10 @@ public:
     }
 
     virtual int getDrawNum(ServerPlayer *player, int n) const{
-        if (player->isWounded())
+        if (player->isWounded()) {
+            player->getRoom()->notifySkillInvoked(player, objectName());
             player->getRoom()->broadcastSkillInvoke("juejing");
+        }
         return n + player->getLostHp();
     }
 };

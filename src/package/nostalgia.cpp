@@ -82,6 +82,7 @@ public:
                 log.arg = effect.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
+                room->notifySkillInvoked(effect.from, objectName());
                 room->broadcastSkillInvoke("wuyan");
                 return true;
             }
@@ -93,6 +94,7 @@ public:
                 log.arg = effect.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
+                room->notifySkillInvoked(effect.to, objectName());
                 room->broadcastSkillInvoke("wuyan");
                 return true;
             }
@@ -279,6 +281,7 @@ public:
                     room->useCard(card_use, false);
                 } else if (choice == "damage") {
                     room->broadcastSkillInvoke("xuanfeng", 2);
+                    room->notifySkillInvoked(lingtong, objectName());
 
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage");
                     DamageStruct damage;
@@ -666,6 +669,7 @@ public:
         log.arg2 = objectName();
         room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(zhonghui, objectName());
         room->broadcastInvoke("animate", "lightbox:$NosBaijiangAnimate:5000");
         room->getThread()->delay(4500);
         room->setPlayerMark(zhonghui, "nosbaijiang", 1);
@@ -840,6 +844,7 @@ public:
         log.arg2 = objectName();
         room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(zhonghui, objectName());
         room->broadcastInvoke("animate", "lightbox:$NosZiliAnimate:5000");
         room->getThread()->delay(5000);
 

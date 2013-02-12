@@ -207,6 +207,8 @@ public:
         QString choice = room->askForChoice(caozhang, objectName(), "jiang+chi+cancel");
         if (choice == "cancel")
             return n;
+
+        room->notifySkillInvoked(caozhang, objectName());
         LogMessage log;
         log.from = caozhang;
         log.arg = objectName();
@@ -293,6 +295,7 @@ public:
             log.from = liaohua;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(liaohua, objectName());
 
             change.to = Player::Play;
             data = QVariant::fromValue(change);
@@ -455,6 +458,7 @@ public:
             log.from = player;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             room->loseMaxHp(player);
         }

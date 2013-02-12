@@ -1005,6 +1005,8 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             if (!skill_name.isEmpty())
                 log.arg = skill_name;
             sendLog(log);
+            if (!skill_name.isEmpty())
+                notifySkillInvoked(player, skill_name);
         }
     }
 
@@ -3328,6 +3330,14 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
         doNotify(player, isLostPhase ? S_COMMAND_LOSE_CARD : S_COMMAND_GET_CARD, arg);
     }
     return true;
+}
+
+void Room::notifySkillInvoked(ServerPlayer *player, const QString &skill_name) {
+    Json::Value args;
+    args[0] = QSanProtocol::S_GAME_EVENT_SKILL_INVOKED;
+    args[1] = toJsonString(player->objectName());
+    args[2] = toJsonString(skill_name);
+    doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
 }
 
 bool Room::broadcastSkillInvoke(const QString &skill_name, const QString &category) {

@@ -19,6 +19,7 @@ public:
         const Card *reason = damage.card;
 
         if (xuchu->getWeapon() == NULL && reason && reason->isKindOf("Slash")) {
+            room->notifySkillInvoked(xuchu, objectName());
             LogMessage log;
             log.type = "#LuoyiBuff";
             log.from = xuchu;
@@ -116,6 +117,7 @@ void DrJiuyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
     ServerPlayer *sunquan = targets.first();
     if (sunquan->hasLordSkill("drjiuyuan")) {
         room->setPlayerFlag(sunquan, "DrJiuyuanInvoked");
+        room->notifySkillInvoked(sunquan, "drjiuyuan");
         sunquan->obtainCard(this, false);
         QList<ServerPlayer *> sunquans;
         QList<ServerPlayer *> players = room->getOtherPlayers(source);
@@ -319,6 +321,7 @@ public:
             log.arg = objectName();
             log.type = "#TriggerSkill";
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             room->broadcastSkillInvoke("wushuang");
         } else if (event == CardFinished) {

@@ -114,6 +114,7 @@ public:
                 if (player->askForSkillInvoke(objectName())) {
                     ServerPlayer *caopi = room->askForPlayerChosen(player, caopis, objectName());
                     room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(caopi, objectName());
                     LogMessage log;
                     log.type = "#InvokeOthersSkill";
                     log.from = player;
@@ -213,6 +214,7 @@ public:
         if (triggerEvent == TargetConfirmed && player->hasSkill(objectName()) && player->isAlive()) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("SavageAssault") && use.from != player) {
+                room->notifySkillInvoked(player, objectName());
                 room->broadcastSkillInvoke(objectName());
                 room->setTag("HuoshouSource", QVariant::fromValue((PlayerStar)player));
             }
@@ -360,6 +362,7 @@ public:
                 && move->reason.m_reason == CardMoveReason::S_REASON_USE) {
                 Card *card = Sanguosha->getCard(move->card_ids.first());
                 if (card->hasFlag("real_SA") && player != move->from) {
+                    room->notifySkillInvoked(player, objectName());
                     room->broadcastSkillInvoke(objectName());
                     player->obtainCard(card);
                 }
@@ -840,6 +843,7 @@ public:
                         log.arg = objectName();
                         log.type = "#TriggerSkill";
                         room->sendLog(log);
+                        room->notifySkillInvoked(use.from, objectName());
 
                         room->broadcastSkillInvoke(objectName(), 1);
                     }
@@ -861,6 +865,7 @@ public:
                                 log.arg = objectName();
                                 log.type = "#TriggerSkill";
                                 room->sendLog(log);
+                                room->notifySkillInvoked(p, objectName());
                             }
                         }
                         room->broadcastSkillInvoke(objectName(), 2);
@@ -898,16 +903,16 @@ public:
         }
 
         if (trigger_this) {
-            QString result = room->askForChoice(dongzhuo, "benghuai", "hp+maxhp");
-
-            int index = (result == "hp") ? 1 : 2;
-            room->broadcastSkillInvoke(objectName(), index);
-
             LogMessage log;
             log.from = dongzhuo;
             log.arg = objectName();
             log.type = "#TriggerSkill";
             room->sendLog(log);
+            room->notifySkillInvoked(dongzhuo, objectName());
+
+            QString result = room->askForChoice(dongzhuo, "benghuai", "hp+maxhp");
+            int index = (result == "hp") ? 1 : 2;
+            room->broadcastSkillInvoke(objectName(), index);
             if (result == "hp")
                 room->loseHp(dongzhuo);
             else
@@ -951,6 +956,7 @@ public:
                     log.to << dongzhuo;
                     log.arg = objectName();
                     room->sendLog(log);
+                    room->notifySkillInvoked(dongzhuo, objectName());
 
                     JudgeStruct judge;
                     judge.pattern = QRegExp("(.*):(spade):(.*)");

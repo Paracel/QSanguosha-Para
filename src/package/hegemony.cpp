@@ -239,6 +239,7 @@ public:
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.from) {
+            room->notifySkillInvoked(player, objectName());
             room->broadcastSkillInvoke(objectName());
             QVariant data_for_ai = QVariant::fromValue((PlayerStar)damage.to);
             if (damage.damage > 1)
@@ -397,6 +398,7 @@ public:
                 target = dying.damage->from;
             if (dying.who != player && target && room->askForChoice(target, "suishi1", "draw+no") == "draw") {
                 room->broadcastSkillInvoke(objectName(), 1);
+                room->notifySkillInvoked(player, objectName());
                 LogMessage log;
                 log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
                 log.from = target;
@@ -412,6 +414,7 @@ public:
                 target = death.damage->from;
             if (target && room->askForChoice(target, "suishi2", "damage+no") == "damage") {
                 room->broadcastSkillInvoke(objectName(), 2);
+                room->notifySkillInvoked(player, objectName());
                 LogMessage log;
                 log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
                 log.from = target;

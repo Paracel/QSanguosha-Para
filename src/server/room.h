@@ -205,6 +205,7 @@ public:
     bool broadcastResetCard(const QList<ServerPlayer *> &players, int cardId);
 
     bool broadcastProperty(ServerPlayer *player, const char *property_name, const QString &value = QString());
+    void notifySkillInvoked(ServerPlayer *player, const QString &skill_name);
     bool broadcastSkillInvoke(const QString &skillName);
     bool broadcastSkillInvoke(const QString &skillName, const QString &category);
     bool broadcastSkillInvoke(const QString &skillName, int type);

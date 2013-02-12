@@ -498,6 +498,7 @@ public:
         if (!damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
             return false;
 
+        room->notifySkillInvoked(player, objectName());
         LogMessage log;
         log.type = "#Jie";
         log.from = player;
@@ -1406,6 +1407,7 @@ public:
             log.arg = objectName();
             log.type = "#TriggerSkill";
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             xiahou->loseMark("@fenyong");
             QList<ServerPlayer *> targets;
@@ -2216,6 +2218,7 @@ public:
                 log.arg = objectName();
                 log.type = "#TriggerSkill";
                 room->sendLog(log);
+                room->notifySkillInvoked(gongsunzan, objectName());
 
                 int n = gongsunzan->getPile("retinue").length();
                 room->setPlayerMark(gongsunzan, "tuqi_dist", n);

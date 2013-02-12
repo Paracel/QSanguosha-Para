@@ -201,6 +201,7 @@ bool Yongsi::trigger(TriggerEvent event, Room *room, ServerPlayer *yuanshu, QVar
         log.arg = QString::number(x);
         log.arg2 = objectName();
         room->sendLog(log);
+        room->notifySkillInvoked(yuanshu, objectName());
 
         room->broadcastSkillInvoke("yongsi", x % 2 + 1);
     } else if (event == EventPhaseStart && yuanshu->getPhase() == Player::Discard) {
@@ -211,6 +212,7 @@ bool Yongsi::trigger(TriggerEvent event, Room *room, ServerPlayer *yuanshu, QVar
         log.arg = QString::number(log.type == "#YongsiBad" ? x : yuanshu->getCardCount(true));
         log.arg2 = objectName();
         room->sendLog(log);
+        room->notifySkillInvoked(yuanshu, objectName());
         if (x > 0)
             room->askForDiscard(yuanshu, "yongsi", x, x, false, true);
     }
@@ -571,6 +573,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
         room->broadcastInvoke("animate", "lightbox:$WujiAnimate:4000");
         room->getThread()->delay(4000);
 
@@ -599,6 +602,7 @@ public:
         QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
         if (player->getHp() <= hp) {
             if (!baobian_skills.contains(skill_name)) {
+                room->notifySkillInvoked(player, "baobian");
                 room->broadcastSkillInvoke("baobian", 4 - hp);
                 room->acquireSkill(player, skill_name);
                 baobian_skills << skill_name;
@@ -834,6 +838,7 @@ public:
 
     virtual int getDrawNum(ServerPlayer *player, int n) const{
         player->getRoom()->broadcastSkillInvoke("shenwei");
+        player->getRoom()->notifySkillInvoked(player, objectName());
         return n + 2;
     }
 };
@@ -888,6 +893,7 @@ public:
             log.arg2 = QString::number(guanyu->getHp());
             room->sendLog(log);
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(guanyu, objectName());
             room->broadcastInvoke("animate", "lightbox:$DanjiAnimate:5000");
             room->getThread()->delay(5000);
 

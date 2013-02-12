@@ -779,6 +779,7 @@ public:
         } else if (event == PreHpRecover) {
             RecoverStruct rec = data.value<RecoverStruct>();
             if (rec.card && rec.card->hasFlag("jiuyuan")) {
+                room->notifySkillInvoked(sunquan, "jiuyuan");
                 room->broadcastSkillInvoke("jiuyuan", rec.who->isMale() ? 1 : 2);
 
                 LogMessage log;
@@ -1091,6 +1092,7 @@ public:
             log.arg = objectName();
             log.type = "#TriggerSkill";
             room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
 
             room->broadcastSkillInvoke(objectName());
             if (use.card->isKindOf("Duel"))
@@ -1475,6 +1477,7 @@ public:
             log.from = gaodayihao;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(gaodayihao, objectName());
             gaodayihao->drawCards(diff);
         } else if (gaodayihao->getHandcardNum() > 4) {
             LogMessage log;
@@ -1482,6 +1485,7 @@ public:
             log.from = gaodayihao;
             log.arg = objectName();
             room->sendLog(log);
+            room->notifySkillInvoked(gaodayihao, objectName());
             room->askForDiscard(gaodayihao, objectName(), diff, diff);
         }
 
@@ -1511,8 +1515,8 @@ public:
             foreach (ServerPlayer *p, room->getOtherPlayers(gaodayihao)) {
                if (p->getWeapon() && p->getWeapon()->isKindOf("QinggangSword")) {
                    if (room->askForSkillInvoke(gaodayihao, objectName())) {
-                        room->broadcastSkillInvoke("noslonghun", 5);
-                        gaodayihao->obtainCard(p->getWeapon());
+                       room->broadcastSkillInvoke("noslonghun", 5);
+                       gaodayihao->obtainCard(p->getWeapon());
                     }
                     break;
                 }

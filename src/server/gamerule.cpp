@@ -203,6 +203,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
                 RoomThread *thread = room->getThread();
                 card_use.from->broadcastSkillInvoke(card);
+                if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false))
+                    room->notifySkillInvoked(card_use.from, card->getSkillName());
 
                 if (card->hasPreAction())
                     card->doPreAction(room, card_use);

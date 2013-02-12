@@ -2148,11 +2148,11 @@ void Room::run() {
         ServerPlayer *lord = m_players.first();
         setPlayerProperty(lord, "general", "shenlvbu1");
 
-        const Package *stdpack = Sanguosha->findChild<const Package *>("standard");
-        const Package *windpack = Sanguosha->findChild<const Package *>("wind");
-
-        QList<const General *> generals = stdpack->findChildren<const General *>();
-        generals << windpack->findChildren<const General *>();
+        QList<const General *> generals = QList<const General *>();
+        foreach (QString pack_name, GetConfigFromLuaState(Sanguosha->getLuaState(), "hulao_packages").toStringList()) {
+             const Package *pack = Sanguosha->findChild<const Package *>(pack_name);
+             if (pack) generals << pack->findChildren<const General *>();
+        }
 
         QStringList names;
         foreach (const General *general, generals) {
@@ -2161,7 +2161,8 @@ void Room::run() {
             names << general->objectName();
         }
 
-        names.removeOne("yuji");
+        foreach (QString name, Config.value("Banlist/HulaoPass").toStringList())
+            if (names.contains(name)) names.removeOne(name);
 
         foreach (ServerPlayer *player, m_players) {
             if (player == lord)

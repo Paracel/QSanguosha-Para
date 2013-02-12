@@ -1029,6 +1029,8 @@ public:
             || room->getMode().endsWith("pd")
             || room->getMode().endsWith("pz"))
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
+        else if (room->getMode() == "04_1v3")
+            all.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
         QSet<QString> huashen_set, room_set;
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         foreach (QVariant huashen, huashens)
@@ -1228,6 +1230,7 @@ public:
             room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
         if (player->getGender() != player->getGeneral()->getGender())
             player->setGender(player->getGeneral()->getGender());
+        room->detachSkillFromPlayer(player, player->tag["HuashenSkill"].toString());
         player->tag.remove("Huashens");
         room->setPlayerMark(player, "@huashen", 0);
         return false;

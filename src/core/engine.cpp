@@ -297,6 +297,9 @@ int Engine::getGeneralCount(bool include_banned) const{
                  || ServerInfo.GameMode.endsWith("pz"))
                  && Config.value("Banlist/Roles").toStringList().contains(general->objectName()))
             total--;
+        else if (ServerInfo.GameMode == "04_1v3"
+                 && Config.value("Banlist/HulaoPass").toStringList().contains(general->objectName()))
+            total--;
         else if (ServerInfo.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
             total--;
         else if (ServerInfo.EnableBasara
@@ -729,10 +732,23 @@ QStringList Engine::getRandomLords() const{
 QStringList Engine::getLimitedGeneralNames() const{
     QStringList general_names;
     QHashIterator<QString, const General *> itor(generals);
-    while (itor.hasNext()) {
-        itor.next();
-        if (!ban_package.contains(itor.value()->getPackage())) {
-            general_names << itor.key();
+    if (ServerInfo.GameMode == "04_1v3") {
+        QList<const General *> hulao_generals = QList<const General *>();
+        foreach (QString pack_name, GetConfigFromLuaState(lua, "hulao_packages").toStringList()) {
+             const Package *pack = Sanguosha->findChild<const Package *>(pack_name);
+             if (pack) hulao_generals << pack->findChildren<const General *>();
+        }
+
+        foreach (const General *general, hulao_generals) {
+            if (general->isTotallyHidden())
+                continue;
+            general_names << general->objectName();
+        }
+    } else {
+        while (itor.hasNext()) {
+            itor.next();
+            if (!ban_package.contains(itor.value()->getPackage()))
+                general_names << itor.key();
         }
     }
 
@@ -754,6 +770,8 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
         || ServerInfo.GameMode.endsWith("pd")
         || ServerInfo.GameMode.endsWith("pz"))
         general_set.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
+    else if (ServerInfo.GameMode == "04_1v3")
+        general_set.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
 
     all_generals = general_set.subtract(ban_set).toList();
 

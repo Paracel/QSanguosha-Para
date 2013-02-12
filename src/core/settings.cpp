@@ -128,10 +128,11 @@ void Settings::init() {
     BackgroundImage = value("BackgroundImage", "backdrop/default.jpg").toString();
 
     lua_State *lua = Sanguosha->getLuaState();
-    QStringList roles_ban, kof_ban, basara_ban, hegemony_ban, pairs_ban;
+    QStringList roles_ban, kof_ban, hulao_ban, basara_ban, hegemony_ban, pairs_ban;
 
     roles_ban = GetConfigFromLuaState(lua, "roles_ban").toStringList();
     kof_ban = GetConfigFromLuaState(lua, "kof_ban").toStringList();
+    hulao_ban = GetConfigFromLuaState(lua, "hulao_ban").toStringList();
     basara_ban = GetConfigFromLuaState(lua, "basara_ban").toStringList();
     hegemony_ban = GetConfigFromLuaState(lua, "hegemony_ban").toStringList();
     hegemony_ban.append(basara_ban);
@@ -152,15 +153,23 @@ void Settings::init() {
     banlist = value("Banlist/1v1").toStringList();
     if (banlist.isEmpty()) {
         foreach (QString ban_general, kof_ban)
-                banlist << ban_general;
+            banlist << ban_general;
 
         setValue("Banlist/1v1", banlist);
+    }
+
+    banlist = value("Banlist/HulaoPass").toStringList();
+    if (banlist.isEmpty()) {
+        foreach (QString ban_general, hulao_ban)
+            banlist << ban_general;
+
+        setValue("Banlist/HulaoPass", banlist);
     }
 
     banlist = value("Banlist/Basara").toStringList();
     if (banlist.isEmpty()) {
         foreach (QString ban_general, basara_ban)
-                    banlist << ban_general;
+            banlist << ban_general;
 
         setValue("Banlist/Basara", banlist);
     }

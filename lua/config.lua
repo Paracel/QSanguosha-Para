@@ -46,6 +46,11 @@ config = {
 		"Custom"
 	},
 
+	hulao_packages = {
+		"standard",
+		"wind"
+	},
+
 	color_wei = "#547998",
 	color_shu = "#D0796C",
 	color_wu = "#4DB873",
@@ -68,6 +73,10 @@ config = {
 	kof_ban = {
 		"sunquan",
 		"huatuo"
+	},
+
+	hulao_ban = {
+		"yuji"
 	},
 
 	basara_ban = {

@@ -85,6 +85,7 @@ return {
 
 	-- HuLao Pass
 	["Hulaopass"] = "虎牢关模式",
+	["HulaoPass"] = "虎牢关",
 
 	["#shenlvbu1"] = "最强神话",
 	["shenlvbu1"] = "吕布-虎牢关",

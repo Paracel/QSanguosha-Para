@@ -689,6 +689,7 @@ public:
         if (stars.isEmpty()) return;
 
         shenzhuge->getRoom()->broadcastSkillInvoke("qixing");
+        shenzhuge->getRoom()->notifySkillInvoked(shenzhuge, "qixing");
         shenzhuge->exchangeFreelyFromPrivatePile("qixing", "stars");
     }
 
@@ -725,6 +726,7 @@ public:
         log.from = shenzhuge;
         log.arg = "qixing";
         room->sendLog(log);
+        room->notifySkillInvoked(shenzhuge, "qixing");
 
         room->setTag("FirstRound", true); //For Manjuan
         shenzhuge->drawCards(7);

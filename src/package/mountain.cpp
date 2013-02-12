@@ -1154,6 +1154,7 @@ public:
     }
 
     virtual void onGameStart(ServerPlayer *zuoci) const{
+        zuoci->getRoom()->notifySkillInvoked(zuoci, "huashen");
         AcquireGenerals(zuoci, 2);
         SelectSkill(zuoci);
     }

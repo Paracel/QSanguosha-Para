@@ -1027,6 +1027,9 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         }
 
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
+            if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
+                && player->hasSkill(card->getSkillName()))
+                notifySkillInvoked(player, card->getSkillName());
             CardResponseStruct resp(card, to, method == Card::MethodUse);
             QVariant data = QVariant::fromValue(resp);
             thread->trigger(CardResponded, this, player, data);

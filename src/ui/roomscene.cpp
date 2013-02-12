@@ -472,6 +472,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
                 break;
 
             ClientPlayer *player = ClientInstance->getPlayer(player_name);
+            if (!player->hasSkill(skill_name)) return;
             if (player != Self) {
                 PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
                 Photo *photo = qobject_cast<Photo *>(container);
@@ -3200,11 +3201,11 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool perm
 }
 
 void RoomScene::showSkillInvocation(const QString &who, const QString &skill_name) {
-    if (skill_name == "songwei" || skill_name == "baonue") return; // limitations at the UI side to avoid duplicate log messages
+    const ClientPlayer *player = ClientInstance->findChild<const ClientPlayer *>(who);
+    if (!player->hasSkill(skill_name)) return;
     const Skill *skill = Sanguosha->getSkill(skill_name);
     if (skill && skill->inherits("SPConvertSkill")) return;
     QString type = "#InvokeSkill";
-    const ClientPlayer *player = ClientInstance->findChild<const ClientPlayer *>(who);
     QString from_general = player->objectName();
     QString arg = skill_name;
     log_box->appendLog(type, from_general, QStringList(), QString(), arg);

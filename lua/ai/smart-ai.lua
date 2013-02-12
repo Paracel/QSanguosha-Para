@@ -4009,7 +4009,7 @@ function SmartAI:hasTrickEffective(card, player)
 	if player then
 		if self.room:isProhibited(self.player, player, card) then return false end
 		if player:getMark("@late") > 0 or player:hasSkill("noswuyan") then
-			if card and not (card:isKindOf("Indulgence") or card:isKindOf("SupplyShortage")) then return false end
+			if card and not card:isKindOf("DelayedTrick") then return false end
 		end
 		if player:hasSkill("wuyan") then
 			if card and (card:isKindOf("Duel") or card:isKindOf("FireAttack")) then return false end

@@ -487,9 +487,9 @@ guhuo_skill.getTurnUseCard = function(self)
 	local slash_str = self:getGuhuoCard("Slash", self.player, true) or self:getGuhuoCard("Analeptic", self.player, true)
 	if slash_str and self:slashIsAvailable() then return sgs.Card_Parse(slash_str) end
 
-	local guhuo = "peach|ex_nihilo|snatch|amazing_grace|archery_attack"
+	local guhuos = "peach|ex_nihilo|snatch|amazing_grace|archery_attack"
 	local ban = sgs.GetConfig("BanPackages", "")
-	if not ban:match("maneuvering") then guhuo = guhuo .. "|fire_attack" end
+	if not ban:match("maneuvering") then guhuos = guhuos .. "|fire_attack" end
 
 	for i = 1, #guhuos do
 		local forbiden = guhuos[i]

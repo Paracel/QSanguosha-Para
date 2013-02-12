@@ -796,13 +796,12 @@ int ServerPlayer::getGeneralMaxHp() const{
         int second = getGeneral2()->getMaxHp();
 
         int plan = Config.MaxHpScheme;
-        if (Config.GameMode.contains("_mini_")) plan = 1;
+        if (Config.GameMode.contains("_mini_") || Config.GameMode == "custom_scenario") plan = 1;
 
         switch (plan) {
         case 3: max_hp = (first + second) / 2; break;
         case 2: max_hp = qMax(first, second); break;
         case 1: max_hp = qMin(first, second); break;
-        case 0:
         default:
                 max_hp = first + second - Config.Scheme0Subtraction; break;
         }

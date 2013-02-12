@@ -53,7 +53,7 @@ public:
     // to CardEffect including objectName.
     void takeOver(Card *card);
     void copyEverythingFrom(Card *card);
-    void setModified(bool modified) {m_isModified = modified;}
+    void setModified(bool modified) { m_isModified = modified; }
 
     // Inherited member functions
     inline virtual void onNullified(ServerPlayer *target) const{

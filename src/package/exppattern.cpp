@@ -49,7 +49,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
     checkpoint = false;
     QStringList card_suits = factors.at(1).split(',');
     foreach (QString suit, card_suits) {
-        if (suit == ".") {checkpoint = true; break;}
+        if (suit == ".") { checkpoint = true; break; }
         bool positive = true;
         if (suit.startsWith('^')) {
             positive = false;
@@ -69,7 +69,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
     int cdn = card->getNumber();
 
     foreach (QString number, card_numbers) {
-        if (number == ".") {checkpoint = true; break;}
+        if (number == ".") { checkpoint = true; break; }
         if (number.contains('~')) {
             QStringList params = number.split('~');
             int from, to;

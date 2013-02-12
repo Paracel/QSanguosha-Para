@@ -126,8 +126,8 @@ public:
     inline virtual bool isKindOf(const char *cardType) const { return inherits(cardType); }
     inline virtual QStringList getFlags() const { return flags; }
 
-    inline virtual bool isModified() const {return false;}
-    inline virtual void onNullified(ServerPlayer *target) const {return;}
+    inline virtual bool isModified() const { return false; }
+    inline virtual void onNullified(ServerPlayer *target) const { return; }
 
     // static functions
     static bool CompareByColor(const Card *a, const Card *b);

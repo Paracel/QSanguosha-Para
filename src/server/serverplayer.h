@@ -121,8 +121,8 @@ public:
         SEMA_MUTEX, // used to protect mutex access to member variables        
         SEMA_COMMAND_INTERACTIVE // used to wait for response from client        
     };
-    inline QSemaphore *getSemaphore(SemaphoreType type) {return semas[type];}
-    inline void acquireLock(SemaphoreType type) {semas[type]->acquire();}
+    inline QSemaphore *getSemaphore(SemaphoreType type) { return semas[type]; }
+    inline void acquireLock(SemaphoreType type) { semas[type]->acquire(); }
     inline bool tryAcquireLock(SemaphoreType type, int timeout = 0) {
         return semas[type]->tryAcquire(1, timeout); 
     }

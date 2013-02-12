@@ -413,22 +413,21 @@ void RecAnalysis::addDesignation(const QString &designation,
         player_test_mask /= 2;
         bool has_player = custom_condition;
         foreach (DesignationType type, des_union)
-            if (!m_recordMap[objectName]->m_designEnum.contains(type)) {has_player = false; break;}
+            if (!m_recordMap[objectName]->m_designEnum.contains(type)) { has_player = false; break; }
 
         if (need_win
-            && !(m_recordWinners.contains(m_recordMap[objectName]->m_role)
-                 || m_recordWinners.contains(objectName))) {
+            && !m_recordWinners.contains(m_recordMap[objectName]->m_role)
+            && !m_recordWinners.contains(objectName)) {
             has_player = false;
         }
 
         if (need_lose
-            && (m_recordWinners.contains(m_recordMap[objectName]->m_role)
-                || m_recordWinners.contains(objectName))) {
+            && m_recordWinners.contains(m_recordMap[objectName]->m_role)
+            && !m_recordWinners.contains(objectName)) {
             has_player = false;
         }
 
         if (!has_player) continue;
-
         if ((data_requirement & player_test_mask) == 0) continue;
 
         if (!addition_option_role.isEmpty()) {

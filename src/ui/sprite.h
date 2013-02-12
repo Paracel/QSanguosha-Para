@@ -55,7 +55,7 @@ public:
     void setStay(bool stay);
     void reset() { index = 0; }
     int getIndex() { return index; }
-    void setIndex(int ind)  {index = ind; }
+    void setIndex(int ind)  { index = ind; }
 
 protected:
     bool stay;

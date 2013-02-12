@@ -59,6 +59,10 @@ sgs.ai_skill_choice.jujian = function(self, choices)
 		return "reset"
 	end
 	if self:isWeak() and self.player:isWounded() then return "recover" end
+	if self.player:hasSkill("manjuan") then
+		if self.player:isWounded() then return "recover" end
+		if self.player:isChained() then return "reset" end
+	end
 	return "draw"
 end
 

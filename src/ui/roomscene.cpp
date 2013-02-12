@@ -346,7 +346,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             container->startHuaShen(huashenGeneral, huashenSkill);
             break;
         }
-    case S_GAME_EVENT_SKILL_INVOKED: {
+    case S_GAME_EVENT_PLAY_EFFECT: {
             QString skillName = arg[1].asCString();
             QString category;
             if (arg[2].isBool()) {

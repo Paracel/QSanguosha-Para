@@ -3332,7 +3332,7 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
 
 bool Room::broadcastSkillInvoke(const QString &skill_name, const QString &category) {
     Json::Value args;
-    args[0] = QSanProtocol::S_GAME_EVENT_SKILL_INVOKED;
+    args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = toJsonString(category);
     args[3] = -1;
@@ -3342,7 +3342,7 @@ bool Room::broadcastSkillInvoke(const QString &skill_name, const QString &catego
 
 bool Room::broadcastSkillInvoke(const QString &skill_name) {
     Json::Value args;
-    args[0] = QSanProtocol::S_GAME_EVENT_SKILL_INVOKED;
+    args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = true;
     args[3] = -1;
@@ -3352,7 +3352,7 @@ bool Room::broadcastSkillInvoke(const QString &skill_name) {
 
 bool Room::broadcastSkillInvoke(const QString &skill_name, int type) {
     Json::Value args;
-    args[0] = QSanProtocol::S_GAME_EVENT_SKILL_INVOKED;
+    args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = true;
     args[3] = type;
@@ -3362,7 +3362,7 @@ bool Room::broadcastSkillInvoke(const QString &skill_name, int type) {
 
 bool Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type) {
     Json::Value args;
-    args[0] = QSanProtocol::S_GAME_EVENT_SKILL_INVOKED;
+    args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = isMale;
     args[3] = type;

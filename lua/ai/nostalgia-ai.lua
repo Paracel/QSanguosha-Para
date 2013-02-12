@@ -42,6 +42,12 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	local abandon_handcard = {}
 	local index = 0
 	local hasPeach = (self:getCardsNum("Peach") > 0)
+	local tos = {}
+	for _, player in ipairs(self.friends_noself) do
+		if not player:hasSkill("manjuan") then
+			table.insert(tos, player)
+		end  
+	end
 
 	local trick_num, basic_num, equip_num = 0, 0, 0
 	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum() >= 3 then
@@ -60,8 +66,8 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		elseif basic_num >= 3 then result_class = "BasicCard"
 		end
 		local f
-		for _, friend in ipairs(self.friends_noself) do
-			if (friend:getHandcardNum() < 2) or (friend:getHandcardNum() < friend:getHp() + 1) and not friend:hasSkill("manjuan") then
+		for _, friend in ipairs(tos) do
+			if friend:getHandcardNum() < 2 or friend:getHandcardNum() < friend:getHp() + 1 then
 				for _, fcard in ipairs(cards) do
 					if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
 						table.insert(abandon_handcard, fcard:getId())
@@ -83,8 +89,8 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	self:sortByUseValue(cards, true)
 	local slash_num = self:getCardsNum("Slash")
 	local jink_num = self:getCardsNum("Jink")
-	for _, friend in ipairs(self.friends_noself) do
-		if (friend:getHandcardNum() < 2) or (friend:getHandcardNum() < friend:getHp() + 1) or self.player:isWounded() then
+	for _, friend in ipairs(tos) do
+		if friend:getHandcardNum() < 2 or friend:getHandcardNum() < friend:getHp() + 1 or self.player:isWounded() then
 			for _, card in ipairs(cards) do
 				if #abandon_handcard >= 3 then break end
 				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard")
@@ -112,8 +118,8 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 			end
 		end
 	end
-	if #self.friends_noself > 0 and self:getOverflow() > 0 then
-		self:sort(self.friends_noself, "handcard")
+	if #tos > 0 and self:getOverflow() > 0 then
+		self:sort(tos, "handcard")
 		local discard = self:askForDiscard("gamerule", math.min(self:getOverflow(), 3))
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(discard, "+"))
 		if use.to then use.to:append(self.friends_noself[1]) end

@@ -480,8 +480,7 @@ public:
         const Card *first = originalCard;
         Card *ncard = new Nullification(first->getSuit(), first->getNumber());
         ncard->addSubcard(first);
-        ncard->setSkillName("kanpo");
-
+        ncard->setSkillName(objectName());
         return ncard;
     }
 

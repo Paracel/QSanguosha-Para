@@ -162,7 +162,7 @@ void TaichenFightCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer 
 
     if (source->isAlive()) {
         Duel *duel = new Duel(Card::NoSuit, 0);
-        duel->setSkillName("taichenfight");
+        duel->setSkillName("TAICHENFIGHT");
         duel->setCancelable(false);
 
         room->setPlayerMark(source, "WushuangTarget", 1);
@@ -185,9 +185,8 @@ public:
             return false;
         Duel *duel = new Duel(Card::NoSuit, 0);
         duel->deleteLater();
-        if (player->isCardLimited(duel, Card::MethodUse)) {
+        if (player->isCardLimited(duel, Card::MethodUse))
             return false;
-        }
         return true;
     }
 

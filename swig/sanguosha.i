@@ -685,7 +685,7 @@ public:
     QString getFullName(bool include_suit = false) const;
     QString getLogName() const;
     QString getName() const;
-    QString getSkillName() const;
+    QString getSkillName(bool isLower = true) const;
     void setSkillName(const char *skill_name);
     QString getDescription() const;
 

@@ -1550,7 +1550,7 @@ void ZhaoxinCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &t
     room->showAllCards(source);
 
     Slash *slash = new Slash(Card::NoSuit, 0);
-    slash->setSkillName("zhaoxin");
+    slash->setSkillName("ZHAOXIN");
     CardUseStruct use;
     use.card = slash;
     use.from = source;

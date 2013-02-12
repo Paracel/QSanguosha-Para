@@ -25,7 +25,7 @@ void WrappedCard::takeOver(Card *card) {
     setObjectName(card->objectName());
     setSuit(card->getSuit());
     setNumber(card->getNumber());
-    m_skillName = card->getSkillName();
+    m_skillName = card->getSkillName(false);
 }
 
 void WrappedCard::copyEverythingFrom(Card *card) {
@@ -42,7 +42,7 @@ void WrappedCard::copyEverythingFrom(Card *card) {
     Card::setSuit(card->getSuit());
     Card::setNumber(card->getNumber());
     flags = card->getFlags();
-    m_skillName = card->getSkillName();
+    m_skillName = card->getSkillName(false);
 }
 
 void WrappedCard::setFlags(const QString &flag) const{

@@ -396,6 +396,7 @@ bool Client::_getSingleCard(int card_id, CardsMoveStruct move) {
     }
     return true;
 }
+
 void Client::getCards(const Json::Value &arg) {
     Q_ASSERT(arg.isArray() && arg.size() >= 1);
     int moveId = arg[0].asInt();

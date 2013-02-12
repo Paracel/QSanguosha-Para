@@ -263,8 +263,8 @@ QString Card::getName() const{
     return Sanguosha->translate(objectName());
 }
 
-QString Card::getSkillName() const{
-    return m_skillName;
+QString Card::getSkillName(bool toLower) const{
+    return toLower ? m_skillName.toLower() : m_skillName;
 }
 
 void Card::setSkillName(const QString &name) {

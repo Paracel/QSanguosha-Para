@@ -835,7 +835,7 @@ void Player::clearCardLimitation(bool single_turn) {
     foreach (Card::HandlingMethod method, limit_type) {
         QStringList limit_patterns = card_limitation[method];
         foreach (QString pattern, limit_patterns) {
-            if (!single_turn || (single_turn && pattern.endsWith("$1")))
+            if (!single_turn || pattern.endsWith("$1"))
                 card_limitation[method].removeAll(pattern);
         }
     }

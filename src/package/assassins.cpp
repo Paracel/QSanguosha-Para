@@ -174,7 +174,7 @@ public:
         ServerPlayer *loser = pindian->isSuccess() ? pindian->to : pindian->from;
         if (winner->canSlash(loser, NULL, false)) {
             Slash *slash = new Slash(Card::NoSuit, 0);
-            slash->setSkillName("mizhao");
+            slash->setSkillName("MIZHAO");
             CardUseStruct card_use;
             card_use.from = winner;
             card_use.to << loser;

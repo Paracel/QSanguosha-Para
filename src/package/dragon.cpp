@@ -87,7 +87,6 @@ public:
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
         DrZhihengCard *zhiheng_card = new DrZhihengCard;
         zhiheng_card->addSubcards(cards);
-        zhiheng_card->setSkillName(objectName());
         return zhiheng_card;
     }
 };

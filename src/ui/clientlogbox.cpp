@@ -91,6 +91,9 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
         if (card->isVirtualCard()) {
             QString skill_name = Sanguosha->translate(card->getSkillName());
             skill_name = bold(skill_name, Qt::yellow);
+            bool eff = (card->getSkillName(false) != card->getSkillName(true));
+            QString meth = eff ? tr("carry out") : tr("use skill");
+            QString suffix = eff ? tr("effect") : "";
 
             QList<int> card_ids = card->getSubcards();
             QStringList subcard_list;
@@ -102,18 +105,18 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
             QString subcard_str = subcard_list.join(", ");
             if (card->getTypeId() == Card::TypeSkill) {
                 const SkillCard *skill_card = qobject_cast<const SkillCard *>(card);
-                if (subcard_list.isEmpty() || !skill_card->willThrow())
-                    log = tr("%from use skill [%1]").arg(skill_name);
-                else {
+                if (subcard_list.isEmpty() || !skill_card->willThrow()) {
+                    log = tr("%from %2 [%1] %3").arg(skill_name).arg(meth).arg(suffix);
+                } else {
                     if (card->isKindOf("DummyCard"))
                         skill_name = bold(Sanguosha->translate("free-discard"), Qt::yellow);
-                    log = tr("%from use skill [%1], and the cost is %2").arg(skill_name).arg(subcard_str);
+                    log = tr("%from %3 [%1] %4, and the cost is %2").arg(skill_name).arg(subcard_str).arg(meth).arg(suffix);
                 }
             } else {
                 if (subcard_list.isEmpty())
-                    log = tr("%from use skill [%1], %3 [%2]").arg(skill_name).arg(card_name).arg(reason);
+                    log = tr("%from %4 [%1] %5, %3 [%2]").arg(skill_name).arg(card_name).arg(reason).arg(meth).arg(suffix);
                 else
-                    log = tr("%from use skill [%1] %4 %2 as %3").arg(skill_name).arg(subcard_str).arg(card_name).arg(reason);
+                    log = tr("%from %5 [%1] %6 %4 %2 as %3").arg(skill_name).arg(subcard_str).arg(card_name).arg(reason).arg(meth).arg(suffix);
             }
 
             delete card;

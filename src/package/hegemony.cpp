@@ -450,7 +450,7 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
         ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "shuangren-slash");
 
         Slash *slash = new Slash(Card::NoSuit, 0);
-        slash->setSkillName("shuangren");
+        slash->setSkillName("SHUANGREN");
 
         CardUseStruct card_use;
         card_use.card = slash;

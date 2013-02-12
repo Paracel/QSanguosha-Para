@@ -258,7 +258,7 @@ bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player
 
 void ShensuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     Slash *slash = new Slash(Card::NoSuit, 0);
-    slash->setSkillName("shensu");
+    slash->setSkillName("SHENSU");
     CardUseStruct use;
     use.card = slash;
     use.from = source;

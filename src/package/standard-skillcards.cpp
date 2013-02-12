@@ -177,13 +177,13 @@ void LijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
     thread->trigger(CardFinished, room, diaochan, data);
 }
 
-void LijianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets) const{
     ServerPlayer *to = targets.at(0);
     ServerPlayer *from = targets.at(1);
 
     Duel *duel = new Duel(Card::NoSuit, 0);
     duel->setCancelable(false);
-    duel->setSkillName("lijian");
+    duel->setSkillName("LIJIAN");
 
     CardUseStruct use;
     use.from = from;

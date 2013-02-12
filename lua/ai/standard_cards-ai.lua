@@ -1335,6 +1335,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
+	local enemies = {}
 	if #self.enemies == 0 and self:getOverflow() > 0 then
 		for _, player in ipairs(players) do
 			if not player:isLord() then table.insert(enemies, player) end

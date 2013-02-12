@@ -1514,7 +1514,7 @@ public:
         if (gaodayihao->getPhase() == Player::Start) {
             foreach (ServerPlayer *p, room->getOtherPlayers(gaodayihao)) {
                if (p->getWeapon() && p->getWeapon()->isKindOf("QinggangSword")) {
-                   if (room->askForSkillInvoke(gaodayihao, objectName())) {
+                   if (room->askForSkillInvoke(gaodayihao, "noslonghun")) {
                        room->broadcastSkillInvoke("noslonghun", 5);
                        gaodayihao->obtainCard(p->getWeapon());
                     }

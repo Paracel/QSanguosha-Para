@@ -871,7 +871,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	local card_id1 = newcards[1]:getEffectiveId()
 	local card_id2 = newcards[2]:getEffectiveId()
 
-	if newcards[1]:isBlack() and newCards[2]:isBlack() then
+	if newcards[1]:isBlack() and newcards[2]:isBlack() then
 		local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitBlack, 0)
 		local nosuit_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 

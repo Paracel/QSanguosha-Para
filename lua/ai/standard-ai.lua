@@ -725,13 +725,6 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	end
 
 	self:sort(jijiangtargets, "defenseSlash")
-	for _, target in ipairs(jijiangtargets) do
-		if (not target:getArmor() or not target:hasArmorEffect(target:getAmor():objectName()))
-			and not target:hasArmorEffect("bazhen") and not (target:hasSkill("yizhong") and not target:getArmor()) then
-			return self:getCardId("Slash") or "."
-		end
-	end
-
 	local slashes = self:getCards("Slash")
 	for _, slash in ipairs(slashes) do
 		for _, target in ipairs(jijiangtargets) do

@@ -256,9 +256,7 @@ function SmartAI:slashIsEffective(slash, to)
 			return false
 		end
 	end
-	if (to:getMark("@fenyong") > 0 or to:getMark("@late") > 0) and not self.player:hasSkill("jueqing") then
-		return false
-	end
+	if to:getMark("@late") > 0 then return false end
 
 	local natures = {
 		Slash = sgs.DamageStruct_Normal,

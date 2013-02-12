@@ -2562,15 +2562,8 @@ void RoomScene::onGameOver() {
 void RoomScene::addRestartButton(QDialog *dialog) {
     dialog->resize(main_window->width() / 2, dialog->height());
     bool goto_next = false;
-    if (Config.GameMode.contains("_mini_") && Self->property("win").toBool()) {
-        QString id = Config.GameMode;
-        id.replace("_mini_", "");
-        int current = id.toInt();
-        if (current != _m_currentStage) {
-            Q_ASSERT(_m_currentStage == current - 1);
-            goto_next = true;
-        }
-    }
+    if (Config.GameMode.contains("_mini_") && Self->property("win").toBool())
+        goto_next = (_m_currentStage < Sanguosha->getMiniSceneCounts());
 
     QPushButton *restart_button;
     restart_button = new QPushButton(goto_next ? tr("Next Stage") : tr("Restart Game"));

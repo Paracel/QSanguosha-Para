@@ -477,7 +477,7 @@ void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) 
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(source))
             if (!p->isNude()) targets << p;
-        if (!targets.isEmpty() && source->askForSkillInvoke("gongqi", QVariant::fromValue(QString("discard")))) {
+        if (!targets.isEmpty() && source->askForSkillInvoke("gongqi_discard", QVariant::fromValue(QString("discard")))) {
             ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi");
             room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi"), to_discard, source);
         }

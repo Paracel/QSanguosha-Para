@@ -173,7 +173,7 @@ sgs.ai_skill_use_func.GongqiCard = function(card, use, self)
 	use.card = card
 end
 
-sgs.ai_skill_invoke.gongqi = function(self, data)
+sgs.ai_skill_invoke.gongqi_discard = function(self, data)
 	self:sort(self.enemies)
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isNude() and not (enemy:isKongcheng() and self:hasSkills(sgs.lose_equip_skill, enemy)) then

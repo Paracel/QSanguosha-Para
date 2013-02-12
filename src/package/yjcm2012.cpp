@@ -679,16 +679,34 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == DamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName())
-                damage.from->tag["Invokelihuo"] = true;
-        } else if (TriggerSkill::triggerable(player) && player->tag.value("Invokelihuo", false).toBool()) {
+            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()) {
+                QVariantList slash_list = damage.from->tag["InvokeLihuo"].toList();
+                slash_list << QVariant::fromValue((CardStar)damage.card);
+                damage.from->tag["InvokeLihuo"] = QVariant::fromValue(slash_list);
+            }
+        } else if (TriggerSkill::triggerable(player)) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (!use.card->isKindOf("Slash"))
+                return false;
+
+            bool can_invoke = false;
+            QVariantList slash_list = use.from->tag["InvokeLihuo"].toList();
+            foreach (QVariant card, slash_list) {
+                if (card.value<CardStar>() == (CardStar)use.card) {
+                    can_invoke = true;
+                    slash_list.removeOne(card);
+                    use.from->tag["InvokeLihuo"] = QVariant::fromValue(slash_list);
+                    break;
+                }
+            }
+            if (!can_invoke) return false;
+
             LogMessage log;
             log.type = "#TriggerSkill";
             log.from = player;
             log.arg = objectName();
             room->sendLog(log);
 
-            player->tag["Invokelihuo"] = false;
             room->broadcastSkillInvoke("lihuo", 2);
             room->loseHp(player, 1);
         }

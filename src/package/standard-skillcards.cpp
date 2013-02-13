@@ -294,7 +294,7 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
             card_use.card = slash;
             card_use.from = liubei;
             card_use.to << targets;
-
+            card_use.m_isOwnerUse = false;
             room->useCard(card_use);
             return;
         }

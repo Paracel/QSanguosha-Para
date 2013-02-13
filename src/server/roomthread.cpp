@@ -156,7 +156,7 @@ PhaseChangeStruct::PhaseChangeStruct()
 }
 
 CardUseStruct::CardUseStruct()
-    : card(NULL), from(NULL)
+    : card(NULL), from(NULL), m_isOwnerUse(true)
 {
 }
 

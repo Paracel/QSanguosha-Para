@@ -58,7 +58,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             room->setPlayerFlag(player, "-slashDisableExtraTarget");
     }
 
-    if (objectName() == "slash") {
+    if (objectName() == "slash" && use.m_isOwnerUse) {
         bool has_changed = false;
         QString skill_name = getSkillName();
         if (!skill_name.isEmpty()) {

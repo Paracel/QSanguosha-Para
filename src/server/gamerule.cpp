@@ -204,7 +204,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 RoomThread *thread = room->getThread();
                 card_use.from->broadcastSkillInvoke(card);
                 if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
-                    && card_use.from->hasSkill(card->getSkillName()))
+                    && card_use.m_isOwnerUse && card_use.from->hasSkill(card->getSkillName()))
                     room->notifySkillInvoked(card_use.from, card->getSkillName());
 
                 if (card->hasPreAction())

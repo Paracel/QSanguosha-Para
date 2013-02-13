@@ -76,6 +76,7 @@ struct CardUseStruct {
     const Card *card;
     ServerPlayer *from;
     QList<ServerPlayer *> to;
+    bool m_isOwnerUse;
 };
 
 class CardMoveReason {

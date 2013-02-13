@@ -802,6 +802,7 @@ public:
                     use.card = analeptic;
                     use.from = dying.who;
                     use.to << dying.who;
+                    use.m_isOwnerUse = false;
                     room->useCard(use);
                 }
             }

@@ -317,7 +317,7 @@ tianyi_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("TianyiCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@TianyiCard=.") end
 end
 
-sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
+sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
@@ -337,7 +337,9 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 
 	local slash = self:getCard("Slash")
 	local dummy_use = { isDummy = true }
+	self.room:setPlayerFlag(self.player, "slashNoDistanceLimit")
 	if slash then self:useBasicCard(slash, dummy_use) end
+	self.room:setPlayerFlag(self.player, "-slashNoDistanceLimit")
 
 	if slashcount >= 1 and dummy_use.card then
 		for _, enemy in ipairs(self.enemies) do
@@ -365,9 +367,8 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 		for index = #self.friends_noself, 1, -1 do
 			local friend = self.friends_noself[index]
 			if not friend:isKongcheng() then
-				local friend_min_card = self:getMinCard(enemy)
+				local friend_min_card = self:getMinCard(friend)
 				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
-
 				if max_point > friend_min_point then
 					use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 					if use.to then use.to:append(friend) end
@@ -378,8 +379,8 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 
 		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
 			if max_point >= 7 then
-			use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
-			if use.to then use.to:append(zhugeliang) end
+				use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
+				if use.to then use.to:append(zhugeliang) end
 				return
 			end
 		end
@@ -389,7 +390,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card,use,self)
 			if not friend:isKongcheng() then
 				if max_point >= 7 then
 					use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
-					if use.to then use.to:append(enemy) end
+					if use.to then use.to:append(friend) end
 					return
 				end
 			end

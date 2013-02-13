@@ -332,6 +332,10 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	return "."
 end
 
+sgs.ai_cardneed.xiaoguo = function(to, card)
+	return getKnownCard(to, "BasicCard", true) == 0 and card:getTypeId() == sgs.Card_TypeBasic
+end
+
 sgs.ai_skill_use["@@shushen"] = function(self, prompt)
 	if #self.friends_noself == 0 then return "." end
 	self:sort(self.friends_noself, "defense")
@@ -541,29 +545,71 @@ sgs.ai_skill_choice.suishi2 = function(self, choices)
 end
 
 sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
-	local target
 	self:sort(self.enemies, "handcard")
-	local max_card = self:getMaxCard(self.player)
+	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
-	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isKongcheng() then
-			local enemy_max_card = self:getMaxCard(enemy)
-			local allknown = 0
-			if self:getKnownNum(enemy) == enemy:getHandcardNum() then
-				allknown = allknown + 1
-			end
-			if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
-				or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
-				or (not enemy_max_card and max_point > 10) then
+
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local dummy_use = { isDummy = true }
+	self.room:setPlayerFlag(self.player, "slashNoDistanceLimit")
+	self:useBasicCard(slash, dummy_use)
+	self.room:setPlayerFlag(self.player, "-slashNoDistanceLimit")
+
+	if dummy_use.card then
+		for _, enemy in ipairs(self.enemies) do
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
+				local enemy_max_card = self:getMaxCard(enemy)
+				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+				if max_point > enemy_max_point then
 					return "@ShuangrenCard=" .. max_card:getEffectiveId() .. "->" .. enemy:objectName()
+				end
+			end
+		end
+		for _, enemy in ipairs(self.enemies) do
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
+				if max_point >= 10 then
+					return "@ShuangrenCard=" .. max_card:getEffectiveId() .. "->" .. enemy:objectName()
+				end
+			end
+		end
+
+		self:sort(self.friends_noself, "handcard")
+		for index = #self.friends_noself, 1, -1 do
+			local friend = self.friends_noself[index]
+			if not friend:isKongcheng() then
+				local friend_min_card = self:getMinCard(friend)
+				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+				if max_point > friend_min_point then
+					return "@ShuangrenCard=" .. max_card:getEffectiveId() .. "->" .. friend:objectName()
+				end
+			end
+		end
+
+		local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
+			if max_point >= 7 then
+				return "@ShuangrenCard=" .. max_card:getEffectiveId() .. "->" .. zhugeliang:objectName()
+			end
+		end
+
+		for index = #self.friends_noself, 1, -1 do
+			local friend = self.friends_noself[index]
+			if not friend:isKongcheng() then
+				if max_point >= 7 then
+					return "@ShuangrenCard=" .. max_card:getEffectiveId() .. "->" .. friend:objectName()
+				end
 			end
 		end
 	end
 	return "."
 end
 
-sgs.ai_skill_playerchosen.shuangren_slash = sgs.ai_skill_playerchosen.zero_card_as_slash
+function sgs.ai_skill_pindian.shuangren(minusecard, self, requestor)
+	local maxcard = self:getMaxCard()
+	return self:isFriend(requestor) and self:getMinCard() or (maxcard:getNumber() < 6 and minusecard or maxcard)
+end
 
+sgs.ai_skill_playerchosen.shuangren_slash = sgs.ai_skill_playerchosen.zero_card_as_slash
 sgs.ai_card_intention.ShuangrenCard = sgs.ai_card_intention.TianyiCard
 
 xiongyi_skill = {}

@@ -290,7 +290,10 @@ end
 
 function SmartAI:getUseValue(card)
 	local class_name = card:getClassName()
-	local v = 0
+	local v = sgs.ai_use_value[class_name] or 0
+	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
+		v = sgs.ai_use_value[card:objectName()] or 0
+	end
 
 	if card:isKindOf("GuhuoCard") then
 		local userstring = card:toString()
@@ -341,15 +344,7 @@ function SmartAI:getUseValue(card)
 	if self:hasSkills(sgs.need_kongcheng) then
 		if self.player:getHandcardNum() == 1 then v = 10 end
 	end
-	if self.player:hasWeapon("halberd") and card:isKindOf("Slash") and self.player:getHandcardNum() == 1 then v = 10 end
-	if card:getTypeId() == sgs.Card_TypeSkill then
-		if v == 0 then v = 10 end
-	end
-
-	if v == 0 then v = sgs.ai_use_value[class_name] or 0 end
-	if class_name == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
-		v = sgs.ai_use_value[card:objectName()] or 0
-	end
+	if self.player:hasWeapon("halberd") and card:isKindOf("Slash") and self.player:isLastHandCard(card) then v = 10 end
 	if self.player:getPhase() == sgs.Player_Play then v = self:adjustUsePriority(card, v) end
 	return v
 end

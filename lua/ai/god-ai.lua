@@ -86,11 +86,11 @@ function SmartAI:cantbeHurt(player)
 			local enemymark = enemy:getMark("@nightmare")
 			if enemymark > maxenemymark and enemy:objectName() ~= player:objectName() then maxenemymark = enemymark end
 		end
-		if self:isEnemy(player) and not (player:isLord() and self.player:getRole() == "rebel") then
-			if (maxfriendmark + 2 > maxenemymark) and not (#self.enemies == 1 and #self.friends + #self.enemies == self.room:alivePlayerCount()) then
-				if not (self.player:getMark("@nightmare") == maxfriendmark and self.role == "loyalist") then
-					return true
-				end
+		if self:isEnemy(player) then
+			if not (player:isLord() and self.player:getRole() == "rebel")
+				and maxfriendmark + 2 > maxenemymark and not (#self.enemies == 1 and #self.friends + #self.enemies == self.room:alivePlayerCount())
+				and not (self.player:getMark("@nightmare") == maxfriendmark and self.role == "loyalist") then
+				return true
 			end
 		elseif maxfriendmark + 1 > maxenemymark then
 			return true

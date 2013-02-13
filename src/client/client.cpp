@@ -9,7 +9,6 @@
 #include "SkinBank.h"
 
 #include <QApplication>
-#include <QCryptographicHash>
 #include <QMessageBox>
 #include <QCheckBox>
 #include <QCommandLinkButton>

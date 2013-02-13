@@ -2017,7 +2017,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 
 	if positive then
 		if from and self:isEnemy(from) and (sgs.evaluateRoleTrends(from) ~= "neutral" or sgs.isRolePredictable()) then
-			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandcard(null_card) then return null_card end
+			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandCard(null_card) then return null_card end
 			if trick:isKindOf("ExNihilo") and (self:isWeak(from) or self:hasSkills(sgs.cardneed_skill, from) or from:hasSkill("manjuan")) then return null_card end
 			if trick:isKindOf("IronChain") and not to:hasArmorEffect("vine") then return nil end
 			if self:isFriend(to) then
@@ -3359,7 +3359,7 @@ function SmartAI:getCardId(class_name, player, acard)
 		if viewas then table.insert(viewArr, viewas) end
 		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cardArr,card:getEffectiveId()) end
 	end
-	if #viewArr >0 or #cardArr > 0 then
+	if #viewArr > 0 or #cardArr > 0 then
 		local viewas, cardid
 		viewas = #viewArr >0 and viewArr[1]
 		cardid = #cardArr >0 and cardArr[1]

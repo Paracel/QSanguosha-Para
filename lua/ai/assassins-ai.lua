@@ -232,6 +232,10 @@ sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
 	return "."
 end
 
+function sgs.ai_cardneed.jieyuan(to, card)
+	return to:getHandcardNum() < 4 and (to:getHp() >= 3 and true or card:isRed())
+end
+
 sgs.ai_skill_invoke.fenxin = function(self, data)
 	local target = data:toPlayer()
 	local target_role = sgs.evaluatePlayerRole(target)

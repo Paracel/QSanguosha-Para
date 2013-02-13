@@ -1510,6 +1510,10 @@ sgs.jijiu_suit_value = {
 	diamond = 6
 }
 
+sgs.ai_cardneed.jijiu = function(to, card)
+	return card:isRed()
+end
+
 sgs.ai_chaofeng.huatuo = 6
 
 sgs.ai_skill_cardask["@wushuang-slash-1"] = function(self, data, pattern, target)

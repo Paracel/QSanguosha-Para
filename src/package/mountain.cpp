@@ -257,23 +257,9 @@ public:
     }
 };
 
-class Tuntian: public DistanceSkill {
+class Tuntian: public TriggerSkill {
 public:
-    Tuntian(): DistanceSkill("tuntian") {
-        frequency = NotFrequent;
-    }
-
-    virtual int getCorrect(const Player *from, const Player *) const{
-        if (from->hasSkill(objectName()))
-            return -from->getPile("field").length();
-        else
-            return 0;
-    }
-};
-
-class TuntianGet: public TriggerSkill {
-public:
-    TuntianGet(): TriggerSkill("#tuntian-get") {
+    Tuntian(): TriggerSkill("tuntian") {
         events << CardsMoveOneTime << FinishJudge;
     }
 
@@ -305,6 +291,21 @@ public:
         return false;
     }
 };
+
+class TuntianDistance: public DistanceSkill {
+public:
+    TuntianDistance(): DistanceSkill("#tuntian-dist") {
+        frequency = NotFrequent;
+    }
+
+    virtual int getCorrect(const Player *from, const Player *) const{
+        if (from->hasSkill("tuntian"))
+            return -from->getPile("field").length();
+        else
+            return 0;
+    }
+};
+
 
 class TuntianClear: public TriggerSkill {
 public:
@@ -1271,11 +1272,11 @@ MountainPackage::MountainPackage()
 
     General *dengai = new General(this, "dengai", "wei", 4);
     dengai->addSkill(new Tuntian);
-    dengai->addSkill(new TuntianGet);
+    dengai->addSkill(new TuntianDistance);
     dengai->addSkill(new TuntianClear);
     dengai->addSkill(new Zaoxian);
     dengai->addRelateSkill("jixi");
-    related_skills.insertMulti("tuntian", "#tuntian-get");
+    related_skills.insertMulti("tuntian", "#tuntian-dist");
     related_skills.insertMulti("tuntian", "#tuntian-clear");
 
     General *jiangwei = new General(this, "jiangwei", "shu");

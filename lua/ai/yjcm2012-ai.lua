@@ -649,13 +649,15 @@ qice_skill.getTurnUseCard = function(self)
 		for i = 1, #aoenames do
 			local newqice = aoenames[i]
 			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
-			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence") then
+			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence")
+				and not self.player:hasSkill("jueqing") and aoeIsEffective(aoe, caocao, self.player) then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 				return parsed_card
 			end
 		end
 	end
-	if self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 and self:getCardsNum("Analeptic") == 0 and self:getCardsNum("Nullification") == 0 then
+	if self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 and self:getCardsNum("Analeptic") == 0
+		and self:getCardsNum("Nullification") == 0 and self.player:getHandcardNum() <= 3 then
 		if ge_available and good > bad and self.player:isWounded() then
 			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card

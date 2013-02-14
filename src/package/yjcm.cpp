@@ -932,7 +932,7 @@ public:
                 room->recover(player, recover);
             }
         }
-        return player->getHp() > 0;
+        return false;
     }
 };
 

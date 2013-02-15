@@ -153,11 +153,11 @@ function sgs.getDefenseSlash(player)
 	end
 
 	if player:getHandcardNum() == 0 and hujiaJink == 0 and not player:hasSkill("kongcheng") then
-		if player:getHp() <= 1 then defense = defense - 1 end
-		if player:getHp() == 2 then defense = defense - 0.5 end
+		if player:getHp() <= 1 then defense = defense - 2.5 end
+		if player:getHp() == 2 then defense = defense - 1.5 end
 		if not hasEightDiagram then defense = defense - 2 end
-		if attacker:hasWeapon("guding_blade") and not player:hasArmorEffect("silver_lion") then
-			defense = defense - 1
+		if attacker:hasWeapon("guding_blade") and not player:hasArmorEffect("silver_lion") and not attacker:hasWeapon("qinggang_sword") then
+			defense = defense - 2
 		end
 	end
 

@@ -2264,6 +2264,12 @@ function SmartAI:askForCardChosen(who, flags, reason)
 					end
 				end
 			end
+			if not self:hasLoseHandcardEffective(who) then
+				if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
+				if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() and self:isWeak(who)) then return who:getArmor():getId() end
+				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
+				if who:getWeapon() then return who:getWeapon():getId() end
+			end
 		end
 		if flags:match("h") then
 			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", who) then

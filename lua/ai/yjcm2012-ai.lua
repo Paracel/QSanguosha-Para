@@ -19,7 +19,7 @@ sgs.ai_skill_invoke.qianxi = function(self, data)
 	if self:isFriend(target) then return false end
 	if target:getLostHp() >= 2 and target:getHp() <= 1 then return false end
 	if self:hasSkills(sgs.masochism_skill, target) or self:hasSkills(sgs.recover_skill, target) or self:hasSkills("longhun|buqu", target) then return true end
-	if damage.damage > 1 then return false end
+	if self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
 	return (target:getMaxHp() - target:getHp()) < 2
 end
 

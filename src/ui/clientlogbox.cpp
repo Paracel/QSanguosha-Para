@@ -126,7 +126,6 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
             skill_name = bold(skill_name, Qt::yellow);
 
             QString subcard_str = bold(real->getLogName(), Qt::yellow);
-
             log = tr("%from use skill [%1] %4 %2 as %3").arg(skill_name).arg(subcard_str).arg(card_name).arg(reason);
         } else
             log = tr("%from %2 %1").arg(card_name).arg(reason);

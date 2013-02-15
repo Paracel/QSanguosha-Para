@@ -196,7 +196,8 @@
     "confirmButtonArea": [5, 3, 61, 75],
     "cancelButtonArea": [5, 92, 61, 75],
     "discardButtonArea": [70, 45, 33, 81],
-    "trustButtonArea": [69, 133, 36, 35]
+    "trustButtonArea": [69, 133, 36, 35],
+    "trustEffectColor": [38, 26, 66]
 },
 "skillButton":
 {

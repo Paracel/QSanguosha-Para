@@ -860,6 +860,7 @@ bool QSanRoomSkin::_loadLayoutConfig(const Json::Value &layoutConfig) {
     tryParse(config["equipBorderPos"], _m_dashboardLayout.m_equipBorderPos);
     tryParse(config["equipSelectedOffset"], _m_dashboardLayout.m_equipSelectedOffset);
     tryParse(config["disperseWidth"], _m_dashboardLayout.m_disperseWidth);
+    tryParse(config["trustEffectColor"], _m_dashboardLayout.m_trustEffectColor);
     config = layoutConfig["skillButton"];
     for (int i = 0; i < 3; i++) {
         int height = 0;

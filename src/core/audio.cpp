@@ -18,8 +18,7 @@ public:
     }
 
     ~Sound() {
-        if (sound)
-            FMOD_Sound_Release(sound);
+        if (sound) FMOD_Sound_Release(sound);
     }
 
     void play() {
@@ -34,8 +33,7 @@ public:
     }
 
     bool isPlaying() const{
-        if (channel == NULL)
-            return false;
+        if (channel == NULL) return false;
 
         FMOD_BOOL is_playing = false;
         FMOD_Channel_IsPlaying(channel, &is_playing);
@@ -49,10 +47,7 @@ private:
 
 void Audio::init() {
     FMOD_RESULT result = FMOD_System_Create(&System);
-
-    if (result == FMOD_OK) {
-        FMOD_System_Init(System, 100, 0, NULL);
-    }
+    if (result == FMOD_OK) FMOD_System_Init(System, 100, 0, NULL);
 }
 
 void Audio::quit() {
@@ -76,8 +71,7 @@ void Audio::play(const QString &filename) {
 }
 
 void Audio::stop() {
-    if (System == NULL)
-        return;
+    if (System == NULL) return;
 
     int n;
     FMOD_System_GetChannelsPlaying(System, &n);
@@ -86,13 +80,11 @@ void Audio::stop() {
     for (int i = 0; i < n; i++) {
         FMOD_CHANNEL *channel;
         FMOD_RESULT result = FMOD_System_GetChannel(System, i, &channel);
-        if (result == FMOD_OK)
-            channels << channel;
+        if (result == FMOD_OK) channels << channel;
     }
 
-    foreach (FMOD_CHANNEL *channel, channels) {
+    foreach (FMOD_CHANNEL *channel, channels)
         FMOD_Channel_Stop(channel);
-    }
 
     stopBGM();
 
@@ -111,13 +103,11 @@ void Audio::playBGM(const QString &filename) {
 }
 
 void Audio::setBGMVolume(float volume) {
-    if (BGMChannel)
-        FMOD_Channel_SetVolume(BGMChannel, volume);
+    if (BGMChannel) FMOD_Channel_SetVolume(BGMChannel, volume);
 }
 
 void Audio::stopBGM() {
-    if (BGMChannel)
-        FMOD_Channel_Stop(BGMChannel);
+    if (BGMChannel) FMOD_Channel_Stop(BGMChannel);
 }
 
 QString Audio::getVersion() {

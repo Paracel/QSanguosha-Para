@@ -90,7 +90,7 @@ void Dashboard::_createMiddle() {
     trusting_text = new QGraphicsSimpleTextItem(tr("Trusting ..."), this);
     trusting_text->setPos(this->boundingRect().width() / 2, 50);
 
-    QBrush trusting_brush(QColor(0x26, 0x1A, 0x42));
+    QBrush trusting_brush(G_DASHBOARD_LAYOUT.m_trustEffectColor);
     trusting_item->setBrush(trusting_brush);
     trusting_item->setOpacity(0.36);
     trusting_item->setZValue(1002.0);

@@ -10,8 +10,7 @@
 static QRectF ButtonRect(0, 0, 189, 46);
 
 Button::Button(const QString &label, qreal scale)
-    : label(label), size(ButtonRect.size() * scale),
-      mute(true), font(Config.SmallFont)
+    : label(label), size(ButtonRect.size() * scale), mute(true), font(Config.SmallFont)
 {
     init();
 }
@@ -61,18 +60,18 @@ void Button::init() {
     qreal xc = (w - 2 * pad) / (tw - 2 * pad);
     qreal yc = (h - 2 * pad) / (th - 2 * pad);
 
-    for (int i = 0; i < tw; i++)
+    for (int i = 0; i < tw; i++) {
         for (int j = 0; j < th; j++) {
             int x = i;
             int y = j;
 
             if (x >= pad && x <= (tw - pad))
-                x = pad + (x - pad)*xc;
+                x = pad + (x - pad) * xc;
             else if (x >= (tw - pad))
                 x = w - (tw - x);
 
             if (y >= pad && y <= (th - pad))
-                y = pad + (y - pad)*yc;
+                y = pad + (y - pad) * yc;
             else if (y >= (th - pad))
                 y = h - (th - y);
 
@@ -80,8 +79,9 @@ void Button::init() {
             QRgb rgb = bgimg.pixel(x, y);
             outimg->setPixel(i, j, rgb);
         }
+    }
 
-    QGraphicsDropShadowEffect * effect = new QGraphicsDropShadowEffect;
+    QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(5);
     effect->setOffset(this->boundingRect().height()/7.0);
     effect->setColor(QColor(0, 0, 0, 200));
@@ -111,9 +111,7 @@ void Button::setFont(const QFont &font) {
 
 void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
     setFocus(Qt::MouseFocusReason);
-#ifdef AUDIO_SUPPORT
     if (!mute) Sanguosha->playSystemAudioEffect("button-hover");
-#endif
     if (!timer_id) timer_id = QObject::startTimer(40);
 }
 
@@ -122,9 +120,7 @@ void Button::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
-#ifdef AUDIO_SUPPORT
     if (!mute) Sanguosha->playSystemAudioEffect("button-down");
-#endif
     emit clicked();
 }
 

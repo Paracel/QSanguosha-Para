@@ -146,7 +146,6 @@ int CardContainer::getFirstEnabled() const{
         if (card->isEnabled())
             return card->getCard()->getId();
     }
-
     return -1;
 }
 
@@ -249,7 +248,7 @@ void GuanxingBox::doGuanxing (const QList<int> &card_ids, bool up_only) {
     QPointF source(start_x, start_y1);
     for (int i = 0; i < up_items.length(); i++) {
         CardItem *card_item = up_items.at(i);
-        QPointF pos(start_x + i*skip, start_y1);
+        QPointF pos(start_x + i * skip, start_y1);
         card_item->setPos(source);
         card_item->setHomePos(pos);
         card_item->goBack(true);
@@ -263,12 +262,7 @@ void GuanxingBox::adjust() {
     up_items.removeOne(item);
     down_items.removeOne(item);
 
-    QList<CardItem *> *items = NULL;
-    if (up_only || item->y() <= middle_y)
-        items = &up_items;
-    else
-        items = &down_items;
-
+    QList<CardItem *> *items = (up_only || item->y() <= middle_y) ? &up_items : items = &down_items;
     int c = (item->x() + item->boundingRect().width()/2 - start_x) / G_COMMON_LAYOUT.m_cardNormalWidth;
     c = qBound(0, c, items->length());
     items->insert(c, item);

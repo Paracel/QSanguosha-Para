@@ -25,7 +25,7 @@ function speakTrigger(card, from, to, event)
 		speak(to, "guojia_weak")
 	elseif card:isKindOf("SavageAssault") and to:hasSkill("kongcheng") then
 		speak(to, "daxiang")
-	elseif card:isKindOf("FireAttack") and to:hasSkill("luanji") then
+	elseif card:isKindOf("FireAttack") and card:getSkillName() == "luanji" then
 		speak(to, "yuanshao_fire")
 	end
 end

@@ -650,7 +650,7 @@ qice_skill.getTurnUseCard = function(self)
 			local newqice = aoenames[i]
 			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
 			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence")
-				and not self.player:hasSkill("jueqing") and aoeIsEffective(aoe, caocao, self.player) then
+				and not self.player:hasSkill("jueqing") and self:aoeIsEffective(aoe, caocao, self.player) then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 				return parsed_card
 			end

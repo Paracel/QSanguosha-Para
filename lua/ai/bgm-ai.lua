@@ -9,7 +9,7 @@ end
 
 sgs.ai_slash_prohibit.chongzhen = function(self, to, card)
 	if self:isFriend(to) then return false end
-	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 then return true end
+	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 and self.player:getHandcardNum() > 1 then return true end
 	return false
 end
 

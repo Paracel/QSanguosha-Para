@@ -341,8 +341,8 @@ sgs.ai_skill_use["@@shushen"] = function(self, prompt)
 	self:sort(self.friends_noself, "defense")
 	
 	for _, enemy in ipairs(self.enemies) do
-		if not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)
-			and not (target:hasSkill("kongcheng") and target:isKongcheng()) then
+		if not (enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive)
+			and not (enemy:hasSkill("kongcheng") and enemy:isKongcheng()) then
 			return ("@ShushenCard=.->%s"):format(enemy:objectName())
 		end
 	end

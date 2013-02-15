@@ -196,8 +196,6 @@ sgs.ai_use_value.SupplyShortage = 7
 sgs.ai_use_priority.SupplyShortage = 0.5
 sgs.ai_card_intention.SupplyShortage = 120
 
-sgs.dynamic_value.control_usecard.SupplyShortage = true
-
 function SmartAI:getChainedFriends()
 	local chainedFriends = {}
 	for _, friend in ipairs(self.friends) do

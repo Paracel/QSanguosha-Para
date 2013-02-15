@@ -1785,8 +1785,6 @@ sgs.ai_use_value.Indulgence = 8
 sgs.ai_use_priority.Indulgence = 0.5
 sgs.ai_card_intention.Indulgence = 120
 
-sgs.dynamic_value.control_usecard.Indulgence = true
-
 function SmartAI:useCardLightning(card, use)
 	if self.player:containsTrick("lightning") then return end
 	if self.player:hasSkill("weimu") and card:isBlack() then return end

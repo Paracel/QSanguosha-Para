@@ -389,8 +389,7 @@ function SmartAI:getDynamicUsePriority(card)
 	if not card then return 0 end
 
 	local type = card:getTypeId()
-	local dummy_use = {}
-	dummy_use.isDummy = true
+	local dummy_use = { isDummy = true }
 	if type == sgs.Card_TypeTrick then
 		self:useTrickCard(card, dummy_use)
 	elseif type == sgs.Card_TypeBasic then
@@ -415,6 +414,26 @@ function SmartAI:getDynamicUsePriority(card)
 		local card_name = use_card:getClassName()
 		local dynamic_value
 
+		if use_card:isKindOf("AmazingGrace") then
+			local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+			if zhugeliang and self:isEnemy(zhugeliang) and zhugeliang:isKongcheng() then
+				value = math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
+				return value
+			end
+		end
+		if use_card:isKindOf("Peach") and self.player:hasSkill("kuanggu") then
+			value = 1.01
+			return value
+		end
+		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then
+			value = 0.1
+			return value
+		end
+		if use_card:isKindOf("DelayedTrick") and not use_card:isKindOf("YanxiaoCard") and #use_card:getSkillName() > 0 then
+			value = sgs.ai_use_priority[use_card:getClassName()] - 0.01
+			return value
+		end
+
 		if use_card:getTypeId() == sgs.Card_TypeEquip then
 			if self:hasSkills(sgs.lose_equip_skill) then value = value + 12 end
 		end
@@ -437,7 +456,6 @@ function SmartAI:getDynamicUsePriority(card)
 						end
 					end
 				end
-
 				if weak_enemy > weak_mate then
 					for _, card in sgs.qlist(self.player:getHandcards()) do
 						if card:isAvailable(self.player) and sgs.dynamic_value.damage_card[card:getClassName()] then
@@ -474,7 +492,6 @@ function SmartAI:getDynamicUsePriority(card)
 					break
 				end
 			end
-
 			if #dummy_use.probably_hit > 0 then
 				self:sort(dummy_use.probably_hit, "defense")
 				local probably_hit
@@ -503,22 +520,8 @@ function SmartAI:getDynamicUsePriority(card)
 		elseif sgs.dynamic_value.control_card[class_name] then
 			if use_card:getTypeId() == sgs.Card_TypeTrick then dynamic_value = 7 - bad_null / good_null else dynamic_value = 6.65 end
 			value = value + dynamic_value
-		elseif sgs.dynamic_value.control_usecard[class_name] then
-			value = value + 6.6
 		elseif sgs.dynamic_value.lucky_chance[class_name] then
 			value = value + (#self.enemies - #self.friends)
-		end
-		if use_card:isKindOf("AmazingGrace") then
-			local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
-			if zhugeliang and self:isEnemy(zhugeliang) and zhugeliang:isKongcheng() then
-				value = math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
-			end
-		end
-		if self.player:hasSkill("kuanggu") and use_card.card:isKindOf("Peach") then
-			value = 1.01
-		end
-		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then
-			value = 0.1
 		end
 	end
 

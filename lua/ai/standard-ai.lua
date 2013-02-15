@@ -860,8 +860,6 @@ sgs.ai_view_as.longdan = function(card, player, card_place)
 	end
 end
 
-sgs.ai_use_priority.longdan = 9
-
 sgs.longdan_keep_value = {
 	Peach = 6,
 	Analeptic = 5.8,

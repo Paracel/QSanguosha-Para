@@ -3917,6 +3917,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 	else
 		if to:hasSkill("juxiang") and card:isKindOf("SavageAssault") and not card:isVirtualCard() then value = value + 50 end
 		if to:hasSkill("danlao") and self.player:aliveCount() > 2 then value = value + 20 end
+		value = value + 50
 	end
 	return value
 end
@@ -3963,7 +3964,7 @@ function SmartAI:getAoeValue(card, player)
 
 	local liuxie = self.room:findPlayerBySkillName("huangen")
 	if liuxie then
-		if self:isFriend(liuxie) then
+		if self:isFriend(liuxie) and liuxie:getHp() > 0 then
 			good = good + 30 * liuxie:getHp()
 		else
 			bad = bad + 30 * liuxie:getHp()
@@ -3971,7 +3972,11 @@ function SmartAI:getAoeValue(card, player)
 	end
 
 	if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) and not canHelpLord() then
-		good = good + (self:isEnemy(lord) and 150 or -250)
+		if self:isEnemy(lord) then
+			good = good + (lord:getHp() == 1 and 250 or 150)
+		else
+			bad = bad + (lord:getHp() == 1 and 1000 or 250)
+		end
 	end
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(attacker)) do

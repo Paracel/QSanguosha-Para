@@ -435,44 +435,61 @@ table.insert(sgs.ai_skills, fenxun_skill)
 fenxun_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("FenxunCard") then return end
 	if not self.player:isNude() then
-		local card
 		local card_id
-		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
-			card = sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
-		elseif self.player:getHandcardNum() > self.player:getHp() then
-			local cards = self.player:getHandcards()
-			cards = sgs.QList2Table(cards)
+		local slashcount = self:getCardsNum("Slash")
+		local jinkcount = self:getCardsNum("Jink")
+		local cards = self.player:getHandcards()
+		cards = sgs.QList2Table(cards)
+		self:sortByKeepValue(cards)
 
+		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
+			return sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
+		elseif self.player:getHandcardNum() > 0 then
 			for _, acard in ipairs(cards) do
-				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not isCard("Peach", acard, self.player) then
+				if acard:isKindOf("Disaster") or acard:isKindOf("AmazingGrace") then
+					card_id = acard:getEffectiveId()
+					break
+				elseif acard:isKindOf("EquipCard") then
+					local dummy_use = { isDummy = true }
+					self:useEquipCard(acard, dummy_use)
+					if not dummy_use.card then
+						card_id = acard:getEffectiveId()
+						break
+					end
+				end
+			end
+		elseif jinkcount > 1 then
+			for _, acard in ipairs(cards) do
+				if acard:isKindOf("Jink") then
+					card_id = acard:getEffectiveId()
+					break
+				end
+			end
+		elseif slashcount > 1 then
+			for _, acard in ipairs(cards) do
+				if acard:isKindOf("Slash") then
+					slashcount = slashcount - 1
 					card_id = acard:getEffectiveId()
 					break
 				end
 			end
 		elseif not self.player:getEquips():isEmpty() then
 			local player = self.player
-			if player:getWeapon() then card_id = player:getWeapon():getId()
-			elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
-			elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
-			elseif player:getArmor() and player:getHandcardNum() <= 1 then card_id = player:getArmor():getId()
-			end
+			if player:getWeapon() then card_id = player:getWeapon():getId() end
 		end
+
 		if not card_id then
-			cards = sgs.QList2Table(self.player:getHandcards())
 			for _, acard in ipairs(cards) do
-				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not isCard("Peach", acard, self.player) then
+				if (acard:isKindOf("Disaster") or acard:isKindOf("AmazingGrace") or acard:isKindOf("EquipCard") or acard:isKindOf("BasicCard"))
+					and not isCard("Peach", acard, self.player) and not isCard("Slash", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break
 				end
 			end
 		end
-		if not card_id then
-			return nil
-		else
-			card = sgs.Card_Parse("@FenxunCard=" .. card_id)
-			return card
+
+		if slashcount > 0 and card_id then
+			return sgs.Card_Parse("@FenxunCard=" .. card_id)
 		end
 	end
 	return nil

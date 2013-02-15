@@ -1841,32 +1841,49 @@ sgs.dynamic_value.lucky_chance.Lightning = true
 sgs.ai_keep_value.Lightning = -1
 
 sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
-	local wuguotai = self.room:findPlayerBySkillName(wuguotai)
+	local nextPlayerCanUse = false
+	local nextAlive = self.player:getNextAlive()
+	if self:isFriend(nextAlive) and not nextAlive:hasSkill("manjuan") and sgs.turncount > 1 and not self:willSkipPlayPhase(nextAlive) then
+		nextPlayerCanUse = true
+	end
 
 	local cards = {}
-	for _, id in ipairs(card_ids) do
-		table.insert(cards, sgs.Sanguosha:getCard(id))
+	local trickCards = {}
+	for _, card_id in ipairs(card_ids) do
+		local acard = sgs.Sanguosha:getCard(card_id)
+		table.insert(cards, acard)
+		if acard:getTypeId() == sgs.Card_TypeTrick then
+			table.insert(trickCards, acard)
+		end
+	end	
+
+	local overflow = (self.player:getPhase() == sgs.Player_NotActive) or (self.player:getHandcardNum() + 2 > self.player:getMaxCards())
+
+	local nextFriendNum = 0
+	local aplayer = self.player:getNextAlive()
+	for i = 1, self.player:aliveCount() do
+		if self:isFriend(aplayer) then
+			aplayer = aplayer:getNextAlive()
+			if not aplayer:hasSkill("manjuan") then nextFriendNum = nextFriendNum + 1 end
+		else
+			break
+		end
 	end
-	local next_alive = self.player:getNextAlive()
-	if next_alive:getPhase() == sgs.Player_Play then
-		self:sortByCardNeed(cards, true)
-		return cards[1]:getEffectiveId()
-	end
-	local no_basic_num = 0
-	for _, c in ipairs(cards) do
-		if c:getTypeId() ~= sgs.Card_TypeBasic then no_basic_num = no_basic_num + 1 end
-	end
-	local next_need_buyi = false
-	if not next_alive:hasSkill("manjuan") and wuguotai and self:isFriend(next_alive, wuguotai) and self:isWeak(next_alive) then next_need_buyi = true end
+
+	local current = (self.player:getPhase() == sgs.Player_Play)
+	local wuguotai = self.room:findPlayerBySkillName("buyi")
+	local nextNeedBuyi = false
+	if not nextAlive:hasSkill("manjuan") and wuguotai and self:isFriend(nextAlive, wuguotai) and self:isWeak(nextAlive) then nextNeedBuyi = true end
+
 	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
-		if self:isFriend(next_alive) then
+		if self:isFriend(nextAlive) then
 			self:sortByCardNeed(cards)
 			local index = 1
-			if next_need_buyi and no_basic_num == 1 then index = 2 end
+			if nextNeedBuyi and no_basic_num == 1 then index = 2 end
 			return cards[index]:getEffectiveId()
-		elseif self:isEnemy(next_alive) then
+		elseif self:isEnemy(nextAlive) then
 			self:sortByCardNeed(cards, true)
-			if next_need_buyi and no_basic_num == 1 then
+			if nextNeedBuyi and no_basic_num == 1 then
 				for _, c in ipairs(cards) do
 					if c:getTypeId() ~= sgs.Card_TypeBasic then return c:getEffectiveId() end
 				end
@@ -1874,22 +1891,169 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			return cards[1]:getEffectiveId()
 		end
 	end
-	if self.player:hasSkill("kongcheng") and self.player:isKongcheng() 
-		and not self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
-		for _, c in ipairs(cards) do
-			if isCard("Jink", c, self.player) or isCard("Peach", c, self.player) then return c:getEffectiveId() end
+
+	if nextNeedBuyi then
+		local maxvaluecard, minvaluecard
+		local maxvalue, minvalue = -100, 100
+		for _, bycard in ipairs(cards) do
+			if not bycard:isKindOf("BasicCard") then
+				local value = self:getUseValue(bycard)
+				if value > maxvalue then 
+					maxvalue = value
+					maxvaluecard = bycard
+				end
+				if value < minvalue then 
+					minvalue = value
+					minvaluecard = bycard 
+				end
+			end
+		end
+		if minvaluecard and nextPlayerCanUse then
+			return minvaluecard:getEffectiveId()
+		end
+		if maxvaluecard then
+			return maxvaluecard:getEffectiveId()
 		end
 	end
 
-	local peach
-	local peach_num = 0
-	for _, c in ipairs(cards) do
-		if c:isKindOf("Peach") then
-			peach = c:getEffectiveId()
-			peach_num = peach_num + 1
+	local friendNeedPeach, peach
+	local peachnum = 0
+	if nextPlayerCanUse then
+		if not self.player:isWounded() and nextp:isWounded() or self.player:getLostHp() < self:getCardsNum("Peach") or self:willSkipPlayPhase() then
+			friendNeedPeach = true
 		end
 	end
-	if peach_num > 1 or self:isEnemy(next_alive) then return peach end
+	for _, card in ipairs(cards) do
+		if card:isKindOf("Peach") then
+			peach = card:getEffectiveId()
+			peachnum = peachnum + 1
+		end
+	end
+	if (not friendNeedPeach and peach) or peachnum > 1 then return peach end
+
+	local exnihilo, jink, analeptic
+	for _, card in ipairs(cards) do
+		if card:isKindOf("ExNihilo") then
+			if not nextPlayerCanUse or (not self:willSkipPlayPhase() and (self:hasSkills("jizhi|zhiheng|rende") or not self:hasSkills("jizhi|zhiheng", nextp))) then
+				exnihilo = card:getEffectiveId()
+			end
+		end
+		if card:isKindOf("Jink")  then
+			jink = card:getEffectiveId()
+		end
+		if card:isKindOf("Analeptic") then
+			analeptic = card:getEffectiveId()
+		end
+	end
+
+	if current then
+		if exnihilo then return exnihilo end
+		if self:isWeak() or self:getCardsNum("Jink") == 0 and (jink or analeptic) then return jink or analeptic end
+	else
+		if self:isWeak() or self:getCardsNum("Jink") == 0 and (jink or analeptic) then return jink or analeptic end
+		if exnihilo then return exnihilo end
+	end 
+
+	if analeptic then
+		local slashs = self:getCards("Slash")
+		for _, enemy in ipairs(self.enemies) do
+			for _, slash in ipairs(slashs) do
+				if (self:getCardsNum("Jink", enemy) < 1 or enemy:isKongcheng()) and self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash) then
+					return analeptic
+				end
+			end
+		end
+	end
+
+	for _, card in ipairs(cards) do
+		if card:isKindOf("Nullification") and (self:getCardsNum("Nullification") < 2 or not nextPlayerCanUse) then
+			return card:getEffectiveId()
+		end
+	end	
+
+	for _, card in ipairs(cards) do
+		if card:isKindOf("EightDiagram") and self.player:hasSkill("tiandu") then return card:getEffectiveId() end
+		if (card:isKindOf("Armor") or card:isKindOf("DefensiveHorse")) and self:isWeak() then return card:getEffectiveId() end
+		if card:isKindOf("Crossbow") and not self.player:hasSkill("paoxiao")
+			and (self:getCardsNum("Slash") > 1 or self:hasSkills("kurou|keji|luoshen|yongsi|luoying") and not current) then return card:getEffectiveId() end
+		if card:isKindOf("Halberd") then
+			if self.player:hasSkill("rende") and self:getCardsNum("Slash") > 0 then return card:getEffectiveId() end
+			if current and self:getCardsNum("Slash") == 1 and self.player:getHandcardNum() == 1 then return card:getEffectiveId() end 
+			return card:getEffectiveId()
+		end
+	end
+
+	local ag_snatch, ag_dismantlement, ag_indulgence, ag_supplyshortage, ag_collateral, ag_duel, ag_aoe, ag_fireattack
+	local hasTrick = false
+	for _, card in ipairs(cards) do
+		for _, enemy in ipairs(self.enemies) do
+			if not enemy:isNude() and isCard("Snatch", card, self.player) and self:hasTrickEffective(card, enemy) and self.player:distanceTo(enemy) == 1 then
+				ag_snatch = card:getEffectiveId()
+				hasTrick = true
+			elseif not enemy:isNude() and isCard("Dismantlement", card, self.player) and self:hasTrickEffective(card, enemy) then
+				ag_dismantlement = card:getEffectiveId()
+				hasTrick = true
+			elseif isCard("Indulgence", card, self.player) and self:hasTrickEffective(card, enemy)
+				and not enemy:containsTrick("indulgence") and not self:willSkipPlayPhase(enemy) then
+				ag_indulgence = card:getEffectiveId()
+				hasTrick = true
+			elseif isCard("SupplyShortage", card, self.player) and self:hasTrickEffective(card, enemy)
+				and not enemy:containsTrick("supply_shortage") and not self:willSkipDrawPhase(enemy) then
+				ag_supplyshortage = card:getEffectiveId()
+				hasTrick = true
+			elseif isCard("Collateral", card, self.player) and self:hasTrickEffective(card, enemy) and enemy:getWeapon() then
+				ag_collateral = card:getEffectiveId()
+				hasTrick = true
+			elseif isCard("Duel", card, self.player) and self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) and self:hasTrickEffective(card, enemy) then
+				ag_duel = card:getEffectiveId()
+				hasTrick = true
+			elseif card:isKindOf("AOE") then
+				local good = self:getAoeValue(card)
+				if good > 0 or (self:hasSkills("jianxiong|luanji", self.player) and good > -10) then
+					ag_aoe = card:getEffectiveId()
+					hasTrick = true
+				end
+			elseif isCard("FireAttack", card, self.player) and self:hasTrickEffective(card, enemy)
+				and (enemy:getHp() == 1 or enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then
+				local suits = {}
+				local suitnum = 0
+				for _, hcard in sgs.qlist(self.player:getHandcards()) do
+					if hcard:getSuit() == sgs.Card_Spade then
+						suits.spade = true
+					elseif hcard:getSuit() == sgs.Card_Heart then
+						suits.heart = true
+					elseif hcard:getSuit() == sgs.Card_Club then
+						suits.club = true
+					elseif hcard:getSuit() == sgs.Card_Diamond then
+						suits.diamond = true
+					end
+				end
+				for k, hassuit in pairs(suits) do
+					if hassuit then suitnum = suitnum + 1 end
+				end
+				if suitnum >= 3 or (suitnum >= 2 and enemy:getHandcardNum() == 1) then
+					ag_fireattack = card:getEffectiveId()
+					hasTrick = true
+				end
+			end
+		end
+	end
+
+	if hasTrick then 
+		if not self:willSkipPlayPhase() or not nextPlayerCanUse then
+			return ag_snatch or ag_dismantlement or ag_indulgence or ag_supplyshortage or ag_collateral or ag_duel or ag_aoe or ag_fireattack
+		end
+		if #trickCards > nextFriendNum + 1 and nextPlayerCanUse then
+			return ag_fireattack or ag_aoe or ag_duel or ag_collateral or ag_supplyshortage or ag_indulgence or ag_dismantlement or ag_snatch
+		end
+	end
+
 	self:sortByCardNeed(cards, true)
+	for _, card in ipairs(cards) do
+		if not card:isKindOf("TrickCard") and not card:isKindOf("Peach") then
+			return card:getEffectiveId()
+		end
+	end
+
 	return cards[1]:getEffectiveId()
 end

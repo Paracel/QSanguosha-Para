@@ -264,72 +264,105 @@ if sgs.GetConfig("EnableHegemony", false) then
 end
 
 -- AI for general
-local function xiaoguo_card(self, target)
-	local has_peach, has_anal, has_slash, has_jink
-	for _, card in sgs.qlist(self.player:getHandcards()) do
-		if card:isKindOf("Peach") then has_peach = card
-		elseif card:isKindOf("Analeptic") then has_anal = card
-		elseif card:isKindOf("Slash") then has_slash = card
-		elseif card:isKindOf("Jink") then has_jink = card
-		end
-	end
-
-	if has_slash then return has_slash
-	elseif has_jink then return has_jink
-	elseif has_anal or has_peach then
-		if getCardsNum("Jink", target) == 0 and self:getAllPeachNum(target) == 0 and not self:isWeak() then
-			return has_anal or has_peach
-		end
-	end
-	return nil
-end
-
 sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 	local currentplayer = self.room:getCurrent()
+
+	local has_anal, has_slash, has_jink
+	for _, acard in sgs.qlist(self.player:getHandcards()) do
+		if acard:isKindOf("Analeptic") then has_anal = acard
+		elseif acard:isKindOf("Slash") then has_slash = acard
+		elseif acard:isKindOf("Jink") then has_jink = acard
+		end
+	end
+
+	local card
+
+	if has_slash then card = has_slash
+	elseif has_jink then card = has_jink
+	elseif has_anal then
+		if (getCardsNum("EquipCard", currentplayer) == 0 and not self:isWeak()) or self:getCardsNum("Analeptic") > 1 then
+			card = has_anal
+		end
+	end
+
+	if not card then return "." end
 	if self:isFriend(currentplayer) then
-		if currentplayer:hasArmorEffect("silver_lion") and current:isWounded() then 
-			local card = xiaoguo_card(self, currentplayer)
-			if card and (card:isKindOf("Slash") or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 1)) then
+		if currentplayer:hasArmorEffect("silver_lion") and currentplayer:isWounded() and self:isWeak(currentplayer) then 
+			if card:isKindOf("Slash") or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 1) then
 				return "$" .. card:getEffectiveId()
+			else return "."
 			end
 		end
-		return "."
 	elseif self:isEnemy(currentplayer) then
 		if not self:damageIsEffective(currentplayer) then return "." end
-		local card = xiaoguo_card(self, currentplayer)
-		return card and ("$" .. card:getEffectiveId()) or "."
+		if currentplayer:hasArmorEffect("silver_lion") and currentplayer:isWounded() and self:isWeak(currentplayer) then return "." end
+		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
+		return "$" .. card:getEffectiveId()
 	end
+	return "."
 end
 
-sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist)
+sgs.ai_choicemade_filter.cardResponsed["@xiaoguo"] = function(player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
 		local current = player:getRoom():getCurrent()
 		if not current then return end
 		local intention = 50
-		if current:hasArmorEffect("silver_lion") and current:isWounded() then intention = -30 end
+		if current:hasArmorEffect("silver_lion") and current:isWounded() and self:isWeak(current) then intention = -30 end
 		sgs.updateIntention(player, current, intention)
 	end
 end
 
 sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	local yuejin = self.room:findPlayerBySkillName("xiaoguo")
-	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, yuejin) then
+	local player = self.player
+
+	if player:hasArmorEffect("silver_lion") and player:isWounded() and self:isWeak() then
+		return "$" .. player:getArmor():getEffectiveId()
+	end
+
+	if not self:damageIsEffective(player, sgs.DamageStruct_Normal, yuejin) then
 		return "."
 	end
-	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
-		return "$" .. self.player:getArmor():getEffectiveId()
+
+	if self:getDamagedEffects(self.player) then
+		return "."
 	end
-	for _, card in sgs.qlist(self.player:getCards("he")) do
-		if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then
-			return "$" .. card:getEffectiveId()
+
+	if player:getHp() > getBestHp(player) then
+		return "."
+	end
+
+	if player:hasArmorEffect("silver_lion") and player:isWounded() then
+		return "$" .. player:getArmor():getEffectiveId()
+	end
+
+	local card_id
+	if self:hasSkills(sgs.lose_equip_skill, player) then
+		if player:getWeapon() then card_id = player:getWeapon():getId()
+		elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
+		elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
+		elseif player:getArmor() then card_id = player:getArmor():getId()
 		end
 	end
-	for _, card in sgs.qlist(self.player:getCards("he")) do
-		if card:isKindOf("EquipCard") then
-			return "$" .. card:getEffectiveId()
+
+	if not card_id then
+		for _, card in sgs.qlist(player:getHandcards()) do
+			if card:getTypeId() == sgs.Card_TypeEquip then
+				card_id = card:getEffectiveId()
+				break
+			end
 		end
 	end
-	return "."
+
+	if not card_id then
+		if player:getWeapon() then card_id = player:getWeapon():getId()
+		elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
+		elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
+		elseif player:getHp() < 4 and player:getArmor() then card_id = player:getArmor():getId()
+		end
+	end
+
+	if not card_id then return "." else return "$" .. card_id end
 end
 
 sgs.ai_cardneed.xiaoguo = function(to, card)

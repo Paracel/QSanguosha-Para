@@ -56,7 +56,7 @@ function debugFunc(self, room, player, data)
 		end
 		if choice == "objectiveLevel" then
 			debugmsg(" ")
-			debugmsg("============%s(%.1f)", sgs.processvalue[sgs.gameProcess(room)], sgs.gameProcess(room, 1))
+			debugmsg("============%s(%.1f)", sgs.gameProcess(room), sgs.gameProcess(room, 1))
 			debugmsg("查看身份关系。当前角色: %s[%s]", sgs.Sanguosha:translate(player:getGeneralName()), sgs.Sanguosha:translate(player:getRole()))
 			for i = 1, #players, 1 do
 				local level = self:objectiveLevel(players[i])

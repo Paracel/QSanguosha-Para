@@ -68,7 +68,6 @@ sgs.card_lack = {}
 sgs.ai_need_damaged = {}
 sgs.ai_debug_func = {}
 sgs.ai_chat_func = {}
-sgs.processvalue = { loyalist = "忠大优", dilemma = "纠结", loyalish = "忠小优", rebelish = "反小优", rebel = "反大优", neutral = "平衡" }
 
 function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
@@ -239,7 +238,7 @@ function SmartAI:assignKeep(num, start)
 			self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
 			table.insert(self.kept, card)
 			--self:log(card:getClassName())
-			self:assignKeep(num-1)
+			self:assignKeep(num - 1)
 			break
 		end
 	end

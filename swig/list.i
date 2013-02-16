@@ -25,7 +25,6 @@ public:
 %template(CardList) QList<const Card *>;
 %template(IntList) QList<int>;
 %template(SkillList) QList<const Skill *>;
-%template(ItemList) QList<CardItem *>;
 %template(DelayedTrickList) QList<const DelayedTrick *>;
 %template(CardsMoveList) QList<CardsMoveStruct>;
 %template(PlaceList) QList<Player::Place>;

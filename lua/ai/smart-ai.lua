@@ -3972,8 +3972,8 @@ function SmartAI:getAoeValue(card, player)
 	end
 
 	local liuxie = self.room:findPlayerBySkillName("huangen")
-	if liuxie then
-		if self:isFriend(liuxie) and liuxie:getHp() > 0 then
+	if liuxie and self.player:aliveCount() > 2 and liuxie:getHp() > 0 then
+		if self:isFriend(liuxie) then
 			good = good + 30 * liuxie:getHp()
 		else
 			bad = bad + 30 * liuxie:getHp()

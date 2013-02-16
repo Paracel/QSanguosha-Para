@@ -350,8 +350,8 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 			if not self:hasSkills(sgs.lose_equip_skill, enemy) then
 				local ee = enemy:getEquips():length()
 				local fe = friend:getEquips():length()
-				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(),enemy)
-								- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(),enemy)
+				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(), enemy)
+								- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(), enemy)
 				if math.abs(ee - fe) <= lost_hp and ee > 0 and (ee > fe or ee == fe and value>0) then
 					if self:hasSkills(sgs.lose_equip_skill, friend) then
 						use.card = sgs.Card_Parse("@GanluCard=.")
@@ -378,12 +378,12 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	end
 
 	target = nil
-	for _,friend in ipairs(self.friends) do
+	for _, friend in ipairs(self.friends) do
 		if (friend:hasArmorEffect("silver_lion") and friend:isWounded()) or (self:hasSkills(sgs.lose_equip_skill, friend)
 			and not friend:getEquips():isEmpty()) then target = friend break end
 	end
 	if not target then return end
-	for _,friend in ipairs(self.friends) do
+	for _, friend in ipairs(self.friends) do
 		if friend:objectName() ~= target:objectName() and math.abs(friend:getEquips():length() - target:getEquips():length()) <= lost_hp then
 			use.card = sgs.Card_Parse("@GanluCard=.")
 			if use.to then
@@ -462,14 +462,14 @@ mingce_skill.getTurnUseCard = function(self)
 	return nil
 end
 
-sgs.ai_skill_use_func.MingceCard = function(card,use,self)
+sgs.ai_skill_use_func.MingceCard = function(card, use, self)
 	local target
 	local friends = self.friends_noself
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 
 	local canMingceTo = function(player)
 		local canGive = not (player:hasSkill("kongcheng") and player:isKongcheng())
-		return canGive or (not canGive and self:getEnemyNumBySeat(self.player,player) == 0)
+		return canGive or (not canGive and self:getEnemyNumBySeat(self.player, player) == 0)
 	end
 
 	self:sort(self.enemies, "defense")

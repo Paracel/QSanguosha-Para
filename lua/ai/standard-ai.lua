@@ -429,7 +429,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 	local cards = to:getHandcards()
 	local need_slash = true
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(), to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if isCard("Slash", c, to) then
 				need_slash = false
@@ -440,7 +440,7 @@ function sgs.ai_cardneed.luoyi(to, card, self)
 
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		if to:canSlash(enemy) and not self:slashProhibit(slash ,enemy) and self:slashIsEffective(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2 then
+		if to:canSlash(enemy) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2 then
 			target = enemy
 			break
 		end
@@ -797,7 +797,7 @@ function sgs.ai_cardneed.paoxiao(to, card, self)
 	local has_weapon = to:getWeapon() and not to:getWeapon():isKindOf("Crossbow")
 	local slash_num = 0
 	for _, c in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(),to:objectName())
+		local flag = string.format("%s_%s_%s", "visible", self.room:getCurrent():objectName(), to:objectName())
 		if c:hasFlag("visible") or c:hasFlag(flag) then
 			if c:isKindOf("Weapon") and not c:isKindOf("Crossbow") then
 				has_weapon = true
@@ -1145,7 +1145,7 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 
 	for _, enemy in ipairs(self.enemies) do
-		if self:canAttack(enemy) and not self:hasSkills("qingnang|jijiu",enemy) then
+		if self:canAttack(enemy) and not self:hasSkills("qingnang|jijiu", enemy) then
 			use.card = card
 			if use.to then use.to:append(enemy) end
 			return
@@ -1281,7 +1281,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	self:sort(self.friends_noself, "defense", true)
 
 	for _, friend in ipairs(self.friends_noself) do
-		if not self:slashIsEffective(slash,friend) then
+		if not self:slashIsEffective(slash, friend) then
 			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end

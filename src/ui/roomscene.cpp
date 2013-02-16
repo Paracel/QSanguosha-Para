@@ -148,7 +148,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(card_shown(QString, int)), this, SLOT(showCard(QString, int)));
     connect(ClientInstance, SIGNAL(gongxin(QList<int>, bool)), this, SLOT(doGongxin(QList<int>, bool)));
     connect(ClientInstance, SIGNAL(focus_moved(QStringList, QSanProtocol::Countdown)), this, SLOT(moveFocus(QStringList, QSanProtocol::Countdown)));
-    connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString,QString)));
+    connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString,QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
     connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString,QStringList)));
@@ -468,11 +468,10 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             QString player_name = arg[1].asCString();
             QString skill_name =  arg[2].asCString();
             const Skill *skill = Sanguosha->getSkill(skill_name);
-            if (skill && skill->isAttachedLordSkill())
-                break;
+            if (skill && (skill->isAttachedLordSkill() || skill->inherits("SPConvertSkill"))) return;
 
             ClientPlayer *player = ClientInstance->getPlayer(player_name);
-            if (!player->hasSkill(skill_name)) return;
+            if (!player || !player->hasSkill(skill_name)) return;
             if (player != Self) {
                 PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
                 Photo *photo = qobject_cast<Photo *>(container);
@@ -3185,7 +3184,7 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion) {
     setEmotion(who, emotion, permanent);
 }
 
-void RoomScene::setEmotion(const QString &who, const QString &emotion ,bool permanent) {
+void RoomScene::setEmotion(const QString &who, const QString &emotion, bool permanent) {
     if (Config.value("NoEquipAnim", false).toBool() && (emotion.startsWith("weapon/") || emotion.startsWith("armor/")))
         return;
     Photo *photo = name2photo[who];
@@ -3209,11 +3208,6 @@ void RoomScene::showSkillInvocation(const QString &who, const QString &skill_nam
     QString from_general = player->objectName();
     QString arg = skill_name;
     log_box->appendLog(type, from_general, QStringList(), QString(), arg);
-
-    if (player != Self) {
-        Photo *photo = name2photo.value(who);
-        photo->showSkillName(skill_name);
-    }
 }
 
 void RoomScene::removeLightBox() {

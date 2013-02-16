@@ -523,10 +523,10 @@ shuangxiong_skill.getTurnUseCard = function(self)
 
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards,true)
+	self:sortByUseValue(cards, true)
 
 	local card
-	for _,acard in ipairs(cards) do
+	for _, acard in ipairs(cards) do
 		if (acard:isRed() and mark == 2) or (acard:isBlack() and mark == 1) then
 			card = acard
 			break

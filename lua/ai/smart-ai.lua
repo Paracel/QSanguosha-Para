@@ -1808,7 +1808,7 @@ function SmartAI:filterEvent(event, player, data)
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if player:canSlash(target, card, true) and self:slashIsEffective(card, target) 
-							and not self:slashProhibit(card, target) and sgs.isGoodTarget(target,self.enemies, self) then
+							and not self:slashProhibit(card, target) and sgs.isGoodTarget(target, self.enemies, self) then
 							if is_neutral then sgs.updateIntention(player, target, -5) end
 						end
 					end
@@ -2592,7 +2592,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, friend in ipairs(friends) do
 		if friend:getHp() <= 2 and friend:faceUp() then
 			for _, hcard in ipairs(cards) do
-				if (hcard:isKindOf("Armor") and not friend:getArmor() and not self:hasSkills("yizhong|bazhen",friend))
+				if (hcard:isKindOf("Armor") and not friend:getArmor() and not self:hasSkills("yizhong|bazhen", friend))
 					or (hcard:isKindOf("DefensiveHorse") and not friend:getDefensiveHorse()) then
 					return hcard, friend
 				end
@@ -2696,7 +2696,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	-- kongcheng
 	self:sort(self.enemies, "defense")
 	if #self.enemies > 0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng") then
-		for _,acard in ipairs(cardtogive) do
+		for _, acard in ipairs(cardtogive) do
 			if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or (acard:isKindOf("Slash") and self.player:getPhase() == sgs.Player_Play)
 				or acard:isKindOf("OffensiveHorse") or acard:isKindOf("Weapon") then
 				return acard, self.enemies[1]
@@ -2708,7 +2708,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
-					and (self:hasSkills(sgs.priority_skill,friend) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
+					and (self:hasSkills(sgs.priority_skill, friend) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
 				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() <= 3 then
 					return hcard, friend
 				end
@@ -3379,7 +3379,7 @@ function SmartAI:getCardId(class_name, player, acard)
 		local card_place = self.room:getCardPlace(card:getEffectiveId())
 		viewas = getSkillViewCard(card, class_name, player, card_place)
 		if viewas then table.insert(viewArr, viewas) end
-		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cardArr,card:getEffectiveId()) end
+		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cardArr, card:getEffectiveId()) end
 	end
 	if #viewArr > 0 or #cardArr > 0 then
 		local viewas, cardid

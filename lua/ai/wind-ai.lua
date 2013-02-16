@@ -441,7 +441,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	else
 		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
-	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill,self.player) then return "question" end
+	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) then return "question" end
 
 	local questioner
 	for _, friend in ipairs(self.friends) do

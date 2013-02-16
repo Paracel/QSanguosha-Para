@@ -220,7 +220,6 @@ function sgs.reverse(list)
 	for i = #list, 1, -1 do
 		table.insert(new, list[i])
 	end
-	
 	return new
 end
 

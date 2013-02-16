@@ -130,6 +130,7 @@ end
 
 sgs.ai_use_value.LihunCard = 8.5
 sgs.ai_use_priority.LihunCard = 6
+sgs.ai_card_intention.LihunCard = 80
 
 function sgs.ai_skill_invoke.kuiwei(self, data)
 	local weapon = 0

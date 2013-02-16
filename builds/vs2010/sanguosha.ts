@@ -184,7 +184,7 @@
         <translation>主公选择了 %1，你处于 %2号位，%3</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="199"/>
+        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="200"/>
         <source>Free choose ...</source>
         <translation>自由选将 ...</translation>
     </message>
@@ -436,22 +436,22 @@
         <translation>%from %5“%1”%6将 %2 当成 %3 %4</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="130"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="129"/>
         <source>%from use skill [%1] %4 %2 as %3</source>
         <translation>由于“%1”的效果，%from 的 %2 被视为 %3 %4</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="132"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="131"/>
         <source>%from %2 %1</source>
         <translation>%from %2了 %1</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="134"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="133"/>
         <source>, target is %to</source>
         <translation>，目标是 %to</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="163"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="162"/>
         <source>Log string is not well formatted: %1</source>
         <translation>提示信息没有格式化好: %1</translation>
     </message>
@@ -1297,17 +1297,17 @@
 <context>
     <name>FreeChooseDialog</name>
     <message>
-        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="236"/>
+        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="237"/>
         <source>Free choose generals</source>
         <translation>自由选择武将</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="265"/>
+        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="266"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="268"/>
+        <location filename="../../src/dialog/choosegeneraldialog.cpp" line="269"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -2466,64 +2466,64 @@
 <context>
     <name>Room</name>
     <message>
-        <location filename="../../src/server/room.cpp" line="1661"/>
+        <location filename="../../src/server/room.cpp" line="1663"/>
         <source>disconnected</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1883"/>
+        <location filename="../../src/server/room.cpp" line="1885"/>
         <source>Computer %1</source>
         <translation>电脑 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1684"/>
+        <location filename="../../src/server/room.cpp" line="1686"/>
         <source>&lt;font color=#000000&gt;Player &lt;b&gt;%1&lt;/b&gt; left the game&lt;/font&gt;</source>
         <translation>&lt;font color=#000000&gt;玩家 %1 离开了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1864"/>
+        <location filename="../../src/server/room.cpp" line="1866"/>
         <source>%1: %2 is not invokable</source>
         <translation>%1: 不可调用的方法名 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1887"/>
+        <location filename="../../src/server/room.cpp" line="1889"/>
         <source>Hello, I&apos;m a robot</source>
         <translation>大家好，我是一个机器人</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1951"/>
+        <location filename="../../src/server/room.cpp" line="1953"/>
         <source>&lt;font color=#EEB422&gt;Player &lt;b&gt;%1&lt;/b&gt; joined the game&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2330"/>
+        <location filename="../../src/server/room.cpp" line="2332"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2332"/>
+        <location filename="../../src/server/room.cpp" line="2334"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2334"/>
+        <location filename="../../src/server/room.cpp" line="2336"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2337"/>
+        <location filename="../../src/server/room.cpp" line="2339"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="3591"/>
+        <location filename="../../src/server/room.cpp" line="3593"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4462"/>
+        <location filename="../../src/server/room.cpp" line="4470"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>

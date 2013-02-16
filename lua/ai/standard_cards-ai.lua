@@ -444,8 +444,8 @@ end
 sgs.ai_skill_use.slash = function(self, prompt)
 	local parsedPrompt = prompt:split(":")
 	local callback = sgs.ai_skill_cardask[parsedPrompt[1]] -- for askForUseSlashTo
-	local slash
 	if type(callback) == "function" then
+		local slash
 		local target
 		if self.player:hasFlag("slashTargetFix") then
 			for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
@@ -459,12 +459,14 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		if self.player:canSlash(target, slash) then return ret .. "->" .. target:objectName() end
 		return "."
 	end
-	slash = self:getCard("Slash")
-	if not slash then return "." end
-	for _, enemy in ipairs(self.enemies) do
-		if self.player:canSlash(enemy, slash) and not self:slashProhibit(slash, enemy)
-			and self:slashIsEffective(slash, enemy) and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
-			return ("%s->%s"):format(slash:toString(), enemy:objectName())
+	local slashes = self:getCards("Slash")
+	for _, slash in ipairs(slashes) do
+		for _, enemy in ipairs(self.enemies) do
+			if self.player:canSlash(enemy, slash) and not self:slashProhibit(slash, enemy)
+				and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
+				and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+				return ("%s->%s"):format(slash:toString(), enemy:objectName())
+			end
 		end
 	end
 	return "."

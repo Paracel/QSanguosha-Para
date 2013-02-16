@@ -661,17 +661,13 @@ sgs.ai_use_value.XianzhenCard = 9.2
 sgs.ai_use_priority.XianzhenCard = 9.2
 
 sgs.ai_skill_cardask["@xianzhen-slash"] = function(self)
-	if self.player:hasSkill("tianxiang") then
-		local dmgStr = {damage = 1, nature = 0}
-		local willTianxiang = sgs.ai_skill_use["@tianxiang"](self, dmgStr)
-		if willTianxiang ~= "." then return "." end
-	elseif self.player:hasSkill("longhun") and self.player:getHp() > 1 then
-		return "."
-	end
 	local target = self.player:getTag("XianzhenTarget"):toPlayer()
 	local slashes = self:getCards("Slash")
 	for _, slash in ipairs(slashes) do
-		if self:slashIsEffective(slash, target) then return slash:toString() end
+		if self.player:canSlash(target, slash) and not self:slashProhibit(slash, target)
+			and self:slashIsEffective(slash, target) then
+			return slash:toString()
+		end
 	end
 	return "."
 end

@@ -193,7 +193,8 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
         last_layout->addWidget(progress_bar);
     }
 
-    bool free_choose = ServerInfo.FreeChoose;
+    bool free_choose = ServerInfo.FreeChoose
+                       || ServerInfo.GameMode.startsWith("_mini_") || ServerInfo.GameMode == "custom_scenario";
 
     if (free_choose) {
         QPushButton *free_choose_button = new QPushButton(tr("Free choose ..."));

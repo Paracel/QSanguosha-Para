@@ -302,7 +302,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 	return "."
 end
 
-sgs.ai_choicemade_filter.cardResponsed["@xiaoguo"] = function(player, promptlist)
+sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
 		local current = player:getRoom():getCurrent()
 		if not current then return end

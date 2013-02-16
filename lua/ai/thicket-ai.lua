@@ -142,7 +142,7 @@ duanliang_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_cardneed.duanliang = function(to, card)
-	return card:isBlack() and card:getTypeId() ~= sgs.Card_TypeTrick and getKnownCard(to, "club", false) + getKnownCard(to, "spade", false) < 2
+	return card:isBlack() and card:getTypeId() ~= sgs.Card_TypeTrick and getKnownCard(to, "black", false) < 2
 end
 
 sgs.duanliang_suit_value = {

@@ -2464,7 +2464,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 		if from:hasWeapon("guding_blade") and slash and to:isKongcheng() then dmg = dmg + 1 end
 		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 then dmg = dmg + 1 end
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()
-			and (to:getHandcardNum() > 3 or getKnownCard(to, "heart") + getKnownCard(to, "diamond") > 0) then dmg = dmg - 1 end
+			and (to:getHandcardNum() > 3 or getKnownCard(to, "red") > 0) then dmg = dmg - 1 end
 	end
 	return (dmg > 1)
 end
@@ -3344,15 +3344,17 @@ function SmartAI:getKnownNum(player)
 	end
 end
 
-function getKnownCard(player, class_name, viewas)
-	local cards = player:getHandcards()
+function getKnownCard(player, class_name, viewas, flags)
+	flags = flags or "h"
+	local cards = player:getCards(flags)
 	local known = 0
 	local suits = { ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }
 	for _, card in sgs.qlist(cards) do
 		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 		if card:hasFlag("visible") or card:hasFlag(flag) or player:objectName() == global_room:getCurrent():objectName() then
 			if (viewas and isCard(class_name, card, player)) or card:isKindOf(class_name)
-				or (suits[class_name] and card:getSuitString() == class_name) then
+				or (suits[class_name] and card:getSuitString() == class_name)
+				or (class_name == "red" and card:isRed()) or (class_name == "black" and card:isBlack()) then
 				known = known + 1
 			end
 		end

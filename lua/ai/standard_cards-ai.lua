@@ -504,7 +504,8 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	if #canAvoidSlash > 0 then return canAvoidSlash[1] end
 	if #arrBestHp > 0 then return arrBestHp[1] end
 
-	self:sort(targetlist, "defenseSlash", true)
+	self:sort(targetlist, "defenseSlash")
+	targetlist = sgs.reverse(targetlist)
 	for _, target in ipairs(targetlist) do
 		if target:objectName() ~= self.player:objectName() and not self:isFriend(target) then
 			return target
@@ -1341,7 +1342,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			if not player:isLord() then table.insert(enemies, player) end
 		end
 		enemies = self:exclude(enemies, card)
-		self:sort(enemies, "defense", true)
+		self:sort(enemies, "defense")
+		enemies = sgs.reverse(enemies)
 	else
 		enemies = self:exclude(self.enemies, card)
 		self:sort(enemies, "defense")

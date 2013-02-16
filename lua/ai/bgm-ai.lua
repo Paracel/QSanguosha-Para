@@ -461,7 +461,8 @@ end
 
 sgs.ai_skill_playerchosen.shichou = function(self, targets)
 	targets = sgs.QList2Table(targets)
-	self:sort(targets, "hp", true)
+	self:sort(targets, "hp")
+	targets = sgs.reverse(targets)
 	if self.player:hasSkill("weidi") and self.player:getRole() == "rebel" then
 		for _, target in ipairs(targets) do
 			if target:hasLordSkill("shichou") then return target end
@@ -688,6 +689,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 		end
 		enemies = self:exclude(enemies, card)
 		self:sort(enemies, "defense", true)
+		enemies = sgs.reverse(enemies)
 	else
 		enemies = self:exclude(self.enemies, card)
 		self:sort(enemies, "defense")

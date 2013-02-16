@@ -498,7 +498,8 @@ sgs.ai_skill_use_func.SongciCard = function(card, use, self)
 		end
 	end
 
-	self:sort(self.enemies, "handcard", true)
+	self:sort(self.enemies, "handcard")
+	self.enemies = sgs.reverse(self.enemies)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
 			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0)

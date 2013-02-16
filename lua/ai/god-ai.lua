@@ -735,7 +735,6 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 		end
 	end
 	benefit = benefit + (others - 7) * 0.05
-	self.room:writeToConsole("ShenfenBenefit " .. benefit)
 	if benefit > 0 then
 		use.card = card
 	end

@@ -500,7 +500,8 @@ sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, i
 end
 
 sgs.ai_skill_playerchosen.fangquan = function(self, targets)
-	self:sort(self.friends_noself, "handcard", true)
+	self:sort(self.friends_noself, "handcard")
+	self.friends_noself = sgs.reverse(self.friends_noself)
 	for _, target in ipairs(self.friends_noself) do
 		if not target:hasSkill("dawu") and self:hasSkills("yongsi|zhiheng|" .. sgs.priority_skill .. "|shensu", target)
 			and (not self:willSkipPlayPhase(target) or target:hasSkill("shensu")) then

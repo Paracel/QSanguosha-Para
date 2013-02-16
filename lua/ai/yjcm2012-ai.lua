@@ -276,7 +276,11 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 		end
 	end
 	self:sort(friends, "handcard")
-	local least_friend, most_friend = friends[1], friends[#friends]
+	local least_friend, most_friend
+	if #friends > 0 then
+		least_friend = friends[1]
+		most_friend = friends[#friends]
+	end
 	local need_kongcheng_friend
 	for _, friend in ipairs(friends) do
 		if friend:getHandcardNum() == 1 and (friend:hasSkill("kongcheng") or (friend:hasSkill("zhiji") and friend:getMark("zhiji") == 0 and friend:getHp() >= 3)) then
@@ -291,8 +295,10 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 			table.insert(enemies, enemy)
 		end
 	end
-	self:sort(enemies, "handcard", true)
-	local most_enemy = enemies[1]
+	self:sort(enemies, "handcard")
+	enemies = sgs.reverse(enemies)
+	local most_enemy
+	if #enemies > 0 then most_enemy = enemies[1] end
 	local prior_enemy, kongcheng_enemy, manjuan_enemy
 	for _, enemy in ipairs(enemies) do
 		if enemy:getHandcardNum() >= 2 and self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", enemy) then

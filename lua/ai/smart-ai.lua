@@ -648,11 +648,10 @@ sgs.ai_compare_funcs = {
 	end,
 }
 
-function SmartAI:sort(players, key, inverse)
+function SmartAI:sort(players, key)
 	if not players then self.room:writeToConsole(debug.traceback()) end
 	local func = sgs.ai_compare_funcs[key or "defense"]
 	table.sort(players, func)
-	if inverse then players = sgs.reverse(players) end
 end
 
 function SmartAI:sortByKeepValue(cards, inverse, kept)
@@ -664,6 +663,7 @@ function SmartAI:sortByKeepValue(cards, inverse, kept)
 			if inverse then return value1 > value2 end
 			return value1 < value2
 		else
+			if not inverse then return a:getNumber() > b:getNumber() end
 			return a:getNumber() < b:getNumber()
 		end
 	end
@@ -677,11 +677,11 @@ function SmartAI:sortByUseValue(cards, inverse)
 		local value2 = self:getUseValue(b)
 
 		if value1 ~= value2 then
-				if not inverse then return value1 > value2
-				else return value1 < value2
-				end
+			if not inverse then return value1 > value2 end
+			return value1 < value2
 		else
-				return a:getNumber() > b:getNumber()
+			if not inverse then return a:getNumber() > b:getNumber() end
+			return a:getNumber() < b:getNumber()
 		end
 	end
 
@@ -696,7 +696,7 @@ function SmartAI:sortByUsePriority(cards, player)
 		if value1 ~= value2 then
 			return value1 > value2
 		else
-			return a:getNumber() < b:getNumber()
+			return a:getNumber() > b:getNumber()
 		end
 	end
 
@@ -724,14 +724,16 @@ function SmartAI:sortByCardNeed(cards, inverse)
 		local value2 = self:cardNeed(b)
 
 		if value1 ~= value2 then
-			return value1 > value2
+			if inverse then return value1 > value2 end
+			return value1 < value2
 		else
-			return a:getNumber() > b:getNumber()
+			if not inverse then return a:getNumber() > b:getNumber() end
+			return a:getNumber() < b:getNumber()
 		end
 	end
 
 	table.sort(cards, compare_func)
-	if inverse then sgs.reverse(cards) end
+	if inverse then cards = sgs.reverse(cards) end
 end
 
 function SmartAI:getPriorTarget()
@@ -3061,7 +3063,7 @@ function SmartAI:needRetrial(judge)
 		if self:hasSkills("wuyan|hongyan", who) then return false end
 
 		if (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
-			if self:isEquip("SilverLion", lord) and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
+			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
 			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not judge:isGood()
 		end
 
@@ -3094,7 +3096,7 @@ function SmartAI:needRetrial(judge)
 	if reason == "luoshen" then
 		if self:isFriend(who) then
 			if who:getHandcardNum() > 30 then return false end
-			if self:isEquip("Crossbow", who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
+			if self:hasCrossbowEffect(who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
 			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
 			return not judge:isGood()
 		else

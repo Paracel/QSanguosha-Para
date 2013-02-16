@@ -615,7 +615,16 @@ end
 sgs.ai_use_value.RendeCard = 8.5
 sgs.ai_use_priority.RendeCard = 8.8
 
-sgs.ai_card_intention.RendeCard = -70
+sgs.ai_card_intention.RendeCard = function(self, card, from, tos)
+	local to = tos[1]
+	local intention = -70
+	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then
+		intention = 0
+	elseif to:hasSkill("kongcheng") and to:isKongcheng() then
+		intention = 30
+	end
+	sgs.updateIntention(from, to, intention)
+end
 
 sgs.dynamic_value.benefit.RendeCard = true
 

@@ -4367,7 +4367,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     tag["retrial"] = true;
 }
 
-bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, bool is_preview, bool visible) {
+bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name, bool is_preview, bool visible) {
     if (cards.isEmpty())
         return false;
     CardMoveReason reason(NULL, guojia->objectName());
@@ -4407,6 +4407,12 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, bool is_preview, 
             cards.removeOne(card_id);
             dummy_card->addSubcard(card_id);
         }
+
+        QVariant decisionData = QVariant::fromValue(QString("Yiji:%1:%2:%3:%4")
+                                                    .arg(skill_name).arg(guojia->objectName()).arg(who->objectName())
+                                                    .arg(Card::IdsToStrings(ids).join("+")));
+        thread->trigger(ChoiceMade, this, guojia, decisionData);
+
         moveCardTo(dummy_card, who, Player::PlaceHand, reason, visible);
         delete dummy_card;
 

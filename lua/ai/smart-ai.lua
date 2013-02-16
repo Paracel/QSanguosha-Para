@@ -60,7 +60,8 @@ sgs.ai_choicemade_filter = {
 	skillInvoke = {},
 	skillChoice = {},
 	Nullification = {},
-	playerChosen = {}
+	playerChosen = {},
+	Yiji = {}
 }
 
 sgs.card_lack = {}
@@ -1623,8 +1624,7 @@ function SmartAI:filterEvent(event, player, data)
 			promptlist = data:toString():split(":")
 			local callbacktable = sgs.ai_choicemade_filter[promptlist[1]]
 			if callbacktable and type(callbacktable) == "table" then
-				local index = 2
-				if promptlist[1] == "cardResponded" then index = 3 end
+				local index = (promptlist[1] == "cardResponded") and 3 or 2
 				local callback = callbacktable[promptlist[index]] or callbacktable.general
 				if type(callback) == "function" then
 					callback(player, promptlist)
@@ -2793,6 +2793,21 @@ function SmartAI:askForYiji(card_ids)
 			return afriend, acard_id
 		end
 	end
+end
+
+sgs.ai_choicemade_filter.Yiji.general = function(from, promptlist)
+	if from:objectName() == promptlist[4] then return end
+	local to
+	for _, p in sgs.qlist(from:getRoom():getAlivePlayers()) do
+		if p:objectName() == promptlist[4] then to = p break end
+	end
+	local intention = -70
+	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then
+		intention = 0
+	elseif to:hasSkill("kongcheng") and to:isKongcheng() then
+		intention = 30
+	end
+	sgs.updateIntention(from, to, intention)
 end
 
 function SmartAI:askForPindian(requestor, reason)

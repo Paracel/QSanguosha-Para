@@ -158,7 +158,7 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
             continue;
         }
 
-        while (room->askForYiji(guojia, yiji_cards)) {}
+        while (room->askForYiji(guojia, yiji_cards, objectName())) {}
 
         if (yiji_cards.isEmpty()) {
             room->setPlayerFlag(guojia, "-yiji_InTempMoving");

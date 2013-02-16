@@ -305,7 +305,7 @@ public:
             move2.to = kongrong;
             room->moveCardsAtomic(move2, true);
 
-            while (room->askForYiji(kongrong, lirang_card, false, true)) {}
+            while (room->askForYiji(kongrong, lirang_card, objectName(), false, true)) {}
 
             CardsMoveStruct move3;
             move3.card_ids = lirang_card;

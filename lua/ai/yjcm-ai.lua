@@ -336,39 +336,55 @@ end
 
 sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	local lost_hp = self.player:getLostHp()
-	local enemy_equip = 0
-	local target
+	local target, min_friend, max_enemy
+
+	local compare_func = function(a, b)
+		return a:getEquips():length() > b:getEquips():length()
+	end
+	table.sort(self.enemies, compare_func)
+	table.sort(self.friends, compare_func)
+	sgs.reverse(self.friends)
 
 	for _, friend in ipairs(self.friends) do
 		for _, enemy in ipairs(self.enemies) do
 			if not self:hasSkills(sgs.lose_equip_skill, enemy) then
-				local ee = self:getCardsNum(".", enemy, "e")
-				local fe = self:getCardsNum(".", friend, "e")
-				if self:hasSkills(sgs.lose_equip_skill, friend) then ee = ee + fe end
-				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(), enemy)
-								- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(), enemy)
-				if math.abs(self:getCardsNum(".", enemy, "e") - self:getCardsNum(".", friend, "e")) <= lost_hp
-					and self:getCardsNum(".", enemy, "e") > 0
-					and (ee > fe or (ee == fe and value > 0)) then
-					use.card = sgs.Card_Parse("@GanluCard=.")
-					if use.to then
-						use.to:append(friend)
-						use.to:append(enemy)
+				local ee = enemy:getEquips():length()
+				local fe = friend:getEquips():length()
+				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(),enemy)
+								- self:evaluateArmor(friend:getArmor(), friend) + self:evaluateArmor(enemy:getArmor(),enemy)
+				if math.abs(ee - fe) <= lost_hp and ee > 0 and (ee > fe or ee == fe and value>0) then
+					if self:hasSkills(sgs.lose_equip_skill, friend) then
+						use.card = sgs.Card_Parse("@GanluCard=.")
+						if use.to then
+							use.to:append(friend)
+							use.to:append(enemy)
+						end
+						return
+					elseif not min_friend and not max_enemy then
+						min_friend = friend
+						max_enemy = enemy
 					end
-					return
 				end
 			end
 		end
+	end	
+	if min_friend and max_enemy then
+		use.card = sgs.Card_Parse("@GanluCard=.")
+		if use.to then 
+			use.to:append(min_friend)
+			use.to:append(max_enemy)
+		end
+		return
 	end
 
 	target = nil
-	for _, friend in ipairs(self.friends) do
+	for _,friend in ipairs(self.friends) do
 		if (friend:hasArmorEffect("silver_lion") and friend:isWounded()) or (self:hasSkills(sgs.lose_equip_skill, friend)
 			and not friend:getEquips():isEmpty()) then target = friend break end
 	end
 	if not target then return end
-	for _, friend in ipairs(self.friends) do
-		if friend ~= target and math.abs(self:getCardsNum(".", friend, "e")-self:getCardsNum(".", target, "e")) <= lost_hp then
+	for _,friend in ipairs(self.friends) do
+		if friend:objectName() ~= target:objectName() and math.abs(friend:getEquips():length() - target:getEquips():length()) <= lost_hp then
 			use.card = sgs.Card_Parse("@GanluCard=.")
 			if use.to then
 				use.to:append(friend)

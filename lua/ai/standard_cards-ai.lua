@@ -1917,7 +1917,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	local friendNeedPeach, peach
 	local peachnum = 0
 	if nextPlayerCanUse then
-		if not self.player:isWounded() and nextp:isWounded() or self.player:getLostHp() < self:getCardsNum("Peach") or self:willSkipPlayPhase() then
+		if not self.player:isWounded() and nextAlive:isWounded() or self.player:getLostHp() < self:getCardsNum("Peach") or self:willSkipPlayPhase() then
 			friendNeedPeach = true
 		end
 	end

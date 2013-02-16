@@ -592,8 +592,9 @@ sgs.ai_skill_invoke.anxian = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
 	if self:isFriend(target) and not self:hasSkills(sgs.masochism_skill, target) then return true end
+	if self:hasHeavySlashDamage(self.player, damage.card, damage.to) and damage.to:getHp() <= 1 then return false end
 	if self:isEnemy(target) and self:hasSkills(sgs.masochism_skill, target) then return true end
-	if damage.damage > 1 then return false end
+	if self:hasHeavySlashDamage(self.player, damage.card, damage.to) then return false end
 	return false
 end
 

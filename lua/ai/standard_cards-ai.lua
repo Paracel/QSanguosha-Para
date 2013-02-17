@@ -175,7 +175,7 @@ function sgs.getDefenseSlash(player)
 		end
 	end
 
-	if player:hasArmorEffect("vine") and has_fire_slash > 0 then
+	if player:hasArmorEffect("vine") and not attacker:hasWeapon("qinggang_sword") and has_fire_slash > 0 then
 		defense = defense - 0.6 / has_fire_slash
 	end
 
@@ -269,7 +269,7 @@ function SmartAI:slashIsEffective(slash, to)
 	if not self:damageIsEffective(to, nature) then return false end
 
 	local armor = to:getArmor()
-	if armor and to:hasArmorEffect(armor:objectName()) then
+	if armor and to:hasArmorEffect(armor:objectName()) and not self.player:hasWeapon("qinggang_sword") then
 		if armor:objectName() == "renwang_shield" then
 			return not slash:isBlack()
 		elseif armor:objectName() == "vine" then

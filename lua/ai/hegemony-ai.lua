@@ -678,16 +678,9 @@ sgs.ai_card_intention.XiongyiCard = -80
 
 sgs.ai_skill_invoke.kuangfu = function(self, data)
 	local damage = data:toDamage()
-	if self:isEnemy(damage.to) then
-		if damage.to:getCards("e"):length() == 1 and damage.to:hasArmorEffect("silver_lion") then
-			return false
-		end
-		return true
-	end
-	if damage.to:getCards("e"):length() == 1 and damage.to:hasArmorEffect("silver_lion") then
-		return true
-	end
-	return false
+	local benefit = (damage.to:getCards("e"):length() == 1 and damage.to:hasArmorEffect("silver_lion") and damage.to:isWounded() and self:isWeak(damage.to))
+	if self:isFriend(damage.to) then return benefit end
+	return not benefit
 end
 
 sgs.ai_skill_choice.kuangfu = function(self, choices)

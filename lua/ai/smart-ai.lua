@@ -2585,8 +2585,8 @@ function SmartAI:getCardNeedPlayer(cards)
 	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then 
 		if (self.player:getHandcardNum() < 2 and self.player:usedTimes("RendeCard") == 0) then return end
 
-		if (self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0)
-			or (self.player:getHandcardNum() == 1 and self.player:usedTimes("RendeCard") == 1) then
+		if ((self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0) or
+			(self.player:getHandcardNum() == 1 and self.player:usedTimes("RendeCard") == 1)) and self:getOverflow() <= 0 then
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:hasWeapon("guding_blade")
 					and (enemy:canSlash(self.player)

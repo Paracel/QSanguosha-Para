@@ -5,6 +5,7 @@
 
 const char *MiniScene::S_KEY_MINISCENE = "_mini_%1";
 const char *MiniSceneRule::S_EXTRA_OPTION_RANDOM_ROLES = "randomRoles";
+const char *MiniSceneRule::S_EXTRA_OPTION_REST_IN_DISCARD_PILE = "restInDiscardPile";
 const QString MiniSceneRule::_S_DEFAULT_HERO = "sujiang";
 
 MiniSceneRule::MiniSceneRule(Scenario *scenario)
@@ -54,7 +55,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
         return true;
     } else if (event == FetchDrawPileCard) {
         if (this->players.first()["endedByPile"] != QString()) {
-            const QList<int>& drawPile = room->getDrawPile();
+            const QList<int> &drawPile = room->getDrawPile();
             foreach (int id, m_fixedDrawCards) {
                 if (drawPile.contains(id))
                     return false;
@@ -93,12 +94,21 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             }
             room->broadcastInvoke("addHistory", "pushPile");
         }
+        if (m_fixedDrawCards.length() > 0 && ex_options.contains(S_EXTRA_OPTION_REST_IN_DISCARD_PILE)) {
+            DummyCard *dummy = new DummyCard;
+            foreach (int id, drawPile) {
+                if (!m_fixedDrawCards.contains(id))
+                    dummy->addSubcard(id);
+            }
+            room->moveCardTo(dummy, NULL, Player::DiscardPile);
+            delete dummy;
+        }
 
         int i = 0, j = 0;
         QList<int> int_list;
         for (i = 0; i < players.length(); i++)
             int_list << i;
-        if (ex_options.contains("randomRoles"))
+        if (ex_options.contains(S_EXTRA_OPTION_RANDOM_ROLES))
             qShuffle(int_list);
 
         for (j = 0; j < players.length(); j++) {

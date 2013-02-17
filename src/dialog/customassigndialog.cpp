@@ -153,6 +153,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     QPushButton *pileAssign = new QPushButton(tr("PileCardAssign"));
 
     random_roles_box = new QCheckBox(tr("RandomRoles"));
+    rest_in_DP_box = new QCheckBox(tr("RestInDiscardPile"));
 
     max_hp_prompt = new QCheckBox(tr("Max Hp"));
     max_hp_prompt->setChecked(false);
@@ -230,6 +231,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     vlayout->addLayout(HLay(set_turned, set_chained));
     vlayout->addLayout(HLay(choose_nationality, nationalities));
     vlayout->addWidget(random_roles_box);
+    vlayout->addWidget(rest_in_DP_box);
     vlayout->addWidget(extra_skill_set);
     vlayout->addWidget(starter_group);
     vlayout->addWidget(ended_by_pile);
@@ -1320,9 +1322,10 @@ void CustomAssignDialog::load() {
     list->setCurrentRow(0);
 
     player_draw->setValue(player_start_draw[list->currentItem()->data(Qt::UserRole).toString()]);
-    num_ComboBox->setCurrentIndex(list->count()-2);
+    num_ComboBox->setCurrentIndex(list->count() - 2);
 
     random_roles_box->setChecked(options.contains(MiniSceneRule::S_EXTRA_OPTION_RANDOM_ROLES));
+    rest_in_DP_box->setChecked(options.contains(MiniSceneRule::S_EXTRA_OPTION_REST_IN_DISCARD_PILE));
 
     updatePileInfo();
     file.close();
@@ -1371,7 +1374,7 @@ bool CustomAssignDialog::save(QString path) {
 
     QString line;
 
-    set_options << random_roles_box->isChecked();
+    set_options << random_roles_box->isChecked() << rest_in_DP_box->isChecked();
     foreach (bool option, set_options) {
         if (option) {
             line.append("extraOptions:");
@@ -1382,7 +1385,11 @@ bool CustomAssignDialog::save(QString path) {
         line.append(MiniSceneRule::S_EXTRA_OPTION_RANDOM_ROLES);
         line.append(" ");
     }
-    line.remove(line.length()-1, 1);
+    if (rest_in_DP_box->isChecked()) {
+        line.append(MiniSceneRule::S_EXTRA_OPTION_REST_IN_DISCARD_PILE);
+        line.append(" ");
+    }
+    line.remove(line.length() - 1, 1);
     line.append("\n");
 
     if (set_pile.length()) {

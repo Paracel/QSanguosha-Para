@@ -1547,9 +1547,9 @@ const ProhibitSkill *Room::isProhibited(const Player *from, const Player *to, co
 }
 
 int Room::drawCard() {
+    thread->trigger(FetchDrawPileCard, this, NULL);
     if (m_drawPile->isEmpty())
         swapPile();
-    thread->trigger(FetchDrawPileCard, this, NULL);
     return m_drawPile->takeFirst();
 }
 

@@ -111,7 +111,7 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
 
-	if enemy:hasArmorEffect("silver_lion") then
+	if enemy:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
 		return
 	end
 

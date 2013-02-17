@@ -45,7 +45,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     list->setFlow(QListView::TopToBottom);
     list->setMovement(QListView::Static);
 
-    QVBoxLayout *vlayout = new QVBoxLayout;
+    QVBoxLayout *vlayout = new QVBoxLayout, *vlayout2 = new QVBoxLayout;
     num_ComboBox = new QComboBox;
     for (int i = 0; i <= 9; i++) {
         if (i < 9)
@@ -135,6 +135,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     general_label->setPixmap(QPixmap("image/system/disabled.png"));
     general_label->setFixedSize(G_COMMON_LAYOUT.m_tinyAvatarSize);
     QGroupBox *general_box = new QGroupBox(tr("General"));
+    general_box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QVBoxLayout *general_lay = new QVBoxLayout();
     general_box->setLayout(general_lay);
     general_lay->addWidget(general_label);
@@ -143,6 +144,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     general_label2->setPixmap(QPixmap("image/system/disabled.png"));
     general_label2->setFixedSize(G_COMMON_LAYOUT.m_tinyAvatarSize);
     QGroupBox *general_box2 = new QGroupBox(tr("General2"));
+    general_box2->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     QVBoxLayout *general_lay2 = new QVBoxLayout();
     general_box2->setLayout(general_lay2);
     general_lay2->addWidget(general_label2);
@@ -226,24 +228,25 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     label_lay->addWidget(general_box2);
     vlayout->addLayout(label_lay);
     vlayout->addLayout(HLay(self_select_general, self_select_general2));
-    vlayout->addLayout(HLay(max_hp_prompt,max_hp_spin));
-    vlayout->addLayout(HLay(hp_prompt,hp_spin));
+    vlayout->addLayout(HLay(max_hp_prompt, max_hp_spin));
+    vlayout->addLayout(HLay(hp_prompt, hp_spin));
     vlayout->addLayout(HLay(set_turned, set_chained));
     vlayout->addLayout(HLay(choose_nationality, nationalities));
+    vlayout->addWidget(extra_skill_set);
+    vlayout->addStretch();
     vlayout->addWidget(random_roles_box);
     vlayout->addWidget(rest_in_DP_box);
-    vlayout->addWidget(extra_skill_set);
-    vlayout->addWidget(starter_group);
-    vlayout->addWidget(ended_by_pile);
-    vlayout->addLayout(HLay(ended_by_pile_text, ended_by_pile_text2, ended_by_pile_box));
-    vlayout->addWidget(single_turn);
-    vlayout->addLayout(HLay(single_turn_text, single_turn_text2, single_turn_box));
-    vlayout->addWidget(before_next);
-    vlayout->addLayout(HLay(before_next_text, before_next_text2, before_next_box));
-    vlayout->addStretch();
-    vlayout->addWidget(defaultLoadButton);
-    vlayout->addLayout(HLay(loadButton, saveButton));
-    vlayout->addLayout(HLay(okButton, cancelButton));
+    vlayout2->addWidget(starter_group);
+    vlayout2->addWidget(ended_by_pile);
+    vlayout2->addLayout(HLay(ended_by_pile_text, ended_by_pile_text2, ended_by_pile_box));
+    vlayout2->addWidget(single_turn);
+    vlayout2->addLayout(HLay(single_turn_text, single_turn_text2, single_turn_box));
+    vlayout2->addWidget(before_next);
+    vlayout2->addLayout(HLay(before_next_text, before_next_text2, before_next_box));
+    vlayout2->addStretch();
+    vlayout2->addWidget(defaultLoadButton);
+    vlayout2->addLayout(HLay(loadButton, saveButton));
+    vlayout2->addLayout(HLay(okButton, cancelButton));
 
     ended_by_pile_text->hide();
     ended_by_pile_text2->hide();
@@ -315,6 +318,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     QHBoxLayout *layout = new QHBoxLayout();
     layout->addLayout(info_lay);
     layout->addLayout(vlayout);
+    layout->addLayout(vlayout2);
     QVBoxLayout *mainlayout = new QVBoxLayout();
     mainlayout->addLayout(layout);
     setLayout(mainlayout);

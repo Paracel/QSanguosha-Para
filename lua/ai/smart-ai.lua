@@ -1745,11 +1745,13 @@ function SmartAI:filterEvent(event, player, data)
 		end
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
-		local from -- convert move.from from const Player * to ServerPlayer *
-		for _, p in sgs.qlist(global_room:getAlivePlayers()) do
-			if p:objectName() == move.from:objectName() then
-				from = p
-				break
+		local from = nil -- convert move.from from const Player * to ServerPlayer *
+		if move.from then
+			for _, p in sgs.qlist(global_room:getAlivePlayers()) do
+				if p:objectName() == move.from:objectName() then
+					from = p
+					break
+				end
 			end
 		end
 		local reason = move.reason

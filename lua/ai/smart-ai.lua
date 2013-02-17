@@ -1745,7 +1745,13 @@ function SmartAI:filterEvent(event, player, data)
 		end
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
-		local from = move.from
+		local from -- convert move.from from const Player * to ServerPlayer *
+		for _, p in sgs.qlist(global_room:getAlivePlayers()) do
+			if p:objectName() == move.from:objectName() then
+				from = p
+				break
+			end
+		end
 		local reason = move.reason
 		
 		for i = 1, move.card_ids:length() do
@@ -1782,7 +1788,7 @@ function SmartAI:filterEvent(event, player, data)
 				if from then sgs.updateIntention(sgs.ai_snat_dism_from, from, intention) end
 			end
 
-			if move.to_place == sgs.Player_PlaceHand and move.to then
+			if move.to_place == sgs.Player_PlaceHand and move.to and player:objectName() == move.to:objectName() then
 				if card:hasFlag("visible") then
 					if is_a_slash(move.to, card) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
 					if is_a_jink(move.to, card) then sgs.card_lack[move.to:objectName()]["Jink"] = 0 end
@@ -1793,16 +1799,16 @@ function SmartAI:filterEvent(event, player, data)
 			end
 
 			if move.to_place == sgs.Player_PlaceHand and move.to and place ~= sgs.Player_DrawPile then
-				local flag = "visible"
-				if move.from and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
-					flag = string.format("%s_%s_%s", "visible", move.from:objectName(), move.to:objectName())
+				if move.from and player:objectName() == move.from:objectName()
+					and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
+					local flag = string.format("%s_%s_%s", "visible", move.from:objectName(), move.to:objectName())
+					global_room:setCardFlag(card_id, flag, from)
 				end
-				global_room:setCardFlag(card_id, flag)
 			end
 
-			if move.to_place == sgs.Player_DiscardPile then
+			--[[if move.to_place == sgs.Player_DiscardPile then
 				global_room:clearCardFlag(card)
-			end
+			end]]
 
 			if player:hasFlag("PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
 				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD then

@@ -552,11 +552,8 @@ sgs.ai_use_priority.FenxunCard = 8
 sgs.ai_card_intention.FenxunCard = 50
 
 sgs.ai_skill_choice.mingshi = function(self, choices, data)
-	local to = data:toPlayer()
-	if self:isEnemy(to) and not to:hasFlag("damage_plus") then
-		return "yes"
-	end
-	return "no"
+	local damage = data:toDamage()
+	return (self:isEnemy(damage.to) and damage.damage == 1) and "yes" or "no"
 end
 
 sgs.ai_skill_invoke.lirang = function(self, data)

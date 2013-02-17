@@ -103,6 +103,8 @@ function sgs.CreateTargetModSkill(spec)
 	
 	if type(spec.pattern) == "string" then
 		skill.pattern = spec.pattern
+	else
+		skill.pattern = "Slash"
 	end
 
 	return skill
@@ -181,7 +183,7 @@ end
 
 function sgs.LoadTranslationTable(t)
 	for key, value in pairs(t) do
-		sgs.AddTranslationEntry(key, value)		
+		sgs.AddTranslationEntry(key, value)
 	end
 end
 

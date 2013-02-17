@@ -275,7 +275,6 @@ nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	cards = sgs.QList2Table(cards)
 
 	local equip_card
-
 	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do

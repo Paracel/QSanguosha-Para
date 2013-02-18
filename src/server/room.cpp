@@ -1993,7 +1993,7 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
     const int max_available = (total - existed.size()) / to_assign.length();
     const int choice_count = qMin(max_choice, max_available);
 
-    QStringList choices = Sanguosha->getRandomGenerals(total-existed.size(), existed);
+    QStringList choices = Sanguosha->getRandomGenerals(total - existed.size(), existed);
 
     if (Config.EnableHegemony) {
         if (to_assign.first()->getGeneral()) {
@@ -2005,7 +2005,7 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
                 //keep legal generals
                 foreach (QString name, old_list) {
                     if (Sanguosha->getGeneral(name)->getKingdom() != sp->getGeneral()->getKingdom()
-                       || sp->findReasonable(old_list, true) == name) {
+                        || sp->findReasonable(old_list, true) == name) {
                         sp->addToSelected(name);
                         old_list.removeOne(name);
                     }
@@ -2116,7 +2116,7 @@ void Room::chooseGenerals() {
                 player->setGeneral2Name("anjiang");
                 notifyProperty(player, player, "general2");
             }
-            this->setTag(player->objectName(),QVariant::fromValue(names));
+            this->setTag(player->objectName(), QVariant::fromValue(names));
         }
     }
 }

@@ -39,7 +39,7 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 			end
 		end
 	end
-	if not self.player:isWounded() or (self.player:getHp() == 1 and self:getCardsNum("Analeptic") > 0 and and self.player:getHandcardNum() >= 2)
+	if not self.player:isWounded() or (self.player:getHp() == 1 and self:getCardsNum("Analeptic") > 0 and self.player:getHandcardNum() >= 2)
 		and self.player:hasSkill("jieming") then
 		local use_quhu
 		for _, friend in ipairs(self.friends) do

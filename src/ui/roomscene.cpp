@@ -3211,13 +3211,19 @@ void RoomScene::showSkillInvocation(const QString &who, const QString &skill_nam
 }
 
 void RoomScene::removeLightBox() {
-    QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
-    QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
-    if (line == NULL) {
-        QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
-        removeItem(line->parentItem());
-    } else
-        removeItem(line->parentItem());
+    PixmapAnimation *pma = qobject_cast<PixmapAnimation *>(sender());
+    if (pma) {
+        removeItem(pma->parentItem());
+    } else {
+        QPropertyAnimation *animation = qobject_cast<QPropertyAnimation *>(sender());
+        QGraphicsTextItem *line = qobject_cast<QGraphicsTextItem *>(animation->targetObject());
+        if (line) {
+            removeItem(line->parentItem());
+        } else {
+            QSanSelectableItem *line = qobject_cast<QSanSelectableItem *>(animation->targetObject());
+            removeItem(line->parentItem());
+        }
+    }
 }
 
 QGraphicsObject *RoomScene::getAnimationObject(const QString &name) const{
@@ -3339,6 +3345,13 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 
         connect(appear, SIGNAL(finished()), line, SLOT(deleteLater()));
         connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));
+    } else if (word.startsWith("anim=")) {
+        PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(lightbox, word.mid(5));
+        if (pma) {
+            pma->setZValue(20002.0);
+            pma->moveBy(-sceneRect().width() * _m_roomLayout->m_infoPlaneWidthPercentage / 2, 0);
+            connect(pma, SIGNAL(finished()), this, SLOT(removeLightBox()));
+        }
     } else {
         QFont font = Config.BigFont;
         if (reset_size) font.setPixelSize(100);

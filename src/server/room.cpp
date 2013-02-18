@@ -444,7 +444,7 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
 
     if (thread->trigger(SlashEffected, this, effect.to, data)) {
         if (effect.to->getMark("Qinggang_Armor_Nullified") > 0)
-            setPlayerMark(effect.to, "Qinggang_Armor_Nullified", effect.to->getMark("Qinggang_Armor_Nullified") - 1);
+            removePlayerMark(effect.to, "Qinggang_Armor_Nullified");
     }
 }
 
@@ -462,7 +462,7 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
         if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
             setEmotion(effect.to, "jink");
         if (effect.to->getMark("Qinggang_Armor_Nullified") > 0)
-            setPlayerMark(effect.to, "Qinggang_Armor_Nullified", effect.to->getMark("Qinggang_Armor_Nullified") - 1);
+            removePlayerMark(effect.to, "Qinggang_Armor_Nullified");
         thread->trigger(SlashMissed, this, effect.from, data);
     }
 }
@@ -1272,6 +1272,19 @@ void Room::setPlayerProperty(ServerPlayer *player, const char *property_name, co
 void Room::setPlayerMark(ServerPlayer *player, const QString &mark, int value) {
     player->setMark(mark, value);
     broadcastInvoke("setMark", QString("%1.%2=%3").arg(player->objectName()).arg(mark).arg(value));
+}
+
+void Room::addPlayerMark(ServerPlayer *player, const QString &mark, int add_num) {
+    int value = player->getMark(mark);
+    value += add_num;
+    setPlayerMark(player, mark, value);
+}
+
+void Room::removePlayerMark(ServerPlayer *player, const QString &mark, int remove_num) {
+    int value = player->getMark(mark);
+    value -= remove_num;
+    value = qMax(0, value);
+    setPlayerMark(player, mark, value);
 }
 
 void Room::setPlayerCardLimitation(ServerPlayer *player, const QString &limit_list,
@@ -2573,7 +2586,7 @@ void Room::damage(DamageStruct &damage_data) {
     // Predamage
     if (thread->trigger(Predamage, this, damage_data.from, data)) {
         if (damage_data.card && damage_data.card->isKindOf("Slash") && damage_data.to->getMark("Qinggang_Armor_Nullified") > 0)
-            setPlayerMark(damage_data.to, "Qinggang_Armor_Nullified", damage_data.to->getMark("Qinggang_Armor_Nullified") - 1);
+            removePlayerMark(damage_data.to, "Qinggang_Armor_Nullified");
         return;
     }
 

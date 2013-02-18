@@ -34,8 +34,7 @@ public:
                         int disc = room->askForCardChosen(player, p, "he", objectName());
                         room->throwCard(disc, p, player);
                     }
-                    room->setPlayerMark(p, objectName() + use.card->toString(),
-                                        p->getMark(objectName() + use.card->toString()) + 1);
+                    room->addPlayerMark(p, objectName() + use.card->toString());
                 }
             }
         } else if (event == SlashMissed) {
@@ -47,8 +46,7 @@ public:
             int disc = room->askForCardChosen(effect.to, effect.from, "he", objectName());
             room->broadcastSkillInvoke(objectName(), 3);
             room->throwCard(disc, effect.from, effect.to);
-            room->setPlayerMark(effect.to, objectName() + effect.slash->toString(),
-                                effect.to->getMark(objectName() + effect.slash->toString()) - 1);
+            room->removePlayerMark(effect.to, objectName() + effect.slash->toString());
         } else if (event == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (!use.card->isKindOf("Slash"))

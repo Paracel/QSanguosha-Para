@@ -338,7 +338,7 @@ public:
             bool do_anim = false;
             foreach (ServerPlayer *p, use.to.toSet()) {
                 if (p->getMark("Equips_of_Others_Nullified_to_You") == 0) {
-                    p->addMark("Qinggang_Armor_Nullified");
+                    room->addPlayerMark(p, "Qinggang_Armor_Nullified");
                     if (p->getArmor() || p->hasSkill("bazhen"))  do_anim = true;
                 }
             }

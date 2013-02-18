@@ -614,7 +614,7 @@ void WuqianCard::onEffect(const CardEffectStruct &effect) const{
     effect.from->loseMark("@wrath", 2);
     room->acquireSkill(effect.from, "wushuang", false);
     room->setPlayerFlag(effect.to, "WuqianTarget");
-    effect.to->addMark("Armor_Nullified");
+    room->addPlayerMark(effect.to, "Armor_Nullified");
 }
 
 class WuqianViewAsSkill: public ZeroCardViewAsSkill {
@@ -658,7 +658,7 @@ public:
             if (p->hasFlag("WuqianTarget")) {
                 room->setPlayerFlag(p, "-WuqianTarget");
                 if (p->getMark("Armor_Nullified") > 0)
-                    p->removeMark("Armor_Nullified");
+                    room->removePlayerMark(p, "Armor_Nullified");
             }
         }
         room->detachSkillFromPlayer(player, "wushuang");

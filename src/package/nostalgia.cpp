@@ -671,7 +671,7 @@ public:
         room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$NosBaijiangAnimate", 5000);
-        room->setPlayerMark(zhonghui, "nosbaijiang", 1);
+        room->addPlayerMark(zhonghui, "nosbaijiang");
 
         if (room->changeMaxHpForAwakenSkill(zhonghui, 1)) {
             RecoverStruct recover;
@@ -845,7 +845,7 @@ public:
         room->sendLog(log);
         room->doLightbox("$NosZiliAnimate", 5000);
 
-        room->setPlayerMark(zhonghui, "noszili", 1);
+        room->addPlayerMark(zhonghui, "noszili");
         if (room->changeMaxHpForAwakenSkill(zhonghui))
             room->acquireSkill(zhonghui, "nospaiyi");
 

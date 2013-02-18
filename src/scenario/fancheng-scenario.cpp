@@ -237,7 +237,7 @@ bool ZhiyuanCard::targetFilter(const QList<const Player *> &targets, const Playe
 
 void ZhiyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     targets.first()->obtainCard(this, false);
-    room->setPlayerMark(source, "zhiyuan", source->getMark("zhiyuan") - 1);
+    room->removePlayerMark(source, "zhiyuan");
 }
 
 class ZhiyuanViewAsSkill: public OneCardViewAsSkill {

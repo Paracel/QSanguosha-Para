@@ -495,7 +495,7 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == SlashMissed) {
             if (player->getPhase() == Player::Play)
-                room->setPlayerMark(player, "huxiao", player->getMark("huxiao") + 1);
+                room->addPlayerMark(player, "huxiao");
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.from == Player::Play)
@@ -537,7 +537,7 @@ public:
         if (event == DamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.from && damage.from->isAlive() && damage.from == room->getCurrent() && damage.from->getMark("wuji") == 0)
-                room->setPlayerMark(damage.from, "wuji_damage", damage.from->getMark("wuji_damage") + damage.damage);
+                room->addPlayerMark(damage.from, "wuji_damage", damage.damage);
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive)
@@ -576,7 +576,7 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$WujiAnimate", 4000);
 
-        player->addMark("wuji");
+        room->addPlayerMark(player, "wuji");
 
         if (room->changeMaxHpForAwakenSkill(player, 1)) {
             RecoverStruct recover;
@@ -783,7 +783,7 @@ public:
         return target && target->hasSkill(objectName());
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DeathStruct death = data.value<DeathStruct>();
         if (death.who != player) return false;
         foreach (ServerPlayer *p, room->getAllPlayers())
@@ -896,7 +896,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$DanjiAnimate", 5000);
 
-            room->setPlayerMark(guanyu, "danji", 1);
+            room->addPlayerMark(guanyu, "danji");
             if (room->changeMaxHpForAwakenSkill(guanyu))
                 room->acquireSkill(guanyu, "mashu");
         }

@@ -319,9 +319,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 damage.from = NULL;
             data = QVariant::fromValue(damage);
             if (damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified") > 0) {
-                room->setPlayerMark(player, "Qinggang_Armor_Nullified", player->getMark("Qinggang_Armor_Nullified") - 1);
-                room->setPlayerMark(player, "Qinggang_Armor_Nullified_Clear",
-                                    player->getMark("Qinggang_Armor_Nullified_Clear") + 1);
+                room->removePlayerMark(player, "Qinggang_Armor_Nullified");
+                room->addPlayerMark(player, "Qinggang_Armor_Nullified_Clear");
             }
             room->sendDamageLog(damage);
 
@@ -342,10 +341,9 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             DamageStruct damage = data.value<DamageStruct>();
             if (player->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
                 if (damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified") > 0)
-                    room->setPlayerMark(player, "Qinggang_Armor_Nullified", player->getMark("Qinggang_Armor_Nullified") - 1);
+                    room->removePlayerMark(player, "Qinggang_Armor_Nullified");
             } else {
-                room->setPlayerMark(player, "Qinggang_Armor_Nullified_Clear",
-                                    player->getMark("Qinggang_Armor_Nullified_Clear") - 1);
+                room->removePlayerMark(player, "Qinggang_Armor_Nullified_Clear");
             }
             if (room->getTag("is_chained").toInt() > 0) {
                 DamageStruct damage = data.value<DamageStruct>();
@@ -918,13 +916,13 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
         room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
         foreach (QString skill_name, GameRule::skill_mark.keys()) {
             if (player->hasSkill(skill_name, true))
-                room->setPlayerMark(player, GameRule::skill_mark[skill_name], 1);
+                room->addPlayerMark(player, GameRule::skill_mark[skill_name]);
         }
     } else {
         room->changeHero(player, general_name, false, false, true, false);
         foreach (QString skill_name, GameRule::skill_mark.keys()) {
             if (player->hasSkill(skill_name, true))
-                room->setPlayerMark(player, GameRule::skill_mark[skill_name], 1);
+                room->addPlayerMark(player, GameRule::skill_mark[skill_name]);
         }
     }
 

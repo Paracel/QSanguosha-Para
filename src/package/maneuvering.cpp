@@ -72,7 +72,7 @@ void Analeptic::onEffect(const CardEffectStruct &effect) const{
         recover.who = effect.from;
         room->recover(effect.to, recover);
     } else {
-        room->setPlayerMark(effect.to, "drank", effect.to->getMark("drank") + 1);
+        room->addPlayerMark(effect.to, "drank");
     }
 }
 

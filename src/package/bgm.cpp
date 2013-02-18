@@ -942,7 +942,7 @@ public:
         if (event == GameStart) {
             foreach (ServerPlayer *p, room->getAlivePlayers())
                 if (p->hasLordSkill("shichou"))
-                    room->setPlayerMark(p, "@hate", player->getMark("@hate") + 1);
+                    room->addPlayerMark(p, "@hate");
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
                   && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
             QList<ServerPlayer *> targets = room->getOtherPlayers(player);
@@ -1130,7 +1130,7 @@ public:
             if (!use.to.contains(daqiao) || daqiao->isKongcheng())
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
-                room->setPlayerMark(daqiao, "anxian", 0);
+                daqiao->setMark("anxian", 0);
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");
@@ -1146,7 +1146,7 @@ public:
                 log.to << daqiao;
                 log.arg = objectName();
                 room->sendLog(log);
-                room->setPlayerMark(daqiao, "anxian", daqiao->getMark("anxian") - 1);
+                daqiao->removeMark("anxian");
                 return true;
             }
         }

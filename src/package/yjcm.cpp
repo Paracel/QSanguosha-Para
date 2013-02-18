@@ -556,7 +556,7 @@ void XianzhenCard::onEffect(const CardEffectStruct &effect) const{
         effect.from->tag["XianzhenTarget"] = QVariant::fromValue(target);
         room->setPlayerFlag(effect.from, "xianzhen_success");
         room->setFixedDistance(effect.from, effect.to, 1);
-        effect.to->addMark("Armor_Nullified");
+        room->addPlayerMark(effect.to, "Armor_Nullified");
     } else {
         room->setPlayerCardLimitation(effect.from, "use", "Slash", true);
     }
@@ -649,7 +649,7 @@ public:
         if (target) {
             room->setFixedDistance(gaoshun, target, -1);
             gaoshun->tag.remove("XianzhenTarget");
-            target->removeMark("Armor_Nullified");
+            room->removePlayerMark(target, "Armor_Nullified");
         }
         return false;
     }
@@ -1084,7 +1084,7 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$ZiliAnimate", 3000);
 
-        room->setPlayerMark(zhonghui, "zili", 1);
+        room->addPlayerMark(zhonghui, "zili");
         if (room->changeMaxHpForAwakenSkill(zhonghui)) {
             if (zhonghui->isWounded() && room->askForChoice(zhonghui, objectName(), "recover+draw") == "recover") {
                 RecoverStruct recover;

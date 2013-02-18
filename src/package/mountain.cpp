@@ -350,7 +350,7 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$ZaoxianAnimate", 4000);
 
-        room->setPlayerMark(dengai, "zaoxian", 1);
+        room->addPlayerMark(dengai, "zaoxian");
         if (room->changeMaxHpForAwakenSkill(dengai))
             room->acquireSkill(dengai, "jixi");
 
@@ -481,7 +481,7 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$HunziAnimate", 5000);
 
-        room->setPlayerMark(sunce, "hunzi", 1);
+        room->addPlayerMark(sunce, "hunzi");
         if (room->changeMaxHpForAwakenSkill(sunce)) {
             room->acquireSkill(sunce, "yinghun");
             room->acquireSkill(sunce, "yingzi");
@@ -655,7 +655,7 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$ZhijiAnimate", 4000);
 
-        room->setPlayerMark(jiangwei, "zhiji", 1);
+        room->addPlayerMark(jiangwei, "zhiji");
         if (room->changeMaxHpForAwakenSkill(jiangwei)) {
             if (jiangwei->isWounded() && room->askForChoice(jiangwei, objectName(), "recover+draw") == "recover") {
                 RecoverStruct recover;
@@ -857,7 +857,7 @@ public:
                 log.to << liushan;
                 log.arg = objectName();
                 room->sendLog(log);
-                liushan->setMark("xiangle", liushan->getMark("xiangle") - 1);
+                liushan->removeMark("xiangle");
                 return true;
             }
         }
@@ -974,7 +974,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$RuoyuAnimate");
 
-            room->setPlayerMark(liushan, "ruoyu", 1);
+            room->addPlayerMark(liushan, "ruoyu");
 
             if (room->changeMaxHpForAwakenSkill(liushan, 1)) {
                 RecoverStruct recover;

@@ -297,6 +297,8 @@ nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
+sgs.ai_skill_invoke.nosshangshi = sgs.ai_skill_invoke.shangshi
+
 function sgs.ai_cardneed.nosgongqi(to, card)
 	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, "EquipCard", true) == 0
 end

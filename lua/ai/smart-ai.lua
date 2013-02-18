@@ -2201,7 +2201,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 	else
-		if flags:match("e") and self:hasSkills("jijiu|beige", who) then
+		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor():getId() end
 			if who:getOffensiveHorse() and ((who:getOffensiveHorse():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then

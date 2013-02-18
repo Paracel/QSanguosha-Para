@@ -57,7 +57,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@dujiang-card";
+        return pattern == "@@dujiang";
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
@@ -91,7 +91,7 @@ public:
                 return false;
 
             Room *room = target->getRoom();
-            room->askForUseCard(target, "@dujiang-card", "@@dujiang", -1, Card::MethodDiscard);
+            room->askForUseCard(target, "@@dujiang", "@dujiang-card", -1, Card::MethodDiscard);
         }
 
         return false;

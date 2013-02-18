@@ -3386,6 +3386,11 @@ bool Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type
     return true;
 }
 
+void Room::doLightbox(const QString &lightboxName, int duration) {
+    broadcastInvoke("animate", QString().arg(lightboxName).arg(duration));
+    thread->delay(duration / 1.2);
+}
+
 void Room::preparePlayers() {
     foreach (ServerPlayer *player, m_players) {
         QList<const Skill *> skills = player->getGeneral()->getSkillList();

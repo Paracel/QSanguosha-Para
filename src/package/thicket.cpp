@@ -742,8 +742,7 @@ void LuanwuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) 
     QString lightbox = "lightbox:$LuanwuAnimate";
     if (source->getGeneralName() != "jiaxu" && (source->getGeneralName() == "sp_jiaxu" || source->getGeneral2Name() == "sp_jiaxu"))
         lightbox = lightbox + "SP";
-    room->broadcastInvoke("animate", lightbox + ":3000");
-    room->getThread()->delay(2000);
+    room->doLightbox(lightbox, 3000);
 
     QList<ServerPlayer *> players = room->getOtherPlayers(source);
     foreach (ServerPlayer *player, players) {

@@ -564,6 +564,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *player) const{
         Room *room = player->getRoom();
+        room->notifySkillInvoked(player, objectName());
 
         LogMessage log;
         log.type = "#WujiWake";
@@ -573,9 +574,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
-        room->broadcastInvoke("animate", "lightbox:$WujiAnimate:4000");
-        room->getThread()->delay(4000);
+        room->doLightbox("$WujiAnimate", 4000);
 
         player->addMark("wuji");
 
@@ -886,6 +885,8 @@ public:
         Room *room = guanyu->getRoom();
         ServerPlayer *the_lord = room->getLord();
         if (the_lord && (the_lord->getGeneralName() == "caocao" || the_lord->getGeneral2Name() == "caocao")) {
+            room->notifySkillInvoked(guanyu, objectName());
+
             LogMessage log;
             log.type = "#DanjiWake";
             log.from = guanyu;
@@ -893,9 +894,7 @@ public:
             log.arg2 = QString::number(guanyu->getHp());
             room->sendLog(log);
             room->broadcastSkillInvoke(objectName());
-            room->notifySkillInvoked(guanyu, objectName());
-            room->broadcastInvoke("animate", "lightbox:$DanjiAnimate:5000");
-            room->getThread()->delay(5000);
+            room->doLightbox("$DanjiAnimate", 5000);
 
             room->setPlayerMark(guanyu, "danji", 1);
             if (room->changeMaxHpForAwakenSkill(guanyu))

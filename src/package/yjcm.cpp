@@ -1072,6 +1072,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *zhonghui) const{
         Room *room = zhonghui->getRoom();
+        room->notifySkillInvoked(zhonghui, objectName());
 
         LogMessage log;
         log.type = "#ZiliWake";
@@ -1081,9 +1082,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(zhonghui, objectName());
-        room->broadcastInvoke("animate", "lightbox:$ZiliAnimate:3000");
-        room->getThread()->delay(3000);
+        room->doLightbox("$ZiliAnimate", 3000);
 
         room->setPlayerMark(zhonghui, "zili", 1);
         if (room->changeMaxHpForAwakenSkill(zhonghui)) {

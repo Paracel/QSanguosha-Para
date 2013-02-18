@@ -210,6 +210,7 @@ public:
     bool broadcastSkillInvoke(const QString &skillName, const QString &category);
     bool broadcastSkillInvoke(const QString &skillName, int type);
     bool broadcastSkillInvoke(const QString &skillName, bool isMale, int type);
+    void doLightbox(const QString &lightboxName, int duration = 2000);
 
     void preparePlayers();
     void changePlayerGeneral(ServerPlayer *player, const QString &new_general);

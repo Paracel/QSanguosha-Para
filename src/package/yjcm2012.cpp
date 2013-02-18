@@ -328,8 +328,7 @@ public:
         if (dying_data.who != liaohua)
             return false;
         if (liaohua->askForSkillInvoke(objectName(), data)) {
-            room->broadcastInvoke("animate", "lightbox:$FuliAnimate:3000");
-            room->getThread()->delay(2800);
+            room->doLightbox("$FuliAnimate", 3000);
             room->broadcastSkillInvoke(objectName());
 
             liaohua->loseMark("@laoji");
@@ -524,8 +523,7 @@ void JiefanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
             || target->getGeneralName().contains("sunce")))
         index = 2;
     room->broadcastSkillInvoke("jiefan", index);
-    room->broadcastInvoke("animate", "lightbox:$JiefanAnimate:2500");
-    room->getThread()->delay(2000);
+    room->doLightbox("$JiefanLightbox", 2500);
 
     foreach (ServerPlayer *player, room->getAllPlayers()) {
         if (player->isAlive() && player->inMyAttackRange(target))

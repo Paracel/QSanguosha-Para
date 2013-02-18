@@ -69,8 +69,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             return true;
 
         if (objectName().startsWith("_mini_")) {
-            room->broadcastInvoke("animate", "lightbox:" + objectName() + ":2000");
-            room->getThread()->delay(2000);
+            room->doLightbox(objectName(), 2000);
 
             LogMessage log;
             log.type = "#WelcomeToMiniScenario";

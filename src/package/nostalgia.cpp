@@ -661,6 +661,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *zhonghui) const{
         Room *room = zhonghui->getRoom();
+        room->notifySkillInvoked(zhonghui, objectName());
 
         LogMessage log;
         log.type = "#NosBaijiangWake";
@@ -669,9 +670,7 @@ public:
         log.arg2 = objectName();
         room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(zhonghui, objectName());
-        room->broadcastInvoke("animate", "lightbox:$NosBaijiangAnimate:5000");
-        room->getThread()->delay(4500);
+        room->doLightbox("$NosBaijiangAnimate", 5000);
         room->setPlayerMark(zhonghui, "nosbaijiang", 1);
 
         if (room->changeMaxHpForAwakenSkill(zhonghui, 1)) {
@@ -836,6 +835,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *zhonghui) const{
         Room *room = zhonghui->getRoom();
+        room->notifySkillInvoked(zhonghui, objectName());
 
         LogMessage log;
         log.type = "#NosZiliWake";
@@ -843,10 +843,7 @@ public:
         log.arg = QString::number(zhonghui->getPile("nospower").length());
         log.arg2 = objectName();
         room->sendLog(log);
-        room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(zhonghui, objectName());
-        room->broadcastInvoke("animate", "lightbox:$NosZiliAnimate:5000");
-        room->getThread()->delay(5000);
+        room->doLightbox("$NosZiliAnimate", 5000);
 
         room->setPlayerMark(zhonghui, "noszili", 1);
         if (room->changeMaxHpForAwakenSkill(zhonghui))

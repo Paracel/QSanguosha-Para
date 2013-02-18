@@ -319,10 +319,8 @@ public:
     void doZuixiang(ServerPlayer *player) const{
         Room *room = player->getRoom();
         room->broadcastSkillInvoke("zuixiang");
-        if (player->getPile("dream").isEmpty()) {
-            room->broadcastInvoke("animate", "lightbox:$ZuixiangAnimate:3000");
-            room->getThread()->delay(3000);
-        }
+        if (player->getPile("dream").isEmpty())
+            room->doLightbox("ZuixiangAnimate", 3000);
 
         QList<Card::CardType> type_list;
         foreach (int card_id, player->getPile("dream")) {
@@ -958,8 +956,8 @@ public:
                 return false;
             if (player->askForSkillInvoke(objectName())) {
                 room->broadcastSkillInvoke(objectName());
-                room->broadcastInvoke("animate", "lightbox:$ShichouAnimate:4500");
-                room->getThread()->delay(4500);
+                room->doLightbox("$ShichouAnimate", 4500);
+
                 player->loseMark("@hate", 1);
                 room->setPlayerMark(player, "xhate", 1);
                 ServerPlayer *victim = room->askForPlayerChosen(player, victims, objectName());

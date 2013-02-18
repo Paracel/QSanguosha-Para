@@ -261,11 +261,7 @@ void Peach::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets
 
 void Peach::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
-
-    // do animation
-    room->broadcastInvoke("animate", QString("peach:%1:%2")
-                                             .arg(effect.from->objectName())
-                                             .arg(effect.to->objectName()));
+    room->setEmotion(effect.from, "peach");
 
     // recover hp
     RecoverStruct recover;

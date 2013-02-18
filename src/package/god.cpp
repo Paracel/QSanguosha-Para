@@ -109,8 +109,7 @@ public:
 
         if (judge.isBad()) {
             room->broadcastSkillInvoke("wuhun", 2);
-            room->broadcastInvoke("animate", "lightbox:$WuhunAnimate:3000");
-            room->getThread()->delay(2000);
+            room->doLightbox("$WuhunAnimate", 3000);
 
             LogMessage log;
             log.type = "#WuhunRevenge";
@@ -298,13 +297,10 @@ void GreatYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlaye
     if (criticaltarget > 0) {
         room->loseHp(shenzhouyu, 3);
         shenzhouyu->loseMark("@flame");
-        if (totalvictim > 1) {
-            room->broadcastInvoke("animate", "lightbox:$YeyanAnimate");
-            room->broadcastSkillInvoke("yeyan", 2);
-        } else {
-            room->broadcastInvoke("animate", "lightbox:$YeyanAnimate");
-            room->broadcastSkillInvoke("yeyan", 1);
-        }
+
+        room->broadcastSkillInvoke("yeyan", (totalvictim > 1) ? 2 : 1);
+        room->doLightbox("$YeyanAnimate");
+
         QList<ServerPlayer *>targets = map.keys();
         if (targets.size() > 1)
             qSort(targets.begin(), targets.end(), ServerPlayer::CompareByActionOrder);
@@ -327,8 +323,8 @@ bool SmallYeyanCard::targetFilter(const QList<const Player *> &targets, const Pl
 }
 
 void SmallYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlayer *> &targets) const{
-    room->broadcastInvoke("animate", "lightbox:$YeyanAnimate");
     room->broadcastSkillInvoke("yeyan", 3);
+    room->doLightbox("$YeyanAnimate");
     shenzhouyu->loseMark("@flame");
     Card::use(room, shenzhouyu, targets);
 }
@@ -443,7 +439,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 if (players.length() >= 4)
-                    room->broadcastInvoke("animate", "lightbox:$GuixinAnimate");
+                    room->doLightbox("$GuixinAnimate");
 
                 foreach (ServerPlayer *player, players) {
                     if (player->isAlive() && !player->isAllNude()) {
@@ -572,8 +568,7 @@ ShenfenCard::ShenfenCard() {
 void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> &) const{
     room->setPlayerFlag(shenlvbu, "ShenfenUsing");
     room->broadcastSkillInvoke("shenfen");
-    room->broadcastInvoke("animate", "lightbox:$ShenfenAnimate:5000");
-    room->getThread()->delay(4500);
+    room->doLightbox("$ShenfenAnimate", 5000);
     shenlvbu->loseMark("@wrath", 6);
 
     QList<ServerPlayer *> players = room->getOtherPlayers(shenlvbu);
@@ -987,8 +982,7 @@ public:
         Room *room = shensimayi->getRoom();
         room->broadcastSkillInvoke(objectName());
         room->notifySkillInvoked(shensimayi, objectName());
-        room->broadcastInvoke("animate", "lightbox:$BaiyinAnimate");
-        room->getThread()->delay(2000);
+        room->doLightbox("$BaiyinAnimate");
 
         LogMessage log;
         log.type = "#BaiyinWake";

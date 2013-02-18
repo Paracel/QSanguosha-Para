@@ -151,7 +151,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString,QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
-    connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString,QStringList)));
+    connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString, QStringList)));
     connect(ClientInstance, SIGNAL(role_state_changed(QString)),this, SLOT(updateRoles(QString)));
     connect(ClientInstance, SIGNAL(event_received(const Json::Value)), this, SLOT(handleGameEvent(const Json::Value)));
 
@@ -3296,10 +3296,6 @@ void RoomScene::animatePopup(const QString &name, const QStringList &args) {
 }
 
 void RoomScene::doAppearingAnimation(const QString &name, const QStringList &args) {
-    if (name == "analeptic" || name == "peach") {
-        setEmotion(args.at(0), name);
-        return;
-    }
     QSanSelectableItem *item = new QSanSelectableItem(QString("image/system/animation/%1.png").arg(name));
     addItem(item);
 
@@ -3426,11 +3422,9 @@ void RoomScene::doIndicate(const QString &, const QStringList &args) {
 void RoomScene::doAnimation(const QString &name, const QStringList &args) {
     static QMap<QString, AnimationFunc> map;
     if (map.isEmpty()) {
-        map["peach"] = &RoomScene::doAppearingAnimation;
         map["jink"] = &RoomScene::animatePopup;
         map["nullification"] = &RoomScene::doMovingAnimation;
 
-        map["analeptic"] = &RoomScene::doAppearingAnimation;
         map["fire"] = &RoomScene::doAppearingAnimation;
         map["lightning"] = &RoomScene::doAppearingAnimation;
 

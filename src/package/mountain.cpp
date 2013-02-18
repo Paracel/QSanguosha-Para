@@ -338,6 +338,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *dengai) const{
         Room *room = dengai->getRoom();
+        room->notifySkillInvoked(dengai, objectName());
 
         LogMessage log;
         log.type = "#ZaoxianWake";
@@ -347,9 +348,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(dengai, objectName());
-        room->broadcastInvoke("animate", "lightbox:$ZaoxianAnimate:4000");
-        room->getThread()->delay(4000);
+        room->doLightbox("$ZaoxianAnimate", 4000);
 
         room->setPlayerMark(dengai, "zaoxian", 1);
         if (room->changeMaxHpForAwakenSkill(dengai))
@@ -471,6 +470,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *sunce) const{
         Room *room = sunce->getRoom();
+        room->notifySkillInvoked(sunce, objectName());
 
         LogMessage log;
         log.type = "#HunziWake";
@@ -479,9 +479,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(sunce, objectName());
-        room->broadcastInvoke("animate", "lightbox:$HunziAnimate:5000");
-        room->getThread()->delay(5000);
+        room->doLightbox("$HunziAnimate", 5000);
 
         room->setPlayerMark(sunce, "hunzi", 1);
         if (room->changeMaxHpForAwakenSkill(sunce)) {
@@ -646,6 +644,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *jiangwei) const{
         Room *room = jiangwei->getRoom();
+        room->notifySkillInvoked(jiangwei, objectName());
 
         LogMessage log;
         log.type = "#ZhijiWake";
@@ -654,9 +653,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(jiangwei, objectName());
-        room->broadcastInvoke("animate", "lightbox:$ZhijiAnimate:4000");
-        room->getThread()->delay(4000);
+        room->doLightbox("$ZhijiAnimate", 4000);
 
         room->setPlayerMark(jiangwei, "zhiji", 1);
         if (room->changeMaxHpForAwakenSkill(jiangwei)) {
@@ -965,10 +962,7 @@ public:
         }
 
         if (can_invoke) {
-            room->broadcastSkillInvoke(objectName());
             room->notifySkillInvoked(liushan, objectName());
-            room->broadcastInvoke("animate", "lightbox:$RuoyuAnimate");
-            room->getThread()->delay(1500);
 
             LogMessage log;
             log.type = "#RuoyuWake";
@@ -976,6 +970,9 @@ public:
             log.arg = QString::number(liushan->getHp());
             log.arg2 = objectName();
             room->sendLog(log);
+
+            room->broadcastSkillInvoke(objectName());
+            room->doLightbox("$RuoyuAnimate");
 
             room->setPlayerMark(liushan, "ruoyu", 1);
 

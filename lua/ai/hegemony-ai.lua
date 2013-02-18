@@ -562,10 +562,43 @@ end
 
 sgs.ai_skill_use["@@sijian"] = function(self, prompt)
 	self:sort(self.enemies, "defense")
-	
 	for _, enemy in ipairs(self.enemies) do
-		if ((not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy)) 
-			or self:getDangerousCard(enemy) or self:getValuableCard(enemy)) and not enemy:isNude() then
+		if not enemy:isNude() then
+			if self:getDangerousCard(enemy) then
+				return ("@SijianCard=.->%s"):format(enemy:objectName())
+			end
+		end
+	end
+
+	for _, friend in ipairs(self.friends) do
+		if friend:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, friend)
+		  and friend:isWounded() and self:isWeak(friend) then
+			return ("@SijianCard=.->%s"):format(friend:objectName())
+		end
+	end
+
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:isNude() then
+			if self:getValuableCard(enemy) then
+				return ("@SijianCard=.->%s"):format(enemy:objectName())
+			end
+		end
+	end
+
+	for _, enemy in ipairs(self.enemies) do
+		local cards = sgs.QList2Table(enemy:getHandcards())
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
+		if #cards <= 2 and not enemy:isKongcheng() then
+			for _, cc in ipairs(cards) do
+				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
+					return ("@SijianCard=.->%s"):format(enemy:objectName())
+				end
+			end
+		end
+	end
+
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:isNude() and self:hasLoseHandcardEffective(enemy) then
 			return ("@SijianCard=.->%s"):format(enemy:objectName())
 		end
 	end

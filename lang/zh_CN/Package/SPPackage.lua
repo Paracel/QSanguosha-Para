@@ -42,7 +42,7 @@ return {
 	["illustrator:sp_guanyu"] = "LiuHeng",
 	["danji"] = "单骑",
 	[":danji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的手牌数大于体力值，且本局游戏主公为曹操，你失去1点体力上限，然后获得技能“马术”。",
-	["$DanjiAnimate"] = "anim=image/animate/danji.png",
+	["$DanjiAnimate"] = "image=image/animate/danji.png",
 	["#DanjiWake"] = "%from 的手牌数(%arg)大于体力值(%arg2)，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
 
 	["#caohong"] = "福将",
@@ -62,7 +62,7 @@ return {
 	[":huxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>若你于出牌阶段使用【杀】被【闪】抵消，本阶段你可以额外使用一张【杀】。",
 	["wuji"] = "武继",
 	[":wuji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合结束阶段开始时，若你于此回合内造成了至少3点伤害，你增加1点体力上限，回复1点体力，然后失去技能“虎啸”。",
-	["$WujiAnimate"] = "anim=image/animate/wuji.png",
+	["$WujiAnimate"] = "image=image/animate/wuji.png",
 	["#WujiWake"] = "%from 本回合已造成 %arg 点伤害，触发“%arg2”觉醒",
 
 	["#xiahouba"] = "棘途壮志",
@@ -111,7 +111,7 @@ return {
 	["weapon_recast"] = "武器重铸",
 	["Hulaopass:recover"] = "回复1点体力",
 	["Hulaopass:draw"] = "摸一张牌",
-	["$StageChangeAnimate"] = "anim=image/animate/StageChange.png",
+	["$StageChangeAnimate"] = "image=image/animate/StageChange.png",
 
 	["sp_cards"] = "SP卡牌包",
 	["sp_moonspear"] = "银月枪",

@@ -42,7 +42,7 @@ return {
 	["&sp_jiaxu"] = "贾诩",
 	["illustrator:sp_jiaxu"] = "雪君S",
 	["cv_jiaxu:convert"] = "你可以替换为魏势力SP贾诩",
-	["$LuanwuAnimateSP"] = "anim=image/animate/luanwuSP.png",
+	["$LuanwuAnimateSP"] = "image=image/animate/luanwuSP.png",
 
 	["tw_diaochan"] = "台版貂蝉",
 	["&tw_diaochan"] = "貂蝉",

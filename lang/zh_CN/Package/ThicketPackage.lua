@@ -69,7 +69,7 @@ return {
 	[":luanwu"] = "<font color=\"red\"><b>限定技。</b></font>出牌阶段，你可以令所有其他角色对距离最近的另一名角色使用一张【杀】，否则该角色失去1点体力。",
 	["@chaos"] = "乱武",
 	["@luanwu-slash"] = "请使用一张【杀】响应“乱武”",
-	["$LuanwuAnimate"] = "anim=image/animate/luanwu.png",
+	["$LuanwuAnimate"] = "image=image/animate/luanwu.png",
 	["#WanshaOne"] = "%from 的“%arg”被触发，只能 %from 自救",
 	["#WanshaTwo"] = "%from 的“%arg”被触发，只有 %from 和 %to 才能救 %to",
 

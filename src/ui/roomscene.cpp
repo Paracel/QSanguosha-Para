@@ -3319,7 +3319,27 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
     lightbox->setBrush(QColor(32, 32, 32, 204));
     lightbox->setZValue(20001.0);
 
-    if (!word.startsWith("anim=")) {
+    if (word.startsWith("image=")) {
+        QSanSelectableItem *line = new QSanSelectableItem(word.mid(6));
+        addItem(line);
+
+        QRectF line_rect = line->boundingRect();
+        line->setParentItem(lightbox);
+        line->setPos(m_tableCenterPos - line_rect.center());
+
+        QPropertyAnimation *appear = new QPropertyAnimation(line, "opacity");
+        appear->setStartValue(0.0);
+        appear->setKeyValueAt(0.8, 1.0);
+        appear->setEndValue(1.0);
+
+        int duration = args.value(1, "2000").toInt();
+        appear->setDuration(duration);
+
+        appear->start(QAbstractAnimation::DeleteWhenStopped);
+
+        connect(appear, SIGNAL(finished()), line, SLOT(deleteLater()));
+        connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));
+    } else {
         QFont font = Config.BigFont;
         if (reset_size) font.setPixelSize(100);
         QGraphicsTextItem *line = addText(word, font);
@@ -3339,26 +3359,6 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 
         appear->start();
 
-        connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));
-    } else {
-        QSanSelectableItem *line = new QSanSelectableItem(word.mid(5));
-        addItem(line);
-
-        QRectF line_rect = line->boundingRect();
-        line->setParentItem(lightbox);
-        line->setPos(m_tableCenterPos - line_rect.center());
-
-        QPropertyAnimation *appear = new QPropertyAnimation(line, "opacity");
-        appear->setStartValue(0.0);
-        appear->setKeyValueAt(0.8, 1.0);
-        appear->setEndValue(1.0);
-
-        int duration = args.value(1, "2000").toInt();
-        appear->setDuration(duration);
-
-        appear->start(QAbstractAnimation::DeleteWhenStopped);
-
-        connect(appear, SIGNAL(finished()), line, SLOT(deleteLater()));
         connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));
     }
 }

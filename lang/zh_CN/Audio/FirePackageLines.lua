@@ -18,7 +18,6 @@ return {
 	["$lianhuan2"] = "统统连起来吧。",
 	["$niepan1"] = "浴火重生！",
 	["$niepan2"] = "凤雏岂能消亡？",
-	["$NiepanAnimate"] = "anim=image/animate/niepan.png",
 	["~pangtong"] = "看来，我命中注定将丧命于此。",
 
 	-- 卧龙诸葛亮

@@ -129,7 +129,7 @@ return {
 	["zili:draw"] = "摸两张牌",
 	["zili:recover"] = "回复1点体力",
 	["power"] = "权",
-	["$ZiliAnimate"] = "anim=image/animate/zili.png",
+	["$ZiliAnimate"] = "image=image/animate/zili.png",
 	["paiyi"] = "排异",
 	[":paiyi"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以将一张“权”置入弃牌堆并选择一名角色：若如此做，该角色摸两张牌。若该角色手牌数大于你的手牌数，你对其造成1点伤害",
 }

@@ -49,7 +49,7 @@ return {
 	["fuli"] = "伏枥",
 	[":fuli"] = "<font color=\"red\"><b>限定技。</b></font>当你处于濒死状态时，你可以将体力回复至X点，然后将你的武将牌翻面。（X为现存势力数）",
 	["@laoji"] = "伏枥",
-	["$FuliAnimate"] = "anim=image/animate/fuli.png",
+	["$FuliAnimate"] = "image=image/animate/fuli.png",
 
 	["#guanxingzhangbao"] = "将门虎子",
 	["guanxingzhangbao"] = "关兴·张苞",
@@ -91,7 +91,7 @@ return {
 	[":jiefan"] = "<font color=\"green\"><b>限定技。</b></font>出牌阶段，你可以选择一名角色，然后攻击范围内包含该角色的所有角色须弃置一张武器牌，否则令该角色摸一张牌。",
 	["@jiefan-discard"] = "请弃置一张武器牌，否则“解烦”目标角色摸一张牌",
 	["@rescue"] = "解烦",
-	["$JiefanAnimate"] = "anim=image/animate/jiefan.png",
+	["$JiefanAnimate"] = "image=image/animate/jiefan.png",
 
 	["#liubiao"] = "跨蹈汉南",
 	["liubiao"] = "刘表",

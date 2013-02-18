@@ -43,7 +43,7 @@ return {
 	[":zuixiang"] = "<font color=\"red\"><b>限定技。</b></font>回合开始阶段开始时，你可以将牌堆顶的三张牌置于你的武将牌上，称为“醉乡牌”，你不能使用或打出“醉乡牌”中存在的类别的牌，且这些类别的牌对你无效。此后每个回合开始阶段开始时，你重复此流程。若你的武将牌上出现同点数的牌，你获得所有“醉乡牌”，你以此法获得的牌不能发动“漫卷”。",
 	["@sleep"] = "醉乡",
 	["dream"] = "醉乡",
-	["$ZuixiangAnimate"] = "anim=image/animate/zuixiang.png",
+	["$ZuixiangAnimate"] = "image=image/animate/zuixiang.png",
 	["$ManjuanGot"] = "%from 即将获得 %card 并将该牌置入弃牌堆",
 	["#ZuiXiang1"] = "%from 的“%arg2”效果被触发， %to 的卡牌【%arg】对其无效",
 	["#ZuiXiang2"] = "%from 的“%arg2”效果被触发，【%arg】对其无效",
@@ -90,7 +90,7 @@ return {
 	["@hate"] = "誓仇",
 	["@hate_to"] = "誓仇",
 	["ShichouGive"] = "请交给目标角色 %arg 张牌",
-	["$ShichouAnimate"] = "anim=image/animate/shichou.png",
+	["$ShichouAnimate"] = "image=image/animate/shichou.png",
 	["#ShichouProtect"] = "%from 的“%arg”被触发，将伤害转移给 %to ",
 
 	["#bgm_daqiao"] = "韶光易逝",

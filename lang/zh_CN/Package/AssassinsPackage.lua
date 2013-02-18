@@ -31,5 +31,5 @@ return {
 	["fenxin"] = "焚心",
 	[":fenxin"] = "<font color=\"red\"><b>限定技。</b></font>若你不是主公，你杀死一名其他非主公角色检验胜利条件之前，你可以与该角色交换身份牌。",
 	["@burnheart"] = "焚心",
-	["$FenxinAnimate"] = "anim=image/animate/fenxin.png",
+	["$FenxinAnimate"] = "image=image/animate/fenxin.png",
 }

@@ -391,7 +391,9 @@ void YinghunCard::onEffect(const CardEffectStruct &effect) const{
         effect.to->drawCards(1);
         room->askForDiscard(effect.to, "yinghun", 1, 1, false, true);
     } else {
+        effect.to->setFlags("YinghunTarget");
         QString choice = room->askForChoice(effect.from, "yinghun", "d1tx+dxt1");
+        effect.to->setFlags("-YinghunTarget");
         if (choice == "d1tx") {
             room->broadcastSkillInvoke("yinghun", index + 1);
 

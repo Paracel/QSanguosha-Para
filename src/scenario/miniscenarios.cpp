@@ -181,7 +181,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                     room->installEquip(sp, equip);
                 else
                     room->moveCardTo(Sanguosha->getCard(equip.toInt()), NULL, sp,
-                                    Player::PlaceEquip, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
+                                     Player::PlaceEquip, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
             }
 
             str = this->players.at(i)["judge"];

@@ -184,10 +184,6 @@ sgs.ai_cardneed.lieren = function(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end
 
-sgs.ai_skill_choice.yinghun = function(self, choices)
-	return self.yinghunchoice
-end
-
 sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	local x = self.player:getLostHp()
 	if x == 1 and #self.friends == 1 then
@@ -199,19 +195,34 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 		return "."
 	end
 
+	self.yinghun = nil
 	if #self.friends > 1 then
+		local find_friend = false
 		for _, friend in ipairs(self.friends_noself) do
-			if self:hasSkills(sgs.lose_equip_skill, friend) and friend:isAlive() then
+			if self:hasSkills(sgs.lose_equip_skill, friend) and not friend:hasSkill("manjuan") and friend:isAlive() then
 				self.yinghun = friend
-				self.yinghunchoice = "dxt1"
+				find_friend = true
 				break
 			end
 		end
-		self:sort(self.friends_noself, "chaofeng")
-		for _, afriend in ipairs(self.friends_noself) do
-			if not afriend:hasSkill("manjuan") and afriend:isAlive() then self.yinghun = afriend end
+		if not find_friend then
+			for _, friend in ipairs(self.friends_noself) do
+				if friend:hasSkill("tuntian") and not friend:hasSkill("manjuan") and friend:isAlive() then
+					self.yinghun = friend
+					find_friend = true
+					break
+				end
+			end
 		end
-		if self.yinghun and not self.yinghunchoice then self.yinghunchoice = "dxt1" end
+		if not find_friend then
+			self:sort(self.friends_noself, "chaofeng")
+			for _, afriend in ipairs(self.friends_noself) do
+				if not afriend:hasSkill("manjuan") and afriend:isAlive() then
+					self.yinghun = afriend
+				end
+			end
+		end
+		if self.yinghun then self.yinghunchoice = "dxt1" end
 	else
 		self:sort(self.enemies, "handcard")
 		for index = #self.enemies, 1, -1 do
@@ -233,10 +244,28 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	end
 end
 
+sgs.ai_skill_choice.yinghun = function(self, choices)
+	return self.yinghunchoice
+end
+
 sgs.ai_card_intention.YinghunCard = function(self, card, from, tos)
+	if from:getLostHp() > 1 then return end
 	local intention = -80
-	if from:hasFlag("yinghun_to_enemy") then intention = -intention end
+	if tos[1]:hasSkill("manjuan") then intention = -intention end
 	sgs.updateIntention(from, tos[1], intention)
+end
+
+sgs.ai_choicemade_filter.skillChoice.yinghun = function(player, promptlist)
+	local to
+	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
+		if p:hasFlag("YinghunTarget") then
+			to = p
+			break
+		end
+	end
+	local choice = promptlist[#promptlist]
+	local intention = (choice == "dxt1") and -80 or 80
+	sgs.updateIntention(player, to, intention)
 end
 
 local function getLowerBoundOfHandcard(self)

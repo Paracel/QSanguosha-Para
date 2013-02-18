@@ -162,7 +162,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	if current_phase == sgs.Player_Judge then
 		if self.player:containsTrick("YanxiaoCard") then return {} end
 		if (self.player:containsTrick("supply_shortage") and self.player:getHp() > self.player:getHandcardNum()) or
-			(self.player:containsTrick("indulgence") and self.player:getHandcardNum() > self.player:getHp()-1) or
+			(self.player:containsTrick("indulgence") and self.player:getHandcardNum() > self.player:getHp() - 1) or
 			(self.player:containsTrick("lightning") and not self:hasWizard(self.friends) and self:hasWizard(self.enemies)) or
 			(self.player:containsTrick("lightning") and #self.friends > #self.enemies) then
 			return to_discard

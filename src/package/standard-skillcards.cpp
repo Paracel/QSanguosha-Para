@@ -283,12 +283,12 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
     const Card *slash = NULL;
 
     foreach (ServerPlayer *target, targets)
-        room->setPlayerFlag(target, "JijiangTarget");
+        target->setFlags("JijiangTarget");
     foreach (ServerPlayer *liege, lieges) {
         slash = room->askForCard(liege, "slash", "@jijiang-slash:" + liubei->objectName(), QVariant(), Card::MethodResponse, liubei);
         if (slash) {
             foreach (ServerPlayer *target, targets)
-                room->setPlayerFlag(target, "-JijiangTarget");
+                target->setFlags("-JijiangTarget");
 
             CardUseStruct card_use;
             card_use.card = slash;
@@ -300,7 +300,7 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
         }
     }
     foreach (ServerPlayer *target, targets)
-        room->setPlayerFlag(target, "-JijiangTarget");
+        target->setFlags("-JijiangTarget");
     room->setPlayerFlag(liubei, "jijiang_failed");
 }
 

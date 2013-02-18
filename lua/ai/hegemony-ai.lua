@@ -354,7 +354,6 @@ sgs.ai_skill_use["@@sijian"] = function(self, prompt)
 
 	return "."
 end
-end
 
 sgs.ai_card_intention.SijianCard = function(self, card, from, tos)
 	local intention = 80

@@ -1173,6 +1173,7 @@ sgs.ai_chaofeng.zhouyu = 3
 sgs.ai_skill_invoke.lianying = function(self, data)
 	if (self.player:hasSkill("kongcheng") or (self.player:hasSkill("zhiji") and self.player:getMark("zhiji") == 0)) then
 		return player:getPhase() == sgs.Player_Play
+	end
 	return true
 end
 

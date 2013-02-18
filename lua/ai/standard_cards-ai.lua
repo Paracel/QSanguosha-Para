@@ -8,8 +8,8 @@ function SmartAI:canAttack(enemy, attacker, nature)
 	return true
 end
 
-local function hasExplicitRebel(room)
-	for _, player in sgs.qlist(room:getAllPlayers()) do
+function SmartAI:hasExplicitRebel()
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if sgs.isRolePredictable() and sgs.evaluatePlayerRole(player) == "rebel" then return true end
 		if sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then return true end
 	end
@@ -330,7 +330,7 @@ function SmartAI:useCardSlash(card, use)
 		or self:getDamagedEffects(friend, self.player)
 		or (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
 			and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)))
-		and (hasExplicitRebel(self.room) or not friend:isLord()))
+		and (self:hasExplicitRebel() or not friend:isLord()))
 		or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
 		or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))
 		then

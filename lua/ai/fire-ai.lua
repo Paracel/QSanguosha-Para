@@ -39,7 +39,8 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 			end
 		end
 	end
-	if not self.player:isWounded() or (self.player:getHp() == 1 and self:getCardsNum("Analeptic") > 0) then
+	if not self.player:isWounded() or (self.player:getHp() == 1 and self:getCardsNum("Analeptic") > 0 and and self.player:getHandcardNum() >= 2)
+		and self.player:hasSkill("jieming") then
 		local use_quhu
 		for _, friend in ipairs(self.friends) do
 			if math.min(5, friend:getMaxHp()) - friend:getHandcardNum() >= 2 then
@@ -49,7 +50,7 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 		end
 		if use_quhu then
 			for _, enemy in ipairs(self.enemies) do
-				if not enemy:isKongcheng() and self.player:getHp() < enemy:getHp() then
+				if not enemy:isKongcheng() and self.player:getHp() < enemy:getHp() and not enemy:hasSkill("jueqing") then
 					local cards = self.player:getHandcards()
 					cards = sgs.QList2Table(cards)
 					self:sortByUseValue(cards, true)

@@ -302,7 +302,7 @@ function SmartAI:useCardSlash(card, use)
 	for _, acard in ipairs(cards) do
 		if acard:getTypeId() == sgs.Card_TypeBasic and not acard:isKindOf("Peach") then basicnum = basicnum + 1 end
 	end
-	local no_distance = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50) or self.player:hasFlag("slashNoDistanceLimit")
+	local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50 or self.player:hasFlag("slashNoDistanceLimit")
 	self.slash_targets = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card)
 	if self.player:hasSkill("duanbing") then self.slash_targets = self.slash_targets + 1 end
 
@@ -463,13 +463,13 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		local ret = callback(self, nil, nil, target)
 		if ret == nil or ret == "." then return "." end
 		slash = sgs.Card_Parse(ret)
-		local no_distance = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50) or self.player:hasFlag("slashNoDistanceLimit")
+		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50 or self.player:hasFlag("slashNoDistanceLimit")
 		if self.player:canSlash(target, slash, not no_distance) then return ret .. "->" .. target:objectName() end
 		return "."
 	end
 	local slashes = self:getCards("Slash")
 	for _, slash in ipairs(slashes) do
-		local no_distance = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50) or self.player:hasFlag("slashNoDistanceLimit")
+		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50 or self.player:hasFlag("slashNoDistanceLimit")
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
 				and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)

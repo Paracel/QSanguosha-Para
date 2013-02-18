@@ -663,6 +663,18 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
             }
             winner = winners.join("+");
         }
+        if (!winner.isNull()) {
+            foreach (ServerPlayer *player, room->getAllPlayers()) {
+                if (player->getGeneralName() == "anjiang") {
+                    QStringList generals = room->getTag(player->objectName()).toStringList();
+                    room->changePlayerGeneral(player, generals.at(0));
+                }
+                if (Config.Enable2ndGeneral && player->getGeneral2Name() == "anjiang") {
+                    QStringList generals = room->getTag(player->objectName()).toStringList();
+                    room->changePlayerGeneral2(player, generals.at(1));
+                }
+            }
+        }
     } else {
         QStringList alive_roles = room->aliveRoles(victim);
         switch (victim->getRoleEnum()) {
@@ -852,7 +864,6 @@ BasaraMode::BasaraMode(QObject *parent)
     : GameRule(parent)
 {
     setObjectName("basara_mode");
-
     events << EventPhaseStart << DamageInflicted;
 }
 
@@ -904,6 +915,8 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
 
     if (player->getGeneralName() == "anjiang") {
         room->changeHero(player, general_name, false, false, false, false);
+        room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
+        room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
         foreach (QString skill_name, GameRule::skill_mark.keys()) {
             if (player->hasSkill(skill_name, true))
                 room->setPlayerMark(player, GameRule::skill_mark[skill_name], 1);
@@ -994,21 +1007,6 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
         }
     case DamageInflicted: {
             playerShowed(player);
-            break;
-        }
-    case GameOverJudge: {
-            if (Config.EnableHegemony) {
-                if (player->getGeneralName() == "anjiang") {
-                    QStringList generals = room->getTag(player->objectName()).toStringList();
-                    room->changePlayerGeneral(player, generals.at(0));
-                    room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
-                    room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
-                }
-                if (player->getGeneral2Name() == "anjiang") {
-                    QStringList generals = room->getTag(player->objectName()).toStringList();
-                    if (Config.Enable2ndGeneral) room->changePlayerGeneral2(player, generals.at(1));
-                }
-            }
             break;
         }
     case BuryVictim: {

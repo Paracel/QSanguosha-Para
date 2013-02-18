@@ -112,7 +112,7 @@ end
 
 sgs.ai_skill_discard.flood = sgs.ai_skill_discard.ganglie
 
-sgs.ai_skill_use["@dujiang-card"] = function(self)
+sgs.ai_skill_use["@@dujiang"] = function(self)
 	local equips = self.player:getEquips()
 	equips = sgs.QList2Table(equips)
 

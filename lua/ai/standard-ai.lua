@@ -1386,6 +1386,7 @@ function SmartAI:getWoundedFriend(maleOnly)
 		if p:isLord() and self:isWeak(p) then hp = hp - 10 end
 		if p:objectName() == self.player:objectName() and self:isWeak(p) and p:hasSkill("qingnang") then hp = hp - 5 end
 		if p:hasSkill("buqu") and p:getPile("buqu"):length() <= 2 then hp = hp + 5 end
+		if self:hasSkills("rende|kuanggu|zaiqi", p) and p:getHp() >= 2 then hp = hp + 5 end
 		return hp
 	end
 

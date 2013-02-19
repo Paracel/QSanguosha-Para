@@ -76,7 +76,7 @@ void CardItem::changeGeneral(const QString &general_name) {
     const General *general = Sanguosha->getGeneral(general_name);
     if (general) {
         _m_isUnknownGeneral = false;
-        setToolTip(general->getSkillDescription());
+        setToolTip(general->getSkillDescription(true));
     } else {
         _m_isUnknownGeneral = true;
         setToolTip(QString());

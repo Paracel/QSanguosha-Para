@@ -54,7 +54,7 @@ public:
     QSet<const TriggerSkill *> getTriggerSkills() const;
 
     QString getPackage() const;
-    QString getSkillDescription() const;
+    QString getSkillDescription(bool include_name = false) const;
 
     void lastWord() const;
 };

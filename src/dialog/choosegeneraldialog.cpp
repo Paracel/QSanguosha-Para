@@ -89,7 +89,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
             button->setIcon(QIcon(G_ROOM_SKIN.getGeneralPixmap(general->objectName(), icon_type)));
             button->setIconSize(icon_size);
         }
-        button->setToolTip(general->getSkillDescription());
+        button->setToolTip(general->getSkillDescription(true));
         buttons << button;
 
         mapper->setMapping(button, general->objectName());
@@ -125,7 +125,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
 
             QLabel *label = new QLabel;
             label->setPixmap(G_ROOM_SKIN.getGeneralPixmap(lord->objectName(), icon_type));
-            label->setToolTip(lord->getSkillDescription());
+            label->setToolTip(lord->getSkillDescription(true));
             layout->addWidget(label);
         }
 
@@ -140,7 +140,7 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
 
             QLabel *label = new QLabel;
             label->setPixmap(G_ROOM_SKIN.getGeneralPixmap(lord->objectName(), icon_type));
-            label->setToolTip(lord->getSkillDescription());
+            label->setToolTip(lord->getSkillDescription(true));
             grid_layout->addWidget(label, 0, 0);
         }
 
@@ -331,7 +331,7 @@ QWidget *FreeChooseDialog::createTab(const QList<const General *> &generals) {
         else
             button = new QRadioButton(text);
         button->setObjectName(general_name);
-        button->setToolTip(general->getSkillDescription());
+        button->setToolTip(general->getSkillDescription(true));
         if (general->isLord())
             button->setIcon(lord_icon);
 

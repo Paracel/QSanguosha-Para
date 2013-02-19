@@ -1593,7 +1593,7 @@ QWidget *GeneralAssignDialog::createTab(const QList<const General *> &generals) 
         QAbstractButton *button;
         button = new QRadioButton(text);
         button->setObjectName(general_name);
-        button->setToolTip(general->getSkillDescription());
+        button->setToolTip(general->getSkillDescription(true));
         if (general->isLord())
             button->setIcon(lord_icon);
 

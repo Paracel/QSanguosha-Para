@@ -1664,6 +1664,10 @@ function SmartAI:filterEvent(event, player, data)
 		local card = struct.card
 		local from = struct.from
 		local to = struct.to
+		if card and card:isKindOf("AOE") and to and to:isLord() and (to:hasFlag("lord_in_danger_SA") or to:hasFlag("lord_in_danger_AA")) then
+			to:setFlags("-lord_in_danger_AA")
+			to:setFlags("-lord_in_danger_SA")
+		end
 		if card:isKindOf("Collateral") then sgs.ai_collateral = true end
 		if card:isKindOf("Dismantlement") or card:isKindOf("Snatch")
 			or card:isKindOf("YinlingCard") then
@@ -1678,6 +1682,18 @@ function SmartAI:filterEvent(event, player, data)
 			and (getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to)) then
 			if to:isLord() and not self:hasExplicitRebel() then sgs.updateIntention(from, to, 50) end
 			sgs.ai_leiji_effect = true
+		end
+	elseif event == sgs.PreDamageDone then
+		local damage = data:toDamage()
+		local lord = self.room:getLord()
+		if damage.trigger_chain and lord:isChained() and self:damageIsEffective(lord, damage.nature, from) then
+			if lord:hasArmorEffect("Vine") and damage.nature == sgs.DamageStruct_Fire and lord:getHp() <= damage.damage + 1 then
+				sgs.lordNeedPeach = damage.damage + 2 - lord:getHp()
+			elseif lord:getHp() <= damage.damage then
+				sgs.lordNeedPeach = damage.damage + 1 - lord:getHp()
+			end
+		else
+			sgs.lordNeedPeach = nil
 		end
 	elseif event == sgs.Damaged then
 		local damage = data:toDamage()
@@ -1742,6 +1758,15 @@ function SmartAI:filterEvent(event, player, data)
 				elseif type(luaskillcardcallback) == "number" then
 					sgs.updateIntentions(from, to, luaskillcardcallback, card)
 				end
+			end
+		end
+		
+		local lord = self.room:getLord()
+		if struct.card and lord:getHp() == 1 and self:aoeIsEffective(struct.card, lord, from) then
+			if struct.card:isKindOf("SavageAssault") then
+				lord:setFlags("lord_in_danger_SA")
+			elseif struct.card:isKindOf("ArcheryAttack") then
+				lord:setFlags("lord_in_danger_AA")
 			end
 		end
 	elseif event == sgs.CardsMoveOneTime then
@@ -2887,6 +2912,31 @@ function SmartAI:askForSinglePeach(dying)
 	end
 	if self:isFriend(dying) then
 		if self:needDeath(dying) then return "." end
+		
+		local lord = self.room:getLord()
+		if self.player:objectName() ~= dying:objectName() and not dying:isLord()
+			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
+			and (sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach
+				or (lord:hasFlag("lord_in_danger_SA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
+				or (lord:hasFlag("lord_in_danger_AA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
+			return "."
+		end
+
+		if sgs.turncount > 1 and not dying:isLord() and dying:objectName() ~= self.player:objectName() then
+			local possible_friend = 0
+			local currentp = self.room:getCurrent()
+			for _, friend in ipairs(self.friends_noself) do
+				if (self:getKnownNum(friend) == friend:getHandcardNum() and getCardsNum("Peach", friend) == 0)
+					or (self:playerGetRound(friend, currentp) < self:playerGetRound(self.player, currentp)) then
+				elseif friend:getHandcardNum() > 0 or getCardsNum("Peach", friend) > 0 then
+					possible_friend = possible_friend + 1
+				end
+			end
+			if possible_friend == 0 and #self:getCards("Peach") < 1 - dying:getHp() then
+				return "."
+			end
+		end
+
 		local buqu = dying:getPile("buqu")
 		local weaklord = 0
 		if not buqu:isEmpty() then
@@ -4235,6 +4285,7 @@ function SmartAI:useEquipCard(card, use)
 		if not self:hasSkills(sgs.lose_equip_skill) and self:getOverflow() <= 0 and not canUseSlash then return end
 		if not self.player:getWeapon() or self:evaluateWeapon(card) > self:evaluateWeapon(self.player:getWeapon()) then
 			if (not use.to) and self.weaponUsed and (not self:hasSkills(sgs.lose_equip_skill)) then return end
+			if self:hasSkills("zhiheng|jilve") and not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() then return end
 			if self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
 			use.card = card
 		end

@@ -41,7 +41,7 @@ public:
 class Wuhun: public TriggerSkill {
 public:
     Wuhun(): TriggerSkill("wuhun") {
-        events << DamageDone;
+        events << PreDamageDone;
         frequency = Compulsory;
     }
 

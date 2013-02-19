@@ -526,7 +526,7 @@ public:
 class WujiCount: public TriggerSkill {
 public:
     WujiCount(): TriggerSkill("#wuji-count") {
-        events << DamageDone << EventPhaseChanging;
+        events << PreDamageDone << EventPhaseChanging;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -534,7 +534,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == DamageDone) {
+        if (event == PreDamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.from && damage.from->isAlive() && damage.from == room->getCurrent() && damage.from->getMark("wuji") == 0)
                 room->addPlayerMark(damage.from, "wuji_damage", damage.damage);

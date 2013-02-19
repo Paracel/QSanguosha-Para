@@ -123,7 +123,7 @@ private:
 class JiushiFlip: public TriggerSkill {
 public:
     JiushiFlip(): TriggerSkill("#jiushi-flip") {
-        events << PreCardUsed << DamageDone << DamageComplete;
+        events << PreCardUsed << PreDamageDone << DamageComplete;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -131,7 +131,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->getSkillName() == "jiushi")
                 player->turnOver();
-        } else if (event == DamageDone) {
+        } else if (event == PreDamageDone) {
             player->tag["PredamagedFace"] = player->faceUp();
         } else if (event == DamageComplete) {
             bool faceup = player->tag.value("PredamagedFace").toBool();

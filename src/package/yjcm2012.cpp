@@ -670,7 +670,7 @@ public:
 class Lihuo: public TriggerSkill {
 public:
     Lihuo(): TriggerSkill("lihuo") {
-        events << DamageDone << CardFinished;
+        events << PreDamageDone << CardFinished;
         view_as_skill = new LihuoViewAsSkill;
     }
 
@@ -679,7 +679,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == DamageDone) {
+        if (event == PreDamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()) {
                 QVariantList slash_list = damage.from->tag["InvokeLihuo"].toList();

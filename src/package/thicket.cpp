@@ -927,7 +927,7 @@ public:
 class Baonue: public TriggerSkill {
 public:
     Baonue(): TriggerSkill("baonue$") {
-        events << Damage << DamageDone;
+        events << Damage << PreDamageDone;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -936,7 +936,7 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (event == DamageDone && damage.from)
+        if (event == PreDamageDone && damage.from)
             damage.from->tag["InvokeBaonue"] = damage.from->getKingdom() == "qun";
         else if (event == Damage && player->tag.value("InvokeBaonue", false).toBool() && player->isAlive()) {
             QList<ServerPlayer *> dongzhuos;

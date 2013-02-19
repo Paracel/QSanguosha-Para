@@ -1739,6 +1739,19 @@ local function hp_subtract_handcard(a, b)
 	return diff1 < diff2
 end
 
+function SmartAI:playerGetRound(player, source)
+	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
+	if player:objectName() == self.player:objectName() then return 0 end
+	local aplayer = source or self.player
+	local round = 0
+	for i = 1, self.room:alivePlayerCount() do
+		round = round + 1
+		if aplayer:getNextAlive():objectName() == player:objectName() then break end
+		aplayer = aplayer:getNextAlive()
+	end
+	return round
+end
+
 function SmartAI:useCardIndulgence(card, use)
 	local enemies = {}
 	if #self.enemies == 0 then

@@ -23,22 +23,32 @@ local function card_for_qiaobian(self, who, return_prompt)
 		if not target and not equips:isEmpty() and self:hasSkills(sgs.lose_equip_skill, who) then
 			for _, equip in sgs.qlist(equips) do
 				if equip:isKindOf("OffensiveHorse") then card = equip break
-				elseif equip:isKindOf("DefensiveHorse") then
+				elseif equip:isKindOf("DefensiveHorse") and not self:isWeak(who) then
 					card = equip
-					weak = self:isWeak(who)
 					break
 				elseif equip:isKindOf("Weapon") then card = equip break
-				elseif equip:isKindOf("Armor") then
+				elseif equip:isKindOf("Armor") and not self:isWeak(who) then
 					card = equip
-					weak = self:isWeak(who)
 					break
 				end
 			end
 
 			if card then
+				if card:isKindOf("Armor") or card:isKindOf("DefensiveHorse") then 
+					self:sort(self.friends, "defense")
+				else
+					self:sort(self.friends, "handcard")
+					self.friends = sgs.reverse(self.friends)
+				end
 				for _, friend in ipairs(self.friends) do
-					if friend == who then
-					elseif not weak and (friend:getCards("e"):isEmpty() or not self:getSameEquip(card, friend)) then
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName()
+						and self:hasSkills(sgs.lose_equip_skill .. "|shensu" , friend) then
+						target = friend
+						break
+					end
+				end
+				for _, friend in ipairs(self.friends) do
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
 						target = friend
 						break
 					end
@@ -71,43 +81,26 @@ local function card_for_qiaobian(self, who, return_prompt)
 		end
 
 		if card == nil or target == nil then
-			if not who:hasEquip() then return nil end
+			if not who:hasEquip() or self:hasSkills(sgs.lose_equip_skill, who) then return nil end
 			local card_id = self:askForCardChosen(who, "e", "snatch")
 			if who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
-			local targets = {}
 			if card then
+				if card:isKindOf("Armor") or card:isKindOf("DefensiveHorse") then
+					self:sort(self.friends, "defense")
+				else
+					self:sort(self.friends, "handcard")
+					self.friends = sgs.reverse(self.friends)
+				end
 				for _, friend in ipairs(self.friends) do
-					if friend:getCards("e"):isEmpty() or not self:getSameEquip(card, friend) then
-						table.insert(targets, friend)
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() and self:hasSkills(sgs.lose_equip_skill .. "|shensu" , friend) then
+						target = friend
 						break
 					end
 				end
-			end
-
-			if #targets > 0 then
-				if card:isKindOf("Weapon") or card:isKindOf("OffensiveHorse") then
-					self:sort(targets, "threat")
-					target = targets[#targets]
-				else
-					self:sort(targets, "defense")
-					target = targets[1]
-				end
-			end
-		end
-
-		if not target then
-			local judges = who:getJudgingArea()
-			if not judges:isEmpty() then
-				for _, judge in sgs.qlist(judges) do
-					card = sgs.Sanguosha:getCard(judge:getEffectiveId())
-					if judge:isKindOf("YanxiaoCard") then
-						for _, friend in ipairs(self.friends_noself) do
-							if not friend:containsTrick(judge:objectName()) and not self.room:isProhibited(self.player, friend, judge) then
-								target = friend
-								break
-							end
-						end
-						if target then break end
+				for _, friend in ipairs(self.friends) do
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
+						target = friend
+						break
 					end
 				end
 			end
@@ -185,11 +178,16 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	end
 
 	if current_phase == sgs.Player_Play then
-		self:sort(self.enemies, "hp")
-		local has_armor = true
-		local judge
+		self:sortByKeepValue(cards)
+		table.remove(to_discard)
+		table.insert(to_discard, cards[1]:getEffectiveId())
+
+		self:sort(self.enemies, "defense")
+		self:sort(self.friends, "defense")
+		self:sort(self.friends_noself, "defense")
+
 		for _, friend in ipairs(self.friends) do
-			if not friend:getCards("j"):isEmpty() and card_for_qiaobian(self, friend, ".") then
+			if not friend:getCards("j"):isEmpty() and not friend:containsTrick("YanxiaoCard") and card_for_qiaobian(self, friend, ".") then
 				return to_discard
 			end
 		end
@@ -204,7 +202,6 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 			if not friend:getCards("e"):isEmpty() and self:hasSkills(sgs.lose_equip_skill, friend) and card_for_qiaobian(self, friend, ".") then
 				return to_discard
 			end
-			if not friend:getArmor() then has_armor = false end
 		end
 
 		local top_value = 0
@@ -217,7 +214,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 
 		local targets = {}
 		for _, enemy in ipairs(self.enemies) do
-			if card_for_qiaobian(self, enemy, ".") then
+			if not self:hasSkills(sgs.lose_equip_skill, enemy) and card_for_qiaobian(self, enemy, ".") then
 				table.insert(targets, enemy)
 			end
 		end
@@ -291,12 +288,7 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
-	if from:getPhase() == sgs.Player_Draw then
-		sgs.ai_card_intention.TuxiCard(self, card, from, tos)
-	end
-	return 0
-end
+sgs.ai_card_intention.QiaobianCard = 0
 
 function sgs.ai_cardneed.qiaobian(to, card)
 	return to:getCardCount(true) <= 2

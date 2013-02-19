@@ -13,7 +13,6 @@ class ClientPlayer: public Player {
 
 public:
     explicit ClientPlayer(Client *client);
-    void handCardChange(int delta);
     QList<const Card *> getCards() const;
     void setCards(const QList<int> &card_ids);
     QTextDocument *getMarkDoc() const;

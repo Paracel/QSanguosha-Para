@@ -15,10 +15,6 @@ ClientPlayer::ClientPlayer(Client *client)
     mark_doc = new QTextDocument(this);
 }
 
-void ClientPlayer::handCardChange(int delta) {
-    handcard_num += delta;
-}
-
 int ClientPlayer::aliveCount() const{
     return ClientInstance->alivePlayerCount();
 }

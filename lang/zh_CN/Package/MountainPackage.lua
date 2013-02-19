@@ -54,7 +54,6 @@ return {
 	["ruoyu"] = "若愚",
 	[":ruoyu"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的体力值为场上最少（或之一），你增加1点体力上限，回复1点体力，然后获得技能“激将”。",
 	["$RuoyuAnimate"] = "image=image/animate/ruoyu.png",
-	["#Xiangle"] = "%to 的“%arg”被触发， %from 须弃置一张基本牌使此【<font color=\"yellow\"><b>杀</b></font>】生效",
 	["#XiangleAvoid"] = "%to 的“%arg”效果被触发，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】无效",
 	["#Fangquan"] = "%from 发动了“<font color=\"yellow\"><b>放权</b></font>”，%to 将进行一个额外的回合",
 	["#RuoyuWake"] = "%from 的体力值(%arg)为场上最少，触发“%arg2”觉醒",

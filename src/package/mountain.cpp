@@ -838,7 +838,7 @@ public:
                 room->notifySkillInvoked(liushan, objectName());
 
                 LogMessage log;
-                log.type = "#Xiangle";
+                log.type = "#TriggerSkill";
                 log.from = use.from;
                 log.to << liushan;
                 log.arg = objectName();

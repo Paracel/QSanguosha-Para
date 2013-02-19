@@ -1425,13 +1425,7 @@ void RoomScene::chooseRole(const QString &scheme, const QStringList &roles) {
         jargon["guard2"] = tr("Guard of Team 2");
     }
 
-    QStringList possibleRoles;
-    if (scheme == "AllRoles")
-        possibleRoles << "lord" << "loyalist" << "renegade" << "rebel";
-    else
-        possibleRoles << "leader1" << "guard1" << "leader2" << "guard2";
-
-    foreach (QString role, possibleRoles) {
+    foreach (QString role, roles) {
         QCommandLinkButton *button = new QCommandLinkButton(jargon[role]);
         if (scheme == "AllRoles")
             button->setIcon(QIcon(QString("image/system/roles/%1.png").arg(role)));

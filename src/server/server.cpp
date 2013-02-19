@@ -556,7 +556,8 @@ void ServerDialog::edit1v1Banlist() {
 
 QGroupBox *ServerDialog::create3v3Box() {
     QGroupBox *box = new QGroupBox(tr("3v3 options"));
-    box->setEnabled(Config.GameMode == "06_3v3");
+    box->setVisible(Config.GameMode == "06_3v3");
+    box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QVBoxLayout *vlayout = new QVBoxLayout;
 
@@ -605,7 +606,8 @@ QGroupBox *ServerDialog::create3v3Box() {
 
 QGroupBox *ServerDialog::createXModeBox() {
     QGroupBox *box = new QGroupBox(tr("XMode options"));
-    box->setEnabled(Config.GameMode == "06_XMode");
+    box->setVisible(Config.GameMode == "06_XMode");
+    box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QVBoxLayout *vlayout = new QVBoxLayout;
 
@@ -645,12 +647,12 @@ QGroupBox *ServerDialog::createGameModeBox() {
 
         if (itor.key() == "06_3v3") {
             QGroupBox *box = create3v3Box();
-            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setVisible(bool)));
 
             item_list << button << box;
         } else if (itor.key() == "06_XMode") {
             QGroupBox *box = createXModeBox();
-            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setVisible(bool)));
 
             item_list << button << box;
         }else {
@@ -738,6 +740,8 @@ QGroupBox *ServerDialog::createGameModeBox() {
             QLayout *item_layout = qobject_cast<QLayout *>(item);
             side->addLayout(item_layout);
         }
+        if (i == item_list.length() / 2 - 2)
+            side->addStretch();
     }
 
     right->addStretch();

@@ -60,7 +60,7 @@ void RoomScene::resetPiles() {
 #include "qsanbutton.h"
 
 RoomScene::RoomScene(QMainWindow *main_window)
-    : main_window(main_window),game_started(false)
+    : main_window(main_window), game_started(false)
 {
     m_choiceDialog = NULL;
     RoomSceneInstance = this;
@@ -193,13 +193,14 @@ RoomScene::RoomScene(QMainWindow *main_window)
     enemy_box = NULL;
     self_box = NULL;
 
-    if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "02_1v1") {
-        // 1v1 & 3v3 mode
-        connect(ClientInstance, SIGNAL(generals_filled(QStringList)), this, SLOT(fillGenerals(QStringList)));
-        connect(ClientInstance, SIGNAL(general_asked()), this, SLOT(startGeneralSelection()));
-        connect(ClientInstance, SIGNAL(general_taken(QString,QString)), this, SLOT(takeGeneral(QString,QString)));
-        connect(ClientInstance, SIGNAL(arrange_started()), this, SLOT(startArrange()));
-        connect(ClientInstance, SIGNAL(general_recovered(int,QString)), this, SLOT(recoverGeneral(int,QString)));
+    if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "02_1v1" || ServerInfo.GameMode == "06_XMode") {
+        if (ServerInfo.GameMode != "06_XMode") {
+            connect(ClientInstance, SIGNAL(generals_filled(QStringList)), this, SLOT(fillGenerals(QStringList)));
+            connect(ClientInstance, SIGNAL(general_asked()), this, SLOT(startGeneralSelection()));
+            connect(ClientInstance, SIGNAL(general_taken(QString, QString)), this, SLOT(takeGeneral(QString, QString)));
+            connect(ClientInstance, SIGNAL(general_recovered(int, QString)), this, SLOT(recoverGeneral(int, QString)));
+        }
+        connect(ClientInstance, SIGNAL(arrange_started(QString)), this, SLOT(startArrange(QString)));
 
         arrange_button = NULL;
 
@@ -210,7 +211,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
             enemy_box->hide();
             self_box->hide();
 
-            connect(ClientInstance, SIGNAL(general_revealed(bool,QString)), this, SLOT(revealGeneral(bool,QString)));
+            connect(ClientInstance, SIGNAL(general_revealed(bool, QString)), this, SLOT(revealGeneral(bool, QString)));
         }
     }
 
@@ -1836,6 +1837,7 @@ void RoomScene::updateSkillButtons() {
         if (skill->isLordSkill()
             && (Self->getRole() != "lord"
                 || ServerInfo.GameMode == "06_3v3"
+                || ServerInfo.GameMode == "06_XMode"
                 || ServerInfo.GameMode == "02_1v1"
                 || Config.value("WithoutLordskill", false).toBool()))
                 continue;
@@ -3104,10 +3106,7 @@ void RoomScene::onGameStart() {
         QString id = Config.GameMode;
         id.replace("_mini_", "");
         _m_currentStage = id.toInt();
-    } else if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "02_1v1") {
-        selector_box->deleteLater();
-        selector_box = NULL;
-
+    } else if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode" || ServerInfo.GameMode == "02_1v1") {
         chat_widget->show();
         log_box->show();
 
@@ -3672,19 +3671,49 @@ void RoomScene::trust() {
     ClientInstance->trust();
 }
 
-void RoomScene::startArrange() {
+void RoomScene::startArrange(const QString &to_arrange) {
+    arrange_items.clear();
     QString mode;
     QList<QPointF> positions;
     if (ServerInfo.GameMode == "06_3v3") {
         mode = "3v3";
         positions << QPointF(279, 356) << QPointF(407, 356) << QPointF(535, 356);
-    } else {
+    } else if (ServerInfo.GameMode == "02_1v1") {
         mode = "1v1";
         positions << QPointF(130, 335) << QPointF(260, 335) << QPointF(390, 335);
     }
 
-    selector_box->load(QString("image/system/%1/arrange.png").arg(mode));
+    QStringList arrangeList = to_arrange.split("+");
+    if (ServerInfo.GameMode == "06_XMode") {
+        if (arrangeList.length() == 5)
+            positions << QPointF(130, 335) << QPointF(260, 335) << QPointF(390, 335);
+        else
+            positions << QPointF(173, 335) << QPointF(303, 335) << QPointF(433, 335);
+        QString path = QString("image/system/XMode/arrange%1.png").arg((arrangeList.length() == 5) ? 1 : 2);
+        selector_box = new QSanSelectableItem(path, true);
+        selector_box->setPos(m_tableCenterPos);
+        addItem(selector_box);
+        selector_box->setZValue(10000);
+    } else
+        selector_box->load(QString("image/system/%1/arrange.png").arg(mode));
 
+    if (ServerInfo.GameMode == "06_XMode") {
+        Q_ASSERT(!to_arrange.isNull());
+        down_generals.clear();
+        foreach (QString name, to_arrange.split("+")) {
+            CardItem *item = new CardItem(name);
+            item->setObjectName(name);
+            item->scaleSmoothly(116.0 / G_COMMON_LAYOUT.m_cardNormalHeight);
+            item->setParentItem(selector_box);
+            int x = 43 + down_generals.length() * 86;
+            int y = 60 + 120 * 3;
+            x = x + G_COMMON_LAYOUT.m_cardNormalWidth / 2;
+            y = y + G_COMMON_LAYOUT.m_cardNormalHeight / 2;
+            item->setPos(x, y);
+            item->setHomePos(QPointF(x, y));
+            down_generals << item;
+        }
+    }
     foreach (CardItem *item, down_generals) {
         item->setFlag(QGraphicsItem::ItemIsFocusable);
         item->setAutoBack(false);
@@ -3767,6 +3796,12 @@ void RoomScene::finishArrange() {
     QStringList names;
     foreach (CardItem *item, arrange_items)
         names << item->objectName();
+
+    if (selector_box) {
+        selector_box->deleteLater();
+        selector_box = NULL;
+    }
+    arrange_rects.clear();
 
     ClientInstance->request("arrange " + names.join("+"));
 }

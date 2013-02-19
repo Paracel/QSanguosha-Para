@@ -89,6 +89,7 @@ Engine::Engine()
     modes["06p"] = tr("6 players");
     modes["06pd"] = tr("6 players (2 renegades)");
     modes["06_3v3"] = tr("6 players (3v3)");
+    modes["06_XMode"] = tr("6 players (XMode)");
     modes["07p"] = tr("7 players");
     modes["08p"] = tr("8 players");
     modes["08pd"] = tr("8 players (2 renegades)");
@@ -234,7 +235,7 @@ QString Engine::translate(const QString &to_translate) const{
 }
 
 int Engine::getRoleIndex() const{
-    if (ServerInfo.GameMode == "06_3v3") {
+    if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode") {
         return 4;
     } else if (ServerInfo.EnableHegemony) {
         return 5;

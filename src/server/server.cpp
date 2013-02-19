@@ -603,6 +603,30 @@ QGroupBox *ServerDialog::create3v3Box() {
     return box;
 }
 
+QGroupBox *ServerDialog::createXModeBox() {
+    QGroupBox *box = new QGroupBox(tr("XMode options"));
+    box->setEnabled(Config.GameMode == "06_XMode");
+
+    QVBoxLayout *vlayout = new QVBoxLayout;
+
+    QComboBox *roleChooseComboBox = new QComboBox;
+    roleChooseComboBox->addItem(tr("Normal"), "Normal");
+    roleChooseComboBox->addItem(tr("Random"), "Random");
+    roleChooseComboBox->addItem(tr("All roles"), "AllRoles");
+
+    role_choose_xmode_ComboBox = roleChooseComboBox;
+
+    QString scheme = Config.value("XMode/RoleChooseX", "Normal").toString();
+    if (scheme == "Random")
+        roleChooseComboBox->setCurrentIndex(1);
+    else if (scheme == "AllRoles")
+        roleChooseComboBox->setCurrentIndex(2);
+
+    vlayout->addLayout(HLay(new QLabel(tr("Role choose")), role_choose_xmode_ComboBox));
+    box->setLayout(vlayout);
+    return box;
+}
+
 QGroupBox *ServerDialog::createGameModeBox() {
     QGroupBox *mode_box = new QGroupBox(tr("Game mode"));
     mode_group = new QButtonGroup;
@@ -620,12 +644,16 @@ QGroupBox *ServerDialog::createGameModeBox() {
         mode_group->addButton(button);
 
         if (itor.key() == "06_3v3") {
-            // add 3v3 options
             QGroupBox *box = create3v3Box();
             connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
             item_list << button << box;
-        } else {
+        } else if (itor.key() == "06_XMode") {
+            QGroupBox *box = createXModeBox();
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
+
+            item_list << button << box;
+        }else {
             item_list << button;
         }
 
@@ -972,6 +1000,10 @@ bool ServerDialog::config() {
     Config.setValue("RoleChoose", role_choose_ComboBox->itemData(role_choose_ComboBox->currentIndex()).toString());
     Config.setValue("ExcludeDisaster", exclude_disaster_checkbox->isChecked());
     Config.setValue("UsingNewMode", new_3v3_radiobutton->isChecked());
+    Config.endGroup();
+
+    Config.beginGroup("XMode");
+    Config.setValue("RoleChooseX", role_choose_xmode_ComboBox->itemData(role_choose_xmode_ComboBox->currentIndex()).toString());
     Config.endGroup();
 
     QSet<QString> ban_packages;

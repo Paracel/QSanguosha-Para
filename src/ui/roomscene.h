@@ -363,7 +363,7 @@ private slots:
     void recoverGeneral(int index, const QString &name);
     void startGeneralSelection();
     void selectGeneral();
-    void startArrange();
+    void startArrange(const QString &to_arrange);
     void toggleArrange();
     void finishArrange();
     void changeGeneral(const QString &general);

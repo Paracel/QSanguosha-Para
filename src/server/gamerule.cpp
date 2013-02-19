@@ -475,7 +475,6 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             QString winner = getWinner(player);
             if (!winner.isNull()) {
                 room->gameOver(winner);
-                player->bury();
                 return true;
             }
 
@@ -504,6 +503,9 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                         return false;
                     }
                 }
+            } else if (room->getMode() == "06_XMode") {
+                changeGeneralXMode(player);
+                return false;
             }
 
             break;
@@ -603,8 +605,49 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     room->setTag("FirstRound", false);
 }
 
+void GameRule::changeGeneralXMode(ServerPlayer *player) const{
+    Config.AIDelay = Config.OriginAIDelay;
+
+    Room *room = player->getRoom();
+    PlayerStar leader = player->tag["XModeLeader"].value<PlayerStar>();
+    Q_ASSERT(leader);
+    QStringList backup = leader->tag["XModeBackup"].toStringList();
+    QString general = room->askForGeneral(leader, backup);
+    if (backup.contains(general))
+        backup.removeOne(general);
+    else
+        backup.takeFirst();
+    leader->tag["XModeBackup"] = QVariant::fromValue(backup);
+    room->revivePlayer(player);
+    room->changeHero(player, general, true, true);
+    if (player->getGeneral()->getKingdom() == "god") {
+        QString new_kingdom = room->askForKingdom(player);
+        room->setPlayerProperty(player, "kingdom", new_kingdom);
+
+        LogMessage log;
+        log.type = "#ChooseKingdom";
+        log.from = player;
+        log.arg = new_kingdom;
+        room->sendLog(log);
+    }
+    player->clearHistory();
+
+    if (player->getKingdom() != player->getGeneral()->getKingdom())
+        room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
+
+    if (!player->faceUp())
+        player->turnOver();
+
+    if (player->isChained())
+        room->setPlayerProperty(player, "chained", false);
+
+    room->setTag("FirstRound", true); //For Manjuan
+    player->drawCards(4);
+    room->setTag("FirstRound", false);
+}
+
 void GameRule::rewardAndPunish(ServerPlayer *killer, ServerPlayer *victim) const{
-    if (killer->isDead())
+    if (killer->isDead() || killer->getRoom()->getMode() == "06_XMode")
         return;
 
     if (killer->getRoom()->getMode() == "06_3v3") {
@@ -630,6 +673,15 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
         case Player::Renegade: winner = "lord+loyalist"; break;
         default:
             break;
+        }
+    } else if (room->getMode() == "06_XMode") {
+        QString role = victim->getRole();
+        PlayerStar leader = victim->tag["XModeLeader"].value<PlayerStar>();
+        if (leader->tag["XModeBackup"].toStringList().isEmpty()) {
+            if (role.startsWith('r'))
+                winner = "lord+loyalist";
+            else
+                winner = "renegade+rebel";
         }
     } else if (Config.EnableHegemony) {
         bool has_anjiang = false, has_diff_kingdoms = false;
@@ -966,7 +1018,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
                     log.arg2 = room->getTag(sp->objectName()).toStringList().at(1);
                 }
 
-                sp->invoke("log",log.toString());
+                sp->invoke("log", log.toString());
                 sp->tag["roles"] = room->getTag(sp->objectName()).toStringList().join("+");
             }
         }

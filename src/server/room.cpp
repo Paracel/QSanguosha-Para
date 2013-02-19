@@ -7,6 +7,7 @@
 #include "gamerule.h"
 #include "banpair.h"
 #include "roomthread3v3.h"
+#include "roomthreadxmode.h"
 #include "roomthread1v1.h"
 #include "server.h"
 #include "generalselector.h"
@@ -35,7 +36,7 @@ Room::Room(QObject *parent, const QString &mode)
     : QThread(parent), mode(mode), current(NULL), pile1(Sanguosha->getRandomCards()),
       m_drawPile(&pile1), m_discardPile(&pile2),
       game_started(false), game_finished(false), L(NULL), thread(NULL),
-      thread_3v3(NULL), thread_1v1(NULL), sem(NULL), _m_semRaceRequest(0), _m_semRoomMutex(1),
+      thread_3v3(NULL), thread_xmode(NULL), thread_1v1(NULL), sem(NULL), _m_semRaceRequest(0), _m_semRoomMutex(1),
       _m_raceStarted(false), provided(NULL), has_provided(false),
       m_surrenderRequestReceived(false), _virtual(false), _m_roomState(false)
 {
@@ -1598,6 +1599,8 @@ void Room::prepareForStart() {
         }
     } else if (mode == "06_3v3") {
         return;
+    } else if (mode == "06_XMode") {
+        return;
     } else if (mode == "02_1v1") {
         if (qrand() % 2 == 0)
             m_players.swap(0, 1);
@@ -2159,6 +2162,12 @@ void Room::run() {
 
         connect(thread_3v3, SIGNAL(finished()), this, SLOT(startGame()));
         connect(thread_3v3, SIGNAL(finished()), thread_3v3, SLOT(deleteLater()));
+    } else if (mode == "06_XMode") {
+        thread_xmode = new RoomThreadXMode(this);
+        thread_xmode->start();
+
+        connect(thread_xmode, SIGNAL(finished()), this, SLOT(startGame()));
+        connect(thread_xmode, SIGNAL(finished()), thread_xmode, SLOT(deleteLater()));
     } else if (mode == "02_1v1") {
         thread_1v1 = new RoomThread1v1(this);
         thread_1v1->start();
@@ -2258,7 +2267,7 @@ void Room::adjustSeats() {
     }
 
     for (int i = 0; i < m_players.length(); i++)
-        m_players.at(i)->setSeat(i+1);
+        m_players.at(i)->setSeat(i + 1);
 
     // tell the players about the seat, and the first is always the lord
     QStringList player_circle;
@@ -2645,7 +2654,7 @@ bool Room::hasWelfare(const ServerPlayer *player) const{
         return player->isLord() || player->getRole() == "renegade";
     else if (mode == "04_1v3")
         return false;
-    else if (Config.EnableHegemony)
+    else if (Config.EnableHegemony || mode == "06_XMode")
         return false;
     else
         return player->isLord() && player_count > 4;
@@ -2728,19 +2737,22 @@ void Room::startGame() {
     }
 
     foreach (ServerPlayer *player, m_players) {
-        if (!Config.EnableBasara && (mode == "06_3v3" || mode == "02_1v1" || !player->isLord()))
+        if (!Config.EnableBasara
+            && (mode == "06_3v3" || mode == "02_1v1" || mode == "06_XMode" || !player->isLord()))
             broadcastProperty(player, "general");
 
         if (mode == "02_1v1")
             broadcastInvoke("revealGeneral", QString("%1:%2").arg(player->objectName()).arg(player->getGeneralName()), player);
 
-        if (Config.Enable2ndGeneral && mode != "02_1v1" && mode != "06_3v3" && mode != "04_1v3" && !Config.EnableBasara)
+        if (Config.Enable2ndGeneral
+            && mode != "02_1v1" && mode != "06_3v3" && mode != "06_XMode" && mode != "04_1v3"
+            && !Config.EnableBasara)
             broadcastProperty(player, "general2");
 
         broadcastProperty(player, "hp");
         broadcastProperty(player, "maxhp");
 
-        if (mode == "06_3v3")
+        if (mode == "06_3v3" || mode == "06_XMode")
             broadcastProperty(player, "role");
     }
 
@@ -2762,7 +2774,7 @@ void Room::startGame() {
     broadcastInvoke("setPileNumber", QString::number(m_drawPile->length()));
 
     thread = new RoomThread(this);
-    if (mode != "02_1v1" && mode != "06_3v3") thread->resetRoomState();
+    if (mode != "02_1v1" && mode != "06_3v3" && mode != "06_XMode") thread->resetRoomState();
     connect(thread, SIGNAL(started()), this, SIGNAL(game_start()));
 
     if (!_virtual) thread->start();
@@ -3400,7 +3412,7 @@ bool Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type
 }
 
 void Room::doLightbox(const QString &lightboxName, int duration) {
-    broadcastInvoke("animate", QString().arg(lightboxName).arg(duration));
+    broadcastInvoke("animate", QString("lightbox:%1:%2").arg(lightboxName).arg(duration));
     thread->delay(duration / 1.2);
 }
 
@@ -4450,6 +4462,8 @@ void Room::arrangeCommand(ServerPlayer *player, const QString &arg) {
         thread_3v3->arrange(player, arg.split("+"));
     else if (mode == "02_1v1")
         thread_1v1->arrange(player, arg.split("+"));
+    else if (mode == "06_XMode")
+        thread_xmode->arrange(player, arg.split("+"));
 }
 
 void Room::takeGeneralCommand(ServerPlayer *player, const QString &arg) {

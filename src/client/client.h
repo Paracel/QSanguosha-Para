@@ -171,7 +171,7 @@ public:
     void fillGenerals(const QString &generals);
     void askForGeneral3v3(const QString &);
     void takeGeneral(const QString &take_str);
-    void startArrange(const QString &);
+    void startArrange(const QString &to_arrange);
     
     void recoverGeneral(const QString &);
     void revealGeneral(const QString &);
@@ -321,7 +321,7 @@ signals:
     void generals_filled(const QStringList &general_names);
     void general_taken(const QString &who, const QString &name);
     void general_asked();
-    void arrange_started();
+    void arrange_started(const QString &to_arrange);
     void general_recovered(int index, const QString &name);
     void general_revealed(bool self, const QString &general);
 

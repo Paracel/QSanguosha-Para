@@ -60,7 +60,7 @@ public:
         if (room->askForSkillInvoke(zhugejin, objectName())) {
             room->broadcastSkillInvoke(objectName());
             zhugejin->setFlags("hongyuan");
-            if (ServerInfo.GameMode == "06_3v3") {
+            if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode") {
                 QStringList names = getTeammateNames(zhugejin);
                 room->setTag("HongyuanTargets", QVariant::fromValue(names));
             }
@@ -154,7 +154,7 @@ public:
         JudgeStar judge = data.value<JudgeStar>();
 
         bool can_invoke = false;
-        if (ServerInfo.GameMode == "06_3v3") {
+        if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode") {
             foreach (ServerPlayer *teammate, getTeammates(player)) {
                 if (teammate == judge->who) {
                     can_invoke = true;

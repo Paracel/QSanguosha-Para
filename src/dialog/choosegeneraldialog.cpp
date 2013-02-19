@@ -107,9 +107,9 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
             if (party < 2)
                 buttons.at(index)->setEnabled(false);
             if (Self->getGeneral())
-                    if (Self->getGeneral()->getKingdom() != general->getKingdom()
-                        || Self->getGeneralName() == general->objectName())
-                buttons.at(index)->setEnabled(false);
+                if (Self->getGeneral()->getKingdom() != general->getKingdom()
+                    || Self->getGeneralName() == general->objectName())
+                    buttons.at(index)->setEnabled(false);
             index++;
         }
     }

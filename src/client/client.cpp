@@ -321,7 +321,7 @@ void Client::processObsoleteServerPacket(const QString &cmd) {
     static QSet<QString> deprecated;
     if (deprecated.isEmpty()) {
         deprecated << "increaseSlashCount" // replaced by addHistory
-            << "addProhibitSkill"; // add all prohibit skill at game start
+                   << "addProhibitSkill"; // add all prohibit skill at game start
     }
 
     Callback callback = callbacks.value(method, NULL);
@@ -1664,8 +1664,8 @@ void Client::takeGeneral(const QString &take_str) {
     emit general_taken(who, name);
 }
 
-void Client::startArrange(const QString &) {
-    emit arrange_started();
+void Client::startArrange(const QString &to_arrange) {
+    emit arrange_started(to_arrange);
 }
 
 void Client::onPlayerChooseRole3v3() {

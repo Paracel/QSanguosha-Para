@@ -302,7 +302,10 @@ end
 
 sgs.ai_card_intention.SijianCard = function(self, card, from, tos)
 	local intention = 80
-	if tos[1]:hasSkill("kongcheng") and tos[1]:getHandcardNum() == 1 then
+	if to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2 then
+		intention = -30
+	elseif to:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, to)
+			and to:isWounded() and self:isWeak(to) then
 		intention = -30
 	end
 	sgs.updateIntention(from, tos[1], intention)

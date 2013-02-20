@@ -269,7 +269,7 @@ function SmartAI:slashIsEffective(slash, to)
 	if not self:damageIsEffective(to, nature) then return false end
 
 	local skillname = slash:getSkillName()
-	local changed = #skillname > 0 and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen")
+	local changed = slash:isVirtualCard() and slash:subcardsLength() > 0 and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen")
 	local armor = to:getArmor()
 	if armor and to:hasArmorEffect(armor:objectName()) and not self.player:hasWeapon("qinggang_sword") then
 		if armor:objectName() == "renwang_shield" then

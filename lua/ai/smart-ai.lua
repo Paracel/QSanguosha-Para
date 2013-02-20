@@ -1447,20 +1447,8 @@ function SmartAI:sortEnemies(players)
 		local alevel = self:objectiveLevel(a)
 		local blevel = self:objectiveLevel(b)
 
-		if alevel~= blevel then return alevel > blevel end
-		if alevel == 3 then return sgs.getDefense(a) > sgs.getDefense(b) end
-
-		alevel = sgs.ai_chaofeng[a:getGeneralName()] or 0
-		blevel = sgs.ai_chaofeng[b:getGeneralName()] or 0
-		if alevel~= blevel then
-			return alevel > blevel
-		end
-
-		alevel = sgs.getDefense(a)
-		blevel = sgs.getDefense(b)
-		if alevel~= blevel then
-			return alevel < blevel
-		end
+		if alevel ~= blevel then return alevel > blevel end
+		return sgs.getDefense(a) < sgs.getDefense(b)
 	end
 	table.sort(players, comp_func)
 end

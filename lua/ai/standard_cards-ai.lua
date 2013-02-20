@@ -462,8 +462,17 @@ sgs.ai_skill_use.slash = function(self, prompt)
 				if player:hasFlag("SlashAssignee") then target = player break end
 			end
 		end
+		local target2 = nil
+		if #parsedPrompt >= 3 then
+			for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+				if p:objectName() == parsedPrompt[3] then
+					target2 = p
+					break
+				end
+			end
+		end
 		if not target then return "." end
-		local ret = callback(self, nil, nil, target)
+		local ret = callback(self, nil, nil, target, target2)
 		if ret == nil or ret == "." then return "." end
 		slash = sgs.Card_Parse(ret)
 		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card) > 50 or self.player:hasFlag("slashNoDistanceLimit")
@@ -1621,53 +1630,138 @@ sgs.dynamic_value.control_card.Dismantlement = true
 
 function SmartAI:useCardCollateral(card, use)
 	if self.player:hasSkill("noswuyan") then return end
-	self:sort(self.enemies, "threat")
+	local fromList = sgs.QList2Table(self.room:getOtherPlayers(self.player))
+	local toList = sgs.QList2Table(self.room:getAlivePlayers())
 
-	for _, friend in ipairs(self.friends_noself) do
-		if friend:getWeapon() and self:hasSkills(sgs.lose_equip_skill, friend)
-			and not friend:hasSkill("weimu")
-			and not self.room:isProhibited(self.player, friend, card) then
+	local cmp = function(a, b)
+		local alevel = self:objectiveLevel(a)
+		local blevel = self:objectiveLevel(b)
 
-			for _, enemy in ipairs(self.enemies) do
-				if friend:canSlash(enemy, nil) then
-					use.card = card
+		if alevel ~= blevel then return alevel > blevel end
+
+		local anum = getCardsNum("Slash", a)
+		local bnum = getCardsNum("Slash", b)
+		if anum ~= bnum then return anum < bnum end
+		return a:getHandcardNum() < b:getHandcardNum()
+	end
+
+	table.sort(fromList, cmp)
+	self:sort(toList, "defense")
+
+	local needCrossbow = false
+	for _, enemy in ipairs(self.enemies) do
+		if self.player:canSlash(enemy) and self:objectiveLevel(enemy) > 3
+			and sgs.isGoodTarget(enemy, self.enemies, self) and not self:slashProhibit(nil, enemy) then
+			needCrossbow = true
+			break
+		end
+	end
+
+	needCrossbow = needCrossbow and self:getCardsNum("Slash", friend) > 2
+
+	if needCrossbow then
+		for i = #fromList, 1, -1 do
+			local friend = fromList[i]
+			if friend:getWeapon() and friend:getWeapon():isKindOf("Crossbow")
+				and not friend:hasSkill("weimu") and not self.room:isProhibited(self.player, friend, card) then
+				for _, enemy in ipairs(toList) do
+					if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then
+						self.player:setFlags("CollateralNeedCrossbow")
+						use.card = card
+						if use.to then use.to:append(friend) end
+						if use.to then use.to:append(enemy) end
+						return
+					end
 				end
-				if use.to then use.to:append(friend) end
-				if use.to then use.to:append(enemy) end
-				return
 			end
 		end
 	end
 
 	local n = nil
 	local final_enemy = nil
-	for _, enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(fromList) do
 		if not self.room:isProhibited(self.player, enemy, card)
 			and self:hasTrickEffective(card, enemy)
 			and not self:hasSkills(sgs.lose_equip_skill, enemy)
 			and not enemy:hasSkill("weimu")
+			and self:objectiveLevel(enemy) >= 0
 			and enemy:getWeapon() then
 
-			for _, enemy2 in ipairs(self.enemies) do
-				if enemy:canSlash(enemy2, card) then
-					if enemy:getHandcardNum() == 0 then
-						use.card = card
-						if use.to then use.to:append(enemy) end
-						if use.to then use.to:append(enemy2) end
-						return
-					else
-						n = 1;
+			for _, enemy2 in ipairs(toList) do
+				if enemy:canSlash(enemy2) and self:objectiveLevel(enemy2) > 3 and enemy:objectName() ~= enemy2:objectName() then
+					n = 1
+					final_enemy = enemy2
+					break
+				end
+			end
+
+			if not n then
+				for _, enemy2 in ipairs(toList) do
+					if enemy:canSlash(enemy2) and self:objectiveLevel(enemy2) <=3 and self:objectiveLevel(enemy2) >=0 and enemy:objectName() ~= enemy2:objectName() then
+						n = 1
 						final_enemy = enemy2
+						break
 					end
 				end
 			end
-			if n then use.card = card end
-			if use.to then use.to:append(enemy) end
-			if use.to then use.to:append(final_enemy) end
-			return
 
+			if not n then
+				for _, friend in ipairs(toList) do
+					if enemy:canSlash(friend) and self:objectiveLevel(friend) < 0 and enemy:objectName() ~= friend:objectName() 
+						and (friend:getHp() > getBestHp(friend) or self:getDamagedEffects(friend, enemy) ) then
+						n = 1
+						final_enemy = friend
+						break
+					end
+				end
+			end
+
+			if n then 
+				use.card = card
+				if use.to then use.to:append(enemy) end
+				if use.to then use.to:append(final_enemy) end
+				return
+			end
 		end
 		n = nil
+	end
+
+	for _, friend in ipairs(fromList) do
+		if friend:getWeapon() and getCardsNum("Slash", friend) >= 1
+			and not friend:hasSkill("weimu")
+			and self:objectiveLevel(friend) < 0
+			and not self.room:isProhibited(self.player, friend, card) then
+
+			for _, enemy in ipairs(toList) do
+				if friend:canSlash(enemy, nil) and self:objectiveLevel(enemy) > 3 and friend:objectName() ~= enemy:objectName()
+					and sgs.isGoodTarget(enemy, self.enemies, self) and not self:slashProhibit(nil, enemy) then
+					use.card = card
+					if use.to then use.to:append(friend) end
+					if use.to then use.to:append(enemy) end
+					return
+				end
+			end
+		end
+	end
+
+	self:sortEnemies(toList)
+
+	for _, friend in ipairs(fromList) do
+		if friend:getWeapon() and self:hasSkills(sgs.lose_equip_skill, friend) 
+			and not friend:hasSkill("weimu")
+			and self:objectiveLevel(friend) < 0
+			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", to) > 1)
+			and not self.room:isProhibited(self.player, friend, card) then
+
+			for _, enemy in ipairs(toList) do
+				if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy2:objectName() then
+					use.card = card
+					if use.to then use.to:append(friend) end
+					if use.to then use.to:append(enemy) end
+					return
+				end
+			end
+		end
 	end
 end
 
@@ -1685,6 +1779,9 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
+	if target2 and target2:hasFlag("CollateralNeedCrossbow") and self:isFriend(target2) then
+		return "."
+	end
 	if self:isFriend(target) and target:hasSkill("leiji") 
 		and (self:hasSuit("spade", true, target) or target:getHandcardNum() >= 3)
 		and (getKnownCard(target, "Jink", true) >= 1

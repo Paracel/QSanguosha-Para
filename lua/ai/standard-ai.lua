@@ -730,7 +730,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local jijiangtargets = {}
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("JijiangTarget") then
-			if self:isFriend(player) and not (player:getHp() > getBestHp(target) or self:getDamagedEffects(player, sgs.jijiangsource)) then return "." end
+			if self:isFriend(player) and not (player:getHp() > getBestHp(player) or self:getDamagedEffects(player, sgs.jijiangsource)) then return "." end
 			table.insert(jijiangtargets, player)
 		end
 	end

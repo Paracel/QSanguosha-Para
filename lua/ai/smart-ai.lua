@@ -4504,6 +4504,40 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 	end
 end
 
+function SmartAI:findPlayerToDraw(include_self)
+	local players = sgs.QList2Table(include_self and self.room:getAllPlayers() or self.player:getOtherPlayers(self.player))
+	local friends = {}
+	for _, player in ipairs(players) do
+		if self:isFriend(player) and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive)
+			and not (player:hasSkill("kongcheng") and player:isKongcheng()) then
+			table.insert(friends, player)
+		end
+	end
+	if #friends == 0 then return end
+
+	self:sort(friends, "defense")
+	for _, friend in ipairs(friends) do
+		if friend:getHandcardNum() < 2 then
+			return friend
+		end
+	end
+
+	for _, friend in ipairs(friends) do
+		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|" ..
+							"lijian|jieyuan|rende|lirang|longluo") then
+			return friend
+		end
+	end
+
+	for _, friend in ipairs(friends) do
+		if self:hasSkills(sgs.cardneed_skill, friend) then
+			return friend
+		end
+	end
+
+	return friends[1]
+end
+
 function getBestHp(player)
 	local arr = { baiyin = 1, quhu = 1, ganlu = 1, yinghun = 2, miji = 1, xueji = 1, baobian = math.max(0, player:getMaxHp() - 3) }
 

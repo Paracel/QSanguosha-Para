@@ -47,12 +47,8 @@ end
 sgs.ai_skill_playerchosen.miji = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
-	for _, target in ipairs(targets) do
-		if self:isFriend(target) and not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)
-			and not (target:hasSkill("kongcheng") and target:isKongcheng()) then
-			return target
-		end 
-	end
+	local to = self:findPlayerToDraw(true)
+	return to and self.player
 end
 
 function sgs.ai_cardneed.jiangchi(to, card)

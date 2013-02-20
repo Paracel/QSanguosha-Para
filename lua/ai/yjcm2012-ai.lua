@@ -174,18 +174,17 @@ sgs.ai_skill_use_func.GongqiCard = function(card, use, self)
 end
 
 sgs.ai_skill_invoke.gongqi_discard = function(self, data)
-	self:sort(self.enemies)
-	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isNude() and not (enemy:isKongcheng() and self:hasSkills(sgs.lose_equip_skill, enemy)) then
-			self.gongqitarget = enemy
-			return true
-		end
+	local player = self:findPlayerToDiscard()
+	if player then
+		self.gongqitarget = player
+		return true
 	end
 	return false
 end
 
 sgs.ai_skill_playerchosen.gonqqi = function(self, targets)
-	return self.gongqitarget or targets[1]
+	if not self.gongqitarget then self.room:writeToConsole(debug.traceback()) return targets[1] end
+	return self.gongqitarget
 end
 
 sgs.ai_use_value.GongqiCard = 2

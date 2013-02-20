@@ -295,63 +295,8 @@ sgs.ai_skill_invoke.lirang = function(self, data)
 end
 
 sgs.ai_skill_use["@@sijian"] = function(self, prompt)
-	self:sort(self.enemies, "defense")
-	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isNude() then
-			if self:getDangerousCard(enemy) then
-				return ("@SijianCard=.->%s"):format(enemy:objectName())
-			end
-		end
-	end
-
-	for _, friend in ipairs(self.friends_noself) do
-		if friend:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, friend)
-		  and friend:isWounded() and self:isWeak(friend) then
-			return ("@SijianCard=.->%s"):format(friend:objectName())
-		end
-	end
-
-	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isNude() then
-			if self:getValuableCard(enemy) then
-				return ("@SijianCard=.->%s"):format(enemy:objectName())
-			end
-		end
-	end
-
-	for _, enemy in ipairs(self.enemies) do
-		local cards = sgs.QList2Table(enemy:getHandcards())
-		local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
-		if #cards <= 2 and not enemy:isKongcheng() then
-			for _, cc in ipairs(cards) do
-				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
-					return ("@SijianCard=.->%s"):format(enemy:objectName())
-				end
-			end
-		end
-	end
-
-	for _, enemy in ipairs(self.enemies) do
-		if enemy:getCards("e"):length() > 0 and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) 
-		 and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
-		 and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("SilverLion") and enemy:isWounded() and self:isWeak(enemy)) then
-			return ("@SijianCard=.->%s"):format(enemy:objectName())
-		end
-	end
-
-	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isNude() and self:hasLoseHandcardEffective(enemy) 
-		  and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
-			return ("@SijianCard=.->%s"):format(enemy:objectName())
-		end
-	end
-
-	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
-	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, zhugeliang) > 0
-		and zhugeliang:getHp() <= 2 then
-		return ("@SijianCard=.->%s"):format(zhugeliang:objectName())
-	end
-
+	local player = self:findPlayerToDiscard()
+	if player then return ("@SijianCard=.->%s"):format(player:objectName()) end
 	return "."
 end
 

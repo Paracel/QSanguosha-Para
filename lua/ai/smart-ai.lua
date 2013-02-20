@@ -2252,7 +2252,6 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			if self:evaluateArmor(who:getArmor(), who) < -5 then return who:getArmor():getId() end
 			if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
 				if who:getWeapon() then return who:getWeapon():getId() end
-				if who:hasArmorEffect("vine") then return who:getArmor():getId() end
 				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
 			end
 		end
@@ -2260,10 +2259,10 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor():getId() end
-			if who:getOffensiveHorse() and ((who:getOffensiveHorse():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then
+			if who:getOffensiveHorse() and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) then
 				return who:getOffensiveHorse():getId()
 			end
-			if who:getWeapon() and ((who:getWeapon():isRed() and who:hasSkill("jijiu")) or who:hasSkill("beige")) then
+			if who:getWeapon() and (not who:hasSkill("jijiu") or who:getWeapon():isRed()) then
 				return who:getWeapon():getId()
 			end
 		end
@@ -4395,6 +4394,114 @@ end
 function SmartAI:needRende()
 	return self.player:hasSkill("rende") and self.player:getLostHp() > 1
 		and self.player:usedTimes("RendeCard") < 2 and #self.friends > 1
+end
+
+function SmartAI:findPlayerToDiscard(flags, include_self)
+	local friends, enemies = {}, {}
+	friends = include_self and self.friends or self.friends_noself
+	enemies = self.enemies
+	flags = flags or "he"
+	
+	self:sort(enemies, "defense")
+	if flags:match("e") then
+		for _, enemy in ipairs(enemies) do
+			if not enemy:isNude() then
+				if self:getDangerousCard(enemy) then
+					return enemy
+				end
+			end
+		end
+		for _, friend in ipairs(friends) do
+			if friend:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, friend)
+				and friend:isWounded() and self:isWeak(friend) then
+				return friend
+			end
+		end
+	end
+
+	if flags:match("j") then
+		for _, friend in ipairs(friends) do
+			if ((friend:containsTrick("indulgence") and not friend:hasSkill("keji")) or friend:containsTrick("supply_shortage"))
+				and not friend:containsTrick("YanxiaoCard") and not (friend:hasSkill("qiaobian") and not friend:isKongcheng()) then
+				return friend
+			end
+		end
+		for _, friend in ipairs(friends) do
+			if friend:containsTrick("lightning") and self:hasWizard(enemies, true) then return friend end
+		end
+	end
+
+	if flags:match("e") then
+		for _, enemy in ipairs(enemies) do
+			if not enemy:isNude() then
+				if self:getValuableCard(enemy) then
+					return enemy
+				end
+			end
+		end
+		for _, enemy in ipairs(enemies) do
+			if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", enemy) then
+				if enemy:getDefensiveHorse() then return enemy end
+				if enemy:getArmor() and not (enemy:hasArmorEffect("silver_lion") and enemy:isWounded() or self:hasSkills("bazhen|yizhong", enemy)) then return enemy end
+				if enemy:getOffensiveHorse() and (not enemy:hasSkill("jijiu") or enemy:getOffensiveHorse():isRed()) then
+					return enemy
+				end
+				if who:getWeapon() and (not enemy:hasSkill("jijiu") or enemy:getWeapon():isRed()) then
+					return enemy
+				end
+			end
+		end
+	end
+
+	if flags:match("h") then
+		for _, enemy in ipairs(enemies) do
+			local cards = sgs.QList2Table(enemy:getHandcards())
+			local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
+			if #cards <= 2 and not enemy:isKongcheng() then
+				for _, cc in ipairs(cards) do
+					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
+						return enemy
+					end
+				end
+			end
+		end
+	end
+
+	if flags:match("e") then
+		for _, enemy in ipairs(enemies) do
+			if enemy:hasEquip() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) 
+			and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
+			and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy)) then
+				return enemy
+			end
+		end
+	end
+
+	if flags:match("j") then
+		for _, enemy in ipairs(enemies) do
+			if enemy:containsTrick("lightning") and self:hasWizard(enemies, true) then return enemy end
+		end
+		for _, enemy in ipairs(enemies) do
+			if enemy:containsTrick("YanxiaoCard") then return enemy end
+		end
+	end
+
+	if flags:match("h") then
+		for _, enemy in ipairs(enemies) do
+			if not enemy:isNude() and self:hasLoseHandcardEffective(enemy) 
+				and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
+				return enemy
+			end
+		end
+	end
+
+	if flags:match("h") then
+		local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+		if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, zhugeliang) > 0
+			and zhugeliang:getHp() <= 2 then
+			return zhugeliang
+		end
+	end
 end
 
 function getBestHp(player)

@@ -69,7 +69,7 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or (target:hasArmorEffect("silver_lion") and target:isWounded())
 	end
 	if self:isEnemy(target) then				---fankui without zhugeliang and luxun
-		if target:hasSkill("tuntian") then return false end
+		if target:hasSkill("tuntian") and target:getPhase() == sgs.Player_NotActive then return false end
 		if (self:needKongcheng(target) or self:getLeastHandcardNum(target) == 1) and target:getHandcardNum() == 1 then
 			if not target:getEquips():isEmpty() then return true
 			else return false

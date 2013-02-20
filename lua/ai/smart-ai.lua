@@ -1861,7 +1861,7 @@ function SmartAI:filterEvent(event, player, data)
 			end
 
 			if player:hasFlag("PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
-				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD then
+				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD and not self:needBear(player) then
 				local is_neutral = (sgs.evaluateRoleTrends(player) == "neutral")
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do

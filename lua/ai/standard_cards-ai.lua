@@ -217,7 +217,7 @@ function SmartAI:slashProhibit(card, enemy)
 	card = card or sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	for _, askill in sgs.qlist(enemy:getVisibleSkillList()) do
 		local filter = sgs.ai_slash_prohibit[askill:objectName()]
-		if filter and type(filter) == "function" and filter(self, enemy, card) then return true end
+		if filter and type(filter) == "function" and filter(self, self.player, enemy, card) then return true end
 	end
 
 	if self:isFriend(enemy) then
@@ -248,8 +248,9 @@ function SmartAI:canLiuli(other, another)
 	else return false end
 end
 
-function SmartAI:slashIsEffective(slash, to)
-	if not slash or not to then self.room:writeToConsole(debug.traceback()) end
+function SmartAI:slashIsEffective(slash, to, from)
+	if not slash or not to then self.room:writeToConsole(debug.traceback()) return false end
+	from = from or self.player
 	if to:getPile("dream"):length() > 0 and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then
@@ -264,19 +265,18 @@ function SmartAI:slashIsEffective(slash, to)
 		ThunderSlash = sgs.DamageStruct_Thunder,
 	}
 
-	if not slash then self.room:writeToConsole(debug.traceback()) end
 	local nature = natures[slash:getClassName()]
-	if not self:damageIsEffective(to, nature) then return false end
+	if not self:damageIsEffective(to, nature, from) then return false end
 
 	local skillname = slash:getSkillName()
 	local changed = slash:isVirtualCard() and slash:subcardsLength() > 0
 					and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen" or skillname == "guhuo")
 	local armor = to:getArmor()
-	if armor and to:hasArmorEffect(armor:objectName()) and not self.player:hasWeapon("qinggang_sword") then
+	if armor and to:hasArmorEffect(armor:objectName()) and not from:hasWeapon("qinggang_sword") then
 		if armor:objectName() == "renwang_shield" then
 			return not slash:isBlack()
 		elseif armor:objectName() == "vine" then
-			return nature ~= sgs.DamageStruct_Normal or (not changed and (self.player:hasWeapon("fan") or (self.player:hasSkill("lihuo") and not self:isWeak())))
+			return nature ~= sgs.DamageStruct_Normal or (not changed and (from:hasWeapon("fan") or (from:hasSkill("lihuo") and not self:isWeak(from))))
 		end
 	end
 

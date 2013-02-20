@@ -30,10 +30,10 @@ sgs.ai_choicemade_filter.skillInvoke.hujia = function(player, promptlist)
 	end
 end
 
-function sgs.ai_slash_prohibit.hujia(self, to)
-	if self:isFriend(to) then return false end
+function sgs.ai_slash_prohibit.hujia(self, from, to)
+	if self:isFriend(to, from) then return false end
 	local guojia = self.room:findPlayerBySkillName("tiandu")
-	if guojia and guojia:getKingdom() == "wei" and self:isFriend(to, guojia) then return sgs.ai_slash_prohibit.tiandu(self, guojia) end
+	if guojia and guojia:getKingdom() == "wei" and self:isFriend(to, guojia) then return sgs.ai_slash_prohibit.tiandu(self, from, guojia) end
 end
 
 sgs.ai_choicemade_filter.cardResponded["@hujia-jink"] = function(player, promptlist)
@@ -249,9 +249,9 @@ sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, in
 	end
 end
 
-function sgs.ai_slash_prohibit.ganglie(self, to)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
-	return self.player:getHandcardNum() + self.player:getHp() < 4
+function sgs.ai_slash_prohibit.ganglie(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	return from:getHandcardNum() + from:getHp() < 4
 end
 
 sgs.ai_chaofeng.xiahoudun = -3
@@ -476,8 +476,8 @@ sgs.ai_chaofeng.xuchu = 3
 
 sgs.ai_skill_invoke.tiandu = sgs.ai_skill_invoke.jianxiong
 
-function sgs.ai_slash_prohibit.tiandu(self, to)
-	if self:isEnemy(to) and self:hasEightDiagramEffect(to) then return true end
+function sgs.ai_slash_prohibit.tiandu(self, from, to)
+	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
 sgs.ai_need_damaged.yiji = function(self, attacker)
@@ -1332,11 +1332,11 @@ sgs.ai_card_intention.LiuliCard = function(self, card, from, to)
 	if not self:isWeak(from) or getCardsNum("Jink", from) > 0 then sgs.updateIntention(from, to[1], 50) end
 end
 
-function sgs.ai_slash_prohibit.liuli(self, to, card)
-	if self:isFriend(to) then return false end
+function sgs.ai_slash_prohibit.liuli(self, from, to, card)
+	if self:isFriend(to, from) then return false end
 	if to:isNude() then return false end
-	for _, friend in ipairs(self.friends_noself) do
-		if to:canSlash(friend, card) and self:slashIsEffective(card, friend) then return true end
+	for _, friend in ipairs(self:getFriendsNoSelf(from)) do
+		if to:canSlash(friend, card) and self:slashIsEffective(card, friend, from) then return true end -- ?
 	end
 end
 

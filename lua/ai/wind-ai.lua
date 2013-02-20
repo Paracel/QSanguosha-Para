@@ -206,19 +206,19 @@ end
 
 sgs.ai_card_intention.LeijiCard = 80
 
-function sgs.ai_slash_prohibit.leiji(self, to, card)
-	if self:isFriend(to) then return false end
+function sgs.ai_slash_prohibit.leiji(self, from, to, card)
+	if self:isFriend(to, from) then return false end
 	local hcard = to:getHandcardNum()
-	if self.player:hasSkill("liegong") and (hcard >= self.player:getHp() or hcard <= self.player:getAttackRange()) then return false end
-	if self.role == "rebel" and to:isLord() then
+	if from:hasSkill("liegong") and (hcard >= from:getHp() or hcard <= from:getAttackRange()) then return false end
+	if from:getRole() == "rebel" and to:isLord() then
 		local other_rebel
-		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		for _, player in sgs.qlist(self.room:getOtherPlayers(from)) do
 			if sgs.evaluatePlayerRole(player) == "rebel" or sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then 
 				other_rebel = player
 				break
 			end
 		end
-		if not other_rebel and ((self.player:getHp() >= 4 and (self:getCardsNum("Peach") > 0 or self:hasSkills("ganglie|neoganglie"))) or self:hasSkill("hongyan")) then
+		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from) > 0 or self:hasSkills("ganglie|neoganglie", from))) or from:hasSkill("hongyan")) then
 			return false
 		end
 	end
@@ -404,10 +404,10 @@ sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	sgs.updateIntention(from, to, intention)
 end
 
-function sgs.ai_slash_prohibit.tianxiang(self, to)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
-	if self:isFriend(to) then return false end
-	return self:cantbeHurt(to)
+function sgs.ai_slash_prohibit.tianxiang(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if self:isFriend(to, from) then return false end
+	return self:cantbeHurt(to, from)
 end
 
 sgs.tianxiang_suit_value = {

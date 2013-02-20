@@ -51,59 +51,61 @@ sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 	return targetlist[1]
 end
 
-function sgs.ai_slash_prohibit.wuhun(self, to)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
+function sgs.ai_slash_prohibit.wuhun(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
 	local maxfriendmark = 0
 	local maxenemymark = 0
-	for _, friend in ipairs(self.friends) do
+	for _, friend in ipairs(self:getFriends(from)) do
 		local friendmark = friend:getMark("@nightmare")
 		if friendmark > maxfriendmark then maxfriendmark = friendmark end
 	end
-	for _, enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self:getEnemies(from)) do
 		local enemymark = enemy:getMark("@nightmare")
 		if enemymark > maxenemymark and enemy:objectName() ~= to:objectName() then maxenemymark = enemymark end
 	end
-	if self:isEnemy(to) and not (to:isLord() and self.player:getRole() == "rebel") then
-		if (maxfriendmark + 2 > maxenemymark) and not (#self.enemies == 1 and #self.friends + #self.enemies == self.room:alivePlayerCount()) then
-			if not (self.player:getMark("@nightmare") == maxfriendmark and self.role == "loyalist") then
+	if self:isEnemy(to, from) and not (to:isLord() and from:getRole() == "rebel") then
+		if (maxfriendmark + 2 > maxenemymark) and not (#(self:getEnemies(from)) == 1 and #(self:getFriends(from)) + #(self:getEnemies(from)) == self.room:alivePlayerCount()) then
+			if not (from:getMark("@nightmare") == maxfriendmark and from:getRole() == "loyalist") then
 				return true
 			end
 		end
 	end
 end
 
-function SmartAI:cantbeHurt(player)
-	if self.player:hasSkill("jueqing") then return false end
+function SmartAI:cantbeHurt(player, from)
+	from = from or self.player
+	if from:hasSkill("jueqing") then return false end
 	local maxfriendmark = 0
 	local maxenemymark = 0
 	local dyingfriend = 0
 	if player:hasSkill("wuhun") then
-		for _, friend in ipairs(self.friends) do
+		for _, friend in ipairs(self:getFriends(from)) do
 			local friendmark = friend:getMark("@nightmare")
 			if friendmark > maxfriendmark then maxfriendmark = friendmark end
 		end
-		for _, enemy in ipairs(self.enemies) do
+		for _, enemy in ipairs(self:getEnemies(from)) do
 			local enemymark = enemy:getMark("@nightmare")
 			if enemymark > maxenemymark and enemy:objectName() ~= player:objectName() then maxenemymark = enemymark end
 		end
-		if self:isEnemy(player) then
-			if not (player:isLord() and self.player:getRole() == "rebel")
-				and maxfriendmark + 2 > maxenemymark and not (#self.enemies == 1 and #self.friends + #self.enemies == self.room:alivePlayerCount())
-				and not (self.player:getMark("@nightmare") == maxfriendmark and self.role == "loyalist") then
+		if self:isEnemy(player, from) then
+			if not (player:isLord() and from:getRole() == "rebel")
+				and maxfriendmark + 2 > maxenemymark and not (#(self:getEnemies(from)) == 1 and #(self:getFriends(from)) + #(self:getEnemies(from)) == self.room:alivePlayerCount())
+				and not (from:getMark("@nightmare") == maxfriendmark and from:getRole() == "loyalist") then
 				return true
 			end
 		elseif maxfriendmark + 1 > maxenemymark then
 			return true
 		end
 	elseif player:hasSkill("duanchang") then
-		if player:getHp() > 1 or #self.enemies == 1 then return false end
+		if player:getHp() > 1 or #(self:getEnemies(from)) == 1 then return false end
 		if player:getHp() <= 1 then
-			if self.player:getMaxHp() == 3 and self.player:getArmor() and self.player:getDefensiveHorse() then return false end
-			if self.player:getMaxHp() <= 3 or (self.player:isLord() and self:isWeak()) then return true end
+			if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
+			if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end
 		end
 	elseif player:hasSkill("tianxiang") then
-		for _, friend in ipairs(self.friends) do
-			if friend:getHp() < 2 and self:getCardsNum("Peach") == 0 then
+		local peach_num = self.player:objectName() == from:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", from)
+		for _, friend in ipairs(self:getFriends(from)) do
+			if friend:getHp() < 2 and peach_num then
 				dyingfriend = dyingfriend + 1
 			end
 		end

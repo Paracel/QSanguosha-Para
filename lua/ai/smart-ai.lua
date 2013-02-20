@@ -1428,7 +1428,7 @@ function SmartAI:getFriends(player)
 	elseif self:isEnemy(self.player, player) then
 		return self.enemies
 	else
-		return {player}
+		return { player }
 	end
 end
 
@@ -1868,7 +1868,7 @@ function SmartAI:filterEvent(event, player, data)
 						local has_slash_prohibit_skill = false
 						for _, askill in sgs.qlist(target:getVisibleSkillList()) do
 							local filter = sgs.ai_slash_prohibit[askill:objectName()]
-							if filter and type(filter) == "function" then
+							if filter and type(filter) == "function" and filter(self, player, target, card) then
 								has_slash_prohibit_skill = true
 								break
 							end

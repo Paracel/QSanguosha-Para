@@ -7,9 +7,9 @@ sgs.ai_skill_invoke.chongzhen = function(self, data)
 	end
 end
 
-sgs.ai_slash_prohibit.chongzhen = function(self, to, card)
-	if self:isFriend(to) then return false end
-	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 and self.player:getHandcardNum() > 1 then return true end
+sgs.ai_slash_prohibit.chongzhen = function(self, from, to, card)
+	if self:isFriend(to, from) then return false end
+	if to:hasSkill("longdan") and to:getHandcardNum() >= 3 and from:getHandcardNum() > 1 then return true end
 	return false
 end
 
@@ -898,8 +898,8 @@ sgs.ai_skill_invoke.fenyong = function(self, data)
 	return true
 end
 
-function sgs.ai_slash_prohibit.fenyong(self, to)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
+function sgs.ai_slash_prohibit.fenyong(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
 	return to:getMark("@fenyong") > 0 and to:hasSkill("fenyong")
 end
 

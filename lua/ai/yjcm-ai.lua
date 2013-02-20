@@ -98,10 +98,10 @@ end
 sgs.ai_use_value.XinzhanCard = 4.4
 sgs.ai_use_priority.XinzhanCard = 9.4
 
-function sgs.ai_slash_prohibit.huilei(self, to)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
-	if self:isFriend(to) and self:isWeak(to) then return true end
-	return #self.enemies > 1 and self:isWeak(to) and self.player:getHandcardNum() > 3
+function sgs.ai_slash_prohibit.huilei(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if self:isFriend(to, from) and self:isWeak(to) then return true end
+	return #(self:getEnemies(from)) > 1 and self:isWeak(to) and from:getHandcardNum() > 3
 end
 
 sgs.ai_chaofeng.masu = -4
@@ -159,10 +159,10 @@ sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, inc
 	return {}
 end
 
-function sgs.ai_slash_prohibit.enyuan(self)
-	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
-	local num = self.player:getHandcardNum()
-	if num >= 3 or self:hasSkill("lianying") or (self:hasSkill("kongcheng") and num == 2) then return false end
+function sgs.ai_slash_prohibit.enyuan(self, from, to)
+	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	local num = from:getHandcardNum()
+	if num >= 3 or from:hasSkill("lianying") or (from:hasSkill("kongcheng") and num == 2) then return false end
 	return true
 end
 

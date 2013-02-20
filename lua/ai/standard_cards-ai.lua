@@ -268,12 +268,14 @@ function SmartAI:slashIsEffective(slash, to)
 	local nature = natures[slash:getClassName()]
 	if not self:damageIsEffective(to, nature) then return false end
 
+	local skillname = slash:getSkillName()
+	local changed = #skillname > 0 and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen")
 	local armor = to:getArmor()
 	if armor and to:hasArmorEffect(armor:objectName()) and not self.player:hasWeapon("qinggang_sword") then
 		if armor:objectName() == "renwang_shield" then
 			return not slash:isBlack()
 		elseif armor:objectName() == "vine" then
-			return nature ~= sgs.DamageStruct_Normal or self.player:hasWeapon("fan") or (self.player:hasSkill("lihuo") and not self:isWeak())
+			return nature ~= sgs.DamageStruct_Normal or (not changed and (self.player:hasWeapon("fan") or (self.player:hasSkill("lihuo") and not self:isWeak())))
 		end
 	end
 

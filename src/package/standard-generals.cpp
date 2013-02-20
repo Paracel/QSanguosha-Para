@@ -450,7 +450,7 @@ const Card *JijiangViewAsSkill::viewAs() const{
 
 bool JijiangViewAsSkill::hasShuGenerals(const Player *player) {
     foreach (const Player *p, player->getSiblings())
-        if (p->getKingdom() == "shu")
+        if (p->isAlive() && p->getKingdom() == "shu")
             return true;
     return false;
 }

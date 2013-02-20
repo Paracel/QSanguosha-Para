@@ -146,6 +146,7 @@ sgs.ai_skill_cardask["@enyuanheart"] = function(self)
 end
 
 function sgs.ai_slash_prohibit.nosenyuan(self)
+	if self.player:hasSkill("jueqing") or (self.player:hasSkill("qianxi") and self.player:distanceTo(to) == 1) then return false end
 	if self:isWeak() then return true end
 end
 

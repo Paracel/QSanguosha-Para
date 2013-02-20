@@ -690,8 +690,12 @@ void PlayerCardContainer::stopHuaShen() {
 }
 
 void PlayerCardContainer::updateAvatarTooltip() {
-    if (m_player)
-        _m_avatarArea->setToolTip(m_player->getSkillDescription());
+    if (m_player) {
+        QString description = m_player->getSkillDescription();
+        _m_avatarArea->setToolTip(description);
+        if (m_player->getGeneral2())
+            _m_smallAvatarArea->setToolTip(description);
+    }
 }
 
 PlayerCardContainer::PlayerCardContainer() {

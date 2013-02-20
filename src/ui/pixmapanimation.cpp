@@ -83,7 +83,7 @@ PixmapAnimation *PixmapAnimation::GetPixmapAnimation(QGraphicsItem *parent, cons
                     (parent->boundingRect().height() - pma->boundingRect().height()) / 2);
 
         pma->setParentItem(parent);
-        pma->setZValue(2.5);
+        pma->setZValue(20002.0);
         if (emotion.contains("weapon")) {
             pma->hide();
             QTimer::singleShot(600, pma, SLOT(preStart()));

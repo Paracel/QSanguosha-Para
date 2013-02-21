@@ -1221,7 +1221,7 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
 
     AI *ai = player->getAI();
     if (ai)
-        card= ai->askForSinglePeach(dying);
+        card = ai->askForSinglePeach(dying);
     else {
         int peaches = 1 - dying->getHp();
         Json::Value arg(Json::arrayValue);
@@ -1233,10 +1233,10 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
             return NULL;
 
         card = Card::Parse(toQString(clientReply));
-
-        if (card != NULL)
-            card = card->validateInResponse(player, continuable);
     }
+
+    if (card != NULL)
+        card = card->validateInResponse(player, continuable);
 
     const Card *result = NULL;
     if (card) {

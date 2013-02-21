@@ -523,8 +523,12 @@ void PlayerCardContainer::addDelayedTricks(QList<CardItem *> &tricks) {
         _paintPixmap(item, start, G_ROOM_SKIN.getCardJudgeIconPixmap(trick->getCard()->objectName()));
         trick->setHomeOpacity(0.0);
         trick->setHomePos(start.center());
-        QString toolTip = Sanguosha->getEngineCard(trick->getCard()->getEffectiveId())->getDescription();
-        trick->setToolTip(toolTip);
+        const Card *card = Sanguosha->getEngineCard(trick->getCard()->getEffectiveId());
+        QString toolTip = QString("<b>%1 [</b><img src='image/system/log/%2.png' height = 12/><b>%3]</b>")
+                                  .arg(Sanguosha->translate(card->objectName()))
+                                  .arg(card->getSuitString())
+                                  .arg(card->getNumber());
+        item->setToolTip(toolTip);
         _m_judgeCards.append(trick);
         _m_judgeIcons.append(item);
     }

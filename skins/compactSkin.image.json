@@ -22,12 +22,18 @@
 "generalCircleImage-0": "image/compact/generals/double-general/circle-compactphoto.png",
 "generalCircleMask-0": ["image/compact/generals/double-general/circle-compactphoto-mask.png", [18, 28, 32, 32]],
 
-"playerGeneralIcon-anjiang-1": "image/compact/generals/small/anjiang.png", 
-"playerGeneralIcon-yanliangwenchou-1": "image/compact/generals/small/yanliangwenchou.png",
-"playerGeneralIcon-erzhang-1": "image/compact/generals/small/erzhang.png",
-"playerGeneralIcon-guanxingzhangbao-1": "image/compact/generals/small/guanxingzhangbao.png",
+"playerGeneralIcon-anjiang-1": "image/compact/generals/small/anjiang.png",
 "playerGeneralIcon-anjiang-6": "image/compact/generals/small/anjiang.png", 
+
+"playerGeneralIcon-yanliangwenchou-1": "image/compact/generals/small/yanliangwenchou.png",
 "playerGeneralIcon-yanliangwenchou-6": "image/compact/generals/small/yanliangwenchou.png",
+
+"playerGeneralIcon-erzhang-1": "image/compact/generals/small/erzhang.png",
 "playerGeneralIcon-erzhang-6": "image/compact/generals/small/erzhang.png",
-"playerGeneralIcon-guanxingzhangbao-6": "image/compact/generals/small/guanxingzhangbao.png"
+
+"playerGeneralIcon-guanxingzhangbao-1": "image/compact/generals/small/guanxingzhangbao.png",
+"playerGeneralIcon-guanxingzhangbao-6": "image/compact/generals/small/guanxingzhangbao.png",
+
+"playerGeneralIcon-nos_guanxingzhangbao-1": "image/compact/generals/small/nos_guanxingzhangbao.png",
+"playerGeneralIcon-nos_guanxingzhangbao-6": "image/compact/generals/small/nos_guanxingzhangbao.png"
 }

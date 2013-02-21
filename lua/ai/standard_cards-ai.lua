@@ -268,7 +268,7 @@ function SmartAI:slashIsEffective(slash, to, from)
 	local nature = natures[slash:getClassName()]
 	if not self:damageIsEffective(to, nature, from) then return false end
 
-	if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and self.player:getCardId("FireSlash") and slash:isKindOf("ThunderSlash") and self:objectiveLevel(to) >= 3 then
+	if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and self:getCardId("FireSlash") and slash:isKindOf("ThunderSlash") and self:objectiveLevel(to) >= 3 then
 		return false
 	end
 

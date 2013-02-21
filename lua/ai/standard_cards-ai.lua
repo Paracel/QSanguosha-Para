@@ -458,13 +458,11 @@ end
 sgs.ai_skill_use.slash = function(self, prompt)
 	local parsedPrompt = prompt:split(":")
 	local callback = sgs.ai_skill_cardask[parsedPrompt[1]] -- for askForUseSlashTo
-	if type(callback) == "function" then
+	if self.player:hasFlag("slashTargetFixToOne") and type(callback) == "function" then
 		local slash
 		local target
-		if self.player:hasFlag("slashTargetFix") then
-			for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-				if player:hasFlag("SlashAssignee") then target = player break end
-			end
+		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			if player:hasFlag("SlashAssignee") then target = player break end
 		end
 		local target2 = nil
 		if #parsedPrompt >= 3 then
@@ -651,7 +649,7 @@ function SmartAI:useCardPeach(card, use)
 		return
 	end
 
-	if self.player:getHp() > getBestHp(self.player) then return end
+	if self.player:getHp() >= getBestHp(self.player) then return end
 
 	local lord = self.room:getLord()
 	if self:isFriend(lord) and lord:getHp() <= 2 and not lord:hasSkill("buqu") and peaches == 1 then

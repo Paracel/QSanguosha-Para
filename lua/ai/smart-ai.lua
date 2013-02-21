@@ -4032,12 +4032,12 @@ function SmartAI:getAoeValue(card, player)
 
 	local canHelpLord = function()
 		local goodnull, badnull = 0, 0
-		if not self:isFriend(lord) then return false end
+		if not lord or not self:isFriend(lord) then return false end
 		if card:isKindOf("SavageAssault") then
-			return lord:hasSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > 0
+			return lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > 0
 		end
 		if card:isKindOf("ArcheryAttack") then
-			return lord:hasSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > 0
+			return lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > 0
 		end
 
 		if self:getCardsNum("Peach") > 0 then return true end
@@ -4074,11 +4074,13 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 
-	if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) and not canHelpLord() then
-		if self:isEnemy(lord) then
-			good = good + (lord:getHp() == 1 and 250 or 150)
-		else
-			bad = bad + (lord:getHp() == 1 and 1000 or 250)
+	if not sgs.GetConfig("EnableHegemony", false) then
+		if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) and not canHelpLord() then
+			if self:isEnemy(lord) then
+				good = good + (lord:getHp() == 1 and 250 or 150)
+			else
+				bad = bad + (lord:getHp() == 1 and 1000 or 250)
+			end
 		end
 	end
 
@@ -4103,8 +4105,13 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 
-	if forbid_start and sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
-		if self.role ~= "rebel" then good = good + 50 else bad = bad + 50 end
+	if not sgs.GetConfig("EnableHegemony", false) then
+		if forbid_start and sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
+			if self.role ~= "rebel" then good = good + 50 else bad = bad + 50 end
+		end
+		if sgs.current_mode_players["rebel"] == 0 and self.role ~= "renegade" then
+			bad = bad + 300
+		end
 	end
 
 	return good - bad
@@ -4146,8 +4153,14 @@ function SmartAI:useTrickCard(card, use)
 	if self:needRende() then return end
 	if card:isKindOf("AOE") then
 		if self:hasSkills("wuyan|noswuyan") then return end
-		if self.role == "loyalist" and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") then return end
-		if self.role == "rebel" and sgs.turncount < 2 and card:isKindOf("SavageAssault") then return end
+		if self.player:isLord() and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") and self:getOverflow() < 1 then return end
+
+		local mode = global_room:getMode()
+		if mode:find("p") and mode >= "04p" then
+			if self.role == "loyalist" and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") then return end
+			if self.role == "rebel" and sgs.turncount < 2 and card:isKindOf("SavageAssault") then return end
+		end
+
 		local others = self.room:getOtherPlayers(self.player)
 		others = sgs.QList2Table(others)
 		local aval = #others

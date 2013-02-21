@@ -839,20 +839,15 @@ public:
 class Keji: public TriggerSkill {
 public:
     Keji(): TriggerSkill("keji") {
-        events << EventPhaseChanging << CardResponded;
+        events << EventPhaseChanging << CardUsed << CardResponded;
         frequency = Frequent;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
-        if (event == CardResponded && lvmeng->getPhase() == Player::Play) {
-            CardStar card_star = data.value<CardResponseStruct>().m_card;
-            if (card_star->isKindOf("Slash"))
-                lvmeng->setFlags("keji_use_slash");
-        } else if (event == EventPhaseChanging) {
+        if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Discard) {
-                if (!lvmeng->hasFlag("keji_use_slash")
-                    && lvmeng->getSlashCount() == 0 && lvmeng->askForSkillInvoke(objectName())) {
+                if (!lvmeng->hasFlag("keji_use_slash") && lvmeng->askForSkillInvoke(objectName())) {
                     if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
                         int index = qrand() % 2 + 1;
                         if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
@@ -862,6 +857,15 @@ public:
                     lvmeng->skip(Player::Discard);
                 }
             }
+        } else if (lvmeng->getPhase() == Player::Play) {
+            CardStar card = NULL;
+            if (event == CardUsed)
+                card = data.value<CardUseStruct>().card;
+            else
+                card = data.value<CardResponseStruct>().m_card;
+
+            if (card->isKindOf("Slash"))
+                room->setPlayerFlag(lvmeng, "keji_use_slash");
         }
 
         return false;

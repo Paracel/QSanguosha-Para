@@ -1154,14 +1154,14 @@ sgs.dynamic_value.benefit.GodSalvation = true
 function SmartAI:useCardDuel(duel, use)
 	if self.player:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return end
 	if self.player:hasSkill("noswuyan") then return end
-	self:sort(self.enemies, "defense")
+
 	local enemies = self:exclude(self.enemies, duel)
 	local friends = self:exclude(self.friends_noself, duel)
 	local n1 = self:getCardsNum("Slash")
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 
 	local canUseDuelTo = function(target)
-		return self:hasTrickEffective(duel, target) and self:damageIsEffective(target, sgs.DamageStruct_Normal) and not self.room:isProhibited(self.player, target, duel)
+		return self:hasTrickEffective(duel, target) and self:damageIsEffective(target,sgs.DamageStruct_Normal) and not self.room:isProhibited(self.player, target, duel)
 	end
 
 	for _, friend in ipairs(friends) do
@@ -1176,11 +1176,12 @@ function SmartAI:useCardDuel(duel, use)
 
 	for _, enemy in ipairs(enemies) do
 		if self.player:hasFlag("duelTo" .. enemy:objectName()) and canUseDuelTo(enemy) then
+
 			local godsalvation = self:getCard("GodSalvation")
-			if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
-				use.card = godsalvation
-				return
+			if godsalvation and godsalvation:getId()~= duel:getId() and self:willUseGodSalvation(godsalvation) and not enemy:isWounded() then
+				use.card = godsalvation return
 			end
+
 			use.card = duel
 			if use.to then
 				use.to:append(enemy)
@@ -1190,32 +1191,63 @@ function SmartAI:useCardDuel(duel, use)
 		end
 	end
 
+	local cmp = function(a, b)
+		local v1 = getCardsNum("Slash", a)
+		local v2 = getCardsNum("Slash", b)
+
+		if self:getDamagedEffects(a, self.player) then v1 = v1 + 20 then
+		if self:getDamagedEffects(b, self.player) then v2 = v2 + 20 then
+
+		if not self:isWeak(a) and a:hasSkill("jianxiong") and not self.player:hasSkill("jueqing") then v1 = v1 + 10 end
+		if not self:isWeak(b) and b:hasSkill("jianxiong") and not self.player:hasSkill("jueqing") then v2 = v2 + 10 end
+
+		if a:getHp() > getBestHp(a) then v1 = v1 + 5 end
+		if b:getHp() > getBestHp(b) then v2 = v2 + 5 end
+
+		if self:hasSkills(sgs.masochism_skill, a) then v1 = v1 + 5 end
+		if self:hasSkills(sgs.masochism_skill, b) then v2 = v2 + 5 end		
+
+		if not self:isWeak(a) and a:hasSkill("jiang") then v1 = v1 + 5 end
+		if not self:isWeak(b) and b:hasSkill("jiang") then v2 = v2 + 5 end
+
+		if a:hasLordSkill("jijiang") then v1 = v1 + 10 end
+		if b:hasLordSkill("jijiang") then v2 = v2 + 10 end
+
+		if v1 == v2 then return sgs.getDefenseSlash(a) < sgs.getDefenseSlash(b) end
+
+		return v1 < v2
+	end
+
+	table.sort(enemies, cmp)
+
 	for _, enemy in ipairs(enemies) do
 		local useduel 
-		local n2 = getCardsNum("Slash", enemy)
+		local n2 = getCardsNum("Slash",enemy)
 		if sgs.card_lack[enemy:objectName()]["Slash"] == 1 then n2 = 0 end
-		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
-		useduel = useduel and not (enemy:getHp() > getBestHp(enemy)) and not self:getDamagedEffects(enemy, self.player)
-		useduel = useduel and not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy) and not self.player:hasSkill("jueqing"))
+		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) 
+					or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
+					or ((self:hasSkills("jianxiong") or self.player:getMark("shuangxiong") > 0) and sgs.isGoodHp(self.player))
+
 		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy, enemies, self) then
 			local godsalvation = self:getCard("GodSalvation")
-			if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
+			if godsalvation and godsalvation:getId()~= duel:getId() and self:willUseGodSalvation(godsalvation) and not enemy:isWounded() then
 				use.card = godsalvation
 				return
 			end
+
 			use.card = duel
 			if use.to then
 				use.to:append(enemy)
 				self:speak("duel", self.player:isFemale())
 			end
 			if self.player:getPhase() == sgs.Player_Play then
-				self.player:setFlags("duelTo" .. enemy:objectName())
+				self.room:setPlayerFlag(self.player, "duelTo" .. enemy:objectName())
 			end
 			return
 		end
 	end
-
 end
+
 sgs.ai_card_intention.Duel = function(self, card, from, tos)
 	if sgs.ai_lijian_effect then
 		sgs.ai_lijian_effect = false

@@ -1448,7 +1448,7 @@ function SmartAI:sortEnemies(players)
 		local blevel = self:objectiveLevel(b)
 
 		if alevel ~= blevel then return alevel > blevel end
-		return sgs.getDefense(a) < sgs.getDefense(b)
+		return sgs.getDefenseSlash(a) < sgs.getDefenseSlash(b)
 	end
 	table.sort(players, comp_func)
 end

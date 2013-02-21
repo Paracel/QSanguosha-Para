@@ -1195,8 +1195,8 @@ function SmartAI:useCardDuel(duel, use)
 		local v1 = getCardsNum("Slash", a)
 		local v2 = getCardsNum("Slash", b)
 
-		if self:getDamagedEffects(a, self.player) then v1 = v1 + 20 then
-		if self:getDamagedEffects(b, self.player) then v2 = v2 + 20 then
+		if self:getDamagedEffects(a, self.player) then v1 = v1 + 20 end
+		if self:getDamagedEffects(b, self.player) then v2 = v2 + 20 end
 
 		if not self:isWeak(a) and a:hasSkill("jianxiong") and not self.player:hasSkill("jueqing") then v1 = v1 + 10 end
 		if not self:isWeak(b) and b:hasSkill("jianxiong") and not self.player:hasSkill("jueqing") then v2 = v2 + 10 end
@@ -1205,7 +1205,7 @@ function SmartAI:useCardDuel(duel, use)
 		if b:getHp() > getBestHp(b) then v2 = v2 + 5 end
 
 		if self:hasSkills(sgs.masochism_skill, a) then v1 = v1 + 5 end
-		if self:hasSkills(sgs.masochism_skill, b) then v2 = v2 + 5 end		
+		if self:hasSkills(sgs.masochism_skill, b) then v2 = v2 + 5 end
 
 		if not self:isWeak(a) and a:hasSkill("jiang") then v1 = v1 + 5 end
 		if not self:isWeak(b) and b:hasSkill("jiang") then v2 = v2 + 5 end
@@ -1241,7 +1241,7 @@ function SmartAI:useCardDuel(duel, use)
 				self:speak("duel", self.player:isFemale())
 			end
 			if self.player:getPhase() == sgs.Player_Play then
-				self.room:setPlayerFlag(self.player, "duelTo" .. enemy:objectName())
+				self.player:setFlags("duelTo" .. enemy:objectName())
 			end
 			return
 		end

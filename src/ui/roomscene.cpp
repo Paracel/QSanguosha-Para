@@ -149,7 +149,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(gongxin(QList<int>, bool)), this, SLOT(doGongxin(QList<int>, bool)));
     connect(ClientInstance, SIGNAL(focus_moved(QStringList, QSanProtocol::Countdown)), this, SLOT(moveFocus(QStringList, QSanProtocol::Countdown)));
     connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString, QString)));
-    connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString,QString)));
+    connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
     connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString, QStringList)));
     connect(ClientInstance, SIGNAL(role_state_changed(QString)),this, SLOT(updateRoles(QString)));
@@ -3194,7 +3194,7 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion, bool perm
 
 void RoomScene::showSkillInvocation(const QString &who, const QString &skill_name) {
     const ClientPlayer *player = ClientInstance->findChild<const ClientPlayer *>(who);
-    if (!player->hasSkill(skill_name)) return;
+    if (!player->hasSkill(skill_name) && !player->hasEquipSkill(skill_name)) return;
     const Skill *skill = Sanguosha->getSkill(skill_name);
     if (skill && skill->inherits("SPConvertSkill")) return;
     QString type = "#InvokeSkill";

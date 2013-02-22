@@ -3,6 +3,11 @@ neoluoyi_skill.name = "neoluoyi"
 table.insert(sgs.ai_skills, neoluoyi_skill)
 neoluoyi_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LuoyiCard") then return nil end
+	if self.player:hasArmorEffect("SilverLion") and self.player:isWounded() and self:isWeak() then
+		return sgs.Card_Parse("@LuoyiCard=" .. self.player:getArmor():getEffectiveId())
+	end
+
+	local luoyicard
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	local slashtarget = 0
@@ -37,19 +42,25 @@ neoluoyi_skill.getTurnUseCard = function(self)
 	end
 	if (slashtarget + dueltarget) > 0 and equipnum > 0 then
 		self:speak("luoyi")
-		local luoyicard
-		for _, card in sgs.qlist(self.player:getCards("he")) do
-			if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then
+		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
+			luoyicard = self.player:getArmor()
+		end
+		if not luoyicard then
+			for _, card in sgs.qlist(self.player:getCards("he")) do
+				if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then 
 				luoyicard = card
 				break
 			end
 		end
-		for _, card in sgs.qlist(self.player:getCards("he")) do
-			if card:isKindOf("EquipCard") and not card:isKindOf("Weapon") then
-				luoyicard = card
-				break
+		if not luoyicard then
+			for _, card in sgs.qlist(self.player:getCards("he")) do
+				if card:isKindOf("EquipCard") and not card:isKindOf("Weapon") then
+					luoyicard = card
+					break
+				end
 			end
 		end
+		if not luoyicard then return nil end
 		return sgs.Card_Parse("@LuoyiCard=" .. luoyicard:getEffectiveId())
 	end
 end

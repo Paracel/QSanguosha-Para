@@ -179,6 +179,9 @@ void ServerDialog::setMaxHpSchemeBox() {
 QWidget *ServerDialog::createAdvancedTab() {
     QVBoxLayout *layout = new QVBoxLayout;
 
+    random_seat_checkbox = new QCheckBox(tr("Arrange the seats randomly"));
+    random_seat_checkbox->setChecked(Config.RandomSeat);
+
     free_choose_checkbox = new QCheckBox(tr("Choose generals and cards freely"));
     free_choose_checkbox->setToolTip(tr("This option enables the cheat menu"));
     free_choose_checkbox->setChecked(Config.FreeChoose);
@@ -189,7 +192,7 @@ QWidget *ServerDialog::createAdvancedTab() {
     free_assign_self_checkbox = new QCheckBox(tr("Assign only your own role"));
     free_assign_self_checkbox->setChecked(Config.FreeAssignSelf);
     free_assign_self_checkbox->setEnabled(free_assign_checkbox->isChecked());
-    connect(free_assign_checkbox,SIGNAL(toggled(bool)), free_assign_self_checkbox, SLOT(setEnabled(bool)));
+    connect(free_assign_checkbox, SIGNAL(toggled(bool)), free_assign_self_checkbox, SLOT(setEnabled(bool)));
 
     pile_swapping_spinbox = new QSpinBox;
     pile_swapping_spinbox->setRange(0, 15);
@@ -283,8 +286,9 @@ QWidget *ServerDialog::createAdvancedTab() {
 
     layout->addWidget(forbid_same_ip_checkbox);
     layout->addWidget(disable_chat_checkbox);
-    layout->addLayout(HLay(free_choose_checkbox, free_assign_checkbox));
-    layout->addWidget(free_assign_self_checkbox);
+    layout->addWidget(random_seat_checkbox);
+    layout->addLayout(free_choose_checkbox);
+    layout->addWidget(HLay(free_assign_self_checkbox, free_assign_checkbox));
     layout->addLayout(HLay(new QLabel(tr("Pile-swapping limitation")), pile_swapping_spinbox));
     layout->addLayout(HLay(without_lordskill_checkbox, sp_convert_checkbox));
     layout->addLayout(HLay(new QLabel(tr("Upperlimit for general")), maxchoice_spinbox));
@@ -943,6 +947,7 @@ bool ServerDialog::config() {
     Config.ServerName = server_name_edit->text();
     Config.OperationTimeout = timeout_spinbox->value();
     Config.OperationNoLimit = nolimit_checkbox->isChecked();
+    Config.RandomSeat = random_seat_checkbox->isChecked();
     Config.FreeChoose = free_choose_checkbox->isChecked();
     Config.FreeAssignSelf = free_assign_self_checkbox->isChecked() && free_assign_checkbox->isEnabled();
     Config.ForbidSIMC = forbid_same_ip_checkbox->isChecked();
@@ -983,6 +988,7 @@ bool ServerDialog::config() {
     Config.setValue("GameMode", Config.GameMode);
     Config.setValue("OperationTimeout", Config.OperationTimeout);
     Config.setValue("OperationNoLimit", Config.OperationNoLimit);
+    Config.setValue("RandomSeat", Config.RandomSeat);
     Config.setValue("FreeChoose", Config.FreeChoose);
     Config.setValue("FreeAssign", free_assign_checkbox->isChecked());
     Config.setValue("FreeAssignSelf", Config.FreeAssignSelf);

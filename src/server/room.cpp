@@ -1629,7 +1629,8 @@ void Room::prepareForStart() {
             bool success = doRequest(owner, S_COMMAND_CHOOSE_ROLE, Json::Value::null, true);
             Json::Value clientReply = owner->getClientReply();
             if (!success || !clientReply.isArray() || clientReply.size() != 2) {
-                qShuffle(m_players);
+                if (Config.RandomSeat)
+                    qShuffle(m_players);
                 assignRoles();
             } else if (Config.FreeAssignSelf) {
                 QString name = toQString(clientReply[0][0]);
@@ -1668,11 +1669,13 @@ void Room::prepareForStart() {
                 }
             }
         } else {
-            qShuffle(m_players);
+            if (Config.RandomSeat)
+                qShuffle(m_players);
             assignRoles();
         }
     } else {
-        qShuffle(m_players);
+        if (Config.RandomSeat)
+            qShuffle(m_players);
         assignRoles();
     }
 
@@ -2266,12 +2269,18 @@ void Room::swapSeat(ServerPlayer *a, ServerPlayer *b) {
 }
 
 void Room::adjustSeats() {
-    for (int i = 0; i < m_players.length(); i++) {
-        if (m_players.at(i)->getRoleEnum() == Player::Lord) {
-            m_players.swap(0, i);
+    QList<ServerPlayer *> players;
+    int i = 0;
+    for (i = 0; i < m_players.length(); i++) {
+        if (m_players.at(i)->getRoleEnum() == Player::Lord)
             break;
-        }
     }
+    for (int j = i; j < m_players.length(); j++)
+        players << m_players.at(j);
+    for (int j = 0; j < i; j++)
+        players << m_players.at(j);
+
+    m_players = players;
 
     for (int i = 0; i < m_players.length(); i++)
         m_players.at(i)->setSeat(i + 1);

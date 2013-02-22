@@ -76,6 +76,7 @@ void Settings::init() {
 
     BanPackages = value("BanPackages").toStringList();
 
+    RandomSeat = value("RandomSeat", true).toBool();
     FreeChoose = value("FreeChoose", false).toBool();
     ForbidSIMC = value("ForbidSIMC", false).toBool();
     DisableChat = value("DisableChat", false).toBool();

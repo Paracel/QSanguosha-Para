@@ -190,6 +190,7 @@ sgs.ai_cardneed.lieren = function(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end
 
+sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	local x = self.player:getLostHp()
 	if x == 1 and #self.friends == 1 then
 		for _, enemy in ipairs(self.enemies) do

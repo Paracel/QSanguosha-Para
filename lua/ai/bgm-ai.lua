@@ -66,7 +66,6 @@ lihun_skill.getTurnUseCard = function(self)
 		return sgs.Card_Parse("@LihunCard=" .. card_id)
 	end
 end
-end
 
 sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 	local cards = self.player:getHandcards()

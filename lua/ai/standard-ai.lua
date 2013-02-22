@@ -1620,11 +1620,9 @@ lijian_skill.getTurnUseCard = function(self)
 	end
 	return nil
 end
-end
 
 sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	local findFriend_maxSlash = function(self, first)
-		self:log("Looking for the friend!")
 		local maxSlash = 0
 		local friend_maxSlash
 		for _, friend in ipairs(self.friends_noself) do
@@ -1641,9 +1639,55 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 				elseif (getCardsNum("Slash", friend_maxSlash) >= getCardsNum("Slash", first)) then safe = true end
 			end
 			if safe then return friend_maxSlash end
-		else self:log("unfound")
 		end
 		return nil
+	end
+
+	local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
+	local friend1, friend2
+	if (self.role == "rebel" or self.role == "renegade" and sgs.current_mode_players["loyalist"] + 1 > sgs.current_mode_players["rebel"])
+		and #self.friends_noself >= 2 and self:getAllPeachNum() < 1 then
+		local nextplayerIsEnemy
+		local nextp = self.player:getNextAlive()
+		local lord, loyalist = self.room:getLord()
+		local e_peaches = 0
+		for _, enemy in ipairs(self.enemies) do
+			e_peaches = e_peaches + getCardsNum("Peach", enemy)
+			if enemy:getHp() == 1 and self:hasTrickEffective(duel, enemy) and not enemy:isLord() then
+				loyalist = enemy
+			end
+		end
+		for i = 1, self.room:alivePlayerCount() do
+			if not self:isFriend(nextp) and not self:willSkipPlayPhase(nextp) then
+				nextplayerIsEnemy = true
+				break
+			elseif self:isFriend(nextp) then
+				break
+			else
+				nextp = nextp:getNextAlive()
+			end
+		end
+		if lord and loyalist and e_peaches < 1 then nextplayerIsEnemy = false end
+		if nextplayerIsEnemy then
+			for _, friend in ipairs(self.friends_noself) do
+				if friend:isMale() then
+					if friend:getHp() == 1 and friend:isKongcheng() and not friend:hasSkill("kongcheng")
+						and self:hasTrickEffective(duel, friend) then
+						friend1 = friend
+					elseif (not friend1 or friend:objectName() ~= friend1:objectName()) and not self:hasSkills("wuyan|noswuyan", friend)
+						and not friend:isCardLimited(duel, sgs.Card_MethodUse) then
+						friend2 = friend
+					end
+					if friend1 and friend2 then break end
+				end
+			end
+			if friend1 and friend2 then
+				use.card = card
+				if use.to then use.to:append(friend1) end
+				if use.to then use.to:append(friend2) end
+				return
+			end
+		end
 	end
 
 	if not self.player:hasUsed("LijianCard") then
@@ -1651,43 +1695,42 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 		local males = {}
 		local first, second
 		local zhugeliang_kongcheng
-		local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
 		for _, enemy in ipairs(self.enemies) do
-			--if zhugeliang_kongcheng and #males == 1 and self:damageIsEffective(zhugeliang_kongcheng, sgs.DamageStruct_Normal, males[1])
-				--then table.insert(males, zhugeliang_kongcheng) end
 			if enemy:isMale() and not self:hasSkills("wuyan|noswuyan", enemy) then
-				if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then	zhugeliang_kongcheng = enemy
+				if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then	zhugeliang_kongcheng=enemy
 				else
-					if #males == 0 and self:hasTrickEffective(duel, enemy) then table.insert(males, enemy)
-					elseif #males == 1 and self:damageIsEffective(enemy, sgs.DamageStruct_Normal, males[1]) then table.insert(males, enemy) end
+					if #males == 0 and self:hasTrickEffective(duel, enemy) and not enemy:hasSkill("mingshi") then table.insert(males, enemy)
+					elseif #males == 1 and self:damageIsEffective(enemy, sgs.DamageStruct_Normal, males[1]) and not enemy:isCardLimited(duel, sgs.Card_MethodUse) then
+						table.insert(males, enemy)
+					end
 				end
-				if #males >= 2 then	break end
+				if #males >= 2 then break end
 			end
 		end
-		if (#males == 1) and #self.friends_noself > 0 then
-			self:log("Only 1")
+		if #males==1 and #self.friends_noself > 0 then
 			first = males[1]
 			if zhugeliang_kongcheng and self:damageIsEffective(zhugeliang_kongcheng, sgs.DamageStruct_Normal, males[1]) then
 				table.insert(males, zhugeliang_kongcheng)
 			else
 				local friend_maxSlash = findFriend_maxSlash(self, first)
-				if friend_maxSlash and self:damageIsEffective(males[1], sgs.DamageStruct_Normal, enemy) then table.insert(males, friend_maxSlash) end
+				if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse)
+					and self:damageIsEffective(males[1], sgs.DamageStruct_Normal, enemy) then table.insert(males, friend_maxSlash) end
 			end
 		end
-		if (#males >= 2) then
+		if #males >= 2 then
 			first = males[1]
 			second = males[2]
 			local lord = self.room:getLord()
-			if (first:getHp() <= 1) then
-				if self.player:isLord() or sgs.isRolePredictable() then
-					local friend_maxSlash = findFriend_maxSlash(self, first)
-					if friend_maxSlash then second = friend_maxSlash end
-				elseif (lord:isMale()) and (not self:hasSkills("wuyan|noswuyan", lord)) then
-					if (self.role == "rebel") and (not first:isLord()) and self:damageIsEffective(lord, sgs.DamageStruct_Normal, first) then
+			if first:getHp() <= 1 then
+				if self.player:isLord() or sgs.isRolePredictable() then 
+					local friend_maxSlash = findFriend_maxSlash(self,first)
+					if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then second = friend_maxSlash end
+				elseif lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
+					if self.role == "rebel" and not first:isLord() and self:damageIsEffective(lord, sgs.DamageStruct_Normal, first) and not lord:isCardLimited(duel, sgs.Card_MethodUse) then
 						second = lord
 					else
-						if ((self.role == "loyalist" or (self.role == "renegade") and not (first:hasSkill("ganglie") and first:hasSkill("enyuan"))))
-							and (getCardsNum("Slash", first) <= getCardsNum("Slash", second)) then
+						if (self.role == "loyalist" or self.role == "renegade") and (not self:hasSkills("ganglie|enyuan|neoganglie|nosenyuan|wuhun", first) or lord:hasSkill("jueqing"))
+							and getCardsNum("Slash", first) <= getCardsNum("Slash", lord) and not lord:isCardLimited(duel, sgs.Card_MethodUse) then
 							second = lord
 						end
 					end
@@ -1696,7 +1739,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 
 			if first and second and first:objectName() ~= second:objectName() then
 				use.card = card
-				if use.to then
+				if use.to then 
 					use.to:append(first)
 					use.to:append(second)
 				end
@@ -1718,7 +1761,12 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, lijian_filter)
 
 sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 	if sgs.evaluateRoleTrends(to[1]) == sgs.evaluateRoleTrends(to[2]) then
-		sgs.updateIntentions(from, to, 40)
+		if sgs.evaluateRoleTrends(from) == "rebel" and sgs.evaluateRoleTrends(to[1]) == sgs.evaluateRoleTrends(from) and to[1]:getHp() == 1 then
+		else
+			sgs.updateIntentions(from, to, 40)
+		end
+	elseif sgs.evaluateRoleTrends(to[1]) ~= sgs.evaluateRoleTrends(to[2]) then
+		sgs.updateIntention(from, to[1], 80)
 	end
 end
 

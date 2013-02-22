@@ -79,13 +79,17 @@ function setInitialTables()
 	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|zhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
-	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|nosfanjian|lijian|manjuan|lihun|yinling"
+	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
+							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao"
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|buqu|yiji|neoganglie|ganglie|guixin|jieming|miji"
-	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|jieyin|renjie|zhiheng|rende|jujian|guicai|guidao|jilve|longhun|wusheng|longdan"
+	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|kanpo|" ..
+							"jieyin|renjie|zhiheng|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
+							"mingce|fuhun|lirang"
 	sgs.drawpeach_skill = "tuxi|qiaobian"
 	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
-	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|nosjujian|zhiheng|mingce|yongsi"
+	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
+							"yinling|jilve|qingcheng|neoluoyi"
 
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
 		table.insert(sgs.role_evaluation, aplayer:objectName())
@@ -4519,14 +4523,7 @@ function SmartAI:findPlayerToDraw(include_self)
 
 	self:sort(friends, "defense")
 	for _, friend in ipairs(friends) do
-		if friend:getHandcardNum() < 2 then
-			return friend
-		end
-	end
-
-	for _, friend in ipairs(friends) do
-		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|" ..
-							"lijian|jieyuan|rende|lirang|longluo") then
+		if friend:getHandcardNum() < 2 and not self:needKongcheng(friend) then
 			return friend
 		end
 	end
@@ -4537,6 +4534,7 @@ function SmartAI:findPlayerToDraw(include_self)
 		end
 	end
 
+	self:sort(friends, "handcard")
 	return friends[1]
 end
 

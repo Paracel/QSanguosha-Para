@@ -155,6 +155,60 @@ local function GuanXing(self, cards)
 		end
 	--end
 
+	local count = #bottom
+	if count > 0 then
+		local zhaolieFlag = false
+		if self:hasSkills("zhaolie", self.player) then
+			zhaolieFlag = sgs.ai_skill_invoke.zhaolie(self, nil)
+		end
+		if zhaolieFlag then 
+			local drawCount = 1
+			local basic = {}
+			local peach = {}
+			local not_basic = {}
+			for index, gcard in ipairs(bottom) do
+				if gcard:isKindOf("Peach") then
+					table.insert(peach, gcard)
+				elseif gcard:isKindOf("BasicCard") then
+					table.insert(basic, gcard)
+				else
+					table.insert(not_basic, gcard)
+				end
+			end
+			bottom = {}
+			for i = 1, drawCount, 1 do
+				if self:isWeak() and #peach > 0 then
+					table.insert(up, peach[1])
+					table.remove(peach, 1)
+				elseif #basic > 0 then
+					table.insert(up, basic[1])
+					table.remove(basic, 1)
+				elseif #not_basic > 0 then
+					table.insert(up, not_basic[1])
+					table.remove(not_basic, 1)
+				end
+			end
+			if #not_basic > 0 then
+				for index, card in ipairs(not_basic) do
+					table.insert(up, card)
+				end
+			end
+			if #peach > 0 then
+				for _,peach in ipairs(peach) do
+					table.insert(bottom, peach)
+				end
+			end
+			if #basic > 0 then
+				for _,card in ipairs(basic) do
+					table.insert(bottom, card)
+				end
+			end
+			up = getBackToId(self, up)
+			bottom = getBackToId(self, bottom)
+			return up, bottom
+		end
+	end
+
 	local pos = 1
 	local luoshen_flag = false
 	local next_judge = {}

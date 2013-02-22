@@ -1568,51 +1568,58 @@ local lijian_skill = {}
 lijian_skill.name = "lijian"
 table.insert(sgs.ai_skills, lijian_skill)
 lijian_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("LijianCard") then
-		return
-	end
-	if not self.player:isNude() then
-		local card
-		local card_id
-		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
-			card_id = self.player:getArmor():getId()
-		elseif self.player:getHandcardNum() > self.player:getHp() then
-			local cards = self.player:getHandcards()
-			cards = sgs.QList2Table(cards)
+	if self.player:hasUsed("LijianCard") or self.player:isNude() then
+		return 
+	end	
+	local card_id
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
+	self:sortByKeepValue(cards)
+	local lightning = self:getCard("Lightning")
 
-			for _, acard in ipairs(cards) do
-				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not isCard("Peach", acard, self.player) then
-					card_id = acard:getEffectiveId()
-					break
-				end
-			end
-		elseif not self.player:getEquips():isEmpty() then
-			local player = self.player
-			if player:getWeapon() then card_id = player:getWeapon():getId()
-			elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
-			elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
-			elseif player:getArmor() and player:getHandcardNum() <= 1 then card_id = player:getArmor():getId()
-			end
-		end
-		if not card_id then
-			cards = sgs.QList2Table(self.player:getHandcards())
-			for _, acard in ipairs(cards) do
-				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not isCard("Peach", acard, self.player) then
-					card_id = acard:getEffectiveId()
-					break
-				end
-			end
-		end
-		if not card_id then
-			return nil
+	if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
+		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+		card_id = self.player:getArmor():getId()
+	elseif self.player:getHandcardNum() > self.player:getHp() then
+		if lightning and not self:willUseLightning(lightning) then
+			card_id = lightning:getEffectiveId()
 		else
-			card = sgs.Card_Parse("@LijianCard=" .. card_id)
-			return card
+			for _, acard in ipairs(cards) do
+				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
+					and not acard:isKindOf("Peach") then 
+					card_id = acard:getEffectiveId()
+					break
+				end
+			end
 		end
+	elseif not self.player:getEquips():isEmpty() then
+		local player = self.player
+		if player:getWeapon() then card_id = player:getWeapon():getId()
+		elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
+		elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
+		elseif player:getArmor() and player:getHandcardNum() <= 1 then card_id = player:getArmor():getId()
+		end
+	end
+	if not card_id then
+		if lightning and not self:willUseLightning(lightning) then
+			card_id = lightning:getEffectiveId()
+		else
+			for _, acard in ipairs(cards) do
+				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
+				  and not acard:isKindOf("Peach") then 
+					card_id = acard:getEffectiveId()
+					break
+				end
+			end
+		end
+	end
+	if not card_id then
+		return nil
+	else
+		return sgs.Card_Parse("@LijianCard=" .. card_id)
 	end
 	return nil
+end
 end
 
 sgs.ai_skill_use_func.LijianCard = function(card, use, self)

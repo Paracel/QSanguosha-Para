@@ -19,17 +19,24 @@ table.insert(sgs.ai_skills, lihun_skill)
 lihun_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LihunCard") or self.player:isNude() then return end
 	local card_id
-	if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) or self:evaluateArmor() < -5 then
-		return sgs.Card_Parse("@LihunCard=" .. self.player:getArmor():getId())
-	elseif self.player:getHandcardNum() > self.player:getHp() then
-		local cards = self.player:getHandcards()
-		cards = sgs.QList2Table(cards)
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
+	self:sortByKeepValue(cards)
+	local lightning = self:getCard("Lightning")
 
-		for _, acard in ipairs(cards) do
-			if (acard:getTypeId() ~= sgs.Card_TypeTrick or acard:isKindOf("AmazingGrace"))
-				and not isCard("Peach", acard, self.player) then
-				card_id = acard:getEffectiveId()
-				break
+	if (self.player:hasArmorEffect("SilverLion") and self.player:isWounded())
+		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+		card_id = self.player:getArmor():getId()
+	elseif self.player:getHandcardNum() > self.player:getHp() then
+		if lightning and not self:willUseLightning(lightning) then
+			card_id = lightning:getEffectiveId()
+		else	
+			for _, acard in ipairs(cards) do
+				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
+					and not acard:isKindOf("Peach") then 
+					card_id = acard:getEffectiveId()
+					break
+				end
 			end
 		end
 	elseif not self.player:getEquips():isEmpty() then
@@ -41,12 +48,15 @@ lihun_skill.getTurnUseCard = function(self)
 		end
 	end
 	if not card_id then
-		cards = sgs.QList2Table(self.player:getHandcards())
-		for _, acard in ipairs(cards) do
-			if (acard:getTypeId() ~= sgs.Card_TypeTrick or acard:isKindOf("AmazingGrace"))
-				and not isCard("Peach", acard, self.player) then
-				card_id = acard:getEffectiveId()
-				break
+		if lightning and not self:willUseLightning(lightning) then
+			card_id = lightning:getEffectiveId()
+		else
+			for _, acard in ipairs(cards) do
+				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
+				  and not acard:isKindOf("Peach") then 
+					card_id = acard:getEffectiveId()
+					break
+				end
 			end
 		end
 	end
@@ -55,6 +65,7 @@ lihun_skill.getTurnUseCard = function(self)
 	else
 		return sgs.Card_Parse("@LihunCard=" .. card_id)
 	end
+end
 end
 
 sgs.ai_skill_use_func.LihunCard = function(card, use, self)

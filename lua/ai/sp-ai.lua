@@ -62,6 +62,7 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif self:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return 0
 			elseif card:isKindOf("Armor") then
 				return 4
 			end

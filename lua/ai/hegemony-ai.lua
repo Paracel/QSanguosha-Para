@@ -205,16 +205,21 @@ fenxun_skill.getTurnUseCard = function(self)
 		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
 			return sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
 		elseif self.player:getHandcardNum() > 0 then
-			for _, acard in ipairs(cards) do
-				if acard:isKindOf("Disaster") or acard:isKindOf("AmazingGrace") then
-					card_id = acard:getEffectiveId()
-					break
-				elseif acard:isKindOf("EquipCard") then
-					local dummy_use = { isDummy = true }
-					self:useEquipCard(acard, dummy_use)
-					if not dummy_use.card then
+			local lightning = self:getCard("Lightning")
+			if lightning and not self:willUseLightning(lightning) then
+				card_id = lightning:getEffectiveId()
+			else
+				for _, acard in ipairs(cards) do
+					if acard:isKindOf("AmazingGrace") then
 						card_id = acard:getEffectiveId()
 						break
+					elseif acard:isKindOf("EquipCard") then
+						local dummy_use = { isDummy = true }
+						self:useEquipCard(acard, dummy_use)
+						if not dummy_use.card then
+							card_id = acard:getEffectiveId()
+							break
+						end
 					end
 				end
 			end

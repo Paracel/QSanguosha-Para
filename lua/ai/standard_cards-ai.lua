@@ -1961,10 +1961,10 @@ sgs.ai_use_value.Indulgence = 8
 sgs.ai_use_priority.Indulgence = 0.5
 sgs.ai_card_intention.Indulgence = 120
 
-function SmartAI:useCardLightning(card, use)
-	if self.player:containsTrick("lightning") then return end
-	if self.player:hasSkill("weimu") and card:isBlack() then return end
-	if self.room:isProhibited(self.player, self.player, card) then end
+function SmartAI:willUseLightning(card)
+	if self.player:containsTrick("lightning") then return false end
+	if self.player:hasSkill("weimu") and card:isBlack() then return false end
+	if self.room:isProhibited(self.player, self.player, card) then return false end
 
 	--if not self:hasWizard(self.enemies) then--and self.room:isProhibited(self.player, self.player, card) then
 	local function hasDangerousFriend()
@@ -1981,10 +1981,9 @@ function SmartAI:useCardLightning(card, use)
 		return false
 	end
 	if self:getFinalRetrial(self.player) == 2 then
-	return
+		return false
 	elseif self:getFinalRetrial(self.player) == 1 then
-		use.card = card
-		return
+		return true
 	elseif not hasDangerousFriend() then
 		local players = self.room:getAllPlayers()
 		players = sgs.QList2Table(players)
@@ -1993,7 +1992,8 @@ function SmartAI:useCardLightning(card, use)
 		local enemies = 0
 
 		for _, player in ipairs(players) do
-			if self:objectiveLevel(player) >= 4 then
+			if self:objectiveLevel(player) >= 4 and not player:hasSkill("hongyan")
+				and not (player:hasSkill("weimu") and card:isBlack()) then
 				enemies = enemies + 1
 			elseif self:isFriend(player) then
 				friends = friends + 1
@@ -2004,9 +2004,15 @@ function SmartAI:useCardLightning(card, use)
 		if friends == 0 then ratio = 999 else ratio = enemies / friends end
 
 		if ratio > 1.5 then
-			use.card = card
-			return
+			return true
 		end
+	end
+	return false
+end
+
+function SmartAI:useCardLightning(card, use)
+	if self:willUseLightning(card) then
+		use.card = card
 	end
 end
 

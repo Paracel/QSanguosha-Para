@@ -1628,9 +1628,10 @@ void Room::prepareForStart() {
         if (owner && owner->isOnline()) {
             bool success = doRequest(owner, S_COMMAND_CHOOSE_ROLE, Json::Value::null, true);
             Json::Value clientReply = owner->getClientReply();
-            if (!success || !clientReply.isArray() || clientReply.size() != 2)
+            if (!success || !clientReply.isArray() || clientReply.size() != 2) {
+                qShuffle(m_players);
                 assignRoles();
-            else if (Config.FreeAssignSelf) {
+            } else if (Config.FreeAssignSelf) {
                 QString name = toQString(clientReply[0][0]);
                 QString role = toQString(clientReply[1][0]);
                 ServerPlayer *player_self = findChild<ServerPlayer *>(name);
@@ -1666,10 +1667,14 @@ void Room::prepareForStart() {
                     m_players.swap(i, m_players.indexOf(player));
                 }
             }
-        } else
+        } else {
+            qShuffle(m_players);
             assignRoles();
-    } else
+        }
+    } else {
+        qShuffle(m_players);
         assignRoles();
+    }
 
     adjustSeats();
 }

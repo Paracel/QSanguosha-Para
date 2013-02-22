@@ -165,7 +165,7 @@ void RoomThreadXMode::assignRoles(const QString &scheme) {
     if (scheme == "Random") {
         qShuffle(roles);
         for (int i = 0; i < roles.length(); i++)
-            room->setPlayerProperty(room->m_players.at(i), "role", roles.at(i));
+            room->m_players.at(i)->setRole(roles.at(i));
     } else if (scheme == "AllRoles") {
         assignRoles(roles, scheme);
     } else {

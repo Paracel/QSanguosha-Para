@@ -320,7 +320,7 @@ public:
         Room *room = player->getRoom();
         room->broadcastSkillInvoke("zuixiang");
         if (player->getPile("dream").isEmpty())
-            room->doLightbox("ZuixiangAnimate", 3000);
+            room->doLightbox("$ZuixiangAnimate", 3000);
 
         QList<Card::CardType> type_list;
         foreach (int card_id, player->getPile("dream")) {

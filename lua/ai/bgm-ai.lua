@@ -906,6 +906,10 @@ end
 sgs.ai_skill_choice.xuehen = function(self, choices)
 	local current = self.room:getCurrent();
 	if self:isEnemy(current) then
+		if self.player:getLostHp() >= 3 and current:getCardCount(true) >= 3 and not self:needKongcheng(current) 
+			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < self.player:getLostHp()) then
+			return "discard"
+		end
 		if self:hasSkills("jijiu|tuntian|beige", current) and self.player:getLostHp() >= 2 and current:getCardCount(true) >= 2 then return "discard" end
 	end
 	self:sort(self.enemies, "defenseSlash")

@@ -13,6 +13,8 @@ neoluoyi_skill.getTurnUseCard = function(self)
 	local slashtarget = 0
 	local dueltarget = 0
 	local equipnum = 0
+	local offhorse = self.player:getOffensiveHorse()
+	local noHorseTargets = 0
 	self:sort(self.enemies, "hp")
 	for _, card in sgs.qlist(self.player:getCards("he")) do
 		if card:isKindOf("EquipCard") and not (card:isKindOf("Weapon") and self:hasEquip(card)) then
@@ -26,6 +28,9 @@ neoluoyi_skill.getTurnUseCard = function(self)
 				if self.player:canSlash(enemy, slash) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 then
 					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
+						if offhorse and self.player:distanceTo(enemy, 1) <= self.player:getAttackRange() then
+							noHorseTargets = noHorseTargets + 1
+						end
 					end
 				end
 			end
@@ -51,6 +56,17 @@ neoluoyi_skill.getTurnUseCard = function(self)
 					luoyicard = card
 					break
 				end
+			end
+		end
+		if not luoyicard and offhorse then
+			if noHorseTargets == 0 then
+				for _, card in sgs.qlist(self.player:getCards("he")) do
+					if card:isKindOf("EquipCard") and not card:isKindOf("OffensiveHorse") then 
+						luoyicard = card
+						break
+					end
+				end
+				if not luoyicard and dueltarget == 0 then return nil end
 			end
 		end
 		if not luoyicard then

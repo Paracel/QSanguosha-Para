@@ -1678,7 +1678,7 @@ function SmartAI:filterEvent(event, player, data)
 		local damage = data:toDamage()
 		local lord = self.room:getLord()
 		if lord and damage.trigger_chain and lord:isChained() and self:damageIsEffective(lord, damage.nature, from) then
-			if lord:hasArmorEffect("Vine") and damage.nature == sgs.DamageStruct_Fire and lord:getHp() <= damage.damage + 1 then
+			if lord:hasArmorEffect("vine") and damage.nature == sgs.DamageStruct_Fire and lord:getHp() <= damage.damage + 1 then
 				sgs.lordNeedPeach = damage.damage + 2 - lord:getHp()
 			elseif lord:getHp() <= damage.damage then
 				sgs.lordNeedPeach = damage.damage + 1 - lord:getHp()
@@ -2522,7 +2522,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 	if from:hasSkill("drluoyi") and not from:getWeapon() then dmg = dmg + 1 end
 	if slash and from:hasSkill("jie") and slash:isRed() then dmg = dmg + 1 end
 	if not from:hasSkill("jueqing") then
-		if (to:hasArmorEffect("Vine") or to:getMark("@gale") > 0) and fireSlash then dmg = dmg + 1 end
+		if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and fireSlash then dmg = dmg + 1 end
 		if from:hasWeapon("guding_blade") and slash and to:isKongcheng() then dmg = dmg + 1 end
 		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 then dmg = dmg + 1 end
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()

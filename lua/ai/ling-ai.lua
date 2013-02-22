@@ -3,7 +3,7 @@ neoluoyi_skill.name = "neoluoyi"
 table.insert(sgs.ai_skills, neoluoyi_skill)
 neoluoyi_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LuoyiCard") then return nil end
-	if self.player:hasArmorEffect("SilverLion") and self.player:isWounded() and self:isWeak() then
+	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() and self:isWeak() then
 		return sgs.Card_Parse("@LuoyiCard=" .. self.player:getArmor():getEffectiveId())
 	end
 

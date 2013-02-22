@@ -1766,7 +1766,7 @@ function SmartAI:filterEvent(event, player, data)
 			local who = to[1]
 			if not lord then return end
 			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluateRoleTrends(who) == "neutral" then
-				local aplayer = self:exclude({ lord }, card)
+				local aplayer = self:exclude({ lord }, card, player)
 				if #aplayer == 1 then sgs.updateIntention(player, lord, -70) end
 			end
 		end
@@ -1879,7 +1879,7 @@ function SmartAI:filterEvent(event, player, data)
 				if isCard("Indulgence", card, player) and not self.room:getLord():hasSkill("qiaobian") then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if not (target:containsTrick("indulgence") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
-							local aplayer = self:exclude({ target }, card)
+							local aplayer = self:exclude({ target }, card, player)
 							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -35) end
 						end
 					end
@@ -1889,7 +1889,7 @@ function SmartAI:filterEvent(event, player, data)
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if player:distanceTo(target) <= (player:hasSkill("duanliang") and 2 or 1)
 							and not (target:containsTrick("supply_shortage") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
-							local aplayer = self:exclude({ target }, card)
+							local aplayer = self:exclude({ target }, card, player)
 							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -35) end
 						end
 					end
@@ -3958,28 +3958,30 @@ function SmartAI:canAvoidAOE(card)
 	return false
 end
 
-function SmartAI:getDistanceLimit(card)
+function SmartAI:getDistanceLimit(card, from)
+	from = from or self.player
 	if card:isKindOf("Snatch") or card:isKindOf("SupplyShortage") then
-		return 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, card)
+		return 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, from, card)
 	end
 end
 
-function SmartAI:exclude(players, card)
+function SmartAI:exclude(players, card, from)
+	from = from or self.player
 	local excluded = {}
-	local limit = self:getDistanceLimit(card)
+	local limit = self:getDistanceLimit(card, from)
 	local range_fix = 0
 	if card:isVirtualCard() then
 		for _, id in sgs.qlist(card:getSubcards()) do
-			if self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == id then range_fix = range_fix + 1 end
+			if from:getOffensiveHorse() and from:getOffensiveHorse():getEffectiveId() == id then range_fix = range_fix + 1 end
 		end
 		if card:getSkillName() == "jixi" then range_fix = range_fix + 1 end
 	end
 
 	for _, player in sgs.list(players) do
-		if not self.room:isProhibited(self.player, player, card) then
+		if not self.room:isProhibited(from, player, card) then
 			local should_insert = true
 			if limit then
-				should_insert = self.player:distanceTo(player, range_fix) <= limit
+				should_insert = from:distanceTo(player, range_fix) <= limit
 			end
 			if should_insert then
 				table.insert(excluded, player)

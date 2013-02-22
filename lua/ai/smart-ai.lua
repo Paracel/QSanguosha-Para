@@ -1678,7 +1678,7 @@ function SmartAI:filterEvent(event, player, data)
 	elseif event == sgs.PreDamageDone then
 		local damage = data:toDamage()
 		local lord = self.room:getLord()
-		if damage.trigger_chain and lord:isChained() and self:damageIsEffective(lord, damage.nature, from) then
+		if lord and damage.trigger_chain and lord:isChained() and self:damageIsEffective(lord, damage.nature, from) then
 			if lord:hasArmorEffect("Vine") and damage.nature == sgs.DamageStruct_Fire and lord:getHp() <= damage.damage + 1 then
 				sgs.lordNeedPeach = damage.damage + 2 - lord:getHp()
 			elseif lord:getHp() <= damage.damage then
@@ -2928,7 +2928,7 @@ function SmartAI:askForSinglePeach(dying)
 		if self:needDeath(dying) then return "." end
 		
 		local lord = self.room:getLord()
-		if self.player:objectName() ~= dying:objectName() and not dying:isLord()
+		if lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
 			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
 			and (sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach
 				or (lord:hasFlag("lord_in_danger_SA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)

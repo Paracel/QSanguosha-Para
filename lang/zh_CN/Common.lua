@@ -1,5 +1,6 @@
 return {
 	["Pairs"] = "双将",
+	["cancel"] = "取消",
 
 	["spade"] = "黑桃",
 	["club"] = "梅花",

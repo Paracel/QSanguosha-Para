@@ -1009,14 +1009,19 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
     QStringList choices;
     if (!shensimayi->hasFlag("JilveZhiheng"))
         choices << "zhiheng";
-
     if (!shensimayi->hasFlag("JilveWansha"))
         choices << "wansha";
+    choices << "cancel";
 
-    if (choices.isEmpty())
+    if (choices.length() == 1)
         return;
 
     QString choice = room->askForChoice(shensimayi, "jilve", choices.join("+"));
+    if (choice == "cancel") {
+        shensimayi->addHistory("JilveCard", -1);
+        card_use.from->invoke("addHistory", "JilveCard:-1");
+        return;
+    }
 
     shensimayi->loseMark("@bear");
 
@@ -1083,7 +1088,7 @@ public:
                 fangzhu->trigger(event, room, player, data);
             }
         }
-        player->setMark("JilveEvent",0);
+        player->setMark("JilveEvent", 0);
         return false;
     }
 

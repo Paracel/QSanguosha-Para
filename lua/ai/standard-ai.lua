@@ -281,8 +281,18 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		return #targets
 	end
 
-	if self.role == "rebel" and sgs.turncount == 1 and not self.room:getLord():isKongcheng() then
-		add_player(self.room:getLord())
+	local lord = self.room:getLord()
+	if lord and self:isEnemy(lord) and sgs.turncount ==1 and not lord:isKongcheng() then
+		add_player(lord)
+	end
+
+	if jiangwei and self:isFriend(jiangwei) and jiangwei:getMark("zhiji") == 0 and jiangwei:getHandcardNum()== 1
+		and self:getEnemyNumBySeat(self.player, jiangwei) <= (jiangwei:getHp() >= 3 and 1 or 0) then
+		if add_player(jiangwei, 1) == 2  then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
+	end
+	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player,dengai) == 0)
+		and dengai:getMark("zaoxian") == 0 and dengai:getPile("field"):length() == 2 and add_player(dengai, 1) == 2 then 
+		return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) 
 	end
 
 	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, zhugeliang) > 0 then
@@ -325,11 +335,6 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", p) then
 			if add_player(p) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 		end
-	end
-
-	if jiangwei and self:isFriend(jiangwei) and jiangwei:getMark("zhiji") == 0 and jiangwei:getHandcardNum() == 1
-			and self:getEnemyNumBySeat(self.player, jiangwei) <= (jiangwei:getHp() >= 3 and 1 or 0) then
-		if add_player(jiangwei, 1) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 	end
 
 	for i = 1, #self.enemies, 1 do

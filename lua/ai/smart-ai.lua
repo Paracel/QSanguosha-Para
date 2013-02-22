@@ -4517,12 +4517,13 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 	end
 end
 
-function SmartAI:findPlayerToDraw(include_self)
+function SmartAI:findPlayerToDraw(include_self, drawnum)
+	drawnum = drawnum or 1
 	local players = sgs.QList2Table(include_self and self.room:getAllPlayers() or self.player:getOtherPlayers(self.player))
 	local friends = {}
 	for _, player in ipairs(players) do
 		if self:isFriend(player) and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive)
-			and not (player:hasSkill("kongcheng") and player:isKongcheng()) then
+			and not (player:hasSkill("kongcheng") and player:isKongcheng() and drawnum <= 2) then
 			table.insert(friends, player)
 		end
 	end

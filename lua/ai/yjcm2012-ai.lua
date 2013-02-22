@@ -47,7 +47,7 @@ end
 sgs.ai_skill_playerchosen.miji = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
-	local to = self:findPlayerToDraw(true)
+	local to = self:findPlayerToDraw(true, self.player:getLostHp())
 	return to and self.player
 end
 

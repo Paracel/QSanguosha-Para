@@ -3470,8 +3470,8 @@ function SmartAI:getCardId(class_name, player, acard)
 	end
 	if #viewArr > 0 or #cardArr > 0 then
 		local viewas, cardid
-		viewas = #viewArr >0 and viewArr[1]
-		cardid = #cardArr >0 and cardArr[1]
+		viewas = #viewArr > 0 and viewArr[1]
+		cardid = #cardArr > 0 and cardArr[1]
 		return self:hasSkills("chongzhen|jinjiu", player) and (viewas or cardid) or (cardid or viewas)
 	end
 	return cardsView(class_name, player)

@@ -199,11 +199,11 @@ bool Dashboard::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStru
     }
 
     if (place == Player::PlaceEquip)        
-       addEquips(card_items);
+        addEquips(card_items);
     else if (place == Player::PlaceDelayedTrick)
-       addDelayedTricks(card_items);
+        addDelayedTricks(card_items);
     else if (place == Player::PlaceHand)
-       addHandCards(card_items);
+        addHandCards(card_items);
     
     adjustCards(true);
     return false;

@@ -77,10 +77,11 @@ void Settings::init() {
     BanPackages = value("BanPackages").toStringList();
 
     RandomSeat = value("RandomSeat", true).toBool();
-    FreeChoose = value("FreeChoose", false).toBool();
+    EnableCheat = value("EnableCheat", false).toBool();
+    FreeChoose = EnableCheat && value("FreeChoose", false).toBool();
     ForbidSIMC = value("ForbidSIMC", false).toBool();
     DisableChat = value("DisableChat", false).toBool();
-    FreeAssignSelf = value("FreeAssignSelf", false).toBool();
+    FreeAssignSelf = EnableCheat && value("FreeAssignSelf", false).toBool();
     Enable2ndGeneral = value("Enable2ndGeneral", false).toBool();
     EnableSame = value("EnableSame", false).toBool();
     EnableBasara = value("EnableBasara", false).toBool();

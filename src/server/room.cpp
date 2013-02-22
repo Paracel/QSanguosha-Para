@@ -1622,7 +1622,7 @@ void Room::prepareForStart() {
                 player->setRole("rebel");
             broadcastProperty(player, "role");
         }
-    } else if (Config.value("FreeAssign", false).toBool()) {
+    } else if (Config.EnableCheat && Config.value("FreeAssign", false).toBool()) {
         ServerPlayer *owner = getOwner();
         notifyMoveFocus(owner, S_COMMAND_CHOOSE_ROLE);
         if (owner && owner->isOnline()) {
@@ -1763,7 +1763,7 @@ void Room::trustCommand(ServerPlayer *player, const QString &) {
 }
 
 bool Room::processRequestCheat(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *packet) {
-    if (!Config.FreeChoose) return false;
+    if (!Config.EnableCheat) return false;
     Json::Value arg = packet->getMessageBody();
     if (!arg.isArray() || !arg[0].isInt()) return false;
     //@todo: synchronize this
@@ -1863,8 +1863,6 @@ void Room::processClientPacket(const QString &request) {
             player->setClientReplyString(request);
             processResponse(player, &packet);
         } else if (packet.getPacketType() == S_TYPE_REQUEST) {
-            //@todo: make sure that cheat is binded to Config.FreeChoose, better make
-            // a seperate variable called EnableCheat
             CallBack callback = m_callbacks[packet.getCommandType()];
             if (!callback) return;
             (this->*callback)(player, &packet);
@@ -3660,8 +3658,7 @@ void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
             if (!game_finished)
                 return activate(player, card_use);
         } else {
-            //@todo: change FreeChoose to EnableCheat
-            if (Config.FreeChoose) {
+            if (Config.EnableCheat) {
                 if (makeCheat(player)) {
                     if (player->isAlive())
                         return activate(player, card_use);

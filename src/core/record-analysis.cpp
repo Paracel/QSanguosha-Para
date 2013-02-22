@@ -53,7 +53,7 @@ void RecAnalysis::initialize(QString dir) {
         }
 
         if (line.contains("setup")) {
-            QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([FSCTBHAM123a-r]*)(\\s+)?");
+            QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)(\\s+)?");
             if (!rx.exactMatch(line))
                 continue;
 
@@ -68,6 +68,8 @@ void RecAnalysis::initialize(QString dir) {
             }
 
             QString flags = texts.at(5);
+            if (flags.contains("R")) m_recordServerOptions << tr("RandomSeats");
+            if (flags.contains("C")) m_recordServerOptions << tr("EnableCheat");
             if (flags.contains("F")) m_recordServerOptions << tr("FreeChoose");
             if (flags.contains("S")) m_recordServerOptions << tr("Enable2ndGeneral");
             if (flags.contains("T")) m_recordServerOptions << tr("EnableSame");

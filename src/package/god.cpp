@@ -438,6 +438,7 @@ public:
             if (shencc->askForSkillInvoke(objectName())) {
                 room->broadcastSkillInvoke(objectName());
 
+                room->setPlayerFlag(shencc, "GuixinUsing");
                 if (players.length() >= 4)
                     room->doLightbox("$GuixinAnimate");
 
@@ -451,6 +452,7 @@ public:
                 }
 
                 shencc->turnOver();
+                room->setPlayerFlag(shencc, "-GuixinUsing");
             } else
                 break;
         }

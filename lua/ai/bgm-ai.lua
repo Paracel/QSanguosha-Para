@@ -24,7 +24,7 @@ lihun_skill.getTurnUseCard = function(self)
 	self:sortByKeepValue(cards)
 	local lightning = self:getCard("Lightning")
 
-	if (self.player:hasArmorEffect("SilverLion") and self.player:isWounded())
+	if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
 		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
 		card_id = self.player:getArmor():getId()
 	elseif self.player:getHandcardNum() > self.player:getHp() then

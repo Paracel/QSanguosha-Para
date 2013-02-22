@@ -1831,24 +1831,19 @@ function SmartAI:filterEvent(event, player, data)
 				global_room:clearCardFlag(card)
 			end]]
 
-			if reason.m_skillName == "qiaobian" and from and move.to then
-				local zhanghe = self.room:getCurrent()
-				if zhanghe:getPhase() == sgs.Player_Draw and move.to:objectName() == zhanghe:objectName() and move.to_place == sgs.Player_PlaceHand
-					and not self:hasSkills("kongcheng|lianying|zhiji|tuntian", from) then
-					sgs.updateIntention(zhanghe, from, 80)
-				end
+			if reason.m_skillName == "qiaobian" and from and move.to and self.room:getCurrent():objectName() == player:objectName() then
 				if table.contains(from_places,sgs.Player_PlaceDelayedTrick) then
 					if card:isKindOf("YanxiaoCard") then
-						sgs.updateIntention(zhanghe, from, 80)
-						sgs.updateIntention(zhanghe, move.to, -80)
+						sgs.updateIntention(player, from, 80)
+						sgs.updateIntention(player, move.to, -80)
 					end
 					if card:isKindOf("SupplyShortage") or card:isKindOf("Indulgence") then
-						sgs.updateIntention(zhanghe, from, -80)
-						sgs.updateIntention(zhanghe, move.to, 80)
+						sgs.updateIntention(player, from, -80)
+						sgs.updateIntention(player, move.to, 80)
 					end
 				end
-				if table.contains(from_places,sgs.Player_PlaceEquip) then
-					sgs.updateIntention(zhanghe, move.to, -80)
+				if table.contains(from_places, sgs.Player_PlaceEquip) then
+					sgs.updateIntention(player, move.to, -80)
 				end
 			end
 

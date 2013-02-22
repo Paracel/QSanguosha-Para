@@ -632,7 +632,11 @@ function SmartAI:useCardPeach(card, use)
 	if self.player:isLord() and (self.player:hasSkill("hunzi") and self.player:getMark("hunzi") == 0)
 		and self.player:getHp() < 4 and self.player:getHp() > peaches then return end
 	for _, enemy in ipairs(self.enemies) do
-		if self:hasSkills(sgs.drawpeach_skill, enemy) and self.player:getHandcardNum() < 3 then
+		if self.player:getHandcardNum() < 3 and
+			(self:hasSkills(sgs.drawpeach_skill, enemy) or getCardsNum("Dismantlement", enemy) >= 1
+			or (not self.player:hasSkill("qianxun") and enemy:hasSkill("jixi") and enemy:getPile("field"):length() > 0 and (enemy:distanceTo(self.player, 1) == 1 or enemy:hasSkill("qicai")))
+			or (((enemy:hasSkill("qixi") and not self.player:hasSkill("weimu")) or enemy:hasSkill("yinling")) and getKnownCard(enemy, "black", nil, "he") >= 1)
+			or (not self.player:hasSkill("qianxun") and getCardsNum("Snatch", enemy) >= 1 and (enemy:distanceTo(self.player) == 1 or enemy:hasSkill("qicai")))) then
 			mustusepeach = true
 		end
 	end

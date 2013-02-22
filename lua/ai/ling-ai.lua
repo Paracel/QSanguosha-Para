@@ -47,9 +47,10 @@ neoluoyi_skill.getTurnUseCard = function(self)
 		end
 		if not luoyicard then
 			for _, card in sgs.qlist(self.player:getCards("he")) do
-				if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then 
-				luoyicard = card
-				break
+				if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then
+					luoyicard = card
+					break
+				end
 			end
 		end
 		if not luoyicard then

@@ -454,6 +454,7 @@ enum TriggerEvent {
 
     CardAsked,
     CardResponded,
+    BeforeCardsMove, // sometimes we need to record cards before the move
     CardsMoving,
     CardsMoveOneTime,
     CardDrawing,

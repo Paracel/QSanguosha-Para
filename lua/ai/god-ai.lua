@@ -809,7 +809,7 @@ sgs.ai_skill_invoke.jilve = function(self, data)
 				and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
 	elseif event == sgs.Damaged then
 		if #self.enemies == 0 then return false end
-		return use and self:askForUseCard("@@fangzhu", "@fangzhu") ~= "."
+		return self:askForUseCard("@@fangzhu", "@fangzhu") ~= "."
 	elseif event == sgs.CardUsed or event == sgs.CardResponded then
 		local card = data:toCardResponse().m_card
 		card = card or data:toCardUse().card

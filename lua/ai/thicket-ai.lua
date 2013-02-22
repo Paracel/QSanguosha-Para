@@ -1,60 +1,66 @@
 sgs.ai_skill_invoke.xingshang = true
 
-sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
-	local friends = {}
-	for _, frd in ipairs(self.friends_noself) do
-		if not (frd:hasSkill("manjuan") and frd:getPhase() == sgs.Player_NotActive) then
-			table.insert(friends, frd)
-		end
+function toTurnOver(self, player, n) 
+	if not player then global_room:writeToConsole(debug.traceback()) return end
+	if player:hasUsed("ShenfenCard") and player:faceUp() and player:getPhase() == sgs.Player_Play
+		and (not player:hasUsed("ShenfenCard") and player:getMark("@wrath") >= 6 or player:hasFlag("ShenfenUsing")) then
+		return false
 	end
-	self:sort(friends)
+	if n > 1 and player:hasSkill("jijiu") 
+		and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then
+		return false
+	end
+	if not player:faceUp() and not player:hasFlag("ShenfenUsing") and not player:hasFlag("GuixinUsing") then
+		return false
+	end
+	if (self:hasSkills("jushou|neojushou|kuiwei", player) or (player:hasSkill("lihun") and not player:hasUsed("LihunCard") and player:faceUp()))
+		and player:getPhase() == sgs.Player_Play then
+		return false
+	end
+	return true
+end
+
+sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
+	self:sort(self.friends_noself, "handcard")
 	local target
-	if #friends > 0 then
-		for _, friend in ipairs(friends) do
-			if friend:isAlive() then
-				if self.player:getLostHp() > 1 and friend:hasSkill("jijiu") then
-					target = friend
-					break
-				end
-				if not friend:faceUp() then
-					target = friend
-					break
-				end
-				if friend:faceUp() and friend:hasSkill("shenfen") and friend:getPhase() == sgs.Player_Play
-					and (not friend:hasUsed("ShenfenCard") and friend:getMark("@wrath") >= 6 or friend:hasFlag("ShenfenUsing")) then
-					target = friend
-					break
-				end
-				if self:hasSkills("jushou|neojushou|kuiwei", friend) and friend:getPhase() == sgs.Player_Play then
-					target = friend
-					break
-				end
-			end
+	local n = self.player:getLostHp()
+	for _, friend in ipairs(self.friends_noself) do
+		if not toTurnOver(self, friend, n) then
+			target = friend
+			break
 		end
 	end
 
 	if not target then
-		local x = self.player:getLostHp()
-		if x >= 3 and #friends > 0 then
-			target = friends[1]
+		if n >= 3 then
+			target = self:findPlayerToDraw(false, n)
+			if not target then
+				for _, enemy in ipairs(self.enemies) do
+					if toTurnOver(self, enemy, n) and player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive then
+						target = enemy
+						break
+					end
+				end
+			end
 		else
-			self:sort(self.enemies)
+			self:sort(self.enemies, "chaofeng")
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:isAlive() and enemy:faceUp()
-					and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
+				if toTurnOver(self, enemy, n) and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
 					target = enemy
 					break
 				end
 			end
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					local invoke = true
-					if (self:hasSkills("jushou|neojushou|kuiwei", enemy)) and enemy:getPhase() == sgs.Player_Play then invoke = false end
-					if enemy:hasSkill("shenfen") and enemy:getMark("@wrath") >= 6 and enemy:getPhase() == sgs.Player_Play
-						and (not enemy:hasUsed("ShenfenCard") or enemy:hasFlag("ShenfenUsing")) then invoke = false end
-					if enemy:hasSkill("lihun") and enemy:getPhase() == sgs.Player_Play and not enemy:hasUsed("LihunCard") then invoke = false end
-					if enemy:hasSkill("jijiu") and x >= 2 then invoke = false end
-					if enemy:isAlive() and enemy:faceUp() and invoke then
+					if toTurnOver(self, enemy, n) and self:hasSkills(sgs.priority_skill, enemy) then
+						target = enemy
+						break
+					end
+				end
+			end
+			if not target then
+				for _, enemy in ipairs(self.enemies) do
+					if toTurnOver(self, enemy, n) then
 						target = enemy
 						break
 					end

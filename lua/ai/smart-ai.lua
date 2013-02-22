@@ -1754,11 +1754,21 @@ function SmartAI:filterEvent(event, player, data)
 		end
 		
 		local lord = self.room:getLord()
-		if struct.card and lord:getHp() == 1 and self:aoeIsEffective(struct.card, lord, from) then
-			if struct.card:isKindOf("SavageAssault") then
+		if card and lord:getHp() == 1 and self:aoeIsEffective(card, lord, from) then
+			if card:isKindOf("SavageAssault") then
 				lord:setFlags("lord_in_danger_SA")
-			elseif struct.card:isKindOf("ArcheryAttack") then
+			elseif card:isKindOf("ArcheryAttack") then
 				lord:setFlags("lord_in_danger_AA")
+			end
+		end
+
+		if sgs.turncount == 1 then
+			local lord = self.room:getLord()
+			local who = to[1]
+			if not lord then return end
+			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluateRoleTrends(who) == "neutral" then
+				local aplayer = self:exclude({ lord }, card)
+				if #aplayer ==1 then sgs.updateIntention(player, lord, -70) end
 			end
 		end
 	elseif event == sgs.CardsMoveOneTime then

@@ -220,6 +220,8 @@ public:
                 if (player->askForSkillInvoke(objectName(), data)) {
                     room->broadcastSkillInvoke(objectName());
                     player->drawCards(1);
+                } else {
+                    break;
                 }
             }
             player->setMark(objectName(), 0);

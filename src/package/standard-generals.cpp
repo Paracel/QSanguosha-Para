@@ -1062,6 +1062,8 @@ public:
                     && room->askForSkillInvoke(sunshangxiang, objectName())) {
                     room->broadcastSkillInvoke(objectName());
                     sunshangxiang->drawCards(2);
+                } else {
+                    break;
                 }
         }
 

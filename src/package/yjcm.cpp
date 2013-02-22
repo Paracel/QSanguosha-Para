@@ -293,6 +293,8 @@ public:
                     } else {
                         room->loseHp(source);
                     }
+                } else {
+                    break;
                 }
             }
         }

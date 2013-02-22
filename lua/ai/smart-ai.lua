@@ -937,7 +937,7 @@ function sgs.isRolePredictable()
 	if sgs.GetConfig("RolePredictable", true) then return true end
 	local mode = string.lower(global_room:getMode())
 	if not mode:find("0") or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3")
-		or mode == "06_3v3" or mode == "06_XMode" or mode:find("mini") then return true end
+		or mode == "06_3v3" or mode == "06_xmode" or mode:find("mini") then return true end
 	return false
 end
 
@@ -1516,7 +1516,6 @@ function SmartAI:updatePlayers(clear_flags)
 			end
 			table.sort(neutrality, compare_func)
 			table.insert(self.enemies, neutrality[1])
-			return
 		end
 		return
 	end
@@ -1768,7 +1767,7 @@ function SmartAI:filterEvent(event, player, data)
 			if not lord then return end
 			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluateRoleTrends(who) == "neutral" then
 				local aplayer = self:exclude({ lord }, card)
-				if #aplayer ==1 then sgs.updateIntention(player, lord, -70) end
+				if #aplayer == 1 then sgs.updateIntention(player, lord, -70) end
 			end
 		end
 	elseif event == sgs.CardsMoveOneTime then

@@ -356,14 +356,14 @@ public:
 class NosJiefan: public TriggerSkill {
 public:
     NosJiefan(): TriggerSkill("nosjiefan") {
-        events << AskForPeaches << DamageCaused << CardFinished << CardUsed;
+        events << AskForPeaches << DamageCaused << CardFinished << PreCardUsed;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *handang, QVariant &data) const{
         ServerPlayer *current = room->getCurrent();
         if (!current || current->isDead())
             return false;
-        if (event == CardUsed) {
+        if (event == PreCardUsed) {
             if (!handang->hasFlag("nosjiefanUsed"))
                 return false;
 

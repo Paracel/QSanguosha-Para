@@ -109,7 +109,7 @@ config = {
 		"sunshangxiang+shensimayi", "sunshangxiang+heg_luxun",
 		"sunce+guanxingzhangbao",
 		"yanliangwenchou+zhangchunhua", "yanliangwenchou+nos_zhangchunhua",
-		"dongzhuo+shenzhaoyun", "dongzhuo+nos_zhangchunhua", "dongzhuo+diy_wangyuanji",
+		"dongzhuo+shenzhaoyun", "dongzhuo+wangyi", "dongzhuo+nos_zhangchunhua", "dongzhuo+diy_wangyuanji",
 		"yuji+zhangchunhua", "yuji+nos_zhangchunhua",
 		"shenlvbu+caozhi", "shenlvbu+liaohua", "shenlvbu+bgm_diaochan", "shenlvbu+bgm_caoren", "shenlvbu+neo_caoren",
 		"shenzhaoyun+huaxiong",

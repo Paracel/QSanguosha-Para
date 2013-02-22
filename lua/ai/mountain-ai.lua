@@ -296,6 +296,13 @@ end
 
 sgs.ai_skill_invoke.tuntian = true
 
+sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
+	if self:isFriend(to, from) then return false end
+	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
+	if to:getHandcardNum() >= 3 then return true end
+	return false
+end
+
 local jixi_skill = {}
 jixi_skill.name = "jixi"
 table.insert(sgs.ai_skills, jixi_skill)

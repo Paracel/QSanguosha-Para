@@ -258,7 +258,7 @@ FreeChooseDialog::FreeChooseDialog(QWidget *parent, bool pair_choose)
         if (!generals.isEmpty()) {
             QWidget *tab = createTab(generals);
             tab_widget->addTab(tab,
-                               QIcon(QString("image/kingdom/icon/%1.png").arg(kingdom)),
+                               QIcon(G_ROOM_SKIN.getPixmap(QSanRoomSkin::S_SKIN_KEY_KINGDOM_ICON, kingdom)),
                                Sanguosha->translate(kingdom));
         }
     }

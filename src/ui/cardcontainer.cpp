@@ -18,6 +18,7 @@ CardContainer::CardContainer()
     close_button->setParentItem(this);
     close_button->setPos(517, 21);
     close_button->hide();
+    connect(close_button, SIGNAL(clicked()), this, SLOT(clear()));
 }
 
 void CardContainer::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
@@ -36,13 +37,14 @@ void CardContainer::fillCards(const QList<int> &card_ids, const QList<int> &disa
         card_items = items;
         items.clear();
     } else if (!items.isEmpty()) {
-        last_retained = retained();
+        retained_stack.push(retained());
         items_stack.push(items);
         foreach (CardItem *item, items)
             item->hide();
         items.clear();
     }
 
+    close_button->hide();
     if (card_items.isEmpty())
         card_items = _createCards(card_ids);
 
@@ -96,15 +98,19 @@ bool CardContainer::retained() {
 }
 
 void CardContainer::clear() {
-    foreach (CardItem *item, items)
-        item->deleteLater();
+    foreach (CardItem *item, items) {
+        item->hide();
+        item = NULL;
+        delete item;
+    }
 
     items.clear();
     if (!items_stack.isEmpty()) {
         items = items_stack.pop();
-        if (last_retained && close_button)
-            close_button->show();
+        bool retained = retained_stack.pop();
         fillCards();
+        if (retained && close_button)
+            close_button->show();
     } else {
         close_button->hide();
         hide();
@@ -166,7 +172,6 @@ void CardContainer::startGongxin() {
 
 void CardContainer::addCloseButton() {
     close_button->show();
-    connect(close_button, SIGNAL(clicked()), this, SLOT(clear()));
 }
 
 void CardContainer::grabItem() {

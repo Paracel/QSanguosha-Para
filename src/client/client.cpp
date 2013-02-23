@@ -67,7 +67,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_MOVE_FOCUS] = &Client::moveFocus; 
     callbacks["setEmotion"] = &Client::setEmotion;
     m_callbacks[S_COMMAND_INVOKE_SKILL] = &Client::skillInvoked;
-    m_callbacks[S_COMMAND_SHOW_ALL_CARDS] = &Client::askForGongxin;
+    m_callbacks[S_COMMAND_SHOW_ALL_CARDS] = &Client::showAllCards;
     m_callbacks[S_COMMAND_SKILL_GONGXIN] = &Client::askForGongxin;
     m_callbacks[S_COMMAND_LOG_EVENT] = &Client::handleGameEvent;
     callbacks["addHistory"] = &Client::addHistory;
@@ -1475,6 +1475,19 @@ void Client::askForGuanxing(const Json::Value &arg) {
     
     emit guanxing(card_ids, up_only);
     setStatus(AskForGuanxing);
+}
+
+void Client::showAllCards(const Json::Value &arg) {
+    if (!arg.isArray() || arg.size() != 3
+        || !arg[0].isString() || ! arg[1].isBool())
+        return;
+    ClientPlayer *who = getPlayer(toQString(arg[0]));
+    QList<int> card_ids;
+    if (!tryParse(arg[2], card_ids)) return;
+
+    who->setCards(card_ids);
+
+    emit gongxin(card_ids, false);
 }
 
 void Client::askForGongxin(const Json::Value &arg) {

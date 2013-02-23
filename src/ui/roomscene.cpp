@@ -1663,7 +1663,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
             || move.to_place == Player::PlaceEquip
             || move.to_place == Player::PlaceSpecial)
         && move.from_place != Player::DrawPile) {
-        foreach (QString flag, move.to->getFlags().split("+"))
+        foreach (QString flag, move.to->getFlagList())
             if (flag.endsWith("_InTempMoving"))
                 return;
     }

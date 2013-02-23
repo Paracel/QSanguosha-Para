@@ -997,9 +997,13 @@ public:
             if (can_invoke) {
                 QString prompt = "@liuli:" + use.from->objectName();
                 room->setPlayerFlag(use.from, "slash_source");
-                daqiao->tag["liuli-card"] = QVariant::fromValue((CardStar)use.card);
+                // a temp nasty trick
+                daqiao->tag["liuli-card"] = QVariant::fromValue((CardStar)use.card); // for the server (AI)
+                QString flag = "LiuliFlag:" + use.card->toString(); // for the client (UI)
+                room->setPlayerFlag(daqiao, flag);
                 if (room->askForUseCard(daqiao, "@@liuli", prompt, -1, Card::MethodDiscard)) {
                     daqiao->tag.remove("liuli-card");
+                    room->setPlayerFlag(daqiao, "-" + flag);
                     room->setPlayerFlag(use.from, "-slash_source");
                     foreach (ServerPlayer *p, players) {
                         if (p->hasFlag("liuli_target")) {
@@ -1012,6 +1016,7 @@ public:
                     }
                 } else {
                     daqiao->tag.remove("liuli-card");
+                    room->setPlayerFlag(daqiao, "-" + flag);
                     room->setPlayerFlag(use.from, "-slash_source");
                 }
             }

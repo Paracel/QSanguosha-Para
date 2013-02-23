@@ -249,8 +249,17 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
         }
     }
 
-    // does it really work?
-    CardStar slash = Self->tag["liuli-card"].value<CardStar>();
+    QString slash_string;
+    foreach (QString flag, Self->getFlagList()) {
+        if (flag.startsWith("LiuliFlag:")) {
+            slash_string = flag.mid(10);
+            break;
+        }
+    }
+    const Card *slash = NULL;
+    if (!slash_string.isEmpty())
+        slash = Card::Parse(slash_string);
+
     if (from && !from->canSlash(to_select, slash, false))
         return false;
 

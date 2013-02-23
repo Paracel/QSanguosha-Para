@@ -120,6 +120,7 @@ public:
     void setAlive(bool alive);
 
     QString getFlags() const;
+    QStringList getFlagList() const;
     void setFlags(const char *flag);
     bool hasFlag(const char *flag) const;
     void clearFlags();

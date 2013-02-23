@@ -131,6 +131,10 @@ QString Player::getFlags() const{
     return flags_list.join("+");
 }
 
+QStringList Player::getFlagList() const{
+    return QStringList(flags.toList());
+}
+
 void Player::setFlags(const QString &flag) {
     static QChar unset_symbol('-');
     if (flag.startsWith(unset_symbol)) {

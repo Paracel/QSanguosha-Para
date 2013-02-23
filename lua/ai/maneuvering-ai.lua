@@ -362,13 +362,27 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	local card
 	local lord = self.room:getLord()
 	self:sortByUseValue(cards, true)
+
+	local lord = self.room:getLord()
 	for _, acard in ipairs(cards) do
-		if acard:getSuitString() == convert[pattern]
-			and (not isCard("Peach", acard, self.player)
-				or ((self:isWeak(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0)
-					and not ((self:isWeak() and self.player:isLord()) or (not self:isEnemy(lord) and sgs.isLordInDanger())))) then
-			card = acard
-			break
+		if acard:getSuitString() == convert[pattern] then
+			if not isCard("Peach", card, self.player) then
+				card = acard
+				break
+			else
+				local needKeepPeach = true
+				if (self:isWeak(target) and not self:isWeak()) or target:getHp() == 1
+					or self:isGoodChainTarget(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0 then
+					needKeepPeach = false 
+				end
+				if lord and not self:isEnemy(lord) and sgs.isLordInDanger() and self:getCardsNum("Peach") == 1 and self.player:aliveCount() > 2 then
+					needKeepPeach = true
+				end
+				if not needKeepPeach then
+					card = acard
+					break
+				end
+			end
 		end
 	end
 	return card and card:getId() or "."

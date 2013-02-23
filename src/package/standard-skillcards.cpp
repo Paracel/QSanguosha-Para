@@ -249,8 +249,9 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
         }
     }
 
+    // does it really work?
     CardStar slash = Self->tag["liuli-card"].value<CardStar>();
-    if (from && !from->canSlash(to_select, slash))
+    if (from && !from->canSlash(to_select, slash, false))
         return false;
 
     int card_id = subcards.first();

@@ -1005,15 +1005,15 @@ public:
                         if (p->hasFlag("liuli_target")) {
                             use.to.insert(use.to.indexOf(daqiao), p);
                             use.to.removeOne(daqiao);
-
                             data = QVariant::fromValue(use);
-
                             room->setPlayerFlag(p, "-liuli_target");
                             return true;
                         }
                     }
+                } else {
+                    daqiao->tag.remove("liuli-card");
+                    room->setPlayerFlag(use.from, "-slash_source");
                 }
-                daqiao->tag.remove("liuli-card");
             }
         }
 

@@ -3356,7 +3356,7 @@ local function getSkillViewCard(card, class_name, player, card_place)
 end
 
 function isCard(class_name, card, player)
-	if not player then global_room:writeToConsole(debug.traceback()) end
+	if not player or not card then global_room:writeToConsole(debug.traceback()) end
 	if not card:isKindOf(class_name) then
 		if getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId())) then return true end
 	else

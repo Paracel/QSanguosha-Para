@@ -111,6 +111,17 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
 
+	local card_str = self:getCardId("Analeptic")
+	if card_str then return sgs.Card_Parse(card_str) end
+
+	for _, anal in ipairs(cards) do
+		if (anal:getClassName() == "Analeptic") and not (anal:getEffectiveId() == slash:getEffectiveId()) then
+			return anal
+		end
+	end
+end
+
+function SmartAI:shouldUseAnaleptic(target, slash)
 	if enemy:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
 		return
 	end
@@ -120,14 +131,20 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 		return
 	end
 
-	local card_str = self:getCardId("Analeptic")
-	if card_str then return sgs.Card_Parse(card_str) end
+	local hcard = target:getHandcardNum()
+	if self.player:hasSkill("liegong") and (hcard >= self.player:getHp() or hcard <= self.player:getAttackRange()) then return true end
 
-	for _, anal in ipairs(cards) do
-		if (anal:getClassName() == "Analeptic") and not (anal:getEffectiveId() == slash:getEffectiveId()) then
-			return anal
-		end
+	if self:hasWeapon("axe") and self.player:getCards("he"):length() > 4 then return true end
+	if self.player:hasSkill("jie") and slash:isRed() then return true end
+	if self.player:hasSkill("tieji") then return true end
+
+	if ((self.player:hasSkill("roulin") and target:isFemale()) or (self.player:isFemale() and target:hasSkill("roulin"))) or self.player:hasSkill("wushuang") then
+		if getKnownCard(target, "Jink", true, "he") >= 2 then return false end
+		return getCardsNum("Jink", target) < 2
 	end
+
+	if getKnownCard(target, "Jink", true, "he") >= 1 then return false end
+	return self:getCardsNum("Analeptic") > 1 or getCardsNum("Jink", target) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1
 end
 
 sgs.dynamic_value.benefit.Analeptic = true

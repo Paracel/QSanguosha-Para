@@ -952,6 +952,9 @@ void Client::addHistory(const QString &add_str) {
     if (add_str == "pushPile") {
         emit card_used();
         return;
+    } else if (add_str == ".") {
+        Self->clearHistory();
+        return;
     }
 
     QRegExp rx("(.+):(-?\\d+)?");

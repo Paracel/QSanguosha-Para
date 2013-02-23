@@ -4052,6 +4052,14 @@ function SmartAI:getAoeValue(card, player)
 	local canHelpLord = function()
 		local goodnull, badnull = 0, 0
 		if not lord or not self:isFriend(lord) then return false end
+		local sub_peach, sub_null = 0, 0
+		if card:isVirtualCard() and card:subcardsLength() > 0 then
+			for _, id in sgs.qlist(card:getSubcards()) do
+				local sc = sgs.Sanguosha:getCard(id)
+				if isCard("Peach", sc, self.player) then sub_peach = sub_peach + 1 end
+				if isCard("Nullification", sc, self.player) then sub_null = sub_null + 1 end
+			end
+		end
 		if card:isKindOf("SavageAssault") then
 			return lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > 0
 		end
@@ -4059,15 +4067,16 @@ function SmartAI:getAoeValue(card, player)
 			return lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > 0
 		end
 
-		if self:getCardsNum("Peach") > 0 then return true end
+		if self:getCardsNum("Peach") - sub_peach > 0 then return true end
 
-		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+		for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 			if self:isFriend(lord, p) then 
 				goodnull = goodnull + getCardsNum("Nullification", p) 
 			else
-				badnull = badnull + getCardsNum("Nullification", p) 
+				badnull = badnull + getCardsNum("Nullification", p)
 			end
 		end
+		goodnull = goodnull + self:getCardsNum("Nullification") - sub_null
 		return goodnull - badnull >= 2
 	end
 
@@ -4094,10 +4103,10 @@ function SmartAI:getAoeValue(card, player)
 	end
 
 	if not sgs.GetConfig("EnableHegemony", false) then
-		if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) and not canHelpLord() then
+		if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) then
 			if self:isEnemy(lord) then
 				good = good + (lord:getHp() == 1 and 250 or 150)
-			else
+			elseif not canHelpLord() then
 				bad = bad + (lord:getHp() == 1 and 1000 or 250)
 			end
 		end
@@ -4172,10 +4181,10 @@ function SmartAI:useTrickCard(card, use)
 	if self:needRende() then return end
 	if card:isKindOf("AOE") then
 		if self:hasSkills("wuyan|noswuyan") then return end
-		if self.player:isLord() and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") and self:getOverflow() < 1 then return end
 
 		local mode = global_room:getMode()
 		if mode:find("p") and mode >= "04p" then
+			if self.player:isLord() and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") and self:getOverflow() < 1 then return end
 			if self.role == "loyalist" and sgs.turncount < 2 and card:isKindOf("ArcheryAttack") then return end
 			if self.role == "rebel" and sgs.turncount < 2 and card:isKindOf("SavageAssault") then return end
 		end
@@ -4189,11 +4198,11 @@ function SmartAI:useTrickCard(card, use)
 			end
 		end
 		if aval < 1 then return end
-		local good = self:getAoeValue(card, self.player)
+		local good = self:getAoeValue(card)
 		if good > 0 then
 			use.card = card
 		end
-		if self:hasSkills("jianxiong|luanji|qice|manjuan", self.player) then
+		if self:hasSkills("jianxiong|luanji|qice|manjuan") then
 			if good > -5 then use.card = card end
 		end
 	else

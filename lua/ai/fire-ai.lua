@@ -458,9 +458,6 @@ luanji_skill.name = "luanji"
 table.insert(sgs.ai_skills, luanji_skill)
 luanji_skill.getTurnUseCard = function(self)
 	local archery = sgs.Sanguosha:cloneCard("archery_attack", sgs.Card_NoSuit, 0)
-	local dummy_use = { isDummy = true }
-	self:useTrickCard(archery, dummy_use)
-	if not dummy_use.card then return end
 
 	local first_found, second_found = false, false
 	local first_card, second_card
@@ -492,6 +489,11 @@ luanji_skill.getTurnUseCard = function(self)
 		local card_str = ("archery_attack:luanji[%s:%s]=%d+%d"):format("to_be_decided", 0, first_id, second_id)
 		local archeryattack = sgs.Card_Parse(card_str)
 		assert(archeryattack)
+
+		local dummy_use = { isDummy = true }
+		self:useTrickCard(archeryattack, dummy_use)
+		if not dummy_use.card then return nil end
+
 		return archeryattack
 	end
 end

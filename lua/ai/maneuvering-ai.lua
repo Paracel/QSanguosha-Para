@@ -122,19 +122,19 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 end
 
 function SmartAI:shouldUseAnaleptic(target, slash)
-	if enemy:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
+	if target:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
 		return
 	end
 
-	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, enemy)
-		and self.player:hasSkill("qianxi") and self.player:distanceTo(enemy) == 1 then
+	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, target)
+		and self.player:hasSkill("qianxi") and self.player:distanceTo(target) == 1 then
 		return
 	end
 
 	local hcard = target:getHandcardNum()
 	if self.player:hasSkill("liegong") and (hcard >= self.player:getHp() or hcard <= self.player:getAttackRange()) then return true end
 
-	if self:hasWeapon("axe") and self.player:getCards("he"):length() > 4 then return true end
+	if self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4 then return true end
 	if self.player:hasSkill("jie") and slash:isRed() then return true end
 	if self.player:hasSkill("tieji") then return true end
 

@@ -233,6 +233,7 @@ QWidget *ServerDialog::createAdvancedTab() {
     disable_chat_checkbox->setChecked(Config.DisableChat);
 
     second_general_checkbox = new QCheckBox(tr("Enable second general"));
+    second_general_checkbox->setChecked(Config.Enable2ndGeneral);
 
     same_checkbox = new QCheckBox(tr("Enable Same"));
     same_checkbox->setChecked(Config.EnableSame);
@@ -257,8 +258,6 @@ QWidget *ServerDialog::createAdvancedTab() {
     scheme0_subtraction_spinbox->setVisible(max_hp_scheme_ComboBox->currentIndex() == 0);
 
     connect(max_hp_scheme_ComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(setMaxHpSchemeBox()));
-
-    second_general_checkbox->setChecked(Config.Enable2ndGeneral);
 
     basara_checkbox = new QCheckBox(tr("Enable Basara"));
     basara_checkbox->setChecked(Config.EnableBasara);
@@ -636,8 +635,6 @@ QGroupBox *ServerDialog::createXModeBox() {
     box->setVisible(Config.GameMode == "06_XMode");
     box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    QVBoxLayout *vlayout = new QVBoxLayout;
-
     QComboBox *roleChooseComboBox = new QComboBox;
     roleChooseComboBox->addItem(tr("Normal"), "Normal");
     roleChooseComboBox->addItem(tr("Random"), "Random");
@@ -651,8 +648,7 @@ QGroupBox *ServerDialog::createXModeBox() {
     else if (scheme == "AllRoles")
         roleChooseComboBox->setCurrentIndex(2);
 
-    vlayout->addLayout(HLay(new QLabel(tr("Role choose")), role_choose_xmode_ComboBox));
-    box->setLayout(vlayout);
+    box->setLayout(HLay(new QLabel(tr("Role choose")), role_choose_xmode_ComboBox));
     return box;
 }
 
@@ -682,7 +678,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
             connect(button, SIGNAL(toggled(bool)), box, SLOT(setVisible(bool)));
 
             item_list << button << box;
-        }else {
+        } else {
             item_list << button;
         }
 

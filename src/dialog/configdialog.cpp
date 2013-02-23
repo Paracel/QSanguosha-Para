@@ -110,7 +110,7 @@ void ConfigDialog::saveConfig() {
 
     enabled = ui->enableLastWordCheckBox->isChecked();
     Config.EnableLastWord = enabled;
-    Config.setValue("EnabledLastWord", enabled);
+    Config.setValue("EnableLastWord", enabled);
 
     enabled = ui->enableBgMusicCheckBox->isChecked();
     Config.EnableBgMusic = enabled;

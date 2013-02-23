@@ -1266,6 +1266,7 @@ sgs.dynamic_value.damage_card.Duel = true
 
 sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
+	if self.player:hasFlag("NeedToWake") then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
 	if self:getDamagedEffects(self.player, target) or self.player:getHp() > getBestHp(self.player) then return "." end
@@ -1888,13 +1889,21 @@ local function hp_subtract_handcard(a, b)
 	return diff1 < diff2
 end
 
-function SmartAI:playerGetRound(player, source)
+function SmartAI:playerGetRound(player, source, friend_or_enemy)
 	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
 	source = source or self.player
 	if player:objectName() == source:objectName() then return 0 end
 	local round = 0
 	for i = 1, self.room:alivePlayerCount() do
-		round = round + 1
+		if friend_or_enemy then
+			if friend_or_enemy == 0 and self:isFriend(source) then
+				round = round + 1
+			elseif friend_or_enemy == 1 and not self:isEnemy(source) then
+				round = round + 1
+			end
+		else
+			round = round + 1
+		end
 		if source:getNextAlive():objectName() == player:objectName() then break end
 		source = source:getNextAlive()
 	end

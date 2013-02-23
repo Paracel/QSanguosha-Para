@@ -383,7 +383,7 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	local lord = self.room:getLord()
 	for _, acard in ipairs(cards) do
 		if acard:getSuitString() == convert[pattern] then
-			if not isCard("Peach", card, self.player) then
+			if not isCard("Peach", acard, self.player) then
 				card = acard
 				break
 			else

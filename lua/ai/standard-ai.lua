@@ -405,7 +405,7 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 		if isCard("Slash", card, self.player) then
 			local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
-				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 then
+				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 and sgs.isGoodTarget(enemy, self.enemies, self) then
 					if getCardsNum("Jink", enemy) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
 						slashtarget = slashtarget + 1
 					end

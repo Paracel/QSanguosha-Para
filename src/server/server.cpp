@@ -582,7 +582,7 @@ void ServerDialog::edit1v1Banlist() {
 
 QGroupBox *ServerDialog::create3v3Box() {
     QGroupBox *box = new QGroupBox(tr("3v3 options"));
-    box->setVisible(Config.GameMode == "06_3v3");
+    box->setEnabled(Config.GameMode == "06_3v3");
     box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QVBoxLayout *vlayout = new QVBoxLayout;
@@ -611,8 +611,7 @@ QGroupBox *ServerDialog::create3v3Box() {
     else if (scheme == "AllRoles")
         roleChooseComboBox->setCurrentIndex(2);
 
-    vlayout->addWidget(standard_3v3_radiobutton);
-    vlayout->addWidget(new_3v3_radiobutton);
+    vlayout->addLayout(HLay(standard_3v3_radiobutton, new_3v3_radiobutton));
     vlayout->addLayout(HLay(extend, extend_edit_button));
     vlayout->addWidget(exclude_disaster_checkbox);
     vlayout->addLayout(HLay(new QLabel(tr("Role choose")), role_choose_ComboBox));
@@ -632,7 +631,7 @@ QGroupBox *ServerDialog::create3v3Box() {
 
 QGroupBox *ServerDialog::createXModeBox() {
     QGroupBox *box = new QGroupBox(tr("XMode options"));
-    box->setVisible(Config.GameMode == "06_XMode");
+    box->setEnabled(Config.GameMode == "06_XMode");
     box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     QComboBox *roleChooseComboBox = new QComboBox;
@@ -670,12 +669,12 @@ QGroupBox *ServerDialog::createGameModeBox() {
 
         if (itor.key() == "06_3v3") {
             QGroupBox *box = create3v3Box();
-            connect(button, SIGNAL(toggled(bool)), box, SLOT(setVisible(bool)));
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
             item_list << button << box;
         } else if (itor.key() == "06_XMode") {
             QGroupBox *box = createXModeBox();
-            connect(button, SIGNAL(toggled(bool)), box, SLOT(setVisible(bool)));
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
             item_list << button << box;
         } else {

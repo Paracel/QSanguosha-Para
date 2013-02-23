@@ -376,7 +376,7 @@ sgs.ai_card_intention.IronChain = function(self, card, from, tos)
 end
 
 sgs.ai_use_value.IronChain = 5.4
-sgs.ai_use_priority.IronChain = 8.5
+sgs.ai_use_priority.IronChain = 9.1
 
 sgs.dynamic_value.benefit.IronChain = true
 

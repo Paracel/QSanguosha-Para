@@ -565,6 +565,7 @@ sgs.ai_chaofeng.sp_machao = sgs.ai_chaofeng.machao
 sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	if math.random(0, 2) == 0 then return false
 	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "tw_diaochan" return true
+	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "heg_diaochan" return true
 	else sgs.ai_skill_choice.cv_diaochan = "sp_diaochan" return true end
 end
 

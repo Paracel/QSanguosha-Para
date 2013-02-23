@@ -36,7 +36,7 @@ sgs.ai_skill_use["@@fangzhu"] = function(self, prompt)
 			target = self:findPlayerToDraw(false, n)
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if toTurnOver(self, enemy, n) and player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive then
+					if toTurnOver(self, enemy, n) and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
 						target = enemy
 						break
 					end

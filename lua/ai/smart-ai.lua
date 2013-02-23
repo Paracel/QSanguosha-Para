@@ -2802,9 +2802,10 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	if self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2 and #cards > 0 then
-		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0) or 
-							(sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0 and sgs.current_mode_players["loyalist"] == 0)
+	if self.player:hasSkill("rende") and self.player:usedTimes("RendeCard") < 2 and #cards > 0 then
+		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0 and self.player:isWounded())
+							or (sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0
+								and sgs.current_mode_players["loyalist"] == 0 and self:isWeak())
 		if need_rende then
 			local players = sgs.QList2Table(self.room:getOtherPlayers(self.player))
 			self:sort(players, "defense")
@@ -2925,7 +2926,7 @@ function SmartAI:askForSinglePeach(dying)
 	local card_str
 	local forbid = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuit, 0)
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
-	if self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
+	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
 		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
 		return "."
 	end
@@ -2933,9 +2934,9 @@ function SmartAI:askForSinglePeach(dying)
 		if self:needDeath(dying) then return "." end
 		
 		local lord = self.room:getLord()
-		if lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
+		if not sgs.GetConfig("EnableHegemony", false) and lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
 			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
-			and (sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach
+			and ((sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach)
 				or (lord:hasFlag("lord_in_danger_SA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
 				or (lord:hasFlag("lord_in_danger_AA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
 			return "."

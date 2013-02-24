@@ -63,6 +63,12 @@ void Dashboard::showControlButtons() {
     m_btnSortHandcard->show();
 }
 
+void Dashboard::showProgressBar(QSanProtocol::Countdown countdown) {
+    _m_progressBar->setCountdown(countdown);
+    connect(_m_progressBar, SIGNAL(timedOut()), this, SIGNAL(progressBarTimedOut()));
+    _m_progressBar->show();
+}
+
 QGraphicsItem *Dashboard::getMouseClickReceiver() {
     return _m_avatarIcon; 
 }

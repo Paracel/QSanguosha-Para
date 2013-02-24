@@ -4052,22 +4052,24 @@ function SmartAI:getAoeValue(card, player)
 	local canHelpLord = function()
 		local goodnull, badnull = 0, 0
 		if not lord or not self:isFriend(lord) then return false end
-		local sub_peach, sub_null = 0, 0
+		local sub_peach, sub_null, sub_slash, sub_jink = 0, 0, 0, 0
 		if card:isVirtualCard() and card:subcardsLength() > 0 then
 			for _, id in sgs.qlist(card:getSubcards()) do
 				local sc = sgs.Sanguosha:getCard(id)
 				if isCard("Peach", sc, self.player) then sub_peach = sub_peach + 1 end
 				if isCard("Nullification", sc, self.player) then sub_null = sub_null + 1 end
+				if isCard("Slash", sc, self.player) then sub_slash = sub_slash + 1 end
+				if isCard("Jink", sc, self.player) then sub_jink = sub_jink + 1 end
 			end
 		end
 		if card:isKindOf("SavageAssault") then
-			return lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > 0
+			return lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > sub_slash
 		end
 		if card:isKindOf("ArcheryAttack") then
-			return lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > 0
+			return lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > sub_jink
 		end
 
-		if self:getCardsNum("Peach") - sub_peach > 0 then return true end
+		if self:getCardsNum("Peach") > sub_peach then return true end
 
 		for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 			if self:isFriend(lord, p) then 

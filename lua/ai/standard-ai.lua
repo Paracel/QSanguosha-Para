@@ -1655,7 +1655,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 		if lord and lord:isMale() then
 			self:sort(self.enemies, "handcard")
 			local e_peaches = 0
-
+			local loyalist
 			for _, enemy in ipairs(self.enemies) do
 				e_peaches = e_peaches + getCardsNum("Peach", enemy)
 				if enemy:getHp() == 1 and self:hasTrickEffective(duel, enemy) and not enemy:isLord() and enemy:isMale()
@@ -1723,7 +1723,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	end
 
 	if lord and self:isFriend(lord) and lord:hasSkill("hunzi") and lord:getHp() == 2 and lord:getMark("hunzi") == 0
-		and self:hasTrickEffective(dule, lord) then
+		and self:hasTrickEffective(duel, lord) then
 
 		local enemycount = self:playerGetRound(lord, self.player, 1)
 		local peaches = self:getAllPeachNum()

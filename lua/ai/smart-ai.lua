@@ -4538,7 +4538,7 @@ end
 
 function SmartAI:findPlayerToDraw(include_self, drawnum)
 	drawnum = drawnum or 1
-	local players = sgs.QList2Table(include_self and self.room:getAllPlayers() or self.player:getOtherPlayers(self.player))
+	local players = sgs.QList2Table(include_self and self.room:getAllPlayers() or self.room:getOtherPlayers(self.player))
 	local friends = {}
 	for _, player in ipairs(players) do
 		if self:isFriend(player) and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive)

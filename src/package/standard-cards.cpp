@@ -71,7 +71,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             if (player->hasSkill("lihuo"))
                 if (room->askForSkillInvoke(player, "lihuo", data)) {
                     FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    if (subcardsLength() > 0)
+                    if (!isVirtualCard() || subcardsLength() > 0)
                         fire_slash->addSubcard(this);
                     fire_slash->setSkillName("lihuo");
                     use.card = fire_slash;
@@ -79,7 +79,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             if (player->hasSkill("fan") && !use.card->isKindOf("FireSlash")) {
                 if (room->askForSkillInvoke(player, "fan", data)) {
                     FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    if (subcardsLength() > 0)
+                    if (!isVirtualCard() || subcardsLength() > 0)
                         fire_slash->addSubcard(this);
                     fire_slash->setSkillName("fan");
                     use.card = fire_slash;

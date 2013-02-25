@@ -1,5 +1,6 @@
 return {
 	["Pairs"] = "双将",
+	["XMode"] = "血战到底",
 	["cancel"] = "取消",
 
 	["spade"] = "黑桃",

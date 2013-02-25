@@ -430,7 +430,7 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     setWindowTitle(tr("Select generals that are excluded"));
 
     if (ban_list.isEmpty())
-        ban_list << "Roles" << "1v1" << "HulaoPass" << "Basara" << "Hegemony" << "Pairs";
+        ban_list << "Roles" << "1v1" << "HulaoPass" << "XMode" << "Basara" << "Hegemony" << "Pairs";
     QVBoxLayout *layout = new QVBoxLayout;
 
     QTabWidget *tab = new QTabWidget;

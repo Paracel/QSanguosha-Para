@@ -1036,6 +1036,8 @@ public:
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
         else if (room->getMode() == "04_1v3")
             all.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
+        else if (room->getMode() == "06_XMode")
+            all.subtract(Config.value("Banlist/XMode", "").toStringList().toSet());
         QSet<QString> huashen_set, room_set;
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         foreach (QVariant huashen, huashens)

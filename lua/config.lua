@@ -51,6 +51,12 @@ config = {
 		"wind"
 	},
 
+	xmode_packages = {
+		"standard",
+		"wind",
+		"fire"
+	},
+
 	color_wei = "#547998",
 	color_shu = "#D0796C",
 	color_wu = "#4DB873",
@@ -76,6 +82,12 @@ config = {
 	},
 
 	hulao_ban = {
+		"yuji"
+	},
+
+	xmode_ban = {
+		"huatuo",
+		"zhangjiao",
 		"yuji"
 	},
 

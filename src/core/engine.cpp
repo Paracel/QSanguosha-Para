@@ -301,6 +301,9 @@ int Engine::getGeneralCount(bool include_banned) const{
         else if (ServerInfo.GameMode == "04_1v3"
                  && Config.value("Banlist/HulaoPass").toStringList().contains(general->objectName()))
             total--;
+        else if (ServerInfo.GameMode == "06_XMode"
+                 && Config.value("Banlist/XMode").toStringList().contains(general->objectName()))
+            total--;
         else if (ServerInfo.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
             total--;
         else if (ServerInfo.EnableBasara
@@ -779,6 +782,8 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
         general_set.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
     else if (ServerInfo.GameMode == "04_1v3")
         general_set.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
+    else if (ServerInfo.GameMode == "06_XMode")
+        general_set.subtract(Config.value("Banlist/XMode", "").toStringList().toSet());
 
     all_generals = general_set.subtract(ban_set).toList();
 

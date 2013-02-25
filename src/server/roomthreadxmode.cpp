@@ -30,13 +30,10 @@ void RoomThreadXMode::run() {
     }
 
     QList<const General *> generals = QList<const General *>();
-    /*foreach (QString pack_name, GetConfigFromLuaState(Sanguosha->getLuaState(), "xmode_packages").toStringList()) {
+    foreach (QString pack_name, GetConfigFromLuaState(Sanguosha->getLuaState(), "xmode_packages").toStringList()) {
          const Package *pack = Sanguosha->findChild<const Package *>(pack_name);
          if (pack) generals << pack->findChildren<const General *>();
-    }*/
-    generals << Sanguosha->findChild<const Package *>("standard")->findChildren<const General *>();
-    generals << Sanguosha->findChild<const Package *>("wind")->findChildren<const General *>();
-    generals << Sanguosha->findChild<const Package *>("fire")->findChildren<const General *>();
+	}
 
     foreach (const General *general, generals) {
         if (general->isTotallyHidden())
@@ -44,11 +41,8 @@ void RoomThreadXMode::run() {
         general_names << general->objectName();
     }
 
-    general_names.removeOne("huatuo");
-    general_names.removeOne("zhangjiao");
-    general_names.removeOne("yuji");
-    /*foreach (QString name, Config.value("Banlist/XMode").toStringList())
-        if (general_names.contains(name)) general_names.removeOne(name);*/
+    foreach (QString name, Config.value("Banlist/XMode").toStringList())
+        if (general_names.contains(name)) general_names.removeOne(name);
 
     qShuffle(general_names);
 

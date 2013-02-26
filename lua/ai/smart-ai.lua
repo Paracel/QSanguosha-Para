@@ -160,6 +160,7 @@ function SmartAI:initialize(player)
 	sgs.card_lack[player:objectName()] = {}
 	sgs.card_lack[player:objectName()]["Slash"] = 0
 	sgs.card_lack[player:objectName()]["Jink"] = 0
+	sgs.card_lack[player:objectName()]["Peach"] = 0
 
 	if self.player:isLord() and not sgs.GetConfig("EnableHegemony", false) then
 		if (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) < 3 then
@@ -1648,6 +1649,15 @@ function SmartAI:filterEvent(event, player, data)
 		if self.room:getCurrent():getPhase() == sgs.Player_NotActive then sgs.modifiedRoleEvaluation() end
 	end
 
+	if event == sgs.AskForPeaches then
+		if self.player:objectName() == player:objectName() then
+			local dying = data:toDying()
+			if self:isFriend(dying.who) and dying.who:getHp() < 1 then
+				sgs.card_lack[player:objectName()]["Peach"] = 1
+			end
+		end
+	end
+
 	if self ~= sgs.recorder then return end
 
 	if event == sgs.CardEffect then
@@ -1859,6 +1869,12 @@ function SmartAI:filterEvent(event, player, data)
 				end
 				if table.contains(from_places, sgs.Player_PlaceEquip) then
 					sgs.updateIntention(player, move.to, -80)
+				end
+			end
+
+			if move.to_place == sgs.Player_PlaceHand then
+				if (not from or sgs.card_lack[from:objectName()]["Peach"] == 0) and to and not card:hasFlag("visible") and  sgs.card_lack[to:objectName()]["Peach"] == 1 then
+					sgs.card_lack[toobjectName()]["Peach"] = 0
 				end
 			end
 
@@ -2955,6 +2971,7 @@ function SmartAI:askForSinglePeach(dying)
 			for _, friend in ipairs(self.friends_noself) do
 				if (self:getKnownNum(friend) == friend:getHandcardNum() and getCardsNum("Peach", friend) == 0)
 					or (self:playerGetRound(friend, currentp) < self:playerGetRound(self.player, currentp)) then
+				elseif sgs.card_lack[friend:objectName()]["Peach"] == 1 then
 				elseif friend:getHandcardNum() > 0 or getCardsNum("Peach", friend) > 0 then
 					possible_friend = possible_friend + 1
 				end

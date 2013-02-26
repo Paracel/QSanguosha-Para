@@ -1803,7 +1803,7 @@ function SmartAI:useCardCollateral(card, use)
 			and not self.room:isProhibited(self.player, friend, card) then
 
 			for _, enemy in ipairs(toList) do
-				if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy2:objectName() then
+				if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then
 					use.card = card
 					if use.to then use.to:append(friend) end
 					if use.to then use.to:append(enemy) end

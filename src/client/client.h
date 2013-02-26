@@ -33,7 +33,7 @@ public:
         AskForYiji = 0x09,
         AskForGuanxing = 0x0A,
         AskForGongxin = 0x0B,
-        AskForShowOrPindian = 0x0c,
+        AskForShowOrPindian = 0x0C,
 
         RespondingUse = 0x11,
         RespondingForDiscard = 0x21,

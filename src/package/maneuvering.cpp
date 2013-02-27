@@ -55,6 +55,12 @@ bool Analeptic::isAvailable(const Player *player) const{
     return IsAvailable(player, this) && BasicCard::isAvailable(player);
 }
 
+void Analeptic::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    use.to << use.from;
+    BasicCard::onUse(room, use);
+}
+
 void Analeptic::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     BasicCard::use(room, source, targets);
     if (targets.isEmpty())

@@ -105,8 +105,12 @@ void YijiViewAsSkill::setCards(const QString &card_str) {
     ids = Card::StringsToIds(cards);
 }
 
-bool YijiViewAsSkill::viewFilter(const QList<const Card *> &, const Card *card) const{
-    return ids.contains(card->getId());
+void YijiViewAsSkill::setMaxNum(int max_num) {
+    this->max_num = max_num;
+}
+
+bool YijiViewAsSkill::viewFilter(const QList<const Card *> &selected, const Card *card) const{
+    return ids.contains(card->getId()) && selected.length() < max_num;
 }
 
 const Card *YijiViewAsSkill::viewAs(const QList<const Card *> &cards) const{

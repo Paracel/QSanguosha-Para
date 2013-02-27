@@ -787,6 +787,8 @@ protected:
 };
 
 class DummyCard: public Card {
+public:
+    DummyCard();
 };
 
 class Package: public QObject {
@@ -1097,7 +1099,8 @@ public:
     bool askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const char *prompt, bool distance_limit = true, bool disable_extra = false);
     int askForAG(ServerPlayer *player, const QList<int> &card_ids, bool refusable, const char *reason);
     const Card *askForCardShow(ServerPlayer *player, ServerPlayer *requestor, const char *reason);
-    bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const char *skill_name = NULL, bool is_preview = true, bool visible = false);
+    bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const char *skill_name = NULL,
+                    bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1);
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const char *reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const char *reason);
     QString askForGeneral(ServerPlayer *player, const QStringList &generals, char *default_choice = NULL);

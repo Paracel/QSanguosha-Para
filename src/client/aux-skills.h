@@ -58,6 +58,7 @@ class YijiViewAsSkill: public ViewAsSkill {
 public:
     explicit YijiViewAsSkill();
     void setCards(const QString &card_str);
+    void setMaxNum(int max_num);
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const;
     virtual const Card *viewAs(const QList<const Card *> &cards) const;
@@ -65,6 +66,7 @@ public:
 private:
     Card *card;
     QList<int> ids;
+    int max_num;
 };
 
 class ChoosePlayerCard;

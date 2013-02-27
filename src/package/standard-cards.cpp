@@ -253,10 +253,11 @@ QString Peach::getSubtype() const{
     return "recover_card";
 }
 
-void Peach::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    BasicCard::use(room, source, targets);
-    if (targets.isEmpty())
-        room->cardEffect(this, source, source);
+void Peach::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    if (use.to.isEmpty())
+        use.to << use.from;
+    BasicCard::onUse(room, use);
 }
 
 void Peach::onEffect(const CardEffectStruct &effect) const{
@@ -887,6 +888,12 @@ ExNihilo::ExNihilo(Suit suit, int number)
     target_fixed = true;
 }
 
+void ExNihilo::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    use.to << use.from;
+    SingleTargetTrick::onUse(room, use);
+}
+
 bool ExNihilo::isAvailable(const Player *player) const{
     return !player->isProhibited(player, this) && TrickCard::isAvailable(player);
 }
@@ -1066,6 +1073,12 @@ Disaster::Disaster(Card::Suit suit, int number)
     : DelayedTrick(suit, number, true)
 {
     target_fixed = true;
+}
+
+void Disaster::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    use.to << use.from;
+    DelayedTrick::onUse(room, use);
 }
 
 bool Disaster::isAvailable(const Player *player) const{

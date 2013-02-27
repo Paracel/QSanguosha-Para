@@ -2052,9 +2052,17 @@ void RoomScene::doTimeout() {
                 ClientInstance->onPlayerChooseAG(card_id);
             break;
         }
-    case Client::AskForSkillInvoke:
-    case Client::AskForYiji: {
+    case Client::AskForSkillInvoke: {
             cancel_button->click();
+            break;
+        }
+    case Client::AskForYiji: {
+            if (cancel_button->isEnabled())
+                cancel_button->click();
+            else {
+                prompt_box->disappear();
+                doCancelButton();
+            }
             break;
         }
     case Client::AskForGuanxing:
@@ -2265,10 +2273,11 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         }
     case Client::AskForYiji: {
             ok_button->setEnabled(false);
-            cancel_button->setEnabled(true);
+            cancel_button->setEnabled(ClientInstance->m_isDiscardActionRefusable);
             discard_button->setEnabled(false);
 
-            yiji_skill->setCards(Sanguosha->currentRoomState()->getCurrentCardUsePattern());
+            yiji_skill->setCards(Sanguosha->currentRoomState()->getCurrentCardUsePattern().split("=").last());
+            yiji_skill->setMaxNum(Sanguosha->currentRoomState()->getCurrentCardUsePattern().split("=").first().toInt());
             dashboard->startPending(yiji_skill);
 
             showPromptBox();

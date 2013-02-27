@@ -6,6 +6,93 @@
 #include "engine.h"
 #include "maneuvering.h"
 
+class Zhenlie: public TriggerSkill {
+public:
+    Zhenlie(): TriggerSkill("zhenlie") {
+        events << TargetConfirmed << CardEffected;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (TriggerSkill::triggerable(player)) {
+            if (event == TargetConfirmed) {
+                CardUseStruct use = data.value<CardUseStruct>();
+                if (use.to.contains(player) && use.from != player) {
+                    if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
+                        if (room->askForSkillInvoke(player, objectName(), data)) {
+                            room->loseHp(player);
+                            if (player->isAlive()) {
+                                room->setCardFlag(use.card, "ZhenlieNullify");
+                                if (!use.from->isNude()) {
+                                    int id = room->askForCardChosen(player, use.from, "he", objectName());
+                                    room->throwCard(id, use.from, player);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (event == CardEffected) {
+                CardEffectStruct effect = data.value<CardEffectStruct>();
+                return effect.card->hasFlag("ZhenlieNullify");
+            }
+        }
+        return false;
+    }
+};
+
+class Miji: public PhaseChangeSkill {
+public:
+    Miji(): PhaseChangeSkill("miji") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (target->getPhase() == Player::Finish && target->isWounded() && target->askForSkillInvoke(objectName())) {
+            QStringList draw_num;
+            for (int i = 1; i <= target->getLostHp(); draw_num << QString::number(i++)) {}
+            int num = room->askForChoice(target, "miji_draw", draw_num.join("+")).toInt();
+            target->drawCards(num, objectName());
+
+            if (!target->isKongcheng()) {
+                int n = 0;
+                forever {
+                    int original_handcardnum = target->getHandcardNum();
+                    if (n < num && !target->isKongcheng()) {
+                        if (!room->askForYiji(target, target->handCards(), objectName(), false, false, false, num - n))
+                            break;
+                        n += original_handcardnum - target->getHandcardNum();
+                    } else {
+                        break;
+                    }
+                }
+                // give the rest cards randomly
+                if (n < num && !target->isKongcheng()) {
+                    int rest_num = num - n;
+                    forever {
+                        QList<int> handcard_list = target->handCards();
+                        qShuffle(handcard_list);
+                        int give = qrand() % rest_num + 1;
+                        rest_num -= give;
+                        QList<int> to_give = handcard_list.length() < give ? handcard_list : handcard_list.mid(0, give);
+                        ServerPlayer *receiver = room->getOtherPlayers(target).at(qrand() % (target->aliveCount() - 1));
+                        DummyCard *dummy = new DummyCard;
+                        foreach (int id, to_give)
+                            dummy->addSubcard(id);
+                        room->obtainCard(receiver, dummy, false);
+                        delete dummy;
+                        if (rest_num == 0 || target->isKongcheng())
+                            break;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+};
+
 QiceCard::QiceCard() {
     will_throw = false;
     handling_method = Card::MethodNone;
@@ -786,9 +873,9 @@ YJCM2012Package::YJCM2012Package()
     madai->addSkill("mashu");
     related_skills.insertMulti("qianxi", "#qianxi-clear");
 
-    /*General *wangyi = new General(this, "wangyi", "wei", 3, false);
+    General *wangyi = new General(this, "wangyi", "wei", 3, false);
     wangyi->addSkill(new Zhenlie);
-    wangyi->addSkill(new Miji);*/
+    wangyi->addSkill(new Miji);
 
     General *xunyou = new General(this, "xunyou", "wei", 3);
     xunyou->addSkill(new Qice);

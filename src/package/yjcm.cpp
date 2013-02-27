@@ -767,7 +767,7 @@ public:
             room->broadcastSkillInvoke(objectName(), 1);
             room->notifySkillInvoked(player, objectName());
             if (player->getMark("@late") == 0)
-                player->gainMark("@late");
+                room->addPlayerMark(player, "@late");
 
             LogMessage log;
             log.type = "#ZhichiDamaged";
@@ -819,17 +819,16 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive) {
-                foreach (ServerPlayer *p, room->getAllPlayers())
-                    p->loseMark("@late");
-            }
+            if (change.to != Player::NotActive)
+                return false;
         } else {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player || player != room->getCurrent())
                 return false;
-            foreach (ServerPlayer *p, room->getAllPlayers())
-                p->loseMark("@late");
         }
+
+        foreach (ServerPlayer *p, room->getAllPlayers())
+            room->setPlayerMark(p, "@late", 0);
 
         return false;
     }

@@ -36,7 +36,16 @@ public:
                 }
             } else if (event == CardEffected) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
-                return effect.card->hasFlag("ZhenlieNullify");
+                if (effect.card->hasFlag("ZhenlieNullify")) {
+                    LogMessage log;
+                    log.type = "#DanlaoAvoid";
+                    log.from = player;
+                    log.arg = effect.card->objectName();
+                    log.arg2 = objectName();
+                    room->sendLog(log);
+
+                    return true;
+                }
             }
         }
         return false;
@@ -282,10 +291,19 @@ public:
                 ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
                 target->setMark(objectName(), 0);
 
-                QString pattern = QString(".|.|.|hand|%1$0").arg(judge.card->isRed() ? "red" : "black");
-                target->tag[objectName()] = QVariant::fromValue(pattern);
+                QString color = judge.card->isRed() ? "red" : "black";
+                target->tag[objectName()] = QVariant::fromValue(color);
+                QString pattern = QString(".|.|.|hand|%1$0").arg(color);
+
                 room->setPlayerFlag(victim, "QianxiTarget");
+                room->addPlayerMark(victim, QString("@qianxi_%1").arg(color));
                 room->setPlayerCardLimitation(victim, "use,response", pattern, false);
+
+                LogMessage log;
+                log.type = "#Qianxi";
+                log.from = victim;
+                log.arg = QString("no_suit_%1").arg(color);
+                room->sendLog(log);
             }
         }
         return false;
@@ -313,10 +331,12 @@ public:
                 return false;
         }
 
-        QString pattern = player->tag["qianxi"].toString();
+        QString color = player->tag["qianxi"].toString();
         foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
-            if (p->hasFlag("QianxiTarget"))
-                room->removePlayerCardLimitation(p, "use,response", pattern);
+            if (p->hasFlag("QianxiTarget")) {
+                room->removePlayerCardLimitation(p, "use,response", QString(".|.|.|hand|%1$0").arg(color));
+                room->setPlayerMark(p, QString("@qianxi_%1").arg(color), 0);
+            }
         }
         return false;
     }

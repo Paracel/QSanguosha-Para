@@ -13,7 +13,7 @@ return {
 	["@jilei_trick"] = "鸡肋（锦囊牌）",
 	["danlao"] = "啖酪",
 	[":danlao"] = "每当一张锦囊牌指定了包括你在内的至少两名目标时，你可以摸一张牌，然后该锦囊牌对你无效。",
-	["#Jilei"] = "%from 对 %to 发动“<font color=\"yellow\"><b>鸡肋</b></font>”，限制了 %arg",
+	["#Jilei"] = "由于“<font color=\"yellow\"><b>鸡肋</b></font>”效果，%from 本回合不能使用、打出或弃置 %arg",
 	["#JileiClear"] = "%from 的“<font color=\"yellow\"><b>鸡肋</b></font>”效果消失",
 	["#DanlaoAvoid"] = "“%arg2”效果被触发，【%arg】 对 %from 无效",
 

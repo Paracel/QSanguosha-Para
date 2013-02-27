@@ -79,13 +79,12 @@ public:
 
             LogMessage log;
             log.type = "#Jilei";
-            log.from = yangxiu;
-            log.to << damage.from;
+            log.from = damage.from;
             log.arg = choice;
             room->sendLog(log);
 
             if (damage.from->getMark("@jilei_" + choice) == 0)
-                damage.from->gainMark("@jilei_" + choice);
+                room->addPlayerMark(damage.from, "@jilei_" + choice);
         }
 
         return false;
@@ -122,9 +121,9 @@ public:
                 log.from = player;
                 room->sendLog(log);
 
-                player->loseMark("@jilei_basic");
-                player->loseMark("@jilei_equip");
-                player->loseMark("@jilei_trick");
+                room->setPlayerMark(player, "@jilei_basic", 0);
+                room->setPlayerMark(player, "@jilei_equip", 0);
+                room->setPlayerMark(player, "@jilei_trick", 0);
                 room->setPlayerJilei(player, "clear");
             }
         }

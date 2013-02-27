@@ -40,6 +40,9 @@ return {
 	["illustrator:madai"] = "大佬荣",
 	["qianxi"] = "潜袭",
 	[":qianxi"] = "回合开始阶段开始时，你可以进行一次判定：若如此做，你令一名距离1的角色不能使用或打出与判定牌颜色相同的手牌，直到回合结束。",
+	["#Qianxi"] = "由于“<font color=\"yellow\"><b>潜袭</b></font>”效果，%from 本回合不能使用或打出 %arg 手牌",
+	["@qianxi_red"] = "潜袭（红色）",
+	["@qianxi_black"] = "潜袭（黑色）",
 
 	["#liaohua"] = "历尽沧桑",
 	["liaohua"] = "廖化",

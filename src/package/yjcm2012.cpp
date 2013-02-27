@@ -161,6 +161,80 @@ public:
     }
 };
 
+class Qianxi: public PhaseChangeSkill {
+public:
+    Qianxi(): PhaseChangeSkill("qianxi") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (target->getPhase() == Player::Start) {
+            if (room->askForSkillInvoke(target, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+
+                JudgeStruct judge;
+                judge.pattern = QRegExp("(.*):(.*):(.*)");
+                judge.reason = objectName();
+                judge.play_animation = false;
+                judge.who = target;
+
+                room->judge(judge);
+
+                if (!target->isAlive())
+                    return false;
+
+                QList<ServerPlayer *> to_choose;
+                foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
+                    if (target->distanceTo(p) == 1)
+                        to_choose << p;
+                }
+                if (to_choose.isEmpty())
+                    return false;
+
+                target->setMark(objectName(), judge.card->isRed() ? 1 : 2);
+                ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
+                target->setMark(objectName(), 0);
+
+                QString pattern = QString(".|.|.|hand|%1$0").arg(judge.card->isRed() ? "red" : "black");
+                target->tag[objectName()] = QVariant::fromValue(pattern);
+                room->setPlayerFlag(victim, "QianxiTarget");
+                room->setPlayerCardLimitation(victim, "use,response", pattern, false);
+            }
+        }
+        return false;
+    }
+};
+
+class QianxiClear: public TriggerSkill {
+public:
+    QianxiClear(): TriggerSkill("#qianxi-clear") {
+        events << EventPhaseChanging << Death;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return !target->tag["qianxi"].toString().isNull();
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to != Player::NotActive)
+                return false;
+        } else if (event == Death) {
+            DeathStruct death = data.value<DeathStruct>();
+            if (death.who != player)
+                return false;
+        }
+
+        QString pattern = player->tag["qianxi"].toString();
+        foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+            if (p->hasFlag("QianxiTarget"))
+                room->removePlayerCardLimitation(p, "use,response", pattern);
+        }
+        return false;
+    }
+};
+
 class Dangxian: public TriggerSkill {
 public:
     Dangxian(): TriggerSkill("dangxian") {
@@ -706,12 +780,13 @@ YJCM2012Package::YJCM2012Package()
     liubiao->addSkill(new Zishou);
     liubiao->addSkill(new Zongshi);
 
-    /*General *madai = new General(this, "madai", "shu");
+    General *madai = new General(this, "madai", "shu");
     madai->addSkill(new Qianxi);
     madai->addSkill(new QianxiClear);
     madai->addSkill("mashu");
+    related_skills.insertMulti("qianxi", "#qianxi-clear");
 
-    General *wangyi = new General(this, "wangyi", "wei", 3, false);
+    /*General *wangyi = new General(this, "wangyi", "wei", 3, false);
     wangyi->addSkill(new Zhenlie);
     wangyi->addSkill(new Miji);*/
 

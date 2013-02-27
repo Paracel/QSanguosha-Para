@@ -28,7 +28,7 @@ local function getOwnCards(self, up, bottom, next_judge)
 	self:sortByUseValue(bottom)
 	local has_slash = self:getCardsNum("Slash") > 0
 	local hasNext = false
-	local fuhun1, fuhun2
+	local nosfuhun1, nosfuhun2
 	local shuangxiong
 	local has_big
 	for index, gcard in ipairs(bottom) do
@@ -38,26 +38,26 @@ local function getOwnCards(self, up, bottom, next_judge)
 			table.remove(bottom, index)
 			hasNext = true
 		else
-			if self.player:hasSkill("fuhun") then
-				if not fuhun1 and gcard:isRed() then
+			if self.player:hasSkill("nosfuhun") then
+				if not nosfuhun1 and gcard:isRed() then
 					table.insert(up, gcard) 
 					table.remove(bottom, index)
-					fuhun1 = true
+					nosfuhun1 = true
 				end
-				if not fuhun2 and gcard:isBlack() and isCard("Slash", gcard, self.player) then
+				if not nosfuhun2 and gcard:isBlack() and isCard("Slash", gcard, self.player) then
 					table.insert(up, gcard) 
 					table.remove(bottom, index)
-					fuhun2 = true
+					nosfuhun2 = true
 				end
-				if not fuhun2 and gcard:isBlack() and card:getTypeId() == sgs.Card_Equip then
+				if not nosfuhun2 and gcard:isBlack() and card:getTypeId() == sgs.Card_Equip then
 					table.insert(up, gcard) 
 					table.remove(bottom, index)
-					fuhun2 = true
+					nosfuhun2 = true
 				end
-				if not fuhun2 and gcard:isBlack() then
+				if not nosfuhun2 and gcard:isBlack() then
 					table.insert(up, gcard) 
 					table.remove(bottom, index)
-					fuhun2 = true
+					nosfuhun2 = true
 				end
 			elseif self.player:hasSkill("shuangxiong") and self.player:getHandcardNum() >= 3 then
 				local rednum, blacknum = 0, 0

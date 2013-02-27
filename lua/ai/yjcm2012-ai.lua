@@ -13,43 +13,7 @@ sgs.ai_skill_invoke.zishou = function(self, data)
 			or ((self.player:getLostHp() + 2) - can_save_card_num + peach_num <= chance_value)
 end
 
-sgs.ai_skill_invoke.qianxi = function(self, data)
-	local damage = data:toDamage()
-	local target = damage.to
-	if self:isFriend(target) then return false end
-	if target:getLostHp() >= 2 and target:getHp() <= 1 then return false end
-	if self:hasSkills(sgs.masochism_skill, target) or self:hasSkills(sgs.recover_skill, target) or self:hasSkills("longhun|buqu", target) then return true end
-	if self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
-	return (target:getMaxHp() - target:getHp()) < 2
-end
-
-function sgs.ai_cardneed.qianxi(to, card)
-	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
-end
-
 sgs.ai_skill_invoke.fuli = true
-
-sgs.ai_skill_invoke.fuhun = function(self, data)
-	local target = 0
-	for _, enemy in ipairs(self.enemies) do
-		if (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then target = target + 1 end
-	end
-	return target > 0 and not self.player:isSkipped(sgs.Player_Play)
-end
-
-sgs.ai_skill_invoke.zhenlie = function(self, data)
-	local judge = data:toJudge()
-	if not judge:isGood() then
-	return true end
-	return false
-end
-
-sgs.ai_skill_playerchosen.miji = function(self, targets)
-	targets = sgs.QList2Table(targets)
-	self:sort(targets, "defense")
-	local to = self:findPlayerToDraw(true, self.player:getLostHp())
-	return to and self.player
-end
 
 function sgs.ai_cardneed.jiangchi(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) < 2

@@ -588,7 +588,7 @@ end
 
 sgs.ai_skill_choice.benghuai = function(self, choices)
 	if self.player:getMaxHp() == 1 or self:hasSkills("nosshangshi|juejing") then return "hp" end
-	return self.player:getLostHp() < (2 + (self:hasSkills("yinghun|miji") and 2 or 0)) and "hp" or "maxhp"
+	return self.player:getLostHp() < (2 + (self:hasSkills("yinghun|nosmiji") and 2 or 0)) and "hp" or "maxhp"
 end
 
 sgs.ai_view_as.jiuchi = function(card, player, card_place)

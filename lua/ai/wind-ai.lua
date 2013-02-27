@@ -405,7 +405,7 @@ sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 end
 
 function sgs.ai_slash_prohibit.tianxiang(self, from, to)
-	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if self:isFriend(to, from) then return false end
 	return self:cantbeHurt(to, from)
 end

@@ -35,7 +35,7 @@ function sgs.isGoodHp(player)
 end
 
 function sgs.isGoodTarget(player, targets, self)
-	local arr = { "jieming", "yiji", "guixin", "fangzhu", "neoganglie", "miji" }
+	local arr = { "jieming", "yiji", "guixin", "fangzhu", "neoganglie", "nosmiji" }
 	local m_skill = false
 	local attacker = global_room:getCurrent()
 	if attacker:hasSkill("jueqing") then return true end
@@ -54,7 +54,7 @@ function sgs.isGoodTarget(player, targets, self)
 
 	for _, masochism in ipairs(arr) do
 		if player:hasSkill(masochism) then
-			if masochism == "miji" and player:isWounded() then
+			if masochism == "nosmiji" and player:isWounded() then
 				m_skill = false
 			else
 				m_skill = true
@@ -204,7 +204,7 @@ function sgs.getDefenseSlash(player)
 		if player:hasSkill("qiaobian") then defense = defense - 2.4 end
 		if player:hasSkill("jieyin") then defense = defense - 2.3 end
 		if player:hasSkill("lijian") then defense = defense - 2.2 end
-		if player:hasSkill("miji") and player:isWounded() then defense = defense - 1.5 end
+		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
 	end
 	return defense
 end
@@ -577,7 +577,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 		end
 	else
 		if not self:hasHeavySlashDamage(target, effect.slash) then
-			if target:hasSkill("mengjin") and not (target:hasSkill("qianxi") and target:distanceTo(self.player) == 1) then
+			if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 				if self:canUseJieyuanDecrease(target) then return "." end
 				if self:getCardsNum("Peach") > 0 and not self.player:hasSkill("tuntian") and not self:willSkipPlayPhase() then
@@ -586,7 +586,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			end
 		end
 		if not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng))
-			and not (target:hasSkill("qianxi") and target:distanceTo(self.player) == 1) then
+			and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 			if target:hasWeapon("axe") then
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
@@ -1950,7 +1950,7 @@ function SmartAI:useCardIndulgence(card, use)
 		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
 		if self:hasSkills("guanxing|xiuluo", enemy) then value = value - 5 end
 		if self:hasSkills("lirang", enemy) then value = value - 5 end
-		if self:hasSkills("tuxi|zhenlie|guanxing|qinyin|zongshi", enemy) then value = value - 3 end
+		if self:hasSkills("tuxi|noszhenlie|guanxing|qinyin|zongshi", enemy) then value = value - 3 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 1 end
 		return value
 	end

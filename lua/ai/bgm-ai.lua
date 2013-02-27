@@ -909,7 +909,7 @@ sgs.ai_skill_invoke.fenyong = function(self, data)
 end
 
 function sgs.ai_slash_prohibit.fenyong(self, from, to)
-	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	return to:getMark("@fenyong") > 0 and to:hasSkill("fenyong")
 end
 

@@ -803,7 +803,7 @@ function sgs.ai_cardneed.beige(to, card)
 end
 
 function sgs.ai_slash_prohibit.duanchang(self, from, to)
-	if from:hasSkill("jueqing") or (fromm:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasSkill("jueqing") or (fromm:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if to:getHp() > 1 or #(self:getEnemies(from)) == 1 then return false end
 	if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
 	if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end
@@ -826,13 +826,13 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne("keji") then return "keji" end
 		end
 		if self.player:getHandcardNum() > 4 then
-			for _, askill in ipairs(("shuangxiong|fuhun|drluoyi|tianyi|xianzhen|paoxiao|luanji|huoji|qixi|duanliang|guose|luoyi|dangxian|neoluoyi|rende|lirang|fuluan"):split("|")) do
+			for _, askill in ipairs(("shuangxiong|nosfuhun|drluoyi|tianyi|xianzhen|paoxiao|luanji|huoji|qixi|duanliang|guose|luoyi|dangxian|neoluoyi|rende|lirang|fuluan"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 		end
 
 		if self.player:getLostHp() >= 2 then
-			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|rende|miji|nosshangshi|shangshi|kuiwei|neojushou|jushou|zaiqi|kuanggu"):split("|")) do
+			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|rende|nosmiji|nosshangshi|shangshi|miji|kuiwei|neojushou|jushou|zaiqi|kuanggu"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 		end
@@ -842,7 +842,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		if self.player:isWounded() then
-			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|miji|rende"):split("|")) do
+			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|nosmiji|rende|miji"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 			if self.player:getHp() < 2 and self.player:getHandcardNum() == 1 then
@@ -866,12 +866,12 @@ function sgs.ai_skill_choice.huashen(self, choices)
 								"tanhu|lijian|neofanjian|shelie|luoshen|yongsi|qingnang|shude|biyue|yingzi|hongyuan|" ..
 								"lirang|drzhiheng|anxu|fangquan|mizhao|quhu|fanjian|nosfanjian|gongxin|duanliang|guose|mingce|" ..
 								"baobian|ganlu|tiaoxin|zhaolie|moukui|liegong|mengjin|tieji|wushuang|drwushuang|" ..
-								"juejing|fuhun|qianxi|yanxiao|guhuo|xuanhuo|nosxuanhuo|qiangxi|" ..
+								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|xuanhuo|nosxuanhuo|qiangxi|" ..
 								"nosjujian|lieren|pojun|qixi|yinling|duoshi|jizhi|zhaoxin|gongqi|drjiedao" ..
 								"neoluoyi|luoyi|wenjiu|jie|jiangchi|wusheng|longdan|jueqing|xueji|yinghun|" ..
 								"longhun|jiuchi|qingcheng|shuangren|kuangfu|nosgongqi|wushen|lianhuan|" ..
-								"jujian|shensu|luanji|zhijian|shuangxiong|fuluan|drluoyi|huoshui|" ..
-								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|zhenlie|kurou|wansha|lianpo|" ..
+								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|drluoyi|huoshui|" ..
+								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|noszhenlie|kurou|wansha|lianpo|" ..
 								"yicong|nosshangshi|shangshi|lianying|tianyi|xianzhen|sijian|zongshi|keji|paoxiao|" ..
 								"kuiwei|yuanhu|neojushou|jushou|huoji|roulin|lihuo|xiaoji|xuanfeng|nosxuanfeng|" ..
 								"jiushi|shushen|dangxian|tannang|mashu|qicai|hongyan|" ..
@@ -925,7 +925,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		for _, askill in ipairs(("huangen|jianxiong|jiang|qianxun|danlao|juxiang|huoshou|zhichi|" ..
 								"lirang|yicong|wusheng|wushuang|tianxiang|leiji|guhuo|nosshangshi|shangshi|" ..
 								"zhiyu|guidao|guicai|jijiu|buyi|lianying|sijian|tianming|drjijiu|jieyuan|" ..
-								"mingshi|xiaoguo|shushen|tiandu|zhenlie"):split("|")) do
+								"mingshi|xiaoguo|shushen|zhenlie|tiandu|noszhenlie"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 

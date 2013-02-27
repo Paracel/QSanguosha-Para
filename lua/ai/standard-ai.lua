@@ -250,7 +250,7 @@ sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, in
 end
 
 function sgs.ai_slash_prohibit.ganglie(self, from, to)
-	if from:hasSkill("jueqing") or (from:hasSkill("qianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	return from:getHandcardNum() + from:getHp() < 4
 end
 

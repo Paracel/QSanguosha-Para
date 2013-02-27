@@ -127,7 +127,7 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 	end
 
 	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, target)
-		and self.player:hasSkill("qianxi") and self.player:distanceTo(target) == 1 then
+		and self.player:hasSkill("nosqianxi") and self.player:distanceTo(target) == 1 then
 		return
 	end
 
@@ -195,7 +195,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 		if self:objectiveLevel(enemy) < 3 then value = value -10 end
 		if not enemy:faceUp() then value = value -10 end
 		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
-		if self:hasSkills("guanxing|xiuluo|tiandu|guidao|zhenlie", enemy) then value = value - 5 end
+		if self:hasSkills("guanxing|xiuluo|tiandu|guidao|noszhenlie", enemy) then value = value - 5 end
 		if self:needKongcheng(enemy) then value = value - 1 end
 		if enemy:getMark("@kuiwei") > 0 then value = value - 2 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 1 end

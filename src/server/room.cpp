@@ -963,6 +963,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         AI *ai = player->getAI();
         if (ai) {
             card = ai->askForCard(pattern, prompt, data);
+            if (card && player->isCardLimited(card, method)) card = NULL;
             if (card) thread->delay();
         } else {
             Json::Value arg(Json::arrayValue);
@@ -1235,6 +1236,8 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
         card = Card::Parse(toQString(clientReply));
     }
 
+    if (card && player->isCardLimited(card, Card::MethodUse))
+        card = NULL;
     if (card != NULL)
         card = card->validateInResponse(player, continuable);
 

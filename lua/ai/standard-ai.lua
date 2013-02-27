@@ -52,7 +52,7 @@ sgs.ai_skill_cardask["@hujia-jink"] = function(self)
 	if bgm_zhangfei and bgm_zhangfei:isAlive() and sgs.hujiasource:hasFlag("dahe") then
 		for _, card in ipairs(self:getCards("Jink")) do
 			if card:getSuit() == sgs.Card_Heart then
-				return card:getId()
+				return card:toString()
 			end
 		end
 		return "."

@@ -522,7 +522,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
 
     LogMessage log;
     log.from = player;
-    if (!card_use.card->targetFixed())
+    if (!card_use.card->targetFixed() || card_use.to.length() > 1 || !card_use.to.contains(card_use.from))
         log.to = card_use.to;
     log.type = "#UseCard";
     log.card_str = card_use.card->toString();

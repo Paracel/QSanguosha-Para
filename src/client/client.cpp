@@ -575,7 +575,7 @@ void Client::notifyRoleChange(const QString &new_role) {
         QString prompt_str = tr("Your role is %1").arg(Sanguosha->translate(new_role));
         if (new_role != "lord")
             prompt_str += tr("\n wait for the lord player choosing general, please");
-        lines_doc->setHtml(prompt_str);
+        lines_doc->setHtml(QString("<p align = \"center\">%1</p>").arg(prompt_str));
     }
 }
 

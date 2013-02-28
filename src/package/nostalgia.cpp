@@ -310,7 +310,7 @@ public:
 
 class NosFuhun: public TriggerSkill {
 public:
-    NosFuhun():TriggerSkill("nosfuhun") {
+    NosFuhun(): TriggerSkill("nosfuhun") {
         events << EventPhaseStart << EventPhaseChanging;
     }
 

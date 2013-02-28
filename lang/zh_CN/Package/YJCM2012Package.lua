@@ -61,7 +61,7 @@ return {
 	["designer:guanxingzhangbao"] = "诺思冥羽",
 	["illustrator:guanxingzhangbao"] = "HOOO",
 	["fuhun"] = "父魂",
-	[":fuhun"] = "To Be Implemented", --摸牌阶段，你可以放弃摸牌，展示牌堆顶的两张牌并获得之：若展示的牌不为同一颜色，你拥有技能“武圣”、“咆哮”，直到回合结束。",
+	[":fuhun"] = "你可以将两张牌当普通【杀】使用。每当你于出牌阶段内以此法使用【杀】造成伤害后，你拥有技能“武圣”、“咆哮”，直到回合结束。",
 
 	["#chengpu"] = "三朝虎臣",
 	["chengpu"] = "程普",

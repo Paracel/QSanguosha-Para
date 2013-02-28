@@ -493,6 +493,71 @@ void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) 
     }
 }
 
+class FuhunViewAsSkill: public ViewAsSkill {
+public:
+    FuhunViewAsSkill(): ViewAsSkill("fuhun") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return Slash::IsAvailable(player);
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
+               && pattern == "slash";
+    }
+
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+        if (selected.length() >= 2)
+            return false;
+        if (Self->getWeapon()
+            && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->objectName() == "crossbow")
+            return Self->canSlashWithoutCrossbow();
+        else
+            return true;
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        if (cards.length() != 2)
+            return NULL;
+
+        Slash *slash = new Slash(Card::SuitToBeDecided, 0);
+        slash->setSkillName(objectName());
+        slash->addSubcards(cards);
+
+        return slash;
+    }
+};
+
+class Fuhun: public TriggerSkill {
+public:
+    Fuhun(): TriggerSkill("fuhun") {
+        events << Damage << EventPhaseChanging;
+        view_as_skill = new FuhunViewAsSkill;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shuangying, QVariant &data) const{
+        if (event == Damage) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()) {
+                room->acquireSkill(shuangying, "wusheng");
+                room->acquireSkill(shuangying, "paoxiao");
+
+                room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
+                shuangying->setFlags(objectName());
+            }
+        } else if (event == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive && shuangying->hasFlag(objectName())) {
+                room->detachSkillFromPlayer(shuangying, "wusheng");
+                room->detachSkillFromPlayer(shuangying, "paoxiao");
+            }
+        }
+
+        return false;
+    }
+};
+
 class Gongqi: public OneCardViewAsSkill {
 public:
     Gongqi(): OneCardViewAsSkill("gongqi") {
@@ -866,8 +931,8 @@ YJCM2012Package::YJCM2012Package()
     related_skills.insertMulti("lihuo", "#lihuo-target");
     related_skills.insertMulti("chunlao", "#chunlao-clear");
 
-    /*General *guanxingzhangbao = new General(this, "guanxingzhangbao", "shu");
-    guanxingzhangbao->addSkill(new Fuhun);*/
+    General *guanxingzhangbao = new General(this, "guanxingzhangbao", "shu");
+    guanxingzhangbao->addSkill(new Fuhun);
 
     General *handang = new General(this, "handang", "wu");
     handang->addSkill(new Gongqi);

@@ -86,7 +86,7 @@ return {
 	["nosqianxi"] = "潜袭",
 	[":nosqianxi"] = "每当你使用【杀】对距离1的目标角色造成伤害时，你可以进行一次判定：若判定结果不为<font color=\"red\">♥</font>，你防止此伤害，该角色失去1点体力上限。",
 
-	["nos_guanxingzhangbao"] = "关兴·张苞-旧",
+	["nos_guanxingzhangbao"] = "关·张-旧",
 	["&nos_guanxingzhangbao"] = "关兴张苞",
 	["designer:nos_guanxingzhangbao"] = "诺思冥羽",
 	["illustrator:nos_guanxingzhangbao"] = "HOOO",

@@ -642,12 +642,18 @@ public:
             if (change.to != Player::NotActive)
                 return false;
         }
+        ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<PlayerStar>();
         if (event == Death) {
             DeathStruct death = data.value<DeathStruct>();
-            if (death.who != gaoshun)
+            if (death.who != gaoshun) {
+                if (death.who == target) {
+                    room->setFixedDistance(gaoshun, target, -1);
+                    gaoshun->tag.remove("XianzhenTarget");
+                    room->setPlayerFlag(gaoshun, "-xianzhen_success");
+                }
                 return false;
+            }
         }
-        ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<PlayerStar>();
         if (target) {
             room->setFixedDistance(gaoshun, target, -1);
             gaoshun->tag.remove("XianzhenTarget");

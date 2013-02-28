@@ -593,7 +593,7 @@ end
 
 sgs.ai_skill_use_func.XianzhenSlashCard = function(card, use, self)
 	local target = self.player:getTag("XianzhenTarget"):toPlayer()
-	if self:askForUseCard("slash", "@xianzhen-slash", sgs.Card_MethodUse) == "." then return end
+	if not target or self:askForUseCard("slash", "@xianzhen-slash", sgs.Card_MethodUse) == "." then return end
 
 	if self:getCard("Slash") and self.player:canSlash(target, nil, false) and target:isAlive() then
 		use.card = card

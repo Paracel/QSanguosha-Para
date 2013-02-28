@@ -580,10 +580,7 @@ void Client::notifyRoleChange(const QString &new_role) {
 }
 
 void Client::activate(const Json::Value &playerId) {
-    if (toQString(playerId) == Self->objectName())
-        setStatus(Playing);
-    else
-        setStatus(NotActive);
+    setStatus(toQString(playerId) == Self->objectName() ? Playing : NotActive);
 }
 
 void Client::startGame(const QString &) {

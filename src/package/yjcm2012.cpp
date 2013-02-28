@@ -499,12 +499,12 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return Slash::IsAvailable(player);
+        return player->getCardCount(true) >= 2 && Slash::IsAvailable(player);
     }
 
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
-               && pattern == "slash";
+               && player->getCardCount(true) >= 2 && pattern == "slash";
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{

@@ -296,7 +296,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     m_pileCardNumInfoTextBox = addText("");
     m_pileCardNumInfoTextBox->setParentItem(m_rolesBox);
     m_pileCardNumInfoTextBox->setDocument(ClientInstance->getLinesDoc());
-    m_pileCardNumInfoTextBox->setDefaultTextColor(Qt::white);
+    m_pileCardNumInfoTextBox->setDefaultTextColor(Config.TextEditColor);
     updateRoles(roles);
 
     add_robot = NULL;

@@ -5,7 +5,7 @@ return {
 
 	["#fuwan"] = "沉毅的国丈",
 	["fuwan"] = "伏完",
-	["illustrator:fuwan"] = "",
+	["illustrator:fuwan"] = "LiuHeng",
 	["moukui"] = "谋溃",
 	[":moukui"] = "每当你指定【杀】的目标后，你可以选择一项：摸一张牌，或弃置目标角色一张牌：若如此做，此【杀】被目标角色的【闪】抵消后，该角色弃置你的一张牌。",
 	["moukui:draw"] = "摸一张牌",

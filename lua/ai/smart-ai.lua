@@ -4081,10 +4081,10 @@ function SmartAI:getAoeValue(card, player)
 			end
 		end
 		if card:isKindOf("SavageAssault") then
-			return lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > sub_slash
+			if lord:hasLordSkill("jijiang") and self.player:getKingdom() == "shu" and self:getCardsNum("Slash") > sub_slash then return true end
 		end
 		if card:isKindOf("ArcheryAttack") then
-			return lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > sub_jink
+			if lord:hasLordSkill("hujia") and self.player:getKingdom() == "wei" and self:getCardsNum("Jink") > sub_jink then return true end
 		end
 
 		if self:getCardsNum("Peach") > sub_peach then return true end

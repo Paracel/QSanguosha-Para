@@ -63,9 +63,10 @@ struct SlashEffectStruct {
 
 struct CardUseStruct {
     enum CardUseReason {
-        CARD_USE_REASON_UNKNOWN,
-        CARD_USE_REASON_PLAY,
-        CARD_USE_REASON_RESPONSE
+        CARD_USE_REASON_UNKNOWN = 0x00,
+        CARD_USE_REASON_PLAY = 0x01,
+        CARD_USE_REASON_RESPONSE = 0x02,
+        CARD_USE_REASON_RESPONSE_USE = 0x12
     } m_reason;
 
     CardUseStruct();

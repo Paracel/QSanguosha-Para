@@ -357,6 +357,14 @@ RoomState *Engine::currentRoomState() {
     }
 }
 
+QString Engine::getCurrentCardUsePattern() {
+    return currentRoomState()->getCurrentCardUsePattern();
+}
+
+CardUseStruct::CardUseReason Engine::getCurrentCardUseReason() {
+    return currentRoomState()->getCurrentCardUseReason();
+}
+
 WrappedCard *Engine::getWrappedCard(int cardId) {
     Card *card = getCard(cardId);
     WrappedCard *wrappedCard = qobject_cast<WrappedCard *>(card);

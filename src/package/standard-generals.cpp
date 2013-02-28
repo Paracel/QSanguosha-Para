@@ -557,7 +557,8 @@ public:
         case CardUseStruct::CARD_USE_REASON_PLAY: {
                 return card->isKindOf("Jink");
             }
-        case CardUseStruct::CARD_USE_REASON_RESPONSE: {
+        case CardUseStruct::CARD_USE_REASON_RESPONSE:
+        case CardUseStruct::CARD_USE_REASON_RESPONSE_USE: {
                 QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
                 if (pattern == "slash")
                     return card->isKindOf("Jink");

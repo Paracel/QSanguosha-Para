@@ -947,7 +947,7 @@ bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 bool GuhuoCard::targetFixed() const{
-    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
         if (!ClientInstance->hasNoTargetResponding()) {
             CardStar card = Sanguosha->cloneCard(user_string, NoSuit, 0);
             Self->tag["guhuo"] = QVariant::fromValue(card);
@@ -971,7 +971,7 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
 
     QString to_guhuo = user_string;
     if (user_string == "slash"
-        && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+        && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
         QStringList guhuo_list;
         guhuo_list << "slash";
         if (!Config.BanPackages.contains("maneuvering"))
@@ -1085,7 +1085,8 @@ public:
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
-        if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+        if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE
+            || Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
             GuhuoCard *card = new GuhuoCard;
             card->setUserString(Sanguosha->currentRoomState()->getCurrentCardUsePattern());
             card->addSubcard(originalCard);

@@ -136,7 +136,8 @@ bool ViewAsSkill::isAvailable(const Player *invoker,
         return false;
     switch (reason) {
     case CardUseStruct::CARD_USE_REASON_PLAY: return isEnabledAtPlay(invoker);
-    case CardUseStruct::CARD_USE_REASON_RESPONSE: return isEnabledAtResponse(invoker, pattern);
+    case CardUseStruct::CARD_USE_REASON_RESPONSE:
+    case CardUseStruct::CARD_USE_REASON_RESPONSE_USE: return isEnabledAtResponse(invoker, pattern);
     default:
             return false;
     }

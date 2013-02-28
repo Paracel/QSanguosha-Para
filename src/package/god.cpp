@@ -1293,7 +1293,8 @@ bool Longhun::viewFilter(const QList<const Card *> &selected, const Card *card) 
             } else
                 return false;
         }
-    case CardUseStruct::CARD_USE_REASON_RESPONSE: {
+    case CardUseStruct::CARD_USE_REASON_RESPONSE:
+    case CardUseStruct::CARD_USE_REASON_RESPONSE_USE: {
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
             if (pattern == "jink")
                 return card->getSuit() == Card::Club;

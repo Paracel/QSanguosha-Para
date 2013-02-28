@@ -108,6 +108,9 @@ public:
     Room *currentRoom();
     RoomState *currentRoomState();
 
+    QString getCurrentCardUsePattern();
+    CardUseStruct::CardUseReason getCurrentCardUseReason();
+
 private:
     void _loadMiniScenarios();
     void _loadModScenarios();

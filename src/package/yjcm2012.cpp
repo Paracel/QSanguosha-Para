@@ -662,7 +662,8 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return  pattern == "slash";
+        return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
+               && pattern == "slash";
     }
 
     virtual bool viewFilter(const Card *to_select) const{

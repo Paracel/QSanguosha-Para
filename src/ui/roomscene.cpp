@@ -2086,17 +2086,14 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         const ViewAsSkill *vsSkill = button->getViewAsSkill();
         if (vsSkill != NULL) {
             CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
-            if ((newStatus & Client::ClientStatusBasicMask) == Client::Responding)
+            if (newStatus == Client::Responding)
                 reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+            else if (newStatus == Client::RespondingUse)
+                reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
             else if (newStatus == Client::Playing)
                 reason = CardUseStruct::CARD_USE_REASON_PLAY;
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-            if ((newStatus & Client::ClientStatusBasicMask) == Client::Responding
-                && newStatus != Client::RespondingUse // temp way to avoid these two skills in responding
-                && (vsSkill->objectName() == "lihuo" || vsSkill->objectName() == "fan"))
-                button->setEnabled(false);
-            else
-                button->setEnabled(vsSkill->isAvailable(Self, reason, pattern) && !pattern.endsWith("!"));
+            button->setEnabled(vsSkill->isAvailable(Self, reason, pattern) && !pattern.endsWith("!"));
         } else {
             const Skill *skill = button->getSkill();
             if (skill->getFrequency() == Skill::Wake)
@@ -2147,11 +2144,16 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                 QString skill_name = rx.capturedTexts().at(1);
                 const ViewAsSkill *skill = Sanguosha->getViewAsSkill(skill_name);
                 if (skill) {
+                    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
+                    if (newStatus == Client::Responding)
+                        reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+                    else if (newStatus == Client::RespondingUse)
+                        reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
                     foreach (QSanSkillButton *button, m_skillButtons) {
                         Q_ASSERT(button != NULL);
                         const ViewAsSkill *vsSkill = button->getViewAsSkill();
                         if (vsSkill != NULL && vsSkill->objectName() == skill_name
-                            && vsSkill->isAvailable(Self, CardUseStruct::CARD_USE_REASON_RESPONSE, pattern))
+                            && vsSkill->isAvailable(Self, reason, pattern))
                             button->click();
                             break;
                     }

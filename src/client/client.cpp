@@ -636,8 +636,10 @@ void Client::setStatus(Status status) {
     this->status = status;
     if (status == Client::Playing)
         _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_PLAY);
-    else if ((status & ClientStatusBasicMask) == Responding)
+    else if (status == Responding)
         _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE);
+    else if (status == RespondingUse)
+        _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
     else
         _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_UNKNOWN);
     emit status_changed(old_status, status);

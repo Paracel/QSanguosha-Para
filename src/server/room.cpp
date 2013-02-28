@@ -824,6 +824,7 @@ bool Room::askForNullification(const TrickCard *trick, ServerPlayer *from, Serve
 
 bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to,
                                 bool positive, _NullificationAiHelper aiHelper) {
+    _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
     QString trick_name = trick->objectName();
     QList<ServerPlayer *> validHumanPlayers;
     QList<ServerPlayer *> validAiPlayers;
@@ -945,6 +946,14 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
                              bool isRetrial, const QString &skill_name) {
     Q_ASSERT(pattern != "slash" || method != Card::MethodUse); // use askForUseSlashTo instead
     notifyMoveFocus(player, S_COMMAND_RESPONSE_CARD);
+    _m_roomState.setCurrentCardUsePattern(pattern);
+    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
+    if (method == Card::MethodResponse)
+        reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+    else if (method == Card::MethodUse)
+        reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
+    _m_roomState.setCurrentCardUseReason(reason);
+
     const Card *card = NULL;
 
     QStringList asked;
@@ -1066,7 +1075,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
                          Card::HandlingMethod method) {
     notifyMoveFocus(player, S_COMMAND_USE_CARD);
     _m_roomState.setCurrentCardUsePattern(pattern);
-    _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE);
+    _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
     CardUseStruct card_use;
 
     bool isCardUsed = false;
@@ -1093,7 +1102,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
                 card_use.from = player;
         }
     }
-    card_use.m_reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+    card_use.m_reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
     if (isCardUsed && card_use.isValid(pattern)) {
         QVariant decisionData = QVariant::fromValue(card_use);
         thread->trigger(ChoiceMade, this, player, decisionData);
@@ -1216,6 +1225,7 @@ const Card *Room::askForCardShow(ServerPlayer *player, ServerPlayer *requestor, 
 
 const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
     notifyMoveFocus(player, S_COMMAND_ASK_PEACH);
+    _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
 
     const Card *card = NULL;
     bool continuable = false;

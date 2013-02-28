@@ -1012,6 +1012,7 @@ public:
         log.arg = QString::number(zhonghui->getPile("nospower").length());
         log.arg2 = objectName();
         room->sendLog(log);
+        room->broadcastSkillInvoke(objectName());
         room->doLightbox("$NosZiliAnimate", 5000);
 
         room->addPlayerMark(zhonghui, "noszili");

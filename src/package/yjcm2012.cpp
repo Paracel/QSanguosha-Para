@@ -389,8 +389,8 @@ public:
         if (dying_data.who != liaohua)
             return false;
         if (liaohua->askForSkillInvoke(objectName(), data)) {
-            room->doLightbox("$FuliAnimate", 3000);
             room->broadcastSkillInvoke(objectName());
+            room->doLightbox("$FuliAnimate", 3000);
 
             liaohua->loseMark("@laoji");
 

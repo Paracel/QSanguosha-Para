@@ -720,6 +720,10 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
                 if (player->getGeneralName() == "anjiang") {
                     QStringList generals = room->getTag(player->objectName()).toStringList();
                     room->changePlayerGeneral(player, generals.at(0));
+
+                    room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
+                    room->setPlayerProperty(player, "role", BasaraMode::getMappedRole(player->getKingdom()));
+
                     generals.takeFirst();
                     room->setTag(player->objectName(), QVariant::fromValue(generals));
                 }
@@ -969,7 +973,20 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
     if (player->getGeneralName() == "anjiang") {
         room->changeHero(player, general_name, false, false, false, false);
         room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
-        room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
+
+        if (player->getGeneral()->getKingdom() == "god") {
+            QString new_kingdom = room->askForKingdom(player);
+            room->setPlayerProperty(player, "kingdom", new_kingdom);
+
+            LogMessage log;
+            log.type = "#ChooseKingdom";
+            log.from = player;
+            log.arg = new_kingdom;
+            room->sendLog(log);
+        }
+
+        if (Config.EnableHegemony)
+            room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
         foreach (QString skill_name, GameRule::skill_mark.keys()) {
             if (player->hasSkill(skill_name, true))
                 room->addPlayerMark(player, GameRule::skill_mark[skill_name]);
@@ -983,9 +1000,6 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
     }
 
     room->getThread()->addPlayerSkills(player);
-    room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
-    if (Config.EnableHegemony)
-        room->setPlayerProperty(player, "role", getMappedRole(player->getGeneral()->getKingdom()));
 
     names.removeOne(general_name);
     room->setTag(player->objectName(), QVariant::fromValue(names));
@@ -1066,6 +1080,11 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
             if (player->getGeneralName() == "anjiang") {
                 QStringList generals = room->getTag(player->objectName()).toStringList();
                 room->changePlayerGeneral(player, generals.at(0));
+
+                room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
+                if (Config.EnableHegemony)
+                    room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));
+
                 generals.takeFirst();
                 room->setTag(player->objectName(), QVariant::fromValue(generals));
             }

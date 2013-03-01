@@ -194,6 +194,7 @@ fenxun_skill.name = "fenxun"
 table.insert(sgs.ai_skills, fenxun_skill)
 fenxun_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("FenxunCard") then return end
+	if self:needBear() then return end
 	if not self.player:isNude() then
 		local card_id
 		local slashcount = self:getCardsNum("Slash")
@@ -202,7 +203,8 @@ fenxun_skill.getTurnUseCard = function(self)
 		cards = sgs.QList2Table(cards)
 		self:sortByKeepValue(cards)
 
-		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
+		if (self.player:hasArmorEffect("SilverLion") and self.player:isWounded())
+			or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
 			return sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
 		elseif self.player:getHandcardNum() > 0 then
 			local lightning = self:getCard("Lightning")
@@ -210,42 +212,38 @@ fenxun_skill.getTurnUseCard = function(self)
 				card_id = lightning:getEffectiveId()
 			else
 				for _, acard in ipairs(cards) do
-					if acard:isKindOf("AmazingGrace") then
+					if (acard:isKindOf("AmazingGrace") or acard:isKindOf("EquipCard")) then
 						card_id = acard:getEffectiveId()
 						break
-					elseif acard:isKindOf("EquipCard") then
-						local dummy_use = { isDummy = true }
-						self:useEquipCard(acard, dummy_use)
-						if not dummy_use.card then
-							card_id = acard:getEffectiveId()
-							break
-						end
 					end
 				end
 			end
-		elseif jinkcount > 1 then
-			for _, acard in ipairs(cards) do
-				if acard:isKindOf("Jink") then
-					card_id = acard:getEffectiveId()
-					break
+			if not card_id and jinkcount > 1 then
+				for _, acard in ipairs(cards) do
+					if acard:isKindOf("Jink") then
+						card_id = acard:getEffectiveId()
+						break
+					end
 				end
 			end
-		elseif slashcount > 1 then
-			for _, acard in ipairs(cards) do
-				if acard:isKindOf("Slash") then
-					slashcount = slashcount - 1
-					card_id = acard:getEffectiveId()
-					break
+			if not card_id and slashcount > 1 then
+				for _, acard in ipairs(cards) do
+					if acard:isKindOf("Slash") then
+						slashcount = slashcount - 1
+						card_id = acard:getEffectiveId()
+						break
+					end
 				end
 			end
-		elseif not self.player:getEquips():isEmpty() then
-			local player = self.player
-			if player:getWeapon() then card_id = player:getWeapon():getId() end
+		end
+
+		if not card_id and self.player:getWeapon() then
+			card_id = player:getWeapon():getId()
 		end
 
 		if not card_id then
 			for _, acard in ipairs(cards) do
-				if (acard:isKindOf("Disaster") or acard:isKindOf("AmazingGrace") or acard:isKindOf("EquipCard") or acard:isKindOf("BasicCard"))
+				if (acard:isKindOf("AmazingGrace") or acard:isKindOf("EquipCard") or acard:isKindOf("BasicCard"))
 					and not isCard("Peach", acard, self.player) and not isCard("Slash", acard, self.player) then
 					card_id = acard:getEffectiveId()
 					break

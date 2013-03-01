@@ -1926,7 +1926,7 @@ function SmartAI:filterEvent(event, player, data)
 			local caiwenji = self.room:findPlayerBySkillName("beige")
 			local intention = -60
 			if player:objectName() == caiwenji:objectName() then intention = 0 end
-			sgs.ai_card_intention.general(caiwenji, player, intention)
+			sgs.updateIntention(caiwenji, player, intention)
 		end
 	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
 		self.room:setPlayerFlag(player, "PlayPhaseNotSkipped")

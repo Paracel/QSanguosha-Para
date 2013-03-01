@@ -1036,15 +1036,20 @@ public:
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
         else if (room->getMode() == "04_1v3")
             all.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
-        else if (room->getMode() == "06_XMode")
+        else if (room->getMode() == "06_XMode") {
             all.subtract(Config.value("Banlist/XMode", "").toStringList().toSet());
+            foreach (ServerPlayer *p, room->getAlivePlayers())
+                all.subtract(p->tag["XModeBackup"].toStringList().toSet());
+        } else if (room->getMode() == "02_1v1") {
+            all.subtract(Config.value("Banlist/1v1", "").toStringList().toSet());
+            foreach (ServerPlayer *p, room->getAlivePlayers())
+                all.subtract(p->tag["1v1Arrange"].toStringList().toSet());
+        }
         QSet<QString> huashen_set, room_set;
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         foreach (QVariant huashen, huashens)
             huashen_set << huashen.toString();
-        QList<const ServerPlayer *> players = room->findChildren<const ServerPlayer *>();
-        foreach (const ServerPlayer *player, players) {
-            if (!player->isAlive()) continue;
+        foreach (ServerPlayer *player, room->getAlivePlayers()) {
             room_set << player->getGeneralName();
             if (player->getGeneral2())
                 room_set << player->getGeneral2Name();

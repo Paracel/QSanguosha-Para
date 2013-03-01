@@ -399,7 +399,7 @@ function SmartAI:useCardSlash(card, use)
 			-- fill the card use struct
 			local usecard = card
 			if not use.to or use.to:isEmpty() then
-				if not (self:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0) then
+				if not (self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0) then
 					local equips = self:getCards("EquipCard", self.player, "h")
 					for _, equip in ipairs(equips) do
 						local callback = sgs.ai_slash_weaponfilter[equip:objectName()]

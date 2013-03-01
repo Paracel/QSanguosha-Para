@@ -354,8 +354,30 @@ public:
             }
         } else if (event == FinishJudge) {
             JudgeStar judge = data.value<JudgeStar>();
-            if (judge->reason == objectName() && judge->card->isBlack())
-                zhenji->obtainCard(judge->card);
+            if (judge->reason == objectName()) {
+                bool isHegVer = zhenji->getGeneralName() != "zhenji"
+                                && (zhenji->getGeneralName() == "heg_zhenji" || zhenji->getGeneral2Name() == "heg_zhenji");
+                if (judge->card->isBlack()) {
+                    if (!isHegVer)
+                        zhenji->obtainCard(judge->card);
+                    else if (zhenji->hasSkill("guicai") || zhenji->hasSkill("guidao") || zhenji->hasSkill("huanshi")) {
+                        CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, zhenji->objectName(), QString(), judge->reason);
+                        room->moveCardTo(judge->card, zhenji, NULL, Player::PlaceTable, reason, true);
+                        QVariantList luoshen_list = zhenji->tag[objectName()].toList();
+                        luoshen_list << judge->card->getEffectiveId();
+                        zhenji->tag[objectName()] = luoshen_list;
+                    }
+                } else {
+                    if (isHegVer) {
+                        DummyCard *dummy = new DummyCard;
+                        foreach (QVariant id, zhenji->tag[objectName()].toList())
+                            dummy->addSubcard(id.toInt());
+                        zhenji->obtainCard(dummy);
+                        zhenji->tag.remove(objectName());
+                        delete dummy;
+                    }
+                }
+            }
         }
 
         return false;

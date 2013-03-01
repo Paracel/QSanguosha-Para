@@ -1505,14 +1505,11 @@ bool RoomScene::_shouldIgnoreDisplayMove(CardsMoveStruct &movement) {
     if ((from == Player::PlaceSpecial && !from_pile.isEmpty() && from_pile.startsWith('#'))
         || (to == Player::PlaceSpecial && !to_pile.isEmpty() && to_pile.startsWith('#')))
         return true;
-    else if (from == Player::DiscardPile && to == Player::DiscardPile)
-        return true;
-    else if (from == Player::PlaceTable && to == Player::DiscardPile)
-        return true;
-    else if (from == Player::PlaceJudge && to == Player::DiscardPile)
-        return true;
-
-    return false;
+    else {
+        QList<Player::Place> ignore_place;
+        ignore_place << Player::DiscardPile << Player::PlaceTable << Player::PlaceJudge;
+        return ignore_place.contains(from) && ignore_place.contains(to);
+    }
 }
 
 bool RoomScene::_processCardsMove(CardsMoveStruct &move, bool isLost) {

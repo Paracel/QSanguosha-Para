@@ -501,16 +501,28 @@ sgs.chunlao_keep_value = {
 	Slash = 5.5,
 }
 
-sgs.ai_skill_invoke.zhiyu = function(self)
+sgs.ai_skill_invoke.zhiyu = function(self, data)
+	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
+	local damage = data:toDamage()
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
 	local first
 	local difcolor = 0
 	for _, card in ipairs(cards) do
 		if not first then first = card end
-		if (first:isRed() and card:isBlack()) or (card:isRed() and first:isBlack()) then difcolor = 1 end
+		if (first:isRed() and card:isBlack()) or (card:isRed() and first:isBlack()) then
+			difcolor = 1
+			break
+		end
 	end
-	return difcolor == 0
+	if difcolor == 0 and damage.from then
+		if self:isFriend(damage.from) and not damage.from:isKongcheng() then
+			return false
+		elseif self:isEnemy(damage.from) and #self.friends > 1 and damage.from:getHandcardNum() == 1 and damage.from:hasSkill("sijian") then
+			return false
+		end
+	end
+	return true
 end
 
 local function get_handcard_suit(cards)

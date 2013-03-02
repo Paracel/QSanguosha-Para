@@ -834,13 +834,6 @@ void Collateral::onEffect(const CardEffectStruct &effect) const{
     ServerPlayer *victim = room->getTag("collateralVictim").value<PlayerStar>();
     room->removeTag("collateralVictim");
     if (!victim) return;
-
-    LogMessage log;
-    log.type = "#CollateralSlash";
-    log.from = source;
-    log.to << victim;
-    room->sendLog(log);
-
     WrappedCard *weapon = killer->getWeapon();
 
     QString prompt = QString("collateral-slash:%1:%2").arg(victim->objectName()).arg(source->objectName());

@@ -287,7 +287,11 @@ sgs.ai_skill_choice.mingshi = function(self, choices, data)
 end
 
 sgs.ai_skill_invoke.lirang = function(self, data)
-	return #self.friends_noself > 0
+	if #self.friends_noself == 0 then return false end
+	for _, friend in ipairs(self.friends_noself) do
+		if not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return true end
+	end
+	return false
 end
 
 sgs.ai_skill_use["@@sijian"] = function(self, prompt)

@@ -2838,9 +2838,9 @@ function SmartAI:getCardNeedPlayer(cards)
 	end
 end
 
-function SmartAI:askForYiji(card_ids)
-	local isLirang = (self.player:hasFlag("lirang_InTempMoving"))
-	if not isLirang and self.player:getHandcardNum() <= 2 then
+function SmartAI:askForYiji(card_ids, reason)
+	local noRest = (reason == "lirang" or reason == "miji")
+	if not noRest and self.player:getHandcardNum() <= 2 then
 		return nil, -1
 	end
 
@@ -2850,11 +2850,11 @@ function SmartAI:askForYiji(card_ids)
 	end
 
 	local card, friend = self:getCardNeedPlayer(cards)
-	if card and friend and not (isLirang and friend:objectName() == self.player:objectName()) then return friend, card:getId() end
+	if card and friend and not (noRest and friend:objectName() == self.player:objectName()) then return friend, card:getId() end
 	if #self.friends > 1 then
 		self:sort(self.friends, "handcard")
 		for _, afriend in ipairs(self.friends) do
-			if not (self:needKongcheng(afriend) or afriend:hasSkill("manjuan")) and not (isLirang and afriend:objectName() == self.player:objectName()) then
+			if not (self:needKongcheng(afriend) or afriend:hasSkill("manjuan")) and not (noRest and afriend:objectName() == self.player:objectName()) then
 				for _, acard_id in ipairs(card_ids) do
 					return afriend, acard_id
 				end
@@ -2863,7 +2863,7 @@ function SmartAI:askForYiji(card_ids)
 	end
 
 	--All cards should be given out for LiRang
-	if isLirang then
+	if noRest then
 		local tos = {}
 		for _, target in ipairs(self.friends_noself) do
 			if self:isFriend(target) and not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)

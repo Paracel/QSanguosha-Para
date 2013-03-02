@@ -4470,17 +4470,19 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
     CardMoveReason reason(NULL, guojia->objectName());
     reason.m_reason = is_preview ? CardMoveReason::S_REASON_PREVIEWGIVE : CardMoveReason::S_REASON_GIVE; // nasty hack only
     notifyMoveFocus(guojia, S_COMMAND_SKILL_YIJI);
+    ServerPlayer *target = NULL;
 
+    QList<int> ids;
     AI *ai = guojia->getAI();
     if (ai) {
         int card_id;
-        ServerPlayer *who = ai->askForYiji(cards, card_id);
-        if (who) {
-            cards.removeOne(card_id);
-            moveCardTo(Sanguosha->getCard(card_id), who, Player::PlaceHand, reason, visible);
-            return true;
-        } else
+        ServerPlayer *who = ai->askForYiji(cards, skill_name, card_id);
+        if (!who)
             return false;
+        else {
+            target = who;
+            ids << card_id;
+        }
     } else {
         Json::Value arg(Json::arrayValue);
         arg[0] = toJsonArray(cards);
@@ -4493,7 +4495,6 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
         if (!success || !clientReply.isArray() || clientReply.size() != 2)
             return false;
 
-        QList<int> ids;
         if (!tryParse(clientReply[0], ids) || !clientReply[1].isString())
             return false;
 
@@ -4501,24 +4502,28 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
             if (!cards.contains(id)) return false;
 
         ServerPlayer *who = findChild<ServerPlayer *>(toQString(clientReply[1]));
-        if (!who) return false;
-
-        DummyCard *dummy_card = new DummyCard;
-        foreach (int card_id, ids) {
-            cards.removeOne(card_id);
-            dummy_card->addSubcard(card_id);
-        }
-
-        QVariant decisionData = QVariant::fromValue(QString("Yiji:%1:%2:%3:%4")
-                                                    .arg(skill_name).arg(guojia->objectName()).arg(who->objectName())
-                                                    .arg(Card::IdsToStrings(ids).join("+")));
-        thread->trigger(ChoiceMade, this, guojia, decisionData);
-
-        moveCardTo(dummy_card, who, Player::PlaceHand, reason, visible);
-        delete dummy_card;
-
-        return true;
+        if (!who)
+            return false;
+        else
+            target = who;
     }
+    Q_ASSERT(target != NULL);
+
+    DummyCard *dummy_card = new DummyCard;
+    foreach (int card_id, ids) {
+        cards.removeOne(card_id);
+        dummy_card->addSubcard(card_id);
+    }
+
+    QVariant decisionData = QVariant::fromValue(QString("Yiji:%1:%2:%3:%4")
+                                                .arg(skill_name).arg(guojia->objectName()).arg(target->objectName())
+                                                .arg(Card::IdsToStrings(ids).join("+")));
+    thread->trigger(ChoiceMade, this, guojia, decisionData);
+
+    moveCardTo(dummy_card, target, Player::PlaceHand, reason, visible);
+    delete dummy_card;
+
+    return true;
 }
 
 QString Room::generatePlayerName() {

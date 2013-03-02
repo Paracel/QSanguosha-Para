@@ -62,6 +62,18 @@ end
 
 sgs.ai_skill_invoke.fuli = true
 
+sgs.ai_skill_choice.miji_draw = function(self, choices)
+	return "" .. self.player:getLostHp()
+end
+
+sgs.ai_skill_invoke.miji = function(self, data)
+	if #self.friends_noself == 0 then return false end
+	for _, friend in ipairs(self.friends_noself) do
+		if not friend:hasSkill("manjuan") then return true end
+	end
+	return false
+end
+
 function sgs.ai_cardneed.jiangchi(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) < 2
 end

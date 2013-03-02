@@ -1900,6 +1900,7 @@ sgs.dynamic_value.damage_card.LijianCard = true
 sgs.ai_chaofeng.diaochan = 4
 
 function SmartAI:canUseJieyuanDecrease(damage_from, player)
+	if not damage_from then return false end
 	local player = player or self.player
 	if player:hasSkill("jieyuan") and damage_from:getHp() >= player:getHp() then
 		for _, card in sgs.qlist(player:getHandcards()) do

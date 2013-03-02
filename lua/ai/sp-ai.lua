@@ -333,7 +333,7 @@ local function can_be_selected_as_target(self, card, who)
 		return false
 	end
 	-- validation of strategy
-	if self:cantbeHurt(who) or self:damageIsEffective(who) then return false end
+	if self:cantbeHurt(who) or not self:damageIsEffective(who) then return false end
 	if self:isEnemy(who) then
 		if not self.player:hasSkill("jueqing") then
 			if who:hasSkill("guixin") and (self.room:getAliveCount() >= 4 or not who:faceUp()) and not who:hasSkill("manjuan") then return false end

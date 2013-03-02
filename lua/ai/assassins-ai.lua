@@ -223,10 +223,17 @@ end
 
 sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
 	local damage = data:toDamage()
-	if (self:getDamagedEffects(self.player, damage.from) or self.player:getHp() > getBestHp(self.player))
-		and damage.damage <= 1 and self.player:getHp() > 1 then return "." end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
+	if damage.card and damage.card:isKindOf("Slash") then
+		if self:hasHeavySlashDamage(damage.from, damage.card, self.player) then
+			for _, card in ipairs(cards) do
+				if card:isRed() then return "$" .. card:getEffectiveId() end
+			end
+		end
+	end
+	if self:getDamagedEffects(self.player, damage.from) and damage.damage <= 1 then return "." end
+	if self:needLostHp(self.player, damage.from) and damage.damage <= 1 then return "." end
 	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end
 	end

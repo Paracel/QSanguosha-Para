@@ -147,7 +147,7 @@ sgs.ai_skill_invoke.yishi = function(self, data)
 			or (target:isKongcheng() and self:hasSkills(sgs.lose_equip_skill, target)) then
 			return false
 		end
-		if self:getDamagedEffects(target, self.player) or (target:getArmor() and not target:getArmor():isKindOf("SilverLion")) then return true end
+		if self:getDamagedEffects(target, self.player, true) or (target:getArmor() and not target:getArmor():isKindOf("SilverLion")) then return true end
 		return false
 	end
 	return false

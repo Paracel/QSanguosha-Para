@@ -214,7 +214,7 @@ end
 sgs.ai_need_damaged.ganglie = function (self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
-		and not self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and sgs.isGoodTarget(attacker, self.enemies, self) then
+		and not (self:hasSkills(sgs.need_kongcheng.."|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self.enemies, self) then
 		return true
 	end
 	return false
@@ -735,7 +735,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local jijiangtargets = {}
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("JijiangTarget") then
-			if self:isFriend(player) and not (player:getHp() > getBestHp(player) or self:getDamagedEffects(player, sgs.jijiangsource)) then return "." end
+			if self:isFriend(player) and not (self:needLostHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
 			table.insert(jijiangtargets, player)
 		end
 	end
@@ -1300,7 +1300,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 
 	for _, player in ipairs(others) do
-		if self:objectiveLevel(player) == 0 and not (source and (source:objectName() == player:objectName())) then
+		if self:objectiveLevel(player) == 0 and not (source and source:objectName() == player:objectName()) then
 			local ret = doLiuli(player)
 			if ret ~= "." then return ret end
 		end
@@ -1319,10 +1319,22 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 
 	for _, friend in ipairs(self.friends_noself) do
-		if friend:getHp() > getBestHp(friend) or self:getDamagedEffects(friend, source) then
+		if self:needLostHp(friend, source, true) or self:getDamagedEffects(friend, source, true) then
 			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end
+			end
+		end
+	end
+
+	if (self:isWeak() or self:hasHeavySlashDamage(source, slash)) and source:hasWeapon("axe") and source:getCards("he"):length() > 2
+		and not self:getCardId("Peach") and not self:getCardId("Analeptic") then
+		for _, friend in ipairs(self.friends_noself) do
+			if not self:isWeak(friend) then
+				if not (source and source:objectName() == friend:objectName()) then
+					local ret = doLiuli(friend)
+					if ret ~= "." then return ret end
+				end
 			end
 		end
 	end

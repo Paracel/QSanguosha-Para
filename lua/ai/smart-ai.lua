@@ -1597,7 +1597,7 @@ function SmartAI:filterEvent(event, player, data)
 	if player:objectName() == self.player:objectName() and sgs.debugmode and sgs.ai_debug_func[event] and type(sgs.ai_debug_func[event]) == "function" then
 		sgs.ai_debug_func[event](self, player, data)
 	end
-	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
+	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and player:getState() == "robot" and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
 		sgs.ai_chat_func[event](self, player, data)
 	end
 

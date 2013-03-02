@@ -279,6 +279,9 @@ public:
                 if (!target->isAlive())
                     return false;
 
+                QString color = judge.card->isRed() ? "red" : "black";
+                target->tag[objectName()] = QVariant::fromValue(color);
+
                 QList<ServerPlayer *> to_choose;
                 foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
                     if (target->distanceTo(p) == 1)
@@ -287,12 +290,7 @@ public:
                 if (to_choose.isEmpty())
                     return false;
 
-                target->setMark(objectName(), judge.card->isRed() ? 1 : 2);
                 ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
-                target->setMark(objectName(), 0);
-
-                QString color = judge.card->isRed() ? "red" : "black";
-                target->tag[objectName()] = QVariant::fromValue(color);
                 QString pattern = QString(".|.|.|hand|%1$0").arg(color);
 
                 room->setPlayerFlag(victim, "QianxiTarget");

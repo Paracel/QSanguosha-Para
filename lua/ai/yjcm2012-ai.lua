@@ -1,3 +1,50 @@
+sgs.ai_skill_invoke.qianxi = function(self, data)
+ 	for _, p in ipairs(self.enemies) do
+		if self.player:distanceTo(p) == 1 and not p:isKongcheng() then
+			return true
+		end
+	end
+	return false
+end
+
+sgs.ai_skill_playerchosen.qianxi = function(self, targets)
+	local enemies = {}
+	local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local isRed = (self.player:getTag("qianxi"):toString() == "red")
+
+	for _, target in sgs.qlist(targets) do
+		if self:isEnemy(target) and not target:isKongcheng() then
+			table.insert(enemies, target)
+		end
+	end
+
+	if #enemies == 1 then
+		return enemies[1]
+	else
+		self:sort(enemies, "defense")
+		if not isRed then
+			for _, enemy in ipairs(enemies) do
+				if enemy:hasSkill("qingguo") and self:slashIsEffective(slash, enemy) then return enemy end
+			end
+			for _, enemy in ipairs(enemies) do
+				if enemy:hasSkill("kanpo") then return enemy end
+			end
+		else
+			for _, enemy in ipairs(enemies) do
+				if getKnownCard(enemy, "Jink", false, "h") > 0 and self:slashIsEffective(slash, enemy) then return enemy end
+			end
+			for _, enemy in ipairs(enemies) do
+				if getCardsNum("Peach", enemy) > 0 or enemy:hasSkill("jijiu") then return enemy end
+			end
+		end
+		for _, enemy in ipairs(enemies) do
+			if enemy:hasSkill("longhun") then return enemy end
+		end
+		return enemies[1]
+	end
+	return targets:first()
+end
+
 function sgs.ai_cardneed.dangxian(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end

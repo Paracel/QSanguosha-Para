@@ -77,5 +77,5 @@ return {
 	["#GuhuoNoTarget"] = "%from 发动了“%arg2”，声明此牌为 【%arg】",
 	["#GuhuoCannotQuestion"] = "%from 当前体力值为 %arg，无法质疑",
 	["#GuhuoQuery"] = "%from 表示 %arg",
-	["$GuhuoResult"] = "%from 发动“<font color=\"yellow\"><b>蛊惑</b></font>”所用的牌是 %card",
+	["$GuhuoResult"] = "%from 的“<font color=\"yellow\"><b>蛊惑</b></font>”牌是 %card",
 }

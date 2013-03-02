@@ -1004,7 +1004,7 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
             user_str = to_guhuo;
         Card *use_card = Sanguosha->cloneCard(user_str, card->getSuit(), card->getNumber());
         use_card->setSkillName("guhuo");
-        use_card->addSubcard(this);
+        use_card->addSubcard(subcards.first());
         use_card->deleteLater();
         return use_card;
     } else
@@ -1056,6 +1056,7 @@ const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji, bool &continuable)
             user_str = to_guhuo;
         Card *use_card = Sanguosha->cloneCard(user_str, card->getSuit(), card->getNumber());
         use_card->setSkillName("guhuo");
+        use_card->addSubcard(subcards.first());
         use_card->deleteLater();
         return use_card;
     } else

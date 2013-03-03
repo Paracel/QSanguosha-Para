@@ -649,6 +649,7 @@ end
 table.insert(sgs.ai_choicemade_filter.cardUsed, jijiang_filter)
 
 sgs.ai_skill_invoke.jijiang = function(self, data)
+	if sgs.jijiangsource then return false end
 	local current = self.room:getCurrent()
 	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverflow(current) > 2 and not self:hasCrossbowEffect(current) then
 		return true
@@ -661,11 +662,7 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 		end
 	end
 
-	if sgs.jijiangsource then
-		return false
-	else
-		return self.room:getLieges("shu", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
-	end
+	return self.room:getLieges("shu", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
 end
 
 sgs.ai_choicemade_filter.skillInvoke.jijiang = function(player, promptlist)

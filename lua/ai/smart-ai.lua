@@ -2016,12 +2016,13 @@ function SmartAI:askForChoice(skill_name, choices, data)
 end
 
 function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_equip)
+	local exchange = { "lihun", "enyuan", "shichou", "quanji" }
 	local callback = sgs.ai_skill_discard[reason]
 	self:assignKeep(self.player:getHp(), true)
 	if type(callback) == "function" then
 		if callback(self, discard_num, min_num, optional, include_equip) then
 			for _, card_id in ipairs(callback(self, discard_num, min_num, optional, include_equip)) do
-				if self.player:isJilei(sgs.Sanguosha:getCard(card_id)) then
+				if not table.contains(exchange, reason) and self.player:isJilei(sgs.Sanguosha:getCard(card_id)) then
 					return {}
 				end
 			end
@@ -2058,11 +2059,11 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	table.sort(cards, compare_func)
 	local least = min_num
 	if discard_num - min_num > 1 then
-		least = discard_num -1
+		least = discard_num - 1
 	end
 	for _, card in ipairs(cards) do
 		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then break end
-		if not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
+		if table.contains(exchange, reason) or not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
 	end
 	return to_discard
 end

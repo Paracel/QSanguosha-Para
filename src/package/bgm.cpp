@@ -927,11 +927,65 @@ public:
     }
 };
 
+ShichouCard::ShichouCard() {
+    will_throw = false;
+    mute = true;
+    handling_method = Card::MethodNone;
+}
+
+bool ShichouCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && to_select->getKingdom() == "shu" && to_select != Self;
+}
+
+void ShichouCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.to->getRoom();
+    ServerPlayer *player = effect.from, *victim = effect.to;
+    room->broadcastSkillInvoke("shichou");
+    room->doLightbox("$ShichouAnimate", 4500);
+
+    player->loseMark("@hate", 1);
+    room->setPlayerMark(player, "xhate", 1);
+    victim->gainMark("@hate_to");
+    room->setPlayerMark(victim, "hate_" + player->objectName(), 1);
+
+    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName());
+    reason.m_playerId = victim->objectName();
+    room->obtainCard(victim, this, reason, false);
+}
+
+class ShichouViewAsSkill: public ViewAsSkill {
+public:
+    ShichouViewAsSkill(): ViewAsSkill("shichou") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@shichou";
+    }
+
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *) const{
+        return selected.length() < 2;
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        if (cards.length() != 2)
+            return NULL;
+
+        ShichouCard *card = new ShichouCard;
+        card->addSubcards(cards);
+        return card;
+    }
+};
+
 class Shichou: public TriggerSkill {
 public:
     Shichou(): TriggerSkill("shichou$") {
         events << GameStart << EventPhaseStart << DamageInflicted << Dying;
         frequency = Limited;
+        view_as_skill = new ShichouViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *player) const{
@@ -943,29 +997,11 @@ public:
             room->addPlayerMark(player, "@hate");
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
                   && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
-            QList<ServerPlayer *> targets = room->getOtherPlayers(player);
-            QList<ServerPlayer *> victims;
-
-            foreach (ServerPlayer *p, targets) {
-                if (p->getKingdom() == "shu")
-                    victims << p;
-            }
-            if (victims.empty())
-                return false;
-            if (player->askForSkillInvoke(objectName())) {
-                room->broadcastSkillInvoke(objectName());
-                room->doLightbox("$ShichouAnimate", 4500);
-
-                player->loseMark("@hate", 1);
-                room->setPlayerMark(player, "xhate", 1);
-                ServerPlayer *victim = room->askForPlayerChosen(player, victims, objectName());
-                victim->gainMark("@hate_to");
-                room->setPlayerMark(victim, "hate_" + player->objectName(), 1);
-
-                const Card *card = room->askForExchange(player, objectName(), 2, true, "ShichouGive");
-                CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName());
-                reason.m_playerId = victim->objectName();
-                room->obtainCard(victim, card, reason, false);
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (p->getKingdom() == "shu") {
+                    room->askForUseCard(player, "@@shichou", "@shichou-give", -1, Card::MethodNone);
+                    break;
+                }
             }
         } else if (event == DamageInflicted && player->hasLordSkill(objectName()) && !player->hasFlag("ShichouTarget")) {
             ServerPlayer *target = NULL;
@@ -1527,6 +1563,7 @@ BGMPackage::BGMPackage(): Package("BGM") {
     addMetaObject<LihunCard>();
     addMetaObject<DaheCard>();
     addMetaObject<TanhuCard>();
+    addMetaObject<ShichouCard>();
     addMetaObject<YanxiaoCard>();
     addMetaObject<YinlingCard>();
 }

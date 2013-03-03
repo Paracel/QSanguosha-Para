@@ -450,7 +450,7 @@ sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, in
 	if #to_discard < min_num then return {} else return to_discard end
 end
 
-sgs.ai_skill_invoke.shichou = function(self, data)
+local function will_invoke_shichou(self)
 	local enemynum = 0
 	local shu = 0
 	local first = self.player:hasFlag("FirstRound")
@@ -469,7 +469,7 @@ sgs.ai_skill_invoke.shichou = function(self, data)
 	return true
 end
 
-sgs.ai_skill_playerchosen.shichou = function(self, targets)
+local function player_chosen_shichou(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "hp")
 	targets = sgs.reverse(targets)
@@ -493,6 +493,19 @@ sgs.ai_skill_playerchosen.shichou = function(self, targets)
 		end
 	end
 	return targets[1]
+end
+
+sgs.ai_skill_use["@@shichou"] = function(self, prompt)
+	if will_invoke_shichou(self) then
+		local to_discard = self:askForDiscard("shichou", 2, 2, false, true)
+		if #to_discard == 2 then
+			local target = player_chosen_shichou(self, self.room:getOtherPlayers(self.player))
+			if target then
+				return ("@ShichouCard=%d+%d->%s"):format(to_discard[1], to_discard[2], target:objectName())
+			end
+		end
+	end
+	return "."
 end
 
 sgs.ai_need_damaged.shichou = function(self, attacker)
@@ -522,7 +535,11 @@ sgs.ai_need_damaged.shichou = function(self, attacker)
 	return false
 end
 
-sgs.ai_skill_discard.shichou = sgs.ai_skill_discard.lihun
+sgs.ai_card_intention.ShichouCard = function(self, card, from, tos)
+	if from:hasSkill("weidi") and tos[1]:isLord() then
+		sgs.updateIntention(from, tos[1], 80)
+	end
+end
 
 function SmartAI:useCardYanxiaoCard(card, use)
 	local players = self.room:getOtherPlayers(self.player)

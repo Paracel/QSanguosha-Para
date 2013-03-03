@@ -89,7 +89,8 @@ return {
 	[":shichou"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"red\"><b>限定技。</b></font>回合开始阶段开始时，你可以选择一名其他蜀势力角色并交给其两张牌。每当你受到伤害时，你将此伤害转移给该角色，然后该角色摸X张牌，直到其第一次进入濒死状态时。（X为伤害点数）",
 	["@hate"] = "誓仇",
 	["@hate_to"] = "誓仇",
-	["ShichouGive"] = "请交给目标角色 %arg 张牌",
+	["@shichou-give"] = "你可以发动“誓仇”",
+	["~shichou"] = "选择两张牌→选择一名其他蜀势力角色→点击确定",
 	["$ShichouAnimate"] = "image=image/animate/shichou.png",
 	["#ShichouProtect"] = "%from 的“%arg”被触发，将伤害转移给 %to ",
 

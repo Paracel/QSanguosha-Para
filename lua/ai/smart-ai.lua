@@ -4059,12 +4059,17 @@ function SmartAI:getAoeValueTo(card, to, from)
 
 		if self:getDamagedEffects(to, from) and not from:hasSkill("jueqing") then value = value + 50 end
 		if card:isKindOf("ArcheryAttack") then
-			sj_num = getCardsNum("Jink", to)
-			if (to:hasSkill("leiji") and sj_num >= 1) or self:hasEightDiagramEffect(to) then
-				value = value + 40
-				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 70 end
+			if to:hasSkill("leiji") and (sj_num >= 1 or self:hasEightDiagramEffect(to)) then
+				value = value + 50
+				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 50 end
+			elseif self:hasEightDiagramEffect(to) then
+				value = value + 30
+				if self:getFinalRetrial(to) == 2 then
+					value = value - 10
+				elseif self:getFinalRetrial(to) == 1 then
+					value = value + 20
+				end
 			end
-			if self:hasEightDiagramEffect(to) then value = value + 30 end
 		end
 
 		if self.room:getMode() ~= "06_3v3" and self.room:getMode() ~= "06_XMode" and not from:hasSkill("jueqing") then

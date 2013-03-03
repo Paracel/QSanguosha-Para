@@ -4047,7 +4047,7 @@ function SmartAI:getJiemingChaofeng(player)
 end
 
 function SmartAI:getAoeValueTo(card, to, from)
-	if not from then from = self.player end
+	from = from or self.player
 	local value, sj_num = 0, 0
 
 	if card:isKindOf("ArcheryAttack") then sj_num = getCardsNum("Jink", to) end
@@ -4057,8 +4057,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 		value = value - (sj_num < 1 and 30 or 0) 
 		value = value - (self:isWeak(to) and 40 or 20)
 
-		if self:getDamagedEffects(to, from) then value = value + 50 end
-		if to:hasSkill("jianxiong") and sgs.isGoodHp(to) then value = value + 30 end
+		if self:getDamagedEffects(to, from) and not from:hasSkill("jueqing") then value = value + 50 end
 		if card:isKindOf("ArcheryAttack") then
 			sj_num = getCardsNum("Jink", to)
 			if (to:hasSkill("leiji") and sj_num >= 1) or self:hasEightDiagramEffect(to) then
@@ -4066,6 +4065,32 @@ function SmartAI:getAoeValueTo(card, to, from)
 				if self:hasSuit("spade", true, to) or to:getHandcardNum() >= 3 then value = value + 70 end
 			end
 			if self:hasEightDiagramEffect(to) then value = value + 30 end
+		end
+
+		if self.room:getMode() ~= "06_3v3" and self.room:getMode() ~= "06_XMode" and not from:hasSkill("jueqing") then
+			if to:getHp() == 1 and not to:hasSkill("buqu") and from:isLord() and sgs.evaluateRoleTrends(to) == "loyalist" and self:getCardsNum("Peach") == 0 then
+				value = value - from:getCardCount(true) * 20
+			end
+		end
+
+		if to:getHp() > 1 then
+			if not from:hasSkill("jueqing") then
+				if to:hasSkill("jianxiong") and sgs.isGoodHp(to) then
+					value = value + (card:isVirtualCard() and card:subcardsLength() * 15 or 30)
+				end
+				if to:hasSkill("ganglie") then value = value + 10 end
+				if to:hasSkill("neoganglie") then value = value + 20 end
+				if to:hasSkill("guixin") then
+					value = value + (not to:faceUp() and 20 or 0)
+					value = value + self.player:aliveCount() * 5
+				end
+				if to:hasSkill("fenyong") and to:hasSkill("xuehen") and to:getMark("@fenyong") == 0 then
+					value = value + 10
+				end
+				if to:hasSkill("shenfen") and to:hasSkill("kuangbao") then
+					value = value + math.min(25, to:getMark("@wrath") * 5)
+				end
+			end
 		end
 	else
 		if to:hasSkill("juxiang") and card:isKindOf("SavageAssault") and not card:isVirtualCard() then value = value + 50 end
@@ -4129,9 +4154,9 @@ function SmartAI:getAoeValue(card, player)
 	local liuxie = self.room:findPlayerBySkillName("huangen")
 	if liuxie and self.player:aliveCount() > 2 and liuxie:getHp() > 0 then
 		if self:isFriend(liuxie) then
-			good = good + 30 * liuxie:getHp()
+			good = good + 30 * math.min(liuxie:getHp(), #(self:getFriends(liuxie)) - 1)
 		else
-			bad = bad + 30 * liuxie:getHp()
+			bad = bad + 30 * math.min(liuxie:getHp(), #(self:getFriends(liuxie)))
 		end
 	end
 
@@ -4146,7 +4171,7 @@ function SmartAI:getAoeValue(card, player)
 	end
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(attacker)) do
-		if self:cantbeHurt(player) and self:aoeIsEffective(card, player, attacker) then
+		if not attacker:hasSkill("jueqing") and self:cantbeHurt(player) and self:aoeIsEffective(card, player, attacker) then
 			bad = bad + 250
 		end
 	end
@@ -4156,7 +4181,7 @@ function SmartAI:getAoeValue(card, player)
 		forbid_start = false
 		good = good + 25
 	end
-	if self.player:hasSkill("shenfen") and self.player:hasSkill("kuangbao") then
+	if attacker:hasSkill("shenfen") and attacker:hasSkill("kuangbao") and not attacker:hasSkill("jueqing") then
 		forbid_start = false
 		good = good + 15
 		if not self.player:hasSkill("wumou") then

@@ -939,10 +939,8 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == GameStart) {
-            foreach (ServerPlayer *p, room->getAlivePlayers())
-                if (p->hasLordSkill("shichou"))
-                    room->addPlayerMark(p, "@hate");
+        if (event == GameStart && player->hasLordSkill("shichou")) {
+            room->addPlayerMark(player, "@hate");
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
                   && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
             QList<ServerPlayer *> targets = room->getOtherPlayers(player);

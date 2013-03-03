@@ -323,7 +323,7 @@ xueji_skill.getTurnUseCard = function(self, inclusive)
 	end
 end
 
-local function can_be_selected_as_target(self, card, who)
+local function can_be_selected_as_target_xueji(self, card, who)
 	-- validation of rule
 	if self.player:getWeapon() and self.player:getWeapon():getEffectiveId() == card:getEffectiveId() then
 		if self.player:distanceTo(who, sgs.weapon_range[self.player:getWeapon():getClassName()] - 1) > self.player:getAttackRange() then return false end
@@ -376,14 +376,14 @@ sgs.ai_skill_use_func.XuejiCard = function(card, use, self)
 	self:sort(self.enemies)
 	local to_use = false
 	for _, enemy in ipairs(self.enemies) do
-		if can_be_selected_as_target(self, card, enemy) then
+		if can_be_selected_as_target_xueji(self, card, enemy) then
 			to_use = true
 			break
 		end
 	end
 	if not to_use then
 		for _, friend in ipairs(self.friends_noself) do
-			if can_be_selected_as_target(self, card, friend) then
+			if can_be_selected_as_target_xueji(self, card, friend) then
 				to_use = true
 				break
 			end
@@ -393,13 +393,13 @@ sgs.ai_skill_use_func.XuejiCard = function(card, use, self)
 		use.card = card
 		if use.to then
 			for _, enemy in ipairs(self.enemies) do
-				if can_be_selected_as_target(self, card, enemy) then
+				if can_be_selected_as_target_xueji(self, card, enemy) then
 					use.to:append(enemy)
 					if use.to:length() == self.player:getLostHp() then return end
 				end
 			end
 			for _, friend in ipairs(self.friends_noself) do
-				if can_be_selected_as_target(self, card, friend) then
+				if can_be_selected_as_target_xueji(self, card, friend) then
 					use.to:append(friend)
 					if use.to:length() == self.player:getLostHp() then return end
 				end

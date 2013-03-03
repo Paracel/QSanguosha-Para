@@ -2371,6 +2371,42 @@ bool Room::_setPlayerGeneral(ServerPlayer *player, const QString &generalName, b
 
 void Room::speakCommand(ServerPlayer *player, const QString &arg) {
     broadcastInvoke("speak", QString("%1:%2").arg(player->objectName()).arg(arg));
+    QString sentence = QString::fromUtf8(QByteArray::fromBase64(arg.toAscii()));
+    if (player && Config.EnableCheat) {
+        if (sentence == ".BroadcastRoles") {
+            foreach (ServerPlayer *p, m_alivePlayers)
+                broadcastProperty(p, "role", p->getRole());
+        } else if (sentence.startsWith(".BroadcastRoles=")) {
+            QString name = sentence.mid(12);
+            foreach (ServerPlayer *p, m_alivePlayers) {
+                if (p->objectName() == name || p->getGeneralName() == name) {
+                    broadcastProperty(p, "role", p->getRole());
+                    break;
+                }
+            }
+        } else if (sentence.startsWith(".ShowHandCards=")) {
+            QString name = sentence.mid(15);
+            foreach (ServerPlayer *p, m_alivePlayers) {
+                if (p->objectName() == name || p->getGeneralName() == name) {
+                    if (!p->isKongcheng()) {
+                        QStringList handcards;
+                        foreach (const Card *card, p->getHandcards())
+                            handcards << card->getLogName();
+                        QString hand = handcards.join(", ");
+                        speakCommand(p, hand.toUtf8().toBase64());
+                    }
+                    break;
+                }
+            }
+        } else if (sentence.startsWith(".SetAIDelay=")) {
+            bool ok = false;
+            int delay = sentence.mid(12).toInt(&ok);
+            if (ok) {
+                Config.AIDelay = Config.OriginAIDelay = delay;
+                Config.setValue("OriginAIDelay", delay);
+            }
+        }
+    }
 }
 
 void Room::processResponse(ServerPlayer *player, const QSanGeneralPacket *packet) {

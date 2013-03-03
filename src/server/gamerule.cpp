@@ -270,6 +270,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             const Card *peach = NULL;
 
             while (dying.who->getHp() <= 0) {
+                peach = NULL;
                 if (dying.who->isAlive())
                     peach = room->askForSinglePeach(player, dying.who);
                 if (peach == NULL)

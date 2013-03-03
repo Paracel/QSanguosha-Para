@@ -641,7 +641,7 @@ sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 	if self:getDamagedEffects(self.player, use.from, true) then
 		return "."
 	end
-	if self:needLostHp(self.player, use.from, true) then
+	if self:needLoseHp(self.player, use.from, true) then
 		return "."
 	end
 	if from:hasWeapon("axe") and self:hasSkills(sgs.lose_equip_skill, from) and from:getEquips():length() > 1 then

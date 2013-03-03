@@ -100,6 +100,7 @@ sgs.ai_use_priority.XinzhanCard = 9.4
 
 function sgs.ai_slash_prohibit.huilei(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasFlag("nosjiefanUsed") then return false end
 	if self:isFriend(to, from) and self:isWeak(to) then return true end
 	return #(self:getEnemies(from)) > 1 and self:isWeak(to) and from:getHandcardNum() > 3
 end
@@ -161,6 +162,7 @@ end
 
 function sgs.ai_slash_prohibit.enyuan(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasFlag("nosjiefanUsed") then return false end
 	local num = from:getHandcardNum()
 	if num >= 3 or from:hasSkill("lianying") or (from:hasSkill("kongcheng") and num == 2) then return false end
 	return true

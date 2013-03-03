@@ -4609,7 +4609,7 @@ function getBestHp(player)
 	return player:getMaxHp()
 end
 
-function SmartAI:needLostHp(to, from, isSlash)
+function SmartAI:needLoseHp(to, from, isSlash)
 	from = from or self.room:getCurrent()
 	to = to or self.player
 	if isSlash and not from:hasSkill("jueqing") then

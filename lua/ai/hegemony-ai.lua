@@ -238,7 +238,7 @@ fenxun_skill.getTurnUseCard = function(self)
 		end
 
 		if not card_id and self.player:getWeapon() then
-			card_id = player:getWeapon():getId()
+			card_id = self.player:getWeapon():getId()
 		end
 
 		if not card_id then

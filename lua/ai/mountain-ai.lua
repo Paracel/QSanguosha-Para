@@ -804,6 +804,7 @@ end
 
 function sgs.ai_slash_prohibit.duanchang(self, from, to)
 	if from:hasSkill("jueqing") or (fromm:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasFlag("nosjiefanUsed") then return false end
 	if to:getHp() > 1 or #(self:getEnemies(from)) == 1 then return false end
 	if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
 	if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end

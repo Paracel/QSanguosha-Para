@@ -251,6 +251,7 @@ end
 
 function sgs.ai_slash_prohibit.ganglie(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasFlag("nosjiefanUsed") then return false end
 	return from:getHandcardNum() + from:getHp() < 4
 end
 
@@ -735,7 +736,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local jijiangtargets = {}
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("JijiangTarget") then
-			if self:isFriend(player) and not (self:needLostHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
+			if self:isFriend(player) and not (self:needLoseHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
 			table.insert(jijiangtargets, player)
 		end
 	end
@@ -1319,7 +1320,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 
 	for _, friend in ipairs(self.friends_noself) do
-		if self:needLostHp(friend, source, true) or self:getDamagedEffects(friend, source, true) then
+		if self:needLoseHp(friend, source, true) or self:getDamagedEffects(friend, source, true) then
 			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end
@@ -1358,6 +1359,7 @@ end
 
 function sgs.ai_slash_prohibit.liuli(self, from, to, card)
 	if self:isFriend(to, from) then return false end
+	if from:hasFlag("nosjiefanUsed") then return false end
 	if to:isNude() then return false end
 	for _, friend in ipairs(self:getFriendsNoself(from)) do
 		if to:canSlash(friend, card) and self:slashIsEffective(card, friend, from) then return true end

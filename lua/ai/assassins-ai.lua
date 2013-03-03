@@ -233,7 +233,7 @@ sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
 		end
 	end
 	if self:getDamagedEffects(self.player, damage.from) and damage.damage <= 1 then return "." end
-	if self:needLostHp(self.player, damage.from) and damage.damage <= 1 then return "." end
+	if self:needLoseHp(self.player, damage.from) and damage.damage <= 1 then return "." end
 	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end
 	end

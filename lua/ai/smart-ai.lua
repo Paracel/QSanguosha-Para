@@ -4115,7 +4115,7 @@ function SmartAI:getAoeValue(card, player)
 
 	if card:isKindOf("SavageAssault") then
 		local menghuo = self.room:findPlayerBySkillName("huoshou")
-		attacker = attacker and menghuo
+		attacker = menghuo or attacker
 	end
 
 	for _, friend in ipairs(self.friends_noself) do

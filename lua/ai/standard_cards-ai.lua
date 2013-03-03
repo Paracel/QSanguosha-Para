@@ -99,12 +99,17 @@ function sgs.getDefenseSlash(player)
 	if sgs.card_lack[player:objectName()]["Jink"] == 1 and knownJink == 0 then defense = 0 end
  	defense = defense + knownJink * 1.2
 
-	if player:getMark("@qianxi_red") > 0 and not player:hasSkill("qingguo") and not hasEightDiagramEffect then
-		defense = 0
-	end
-
 	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and not attacker:hasWeapon("qinggang_sword") then
 		hasEightDiagram = true
+	end
+
+	if not hasEightDiagramEffect then
+		if player:getMark("@qianxi_red") > 0 and (not player:hasSkill("qingguo") and not (player:hasSkill("longhun") and player:getHp() == 1)) then
+			defense = 0
+		elseif player:getMark("@qianxi_black") > 0 then
+			if player:hasSkill("qingguo") then defense = defense / 2 end
+			if player:hasSkill("longhun") and player:getHp() == 1 then defense = defense * 3 / 4 end
+		end
 	end
 
 	if hasEightDiagram then

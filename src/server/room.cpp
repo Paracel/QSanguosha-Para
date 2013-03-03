@@ -397,8 +397,16 @@ QStringList Room::aliveRoles(ServerPlayer *except) const{
 
 void Room::gameOver(const QString &winner) {
     QStringList all_roles;
-    foreach (ServerPlayer *player, m_players)
+    foreach (ServerPlayer *player, m_players) {
         all_roles << player->getRole();
+        if (player->getHandcardNum() > 0) {
+            QStringList handcards;
+            foreach (const Card *card, player->getHandcards())
+                handcards << Sanguosha->getEngineCard(card->getId())->getLogName();
+            QString handcard = handcards.join(", ").toUtf8().toBase64();
+            setPlayerFlag(player, QString("LastHandCards:%1").arg(handcard));
+        }
+    }
 
     game_finished = true;
 

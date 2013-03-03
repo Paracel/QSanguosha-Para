@@ -2808,7 +2808,7 @@ void RoomScene::doScript() {
 }
 
 void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *> &players) {
-    table->setColumnCount(9);
+    table->setColumnCount(10);
     table->setRowCount(players.length());
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -2824,6 +2824,7 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
             labels << tr("Role");
 
         labels << tr("Recover") << tr("Damage") << tr("Damaged") << tr("Kill") << tr("Designation");
+        labels << tr("Handcards");
 
     }
     table->setHorizontalHeaderLabels(labels);
@@ -2882,9 +2883,24 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
         item = new QTableWidgetItem;
         item->setText(rec->m_designation.join(", "));
         table->setItem(i, 8, item);
+
+        item = new QTableWidgetItem;
+        QString handcards;
+        foreach (QString flag, player->getFlagList()) {
+            if (flag.startsWith("LastHandCards:")) {
+                handcards = QString::fromUtf8(QByteArray::fromBase64(flag.mid(14).toAscii()));
+                handcards.replace("<img src='image/system/log/spade.png' height = 12/>", tr("Spade"));
+                handcards.replace("<img src='image/system/log/heart.png' height = 12/>", tr("Heart"));
+                handcards.replace("<img src='image/system/log/club.png' height = 12/>", tr("Club"));
+                handcards.replace("<img src='image/system/log/diamond.png' height = 12/>", tr("Diamond"));
+                break;
+            }
+        }
+        item->setText(handcards);
+        table->setItem(i, 9, item);
     }
 
-    for (int i = 2; i <= 8; i++)
+    for (int i = 2; i <= 9; i++)
         table->resizeColumnToContents(i);
 }
 

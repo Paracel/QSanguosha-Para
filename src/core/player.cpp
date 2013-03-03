@@ -716,22 +716,30 @@ QSet<const TriggerSkill *> Player::getTriggerSkills() const{
     return skillList;
 }
 
-QSet<const Skill *> Player::getVisibleSkills(bool include_equip) const{
-    return getVisibleSkillList(include_equip).toSet();
+QSet<const Skill *> Player::getSkills(bool include_equip, bool visible_only) const{
+    return getSkillList(include_equip, visible_only).toSet();
 }
 
-QList<const Skill *> Player::getVisibleSkillList(bool include_equip) const{
+QList<const Skill *> Player::getSkillList(bool include_equip, bool visible_only) const{
     QList<const Skill *> skillList;
 
     foreach (QString skill_name, skills + acquired_skills.toList()) {
         const Skill *skill = Sanguosha->getSkill(skill_name);
         if (skill
             && (include_equip || !hasEquipSkill(skill->objectName()))
-            && skill->isVisible())
+            && (!visible_only || skill->isVisible()))
             skillList << skill;
     }
 
     return skillList;
+}
+
+QSet<const Skill *> Player::getVisibleSkills(bool include_equip) const{
+    return getVisibleSkillList(include_equip).toSet();
+}
+
+QList<const Skill *> Player::getVisibleSkillList(bool include_equip) const{
+    return getSkillList(include_equip, true);
 }
 
 QSet<QString> Player::getAcquiredSkills() const{

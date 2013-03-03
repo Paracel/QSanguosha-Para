@@ -3539,7 +3539,7 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
     for (int i = 0; i < cards.size(); i++)
         cardChanged[i] = false;
 
-    QSet<const Skill *> skills = player->getVisibleSkills();
+    QSet<const Skill *> skills = player->getSkills(false, false);
     QList<const FilterSkill *> filterSkills;
 
     foreach (const Skill *skill, skills) {

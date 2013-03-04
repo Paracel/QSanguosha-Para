@@ -513,22 +513,16 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getCardCount(true) >= 2 && Slash::IsAvailable(player);
+        return player->getHandcardNum() >= 2 && Slash::IsAvailable(player);
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
-               && player->getCardCount(true) >= 2 && pattern == "slash";
+               && player->getHandcardNum() >= 2 && pattern == "slash";
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        if (selected.length() >= 2)
-            return false;
-        if (Self->getWeapon()
-            && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->objectName() == "crossbow")
-            return Self->canSlashWithoutCrossbow();
-        else
-            return true;
+        return selected.length() < 2 && !to_select->isEquipped();
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
@@ -546,25 +540,30 @@ public:
 class Fuhun: public TriggerSkill {
 public:
     Fuhun(): TriggerSkill("fuhun") {
-        events << Damage << EventPhaseChanging;
+        events << PreDamageDone << EventPhaseChanging;
         view_as_skill = new FuhunViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shuangying, QVariant &data) const{
-        if (event == Damage) {
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == PreDamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()) {
-                room->acquireSkill(shuangying, "wusheng");
-                room->acquireSkill(shuangying, "paoxiao");
+            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()
+                && damage.from->getPhase() == Player::Play) {
+                room->acquireSkill(damage.from, "wusheng");
+                room->acquireSkill(damage.from, "paoxiao");
 
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
-                shuangying->setFlags(objectName());
+                damage.from->setFlags(objectName());
             }
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive && shuangying->hasFlag(objectName())) {
-                room->detachSkillFromPlayer(shuangying, "wusheng");
-                room->detachSkillFromPlayer(shuangying, "paoxiao");
+            if (change.to == Player::NotActive && player->hasFlag(objectName())) {
+                room->detachSkillFromPlayer(player, "wusheng");
+                room->detachSkillFromPlayer(player, "paoxiao");
             }
         }
 

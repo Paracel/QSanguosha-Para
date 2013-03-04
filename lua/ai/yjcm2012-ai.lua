@@ -561,7 +561,7 @@ sgs.chunlao_keep_value = {
 }
 
 sgs.ai_skill_invoke.zhiyu = function(self, data)
-	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
+	local manjuan = (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive)
 	local damage = data:toDamage()
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
@@ -575,12 +575,15 @@ sgs.ai_skill_invoke.zhiyu = function(self, data)
 		end
 	end
 	if difcolor == 0 and damage.from then
-		if self:isFriend(damage.from) and not damage.from:isKongcheng() then
+		if self:isFriend(damage.from) and (not damage.from:isKongcheng() or manjuan) then
 			return false
-		elseif self:isEnemy(damage.from) and #self.friends > 1 and damage.from:getHandcardNum() == 1 and damage.from:hasSkill("sijian") then
-			return false
+		elseif self:isEnemy(damage.from) then
+			if #self.friends > 1 and damage.from:getHandcardNum() == 1 and damage.from:hasSkill("sijian") then return false end
+			if manjuan and self.player:isKongcheng() then return false end
+			return true
 		end
 	end
+	if manjuan then return false end
 	return true
 end
 

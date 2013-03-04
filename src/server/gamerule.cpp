@@ -1100,10 +1100,12 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
             player->bury();
             if (Config.EnableHegemony) {
                 ServerPlayer *killer = death.damage ? death.damage->from : NULL;
-                if (killer && killer->getKingdom() == player->getKingdom())
-                    killer->throwAllHandCardsAndEquips();
-                else if (killer && killer->isAlive())
-                    killer->drawCards(3);
+                if (killer && killer->getKingdom() != "god") {
+                    if (killer->getKingdom() == player->getKingdom())
+                        killer->throwAllHandCardsAndEquips();
+                    else if (killer->isAlive())
+                        killer->drawCards(3);
+                }
                 return true;
             }
 

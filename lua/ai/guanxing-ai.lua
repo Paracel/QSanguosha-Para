@@ -194,12 +194,12 @@ local function GuanXing(self, cards)
 				end
 			end
 			if #peach > 0 then
-				for _,peach in ipairs(peach) do
+				for _, peach in ipairs(peach) do
 					table.insert(bottom, peach)
 				end
 			end
 			if #basic > 0 then
-				for _,card in ipairs(basic) do
+				for _, card in ipairs(basic) do
 					table.insert(bottom, card)
 				end
 			end
@@ -236,7 +236,7 @@ local function GuanXing(self, cards)
 				if next_player:hasSkill("luoshen") then
 					if for_judge:isBlack() then
 						table.insert(next_judge, for_judge)
-						table.remove(bottom, index)	
+						table.remove(bottom, index)
 						has_judged = true
 						judged_list[pos] = 1
 						break
@@ -253,7 +253,7 @@ local function GuanXing(self, cards)
 			else
 				if next_player:hasSkill("luoshen") and for_judge:isRed() and not luoshen_flag then
 					table.insert(next_judge, for_judge)
-					table.remove(bottom, index)	
+					table.remove(bottom, index)
 					has_judged = true
 					judged_list[pos] = 1
 					luoshen_flag = true

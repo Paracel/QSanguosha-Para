@@ -30,7 +30,7 @@ lihun_skill.getTurnUseCard = function(self)
 	elseif self.player:getHandcardNum() > self.player:getHp() then
 		if lightning and not self:willUseLightning(lightning) then
 			card_id = lightning:getEffectiveId()
-		else	
+		else
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
 					and not acard:isKindOf("Peach") then 
@@ -806,7 +806,7 @@ sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
 			if self:hasSkills("jijiu|qingnang|jieyin", enemy) then
 				local cardchosen
 				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
-				for _ , equip in ipairs(equips) do
+				for _, equip in ipairs(equips) do
 					if equip and equip:isRed() and enemy:hasSkill("jijiu") then 
 						cardchosen = equip:getEffectiveId()
 						break

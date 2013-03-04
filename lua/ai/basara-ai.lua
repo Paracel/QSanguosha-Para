@@ -31,12 +31,12 @@ function askForShowGeneral(self, choices)
 	for _, player in ipairs(players) do
 		if self:hasSkills(skills_to_show, player) then return "yes" end
 	end
-	if self.player:getDefensiveHorse() and self.player:getArmor() and not self:isWeak() then return "yes" end	
+	if self.player:getDefensiveHorse() and self.player:getArmor() and not self:isWeak() then return "yes" end
 end
 
 sgs.ai_skill_choice.RevealGeneral = function(self, choices)
 	if askForShowGeneral(self, choices) == "yes" then return "yes" end
-	
+
 	local anjiang = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if player:getGeneralName() == "anjiang" then
@@ -60,7 +60,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 		end
 		init(self, player)
 	end
-	sgs.ai_skill_choice.RevealGeneral = function(self, choices)	
+	sgs.ai_skill_choice.RevealGeneral = function(self, choices)
 		if askForShowGeneral(self, choices) == "yes" then return "yes" end
 
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do

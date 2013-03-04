@@ -1761,7 +1761,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-		
+
 		local lord = self.room:getLord()
 		if card and lord and lord:getHp() == 1 and self:aoeIsEffective(card, lord, from) then
 			if card:isKindOf("SavageAssault") then
@@ -1799,7 +1799,7 @@ function SmartAI:filterEvent(event, player, data)
 		end
 		local reason = move.reason
 		local from_places = sgs.QList2Table(move.from_places)
-		
+
 		for i = 1, move.card_ids:length() do
 			local place = move.from_places:at(i - 1)
 			local card_id = move.card_ids:at(i - 1)
@@ -1857,7 +1857,7 @@ function SmartAI:filterEvent(event, player, data)
 			end]]
 
 			if reason.m_skillName == "qiaobian" and from and move.to and self.room:getCurrent():objectName() == player:objectName() then
-				if table.contains(from_places,sgs.Player_PlaceDelayedTrick) then
+				if table.contains(from_places, sgs.Player_PlaceDelayedTrick) then
 					if card:isKindOf("YanxiaoCard") then
 						sgs.updateIntention(player, from, 80)
 						sgs.updateIntention(player, move.to, -80)
@@ -1893,7 +1893,7 @@ function SmartAI:filterEvent(event, player, data)
 							end
 						end
 						if player:canSlash(target, card, true) and self:slashIsEffective(card, target)
-							and not has_slash_prohibit_skill and sgs.isGoodTarget(target,self.enemies, self) then
+							and not has_slash_prohibit_skill and sgs.isGoodTarget(target, self.enemies, self) then
 							if is_neutral then sgs.updateIntention(player, target, -35) end
 						end
 					end
@@ -2958,7 +2958,7 @@ function SmartAI:askForSinglePeach(dying)
 	end
 	if self:isFriend(dying) then
 		if self:needDeath(dying) then return "." end
-		
+
 		local lord = self.room:getLord()
 		if not sgs.GetConfig("EnableHegemony", false) and lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
 			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
@@ -3041,7 +3041,6 @@ function SmartAI:getTurnUse()
 	if self.player:hasWeapon("crossbow") then
 		slashAvail = 100
 	end
-
 
 	local i = 0
 	for _, card in ipairs(cards) do
@@ -3217,7 +3216,7 @@ function SmartAI:needRetrial(judge)
 			return judge:isGood()
 		end
 	end
-	
+
 	if reason == "tieji" then
 		local target
 		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
@@ -3338,7 +3337,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 		end
 	end  
 	if player:hasLordSkill("shichou") then
-		return sgs.ai_need_damaged.shichou(self,attacker) == 1
+		return sgs.ai_need_damaged.shichou(self, attacker) == 1
 	end
 
 	if self:hasHeavySlashDamage(attacker) then return false end
@@ -3923,7 +3922,7 @@ end
 
 function SmartAI:aoeIsEffective(card, to, source)
 	source = source or self.player
-	
+
 	if source:hasSkill("noswuyan") or to:hasSkill("noswuyan") then
 		return false
 	end
@@ -4490,7 +4489,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 	friends = include_self and self.friends or self.friends_noself
 	enemies = self.enemies
 	flags = flags or "he"
-	
+
 	self:sort(enemies, "defense")
 	if flags:match("e") then
 		for _, enemy in ipairs(enemies) do

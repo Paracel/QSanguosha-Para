@@ -3,7 +3,7 @@ sgs.weapon_range.SPMoonSpear = 3
 sgs.ai_skill_invoke.sp_moonspear = function(self, data)
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	for _, target in ipairs(self.enemies) do
-		if self.player:canSlash(target) and not self:slashProhibit(slash , target) then
+		if self.player:canSlash(target) and not self:slashProhibit(slash, target) then
 		return true
 		end
 	end

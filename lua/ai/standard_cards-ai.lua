@@ -3,7 +3,7 @@ function SmartAI:canAttack(enemy, attacker, nature)
 	nature = nature or sgs.DamageStruct_Normal
 	if #self.enemies == 1 or self:hasSkills("jueqing") then return true end
 	if self:getDamagedEffects(enemy, attacker) or (enemy:getHp() > getBestHp(enemy) and #self.enemies > 1) or not sgs.isGoodTarget(enemy, self.enemies, self) then return false end
-	if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy, nature , attacker) then return false end
+	if self:objectiveLevel(enemy) <= 3 or self:cantbeHurt(enemy) or not self:damageIsEffective(enemy, nature, attacker) then return false end
 	if nature ~= sgs.DamageStruct_Normal and enemy:isChained() and not self:isGoodChainTarget(enemy) then return false end
 	return true
 end
@@ -202,7 +202,7 @@ function sgs.getDefenseSlash(player)
 
 	if player:containsTrick("indulgence") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
 	if player:containsTrick("supply_shortage") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
-	
+
 	if (attacker:hasSkill("roulin") and player:isFemale()) or (attacker:isFemale() and player:hasSkill("roulin")) then
 		defense = defense - 1.4
 	end
@@ -1176,7 +1176,7 @@ function SmartAI:useCardDuel(duel, use)
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 
 	local canUseDuelTo = function(target)
-		return self:hasTrickEffective(duel, target) and self:damageIsEffective(target,sgs.DamageStruct_Normal) and not self.room:isProhibited(self.player, target, duel)
+		return self:hasTrickEffective(duel, target) and self:damageIsEffective(target, sgs.DamageStruct_Normal) and not self.room:isProhibited(self.player, target, duel)
 	end
 
 	for _, friend in ipairs(friends) do
@@ -1237,7 +1237,7 @@ function SmartAI:useCardDuel(duel, use)
 
 	for _, enemy in ipairs(enemies) do
 		local useduel 
-		local n2 = getCardsNum("Slash",enemy)
+		local n2 = getCardsNum("Slash", enemy)
 		if sgs.card_lack[enemy:objectName()]["Slash"] == 1 then n2 = 0 end
 		useduel = n1 >= n2 or self.player:getHp() > getBestHp(self.player) 
 					or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
@@ -1488,7 +1488,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			end
 		end
 	end
-	
+
 	local new_enemies = table.copyFrom(enemies)
 	local compare_JudgingArea = function(a, b)
 		return a:getJudgingArea():length() > b:getJudgingArea():length()
@@ -1542,7 +1542,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			if self:hasSkills("jijiu|qingnang|jieyin", enemy) then
 				local cardchosen
 				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
-				for _ , equip in ipairs(equips) do
+				for _, equip in ipairs(equips) do
 					if equip and equip:isRed() and enemy:hasSkill("jijiu") then 
 						cardchosen = equip:getEffectiveId()
 						break
@@ -1571,7 +1571,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			end
 		end
 	end
-	
+
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() and self:hasTrickEffective(card, enemy)
@@ -2059,7 +2059,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		if acard:getTypeId() == sgs.Card_TypeTrick then
 			table.insert(trickCards, acard)
 		end
-	end	
+	end
 
 	local overflow = (self.player:getPhase() == sgs.Player_NotActive) or (self.player:getHandcardNum() + 2 > self.player:getMaxCards())
 

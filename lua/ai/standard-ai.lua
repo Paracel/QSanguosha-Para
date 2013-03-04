@@ -291,7 +291,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		and self:getEnemyNumBySeat(self.player, jiangwei) <= (jiangwei:getHp() >= 3 and 1 or 0) then
 		if add_player(jiangwei, 1) == 2  then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 	end
-	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player,dengai) == 0)
+	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player, dengai) == 0)
 		and dengai:getMark("zaoxian") == 0 and dengai:getPile("field"):length() == 2 and add_player(dengai, 1) == 2 then 
 		return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) 
 	end
@@ -894,7 +894,7 @@ sgs.ai_skill_invoke.tieji = function(self, data)
 
 	local zj = self.room:findPlayerBySkillName("guidao")
 	if zj and self:isEnemy(zj) and self:canRetrial(zj) then return false end
-	
+
 	if target:hasArmorEffect("eight_diagram") and not self.player:hasWeapon("qinggang_sword") then return true end
 	if target:hasLordSkill("hujia") then
 		for _, p in ipairs(self.enemies) do
@@ -1588,7 +1588,7 @@ table.insert(sgs.ai_skills, lijian_skill)
 lijian_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LijianCard") or self.player:isNude() then
 		return 
-	end	
+	end
 	local card_id
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
@@ -1859,7 +1859,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			local lord = self.room:getLord()
 			if first:getHp() <= 1 then
 				if self.player:isLord() or sgs.isRolePredictable() then 
-					local friend_maxSlash = findFriend_maxSlash(self,first)
+					local friend_maxSlash = findFriend_maxSlash(self, first)
 					if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then second = friend_maxSlash end
 				elseif lord and lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
 					if self.role == "rebel" and not lord:isCardLimited(duel, sgs.Card_MethodUse) and not first:isLord() and self:damageIsEffective(lord, sgs.DamageStruct_Normal, first) then

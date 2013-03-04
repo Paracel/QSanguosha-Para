@@ -472,7 +472,7 @@ luanji_skill.getTurnUseCard = function(self)
 				for _, scard in ipairs(cards) do
 					if first_card ~= scard and scard:getSuit() == first_card:getSuit()
 						and not (isCard("Peach", scard, self.player) or isCard("ExNihilo", scard, self.player) or isCard("AOE", scard, self.player)) then
-						
+
 						local dummy_use = { isDummy = true }
 						self:useTrickCard(archeryattack, dummy_use)
 						if not dummy_use.card then

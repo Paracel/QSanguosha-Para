@@ -370,7 +370,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 				end
 			end
 		end
-	end	
+	end
 	if min_friend and max_enemy then
 		use.card = sgs.Card_Parse("@GanluCard=.")
 		if use.to then 

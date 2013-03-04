@@ -153,7 +153,7 @@ function sgs.ai_slash_prohibit.nosenyuan(self, from)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("nosjiefanUsed") then return false end
 	if self:needLoseHp() then return false end
-	
+
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
 		if card:getSuit() == sgs.Card_Heart and not (isCard("Peach", card, self.player) or (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play)) then

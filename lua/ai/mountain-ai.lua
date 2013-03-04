@@ -42,7 +42,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 				for _, friend in ipairs(self.friends) do
 					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName()
-						and self:hasSkills(sgs.lose_equip_skill .. "|shensu" , friend) then
+						and self:hasSkills(sgs.lose_equip_skill .. "|shensu", friend) then
 						target = friend
 						break
 					end
@@ -92,7 +92,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 					self.friends = sgs.reverse(self.friends)
 				end
 				for _, friend in ipairs(self.friends) do
-					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() and self:hasSkills(sgs.lose_equip_skill .. "|shensu" , friend) then
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() and self:hasSkills(sgs.lose_equip_skill .. "|shensu", friend) then
 						target = friend
 						break
 					end
@@ -418,7 +418,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local shouldUse, range_fix = 0, 0
 	local hasCrossbow, slashTo = false, false
-	for _ , card in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:isKindOf("TrickCard") and self:getUseValue(card) > 3.69 then
 			local dummy_use = { isDummy = true }
 			self:useTrickCard(card, dummy_use)

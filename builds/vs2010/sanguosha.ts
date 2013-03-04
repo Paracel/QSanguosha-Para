@@ -2142,7 +2142,7 @@
 <context>
     <name>Player</name>
     <message>
-        <location filename="../../src/core/player.cpp" line="761"/>
+        <location filename="../../src/core/player.cpp" line="771"/>
         <source>No skills</source>
         <translation>无技能</translation>
     </message>
@@ -2548,7 +2548,7 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4622"/>
+        <location filename="../../src/server/room.cpp" line="4626"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>

@@ -164,8 +164,16 @@ public:
          } else if (!player->isNude())
             can_invoke = (judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept");
 
-        if (!can_invoke)
+        if (!can_invoke) {
+            LogMessage log;
+            log.type = "#ZhibaReject";
+            log.from = judge->who;
+            log.to << player;
+            log.arg = objectName();
+            room->sendLog(log);
+
             return false;
+        }
 
         QStringList prompt_list;
         prompt_list << "@huanshi-card" << judge->who->objectName()

@@ -508,6 +508,13 @@ void ZhibaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
     room->setPlayerFlag(sunce, "ZhibaInvoked");
     room->notifySkillInvoked(sunce, "zhiba");
     if (sunce->getMark("hunzi") > 0 && room->askForChoice(sunce, "zhiba_pindian", "accept+reject") == "reject") {
+        LogMessage log;
+        log.type = "#ZhibaReject";
+        log.from = sunce;
+        log.to << source;
+        log.arg = "zhiba_pindian";
+        room->sendLog(log);
+
         room->broadcastSkillInvoke("zhiba", 5);
         return;
     }

@@ -882,12 +882,19 @@ public:
             }
         } else if (lvmeng->getPhase() == Player::Play) {
             CardStar card = NULL;
+            bool isSlash = false;
             if (event == CardUsed)
-                card = data.value<CardUseStruct>().card;
-            else
+                isSlash = data.value<CardUseStruct>().card->isKindOf("Slash");
+            else {
                 card = data.value<CardResponseStruct>().m_card;
-
-            if (card->isKindOf("Slash"))
+                if (card->isKindOf("Slash"))
+                    isSlash = true;
+                else if (card->isVirtualCard()) {
+                    const Card *tr_card = Sanguosha->getCard(card->getEffectiveId());
+                    isSlash = (tr_card->isKindOf("Slash"));
+                }
+            }
+            if (isSlash)
                 room->setPlayerFlag(lvmeng, "keji_use_slash");
         }
 

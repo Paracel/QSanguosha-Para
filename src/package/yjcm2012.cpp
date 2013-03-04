@@ -540,7 +540,7 @@ public:
 class Fuhun: public TriggerSkill {
 public:
     Fuhun(): TriggerSkill("fuhun") {
-        events << PreDamageDone << EventPhaseChanging;
+        events << Damage << EventPhaseChanging;
         view_as_skill = new FuhunViewAsSkill;
     }
 
@@ -549,15 +549,15 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == PreDamageDone) {
+        if (event == Damage && TriggerSkill::triggerable(player)) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()
-                && damage.from->getPhase() == Player::Play) {
-                room->acquireSkill(damage.from, "wusheng");
-                room->acquireSkill(damage.from, "paoxiao");
+                && player->getPhase() == Player::Play) {
+                room->acquireSkill(player, "wusheng");
+                room->acquireSkill(player, "paoxiao");
 
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
-                damage.from->setFlags(objectName());
+                player->setFlags(objectName());
             }
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();

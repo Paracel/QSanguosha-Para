@@ -314,8 +314,12 @@ public:
         events << EventPhaseStart << EventPhaseChanging;
     }
 
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shuangying, QVariant &data) const{
-        if (event == EventPhaseStart && shuangying->getPhase() ==  Player::Draw) {
+        if (event == EventPhaseStart && shuangying->getPhase() ==  Player::Draw && TriggerSkill::triggerable(shuangying)) {
             if (shuangying->askForSkillInvoke(objectName())) {
                 int card1 = room->drawCard();
                 int card2 = room->drawCard();

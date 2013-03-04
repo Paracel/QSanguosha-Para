@@ -615,6 +615,7 @@ void WuqianCard::onEffect(const CardEffectStruct &effect) const{
 
     effect.from->loseMark("@wrath", 2);
     room->acquireSkill(effect.from, "wushuang", false);
+    room->setPlayerFlag(effect.from, "WuqianSource");
     room->setPlayerFlag(effect.to, "WuqianTarget");
     room->addPlayerMark(effect.to, "Armor_Nullified");
 }
@@ -641,7 +642,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->hasSkill("wuqian");
+        return target != NULL && target->hasFlag("WuqianSource");
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -1106,8 +1107,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && TriggerSkill::triggerable(target)
-               && target->hasFlag("JilveWansha");
+        return target != NULL && target->hasFlag("JilveWansha");
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *target, QVariant &data) const{

@@ -42,7 +42,8 @@ void QiaobianCard::use(Room *room, ServerPlayer *zhanghe, QList<ServerPlayer *> 
             return;
 
         foreach (ServerPlayer *target, targets) {
-            room->cardEffect(this, zhanghe, target);
+            if (zhanghe->isAlive() && target->isAlive())
+                room->cardEffect(this, zhanghe, target);
         }
     } else if (phase == Player::Play) {
         if (targets.isEmpty())

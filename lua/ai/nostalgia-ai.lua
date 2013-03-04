@@ -149,18 +149,23 @@ sgs.ai_skill_cardask["@enyuanheart"] = function(self)
 	return "."
 end
 
-function sgs.ai_slash_prohibit.nosenyuan(self, from)
+function sgs.ai_slash_prohibit.nosenyuan(self, from, to, card)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("nosjiefanUsed") then return false end
-	if self:needLoseHp() then return false end
+	if self:needLoseHp(from) then return false end
+	if from:getHp() > 3 then return false end
 
+	local n = 0
 	local cards = self.player:getHandcards()
-	for _, card in sgs.qlist(cards) do
-		if card:getSuit() == sgs.Card_Heart and not (isCard("Peach", card, self.player) or (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play)) then
-			return false
+	for _, hcard in sgs.qlist(cards) do
+		if hcard:getSuit() == sgs.Card_Heart and not (isCard("Peach", hcard, to) or isCard("ExNihilo", hcard, to)) then
+			if not hcard:isKindOf("Slash") then return false end
+			n = n + 1
+			if n > 1 then return false end
 		end
 	end
-	if self:isWeak(from) then return true end
+	if n == 1 then return card:getSuit() == sgs.Card_Heart end
+	return self:isWeak(from)
 end
 
 sgs.ai_need_damaged.nosenyuan = function (self, attacker)

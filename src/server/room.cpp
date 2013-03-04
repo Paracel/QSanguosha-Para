@@ -4512,7 +4512,11 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
     if (cards.isEmpty() || max_num == 0)
         return false;
     CardMoveReason reason(NULL, guojia->objectName());
-    reason.m_reason = is_preview ? CardMoveReason::S_REASON_PREVIEWGIVE : CardMoveReason::S_REASON_GIVE; // nasty hack only
+    // when we use ? : here, compiling error occurs under debug mode...
+    if (is_preview)
+        reason.m_reason = CardMoveReason::S_REASON_PREVIEWGIVE;
+    else
+        reason.m_reason = CardMoveReason::S_REASON_GIVE;
     notifyMoveFocus(guojia, S_COMMAND_SKILL_YIJI);
     ServerPlayer *target = NULL;
 

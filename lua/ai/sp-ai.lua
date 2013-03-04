@@ -300,6 +300,7 @@ local xueji_skill = {}
 xueji_skill.name = "xueji"
 table.insert(sgs.ai_skills, xueji_skill)
 xueji_skill.getTurnUseCard = function(self, inclusive)
+	if self.player:getLostHp() == 0 or self.player:hasUsed("XuejiCard") then return end
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
 
@@ -372,7 +373,6 @@ local function can_be_selected_as_target_xueji(self, card, who)
 end
 
 sgs.ai_skill_use_func.XuejiCard = function(card, use, self)
-	if self.player:getLostHp() == 0 or self.player:hasUsed("XuejiCard") then return end
 	self:sort(self.enemies)
 	local to_use = false
 	for _, enemy in ipairs(self.enemies) do

@@ -358,17 +358,17 @@ public:
                 bool isHegVer = zhenji->getGeneralName() != "zhenji"
                                 && (zhenji->getGeneralName() == "heg_zhenji" || zhenji->getGeneral2Name() == "heg_zhenji");
                 if (judge->card->isBlack()) {
-                    if (!isHegVer)
-                        zhenji->obtainCard(judge->card);
-                    else if (zhenji->hasSkills("guicai|guidao|huanshi")) {
+                    if (isHegVer && zhenji->hasSkills("guicai|guidao|huanshi")) {
                         CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, zhenji->objectName(), QString(), judge->reason);
                         room->moveCardTo(judge->card, zhenji, NULL, Player::PlaceTable, reason, true);
                         QVariantList luoshen_list = zhenji->tag[objectName()].toList();
                         luoshen_list << judge->card->getEffectiveId();
                         zhenji->tag[objectName()] = luoshen_list;
+                    } else {
+                        zhenji->obtainCard(judge->card);
                     }
                 } else {
-                    if (isHegVer) {
+                    if (isHegVer && zhenji->hasSkills("guicai|guidao|huanshi")) {
                         DummyCard *dummy = new DummyCard;
                         foreach (QVariant id, zhenji->tag[objectName()].toList())
                             dummy->addSubcard(id.toInt());

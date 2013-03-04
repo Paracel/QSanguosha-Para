@@ -331,12 +331,16 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             ClientPlayer *player = ClientInstance->getPlayer(arg[1].asCString());
             PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
             container->setSaveMeIcon(true);
+            Photo *photo = qobject_cast<Photo *>(container);
+            if (photo) photo->setFrame(Photo::S_FRAME_SOS);
             break;
         }
     case S_GAME_EVENT_PLAYER_QUITDYING: {
             ClientPlayer *player = ClientInstance->getPlayer(arg[1].asCString());
             PlayerCardContainer *container = (PlayerCardContainer *)_getGenericCardContainer(Player::PlaceHand, player);
             container->setSaveMeIcon(false);
+            Photo *photo = qobject_cast<Photo *>(container);
+            if (photo) photo->setFrame(Photo::S_FRAME_NO_FRAME);
             break;
         }
     case S_GAME_EVENT_HUASHEN: {

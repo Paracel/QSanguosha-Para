@@ -903,7 +903,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
                                                 + ":" + to->objectName() + ":" + (positive ? "true" : "false"));
     thread->trigger(ChoiceMade, this, repliedPlayer, decisionData);
     setTag("NullifyingTimes",getTag("NullifyingTimes").toInt() + 1);
-    bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, to, !positive, aiHelper);
+    bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, from, !positive, aiHelper);
     return result;
 }
 

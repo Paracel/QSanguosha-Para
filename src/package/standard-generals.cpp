@@ -360,7 +360,7 @@ public:
                 if (judge->card->isBlack()) {
                     if (!isHegVer)
                         zhenji->obtainCard(judge->card);
-                    else if (zhenji->hasSkill("guicai") || zhenji->hasSkill("guidao") || zhenji->hasSkill("huanshi")) {
+                    else if (zhenji->hasSkills("guicai|guidao|huanshi")) {
                         CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, zhenji->objectName(), QString(), judge->reason);
                         room->moveCardTo(judge->card, zhenji, NULL, Player::PlaceTable, reason, true);
                         QVariantList luoshen_list = zhenji->tag[objectName()].toList();

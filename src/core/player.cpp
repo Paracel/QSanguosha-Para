@@ -124,11 +124,7 @@ void Player::setAlive(bool alive) {
 }
 
 QString Player::getFlags() const{
-    QStringList flags_list;
-    foreach (QString flag, flags)
-        flags_list << flag;
-
-    return flags_list.join("+");
+    return QStringList(flags.toList()).join("|");
 }
 
 QStringList Player::getFlagList() const{
@@ -302,6 +298,20 @@ bool Player::hasSkill(const QString &skill_name, bool include_lose) const{
     }
     return skills.contains(skill_name)
            || acquired_skills.contains(skill_name);
+}
+
+bool Player::hasSkills(const QString &skill_name, bool include_lose) const{
+    foreach (QString skill, skill_name.split("|")) {
+        bool checkpoint = true;
+        foreach (QString sk, skill.split("+")) {
+            if (!hasSkill(sk, include_lose)) {
+                checkpoint = false;
+                break;
+            }
+        }
+        if (checkpoint) return true;
+    }
+    return false;
 }
 
 bool Player::hasInnateSkill(const QString &skill_name, bool include_lose) const{

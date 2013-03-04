@@ -84,7 +84,7 @@ function sgs.isGoodTarget(player, targets, self)
 		return false
 	end
 
-	if (m_skill or (player:hasSkill("fenyong") and player:hasSkill("xuehen"))) and sgs.isGoodHp(player) then
+	if (m_skill or player:hasSkills("fenyong+xuehen")) and sgs.isGoodHp(player) then
 		return false
 	else
 		return true

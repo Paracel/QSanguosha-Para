@@ -3867,15 +3867,12 @@ function SmartAI:hasSkills(skill_names, player)
 	player = player or self.player
 	if type(player) == "table" then
 		for _, p in ipairs(player) do
-			if self:hasSkills(skill_names, p) then return true end
+			if p:hasSkills(skill_names) then return true end
 		end
 		return false
 	end
-	if type(skill_names) == "string" then skill_names = skill_names:split("|") end
-	for _, skill_name in ipairs(skill_names) do
-		if player:hasSkill(skill_name) then
-			return true
-		end
+	if type(skill_names) == "string" then
+		return player:hasSkills(skill_names)
 	end
 	return false
 end
@@ -4089,10 +4086,10 @@ function SmartAI:getAoeValueTo(card, to, from)
 					value = value + (not to:faceUp() and 20 or 0)
 					value = value + self.player:aliveCount() * 5
 				end
-				if to:hasSkill("fenyong") and to:hasSkill("xuehen") and to:getMark("@fenyong") == 0 then
+				if to:hasSkills("fenyong+xuehen") and to:getMark("@fenyong") == 0 then
 					value = value + 10
 				end
-				if to:hasSkill("shenfen") and to:hasSkill("kuangbao") then
+				if to:hasSkills("shenfen+kuangbao") then
 					value = value + math.min(25, to:getMark("@wrath") * 5)
 				end
 			end

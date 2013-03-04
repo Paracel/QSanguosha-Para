@@ -141,6 +141,7 @@ public:
     virtual void addSkill(const char *skill_name);
     virtual void loseSkill(const char *skill_name);
     bool hasSkill(const char *skill_name, bool include_lose = false) const;
+    bool hasSkills(const char *skill_name, bool include_lose = false) const;
     bool hasLordSkill(const char *skill_name, bool include_lose = false) const;
     bool hasInnateSkill(const char *skill_name, bool include_lose = false) const;
 

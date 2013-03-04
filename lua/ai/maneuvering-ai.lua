@@ -80,10 +80,12 @@ end
 
 function sgs.ai_armor_value.vine(player, self)
 	if not self:damageIsEffective(nil, sgs.DamageStruct_Fire) then return 6 end
-	for _, enemy in ipairs(self:getEnemies(player)) do
-		if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkill("huoji") then return -1 end
-		if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -1 end
-		if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 then return -1 end
+	for _, enemy in sgs.qlist(self.room:getOtherPlayers(player)) do
+		if not self:isFriend(enemy, player) then
+			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkill("huoji") then return -1 end
+			if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -1 end
+			if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 then return -1 end
+		end
 	end
 
 	if (#self.enemies < 3 and sgs.turncount >= 2) or player:getHp() <= 2 then return 5 end

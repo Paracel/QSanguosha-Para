@@ -955,12 +955,6 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
     Q_ASSERT(pattern != "slash" || method != Card::MethodUse); // use askForUseSlashTo instead
     notifyMoveFocus(player, S_COMMAND_RESPONSE_CARD);
     _m_roomState.setCurrentCardUsePattern(pattern);
-    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
-    if (method == Card::MethodResponse)
-        reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
-    else if (method == Card::MethodUse)
-        reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
-    _m_roomState.setCurrentCardUseReason(reason);
 
     const Card *card = NULL;
 
@@ -969,6 +963,13 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
     QVariant asked_data = QVariant::fromValue(asked);
     if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial && !player->hasFlag("continuing"))
         thread->trigger(CardAsked, this, player, asked_data);
+
+    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
+    if (method == Card::MethodResponse)
+        reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+    else if (method == Card::MethodUse)
+        reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
+    _m_roomState.setCurrentCardUseReason(reason);
 
     if (player->hasFlag("continuing"))
         setPlayerFlag(player, "-continuing");

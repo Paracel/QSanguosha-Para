@@ -357,19 +357,15 @@ function SmartAI:useCardSlash(card, use)
 					and self:slashIsEffective(card, friend) then
 					use.card = card
 					if use.to then
-						if use.to:length() == self.slash_targets - 1 then
-							if self.player:hasSkill("duanbing") then
-								local has_extra = false
-								for _, tg in sgs.qlist(use.to) do
-									if self.player:distanceTo(tg, rangefix) == 1 then
-										has_extra = true
-										break
-									end
+						if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
+							local has_extra = false
+							for _, tg in sgs.qlist(use.to) do
+								if self.player:distanceTo(tg, rangefix) == 1 then
+									has_extra = true
+									break
 								end
-								if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
-									use.to:append(friend)
-								end
-							else
+							end
+							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
 								use.to:append(friend)
 							end
 						else
@@ -442,19 +438,15 @@ function SmartAI:useCardSlash(card, use)
 			end
 			use.card = use.card or usecard
 			if use.to and not use.to:contains(target) then
-				if use.to:length() == self.slash_targets - 1 then
-					if self.player:hasSkill("duanbing") then
-						local has_extra = false
-						for _, tg in sgs.qlist(use.to) do
-							if self.player:distanceTo(tg, rangefix) == 1 then
-								has_extra = true
-								break
-							end
+				if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
+					local has_extra = false
+					for _, tg in sgs.qlist(use.to) do
+						if self.player:distanceTo(tg, rangefix) == 1 then
+							has_extra = true
+							break
 						end
-						if has_extra or self.player:distanceTo(target, rangefix) == 1 then
-							use.to:append(target)
-						end
-					else
+					end
+					if has_extra or self.player:distanceTo(target, rangefix) == 1 then
 						use.to:append(target)
 					end
 				else
@@ -493,6 +485,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		return "."
 	end
 	local slashes = self:getCards("Slash")
+	self:sort(self.enemies, "defenseSlash")
 	for _, slash in ipairs(slashes) do
 		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50 or self.player:hasFlag("slashNoDistanceLimit")
 		for _, enemy in ipairs(self.enemies) do

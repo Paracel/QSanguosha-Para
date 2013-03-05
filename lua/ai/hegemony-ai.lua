@@ -289,7 +289,19 @@ end
 sgs.ai_skill_invoke.lirang = function(self, data)
 	if #self.friends_noself == 0 then return false end
 	for _, friend in ipairs(self.friends_noself) do
-		if not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return true end
+		local insert = true
+		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
+		if insert and friend:hasFlag("DimengTarget") then
+			local another
+			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
+				if p:hasFlag("DimengTarget") then
+					another = p
+					break
+				end
+			end
+			if not another or not self:isFriend(another) then insert = false end
+		end
+		if insert then return true end
 	end
 	return false
 end

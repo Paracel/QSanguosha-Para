@@ -2846,6 +2846,24 @@ function SmartAI:askForYiji(card_ids, reason)
 	if not noRest and self.player:getHandcardNum() <= 2 then
 		return nil, -1
 	end
+	
+	local available_friends = {}
+	for _, friend in ipairs(self.friends_noself) do
+		local insert = true
+		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
+		if insert and reason == "lirang" and friend:hasFlag("DimengTarget") then
+			local another
+			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
+				if p:hasFlag("DimengTarget") then
+					another = p
+					break
+				end
+			end
+			if not another or not self:isFriend(another) then insert = false end
+		end
+		if insert then table.insert(available_friends, friend) end
+	end
+	if not noRest then table.insert(available_friends, self.player) end
 
 	local cards = {}
 	for _, card_id in ipairs(card_ids) do
@@ -2853,11 +2871,11 @@ function SmartAI:askForYiji(card_ids, reason)
 	end
 
 	local card, friend = self:getCardNeedPlayer(cards)
-	if card and friend and not (noRest and friend:objectName() == self.player:objectName()) then return friend, card:getId() end
-	if #self.friends > 1 then
-		self:sort(self.friends, "handcard")
-		for _, afriend in ipairs(self.friends) do
-			if not (self:needKongcheng(afriend) or afriend:hasSkill("manjuan")) and not (noRest and afriend:objectName() == self.player:objectName()) then
+	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
+	if #available_friends > 0 then
+		self:sort(available_friends, "handcard")
+		for _, afriend in ipairs(available_friends) do
+			if not self:needKongcheng(afriend) then
 				for _, acard_id in ipairs(card_ids) do
 					return afriend, acard_id
 				end
@@ -2865,19 +2883,11 @@ function SmartAI:askForYiji(card_ids, reason)
 		end
 	end
 
-	--All cards should be given out for LiRang
+	--All cards should be given out for LiRang & MiJi
 	if noRest then
-		local tos = {}
-		for _, target in ipairs(self.friends_noself) do
-			if self:isFriend(target) and not (target:hasSkill("manjuan") and target:getPhase() == sgs.Player_NotActive)
-				and not self:needKongcheng(target) then
-				table.insert(tos, target)
-			end
-		end
-
-		if #tos == 0 then return end
-		self:sort(tos, "defense")
-		local afriend = tos[1]
+		if #available_friends == 0 then return end
+		self:sort(available_friends, "defense")
+		local afriend = available_friends[1]
 		for _, acard_id in ipairs(card_ids) do
 			return afriend, acard_id
 		end

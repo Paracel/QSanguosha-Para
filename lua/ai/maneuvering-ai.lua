@@ -364,7 +364,7 @@ function SmartAI:useCardIronChain(card, use)
 end
 
 sgs.ai_card_intention.IronChain = function(self, card, from, tos)
-	local liuxie = from:getRoom():findPlayerBySkillName("huangen")
+	local liuxie = self.room:findPlayerBySkillName("huangen")
 	for _, to in ipairs(tos) do
 		if not to:isChained() then
 			local enemy = true

@@ -1542,27 +1542,125 @@ function SmartAI:updatePlayers(clear_flags)
 	table.insert(self.friends, self.player)
 end
 
+function findPlayerByObjectName(room, name, include_death, except)
+	if not room then
+		return
+	end
+	local players = nil
+	if include_death then
+		players = room:getPlayers()
+	else
+		players = room:getAllPlayers()
+	end
+	if except then
+		players:removeOne(except)
+	end
+	for _,p in sgs.qlist(players) do
+		if p:objectName() == name then
+			return p
+		end
+	end
+end
+
+function getTrickIntention(trick_class, target)
+	local intention = sgs.ai_card_intention[trick_class]
+	if type(intention) == "number" then
+		return intention
+	elseif type(intention == "function") then
+		if trick_class == "IronChain" then
+			if target and target:isChained() then
+				return -60
+			else
+				return 60
+			end
+		end
+	end
+	if sgs.dynamic_value.damage_card[trick_class] then
+		return 70
+	end
+	if sgs.dynamic_value.benefit[trick_class] then
+		return -40
+	end
+	if target then
+		if trick_class == "Snatch" or trick_class == "Dismantlement" then
+			local judgelist = target:getCards("j")
+			if not judgelist or judgelist:isEmpty() then
+				if not target:hasArmorEffect("silver_lion") then
+					return 80
+				end
+			end
+		end
+	end
+	return 0
+end
+
+sgs.ai_nullification_level = {}
+sgs.ai_trick_struct = { "source", "target", "trick" }
 sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
-	if player:objectName() == promptlist[3] then return end
+	local room = player:getRoom()
+	local null_source = player:objectName()
+	local trick_class = promptlist[2]
+	local trick_target = promptlist[3]
 	local positive = true
-	if promptlist[4] == "false" then positive = false end
-	local className, to = promptlist[2]
-	sgs.lastclass = className
-	for _, aplayer in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
-		if aplayer:objectName() == promptlist[3] then to = aplayer break end
+	if promptlist[4] == "false" then 
+		positive = false
 	end
-	local intention = 0
-	if type(sgs.ai_card_intention[className]) == "number" then intention = sgs.ai_card_intention[className]
-	elseif sgs.dynamic_value.damage_card[className] then intention = 70
-	elseif sgs.dynamic_value.benefit[className] then intention = -40
-	elseif (className == "Snatch" or className == "Dismantlement")
-			and (to:getCards("j"):isEmpty() and not to:hasArmorEffect("silver_lion")) then
-		intention = 80
-	elseif className == "Nullification" then
-		intention = 50
+	local level = #sgs.ai_nullification_level
+	if trick_class == "Nullification" then
+		table.insert(sgs.ai_nullification_level, null_source)
+		local target = sgs.ai_nullification_level[1]
+		if null_source ~= target then
+			local count = 0
+			for _, name in pairs(sgs.ai_nullification_level) do
+				if name == null_source then
+					count = count + 1
+				end
+			end
+			local pos = math.mod(level, 2)
+			local to = findPlayerByObjectName(room, target)
+			local intention = count * 25
+			if pos == 0 then
+				sgs.updateIntention(player, to, -intention)
+			else
+				sgs.updateIntention(player, to, intention)
+			end
+		end
+	else
+		if null_source == trick_target then
+			local me = findPlayerByObjectName(room, trick_target)
+			local intention = getTrickIntention(trick_class, me)
+			if level > 0 and sgs.ai_nullification_level[1] == trick_target then
+				if sgs.ai_trick_struct[3] == trick_class then
+					table.insert(sgs.ai_nullification_level, null_source)
+				else
+					if intention > 0 then
+						sgs.ai_nullification_level = { trick_target, trick_target, null_source }
+					else
+						sgs.ai_nullification_level = { trick_target, null_source }
+					end
+					sgs.ai_trick_struct = {null_source, trick_target, trick_class}
+				end
+			else
+				if intention > 0 then
+					sgs.ai_nullification_level = { trick_target, trick_target, null_source }
+				else
+					sgs.ai_nullification_level = { trick_target, null_source }
+				end
+				sgs.ai_trick_struct = { null_source, trick_target, trick_class }
+			end 
+		else
+			sgs.lastclass = trick_class
+			local to = findPlayerByObjectName(room, trick_target, false, player)
+			local intention = getTrickIntention(trick_class, to)
+			if intention > 0 then
+				sgs.ai_nullification_level = { trick_target, trick_target, null_source }
+			else
+				sgs.ai_nullification_level = { trick_target, null_source }
+			end
+			sgs.ai_trick_struct = { null_source, trick_target, trick_class }
+			sgs.updateIntention(player, to, -intention)
+		end
 	end
-	if positive then intention = -intention end
-	sgs.updateIntention(player, to, intention)
 end
 
 sgs.ai_choicemade_filter.playerChosen.general = function(from, promptlist)
@@ -1789,14 +1887,7 @@ function SmartAI:filterEvent(event, player, data)
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		local from = nil -- convert move.from from const Player * to ServerPlayer *
-		if move.from then
-			for _, p in sgs.qlist(global_room:getAlivePlayers()) do
-				if p:objectName() == move.from:objectName() then
-					from = p
-					break
-				end
-			end
-		end
+		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
 		local reason = move.reason
 		local from_places = sgs.QList2Table(move.from_places)
 

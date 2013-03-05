@@ -899,11 +899,11 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     log.arg = trick_name;
     sendLog(log);
 
-    QVariant decisionData = QVariant::fromValue("Nullification:" + QString(trick->metaObject()->className())
+    QVariant decisionData = QVariant::fromValue("Nullification:" + QString(trick->getClassName())
                                                 + ":" + to->objectName() + ":" + (positive ? "true" : "false"));
     thread->trigger(ChoiceMade, this, repliedPlayer, decisionData);
     setTag("NullifyingTimes",getTag("NullifyingTimes").toInt() + 1);
-    bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, from, !positive, aiHelper);
+    bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, to, !positive, aiHelper);
     return result;
 }
 

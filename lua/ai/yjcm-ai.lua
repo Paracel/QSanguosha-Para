@@ -10,6 +10,20 @@ function sgs.ai_skill_invoke.jiushi(self, data)
 	return not self.player:faceUp()
 end
 
+sgs.ai_skill_invoke.luoying = function(self)
+	if self.player:hasFlag("DimengTarget") then
+		local another
+		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			if player:hasFlag("DimengTarget") then
+				another = player
+				break
+			end
+		end
+		if not another or not self:isFriend(another) then return false end
+	end
+	return true
+end
+
 sgs.ai_skill_askforag.luoying = function(self, card_ids)
 	return -1
 end

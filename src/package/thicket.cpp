@@ -606,6 +606,8 @@ const Card *DimengCard::validate(const CardUseStruct *card_use) const{
 void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *a = targets.at(0);
     ServerPlayer *b = targets.at(1);
+    a->setFlags("DimengTarget");
+    b->setFlags("DimengTarget");
 
     int n1 = a->getHandcardNum();
     int n2 = b->getHandcardNum();
@@ -635,6 +637,9 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     log.arg2 = QString::number(n2);
     room->sendLog(log);
     room->getThread()->delay();
+
+    a->setFlags("-DimengTarget");
+    b->setFlags("-DimengTarget");
 }
 
 class Dimeng: public ZeroCardViewAsSkill {

@@ -685,6 +685,10 @@ void SkillCard::setUserString(const QString &user_string) {
     this->user_string = user_string;
 }
 
+QString SkillCard::getUserString() const{
+    return user_string;
+}
+
 QString SkillCard::getType() const{
     return "skill_card";
 }

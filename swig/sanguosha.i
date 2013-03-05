@@ -780,6 +780,7 @@ class SkillCard: public Card {
 public:
     SkillCard();
     void setUserString(const char *user_string);
+    QString getUserString() const;
 
     virtual QString getSubtype() const;
     virtual QString getType() const;

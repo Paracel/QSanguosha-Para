@@ -440,8 +440,18 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             bool isSecondaryHero = arg[3].asBool();
             bool sendLog = arg[4].asBool();
             ClientPlayer *player = ClientInstance->getPlayer(playerName);
-            if (sendLog)
-                log_box->appendLog("#Transfigure", player->objectName(), QStringList(), QString(), newHeroName);
+            if (sendLog) {
+                QString type = "#Transfigure";
+                QString arg2 = QString();
+                if (player->getGeneral2() && !isSecondaryHero) {
+                    type = "#TransfigureDual";
+                    arg2 = "GeneralA";
+                } else if (isSecondaryHero) {
+                    type = "#TransfigureDual";
+                    arg2 = "GeneralB";
+                }
+                log_box->appendLog(type, player->objectName(), QStringList(), QString(), newHeroName, arg2);
+            }
             if (player->getGeneralName() == "shenlvbu1" && newHeroName == "shenlvbu2"
                 && player->getMark("secondMode") > 0)
                 Sanguosha->playSystemAudioEffect("stagechange");

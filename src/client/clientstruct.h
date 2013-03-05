@@ -29,6 +29,8 @@ struct ServerInfoStruct {
     bool DisableChat;
     int MaxHpScheme;
     int Scheme0Subtraction;
+
+    bool DuringGame;
 };
 
 extern ServerInfoStruct ServerInfo;

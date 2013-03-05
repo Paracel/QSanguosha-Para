@@ -334,9 +334,10 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
         QString to_cv = room->askForChoice(player, objectName(), choicelist.join("+"));
 
         LogMessage log;
-        log.type = "#Transfigure";
+        log.type = player->getGeneral2() ? "#TransfigureDual" : "#Transfigure";
         log.from = player;
         log.arg = to_cv;
+        log.arg2 = player->getGeneral2() ? "GeneralA" : QString();
         room->sendLog(log);
         room->setPlayerProperty(player, "general", to_cv);
 

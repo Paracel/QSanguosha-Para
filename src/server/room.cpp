@@ -4232,9 +4232,10 @@ bool Room::makeCheat(ServerPlayer *player) {
 
         obtainCard(player, card_id);
     } else if (code == S_CHEAT_CHANGE_GENERAL) {
-        if (!arg[1].isString()) return false;
+        if (!arg[1].isString() || !arg[2].isBool()) return false;
         QString generalName = toQString(arg[1]);
-        changeHero(player, generalName, false, true);
+        bool isSecondaryHero = arg[2].asBool();
+        changeHero(player, generalName, false, true, isSecondaryHero);
     }
     arg = Json::Value::null;
     return true;

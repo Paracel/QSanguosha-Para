@@ -36,50 +36,55 @@ bool ServerInfoStruct::parse(const QString &str) {
     }
 
     QStringList texts = rx.capturedTexts();
+    if (texts.isEmpty()) {
+        DuringGame = false;
+    } else {
+        DuringGame = true;
 
-    QString server_name = texts.at(1);
-    Name = QString::fromUtf8(QByteArray::fromBase64(server_name.toAscii()));
+        QString server_name = texts.at(1);
+        Name = QString::fromUtf8(QByteArray::fromBase64(server_name.toAscii()));
 
-    GameMode = texts.at(2);
-    OperationTimeout = texts.at(3).toInt();
+        GameMode = texts.at(2);
+        OperationTimeout = texts.at(3).toInt();
 
-    QStringList ban_packages = texts.at(4).split("+");
-    QList<const Package *> packages = Sanguosha->findChildren<const Package *>();
-    foreach (const Package *package, packages) {
-        if (package->inherits("Scenario"))
-            continue;
+        QStringList ban_packages = texts.at(4).split("+");
+        QList<const Package *> packages = Sanguosha->findChildren<const Package *>();
+        foreach (const Package *package, packages) {
+            if (package->inherits("Scenario"))
+                continue;
 
-        QString package_name = package->objectName();
-        if (ban_packages.contains(package_name))
-            package_name = "!" + package_name;
+            QString package_name = package->objectName();
+            if (ban_packages.contains(package_name))
+                package_name = "!" + package_name;
 
-        Extensions << package_name;
-    }
+            Extensions << package_name;
+        }
 
-    QString flags = texts.at(5);
+        QString flags = texts.at(5);
 
-    RandomSeat = flags.contains("R");
-    EnableCheat = flags.contains("C");
-    FreeChoose = EnableCheat && flags.contains("F");
-    Enable2ndGeneral = flags.contains("S");
-    EnableSame = flags.contains("T");
-    EnableBasara= flags.contains("B");
-    EnableHegemony = flags.contains("H");
-    EnableAI = flags.contains("A");
-    DisableChat = flags.contains("M");
+        RandomSeat = flags.contains("R");
+        EnableCheat = flags.contains("C");
+        FreeChoose = EnableCheat && flags.contains("F");
+        Enable2ndGeneral = flags.contains("S");
+        EnableSame = flags.contains("T");
+        EnableBasara= flags.contains("B");
+        EnableHegemony = flags.contains("H");
+        EnableAI = flags.contains("A");
+        DisableChat = flags.contains("M");
 
-    if (flags.contains("1"))
-        MaxHpScheme = 1;
-    else if (flags.contains("2"))
-        MaxHpScheme = 2;
-    else if (flags.contains("3"))
-        MaxHpScheme = 3;
-    else {
-        MaxHpScheme = 0;
-        for (char c = 'a'; c <= 'r'; c++) {
-            if (flags.contains(c)) {
-                Scheme0Subtraction = int(c) - int('a') - 5;
-                break;
+        if (flags.contains("1"))
+            MaxHpScheme = 1;
+        else if (flags.contains("2"))
+            MaxHpScheme = 2;
+        else if (flags.contains("3"))
+            MaxHpScheme = 3;
+        else {
+            MaxHpScheme = 0;
+            for (char c = 'a'; c <= 'r'; c++) {
+                if (flags.contains(c)) {
+                    Scheme0Subtraction = int(c) - int('a') - 5;
+                    break;
+                }
             }
         }
     }

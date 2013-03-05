@@ -491,10 +491,11 @@ void Client::requestCheatGetOneCard(int card_id) {
     requestToServer(S_COMMAND_CHEAT, cheatArg);
 }
 
-void Client::requestCheatChangeGeneral(QString name) {
+void Client::requestCheatChangeGeneral(const QString &name, bool isSecondaryHero) {
     Json::Value cheatArg;
     cheatArg[0] = (int)S_CHEAT_CHANGE_GENERAL;
     cheatArg[1] = toJsonString(name);
+    cheatArg[2] = isSecondaryHero;
     requestToServer(S_COMMAND_CHEAT, cheatArg);
 }
 

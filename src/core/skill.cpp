@@ -317,7 +317,9 @@ bool SPConvertSkill::triggerable(const ServerPlayer *target) const{
             break;
         }
     }
-    return GameStartSkill::triggerable(target) && target->getGeneralName() == from && available && canInvoke;
+    return GameStartSkill::triggerable(target)
+           && (target->getGeneralName() == from || target->getGeneral2Name() == from)
+           && available && canInvoke;
 }
 
 void SPConvertSkill::onGameStart(ServerPlayer *player) const{
@@ -332,18 +334,19 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
                 choicelist << to_gen;
         }
         QString to_cv = room->askForChoice(player, objectName(), choicelist.join("+"));
+        bool isSecondaryHero = (player->getGeneralName() != from && player->getGeneral2Name() == from);
 
         LogMessage log;
         log.type = player->getGeneral2() ? "#TransfigureDual" : "#Transfigure";
         log.from = player;
         log.arg = to_cv;
-        log.arg2 = player->getGeneral2() ? "GeneralA" : QString();
+        log.arg2 = player->getGeneral2() ? (isSecondaryHero ? "GeneralB" : "GeneralA") : QString();
         room->sendLog(log);
-        room->setPlayerProperty(player, "general", to_cv);
+        room->setPlayerProperty(player, isSecondaryHero ? "general2" : "general", to_cv);
 
         const General *general = Sanguosha->getGeneral(to_cv);
         const QString kingdom = general->getKingdom();
-        if (kingdom != player->getKingdom())
+        if (!isSecondaryHero && kingdom != player->getKingdom())
             room->setPlayerProperty(player, "kingdom", kingdom);
     }
 }

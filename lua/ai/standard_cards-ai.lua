@@ -945,6 +945,7 @@ end
 sgs.ai_skill_invoke.kylin_bow = function(self, data)
 	local damage = data:toDamage()
 
+	if damage.from:hasSkill("kuangfu") and damage.to:getCards("e"):length() == 1 then return false end
 	if self:hasSkills(sgs.lose_equip_skill, damage.to) then
 		return self:isFriend(damage.to)
 	end

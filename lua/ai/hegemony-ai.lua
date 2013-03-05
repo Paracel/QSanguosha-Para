@@ -414,6 +414,9 @@ sgs.ai_card_intention.XiongyiCard = -80
 
 sgs.ai_skill_invoke.kuangfu = function(self, data)
 	local damage = data:toDamage()
+	if self:hasSkills(sgs.lose_equip_skill, damage.to) then
+		return self:isFriend(damage.to)
+	end
 	local benefit = (damage.to:getCards("e"):length() == 1 and damage.to:hasArmorEffect("silver_lion") and damage.to:isWounded() and self:isWeak(damage.to))
 	if self:isFriend(damage.to) then return benefit end
 	return not benefit

@@ -375,6 +375,13 @@ public:
 
             liaohua->setPhase(Player::Play);
             room->broadcastProperty(liaohua, "phase");
+            RoomThread *thread = room->getThread();
+            if (!thread->trigger(EventPhaseStart, room, liaohua))
+                thread->trigger(EventPhaseProceeding, room, liaohua);
+            thread->trigger(EventPhaseEnd, room, liaohua);
+
+            liaohua->setPhase(Player::RoundStart);
+            room->broadcastProperty(liaohua, "phase");
         }
         return false;
     }

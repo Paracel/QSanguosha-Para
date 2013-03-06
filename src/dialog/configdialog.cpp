@@ -30,7 +30,6 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     ui->effectVolumeSlider->setValue(100 * Config.EffectVolume);
 
     // tab 2
-    ui->disableLuaCheckBox->setChecked(Config.DisableLua);
     ui->nullificationSpinBox->setValue(Config.NullificationCountDown);
     ui->gameStartSpinBox->setValue(Config.CountDownSeconds);
     ui->neverNullifyMyTrickCheckBox->setChecked(Config.NeverNullifyMyTrick);
@@ -130,9 +129,6 @@ void ConfigDialog::saveConfig() {
 
     Config.EnableMinimizeDialog = ui->minimizecCheckBox->isChecked();
     Config.setValue("EnableMinimizeDialog", Config.EnableMinimizeDialog);
-
-    Config.DisableLua = ui->disableLuaCheckBox->isChecked();
-    Config.setValue("DisableLua", Config.DisableLua);
 }
 
 void ConfigDialog::on_browseBgMusicButton_clicked() {

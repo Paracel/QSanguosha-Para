@@ -95,6 +95,7 @@ void Settings::init() {
     AlterAIDelayAD = value("AlterAIDelayAD", false).toBool();
     AIDelayAD = value("AIDelayAD", 0).toInt();
     ServerPort = value("ServerPort", 9527u).toUInt();
+    DisableLua = value("DisableLua", false).toBool();
 
 #ifdef Q_OS_WIN32
     UserName = value("UserName", qgetenv("USERNAME")).toString();
@@ -125,7 +126,6 @@ void Settings::init() {
     EnableBgMusic = value("EnableBgMusic", true).toBool();
     BGMVolume = value("BGMVolume", 1.0f).toFloat();
     EffectVolume = value("EffectVolume", 1.0f).toFloat();
-    DisableLua = value("DisableLua", false).toBool();
 
     BackgroundImage = value("BackgroundImage", "backdrop/default.jpg").toString();
 

@@ -60,9 +60,8 @@ QWidget *ServerDialog::createBasicTab() {
     timeout_spinbox->setValue(Config.OperationTimeout);
     timeout_spinbox->setSuffix(tr(" seconds"));
     nolimit_checkbox = new QCheckBox(tr("No limit"));
-    nolimit_checkbox->setChecked(false);
-    connect(nolimit_checkbox, SIGNAL(toggled(bool)), timeout_spinbox, SLOT(setDisabled(bool)));
     nolimit_checkbox->setChecked(Config.OperationNoLimit);
+    connect(nolimit_checkbox, SIGNAL(toggled(bool)), timeout_spinbox, SLOT(setDisabled(bool)));
 
     // add 1v1 banlist edit button
     QPushButton *edit_button = new QPushButton(tr("Banlist ..."));
@@ -88,6 +87,10 @@ QWidget *ServerDialog::createBasicTab() {
 }
 
 QWidget *ServerDialog::createPackageTab() {
+    disable_lua_checkbox = new QCheckBox(tr("Disable Lua"));
+    disable_lua_checkbox->setChecked(Config.DisableLua);
+    disable_lua_checkbox->setToolTip(tr("The setting takes effect after reboot"));
+
     extension_group = new QButtonGroup;
     extension_group->setExclusive(false);
 
@@ -124,7 +127,7 @@ QWidget *ServerDialog::createPackageTab() {
                 column = i % 5;
                 i++;
 
-                layout1->addWidget(checkbox, row, column+1);
+                layout1->addWidget(checkbox, row, column + 1);
                 break;
             }
         case Package::CardPack: {
@@ -132,7 +135,7 @@ QWidget *ServerDialog::createPackageTab() {
                 column = j % 5;
                 j++;
 
-                layout2->addWidget(checkbox, row, column+1);
+                layout2->addWidget(checkbox, row, column + 1);
                 break;
             }
         default:
@@ -142,6 +145,7 @@ QWidget *ServerDialog::createPackageTab() {
 
     QWidget *widget = new QWidget;
     QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(disable_lua_checkbox);
     layout->addWidget(box1);
     layout->addWidget(box2);
 
@@ -978,6 +982,7 @@ bool ServerDialog::config() {
     Config.AIDelayAD = ai_delay_ad_spinbox->value();
     Config.AlterAIDelayAD = ai_delay_altered_checkbox->isChecked();
     Config.ServerPort = port_edit->text().toInt();
+    Config.DisableLua = disable_lua_checkbox->isChecked();
 
     // game mode
     QString objname = mode_group->checkedButton()->objectName();
@@ -1025,6 +1030,7 @@ bool ServerDialog::config() {
     Config.setValue("AIDelayAD", Config.AIDelayAD);
     Config.setValue("ServerPort", Config.ServerPort);
     Config.setValue("Address", Config.Address);
+    Config.setValue("DisableLua", disable_lua_checkbox->isChecked());
 
     Config.beginGroup("3v3");
     Config.setValue("UsingExtension", !standard_3v3_radiobutton->isChecked() && !new_3v3_radiobutton->isChecked());

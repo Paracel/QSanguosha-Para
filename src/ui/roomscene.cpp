@@ -3370,8 +3370,8 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 
         QPropertyAnimation *appear = new QPropertyAnimation(line, "opacity");
         appear->setStartValue(0.0);
-        appear->setKeyValueAt(0.8, 1.0);
-        appear->setEndValue(1.0);
+        appear->setKeyValueAt(0.7, 1.0);
+        appear->setEndValue(0.0);
 
         int duration = args.value(1, "2000").toInt();
         appear->setDuration(duration);
@@ -3399,8 +3399,8 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 
         QPropertyAnimation *appear = new QPropertyAnimation(line, "opacity");
         appear->setStartValue(0.0);
-        appear->setKeyValueAt(0.8, 1.0);
-        appear->setEndValue(1.0);
+        appear->setKeyValueAt(0.7, 1.0);
+        appear->setEndValue(0.0);
 
         int duration = args.value(1, "2000").toInt();
         appear->setDuration(duration);

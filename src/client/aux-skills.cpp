@@ -114,7 +114,7 @@ bool YijiViewAsSkill::viewFilter(const QList<const Card *> &selected, const Card
 }
 
 const Card *YijiViewAsSkill::viewAs(const QList<const Card *> &cards) const{
-    if (cards.isEmpty())
+    if (cards.isEmpty() || cards.length() > max_num)
         return NULL;
 
     card->clearSubcards();

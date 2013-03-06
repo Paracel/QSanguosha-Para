@@ -80,7 +80,7 @@ function sgs.isGoodTarget(player, targets, self)
 		end
 	end
 
-	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and player:isLord() and player:getHp() < 3 and sgs.current_mode_players["loyalist"] > 0 then
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and player:isLord() and player:getHp() == 2 and sgs.current_mode_players["loyalist"] > 0 then
 		return false
 	end
 
@@ -1349,7 +1349,6 @@ function SmartAI:getValuableCard(who)
 
 	local equips = sgs.QList2Table(who:getEquips())
 	for _, equip in ipairs(equips) do
-		if who:hasSkill("shensu") then return equip:getEffectiveId() end
 		if who:hasSkill("longhun") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
 		if who:hasSkill("qixi") and equip:isBlack() then return equip:getEffectiveId() end
 		if who:hasSkill("guidao") and equip:isBlack() then return equip:getEffectiveId() end
@@ -1357,7 +1356,7 @@ function SmartAI:getValuableCard(who)
 		if who:hasSkill("jijiu") and equip:isRed() then return equip:getEffectiveId() end
 		if who:hasSkill("wusheng") and equip:isRed() then return equip:getEffectiveId() end
 		if who:hasSkill("duanliang") and equip:isBlack() then return equip:getEffectiveId() end
-		if self:hasSkills("mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng", who) then return equip:getEffectiveId() end
+		if self:hasSkills("shensu|mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng", who) then return equip:getEffectiveId() end
 	end
 
 	if armor and self:evaluateArmor(armor, who) > 0

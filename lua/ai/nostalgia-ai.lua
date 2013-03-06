@@ -249,6 +249,14 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 			end
 		end
 	end
+	if not target then
+		for _, enemy in ipairs(self.enemies) do
+			if not enemy:isNude() and enemy:hasSkill("manjuan") then
+				target = enemy
+				break
+			end
+		end
+	end
 
 	if target then
 		local willUse = false

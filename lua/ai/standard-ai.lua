@@ -1431,8 +1431,8 @@ function SmartAI:getWoundedFriend(maleOnly)
 
 	for _, friend in ipairs(self.friends) do
 		if friend:isLord() then
-			if friend:getMark("hunzi") == 0 and friend:getMark("@waked") == 0 and friend:hasSkill("hunzi")
-					and self:getEnemyNumBySeat(self.player, friend) <= (friend:getHp() >= 2 and 1 or 0) then
+			if friend:getMark("hunzi") == 0 and friend:hasSkill("hunzi")
+				and self:getEnemyNumBySeat(self.player, friend) <= (friend:getHp() >= 2 and 1 or 0) then
 				addToList(friend, 2)
 			elseif friend:getHp() >= getBestHp(friend) then
 				addToList(friend, 2)

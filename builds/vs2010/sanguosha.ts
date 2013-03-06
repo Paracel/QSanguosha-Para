@@ -2501,64 +2501,64 @@
 <context>
     <name>Room</name>
     <message>
-        <location filename="../../src/server/room.cpp" line="1710"/>
+        <location filename="../../src/server/room.cpp" line="1726"/>
         <source>disconnected</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1930"/>
+        <location filename="../../src/server/room.cpp" line="1946"/>
         <source>Computer %1</source>
         <translation>电脑 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1733"/>
+        <location filename="../../src/server/room.cpp" line="1749"/>
         <source>&lt;font color=#000000&gt;Player &lt;b&gt;%1&lt;/b&gt; left the game&lt;/font&gt;</source>
         <translation>&lt;font color=#000000&gt;玩家 %1 离开了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1911"/>
+        <location filename="../../src/server/room.cpp" line="1927"/>
         <source>%1: %2 is not invokable</source>
         <translation>%1: 不可调用的方法名 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1934"/>
+        <location filename="../../src/server/room.cpp" line="1950"/>
         <source>Hello, I&apos;m a robot</source>
         <translation>大家好，我是一个机器人</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="1998"/>
+        <location filename="../../src/server/room.cpp" line="2014"/>
         <source>&lt;font color=#EEB422&gt;Player &lt;b&gt;%1&lt;/b&gt; joined the game&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2425"/>
+        <location filename="../../src/server/room.cpp" line="2441"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2427"/>
+        <location filename="../../src/server/room.cpp" line="2443"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2429"/>
+        <location filename="../../src/server/room.cpp" line="2445"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2432"/>
+        <location filename="../../src/server/room.cpp" line="2448"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="3730"/>
+        <location filename="../../src/server/room.cpp" line="3746"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4628"/>
+        <location filename="../../src/server/room.cpp" line="4644"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>
@@ -2577,8 +2577,8 @@
         <location filename="../../src/ui/roomscene.cpp" line="2792"/>
         <location filename="../../src/ui/roomscene.cpp" line="2802"/>
         <location filename="../../src/ui/roomscene.cpp" line="2817"/>
-        <location filename="../../src/ui/roomscene.cpp" line="3494"/>
-        <location filename="../../src/ui/roomscene.cpp" line="3519"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3524"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3549"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -2902,47 +2902,52 @@
         <translation>本房间禁止聊天！</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3162"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3095"/>
+        <source>&lt;font color=&apos;%1&apos;&gt;[%2] said: %3 &lt;/font&gt;</source>
+        <translation>&lt;font color=&apos;%1&apos;&gt;[%2] 说: %3 &lt;/font&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/ui/roomscene.cpp" line="3192"/>
         <source>&lt;font color=&apos;%1&apos;&gt;---------- Game Start ----------&lt;/font&gt;</source>
         <translation>&lt;font color=&apos;%1&apos;&gt;────────游戏开始────────&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3481"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3511"/>
         <source>Server information</source>
         <translation>服务器信息</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3494"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3524"/>
         <source>Only the lord can kick!</source>
         <translation>只有主公才能踢人！</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3509"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3539"/>
         <source>Kick</source>
         <translation>踢人</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3510"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3540"/>
         <source>Please select the player to kick</source>
         <translation>请选择被踢玩家</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3519"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3549"/>
         <source>You can only initiate a surrender poll at your play phase!</source>
         <translation>只有在你的出牌阶段才能请求投降！</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3524"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3554"/>
         <source>Surrender</source>
         <translation>投降</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3524"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3554"/>
         <source>Are you sure to surrender ?</source>
         <translation>你真的要投降吗？</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3772"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3802"/>
         <source>Complete</source>
         <translation>完成</translation>
     </message>

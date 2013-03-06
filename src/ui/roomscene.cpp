@@ -240,8 +240,8 @@ RoomScene::RoomScene(QMainWindow *main_window)
     chat_widget = new ChatWidget();
     chat_widget->setZValue(-0.1);
     addItem(chat_widget);
-    connect(chat_widget,SIGNAL(return_button_click()),this, SLOT(speak()));
-    connect(chat_widget,SIGNAL(chat_widget_msg(QString)),this, SLOT(appendChatEdit(QString)));
+    connect(chat_widget,SIGNAL(return_button_click()), this, SLOT(speak()));
+    connect(chat_widget, SIGNAL(chat_widget_msg(QString)), this, SLOT(appendChatEdit(QString)));
 
     if (ServerInfo.DisableChat)
         chat_edit_widget->hide();
@@ -3065,8 +3065,38 @@ void RoomScene::viewDistance() {
 void RoomScene::speak() {
     if (game_started && ServerInfo.DisableChat)
         chat_box->append(tr("This room does not allow chatting!"));
-    else
-        ClientInstance->speakToServer(chat_edit->text());
+    else {
+        bool broadcast = true;
+        QString text = chat_edit->text();
+        if (text == ".StartBgMusic") {
+            broadcast = false;
+#ifdef AUDIO_SUPPORT
+            QString bgmusic_path = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
+
+            Audio::playBGM(bgmusic_path);
+            Audio::setBGMVolume(Config.BGMVolume);
+#endif
+        } else if (text == ".StopBgMusic") {
+            broadcast = false;
+#ifdef AUDIO_SUPPORT
+            Audio::stopBGM();
+#endif
+        }
+        if (broadcast)
+            ClientInstance->speakToServer(text);
+        else {
+            QString title;
+            if (Self) {
+                title = Self->getGeneralName();
+                title = Sanguosha->translate(title);
+                title.append(QString("(%1)").arg(Self->screenName()));
+                title = QString("<b>%1</b>").arg(title);
+            }
+            QString line = tr("<font color='%1'>[%2] said: %3 </font>")
+                           .arg(Config.TextEditColor.name()).arg(title).arg(text);
+            appendChatBox(QString("<p style=\"margin:3px 2px;\">%1</p>").arg(line));
+        }
+    }
     chat_edit->clear();
 }
 
@@ -3900,8 +3930,7 @@ void RoomScene::appendChatEdit(QString txt) {
 void RoomScene::appendChatBox(QString txt) {
     QString prefix = "<img src='image/system/chatface/";
     QString suffix = ".png'></img>";
-    txt=txt.replace("<#", prefix);
-    txt=txt.replace("#>", suffix);
+    txt = txt.replace("<#", prefix).replace("#>", suffix);
     chat_box->append(txt);
 }
 

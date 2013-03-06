@@ -58,7 +58,7 @@ QSanSelectableItem::QSanSelectableItem(bool center_as_origin)
 {
     if (center_as_origin) {
         resetTransform();
-        this->translate(-_m_mainPixmap.width() / 2, -_m_mainPixmap.height()/2);
+        this->translate(-_m_mainPixmap.width() / 2, -_m_mainPixmap.height() / 2);
     }
     _m_width = _m_height = 0;
 }

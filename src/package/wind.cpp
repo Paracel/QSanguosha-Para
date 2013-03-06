@@ -562,7 +562,7 @@ public:
                     LogMessage log;
                     log.type = "#BuquDuplicateGroup";
                     log.from = zhoutai;
-                    log.arg = QString::number(i+1);
+                    log.arg = QString::number(i + 1);
                     if (number == 10)
                         log.arg2 = "10";
                     else {

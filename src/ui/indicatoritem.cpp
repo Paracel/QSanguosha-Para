@@ -50,8 +50,8 @@ void IndicatorItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     QPen pen(color);
     pen.setWidthF(width);
 
-    int baseX = qMin(start.x(),finish.x());
-    int baseY = qMin(start.y(),finish.y());
+    int baseX = qMin(start.x(), finish.x());
+    int baseY = qMin(start.y(), finish.y());
 
     QLinearGradient linearGrad(start - QPoint(baseX, baseY),
                                finish - QPoint(baseX, baseY));

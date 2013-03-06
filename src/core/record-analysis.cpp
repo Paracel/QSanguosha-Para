@@ -102,7 +102,7 @@ void RecAnalysis::initialize(QString dir) {
 
         if (line.contains("speak")) {
             QString speaker = line.split(":").first();
-            speaker.remove(0, speaker.lastIndexOf(" ")+1);
+            speaker.remove(0, speaker.lastIndexOf(" ") + 1);
             QString words = line.split(":").last().remove(" ");
             words = QString::fromUtf8(QByteArray::fromBase64(words.toAscii()));
             m_recordChat += getPlayer(speaker)->m_screenName+": "+words;
@@ -185,12 +185,12 @@ void RecAnalysis::initialize(QString dir) {
     }
 
     QString winners = records_line.last();
-    winners.remove(winners.lastIndexOf("[")-1, winners.length());
+    winners.remove(winners.lastIndexOf("[") - 1, winners.length());
     winners = winners.split("[").last();
     m_recordWinners = winners.remove("\"").split("+");
 
     winners = records_line.last().remove("\"");
-    winners.remove(0, winners.lastIndexOf("[")+1);
+    winners.remove(0, winners.lastIndexOf("[") + 1);
     QStringList roles_order = winners.remove(QRegExp("[^a-z,]+")).split(",");
     for (int i = 0; i < role_list.length(); i++) {
         getPlayer(role_list.at(i))->m_role = roles_order.at(i);

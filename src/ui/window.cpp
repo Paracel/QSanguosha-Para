@@ -16,7 +16,7 @@ Window::Window(const QString &title, const QSizeF &size)
     QPixmap *bg;
     bg = size.width()>size.height() ? new QPixmap("image/system/tip.png") : new QPixmap("image/system/about.png");
     QImage bgimg = bg->toImage();
-    outimg = new QImage(size.toSize(),QImage::Format_ARGB32);
+    outimg = new QImage(size.toSize(), QImage::Format_ARGB32);
 
     qreal pad = 10;
 

@@ -107,7 +107,7 @@ public:
                 return false;
         }
         //==================================
-        if (room->askForSkillInvoke(ganfuren,objectName())) {
+        if (room->askForSkillInvoke(ganfuren, objectName())) {
             int handcard_num = ganfuren->getHandcardNum();
             room->broadcastSkillInvoke(objectName());
             ganfuren->throwAllHandCards();

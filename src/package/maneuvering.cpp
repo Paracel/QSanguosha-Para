@@ -435,7 +435,7 @@ ManeuveringPackage::ManeuveringPackage()
           << new ThunderSlash(Card::Spade, 7)
           << new ThunderSlash(Card::Spade, 8)
           << new Analeptic(Card::Spade, 9)
-          << new SupplyShortage(Card::Spade,10)
+          << new SupplyShortage(Card::Spade, 10)
           << new IronChain(Card::Spade, 11)
           << new IronChain(Card::Spade, 12)
           << new Nullification(Card::Spade, 13);

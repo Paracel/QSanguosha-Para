@@ -275,7 +275,7 @@ bool GreatYeyanCard::targetFilter(const QList<const Player *> &targets, const Pl
     int i = 0;
     foreach (const Player *player, targets)
         if (player == to_select) i++;
-    maxVotes = qMax(3 - targets.size(),0) + i;
+    maxVotes = qMax(3 - targets.size(), 0) + i;
     return maxVotes > 0;
 }
 

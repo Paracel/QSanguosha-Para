@@ -41,7 +41,7 @@ public:
     virtual void onTagSet(Room *room, const QString &key) const;
     virtual void assign(QStringList &generals, QStringList &roles) const{
         MiniSceneRule *rule = qobject_cast<MiniSceneRule *>(getRule());
-        rule->assign(generals,roles);
+        rule->assign(generals, roles);
     }
     virtual int getPlayerCount() const{
         QStringList generals, roles;

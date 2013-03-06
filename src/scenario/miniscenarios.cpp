@@ -16,7 +16,7 @@ MiniSceneRule::MiniSceneRule(Scenario *scenario)
 
 void MiniSceneRule::assign(QStringList &generals, QStringList &roles) const{
     for (int i = 0; i < players.length(); i++) {
-        QMap<QString,QString> sp = players.at(i);
+        QMap<QString, QString> sp = players.at(i);
         QString name = sp["general"];
         if (name == "select") name = _S_DEFAULT_HERO;
         generals << name;
@@ -164,7 +164,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             str = this->players.at(i)["hpadj"];
             if (str != QString())
-                room->setPlayerProperty(sp,"maxhp",sp->getMaxHp()+str.toInt());
+                room->setPlayerProperty(sp,"maxhp", sp->getMaxHp()+str.toInt());
             str = QString::number(sp->getMaxHp());
 
             QString str2 = this->players.at(i)["hp"];
@@ -173,7 +173,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             str = this->players.at(i)["equip"];
             QStringList equips = str.split(",");
-            foreach (QString equip,equips) {
+            foreach (QString equip, equips) {
                 bool ok;
                 equip.toInt(&ok);
                 if (!ok)
@@ -186,8 +186,9 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             str = this->players.at(i)["judge"];
             if (str != QString()) {
                 QStringList judges = str.split(",");
-                foreach (QString judge,judges)
-                    room->moveCardTo(Sanguosha->getCard(judge.toInt()),NULL,sp,Player::PlaceDelayedTrick, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
+                foreach (QString judge, judges)
+                    room->moveCardTo(Sanguosha->getCard(judge.toInt()), NULL, sp,
+                                     Player::PlaceDelayedTrick, CardMoveReason(CardMoveReason::S_REASON_UNKNOWN, QString()));
             }
 
             str = this->players.at(i)["hand"];

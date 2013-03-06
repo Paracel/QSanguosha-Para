@@ -299,7 +299,7 @@ bool Client::processServerRequest(const QSanGeneralPacket &packet) {
     Countdown countdown;
     countdown.m_current = 0;
     if (!msg.isArray() || msg.size() <= 1 
-        || !countdown.tryParse(msg[msg.size()-1])) {
+        || !countdown.tryParse(msg[msg.size() - 1])) {
         countdown.m_type = Countdown::S_COUNTDOWN_USE_DEFAULT;    
         countdown.m_max = ServerInfo.getCommandTimeout(command, S_CLIENT_INSTANCE);
     }
@@ -561,7 +561,7 @@ void Client::arrangeSeats(const QString &seats_str) {
 
     Q_ASSERT(self_index != -1);
 
-    for (int i = self_index+1; i < players.length(); i++)
+    for (int i = self_index + 1; i < players.length(); i++)
         seats.append(players.at(i));
     for (int i = 0; i < self_index; i++)
         seats.append(players.at(i));
@@ -1033,7 +1033,7 @@ void Client::setLines(const QString &filename) {
         QString skill_name = rx.capturedTexts().at(1);
         skill_line = Sanguosha->translate("$" + skill_name);
 
-        QChar last_char = skill_name[skill_name.length()-1];
+        QChar last_char = skill_name[skill_name.length() - 1];
         if (last_char.isDigit())
             skill_name.chop(1);
 

@@ -5,7 +5,7 @@
 #include <QMessageBox>
 
 MyPixmapItem::MyPixmapItem(const QPixmap &pixmap, QGraphicsItem *parentItem)
-    : QGraphicsPixmapItem(pixmap,parentItem)
+    : QGraphicsPixmapItem(pixmap, parentItem)
 {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);
@@ -86,7 +86,7 @@ void MyPixmapItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QW
 void MyPixmapItem::initFaceBoardPos() {
     const int start_x = 5, start_y = 5;
     int x, y;
-    int icon_w = 16,icon_h = 16;
+    int icon_w = 16, icon_h = 16;
     int x_offset = 6, y_offset = 6;
 
     // total 7 x 8 icons in QList <QRect> faceboardPos;
@@ -100,9 +100,9 @@ void MyPixmapItem::initFaceBoardPos() {
 }
 
 void MyPixmapItem::initEasyTextPos() {
-    const int start_x = 5,start_y = 5;
+    const int start_x = 5, start_y = 5;
     int y;
-    int icon_w = 210,icon_h = 12;
+    int icon_w = 210, icon_h = 12;
     int y_offset = 10;
 
     // only 10 text QList <QRect> easytextPos;
@@ -184,8 +184,8 @@ QPushButton *ChatWidget::createButton(const QString &name) {
     QPixmap iconOff(QString("image/system/chatface/%1.png").arg(name));
 
     QIcon icon;
-    icon.addPixmap(iconOff, QIcon::Normal,QIcon::Off);
-    icon.addPixmap(iconOn, QIcon::Active,QIcon::Off);
+    icon.addPixmap(iconOff, QIcon::Normal, QIcon::Off);
+    icon.addPixmap(iconOn, QIcon::Active, QIcon::Off);
 
     button->setIcon(icon);
     button->setIconSize(iconOn.size());

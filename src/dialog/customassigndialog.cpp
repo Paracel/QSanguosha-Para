@@ -126,7 +126,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     for (int i = 0; i < mark_icons.length(); i++) {
         int row = i / columns;
         int column = i % columns;
-        grid_layout->addWidget(mark_icons.at(i), row, column+1);
+        grid_layout->addWidget(mark_icons.at(i), row, column + 1);
         mark_icons.at(i)->hide();
     }
     starter_lay->addLayout(grid_layout);
@@ -167,7 +167,7 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     hp_prompt = new QCheckBox(tr("Hp"));
     hp_prompt->setChecked(false);
     hp_spin = new QSpinBox();
-    hp_spin->setRange(1,max_hp_spin->value());
+    hp_spin->setRange(1, max_hp_spin->value());
     hp_spin->setValue(4);
     hp_spin->setEnabled(false);
 
@@ -367,8 +367,8 @@ CustomAssignDialog::CustomAssignDialog(QWidget *parent)
     connect(single_turn, SIGNAL(toggled(bool)), this, SLOT(checkBeforeNextBox(bool)));
     connect(before_next, SIGNAL(toggled(bool)), this, SLOT(checkSingleTurnBox(bool)));
     connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
-    connect(loadButton,SIGNAL(clicked()),this,SLOT(load()));
-    connect(saveButton,SIGNAL(clicked()),this,SLOT(save()));
+    connect(loadButton, SIGNAL(clicked()), this, SLOT(load()));
+    connect(saveButton, SIGNAL(clicked()), this, SLOT(save()));
     connect(defaultLoadButton, SIGNAL(clicked()), this, SLOT(load()));
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 }
@@ -666,7 +666,7 @@ void CustomAssignDialog::updatePileInfo(int row) {
     if (row >= 0) {
         if (move_pile_check->isChecked()) {
             move_list_up_button->setEnabled(row != 0);
-            move_list_down_button->setEnabled(row != pile_list->count()-1);
+            move_list_down_button->setEnabled(row != pile_list->count() - 1);
         }
         return;
     }
@@ -799,7 +799,7 @@ void CustomAssignDialog::removeEquipCard() {
         int row = equip_list->currentRow();
         equip_list->takeItem(row);
         if (equip_list->count() > 0)
-            equip_list->setCurrentRow(row >= equip_list->count() ? row-1 : row);
+            equip_list->setCurrentRow(row >= equip_list->count() ? row - 1 : row);
         else
             removeEquipButton->setEnabled(false);
     }
@@ -813,7 +813,7 @@ void CustomAssignDialog::removeHandCard() {
         int row = hand_list->currentRow();
         hand_list->takeItem(row);
         if (hand_list->count() > 0)
-            hand_list->setCurrentRow(row >= hand_list->count() ? row-1 : row);
+            hand_list->setCurrentRow(row >= hand_list->count() ? row - 1 : row);
         else
             removeHandButton->setEnabled(false);
     }
@@ -827,7 +827,7 @@ void CustomAssignDialog::removeJudgeCard() {
         int row = judge_list->currentRow();
         judge_list->takeItem(row);
         if (judge_list->count() > 0)
-            judge_list->setCurrentRow(row >= judge_list->count() ? row-1 : row);
+            judge_list->setCurrentRow(row >= judge_list->count() ? row - 1 : row);
         else
             removeJudgeButton->setEnabled(false);
     }
@@ -839,7 +839,7 @@ void CustomAssignDialog::removePileCard() {
         int row = pile_list->currentRow();
         pile_list->takeItem(row);
         if (pile_list->count() > 0)
-            pile_list->setCurrentRow(row >= pile_list->count() ? row-1 : row);
+            pile_list->setCurrentRow(row >= pile_list->count() ? row - 1 : row);
         else {
             removePileButton->setEnabled(false);
             ended_by_pile->setEnabled(false);
@@ -874,14 +874,14 @@ void CustomAssignDialog::setMoveButtonAvaliable(bool toggled) {
         move_list_check->setChecked(toggled);
         if (toggled) {
             move_list_up_button->setEnabled(list->currentRow() != 0);
-            move_list_down_button->setEnabled(list->currentRow() != list->count()-1);
+            move_list_down_button->setEnabled(list->currentRow() != list->count() - 1);
         }
     } else {
         move_list_check->setChecked(false);
         move_pile_check->setChecked(toggled);
         if (toggled) {
             move_list_up_button->setEnabled(pile_list->count() > 0 && pile_list->currentRow() != 0);
-            move_list_down_button->setEnabled(pile_list->count() > 0 && pile_list->currentRow() != pile_list->count()-1);
+            move_list_down_button->setEnabled(pile_list->count() > 0 && pile_list->currentRow() != pile_list->count() - 1);
         }
     }
 
@@ -972,9 +972,9 @@ void CustomAssignDialog::exchangeListItem() {
         first_index = pile_list->currentRow();
 
     if (sender()->objectName() == "list_up")
-        second_index = first_index-1;
+        second_index = first_index - 1;
     else if (sender()->objectName() == "list_down")
-        second_index = first_index+1;
+        second_index = first_index + 1;
 
     if (first_index < 0 && second_index < 0)
         return;
@@ -1038,7 +1038,7 @@ void CustomAssignDialog::on_list_itemSelectionChanged(QListWidgetItem *current) 
 
     if (move_list_check->isChecked()) {
         move_list_up_button->setEnabled(list->currentRow() != 0);
-        move_list_down_button->setEnabled(list->currentRow() != list->count()-1);
+        move_list_down_button->setEnabled(list->currentRow() != list->count() - 1);
     }
 
     int val = 4;
@@ -1177,7 +1177,7 @@ void CustomAssignDialog::load() {
 
         if (line.startsWith("setPile:")) {
             QStringList list = line.remove("setPile:").split(",");
-            foreach (QString id,list)
+            foreach (QString id, list)
                 set_pile.prepend(id.toInt());
             continue;
         } else if (line.startsWith("extraOptions:")) {
@@ -1202,7 +1202,7 @@ void CustomAssignDialog::load() {
             QStringList keys = str.split(":");
             if (keys.size() < 2) continue;
             if (keys.first().size() < 1) continue;
-            player.insert(keys.at(0),keys.at(1));
+            player.insert(keys.at(0), keys.at(1));
         }
 
         if (player["role"]!= QString()) role_mapping[name] = player["role"];
@@ -1454,7 +1454,7 @@ bool CustomAssignDialog::save(QString path) {
             foreach (QString skill_name, player_exskills[name]) {
                 line.append(skill_name + ",");
             }
-            line.remove(line.length()-1, 1);
+            line.remove(line.length() - 1, 1);
             line.append(" ");
         }
         if (i == 0) {
@@ -1476,21 +1476,21 @@ bool CustomAssignDialog::save(QString path) {
 
         if (player_equips[name].length()) {
             line.append("equip:");
-            foreach (int equip,player_equips[name]) line.append(QString("%1,").arg(equip));
+            foreach (int equip, player_equips[name]) line.append(QString("%1,").arg(equip));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_handcards[name].length()) {
             line.append("hand:");
-            foreach (int hand,player_handcards[name]) line.append(QString("%1,").arg(hand));
+            foreach (int hand, player_handcards[name]) line.append(QString("%1,").arg(hand));
             line.chop(1);
             line.append(" ");
         }
 
         if (player_judges[name].length()) {
             line.append("judge:");
-            foreach (int judge,player_judges[name]) line.append(QString("%1,").arg(judge));
+            foreach (int judge, player_judges[name]) line.append(QString("%1,").arg(judge));
             line.chop(1);
             line.append(" ");
         }
@@ -1670,7 +1670,7 @@ void CardAssignDialog::askCard() {
     int id = card_list->item(row)->data(Qt::UserRole).toInt();
     excluded_card << id;
     updateCardList();
-    card_list->setCurrentRow(row >= card_list->count() ? row-1 : row);
+    card_list->setCurrentRow(row >= card_list->count() ? row - 1 : row);
 }
 
 void CardAssignDialog::updateExcluded(int card_id) {
@@ -1845,7 +1845,7 @@ void SkillAssignDialog::updateSkillList() {
             skill_list->addItem(item);
         }
     }
-    skill_list->setCurrentRow(index >= skill_list->count() ? skill_list->count()-1 : index);
+    skill_list->setCurrentRow(index >= skill_list->count() ? skill_list->count() - 1 : index);
 
     if (skill_list->count() > 0) {
         changeSkillInfo();

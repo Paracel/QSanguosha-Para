@@ -958,7 +958,7 @@ void BasaraMode::playerShowed(ServerPlayer *player) const{
 
     QString answer = room->askForChoice(player, "RevealGeneral", "yes+no");
     if (answer == "yes") {
-        QString general_name = room->askForGeneral(player,names);
+        QString general_name = room->askForGeneral(player, names);
 
         generalShowed(player, general_name);
         if (Config.EnableHegemony) room->getThread()->trigger(GameOverJudge, room, player);
@@ -1053,7 +1053,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
                     if (ces.card->isKindOf("TrickCard") || ces.card->isKindOf("Slash"))
                         playerShowed(player);
 
-                const ProhibitSkill *prohibit = room->isProhibited(ces.from,ces.to,ces.card);
+                const ProhibitSkill *prohibit = room->isProhibited(ces.from, ces.to, ces.card);
                 if (prohibit) {
                     LogMessage log;
                     log.type = "#SkillAvoid";

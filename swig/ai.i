@@ -183,7 +183,7 @@ ServerPlayer *LuaAI::askForYiji(const QList<int> &cards, const QString &reason, 
     for (int i = 0; i < cards.length(); i++) {
         int elem = cards.at(i);
         lua_pushnumber(L, elem);
-        lua_rawseti(L, -3, i+1);
+        lua_rawseti(L, -3, i + 1);
     }
 
     int error = lua_pcall(L, 3, 2, 0);

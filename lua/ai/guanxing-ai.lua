@@ -63,7 +63,7 @@ local function getOwnCards(self, up, bottom, next_judge)
 				local rednum, blacknum = 0, 0
 				local cards = sgs.QList2Table(self.player:getHandcards())
 				for _, card in ipairs(cards) do
-					if card:isRed() then rednum = rednum +1 else blacknum = blacknum +1 end
+					if card:isRed() then rednum = rednum + 1 else blacknum = blacknum + 1 end
 				end
 				if not shuangxiong and ((rednum > blacknum and gcard:isBlack()) or (blacknum > rednum and gcard:isRed())) 
 					and (isCard("Slash", gcard, self.player) or isCard("Duel", gcard, self.player)) then

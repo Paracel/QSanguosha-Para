@@ -113,7 +113,7 @@ QByteArray Replayer::PNG2TXT(const QString filename) {
     image = image.convertToFormat(QImage::Format_ARGB32);
     const uchar *imageData = image.bits();
     qint32 actual_size = *(const qint32 *)imageData;
-    QByteArray data((const char *)(imageData+4), actual_size);
+    QByteArray data((const char *)(imageData + 4), actual_size);
     data = qUncompress(data);
 
     return data;

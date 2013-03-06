@@ -804,12 +804,12 @@ bool Room::isCanceled(const CardEffectStruct &effect) {
     const TrickCard *trick = qobject_cast<const TrickCard *>(effect.card->getRealCard());
     if (trick) {
         QVariant decisionData = QVariant::fromValue(effect.to);
-        setTag("NullifyingTarget",decisionData);
+        setTag("NullifyingTarget", decisionData);
         decisionData = QVariant::fromValue(effect.from);
-        setTag("NullifyingSource",decisionData);
+        setTag("NullifyingSource", decisionData);
         decisionData = QVariant::fromValue(effect.card);
-        setTag("NullifyingCard",decisionData);
-        setTag("NullifyingTimes",0);
+        setTag("NullifyingCard", decisionData);
+        setTag("NullifyingTimes", 0);
         return askForNullification(trick, effect.from, effect.to, true);
     } else
         return false;
@@ -902,7 +902,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     QVariant decisionData = QVariant::fromValue("Nullification:" + QString(trick->getClassName())
                                                 + ":" + to->objectName() + ":" + (positive ? "true" : "false"));
     thread->trigger(ChoiceMade, this, repliedPlayer, decisionData);
-    setTag("NullifyingTimes",getTag("NullifyingTimes").toInt() + 1);
+    setTag("NullifyingTimes", getTag("NullifyingTimes").toInt() + 1);
     bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, to, !positive, aiHelper);
     return result;
 }
@@ -2298,7 +2298,7 @@ void Room::swapSeat(ServerPlayer *a, ServerPlayer *b) {
 
         broadcastProperty(player, "seat");
 
-        player->setNext(m_players.at((i+1) % m_players.length()));
+        player->setNext(m_players.at((i + 1) % m_players.length()));
     }
 }
 
@@ -2361,7 +2361,7 @@ QString Room::_chooseDefaultGeneral(ServerPlayer *player) const{
                 if (Sanguosha->getGeneral(name)->getKingdom() == player->getGeneral()->getKingdom())
                     return name;
             } else {
-                foreach (QString other,player->getSelected()) { // choosing second general
+                foreach (QString other, player->getSelected()) { // choosing second general
                     if (name == other) continue;
                     if (Sanguosha->getGeneral(name)->getKingdom() == Sanguosha->getGeneral(other)->getKingdom())
                         return name;
@@ -4669,7 +4669,7 @@ void Room::copyFrom(Room *rRoom) {
         b->setNext(player_map.value(a->getNext()));
     }
 
-    foreach (ServerPlayer *a,m_alivePlayers) {
+    foreach (ServerPlayer *a, m_alivePlayers) {
         if (!a->isAlive()) m_alivePlayers.removeOne(a);
     }
     current = player_map.value(rRoom->getCurrent());

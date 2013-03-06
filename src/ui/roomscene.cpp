@@ -152,7 +152,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
     connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString, QStringList)));
-    connect(ClientInstance, SIGNAL(role_state_changed(QString)),this, SLOT(updateRoles(QString)));
+    connect(ClientInstance, SIGNAL(role_state_changed(QString)), this, SLOT(updateRoles(QString)));
     connect(ClientInstance, SIGNAL(event_received(const Json::Value)), this, SLOT(handleGameEvent(const Json::Value)));
 
     connect(ClientInstance, SIGNAL(game_started()), this, SLOT(onGameStart()));
@@ -170,7 +170,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     addItem(guanxing_box);
     guanxing_box->setZValue(20000.0);
 
-    connect(ClientInstance, SIGNAL(guanxing(QList<int>,bool)), guanxing_box, SLOT(doGuanxing(QList<int>,bool)));
+    connect(ClientInstance, SIGNAL(guanxing(QList<int>, bool)), guanxing_box, SLOT(doGuanxing(QList<int>, bool)));
     guanxing_box->moveBy(-120, 0);
 
     card_container = new CardContainer();
@@ -240,7 +240,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     chat_widget = new ChatWidget();
     chat_widget->setZValue(-0.1);
     addItem(chat_widget);
-    connect(chat_widget,SIGNAL(return_button_click()), this, SLOT(speak()));
+    connect(chat_widget, SIGNAL(return_button_click()), this, SLOT(speak()));
     connect(chat_widget, SIGNAL(chat_widget_msg(QString)), this, SLOT(appendChatEdit(QString)));
 
     if (ServerInfo.DisableChat)
@@ -1768,7 +1768,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
                 hide++;
         }
         if (!card_str.isEmpty()) log_box->appendLog("$MoveCard", from_general, tos, card_str);
-        if (hide > 0) log_box->appendLog("#MoveNCards", from_general, tos, QString(),QString::number(hide));
+        if (hide > 0) log_box->appendLog("#MoveNCards", from_general, tos, QString(), QString::number(hide));
     }
     if (move.from_place == Player::PlaceHand && move.to_place == Player::PlaceHand) {
         QString from_general = move.from->objectName();
@@ -3351,12 +3351,12 @@ void RoomScene::animatePopup(const QString &name, const QStringList &args) {
     glare->setPixmapAtMid(*item);
 
     sprite->setResetTime(200);
-    sprite->addKeyFrame(0,"opacity",0);
-    sprite->addKeyFrame(400,"opacity",1);
-    sprite->addKeyFrame(600,"opacity",1);
-    sprite->addKeyFrame(0,"scale",0.2,QEasingCurve::OutQuad);
-    sprite->addKeyFrame(400,"scale",1);
-    sprite->addKeyFrame(600,"scale",1.2);
+    sprite->addKeyFrame(0,"opacity", 0);
+    sprite->addKeyFrame(400,"opacity", 1);
+    sprite->addKeyFrame(600,"opacity", 1);
+    sprite->addKeyFrame(0,"scale", 0.2, QEasingCurve::OutQuad);
+    sprite->addKeyFrame(400,"scale", 1);
+    sprite->addKeyFrame(600,"scale", 1.2);
 
     sprite->start();
 

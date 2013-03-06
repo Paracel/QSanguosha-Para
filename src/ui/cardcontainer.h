@@ -37,7 +37,7 @@ public:
     void view(const ClientPlayer *player);
     virtual QRectF boundingRect() const;
     ClientPlayer *m_currentPlayer;
-    virtual void paint(QPainter *,const QStyleOptionGraphicsItem *,QWidget *);
+    virtual void paint(QPainter *, const QStyleOptionGraphicsItem *, QWidget *);
     bool retained();
 
 public slots:

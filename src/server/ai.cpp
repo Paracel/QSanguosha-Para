@@ -17,8 +17,7 @@ AI::AI(ServerPlayer *player)
 typedef QPair<QString, QString> RolePair;
 
 struct RoleMapping: public QMap<RolePair, AI::Relation> {
-    void set(const QString &role1, const QString &role2, AI::Relation relation,
-             bool bidirectional = false) {
+    void set(const QString &role1, const QString &role2, AI::Relation relation, bool bidirectional = false) {
         insert(qMakePair(role1, role2), relation);
         if (bidirectional)
             insert(qMakePair(role2, role1), relation);

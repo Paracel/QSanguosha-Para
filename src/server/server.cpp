@@ -266,7 +266,7 @@ QWidget *ServerDialog::createAdvancedTab() {
     basara_checkbox = new QCheckBox(tr("Enable Basara"));
     basara_checkbox->setChecked(Config.EnableBasara);
     updateButtonEnablility(mode_group->checkedButton());
-    connect(mode_group,SIGNAL(buttonClicked(QAbstractButton *)),this,SLOT(updateButtonEnablility(QAbstractButton *)));
+    connect(mode_group, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(updateButtonEnablility(QAbstractButton *)));
 
     hegemony_checkbox = new QCheckBox(tr("Enable Hegemony"));
     hegemony_checkbox->setChecked(Config.EnableBasara && Config.EnableHegemony);
@@ -381,7 +381,7 @@ QWidget *ServerDialog::createAITab() {
     ai_delay_ad_spinbox->setValue(Config.AIDelayAD);
     ai_delay_ad_spinbox->setSuffix(tr(" millisecond"));
     ai_delay_ad_spinbox->setEnabled(ai_delay_altered_checkbox->isChecked());
-    connect(ai_delay_altered_checkbox,SIGNAL(toggled(bool)),ai_delay_ad_spinbox, SLOT(setEnabled(bool)));
+    connect(ai_delay_altered_checkbox, SIGNAL(toggled(bool)), ai_delay_ad_spinbox, SLOT(setEnabled(bool)));
 
     layout->addWidget(ai_enable_checkbox);
     layout->addWidget(role_predictable_checkbox);
@@ -476,7 +476,7 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     QVBoxLayout *vlay = new QVBoxLayout;
     vlay->addWidget(list);
     apage->setLayout(vlay);
-    tab->addTab(apage,Sanguosha->translate("Pairs"));
+    tab->addTab(apage, Sanguosha->translate("Pairs"));
     lists << list;
 
     QPushButton *add = new QPushButton(tr("Add ..."));
@@ -1015,8 +1015,8 @@ bool ServerDialog::config() {
     Config.setValue("DisableChat", Config.DisableChat);
     Config.setValue("Enable2ndGeneral", Config.Enable2ndGeneral);
     Config.setValue("EnableSame", Config.EnableSame);
-    Config.setValue("EnableBasara",Config.EnableBasara);
-    Config.setValue("EnableHegemony",Config.EnableHegemony);
+    Config.setValue("EnableBasara", Config.EnableBasara);
+    Config.setValue("EnableHegemony", Config.EnableHegemony);
     Config.setValue("HegemonyMaxChoice", hegemony_maxchoice_spinbox->value());
     Config.setValue("HegemonyMaxShown", hegemony_maxshown_spinbox->value());
     Config.setValue("MaxHpScheme", Config.MaxHpScheme);

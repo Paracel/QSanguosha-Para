@@ -198,7 +198,7 @@ bool Card::CompareByType(const Card *a, const Card *b) {
     if (order1 != order2)
         return order1 < order2;
     else
-        return CompareBySuitNumber(a,b);
+        return CompareBySuitNumber(a, b);
 }
 
 bool Card::isNDTrick() const{

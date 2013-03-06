@@ -47,7 +47,7 @@ void Button::init() {
     title_item->setGraphicsEffect(de);
     
     QImage bgimg("image/system/button/button.png");
-    outimg = new QImage(size.toSize(),QImage::Format_ARGB32);
+    outimg = new QImage(size.toSize(), QImage::Format_ARGB32);
 
     qreal pad = 10;
 
@@ -83,7 +83,7 @@ void Button::init() {
 
     QGraphicsDropShadowEffect *effect = new QGraphicsDropShadowEffect;
     effect->setBlurRadius(5);
-    effect->setOffset(this->boundingRect().height()/7.0);
+    effect->setOffset(this->boundingRect().height() / 7.0);
     effect->setColor(QColor(0, 0, 0, 200));
     this->setGraphicsEffect(effect);
     
@@ -132,7 +132,7 @@ void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     QRectF rect = boundingRect();
 
     painter->drawImage(rect,*outimg);
-    painter->fillRect(rect,QColor(255, 255, 255, glow * 10));
+    painter->fillRect(rect, QColor(255, 255, 255, glow * 10));
 }
 
 void Button::timerEvent(QTimerEvent *) {

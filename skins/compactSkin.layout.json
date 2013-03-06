@@ -4,7 +4,7 @@
     "chooseGeneralBoxSwitchIconSizeThreshold": 10,
     "chooseGeneralBoxSwitchIconEachRow": 5,
     "chooseGeneralBoxSwitchIconEachRowForTooManyGenerals": 6,
-	"chooseGeneralBoxNoIconThreshold": 24 
+    "chooseGeneralBoxNoIconThreshold": 24
 },
 "room":
 {

@@ -21,7 +21,7 @@ class Sprite: public QObject, public QGraphicsPixmapItem {
 public:
     explicit Sprite(QGraphicsItem *parent = 0);
 
-    void addKeyFrame(int time,const QString & property, qreal value,QEasingCurve::Type easing = QEasingCurve::Linear);
+    void addKeyFrame(int time, const QString & property, qreal value, QEasingCurve::Type easing = QEasingCurve::Linear);
     void setResetTime(int time);
     void setPixmapAtMid(const QPixmap &pixmap);
 
@@ -38,11 +38,11 @@ private:
     struct AnimationLine {
         AnimationLine() { frames[0] = 1; }
         QString name;
-        QMap<int,qreal> frames;
-        QMap<int,QEasingCurve::Type> easings;
+        QMap<int, qreal> frames;
+        QMap<int, QEasingCurve::Type> easings;
     };
 
-    QMap<QString,AnimationLine *> lines;
+    QMap<QString, AnimationLine *> lines;
     int total_time;
     int resetTime;
 };

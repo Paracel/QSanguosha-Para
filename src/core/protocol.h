@@ -177,7 +177,7 @@ namespace QSanProtocol {
 
     class QSanGeneralPacket: public QSanPacket {
     public:
-        //format: [global_serial,local_serial,packet_type,command_name,command_body]
+        //format: [global_serial, local_serial, packet_type, command_name, command_body]
         unsigned int m_globalSerial;
         unsigned int m_localSerial;        
         inline QSanGeneralPacket(int packetDescription = S_DESC_UNKNOWN, CommandType command = S_COMMAND_UNKNOWN) {

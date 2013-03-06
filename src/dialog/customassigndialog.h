@@ -201,7 +201,7 @@ class SkillAssignDialog: public QDialog {
     Q_OBJECT
 
 public:
-    SkillAssignDialog(QDialog *parent,QString player_name, QStringList &player_skills);
+    SkillAssignDialog(QDialog *parent, QString player_name, QStringList &player_skills);
 
 private:
     QListWidget *skill_list;

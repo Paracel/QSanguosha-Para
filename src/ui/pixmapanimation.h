@@ -21,7 +21,7 @@ public:
     void start(bool permanent = true, int interval = 50);
     void stop();
 
-    static PixmapAnimation *GetPixmapAnimation(QGraphicsItem *parent,const QString & emotion);
+    static PixmapAnimation *GetPixmapAnimation(QGraphicsItem *parent, const QString & emotion);
     static QPixmap GetFrameFromCache(const QString &filename);
     static int GetFrameCount(const QString &emotion);
 

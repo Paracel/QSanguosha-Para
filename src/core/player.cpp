@@ -392,7 +392,7 @@ void Player::setPhaseString(const QString &phase_str) {
     static QMap<QString, Phase> phase_map;
     if (phase_map.isEmpty()) {
         phase_map.insert("round_start", RoundStart);
-        phase_map.insert("start",Start);
+        phase_map.insert("start", Start);
         phase_map.insert("judge", Judge);
         phase_map.insert("draw", Draw);
         phase_map.insert("play", Play);
@@ -543,7 +543,7 @@ int Player::getMaxCards() const {
     }
     extra += Sanguosha->correctMaxCards(this);
 
-    return (qMax(hp,0) + rule + extra);
+    return (qMax(hp, 0) + rule + extra);
 }
 
 QString Player::getKingdom() const {

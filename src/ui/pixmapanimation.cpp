@@ -9,7 +9,7 @@
 const int PixmapAnimation::S_DEFAULT_INTERVAL = 50;
 
 PixmapAnimation::PixmapAnimation(QGraphicsScene *scene)
-    : QGraphicsItem(0,scene)
+    : QGraphicsItem(0, scene)
 {
 }
 
@@ -50,9 +50,9 @@ void PixmapAnimation::timerEvent(QTimerEvent *) {
     advance(1);
 }
 
-void PixmapAnimation::start(bool permanent,int interval) {
+void PixmapAnimation::start(bool permanent, int interval) {
     _m_timerId = startTimer(interval);
-    if (!permanent) connect(this,SIGNAL(finished()),this,SLOT(deleteLater()));
+    if (!permanent) connect(this, SIGNAL(finished()), this, SLOT(deleteLater()));
 }
 
 void PixmapAnimation::stop() {

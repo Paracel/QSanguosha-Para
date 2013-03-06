@@ -187,41 +187,91 @@ end
 sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards, true)
+	self:sortByKeepValue(cards)
 
 	local target
 	for _, friend in ipairs(self.friends_noself) do
-		if self:hasSkills(sgs.lose_equip_skill, friend) and not friend:getEquips():isEmpty() then
-			for _, card in ipairs(cards) do
-				if card:getSuit() == sgs.Card_Heart and self.player:getHandcardNum() > 1 then
-					use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
-					target = friend
-					break
-				end
-			end
+		if self:hasSkills(sgs.lose_equip_skill, friend) and not friend:getEquips():isEmpty() and not friend:hasSkill("manjuan") then
+			target = friend
+			break
 		end
-		if target then break end
 	end
 	if not target then
 		for _, enemy in ipairs(self.enemies) do
-			if not enemy:isKongcheng() then
-				for _, card in ipairs(cards)do
-					if card:getSuit() == sgs.Card_Heart
-						and not isCard("Peach", card, self.player) and not isCard("Peach", card, enemy) and self.player:getHandcardNum() > 1 then
-						use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
+			if self:getDangerousCard(enemy) then
+				target = enemy
+				break
+			end
+		end
+	end
+	if not target then
+		for _, friend in ipairs(self.friends_noself) do
+			if friend:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, friend)
+			  and friend:isWounded() and self:isWeak(friend) and not friend:hasSkill("manjuan") then
+				target = friend
+				break
+			end
+		end
+	end
+	if not target then
+		self:sort(self.enemies, "handcard")
+		for _, enemy in ipairs(self.enemies) do
+			if self:getValuableCard(enemy) then
+				target = enemy
+				break
+			end
+			if target then break end
+
+			local cards = sgs.QList2Table(enemy:getHandcards())
+			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
+			if not enemy:isKongcheng() and not enemy:hasSkill("tuntian") then
+				for _, cc in ipairs(cards) do
+					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 						target = enemy
 						break
 					end
 				end
 			end
 			if target then break end
+
+			if self:getValuableCard(enemy) then
+				target = enemy
+				break
+			end
+			if target then break end
+		end
+	end
+	if not target then
+		for _, friend in ipairs(self.friends_noself) do
+			if friend:hasSkill("tuntian") and not friend:hasSkill("manjuan") then
+				target = friend
+				break
+			end
 		end
 	end
 
 	if target then
-		self.room:setPlayerFlag(target, "nosxuanhuo_target")
-		if use.to then
-			use.to:append(target)
+		local willUse = false
+		if self:isFriend(target) then
+			for _, card in ipairs(cards) do
+				if card:getSuit() == sgs.Card_Heart then
+					willUse = true
+					break
+				end
+			end
+		else
+			for _, card in ipairs(cards) do
+				if card:getSuit() == sgs.Card_Heart and not card:isKindOf("Peach") and not card:isKindOf("Nullification") then
+					willUse = true
+					break
+				end
+			end
+		end
+
+		if willUse then
+			target:setFlags("nosxuanhuo_target")
+			use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
+			if use.to then use.to:append(target) end
 		end
 	end
 end

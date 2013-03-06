@@ -2369,6 +2369,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 	else
+		if flags:match("e") and self:getDangerousCard(who) then return self:getDangerousCard(who) end
 		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not (who:hasArmorEffect("silver_lion") and who:isWounded() or self:hasSkills("bazhen|yizhong", who)) then return who:getArmor():getId() end
@@ -4629,7 +4630,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 			end
 		end
 		for _, enemy in ipairs(enemies) do
-			if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", enemy) then
+			if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", enemy) and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
 				if enemy:getDefensiveHorse() then return enemy end
 				if enemy:getArmor() and not (enemy:hasArmorEffect("silver_lion") and enemy:isWounded() or self:hasSkills("bazhen|yizhong", enemy)) then return enemy end
 				if enemy:getOffensiveHorse() and (not enemy:hasSkill("jijiu") or enemy:getOffensiveHorse():isRed()) then
@@ -4646,7 +4647,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 		for _, enemy in ipairs(enemies) do
 			local cards = sgs.QList2Table(enemy:getHandcards())
 			local flag = string.format("%s_%s_%s","visible", self.player:objectName(), enemy:objectName())
-			if #cards <= 2 and not enemy:isKongcheng() then
+			if #cards <= 2 and not enemy:isKongcheng() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
 				for _, cc in ipairs(cards) do
 					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 						return enemy
@@ -4658,7 +4659,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 
 	if flags:match("e") then
 		for _, enemy in ipairs(enemies) do
-			if enemy:hasEquip() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) 
+			if enemy:hasEquip() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive)
 			and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
 			and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy)) then
 				return enemy

@@ -292,10 +292,7 @@ void GeneralOverview::askTransfiguration() {
 
 void GeneralOverview::on_tableWidget_itemDoubleClicked(QTableWidgetItem *) {
     if (ServerInfo.EnableCheat && Self) {
-        ui->changeGeneralButton->setEnabled(false);
-        int row = ui->tableWidget->currentRow();
-        QString general_name = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toString();
-        ClientInstance->requestCheatChangeGeneral(general_name, false);
+        askTransfiguration();
     }
 }
 

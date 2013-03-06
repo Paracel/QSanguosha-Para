@@ -801,8 +801,10 @@ void Dashboard::stopPending() {
     pending_card = NULL;
     emit card_selected(NULL);
 
-    foreach (CardItem *item, m_handCards)
+    foreach (CardItem *item, m_handCards) {
         item->setEnabled(false);
+        animations->effectOut(item);
+    }
 
     for (int i = 0; i < 4; i++) {
         CardItem *equip = _m_equipCards[i];

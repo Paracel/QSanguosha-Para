@@ -1526,7 +1526,23 @@ void Room::changeHero(ServerPlayer *player, const QString &new_general, bool ful
     broadcastProperty(player, "hp");
     broadcastProperty(player, "maxhp");
 
-    thread->addPlayerSkills(player, invokeStart);
+    QVariant void_data;
+    QList<const TriggerSkill *> game_start;
+    const General *gen = isSecondaryHero ? player->getGeneral2() : player->getGeneral();
+    if (gen) {
+        foreach (const Skill *skill, gen->getSkillList()) {
+            if (skill->inherits("TriggerSkill")) {
+                 const TriggerSkill *trigger = qobject_cast<const TriggerSkill *>(skill);
+                 thread->addTriggerSkill(trigger);
+                 if (invokeStart && trigger->getTriggerEvents().contains(GameStart))
+                     game_start << trigger;
+            }
+        }
+    }
+    if (invokeStart) {
+        foreach (const TriggerSkill *skill, game_start)
+            skill->trigger(GameStart, this, player, void_data);
+    }
     resetAI(player);
 }
 

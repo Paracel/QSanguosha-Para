@@ -1091,8 +1091,8 @@ public:
                     const TriggerSkill *game_start_skill = qobject_cast<const TriggerSkill *>(skill);
                     if (!game_start_skill->getTriggerEvents().contains(GameStart))
                         return false;
-                    QVariant data = 0;
-                    game_start_skill->trigger(GameStart, room, weiwudi, data);
+                    QVariant void_data;
+                    game_start_skill->trigger(GameStart, room, weiwudi, void_data);
                 }
             }
         }

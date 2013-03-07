@@ -428,14 +428,67 @@ dimeng_skill.getTurnUseCard = function(self)
 
 end
 
+function DimengIsWorth(self, friend, enemy, mycards, myequips)
+	local hand1 = enemy:getHandcardNum()
+	local hand2 = friend:getHandcardNum()
+	if hand1 < hand2 then
+		return false
+	elseif hand1 == hand2 and hand1 > 0 then
+		return friend:hasSkill("tuntian")
+	end
+	local cardNum = #mycards
+	local delt = hand1 - hand2
+	if delt > cardNum then
+		return false
+	end
+	local equipNum = #myequips
+	if equipNum > 0 then
+		if self:hasSkills(sgs.lose_equip_skill) then
+			return true
+		end
+	end
+
+	local soKeep = 0
+	local soUse = 0
+	local marker = math.ceil(delt / 2)
+	for i = 1, delt, 1 do
+		local card = mycards[i]
+		local keepValue = self:getKeepValue(card)
+		if keepValue > 4 then
+			soKeep = soKeep + 1
+		end
+		local useValue = self:getUseValue(card)
+		if useValue > 7 then
+			soUse = soUse + 1
+		end
+	end
+	if soKeep > marker then
+		return false
+	end
+	if soUse > marker then
+		return false
+	end
+	return true
+end
+
 sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	local cardNum = 0
+	local mycards = {}
+	local myequips = {}
 	for _, c in sgs.qlist(self.player:getHandcards()) do
-		if not self.player:isJilei(c) then cardNum = cardNum + 1 end
+		if not self.player:isJilei(c) then 
+			cardNum = cardNum + 1 
+			table.insert(mycards, c)
+		end
 	end
 	for _, c in sgs.qlist(self.player:getEquips()) do
-		if not self.player:isJilei(c) then cardNum = cardNum + 1 end
+		if not self.player:isJilei(c) then 
+			cardNum = cardNum + 1
+			table.insert(mycards, c)
+			table.insert(myequips, c)
+		end
 	end
+	self:sortByKeepValue(mycards)
 
 	self:sort(self.enemies, "handcard")
 	local friends = {} 
@@ -454,7 +507,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			local hand1 = enemy:getHandcardNum()
 
-			if enemy:hasSkill("manjuan") and (hand1 > hand2 - 1) and (hand1 - hand2) <= cardNum then
+			if enemy:hasSkill("manjuan") and hand1 > hand2 - 1 and hand1 - hand2 <= cardNum then
 				use.card = card
 				if use.to then
 					use.to:append(enemy)
@@ -466,18 +519,52 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			local hand1 = enemy:getHandcardNum()
 
-			if (hand1 > hand2) then
-				if (hand1 - hand2) <= cardNum then
-					use.card = card
-					if use.to then
-						use.to:append(enemy)
-						use.to:append(lowest_friend)
-					end
-					return
+			if DimengIsWorth(self, lowest_friend, enemy, mycards, myequips) then
+				use.card = card
+				if use.to then
+					use.to:append(enemy)
+					use.to:append(lowest_friend)
 				end
+				return
 			end
 		end
 	end
+end
+
+sgs.ai_skill_discard.DimengCard = function(self, discard_num, min_num, optional, include_equip)
+	local cards = self.player:getCards("he")
+	local to_discard = {}
+	cards = sgs.QList2Table(cards)
+
+	local aux_func = function(card)
+		local place = self.room:getCardPlace(card:getEffectiveId())
+		if place == sgs.Player_PlaceEquip then
+			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
+			elseif card:isKindOf("OffensiveHorse") then return 1
+			elseif card:isKindOf("Weapon") then return 2
+			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif card:isKindOf("Armor") then return 4
+			end
+		elseif self:getUseValue(card) > 7 then return 3
+		elseif self:hasSkills(sgs.lose_equip_skill) then return 5
+		else return 0
+		end
+		return 0
+	end
+
+	local compare_func = function(a, b)
+		if aux_func(a) ~= aux_func(b) then 
+			return aux_func(a) < aux_func(b) 
+		end
+		return self:getKeepValue(a) < self:getKeepValue(b)
+	end
+
+	table.sort(cards, compare_func)
+	for _, card in ipairs(cards) do
+		if not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
+		if #to_discard >= discard_num then break end
+	end
+	return to_discard
 end
 
 sgs.ai_card_intention.DimengCard = function(self, card, from, to)

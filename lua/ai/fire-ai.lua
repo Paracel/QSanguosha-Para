@@ -473,11 +473,11 @@ luanji_skill.getTurnUseCard = function(self)
 					if first_card ~= scard and scard:getSuit() == first_card:getSuit()
 						and not (isCard("Peach", scard, self.player) or isCard("ExNihilo", scard, self.player) or isCard("AOE", scard, self.player)) then
 
-						local card_str = ("archery_attack:luanji[%s:%s]=%d+%d"):format("to_be_decided", 0, first_card:getId(), second_card:getId())
+						local card_str = ("archery_attack:luanji[%s:%s]=%d+%d"):format("to_be_decided", 0, first_card:getId(), scard:getId())
 						local archeryattack = sgs.Card_Parse(card_str)
 						local dummy_use = { isDummy = true }
 						self:useTrickCard(archeryattack, dummy_use)
-						if not dummy_use.card then
+						if dummy_use.card then
 							second_card = scard
 							second_found = true
 							break

@@ -372,7 +372,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
-	local lord = from:getRoom():getLord()
+	local lord = self.room:getLord()
 	local tuxi_lord = false
 	if from:getState() == "online" then
 		for _, to in ipairs(tos) do
@@ -383,7 +383,7 @@ sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 		end
 	else
 		for _, to in ipairs(tos) do
-			if to:objectName() == lord:objectName() then tuxi_lord = true end
+			if lord and to:objectName() == lord:objectName() then tuxi_lord = true end
 			local intention = from:hasFlag("tuxi_isfriend_" .. to:objectName()) and -5 or 80
 			sgs.updateIntention(from, to, intention)
 		end

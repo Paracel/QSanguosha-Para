@@ -494,7 +494,8 @@ sgs.ai_skill_use["@@dawu"] = function(self, prompt)
 	local targets = {}
 	local lord = self.room:getLord()
 	self:sort(self.friends_noself, "defense")
-	if self:isFriend(lord) and not sgs.isLordHealthy() and not self.player:isLord() and not lord:hasSkill("buqu") then table.insert(targets, lord:objectName())
+	if lord and self:isFriend(lord) and not sgs.isLordHealthy() and not self.player:isLord() and not lord:hasSkill("buqu") then
+		table.insert(targets, lord:objectName())
 	else
 		for _, friend in ipairs(self.friends_noself) do
 			if self:isWeak(friend) and not friend:hasSkill("buqu") then table.insert(targets, friend:objectName()) break end
@@ -675,7 +676,7 @@ local function getDangerousShenGuanYu(self)
 end
 
 sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
-	if (self.role == "loyalist" or self.role == "renegade") and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
+	if (self.role == "loyalist" or self.role == "renegade") and self.room:getLord() and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
 	local benefit = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if self:isFriend(player) then benefit = benefit - getShenfenUseValueOf_HE_Cards(self, player) end

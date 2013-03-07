@@ -320,7 +320,8 @@ function SmartAI:getUseValue(card)
 		if self:hasSkills("qiangxi|zhulou") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
 		if (self:hasSkill("bazhen") or self:hasSkill("yizhong")) and card:isKindOf("Armor") then v = 2 end
-		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong") and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
+		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong")
+			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
 			v = 9
 		end
 		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
@@ -1095,6 +1096,7 @@ end
 
 function sgs.isLordHealthy()
 	local lord = global_room:getLord()
+	if not lord then return true end
 	local lord_hp
 	if lord:hasSkill("benghuai") and lord:getHp() > 4 then lord_hp = 4
 	else lord_hp = lord:getHp() end
@@ -1103,6 +1105,7 @@ end
 
 function sgs.isLordInDanger()
 	local lord = global_room:getLord()
+	if not lord then return false end
 	local lord_hp
 	if lord:hasSkill("benghuai") and lord:getHp() > 4 then lord_hp = 4
 	else lord_hp = lord:getHp() end
@@ -1335,7 +1338,7 @@ function SmartAI:objectiveLevel(player)
 		if rebel_num == 0 then
 			if #players == 2 and self.role == "loyalist" then return 5 end
 
-			if self.room:getLord():hasSkill("benghuai") then
+			if self.room:getLord() and self.room:getLord():hasSkill("benghuai") then
 				if self.player:isLord() then
 					if (sgs.evaluatePlayerRole(player) == "renegade" or sgs.evaluateRoleTrends(player) == "renegade") and player:getHp() > 1 then
 						return 5
@@ -1525,8 +1528,6 @@ function SmartAI:updatePlayers(clear_flags)
 	self.friends = {}
 	self.friends_noself = {}
 
-	local lord = self.room:getLord()
-	local role = self.role
 	self.retain = 2
 	self.harsh_retain = true
 
@@ -1990,7 +1991,7 @@ function SmartAI:filterEvent(event, player, data)
 					end
 				end
 
-				if isCard("Indulgence", card, player) and not self.room:getLord():hasSkill("qiaobian") then
+				if isCard("Indulgence", card, player) and self.room:getLord() and not self.room:getLord():hasSkill("qiaobian") then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if not (target:containsTrick("indulgence") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
 							local aplayer = self:exclude({ target }, card, player)
@@ -1999,7 +2000,7 @@ function SmartAI:filterEvent(event, player, data)
 					end
 				end
 
-				if isCard("SupplyShortage", card, player) and not self.room:getLord():hasSkill("qiaobian") then
+				if isCard("SupplyShortage", card, player) and self.room:getLord() and not self.room:getLord():hasSkill("qiaobian") then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if player:distanceTo(target) <= (player:hasSkill("duanliang") and 2 or 1)
 							and not (target:containsTrick("supply_shortage") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
@@ -2238,7 +2239,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if trick:isKindOf("AOE") and not (from:hasSkill("wuyan") and not (menghuo and trick:isKindOf("SavageAssault"))) then
 				local lord = self.room:getLord()
 				local currentplayer = self.room:getCurrent()
-				if self:isFriend(lord) and self:isWeak(lord) and self:aoeIsEffective(trick, lord)
+				if lord and self:isFriend(lord) and self:isWeak(lord) and self:aoeIsEffective(trick, lord)
 					and ((lord:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))
 						> ((to:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))
 					and not (self.player:objectName() == to:objectName() and self.player:getHp() == 1 and not self:canAvoidAOE(trick)) then
@@ -4255,7 +4256,7 @@ function SmartAI:getAoeValue(card, player)
 	end
 
 	if not sgs.GetConfig("EnableHegemony", false) then
-		if self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) then
+		if lord and self.role ~= "lord" and sgs.isLordInDanger() and self:aoeIsEffective(card, lord, attacker) then
 			if self:isEnemy(lord) then
 				good = good + (lord:getHp() == 1 and 250 or 150)
 			elseif not canHelpLord() then

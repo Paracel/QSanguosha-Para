@@ -660,7 +660,7 @@ function SmartAI:useCardPeach(card, use)
 	if self.player:getHp() >= getBestHp(self.player) then return end
 
 	local lord = self.room:getLord()
-	if self:isFriend(lord) and lord:getHp() <= 2 and not lord:hasSkill("buqu") and peaches == 1 then
+	if lord and self:isFriend(lord) and lord:getHp() <= 2 and not lord:hasSkill("buqu") and peaches == 1 then
 		if self.player:isLord() then use.card = card end
 		return
 	end
@@ -991,7 +991,7 @@ function sgs.ai_armor_value.eight_diagram(player, self)
 		return 6
 	end
 
-	if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong") and self.room:getLord():hasLordSkill("hujia") then
+	if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong") and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") then
 		return 5
 	end
 

@@ -16,6 +16,7 @@ sgs.ai_playerchosen_intention.sp_moonspear = 80
 function sgs.ai_slash_prohibit.weidi(self, from, to, card)
 	if to:isLord() then return false end
 	local lord = self.room:getLord()
+	if not lord then return false end
 	for _, askill in sgs.qlist(lord:getVisibleSkillList()) do
 		if askill:objectName() ~= "weidi" and askill:isLordSkill() then
 			local filter = sgs.ai_slash_prohibit[askill:objectName()]
@@ -522,7 +523,7 @@ end
 
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
-	if lord:hasLordSkill("shichou") then
+	if lord and lord:hasLordSkill("shichou") then
 		return self:isFriend(lord)
 	end
 	return lord:getKingdom() == "shu"
@@ -532,7 +533,7 @@ sgs.ai_chaofeng.sp_sunshangxiang = sgs.ai_chaofeng.sunshangxiang
 
 sgs.ai_skill_invoke.cv_caiwenji = function(self, data)
 	local lord = self.room:getLord()
-	if lord:hasLordSkill("xueyi") then
+	if lord and lord:hasLordSkill("xueyi") then
 		return not self:isFriend(lord)
 	end
 	return lord:getKingdom() == "wei"
@@ -542,15 +543,15 @@ sgs.ai_chaofeng.sp_caiwenji = sgs.ai_chaofeng.caiwenji
 
 sgs.ai_skill_invoke.cv_machao = function(self, data)
 	local lord = self.room:getLord()
-	if lord:hasLordSkill("xueyi") and self:isFriend(lord) then
+	if lord and lord:hasLordSkill("xueyi") and self:isFriend(lord) then
 		sgs.ai_skill_choice.cv_machao = "sp_machao"
 		return true
 	end
-	if lord:hasLordSkill("shichou") and not self:isFriend(lord) then
+	if lord and lord:hasLordSkill("shichou") and not self:isFriend(lord) then
 		sgs.ai_skill_choice.cv_machao = "sp_machao"
 		return true
 	end
-	if lord:getKingdom() == "qun" and not lord:hasLordSkill("xueyi") then
+	if lord and lord:getKingdom() == "qun" and not lord:hasLordSkill("xueyi") then
 		sgs.ai_skill_choice.cv_machao = "sp_machao"
 		return true
 	end

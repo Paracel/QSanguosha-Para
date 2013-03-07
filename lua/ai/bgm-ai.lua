@@ -562,7 +562,7 @@ function SmartAI:useCardYanxiaoCard(card, use)
 			return
 		end
 		local lord = self.room:getLord()
-		if self:isFriend(lord) and not lord:containsTrick("YanxiaoCard") then
+		if lord and self:isFriend(lord) and not lord:containsTrick("YanxiaoCard") then
 			use.card = card
 			if use.to then use.to:append(lord) end
 			return

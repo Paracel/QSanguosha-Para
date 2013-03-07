@@ -1387,28 +1387,31 @@ function SmartAI:getValuableCard(who)
 end
 
 function SmartAI:useCardSnatchOrDismantlement(card, use)
-	local name = card:objectName()
-	if self.player:hasSkill("noswuyan") then return end
+	local isYinling = card:isKindOf("YinlingCard")
+	local name = isYinling and "yinling" or card:objectName()
+	if not isYinling and self.player:hasSkill("noswuyan") then return end
 	local players = self.room:getOtherPlayers(self.player)
 	local isJixi = self.player:hasFlag("JixiSnatch")
 	local tricks
 	players = self:exclude(players, card)
-	for _, player in ipairs(players) do
-		if not player:getJudgingArea():isEmpty() and self:hasTrickEffective(card, player)
-			and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
-			use.card = card
-			if use.to then
-				tricks = player:getCards("j")
-				for _, trick in sgs.qlist(tricks) do
-					if trick:isKindOf("Lightning") then
-						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+	if not isYinling then
+		for _, player in ipairs(players) do
+			if not player:getJudgingArea():isEmpty() and self:hasTrickEffective(card, player)
+				and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
+				use.card = card
+				if use.to then
+					tricks = player:getCards("j")
+					for _, trick in sgs.qlist(tricks) do
+						if trick:isKindOf("Lightning") then
+							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+						end
 					end
+					use.to:append(player)
+				elseif isJixi then
+					self.room:setPlayerFlag(player, "JixiTarget")
 				end
-				use.to:append(player)
-			elseif isJixi then
-				self.room:setPlayerFlag(player, "JixiTarget")
+				return
 			end
-			return
 		end
 	end
 
@@ -1428,7 +1431,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local friends = self:exclude(self.friends_noself, card)
 	local hasLion, target
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and self:hasTrickEffective(card, enemy) then
+		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			if self:getDangerousCard(enemy) then
 				use.card = card
 				if use.to then
@@ -1443,35 +1446,40 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
-	for _, friend in ipairs(friends) do
-		if (friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")) and not friend:containsTrick("YanxiaoCard")
-			and self:hasTrickEffective(card, friend) then
-			use.card = card
-			if use.to then
-				tricks = friend:getJudgingArea()
-				for _, trick in sgs.qlist(tricks) do
-					if trick:isKindOf("Indulgence") then
-						if friend:getHp() <= friend:getHandcardNum() or friend:isLord() or name == "snatch" then
+	if not isYinling then
+		for _, friend in ipairs(friends) do
+			if (friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")) and not friend:containsTrick("YanxiaoCard")
+				and self:hasTrickEffective(card, friend) then
+				use.card = card
+				if use.to then
+					tricks = friend:getJudgingArea()
+					for _, trick in sgs.qlist(tricks) do
+						if trick:isKindOf("Indulgence") then
+							if friend:getHp() <= friend:getHandcardNum() or friend:isLord() or name == "snatch" then
+								sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+								break
+							end
+						end
+						if trick:isKindOf("SupplyShortage") then
+							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+							break
+						end
+						if trick:isKindOf("Indulgence") then
 							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
 							break
 						end
 					end
-					if trick:isKindOf("SupplyShortage") then
-						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
-						break
-					end
-					if trick:isKindOf("Indulgence") then
-						sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
-						break
-					end
+					use.to:append(friend)
+				elseif isJixi then
+					self.room:setPlayerFlag(friend, "JixiTarget")
 				end
-				use.to:append(friend)
-			elseif isJixi then
-				self.room:setPlayerFlag(friend, "JixiTarget")
+				return
 			end
-			return
 		end
-		if friend:hasArmorEffect("silver_lion") and self:hasTrickEffective(card, friend)
+	end
+
+	for _, friend in ipairs(friends) do
+		if friend:hasArmorEffect("silver_lion") and (self:hasTrickEffective(card, friend) or isYinling)
 			and friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
 			hasLion = true
 			target = friend
@@ -1479,7 +1487,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and self:hasTrickEffective(card, enemy) then
+		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			if self:getValuableCard(enemy) then
 				use.card = card
 				if use.to then
@@ -1498,28 +1506,30 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local compare_JudgingArea = function(a, b)
 		return a:getJudgingArea():length() > b:getJudgingArea():length()
 	end
-	table.sort(new_enemies, compare_JudgingArea)  
+	table.sort(new_enemies, compare_JudgingArea)
 	local yanxiao_card, yanxiao_target, yanxiao_prior
-	for _, enemy in ipairs(new_enemies) do
-		for _, acard in sgs.qlist(enemy:getJudgingArea()) do
-			if acard:isKindOf("YanxiaoCard") and self:hasTrickEffective(card, enemy) then
-				yanxiao_card = acard
-				yanxiao_target = enemy
-				if enemy:containsTrick("indulgence") or enemy:containsTrick("supply_shortage") then yanxiao_prior = true end
-				break
+	if not isYinling then
+		for _, enemy in ipairs(new_enemies) do
+			for _, acard in sgs.qlist(enemy:getJudgingArea()) do
+				if acard:isKindOf("YanxiaoCard") and self:hasTrickEffective(card, enemy) then
+					yanxiao_card = acard
+					yanxiao_target = enemy
+					if enemy:containsTrick("indulgence") or enemy:containsTrick("supply_shortage") then yanxiao_prior = true end
+					break
+				end
 			end
+			if yanxiao_card and yanxiao_target then break end
 		end
-		if yanxiao_card and yanxiao_target then break end
-	end
-	if yanxiao_prior and yanxiao_card and yanxiao_target then
-		use.card = card
-		if use.to then 
-			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
-			use.to:append(yanxiao_target)
-		elseif isJixi then
-			self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
+		if yanxiao_prior and yanxiao_card and yanxiao_target then
+			use.card = card
+			if use.to then 
+				sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
+				use.to:append(yanxiao_target)
+			elseif isJixi then
+				self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
+			end
+			return
 		end
-		return
 	end
 
 	for _, enemy in ipairs(enemies) do
@@ -1543,7 +1553,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and self:hasTrickEffective(card, enemy) then
+		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			if self:hasSkills("jijiu|qingnang|jieyin", enemy) then
 				local cardchosen
 				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
@@ -1579,7 +1589,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
-			if not enemy:isNude() and self:hasTrickEffective(card, enemy)
+			if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling)
 				and not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy) and i <= 2 then
 				if (enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 6 + (isJixi and 6 or 0) and enemy:getHp() <= 3 + (isJixi and 2 or 0)) then
 					local cardchosen
@@ -1615,7 +1625,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		return
 	end
 
-	if yanxiao_card and yanxiao_target then
+	if not isYinling and yanxiao_card and yanxiao_target then
 		use.card = card
 		if use.to then 
 			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()

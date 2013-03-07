@@ -671,6 +671,8 @@ local yinling_skill = {}
 yinling_skill.name = "yinling"
 table.insert(sgs.ai_skills, yinling_skill)
 yinling_skill.getTurnUseCard = function(self, inclusive)
+	if self.player:getPile("brocade"):length() >= 4 then return nil end
+
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
@@ -728,158 +730,7 @@ yinling_skill.getTurnUseCard = function(self, inclusive)
 end
 
 sgs.ai_skill_use_func.YinlingCard = function(card, use, self)
-	if self.player:getPile("brocade"):length() >= 4 then return end
-	local players = self.room:getOtherPlayers(self.player)
-	players = self:exclude(players, card)
-
-	local enemies = {}
-	if #self.enemies == 0 and self:getOverflow() > 0 then
-		for _, player in ipairs(players) do
-			if not player:isLord() then table.insert(enemies, player) end
-		end
-		enemies = self:exclude(enemies, card)
-		self:sort(enemies, "defense", true)
-		enemies = sgs.reverse(enemies)
-	else
-		enemies = self:exclude(self.enemies, card)
-		self:sort(enemies, "defense")
-	end
-	self:sort(self.friends_noself, "defense")
-	local friends = self:exclude(self.friends_noself, card)
-	local hasLion, target
-	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() then
-			if self:getDangerousCard(enemy) then
-				use.card = card
-				if use.to then
-					sgs.ai_skill_cardchosen.yinling = self:getDangerousCard(enemy)
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				end
-				return
-			end
-		end
-	end
-
-	for _, friend in ipairs(friends) do
-		if friend:hasArmorEffect("silver_lion")
-			and friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
-			hasLion = true
-			target = friend
-		end
-	end
-
-	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() then
-			if self:getValuableCard(enemy) then
-				use.card = card
-				if use.to then
-					sgs.ai_skill_cardchosen.yinling = self:getValuableCard(enemy)
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				end
-				return
-			end
-		end
-	end
-
-	for _, enemy in ipairs(enemies) do
-		local cards = sgs.QList2Table(enemy:getHandcards())
-		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
-		if #cards <= 2 and not enemy:isKongcheng() then
-			for _, cc in ipairs(cards) do
-				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen.yinling = self:getCardRandomly(enemy, "h")
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
-				end
-			end
-		end
-	end
-
-	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and self:hasTrickEffective(card, enemy) then
-			if self:hasSkills("jijiu|qingnang|jieyin", enemy) then
-				local cardchosen
-				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
-				for _, equip in ipairs(equips) do
-					if equip and equip:isRed() and enemy:hasSkill("jijiu") then 
-						cardchosen = equip:getEffectiveId()
-						break
-					end
-				end
-
-				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse():getEffectiveId() end
-				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then 
-					cardchosen = enemy:getArmor():getEffectiveId() 
-				end
-				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then 
-					cardchosen = self:getCardRandomly(enemy, "h") 
-				end
-
-				if cardchosen then
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen[name] = cardchosen
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
-				end
-			end
-		end
-	end
-
-	for i = 1, 2, 1 do
-		for _, enemy in ipairs(enemies) do
-			if not enemy:isNude()
-				and not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy) then
-				if enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 3 and enemy:getHp() <= 3 then
-					local cardchosen
-					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then
-						cardchosen = enemy:getDefensiveHorse():getEffectiveId()
-					elseif enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then
-						cardchosen = enemy:getArmor():getEffectiveId()
-					else
-						cardchosen = self:getCardRandomly(enemy, "h")
-					end
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen.yinling = cardchosen
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
-				end
-			end
-		end
-	end
-
-	if hasLion then
-		use.card = card
-		if use.to then
-			sgs.ai_skill_cardchosen.yinling = target:getArmor():getEffectiveId()
-			use.to:append(target)
-		end
-		return
-	end
-
-	for _, enemy in ipairs(enemies) do
-		if not enemy:isKongcheng() and self:hasLoseHandcardEffective(enemy)
-			and (enemy:getHandcardNum() > enemy:getHp() - 2 or (enemy:getHandcardNum() == 1 and not self:needKongcheng(enemy))) then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen.yinling = enemy:getRandomHandCardId()
-				use.to:append(enemy)
-			end
-			return
-		end
-	end
-	return
+	self:useCardSnatchOrDismantlement(card, use)
 end
 
 sgs.ai_use_value.YinlingCard = sgs.ai_use_value.Dismantlement + 1

@@ -339,12 +339,12 @@
         <translation>其他</translation>
     </message>
     <message>
-        <location filename="../../src/client/client.cpp" line="1597"/>
+        <location filename="../../src/client/client.cpp" line="1603"/>
         <source>&lt;font color=&apos;red&apos;&gt;System: %1&lt;/font&gt;</source>
         <translation>&lt;font color=&apos;red&apos;&gt;系统: %1&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/client/client.cpp" line="1613"/>
+        <location filename="../../src/client/client.cpp" line="1619"/>
         <source>&lt;font color=&apos;%1&apos;&gt;[%2] said: %3 &lt;/font&gt;</source>
         <translation>&lt;font color=&apos;%1&apos;&gt;[%2] 说: %3 &lt;/font&gt;</translation>
     </message>
@@ -456,7 +456,7 @@
         <translation>，目标是 %to</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="162"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="170"/>
         <source>Log string is not well formatted: %1</source>
         <translation>提示信息没有格式化好: %1</translation>
     </message>
@@ -2110,32 +2110,32 @@
 <context>
     <name>NativeClientSocket</name>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="130"/>
+        <location filename="../../src/util/nativesocket.cpp" line="129"/>
         <source>Connection was refused or timeout</source>
         <translation>连接被拒绝或超时</translation>
     </message>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="132"/>
+        <location filename="../../src/util/nativesocket.cpp" line="131"/>
         <source>Remote host close this connection</source>
         <translation>远程主机已关闭此次连接</translation>
     </message>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="134"/>
+        <location filename="../../src/util/nativesocket.cpp" line="133"/>
         <source>Host not found</source>
         <translation>未找到主机</translation>
     </message>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="136"/>
+        <location filename="../../src/util/nativesocket.cpp" line="135"/>
         <source>Socket access error</source>
         <translation>套接字访问错误</translation>
     </message>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="139"/>
+        <location filename="../../src/util/nativesocket.cpp" line="138"/>
         <source>Unknow error</source>
         <translation>未知错误</translation>
     </message>
     <message>
-        <location filename="../../src/util/nativesocket.cpp" line="142"/>
+        <location filename="../../src/util/nativesocket.cpp" line="141"/>
         <source>Connection failed, error code = %1
  reason:
  %2</source>
@@ -2526,34 +2526,34 @@
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2441"/>
+        <location filename="../../src/server/room.cpp" line="2470"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2443"/>
+        <location filename="../../src/server/room.cpp" line="2472"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2445"/>
+        <location filename="../../src/server/room.cpp" line="2474"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2448"/>
+        <location filename="../../src/server/room.cpp" line="2477"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="3746"/>
+        <location filename="../../src/server/room.cpp" line="3775"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4644"/>
+        <location filename="../../src/server/room.cpp" line="4673"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>

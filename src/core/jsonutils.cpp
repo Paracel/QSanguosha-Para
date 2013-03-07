@@ -38,14 +38,14 @@ bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QList<int> &result) {
     return true;
 }
 
-Json::Value QSanProtocol::Utils:: toJsonArray(const QList<QString> &arg) {
+Json::Value QSanProtocol::Utils::toJsonArray(const QList<QString> &arg) {
     Json::Value val(Json::arrayValue);
     foreach (QString s, arg)
         val.append(toJsonString(s));
     return val;
 }
 
-Json::Value QSanProtocol::Utils:: toJsonArray(const QStringList &arg) {
+Json::Value QSanProtocol::Utils::toJsonArray(const QStringList &arg) {
     Json::Value val(Json::arrayValue);
     foreach (QString s, arg)
         val.append(toJsonString(s));

@@ -118,7 +118,7 @@ public:
     void warn(const QString &);
     void setMark(const QString &mark_str);
     void showCard(const Json::Value &show_str);    
-    void log(const QString &log_str);
+    void log(const Json::Value &log_str);
     void speak(const QString &speak_data);
     void addHistory(const QString &card);
     void moveFocus(const Json::Value &focus);
@@ -291,7 +291,7 @@ signals:
     void player_killed(const QString &who);
     void player_revived(const QString &who);
     void card_shown(const QString &player_name, int card_id);
-    void log_received(const QString &log_str);
+    void log_received(const QStringList &log_str);
     void guanxing(const QList<int> &card_ids, bool up_only);
     void gongxin(const QList<int> &card_ids, bool enable_heart);
     void focus_moved(const QStringList &focus, QSanProtocol::Countdown countdown);

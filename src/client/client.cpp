@@ -61,7 +61,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_UPDATE_CARD] = &Client::updateCard;
     //callbacks["showCard"] = &Client::showCard;
     callbacks["setMark"] = &Client::setMark;
-    callbacks["log"] = &Client::log;
+    m_callbacks[S_COMMAND_LOG_SKILL] = &Client::log;
     callbacks["speak"] = &Client::speak;
     callbacks["attachSkill"] = &Client::attachSkill;
     m_callbacks[S_COMMAND_MOVE_FOCUS] = &Client::moveFocus; 
@@ -1580,8 +1580,14 @@ void Client::onPlayerReplyGuanxing(const QList<int> &up_cards, const QList<int> 
     setStatus(NotActive);
 }
 
-void Client::log(const QString &log_str) {
-    emit log_received(log_str);
+void Client::log(const Json::Value &log_str) {
+    if (!log_str.isArray() || log_str.size() != 6)
+        emit log_received(QStringList() << QString());
+    else {
+        QStringList log;
+        tryParse(log_str, log);
+        emit log_received(log);
+    }
 }
 
 void Client::speak(const QString &speak_data) {

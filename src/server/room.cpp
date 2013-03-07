@@ -4428,7 +4428,7 @@ void Room::sendLog(const LogMessage &log) {
     if (log.type.isEmpty())
         return;
 
-    broadcastInvoke("log", log.toString());
+    doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 }
 
 void Room::showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer) {

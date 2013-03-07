@@ -3070,6 +3070,8 @@ void RoomScene::speak() {
         QString text = chat_edit->text();
         if (text == ".StartBgMusic") {
             broadcast = false;
+            Config.EnableBgMusic = true;
+            Config.setValue("EnableBgMusic", true);
 #ifdef AUDIO_SUPPORT
             QString bgmusic_path = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
 
@@ -3078,6 +3080,8 @@ void RoomScene::speak() {
 #endif
         } else if (text == ".StopBgMusic") {
             broadcast = false;
+            Config.EnableBgMusic = false;
+            Config.setValue("EnableBgMusic", false);
 #ifdef AUDIO_SUPPORT
             Audio::stopBGM();
 #endif

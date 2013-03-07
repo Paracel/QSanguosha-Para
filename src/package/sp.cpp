@@ -601,7 +601,8 @@ public:
         if (player->getHp() <= hp) {
             if (!baobian_skills.contains(skill_name)) {
                 room->notifySkillInvoked(player, "baobian");
-                room->broadcastSkillInvoke("baobian", 4 - hp);
+                if (player->getHp() == hp)
+                    room->broadcastSkillInvoke("baobian", 4 - hp);
                 room->acquireSkill(player, skill_name);
                 baobian_skills << skill_name;
             }

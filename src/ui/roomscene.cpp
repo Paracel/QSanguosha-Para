@@ -2953,7 +2953,7 @@ void RoomScene::killPlayer(const QString &who) {
         container->stopHuaShen();
     }
 
-    if (Config.EnableLastWord && !Self->hasFlag("marshalling"))
+    if (Config.EnableEffects && Config.EnableLastWord && !Self->hasFlag("marshalling"))
         general->lastWord();
     m_roomMutex.unlock();
 }
@@ -3085,6 +3085,14 @@ void RoomScene::speak() {
 #ifdef AUDIO_SUPPORT
             Audio::stopBGM();
 #endif
+        } else if (text == ".EnableEffects") {
+            broadcast = false;
+            Config.EnableEffects = true;
+            Config.setValue("EnableEffects", true);
+        } else if (text == ".DisableEffects") {
+            broadcast = false;
+            Config.EnableEffects = false;
+            Config.setValue("EnableEffects", false);
         }
         if (broadcast)
             ClientInstance->speakToServer(text);

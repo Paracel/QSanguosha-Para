@@ -20,7 +20,11 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     ui->bgMusicPathLineEdit->setText(Config.value("BackgroundMusic", "audio/system/background.ogg").toString());
 
     ui->enableEffectCheckBox->setChecked(Config.EnableEffects);
+
+    ui->enableLastWordCheckBox->setEnabled(Config.EnableEffects);
     ui->enableLastWordCheckBox->setChecked(Config.EnableLastWord);
+    connect(ui->enableEffectCheckBox, SIGNAL(toggled(bool)), ui->enableLastWordCheckBox, SLOT(setEnabled(bool)));
+
     ui->enableBgMusicCheckBox->setChecked(Config.EnableBgMusic);
     ui->noIndicatorCheckBox->setChecked(Config.value("NoIndicator", false).toBool());
     ui->noEquipAnimCheckBox->setChecked(Config.value("NoEquipAnim", false).toBool());

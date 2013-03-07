@@ -29,6 +29,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 		end
 	elseif self:isEnemy(currentplayer) then
 		if not self:damageIsEffective(currentplayer) then return "." end
+		if self:getDamagedEffects(currentplayer) or self:needLoseHp(currentplayer) then return "." end
 		if currentplayer:hasArmorEffect("silver_lion") and currentplayer:isWounded() and self:isWeak(currentplayer) then return "." end
 		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
 		return "$" .. card:getEffectiveId()
@@ -203,7 +204,7 @@ fenxun_skill.getTurnUseCard = function(self)
 		cards = sgs.QList2Table(cards)
 		self:sortByKeepValue(cards)
 
-		if (self.player:hasArmorEffect("SilverLion") and self.player:isWounded())
+		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
 			or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
 			return sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
 		elseif self.player:getHandcardNum() > 0 then
@@ -263,16 +264,17 @@ sgs.ai_skill_use_func.FenxunCard = function(card, use, self)
 		self:sort(self.enemies, "defense")
 		local target
 		for _, enemy in ipairs(self.enemies) do
-			if self.player:distanceTo(enemy) > 1 and self.player:canSlash(enemy, nil, false) then
-				target = enemy
-				break
+			for _, slash in ipairs(self:getCards("Slash")) do
+				if self.player:distanceTo(enemy) > 1 and not self:slashProhibit(slash, enemy) 
+				  and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
+					target = enemy
+					break
+				end
 			end
 		end
 		if target and self:getCardsNum("Slash") > 0 then
 			use.card = card
-			if use.to then
-				use.to:append(target)
-			end
+			if use.to then use.to:append(target) end
 		end
 	end
 end

@@ -170,7 +170,8 @@ void ClientLogBox::appendLog(const QStringList &log_str) {
         append(tr("Log string is not well formatted: %1").arg(err_string));
         return;
     }
-    appendLog(log_str[0], log_str[1], log_str[2].split("+"), log_str[3], log_str[4], log_str[5]);
+    appendLog(log_str[0], log_str[1], log_str[2].isEmpty() ? QStringList() : log_str[2].split("+"),
+              log_str[3], log_str[4], log_str[5]);
 }
 
 void ClientLogBox::append(const QString &text) {

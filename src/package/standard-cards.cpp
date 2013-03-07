@@ -130,6 +130,14 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         log.from = use.from;
         log.to << use.to;
         room->sendLog(log);
+    } else if (use.from->hasFlag("MoonspearUse")) {
+        room->setEmotion(player, "weapon/moonspear");
+
+        LogMessage log;
+        log.type = "#InvokeSkill";
+        log.from = use.from;
+        log.arg = "moon_spear";
+        room->sendLog(log);
     } else if (use.card->isVirtualCard() && use.card->getSkillName() == "spear")
         room->setEmotion(player, "weapon/spear");
     else if (use.to.size() > 1 && player->hasWeapon("halberd") && player->isLastHandCard(this))
@@ -371,9 +379,9 @@ public:
 
         int weapon_id = player->getWeapon()->getId();
         room->setCardFlag(weapon_id, "using");
-        room->setPlayerFlag(effect.from, "BladeUse");
+        effect.from->setFlags("BladeUse");
         room->askForUseSlashTo(effect.from, effect.to, QString("blade-slash:%1").arg(effect.to->objectName()), false, true);
-        room->setPlayerFlag(effect.from, "-BladeUse");
+        effect.from->setFlags("-BladeUse");
         room->setCardFlag(weapon_id, "-using");
 
         return false;

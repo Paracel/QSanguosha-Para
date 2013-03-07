@@ -666,7 +666,7 @@ bool Room::getResult(ServerPlayer *player, time_t timeOut) {
         if (Config.OperationNoLimit)
             player->acquireLock(ServerPlayer::SEMA_COMMAND_INTERACTIVE);
         else
-            player->tryAcquireLock(ServerPlayer::SEMA_COMMAND_INTERACTIVE, timeOut) ;
+            player->tryAcquireLock(ServerPlayer::SEMA_COMMAND_INTERACTIVE, timeOut);
 
         // Note that we rely on processResponse to filter out all unrelevant packet.
         // By the time the lock is released, m_clientResponse must be the right message

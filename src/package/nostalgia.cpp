@@ -10,7 +10,7 @@
 class MoonSpearSkill: public WeaponSkill {
 public:
     MoonSpearSkill(): WeaponSkill("moon_spear") {
-        events << CardFinished << CardResponded;
+        events << CardUsed << CardResponded;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -18,22 +18,19 @@ public:
             return false;
 
         CardStar card = NULL;
-        if (event == CardFinished) {
+        if (event == CardUsed) {
             CardUseStruct card_use = data.value<CardUseStruct>();
             card = card_use.card;
-
-            if (card == player->tag["MoonSpearSlash"].value<CardStar>())
-                card = NULL;
         } else if (event == CardResponded) {
             card = data.value<CardResponseStruct>().m_card;
-            player->tag["MoonSpearSlash"] = data;
         }
 
         if (card == NULL || !card->isBlack())
             return false;
 
-        if (room->askForUseCard(player, "slash", "@moon-spear-slash"))
-            room->setEmotion(player, "weapon/moonspear");
+        player->setFlags("MoonspearUse");
+        room->askForUseCard(player, "slash", "@moon-spear-slash");
+        player->setFlags("-MoonspearUse");
 
         return false;
     }

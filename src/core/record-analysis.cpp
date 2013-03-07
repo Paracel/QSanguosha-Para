@@ -152,14 +152,10 @@ void RecAnalysis::initialize(QString dir) {
         }
 
         if (line.contains("#Damage")) {
-            QRegExp rx("(.*):(.*)::(\\d+):(\\w+)");
-            if (!rx.exactMatch(line))
-                continue;
-
-            QStringList texts = rx.capturedTexts();
-            QString object_damage = line.contains("#DamageNoSource") ? QString() : texts.at(2).split("->").first();
-            QString object_damaged = texts.at(2).split("->").last();
-            int damage = texts.at(3).toInt();
+            QStringList texts = line.split(",");
+            QString object_damage = line.contains("#DamageNoSource") ? QString() : texts.at(5).mid(1, texts.at(5).length() - 2);
+            QString object_damaged = texts.at(6).mid(1, texts.at(6).length() - 2);
+            int damage = texts.at(8).mid(1, texts.at(8).length() - 2).toInt();
 
             if (!object_damage.isEmpty())
                 getPlayer(object_damage)->m_damage += damage;
@@ -168,16 +164,18 @@ void RecAnalysis::initialize(QString dir) {
         }
 
         if (line.contains("#Murder") || line.contains("#Suicide")) {
-            QString object = line.split(":").at(1).split("->").first();
+            QStringList texts = line.split(",");
+            QString object = texts.at(5).mid(1, texts.at(5).length() - 2);
             getPlayer(object)->m_kill++;
-            object = line.split(":").at(1).split("->").last();
+            object = texts.at(6).mid(1, texts.at(6).length() - 2);
             getPlayer(object)->m_isAlive = false;
 
             continue;
         }
 
         if (line.contains("#Contingency")) {
-            QString object = line.split(":").at(1).split("->").last();
+            QStringList texts = line.split(",");
+            QString object = texts.at(6).mid(1, texts.at(6).length() - 2);
             getPlayer(object)->m_isAlive = false;
 
             continue;

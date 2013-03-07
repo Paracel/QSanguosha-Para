@@ -778,57 +778,76 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 	local effect = data:toSlashEffect()
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
-	if effect.slash:hasFlag("drank") or #allcards - 2 > self.player:getHp()
-		or ((self.player:hasSkill("kuanggu") or self.player:hasArmorEffect("silver_lion")) and self.player:isWounded()) then
-		local cards = self.player:getCards("h")
-		cards = sgs.QList2Table(cards)
-		local armor_used = false
-		local index
-		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
-			armor_used = true
+	if self:hasHeavySlashDamage(self.player, effect.slash, target) or #allcards - 2 >= self.player:getHp()
+		or (self.player:hasSkill("kuanggu") and self.player:isWounded() and self.player:distanceTo(effect.to) == 1)
+		or (effect.to:getHp() == 1 and not effect.to:hasSkill("buqu")) 
+		or ((self:hasSkills(sgs.need_kongcheng) or not self:hasLoseHandcardEffective()) and self.player:getHandcardNum() > 0)
+		or (self:hasSkills(sgs.lose_equip_skill, self.player) and self.player:getEquips():length() > 1 and self.player:getHandcardNum() < 2)
+		or (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
+		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+	
+		local hcards = self.player:getCards("h")
+		hcards = sgs.QList2Table(hcards)
+		self:sortByKeepValue(hcards)
+		local cards = {}
+		local hand, armor, def, off = 0, 0, 0, 0
+		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
+			or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+			table.insert(cards, self.player:getArmor():getEffectiveId())
+			armor = 1
 		end
-		if self:hasSkills(sgs.need_kongcheng) then index = #cards end
-		if self.player:getOffensiveHorse() then
-			if index then
-				if index < 2 then
-					index = index + 1
-					table.insert(cards, self.player:getOffensiveHorse())
-				end
+		if (self:hasSkills(sgs.need_kongcheng) or not self:hasLoseHandcardEffective()) and self.player:getHandcardNum() > 0 then
+			hand = 1
+			for _, card in ipairs(hcards) do
+				table.insert(cards, card:getEffectiveId())
+				if #cards == 2 then break end
 			end
-			table.insert(cards, self.player:getOffensiveHorse())
 		end
-		if self.player:getArmor() and not armor_used then
-			if index then
-				if index < 2 then
-					index = index + 1
-					table.insert(cards, self.player:getArmor())
-				end
+		if #cards < 2 and self:hasSkills(sgs.lose_equip_skill, self.player) then
+			if #cards < 2 and self.player:getOffensiveHorse() then
+				off = 1
+				table.insert(cards, self.player:getOffensiveHorse():getEffectiveId())
 			end
-			table.insert(cards, self.player:getArmor())
+			if #cards < 2 and self.player:getArmor() then
+				armor = 1
+				table.insert(cards, self.player:getArmor():getEffectiveId())
+			end
+			if #cards < 2 and self.player:getDefensiveHorse() then
+				def = 1
+				table.insert(cards, self.player:getDefensiveHorse():getEffectiveId())
+			end
 		end
-		if self.player:getDefensiveHorse() then
-			if index then
-				if index < 2 then
-					index = index + 1
-					table.insert(cards, self.player:getDefensiveHorse())
-				end
+
+		if #cards < 2 and hand < 1 and self.player:getHandcardNum() > 2 then
+			hand = 1
+			for _, card in ipairs(hcards) do
+				table.insert(cards, card:getEffectiveId())
+				if #cards == 2 then break end
 			end
-			table.insert(cards, self.player:getDefensiveHorse())
 		end
-		if armor_used and #cards >= 1 then
-			self:sortByUseValue(cards, true)
-			return "$" .. self.player:getArmor():getEffectiveId() .. "+" .. cards[1]:getEffectiveId()
-		elseif #cards >= 2 then
-			if self:isWeak() then
-				for index = #cards, 1, -1 do
-					if isCard("Jink", cards[index], self.player) or isCard("Peach", cards[index], self.player) or isCard("Analeptic", cards[index], self.player) then
-						table.remove(cards, index)
-					end
-				end
+
+		if #cards < 2 and off < 1 and self.player:getOffensiveHorse() then
+			off = 1
+			table.insert(cards, self.player:getOffensiveHorse():getEffectiveId())
+		end
+		if #cards < 2 and hand < 1 and self.player:getHandcardNum() > 0 then
+			hand = 1
+			for _, card in ipairs(hcards) do
+				table.insert(cards, card:getEffectiveId())
+				if #cards == 2 then break end
 			end
-			if #cards < 2 then return end
-			self:sortByUseValue(cards, true)
-			return "$" .. cards[1]:getEffectiveId() .. "+" .. cards[2]:getEffectiveId()
+		end
+		if #cards < 2 and armor < 1 and self.player:getArmor() then
+			armor = 1
+			table.insert(cards, self.player:getArmor():getEffectiveId())
+		end
+		if #cards < 2 and def < 1 and self.player:getDefensiveHorse() then
+			def = 1
+			table.insert(cards, self.player:getDefensiveHorse():getEffectiveId())
+		end
+
+		if #cards == 2 then
+			return "$" .. table.concat(cards, "+")
 		end
 	end
 end

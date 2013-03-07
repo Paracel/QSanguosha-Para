@@ -109,7 +109,6 @@ bool NativeClientSocket::isConnected() const{
     return socket->state() == QTcpSocket::ConnectedState;
 }
 
-
 QString NativeClientSocket::peerName() const{
     QString peer_name = socket->peerName();
     if (peer_name.isEmpty())

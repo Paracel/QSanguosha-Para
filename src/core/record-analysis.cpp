@@ -36,18 +36,18 @@ void RecAnalysis::initialize(QString dir) {
 
     QStringList role_list;
     foreach (QString line, records_line) {
-        if (line.contains("MG_SELF")) {
+        if (line.contains(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))) {
             line = line.split("[").last().remove("]");
             line.remove(QRegExp("[^a-zA-Z0-9_,]"));
             QStringList self_info = line.split(",");
             if (self_info.at(1) == "objectName")
                 getPlayer(self_info.at(2), "MG_SELF")->m_screenName = Config.UserName;
             else if (self_info.at(1) == "role")
-                getPlayer("MG_SELF")->m_role = self_info.at(2);
+                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_role = self_info.at(2);
             else if (self_info.at(1) == "general")
-                getPlayer("MG_SELF")->m_generalName = self_info.at(2);
+                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_generalName = self_info.at(2);
             else if (self_info.at(1) == "general2")
-                getPlayer("MG_SELF")->m_general2Name = self_info.at(2);
+                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_general2Name = self_info.at(2);
 
             continue;
         }

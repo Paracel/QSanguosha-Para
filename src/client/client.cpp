@@ -268,7 +268,7 @@ void Client::disconnectFromHost() {
     }
 }
 
-typedef char buffer_t[1024];
+typedef char buffer_t[65535];
 
 void Client::processServerPacket(const QString &cmd) {
     processServerPacket(cmd.toAscii().data());

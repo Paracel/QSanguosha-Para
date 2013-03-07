@@ -3150,15 +3150,6 @@ function SmartAI:getTurnUse()
 		dummy_use.isDummy = true
 		local hp = self.player:getHp()
 		if self.player:hasSkill("benghuai") and hp > 4 then hp = 4 end
-		if not self:hasSkills(sgs.need_kongcheng) then
-			if (i >= (self.player:getHandcardNum() - hp + self.retain)) and (self:getUseValue(card) < self.retain_thresh) then
-				return turnUse
-			end
-
-			if (i >= (self.player:getHandcardNum() - hp)) and (self:getUseValue(card) < 8.5) and self.harsh_retain then
-				return turnUse
-			end
-		end
 
 		local type = card:getTypeId()
 		self["use" .. sgs.ai_type_name[type + 1] .. "Card"](self, card, dummy_use)

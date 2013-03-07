@@ -1388,10 +1388,10 @@ end
 
 function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local isYinling = card:isKindOf("YinlingCard")
+	local isJixi = card:getSkillName() == "jixi"
 	local name = isYinling and "yinling" or card:objectName()
 	if not isYinling and self.player:hasSkill("noswuyan") then return end
 	local players = self.room:getOtherPlayers(self.player)
-	local isJixi = self.player:hasFlag("JixiSnatch")
 	local tricks
 	players = self:exclude(players, card)
 	if not isYinling then
@@ -1407,8 +1407,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						end
 					end
 					use.to:append(player)
-				elseif isJixi then
-					self.room:setPlayerFlag(player, "JixiTarget")
 				end
 				return
 			end
@@ -1438,8 +1436,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					sgs.ai_skill_cardchosen[name] = self:getDangerousCard(enemy)
 					use.to:append(enemy)
 					self:speak("hostile", self.player:isFemale())
-				elseif isJixi then
-					self.room:setPlayerFlag(enemy, "JixiTarget")
 				end
 				return
 			end
@@ -1470,8 +1466,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						end
 					end
 					use.to:append(friend)
-				elseif isJixi then
-					self.room:setPlayerFlag(friend, "JixiTarget")
 				end
 				return
 			end
@@ -1494,8 +1488,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					sgs.ai_skill_cardchosen[name] = self:getValuableCard(enemy)
 					use.to:append(enemy)
 					self:speak("hostile", self.player:isFemale())
-				elseif isJixi then
-					self.room:setPlayerFlag(enemy, "JixiTarget")
 				end
 				return
 			end
@@ -1525,8 +1517,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			if use.to then 
 				sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
 				use.to:append(yanxiao_target)
-			elseif isJixi then
-				self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
 			end
 			return
 		end
@@ -1543,8 +1533,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "h")
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
-					elseif isJixi then
-						self.room:setPlayerFlag(enemy, "JixiTarget")
 					end
 					return
 				end
@@ -1578,8 +1566,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						sgs.ai_skill_cardchosen[name] = cardchosen
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
-					elseif isJixi then
-						self.room:setPlayerFlag(enemy, "JixiTarget")
 					end
 					return
 				end
@@ -1605,8 +1591,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						sgs.ai_skill_cardchosen[name] = cardchosen
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
-					elseif isJixi then
-						self.room:setPlayerFlag(enemy, "JixiTarget")
 					end
 					return
 				end
@@ -1619,8 +1603,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		if use.to then
 			sgs.ai_skill_cardchosen[name] = target:getArmor():getEffectiveId()
 			use.to:append(target)
-		elseif isJixi then
-			self.room:setPlayerFlag(target, "JixiTarget")
 		end
 		return
 	end
@@ -1630,8 +1612,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		if use.to then 
 			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
 			use.to:append(yanxiao_target)
-		elseif isJixi then
-			self.room:setPlayerFlag(yanxiao_target, "JixiTarget")
 		end
 		return
 	end
@@ -1652,8 +1632,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 						sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "he")
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
-					elseif isJixi then
-						self.room:setPlayerFlag(enemy, "JixiTarget")
 					end
 					return
 				else
@@ -1665,8 +1643,6 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 							sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "h") end
 						use.to:append(enemy)
 						self:speak("hostile", self.player:isFemale())
-					elseif isJixi then
-						self.room:setPlayerFlag(enemy, "JixiTarget")
 					end
 					return
 				end

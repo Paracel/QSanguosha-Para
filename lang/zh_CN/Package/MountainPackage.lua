@@ -15,8 +15,8 @@ return {
 	["#qiaobian-2"] = "你可以弃置 %arg 张手牌跳过摸牌阶段",
 	["#qiaobian-3"] = "你可以弃置 %arg 张手牌跳过出牌阶段",
 	["#qiaobian-4"] = "你可以弃置 %arg 张手牌跳过弃牌阶段",
-	["~qiaobian2"] = "选择 1-2 名其他角色→点击确定。",
-	["~qiaobian3"] = "选择一名角色→点击确定。",
+	["~qiaobian2"] = "选择 1-2 名其他角色→点击确定",
+	["~qiaobian3"] = "选择一名角色→点击确定",
 
 	["#dengai"] = "矫然的壮士",
 	["dengai"] = "邓艾",
@@ -29,6 +29,8 @@ return {
 	["$ZaoxianAnimate"] = "image=image/animate/zaoxian.png",
 	["jixi"] = "急袭",
 	[":jixi"] = "你可以将一张“田”当【顺手牵羊】使用。",
+	["@jixi-target"] = "请选择【顺手牵羊】的目标角色",
+	["~jixi"] = "选择【顺手牵羊】的目标角色→点击确定",
 	["#ZaoxianWake"] = "%from 的“田”为 %arg 张，触发“%arg2”觉醒",
 
 	["#jiangwei"] = "龙的衣钵",

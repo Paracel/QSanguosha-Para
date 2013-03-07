@@ -397,18 +397,51 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
 
         targets << p;
     }
+    if (targets.isEmpty()) return;
 
-    if (targets.isEmpty())
-        return;
-
-    ServerPlayer *target = room->askForPlayerChosen(dengai, targets, "jixi");
+    QString flag = QString("JixiSnatch:%1").arg(snatch->toString());
+    room->setPlayerFlag(dengai, flag);
 
     CardUseStruct use;
     use.card = snatch;
     use.from = dengai;
-    use.to << target;
 
+    if (room->askForUseCard(dengai, "@@jixi!", "@jixi-target")) {
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (p->hasFlag("JixiSnatchTarget")) {
+                room->setPlayerFlag(p, "-JixiSnatchTarget");
+                use.to << p;
+            }
+        }
+    } else {
+        use.to << targets.at(qrand() % targets.length());
+    }
+    room->setPlayerFlag(dengai, QString("-%1").arg(flag));
     room->useCard(use);
+}
+
+JixiSnatchCard::JixiSnatchCard() {
+}
+
+bool JixiSnatchCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    const Card *card = NULL;
+    foreach (QString flag, Self->getFlagList()) {
+        if (flag.startsWith("JixiSnatch:")) {
+            card = Card::Parse(flag.mid(11));
+            break;
+        }
+    }
+    if (card == NULL)
+        return false;
+    else {
+        const Snatch *snatch = qobject_cast<const Snatch *>(card);
+        return !Self->isProhibited(to_select, snatch) && snatch->targetFilter(targets, to_select, Self);
+    }
+}
+
+void JixiSnatchCard::onUse(Room *room, const CardUseStruct &card_use) const{
+    foreach (ServerPlayer *to, card_use.to)
+        room->setPlayerFlag(to, "JixiSnatchTarget");
 }
 
 class Jixi: public ZeroCardViewAsSkill {
@@ -422,8 +455,16 @@ public:
         return !player->getPile("field").isEmpty() && snatch->isAvailable(player);
     }
 
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@jixi!";
+    }
+
     virtual const Card *viewAs() const{
-        return new JixiCard;
+        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+        if (pattern == "@@jixi!")
+            return new JixiSnatchCard;
+        else
+            return new JixiCard;
     }
 
     virtual Location getLocation() const{
@@ -1336,6 +1377,7 @@ MountainPackage::MountainPackage()
     addMetaObject<ZhijianCard>();
     addMetaObject<ZhibaCard>();
     addMetaObject<JixiCard>();
+    addMetaObject<JixiSnatchCard>();
 
     skills << new ZhibaPindian << new Jixi;
 }

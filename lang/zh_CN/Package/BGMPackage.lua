@@ -179,7 +179,7 @@ return {
 	["hantong_acquire:jiuyuan"] = "你可以发动“汉统”并获得技能“救援”",
 	["hantong_acquire:xueyi"] = "你可以发动“汉统”并获得技能“血裔”",
 	["@hantong-jijiang"] = "请发动“激将”",
-	["~jijiang"] = "选择【杀】的目标→点击确定",
+	["~jijiang"] = "选择【杀】的目标角色→点击确定",
 
 	["#diy_gongsunzan"] = "白马将军",
 	["diy_gongsunzan"] = "公孙瓒-DIY",

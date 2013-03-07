@@ -213,6 +213,8 @@ void Photo::setFrame(FrameType type) {
         if (_m_focusFrame) {
             if (_m_saveMeIcon && _m_saveMeIcon->isVisible())
                 setFrame(S_FRAME_SOS);
+            else if (m_player->getPhase() != Player::NotActive)
+                setFrame(S_FRAME_PLAYING);
             else
                 _m_focusFrame->hide();
         }

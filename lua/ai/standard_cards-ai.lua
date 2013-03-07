@@ -585,15 +585,16 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 				if self:canUseJieyuanDecrease(target) then return "." end
-				if self:getCardsNum("Peach") > 0 and not self.player:hasSkill("tuntian") and not self:willSkipPlayPhase() then
+				if (self:getCardsNum("Peach") > 0 or (self:getCardsNum("Analeptic") > 0 and self:isWeak()))
+					and not self.player:hasSkill("tuntian") and not self:willSkipPlayPhase() then
 					return "."
 				end
 			end
 		end
-		if not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng))
+		if not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng)) and self:hasLoseHandcardEffective()
 			and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 			if target:hasWeapon("axe") then
-				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 then return "." end
+				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 and target:getCards("he"):length() > 2 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
 			elseif target:hasWeapon("blade") then
 				if ((effect.slash:isKindOf("FireSlash") 
@@ -1305,7 +1306,7 @@ function SmartAI:getDangerousCard(who)
 	if weapon and weapon:isKindOf("Spear") and who:getHandcardNum() >= 3 and who:hasSkill("paoxiao") then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Axe") and self:hasSkills("luoyi|pojun|jiushi|jiuchi|jie||jieyuan", who) then return weapon:getEffectiveId() end
 	if armor and armor:isKindOf("EightDiagram") and who:hasSkill("leiji") then return armor:getEffectiveId() end
-	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and self:hasSkills("guidao|longdan|guicai|jilve|huanshi|qingguo", who) then return weapon:getEffectiveId() end
+	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and self:hasSkills("guidao|longdan|guicai|jilve|huanshi|qingguo|kanpo", who) then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Crossbow") and getCardsNum("Slash", who) > 1 then return weapon:getEffectiveId() end
 end

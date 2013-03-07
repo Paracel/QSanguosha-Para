@@ -2472,7 +2472,7 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	if effect and effect.slash then damage_nature = effect.nature end
 
 	if self.player:isDead() then return "." end
-	if target and target:hasSkill("jueqing") then return end
+	if target and target:hasSkill("jueqing") and not self:needLoseHp() then return end
 	if effect and target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1 then return end
 	if not self:damageIsEffective(nil, damage_nature, target) then return "." end
 	if target and target:hasSkill("guagu") and self.player:isLord() then return "." end

@@ -4279,7 +4279,7 @@ function SmartAI:getAoeValue(card, player)
 		forbid_start = false
 		good = good + 25
 	end
-	if attacker:hasSkill("shenfen") and attacker:hasSkill("kuangbao") and not attacker:hasSkill("jueqing") then
+	if attacker:hasSkills("shenfen+kuangbao") and not attacker:hasSkill("jueqing") then
 		forbid_start = false
 		good = good + 15
 		if not self.player:hasSkill("wumou") then
@@ -4293,7 +4293,7 @@ function SmartAI:getAoeValue(card, player)
 		if forbid_start and sgs.turncount < 2 and self.player:getSeat() <= 3 and card:isKindOf("SavageAssault") then
 			if self.role ~= "rebel" then good = good + 50 else bad = bad + 50 end
 		end
-		if sgs.current_mode_players["rebel"] == 0 and self.role ~= "renegade" and sgs.current_mode_players["loyalist"] > 0 then
+		if sgs.current_mode_players["rebel"] == 0 and self.role ~= "renegade" and sgs.current_mode_players["loyalist"] > 0 and lord and self:isWeak(lord) then
 			bad = bad + 300
 		end
 	end

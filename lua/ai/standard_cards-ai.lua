@@ -400,7 +400,9 @@ function SmartAI:useCardSlash(card, use)
 			-- fill the card use struct
 			local usecard = card
 			if not use.to or use.to:isEmpty() then
-				if not (self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0) then
+				if self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0 then
+				elseif self.player:hasWeapon("crossbow") and self:getCardsNum("Slash") > 1 then
+				else
 					local equips = self:getCards("EquipCard", self.player, "h")
 					for _, equip in ipairs(equips) do
 						local callback = sgs.ai_slash_weaponfilter[equip:objectName()]
@@ -1436,7 +1438,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local enemies = {}
 	if #self.enemies == 0 and self:getOverflow() > 0 then
 		for _, player in ipairs(players) do
-			if not player:isLord() then table.insert(enemies, player) end
+			if sgs.evaluateRoleTrends(player) ~= "loyalist" and not player:isLord() then table.insert(enemies, player) end
 		end
 		enemies = self:exclude(enemies, card)
 		self:sort(enemies, "defense")

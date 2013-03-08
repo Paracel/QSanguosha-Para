@@ -3,7 +3,7 @@ neoluoyi_skill.name = "neoluoyi"
 table.insert(sgs.ai_skills, neoluoyi_skill)
 neoluoyi_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LuoyiCard") then return nil end
-	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() and self:isWeak() then
+	if self:needToThrowArmor() then
 		return sgs.Card_Parse("@LuoyiCard=" .. self.player:getArmor():getEffectiveId())
 	end
 
@@ -47,7 +47,7 @@ neoluoyi_skill.getTurnUseCard = function(self)
 	end
 	if (slashtarget + dueltarget) > 0 and equipnum > 0 then
 		self:speak("luoyi")
-		if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
+		if self:needToThrowArmor() then
 			luoyicard = self.player:getArmor()
 		end
 		if not luoyicard then

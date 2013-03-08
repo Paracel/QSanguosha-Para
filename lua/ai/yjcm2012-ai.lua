@@ -136,8 +136,7 @@ gongqi_skill.getTurnUseCard = function(self, inclusive)
 	if self.player:hasUsed("GongqiCard") then return end
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
-	if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
-		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+	if self:needToThrowArmor() then
 		return sgs.Card_Parse("@GongqiCard=" .. self.player:getArmor():getEffectiveId())
 	end
 

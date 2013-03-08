@@ -135,7 +135,7 @@ sgs.ai_card_intention.NosJujianCard = -100
 sgs.dynamic_value.benefit.NosJujianCard = true
 
 sgs.ai_skill_cardask["@enyuanheart"] = function(self)
-	if self:needLoseHp() then return "." end
+	if self:needToLoseHp() then return "." end
 	local damage = data:toDamage()
 	if self:isFriend(damage.to) then return end
 
@@ -152,7 +152,7 @@ end
 function sgs.ai_slash_prohibit.nosenyuan(self, from, to, card)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("nosjiefanUsed") then return false end
-	if self:needLoseHp(from) then return false end
+	if self:needToLoseHp(from) then return false end
 	if from:getHp() > 3 then return false end
 
 	local n = 0
@@ -206,8 +206,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 	end
 	if not target then
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:hasArmorEffect("silver_lion") and not self:hasSkills(sgs.use_lion_skill, friend)
-			  and friend:isWounded() and self:isWeak(friend) and not friend:hasSkill("manjuan") then
+			if self:needToThrowArmor(friend) and not friend:hasSkill("manjuan") then
 				target = friend
 				break
 			end
@@ -448,7 +447,7 @@ sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
 	if self:isFriend(target) then
-		return (self:hasSkills(sgs.lose_equip_skill, target) and not self:isWeak(target)) or (target:hasArmorEffect("silver_lion") and target:isWounded())
+		return (self:hasSkills(sgs.lose_equip_skill, target) and not self:isWeak(target)) or self:needToThrowArmor(target)
 	end
 
 	return true

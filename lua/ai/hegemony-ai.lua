@@ -21,7 +21,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 
 	if not card then return "." end
 	if self:isFriend(currentplayer) then
-		if currentplayer:hasArmorEffect("silver_lion") and currentplayer:isWounded() and self:isWeak(currentplayer) then 
+		if self:needToThrowArmor(currentplayer) then 
 			if card:isKindOf("Slash") or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 1) then
 				return "$" .. card:getEffectiveId()
 			else return "."
@@ -29,8 +29,8 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 		end
 	elseif self:isEnemy(currentplayer) then
 		if not self:damageIsEffective(currentplayer) then return "." end
-		if self:getDamagedEffects(currentplayer) or self:needLoseHp(currentplayer) then return "." end
-		if currentplayer:hasArmorEffect("silver_lion") and currentplayer:isWounded() and self:isWeak(currentplayer) then return "." end
+		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer) then return "." end
+		if self:needToThrowArmor() then return "." end
 		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
 		return "$" .. card:getEffectiveId()
 	end
@@ -42,7 +42,10 @@ sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist
 		local current = player:getRoom():getCurrent()
 		if not current then return end
 		local intention = 50
-		if current:hasArmorEffect("silver_lion") and current:isWounded() and self:isWeak(current) then intention = -30 end
+		if (current:hasArmorEffect("silver_lion") and current:isWounded() and self:isWeak(current))
+			or (current:getArmor() and current:hasSkills("bazhen|yizhong")) then
+			intention = -30
+		end
 		sgs.updateIntention(player, current, intention)
 	end
 end
@@ -51,7 +54,7 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	local yuejin = self.room:findPlayerBySkillName("xiaoguo")
 	local player = self.player
 
-	if player:hasArmorEffect("silver_lion") and player:isWounded() and self:isWeak() then
+	if self:needToThrowArmor(player) then
 		return "$" .. player:getArmor():getEffectiveId()
 	end
 
@@ -65,10 +68,6 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 
 	if player:getHp() > getBestHp(player) then
 		return "."
-	end
-
-	if player:hasArmorEffect("silver_lion") and player:isWounded() then
-		return "$" .. player:getArmor():getEffectiveId()
 	end
 
 	local card_id
@@ -204,8 +203,7 @@ fenxun_skill.getTurnUseCard = function(self)
 		cards = sgs.QList2Table(cards)
 		self:sortByKeepValue(cards)
 
-		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
-			or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+		if self:needToThrowArmor() then
 			return sgs.Card_Parse("@FenxunCard=" .. self.player:getArmor():getId())
 		elseif self.player:getHandcardNum() > 0 then
 			local lightning = self:getCard("Lightning")
@@ -431,7 +429,7 @@ sgs.ai_skill_invoke.kuangfu = function(self, data)
 	if self:hasSkills(sgs.lose_equip_skill, damage.to) then
 		return self:isFriend(damage.to)
 	end
-	local benefit = (damage.to:getCards("e"):length() == 1 and damage.to:hasArmorEffect("silver_lion") and damage.to:isWounded() and self:isWeak(damage.to))
+	local benefit = (damage.to:getCards("e"):length() == 1 and damage.to:getArmor() and self:needToThrowArmor(damage.to))
 	if self:isFriend(damage.to) then return benefit end
 	return not benefit
 end
@@ -445,7 +443,7 @@ qingcheng_skill.name = "qingcheng"
 table.insert(sgs.ai_skills, qingcheng_skill)
 qingcheng_skill.getTurnUseCard = function(self, inclusive)
 	local equipcard
-	if self.player:hasArmorEffect("silver_lion") and self.player:isWounded() then
+	if self:needToThrowArmor() then
 		equipcard = self.player:getArmor()
 	else
 		for _, card in sgs.qlist(self.player:getCards("he")) do

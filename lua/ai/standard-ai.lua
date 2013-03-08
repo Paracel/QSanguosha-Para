@@ -66,7 +66,7 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 
 	if self:isFriend(target) then
 		if self:getOverflow(target) > 2 then return true end
-		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or (target:hasArmorEffect("silver_lion") and target:isWounded())
+		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or self:needToThrowArmor(target)
 	end
 	if self:isEnemy(target) then				---fankui without zhugeliang and luxun
 		if target:hasSkill("tuntian") and target:getPhase() == sgs.Player_NotActive then return false end
@@ -733,7 +733,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local jijiangtargets = {}
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("JijiangTarget") then
-			if self:isFriend(player) and not (self:needLoseHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
+			if self:isFriend(player) and not (self:needToLoseHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
 			table.insert(jijiangtargets, player)
 		end
 	end
@@ -982,7 +982,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
 
-		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) then
+		if self:needToThrowArmor() then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
 		end
 
@@ -1317,7 +1317,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	end
 
 	for _, friend in ipairs(self.friends_noself) do
-		if self:needLoseHp(friend, source, true) or self:getDamagedEffects(friend, source, true) then
+		if self:needToLoseHp(friend, source, true) or self:getDamagedEffects(friend, source, true) then
 			if not (source and source:objectName() == friend:objectName()) then
 				local ret = doLiuli(friend)
 				if ret ~= "." then return ret end
@@ -1595,8 +1595,7 @@ lijian_skill.getTurnUseCard = function(self)
 	self:sortByKeepValue(cards)
 	local lightning = self:getCard("Lightning")
 
-	if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
-		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+	if self:needToThrowArmor() then
 		card_id = self.player:getArmor():getId()
 	elseif self.player:getHandcardNum() > self.player:getHp() then
 		if lightning and not self:willUseLightning(lightning) then

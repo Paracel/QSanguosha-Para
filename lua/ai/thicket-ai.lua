@@ -278,21 +278,19 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	if not self.yinghun and #self.enemies > 0 then
 		self:sort(self.enemies, "handcard")
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:isAlive() and enemy:getCards("he"):length() >= x-1 
+			if enemy:isAlive() and enemy:getCards("he"):length() >= x - 1 
 				and not (self:needKongcheng(enemy) and enemy:getCards("he"):length() == x - 1)
-				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
-				and not (enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy))
-				and not enemy:hasSkill("tuntian") then
+				and not self:doNotDiscard(enemy, "he", true) then
 				self.yinghunchoice = "d1tx"
 				self.player:setFlags("yinghun_to_enemy")
 				return "@YinghunCard=.->" .. enemy:objectName()
 			end
 		end
-		self.enemies = sgs.reverse(sself.enemies)
+		self.enemies = sgs.reverse(self.enemies)
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isAlive() and not enemy:isNude()
 				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
-				and not (enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy))
+				and not self:needToThrowArmor(enemy)
 				and not enemy:hasSkill("tuntian") then
 				self.yinghunchoice = "d1tx"
 				return "@YinghunCard=.->" .. enemy:objectName()
@@ -301,7 +299,7 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isAlive() and not enemy:isNude()
 			  and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
-			  and not (enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy))
+			  and not enemy:needToThrowArmor(enemy)
 			  and not (enemy:hasSkill("tuntian") and x < 3 and enemy:getCards("he"):length() < 2) then
 				self.yinghunchoice = "d1tx"
 				return "@YinghunCard=.->" .. enemy:objectName()

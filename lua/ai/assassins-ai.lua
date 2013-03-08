@@ -1,17 +1,15 @@
 sgs.ai_skill_invoke.moukui = function(self, data)
 	local target = data:toPlayer()
 	self.moukuitarget = target
-	return not self:isFriend(target) 
+	if self:isFriend(target) then return target:getArmor() and self:needToThrowArmor(target) else return true end
 end
 
 sgs.ai_skill_choice.moukui = function(self, choices, data)
 	local target = self.moukuitarget
 	if not target then return "draw" end
 	local equip_num = target:getEquips():length()
-	if target:isKongcheng() and equip_num > 0 then
-		if self:hasSkills(sgs.lose_equip_skill, target) or (target:hasArmorEffect("silver_lion") and target:isWounded() and equip_num == 1) then
-			return "draw"
-		end
+	if self:isEnemy(target) and self:doNotDiscard(target) then
+		return "draw"
 	end
 	return "discard"
 end
@@ -59,7 +57,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
 
-		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) then
+		if self:needToThrowArmor() then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
 		end
 
@@ -118,7 +116,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 			table.insert(unpreferedCards, self.player:getWeapon():getId())
 		end
 
-		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded()) then
+		if self:needToThrowArmor() then
 			table.insert(unpreferedCards, self.player:getArmor():getId())
 		end
 
@@ -233,7 +231,7 @@ sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
 		end
 	end
 	if self:getDamagedEffects(self.player, damage.from) and damage.damage <= 1 then return "." end
-	if self:needLoseHp(self.player, damage.from) and damage.damage <= 1 then return "." end
+	if self:needToLoseHp(self.player, damage.from) and damage.damage <= 1 then return "." end
 	for _, card in ipairs(cards) do
 		if card:isRed() then return "$" .. card:getEffectiveId() end
 	end

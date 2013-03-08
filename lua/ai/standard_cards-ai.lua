@@ -785,16 +785,14 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 		or (effect.to:getHp() == 1 and not effect.to:hasSkill("buqu")) 
 		or ((self:hasSkills(sgs.need_kongcheng) or not self:hasLoseHandcardEffective()) and self.player:getHandcardNum() > 0)
 		or (self:hasSkills(sgs.lose_equip_skill, self.player) and self.player:getEquips():length() > 1 and self.player:getHandcardNum() < 2)
-		or (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
-		or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+		or self:needToThrowArmor() then
 	
 		local hcards = self.player:getCards("h")
 		hcards = sgs.QList2Table(hcards)
 		self:sortByKeepValue(hcards)
 		local cards = {}
 		local hand, armor, def, off = 0, 0, 0, 0
-		if (self.player:hasArmorEffect("silver_lion") and self.player:isWounded())
-			or (self:hasSkills("bazhen|yizhong") and self.player:getArmor()) then
+		if self:needToThrowArmor() then
 			table.insert(cards, self.player:getArmor():getEffectiveId())
 			armor = 1
 		end
@@ -1372,11 +1370,11 @@ function SmartAI:getValuableCard(who)
 	local equips = sgs.QList2Table(who:getEquips())
 	for _, equip in ipairs(equips) do
 		if who:hasSkill("longhun") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
-		if who:hasSkill("qixi") and equip:isBlack() then return equip:getEffectiveId() end
+		if who:hasSkill("qixi|yinling") and equip:isBlack() then return equip:getEffectiveId() end
 		if who:hasSkill("guidao") and equip:isBlack() then return equip:getEffectiveId() end
-		if who:hasSkill("guose") and equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
+		if who:hasSkill("guose|yanxiao") and equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
 		if who:hasSkill("jijiu") and equip:isRed() then return equip:getEffectiveId() end
-		if who:hasSkill("wusheng") and equip:isRed() then return equip:getEffectiveId() end
+		if who:hasSkill("wusheng|xueji") and equip:isRed() then return equip:getEffectiveId() end
 		if who:hasSkill("duanliang") and equip:isBlack() then return equip:getEffectiveId() end
 		if self:hasSkills("shensu|mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng", who) then return equip:getEffectiveId() end
 	end
@@ -1495,8 +1493,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, friend in ipairs(friends) do
-		if friend:hasArmorEffect("silver_lion") and (self:hasTrickEffective(card, friend) or isYinling)
-			and friend:isWounded() and not self:hasSkills(sgs.use_lion_skill, friend) then
+		if (self:hasTrickEffective(card, friend) or isYinling) and self:needToThrowArmor(friend) then
 			hasLion = true
 			target = friend
 		end
@@ -1642,13 +1639,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	if name == "snatch" or self:getOverflow() > 0 then
 		for _, enemy in ipairs(enemies) do
 			local equips = enemy:getEquips()
-			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not enemy:hasSkill("tuntian")
-				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
-				and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy)) then
-
-				if enemy:getHandcardNum() == 1 and enemy:getCards("e"):length() == 0 then
-					if self:needKongcheng(enemy) or not self:hasLoseHandcardEffective(enemy) then return end
-				end
+			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not self:doNotDiscard(enemy) then
 				if self:hasSkills(sgs.cardneed_skill, enemy) then
 					use.card = card
 					if use.to then
@@ -1774,7 +1765,7 @@ function SmartAI:useCardCollateral(card, use)
 			if not n then
 				for _, friend in ipairs(toList) do
 					if enemy:canSlash(friend) and self:objectiveLevel(friend) < 0 and enemy:objectName() ~= friend:objectName() 
-						and (self:needLoseHp(friend, enemy, true) or self:getDamagedEffects(friend, enemy, true)) then
+						and (self:needToLoseHp(friend, enemy, true) or self:getDamagedEffects(friend, enemy, true)) then
 						n = 1
 						final_enemy = friend
 						break

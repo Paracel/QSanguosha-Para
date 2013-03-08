@@ -167,7 +167,7 @@ bool ServerPlayer::askForSkillInvoke(const QString &skill_name, const QVariant &
     return room->askForSkillInvoke(this, skill_name, data);
 }
 
-QList<int> ServerPlayer::forceToDiscard(int discard_num, bool include_equip) {
+QList<int> ServerPlayer::forceToDiscard(int discard_num, bool include_equip, bool is_discard) {
     QList<int> to_discard;
 
     QString flags = "h";
@@ -177,8 +177,12 @@ QList<int> ServerPlayer::forceToDiscard(int discard_num, bool include_equip) {
     QList<const Card *> all_cards = getCards(flags);
     qShuffle(all_cards);
 
-    for (int i = 0; i < discard_num; i++)
-        to_discard << all_cards.at(i)->getId();
+    for (int i = 0; i < all_cards.length(); i++) {
+        if (!is_discard || !isJilei(all_cards.at(i)))
+            to_discard << all_cards.at(i)->getId();
+        if (to_discard.length() == discard_num)
+            break;
+    }
 
     return to_discard;
 }

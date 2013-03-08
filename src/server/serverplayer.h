@@ -43,7 +43,7 @@ public:
     void clearPrivatePiles();
     void drawCards(int n, const QString &reason = QString());
     bool askForSkillInvoke(const QString &skill_name, const QVariant &data = QVariant());
-    QList<int> forceToDiscard(int discard_num, bool include_equip);
+    QList<int> forceToDiscard(int discard_num, bool include_equip, bool is_discard = true);
     QList<int> handCards() const;
     QList<const Card *> getHandcards() const;
     QList<const Card *> getCards(const QString &flags) const;

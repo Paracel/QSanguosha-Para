@@ -194,7 +194,7 @@ function sgs.getDefense(player)
 			defense = defense + 1
 		end
 	end
-	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and player:hasSkill("tiandu") then
+	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and player:hasSkills("tiandu|leiji|noszhenlie") then
 		defense = defense + 0.5
 	end
 	if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then

@@ -1009,7 +1009,7 @@ function sgs.ai_armor_value.eight_diagram(player, self)
 	if haszj then
 		return 2
 	end
-	if player:hasSkill("tiandu") then
+	if player:hasSkills("tiandu|leiji|noszhenlie") then
 		return 6
 	end
 
@@ -2225,7 +2225,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	end
 
 	for _, card in ipairs(cards) do
-		if card:isKindOf("EightDiagram") and self.player:hasSkill("tiandu") then return card:getEffectiveId() end
+		if card:isKindOf("EightDiagram") and self:hasSkills("tiandu|leiji|noszhenlie") and not self:getSameEquip(card) then return card:getEffectiveId() end
 		if (card:isKindOf("Armor") or card:isKindOf("DefensiveHorse")) and self:isWeak() then return card:getEffectiveId() end
 		if card:isKindOf("Crossbow") and not self.player:hasSkill("paoxiao")
 			and (self:getCardsNum("Slash") > 1 or self:hasSkills("kurou|keji|luoshen|yongsi|luoying") and not current) then return card:getEffectiveId() end

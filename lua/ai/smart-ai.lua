@@ -4651,9 +4651,9 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 
 	if flags:match("e") then
 		for _, enemy in ipairs(enemies) do
-			if enemy:hasEquip() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive)
-			and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
-			and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy)) then
+			if enemy:hasEquip() and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive and #self.enemies > 1)
+				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:isKongcheng())
+				and not (enemy:getCardCount(true) == 1 and enemy:hasArmorEffect("silver_lion") and enemy:isWounded() and self:isWeak(enemy)) then
 				return enemy
 			end
 		end
@@ -4670,8 +4670,8 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 
 	if flags:match("h") then
 		for _, enemy in ipairs(enemies) do
-			if not enemy:isNude() and self:hasLoseHandcardEffective(enemy) 
-				and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
+			if not enemy:isNude() and self:hasLoseHandcardEffective(enemy)
+				and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive and #self.enemies > 1) then
 				return enemy
 			end
 		end

@@ -1545,7 +1545,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
 		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
-		if #cards <= 2 and self:hasTrickEffective(card, enemy) and not enemy:isKongcheng() then
+		if #cards <= 2 and (self:hasTrickEffective(card, enemy) or isYinling) and not enemy:isKongcheng() and not enemy:hasSkill("tuntian") then
 			for _, cc in ipairs(cards) do
 				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 					use.card = card
@@ -1596,7 +1596,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling)
-				and not self:needKongcheng(enemy) and self:hasLoseHandcardEffective(enemy) and i <= 2 then
+				and not (self:needKongcheng(enemy) and i <= 2) and self:hasLoseHandcardEffective(enemy)
+				and not (enemy:hasSkill("tuntian") and #self.enemies > 1) then
 				if (enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy) < 6 + (isJixi and 6 or 0) and enemy:getHp() <= 3 + (isJixi and 2 or 0)) then
 					local cardchosen
 					if self.player:distanceTo(enemy) == self.player:getAttackRange() + 1 and enemy:getDefensiveHorse() then

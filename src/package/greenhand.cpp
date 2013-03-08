@@ -55,7 +55,7 @@ public:
 
         ServerPlayer *target = room->askForPlayerChosen(zhangliao, targets, "gh_tuxi");
         int card_id = room->askForCardChosen(zhangliao, target, "h", "gh_tuxi");
-        room->broadcastSkillInvoke("tuxi");
+        room->broadcastSkillInvoke("gh_tuxi");
         CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, zhangliao->objectName());
         room->obtainCard(zhangliao, Sanguosha->getCard(card_id), reason, false);
 

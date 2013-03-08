@@ -346,7 +346,7 @@ bool Jushou::onPhaseChange(ServerPlayer *target) const{
             target->drawCards(getJushouDrawNum(target));
             target->turnOver();
 
-            room->broadcastSkillInvoke("jushou");
+            room->broadcastSkillInvoke(objectName() == "neojushou" ? "neojushou" : "jushou");
         }
     }
 

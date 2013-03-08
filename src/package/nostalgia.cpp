@@ -267,7 +267,7 @@ public:
                 QString choice = room->askForChoice(lingtong, objectName(), choicelist.join("+"));
                 if (choice == "slash") {
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets1, "nosxuanfeng_slash");
-                    room->broadcastSkillInvoke("xuanfeng", 1);
+                    room->broadcastSkillInvoke(objectName(), 1);
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName(objectName());
 
@@ -277,7 +277,7 @@ public:
                     card_use.to << target;
                     room->useCard(card_use, false);
                 } else if (choice == "damage") {
-                    room->broadcastSkillInvoke("xuanfeng", 2);
+                    room->broadcastSkillInvoke(objectName(), 2);
                     room->notifySkillInvoked(lingtong, objectName());
 
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage");

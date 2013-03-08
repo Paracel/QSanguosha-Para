@@ -65,7 +65,6 @@ public:
 };
 
 NeoFanjianCard::NeoFanjianCard() {
-    mute = true;
     will_throw = false;
     handling_method = Card::MethodNone;
 }
@@ -75,7 +74,6 @@ void NeoFanjianCard::onEffect(const CardEffectStruct &effect) const{
     ServerPlayer *target = effect.to;
     Room *room = zhouyu->getRoom();
 
-    room->broadcastSkillInvoke("fanjian");
     const Card *card = Sanguosha->getCard(getSubcards().first());
     int card_id = card->getEffectiveId();
     Card::Suit suit = room->askForSuit(target, "neofanjian");

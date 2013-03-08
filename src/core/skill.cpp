@@ -403,7 +403,7 @@ int SlashNoDistanceLimitSkill::getDistanceLimit(const Player *from, const Card *
 FakeMoveSkill::FakeMoveSkill(const QString &name, FakeCondition condition)
     : TriggerSkill(QString("#%1-fake-move").arg(name)), name(name), condition(condition)
 {
-    events << CardsMoving << CardsMoveOneTime;
+    events << BeforeCardsMove << CardsMoving << CardsMoveOneTime;
 }
 
 int FakeMoveSkill::getPriority() const{

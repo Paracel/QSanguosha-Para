@@ -3874,11 +3874,11 @@ function SmartAI:getCardsFromGame(class_name)
 	return cards
 end
 
-function SmartAI:getRestCardsNum(class_name)
+function SmartAI:getRestCardsNum(class_name, player)
+	player = player or self.player
 	local ban = sgs.GetConfig("BanPackages", "")
 	sgs.discard_pile = self.room:getDiscardPile()
-	local totalnum = 0
-	local discardnum = 0
+	local totalnum, discardnum, knownnum = 0, 0, 0
 	local card
 	for i = 1, sgs.Sanguosha:getCardCount() do
 		card = sgs.Sanguosha:getEngineCard(i - 1)
@@ -3888,7 +3888,10 @@ function SmartAI:getRestCardsNum(class_name)
 		card = sgs.Sanguosha:getCard(card_id)
 		if card:isKindOf(class_name) then discardnum = discardnum + 1 end
 	end
-	return totalnum - discardnum
+	for _, player in sgs.qlist(self.room:getOtherPlayers(player)) do
+		knownnum = knownnum + getKnownCard(player, class_name)
+	end
+	return totalnum - discardnum - knownnum
 end
 
 function SmartAI:evaluatePlayerCardsNum(class_name, player)

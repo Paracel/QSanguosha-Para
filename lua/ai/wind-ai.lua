@@ -427,24 +427,23 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, guhuo_filter)
 sgs.ai_skill_choice.guhuo = function(self, choices)
 	local yuji = self.room:findPlayerBySkillName("guhuo")
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
+	if guhuoname == "peach+analeptic" then guhuoname = "peach" end
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuit, 0)
 	local guhuotype = guhuocard:getClassName()
-	if guhuotype and self:getRestCardsNum(guhuotype) == 0 and self.player:getHp() > 0 then return "question" end
+	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
 	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:hasCrossbowEffect(yuji))) then return "noquestion" end
 	local players = self.room:getOtherPlayers(self.player)
 	players = sgs.QList2Table(players)
-	local yuji
+	local x = math.random(1, 5)
+
 	self:sort(self.friends, "hp")
-	if self.player:getHp() < 2 and self.room:alivePlayerCount() > 2 then return "noquestion" end
-	for _, other in ipairs(players) do
-		if other:hasSkill("guhuo") then yuji = other break end
-	end
-	if self.lua_ai:isFriend(yuji) then return "noquestion"
+	if self.player:getHp() < 2 and self:getCardsNum("Peach") < 1 and self.room:alivePlayerCount() > 2 then return "noquestion" end
+	if self:isFriend(yuji) then return "noquestion"
 	elseif sgs.questioner then return "noquestion"
 	else
 		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
-	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) then return "question" end
+	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) and x ~= 1 then return "question" end
 
 	local questioner
 	for _, friend in ipairs(self.friends) do
@@ -456,7 +455,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 		end
 	end
 	if not questioner then questioner = self.friends[#self.friends] end
-	return self.player:objectName() == questioner:objectName() and "question" or "noquestion"
+	return self.player:objectName() == questioner:objectName() and x ~= 1 and "question" or "noquestion"
 end
 
 sgs.ai_choicemade_filter.skillChoice.guhuo = function(player, promptlist)
@@ -469,53 +468,142 @@ local guhuo_skill = {}
 guhuo_skill.name = "guhuo"
 table.insert(sgs.ai_skills, guhuo_skill)
 guhuo_skill.getTurnUseCard = function(self)
-	local cards = self.player:getHandcards()
-	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards)
+	if self.player:isKongcheng() then return end
 
-	for _, card in ipairs(cards) do
-		if card:isNDTrick() and card:getSuit() == sgs.Card_Heart then
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	local otherSuit_str, GuhuoCard_str = {}, {}
+
+for _,card in ipairs(cards) do
+		if card:isNDTrick() then
 			local dummyuse = { isDummy = true } 
 			self:useTrickCard(card, dummyuse)
 			if dummyuse.card then
-				local parsed_card = sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. card:objectName())
-				return parsed_card
+				local cardstr = "@GuhuoCard=" .. card:getId() .. ":" .. card:objectName()
+				if card:getSuit() == sgs.Card_Heart then
+					table.insert(GuhuoCard_str, cardstr)
+				else
+					table.insert(otherSuit_str, cardstr)
+				end
 			end
 		end
 	end
 
-	local card_str = self:getGuhuoCard("Peach", self.player, true)
-	if card_str then return sgs.Card_Parse(card_str) end
-
-	local slash_str = self:getGuhuoCard("Slash", self.player, true) or self:getGuhuoCard("Analeptic", self.player, true)
-	if slash_str and self:slashIsAvailable() then return sgs.Card_Parse(slash_str) end
-
-	local guhuos = "peach|ex_nihilo|snatch|amazing_grace|archery_attack"
-	local ban = sgs.GetConfig("BanPackages", "")
-	if not ban:match("maneuvering") then guhuos = guhuos .. "|fire_attack" end
-
-	for i = 1, #guhuos do
-		local forbiden = guhuos[i]
-		forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuit, 0)
-		if self.player:isCardLimited(forbid, sgs.Card_MethodUse, true) then table.remove(forbiden, #guhuos) end
+	local other_suit, enemy_is_weak, zgl_kongcheng = true
+	local can_fake_guhuo = sgs.turncount > 1
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:getHp() > 2 then
+			other_suit = false
+		end
+		if enemy:getHp() > 1 then
+			can_fake_guhuo = false
+		end
+		if self:isWeak(enemy) then
+			enemy_is_weak = true
+		end
+		if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then
+			zgl_kongcheng = true
+		end
 	end
 
-	self:sortByUseValue(cards, true)
-	for _, card in ipairs(cards) do
-		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h") >= 2 and not self:hasCrossbowEffect())
-		or (card:isKindOf("Jink") and self:getCardsNum("Jink", self.player, "h") >= 3)
-		or (card:isKindOf("Weapon") and self.player:getWeapon())
-		or card:isKindOf("Disaster") then
-			for i = 1, 10 do
-				local newguhuo = guhuos[math.random(1, #guhuos)]
-				local guhuocard = sgs.Sanguosha:cloneCard(newguhuo, card:getSuit(), card:getNumber())
-				if self:getRestCardsNum(guhuocard:getClassName()) == 0 then return end
+	if #otherSuit_str > 0 and other_suit then
+		table.insertTable(GuhuoCard_str, otherSuit_str)
+	end
+
+	local peach_str = self:getGuhuoCard("Peach", self.player, true) 
+	if peach_str then table.insert(GuhuoCard_str, peach_str) end
+
+	local fakeCards = {}
+
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h")>=2 and not self:isEquip("Crossbow"))
+			or (card:isKindOf("Jink") and self:getCardsNum("Jink", self.player, "h")>=3)
+			or (card:isKindOf("EquipCard") and self:getSameEquip(card))
+			or card:isKindOf("Disaster") then
+			table.insert(fakeCards, card)
+		end
+	end
+	self:sortByUseValue(fakeCards, true)
+
+	local function fake_guhuo(objectName, can_fake_guhuo)
+		if #fakeCards == 0 then return end
+
+		local fakeCard
+		local guhuo = "peach|ex_nihilo|snatch|dismantlement|amazing_grace|archery_attack|savage_assault|god_salvation"
+		if not sgs.GetConfig("BanPackages", ""):match("maneuvering") then guhuo = guhuo .. "|fire_attack" end
+		local guhuos = guhuo:split("|")
+		for i = 1, #guhuos do
+			local forbiden = guhuos[i]
+			forbid = sgs.Sanguosha:cloneCard(forbiden, sgs.Card_NoSuit, 0)
+			if self.player:isLocked(forbid) then table.remove(forbiden, #guhuos) end
+		end
+		if can_fake_guhuo then
+			for i = 1, #guhuos do
+				if guhuos[i] == "god_salvation" then table.remove(guhuos, i) break end
+			end
+		end
+		for i=1, 10 do
+			local card = fakeCards[math.random(1, #fakeCards)]
+			local newguhuo = objectName or guhuos[math.random(1, #guhuos)]
+			local guhuocard = sgs.Sanguosha:cloneCard(newguhuo, card:getSuit(), card:getNumber())
+			if self:getRestCardsNum(guhuocard:getClassName()) > 0 then
 				local dummyuse = { isDummy = true }
 				if newguhuo == "peach" then self:useBasicCard(guhuocard, dummyuse) else self:useTrickCard(guhuocard, dummyuse) end
 				if dummyuse.card then
-					local parsed_card = sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. newguhuo)
-					return parsed_card
+					fakeCard = sgs.Card_Parse("@GuhuoCard=" .. card:getId() .. ":" .. newguhuo)
+					break
 				end
+			end
+		end
+		return fakeCard
+	end
+
+	if #GuhuoCard_str > 0 then
+		local guhuo_str = GuhuoCard_str[math.random(1, #GuhuoCard_str)]
+
+		local str = guhuo_str:split("=")
+		str = str[2]:split(":")
+		local cardid, cardname = str[1], str[2]
+		if sgs.Sanguosha:getCard(cardid):objectName() == cardname and cardname == "ex_nihilo" and math.random(1,3) == 1 then
+			local fake_exnihilo = fake_guhuo(cardname)
+			if fake_exnihilo then return fake_exnihilo end
+		elseif math.random(1,5) == 1 then
+			local fake_GuhuoCard = fake_guhuo()
+			if fake_GuhuoCard then return fake_GuhuoCard end
+		else
+			return sgs.Card_Parse(guhuo_str)
+		end
+	elseif can_fake_guhuo and math.random(1, 4) ~= 1 then
+		local fake_GuhuoCard = fake_guhuo(nil, can_fake_guhuo)
+		if fake_GuhuoCard then return fake_GuhuoCard end
+	elseif zgl_kongcheng and #fakeCards > 0 then
+		return sgs.Card_Parse("@GuhuoCard=" .. fakeCards[1]:getEffectiveId() .. ":amazing_grace")
+	else
+		local lord = self.room:getLord()
+		local drawcard = false
+		if lord and self:isFriend(lord) and lord:getHp() == 1 and not self.player:isLord() then
+			drawcard = true
+		elseif not enemy_is_weak then
+			if sgs.current_mode_players["loyalist"] > sgs.current_mode_players["renegade"] + sgs.current_mode_players["rebel"]
+				and self.role == "loyalist" and sgs.current_mode_players["rebel"] > 0 then
+				drawcard = true
+			elseif sgs.current_mode_players["rebel"] > sgs.current_mode_players["loyalist"] + sgs.current_mode_players["renegade"] + 2
+				and self.role == "rebel" then
+				drawcard = true
+			end
+		end
+
+		if drawcard and #fakeCards > 0 then
+			local card_objectname
+			local objectNames = { "ex_nihilo", "snatch", "dismantlement", "amazing_grace", "archery_attack", "savage_assault", "god_salvation", "duel" }
+			for _, objectName in ipairs(objectNames) do
+				local acard = sgs.Sanguosha:cloneCard(objectName, sgs.Card_NoSuit, 0)
+				if self:getRestCardsNum(acard:getClassName()) == 0 then
+					card_objectname = objectName
+					break
+				end
+			end
+			if card_objectname then
+				return sgs.Card_Parse("@GuhuoCard=" .. fakeCards[1]:getEffectiveId() .. ":" .. card_objectname)
 			end
 		end
 	end

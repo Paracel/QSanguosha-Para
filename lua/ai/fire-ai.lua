@@ -94,15 +94,18 @@ sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 
 	local max_x = 0
 	local target
-	for _, friend in ipairs(friends) do
-		if friend:hasFlag("ShenfenUsing") and math.min(friend:getMaxHp(), 5) - friend:getHandcardNum() >= 2 then
-			return "@JiemingCard=.->" .. friend:objectName()
+	local Shenfen_user
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if player:hasFlag("ShenfenUsing") then
+			Shenfen_user = player
+			break
 		end
 	end
 	for _, friend in ipairs(friends) do
 		local x = math.min(friend:getMaxHp(), 5) - friend:getHandcardNum()
-		if friend:hasSkill("manjuan") then x = x + 1 end
-
+		if Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and (friend:getMaxHp() < 5 or friend:getHandcardNum() > 4) then x = -1 end
+		if friend:hasSkill("manjuan") and x > 0 then x = x + 1 end
+		
 		if x > max_x and friend:isAlive() then
 			max_x = x
 			target = friend

@@ -285,11 +285,15 @@ function SmartAI:isGoodChainTarget(who)
 end
 
 function SmartAI:useCardIronChain(card, use)
+	local needTarget = (card:getSkillName() == "guhuo" or card:getSkillName() == "qice")
 	use.card = card
-	if self.player:isCardLimited(card, sgs.Card_MethodUse) then return end
-	if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
-	if self:needBear() then return end
-	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return end
+	if not needTarget then
+		if self.player:isCardLimited(card, sgs.Card_MethodUse) then return end
+		if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
+		if self:needBear() then return end
+		if self:getOverflow() <= 0 and self.player:hasSkill("manjuan") then return end
+		if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return end
+	end
 	local friendtargets = {}
 	local otherfriends = {}
 	local enemytargets = {}

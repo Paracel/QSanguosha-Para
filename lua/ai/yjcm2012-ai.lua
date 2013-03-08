@@ -714,6 +714,7 @@ sgs.ai_skill_use_func.QiceCard = function(card, use, self)
 	local userstring = card:toString()
 	userstring = (userstring:split(":"))[3]
 	local qicecard = sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
+	qicecard:setSkillName("qice")
 	self:useTrickCard(qicecard, use)
 	if not use.card then return end
 	use.card = card

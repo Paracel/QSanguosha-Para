@@ -1917,6 +1917,41 @@ local function hp_subtract_handcard(a, b)
 	return diff1 < diff2
 end
 
+function SmartAI:enemiesContainsTrick()
+	local trick_all, possible_indul_enemy, possible_ss_enemy = 0, 0, 0
+
+	local zhanghe = self.room:findPlayerBySkillName("qiaobian")
+	if zhanghe and (not self:isEnemy(zhanghe) or zhanghe:isKongcheng() or not zhanghe:faceUp()) then zhanghe = nil end
+
+	for _, acard in sgs.qlist(self.player:getCards("he")) do
+		if isCard("Indulgence", acard, self.player) then indul_num = indul_num + 1 end
+		if isCard("SupplyShortage", acard, self.player) then ss_num = ss_num + 1 end
+	end
+
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:containsTrick("YanxiaoCard") and not (self:hasSkills("qiaobian", enemy)
+			and enemy:getHandcardNum() > 0) and not self:hasSkills("keji", enemy) then
+			if enemy:containsTrick("indulgence") and (not zhanghe or self:playerGetRound(enemy) >= self:playerGetRound(zhanghe)) then
+				trick_all = trick_all + 1 
+			else
+				possible_indul_enemy = possible_indul_enemy + 1
+			end
+		end
+		if not self:hasSkills("shensu", enemy) and (self.player:distanceTo(enemy) == 1 or self.player:hasSkill("duanliang") and self.player:distanceTo(enemy) <= 2) then
+			if enemy:containsTrick("supply_shortage") and (not zhanghe or self:playerGetRound(enemy) >= self:playerGetRound(zhanghe)) then
+				trick_all = trick_all + 1
+			else
+				possible_ss_enemy  = possible_ss_enemy + 1
+			end
+		end
+	end
+
+	indul_num = math.min(possible_indul_enemy, indul_num)
+	ss_num = math.min(possible_ss_enemy, ss_num)
+	trick_all = trick_all + indul_num + ss_num
+	return trick_all
+end
+
 function SmartAI:playerGetRound(player, source, friend_or_enemy)
 	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
 	source = source or self.player
@@ -1959,10 +1994,8 @@ function SmartAI:useCardIndulgence(card, use)
 			or (self:hasSkills("qiaobian", enemy) and not enemy:isKongcheng()) then
 			return -100
 		end
-		if zhanghe_seat > 0 then
-			local gap1 = (enemy:getSeat() - self.player:getSeat()) % self.room:alivePlayerCount()
-			local gap2 = (zhanghe_seat - self.player:getSeat()) % self.room:alivePlayerCount()
-			if gap1 > gap2 then return -100 end
+		if zhanghe_seat > 0 and (self:playerGetRound(zhanghe) <= self:playerGetRound(enemy) and self:enemiesContainsTrick() <= 1 or not enemy:faceUp()) then
+			return - 100
 		end
 
 		local value = enemy:getHandcardNum() - enemy:getHp()

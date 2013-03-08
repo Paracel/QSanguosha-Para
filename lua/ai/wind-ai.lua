@@ -473,7 +473,7 @@ guhuo_skill.getTurnUseCard = function(self)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local otherSuit_str, GuhuoCard_str = {}, {}
 
-for _,card in ipairs(cards) do
+	for _,card in ipairs(cards) do
 		if card:isNDTrick() then
 			local dummyuse = { isDummy = true } 
 			self:useTrickCard(card, dummyuse)
@@ -515,8 +515,8 @@ for _,card in ipairs(cards) do
 	local fakeCards = {}
 
 	for _, card in sgs.qlist(self.player:getHandcards()) do
-		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h")>=2 and not self:isEquip("Crossbow"))
-			or (card:isKindOf("Jink") and self:getCardsNum("Jink", self.player, "h")>=3)
+		if (card:isKindOf("Slash") and self:getCardsNum("Slash", self.player, "h") >= 2 and not self:hasCrossbowEffect())
+			or (card:isKindOf("Jink") and self:getCardsNum("Jink", self.player, "h") >= 3)
 			or (card:isKindOf("EquipCard") and self:getSameEquip(card))
 			or card:isKindOf("Disaster") then
 			table.insert(fakeCards, card)
@@ -566,7 +566,7 @@ for _,card in ipairs(cards) do
 		if sgs.Sanguosha:getCard(cardid):objectName() == cardname and cardname == "ex_nihilo" and math.random(1,3) == 1 then
 			local fake_exnihilo = fake_guhuo(cardname)
 			if fake_exnihilo then return fake_exnihilo end
-		elseif math.random(1,5) == 1 then
+		elseif math.random(1, 5) == 1 then
 			local fake_GuhuoCard = fake_guhuo()
 			if fake_GuhuoCard then return fake_GuhuoCard end
 		else
@@ -606,6 +606,15 @@ for _,card in ipairs(cards) do
 				return sgs.Card_Parse("@GuhuoCard=" .. fakeCards[1]:getEffectiveId() .. ":" .. card_objectname)
 			end
 		end
+	end
+
+	local slash_str = self:getGuhuoCard("Slash", self.player, true)
+	if slash_str and self:slashIsAvailable() then
+		local card = sgs.Card_Parse(slash_str)
+		local slash = sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
+		local dummy_use = { isDummy = true }
+		self:useBasicCard(slash, dummy_use)
+		if dummy_use.card then return card end
 	end
 end
 

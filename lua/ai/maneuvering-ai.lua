@@ -101,11 +101,11 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if not self.toUse then return nil end
 
 	for _, card in ipairs(self.toUse) do
-		if card:getId()~= slash:getId() then return nil end
+		if card:getId() ~= slash:getId() then return nil end
 	end
 
 	if not use.to then return nil end
-	if self.player:hasUsed("Analeptic") then return nil end
+	if not sgs.Analeptic_IsAvailable(self.player) then return nil end
 
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
@@ -117,7 +117,7 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if card_str then return sgs.Card_Parse(card_str) end
 
 	for _, anal in ipairs(cards) do
-		if (anal:getClassName() == "Analeptic") and not (anal:getEffectiveId() == slash:getEffectiveId()) then
+		if anal:getClassName() == "Analeptic" and anal:getEffectiveId() ~= slash:getEffectiveId() then
 			return anal
 		end
 	end

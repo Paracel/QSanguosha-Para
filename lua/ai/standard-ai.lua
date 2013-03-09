@@ -1813,18 +1813,22 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	end
 
 	if not self.player:hasUsed("LijianCard") then
-		self:sort(self.enemies, "hp")
+		self:sort(self.enemies, "defense")
 		local males, others = {}, {}
 		local first, second
-		local zhugeliang_kongcheng
+		local zhugeliang_kongcheng, xunyu
 
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isMale() and not self:hasSkills("wuyan|noswuyan", enemy) then
-				if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then	zhugeliang_kongcheng=enemy
+				if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then	zhugeliang_kongcheng = enemy
+				elseif enemy:hasSkill("jieming") then xunyu = enemy
 				else
-					if #males == 0 and self:hasTrickEffective(duel, enemy) and not enemy:hasSkill("mingshi") and
-						not (enemy:hasSkill("hunzi") and enemy:getMark("hunzi") < 1 and enemy:getHp() == 2) then
-						table.insert(males, enemy)
+					if #males == 0 and self:hasTrickEffective(duel, enemy) then
+						if not enemy:hasSkill("mingshi") and not (enemy:hasSkill("hunzi") and enemy:getMark("hunzi") < 1 and enemy:getHp() == 2) then
+							table.insert(males, enemy)
+						else
+							table.insert(others, enemy)
+						end
 					elseif #males == 1 and self:damageIsEffective(enemy, sgs.DamageStruct_Normal, males[1]) then
 						if not self:hasSkills("jizhi|jiang", enemy) then
 							table.insert(males, enemy)
@@ -1837,8 +1841,23 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			end
 		end
 
-		if #males == 1 and #others >= 1 and not others[1]:isCardLimited(duel, sgs.Card_MethodUse) then
-			table.insert(males, others[1])
+		if #males == 1 then
+			if #others >= 1 and not others[1]:isCardLimited(duel, sgs.Card_MethodUse) then
+				table.insert(males, others[1])
+			elseif xunyu and not xunyu:isCardLimited(duel, sgs.Card_MethodUse) then
+				if getCardsNum("Slash", males) < 1 then
+					table.insert(males, xunyu)
+				else
+					local drawcards = 0
+					for _, enemy in ipairs(self.enemies) do
+						local x = math.max(math.min(5, enemy:getMaxHp()) - enemy:getHandcardNum(), 0)
+						if x > drawcards then drawcards = x end
+					end
+					if drawcards <= 2 then
+						table.insert(males, xunyu)
+					end
+				end
+			end
 		end
 
 		if #males == 1 and #self.friends_noself > 0 then

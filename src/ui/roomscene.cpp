@@ -1351,7 +1351,7 @@ void RoomScene::chooseKingdom(const QStringList &kingdoms) {
 void RoomScene::chooseOption(const QString &skillName, const QStringList &options) {
     QDialog *dialog = new QDialog;
     QVBoxLayout *layout = new QVBoxLayout;
-    QString title = Sanguosha->translate(skillName.startsWith("cv_") ? "sp_convert" : skillName);
+    QString title = Sanguosha->translate(skillName);
     dialog->setWindowTitle(title);
     layout->addWidget(new QLabel(tr("Please choose:")));
 

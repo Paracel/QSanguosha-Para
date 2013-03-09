@@ -7,9 +7,6 @@ return {
 	["&sp_diaochan"] = "貂蝉",
 	["illustrator:sp_diaochan"] = "巴萨小马",
 	["cv_diaochan:convert"] = "你可以替换为SP貂蝉或台版貂蝉或国战貂蝉",
-	["cv_diaochan:sp_diaochan"] = "SP",
-	["cv_diaochan:tw_diaochan"] = "台湾版",
-	["cv_diaochan:heg_diaochan"] = "国战版",
 
 	["#sp_sunshangxiang"] = "梦醉良缘",
 	["sp_sunshangxiang"] = "SP孙尚香",
@@ -34,8 +31,6 @@ return {
 	["&sp_machao"] = "马超",
 	["illustrator:sp_machao"] = "天空之城",
 	["cv_machao:convert"] = "你可以替换为群雄势力SP马超或台版马超",
-	["cv_machao:sp_machao"] = "SP",
-	["cv_machao:tw_machao"] = "台湾版",
 
 	["#sp_jiaxu"] = "算无遗策",
 	["sp_jiaxu"] = "SP贾诩",
@@ -62,15 +57,11 @@ return {
 	["&tw_daqiao"] = "大乔", 
 	["illustrator:tw_daqiao"] = "玄兔",
 	["cv_daqiao:convert"] = "你可以替换为王战大乔或台版大乔",
-	["cv_daqiao:wz_daqiao"] = "王战版",
-	["cv_daqiao:tw_daqiao"] = "台湾版",
 
 	["tw_zhenji"] = "台版甄姬",
 	["&tw_zhenji"] = "甄姬", 
 	["illustrator:tw_zhenji"] = "DM添",
 	["cv_zhenji:convert"] = "你可以替换为国战甄姬或台版甄姬",
-	["cv_zhenji:heg_zhenji"] = "国战版",
-	["cv_zhenji:tw_zhenji"] = "台湾版",
 
 	["tw_machao"] = "台版马超",
 	["&tw_machao"] = "马超", 
@@ -85,8 +76,6 @@ return {
 	["&tw_lvbu"] = "吕布", 
 	["illustrator:tw_lvbu"] = "焚烧的大葱",
 	["cv_lvbu:convert"] = "你可以替换为国战吕布或台版吕布",
-	["cv_lvbu:heg_lvbu"] = "国战版",
-	["cv_lvbu:tw_lvbu"] = "台湾版",
 
 	["wz_daqiao"] = "王战大乔",
 	["&wz_daqiao"] = "大乔", 
@@ -96,9 +85,6 @@ return {
 	["&wz_xiaoqiao"] = "小乔", 
 	["illustrator:wz_xiaoqiao"] = "Natsu",
 	["cv_xiaoqiao:convert"] = "你可以替换为王战小乔或国战小乔",
-	["cv_xiaoqiao"] = "SP替换",
-	["cv_xiaoqiao:wz_xiaoqiao"] = "王战版",
-	["cv_xiaoqiao:heg_xiaoqiao"] = "国战版",
 
 	-- Hegemony SP
 	["hegemony_sp"] = "国战SP",
@@ -107,8 +93,6 @@ return {
 	["&sp_heg_zhouyu"] = "周瑜",
 	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
 	["cv_zhouyu:convert"] = "你可以替换为国战周瑜或国战SP周瑜",
-	["cv_zhouyu:heg_zhouyu"] = "国战版",
-	["cv_zhouyu:sp_heg_zhouyu"] = "国战SP版",
 
 	["heg_caopi"] = "国战曹丕",
 	["&heg_caopi"] = "曹丕", 

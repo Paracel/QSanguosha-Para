@@ -428,10 +428,13 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local yuji = self.room:findPlayerBySkillName("guhuo")
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
 	if guhuoname == "peach+analeptic" then guhuoname = "peach" end
+	if guhuoname == "normal_slash" then guhuoname = "peach" end
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname, sgs.Card_NoSuit, 0)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
 	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:hasCrossbowEffect(yuji))) then return "noquestion" end
+	if yuji:hasFlag("guhuo_failed") and math.random(1, 6) == 1 and self:isEnemy(yuji) and self.player:getHp() >= 3
+		and self.player:getHp() > self.player:getLostHp() then return "question" end
 	local players = self.room:getOtherPlayers(self.player)
 	players = sgs.QList2Table(players)
 	local x = math.random(1, 5)
@@ -580,7 +583,7 @@ guhuo_skill.getTurnUseCard = function(self)
 	else
 		local lord = self.room:getLord()
 		local drawcard = false
-		if lord and self:isFriend(lord) and lord:getHp() == 1 and not self.player:isLord() then
+		if lord and self:isFriend(lord) and self:isWeak(lord) and not self.player:isLord() then
 			drawcard = true
 		elseif not enemy_is_weak then
 			if sgs.current_mode_players["loyalist"] > sgs.current_mode_players["renegade"] + sgs.current_mode_players["rebel"]

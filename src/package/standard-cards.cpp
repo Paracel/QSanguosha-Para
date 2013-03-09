@@ -892,7 +892,8 @@ ExNihilo::ExNihilo(Suit suit, int number)
 
 void ExNihilo::onUse(Room *room, const CardUseStruct &card_use) const{
     CardUseStruct use = card_use;
-    use.to << use.from;
+    if (use.to.isEmpty())
+        use.to << use.from;
     SingleTargetTrick::onUse(room, use);
 }
 
@@ -1079,7 +1080,8 @@ Disaster::Disaster(Card::Suit suit, int number)
 
 void Disaster::onUse(Room *room, const CardUseStruct &card_use) const{
     CardUseStruct use = card_use;
-    use.to << use.from;
+    if (use.to.isEmpty())
+        use.to << use.from;
     DelayedTrick::onUse(room, use);
 }
 

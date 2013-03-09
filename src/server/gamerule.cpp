@@ -1035,7 +1035,7 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
                     log.arg2 = room->getTag(sp->objectName()).toStringList().at(1);
                 }
 
-                room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+                room->doNotify(sp, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
                 sp->tag["roles"] = room->getTag(sp->objectName()).toStringList().join("+");
             }
         }

@@ -4471,7 +4471,7 @@ function SmartAI:useEquipCard(card, use)
 		if (self:hasSkills("rende|qingnang|nosgongqi"))
 		or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
 		or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
-		or (self:hasSkills("guose|longhun|guose") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
+		or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
 		or (self:hasSkill("jijiu") and (card:isRed() or same:isRed())) then return end
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)

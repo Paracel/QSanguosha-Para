@@ -118,7 +118,7 @@ void Window::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 void Window::appear() {
     QPropertyAnimation *scale_x = new QPropertyAnimation(scaleTransform, "xScale");
     QPropertyAnimation *scale_y = new QPropertyAnimation(scaleTransform, "yScale");
-    QPropertyAnimation *opacity = new QPropertyAnimation(this,"opacity");
+    QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity");
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
 
     scale_x->setEndValue(1);
@@ -135,7 +135,7 @@ void Window::appear() {
 void Window::disappear() {
     QPropertyAnimation *scale_x = new QPropertyAnimation(scaleTransform, "xScale");
     QPropertyAnimation *scale_y = new QPropertyAnimation(scaleTransform, "yScale");
-    QPropertyAnimation *opacity = new QPropertyAnimation(this,"opacity");
+    QPropertyAnimation *opacity = new QPropertyAnimation(this, "opacity");
     QParallelAnimationGroup *group = new QParallelAnimationGroup();
 
     scale_x->setEndValue(1.05);

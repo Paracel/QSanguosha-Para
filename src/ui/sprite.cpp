@@ -167,7 +167,7 @@ EmphasizeEffect::EmphasizeEffect(bool stay, QObject *parent) {
     this->setObjectName("emphasizer");
     index = 0;
     this->stay = stay;
-    QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "index");
     connect(anim, SIGNAL(valueChanged(QVariant)), this, SLOT(update()));
     anim->setEndValue(40);
     anim->setDuration((40 - index)* 5);
@@ -204,7 +204,7 @@ QRectF EmphasizeEffect::boundingRectFor(const QRectF &sourceRect) const{
 void QAnimatedEffect::setStay(bool stay) {
     this->stay = stay;
     if (!stay) {
-        QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
+        QPropertyAnimation *anim = new QPropertyAnimation(this, "index");
         anim->setEndValue(0);
         anim->setDuration(index * 5);
 
@@ -220,7 +220,7 @@ SentbackEffect::SentbackEffect(bool stay, QObject *parent) {
     index = 0;
     this->stay = stay;
 
-    QPropertyAnimation *anim = new QPropertyAnimation(this,"index");
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "index");
     connect(anim, SIGNAL(valueChanged(QVariant)), this, SLOT(update()));
     anim->setEndValue(40);
     anim->setDuration((40 - index) * 5);

@@ -22,7 +22,7 @@ void IndicatorItem::doAnimation() {
     animation->setEasingCurve(QEasingCurve::OutCubic);
     animation->setDuration(500);
 
-    QPropertyAnimation *pause = new QPropertyAnimation(this,"opacity");
+    QPropertyAnimation *pause = new QPropertyAnimation(this, "opacity");
     pause->setEndValue(0);
     pause->setEasingCurve(QEasingCurve::InQuart);
     pause->setDuration(600);

@@ -228,7 +228,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     // chat edit
     chat_edit = new QLineEdit;
     chat_edit->setObjectName("chat_edit");
-    chat_edit->setMaxLength(50);
+    chat_edit->setMaxLength(500);
     chat_edit_widget = addWidget(chat_edit);
     chat_edit_widget->setObjectName("chat_edit_widget");
     chat_edit_widget->setZValue(-2.0);
@@ -3073,9 +3073,23 @@ void RoomScene::speak() {
             Config.EnableBgMusic = true;
             Config.setValue("EnableBgMusic", true);
 #ifdef AUDIO_SUPPORT
+            Audio::stopBGM();
             QString bgmusic_path = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
-
             Audio::playBGM(bgmusic_path);
+            Audio::setBGMVolume(Config.BGMVolume);
+#endif
+        } else if (text.startsWith(".StartBgMusic=")) {
+            broadcast = false;
+            Config.EnableBgMusic = true;
+            Config.setValue("EnableBgMusic", true);
+            QString path = text.mid(14);
+            if (path.startsWith("|")) {
+                path = path.mid(1);
+                Config.setValue("BackgroundMusic", path);
+            }
+#ifdef AUDIO_SUPPORT
+            Audio::stopBGM();
+            Audio::playBGM(path);
             Audio::setBGMVolume(Config.BGMVolume);
 #endif
         } else if (text == ".StopBgMusic") {
@@ -3363,12 +3377,12 @@ void RoomScene::animatePopup(const QString &name, const QStringList &args) {
     glare->setPixmapAtMid(*item);
 
     sprite->setResetTime(200);
-    sprite->addKeyFrame(0,"opacity", 0);
-    sprite->addKeyFrame(400,"opacity", 1);
-    sprite->addKeyFrame(600,"opacity", 1);
-    sprite->addKeyFrame(0,"scale", 0.2, QEasingCurve::OutQuad);
-    sprite->addKeyFrame(400,"scale", 1);
-    sprite->addKeyFrame(600,"scale", 1.2);
+    sprite->addKeyFrame(0, "opacity", 0);
+    sprite->addKeyFrame(400, "opacity", 1);
+    sprite->addKeyFrame(600, "opacity", 1);
+    sprite->addKeyFrame(0, "scale", 0.2, QEasingCurve::OutQuad);
+    sprite->addKeyFrame(400, "scale", 1);
+    sprite->addKeyFrame(600, "scale", 1.2);
 
     sprite->start();
 

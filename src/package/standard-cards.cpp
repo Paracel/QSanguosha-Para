@@ -149,7 +149,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         && player->hasWeapon("crossbow")
         && !player->hasSkill("paoxiao")
         && !player->hasSkill("huxiao"))
-        room->setEmotion(player,"weapon/crossbow");
+        room->setEmotion(player, "weapon/crossbow");
     if (use.card->isKindOf("ThunderSlash"))
         room->setEmotion(player, "thunder_slash");
     else if (use.card->isKindOf("FireSlash"))
@@ -309,7 +309,7 @@ public:
                 && !to->isSexLess()
                 && use.card->isKindOf("Slash")) {
                 if (use.from->askForSkillInvoke(objectName())) {
-                    to->getRoom()->setEmotion(use.from,"weapon/double_sword");
+                    to->getRoom()->setEmotion(use.from, "weapon/double_sword");
 
                     bool draw_card = false;
                     if (to->isKongcheng())

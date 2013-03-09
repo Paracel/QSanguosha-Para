@@ -127,10 +127,10 @@ void MagatamasBoxItem::_doHpChangeAnimation(int newHp) {
         int pos = m_maxHp > 5 ? 0 : i;
         aniMaga->setPos(QPoint(xStep * pos - aniMaga->offset().x(), yStep * pos - aniMaga->offset().y()));
 
-        QPropertyAnimation *fade = new QPropertyAnimation(aniMaga,"opacity");
+        QPropertyAnimation *fade = new QPropertyAnimation(aniMaga, "opacity");
         fade->setEndValue(0);
         fade->setDuration(500);
-        QPropertyAnimation *grow = new QPropertyAnimation(aniMaga,"scale");
+        QPropertyAnimation *grow = new QPropertyAnimation(aniMaga, "scale");
         grow->setEndValue(4);
         grow->setDuration(500);
 

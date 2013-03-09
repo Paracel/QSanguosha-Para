@@ -75,7 +75,7 @@ void NativeClientSocket::connectToHost() {
     } else {
         address = Config.HostAddress;
         if (address == "127.0.0.1")
-            port = Config.value("ServerPort","9527").toString().toUShort();
+            port = Config.value("ServerPort", "9527").toString().toUShort();
     }
 
     socket->connectToHost(address, port);

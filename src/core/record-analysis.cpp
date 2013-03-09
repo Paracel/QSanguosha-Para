@@ -41,7 +41,7 @@ void RecAnalysis::initialize(QString dir) {
             line.remove(QRegExp("[^a-zA-Z0-9_,]"));
             QStringList self_info = line.split(",");
             if (self_info.at(1) == "objectName")
-                getPlayer(self_info.at(2), "MG_SELF")->m_screenName = Config.UserName;
+                getPlayer(self_info.at(2), QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_screenName = Config.UserName;
             else if (self_info.at(1) == "role")
                 getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_role = self_info.at(2);
             else if (self_info.at(1) == "general")

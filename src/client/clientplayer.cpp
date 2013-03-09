@@ -175,11 +175,11 @@ void ClientPlayer::setMark(const QString &mark, int value) {
 
         if (itor.key().startsWith("@") && itor.value() > 0) {
 #define _EXCLUDE_MARK(markname) {\
-                                   if (itor.key() == QString("@%1").arg(#markname)) {\
-                                       markname##_mark = itor.value();\
-                                       continue;\
-                                   }\
-                               }
+                                    if (itor.key() == QString("@%1").arg(#markname)) {\
+                                        markname##_mark = itor.value();\
+                                        continue;\
+                                    }\
+                                }
 
             _EXCLUDE_MARK(huashen)
             _EXCLUDE_MARK(yongsi_test)
@@ -199,17 +199,17 @@ void ClientPlayer::setMark(const QString &mark, int value) {
 
     // keep these marks at a certain place
 #define _SET_MARK(markname) {\
-                               if (markname##_mark > 0) {\
-                                   QString mark_text = QString("<img src='image/mark/test/@%1.png' />").arg(#markname);\
-                                   if (markname##_mark != 1) {\
-                                       mark_text.append(QString("%1").arg(markname##_mark));\
-                                   }\
-                                   if (this != Self) {\
-                                       mark_text.append("<br>");\
-                                       text.prepend(mark_text);\
-                                   } else {\
-                                      text.append(mark_text);\
-                                   }\
+                                if (markname##_mark > 0) {\
+                                    QString mark_text = QString("<img src='image/mark/test/@%1.png' />").arg(#markname);\
+                                    if (markname##_mark != 1) {\
+                                        mark_text.append(QString("%1").arg(markname##_mark));\
+                                    }\
+                                    if (this != Self) {\
+                                        mark_text.append("<br>");\
+                                        text.prepend(mark_text);\
+                                    } else {\
+                                       text.append(mark_text);\
+                                    }\
                                 }\
                             }
 

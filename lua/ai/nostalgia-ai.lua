@@ -39,23 +39,18 @@ nosjujian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
-	local abandon_handcard = {}
+	local abandon_card = {}
 	local index = 0
 	local hasPeach = (self:getCardsNum("Peach") > 0)
-	local tos = {}
-	for _, player in ipairs(self.friends_noself) do
-		if not player:hasSkill("manjuan") then
-			table.insert(tos, player)
-		end  
-	end
+	local to
 
 	local trick_num, basic_num, equip_num = 0, 0, 0
-	if not hasPeach and self.player:isWounded() and self.player:getHandcardNum() >= 3 then
+	if not hasPeach and self.player:isWounded() and self.player:getCards("he"):length() >=3 then
 		local cards = self.player:getCards("he")
 		cards = sgs.QList2Table(cards)
 		self:sortByUseValue(cards, true)
 		for _, card in ipairs(cards) do
-			if card:getTypeId() == sgs.Card_TypeTrick and not card:isKindOf("ExNihilo") then trick_num = trick_num + 1
+			if card:getTypeId() == sgs.Card_TypeTrick and not isCard("ExNihilo", card, self.player) then trick_num = trick_num + 1
 			elseif card:getTypeId() == sgs.Card_TypeBasic then basic_num = basic_num + 1
 			elseif card:getTypeId() == sgs.Card_TypeEquip then equip_num = equip_num + 1
 			end
@@ -65,64 +60,72 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		elseif equip_num >= 3 then result_class = "EquipCard"
 		elseif basic_num >= 3 then result_class = "BasicCard"
 		end
-		local f
-		for _, friend in ipairs(tos) do
-			if friend:getHandcardNum() < 2 or friend:getHandcardNum() < friend:getHp() + 1 then
-				for _, fcard in ipairs(cards) do
-					if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
-						table.insert(abandon_handcard, fcard:getId())
-						index = index + 1
-					end
-					if index == 3 then f = friend break end
-				end
+
+		for _, fcard in ipairs(cards) do
+			if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
+				table.insert(abandon_card, fcard:getId())
+				index = index + 1
+				if index == 3 then break end
 			end
 		end
+
 		if index == 3 then
-			if use.to then use.to:append(f) end
-			use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_handcard, "+"))
+			to = self:findPlayerToDraw(false, 3)
+			if not to then return end
+			if use.to then use.to:append(to) end
+			use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_card, "+"))
 			return
 		end
 	end
-	abandon_handcard = {}
+
+	abandon_card = {}
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)
 	local slash_num = self:getCardsNum("Slash")
 	local jink_num = self:getCardsNum("Jink")
-	for _, friend in ipairs(tos) do
-		if friend:getHandcardNum() < 2 or friend:getHandcardNum() < friend:getHp() + 1 or self.player:isWounded() then
-			for _, card in ipairs(cards) do
-				if #abandon_handcard >= 3 then break end
-				if not card:isKindOf("Nullification") and not card:isKindOf("EquipCard")
-					and not card:isKindOf("Peach") and not card:isKindOf("Jink")
-					and not card:isKindOf("Indulgence") and not card:isKindOf("SupplyShortage") then
-					table.insert(abandon_handcard, card:getId())
-					index = 5
-				elseif card:isKindOf("Slash") and slash_num > 1 then
-					if (self.player:getWeapon() and not self.player:getWeapon():objectName() == "crossbow")
-						or not self.player:getWeapon() then
-						table.insert(abandon_handcard, card:getId())
-						index = 5
-						slash_num = slash_num - 1
-					end
-				elseif card:isKindOf("Jink") and jink_num > 1 then
-					table.insert(abandon_handcard, card:getId())
-					index = 5
-					jink_num = jink_num - 1
-				end
-			end
-			if index == 5 then
-				use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_handcard, "+"))
-				if use.to then use.to:append(friend) end
-				return
-			end
+	index = 0
+	for _, card in ipairs(cards) do
+		if index >= 3 then break end
+		if card:isKindOf("TrickCard") and not card:isKindOf("Nullification") then
+			table.insert(abandon_card, card:getId())
+			index = index + 1
+		elseif card:isKindOf("EquipCard") then
+			table.insert(abandon_card, card:getId())
+			index = index + 1
+		elseif card:isKindOf("Slash") and slash_num > 1 then
+			table.insert(abandon_card, card:getId())
+			index = index + 1
+			slash_num = slash_num - 1
+		elseif card:isKindOf("Jink") and jink_num > 1 then
+			table.insert(abandon_card, card:getId())
+			index = index + 1
+			jink_num = jink_num - 1
 		end
 	end
-	if #tos > 0 and self:getOverflow() > 0 then
-		self:sort(tos, "handcard")
-		local discard = self:askForDiscard("gamerule", math.min(self:getOverflow(), 3))
+
+	if index == 3 then
+		to = self:findPlayerToDraw("noself", 3)
+		if not to then return end
+		if use.to then use.to:append(to) end
+		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_card, "+"))
+		return
+	end
+
+	if self:getOverflow() > 0 then
+		local discard = self:askForDiscard("dummyreason", math.min(self:getOverflow(), 3))
+		to = self:findPlayerToDraw(false, math.min(self:getOverflow(), 3))
+		if not to then return end
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(discard, "+"))
-		if use.to then use.to:append(self.friends_noself[1]) end
+		if use.to then use.to:append(to) end
+		return
+	end
+
+	if index > 0 then
+		to = self:findPlayerToDraw(false, index)
+		if not to then return end
+		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_card, "+"))
+		if use.to then use.to:append(to) end
 		return
 	end
 end

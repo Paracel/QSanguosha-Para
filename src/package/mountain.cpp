@@ -307,7 +307,6 @@ public:
     }
 };
 
-
 class TuntianClear: public TriggerSkill {
 public:
     TuntianClear(): TriggerSkill("#tuntian-clear") {

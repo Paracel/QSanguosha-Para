@@ -57,7 +57,8 @@ bool Analeptic::isAvailable(const Player *player) const{
 
 void Analeptic::onUse(Room *room, const CardUseStruct &card_use) const{
     CardUseStruct use = card_use;
-    use.to << use.from;
+    if (use.to.isEmpty())
+        use.to << use.from;
     BasicCard::onUse(room, use);
 }
 

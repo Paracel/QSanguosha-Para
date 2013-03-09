@@ -1977,6 +1977,9 @@ function SmartAI:filterEvent(event, player, data)
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						local has_slash_prohibit_skill = false
+						if target:hasSkill("fangzhu") and target:getLostHp() <= 2 then
+							has_slash_prohibit_skill = true
+						end
 						for _, askill in sgs.qlist(target:getVisibleSkillList()) do
 							local filter = sgs.ai_slash_prohibit[askill:objectName()]
 							if filter and type(filter) == "function" and filter(self, player, target, card) then

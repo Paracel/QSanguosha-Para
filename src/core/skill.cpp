@@ -333,7 +333,12 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
                     && !Sanguosha->getBanPackages().contains(gen->getPackage()))
                 choicelist << to_gen;
         }
-        QString to_cv = room->askForChoice(player, objectName(), choicelist.join("+"));
+        QString to_cv;
+        AI *ai = player->getAI();
+        if (ai)
+            to_cv = room->askForChoice(player, objectName(), choicelist.join("+"));
+        else
+            to_cv = choicelist.length() == 1 ? choicelist.first() : room->askForGeneral(player, choicelist.join("+"));
         bool isSecondaryHero = (player->getGeneralName() != from && player->getGeneral2Name() == from);
 
         LogMessage log;

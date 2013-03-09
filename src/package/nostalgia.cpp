@@ -1063,9 +1063,26 @@ public:
         } else if (choice == "obtain") {
             room->broadcastSkillInvoke("guixin", index + 2);
             QStringList lords = Sanguosha->getLords();
-            QList<ServerPlayer *> players = room->getOtherPlayers(weiwudi);
-            foreach (ServerPlayer *player, players) {
-                lords.removeOne(player->getGeneralName());
+            foreach (ServerPlayer *player, room->getAlivePlayers()) {
+                QString name = player->getGeneralName();
+                const Skill *convert_skill_1 = Sanguosha->getSkill(QString("cv_%1").arg(name.split("_").last()));
+                if (convert_skill_1) {
+                    const SPConvertSkill *skill = qobject_cast<const SPConvertSkill *>(convert_skill_1);
+                    if (skill && skill->getToName().contains(name))
+                        name = skill->getFromName();
+                }
+                lords.removeOne(name);
+
+                if (!player->getGeneral2()) continue;
+
+                name = player->getGeneralName();
+                const Skill *convert_skill_2 = Sanguosha->getSkill(QString("cv_%1").arg(name.split("_").last()));
+                if (convert_skill_2) {
+                    const SPConvertSkill *skill = qobject_cast<const SPConvertSkill *>(convert_skill_2);
+                    if (skill && skill->getToName().contains(name))
+                        name = skill->getFromName();
+                }
+                lords.removeOne(name);
             }
 
             QStringList lord_skills;

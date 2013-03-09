@@ -351,6 +351,14 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
     }
 }
 
+QString SPConvertSkill::getFromName() const{
+    return from;
+}
+
+QStringList SPConvertSkill::getToName() const{
+    return to_list;
+}
+
 ProhibitSkill::ProhibitSkill(const QString &name)
     : Skill(name, Skill::Compulsory)
 {

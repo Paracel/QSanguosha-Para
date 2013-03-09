@@ -23,14 +23,11 @@ public:
                 if (use.to.contains(player) && use.from != player) {
                     if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
                         if (room->askForSkillInvoke(player, objectName(), data)) {
+                            room->setCardFlag(use.card, "ZhenlieNullify");
                             room->loseHp(player);
-                            if (player->isAlive()) {
-                                room->setCardFlag(use.card, "ZhenlieNullify");
-                                player->setFlags("ZhenlieNullify");
-                                if (!use.from->isNude()) {
-                                    int id = room->askForCardChosen(player, use.from, "he", objectName());
-                                    room->throwCard(id, use.from, player);
-                                }
+                            if (player->isAlive() && !use.from->isNude()) {
+                                int id = room->askForCardChosen(player, use.from, "he", objectName());
+                                room->throwCard(id, use.from, player);
                             }
                         }
                     }
@@ -38,8 +35,7 @@ public:
             }
         } else if (event == CardEffected) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (!effect.card->isKindOf("Slash") && effect.card->hasFlag("ZhenlieNullify")
-                && player->hasFlag("-ZhenlieNullify")) {
+            if (!effect.card->isKindOf("Slash") && effect.card->hasFlag("ZhenlieNullify")) {
                 LogMessage log;
                 log.type = "#DanlaoAvoid";
                 log.from = player;
@@ -47,12 +43,11 @@ public:
                 log.arg2 = objectName();
                 room->sendLog(log);
 
-                player->setFlags("-ZhenlieNullify");
                 return true;
             }
         } else if (event == SlashEffected) {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (effect.slash->hasFlag("ZhenlieNullify") && player->hasFlag("ZhenlieNullify")) {
+            if (effect.slash->hasFlag("ZhenlieNullify")) {
                 LogMessage log;
                 log.type = "#DanlaoAvoid";
                 log.from = player;
@@ -60,7 +55,6 @@ public:
                 log.arg2 = objectName();
                 room->sendLog(log);
 
-                player->setFlags("-ZhenlieNullify");
                 return true;
             }
         }

@@ -401,15 +401,18 @@ public:
             DyingStruct dying = data.value<DyingStruct>();
             if (dying.damage && dying.damage->from)
                 target = dying.damage->from;
-            if (dying.who != player && target && room->askForChoice(target, "suishi1", "draw+no") == "draw") {
+            if (dying.who != player && target
+                && room->askForSkillInvoke(target, objectName(), QString("draw:%1").arg(player->objectName()))) {
                 room->broadcastSkillInvoke(objectName(), 1);
-                room->notifySkillInvoked(player, objectName());
-                LogMessage log;
-                log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
-                log.from = target;
-                log.to << player;
-                log.arg = objectName();
-                room->sendLog(log);
+                if (target != player) {
+                    room->notifySkillInvoked(player, objectName());
+                    LogMessage log;
+                    log.type = "#InvokeOthersSkill";
+                    log.from = target;
+                    log.to << player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+                }
 
                 player->drawCards(1);
             }
@@ -417,15 +420,17 @@ public:
             DeathStruct death = data.value<DeathStruct>();
             if (death.damage && death.damage->from)
                 target = death.damage->from;
-            if (target && room->askForChoice(target, "suishi2", "damage+no") == "damage") {
+            if (target && room->askForSkillInvoke(target, objectName(), QString("losehp:%1").arg(player->objectName()))) {
                 room->broadcastSkillInvoke(objectName(), 2);
-                room->notifySkillInvoked(player, objectName());
-                LogMessage log;
-                log.type = (target != player) ? "#InvokeOthersSkill" : "#InvokeSkill";
-                log.from = target;
-                log.to << player;
-                log.arg = objectName();
-                room->sendLog(log);
+                if (target != player) {
+                    room->notifySkillInvoked(player, objectName());
+                    LogMessage log;
+                    log.type = "#InvokeOthersSkill";
+                    log.from = target;
+                    log.to << player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+                }
 
                 room->loseHp(player);
             }

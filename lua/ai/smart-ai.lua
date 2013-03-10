@@ -3286,7 +3286,7 @@ function SmartAI:needRetrial(judge)
 	if reason == "indulgence" then
 		if self:isFriend(who) then
 			if who:getHp() - who:getHandcardNum() >= 2 then return false end
-			if who:hasSkill("tuxi") and who:getHp()>2 then return false end
+			if who:hasSkill("tuxi") and who:getHp() > 2 then return false end
 			return not judge:isGood()
 		else
 			return judge:isGood()

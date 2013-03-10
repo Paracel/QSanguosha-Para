@@ -323,20 +323,16 @@ sgs.ai_card_intention.SijianCard = function(self, card, from, tos)
 	sgs.updateIntention(from, tos[1], intention)
 end
 
-sgs.ai_skill_choice.suishi1 = function(self, choices)
-	local tianfeng = self.room:findPlayerBySkillName("suishi")
-	if tianfeng and self:isFriend(tianfeng) then
-		return "draw"
+sgs.ai_skill_invoke.suishi = function(self, data)
+	local promptlist = data:toString():split(":")
+	local effect = promptlist[1]
+	local tianfeng = findPlayerByObjectName(promptlist[2])
+	if effect == "draw" then
+		return tianfeng and self:isFriend(tianfeng)
+	elseif effect == "losehp" then
+		return tianfeng and self:isEnemy(tianfeng)
 	end
-	return "no"
-end
-
-sgs.ai_skill_choice.suishi2 = function(self, choices)
-	local tianfeng = self.room:findPlayerBySkillName("suishi")
-	if tianfeng and self:objectiveLevel(tianfeng) > 3 then
-		return "damage"
-	end
-	return "no"
+	return false
 end
 
 sgs.ai_skill_use["@@shuangren"] = function(self, prompt)

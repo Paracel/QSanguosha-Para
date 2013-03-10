@@ -853,7 +853,7 @@ sgs.ai_skill_use_func.JilveCard = function(card, use, self)
 	use.card = card
 end
 
-sgs.ai_use_priority.JilveCard = ((sgs.ai_skill_choice.jilve == "zhiheng") and 0.4 or 8)
+sgs.ai_use_priority.JilveCard = ((sgs.ai_skill_choice.jilve == "zhiheng") and sgs.ai_use_priority.ZhihengCard or 8)
 
 sgs.ai_skill_use["@zhiheng"] = function(self, prompt)
 	local card = sgs.Card_Parse("@ZhihengCard=.")

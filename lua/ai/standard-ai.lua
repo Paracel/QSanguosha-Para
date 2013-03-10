@@ -944,9 +944,34 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 
 	if self.player:getHp() < 3 then
 		local zcards = self.player:getCards("he")
+		local use_slash, keep_jink = false, false
 		for _, zcard in sgs.qlist(zcards) do
 			if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
-				table.insert(unpreferedCards, zcard:getId())
+				local shouldUse = true
+				if not self:isWeak() and isCard("Slash", zcard, self.player) and not use_slash then
+					local dummy_use = { isDummy = true }
+					self:useBasicCard(zcard, dummy_use)
+					if dummy_use.card then
+						use_slash = true
+						shouldUse = false
+					end
+				end
+				if zcard:getTypeId() == sgs.Card_TypeTrick then
+					local dummy_use = { isDummy = true }
+					self:useTrickCard(zcard, dummy_use)
+					if dummy_use.card then shouldUse = false end
+				end
+				if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(card) then
+					local dummy_use = { isDummy = true }
+					self:useEquipCard(zcard, dummy_use)
+					if dummy_use.card then shouldUse = false end
+				end
+				if self.player:hasEquip(zcard) and zcard:isKindOf("Armor") and not self:needToThrowArmor() then shouldUse = false end
+				if isCard("Jink", zcard, self.player) and not keep_jink then
+					keep_jink = true
+					shouldUse = false
+				end
+				if shouldUse then table.insert(unpreferedCards, zcard:getId()) end
 			end
 		end
 	end
@@ -988,6 +1013,14 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 		if self.player:getOffensiveHorse() and self.player:getWeapon() then
 			table.insert(unpreferedCards, self.player:getOffensiveHorse():getId())
 		end
+
+		for _, card in ipairs(cards) do
+			if card:getTypeId() == sgs.Card_TypeTrick then
+				local dummy_use = { isDummy = true }
+				self:useTrickCard(card, dummy_use)
+				if not dummy_use.card then table.insert(unpreferedCards, card:getId()) end
+			end
+		end
 	end
 
 	for index = #unpreferedCards, 1, -1 do
@@ -1001,6 +1034,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 end
 
 sgs.ai_use_value.ZhihengCard = 9
+sgs.ai_use_priority.ZhihengCard = 3
 sgs.dynamic_value.benefit.ZhihengCard = true
 
 function sgs.ai_cardneed.zhiheng(to, card)

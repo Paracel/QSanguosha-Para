@@ -2022,18 +2022,19 @@ function SmartAI:useCardIndulgence(card, use)
 
 		local value = enemy:getHandcardNum() - enemy:getHp()
 
-		if self:hasSkills("lijian|fanjian|neofanjian|nosfanjian|dimeng|jijiu|jieyin|anxu|yongsi|zhiheng|manjuan|rende", enemy) then value = value + 10 end    
-		if self:hasSkills("rende|qixi|qice|guose|duanliang|nosjujian|luoshen|jizhi|jilve|wansha|mingce", enemy) then value = value + 5 end
-		if self:hasSkills("guzheng|luoying|yinling|gongxin|shenfen|ganlu|duoshi", enemy) then value = value + 3 end
+		if enemy:hasSkills("lijian|fanjian|neofanjian|nosfanjian|dimeng|jijiu|jieyin|anxu|yongsi|zhiheng|manjuan|rende") then value = value + 10 end    
+		if enemy:hasSkills("rende|qixi|qice|guose|duanliang|nosjujian|luoshen|jizhi|jilve|wansha|mingce") then value = value + 5 end
+		if enemy:hasSkills("guzheng|luoying|yinling|gongxin|shenfen|ganlu|duoshi") then value = value + 3 end
 		if self:isWeak(enemy) then value = value + 3 end
 		if enemy:isLord() then value = value + 3 end
 
 		if self:objectiveLevel(enemy) < 3 then value = value -10 end
 		if not enemy:faceUp() then value = value -10 end
-		if self:hasSkills("keji|shensu", enemy) then value = value - enemy:getHandcardNum() end
-		if self:hasSkills("guanxing|xiuluo", enemy) then value = value - 5 end
-		if self:hasSkills("lirang", enemy) then value = value - 5 end
-		if self:hasSkills("tuxi|noszhenlie|guanxing|qinyin|zongshi", enemy) then value = value - 3 end
+		if enemy:hasSkills("keji|shensu") then value = value - enemy:getHandcardNum() end
+		if enemy:hasSkills("guanxing|xiuluo") then value = value - 5 end
+		if enemy:hasSkills("lirang") then value = value - 5 end
+		if enemy:hasSkills("tuxi|noszhenlie|guanxing|qinyin|zongshi|tiandu") then value = value - 3 end
+		if self:needBear(enemy) then value = value - 20 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 1 end
 		return value
 	end

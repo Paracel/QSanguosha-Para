@@ -834,7 +834,7 @@ jilve_skill.getTurnUseCard = function(self)
 				and #self.enemies > 1 then
 				sgs.ai_skill_choice.jilve = "wansha"
 				sgs.ai_use_priority.JilveCard = 8
-				return sgs.Card_Parse("@JilveCard=.") 
+				return sgs.Card_Parse("@JilveCard=.")
 			end
 		end
 	end
@@ -856,7 +856,6 @@ jilve_skill.getTurnUseCard = function(self)
 			end
 		end
 	end
-end
 end
 
 sgs.ai_skill_use_func.JilveCard = function(card, use, self)

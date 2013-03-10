@@ -2384,27 +2384,26 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 		if flags:match("e") then
-			if who:hasWeapon("crossbow") and getCardsNum("Slash", who) > 1 then
-				for _, friend in ipairs(self.friends) do
-					if who:distanceTo(friend) <= 1 then return who:getWeapon():getId() end
-				end
+			if self:getValuableCard(who) then
+				return self:getValuableCard(who)
 			end
-
-			self:sort(self.friends, "hp")
-			local friend = self.friends[1]
-			if self:isWeak(friend) and who:distanceTo(friend) <= who:getAttackRange() then
-				if who:getWeapon() and who:distanceTo(friend) > 1 then return who:getWeapon():getId() end
-				if who:getOffensiveHorse() and who:distanceTo(friend) > 1 then return who:getOffensiveHorse():getId() end
+		end
+		if flags:match("h") then
+			if self:hasSkills("jijiu|qingnang|qiaobian|jieyin|beige|buyi|manjuan", who)
+				and not who:isKongcheng() and who:getHandcardNum() <= 2 and not self:doNotDiscard(who, "h") then
+				return self:getCardRandomly(who, "h") 
 			end
-
-			if who:getDefensiveHorse() then
-				for _, friend in ipairs(self.friends) do
-					if friend:distanceTo(who) == friend:getAttackRange() + 1 then
-						return who:getDefensiveHorse():getId()
+			local cards = sgs.QList2Table(who:getHandcards())
+			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), who:objectName())
+			if #cards <= 2 and not self:doNotDiscard(who, "h") then
+				for _, cc in ipairs(cards) do
+					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
+						return self:getCardRandomly(who, "h")
 					end
 				end
 			end
 		end
+
 		if flags:match("j") then
 			local tricks = who:getCards("j")
 			local lightning, yanxiao
@@ -2422,41 +2421,22 @@ function SmartAI:askForCardChosen(who, flags, reason)
 				return yanxiao
 			end
 		end
-		if flags:match("e") then
-			if who:getArmor() and self:evaluateArmor(who:getArmor(), who) > 0
-				and not self:needToThrowArmor(who) then
-				return who:getArmor():getId()
-			end
 
-			if who:getWeapon() then
-				if not (who:hasSkill("xiaoji") and (who:getHandcardNum() >= who:getHp())) then
-					for _, friend in ipairs(self.friends) do
-						if (who:distanceTo(friend) <= who:getAttackRange()) and (who:distanceTo(friend) > 1) then
-							return who:getWeapon():getId()
-						end
-					end
-				end
-			end
-
-			if who:getOffensiveHorse() then
-				if who:hasSkill("xiaoji") and who:getHandcardNum() >= who:getHp() then
-				else
-					for _, friend in ipairs(self.friends) do
-						if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
-							return who:getOffensiveHorse():getId()
-						end
-					end
-				end
-			end
-			if not self:hasLoseHandcardEffective(who) then
-				if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
-				if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end
-				if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
-				if who:getWeapon() then return who:getWeapon():getId() end
+		if flags:match("h") then
+			if self:hasSkills(sgs.cardneed_skill, who) and not self:doNotDiscard(who, "h") then
+				return self:getCardRandomly(who, "h")
 			end
 		end
+
+		if flags:match("e") and not self:doNotDiscard(who, "e") then
+			if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
+			if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end
+			if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
+			if who:getWeapon() then return who:getWeapon():getId() end
+		end
+
 		if flags:match("h") then
-			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:hasSkills("kongcheng|lianying|shangshi|nosshangshi", who) then
+			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:doNotDiscard(who, "h") then
 				return self:getCardRandomly(who, "h")
 			end
 		end
@@ -4609,14 +4589,20 @@ function SmartAI:doNotDiscard(to, flags, conservative)
 	if not to then global_room:writeToConsole(debug.traceback()) return end
 	flags = flags or "he"
 	if to:isNude() then return true end
+	if flags:match("e") then
+		if to:hasSkills("jieyin+xiaoji") and to:getDefensiveHorse() then return false end
+		if to:hasSkills("jieyin+xiaoji") and to:getArmor() and not to:getArmor():isKindOf("SilverLion") then return false end
+	end
+	conservative = conservative or (sgs.turncount <= 2 and self.room:alivePlayerCount() > 2)
+	if to:hasSkill("tuntian") and to:getPhase() == sgs.Player_NotActive and (conservative or #self.enemies > 1) then return true end
 	if flags == "h" or (flags == "he" and not to:hasEquip()) then
+		if to:isKongcheng() then return true end
 		if not self:hasLoseHandcardEffective(to) then return true end
-		if to:getHandcardNum() == 1 and (self:needKongcheng(to) or self:hasSkills(sgs.need_kongcheng, to)) then return true end
-		if to:hasSkill("tuntian") and to:getPhase() == sgs.Player_NotActive and (not conservative or #self.enemies > 1) then return true end
+		if #self.friends > 1 and to:getHandcardNum() == 1 and to:hasSkill("sijian") then return false end
+		if to:getHandcardNum() == 1 and self:needKongcheng(to) then return true end
 	elseif flags:match("e") then
 		if not to:hasEquip() then return true end
 		if self:hasSkills(sgs.lose_equip_skill, to) and to:isKongcheng() then return true end
-		if to:hasSkill("tuntian") and to:getPhase() == sgs.Player_NotActive and (not conservative or #self.enemies > 1) then return true end
 		if to:getCardCount(true) == 1 and to:getArmor() and self:needToThrowArmor(to) then return true end
 	end
 	return false
@@ -4637,11 +4623,6 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 				end
 			end
 		end
-		for _, friend in ipairs(friends) do
-			if self:needToThrowArmor(friend) then
-				return friend
-			end
-		end
 	end
 
 	if flags:match("j") then
@@ -4654,9 +4635,17 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 		for _, friend in ipairs(friends) do
 			if friend:containsTrick("lightning") and self:hasWizard(enemies, true) then return friend end
 		end
+		for _, enemy in ipairs(enemies) do
+			if enemy:containsTrick("lightning") and self:hasWizard(enemies, true) then return enemy end
+		end
 	end
 
 	if flags:match("e") then
+		for _, friend in ipairs(friends) do
+			if self:needToThrowArmor(friend) then
+				return friend
+			end
+		end
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() then
 				if self:getValuableCard(enemy) then
@@ -4702,16 +4691,14 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 
 	if flags:match("j") then
 		for _, enemy in ipairs(enemies) do
-			if enemy:containsTrick("lightning") and self:hasWizard(enemies, true) then return enemy end
-		end
-		for _, enemy in ipairs(enemies) do
 			if enemy:containsTrick("YanxiaoCard") then return enemy end
 		end
 	end
 
 	if flags:match("h") then
+		self:sort(enemies, "handcard")
 		for _, enemy in ipairs(enemies) do
-			if not enemy:isNude() and not self:doNotDiscard(enemy, "h") then
+			if not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h") then
 				return enemy
 			end
 		end

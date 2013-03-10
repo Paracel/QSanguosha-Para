@@ -2918,7 +2918,15 @@ end
 
 function SmartAI:askForYiji(card_ids, reason)
 	local noRest = (reason == "lirang" or reason == "miji")
-	if not noRest and self.player:getHandcardNum() <= 2 then
+	local Shenfen_user
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:hasFlag("ShenfenUsing") then
+			Shenfen_user = player
+			break
+		end
+	end
+
+	if not noRest and self.player:getHandcardNum() <= 2 and not Shenfen_user then
 		return nil, -1
 	end
 	
@@ -2936,6 +2944,7 @@ function SmartAI:askForYiji(card_ids, reason)
 			end
 			if not another or not self:isFriend(another) then insert = false end
 		end
+		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
 		if insert then table.insert(available_friends, friend) end
 	end
 	if not noRest then table.insert(available_friends, self.player) end
@@ -2944,16 +2953,18 @@ function SmartAI:askForYiji(card_ids, reason)
 	for _, card_id in ipairs(card_ids) do
 		table.insert(cards, sgs.Sanguosha:getCard(card_id))
 	end
+	local id = card_ids[1]
 
 	local card, friend = self:getCardNeedPlayer(cards)
 	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
 	if #available_friends > 0 then
 		self:sort(available_friends, "handcard")
+		if Shenfen_user and table.contains(available_friends, Shenfen_user) then
+			return Shenfen_user, id
+		end
 		for _, afriend in ipairs(available_friends) do
 			if not self:needKongcheng(afriend) then
-				for _, acard_id in ipairs(card_ids) do
-					return afriend, acard_id
-				end
+				return afriend, id
 			end
 		end
 	end
@@ -2963,9 +2974,7 @@ function SmartAI:askForYiji(card_ids, reason)
 		if #available_friends == 0 then return end
 		self:sort(available_friends, "defense")
 		local afriend = available_friends[1]
-		for _, acard_id in ipairs(card_ids) do
-			return afriend, acard_id
-		end
+		return afriend, id
 	end
 end
 

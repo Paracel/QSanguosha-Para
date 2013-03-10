@@ -288,6 +288,14 @@ end
 
 sgs.ai_skill_invoke.lirang = function(self, data)
 	if #self.friends_noself == 0 then return false end
+	local Shenfen_user
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:hasFlag("ShenfenUsing") then
+			Shenfen_user = player
+			break
+		end
+	end
+
 	for _, friend in ipairs(self.friends_noself) do
 		local insert = true
 		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
@@ -301,6 +309,7 @@ sgs.ai_skill_invoke.lirang = function(self, data)
 			end
 			if not another or not self:isFriend(another) then insert = false end
 		end
+		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
 		if insert then return true end
 	end
 	return false

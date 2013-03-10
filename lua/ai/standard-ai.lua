@@ -944,7 +944,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 
 	if self.player:getHp() < 3 then
 		local zcards = self.player:getCards("he")
-		local use_slash, keep_jink = false, false
+		local use_slash, keep_jink, keep_anal = false, false, false
 		for _, zcard in sgs.qlist(zcards) do
 			if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
 				local shouldUse = true
@@ -971,18 +971,31 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 					keep_jink = true
 					shouldUse = false
 				end
+				if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_anal then
+					keep_anal = true
+					shouldUse = false
+				end
 				if shouldUse then table.insert(unpreferedCards, zcard:getId()) end
 			end
 		end
 	end
 
 	if #unpreferedCards == 0 then
-		if self:getCardsNum("Slash") > 1 then
-			self:sortByKeepValue(cards)
-			for _, card in ipairs(cards) do
-				if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
+		local use_slash_num = 0
+		self:sortByKeepValue(cards)
+		for _, card in ipairs(cards) do
+			if card:isKindOf("Slash") then
+				local will_use = false
+				if use_slash_num <= sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, card) then
+					local dummy_use = { isDummy = true }
+					self:useBasicCard(card, dummy_use)
+					if dummy_use.card then
+						will_use = true
+						use_slash_num = use_slash_num + 1
+					end
+				end
+				if not will_use then table.insert(unpreferedCards, card:getId()) end
 			end
-			table.remove(unpreferedCards, 1)
 		end
 
 		local num = self:getCardsNum("Jink") - 1

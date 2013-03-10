@@ -2373,7 +2373,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	else
 		if flags:match("e") and self:getDangerousCard(who) then return self:getDangerousCard(who) end
-		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) then
+		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e") then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end
 			if who:getOffensiveHorse() and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) then
@@ -4663,7 +4663,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self)
 			end
 		end
 		for _, enemy in ipairs(enemies) do
-			if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", enemy) and not (enemy:hasSkill("tuntian") and enemy:getPhase() == sgs.Player_NotActive) then
+			if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", enemy) and not self:doNotDiscard(enemy, "e") then
 				if enemy:getDefensiveHorse() then return enemy end
 				if enemy:getArmor() and not self:needToThrowArmor(enemy) then return enemy end
 				if enemy:getOffensiveHorse() and (not enemy:hasSkill("jijiu") or enemy:getOffensiveHorse():isRed()) then

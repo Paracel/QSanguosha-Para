@@ -834,9 +834,10 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		if self.player:getLostHp() >= 2 then
-			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|rende|nosmiji|nosshangshi|shangshi|miji|kuiwei|neojushou|jushou|zaiqi|kuanggu"):split("|")) do
+			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|rende|nosmiji|nosshangshi|shangshi|kuiwei|neojushou|jushou|zaiqi|kuanggu"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
+			if str:matchOne("miji") and #self.friends > 1 then return "miji" end
 		end
 
 		if self.player:getHandcardNum() < 2 then
@@ -844,12 +845,13 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		if self.player:isWounded() then
-			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|nosmiji|rende|miji"):split("|")) do
+			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|nosmiji|rende"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 			if self.player:getHp() < 2 and self.player:getHandcardNum() == 1 then
 				if str:matchOne("shenzhi") then return "shenzhi" end
 			end
+			if str:matchOne("miji") and #self.friends > 1 then return "miji" end
 		end
 
 		if self.player:getCards("e"):length() > 1 then

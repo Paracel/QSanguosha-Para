@@ -222,15 +222,6 @@ void QingnangCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->getRoom()->recover(effect.to, recover);
 }
 
-GuicaiCard::GuicaiCard() {
-    target_fixed = true;
-    will_throw = false;
-    handling_method = Card::MethodResponse;
-}
-
-void GuicaiCard::use(Room *, ServerPlayer *, QList<ServerPlayer *> &) const{
-}
-
 LiuliCard::LiuliCard() {
 }
 

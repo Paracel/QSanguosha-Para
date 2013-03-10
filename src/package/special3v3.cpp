@@ -92,46 +92,10 @@ public:
     }
 };
 
-HuanshiCard::HuanshiCard() {
-    target_fixed = true;
-    will_throw = false;
-    handling_method = Card::MethodResponse;
-}
-
-void HuanshiCard::use(Room *, ServerPlayer *, QList<ServerPlayer *> &) const{
-}
-
-class HuanshiViewAsSkill: public OneCardViewAsSkill {
-public:
-    HuanshiViewAsSkill(): OneCardViewAsSkill("huanshi") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@huanshi";
-    }
-
-    virtual bool viewFilter(const Card *card) const{
-        return !Self->isCardLimited(card, Card::MethodResponse);
-    }
-
-    virtual const Card *viewAs(const Card *to_select) const{
-        Card *card = new HuanshiCard;
-        card->setSuit(to_select->getSuit());
-        card->addSubcard(to_select);
-
-        return card;
-    }
-};
-
 class Huanshi: public TriggerSkill {
 public:
     Huanshi(): TriggerSkill("huanshi") {
         events << AskForRetrial;
-        view_as_skill = new HuanshiViewAsSkill;
     }
 
     QList<ServerPlayer *> getTeammates(ServerPlayer *zhugejin) const{
@@ -180,8 +144,7 @@ public:
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
 
-        player->tag["Judge"] = data;
-        const Card *card = room->askForCard(player, "@huanshi", prompt, data, Card::MethodResponse, judge->who, true);
+        const Card *card = room->askForCard(player, "..", prompt, data, Card::MethodResponse, judge->who, true);
         if (card != NULL) {
             room->broadcastSkillInvoke(objectName());
             room->retrial(card, player, judge, objectName());
@@ -263,7 +226,6 @@ Special3v3Package::Special3v3Package():Package("Special3v3")
     zhugejin->addSkill(new Mingzhe);
     related_skills.insertMulti("hongyuan", "#hongyuan");
 
-    addMetaObject<HuanshiCard>();
     addMetaObject<HongyuanCard>();
 }
 

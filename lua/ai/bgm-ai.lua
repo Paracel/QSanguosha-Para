@@ -873,14 +873,17 @@ sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 	if self.player:hasFlag("langgu_hongyan") and judge.card:getSuit() ~= sgs.Card_Heart then
 		local cards = sgs.QList2Table(self.player:getHandcards())
 		for _, card in ipairs(cards) do
-			if card:getSuit() == sgs.Card_Heart then
-				return "@LangguCard[" .. card:getSuitString() .. ":" .. card:getNumberString() .. "]=" .. card:getId()
+			if card:getSuit() == sgs.Card_Heart and not isCard("Peach", card, self.player) then
+				return "$" .. card:getId()
 			end
 		end
 		if judge.card:getSuit() == sgs.Card_Spade then
 			self:sortByKeepValue(cards)
-			local card = cards[1]
-			return "@LangguCard[" .. card:getSuitString() .. ":" .. card:getNumberString() .. "]=" .. card:getId()
+			for _, card in ipairs(cards) do
+				if not card:getSuit() == sgs.Card_Spade and not isCard("Peach", card, self.player) then
+					return "$" .. card:getId()
+				end
+			end
 		end
 	end
 

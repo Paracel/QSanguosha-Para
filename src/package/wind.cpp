@@ -7,46 +7,10 @@
 #include "ai.h"
 #include "general.h"
 
-GuidaoCard::GuidaoCard() {
-    target_fixed = true;
-    will_throw = false;
-    handling_method = Card::MethodResponse;
-}
-
-void GuidaoCard::use(Room *, ServerPlayer *, QList<ServerPlayer *> &) const{
-}
-
-class GuidaoViewAsSkill: public OneCardViewAsSkill {
-public:
-    GuidaoViewAsSkill(): OneCardViewAsSkill("guidao") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@guidao";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack() && !Self->isCardLimited(to_select, Card::MethodResponse);
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        GuidaoCard *guidaoCard = new GuidaoCard;
-        guidaoCard->setSuit(originalCard->getSuit());
-        guidaoCard->addSubcard(originalCard);
-
-        return guidaoCard;
-    }
-};
-
 class Guidao: public TriggerSkill {
 public:
     Guidao(): TriggerSkill("guidao") {
         events << AskForRetrial;
-        view_as_skill = new GuidaoViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -74,7 +38,7 @@ public:
         prompt_list << "@guidao-card" << judge->who->objectName()
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
-        const Card *card = room->askForCard(player, "@guidao", prompt, data, Card::MethodResponse, judge->who, true);
+        const Card *card = room->askForCard(player, ".|.|.|.|black", prompt, data, Card::MethodResponse, judge->who, true);
 
         if (card != NULL) {
             room->broadcastSkillInvoke(objectName());
@@ -146,14 +110,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhangjiao, QVariant &data) const{
         CardStar card_star = data.value<CardResponseStruct>().m_card;
-        bool isJink = false;
         if (card_star->isKindOf("Jink"))
-            isJink = true;
-        else if (card_star->isVirtualCard()) {
-            const Card *tr_card = Sanguosha->getCard(card_star->getEffectiveId());
-            isJink = (tr_card->isKindOf("Jink"));
-        }
-        if (isJink)
             room->askForUseCard(zhangjiao, "@@leiji", "@leiji");
         return false;
     }
@@ -1164,7 +1121,6 @@ WindPackage::WindPackage()
 
     addMetaObject<ShensuCard>();
     addMetaObject<TianxiangCard>();
-    addMetaObject<GuidaoCard>();
     addMetaObject<HuangtianCard>();
     addMetaObject<LeijiCard>();
     addMetaObject<GuhuoCard>();

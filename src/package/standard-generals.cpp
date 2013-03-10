@@ -228,35 +228,10 @@ public:
     }
 };
 
-class GuicaiViewAsSkill: public OneCardViewAsSkill {
-public:
-    GuicaiViewAsSkill() :OneCardViewAsSkill("guicai") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@guicai";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && !Self->isCardLimited(to_select, Card::MethodResponse);
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new GuicaiCard;
-        card->addSubcard(originalCard);
-        return card;
-    }
-};
-
 class Guicai: public TriggerSkill {
 public:
     Guicai(): TriggerSkill("guicai") {
         events << AskForRetrial;
-        view_as_skill = new GuicaiViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -269,7 +244,7 @@ public:
         prompt_list << "@guicai-card" << judge->who->objectName()
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
-        const Card *card = room->askForCard(player, "@guicai", prompt, data, Card::MethodResponse, judge->who, true);
+        const Card *card = room->askForCard(player, ".", prompt, data, Card::MethodResponse, judge->who, true);
         if (card) {
             if (player->hasInnateSkill("guicai") || !player->hasSkill("jilve"))
                 room->broadcastSkillInvoke(objectName());
@@ -723,18 +698,13 @@ class Jizhi: public TriggerSkill {
 public:
     Jizhi(): TriggerSkill("jizhi") {
         frequency = Frequent;
-        events << CardUsed << CardResponded;
+        events << CardUsed;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *yueying, QVariant &data) const{
-        CardStar card = NULL;
-        if (event == CardUsed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            card = use.card;
-        } else if (event == CardResponded)
-            card = data.value<CardResponseStruct>().m_card;
+        CardUseStruct use = data.value<CardUseStruct>();
 
-        if (card->isNDTrick() && room->askForSkillInvoke(yueying, objectName())) {
+        if (use.card->isNDTrick() && room->askForSkillInvoke(yueying, objectName())) {
             room->broadcastSkillInvoke(objectName());
             yueying->drawCards(1);
         }
@@ -871,6 +841,7 @@ public:
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Discard) {
                 if (!lvmeng->hasFlag("keji_use_slash") && lvmeng->askForSkillInvoke(objectName())) {
+                    lvmeng->setFlags("-keji_use_slash");
                     if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
                         int index = qrand() % 2 + 1;
                         if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
@@ -882,20 +853,13 @@ public:
             }
         } else if (lvmeng->getPhase() == Player::Play) {
             CardStar card = NULL;
-            bool isSlash = false;
             if (event == CardUsed)
-                isSlash = data.value<CardUseStruct>().card->isKindOf("Slash");
-            else {
+                card = data.value<CardUseStruct>().card;
+            else
                 card = data.value<CardResponseStruct>().m_card;
-                if (card->isKindOf("Slash"))
-                    isSlash = true;
-                else if (card->isVirtualCard()) {
-                    const Card *tr_card = Sanguosha->getCard(card->getEffectiveId());
-                    isSlash = (tr_card->isKindOf("Slash"));
-                }
-            }
-            if (isSlash)
-                room->setPlayerFlag(lvmeng, "keji_use_slash");
+
+            if (card->isKindOf("Slash"))
+                lvmeng->setFlags("keji_use_slash");
         }
 
         return false;
@@ -1396,7 +1360,6 @@ void StandardPackage::addGenerals() {
     addMetaObject<KurouCard>();
     addMetaObject<LijianCard>();
     addMetaObject<FanjianCard>();
-    addMetaObject<GuicaiCard>();
     addMetaObject<QingnangCard>();
     addMetaObject<LiuliCard>();
     addMetaObject<JijiangCard>();

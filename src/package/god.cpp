@@ -1054,7 +1054,7 @@ public: // wansha & zhiheng
 class Jilve: public TriggerSkill {
 public:
     Jilve(): TriggerSkill("jilve") {
-        events << CardUsed << CardResponded // JiZhi
+        events << CardUsed // JiZhi
                << AskForRetrial // GuiCai
                << Damaged; // FangZhu
         view_as_skill = new JilveViewAsSkill;
@@ -1066,14 +1066,10 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         player->setMark("JilveEvent", (int)event);
-        if (event == CardUsed || event == CardResponded) {
-            CardStar card = NULL;
-            if (event == CardUsed)
-                card = data.value<CardUseStruct>().card;
-            else
-                card = data.value<CardResponseStruct>().m_card;
+        if (event == CardUsed) {
+            CardStar card = data.value<CardUseStruct>().card;
 
-            if (card->isNDTrick() && player->askForSkillInvoke("jilve", data)) {
+            if (card && card->isNDTrick() && player->askForSkillInvoke("jilve", data)) {
                 player->loseMark("@bear");
                 room->broadcastSkillInvoke(objectName(), 5);
                 player->drawCards(1);

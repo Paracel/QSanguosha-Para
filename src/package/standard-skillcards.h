@@ -80,15 +80,6 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class GuicaiCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE GuicaiCard();
-
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
 class LiuliCard: public SkillCard {
     Q_OBJECT
 

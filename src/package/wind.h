@@ -9,15 +9,6 @@
 #include <QButtonGroup>
 #include <QDialog>
 
-class GuidaoCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE GuidaoCard();
-
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
 class LeijiCard: public SkillCard {
     Q_OBJECT
 

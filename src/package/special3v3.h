@@ -15,15 +15,6 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
-class HuanshiCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE HuanshiCard();
-
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
 class Special3v3Package: public Package {
     Q_OBJECT
 

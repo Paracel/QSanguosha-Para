@@ -1638,45 +1638,10 @@ public:
     }
 };
 
-LangguCard::LangguCard() {
-    target_fixed = true;
-    will_throw = false;
-    handling_method = Card::MethodResponse;
-    mute = true;
-}
-
-void LangguCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-}
-
-class LangguViewAsSkill: public OneCardViewAsSkill {
-public:
-    LangguViewAsSkill(): OneCardViewAsSkill("langgu") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@langgu";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && !Self->isCardLimited(to_select, Card::MethodResponse);
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new LangguCard;
-        card->addSubcard(originalCard);
-        return card;
-    }
-};
-
 class Langgu: public TriggerSkill {
 public:
     Langgu(): TriggerSkill("langgu") {
         events << Damaged << AskForRetrial;
-        view_as_skill = new LangguViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *simazhao, QVariant &data) const{
@@ -1741,9 +1706,10 @@ public:
             prompt_list << "@langgu-card" << judge->who->objectName()
                         << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
             QString prompt = prompt_list.join(":");
-            const Card *card = room->askForCard(simazhao, "@langgu", prompt, data, Card::MethodResponse, judge->who, true);
+            const Card *card = room->askForCard(simazhao, ".", prompt, data, Card::MethodResponse, judge->who, true);
 
-            room->retrial(card, simazhao, judge, objectName());
+            if (card)
+                room->retrial(card, simazhao, judge, objectName());
         }
 
         return false;
@@ -2321,7 +2287,6 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     related_skills.insertMulti("tuqi", "#tuqi-dist");
 
     addMetaObject<ZhaoxinCard>();
-    addMetaObject<LangguCard>();
     addMetaObject<FuluanCard>();
     addMetaObject<HuangenCard>();
     addMetaObject<HantongCard>();

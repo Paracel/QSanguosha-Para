@@ -348,13 +348,12 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardUsed) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isVirtualCard()) {
-                if (use.card->isKindOf("SavageAssault")
-                    && use.card->subcardsLength() == 1
-                    && Sanguosha->getCard(use.card->getSubcards().first())->isKindOf("SavageAssault"))
-                    room->setCardFlag(use.card->getSubcards().first(), "real_SA");
-            } else if (use.card->isKindOf("SavageAssault")) {
-                room->setCardFlag(use.card->getId(), "real_SA");
+            if (use.card->isKindOf("SavageAssault")) {
+                if (use.card->isVirtualCard() && use.card->subcardsLength() != 1)
+                    return false;
+                if (Sanguosha->getEngineCard(use.card->getEffectiveId())
+                    && Sanguosha->getEngineCard(use.card->getEffectiveId())->isKindOf("SavageAssault"))
+                    room->setCardFlag(use.card->getEffectiveId(), "real_SA");
             }
         } else if (TriggerSkill::triggerable(player)) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();

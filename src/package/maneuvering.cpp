@@ -167,6 +167,7 @@ public:
                 log.arg2 = effect.slash->objectName();
                 room->sendLog(log);
 
+                effect.to->setFlags("ArmorNullify");
                 return true;
             }
         } else if (event == CardEffected) {

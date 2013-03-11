@@ -230,6 +230,7 @@ void Room::revivePlayer(ServerPlayer *player) {
     player->setAlive(true);
     player->throwAllMarks(false);
     broadcastProperty(player, "alive");
+    setEmotion(player, "revive");
 
     m_alivePlayers.clear();
     foreach (ServerPlayer *player, m_players) {
@@ -450,8 +451,13 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
 
     thread->trigger(SlashEffectStart, this, effect.from, data);
 
-    if (thread->trigger(SlashEffected, this, effect.to, data))
+    if (thread->trigger(SlashEffected, this, effect.to, data)) {
+        if (!effect.to->hasFlag("ArmorNullify"))
+            setEmotion(effect.to, "skill_nullify");
+        else
+            effect.to->setFlags("-ArmorNullify");
         removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // prevent the effect
+    }
 }
 
 void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
@@ -2685,7 +2691,14 @@ bool Room::cardEffect(const CardEffectStruct &effect) {
     // No skills should be triggered here!
     thread->trigger(CardEffect, this, effect.to, data);
     // Make sure that effectiveness of Slash isn't judged here!
-    return !thread->trigger(CardEffected, this, effect.to, data);
+    if (thread->trigger(CardEffected, this, effect.to, data)) {
+        if (!effect.to->hasFlag("ArmorNullify"))
+            setEmotion(effect.to, "skill_nullify");
+        else
+            effect.to->setFlags("-ArmorNullify");
+        return true;
+    }
+    return false;
 }
 
 bool Room::isJinkEffected(ServerPlayer *user, const Card *jink) {

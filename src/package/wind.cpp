@@ -594,6 +594,12 @@ void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     room->setPlayerFlag(effect.to, "TianxiangTarget");
     DamageStruct damage = effect.from->tag.value("TianxiangDamage").value<DamageStruct>();
+
+    if (damage.card && damage.card->isKindOf("Slash") && effect.from->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
+        room->removePlayerMark(effect.from, "Qinggang_Armor_Nullified"); // prevent the damage
+        room->addPlayerMark(effect.from, "Qinggang_Armor_Nullified_Clear");
+    }
+
     damage.to = effect.to;
     damage.transfer = true;
     room->damage(damage);

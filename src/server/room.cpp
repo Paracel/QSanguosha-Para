@@ -451,10 +451,8 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
 
     thread->trigger(SlashEffectStart, this, effect.from, data);
 
-    if (thread->trigger(SlashEffected, this, effect.to, data)) {
-        if (effect.to->getMark("Qinggang_Armor_Nullified") > 0)
-            removePlayerMark(effect.to, "Qinggang_Armor_Nullified");
-    }
+    if (thread->trigger(SlashEffected, this, effect.to, data))
+        removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // prevent the effect
 }
 
 void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
@@ -470,8 +468,7 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
     else {
         if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
             setEmotion(effect.to, "jink");
-        if (effect.to->getMark("Qinggang_Armor_Nullified") > 0)
-            removePlayerMark(effect.to, "Qinggang_Armor_Nullified");
+        removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // use Jink to nullify the Slash
         thread->trigger(SlashMissed, this, effect.from, data);
     }
 }
@@ -1305,6 +1302,7 @@ void Room::addPlayerMark(ServerPlayer *player, const QString &mark, int add_num)
 
 void Room::removePlayerMark(ServerPlayer *player, const QString &mark, int remove_num) {
     int value = player->getMark(mark);
+    if (value == 0) return;
     value -= remove_num;
     value = qMax(0, value);
     setPlayerMark(player, mark, value);
@@ -2709,8 +2707,8 @@ void Room::damage(DamageStruct &damage_data) {
 
     // Predamage
     if (thread->trigger(Predamage, this, damage_data.from, data)) {
-        if (damage_data.card && damage_data.card->isKindOf("Slash") && damage_data.to->getMark("Qinggang_Armor_Nullified") > 0)
-            removePlayerMark(damage_data.to, "Qinggang_Armor_Nullified");
+        if (damage_data.card && damage_data.card->isKindOf("Slash"))
+            removePlayerMark(damage_data.to, "Qinggang_Armor_Nullified"); // no damage
         return;
     }
 

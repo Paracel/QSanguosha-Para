@@ -1020,6 +1020,12 @@ public:
             log.to << target;
             room->sendLog(log);
             DamageStruct damage = data.value<DamageStruct>();
+
+            if (damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
+                room->removePlayerMark(player, "Qinggang_Armor_Nullified"); // prevent the damage
+                room->addPlayerMark(player, "Qinggang_Armor_Nullified_Clear");
+            }
+
             DamageStruct newdamage = damage;
             newdamage.to = target;
             newdamage.transfer = true;

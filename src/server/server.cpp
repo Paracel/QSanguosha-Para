@@ -69,10 +69,6 @@ QWidget *ServerDialog::createBasicTab() {
     connect(edit_button, SIGNAL(clicked()), this, SLOT(edit1v1Banlist()));
 
     QFormLayout *form_layout = new QFormLayout;
-    QHBoxLayout *hlay = new QHBoxLayout;
-    hlay->addWidget(timeout_spinbox);
-    hlay->addWidget(nolimit_checkbox);
-    hlay->addWidget(edit_button);
     form_layout->addRow(tr("Server name"), server_name_edit);
     QHBoxLayout *lay = new QHBoxLayout;
     lay->addWidget(timeout_spinbox);
@@ -208,8 +204,10 @@ QWidget *ServerDialog::createAdvancedTab() {
     connect(enable_cheat_checkbox, SIGNAL(toggled(bool)), free_assign_self_checkbox, SLOT(setVisible(bool)));
     connect(free_assign_checkbox, SIGNAL(toggled(bool)), free_assign_self_checkbox, SLOT(setEnabled(bool)));
 
+    pile_swapping_label = new QLabel(tr("Pile-swapping limitation"));
+    pile_swapping_label->setToolTip(tr("-1 means no limitations"));
     pile_swapping_spinbox = new QSpinBox;
-    pile_swapping_spinbox->setRange(0, 15);
+    pile_swapping_spinbox->setRange(-1, 15);
     pile_swapping_spinbox->setValue(Config.value("PileSwappingLimitation", 5).toInt());
 
     without_lordskill_checkbox = new QCheckBox(tr("Without Lordskill"));
@@ -222,6 +220,8 @@ QWidget *ServerDialog::createAdvancedTab() {
     maxchoice_spinbox->setRange(3, 21);
     maxchoice_spinbox->setValue(Config.value("MaxChoice", 5).toInt());
 
+    lord_maxchoice_label = new QLabel(tr("Upperlimit for lord"));
+    lord_maxchoice_label->setToolTip(tr("-1 means that all lords are available"));
     lord_maxchoice_spinbox = new QSpinBox;
     lord_maxchoice_spinbox->setRange(-1, 15);
     lord_maxchoice_spinbox->setValue(Config.value("LordMaxChoice", -1).toInt());
@@ -303,10 +303,10 @@ QWidget *ServerDialog::createAdvancedTab() {
     layout->addWidget(enable_cheat_checkbox);
     layout->addWidget(free_choose_checkbox);
     layout->addLayout(HLay(free_assign_checkbox, free_assign_self_checkbox));
-    layout->addLayout(HLay(new QLabel(tr("Pile-swapping limitation")), pile_swapping_spinbox));
+    layout->addLayout(HLay(pile_swapping_label, pile_swapping_spinbox));
     layout->addLayout(HLay(without_lordskill_checkbox, sp_convert_checkbox));
     layout->addLayout(HLay(new QLabel(tr("Upperlimit for general")), maxchoice_spinbox));
-    layout->addLayout(HLay(new QLabel(tr("Upperlimit for lord")), lord_maxchoice_spinbox));
+    layout->addLayout(HLay(lord_maxchoice_label, lord_maxchoice_spinbox));
     layout->addLayout(HLay(new QLabel(tr("Upperlimit for non-lord")), nonlord_maxchoice_spinbox));
     layout->addWidget(second_general_checkbox);
     layout->addLayout(HLay(max_hp_label, max_hp_scheme_ComboBox));

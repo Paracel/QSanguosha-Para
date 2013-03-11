@@ -3055,54 +3055,64 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>游戏包选择</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="90"/>
+        <location filename="../../src/server/server.cpp" line="86"/>
         <source>Disable Lua</source>
         <translation>禁用Lua扩展（重启后生效）</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="92"/>
+        <location filename="../../src/server/server.cpp" line="88"/>
         <source>The setting takes effect after reboot</source>
         <translation>此项设置保存后重启游戏方能生效</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="100"/>
+        <location filename="../../src/server/server.cpp" line="96"/>
         <source>General package</source>
         <translation>武将包</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="101"/>
+        <location filename="../../src/server/server.cpp" line="97"/>
         <source>Card package</source>
         <translation>卡牌包</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="186"/>
+        <location filename="../../src/server/server.cpp" line="182"/>
         <source>Arrange the seats randomly</source>
         <translation>随机安排座位</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="189"/>
+        <location filename="../../src/server/server.cpp" line="185"/>
         <source>Enable cheat</source>
         <translation>启用作弊</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="190"/>
+        <location filename="../../src/server/server.cpp" line="186"/>
         <source>This option enables the cheat menu</source>
         <translation>本选项启用作弊菜单</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="201"/>
+        <location filename="../../src/server/server.cpp" line="197"/>
         <source>Assign only your own role</source>
         <translation>仅分配自己的身份</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="215"/>
+        <location filename="../../src/server/server.cpp" line="208"/>
+        <source>-1 means no limitations</source>
+        <translation>-1表示无次数限制（虎牢关模式不生效）</translation>
+    </message>
+    <message>
+        <location filename="../../src/server/server.cpp" line="213"/>
         <source>Without Lordskill</source>
         <translation>主公无主公技</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="218"/>
+        <location filename="../../src/server/server.cpp" line="216"/>
         <source>Enable SP Convert</source>
         <translation>同技能SP替换</translation>
+    </message>
+    <message>
+        <location filename="../../src/server/server.cpp" line="224"/>
+        <source>-1 means that all lords are available</source>
+        <translation>-1表示所有默认主公均会出现在选将列表中</translation>
     </message>
     <message>
         <location filename="../../src/server/server.cpp" line="242"/>
@@ -3145,12 +3155,12 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>同势力最大亮将数</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="306"/>
+        <location filename="../../src/server/server.cpp" line="207"/>
         <source>Pile-swapping limitation</source>
         <translation>最大洗牌次数</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="309"/>
+        <location filename="../../src/server/server.cpp" line="223"/>
         <source>Upperlimit for lord</source>
         <translation>主公选择上限（主公选将）</translation>
     </message>
@@ -3234,7 +3244,7 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>基本</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="197"/>
+        <location filename="../../src/server/server.cpp" line="193"/>
         <source>Assign role and seat freely</source>
         <translation>自由分配身份和座位</translation>
     </message>
@@ -3351,7 +3361,7 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>%1 (%2 人)</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="193"/>
+        <location filename="../../src/server/server.cpp" line="189"/>
         <source>Choose generals and cards freely</source>
         <translation>自由选择武将与卡牌</translation>
     </message>
@@ -3361,7 +3371,7 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>禁止同一个IP建立多个连接</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="76"/>
+        <location filename="../../src/server/server.cpp" line="72"/>
         <source>Server name</source>
         <translation>服务器名</translation>
     </message>
@@ -3386,7 +3396,7 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../src/server/server.cpp" line="81"/>
+        <location filename="../../src/server/server.cpp" line="77"/>
         <source>Operation timeout</source>
         <translation>操作时间</translation>
     </message>

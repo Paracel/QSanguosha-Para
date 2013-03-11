@@ -1423,7 +1423,7 @@ void Room::swapPile() {
     int limit = Config.value("PileSwappingLimitation", 5).toInt() + 1;
     if (mode == "04_1v3")
         limit = qMin(limit, Config.BanPackages.contains("maneuvering") ? 3 : 2);
-    if (times == limit)
+    if (limit > 0 && times == limit)
         gameOver(".");
 
     qSwap(m_drawPile, m_discardPile);

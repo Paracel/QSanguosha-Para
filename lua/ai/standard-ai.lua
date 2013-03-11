@@ -706,7 +706,7 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 end
 
 sgs.ai_use_value.JijiangCard = 8.5
-sgs.ai_use_priority.JijiangCard = 2.7
+sgs.ai_use_priority.JijiangCard = 2.45
 
 sgs.ai_card_intention.JijiangCard = function(self, card, from, tos)
 	if not from:isLord() and global_room:getCurrent():objectName() == from:objectName() then
@@ -1047,7 +1047,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 end
 
 sgs.ai_use_value.ZhihengCard = 9
-sgs.ai_use_priority.ZhihengCard = 3
+sgs.ai_use_priority.ZhihengCard = 2.61
 sgs.dynamic_value.benefit.ZhihengCard = true
 
 function sgs.ai_cardneed.zhiheng(to, card)

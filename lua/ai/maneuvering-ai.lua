@@ -153,7 +153,7 @@ sgs.dynamic_value.benefit.Analeptic = true
 
 sgs.ai_use_value.Analeptic = 5.98
 sgs.ai_keep_value.Analeptic = 4.5
-sgs.ai_use_priority.Analeptic = 2.7
+sgs.ai_use_priority.Analeptic = 2.5
 
 local function handcard_subtract_hp(a, b)
 	local diff1 = a:getHandcardNum() - a:getHp()

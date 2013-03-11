@@ -515,7 +515,7 @@ sgs.ai_skill_use_func.SongciCard = function(card, use, self)
 end
 
 sgs.ai_use_value.SongciCard = 3
-sgs.ai_use_priority.SongciCard = 2.5
+sgs.ai_use_priority.SongciCard = 3
 
 sgs.ai_card_intention.SongciCard = function(self, card, from, to)
 	sgs.updateIntention(from, to[1], to[1]:getHandcardNum() > to[1]:getHp() and 80 or -80)

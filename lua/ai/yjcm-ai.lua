@@ -742,7 +742,7 @@ sgs.ai_skill_cardask["@xianzhen-slash"] = function(self)
 end
 
 sgs.ai_use_value.XianzhenSlashCard = 9.2
-sgs.ai_use_priority.XianzhenSlashCard = 2.6
+sgs.ai_use_priority.XianzhenSlashCard = 2.45
 
 sgs.ai_skill_invoke.shangshi = function(self, data)
 	if self.player:getLostHp() == 1 then return sgs.ai_skill_invoke.lianying(self, data) end

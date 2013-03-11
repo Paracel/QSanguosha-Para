@@ -62,7 +62,7 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 		return "."
 	end
 
-	if self:getDamagedEffects(self.player) then
+	if self:getDamagedEffects(self.player, yuejin) then
 		return "."
 	end
 

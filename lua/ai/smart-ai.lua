@@ -2634,6 +2634,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 end
 
 function SmartAI:needKongcheng(player, need_keep)
+	if not player then self.room:writeToConsole(debug.traceback()) end
 	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)))
 			or (not need_keep and not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
 end
@@ -4487,7 +4488,7 @@ function SmartAI:useEquipCard(card, use)
 		if not self.player:getWeapon() or self:evaluateWeapon(card) > self:evaluateWeapon(self.player:getWeapon()) then
 			if (not use.to) and self.weaponUsed and (not self:hasSkills(sgs.lose_equip_skill)) then return end
 			if (self.player:hasSkill("zhiheng") or self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0)
-				not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() and not card:isKindOf("Crossbow") then return end
+				and not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() and not card:isKindOf("Crossbow") then return end
 			if self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
 			use.card = card
 		end

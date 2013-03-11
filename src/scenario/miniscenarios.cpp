@@ -160,17 +160,22 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             QString str = this->players.at(i)["maxhp"];
             if (str == QString()) str = QString::number(sp->getGeneralMaxHp());
-            room->setPlayerProperty(sp, "maxhp", str.toInt());
+            sp->setMaxHp(str.toInt());
+            room->broadcastProperty(sp, "maxhp");
 
             str = this->players.at(i)["hpadj"];
-            if (str != QString())
-                room->setPlayerProperty(sp, "maxhp", sp->getMaxHp() + str.toInt());
-            str = QString::number(sp->getMaxHp());
+            if (str != QString()) {
+                sp->setMaxHp(sp->getMaxHp() + str.toInt());
+                room->broadcastProperty(sp, "maxhp");
+            }
 
+            str = QString::number(sp->getMaxHp());
             QString str2 = this->players.at(i)["hp"];
             if (str2 != QString()) str = str2;
-            room->setPlayerProperty(sp, "hp", str.toInt());
+            sp->setHp(str.toInt());
+            room->broadcastProperty(sp, "hp");
 
+            room->setTag("FirstRound", true);
             str = this->players.at(i)["equip"];
             QStringList equips = str.split(",");
             foreach (QString equip, equips) {
@@ -193,15 +198,14 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             str = this->players.at(i)["hand"];
             if (str != QString()) {
-                QStringList hands = str.split(",");
-                room->setPlayerFlag(sp, "NoManjuan");               
+                QStringList hands = str.split(",");               
                 DummyCard *dummy = new DummyCard;
                 foreach (QString hand, hands)
                     dummy->addSubcard(hand.toInt());
                 room->obtainCard(sp, dummy);
                 dummy->deleteLater();
-                room->setPlayerFlag(sp, "-NoManjuan");
             }
+            room->setTag("FirstRound", true);
 
             QString skills = this->players.at(i)["acquireSkills"];
             if (skills != QString()) {
@@ -232,9 +236,9 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
 
             str = this->players[i]["draw"];
             if (str == QString()) str = "4";
-            room->setPlayerFlag(sp, "NoManjuan");
+            room->setTag("FirstRound", true);
             room->drawCards(sp, str.toInt());
-            room->setPlayerFlag(sp, "-NoManjuan");
+            room->setTag("FirstRound", false);
 
             if (this->players[i]["marks"] != QString()) {
                 QStringList marks = this->players[i]["marks"].split(",");

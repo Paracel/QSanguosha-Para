@@ -305,8 +305,8 @@ SPConvertSkill::SPConvertSkill(const QString &from, const QString &to)
 bool SPConvertSkill::triggerable(const ServerPlayer *target) const{
     if (target == NULL) return false;
     if (!Config.value("EnableSPConvert", true).toBool()) return false;
-    bool canInvoke = ServerInfo.GameMode.endsWith("p") || ServerInfo.GameMode.endsWith("pd")
-                     || ServerInfo.GameMode.endsWith("pz");
+    bool canInvoke = Config.GameMode.endsWith("p") || Config.GameMode.endsWith("pd")
+                     || Config.GameMode.endsWith("pz");
     if (!canInvoke) return false;
     bool available = false;
     foreach (QString to_gen, to_list) {

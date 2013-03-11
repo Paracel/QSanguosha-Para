@@ -2456,6 +2456,9 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 Config.AIDelay = Config.OriginAIDelay = delay;
                 Config.setValue("OriginAIDelay", delay);
             }
+        } else if (sentence.startsWith(".SetGameMode=")) {
+            Config.GameMode = sentence.mid(13);
+            Config.setValue("GameMode", Config.GameMode);
         }
     }
 }

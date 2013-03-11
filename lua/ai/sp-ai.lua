@@ -165,7 +165,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 				if equip_type == "Armor" then
 					if not self:needKongcheng(friend) and not self:hasSkills("bazhen|yizhong", friend) then return friend end
 				else
-					if friend:isWounded() and not friend:hasSkill("longhun") then return friend end
+					if friend:isWounded() and not (friend:hasSkill("longhun") and friend:getCardCount(true) >= 3) then return friend end
 				end
 			end
 		end

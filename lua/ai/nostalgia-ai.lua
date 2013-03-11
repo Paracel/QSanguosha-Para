@@ -289,13 +289,13 @@ end
 sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	for _, player in sgs.qlist(targets) do
 		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player)
-			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player) and not player:hasSkill("manjuan") then
+			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end
 	for _, player in sgs.qlist(targets) do
 		if self:isFriend(player)
-			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player) and not player:hasSkill("manjuan") then
+			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end

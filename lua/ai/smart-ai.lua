@@ -2633,9 +2633,9 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 	return (dmg > 1)
 end
 
-function SmartAI:needKongcheng(player)
+function SmartAI:needKongcheng(player, need_keep)
 	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)))
-			or (not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
+			or (not need_keep and not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
 end
 
 function SmartAI:getLeastHandcardNum(player)
@@ -2884,7 +2884,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 
+				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
 					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
 					return hcard, friend
 				end
@@ -2963,7 +2963,7 @@ function SmartAI:askForYiji(card_ids, reason)
 			return Shenfen_user, id
 		end
 		for _, afriend in ipairs(available_friends) do
-			if not self:needKongcheng(afriend) then
+			if not self:needKongcheng(afriend, true) then
 				return afriend, id
 			end
 		end

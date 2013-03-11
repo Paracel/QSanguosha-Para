@@ -1228,7 +1228,7 @@ sgs.dynamic_value.damage_card.FanjianCard = true
 sgs.ai_chaofeng.zhouyu = 3
 
 sgs.ai_skill_invoke.lianying = function(self, data)
-	if (self.player:hasSkill("kongcheng") or (self.player:hasSkill("zhiji") and self.player:getMark("zhiji") == 0)) then
+	if self:needKongcheng(self.player, true) then
 		return player:getPhase() == sgs.Player_Play
 	end
 	return true
@@ -1968,6 +1968,10 @@ sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 	elseif sgs.evaluateRoleTrends(to[1]) ~= sgs.evaluateRoleTrends(to[2]) then
 		sgs.updateIntention(from, to[1], 80)
 	end
+end
+
+sgs.ai_skill_invoke.biyue = function(self, data)
+	return not self.player:isKongcheng() and self:needKongcheng(self.player, true)
 end
 
 sgs.dynamic_value.damage_card.LijianCard = true

@@ -4,6 +4,7 @@ return {
 	["cancel"] = "取消",
 	["GeneralA"] = "主将",
 	["GeneralB"] = "副将",
+	["surrender:yes"] = "你可以立即认输结束游戏",
 
 	["spade"] = "黑桃",
 	["club"] = "梅花",

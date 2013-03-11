@@ -178,7 +178,7 @@ void Dashboard::killPlayer() {
     this->setGraphicsEffect(effect);
     refresh();
     _m_deathIcon->show();
-    if (ServerInfo.GameMode == "04_1v3" && Self->getGeneralName() != "shenlvbu2") {
+    if (ServerInfo.GameMode == "04_1v3" && !Self->isLord()) {
         _m_votesGot = 6;
         updateVotes(false);
     }

@@ -2934,6 +2934,7 @@ void RoomScene::killPlayer(const QString &who) {
     m_roomMutex.lock();
     if (who == Self->objectName()) {
         dashboard->killPlayer();
+        dashboard->update();
         general = Self->getGeneral();
         item2player.remove(dashboard);
         if (ServerInfo.GameMode == "02_1v1") self_box->killPlayer(general->objectName());

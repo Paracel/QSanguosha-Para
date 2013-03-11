@@ -1170,12 +1170,11 @@ void Client::gameOver(const Json::Value &arg) {
 void Client::killPlayer(const QString &player_name) {
     alive_count--;
     ClientPlayer *player = getPlayer(player_name);
+    player->detachAllSkills();
     if (player == Self) {
         foreach (const Skill *skill, Self->getVisibleSkills())
             emit skill_detached(skill->objectName());
     }
-
-    player->detachAllSkills();
 
     if (!Self->hasFlag("marshalling")) {
         QString general_name = player->getGeneralName();

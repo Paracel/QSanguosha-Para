@@ -48,6 +48,7 @@ public:
     int OriginAIDelay;
     bool AlterAIDelayAD;
     int AIDelayAD;
+    bool SurrenderAtDeath;
     ushort ServerPort;
     bool DisableLua;
 

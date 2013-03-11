@@ -2634,7 +2634,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 end
 
 function SmartAI:needKongcheng(player, need_keep)
-	if not player then self.room:writeToConsole(debug.traceback()) end
+	player = player or self.player
 	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)))
 			or (not need_keep and not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
 end

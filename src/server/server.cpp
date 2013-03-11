@@ -383,12 +383,16 @@ QWidget *ServerDialog::createAITab() {
     ai_delay_ad_spinbox->setEnabled(ai_delay_altered_checkbox->isChecked());
     connect(ai_delay_altered_checkbox, SIGNAL(toggled(bool)), ai_delay_ad_spinbox, SLOT(setEnabled(bool)));
 
+    surrender_at_death_checkbox = new QCheckBox(tr("Surrender at the time of Death"));
+    surrender_at_death_checkbox->setChecked(Config.SurrenderAtDeath);
+
     layout->addWidget(ai_enable_checkbox);
     layout->addWidget(role_predictable_checkbox);
     layout->addWidget(ai_chat_checkbox);
     layout->addLayout(HLay(new QLabel(tr("AI delay")), ai_delay_spinbox));
     layout->addWidget(ai_delay_altered_checkbox);
     layout->addLayout(HLay(new QLabel(tr("AI delay After Death")), ai_delay_ad_spinbox));
+    layout->addWidget(surrender_at_death_checkbox);
     layout->addStretch();
 
     QWidget *widget = new QWidget;
@@ -1028,6 +1032,7 @@ bool ServerDialog::config() {
     Config.setValue("OriginAIDelay", Config.OriginAIDelay);
     Config.setValue("AlterAIDelayAD", ai_delay_altered_checkbox->isChecked());
     Config.setValue("AIDelayAD", Config.AIDelayAD);
+    Config.setValue("SurrenderAtDeath", surrender_at_death_checkbox->isChecked());
     Config.setValue("ServerPort", Config.ServerPort);
     Config.setValue("Address", Config.Address);
     Config.setValue("DisableLua", disable_lua_checkbox->isChecked());

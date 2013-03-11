@@ -317,7 +317,7 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
     victim->detachAllSkills();
     thread->trigger(BuryVictim, this, victim, death_data);
 
-    if (Config.EnableAI) {
+    if (!victim->isAlive() && Config.EnableAI) {
         bool expose_roles = true;
         foreach (ServerPlayer *player, m_alivePlayers) {
             if (!player->isOffline()) {
@@ -337,14 +337,13 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
                 } else
                     broadcastProperty(player, "role");
             }
+
+            if (Config.AlterAIDelayAD)
+                Config.AIDelay = Config.AIDelayAD;
+            if (victim->isOnline() && Config.SurrenderAtDeath && askForSkillInvoke(victim, "surrender", "yes"))
+                makeSurrender(victim);
         }
     }
-
-    foreach (ServerPlayer *p, getOtherPlayers(victim))
-        if (p->getState() != "robot")
-            return;
-    if (Config.AlterAIDelayAD)
-        Config.AIDelay = Config.AIDelayAD;
 }
 
 void Room::judge(JudgeStruct &judge_struct) {

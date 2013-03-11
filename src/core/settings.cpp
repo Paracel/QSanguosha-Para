@@ -94,6 +94,7 @@ void Settings::init() {
     OriginAIDelay = value("OriginAIDelay", 1000).toInt();
     AlterAIDelayAD = value("AlterAIDelayAD", false).toBool();
     AIDelayAD = value("AIDelayAD", 0).toInt();
+    SurrenderAtDeath = value("SurrenderAtDeath", false).toBool();
     ServerPort = value("ServerPort", 9527u).toUInt();
     DisableLua = value("DisableLua", false).toBool();
 

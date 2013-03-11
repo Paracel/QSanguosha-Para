@@ -23,6 +23,7 @@ public:
                 if (use.to.contains(player) && use.from != player) {
                     if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
                         if (room->askForSkillInvoke(player, objectName(), data)) {
+                            room->broadcastSkillInvoke(objectName());
                             room->setCardFlag(use.card, "ZhenlieNullify");
                             room->loseHp(player);
                             if (player->isAlive() && !use.from->isNude()) {
@@ -70,6 +71,7 @@ public:
     virtual bool onPhaseChange(ServerPlayer *target) const{
         Room *room = target->getRoom();
         if (target->getPhase() == Player::Finish && target->isWounded() && target->askForSkillInvoke(objectName())) {
+            room->broadcastSkillInvoke(objectName(), 1);
             QStringList draw_num;
             for (int i = 1; i <= target->getLostHp(); draw_num << QString::number(i++)) {}
             int num = room->askForChoice(target, "miji_draw", draw_num.join("+")).toInt();
@@ -106,6 +108,7 @@ public:
                             break;
                     }
                 }
+                room->broadcastSkillInvoke(objectName(), qrand() % 2 + 2);
             }
         }
         return false;
@@ -303,6 +306,7 @@ public:
                 ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
                 QString pattern = QString(".|.|.|hand|%1$0").arg(color);
 
+                room->broadcastSkillInvoke(objectName());
                 room->setPlayerFlag(victim, "QianxiTarget");
                 room->addPlayerMark(victim, QString("@qianxi_%1").arg(color));
                 room->setPlayerCardLimitation(victim, "use,response", pattern, false);
@@ -557,7 +561,7 @@ public:
                 room->acquireSkill(player, "wusheng");
                 room->acquireSkill(player, "paoxiao");
 
-                room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
+                room->broadcastSkillInvoke(objectName(), 2);
                 player->setFlags(objectName());
             }
         } else if (event == EventPhaseChanging) {
@@ -569,6 +573,10 @@ public:
         }
 
         return false;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
+        return 1;
     }
 };
 

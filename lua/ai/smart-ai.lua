@@ -2138,6 +2138,8 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 		local place = self.room:getCardPlace(card:getEffectiveId())
 		if place == sgs.Player_PlaceEquip then
 			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
+			elseif card:isKindOf("Weapon") and self.player:getHandcardNum() < discard_num + 1 then return 0
+			elseif card:isKindOf("OffensiveHorse") and self.player:getHandcardNum() < discard_num + 1 then return 0
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3
@@ -3442,14 +3444,10 @@ end
 
 local function cardsView(class_name, player)
 	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
-		player:getRoom():writeToConsole("CardsView:" .. class_name)
-		player:getRoom():writeToConsole("CardsView:" .. skill:objectName())
 		local askill = skill:objectName()
 		if player:hasSkill(askill) then
-			player:getRoom():writeToConsole("CardsViewX:" .. askill)
 			local callback = sgs.ai_cardsview[askill]
 			if type(callback) == "function" then
-				player:getRoom():writeToConsole("CardsViewX:" .. askill)
 				return callback(class_name, player)
 			end
 		end

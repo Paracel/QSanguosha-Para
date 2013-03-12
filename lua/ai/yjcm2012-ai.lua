@@ -63,15 +63,10 @@ end
 sgs.ai_skill_invoke.fuli = true
 
 function sgs.ai_cardsview.fuhun(class_name, player)
-	player:getRoom():writeToConsole("Fuhun!!!" .. class_name)
-	player:getRoom():writeToConsole("Fuhun!!!" .. sgs.Sanguosha:getCurrentCardUseReason())
 	if class_name == "Slash"
 		and (sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE
 			or sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_PLAY) then
-		player:getRoom():writeToConsole("Fuhun!!!")
-		local str = cardsView_spear(player, "fuhun")
-		if str then player:getRoom():writeToConsole(str) end
-		return str
+		return cardsView_spear(player, "fuhun")
 	end
 end
 

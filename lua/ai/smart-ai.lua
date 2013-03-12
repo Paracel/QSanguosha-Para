@@ -34,7 +34,6 @@ sgs.ai_skill_cardask = {}
 sgs.ai_skill_choice = {}
 sgs.ai_skill_askforag = {}
 sgs.ai_skill_pindian = {}
-sgs.ai_filterskill_filter = {}
 sgs.ai_skill_playerchosen = {}
 sgs.ai_skill_discard = {}
 sgs.ai_cardshow = {}
@@ -3432,13 +3431,6 @@ end
 
 local function prohibitUseDirectly(card, player)
 	if player:isCardLimited(card, card:getHandlingMethod()) then return true end
-
-	--[[local _, flist = sgs.getSkillLists(player)
-	for _, askill in ipairs(flist) do
-		local callback = sgs.ai_filterskill_filter[askill]
-		local card_place = global_room:getCardPlace(card:getEffectiveId())
-		if type(callback) == "function" and callback(card, card_place, player) then return true end
-	end]]
 	return false
 end
 
@@ -3611,14 +3603,18 @@ function getCards(class_name, player, room, flag)
 
 		if class_name == "." then table.insert(cards, card)
 		elseif card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cards, card)
-		elseif getSkillViewCard(card, class_name, player, card_place) then
+		else
 			card_str = getSkillViewCard(card, class_name, player, card_place)
-			card_str = sgs.Card_Parse(card_str)
-			table.insert(cards, card_str)
-		elseif cardsView(class_name, player) then
-			card_str = cardsView(class_name, player)
-			card_str = sgs.Card_Parse(card_str)
-			table.insert(cards, card_str)
+			if card_str then
+				card_str = sgs.Card_Parse(card_str)
+				table.insert(cards, card_str)
+			else
+				card_str = cardsView(class_name, player)
+				if card_str then
+					card_str = sgs.Card_Parse(card_str)
+					table.insert(cards, card_str)
+				end
+			end
 		end
 	end
 	return cards

@@ -27,13 +27,6 @@ wushen_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_filterskill_filter.wushen = function(card, card_place)
-	local suit = card:getSuitString()
-	local number = card:getNumberString()
-	local card_id = card:getEffectiveId()
-	if card:getSuit() == sgs.Card_Heart then return ("slash:wushen[%s:%s]=%d"):format(suit, number, card_id) end
-end
-
 sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 	local targetlist = sgs.QList2Table(targets)
 	local target

@@ -318,12 +318,6 @@ end
 
 sgs.ai_chaofeng.zhoutai = -4
 
-function sgs.ai_filterskill_filter.hongyan(card, card_place)
-	if card:getSuit() == sgs.Card_Spade then
-		return ("%s:hongyan[heart:%s]=%d"):format(card:objectName(), card:getNumberString(), card:getEffectiveId())
-	end
-end
-
 sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	local friend_lost_hp = 10
 	local friend_hp = 0

@@ -622,13 +622,6 @@ jinjiu_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_filterskill_filter.jinjiu = function(card, card_place)
-	local suit = card:getSuitString()
-	local number = card:getNumberString()
-	local card_id = card:getEffectiveId()
-	if card:isKindOf("Analeptic") then return ("slash:jinjiu[%s:%s]=%d"):format(suit, number, card_id) end
-end
-
 local xianzhen_skill = {}
 xianzhen_skill.name = "xianzhen"
 table.insert(sgs.ai_skills, xianzhen_skill)

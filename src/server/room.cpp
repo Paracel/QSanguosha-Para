@@ -452,7 +452,7 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
     thread->trigger(SlashEffectStart, this, effect.from, data);
 
     if (thread->trigger(SlashEffected, this, effect.to, data)) {
-        if (!effect.to->hasFlag("ArmorNullify"))
+        if (!effect.to->hasFlag("NonSkillNullify"))
             setEmotion(effect.to, "skill_nullify");
         else
             effect.to->setFlags("-ArmorNullify");
@@ -2691,11 +2691,11 @@ bool Room::cardEffect(const CardEffectStruct &effect) {
     // No skills should be triggered here!
     thread->trigger(CardEffect, this, effect.to, data);
     // Make sure that effectiveness of Slash isn't judged here!
-    if (thread->trigger(CardEffected, this, effect.to, data)) {
-        if (!effect.to->hasFlag("ArmorNullify"))
+    if (!thread->trigger(CardEffected, this, effect.to, data)) {
+        if (!effect.to->hasFlag("NonSkillNullify"))
             setEmotion(effect.to, "skill_nullify");
         else
-            effect.to->setFlags("-ArmorNullify");
+            effect.to->setFlags("-NonSkillNullify");
         return true;
     }
     return false;

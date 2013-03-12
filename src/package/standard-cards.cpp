@@ -1163,7 +1163,7 @@ public:
             player->getRoom()->sendLog(log);
 
             room->setEmotion(player, "armor/renwang_shield");
-            effect.to->setFlags("ArmorNullify");
+            effect.to->setFlags("NonSkillNullify");
             return true;
         } else
             return false;

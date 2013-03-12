@@ -389,8 +389,10 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
     case CardEffected: {
             if (data.canConvert<CardEffectStruct>()) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
-                if (room->isCanceled(effect))
+                if (room->isCanceled(effect)) {
+                    effect.to->setFlags("NonSkillNullify");
                     return true;
+                }
                 if (effect.to->isAlive() || effect.card->isKindOf("Slash"))
                     effect.card->onEffect(effect);
             }

@@ -331,6 +331,7 @@ function SmartAI:getUseValue(card)
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
 			if self.player:hasWeapon("crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
 			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
+			if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 1 or -1) end
 		elseif card:isKindOf("Jink") then
 			if self:getCardsNum("Jink") > 1 then v = v - 6 end
 			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
@@ -382,6 +383,7 @@ function SmartAI:adjustUsePriority(card, v)
 		if card:isRed() then v = v - 0.05 end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
 		if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 0.21 end
+		if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 0.21 or -0.1) end
 		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.21 end
 		if self.player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then v = v + 0.11 end
 		if self.player:hasSkill("jinjiu") and card:getEffectiveId() >= 0 and sgs.Sanguosha:getEngineCard(card:getEffectiveId()):isKindOf("Analeptic") then v = v + 0.11 end
@@ -3230,17 +3232,6 @@ function SmartAI:useCardByClassName(card, use)
 	end
 end
 
-function sgs.getSkillLists(player)
-	local slist = player:getVisibleSkillList()
-	local vsnlist = {}
-	local fsnlist = {}
-	for _, askill in sgs.qlist(player:getVisibleSkillList()) do
-		if askill:inherits("ViewAsSkill") then table.insert(vsnlist, askill:objectName()) end
-		if askill:inherits("FilterSkill") then table.insert(fsnlist, askill:objectName()) end
-	end
-	return vsnlist, fsnlist
-end
-
 function SmartAI:hasWizard(players, onlyharm)
 	local skill
 	if onlyharm then skill = sgs.wizard_harm_skill else skill = sgs.wizard_skill end
@@ -3440,21 +3431,25 @@ end
 local function prohibitUseDirectly(card, player)
 	if player:isCardLimited(card, card:getHandlingMethod()) then return true end
 
-	local _, flist = sgs.getSkillLists(player)
+	--[[local _, flist = sgs.getSkillLists(player)
 	for _, askill in ipairs(flist) do
 		local callback = sgs.ai_filterskill_filter[askill]
 		local card_place = global_room:getCardPlace(card:getEffectiveId())
 		if type(callback) == "function" and callback(card, card_place, player) then return true end
-	end
+	end]]
 	return false
 end
 
 local function cardsView(class_name, player)
-	local vlist = sgs.getSkillLists(player)
-	for _, askill in ipairs(vlist) do
+	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+		player:getRoom():writeToConsole("CardsView:" .. class_name)
+		player:getRoom():writeToConsole("CardsView:" .. skill:objectName())
+		local askill = skill:objectName()
 		if player:hasSkill(askill) then
+			player:getRoom():writeToConsole("CardsViewX:" .. askill)
 			local callback = sgs.ai_cardsview[askill]
-			if type(callback) == "function" and callback(class_name, player) then
+			if type(callback) == "function" then
+				player:getRoom():writeToConsole("CardsViewX:" .. askill)
 				return callback(class_name, player)
 			end
 		end
@@ -3462,8 +3457,8 @@ local function cardsView(class_name, player)
 end
 
 local function getSkillViewCard(card, class_name, player, card_place)
-	local vlist = sgs.getSkillLists(player)
-	for _, askill in ipairs(vlist) do
+	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+		local askill = skill:objectName()
 		if player:hasSkill(askill) then
 			local callback = sgs.ai_view_as[askill]
 			if type(callback) == "function" then
@@ -3620,6 +3615,10 @@ function getCards(class_name, player, room, flag)
 		elseif card:isKindOf(class_name) and not prohibitUseDirectly(card, player) then table.insert(cards, card)
 		elseif getSkillViewCard(card, class_name, player, card_place) then
 			card_str = getSkillViewCard(card, class_name, player, card_place)
+			card_str = sgs.Card_Parse(card_str)
+			table.insert(cards, card_str)
+		elseif cardsView(class_name, player) then
+			card_str = cardsView(class_name, player)
 			card_str = sgs.Card_Parse(card_str)
 			table.insert(cards, card_str)
 		end

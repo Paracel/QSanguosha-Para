@@ -879,37 +879,42 @@ function sgs.ai_weapon_value.blade(self, enemy)
 	if not enemy then return self:getCardsNum("Slash") end
 end
 
-function sgs.ai_cardsview.spear(class_name, player)
-	if class_name == "Slash" then
-		local cards = player:getCards("he")
-		cards = sgs.QList2Table(cards)
+function cardsView_spear(player, skill_name)
+	local cards = player:getCards("he")
+	cards = sgs.QList2Table(cards)
+	if skill_name ~= "fuhun" or player:hasSkill("wusheng") then
 		for _, acard in ipairs(cards) do
 			if isCard("Slash", acard, player) then return end
 		end
-		local cards = player:getCards("h")
-		cards = sgs.QList2Table(cards)
-		local newcards = {}
-		for _, card in ipairs(cards) do
-			if not isCard("Peach", card, player) and not (isCard("ExNihilo", card, player) and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
-		end
-		if #newcards < 2 then return end
+	end
+	local cards = player:getCards("h")
+	cards = sgs.QList2Table(cards)
+	local newcards = {}
+	for _, card in ipairs(cards) do
+		if not isCard("Slash", card, player) and not isCard("Peach", card, player) and not (isCard("ExNihilo", card, player) and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
+	end
+	if #newcards < 2 then return end
 
-		local card_id1 = newcards[1]:getEffectiveId()
-		local card_id2 = newcards[2]:getEffectiveId()
+	local card_id1 = newcards[1]:getEffectiveId()
+	local card_id2 = newcards[2]:getEffectiveId()
 
-		local card_str = ("slash:spear[%s:%s]=%d+%d"):format("to_be_decided", 0, card_id1, card_id2)
-		return card_str
+	local card_str = ("slash:%s[%s:%s]=%d+%d"):format(skill_name, "to_be_decided", 0, card_id1, card_id2)
+	return card_str
+end
+
+function sgs.ai_cardsview.spear(class_name, player)
+	if class_name == "Slash" then
+		return cardsView_spear(player, "spear")
 	end
 end
 
-local spear_skill = {}
-spear_skill.name = "spear"
-table.insert(sgs.ai_skills, spear_skill)
-spear_skill.getTurnUseCard = function(self, inclusive)
+function turnUse_spear(self, inclusive, skill_name)
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
-	for _, acard in ipairs(cards) do
-		if isCard("Slash", acard, self.player) then return end
+	if skill_name ~= "fuhun" or self.player:hasSkill("wusheng") then
+		for _, acard in ipairs(cards) do
+			if isCard("Slash", acard, self.player) then return end
+		end
 	end
 
 	local cards = self.player:getCards("h")
@@ -917,7 +922,7 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	self:sortByUseValue(cards)
 	local newcards = {}
 	for _, card in ipairs(cards) do
-		if not isCard("Peach", card, self.player) and not (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
+		if not isCard("Slash", card, self.player) and not isCard("Peach", card, self.player) and not (isCard("ExNihilo", card, self.player) and self.player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
 	if #newcards <= self.player:getHp() - 1 and not self:hasHeavySlashDamage(self.player) and not self:hasSkills("kongcheng|lianying|paoxiao") then return end
 	if #newcards < 2 then return end
@@ -955,9 +960,16 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 		end
 	end
 
-	local card_str = ("slash:spear[%s:%s]=%d+%d"):format("to_be_decided", 0, card_id1, card_id2)
+	local card_str = ("slash:%s[%s:%s]=%d+%d"):format(skill_name, "to_be_decided", 0, card_id1, card_id2)
 	local slash = sgs.Card_Parse(card_str)
 	return slash
+end
+
+local spear_skill = {}
+spear_skill.name = "spear"
+table.insert(sgs.ai_skills, spear_skill)
+spear_skill.getTurnUseCard = function(self, inclusive)
+	return turnUse_spear(self, inclusive, "spear")
 end
 
 function sgs.ai_slash_weaponfilter.fan(to)

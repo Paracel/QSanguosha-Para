@@ -129,8 +129,8 @@ private:
     QCheckBox *ai_delay_altered_checkbox;
     QSpinBox *ai_delay_ad_spinbox;
     QCheckBox *surrender_at_death_checkbox;
-    QRadioButton *standard_3v3_radiobutton;
-    QRadioButton *new_3v3_radiobutton;
+    QRadioButton *official_3v3_radiobutton;
+    QComboBox *official_3v3_ComboBox;
     QComboBox *role_choose_ComboBox;
     QCheckBox *exclude_disaster_checkbox;
     QComboBox *role_choose_xmode_ComboBox;

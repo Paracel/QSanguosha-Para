@@ -595,8 +595,21 @@ QGroupBox *ServerDialog::create3v3Box() {
 
     QVBoxLayout *vlayout = new QVBoxLayout;
 
-    standard_3v3_radiobutton = new QRadioButton(tr("Standard mode"));
-    new_3v3_radiobutton = new QRadioButton(tr("New Mode"));
+    official_3v3_radiobutton = new QRadioButton(tr("Official mode"));
+
+    QComboBox *officialComboBox = new QComboBox;
+    officialComboBox->addItem(tr("Classical"), "Classical");
+    officialComboBox->addItem("2012", "2012");
+    //official_rule_ComboBox->addItem("2013", "2013");
+
+    official_3v3_ComboBox = officialComboBox;
+
+    QString rule = Config.value("3v3/OfficialRule", "2012").toString();
+    if (rule == "Classical")
+        official_3v3_ComboBox->setCurrentIndex(0);
+    //else if (rule == "2013")
+    //    official_3v3_ComboBox->setCurrentIndex(2);
+
     QRadioButton *extend = new QRadioButton(tr("Extension mode"));
     QPushButton *extend_edit_button = new QPushButton(tr("General selection ..."));
     extend_edit_button->setEnabled(false);
@@ -619,20 +632,17 @@ QGroupBox *ServerDialog::create3v3Box() {
     else if (scheme == "AllRoles")
         roleChooseComboBox->setCurrentIndex(2);
 
-    vlayout->addLayout(HLay(standard_3v3_radiobutton, new_3v3_radiobutton));
+    vlayout->addLayout(HLay(official_3v3_radiobutton, official_3v3_ComboBox));
     vlayout->addLayout(HLay(extend, extend_edit_button));
     vlayout->addWidget(exclude_disaster_checkbox);
     vlayout->addLayout(HLay(new QLabel(tr("Role choose")), role_choose_ComboBox));
     box->setLayout(vlayout);
 
     bool using_extension = Config.value("3v3/UsingExtension", false).toBool();
-    bool using_new_mode = Config.value("3v3/UsingNewMode", false).toBool();
     if (using_extension)
         extend->setChecked(true);
-    else if (using_new_mode)
-        new_3v3_radiobutton->setChecked(true);
     else
-        standard_3v3_radiobutton->setChecked(true);
+        official_3v3_radiobutton->setChecked(true);
 
     return box;
 }
@@ -1038,10 +1048,10 @@ bool ServerDialog::config() {
     Config.setValue("DisableLua", disable_lua_checkbox->isChecked());
 
     Config.beginGroup("3v3");
-    Config.setValue("UsingExtension", !standard_3v3_radiobutton->isChecked() && !new_3v3_radiobutton->isChecked());
+    Config.setValue("UsingExtension", !official_3v3_radiobutton->isChecked());
     Config.setValue("RoleChoose", role_choose_ComboBox->itemData(role_choose_ComboBox->currentIndex()).toString());
     Config.setValue("ExcludeDisaster", exclude_disaster_checkbox->isChecked());
-    Config.setValue("UsingNewMode", new_3v3_radiobutton->isChecked());
+    Config.setValue("OfficialRule", official_3v3_ComboBox->itemData(official_3v3_ComboBox->currentIndex()).toString());
     Config.endGroup();
 
     Config.beginGroup("XMode");

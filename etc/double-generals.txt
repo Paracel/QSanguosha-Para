@@ -25,6 +25,7 @@ xuchu huangzhong						55
 guojia zhanghe							76
 guojia liubei							58
 guojia machao							76
+guojia wolong							62
 guojia lvmeng							77
 guojia sunshangxiang					85
 guojia huatuo							90
@@ -183,6 +184,7 @@ pangtong diy_liuxie						57
 pangtong ganfuren						51
 pangtong nos_xushu						30
 wolong xiaoqiao							51
+wolong zhangjiao						74
 jiangwei lvmeng							31
 jiangwei luxun							33
 jiangwei xunyou							56

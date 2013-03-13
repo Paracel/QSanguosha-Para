@@ -561,6 +561,6 @@ sgs.ai_chaofeng.yanliangwenchou = 1
 
 sgs.ai_skill_invoke.mengjin = function(self, data)
 	local effect = data:toSlashEffect()
-	if self:isFriend(effect.to) then return target:getArmor() and self:needToThrowArmor(target) end
-	return not self:doNotDiscard(enemy)
+	if self:isFriend(effect.to) then return effect.to:getArmor() and self:needToThrowArmor(effect.to) end
+	return not self:doNotDiscard(effect.to)
 end

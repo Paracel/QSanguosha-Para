@@ -325,11 +325,11 @@ sgs.ai_card_intention.SijianCard = function(self, card, from, tos)
 	local intention = 80
 	local to = tos[1]
 	if to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2 then
-		intention = -30
-	elseif to:hasArmorEffect("silver_lion") and to:isWounded() then
-		intention = -30
+		intention = -10
+	elseif self:needToThrowArmor(to) then
+		intention = -10
 	end
-	sgs.updateIntention(from, tos[1], intention)
+	sgs.updateIntention(from, to, intention)
 end
 
 sgs.ai_skill_invoke.suishi = function(self, data)

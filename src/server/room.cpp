@@ -455,7 +455,7 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
         if (!effect.to->hasFlag("NonSkillNullify"))
             setEmotion(effect.to, "skill_nullify");
         else
-            effect.to->setFlags("-ArmorNullify");
+            effect.to->setFlags("-NonSkillNullify");
         removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // prevent the effect
     }
 }
@@ -2684,21 +2684,23 @@ bool Room::cardEffect(const Card *card, ServerPlayer *from, ServerPlayer *to) {
 }
 
 bool Room::cardEffect(const CardEffectStruct &effect) {
-    if (effect.to->isDead() && !effect.card->isKindOf("Slash")) // Be care!!!
-        return false;
-
     QVariant data = QVariant::fromValue(effect);
-    // No skills should be triggered here!
-    thread->trigger(CardEffect, this, effect.to, data);
-    // Make sure that effectiveness of Slash isn't judged here!
-    if (!thread->trigger(CardEffected, this, effect.to, data)) {
-        if (!effect.to->hasFlag("NonSkillNullify"))
-            setEmotion(effect.to, "skill_nullify");
-        else
-            effect.to->setFlags("-NonSkillNullify");
-        return true;
+    bool cancel = false;
+    if (effect.to->isAlive() || effect.card->isKindOf("Slash")) { // Be care!!!
+        // No skills should be triggered here!
+        thread->trigger(CardEffect, this, effect.to, data);
+        // Make sure that effectiveness of Slash isn't judged here!
+        if (!thread->trigger(CardEffected, this, effect.to, data)) {
+            cancel = true;
+        } else {
+            if (!effect.to->hasFlag("NonSkillNullify"))
+                setEmotion(effect.to, "skill_nullify");
+            else
+                effect.to->setFlags("-NonSkillNullify");
+        }
     }
-    return false;
+    thread->trigger(PostCardEffected, this, effect.to, data);
+    return cancel;
 }
 
 bool Room::isJinkEffected(ServerPlayer *user, const Card *jink) {

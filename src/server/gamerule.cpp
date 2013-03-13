@@ -18,7 +18,7 @@ GameRule::GameRule(QObject *)
 
     events << GameStart << TurnStart
            << EventPhaseProceeding << EventPhaseEnd << EventPhaseChanging
-           << CardUsed << CardFinished << CardEffected
+           << CardUsed << CardFinished << CardEffected << PostCardEffected
            << PostHpReduced
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
@@ -227,6 +227,14 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     }
                 }
 
+                if (card_use.card->isKindOf("Slash") || card_use.card->isNDTrick()) {
+                    foreach (ServerPlayer *p, card_use.to) {
+                        QStringList card_list = p->tag["CurrentCardUse"].toStringList();
+                        card_list << card_use.card->toString();
+                        p->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
+                    }
+                }
+
                 card_use = data.value<CardUseStruct>();
                 if (card_use.from) {
                     foreach (ServerPlayer *p, room->getAllPlayers())
@@ -379,9 +387,11 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             }
 
             if (room->getMode() == "02_1v1" && player->isDead()) {
-                QString new_general = player->tag["1v1ChangeGeneral"].toString();
-                if (!new_general.isEmpty())
-                    changeGeneral1v1(player);
+                if (!damage.card || !player->tag["CurrentCardUse"].toStringList().contains(damage.card->toString())) {
+                    QString new_general = player->tag["1v1ChangeGeneral"].toString();
+                    if (!new_general.isEmpty())
+                        changeGeneral1v1(player);
+                }
             }
 
             break;
@@ -397,6 +407,22 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     effect.card->onEffect(effect);
             }
 
+            break;
+        }
+    case PostCardEffected: {
+            if (data.canConvert<CardEffectStruct>()) {
+                CardEffectStruct effect = data.value<CardEffectStruct>();
+                QStringList card_list = effect.to->tag["CurrentCardUse"].toStringList();
+                if (effect.card && card_list.contains(effect.card->toString())) {
+                    if (room->getMode() == "02_1v1" && effect.to->isDead()) {
+                        QString new_general = effect.to->tag["1v1ChangeGeneral"].toString();
+                        if (!new_general.isEmpty())
+                            changeGeneral1v1(effect.to);
+                    }
+                    card_list.removeOne(effect.card->toString());
+                    effect.to->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
+                }
+            }
             break;
         }
     case SlashEffectStart: {
@@ -503,7 +529,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     player->tag["1v1ChangeGeneral"] = list.takeFirst();
                     player->tag["1v1Arrange"] = list;
 
-                    if (death.damage == NULL) {
+                    QStringList card_list = player->tag["CurrentCardUse"].toStringList();
+                    if (death.damage == NULL && card_list.isEmpty()) {
                         changeGeneral1v1(player);
                         return false;
                     }

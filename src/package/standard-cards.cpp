@@ -664,11 +664,14 @@ bool GodSalvation::isCancelable(const CardEffectStruct &effect) const{
 
 void GodSalvation::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
-
-    RecoverStruct recover;
-    recover.card = this;
-    recover.who = effect.from;
-    room->recover(effect.to, recover);
+    if (!effect.to->isWounded())
+        room->setEmotion(effect.to, "skill_nullify");
+    else {
+        RecoverStruct recover;
+        recover.card = this;
+        recover.who = effect.from;
+        room->recover(effect.to, recover);
+    }
 }
 
 SavageAssault::SavageAssault(Suit suit, int number)

@@ -809,7 +809,7 @@ QList<int> Engine::getRandomCards() const{
 
     if (Config.GameMode == "06_3v3") {
         using_new_3v3 = Config.value("3v3/UsingNewMode", false).toBool();
-        exclude_disaters = Config.value("3v3/ExcludeDisasters", true).toBool() || using_new_3v3;
+        exclude_disaters = Config.value("3v3/UsingExtension", false).toBool() && Config.value("3v3/ExcludeDisasters", true).toBool();
     }
 
     if (Config.GameMode == "04_1v3")
@@ -822,12 +822,13 @@ QList<int> Engine::getRandomCards() const{
         if (exclude_disaters && card->isKindOf("Disaster"))
             continue;
 
-        if (card->getPackage() == "New3v3Card" && using_new_3v3) {
+        if (card->getPackage() == "New3v3Card" && using_new_3v3)
             list << card->getId();
-            list.removeOne(98);
-        } else if (!ban_package.contains(card->getPackage()))
+        else if (!ban_package.contains(card->getPackage()))
             list << card->getId();
     }
+    if (using_new_3v3)
+        list.removeOne(98);
 
     qShuffle(list);
 

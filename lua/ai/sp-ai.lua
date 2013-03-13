@@ -60,8 +60,8 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 				if self.player:isWounded() then
 					return -2
 				end
-			elseif card:isKindOf("Weapon") and self.player:getHandcardNum() < discard_num + 1 then return 0
-			elseif card:isKindOf("OffensiveHorse") and self.player:getHandcardNum() < discard_num + 1 then return 0
+			elseif card:isKindOf("Weapon") and self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
+			elseif card:isKindOf("OffensiveHorse") and self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3

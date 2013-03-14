@@ -77,6 +77,93 @@ fuhun_skill.getTurnUseCard = function(self, inclusive)
 	return turnUse_spear(self, inclusive, "fuhun")
 end
 
+function sgs.ai_skill_invoke.zhenlie(self, data)
+	local use = data:toCardUse()
+	if not use.from or use.from:isDead() then return false end
+	if self.role == "rebel" and sgs.evaluateRoleTrends(use.from) == "rebel" and self.player:getHp() == 1 and self:getAllPeachNum() < 1 then return false end
+
+	if self:isEnemy(use.from) or (self:isFriend(use.from) and self.role == "loyalist" and use.from:isLord() and self.player:getHp() == 1) then
+		if use.card:isKindOf("Slash") then
+			if not self:slashIsEffective(use.card, self.player, use.from) then return false end
+			if self:hasHeavySlashDamage(use.from, use.card, self.player) then return true end
+			
+			local hasHeart = false
+			for _, card in ipairs(self:getCards("Jink")) do
+				if card:getSuit() == sgs.Card_Heart then
+					hasHeart = true
+					break
+				end
+			end
+			if self:getCardsNum("Jink") == 0
+				or (use.from:hasSkill("wushuang") and self:getCardsNum("Jink") < 2)
+				or (use.from:hasSkill("dahe") and self.player:hasFlag("dahe") and not hasHeart) then
+
+				if self.player:isChained() and not self:isGoodChainTarget(self.player) and use.card:isKindOf("NatureSlash") then return true end
+				if use.from:hasSkill("nosqianxi") and use.from:distanceTo(self.player) == 1 then return true end
+				if self:isFriend(use.from) and self.role == "loyalist" and use.from:isLord() and self.player:getHp() == 1 then return true end
+				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))
+					and not self:doNotDiscard(use.from) then
+					return true
+				end
+			end
+		end
+		elseif use.card:isKindOf("AOE") then
+			local from = use.from
+			if use.card:isKindOf("SavageAssault") then
+				local menghuo = self.room:findPlayerBySkillName("huoshou")
+				if menghuo then from = menghuo end
+			end
+
+			local friend_null = 0
+			for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+				if self:isFriend(p) then friend_null = friend_null + getCardsNum("Nullification", p) end
+				if self:isEnemy(p) then friend_null = friend_null - getCardsNum("Nullification", p) end
+			end
+			friend_null = friend_null + self:getCardsNum("Nullification")
+			local sj_num = self:getCardsNum(use.card:isKindOf("SavageAssault") and "Slash" or "Jink")
+
+			if not self:hasTrickEffective(use.card, self.player) then return false end
+			if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, from) then return false end
+			if self:isFriend(from) and self.role == "loyalist" and from:isLord() and self.player:getHp() == 1 then return true end
+			if use.from:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 and self:hasLoseHandcardEffective() then return true end
+			if sj_num == 0 and friend_null <= 0 then
+				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))
+					and not self:doNotDiscard(use.from) and then
+					return true
+				end
+			end
+		end
+	elseif self:isEnemy(use.from) then
+		if use.card:isKindOf("FireAttack") then
+			if not self:hasTrickEffective(use.card, self.player) then return false end
+			if not self:damageIsEffective(self.player, sgs,DamageStruct_Fire, use.from) then return false end
+			if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
+				and not (use.from:hasSkill("hongyan") and getKnownCard(self.player, "spade") > 0) then
+				return not self:doNotDiscard(use.from)
+			elseif self.player:isChained() and not self:isGoodChainTarget(self.player) then
+				return not self:doNotDiscard(use.from)
+			end
+		elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))
+				and self:getCardsNum("Peach") == self.player:getHandcardNum() and not self.player:isKongcheng() then
+			if not self:hasTrickEffective(use.card, self.player) then return false end
+			return not self:doNotDiscard(use.from)
+		elseif use.card:isKindOf("Duel") then
+			if self:getCardsNum("Slash") == 0 or self:getCardsNum("Slash") < getCardsNum("Slash", use.from) then
+				if not self:hasTrickEffective(use.card, self.player) then return false end
+				if not self:damageIsEffective(self.player, sgs,DamageStruct_Normal, use.from) then return false end
+				return not self:doNotDiscard(use.from)
+			end
+		else
+			if use.card:isKindOf("TrickCard") then
+				if not self:doNotDiscard(use.from) and self.player:getHp() > getBestHp(self.player) then
+					return true
+				end
+			end
+		end
+	end
+	return false
+end
+
 sgs.ai_skill_choice.miji_draw = function(self, choices)
 	return "" .. self.player:getLostHp()
 end

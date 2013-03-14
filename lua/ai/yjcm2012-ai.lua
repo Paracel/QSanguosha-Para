@@ -89,6 +89,43 @@ sgs.ai_skill_invoke.miji = function(self, data)
 	return false
 end
 
+sgs.ai_skill_askforag.miji = function(self, card_ids)
+	local available_friends = {}
+	for _, friend in ipairs(self.friends_noself) do
+		if not friend:hasSkill("manjuan") then table.insert(available_friends, friend) end
+	end
+
+	local toGive, allcards = {}, {}
+	local keep
+	for _, id in ipairs(card_ids) do
+		local card = sgs.Sanguosha:getCard(id)
+		if not keep and (isCard("Jink", card, self.player) or isCard("Analeptic", card, self.player)) then
+			keep = true
+		else
+			table.insert(toGive, card)
+		end
+		table.insert(allcards, card)
+	end
+
+	local cards = #toGive > 0 and toGive or allcards
+	local id = cards[1]:getId()
+
+	local card, friend = self:getCardNeedPlayer(cards)
+	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
+
+	if #available_friends > 0 then
+		self:sort(available_friends, "handcard")
+		for _, afriend in ipairs(available_friends) do
+			if not self:needKongcheng(afriend, true) then
+				return afriend, id
+			end
+		end
+		self:sort(available_friends, "defense")
+		return available_friends[1], id
+	end
+	return nil, -1
+end
+
 function sgs.ai_cardneed.jiangchi(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) < 2
 end

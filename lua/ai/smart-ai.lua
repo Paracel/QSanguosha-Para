@@ -33,6 +33,7 @@ sgs.ai_skill_suit = {}
 sgs.ai_skill_cardask = {}
 sgs.ai_skill_choice = {}
 sgs.ai_skill_askforag = {}
+sgs.ai_skill_askforyiji = {}
 sgs.ai_skill_pindian = {}
 sgs.ai_skill_playerchosen = {}
 sgs.ai_skill_discard = {}
@@ -2921,65 +2922,14 @@ function SmartAI:getCardNeedPlayer(cards)
 end
 
 function SmartAI:askForYiji(card_ids, reason)
-	local noRest = (reason == "lirang" or reason == "miji")
-	local Shenfen_user
-	for _, player in sgs.qlist(self.room:getAllPlayers()) do
-		if player:hasFlag("ShenfenUsing") then
-			Shenfen_user = player
-			break
+	if reason then
+		local callback = sgs.ai_skill_askforyiji[string.gsub(reason,"%-","_")]
+		if type(callback) == "function" then
+			local cardid, target = callback(self, card_ids)
+			if cardid or target then return cardid, target end
 		end
 	end
-
-	if not noRest and self.player:getHandcardNum() <= 2 and not Shenfen_user then
-		return nil, -1
-	end
-	
-	local available_friends = {}
-	for _, friend in ipairs(self.friends_noself) do
-		local insert = true
-		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
-		if insert and reason == "lirang" and friend:hasFlag("DimengTarget") then
-			local another
-			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if p:hasFlag("DimengTarget") then
-					another = p
-					break
-				end
-			end
-			if not another or not self:isFriend(another) then insert = false end
-		end
-		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
-		if insert then table.insert(available_friends, friend) end
-	end
-	if not noRest then table.insert(available_friends, self.player) end
-
-	local cards = {}
-	for _, card_id in ipairs(card_ids) do
-		table.insert(cards, sgs.Sanguosha:getCard(card_id))
-	end
-	local id = card_ids[1]
-
-	local card, friend = self:getCardNeedPlayer(cards)
-	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
-	if #available_friends > 0 then
-		self:sort(available_friends, "handcard")
-		if Shenfen_user and table.contains(available_friends, Shenfen_user) then
-			return Shenfen_user, id
-		end
-		for _, afriend in ipairs(available_friends) do
-			if not self:needKongcheng(afriend, true) then
-				return afriend, id
-			end
-		end
-	end
-
-	--All cards should be given out for LiRang & MiJi
-	if noRest then
-		if #available_friends == 0 then return end
-		self:sort(available_friends, "defense")
-		local afriend = available_friends[1]
-		return afriend, id
-	end
+	return nil, -1
 end
 
 sgs.ai_choicemade_filter.Yiji.general = function(from, promptlist)

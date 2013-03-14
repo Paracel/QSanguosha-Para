@@ -485,6 +485,50 @@ function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
+sgs.ai_skill_askforyiji = function(self, card_ids)
+	local Shenfen_user
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:hasFlag("ShenfenUsing") then
+			Shenfen_user = player
+			break
+		end
+	end
+
+	if self.player:getHandcardNum() <= 2 and not Shenfen_user then
+		return nil, -1
+	end
+
+	local available_friends = {}
+	for _, friend in ipairs(self.friends_noself) do
+		local insert = true
+		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
+		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
+		if insert then table.insert(available_friends, friend) end
+	end
+	table.insert(available_friends, self.player)
+
+	local cards = {}
+	for _, card_id in ipairs(card_ids) do
+		table.insert(cards, sgs.Sanguosha:getCard(card_id))
+	end
+	local id = card_ids[1]
+
+	local card, friend = self:getCardNeedPlayer(cards)
+	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
+	if #available_friends > 0 then
+		self:sort(available_friends, "handcard")
+		if Shenfen_user and table.contains(available_friends, Shenfen_user) then
+			return Shenfen_user, id
+		end
+		for _, afriend in ipairs(available_friends) do
+			if not self:needKongcheng(afriend, true) then
+				return afriend, id
+			end
+		end
+	end
+	return nil, -1
+end
+
 sgs.ai_need_damaged.yiji = function(self, attacker)
 	local need_card = false
 	local current = self.room:getCurrent()

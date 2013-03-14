@@ -605,12 +605,10 @@ QGroupBox *ServerDialog::create3v3Box() {
     official_3v3_ComboBox = officialComboBox;
 
     QString rule = Config.value("3v3/OfficialRule", "2012").toString();
-    if (rule == "Classical")
-        official_3v3_ComboBox->setCurrentIndex(0);
-    else if (rule == "2012")
-        official_3v3_ComboBox->setCurrentIndex(1);
+    if (rule == "2012")
+        officialComboBox->setCurrentIndex(1);
     //else if (rule == "2013")
-    //    official_3v3_ComboBox->setCurrentIndex(2);
+    //    officialComboBox->setCurrentIndex(2);
 
     QRadioButton *extend = new QRadioButton(tr("Extension mode"));
     QPushButton *extend_edit_button = new QPushButton(tr("General selection ..."));

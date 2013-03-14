@@ -39,13 +39,6 @@ config = {
 		"Test"
 	},
 
-	scene_names = {
-		"Guandu",
-		"Fancheng",
-		"Couple",
-		"Custom"
-	},
-
 	hulao_packages = {
 		"standard",
 		"wind"

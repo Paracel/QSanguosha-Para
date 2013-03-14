@@ -30,7 +30,7 @@ public:
                             if (h_list.length() > 1) {
                                 if (player->askForSkillInvoke("reselect")) {
                                     h_list.removeOne(player->getGeneralName());
-                                    QString general_name = room->askForChoice(player, "reselect", h_list.join("+"));
+                                    QString general_name = room->askForGeneral(player, h_list);
                                     room->changeHero(player, general_name, true, false);
                                 }
                             }
@@ -39,7 +39,7 @@ public:
                             if (w_list.length() > 1) {
                                 if (player->askForSkillInvoke("reselect")) {
                                     w_list.removeOne(player->getGeneralName());
-                                    QString general_name = room->askForChoice(player, "reselect", w_list.join("+"));
+                                    QString general_name = room->askForGeneral(player, w_list);
                                     room->changeHero(player, general_name, true, false);
                                 }
                             }

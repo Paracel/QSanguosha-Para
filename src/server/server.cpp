@@ -979,7 +979,7 @@ bool ServerDialog::config() {
     Config.DisableChat = disable_chat_checkbox->isChecked();
     Config.Enable2ndGeneral = second_general_checkbox->isChecked();
     Config.EnableSame = same_checkbox->isChecked();
-    Config.EnableBasara= basara_checkbox->isChecked() && basara_checkbox->isEnabled();
+    Config.EnableBasara = basara_checkbox->isChecked() && basara_checkbox->isEnabled();
     Config.EnableHegemony = hegemony_checkbox->isChecked() && hegemony_checkbox->isEnabled();
     Config.MaxHpScheme = max_hp_scheme_ComboBox->currentIndex();
     if (Config.MaxHpScheme == 0) {

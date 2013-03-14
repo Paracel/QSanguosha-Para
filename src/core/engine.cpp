@@ -291,7 +291,7 @@ int Engine::getGeneralCount(bool include_banned) const{
     while (itor.hasNext()) {
         itor.next();
         const General *general = itor.value();
-        if (ban_package.contains(general->getPackage()))
+        if (getBanPackages().contains(general->getPackage()))
             total--;
         else if ((ServerInfo.GameMode.endsWith("p")
                  || ServerInfo.GameMode.endsWith("pd")
@@ -551,10 +551,10 @@ QString Engine::getSetupString() const{
     QString server_name = Config.ServerName.toUtf8().toBase64();
     QStringList setup_items;
     setup_items << server_name
-            << Config.GameMode
-            << QString::number(timeout)
-            << Sanguosha->getBanPackages().join("+")
-            << flags;
+                << Config.GameMode
+                << QString::number(timeout)
+                << Sanguosha->getBanPackages().join("+")
+                << flags;
 
     return setup_items.join(":");
 }
@@ -678,7 +678,7 @@ QStringList Engine::getLords(bool contain_banned) const{
     // add intrinsic lord
     foreach (QString lord, lord_list) {
         const General *general = generals.value(lord);
-        if (ban_package.contains(general->getPackage()))
+        if (getBanPackages().contains(general->getPackage()))
             continue;
         if (!contain_banned) {
             if (ServerInfo.GameMode.endsWith("p")
@@ -723,7 +723,7 @@ QStringList Engine::getRandomLords() const{
     QStringList nonlord_list;
     foreach (QString nonlord, this->nonlord_list) {
         const General *general = generals.value(nonlord);
-        if (ban_package.contains(general->getPackage()))
+        if (getBanPackages().contains(general->getPackage()))
             continue;
         if (Config.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
             continue;
@@ -765,7 +765,7 @@ QStringList Engine::getLimitedGeneralNames() const{
     } else {
         while (itor.hasNext()) {
             itor.next();
-            if (!ban_package.contains(itor.value()->getPackage()))
+            if (!getBanPackages().contains(itor.value()->getPackage()))
                 general_names << itor.key();
         }
     }
@@ -824,7 +824,7 @@ QList<int> Engine::getRandomCards() const{
 
         if (card->getPackage() == "New3v3Card" && using_2012_3v3)
             list << card->getId();
-        else if (!ban_package.contains(card->getPackage()))
+        else if (!getBanPackages().contains(card->getPackage()))
             list << card->getId();
     }
     if (using_2012_3v3)

@@ -1963,6 +1963,7 @@ function SmartAI:enemiesContainsTrick()
 	local zhanghe = self.room:findPlayerBySkillName("qiaobian")
 	if zhanghe and (not self:isEnemy(zhanghe) or zhanghe:isKongcheng() or not zhanghe:faceUp()) then zhanghe = nil end
 
+	local indul_num, ss_num = 0, 0
 	for _, acard in sgs.qlist(self.player:getCards("he")) do
 		if isCard("Indulgence", acard, self.player) then indul_num = indul_num + 1 end
 		if isCard("SupplyShortage", acard, self.player) then ss_num = ss_num + 1 end

@@ -21,16 +21,12 @@ void Slash::setNature(DamageStruct::Nature nature) {
 }
 
 bool Slash::IsAvailable(const Player *player, const Card *slash) {
-    if (slash == NULL) {
-        Slash *newslash = new Slash(Card::NoSuit, 0);
-        newslash->deleteLater();
-        if (player->isCardLimited(newslash, Card::MethodUse))
-            return false;
-    } else {
-        if (player->isCardLimited(slash, Card::MethodUse))
-            return false;
-    }
-
+    Slash *newslash = new Slash(Card::NoSuit, 0);
+    newslash->deleteLater();
+#define THIS_SLASH (slash == NULL ? newslash : slash)
+    if (player->isCardLimited(THIS_SLASH, Card::MethodUse))
+       return false;
+#undef THIS_SLASH
     return (player->hasWeapon("crossbow") || player->canSlashWithoutCrossbow());
 }
 

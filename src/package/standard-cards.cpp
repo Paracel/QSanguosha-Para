@@ -52,10 +52,6 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         foreach (ServerPlayer *target, room->getAlivePlayers())
             if (target->hasFlag("SlashAssignee"))
                 room->setPlayerFlag(target, "-SlashAssignee");
-        if (player->hasFlag("slashNoDistanceLimit"))
-            room->setPlayerFlag(player, "-slashNoDistanceLimit");
-        if (player->hasFlag("slashDisableExtraTarget"))
-            room->setPlayerFlag(player, "-slashDisableExtraTarget");
     }
 
     if (objectName() == "slash" && use.m_isOwnerUse) {
@@ -87,7 +83,8 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             }
         }
     }
-    if ((use.card->isVirtualCard() && use.card->subcardsLength() == 0) || (getSkillName() == "guhuo" && use.card != this)) {
+    if (((use.card->isVirtualCard() && use.card->subcardsLength() == 0) || (getSkillName() == "guhuo" && use.card != this))
+        && !player->hasFlag("slashDisableExtraTarget")) {
         QList<ServerPlayer *> targets_ts;
         while (true) {
             QList<const Player *> targets_const;
@@ -108,6 +105,11 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             targets_const.clear();
         }
     }
+
+    if (player->hasFlag("slashNoDistanceLimit"))
+        room->setPlayerFlag(player, "-slashNoDistanceLimit");
+    if (player->hasFlag("slashDisableExtraTarget"))
+        room->setPlayerFlag(player, "-slashDisableExtraTarget");
 
     if (player->getPhase() == Player::Play && player->hasFlag("MoreSlashInOneTurn")) {
         if (player->hasSkill("paoxiao"))

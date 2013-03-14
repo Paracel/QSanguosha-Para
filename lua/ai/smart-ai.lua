@@ -1841,7 +1841,7 @@ function SmartAI:filterEvent(event, player, data)
 		--self.room:writeToConsole(str)
 
 		local callback = sgs.ai_card_intention[card:getClassName()]
-		if callback then
+		if #to > 0 and callback then
 			if type(callback) == "function" then
 				callback(self, card, from, to)
 			elseif type(callback) == "number" then
@@ -1854,7 +1854,7 @@ function SmartAI:filterEvent(event, player, data)
 		end
 		if card:getClassName() == "LuaSkillCard" and card:isKindOf("LuaSkillCard") then
 			local luaskillcardcallback = sgs.ai_card_intention[card:objectName()]
-			if luaskillcardcallback then
+			if #to > 0 and luaskillcardcallback then
 				if type(luaskillcardcallback) == "function" then
 					luaskillcardcallback(card, from, to)
 				elseif type(luaskillcardcallback) == "number" then
@@ -1872,7 +1872,7 @@ function SmartAI:filterEvent(event, player, data)
 			end
 		end
 
-		if sgs.turncount == 1 then
+		if sgs.turncount == 1 and #to > 0 then
 			local who = to[1]
 			if not lord then return end
 			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluateRoleTrends(who) == "neutral" then

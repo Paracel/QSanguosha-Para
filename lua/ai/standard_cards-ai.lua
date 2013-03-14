@@ -2224,6 +2224,12 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 	if (not friendNeedPeach and peach) or peachnum > 1 then return peach end
+	
+	for _, card in ipairs(cards) do
+		if card:isKindOf("Nullification") and ( self:getCardsNum("Nullification") < 2 or not nextPlayerCanUse) then
+			return card:getEffectiveId()
+		end
+	end
 
 	local exnihilo, jink, analeptic
 	for _, card in ipairs(cards) do

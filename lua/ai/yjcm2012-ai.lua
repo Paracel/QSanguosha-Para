@@ -45,6 +45,8 @@ sgs.ai_skill_playerchosen.qianxi = function(self, targets)
 	return targets:first()
 end
 
+sgs.ai_playerchosen_intention.qianxi = 80
+
 function sgs.ai_cardneed.dangxian(to, card)
 	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
 end
@@ -106,7 +108,6 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 					return true
 				end
 			end
-		end
 		elseif use.card:isKindOf("AOE") then
 			local from = use.from
 			if use.card:isKindOf("SavageAssault") then
@@ -128,7 +129,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			if use.from:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 and self:hasLoseHandcardEffective() then return true end
 			if sj_num == 0 and friend_null <= 0 then
 				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))
-					and not self:doNotDiscard(use.from) and then
+					and not self:doNotDiscard(use.from) then
 					return true
 				end
 			end

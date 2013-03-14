@@ -982,17 +982,18 @@ local function need_huangen(self, who)
 	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
 	if card == nil then return false end
 	if self:isEnemy(who) then
-		if card:isKindOf("GodSalvation") and who:isWounded() and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then
+		if card:isKindOf("GodSalvation") and who:isWounded() and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive
+			and self:hasTrickEffective(card, who) then
 			return true
 		end
-		if card:isKindOf("GodSalvation") and who:isWounded() and self:isWeak(who) then
+		if card:isKindOf("GodSalvation") and who:isWounded() and self:isWeak(who) and self:hasTrickEffective(card, who) then
 			return true
 		end
 		return false
 	elseif self:isFriend(who) then
 		if self:hasSkills("noswuyan", who) and self.room:getCurrent():objectName() ~= who:objectName() then return true end
-		if card:isKindOf("GodSalvation") and who:isWounded() then return false end
-		if card:isKindOf("IronChain") and who:isChained() then return false end
+		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who) then return false end
+		if card:isKindOf("IronChain") and who:isChained() and self:hasTrickEffective(card, who) then return false end
 		if card:isKindOf("AmazingGrace") then return not self:hasTrickEffective(card, who) end
 		return true
 	end

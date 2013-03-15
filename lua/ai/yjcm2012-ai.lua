@@ -177,7 +177,7 @@ sgs.ai_skill_invoke.miji = function(self, data)
 	return false
 end
 
-sgs.ai_skill_askforag.miji = function(self, card_ids)
+sgs.ai_skill_askforyiji.miji = function(self, card_ids)
 	local available_friends = {}
 	for _, friend in ipairs(self.friends_noself) do
 		if not friend:hasSkill("manjuan") then table.insert(available_friends, friend) end

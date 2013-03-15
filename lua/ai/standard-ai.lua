@@ -487,7 +487,7 @@ function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
-sgs.ai_skill_askforyiji = function(self, card_ids)
+sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 	local Shenfen_user
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("ShenfenUsing") then

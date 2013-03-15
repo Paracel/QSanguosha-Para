@@ -311,7 +311,7 @@ bool SPConvertSkill::triggerable(const ServerPlayer *target) const{
     bool available = false;
     foreach (QString to_gen, to_list) {
         const General *gen = Sanguosha->getGeneral(to_gen);
-        if (gen && !Config.value("Ban/Roles", "").toStringList().contains(to_gen)
+        if (gen && !Config.value("Banlist/Roles", "").toStringList().contains(to_gen)
             && !Sanguosha->getBanPackages().contains(gen->getPackage())) {
             available = true;
             break;
@@ -329,8 +329,8 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
         QStringList choicelist;
         foreach (QString to_gen, to_list) {
             const General *gen = Sanguosha->getGeneral(to_gen);
-            if (gen && !Config.value("Ban/Roles", "").toStringList().contains(to_gen)
-                    && !Sanguosha->getBanPackages().contains(gen->getPackage()))
+            if (gen && !Config.value("Banlist/Roles", "").toStringList().contains(to_gen)
+                && !Sanguosha->getBanPackages().contains(gen->getPackage()))
                 choicelist << to_gen;
         }
         QString to_cv;

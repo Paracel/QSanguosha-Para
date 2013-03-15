@@ -72,7 +72,7 @@ function SmartAI:cantbeHurt(player, from)
 	local maxfriendmark = 0
 	local maxenemymark = 0
 	local dyingfriend = 0
-	if player:hasSkill("wuhun") then
+	if player:hasSkill("wuhun") and #(self:getFriendsNoself(player)) > 0 then
 		for _, friend in ipairs(self:getFriends(from)) do
 			local friendmark = friend:getMark("@nightmare")
 			if friendmark > maxfriendmark then maxfriendmark = friendmark end
@@ -114,7 +114,7 @@ function SmartAI:needDeath(player)
 	local maxfriendmark = 0
 	local maxenemymark = 0
 	player = player or self.player
-	if player:hasSkill("wuhun") then
+	if player:hasSkill("wuhun") and #(self:getFriendsNoself(player)) > 0 then
 		for _, aplayer in sgs.qlist(self.room:getAlivePlayers()) do
 			local mark = aplayer:getMark("@nightmare")
 			if self:isFriend(player, aplayer) and player:objectName() ~= aplayer:objectName() then

@@ -270,7 +270,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 	end
 
 	SmartAI.printFEList = function(self)
-		for _, player in ipairs (self.enemies) do
+		for _, player in ipairs(self.enemies) do
 			self.room:writeToConsole("enemy " .. self:getHegGeneralName(player))
 		end
 

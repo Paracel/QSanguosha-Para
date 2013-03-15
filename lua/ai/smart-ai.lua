@@ -753,6 +753,7 @@ end
 function sgs.evaluatePlayerRole(player)
 	if not player then global_room:writeToConsole("Player is empty in role's evaluation!") return end
 	if player:isLord() then return "loyalist" end
+	if sgs.isRolePredictable() then return player:getRole() end
 	if sgs.current_mode_players["loyalist"] == 0 and sgs.current_mode_players["rebel"] == 0 then return "renegade" end
 	if sgs.current_mode_players["loyalist"] == 0 and sgs.current_mode_players["renegade"] == 0 then return "rebel" end
 
@@ -911,6 +912,7 @@ end
 
 function sgs.evaluateRoleTrends(player)
 	if player:isLord() then return "loyalist" end
+	if sgs.isRolePredictable() then return player:getRole() end
 	local max_value = math.max(sgs.role_evaluation[player:objectName()]["loyalist"], sgs.role_evaluation[player:objectName()]["renegade"])
 	max_value = math.max(max_value, sgs.role_evaluation[player:objectName()]["rebel"])
 	local rebel_value = sgs.role_evaluation[player:objectName()]["rebel"]
@@ -937,11 +939,12 @@ function sgs.compareRoleEvaluation(player, first, second)
 	end
 end
 
-function sgs.isRolePredictable()
+function sgs.isRolePredictable(classical)
 	if sgs.GetConfig("RolePredictable", true) then return true end
 	local mode = string.lower(global_room:getMode())
-	if not mode:find("0") or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3")
-		or mode == "06_3v3" or mode == "06_xmode" or mode:find("mini") then return true end
+	local isMini = (mode:find("mini") or mode:find("custom_scenario"))
+	if (not mode:find("0") and not isMini) or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3")
+		or mode == "06_3v3" or mode == "06_xmode" or (not classical and isMini) then return true end
 	return false
 end
 
@@ -1231,7 +1234,7 @@ function SmartAI:objectiveLevel(player)
 
 	if #players == 1 then return 5 end
 
-	if sgs.isRolePredictable() then
+	if sgs.isRolePredictable(true) then
 		if self.lua_ai:isFriend(player) then return -2
 		elseif self.lua_ai:isEnemy(player) then return 5
 		elseif self.lua_ai:relationTo(player) == sgs.AI_Neutrality then
@@ -1399,7 +1402,7 @@ end
 function SmartAI:isFriend(other, another)
 	if not other then self.room:writeToConsole(debug.traceback()) return end
 	if another then return self:isFriend(other) == self:isFriend(another) end
-	if sgs.isRolePredictable() and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isFriend(other) end
+	if sgs.isRolePredictable(true) and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isFriend(other) end
 	if self.player:objectName() == other:objectName() then return true end
 	if self:objectiveLevel(other) < 0 then return true end
 	return false
@@ -1408,7 +1411,7 @@ end
 function SmartAI:isEnemy(other, another)
 	if not other then self.room:writeToConsole(debug.traceback()) return end
 	if another then return self:isFriend(other) ~= self:isFriend(another) end
-	if sgs.isRolePredictable() and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isEnemy(other) end
+	if sgs.isRolePredictable(true) and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isEnemy(other) end
 	if self.player:objectName() == other:objectName() then return false end
 	if self:objectiveLevel(other) > 0 then return true end
 	return false
@@ -1492,7 +1495,7 @@ function SmartAI:updatePlayers(clear_flags)
 	sgs.discard_pile = global_room:getDiscardPile()
 	sgs.draw_pile = global_room:getDrawPile()
 
-	if sgs.isRolePredictable() then
+	if sgs.isRolePredictable(true) then
 		self.friends = {}
 		self.friends_noself = {}
 		local friends = sgs.QList2Table(self.lua_ai:getFriends())

@@ -13,7 +13,7 @@ General::General(Package *package, const QString &name, const QString &kingdom,
       hidden(hidden), never_shown(never_shown)
 {
     static QChar lord_symbol('$');
-    if (name.contains(lord_symbol)) {
+    if (name.endsWith(lord_symbol)) {
         QString copy = name;
         copy.remove(lord_symbol);
         lord = true;

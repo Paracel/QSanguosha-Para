@@ -94,6 +94,8 @@ sgs.ai_skill_playerchosen.songwei = function(self, targets)
 	return targets[1]
 end
 
+sgs.ai_playerchosen_intention.songwei = -50
+
 sgs.ai_card_intention.FangzhuCard = function(self, card, from, tos)
 	if tos[1]:hasSkill("manjuan") and tos[1]:getPhase() == sgs.Player_NotActive then sgs.updateIntention(from, tos[1], 80) end
 	if from:getLostHp() < 3 then
@@ -727,6 +729,8 @@ sgs.ai_skill_playerchosen.baonue = function(self, targets)
 	end
 	return targets[1]
 end
+
+sgs.ai_playerchosen_intention.baonue = -50
 
 sgs.jiuchi_suit_value = {
 	spade = 5,

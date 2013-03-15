@@ -4524,6 +4524,7 @@ end
 function SmartAI:needToThrowArmor(player)
 	player = player or self.player
 	if not player:getArmor() or not player:hasArmorEffect(player:getArmor():objectName()) then return false end
+	if self:evaluateArmor(player:getArmor(), player) <= 0 then return true end
 	if player:hasSkills("bazhen|yizhong") then return true end
 	if player:hasArmorEffect("silver_lion") and player:isWounded() then
 		if self:isFriend(player) then

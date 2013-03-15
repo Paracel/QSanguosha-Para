@@ -1449,8 +1449,10 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	local enemies = {}
 	if #self.enemies == 0 and self:getOverflow() > 0 then
+		local lord = self.room:getLord()
+		local sb_liubei = lord and lord:hasLordSkill("shichou")
 		for _, player in ipairs(players) do
-			if sgs.evaluateRoleTrends(player) ~= "loyalist" and not player:isLord() then table.insert(enemies, player) end
+			if not player:isLord() and sgs.evaluateRoleTrends(player) ~= "loyalist" and not (sb_liubei and player:getKingdom() == "shu") then table.insert(enemies, player) end
 		end
 		enemies = self:exclude(enemies, card)
 		self:sort(enemies, "defense")
@@ -2018,7 +2020,8 @@ function SmartAI:useCardIndulgence(card, use)
 	local enemies = {}
 	if #self.enemies == 0 then
 		if sgs.turncount == 0 and self.role == "lord" and not sgs.isRolePredictable() 
-			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 30 then
+			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 30
+			and not (self.player:hasLordSkill("shichou") and self.player:getNextAlive():getKingdom() == "shu") then
 			enemies = self:exclude({ self.player:getNextAlive() }, card)
 		end
 	else

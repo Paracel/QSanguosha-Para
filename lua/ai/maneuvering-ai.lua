@@ -105,8 +105,8 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 		if card:getId() ~= slash:getId() then return nil end
 	end
 
-	if not use.to then return nil end
-	if use.to:hasSkill("zhenlie") then return nil end
+	if not use.to or use.to:isEmpty() then return nil end
+	if use.to:first():hasSkill("zhenlie") then return nil end
 	if not sgs.Analeptic_IsAvailable(self.player) then return nil end
 
 	local cards = self.player:getHandcards()

@@ -4239,29 +4239,33 @@ function SmartAI:getAoeValue(card, player)
 	return good - bad
 end
 
-function SmartAI:hasTrickEffective(card, player)
-	if player then
-		if self.room:isProhibited(self.player, player, card) then return false end
-		if player:getMark("@late") > 0 or player:hasSkill("noswuyan") then
-			if card and not card:isKindOf("DelayedTrick") then return false end
+function SmartAI:hasTrickEffective(card, to, from)
+	to = to or self.player
+	from = from or self.room:getCurrent()
+	if self.room:isProhibited(to, from, card) then return false end
+	if to:getMark("@late") > 0 and not card:isKindOf("DelayedTrick") then return false end
+	if to:getPile("dream"):length() > 0 and to:isLocked(card) then return false end
+
+	if to:objectName() ~= from:objectName() then
+		if from:hasSkill("noswuyan") or to:hasSkill("noswuyan") then
+			if card:isKindOf("TrickCard") and not card:isKindOf("DelayedTrick") then
+				return false
+			end
 		end
-		if player:hasSkill("wuyan") then
-			if card and (card:isKindOf("Duel") or card:isKindOf("FireAttack")) then return false end
+	end
+
+	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
+		if card:isKindOf("TrickCard") and 
+		  (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+			return false
 		end
-		if (player:getMark("@fog") > 0 or player:getMark("@fenyong") > 0)
-			and card and (card:isKindOf("Duel") or card:isKindOf("FireAttack")) then return false end
-		if player:getPile("dream"):length() > 0 and player:isLocked(card) then return false end
-	else
-		if self.player:hasSkill("wuyan") then
-			if card:isKindOf("TrickCard")
-				and (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
-			return false end
-		end
-		if self.player:hasSkill("noswuyan") then
-			if card:isKindOf("TrickCard")
-				and not (card:isKindOf("DelayedTrick") or card:isKindOf("GodSalvation") or card:isKindOf("AmazingGrace")) then
-			return false end
-		end
+	end
+
+	local nature = sgs.DamageStruct_Normal
+	if card:isKindOf("FireAttack") then nature = sgs.DamageStruct_Fire end
+	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault"))
+		and not self:damageIsEffective(to, nature, from) then
+		return false
 	end
 	return true
 end

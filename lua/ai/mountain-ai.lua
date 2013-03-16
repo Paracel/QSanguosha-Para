@@ -601,7 +601,7 @@ zhiba_pindian_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse("@ZhibaCard=.")
 end
 
-sgs.ai_use_priority.ZhibaCard = 0.8
+sgs.ai_use_priority.ZhibaCard = 0
 
 sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 	local lords = {}

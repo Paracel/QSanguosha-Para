@@ -4,7 +4,7 @@ end
 
 sgs.ai_card_intention.ThunderSlash = sgs.ai_card_intention.Slash
 
-sgs.ai_use_value.ThunderSlash = 4.5
+sgs.ai_use_value.ThunderSlash = 4.55
 sgs.ai_keep_value.ThunderSlash = 2.5
 sgs.ai_use_priority.ThunderSlash = 2.3
 
@@ -14,7 +14,7 @@ end
 
 sgs.ai_card_intention.FireSlash = sgs.ai_card_intention.Slash
 
-sgs.ai_use_value.FireSlash = 4.4
+sgs.ai_use_value.FireSlash = 4.6
 sgs.ai_keep_value.FireSlash = 2.6
 sgs.ai_use_priority.FireSlash = 2.3
 

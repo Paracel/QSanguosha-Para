@@ -3538,44 +3538,40 @@ void Room::notifySkillInvoked(ServerPlayer *player, const QString &skill_name) {
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
 }
 
-bool Room::broadcastSkillInvoke(const QString &skill_name, const QString &category) {
+void Room::broadcastSkillInvoke(const QString &skill_name, const QString &category) {
     Json::Value args;
     args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = toJsonString(category);
     args[3] = -1;
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
-    return true;
 }
 
-bool Room::broadcastSkillInvoke(const QString &skill_name) {
+void Room::broadcastSkillInvoke(const QString &skill_name) {
     Json::Value args;
     args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = true;
     args[3] = -1;
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
-    return true;
 }
 
-bool Room::broadcastSkillInvoke(const QString &skill_name, int type) {
+void Room::broadcastSkillInvoke(const QString &skill_name, int type) {
     Json::Value args;
     args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = true;
     args[3] = type;
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
-    return true;
 }
 
-bool Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type) {
+void Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type) {
     Json::Value args;
     args[0] = QSanProtocol::S_GAME_EVENT_PLAY_EFFECT;
     args[1] = toJsonString(skill_name);
     args[2] = isMale;
     args[3] = type;
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
-    return true;
 }
 
 void Room::doLightbox(const QString &lightboxName, int duration) {

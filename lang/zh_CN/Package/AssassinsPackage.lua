@@ -13,7 +13,7 @@ return {
 
 	["#liuxie"] = "受困天子",
 	["liuxie"] = "刘协",
-	["illustrator:liuxie"] = "Yi章",
+	["illustrator:liuxie"] = "LiuHeng",
 	["tianming"] = "天命",
 	[":tianming"] = "每当你被指定为【杀】的目标时，你可以弃置两张牌，然后摸两张牌：若全场唯一的体力值最多的角色不是你，该角色也可以弃置两张牌，然后摸两张牌。",
 	["mizhao"] = "密诏",

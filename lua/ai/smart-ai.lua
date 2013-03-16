@@ -2029,7 +2029,7 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.updateIntention(caiwenji, player, intention)
 		end
 	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
-		self.room:setPlayerFlag(player, "PlayPhaseNotSkipped")
+		player:setFlags("PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 

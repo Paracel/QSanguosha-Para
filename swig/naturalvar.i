@@ -21,7 +21,7 @@ SWIG_arg ++;
 %naturalvar QString;
 
 %typemap(in, checkfn = "lua_isstring") QString
-%{ $1 = lua_tostring(L,$input); %}
+%{ $1 = lua_tostring(L, $input); %}
 
 %typemap(out) QString
 %{ lua_pushstring(L, $1.toUtf8()); SWIG_arg++; %}

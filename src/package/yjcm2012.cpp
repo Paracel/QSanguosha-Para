@@ -200,11 +200,12 @@ public:
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
         if (target->askForSkillInvoke(objectName(), QVariant::fromValue(damage))) {
             target->drawCards(1);
-            if (target->isKongcheng())
-                return;
 
             Room *room = target->getRoom();
             room->broadcastSkillInvoke(objectName());
+
+            if (target->isKongcheng())
+                return;
             room->showAllCards(target);
 
             QList<const Card *> cards = target->getHandcards();

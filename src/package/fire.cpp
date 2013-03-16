@@ -486,8 +486,7 @@ public:
 
     virtual bool isEnabledAtNullification(const ServerPlayer *player) const{
         foreach (const Card *card, player->getHandcards()) {
-            if (card->isBlack() || card->objectName() == "nullification")
-                return true;
+            if (card->isBlack()) return true;
         }
         return false;
     }

@@ -1351,17 +1351,12 @@ int Longhun::getEffectIndex(const ServerPlayer *player, const Card *card) const{
 }
 
 bool Longhun::isEnabledAtNullification(const ServerPlayer *player) const{
-    int n = getEffHp(player);
-    int count = 0;
+    int n = getEffHp(player), count = 0;
     foreach (const Card *card, player->getHandcards() + player->getEquips()) {
-        if (card->objectName() == "nullification")
-            return true;
-
-        if (card->getSuit() == Card::Spade)
-            count++;
+        if (card->getSuit() == Card::Spade) count++;
+        if (count >= n) return true;
     }
-
-    return count >= n;
+    return false;
 }
 
 int Longhun::getEffHp(const Player *zhaoyun) const{

@@ -2529,7 +2529,8 @@ function SmartAI:askForCard(pattern, prompt, data)
 		card = sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Jink") or "."
 		if card == "." then sgs.card_lack[self.player:objectName()]["Jink"] = 1 end
 	end
-	return card
+	if not card then card = self.lua_ai:askForCard(pattern, prompt, data) end
+	return card and card:toString() or "."
 end
 
 function SmartAI:askForUseCard(pattern, prompt, method)

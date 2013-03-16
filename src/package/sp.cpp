@@ -802,29 +802,44 @@ public:
         return PhaseChangeSkill::triggerable(target)
                && target->getPhase() == Player::Start
                && !target->isKongcheng()
-               && !target->getJudgingArea().isEmpty();
+               && hasDelayedTrick(target);
     }
 
     virtual bool onPhaseChange(ServerPlayer *target) const{
-        do {
-            if (!target->askForSkillInvoke(objectName()))
-                return false;
-
-            Room *room = target->getRoom();
-            int card_id = room->askForCardChosen(target, target, "j", objectName());
-            const Card *card = Sanguosha->getCard(card_id);
-
-            QString suit_str = card->getSuitString();
-            QString pattern = QString(".%1").arg(suit_str.at(0).toUpper());
-            QString prompt = QString("@xiuluo:::%1").arg(suit_str);
-            if (room->askForCard(target, pattern, prompt)) {
-                room->broadcastSkillInvoke(objectName());
-                room->throwCard(card, NULL);
-            } else {
-                break;
+        Room *room = target->getRoom();
+        while (hasDelayedTrick(target) && !target->isKongcheng()) {
+            QStringList suits;
+            foreach (const Card *jcard, target->getJudgingArea()) {
+                if (!suits.contains(jcard->getSuitString()))
+                    suits << jcard->getSuitString();
             }
-        } while(!target->getCards("j").isEmpty());
 
+            const Card *card = room->askForCard(target, QString(".|%1|.|hand").arg(suits.join(",")),
+                                                "@xiuluo", QVariant(), objectName());
+            if (!card || !hasDelayedTrick(target)) break;
+            room->broadcastSkillInvoke(objectName());
+
+            QList<int> avail_list, other_list;
+            foreach (const Card *jcard, target->getJudgingArea()) {
+                if (jcard->isKindOf("YanxiaoCard")) continue;
+                if (jcard->getSuit() == card->getSuit())
+                    avail_list << jcard->getEffectiveId();
+                else
+                    other_list << jcard->getEffectiveId();
+            }
+            room->fillAG(avail_list + other_list, NULL, other_list);
+            int id = room->askForAG(target, avail_list, false, objectName());
+            room->broadcastInvoke("clearAG");
+            room->throwCard(id, NULL);
+        }
+
+        return false;
+    }
+
+private:
+    static bool hasDelayedTrick(const ServerPlayer *target) {
+        foreach (const Card *card, target->getJudgingArea())
+            if (!card->isKindOf("YanxiaoCard")) return true;
         return false;
     }
 };

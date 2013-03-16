@@ -97,7 +97,7 @@ return {
 	["illustrator:shenlvbu2"] = "LiuHeng",
 	["xiuluo"] = "修罗",
 	[":xiuluo"] = "回合开始阶段开始时，你可以弃置一张与判定区内延时类锦囊牌花色相同的手牌：若如此做，你弃置该延时类锦囊牌。",
-	["@xiuluo"] = "请弃置一张花色相同的手牌",
+	["@xiuluo"] = "请弃置一张与判定区某一张牌花色相同的手牌",
 	["shenwei"] = "神威",
 	[":shenwei"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸两张牌。你的手牌上限+2。",
 	["shenji"] = "神戟",

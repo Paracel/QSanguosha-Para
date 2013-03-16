@@ -1181,7 +1181,7 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const Q
 
 int Room::askForAG(ServerPlayer *player, const QList<int> &card_ids, bool refusable, const QString &reason) {
     notifyMoveFocus(player, S_COMMAND_AMAZING_GRACE);
-    Q_ASSERT(card_ids.length()>0);
+    Q_ASSERT(card_ids.length() > 0);
 
     int card_id = -1;
     if (card_ids.length() == 1 && !refusable)

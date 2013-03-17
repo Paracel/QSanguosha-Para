@@ -2484,6 +2484,21 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                     break;
                 }
             }
+        } else if (sentence.startsWith(".ShowHandCards")) {
+            QString split("----------");
+            split = split.toUtf8().toBase64();
+            speakCommand(player, split);
+            foreach (ServerPlayer *p, m_alivePlayers) {
+                if (!p->isKongcheng()) {
+                    QStringList handcards;
+                    foreach (const Card *card, p->getHandcards())
+                        handcards << QString("<b>%1</b>")
+                                             .arg(Sanguosha->getEngineCard(card->getId())->getLogName());
+                    QString hand = handcards.join(", ");
+                    speakCommand(p, hand.toUtf8().toBase64());
+                }
+            }
+            speakCommand(player, split);
         } else if (sentence.startsWith(".ShowHandCards=")) {
             QString name = sentence.mid(15);
             foreach (ServerPlayer *p, m_alivePlayers) {

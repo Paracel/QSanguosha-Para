@@ -948,7 +948,7 @@ void ServerPlayer::exchangeFreelyFromPrivatePile(const QString &skill_name, cons
     while (!pile.isEmpty()) {
         room->fillAG(pile, this);
         int card_id = room->askForAG(this, pile, true, skill_name);
-        invoke("clearAG");
+        room->clearAG(this);
         if (card_id == -1) break;
 
         pile.removeOne(card_id);

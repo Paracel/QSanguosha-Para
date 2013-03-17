@@ -50,33 +50,31 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["arrangeSeats"] = &Client::arrangeSeats;
     callbacks["warn"] = &Client::warn;
 
-    callbacks["startGame"] = &Client::startGame;
+    m_callbacks[S_COMMAND_GAME_START] = &Client::startGame;
     m_callbacks[S_COMMAND_GAME_OVER] = &Client::gameOver;
 
-    callbacks["hpChange"] = &Client::hpChange;
-    callbacks["maxhpChange"] = &Client::maxhpChange;
+    m_callbacks[S_COMMAND_CHANGE_HP] = &Client::hpChange;
+    m_callbacks[S_COMMAND_CHANGE_MAXHP] = &Client::maxhpChange;
     callbacks["killPlayer"] = &Client::killPlayer;
     callbacks["revivePlayer"] = &Client::revivePlayer;
     m_callbacks[S_COMMAND_SHOW_CARD] = &Client::showCard;
     m_callbacks[S_COMMAND_UPDATE_CARD] = &Client::updateCard;
-    //callbacks["showCard"] = &Client::showCard;
-    callbacks["setMark"] = &Client::setMark;
+    m_callbacks[S_COMMAND_SET_MARK] = &Client::setMark;
     m_callbacks[S_COMMAND_LOG_SKILL] = &Client::log;
     callbacks["speak"] = &Client::speak;
     callbacks["attachSkill"] = &Client::attachSkill;
     m_callbacks[S_COMMAND_MOVE_FOCUS] = &Client::moveFocus; 
-    callbacks["setEmotion"] = &Client::setEmotion;
+    m_callbacks[S_COMMAND_SET_EMOTION] = &Client::setEmotion;
     m_callbacks[S_COMMAND_INVOKE_SKILL] = &Client::skillInvoked;
     m_callbacks[S_COMMAND_SHOW_ALL_CARDS] = &Client::showAllCards;
     m_callbacks[S_COMMAND_SKILL_GONGXIN] = &Client::askForGongxin;
     m_callbacks[S_COMMAND_LOG_EVENT] = &Client::handleGameEvent;
-    callbacks["addHistory"] = &Client::addHistory;
+    m_callbacks[S_COMMAND_ADD_HISTORY] = &Client::addHistory;
     callbacks["animate"] = &Client::animate;
     callbacks["setScreenName"] = &Client::setScreenName;
     callbacks["setFixedDistance"] = &Client::setFixedDistance;
-    callbacks["cardLimitation"] = &Client::cardLimitation;
+    m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
     callbacks["jilei"] = &Client::jilei;
-    callbacks["cardLock"] = &Client::cardLock;
     callbacks["setNullification"] = &Client::setNullification;
 
     callbacks["updateStateItem"] = &Client::updateStateItem;
@@ -86,7 +84,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_SET_PROPERTY] = &Client::updateProperty;
     callbacks["clearPile"] = &Client::resetPiles;
     callbacks["setPileNumber"] = &Client::setPileNumber;
-    callbacks["setCardFlag"] = &Client::setCardFlag;
+    m_callbacks[S_COMMAND_CARD_FLAG] = &Client::setCardFlag;
     callbacks["playSystemAudioEffect"] = &Client::playSystemAudioEffect;
 
     // interactive methods    
@@ -116,9 +114,9 @@ Client::Client(QObject *parent, const QString &filename)
     m_interactions[S_COMMAND_CHOOSE_ROLE_3V3] = &Client::askForRole3v3;
     m_interactions[S_COMMAND_SURRENDER] = &Client::askForSurrender;
 
-    callbacks["fillAG"] = &Client::fillAG;    
-    callbacks["takeAG"] = &Client::takeAG;
-    callbacks["clearAG"] = &Client::clearAG;
+    m_callbacks[S_COMMAND_FILL_AMAZING_GRACE] = &Client::fillAG;
+    m_callbacks[S_COMMAND_TAKE_AMAZING_GRACE] = &Client::takeAG;
+    m_callbacks[S_COMMAND_CLEAR_AMAZING_GRACE] = &Client::clearAG;
 
     // 3v3 mode & 1v1 mode
     callbacks["fillGenerals"] = &Client::fillGenerals;
@@ -450,7 +448,7 @@ void Client::loseCards(const Json::Value &arg) {
 }
 
 void Client::onPlayerChooseGeneral(const QString &item_name) {
-    setStatus(Client::NotActive);
+    setStatus(NotActive);
     if (!item_name.isEmpty()) {
         replyToServer(S_COMMAND_CHOOSE_GENERAL, toJsonString(item_name));        
         Sanguosha->playSystemAudioEffect("choose-item");
@@ -591,7 +589,7 @@ void Client::activate(const Json::Value &playerId) {
     setStatus(toQString(playerId) == Self->objectName() ? Playing : NotActive);
 }
 
-void Client::startGame(const QString &) {
+void Client::startGame(const Json::Value &) {
     Sanguosha->registerRoom(this);
     _m_roomState.reset();
 
@@ -601,38 +599,26 @@ void Client::startGame(const QString &) {
     emit game_started();
 }
 
-void Client::hpChange(const QString &change_str) {
-    QRegExp rx("(.+):(-?\\d+)([FTL]*)");
+void Client::hpChange(const Json::Value &change_str) {
+    if (!change_str.isArray() || change_str.size() != 3) return;
+    if (!change_str[0].isString() || !change_str[1].isInt() || !change_str[2].isInt()) return;
 
-    if (!rx.exactMatch(change_str))
-        return;
+    QString who = toQString(change_str[0]);
+    int delta = change_str[1].asInt();
 
-    QStringList texts = rx.capturedTexts();
-    QString who = texts.at(1);
-    int delta = texts.at(2).toInt();
-    QString nature_str = texts.at(3);
+    int nature_index = change_str[2].asInt();
+    DamageStruct::Nature nature = DamageStruct::Normal;
+    if (nature_index > 0) nature = (DamageStruct::Nature)nature_index;
 
-    DamageStruct::Nature nature;
-    if (nature_str == "F")
-        nature = DamageStruct::Fire;
-    else if (nature_str == "T")
-        nature = DamageStruct::Thunder;
-    else
-        nature = DamageStruct::Normal;
-
-    emit hp_changed(who, delta, nature, nature_str == "L");
+    emit hp_changed(who, delta, nature, nature_index == -1);
 }
 
-void Client::maxhpChange(const QString &change_str) {
-    QRegExp rx("(.+):(-?\\d+)");
+void Client::maxhpChange(const Json::Value &change_str) {
+    if (!change_str.isArray() || change_str.size() != 2) return;
+    if (!change_str[0].isString() || !change_str[1].isInt()) return;
 
-    if (!rx.exactMatch(change_str))
-        return;
-
-    QStringList texts = rx.capturedTexts();
-    QString who = texts.at(1);
-    int delta = texts.at(2).toInt();
-
+    QString who = toQString(change_str[0]);
+    int delta = change_str[1].asInt();
     emit maxhp_changed(who, delta);
 }
 
@@ -654,28 +640,18 @@ Client::Status Client::getStatus() const{
     return status;
 }
 
-void Client::cardLimitation(const QString &limit_str) {
-    if (limit_str == "$1")
-        Self->clearCardLimitation(true);
-    else if (limit_str == "$0")
-        Self->clearCardLimitation(false);
-    else {
-        QString _limit_str = limit_str;
-        bool remove = false;
-        if (limit_str.startsWith('-')) {
-            remove = true;
-            _limit_str = limit_str.mid(1);
-        }
-        QRegExp rx("(.+):(.+):([01])");
+void Client::cardLimitation(const Json::Value &limit) {
+    if (!limit.isArray() || limit.size() != 4) return;
 
-        if (!rx.exactMatch(_limit_str))
-            return;
-
-        QStringList texts = rx.capturedTexts();
-        QString limit_list = texts.at(1);
-        QString pattern = texts.at(2);
-        bool single_turn = (texts.at(3) == "1");
-        if (!remove)
+    bool set = limit[0].asBool();
+    bool single_turn = limit[3].asBool();
+    if (limit[1].isNull() && limit[2].isNull()) {
+        Self->clearCardLimitation(single_turn);
+    } else {
+        if (!limit[1].isString() || !limit[2].isString()) return;
+        QString limit_list = toQString(limit[1]);
+        QString pattern = toQString(limit[2]);
+        if (set)
             Self->setCardLimitation(limit_list, pattern, single_turn);
         else
             Self->removeCardLimitation(limit_list, pattern);
@@ -684,10 +660,6 @@ void Client::cardLimitation(const QString &limit_str) {
 
 void Client::jilei(const QString &jilei_str) {
     Self->jilei(jilei_str);
-}
-
-void Client::cardLock(const QString &card_str) {
-    Self->setCardLocked(card_str);
 }
 
 void Client::setNullification(const QString &str) {
@@ -975,7 +947,12 @@ void Client::speakToServer(const QString &text) {
     request(QString("speak %1").arg(QString(data)));
 }
 
-void Client::addHistory(const QString &add_str) {
+void Client::addHistory(const Json::Value &history) {
+    if (!history.isArray() || history.size() != 2) return;
+    if (!history[0].isString() || !history[1].isInt()) return;
+
+    QString add_str = toQString(history[0]);
+    int times = history[1].asInt();
     if (add_str == "pushPile") {
         emit card_used();
         return;
@@ -984,20 +961,7 @@ void Client::addHistory(const QString &add_str) {
         return;
     }
 
-    QRegExp rx("(.+):(-?\\d+)?");
-    if (rx.exactMatch(add_str)) {
-        QStringList texts = rx.capturedTexts();
-        QString card_name = texts.at(1);
-        QString times_str = texts.at(2);
-
-        int times = 1;
-        if (!times_str.isEmpty()) {
-            //times_str.remove(QChar('@'));
-            times = times_str.toInt();
-        }
-
-        Self->addHistory(card_name, times);
-    }
+    Self->addHistory(add_str, times);
 }
 
 int Client::alivePlayerCount() const{
@@ -1089,16 +1053,13 @@ void Client::setPileNumber(const QString &pile_str) {
     updatePileNum();
 }
 
-void Client::setCardFlag(const QString &pattern_str) {
-    QRegExp rx("(\\w+):(.+)");
-    if (!rx.exactMatch(pattern_str))
-        return;
+void Client::setCardFlag(const Json::Value &pattern_str) {
+    if (!pattern_str.isArray() || pattern_str.size() != 2) return;
+    if (!pattern_str[0].isInt() || !pattern_str[1].isString()) return;
 
-    QStringList texts = rx.capturedTexts();
-    QString card_str = texts.at(1);
-    QString object = texts.at(2);
-
-    Sanguosha->getCard(card_str.toInt())->setFlags(object);
+    int id = pattern_str[0].asInt();
+    QString flag = toQString(pattern_str[1]);
+    Sanguosha->getCard(id)->setFlags(flag);
 }
 
 void Client::playSystemAudioEffect(const QString &effect_str) {
@@ -1314,16 +1275,13 @@ void Client::askForDirection(const Json::Value &) {
 }
 
 
-void Client::setMark(const QString &mark_str) {
-    QRegExp rx("(\\w+)\\.(@?[\\w-]+)=(\\d+)");
+void Client::setMark(const Json::Value &mark_str) {
+    if (!mark_str.isArray() || mark_str.size() != 3) return;
+    if (!mark_str[0].isString() || !mark_str[1].isString() || !mark_str[2].isInt()) return;
 
-    if (!rx.exactMatch(mark_str))
-        return;
-
-    QStringList texts = rx.capturedTexts();
-    QString who = texts.at(1);
-    QString mark = texts.at(2);
-    int value = texts.at(3).toInt();
+    QString who = toQString(mark_str[0]);
+    QString mark = toQString(mark_str[1]);
+    int value = mark_str[2].asInt();
 
     ClientPlayer *player = getPlayer(who);
     player->setMark(mark, value);
@@ -1352,45 +1310,33 @@ void Client::onPlayerDiscardCards(const Card *cards) {
     setStatus(NotActive);
 }
 
-void Client::fillAG(const QString &cards_str) {
-    QStringList list = cards_str.split(":");
-    QStringList cards = list.first().split("+");
-    QList<int> card_ids;
-    foreach (QString card, cards)
-        card_ids << card.toInt();
-
-    QList<int> disabled_ids = QList<int>();
-    if (list.length() == 2) {
-        QStringList disabled = list.last().split("+");
-        foreach (QString card, disabled)
-            disabled_ids << card.toInt();
-    }
-
+void Client::fillAG(const Json::Value &cards_str) {
+    if (!cards_str.isArray() || cards_str.size() != 2) return;
+    QList<int> card_ids, disabled_ids;
+    tryParse(cards_str[0], card_ids);
+    tryParse(cards_str[1], disabled_ids);
     emit ag_filled(card_ids, disabled_ids);
 }
 
-void Client::takeAG(const QString &take_str) {
-    QRegExp rx("(.+):(\\d+)");
-    if (!rx.exactMatch(take_str))
-        return;
+void Client::takeAG(const Json::Value &take_str) {
+    if (!take_str.isArray() || take_str.size() != 2) return;
+    if (!take_str[1].isInt()) return;
 
-    QStringList words = rx.capturedTexts();
-    QString taker_name = words.at(1);
-    int card_id = words.at(2).toInt();
-
+    int card_id = take_str[1].asInt();
     const Card *card = Sanguosha->getCard(card_id);
-    if (taker_name != ".") {
-        ClientPlayer *taker = getPlayer(taker_name);
-        taker->addCard(card, Player::PlaceHand);
-        emit ag_taken(taker, card_id);
-    } else {
+
+    if (take_str[0].isNull()) {
         discarded_list.prepend(card);
         updatePileNum();
         emit ag_taken(NULL, card_id);
+    } else {
+        ClientPlayer *taker = getPlayer(toQString(take_str[0]));
+        taker->addCard(card, Player::PlaceHand);
+        emit ag_taken(taker, card_id);
     }
 }
 
-void Client::clearAG(const QString &) {
+void Client::clearAG(const Json::Value &) {
     emit ag_cleared();
 }
 
@@ -1659,10 +1605,12 @@ void Client::moveFocus(const Json::Value &focus) {
     emit focus_moved(players, countdown);
 }
 
-void Client::setEmotion(const QString &set_str) {
-    QStringList words = set_str.split(":");
-    QString target_name = words.at(0);
-    QString emotion = words.at(1);
+void Client::setEmotion(const Json::Value &set_str) {
+    if (!set_str.isArray() || set_str.size() != 2) return;
+    if (!set_str[0].isString() || !set_str[1].isString()) return;
+
+    QString target_name = toQString(set_str[0]);
+    QString emotion = toQString(set_str[1]);
 
     emit emotion_set(target_name, emotion);
 }

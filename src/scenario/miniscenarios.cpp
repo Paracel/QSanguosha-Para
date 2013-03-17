@@ -91,7 +91,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             } else {
                 room->moveCardTo(Sanguosha->getCard(id), NULL, Player::DrawPile, true);
             }
-            room->broadcastInvoke("addHistory", "pushPile");
+            room->addPlayerHistory(NULL, "pushPile");
         }
         if (m_fixedDrawCards.length() > 0 && ex_options.contains(S_EXTRA_OPTION_REST_IN_DISCARD_PILE)) {
             DummyCard *dummy = new DummyCard;

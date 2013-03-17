@@ -954,7 +954,7 @@ public:
 
         room->fillAG(powers, zhonghui);
         int power = room->askForAG(zhonghui, powers, false, "nospaiyi");
-        zhonghui->invoke("clearAG");
+        room->clearAG(zhonghui);
 
         if (power == -1)
             power = powers.first();

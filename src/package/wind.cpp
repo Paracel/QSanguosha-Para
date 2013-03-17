@@ -430,7 +430,7 @@ public:
 
                 buqu.removeOne(card_id);
                 room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
-                room->broadcastInvoke("clearAG");
+                room->clearAG();
             }
         }
     }

@@ -196,7 +196,7 @@ public:
             }
         }
 
-        room->broadcastInvoke("clearAG");
+        room->clearAG();
 
         return true;
     }
@@ -698,7 +698,7 @@ public:
         for (int i = 0; i < n; i++) {
             room->fillAG(stars, shenzhuge);
             int card_id = room->askForAG(shenzhuge, stars, false, "qixing-discard");
-            shenzhuge->invoke("clearAG");
+            room->clearAG(shenzhuge);
             stars.removeOne(card_id);
             CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), skillName, QString());
             room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
@@ -1021,8 +1021,7 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
 
     QString choice = room->askForChoice(shensimayi, "jilve", choices.join("+"));
     if (choice == "cancel") {
-        shensimayi->addHistory("JilveCard", -1);
-        card_use.from->invoke("addHistory", "JilveCard:-1");
+        room->addPlayerHistory(shensimayi, "JilveCard", -1);
         return;
     }
 

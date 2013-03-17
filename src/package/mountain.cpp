@@ -375,7 +375,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     else {
         room->fillAG(fields, dengai);
         card_id = room->askForAG(dengai, fields, false, "jixi");
-        dengai->invoke("clearAG");
+        room->clearAG(dengai);
 
         if (card_id == -1)
             return;
@@ -855,7 +855,7 @@ public:
 
             cards.removeOne(to_back);
 
-            erzhang->invoke("clearAG");
+            room->clearAG(erzhang);
 
             CardsMoveStruct move;
             move.card_ids = cards;

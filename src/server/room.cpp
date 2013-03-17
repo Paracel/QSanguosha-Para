@@ -1280,6 +1280,24 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
     return result;
 }
 
+void Room::addPlayerHistory(ServerPlayer *player, const QString &key, int times) {
+    if (player) {
+        if (key == ".")
+            player->clearHistory();
+        else
+            player->addHistory(key, times);
+    }
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(key);
+    arg[1] = times;
+
+    if (player)
+        doNotify(player, S_COMMAND_ADD_HISTORY, arg);
+    else
+        doBroadcastNotify(S_COMMAND_ADD_HISTORY, arg);
+}
+
 void Room::setPlayerFlag(ServerPlayer *player, const QString &flag) {
     player->setFlags(flag);
     broadcastProperty(player, "flags", flag);
@@ -1301,7 +1319,12 @@ void Room::setPlayerProperty(ServerPlayer *player, const char *property_name, co
 
 void Room::setPlayerMark(ServerPlayer *player, const QString &mark, int value) {
     player->setMark(mark, value);
-    broadcastInvoke("setMark", QString("%1.%2=%3").arg(player->objectName()).arg(mark).arg(value));
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(player->objectName());
+    arg[1] = toJsonString(mark);
+    arg[2] = value;
+    doBroadcastNotify(S_COMMAND_SET_MARK, arg);
 }
 
 void Room::addPlayerMark(ServerPlayer *player, const QString &mark, int add_num) {
@@ -1321,25 +1344,54 @@ void Room::removePlayerMark(ServerPlayer *player, const QString &mark, int remov
 void Room::setPlayerCardLimitation(ServerPlayer *player, const QString &limit_list,
                                    const QString &pattern, bool single_turn) {
     player->setCardLimitation(limit_list, pattern, single_turn);
-    player->invoke("cardLimitation", QString("%1:%2:%3").arg(limit_list).arg(pattern)
-                                                        .arg(single_turn ? "1" : "0"));
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = true;
+    arg[1] = toJsonString(limit_list);
+    arg[2] = toJsonString(pattern);
+    arg[3] = single_turn;
+    doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
 void Room::removePlayerCardLimitation(ServerPlayer *player, const QString &limit_list,
                                    const QString &pattern) {
     player->removeCardLimitation(limit_list, pattern);
-    player->invoke("cardLimitation", QString("-%1:%2:%3").arg(limit_list).arg(pattern)
-                                                         .arg("0"));
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = false;
+    arg[1] = toJsonString(limit_list);
+    arg[2] = toJsonString(pattern);
+    arg[3] = false;
+    doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
 void Room::clearPlayerCardLimitation(ServerPlayer *player, bool single_turn) {
     player->clearCardLimitation(single_turn);
-    player->invoke("cardLimitation", single_turn ? "$1" : "$0");
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = true;
+    arg[1] = Json::Value::null;
+    arg[2] = Json::Value::null;
+    arg[3] = single_turn;
+    doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
 void Room::setPlayerCardLock(ServerPlayer *player, const QString &name) {
     player->setCardLocked(name);
-    player->invoke("cardLock", name);
+
+    static QChar unset_symbol('-');
+    bool set = true;
+    QString copy = name;
+    if (name.startsWith(unset_symbol)) {
+        set = false;
+        copy = name.mid(1);
+    }
+    Json::Value arg(Json::arrayValue);
+    arg[0] = set;
+    arg[1] = toJsonString("use,response");
+    arg[2] = toJsonString(copy);
+    arg[3] = false;
+    doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
 void Room::setPlayerJilei(ServerPlayer *player, const QString &name) {
@@ -1360,11 +1412,14 @@ void Room::setCardFlag(int card_id, const QString &flag, ServerPlayer *who) {
     if (flag.isEmpty()) return;
 
     Sanguosha->getCard(card_id)->setFlags(flag);
-    QString pattern = QString::number(card_id) + ":" + flag;
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = card_id;
+    arg[1] = toJsonString(flag);
     if (who)
-        who->invoke("setCardFlag", pattern);
+        doNotify(who, S_COMMAND_CARD_FLAG, arg);
     else
-        broadcastInvoke("setCardFlag", pattern);
+        doBroadcastNotify(S_COMMAND_CARD_FLAG, arg);
 }
 
 void Room::clearCardFlag(const Card *card, ServerPlayer *who) {
@@ -1377,11 +1432,13 @@ void Room::clearCardFlag(const Card *card, ServerPlayer *who) {
 void Room::clearCardFlag(int card_id, ServerPlayer *who) {
     Sanguosha->getCard(card_id)->clearFlags();
 
-    QString pattern = QString::number(card_id) + ":.";
+    Json::Value arg(Json::arrayValue);
+    arg[0] = card_id;
+    arg[1] = toJsonString(".");
     if (who)
-        who->invoke("setCardFlag", pattern);
+        doNotify(who, S_COMMAND_CARD_FLAG, arg);
     else
-        broadcastInvoke("setCardFlag", pattern);
+        doBroadcastNotify(S_COMMAND_CARD_FLAG, arg);
 }
 
 ServerPlayer *Room::addSocket(ClientSocket *socket) {
@@ -2543,12 +2600,9 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
     if (!card) return;
 
     if (card_use.from->getPhase() == Player::Play && add_history) {
-        if (!slash_not_record) {
-            card_use.from->addHistory(key);
-            card_use.from->invoke("addHistory", key + ":");
-        }
-
-        broadcastInvoke("addHistory", "pushPile");
+        if (!slash_not_record)
+            addPlayerHistory(card_use.from, key);
+        addPlayerHistory(NULL, "pushPile");
     }
 
     if (card_use.card->getRealCard() == card) {
@@ -2587,8 +2641,12 @@ void Room::loseHp(ServerPlayer *victim, int lose) {
     sendLog(log);
 
     setPlayerProperty(victim, "hp", victim->getHp() - lose);
-    QString str = QString("%1:%2L").arg(victim->objectName()).arg(-lose);
-    broadcastInvoke("hpChange", str);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(victim->objectName());
+    arg[1] = -lose;
+    arg[2] = -1;
+    doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
 
     thread->trigger(PostHpReduced, this, victim, data);
 }
@@ -2607,7 +2665,10 @@ void Room::loseMaxHp(ServerPlayer *victim, int lose) {
     log.arg = QString::number(lose);
     sendLog(log);
 
-    broadcastInvoke("maxhpChange", QString("%1:%2").arg(victim->objectName()).arg(-lose));
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(victim->objectName());
+    arg[1] = -lose;
+    doBroadcastNotify(S_COMMAND_CHANGE_MAXHP, arg);
 
     LogMessage log2;
     log2.type = "#GetHp";
@@ -2655,7 +2716,11 @@ void Room::applyDamage(ServerPlayer *victim, const DamageStruct &damage) {
     default: break;
     }
 
-    broadcastInvoke("hpChange", change_str);
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(victim->objectName());
+    arg[1] = -damage.damage;
+    arg[2] = int(damage.nature);
+    doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
 }
 
 void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_emotion) {
@@ -2672,7 +2737,12 @@ void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_
 
     int new_hp = qMin(player->getHp() + recover_num, player->getMaxHp());
     setPlayerProperty(player, "hp", new_hp);
-    broadcastInvoke("hpChange", QString("%1:%2").arg(player->objectName()).arg(recover_num));
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(player->objectName());
+    arg[1] = recover_num;
+    arg[2] = 0;
+    doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
 
     if (set_emotion) setEmotion(player, "recover");
 
@@ -2893,7 +2963,7 @@ void Room::startGame() {
     }
 
     preparePlayers();
-    broadcastInvoke("startGame");
+    doBroadcastNotify(S_COMMAND_GAME_START, Json::Value::null);
     game_started = true;
 
     Server *server = qobject_cast<Server *>(parent());
@@ -3746,7 +3816,10 @@ void Room::removeTag(const QString &key) {
 }
 
 void Room::setEmotion(ServerPlayer *target, const QString &emotion) {
-    broadcastInvoke("setEmotion", QString("%1:%2").arg(target->objectName()).arg(emotion.isEmpty() ? "." : emotion));
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(target->objectName());
+    arg[1] = toJsonString(emotion.isEmpty() ? "." : emotion);
+    doBroadcastNotify(S_COMMAND_SET_EMOTION, arg);
 }
 
 #include <QElapsedTimer>
@@ -4368,26 +4441,21 @@ void Room::makeReviving(const QString &name) {
 }
 
 void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who, const QList<int> &disabled_ids) {
-    QStringList card_str;
-    foreach (int card_id, card_ids)
-        card_str << QString::number(card_id);
-    QStringList disabled_str;
-    foreach (int card_id, disabled_ids)
-        disabled_str << QString::number(card_id);
-
-    QString ag_str;
-    if (disabled_str.isEmpty())
-        ag_str = card_str.join("+");
-    else
-        ag_str = QString("%1:%2").arg(card_str.join("+")).arg(disabled_str.join("+"));
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonArray(card_ids);
+    arg[1] = toJsonArray(disabled_ids);
 
     if (who)
-        who->invoke("fillAG", ag_str);
+        doNotify(who, S_COMMAND_FILL_AMAZING_GRACE, arg);
     else
-        broadcastInvoke("fillAG", ag_str);
+        doBroadcastNotify(S_COMMAND_FILL_AMAZING_GRACE, arg);
 }
 
 void Room::takeAG(ServerPlayer *player, int card_id) {
+    Json::Value arg(Json::arrayValue);
+    arg[0] = player ? toJsonString(player->objectName()) : Json::Value::null;
+    arg[1] = card_id;
+
     if (player) {
         CardsMoveOneTimeStruct move;
         move.from = NULL;
@@ -4406,7 +4474,7 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
         QList<const Card *>cards;
         cards << Sanguosha->getCard(card_id);
         filterCards(player, cards, false);
-        broadcastInvoke("takeAG", QString("%1:%2").arg(player->objectName()).arg(card_id));
+        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
 
         foreach (ServerPlayer *p, getAllPlayers())
             thread->trigger(CardsMoving, this, p, data);
@@ -4420,8 +4488,15 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
 
         m_discardPile->prepend(card_id);
         setCardMapping(card_id, NULL, Player::DiscardPile);
-        broadcastInvoke("takeAG", QString(".:%1").arg(card_id));
+        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
     }
+}
+
+void Room::clearAG(ServerPlayer *player) {
+    if (player)
+        doNotify(player, S_COMMAND_CLEAR_AMAZING_GRACE, Json::Value::null);
+    else
+        doBroadcastNotify(S_COMMAND_CLEAR_AMAZING_GRACE, Json::Value::null);
 }
 
 void Room::provide(const Card *card) {

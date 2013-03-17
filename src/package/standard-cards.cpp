@@ -631,7 +631,7 @@ void AmazingGrace::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     // throw the rest cards
     foreach (QVariant card_id, ag_list)
         room->takeAG(NULL, card_id.toInt());
-    room->broadcastInvoke("clearAG");
+    room->clearAG();
 }
 
 void AmazingGrace::onEffect(const CardEffectStruct &effect) const{

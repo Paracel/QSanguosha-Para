@@ -105,9 +105,9 @@ public:
     void startInXs(const QString &);
     void arrangeSeats(const QString &seats);
     void activate(const Json::Value &playerId);
-    void startGame(const QString &);
-    void hpChange(const QString &change_str);
-    void maxhpChange(const QString &change_str);
+    void startGame(const Json::Value &);
+    void hpChange(const Json::Value &change_str);
+    void maxhpChange(const Json::Value &change_str);
     void resetPiles(const QString &);
     void setPileNumber(const QString &pile_num);
     void gameOver(const Json::Value &);
@@ -117,29 +117,28 @@ public:
     void killPlayer(const QString &player_name);
     void revivePlayer(const QString &player_name);
     void warn(const QString &);
-    void setMark(const QString &mark_str);
+    void setMark(const Json::Value &mark_str);
     void showCard(const Json::Value &show_str);    
     void log(const Json::Value &log_str);
     void speak(const QString &speak_data);
-    void addHistory(const QString &card);
+    void addHistory(const Json::Value &history);
     void moveFocus(const Json::Value &focus);
-    void setEmotion(const QString &set_str);
+    void setEmotion(const Json::Value &set_str);
     void skillInvoked(const Json::Value &invoke_str);
     void animate(const QString &animate_str);
-    void cardLimitation(const QString &limit_str);
+    void cardLimitation(const Json::Value &limit);
     void jilei(const QString &jilei_str);
-    void cardLock(const QString &card_str);
     void setNullification(const QString &str);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const QString &set_str);
     void updateStateItem(const QString &state_str);
-    void setCardFlag(const QString &pattern_str);
+    void setCardFlag(const Json::Value &pattern_str);
     void playSystemAudioEffect(const QString &effect_str);
     void updateCard(const Json::Value &arg);
 
-    void fillAG(const QString &cards_str);    
-    void takeAG(const QString &take_str);
-    void clearAG(const QString &);
+    void fillAG(const Json::Value &cards_str);
+    void takeAG(const Json::Value &take_str);
+    void clearAG(const Json::Value &);
 
     //interactive server callbacks
     void askForCard(const Json::Value &);

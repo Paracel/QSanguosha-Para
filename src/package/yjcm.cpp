@@ -74,11 +74,11 @@ public:
                     room->fillAG(luoyingget.card_ids, caozhi);
                     int id = room->askForAG(caozhi, luoyingget.card_ids, true, objectName());
                     if (id == -1) {
-                        caozhi->invoke("clearAG");
+                        room->clearAG(caozhi);
                         break;
                     }
                     luoyingget.card_ids.removeOne(id);
-                    caozhi->invoke("clearAG");
+                    room->clearAG(caozhi);
                 }
 
                 if (!luoyingget.card_ids.empty()) {
@@ -967,7 +967,7 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
             room->fillAG(left, source, non_hearts);
             int card_id = room->askForAG(source, hearts, true, "xinzhan");
             if (card_id == -1) {
-                source->invoke("clearAG");
+                room->clearAG(source);
                 break;
             }
 
@@ -975,12 +975,12 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
             left.removeOne(card_id);
 
             dummy->addSubcard(card_id);
-            source->invoke("clearAG");
+            room->clearAG(source);
         }
 
         if (dummy->subcardsLength() > 0) {
             source->obtainCard(dummy);
-            source->invoke("clearAG"); // strange bug occurs with Manjuan
+            room->clearAG(source); // strange bug occurs with Manjuan
             foreach (int id, dummy->getSubcards())
                 room->showCard(source, id);
         }
@@ -1134,7 +1134,7 @@ void PaiyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     else {
         room->fillAG(powers, zhonghui);
         card_id = room->askForAG(zhonghui, powers, false, "paiyi");
-        zhonghui->invoke("clearAG");
+        room->clearAG(zhonghui);
 
         if (card_id == -1)
             return;

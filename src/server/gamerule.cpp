@@ -183,10 +183,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
                 room->setPlayerMark(player, "drank", 0);
             }
-            if (player->getPhase() == Player::Play) {
-                player->clearHistory();
-                player->invoke("addHistory", ".");
-            }
+            if (player->getPhase() == Player::Play)
+                room->addPlayerHistory(player, ".");
             break;
         }
     case EventPhaseChanging: {

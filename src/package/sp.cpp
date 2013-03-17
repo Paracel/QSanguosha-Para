@@ -725,7 +725,7 @@ public:
                     room->loseHp(player);
                 }
                 bifa_list.removeOne(card_id);
-                player->invoke("clearAG");
+                room->clearAG(player);
                 player->tag.remove("BifaSource" + QString::number(card_id));
             }
         }
@@ -829,7 +829,7 @@ public:
             }
             room->fillAG(avail_list + other_list, NULL, other_list);
             int id = room->askForAG(target, avail_list, false, objectName());
-            room->broadcastInvoke("clearAG");
+            room->clearAG();
             room->throwCard(id, NULL);
         }
 

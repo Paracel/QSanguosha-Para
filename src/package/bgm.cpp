@@ -241,7 +241,7 @@ public:
         if (id != -1)
             room->moveCardTo(Sanguosha->getCard(id), sp_pangtong, Player::PlaceHand, true);
 
-        sp_pangtong->invoke("clearAG");
+        room->clearAG(sp_pangtong);
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *sp_pangtong, QVariant &data) const{
@@ -1263,7 +1263,7 @@ public:
                     card_id = brocade.first();
                 else
                     card_id = room->askForAG(ganning, brocade, false, objectName());
-                ganning->invoke("clearAG");
+                room->clearAG(ganning);
 
                 brocade.removeOne(card_id);
 
@@ -1682,11 +1682,11 @@ public:
                         room->fillAG(langgu_discard, simazhao);
                         int id = room->askForAG(simazhao, langgu_discard, true, objectName());
                         if (id == -1) {
-                            simazhao->invoke("clearAG");
+                            room->clearAG(simazhao);
                             break;
                         }
                         langgu_discard.removeOne(id);
-                        simazhao->invoke("clearAG");
+                        room->clearAG(simazhao);
                     }
 
                     if (!langgu_discard.empty()) {
@@ -1916,7 +1916,7 @@ void HantongCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
         card_id = edict.first();
     else
         card_id = room->askForAG(source, edict, false, objectName());
-    source->invoke("clearAG");
+    room->clearAG(source);
 
     edict.removeOne(card_id);
 
@@ -2009,7 +2009,7 @@ public:
             card_id = edict.first();
         else
             card_id = room->askForAG(liuxie, edict, false, objectName());
-        liuxie->invoke("clearAG");
+        room->clearAG(liuxie);
 
         edict.removeOne(card_id);
 

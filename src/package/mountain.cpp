@@ -850,7 +850,7 @@ public:
             room->broadcastSkillInvoke("guzheng");
             room->fillAG(cards, erzhang, cardsOther);
 
-            int to_back = room->askForAG(erzhang, cardsToGet, false, objectName());
+            int to_back = room->askForAG(erzhang, cardsToGet, false, "guzheng");
             player->obtainCard(Sanguosha->getCard(to_back));
 
             cards.removeOne(to_back);

@@ -55,14 +55,14 @@ Client::Client(QObject *parent, const QString &filename)
 
     m_callbacks[S_COMMAND_CHANGE_HP] = &Client::hpChange;
     m_callbacks[S_COMMAND_CHANGE_MAXHP] = &Client::maxhpChange;
-    callbacks["killPlayer"] = &Client::killPlayer;
-    callbacks["revivePlayer"] = &Client::revivePlayer;
+    m_callbacks[S_COMMAND_KILL_PLAYER] = &Client::killPlayer;
+    m_callbacks[S_COMMAND_REVIVE_PLAYER] = &Client::revivePlayer;
     m_callbacks[S_COMMAND_SHOW_CARD] = &Client::showCard;
     m_callbacks[S_COMMAND_UPDATE_CARD] = &Client::updateCard;
     m_callbacks[S_COMMAND_SET_MARK] = &Client::setMark;
     m_callbacks[S_COMMAND_LOG_SKILL] = &Client::log;
     callbacks["speak"] = &Client::speak;
-    callbacks["attachSkill"] = &Client::attachSkill;
+    m_callbacks[S_COMMAND_ATTACH_SKILL] = &Client::attachSkill;
     m_callbacks[S_COMMAND_MOVE_FOCUS] = &Client::moveFocus; 
     m_callbacks[S_COMMAND_SET_EMOTION] = &Client::setEmotion;
     m_callbacks[S_COMMAND_INVOKE_SKILL] = &Client::skillInvoked;
@@ -72,7 +72,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_ADD_HISTORY] = &Client::addHistory;
     callbacks["animate"] = &Client::animate;
     callbacks["setScreenName"] = &Client::setScreenName;
-    callbacks["setFixedDistance"] = &Client::setFixedDistance;
+    m_callbacks[S_COMMAND_FIXED_DISTANCE] = &Client::setFixedDistance;
     m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
     callbacks["jilei"] = &Client::jilei;
     callbacks["setNullification"] = &Client::setNullification;
@@ -1155,7 +1155,10 @@ void Client::gameOver(const Json::Value &arg) {
     emit game_over();
 }
 
-void Client::killPlayer(const QString &player_name) {
+void Client::killPlayer(const Json::Value &player_arg) {
+    if (!player_arg.isArray() || player_arg.size() != 1 || !player_arg[0].isString()) return;
+    QString player_name = toQString(player_arg[0]);
+
     alive_count--;
     ClientPlayer *player = getPlayer(player_name);
     player->detachAllSkills();
@@ -1188,9 +1191,11 @@ void Client::killPlayer(const QString &player_name) {
     emit player_killed(player_name);
 }
 
-void Client::revivePlayer(const QString &player_name) {
-    alive_count++;
+void Client::revivePlayer(const Json::Value &player_arg) {
+    if (!player_arg.isArray() || player_arg.size() != 1 || !player_arg[0].isString()) return;
+    QString player_name = toQString(player_arg[0]);
 
+    alive_count++;
     emit player_revived(player_name);
 }
 
@@ -1422,7 +1427,10 @@ void Client::showCard(const Json::Value &show_str) {
     emit card_shown(player_name, card_id);
 }
 
-void Client::attachSkill(const QString &skill_name) {
+void Client::attachSkill(const Json::Value &skill) {
+    if (!skill.isArray() || skill.size() != 1 || !skill[0].isString()) return;
+
+    QString skill_name = toQString(skill[0]);
     Self->acquireSkill(skill_name);
     emit skill_attached(skill_name, true);
 }
@@ -1635,15 +1643,13 @@ void Client::setScreenName(const QString &set_str) {
     player->setScreenName(screen_name);
 }
 
-void Client::setFixedDistance(const QString &set_str) {
-    QRegExp rx("(\\w+)~(\\w+)=(-?\\d+)");
-    if (!rx.exactMatch(set_str))
-        return;
+void Client::setFixedDistance(const Json::Value &set_str) {
+    if (!set_str.isArray() || set_str.size() != 3) return;
+    if (!set_str[0].isString() || !set_str[1].isString() || !set_str[2].isInt()) return;
 
-    QStringList texts = rx.capturedTexts();
-    ClientPlayer *from = getPlayer(texts.at(1));
-    ClientPlayer *to = getPlayer(texts.at(2));
-    int distance = texts.at(3).toInt();
+    ClientPlayer *from = getPlayer(toQString(set_str[0]));
+    ClientPlayer *to = getPlayer(toQString(set_str[1]));
+    int distance = set_str[2].asInt();
 
     if (from && to)
         from->setFixedDistance(to, distance);

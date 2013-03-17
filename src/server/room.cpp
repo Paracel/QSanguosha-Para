@@ -243,7 +243,10 @@ void Room::revivePlayer(ServerPlayer *player) {
         broadcastProperty(m_alivePlayers.at(i), "seat");
     }
 
-    broadcastInvoke("revivePlayer", player->objectName());
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(player->objectName());
+    doBroadcastNotify(S_COMMAND_REVIVE_PLAYER, arg);
+
     updateStateItem();
 }
 
@@ -300,9 +303,11 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
     sendLog(log);
 
     broadcastProperty(victim, "alive");
-
     broadcastProperty(victim, "role");
-    broadcastInvoke("killPlayer", victim->objectName());
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(victim->objectName());
+    doBroadcastNotify(S_COMMAND_KILL_PLAYER, arg);
 
     thread->trigger(GameOverJudge, this, victim, data);
 
@@ -480,7 +485,10 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
 
 void Room::attachSkillToPlayer(ServerPlayer *player, const QString &skill_name) {
     player->acquireSkill(skill_name);
-    player->invoke("attachSkill", skill_name);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(skill_name);
+    doNotify(player, S_COMMAND_ATTACH_SKILL, arg);
 }
 
 void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name, bool is_equip) {
@@ -1616,11 +1624,13 @@ lua_State *Room::getLuaState() const{
 }
 
 void Room::setFixedDistance(Player *from, const Player *to, int distance) {
-    QString a = from->objectName();
-    QString b = to->objectName();
-    QString set_str = QString("%1~%2=%3").arg(a).arg(b).arg(distance);
     from->setFixedDistance(to, distance);
-    broadcastInvoke("setFixedDistance", set_str);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(from->objectName());
+    arg[1] = toJsonString(to->objectName());
+    arg[2] = distance;
+    doBroadcastNotify(S_COMMAND_FIXED_DISTANCE, arg);
 }
 
 void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPlayer *> &list) {

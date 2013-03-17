@@ -137,16 +137,16 @@ void RecAnalysis::initialize(QString dir) {
             continue;
         }
 
-        if (line.contains("hpChange")) {
-            QStringList info_assemble = line.split(" ").last().split(":");
-            QString hp = info_assemble.at(1);
+        if (line.contains("1044,31,")) { // means hpChange
+            QString name = line.split("[").last().split(",").first();
+            name = name.mid(1, name.length() - 2);
+            QString delta = line.split(",").at(5);
             bool ok = false;
-            int hp_change = hp.remove(QRegExp("[TF]")).toInt(&ok);
+            int hp_change = delta.toInt(&ok);
             if (!ok)
                 continue;
-
             if (hp_change > 0)
-                getPlayer(info_assemble.at(0))->m_recover += hp_change;
+                getPlayer(name)->m_recover += hp_change;
 
             continue;
         }

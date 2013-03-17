@@ -114,8 +114,8 @@ public:
     void loseCards(const Json::Value &);
     void getCards(const Json::Value &);
     void updateProperty(const Json::Value &);
-    void killPlayer(const QString &player_name);
-    void revivePlayer(const QString &player_name);
+    void killPlayer(const Json::Value &player_arg);
+    void revivePlayer(const Json::Value &player_arg);
     void warn(const QString &);
     void setMark(const Json::Value &mark_str);
     void showCard(const Json::Value &show_str);    
@@ -130,7 +130,7 @@ public:
     void jilei(const QString &jilei_str);
     void setNullification(const QString &str);
     void setScreenName(const QString &set_str);
-    void setFixedDistance(const QString &set_str);
+    void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const QString &state_str);
     void setCardFlag(const Json::Value &pattern_str);
     void playSystemAudioEffect(const QString &effect_str);
@@ -178,7 +178,7 @@ public:
     void recoverGeneral(const QString &);
     void revealGeneral(const QString &);
 
-    void attachSkill(const QString &skill_name);
+    void attachSkill(const Json::Value &skill);
     
     inline virtual RoomState *getRoomState() { return &_m_roomState; }
     inline virtual Card *getCard(int cardId) const{ return _m_roomState.getCard(cardId); }

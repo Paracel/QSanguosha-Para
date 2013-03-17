@@ -772,6 +772,7 @@ void Dashboard::cancelNullification() {
 }
 
 void Dashboard::controlNullificationButton(bool show) {
+    if (ClientInstance->getReplayer()) return;
     m_btnNoNullification->setState(QSanButton::S_STATE_UP);
     m_btnNoNullification->setVisible(show);
 }

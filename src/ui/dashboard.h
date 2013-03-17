@@ -84,14 +84,19 @@ public:
     int width();
     int height();
 
+    void showNullificationButton();
+    void hideNullificationButton();
+
     static const int S_PENDING_OFFSET_Y = -25;
 
 public slots:
     void sortCards(bool doAnmiation = true);
     void reverseSelection();
+    void cancelNullification();
     void skillButtonActivated();
     void skillButtonDeactivated();
     void selectAll();
+    void controlNullificationButton(bool show);
 
 protected:
     void _createExtraButtons();
@@ -127,6 +132,7 @@ protected:
     
     QSanButton *m_btnReverseSelection;
     QSanButton *m_btnSortHandcard;
+    QSanButton *m_btnNoNullification;
     QGraphicsPixmapItem *_m_leftFrame, *_m_middleFrame, *_m_rightFrame;    
     // we can not draw bg directly _m_rightFrame because then it will always be
     // under avatar (since it's avatar's parent).

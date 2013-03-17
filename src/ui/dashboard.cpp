@@ -444,12 +444,19 @@ void Dashboard::highlightEquip(QString skillName, bool highlight) {
 void Dashboard::_createExtraButtons() {
     m_btnReverseSelection = new QSanButton("handcard", "reverse-selection", this);
     m_btnSortHandcard = new QSanButton("handcard", "sort", this);
+    m_btnNoNullification = new QSanButton("handcard", "nullification", this);
+    m_btnNoNullification->setStyle(QSanButton::S_STYLE_TOGGLE);
     // @todo: auto hide.
     m_btnReverseSelection->setPos(G_DASHBOARD_LAYOUT.m_leftWidth, -m_btnReverseSelection->boundingRect().height());
     m_btnSortHandcard->setPos(m_btnReverseSelection->boundingRect().right() + G_DASHBOARD_LAYOUT.m_leftWidth,
                               -m_btnReverseSelection->boundingRect().height());
+    m_btnNoNullification->setPos(m_btnReverseSelection->boundingRect().right() + m_btnSortHandcard->boundingRect().width() + G_DASHBOARD_LAYOUT.m_leftWidth,
+                                 -m_btnReverseSelection->boundingRect().height());
+
+    m_btnNoNullification->hide();
     connect(m_btnReverseSelection, SIGNAL(clicked()), this, SLOT(reverseSelection()));
     connect(m_btnSortHandcard, SIGNAL(clicked()), this, SLOT(sortCards()));
+    connect(m_btnNoNullification, SIGNAL(clicked()), this, SLOT(cancelNullification()));
 }
 
 void Dashboard::skillButtonActivated() {
@@ -757,6 +764,16 @@ void Dashboard::reverseSelection() {
         if (item->isEnabled() && !selected_items.contains(item))
             item->clickItem();
     adjustCards();
+}
+
+
+void Dashboard::cancelNullification() {
+    ClientInstance->m_noNullificationThisTime = !ClientInstance->m_noNullificationThisTime;
+}
+
+void Dashboard::controlNullificationButton(bool show) {
+    m_btnNoNullification->setState(QSanButton::S_STATE_UP);
+    m_btnNoNullification->setVisible(show);
 }
 
 void Dashboard::disableAllCards() {

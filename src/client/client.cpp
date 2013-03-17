@@ -77,6 +77,7 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["cardLimitation"] = &Client::cardLimitation;
     callbacks["jilei"] = &Client::jilei;
     callbacks["cardLock"] = &Client::cardLock;
+    callbacks["setNullification"] = &Client::setNullification;
 
     callbacks["updateStateItem"] = &Client::updateStateItem;
 
@@ -129,6 +130,8 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["revealGeneral"] = &Client::revealGeneral;
 
     m_isUseCard = false;
+    m_noNullificationThisTime = false;
+    m_noNullificationTrickName = ".";
 
     Self = new ClientPlayer(this);
     Self->setScreenName(Config.UserName);
@@ -687,6 +690,20 @@ void Client::cardLock(const QString &card_str) {
     Self->setCardLocked(card_str);
 }
 
+void Client::setNullification(const QString &str) {
+    if (str != ".") {
+        if (m_noNullificationTrickName == ".") {
+            m_noNullificationThisTime = false;
+            m_noNullificationTrickName = str;
+            emit nullification_asked(true);
+        }
+    } else {
+        m_noNullificationThisTime = false;
+        m_noNullificationTrickName = ".";
+        emit nullification_asked(false);
+    }
+}
+
 QString Client::getSkillLine() const{
     return skill_line;
 }
@@ -881,13 +898,19 @@ void Client::askForNullification(const Json::Value &arg) {
 
     if (!target_player || !target_player->getGeneral()) return;
 
-    const Card *trick_card = Sanguosha->findChild<const Card *>(trick_name);
     ClientPlayer *source = NULL;
     if (source_name != Json::Value::null)
         source = getPlayer(source_name.asCString());
 
+    const Card *trick_card = Sanguosha->findChild<const Card *>(trick_name);
     if (Config.NeverNullifyMyTrick && source == Self) {
         if (trick_card->isKindOf("SingleTargetTrick") || trick_card->isKindOf("IronChain")) {
+            onPlayerResponseCard(NULL);
+            return;
+        }
+    }
+    if (m_noNullificationThisTime && m_noNullificationTrickName == trick_name) {
+        if (trick_card->isKindOf("AOE") || trick_card->isKindOf("GlobalEffect")) {
             onPlayerResponseCard(NULL);
             return;
         }

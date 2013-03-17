@@ -249,6 +249,11 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             CardUseStruct use = data.value<CardUseStruct>();
             room->clearCardFlag(use.card);
 
+            if (use.card->isKindOf("AOE") || use.card->isKindOf("GlobalEffect")) {
+                foreach (ServerPlayer *p, room->getAlivePlayers())
+                    p->invoke("setNullification", ".");
+            }
+
             break;
         }
     case EventAcquireSkill:

@@ -129,6 +129,7 @@ public:
     void cardLimitation(const QString &limit_str);
     void jilei(const QString &jilei_str);
     void cardLock(const QString &card_str);
+    void setNullification(const QString &str);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const QString &set_str);
     void updateStateItem(const QString &state_str);
@@ -198,6 +199,8 @@ public:
     // public fields
     bool m_isDiscardActionRefusable;
     bool m_canDiscardEquip;
+    bool m_noNullificationThisTime;
+    QString m_noNullificationTrickName;
     int discard_num;
     int min_num;
     QString skill_name;
@@ -315,6 +318,8 @@ signals:
     void skill_attached(const QString &skill_name, bool from_left);
     void skill_detached(const QString &skill_name);
     void do_filter();
+
+    void nullification_asked(bool asked);
 
     void ag_filled(const QList<int> &card_ids, const QList<int> &disabled_ids);
     void ag_taken(ClientPlayer *taker, int card_id);

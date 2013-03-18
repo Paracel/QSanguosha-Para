@@ -255,10 +255,6 @@ function sgs.ai_skill_pindian.dahe(minusecard, self, requestor)
 	return self:getMaxCard(self.player):getId()
 end
 
-sgs.ai_skill_choice.dahe = function(self, choices)
-	return "yes"
-end
-
 sgs.ai_skill_playerchosen.dahe = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
@@ -269,8 +265,9 @@ sgs.ai_skill_playerchosen.dahe = function(self, targets)
 		end
 	end
 	for _, target in ipairs(targets) do
-		if self:isFriend(target) then return target end
+		if self:isFriend(target) and not self:needKongcheng(target, true) then return target end
 	end
+	return nil
 end
 
 sgs.ai_cardneed.dahe = sgs.ai_cardneed.bignumber
@@ -387,15 +384,6 @@ sgs.ai_skill_cardask["@mouduan"] = function(self, data)
 	if #to_discard > 0 then return "$" .. to_discard[1] else return "." end
 end
 
-sgs.ai_skill_invoke.zhaolie = function(self, data)
-	for _, enemy in ipairs(self.enemies) do
-		if self.player:distanceTo(enemy) <= self.player:getAttackRange() and self:damageIsEffective(enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
-			return true
-		end
-	end
-	return false
-end
-
 sgs.ai_skill_playerchosen.zhaolie = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "hp")
@@ -404,7 +392,7 @@ sgs.ai_skill_playerchosen.zhaolie = function(self, targets)
 			return target
 		end
 	end
-	return targets[1]
+	return nil
 end
 
 sgs.ai_skill_choice.zhaolie = function(self, choices, data)

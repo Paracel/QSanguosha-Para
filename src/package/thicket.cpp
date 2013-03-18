@@ -111,8 +111,8 @@ public:
             }
             
             while (!caopis.isEmpty()) {
-                if (player->askForSkillInvoke(objectName())) {
-                    ServerPlayer *caopi = room->askForPlayerChosen(player, caopis, objectName());
+                ServerPlayer *caopi = room->askForPlayerChosen(player, caopis, objectName(), "@songwei-to", true);
+                if (caopi) {
                     room->broadcastSkillInvoke(objectName());
                     room->notifySkillInvoked(caopi, objectName());
                     LogMessage log;
@@ -950,8 +950,8 @@ public:
             }
 
             while (!dongzhuos.isEmpty()) {
-                if (player->askForSkillInvoke(objectName())) {
-                    ServerPlayer *dongzhuo = room->askForPlayerChosen(player, dongzhuos, objectName());
+                ServerPlayer *dongzhuo = room->askForPlayerChosen(player, dongzhuos, objectName(), "@baonue-to", true);
+                if (dongzhuo) {
                     dongzhuo->setFlags("baonue_used"); //for AI
                     dongzhuos.removeOne(dongzhuo);
 

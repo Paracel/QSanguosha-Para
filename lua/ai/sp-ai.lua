@@ -1,16 +1,16 @@
 sgs.weapon_range.SPMoonSpear = 3
 
-sgs.ai_skill_invoke.sp_moonspear = function(self, data)
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
-	for _, target in ipairs(self.enemies) do
-		if self.player:canSlash(target) and not self:slashProhibit(slash, target) then
-		return true
+sgs.ai_skill_playerchosen.sp_moonspear = function(self, targets)
+	targets = sgs.QList2Table(targets)
+	self:sort(targets, "defense")
+	for _, target in ipairs(targets) do
+		if self:isEnemy(target) and self:damageIsEffective(target) and sgs.isGoodTarget(target, targets, self) then
+			return target
 		end
 	end
-	return false
+	return nil
 end
 
-sgs.ai_skill_playerchosen.sp_moonspear = sgs.ai_skill_playerchosen.zero_card_as_slash
 sgs.ai_playerchosen_intention.sp_moonspear = 80
 
 function sgs.ai_slash_prohibit.weidi(self, from, to, card)

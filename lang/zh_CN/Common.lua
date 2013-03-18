@@ -5,6 +5,8 @@ return {
 	["GeneralA"] = "主将",
 	["GeneralB"] = "副将",
 	["surrender:yes"] = "你可以立即认输结束游戏",
+	["@dummy-slash"] = "请选择你使用【杀】的目标角色",
+	["@dummy-slash2"] = "请选择 %src 使用【杀】的目标角色",
 
 	["spade"] = "黑桃",
 	["club"] = "梅花",
@@ -88,6 +90,7 @@ return {
 	["#Suicide"] = "%to【%arg】 自杀",
 	["#InvokeSkill"] = "%from 发动了“%arg”",
 	["#InvokeOthersSkill"] = "%from 发动了 %to 的“%arg”",
+	["#ChoosePlayerWithSkill"] = "%from 发动了“%arg”，目标是 %to",
 	["#TriggerSkill"] = "%from 的“%arg”被触发",
 	["#Pindian"] = "%from 向 %to 发起了拼点",
 	["#PindianSuccess"] = "%from (对 %to) 拼点赢！",
@@ -160,6 +163,7 @@ return {
 
 	["cw"] = "顺时针",
 	["ccw"] = "逆时针",
+	["@3v3-action"] = "请选择行动角色",
 	["#TrickDirection"] = "%from 选择了 %arg 作为结算顺序",
 	["custom"] = "自定义模式",
 	["UnknowNick"] = "",

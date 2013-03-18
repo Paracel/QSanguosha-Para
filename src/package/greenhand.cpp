@@ -24,9 +24,15 @@ public:
         if (!targets.isEmpty())
             can_invoke = true;
 
-        if (can_invoke && room->askForSkillInvoke(zhangliao, objectName())) {
-            zhangliao->setFlags("gh_tuxi");
-            return n - 1;
+        if (can_invoke) {
+            ServerPlayer *target = room->askForPlayerChosen(zhangliao, targets, objectName(), "gh_tuxi-invoke", true);
+            if (target) {
+                target->setFlags("GHTuxiTarget");
+                zhangliao->setFlags("gh_tuxi");
+                return n - 1;
+            } else {
+                return n;
+            }
         } else
             return n;
     }
@@ -46,14 +52,16 @@ public:
         if (!zhangliao->hasFlag("gh_tuxi")) return false;
         zhangliao->setFlags("-gh_tuxi");
 
-        QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
-            if (!p->isKongcheng())
-                targets << p;
-        if (targets.isEmpty())
-            return false;
+        ServerPlayer *target = NULL;
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao)) {
+            if (p->hasFlag("GHTuxiTarget")) {
+                p->setFlags("-GHTuxiTarget");
+                target = p;
+                break;
+            }
+        }
+        if (!target) return false;
 
-        ServerPlayer *target = room->askForPlayerChosen(zhangliao, targets, "gh_tuxi");
         int card_id = room->askForCardChosen(zhangliao, target, "h", "gh_tuxi");
         room->broadcastSkillInvoke("gh_tuxi");
         CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, zhangliao->objectName());

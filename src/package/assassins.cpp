@@ -124,7 +124,7 @@ void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
             targets << p;
 
     if (!targets.isEmpty()) {
-        ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "mizhao");
+        ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "mizhao", QString("@mizhao-pindian").arg(effect.to->objectName()));
         effect.to->pindian(target, "mizhao", NULL);
     }
 }

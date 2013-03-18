@@ -915,11 +915,10 @@ void Client::onPlayerChooseCard(int card_id) {
 }
 
 void Client::onPlayerChoosePlayer(const Player *player) {
-    if (player == NULL)
+    if (player == NULL && !m_isDiscardActionRefusable)
         player = findChild<const Player *>(players_to_choose.first());
 
-    if (player == NULL) return;
-    replyToServer(S_COMMAND_CHOOSE_PLAYER, toJsonString(player->objectName()));    
+    replyToServer(S_COMMAND_CHOOSE_PLAYER, (player == NULL) ? Json::Value::null : toJsonString(player->objectName()));
     setStatus(NotActive);
 }
 
@@ -1525,13 +1524,46 @@ void Client::askForYiji(const Json::Value &ask_str) {
 }
 
 void Client::askForPlayerChosen(const Json::Value &players) {
-    if (!players.isArray() || players.size() != 2) return;
-    if (!players[1].isString() || !players[0].isArray()) return;
+    if (!players.isArray() || players.size() != 4) return;
+    if (!players[1].isString() || !players[0].isArray() || !players[3].isBool()) return;
     if (players[0].size() == 0) return;
     skill_name = toQString(players[1]);
     players_to_choose.clear();
     for (unsigned int i = 0; i < players[0].size(); i++)
-        players_to_choose.push_back(toQString(players[0][i]));    
+        players_to_choose.push_back(toQString(players[0][i]));
+    m_isDiscardActionRefusable = players[3].asBool();
+
+    QString text;
+    QString description = Sanguosha->translate(ClientInstance->skill_name);
+    QString prompt = toQString(players[2]);
+    if (!prompt.isEmpty()) {
+        QStringList texts = prompt.split(":");
+        text = Sanguosha->translate(texts.first());
+
+        if (texts.length() >= 2)
+            text.replace("%src", getPlayerName(texts.at(1)));
+
+        if (texts.length() >= 3)
+            text.replace("%dest", getPlayerName(texts.at(2)));
+
+        if (texts.length() >= 4) {
+            QString arg = Sanguosha->translate(texts.at(3));
+            text.replace("%arg", arg);
+        }
+
+        if (texts.length() >= 5) {
+            QString arg2 = Sanguosha->translate(texts.at(4));
+            text.replace("%arg2", arg2);
+        }
+
+        if (prompt.startsWith("@") && !description.isEmpty() && description != skill_name)
+            text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
+    } else {
+        text = tr("Please choose a player");
+        if (!description.isEmpty() && description != skill_name)
+            text = text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
+    }
+    prompt_doc->setHtml(text);
 
     setStatus(AskForPlayerChoose);
 }

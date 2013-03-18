@@ -4280,10 +4280,11 @@ const Card *Room::askForPindian(ServerPlayer *player, ServerPlayer *from, Server
     }
 }
 
-ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const QString &skillName) {
+ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const QString &skillName,
+                                       const QString &prompt, bool optional, bool notify_skill) {
     if (targets.isEmpty())
         return NULL;
-    else if (targets.length() == 1) {
+    else if (targets.length() == 1 && !optional) {
         QVariant data = QString("%1:%2:%3").arg("playerChosen").arg(skillName).arg(targets.first()->objectName());
         thread->trigger(ChoiceMade, this, player, data);
         return targets.first();
@@ -4298,6 +4299,8 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
         Json::Value req;
         req[0] = Json::Value(Json::arrayValue);
         req[1] = toJsonString(skillName);
+        req[2] = toJsonString(prompt);
+        req[3] = optional;
         foreach (ServerPlayer *target, targets)
             req[0].append(toJsonString(target->objectName()));
         bool success = doRequest(player, S_COMMAND_CHOOSE_PLAYER, req, true);
@@ -4305,10 +4308,22 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
         Json::Value clientReply = player->getClientReply();
         if (success && clientReply.isString())
             choice = findChild<ServerPlayer *>(clientReply.asCString());
-        if (choice == NULL)
-            choice = targets.at(qrand() % targets.length());
     }
+    if (choice == NULL && !optional)
+        choice = targets.at(qrand() % targets.length());
     if (choice) {
+        if (notify_skill) {
+            notifySkillInvoked(player, skillName);
+            QVariant decisionData = QVariant::fromValue("skillInvoke:" + skillName + ":yes");
+            thread->trigger(ChoiceMade, this, player, decisionData);
+
+            LogMessage log;
+            log.type = "#ChoosePlayerWithSkill";
+            log.from = player;
+            log.to << choice;
+            log.arg = skillName;
+            sendLog(log);
+        }
         QVariant data = QString("%1:%2:%3").arg("playerChosen").arg(skillName).arg(choice->objectName());
         thread->trigger(ChoiceMade, this, player, data);
     }

@@ -94,7 +94,7 @@ public:
         if (foes.length() == 1)
             foe = foes.first();
         else
-            foe = room->askForPlayerChosen(shenguanyu, foes, "wuhun");
+            foe = room->askForPlayerChosen(shenguanyu, foes, "wuhun", "@wuhun-revenge");
 
         room->notifySkillInvoked(shenguanyu, "wuhun");
 

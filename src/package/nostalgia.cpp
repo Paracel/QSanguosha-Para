@@ -207,7 +207,7 @@ void NosXuanhuoCard::onEffect(const CardEffectStruct &effect) const{
     room->obtainCard(effect.from, Sanguosha->getCard(card_id), reason, room->getCardPlace(card_id) != Player::PlaceHand);
 
     QList<ServerPlayer *> targets = room->getOtherPlayers(effect.to);
-    ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "nosxuanhuo");
+    ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "nosxuanhuo", "@nosxuanhuo-give:" + effect.to->objectName());
     if (target != effect.from) {
         CardMoveReason reason2(CardMoveReason::S_REASON_GIVE, effect.from->objectName());
         reason2.m_playerId = target->objectName();
@@ -266,7 +266,7 @@ public:
 
                 QString choice = room->askForChoice(lingtong, objectName(), choicelist.join("+"));
                 if (choice == "slash") {
-                    ServerPlayer *target = room->askForPlayerChosen(lingtong, targets1, "nosxuanfeng_slash");
+                    ServerPlayer *target = room->askForPlayerChosen(lingtong, targets1, "nosxuanfeng_slash", "@dummy-slash");
                     room->broadcastSkillInvoke(objectName(), 1);
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName(objectName());
@@ -280,7 +280,7 @@ public:
                     room->broadcastSkillInvoke(objectName(), 2);
                     room->notifySkillInvoked(lingtong, objectName());
 
-                    ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage");
+                    ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage", "@nosxuanfeng-damage");
                     DamageStruct damage;
                     damage.from = lingtong;
                     damage.to = target;
@@ -961,7 +961,7 @@ public:
 
         const Card *card = Sanguosha->getCard(power);
 
-        ServerPlayer *target = room->askForPlayerChosen(zhonghui, room->getAlivePlayers(), "nospaiyi");
+        ServerPlayer *target = room->askForPlayerChosen(zhonghui, room->getAlivePlayers(), "nospaiyi", "@nospaiyi-to:::" + card->objectName());
         CardMoveReason reason(CardMoveReason::S_REASON_TRANSFER, zhonghui->objectName(), "nospaiyi", QString());
 
         if (card->isKindOf("DelayedTrick")) {

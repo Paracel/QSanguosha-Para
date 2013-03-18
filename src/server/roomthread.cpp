@@ -321,7 +321,7 @@ void RoomThread::run3v3() {
                 targets << player;
         }
 
-        ServerPlayer *to_action = room->askForPlayerChosen(first->first(), targets, "3v3-action");
+        ServerPlayer *to_action = room->askForPlayerChosen(first->first(), targets, "3v3-action", "@3v3-action");
         if (to_action) {
             action3v3(to_action);
             if (to_action != first->first()) {

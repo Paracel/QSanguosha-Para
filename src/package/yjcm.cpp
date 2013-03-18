@@ -329,7 +329,7 @@ void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
             if (effect.to->canSlash(victim))
                 targets << victim;
         }
-        victim = room->askForPlayerChosen(effect.from, targets, "xuanhuo");
+        victim = room->askForPlayerChosen(effect.from, targets, "xuanhuo", "@dummy-slash2:" + effect.to->objectName());
 
         LogMessage log;
         log.type = "#CollateralSlash";
@@ -700,7 +700,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     QStringList choicelist;
     choicelist << "draw";
     if (!targets.isEmpty() && effect.from->isAlive()) {
-        target = room->askForPlayerChosen(effect.from, targets, "mingce");
+        target = room->askForPlayerChosen(effect.from, targets, "mingce", "@dummy-slash2:" + effect.to->objectName());
         target->setFlags("MingceTarget"); // For AI
 
         LogMessage log;

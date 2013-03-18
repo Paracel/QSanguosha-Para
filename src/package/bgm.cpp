@@ -605,14 +605,14 @@ public:
 
         if (pindian->isSuccess()) {
             room->setPlayerFlag(pindian->to, "dahe");
-            QList<ServerPlayer *> to_givelist = room->getAlivePlayers();
+            QList<ServerPlayer *> to_givelist;
             foreach (ServerPlayer *p, to_givelist) {
-                if (p->getHp() > pindian->from->getHp())
-                    to_givelist.removeOne(p);
+                if (p->getHp() <= pindian->from->getHp())
+                    to_givelist << p;
             }
-            QString choice = room->askForChoice(pindian->from, "dahe", "yes+no");
-            if (!to_givelist.isEmpty() && choice == "yes") {
-                ServerPlayer *to_give = room->askForPlayerChosen(pindian->from, to_givelist, "dahe");
+            if (!to_givelist.isEmpty()) {
+                ServerPlayer *to_give = room->askForPlayerChosen(pindian->from, to_givelist, "dahe", "@dahe-give", true);
+                if (!to_give) return false;
                 CardMoveReason reason(CardMoveReason::S_REASON_GIVE, pindian->from->objectName());
                 reason.m_playerId = to_give->objectName();
                 to_give->obtainCard(pindian->to_card);
@@ -816,7 +816,9 @@ public:
         }
         if (victims.empty())
             return n;
-        if (room->askForSkillInvoke(liubei, objectName())) {
+        ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie", "zhaolie-invoke", true);
+        if (victim) {
+            victim->setFlags("ZhaolieTarget");
             liubei->setFlags("zhaolie");
             return n - 1;
         }
@@ -835,16 +837,19 @@ public:
         if (!liubei->hasFlag("zhaolie")) return false;
         room->setPlayerFlag(liubei, "-zhaolie");
 
-        QList<ServerPlayer *> targets = room->getOtherPlayers(liubei);
-        QList<ServerPlayer *> victims;
+        ServerPlayer *victim = NULL;
+        foreach (ServerPlayer *p, room->getOtherPlayers(liubei)) {
+            if (p->hasFlag("ZhaolieTarget")) {
+                p->setFlags("-ZhaolieTarget");
+                victim = p;
+                break;
+            }
+        }
+        if (!victim) return false;
+
         QList<const Card *> cards;
         int no_basic = 0;
-        foreach (ServerPlayer *p, targets) {
-            if (liubei->inMyAttackRange(p))
-                victims << p;
-        }
-        if (victims.isEmpty()) return false;
-        ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie");
+
         QList<int> cardIds;
         for (int i = 0; i < 3; i++) {
             int id = room->drawCard();
@@ -1282,7 +1287,7 @@ public:
             const Card *card = room->askForCard(target, "Jink", "@junwei-show", ai_data, Card::MethodNone);
             if (card) {
                 room->showCard(target, card->getEffectiveId());
-                ServerPlayer *receiver = room->askForPlayerChosen(ganning, room->getAllPlayers(), "junweigive");
+                ServerPlayer *receiver = room->askForPlayerChosen(ganning, room->getAllPlayers(), "junweigive", "@junwei-give");
                 if (receiver != target)
                     receiver->obtainCard(card);
             } else {
@@ -1455,7 +1460,7 @@ public:
             if (choice == "slash") {
                 room->broadcastSkillInvoke(objectName(), 2);
 
-                ServerPlayer *victim = room->askForPlayerChosen(xiahou, targets, objectName());
+                ServerPlayer *victim = room->askForPlayerChosen(xiahou, targets, objectName(), "@dummy-slash");
 
                 Slash *slash = new Slash(Card::NoSuit, 0);
                 slash->setSkillName(objectName());

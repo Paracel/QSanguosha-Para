@@ -75,7 +75,7 @@ void QiaobianCard::use(Room *room, ServerPlayer *zhanghe, QList<ServerPlayer *> 
         }
 
         room->setTag("QiaobianTarget", QVariant::fromValue(from));
-        ServerPlayer *to = room->askForPlayerChosen(zhanghe, tos, "qiaobian");
+        ServerPlayer *to = room->askForPlayerChosen(zhanghe, tos, "qiaobian", "@qiaobian-to:::" + card->objectName());
         if (to)
             room->moveCardTo(card, from, to, place,
                              CardMoveReason(CardMoveReason::S_REASON_TRANSFER,

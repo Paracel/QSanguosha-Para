@@ -334,18 +334,9 @@ sgs.ai_skill_use_func.GongqiCard = function(card, use, self)
 	use.card = card
 end
 
-sgs.ai_skill_invoke.gongqi_discard = function(self, data)
-	local player = self:findPlayerToDiscard()
-	if player then
-		self.gongqitarget = player
-		return true
-	end
-	return false
-end
-
 sgs.ai_skill_playerchosen.gonqqi = function(self, targets)
-	if not self.gongqitarget then self.room:writeToConsole(debug.traceback()) return targets[1] end
-	return self.gongqitarget
+	local player = self:findPlayerToDiscard()
+	return player
 end
 
 sgs.ai_use_value.GongqiCard = 2
@@ -602,13 +593,6 @@ sgs.ai_card_intention.AnxuCard = function(self, card, from, to)
 	sgs.updateIntention(from, more, intention)
 end
 
-sgs.ai_skill_invoke.zhuiyi = function(self, data)
-	local damage = data:toDamageStar()
-	local exclude = self.player
-	if damage and damage.from then exclude = damage.from end
-	return #self.friends_noself > (table.contains(self.friends_noself, exclude) and 1 or 0)
-end
-
 sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
@@ -617,6 +601,7 @@ sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 			return friend
 		end
 	end
+	return nil
 end
 
 sgs.ai_skill_invoke.lihuo = function(self, data)

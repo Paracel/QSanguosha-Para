@@ -33,10 +33,9 @@ public:
                 targets << tmp;
         }
         if (targets.isEmpty()) return false;
-        if (!room->askForSkillInvoke(player, objectName(), data))
-            return false;
 
-        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName());
+        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "@sp_moonspear", true);
+        if (!target) return false;
         room->setEmotion(player, "weapon/moonspear");
         if (!room->askForCard(target, "jink", "@moon-spear-jink", QVariant(), Card::MethodResponse, player)) {
             DamageStruct damage;
@@ -365,7 +364,7 @@ void YuanhuCard::onEffect(const CardEffectStruct &effect) const{
               targets << p;
       }
       if (!targets.isEmpty()) {
-          ServerPlayer *to_dismantle = room->askForPlayerChosen(caohong, targets, "yuanhu");
+          ServerPlayer *to_dismantle = room->askForPlayerChosen(caohong, targets, "yuanhu", "@yuanhu-discard:" + effect.to->objectName());
           int card_id = room->askForCardChosen(caohong, to_dismantle, "hej", "yuanhu");
           room->throwCard(Sanguosha->getCard(card_id), to_dismantle, caohong);
       }

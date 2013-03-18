@@ -13,16 +13,7 @@ QuhuCard::QuhuCard() {
 }
 
 bool QuhuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if (!targets.isEmpty())
-        return false;
-
-    if (to_select->getHp() <= Self->getHp())
-        return false;
-
-    if (to_select->isKongcheng())
-        return false;
-
-    return true;
+    return targets.isEmpty() && to_select->getHp() > Self->getHp() && !to_select->isKongcheng();
 }
 
 void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targets) const{
@@ -50,7 +41,7 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
             return;
         }
 
-        ServerPlayer *wolf = room->askForPlayerChosen(xunyu, wolves, "quhu");
+        ServerPlayer *wolf = room->askForPlayerChosen(xunyu, wolves, "quhu", QString("@quhu-damage:%1").arg(tiger->objectName()));
 
         DamageStruct damage;
         damage.from = tiger;

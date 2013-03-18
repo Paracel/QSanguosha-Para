@@ -501,6 +501,18 @@ sgs.ai_skill_use.slash = function(self, prompt)
 	return "."
 end
 
+sgs.ai_skill_playerchosen.slash_extra_targets = function(self, targets)
+	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	targets = sgs.QList2Table(targets)
+	self:sort(targets, "defenseSlash")
+	for _, target in ipairs(targets) do
+		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.isGoodTarget(target, targetlist, self) and self:slashIsEffective(slash, target) then
+			return target
+		end
+	end
+	return nil
+end
+
 sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	local targetlist = sgs.QList2Table(targets)

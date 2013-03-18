@@ -24,6 +24,7 @@ return {
 	[":nosenyuan"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你回复1点体力后，令你回复体力的角色摸一张牌；每当你受到一次伤害后，伤害来源选择一项：交给你一张<font color=\"red\">♥</font>手牌，或失去1点体力。",
 	["nosxuanhuo"] = "眩惑",
 	[":nosxuanhuo"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以将一张<font color=\"red\">♥</font>手牌交给一名其他角色：若如此做，你获得该角色的一张牌，然后将该牌交给除该角色外的另一名角色。",
+	["@nosxuanhuo-give"] = "你可以将该牌交给除 %src 外的一名角色",
 	["#EnyuanRecover"] = "%from 的“%arg2”被触发，令其回复体力的角色 %to 将摸 %arg 张牌",
 	["@enyuanheart"] = "请给出一张<font color=\"red\">♥</font>手牌",
 
@@ -44,10 +45,11 @@ return {
 	["designer:nos_lingtong"] = "ShadowLee",
 	["illustrator:nos_lingtong"] = "绵Myan",
 	["nosxuanfeng"] = "旋风",
-	[":nosxuanfeng"] = "每当你失去一次装备区里的牌后，你可以选择一项：1.视为对一名其他角色使用一张【杀】。（此【杀】无距离限制且不计入每回合的使用限制）2.对与你距离1的一名其他角色造成1点伤害",
+	[":nosxuanfeng"] = "每当你失去一次装备区里的牌后，你可以选择一项：1.视为对一名其他角色使用一张【杀】。（此【杀】无距离限制且不计入每回合的使用限制）2.对距离1的一名角色造成1点伤害",
 	["nosxuanfeng:nothing"] = "不发动",
 	["nosxuanfeng:damage"] = "对距离1的其他角色造成1点伤害",
 	["nosxuanfeng:slash"] = "视为对一名其他角色使用一张【杀】",
+	["@nosxuanfeng-damage"] = "请选择距离1的一名角色",
 
 	["nos_zhangchunhua"] = "张春华-旧",
 	["&nos_zhangchunhua"] = "张春华",
@@ -118,6 +120,7 @@ return {
 	["$NosZiliAnimate"] = "image=image/animate/noszili.png",
 	["nospaiyi"] = "排异",
 	[":nospaiyi"] = "回合结束阶段开始时，你可以将一张“权”移动到一个合理的区域。若不是你的区域，你摸一张牌。",
+	["@nospaiyi-to"] = "请选择移动【%arg】的目标角色",
 	["nospaiyi:Judging"] = "判定区",
 	["nospaiyi:Equip"] = "装备区",
 	["nospaiyi:Hand"] = "手牌",

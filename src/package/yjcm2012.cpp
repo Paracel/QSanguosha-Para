@@ -511,9 +511,10 @@ void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) 
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(source))
             if (!p->isNude()) targets << p;
-        if (!targets.isEmpty() && source->askForSkillInvoke("gongqi_discard", QVariant::fromValue(QString("discard")))) {
-            ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi");
-            room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi"), to_discard, source);
+        if (!targets.isEmpty()) {
+            ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi", "@gongqi-discard", true);
+            if (to_discard)
+                room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi"), to_discard, source);
         }
     }
 }
@@ -726,11 +727,15 @@ public:
         QList<ServerPlayer *> targets = (death.damage && death.damage->from) ? room->getOtherPlayers(death.damage->from) :
                                                                                room->getAlivePlayers();
 
-        QVariant data_for_ai = QVariant::fromValue(death.damage);
-        if (targets.isEmpty() || !player->askForSkillInvoke(objectName(), data_for_ai))
+        if (targets.isEmpty())
             return false;
 
-        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName());
+        QString prompt = "zhuiyi-invoke";
+        if (death.damage && death.damage->from && death.damage->from != player)
+            prompt = QString("%1x:%2").arg(prompt).arg(death.damage->from->objectName());
+        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), prompt, true);
+        if (!target) return false;
+
         if (target->getGeneralName().contains("sunquan"))
             room->broadcastSkillInvoke(objectName(), 2);
         else

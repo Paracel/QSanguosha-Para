@@ -2183,11 +2183,14 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			null_num = null_num + 1
 		end
 	end
-	if null_card then null_card = sgs.Card_Parse(null_card) else return end
-	if self.player:isCardLimited(null_card, sgs.Card_MethodUse) then return end
+	if null_card then null_card = sgs.Card_Parse(null_card) else return nil end
+	if self.player:isCardLimited(null_card, sgs.Card_MethodUse) then return nil end
 	if (from and from:isDead()) or (to and to:isDead()) then return nil end
 	if self:needBear() then return nil end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return nil end
+
+	if trick:isKindOf("FireAttack") and to:isKongcheng() then return nil end
+	if ("snatch|dismantlement"):match(trick:objectName()) and to:isAllNude() then return nil end
 
 	if from and not from:hasSkill("jueqing") then
 		if (to:hasSkill("wuyan") or (self:getDamagedEffects(to, from) and self:isFriend(to)))
@@ -2203,13 +2206,23 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	end
 
 	if positive then
+		if ("snatch|dismantlement"):match(trick:objectName()) and not to:containsTrick("YanxiaoCard") and (to:containsTrick("indulgence") or to:containsTrick("supply_shortage")) then
+			if self:isEnemy(from) then return null_card end
+			if self:isFriend(to) and to:isNude() then return nil end
+		end
 		if from and self:isEnemy(from) and (sgs.evaluateRoleTrends(from) ~= "neutral" or sgs.isRolePredictable()) then
-			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandCard(null_card) then return null_card end
+			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandCard(null_card) and trick:isKindOf("SingleTargetTrick") then return null_card end
 			if trick:isKindOf("ExNihilo") and (self:isWeak(from) or self:hasSkills(sgs.cardneed_skill, from) or from:hasSkill("manjuan")) then return null_card end
 			if trick:isKindOf("IronChain") and not to:hasArmorEffect("vine") then return nil end
 			if self:isFriend(to) then
 				if trick:isKindOf("Dismantlement") then
-					if self:getDangerousCard(to) or self:getValuableCard(to) or (to:getHandcardNum() == 1 and not self:needKongcheng(to)) then return null_card end
+					if self:getDangerousCard(to) or self:getValuableCard(to) then return null_card end
+					if to:getHandcardNum() == 1 and not self:needKongcheng(to) then
+						if (getKnownCard(to, "TrickCard", false) == 1 or getKnownCard(to, "EquipCard", false) == 1 or getKnownCard(to, "Slash", false) == 1) then
+							return nil
+						end
+						return null_card
+					end
 				else
 					if trick:isKindOf("Snatch") then return null_card end
 					if trick:isKindOf("FireAttack") and (to:hasArmorEffect("vine") or to:getMark("@gale") > 0 or (to:isChained() and not self:isGoodChainTarget(to)))
@@ -2235,14 +2248,12 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					if to:getHp() - to:getHandcardNum() >= 2 then return nil end
 					if to:hasSkill("tuxi") and to:getHp() > 2 then return nil end
 					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
-					if to:hasSkill("shensu") and not self:isWeak(to) then return nil end
 					return null_card
 				end
 				if trick:isKindOf("SupplyShortage") then
 					if self:hasSkills("guidao|tiandu", to) then return nil end
 					if to:getMark("@kuiwei") == 0 then return nil end
 					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
-					if to:hasSkill("shensu") and not self:isWeak(to) then return nil end
 					return null_card
 				end
 			end
@@ -2295,7 +2306,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if from:objectName() == to:objectName() then
 				if self:isFriend(from) then return null_card else return end
 			end
-			if not (trick:isKindOf("AmazingGrace") or trick:isKindOf("GodSalvation") or trick:isKindOf("AOE")) then
+			if not (trick:isKindOf("GlobalEffect") or trick:isKindOf("AOE")) then
 				if self:isFriend(from) then
 					if ("snatch|dismantlement"):match(trick:objectName()) and to:isNude() then
 					elseif trick:isKindOf("FireAttack") and to:isKongcheng() then

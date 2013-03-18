@@ -733,7 +733,7 @@ public:
         QString prompt = "zhuiyi-invoke";
         if (death.damage && death.damage->from && death.damage->from != player)
             prompt = QString("%1x:%2").arg(prompt).arg(death.damage->from->objectName());
-        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), prompt, true);
+        ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), prompt, true, true);
         if (!target) return false;
 
         if (target->getGeneralName().contains("sunquan"))

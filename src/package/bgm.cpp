@@ -816,7 +816,7 @@ public:
         }
         if (victims.empty())
             return n;
-        ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie", "zhaolie-invoke", true);
+        ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie", "zhaolie-invoke", true, true);
         if (victim) {
             victim->setFlags("ZhaolieTarget");
             liubei->setFlags("zhaolie");

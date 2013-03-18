@@ -25,7 +25,7 @@ public:
             can_invoke = true;
 
         if (can_invoke) {
-            ServerPlayer *target = room->askForPlayerChosen(zhangliao, targets, objectName(), "gh_tuxi-invoke", true);
+            ServerPlayer *target = room->askForPlayerChosen(zhangliao, targets, objectName(), "gh_tuxi-invoke", true, true);
             if (target) {
                 target->setFlags("GHTuxiTarget");
                 zhangliao->setFlags("gh_tuxi");

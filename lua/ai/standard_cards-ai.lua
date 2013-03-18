@@ -847,10 +847,10 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 	local effect = data:toSlashEffect()
 	local allcards = self.player:getCards("he")
 	allcards = sgs.QList2Table(allcards)
-	if self:hasHeavySlashDamage(self.player, effect.slash, target) or #allcards - 2 >= self.player:getHp()
+	if self:hasHeavySlashDamage(self.player, effect.slash, target) or #allcards - 3 >= self.player:getHp()
 		or (self.player:hasSkill("kuanggu") and self.player:isWounded() and self.player:distanceTo(effect.to) == 1)
 		or (effect.to:getHp() == 1 and not effect.to:hasSkill("buqu"))
-		or ((self:hasSkills(sgs.need_kongcheng) or not self:hasLoseHandcardEffective()) and self.player:getHandcardNum() > 0)
+		or ((self:needKongcheng() or not self:hasLoseHandcardEffective()) and self.player:getHandcardNum() > 0)
 		or (self:hasSkills(sgs.lose_equip_skill, self.player) and self.player:getEquips():length() > 1 and self.player:getHandcardNum() < 2)
 		or self:needToThrowArmor() then
 

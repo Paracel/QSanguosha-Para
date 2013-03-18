@@ -360,6 +360,10 @@ void RecAnalysis::setDesignation() {
             only = false;
             break;
         }
+        if (s->m_role == "lord" && s->m_isAlive) {
+            only = false;
+            break;
+        }
     }
     addDesignation(tr("Break Point"), MostKill, findPlayerOfKills(1), only, "rebel", false, false, true);
 

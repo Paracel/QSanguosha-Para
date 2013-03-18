@@ -15,7 +15,8 @@ sgs.ai_skill_choice.moukui = function(self, choices, data)
 end
 
 sgs.ai_skill_invoke.tianming = function(self, data)
-	if self:hasSkill("manjuan") and self.room:getCurrent() ~= self.player then return false end
+	if self:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
+	if self.player:hasArmorEffect("eight_diagram") and self.player:getCardCount(true) == 2 then return false end
 	if self:getCardsNum("Jink") == 0 or self.player:isNude() then return true end
 	local unpreferedCards = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())

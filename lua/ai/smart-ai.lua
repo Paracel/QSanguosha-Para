@@ -232,8 +232,8 @@ end
 function SmartAI:assignKeep(num, start)
 	if num <= 0 then return end
 	if start then
-		self.keepValue = {} 
-		self.kept = {} 
+		self.keepValue = {}
+		self.kept = {}
 	end
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
@@ -1537,7 +1537,7 @@ function SmartAI:updatePlayers(clear_flags)
 	self.harsh_retain = true
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if self:objectiveLevel(player) < 0 and player:isAlive() then 
+		if self:objectiveLevel(player) < 0 and player:isAlive() then
 			table.insert(self.friends_noself, player)
 			table.insert(self.friends, player)
 		end
@@ -1608,7 +1608,7 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 	local trick_class = promptlist[2]
 	local trick_target = promptlist[3]
 	local positive = true
-	if promptlist[4] == "false" then 
+	if promptlist[4] == "false" then
 		positive = false
 	end
 	local level = #sgs.ai_nullification_level
@@ -1653,7 +1653,7 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 					sgs.ai_nullification_level = { trick_target, null_source }
 				end
 				sgs.ai_trick_struct = { null_source, trick_target, trick_class }
-			end 
+			end
 		else
 			sgs.lastclass = trick_class
 			local to = findPlayerByObjectName(room, trick_target, false, player)
@@ -2398,7 +2398,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		if flags:match("h") then
 			if self:hasSkills("jijiu|qingnang|qiaobian|jieyin|beige|buyi|manjuan", who)
 				and not who:isKongcheng() and who:getHandcardNum() <= 2 and not self:doNotDiscard(who, "h") then
-				return self:getCardRandomly(who, "h") 
+				return self:getCardRandomly(who, "h")
 			end
 			local cards = sgs.QList2Table(who:getHandcards())
 			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), who:objectName())
@@ -2607,8 +2607,8 @@ function SmartAI:getEnemyNumBySeat(from, to)
 	local to_seat = (to:getSeat() - from:getSeat()) % #players
 	local enemynum = 0
 	for _, p in ipairs(players) do
-		if self:isEnemy(from, p) and ((p:getSeat() - from:getSeat()) % #players) < to_seat then			 
-			enemynum = enemynum + 1 
+		if self:isEnemy(from, p) and ((p:getSeat() - from:getSeat()) % #players) < to_seat then
+			enemynum = enemynum + 1
 		end
 	end
 	return enemynum
@@ -2745,7 +2745,7 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then 
+	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then
 		if (self.player:getHandcardNum() < 2 and self.player:usedTimes("RendeCard") == 0) then return end
 
 		if ((self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0) or
@@ -2753,7 +2753,7 @@ function SmartAI:getCardNeedPlayer(cards)
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:hasWeapon("guding_blade")
 					and (enemy:canSlash(self.player)
-					or self:hasSkills("shensu|jiangchi|tianyi|wushen|nosgongqi")) then 
+					or self:hasSkills("shensu|jiangchi|tianyi|wushen|nosgongqi")) then
 					return
 				end
 				if enemy:canSlash(self.player) and enemy:hasSkill("nosqianxi") and enemy:distanceTo(self.player) == 1 then return end
@@ -2826,11 +2826,11 @@ function SmartAI:getCardNeedPlayer(cards)
 						for _, hcard in ipairs(cardtogive) do
 							if hcard:isKindOf("Weapon")
 								and friend:distanceTo(p) <= friend:getAttackRange() + (sgs.weapon_range[hcard:getClassName()] or 0) and not friend:getWeapon() then
-								return hcard, friend 
+								return hcard, friend
 							end
 							if hcard:isKindOf("OffensiveHorse")
 								and friend:distanceTo(p) <= friend:getAttackRange() + 1 and not friend:getOffensiveHorse() then
-								return hcard, friend 
+								return hcard, friend
 							end
 						end
 					end
@@ -2904,7 +2904,7 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 
+				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
 					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
 					return hcard, friend
 				end
@@ -3364,10 +3364,10 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 		if attacker:hasSkill("nosqianxi") and attacker:distanceTo(player) == 1 then
 			return false
 		end
-		if attacker:hasWeapon("ice_sword") and player:getCards("he"):length() > 1 then 
+		if attacker:hasWeapon("ice_sword") and player:getCards("he"):length() > 1 then
 			return false
 		end
-	end  
+	end
 	if player:hasLordSkill("shichou") then
 		return sgs.ai_need_damaged.shichou(self, attacker) == 1
 	end
@@ -4086,7 +4086,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 	if card:isKindOf("SavageAssault") then sj_num = getCardsNum("Slash", to) end
 
 	if self:aoeIsEffective(card, to, from) then
-		value = value - (sj_num < 1 and 30 or 0) 
+		value = value - (sj_num < 1 and 30 or 0)
 		value = value - (self:isWeak(to) and 40 or 20)
 
 		if self:getDamagedEffects(to, from) and not from:hasSkill("jueqing") then value = value + 50 end
@@ -4165,8 +4165,8 @@ function SmartAI:getAoeValue(card, player)
 		if self:getCardsNum("Peach") > sub_peach then return true end
 
 		for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			if self:isFriend(lord, p) then 
-				goodnull = goodnull + getCardsNum("Nullification", p) 
+			if self:isFriend(lord, p) then
+				goodnull = goodnull + getCardsNum("Nullification", p)
 			else
 				badnull = badnull + getCardsNum("Nullification", p)
 			end
@@ -4256,7 +4256,7 @@ function SmartAI:hasTrickEffective(card, to, from)
 	end
 
 	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
-		if card:isKindOf("TrickCard") and 
+		if card:isKindOf("TrickCard") and
 		  (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
 			return false
 		end

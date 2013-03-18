@@ -203,7 +203,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 	for _, enemy in ipairs(self.enemies) do
 		down = down + 10
 		up = up - (enemy:isWounded() and 10 or 0)
-		if self:hasSkills(sgs.masochism_skill, enemy) then 
+		if self:hasSkills(sgs.masochism_skill, enemy) then
 			down = down + 10
 			up = up - 15
 		end
@@ -219,7 +219,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 		end
 	end
 
-	if down > 0 then 
+	if down > 0 then
 		sgs.ai_skill_choice.qinyin = "down"
 		return true
 	elseif up > 0 then
@@ -845,7 +845,7 @@ jilve_skill.getTurnUseCard = function(self)
 				and #self.enemies > 1 then
 				sgs.ai_skill_choice.jilve = "wansha"
 				sgs.ai_use_priority.JilveCard = 8
-				return sgs.Card_Parse("@JilveCard=.") 
+				return sgs.Card_Parse("@JilveCard=.")
 			end
 		end
 	end

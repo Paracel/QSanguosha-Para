@@ -389,7 +389,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	end
 	if min_friend and max_enemy then
 		use.card = sgs.Card_Parse("@GanluCard=.")
-		if use.to then 
+		if use.to then
 			use.to:append(min_friend)
 			use.to:append(max_enemy)
 		end
@@ -423,7 +423,7 @@ sgs.ai_card_intention.GanluCard = function(self, card, from, to)
 	end
 	table.sort(to, compare_func)
 	for i = 1, 2, 1 do
-		if to[i]:hasArmorEffect("silver_lion") then 
+		if to[i]:hasArmorEffect("silver_lion") then
 			sgs.updateIntention(from, to[i], -20)
 			break
 		end
@@ -440,7 +440,7 @@ sgs.ai_skill_invoke.buyi = function(self, data)
 	if dying.who:isKongcheng() then return false end
 
 	isFriend = not self:isEnemy(dying.who)
-	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying.who:isLord() or dying.who:objectName() == self.player:objectName()) and 
+	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying.who:isLord() or dying.who:objectName() == self.player:objectName()) and
 		(sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
 		isFriend = false
 	end
@@ -563,7 +563,7 @@ sgs.ai_skill_choice.mingce = function(self, choices)
 	if not self:isFriend(chengong) and self:isWeak() then return "draw" end
 	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
 	for _, player in sgs.qlist(self.room:getAlivePlayers()) do
-		if player:hasFlag("MingceTarget") then 
+		if player:hasFlag("MingceTarget") then
 			if self:isEnemy(player) and not self:slashProhibit(slash, player) and sgs.getDefenseSlash(player) <= 2
 				and self:slashIsEffective(slash, player) and sgs.isGoodTarget(player, self.enemies, self) then
 				return "use"

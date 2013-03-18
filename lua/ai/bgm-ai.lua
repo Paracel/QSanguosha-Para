@@ -32,7 +32,7 @@ lihun_skill.getTurnUseCard = function(self)
 		else
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then 
+					and not acard:isKindOf("Peach") then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -52,7 +52,7 @@ lihun_skill.getTurnUseCard = function(self)
 		else
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-				  and not acard:isKindOf("Peach") then 
+				  and not acard:isKindOf("Peach") then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -546,7 +546,7 @@ function SmartAI:useCardYanxiaoCard(card, use)
 	self:sort(self.friends_noself, "defense")
 	for _, friend in ipairs(self.friends_noself) do
 		local judges = friend:getJudgingArea()
-		local need_yanxiao = (friend:containsTrick("lightning") and self:getFinalRetrial(player) == 2) 
+		local need_yanxiao = (friend:containsTrick("lightning") and self:getFinalRetrial(player) == 2)
 							or friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")
 		if need_yanxiao and not friend:containsTrick("YanxiaoCard") then
 			use.card = card
@@ -807,7 +807,7 @@ end
 sgs.ai_skill_choice.xuehen = function(self, choices)
 	local current = self.room:getCurrent();
 	if self:isEnemy(current) then
-		if self.player:getLostHp() >= 3 and current:getCardCount(true) >= 3 and not self:needKongcheng(current) 
+		if self.player:getLostHp() >= 3 and current:getCardCount(true) >= 3 and not self:needKongcheng(current)
 			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < self.player:getLostHp()) then
 			return "discard"
 		end

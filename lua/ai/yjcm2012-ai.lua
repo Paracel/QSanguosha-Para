@@ -88,7 +88,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 		if use.card:isKindOf("Slash") then
 			if not self:slashIsEffective(use.card, self.player, use.from) then return false end
 			if self:hasHeavySlashDamage(use.from, use.card, self.player) then return true end
-			
+
 			local hasHeart = false
 			for _, card in ipairs(self:getCards("Jink")) do
 				if card:getSuit() == sgs.Card_Heart then
@@ -669,7 +669,7 @@ function sgs.ai_cardneed.lihuo(to, card)
 end
 
 sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
-	local slashcards = {} 
+	local slashcards = {}
 	local chunlao = self.player:getPile("wine")
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)

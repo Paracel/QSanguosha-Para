@@ -61,7 +61,7 @@ neoluoyi_skill.getTurnUseCard = function(self)
 		if not luoyicard and offhorse then
 			if noHorseTargets == 0 then
 				for _, card in sgs.qlist(self.player:getCards("he")) do
-					if card:isKindOf("EquipCard") and not card:isKindOf("OffensiveHorse") then 
+					if card:isKindOf("EquipCard") and not card:isKindOf("OffensiveHorse") then
 						luoyicard = card
 						break
 					end
@@ -139,7 +139,7 @@ sgs.ai_skill_invoke.yishi = function(self, data)
 	else
 		if target:isNude() then return false end
 		if self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
-		if target:getEquips():length() == 0 
+		if target:getEquips():length() == 0
 			and (target:getHandcardNum() == 1 and (self:hasSkills(sgs.need_kongcheng, target) or not self:hasLoseHandcardEffective(target))) then
 			return false
 		end

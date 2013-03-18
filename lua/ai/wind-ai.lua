@@ -161,7 +161,7 @@ end
 
 function sgs.ai_cardneed.guidao(to, card, self)
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
-		if self:getFinalRetrial(to) == 1 then 
+		if self:getFinalRetrial(to) == 1 then
 			if player:containsTrick("lightning") and not player:containsTrick("YanxiaoCard") then
 				return card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 and not self:hasSkills("hongyan|wuyan")
 			end
@@ -214,7 +214,7 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 	if from:getRole() == "rebel" and to:isLord() then
 		local other_rebel
 		for _, player in sgs.qlist(self.room:getOtherPlayers(from)) do
-			if sgs.evaluatePlayerRole(player) == "rebel" or sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then 
+			if sgs.evaluatePlayerRole(player) == "rebel" or sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel" then
 				other_rebel = player
 				break
 			end
@@ -350,7 +350,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 		if (enemy:getHp() <= dmg.damage and enemy:isAlive()) then
 			if (enemy:getHandcardNum() <= 2) or self:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng", enemy)
 				or enemy:containsTrick("indulgence") and self:canAttack(enemy, (dmg.from or self.room:getCurrent()), dmg.nature) then
-				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName() 
+				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName()
 			end
 		end
 	end
@@ -472,7 +472,7 @@ guhuo_skill.getTurnUseCard = function(self)
 
 	for _,card in ipairs(cards) do
 		if card:isNDTrick() then
-			local dummyuse = { isDummy = true } 
+			local dummyuse = { isDummy = true }
 			self:useTrickCard(card, dummyuse)
 			if dummyuse.card then
 				local cardstr = "@GuhuoCard=" .. card:getId() .. ":" .. card:objectName()
@@ -506,7 +506,7 @@ guhuo_skill.getTurnUseCard = function(self)
 		table.insertTable(GuhuoCard_str, otherSuit_str)
 	end
 
-	local peach_str = self:getGuhuoCard("Peach", self.player, true) 
+	local peach_str = self:getGuhuoCard("Peach", self.player, true)
 	if peach_str then table.insert(GuhuoCard_str, peach_str) end
 
 	local fakeCards = {}

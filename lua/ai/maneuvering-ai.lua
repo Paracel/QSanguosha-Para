@@ -402,7 +402,7 @@ sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 				local needKeepPeach = true
 				if (self:isWeak(target) and not self:isWeak()) or target:getHp() == 1
 					or self:isGoodChainTarget(target) or target:hasArmorEffect("vine") or target:getMark("@gale") > 0 then
-					needKeepPeach = false 
+					needKeepPeach = false
 				end
 				if lord and not self:isEnemy(lord) and sgs.isLordInDanger() and self:getCardsNum("Peach") == 1 and self.player:aliveCount() > 2 then
 					needKeepPeach = true

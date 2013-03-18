@@ -111,7 +111,7 @@ sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 			end
 		end
 		if friend:hasSkill("manjuan") and x > 0 then x = x + 1 end
-		
+
 		if x > max_x and friend:isAlive() then
 			max_x = x
 			target = friend
@@ -448,7 +448,7 @@ sgs.ai_cardneed.tianyi = function(to, card, self)
 		end
 	end
 	if not has_big then
-		return card:getNumber() > 10 
+		return card:getNumber() > 10
 	else
 		return card:isKindOf("Slash") or card:isKindOf("Analeptic")
 	end

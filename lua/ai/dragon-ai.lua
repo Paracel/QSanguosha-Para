@@ -9,7 +9,7 @@ sgs.ai_skill_use["@@drzhiheng"] = function(self, prompt)
 	for index = #to_discard, 1, -1 do
 		if self.player:isJilei(sgs.Sanguosha:getCard(to_discard[index])) then table.remove(to_discard, index) end
 	end
-	if #to_discard > 0 then 
+	if #to_discard > 0 then
 		return ("@DrZhihengCard=" .. table.concat(to_discard, "+"))
 	else
 		return ("@DrZhihengCard=.")
@@ -44,19 +44,19 @@ sgs.ai_skill_use_func.DrJiuyuanCard = function(card, use, self)
 
 		self:sortByKeepValue(cards)
 		for _, acard in sgs.qlist(cards) do
-			if self:isWeak(lord) and isCard("Analeptic", acard, lord) then 
+			if self:isWeak(lord) and isCard("Analeptic", acard, lord) then
 				card_id = acard:getEffectiveId()
 				break
 			end
 		end
 		if card_id == -1 then
-			if self:isWeak(lord) and isCard("Jink", acard, lord) then 
+			if self:isWeak(lord) and isCard("Jink", acard, lord) then
 				card_id = acard:getEffectiveId()
 				break
 			end
 		end
 		if card_id == -1 then
-			if self:isWeak(lord) and isCard("Nullification", acard, lord) then 
+			if self:isWeak(lord) and isCard("Nullification", acard, lord) then
 				card_id = acard:getEffectiveId()
 				break
 			end
@@ -108,19 +108,19 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:getWeapon() and not self:hasSkills(sgs.lose_equip_skill, enemy) and not enemy:hasSkill("tuntian") then 
+		if enemy:getWeapon() and not self:hasSkills(sgs.lose_equip_skill, enemy) and not enemy:hasSkill("tuntian") then
 			table.insert(targets, enemy)
 		end
 	end
 	for _, friend in ipairs(self.friends_noself) do
-		if friend:getWeapon() then 
+		if friend:getWeapon() then
 			table.insert(targets, friend)
 		end
 	end
 	if #targets == 0 then return end
 	local equip_need
 	for _, enemy in ipairs(self.enemies) do
-		if self:getCardsNum("Slash") > 0 
+		if self:getCardsNum("Slash") > 0
 			and self.player:canSlash(enemy, nil, false) and not self:cantbeHurt(enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 			and self:damageIsEffective(self.player, sgs.DamageStruct_Normal, enemy) then
 			if self.player:distanceTo(enemy) == 1 and self:getCardsNum("Slash") > 3 then equip_need = "Crossbow"

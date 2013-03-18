@@ -40,7 +40,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 		if self.player:getArmor() then num = num + 1 end
 		if num > 0 then
 			for _, card in ipairs(cards) do
-				if card:isKindOf("Jink") and num > 0 then 
+				if card:isKindOf("Jink") and num > 0 then
 					table.insert(unpreferedCards, card:getId())
 					num = num - 1
 				end
@@ -70,7 +70,7 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 		if self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.remove(unpreferedCards, index) end
 	end
 
-	if #unpreferedCards >= 2 or #unpreferedCards == #cards then 
+	if #unpreferedCards >= 2 or #unpreferedCards == #cards then
 		return true
 	end
 end
@@ -99,7 +99,7 @@ sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, i
 		if self.player:getArmor() then num = num + 1 end
 		if num > 0 then
 			for _, card in ipairs(cards) do
-				if card:isKindOf("Jink") and num > 0 then 
+				if card:isKindOf("Jink") and num > 0 then
 					table.insert(unpreferedCards, card:getId())
 					num = num - 1
 				end
@@ -148,7 +148,7 @@ mizhao_skill.getTurnUseCard = function(self)
 	local allcard = {}
 	cards = sgs.QList2Table(cards)
 	for _, card in ipairs(cards) do
-		table.insert(allcard, card:getId()) 
+		table.insert(allcard, card:getId())
 	end
 	local parsed_card = sgs.Card_Parse("@MizhaoCard=" .. table.concat(allcard, "+"))
 	return parsed_card

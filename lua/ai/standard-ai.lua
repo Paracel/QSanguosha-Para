@@ -170,7 +170,7 @@ end
 
 function sgs.ai_cardneed.guicai(to, card, self)
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
-		if self:getFinalRetrial(to) == 1 then 
+		if self:getFinalRetrial(to) == 1 then
 			if player:containsTrick("lightning") and not player:containsTrick("YanxiaoCard") then
 				return card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 and not self:hasSkills("hongyan|wuyan")
 			end
@@ -291,8 +291,8 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		if add_player(jiangwei, 1) == 2  then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 	end
 	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player, dengai) == 0)
-		and dengai:getMark("zaoxian") == 0 and dengai:getPile("field"):length() == 2 and add_player(dengai, 1) == 2 then 
-		return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) 
+		and dengai:getMark("zaoxian") == 0 and dengai:getPile("field"):length() == 2 and add_player(dengai, 1) == 2 then
+		return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2])
 	end
 
 	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, zhugeliang) > 0 then
@@ -985,7 +985,7 @@ zhiheng_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
-	local unpreferedCards = {} 
+	local unpreferedCards = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
 
 	if self.player:getHp() < 3 then
@@ -1349,7 +1349,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	self:sort(self.enemies, "defense")
 
 	local doLiuli = function(who)
-		if not self:isFriend(who) and who:hasSkill("leiji") 
+		if not self:isFriend(who) and who:hasSkill("leiji")
 			and (self:hasSuit("spade", true, who) or who:getHandcardNum() >= 3)
 			and (getKnownCard(who, "Jink", true) >= 1 or self:hasEightDiagramEffect(who)) then
 			return "."
@@ -1679,7 +1679,7 @@ lijian_skill.name = "lijian"
 table.insert(sgs.ai_skills, lijian_skill)
 lijian_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("LijianCard") or self.player:isNude() then
-		return 
+		return
 	end
 	local card_id
 	local cards = self.player:getHandcards()
@@ -1695,7 +1695,7 @@ lijian_skill.getTurnUseCard = function(self)
 		else
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-					and not acard:isKindOf("Peach") then 
+					and not acard:isKindOf("Peach") then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -1715,7 +1715,7 @@ lijian_skill.getTurnUseCard = function(self)
 		else
 			for _, acard in ipairs(cards) do
 				if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-				  and not acard:isKindOf("Peach") then 
+				  and not acard:isKindOf("Peach") then
 					card_id = acard:getEffectiveId()
 					break
 				end
@@ -1776,7 +1776,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 
 			if loyalist and e_peaches < 1 then
 				use.card = card
-				if use.to then 
+				if use.to then
 					use.to:append(loyalist)
 					use.to:append(lord)
 				end
@@ -1796,7 +1796,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 				else
 					nextp = nextp:getNextAlive()
 				end
-			end	
+			end
 			if nextplayerIsEnemy then
 				local round = 50
 				local to_die, nextfriend
@@ -1866,7 +1866,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 				end
 				if target then
 					use.card = card
-					if use.to then 
+					if use.to then
 						use.to:append(lord)
 						use.to:append(target)
 					end
@@ -1883,7 +1883,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			and self:damageIsEffective(shenguanyu, sgs.DamageStruct_Normal, lord) then
 
 			use.card = card
-			if use.to then 
+			if use.to then
 				use.to:append(shenguanyu)
 				use.to:append(lord)
 			end
@@ -1968,7 +1968,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			second = males[2]
 			local lord = self.room:getLord()
 			if first:getHp() <= 1 then
-				if self.player:isLord() or sgs.isRolePredictable() then 
+				if self.player:isLord() or sgs.isRolePredictable() then
 					local friend_maxSlash = findFriend_maxSlash(self, first)
 					if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then second = friend_maxSlash end
 				elseif lord and lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
@@ -1985,7 +1985,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 
 			if first and second and first:objectName() ~= second:objectName() and not second:isCardLimited(duel, sgs.Card_MethodUse) then
 				use.card = card
-				if use.to then 
+				if use.to then
 					use.to:append(first)
 					use.to:append(second)
 				end

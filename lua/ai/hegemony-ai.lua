@@ -21,7 +21,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 
 	if not card then return "." end
 	if self:isFriend(currentplayer) then
-		if self:needToThrowArmor(currentplayer) then 
+		if self:needToThrowArmor(currentplayer) then
 			if card:isKindOf("Slash") or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 1) then
 				return "$" .. card:getEffectiveId()
 			else return "."
@@ -263,7 +263,7 @@ sgs.ai_skill_use_func.FenxunCard = function(card, use, self)
 		local target
 		for _, enemy in ipairs(self.enemies) do
 			for _, slash in ipairs(self:getCards("Slash")) do
-				if self.player:distanceTo(enemy) > 1 and not self:slashProhibit(slash, enemy) 
+				if self.player:distanceTo(enemy) > 1 and not self:slashProhibit(slash, enemy)
 				  and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
 					target = enemy
 					break
@@ -535,7 +535,7 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 		for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|ganglie|neoganglie|fankui|jianxiong|enyuan|nosenyuan" ..
 								"|qingguo|longdan|xiangle|jiang|yanzheng|tianming|" ..
 								"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
-								"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" .. 
+								"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" ..
 								"guzheng|xingshang|shushen"):split("|")) do
 			if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
 				use.card = card
@@ -562,7 +562,7 @@ sgs.ai_skill_choice.qingcheng = function(self, choices, data)
 	local target = data:toPlayer()
 	for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|qingguo|longdan|xiangle|jiang|yanzheng|tianming|" ..
 							"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
-							"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" .. 
+							"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" ..
 							"guzheng|xingshang|shushen"):split("|")) do
 		if target:hasSkill(askill, true) and target:getMark("Qingcheng" .. askill) == 0 then
 			return askill

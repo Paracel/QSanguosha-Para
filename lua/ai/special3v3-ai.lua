@@ -22,7 +22,7 @@ end
 
 function sgs.ai_cardneed.huanshi(to, card, self)
 	for _, player in ipairs(self.friends) do
-		if self:getFinalRetrial(to) == 1 then 
+		if self:getFinalRetrial(to) == 1 then
 			if self:willSkipDrawPhase(player) then
 				return card:getSuit() == sgs.Card_Club and not self:hasSuit("club", true, to)
 			end

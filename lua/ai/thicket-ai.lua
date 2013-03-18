@@ -1,12 +1,12 @@
 sgs.ai_skill_invoke.xingshang = true
 
-function toTurnOver(self, player, n) 
+function toTurnOver(self, player, n)
 	if not player then global_room:writeToConsole(debug.traceback()) return end
 	if player:hasUsed("ShenfenCard") and player:faceUp() and player:getPhase() == sgs.Player_Play
 		and (not player:hasUsed("ShenfenCard") and player:getMark("@wrath") >= 6 or player:hasFlag("ShenfenUsing")) then
 		return false
 	end
-	if n > 1 and player:hasSkill("jijiu") 
+	if n > 1 and player:hasSkill("jijiu")
 		and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then
 		return false
 	end
@@ -280,7 +280,7 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 	if not self.yinghun and #self.enemies > 0 then
 		self:sort(self.enemies, "handcard")
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:isAlive() and enemy:getCards("he"):length() >= x - 1 
+			if enemy:isAlive() and enemy:getCards("he"):length() >= x - 1
 				and not (self:needKongcheng(enemy) and enemy:getCards("he"):length() == x - 1)
 				and not self:doNotDiscard(enemy, "he", true) then
 				self.yinghunchoice = "d1tx"
@@ -376,7 +376,7 @@ sgs.ai_skill_invoke.haoshi = function(self, data)
 		end
 		extra = extra + #kingdoms
 	end
-	local draw_skills = { 
+	local draw_skills = {
 						["yingzi"] = 1, ["zishou"] = self.player:getLostHp(), ["shenwei"] = 2, ["juejing"] = self.player:getLostHp(),
 						["luoyi"] = -1, ["zhaolie"] = -1, ["hongyuan"] = -1
 						}
@@ -476,13 +476,13 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	local mycards = {}
 	local myequips = {}
 	for _, c in sgs.qlist(self.player:getHandcards()) do
-		if not self.player:isJilei(c) then 
-			cardNum = cardNum + 1 
+		if not self.player:isJilei(c) then
+			cardNum = cardNum + 1
 			table.insert(mycards, c)
 		end
 	end
 	for _, c in sgs.qlist(self.player:getEquips()) do
-		if not self.player:isJilei(c) then 
+		if not self.player:isJilei(c) then
 			cardNum = cardNum + 1
 			table.insert(mycards, c)
 			table.insert(myequips, c)
@@ -491,7 +491,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	self:sortByKeepValue(mycards)
 
 	self:sort(self.enemies, "handcard")
-	local friends = {} 
+	local friends = {}
 	for _, player in ipairs(self.friends_noself) do
 		if not player:hasSkill("manjuan") then
 			table.insert(friends, player)
@@ -553,8 +553,8 @@ sgs.ai_skill_discard.DimengCard = function(self, discard_num, min_num, optional,
 	end
 
 	local compare_func = function(a, b)
-		if aux_func(a) ~= aux_func(b) then 
-			return aux_func(a) < aux_func(b) 
+		if aux_func(a) ~= aux_func(b) then
+			return aux_func(a) < aux_func(b)
 		end
 		return self:getKeepValue(a) < self:getKeepValue(b)
 	end

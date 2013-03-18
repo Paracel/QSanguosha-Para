@@ -1791,10 +1791,9 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         // both src and dest are player
         QString type;
         if (move.to_place == Player::PlaceDelayedTrick) {
-            const Card *trick = Sanguosha->getCard(move.card_ids.first());
-            if (trick->objectName() == "lightning") {
-                if (move.from != move.to) type = "$LightningMove";
-            } else
+            if (move.from_place == Player::PlaceDelayedTrick && move.from != move.to)
+                type = "$LightningMove";
+            else
                 type = "$PasteCard";
         }
         if (!type.isNull()) {

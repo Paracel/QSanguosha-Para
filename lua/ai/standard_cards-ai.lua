@@ -1516,9 +1516,19 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local enemies = {}
 	if #self.enemies == 0 and self:getOverflow() > 0 then
 		local lord = self.room:getLord()
-		local sb_liubei = lord and lord:hasLordSkill("shichou")
 		for _, player in ipairs(players) do
-			if not player:isLord() and sgs.evaluateRoleTrends(player) ~= "loyalist" and not (sb_liubei and player:getKingdom() == "shu") then table.insert(enemies, player) end
+			if not self:isFriend(player) then
+				if lord and self.player:isLord() then
+					local kingdoms = {}
+					if lord:getGeneral():isLord() then table.insert(kingdoms, lord:getGeneral():getKingdom()) end
+					if lord:getGeneral2() and lord:getGeneral2():isLord() then table.insert(kingdoms, lord:getGeneral2():getKingdom()) end
+					if not table.contains(kingdoms, player:getKingdom()) and not lord:hasSkill("yongsi") then table.insert(enemies, player) end
+				elseif lord and player:objectName() ~= lord:objectName() then
+					table.insert(enemies, player)
+				elseif not lord then
+					table.insert(enemies, player)
+				end
+			end
 		end
 		enemies = self:exclude(enemies, card)
 		self:sort(enemies, "defense")

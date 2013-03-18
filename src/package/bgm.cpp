@@ -606,7 +606,7 @@ public:
         if (pindian->isSuccess()) {
             room->setPlayerFlag(pindian->to, "dahe");
             QList<ServerPlayer *> to_givelist;
-            foreach (ServerPlayer *p, to_givelist) {
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->getHp() <= pindian->from->getHp())
                     to_givelist << p;
             }

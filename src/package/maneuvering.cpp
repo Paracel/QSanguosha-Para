@@ -182,6 +182,7 @@ public:
                 log.arg2 = effect.card->objectName();
                 room->sendLog(log);
 
+                effect.to->setFlags("NonSkillNullify");
                 return true;
             }
         } else if (event == DamageInflicted) {

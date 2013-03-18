@@ -731,7 +731,9 @@ sgs.weapon_range.Spear = 3
 sgs.weapon_range.Halberd = 4
 sgs.weapon_range.KylinBow = 5
 
-sgs.ai_skill_invoke.double_sword = true
+sgs.ai_skill_invoke.DoubleSword = function(self, data)
+	return not self:needKongcheng(self.player, true)
+end
 
 function sgs.ai_slash_weaponfilter.double_sword(to, self)
 	return self.player:getGender() ~= to:getGender()
@@ -742,12 +744,37 @@ function sgs.ai_weapon_value.double_sword(self, enemy)
 end
 
 sgs.ai_skill_cardask["double-sword-card"] = function(self, data, pattern, target)
+	if self.player:isKongcheng() then return "." end
+		local need_double_jink = target and (target:hasSkill("wushuang")
+											or (target:hasSkill("roulin") and self.player:isFemale())
+											or (target:isFemale() and self.player:hasSkill("roulin")))
+	if need_double_jink and self:getCardsNum("Jink") == 2 then return "." end
+
+	if self:needKongcheng(self.player, true) and self.player:getHandcardNum() <= 2 then
+		if self.player:getHandcardNum() == 1 then
+			local card = self.player:getHandcards():first()
+			return isCard("Jink", card, self.player) and "." or ("$"..card:getEffectiveId())
+		end
+		if self.player:getHandcardNum() == 2 then
+			local first = self.player:getHandcards():first()
+			local last = self.player:getHandcards():last()
+			local jink = isCard("Jink", first, self.player) and first or (isCard("Jink", last, self.player) and last)
+			if jink then
+				return first:getEffectiveId() == jink:getEffectiveId() and ("$" .. last:getEffectiveId()) or ("$" .. first:getEffectiveId())
+			end
+		end
+	end
 	if target and self:isFriend(target) then return "." end
 	if self:needBear() then return "." end
+	if target and target:isKongcheng() and target:hasSkill("kongcheng") then return "." end
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
-		if card:isKindOf("Slash") or card:isKindOf("Collateral") or card:isKindOf("GodSalvation")
-		or card:isKindOf("Disaster") or card:isKindOf("EquipCard") or card:isKindOf("AmazingGrace") then
+		if (card:isKindOf("Slash") and self:getCardsNum("Slash") > 1)
+			or (card:isKindOf("Jink") and self:getCardsNum("Jink") > 2)
+			or card:isKindOf("Disaster")
+			or (card:isKindOf("EquipCard") and not self:hasSkills(sgs.lose_equip_skill))
+			or (not self.player:hasSkill("jizhi") and (card:isKindOf("Collateral") or card:isKindOf("GodSalvation")
+														or card:isKindOf("FireAttack") or card:isKindOf("IronChain") or card:isKindOf("AmazingGrace"))) then
 			return "$" .. card:getEffectiveId()
 		end
 	end

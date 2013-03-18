@@ -310,7 +310,7 @@ public:
                 int mark_n = player->getMark("double_jink" + use.card->toString());
                 for (int i = 0; i < use.to.length(); i++) {
                     mark_n += count;
-                    room->setPlayerMark(player, "double_jink" + use.card->toString(), mark_n);
+                    player->setMark("double_jink" + use.card->toString(), mark_n);
                     count *= 10;
                 }
             }
@@ -328,7 +328,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash")) {
                 if (player->getMark("double_jink" + use.card->toString()) > 0)
-                    room->setPlayerMark(player, "double_jink" + use.card->toString(), 0);
+                    player->setMark("double_jink" + use.card->toString(), 0);
             }
         }
 

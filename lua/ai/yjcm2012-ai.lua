@@ -89,6 +89,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			if not self:slashIsEffective(use.card, self.player, use.from) then return false end
 			if self:hasHeavySlashDamage(use.from, use.card, self.player) then return true end
 
+			local jink_num = self:getExpectedJinkNum(use)
 			local hasHeart = false
 			for _, card in ipairs(self:getCards("Jink")) do
 				if card:getSuit() == sgs.Card_Heart then
@@ -97,7 +98,8 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				end
 			end
 			if self:getCardsNum("Jink") == 0
-				or (use.from:hasSkill("wushuang") and self:getCardsNum("Jink") < 2)
+				or jink_num == 0
+				or self:getCardsNum("Jink") < jink_num
 				or (use.from:hasSkill("dahe") and self.player:hasFlag("dahe") and not hasHeart) then
 
 				if self.player:isChained() and not self:isGoodChainTarget(self.player) and use.card:isKindOf("NatureSlash") then return true end

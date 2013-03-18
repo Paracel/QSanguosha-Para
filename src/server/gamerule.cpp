@@ -431,7 +431,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
     case SlashEffectStart: {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             int n_nj = effect.from->getMark("no_jink" + effect.slash->toString());
-            room->setPlayerMark(effect.from, "no_jink" + effect.slash->toString(), n_nj / 10);
+            effect.from->setMark("no_jink" + effect.slash->toString(), n_nj / 10);
 
             if (effect.jink_num > 0) {
                 if (n_nj % 10) {
@@ -440,7 +440,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 }
             }
             int n_dj = effect.from->getMark("double_jink" + effect.slash->toString());
-            room->setPlayerMark(effect.from, "double_jink" + effect.slash->toString(), n_dj / 10);
+            effect.from->setMark("double_jink" + effect.slash->toString(), n_dj / 10);
             if (effect.jink_num == 1) {
                 if (n_dj % 10) {
                     effect.jink_num = 2;

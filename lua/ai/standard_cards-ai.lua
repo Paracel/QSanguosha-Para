@@ -731,7 +731,7 @@ sgs.weapon_range.Spear = 3
 sgs.weapon_range.Halberd = 4
 sgs.weapon_range.KylinBow = 5
 
-sgs.ai_skill_invoke.DoubleSword = function(self, data)
+sgs.ai_skill_invoke.double_sword = function(self, data)
 	return not self:needKongcheng(self.player, true)
 end
 
@@ -743,17 +743,43 @@ function sgs.ai_weapon_value.double_sword(self, enemy)
 	if enemy and enemy:isMale() ~= self.player:isMale() then return 3 end
 end
 
+function SmartAI:getExpectedJinkNum(use)
+	local cantUseJink, needDoubleJink = false, false
+	if (use.from:getMark("no_jink" .. use.card:toString()) > 0) then
+		local num = use.from:getMark("no_jink" .. use.card:toString())
+		for _, p in sgs.qlist(use.to) do
+			if p:objectName() == self.player:objectName() and num % 10 > 0 then
+				cantUseJink = true
+				break
+			end
+			num = math.floor(num / 10)
+		end
+	end
+	if (use.from:getMark("double_jink" .. use.card:toString()) > 0) then
+		local num = use.from:getMark("double_jink" .. use.card:toString())
+		for _, p in sgs.qlist(use.to) do
+			if p:objectName() == self.player:objectName() and num % 10 > 0 then
+				needDoubleJink = true
+				break
+			end
+			num = math.floor(num / 10)
+		end
+	end
+	if cantUseJink then return 0
+	elseif needDoubleJink then return 2
+	else return 1 end
+end
+
 sgs.ai_skill_cardask["double-sword-card"] = function(self, data, pattern, target)
 	if self.player:isKongcheng() then return "." end
-		local need_double_jink = target and (target:hasSkill("wushuang")
-											or (target:hasSkill("roulin") and self.player:isFemale())
-											or (target:isFemale() and self.player:hasSkill("roulin")))
-	if need_double_jink and self:getCardsNum("Jink") == 2 then return "." end
+	local use = data:toCardUse()
+	local jink_num = self:getExpectedJinkNum(use)
+	if jink_num > 1 and self:getCardsNum("Jink") == jink_num then return "." end
 
 	if self:needKongcheng(self.player, true) and self.player:getHandcardNum() <= 2 then
 		if self.player:getHandcardNum() == 1 then
 			local card = self.player:getHandcards():first()
-			return isCard("Jink", card, self.player) and "." or ("$"..card:getEffectiveId())
+			return (jink_num > 0 and isCard("Jink", card, self.player)) and "." or ("$" .. card:getEffectiveId())
 		end
 		if self.player:getHandcardNum() == 2 then
 			local first = self.player:getHandcards():first()
@@ -766,7 +792,7 @@ sgs.ai_skill_cardask["double-sword-card"] = function(self, data, pattern, target
 	end
 	if target and self:isFriend(target) then return "." end
 	if self:needBear() then return "." end
-	if target and target:isKongcheng() and target:hasSkill("kongcheng") then return "." end
+	if target and self:needKongcheng(target, true) then return "." end
 	local cards = self.player:getHandcards()
 	for _, card in sgs.qlist(cards) do
 		if (card:isKindOf("Slash") and self:getCardsNum("Slash") > 1)

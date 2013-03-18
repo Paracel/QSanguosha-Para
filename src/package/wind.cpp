@@ -339,14 +339,14 @@ public:
                     room->sendLog(log);
 
                     mark_n += count;
-                    room->setPlayerMark(player, "no_jink" + use.card->toString(), mark_n);
+                    player->setMark("no_jink" + use.card->toString(), mark_n);
                 }
                 count *= 10;
             }
         } else if (event == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
-                room->setPlayerMark(player, "no_jink" + use.card->toString(), 0);
+                player->setMark("no_jink" + use.card->toString(), 0);
         }
 
         return false;

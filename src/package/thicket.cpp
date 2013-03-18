@@ -838,7 +838,7 @@ public:
                         if (p->isFemale()) {
                             play_effect = true;
                             mark_n += count;
-                            room->setPlayerMark(use.from, "double_jink" + use.card->toString(), mark_n);
+                            use.from->setMark("double_jink" + use.card->toString(), mark_n);
                         }
                         count *= 10;
                     }
@@ -858,7 +858,7 @@ public:
                         if (p->hasSkill(objectName())) {
                             play_effect = true;
                             mark_n += count;
-                            room->setPlayerMark(use.from, "double_jink" + use.card->toString(), mark_n);
+                            use.from->setMark("double_jink" + use.card->toString(), mark_n);
                         }
                         count *= 10;
                     }
@@ -880,7 +880,7 @@ public:
         } else if (event == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
-                room->setPlayerMark(use.from, "double_jink" + use.card->toString(), 0);
+                use.from->setMark("double_jink" + use.card->toString(), 0);
         }
 
         return false;

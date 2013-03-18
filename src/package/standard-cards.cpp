@@ -315,7 +315,7 @@ public:
                         draw_card = true;
                     else {
                         QString prompt = "double-sword-card:" + use.from->objectName();
-                        const Card *card = room->askForCard(to, ".", prompt);
+                        const Card *card = room->askForCard(to, ".", prompt, data);
                         if (!card) draw_card = true;
                     }
                     if (draw_card)

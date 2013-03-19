@@ -805,7 +805,7 @@ void MainWindow::on_actionAbout_fmod_triggered() {
     content.append(tr("Current versionn %1 <br/>").arg(Audio::getVersion()));
 #endif
 
-    Window *window = new Window(tr("About fmod"), QSize(500, 259));
+    Window *window = new Window(tr("About fmod"), QSize(500, 260));
     scene->addItem(window);
 
     window->addContent(content);
@@ -829,7 +829,26 @@ void MainWindow::on_actionAbout_Lua_triggered() {
     content.append(tr("Current versionn %1 <br/>").arg(LUA_RELEASE));
     content.append(LUA_COPYRIGHT);
 
-    Window *window = new Window(tr("About Lua"), QSize(500, 500));
+    Window *window = new Window(tr("About Lua"), QSize(500, 585));
+    scene->addItem(window);
+
+    window->addContent(content);
+    window->addCloseButton(tr("OK"));
+    window->setZValue(32766);
+    window->shift(scene && scene->inherits("RoomScene") ? scene->width() : 0,
+                  scene && scene->inherits("RoomScene") ? scene->height() : 0);
+
+    window->appear();
+}
+
+void MainWindow::on_actionAbout_GPLv3_triggered() {
+    QString content = tr("The GNU General Public License is the most widely used free software license, which guarantees end users the freedoms to use, study, share, and modify the software.");
+    content.append("<p align='center'> <img src='image/logo/gplv3.png' /> </p> <br/>");
+
+    QString address = "http://gplv3.fsf.org";
+    content.append(tr("Official site: <a href='%1' style = \"color:#0072c1; \">%1</a> <br/>").arg(address));
+
+    Window *window = new Window(tr("About GPLv3"), QSize(500, 235));
     scene->addItem(window);
 
     window->addContent(content);

@@ -60,6 +60,7 @@
     </property>
     <addaction name="actionAbout"/>
     <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAbout_GPLv3"/>
     <addaction name="actionAbout_Lua"/>
     <addaction name="actionAbout_fmod"/>
     <addaction name="separator"/>
@@ -367,6 +368,11 @@
   <action name="actionRecord_analysis">
    <property name="text">
     <string>Record analysis</string>
+   </property>
+  </action>
+  <action name="actionAbout_GPLv3">
+   <property name="text">
+    <string>About GPLv3</string>
    </property>
   </action>
  </widget>

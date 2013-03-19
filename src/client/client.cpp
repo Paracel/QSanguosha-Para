@@ -1561,7 +1561,7 @@ void Client::askForPlayerChosen(const Json::Value &players) {
     } else {
         text = tr("Please choose a player");
         if (!description.isEmpty() && description != skill_name)
-            text = text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
+            text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
     }
     prompt_doc->setHtml(text);
 

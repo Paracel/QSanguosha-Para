@@ -52,3 +52,4 @@ diy/
 card_intention.txt
 ai.html
 *.sh
+/src/lua/print.c

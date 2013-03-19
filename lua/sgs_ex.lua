@@ -294,3 +294,7 @@ end
 function string:matchOne(option)
 	return self:match("^" .. option .. "%p") or self:match("%p" .. option .. "%p") or self:match("%p" .. option .. "$")
 end
+
+function math:mod(num)
+	return math.fmod(self, num)
+end

@@ -1171,7 +1171,7 @@ function sgs.outputProcessValues(room)
 	else global_room:writeToConsole("neutral") end
 end
 
-function sgs.gameProcess(room, ...)
+function sgs.gameProcess(room, arg)
 	local rebel_num = sgs.current_mode_players["rebel"]
 	local loyal_num = sgs.current_mode_players["loyalist"]
 	if rebel_num == 0 and loyal_num> 0 then return "loyalist"
@@ -1209,7 +1209,7 @@ function sgs.gameProcess(room, ...)
 		--end
 	end
 	local diff = loyal_value - rebel_value + (loyal_num - rebel_num) * 2
-	if #arg > 0 and arg[1] == 1 then return diff end
+	if arg and arg == 1 then return diff end
 
 	if diff >= 2 then
 		if health then return "loyalist"
@@ -1622,7 +1622,7 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 					count = count + 1
 				end
 			end
-			local pos = math.mod(level, 2)
+			local pos = math.fmod(level, 2)
 			local to = findPlayerByObjectName(room, target)
 			local intention = count * 25
 			if pos == 0 then
@@ -2540,7 +2540,6 @@ function SmartAI:askForCard(pattern, prompt, data)
 		card = sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Jink") or "."
 		if card == "." then sgs.card_lack[self.player:objectName()]["Jink"] = 1 end
 	end
-	if not card then card = self.lua_ai:askForCard(pattern, prompt, data) end
 	return card or "."
 end
 
@@ -2938,7 +2937,7 @@ end
 
 function SmartAI:askForYiji(card_ids, reason)
 	if reason then
-		local callback = sgs.ai_skill_askforyiji[string.gsub(reason,"%-","_")]
+		local callback = sgs.ai_skill_askforyiji[string.gsub(reason, "%-", "_")]
 		if type(callback) == "function" then
 			local cardid, target = callback(self, card_ids)
 			if cardid or target then return cardid, target end

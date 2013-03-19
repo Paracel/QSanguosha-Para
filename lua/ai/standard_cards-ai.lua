@@ -748,7 +748,7 @@ function SmartAI:getExpectedJinkNum(use)
 	if (use.from:getMark("no_jink" .. use.card:toString()) > 0) then
 		local num = use.from:getMark("no_jink" .. use.card:toString())
 		for _, p in sgs.qlist(use.to) do
-			if p:objectName() == self.player:objectName() and num % 10 > 0 then
+			if p:objectName() == self.player:objectName() and math.fmod(num, 10) > 0 then
 				cantUseJink = true
 				break
 			end

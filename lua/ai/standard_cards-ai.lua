@@ -2557,7 +2557,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	end
 	local hasTrick = false
 	for _, card in ipairs(cards) do
-		for _, enemy in ipairs(newenemies) do
+		for _, enemy in ipairs(new_enemies) do
 			if not enemy:isNude() and isCard("Snatch", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and self.player:distanceTo(enemy) == 1 then
 				ag_snatch = card:getEffectiveId()
 				hasTrick = true

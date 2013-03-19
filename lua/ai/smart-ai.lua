@@ -2239,28 +2239,6 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				if (trick:isKindOf("Snatch") or trick:isKindOf("Dismantlement")) and to:getCards("j"):length() > 0 then
 					return null_card
 				end
-				if trick:isKindOf("AmazingGrace") then
-					local NP = to:getNextAlive()
-					if self:isFriend(NP) then
-						local ag_ids = self.room:getTag("AmazingGrace"):toStringList()
-						local peach_num, exnihilo_num = 0, 0
-						for _, ag_id in ipairs(ag_ids) do
-							local ag_card = sgs.Sanguosha:getCard(ag_id)
-							if ag_card:isKindOf("Peach") then peach_num = peach_num + 1 end
-							if ag_card:isKindOf("ExNihilo") then exnihilo_num = exnihilo_num + 1 end
-						end
-						if (peach_num == 1 and to:getHp() < getBestHp(to))
-							or (peach_num > 0 and self:isWeak(to))
-							or (NP:getHp() < getBestHp(NP) and self:getOverflow(NP) <= 0) then
-							return null_card
-						end
-						if peach_num == 0 and exnihilo_num > 0 and not self:willSkipPlayPhase(NP) then
-							if self:hasSkills("jizhi|rende|zhiheng", NP) then return null_card end
-							if self:needBear(NP) then return null_card end
-							if NP:hasSkill("jilve") and NP:getMark("@bear") > 0 then return null_card end
-						end
-					end
-				end
 			end
 		end
 
@@ -2297,8 +2275,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					end
 				end
 				if self:isWeak(to) and self:aoeIsEffective(trick, to) then
-					if ((to:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount())) >
-					((self.player:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount())) or null_num > 1 then
+					if ((to:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount()))
+						> ((self.player:getSeat() - currentplayer:getSeat()) % (self.room:alivePlayerCount())) or null_num > 1 then
 						return null_card
 					elseif self:canAvoidAOE(trick) or self.player:getHp() > 1 or (to:isLord() and self.role == "loyalist") then
 						return null_card
@@ -2320,6 +2298,28 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if self:isEnemy(to) then
 				if trick:isKindOf("GodSalvation") and self:isWeak(to) then
 					return null_card
+				end
+				if trick:isKindOf("AmazingGrace") then
+					local NP = to:getNextAlive()
+					if self:isFriend(NP) then
+						local ag_ids = self.room:getTag("AmazingGrace"):toStringList()
+						local peach_num, exnihilo_num = 0, 0
+						for _, ag_id in ipairs(ag_ids) do
+							local ag_card = sgs.Sanguosha:getCard(ag_id)
+							if ag_card:isKindOf("Peach") then peach_num = peach_num + 1 end
+							if ag_card:isKindOf("ExNihilo") then exnihilo_num = exnihilo_num + 1 end
+						end
+						if (peach_num == 1 and to:getHp() < getBestHp(to))
+							or (peach_num > 0 and self:isWeak(to))
+							or (NP:getHp() < getBestHp(NP) and self:getOverflow(NP) <= 0) then
+							return null_card
+						end
+						if peach_num == 0 and exnihilo_num > 0 and not self:willSkipPlayPhase(NP) then
+							if self:hasSkills("jizhi|rende|zhiheng", NP) then return null_card end
+							if self:needBear(NP) then return null_card end
+							if NP:hasSkill("jilve") and NP:getMark("@bear") > 0 then return null_card end
+						end
+					end
 				end
 			end
 		end

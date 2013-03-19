@@ -848,7 +848,7 @@ void MainWindow::on_actionAbout_GPLv3_triggered() {
     QString address = "http://gplv3.fsf.org";
     content.append(tr("Official site: <a href='%1' style = \"color:#0072c1; \">%1</a> <br/>").arg(address));
 
-    Window *window = new Window(tr("About GPLv3"), QSize(500, 235));
+    Window *window = new Window(tr("About GPLv3"), QSize(500, 225));
     scene->addItem(window);
 
     window->addContent(content);

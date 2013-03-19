@@ -38,7 +38,6 @@
 ** pseudo-indices
 */
 #define LUA_REGISTRYINDEX	LUAI_FIRSTPSEUDOIDX
-#define LUA_GLOBALSINDEX    LUA_REGISTRYINDEX // @Para: compatibility?
 #define lua_upvalueindex(i)	(LUA_REGISTRYINDEX - (i))
 
 

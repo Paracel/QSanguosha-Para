@@ -203,7 +203,6 @@ LUALIB_API void (luaL_openlib) (lua_State *L, const char *libname,
                                 const luaL_Reg *l, int nup);
 
 #define luaL_register(L,n,l)	(luaL_openlib(L,(n),(l),0))
-#define luaL_reg    luaL_Reg // @Para: compatibility?
 
 #endif
 

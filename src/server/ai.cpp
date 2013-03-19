@@ -416,7 +416,7 @@ bool LuaAI::getTable(lua_State *L, QList<int> &table) {
         return false;
     }
 
-    size_t len = lua_objlen(L, -1);
+    size_t len = lua_rawlen(L, -1);
     size_t i;
     for (i = 0; i < len; i++) {
         lua_rawgeti(L, -1, i + 1);

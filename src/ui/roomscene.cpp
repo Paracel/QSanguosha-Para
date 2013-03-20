@@ -117,8 +117,6 @@ RoomScene::RoomScene(QMainWindow *main_window)
     yiji_skill = new YijiViewAsSkill;
     choose_skill = new ChoosePlayerSkill;
 
-    known_cards_menu = new QMenu(main_window);
-
     change_general_menu = new QMenu(main_window);
     QAction *action = change_general_menu->addAction(tr("Change general ..."));
     FreeChooseDialog *general_changer = new FreeChooseDialog(main_window);
@@ -1029,7 +1027,7 @@ void RoomScene::enableTargets(const Card *card) {
     selected_targets.clear();
 
     // unset avatar and all photo
-    foreach (QGraphicsItem *item, item2player.keys())
+    foreach (PlayerCardContainer *item, item2player.keys())
         item->setSelected(false);
 
     if (card == NULL) {
@@ -1674,9 +1672,20 @@ QString RoomScene::_translateMovement(const CardsMoveStruct &move) {
 
 void RoomScene::keepLoseCardLog(const CardsMoveStruct &move) {
     if (move.from && move.to_place == Player::DrawPile) {
-        QString type = "$PutCard";
+        bool hidden = false;
+        foreach (int id, move.card_ids) {
+            if (id == Card::S_UNKNOWN_CARD_ID) {
+                hidden = true;
+                break;
+            }
+        }
+
+        QString type = hidden ? "#PutCard" : "$PutCard";
         QString from_general = move.from->objectName();
-        log_box->appendLog(type, from_general, QStringList(), QString::number(move.card_ids.first()));
+        if (hidden)
+            log_box->appendLog(type, from_general, QStringList(), QString(), QString::number(move.card_ids.length()));
+        else
+            log_box->appendLog(type, from_general, QStringList(), Card::IdsToStrings(move.card_ids).join("+"));
     }
 }
 
@@ -3149,9 +3158,17 @@ void RoomScene::showPlayerCards() {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
         QString name = action->data().toString();
-        const ClientPlayer *player = ClientInstance->getPlayer(name);
-        card_container->addCloseButton();
-        card_container->view(player);
+        QString player_name = name.split(".").first(), pile_name = name.split(".").last();
+        const ClientPlayer *player = ClientInstance->getPlayer(player_name);
+        QList<const Card *> cards;
+        foreach (int id, player->getPile(pile_name)) {
+            const Card *card = Sanguosha->getCard(id);
+            if (card) cards << card;
+        }
+
+        CardOverview *overview = new CardOverview;
+        overview->loadFromList(cards);
+        overview->show();
     }
 }
 

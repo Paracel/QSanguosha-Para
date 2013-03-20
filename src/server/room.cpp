@@ -3621,8 +3621,10 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
                                    || cards_moves[i].from_place == Player::PlaceDelayedTrick
                                    // only cards moved to hand/special can be invisible
                                    || cards_moves[i].from_place == Player::DiscardPile
-                                   || cards_moves[i].to_place == Player::DiscardPile);
+                                   || cards_moves[i].to_place == Player::DiscardPile)
                                    // any card from/to discard pile should be visible
+                                   || player->hasFlag("GongxinOperator");
+                                   // the player put someone's cards to the drawpile
             arg[i + 1] = cards_moves[i].toJsonValue();
         }
         doNotify(player, isLostPhase ? S_COMMAND_LOSE_CARD : S_COMMAND_GET_CARD, arg);
@@ -4242,9 +4244,11 @@ void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
     if (result == "discard")
         throwCard(card_id, target, shenlvmeng);
     else {
+        shenlvmeng->setFlags("GongxinOperator");
         CardMoveReason reason(CardMoveReason::S_REASON_PUT, shenlvmeng->objectName(),
                               QString(), Sanguosha->getCard(card_id)->getSkillName(), QString());
         moveCardTo(Sanguosha->getCard(card_id), target, NULL, Player::DrawPile, reason, true);
+        shenlvmeng->setFlags("-GongxinOperator");
     }
 }
 

@@ -200,7 +200,7 @@ private:
     QMainWindow *main_window;
     QSanButton *ok_button, *cancel_button, *discard_button;
     QSanButton *trust_button;
-    QMenu *known_cards_menu, *change_general_menu;
+    QMenu *change_general_menu;
     Window *prompt_box;
     QGraphicsItem *control_panel;
     QMap<PlayerCardContainer *, const ClientPlayer *> item2player;

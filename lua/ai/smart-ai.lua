@@ -2187,9 +2187,9 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if self.player:isCardLimited(null_card, sgs.Card_MethodUse) then return nil end
 	if (from and from:isDead()) or (to and to:isDead()) then return nil end
 	if self:needBear() then return nil end
-	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return nil end
+	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") == 0 and (self:isWeak() or self.player:isLord()) then return nil end
 
-	if trick:isKindOf("FireAttack") and to:isKongcheng() then return nil end
+	if trick:isKindOf("FireAttack") and (to:isKongcheng() or from:isKongcheng()) then return nil end
 	if ("snatch|dismantlement"):match(trick:objectName()) and to:isAllNude() then return nil end
 
 	if from and not from:hasSkill("jueqing") then

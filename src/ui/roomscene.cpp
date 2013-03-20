@@ -117,6 +117,8 @@ RoomScene::RoomScene(QMainWindow *main_window)
     yiji_skill = new YijiViewAsSkill;
     choose_skill = new ChoosePlayerSkill;
 
+    miscellaneous_menu = new QMenu(main_window);
+
     change_general_menu = new QMenu(main_window);
     QAction *action = change_general_menu->addAction(tr("Change general ..."));
     FreeChooseDialog *general_changer = new FreeChooseDialog(main_window);
@@ -1268,8 +1270,45 @@ void RoomScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
     QGraphicsScene::contextMenuEvent(event);
 
     QGraphicsItem *item = itemAt(event->scenePos());
-    if (!item) return;
-    if (ServerInfo.FreeChoose && arrange_button) {
+    if (!item) {
+        QMenu *menu = miscellaneous_menu;
+        menu->clear();
+        menu->setTitle(tr("Miscellaneous"));
+
+        QMenu *private_pile = menu->addMenu(tr("Private Piles"));
+
+        bool enabled = false;
+        foreach (PlayerCardContainer *container, item2player.keys()) {
+            const ClientPlayer *player = item2player.value(container, NULL);
+            QStringList piles = player->getPileNames();
+            if (!piles.isEmpty()) {
+                foreach (QString pile_name, piles) {
+                    bool add = false;
+                    foreach (int id, player->getPile(pile_name)) {
+                        if (id != Card::S_UNKNOWN_CARD_ID) {
+                            add = true;
+                            break;
+                        }
+                    }
+                    if (add) {
+                        enabled = true;
+                        QAction *action = private_pile->addAction(QString("%1 %2").arg(ClientInstance->getPlayerName(player->objectName())).arg(Sanguosha->translate(pile_name)));
+                        action->setData(QString("%1.%2").arg(player->objectName()).arg(pile_name));
+                        connect(action, SIGNAL(triggered()), this, SLOT(showPlayerCards()));
+                    }
+                }
+            }
+        }
+        private_pile->setEnabled(enabled);
+        menu->addSeparator();
+
+        QAction *distance = menu->addAction(tr("View distance"));
+        connect(distance, SIGNAL(triggered()), this, SLOT(viewDistance()));
+        QAction *discard = menu->addAction(tr("View Discard pile"));
+        connect(discard, SIGNAL(triggered()), this, SLOT(toggleDiscards()));
+
+        menu->popup(event->screenPos());
+    } else if (ServerInfo.FreeChoose && arrange_button) {
         QGraphicsObject *obj = item->toGraphicsObject();
         if (obj && Sanguosha->getGeneral(obj->objectName())) {
             to_change = qobject_cast<CardItem *>(obj);
@@ -1505,7 +1544,10 @@ void RoomScene::chooseDirection() {
 
 void RoomScene::toggleDiscards() {
     CardOverview *overview = new CardOverview;
-    overview->loadFromList(ClientInstance->discarded_list);
+    QList<const Card *> cards;
+    foreach (const Card *card, ClientInstance->discarded_list)
+        cards << Sanguosha->getEngineCard(card->getId());
+    overview->loadFromList(cards);
     overview->show();
 }
 
@@ -3162,7 +3204,7 @@ void RoomScene::showPlayerCards() {
         const ClientPlayer *player = ClientInstance->getPlayer(player_name);
         QList<const Card *> cards;
         foreach (int id, player->getPile(pile_name)) {
-            const Card *card = Sanguosha->getCard(id);
+            const Card *card = Sanguosha->getEngineCard(id);
             if (card) cards << card;
         }
 

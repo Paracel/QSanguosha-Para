@@ -61,6 +61,8 @@ public:
 DistanceViewDialog::DistanceViewDialog(QWidget *parent)
     : QDialog(parent)
 {
+    setWindowTitle(tr("Distance view"));
+
     QFormLayout *layout = new QFormLayout;
 
     ui = new DistanceViewDialogUI;

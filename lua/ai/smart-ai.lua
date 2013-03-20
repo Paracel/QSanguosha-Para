@@ -422,24 +422,20 @@ function SmartAI:getDynamicUsePriority(card)
 		local card_name = use_card:getClassName()
 		local dynamic_value
 
+		-- direct control
 		if use_card:isKindOf("AmazingGrace") then
 			local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 			if zhugeliang and self:isEnemy(zhugeliang) and zhugeliang:isKongcheng() then
-				value = math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
-				return value
+				return math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
 			end
 		end
-		if use_card:isKindOf("Peach") and self.player:hasSkill("kuanggu") then
-			value = 1.01
-			return value
-		end
-		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then
-			value = 0.1
-			return value
-		end
+		if use_card:isKindOf("Peach") and self.player:hasSkill("kuanggu") then return 1.01 end
+		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then return 0.1 end
 		if use_card:isKindOf("DelayedTrick") and not use_card:isKindOf("YanxiaoCard") and #use_card:getSkillName() > 0 then
-			value = sgs.ai_use_priority[use_card:getClassName()] - 0.01
-			return value
+			return sgs.ai_use_priority[use_card:getClassName()] - 0.01
+		end
+		if use_card:isKindOf("Duel") and (self:hasCrossbowEffect(self.player) or self.player:hasFlag("xianzhen_success") or self.player:canSlashWithoutCrossbow()) then
+			return sgs.ai_use_priority.Slash - 0.1
 		end
 
 		if use_card:getTypeId() == sgs.Card_TypeEquip then

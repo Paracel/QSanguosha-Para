@@ -45,7 +45,7 @@ sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 end
 
 function sgs.ai_slash_prohibit.wuhun(self, from, to)
-	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasSkill("jueqing") then return false end
 	if from:hasFlag("nosjiefanUsed") then return false end
 	local damageNum = self:hasHeavySlashDamage(from, nil, to, true)
 
@@ -100,6 +100,9 @@ function SmartAI:cantbeHurt(player, from, damageNum)
 			if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end
 		end
 	elseif player:hasSkill("tianxiang") then
+		if getKnownCard(player, "diamond", false) + getKnownCard(player, "club", false) == player:getHandcardNum() then
+			return false
+		end
 		local peach_num = self.player:objectName() == from:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", from)
 		for _, friend in ipairs(self:getFriends(from)) do
 			if friend:getHp() < 2 and peach_num then

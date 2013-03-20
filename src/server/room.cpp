@@ -1945,6 +1945,7 @@ bool Room::makeSurrender(ServerPlayer *initiator) {
             gameOver(renegadeAlive >= loyalAlive ? "renegade" : "loyalist+lord");
     }
 
+    m_surrenderRequestReceived = false;
     return true;
 }
 

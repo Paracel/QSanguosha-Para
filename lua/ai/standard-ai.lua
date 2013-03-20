@@ -418,7 +418,7 @@ sgs.ai_skill_invoke.luoyi = function(self, data)
 			local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
 				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy) and self:hasTrickEffective(duel, enemy)
-					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
+					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy, self.player, 2) and self:damageIsEffective(enemy) then
 					dueltarget = dueltarget + 1
 				end
 			end

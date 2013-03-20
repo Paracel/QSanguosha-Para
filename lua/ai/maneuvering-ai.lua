@@ -450,8 +450,13 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		if self.player:hasFlag("FireAttackFailed_" .. enemy:objectName()) and self:getOverflow() <= 0 and not self:hasSkill("jizhi") then
 			return false
 		end
+		local damage = 1
+		if not enemy:hasArmorEffect("silver_lion") then
+			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
+			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
+		end
 		return self:objectiveLevel(enemy) > 3 and not enemy:isKongcheng() and not self.room:isProhibited(self.player, enemy, fire_attack)
-				and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(enemy)
+				and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(enemy, self.player, damage)
 				and self:hasTrickEffective(fire_attack, enemy)
 				and sgs.isGoodTarget(enemy, self.enemies, self)
 				and (self.player:hasSkill("jueqing")
@@ -468,11 +473,11 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	end
 
 	if self.player:isChained() and self:isGoodChainTarget(self.player) and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing")
-			and not self.room:isProhibited(self.player, self.player, fire_attack)
-			and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
-			and self:hasTrickEffective(fire_attack, self.player)
-			and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
-				or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
+		and not self.room:isProhibited(self.player, self.player, fire_attack)
+		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
+		and self:hasTrickEffective(fire_attack, self.player)
+		and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
+			or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
 		local godsalvation = self:getCard("GodSalvation")
 		if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
 			use.card = godsalvation

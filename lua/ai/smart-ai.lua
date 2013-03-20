@@ -2642,7 +2642,7 @@ function SmartAI:getEnemyNumBySeat(from, to)
 	return enemynum
 end
 
-function SmartAI:hasHeavySlashDamage(from, slash, to)
+function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 	from = from or self.room:getCurrent()
 	to = to or self.player
 	if not from or not to then self.room:writeToConsole(debug.traceback()) return false end
@@ -2666,7 +2666,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to)
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()
 			and (to:getHandcardNum() > 3 or getKnownCard(to, "red") > 0) then dmg = dmg - 1 end
 	end
-	return (dmg > 1)
+	return return_value and dmg or (dmg > 1)
 end
 
 function SmartAI:needKongcheng(player, need_keep)

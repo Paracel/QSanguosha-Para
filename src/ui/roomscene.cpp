@@ -1292,7 +1292,9 @@ void RoomScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
                     }
                     if (add) {
                         enabled = true;
-                        QAction *action = private_pile->addAction(QString("%1 %2").arg(ClientInstance->getPlayerName(player->objectName())).arg(Sanguosha->translate(pile_name)));
+                        QAction *action = private_pile->addAction(QString("%1 %2")
+                                                                  .arg(ClientInstance->getPlayerName(player->objectName()))
+                                                                  .arg(Sanguosha->translate(pile_name)));
                         action->setData(QString("%1.%2").arg(player->objectName()).arg(pile_name));
                         connect(action, SIGNAL(triggered()), this, SLOT(showPlayerCards()));
                     }
@@ -1544,6 +1546,7 @@ void RoomScene::chooseDirection() {
 
 void RoomScene::toggleDiscards() {
     CardOverview *overview = new CardOverview;
+    overview->setWindowTitle(tr("Discarded pile"));
     QList<const Card *> cards;
     foreach (const Card *card, ClientInstance->discarded_list)
         cards << Sanguosha->getEngineCard(card->getId());
@@ -3209,6 +3212,9 @@ void RoomScene::showPlayerCards() {
         }
 
         CardOverview *overview = new CardOverview;
+        overview->setWindowTitle(QString("%1 %2")
+                                 .arg(ClientInstance->getPlayerName(player_name))
+                                 .arg(Sanguosha->translate(pile_name)));
         overview->loadFromList(cards);
         overview->show();
     }

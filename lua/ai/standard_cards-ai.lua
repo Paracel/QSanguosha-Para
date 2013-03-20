@@ -1855,7 +1855,7 @@ function SmartAI:useCardCollateral(card, use)
 				and not friend:hasSkill("weimu") and not self.room:isProhibited(self.player, friend, card) then
 				for _, enemy in ipairs(toList) do
 					if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then
-						self.player:setFlags("CollateralNeedCrossbow")
+						self.player:setFlags("GlobalFlag_CollateralNeedCrossbow")
 						use.card = card
 						if use.to then use.to:append(friend) end
 						if use.to then use.to:append(enemy) end
@@ -1980,7 +1980,7 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
-	if target2 and target2:hasFlag("CollateralNeedCrossbow") and self:isFriend(target2) then
+	if target2 and target2:hasFlag("GlobalFlag_CollateralNeedCrossbow") and self:isFriend(target2) then
 		return "."
 	end
 	if self:isFriend(target) and target:hasSkill("leiji")

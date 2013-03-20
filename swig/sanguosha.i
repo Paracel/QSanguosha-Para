@@ -894,8 +894,6 @@ public:
 
     void initMediaSource();
     void playAudioEffect(int index = -1) const;
-    void setFlag(ServerPlayer *player) const;
-    void unsetFlag(ServerPlayer *player) const;
     Frequency getFrequency() const;
     QStringList getSources() const;
 };

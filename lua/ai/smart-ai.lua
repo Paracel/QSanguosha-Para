@@ -1765,9 +1765,9 @@ function SmartAI:filterEvent(event, player, data)
 		local card = struct.card
 		local from = struct.from
 		local to = struct.to
-		if card and card:isKindOf("AOE") and to and to:isLord() and (to:hasFlag("lord_in_danger_SA") or to:hasFlag("lord_in_danger_AA")) then
-			to:setFlags("-lord_in_danger_AA")
-			to:setFlags("-lord_in_danger_SA")
+		if card and card:isKindOf("AOE") and to and to:isLord() and (to:hasFlag("GlobalFlag_LordInDangerSA") or to:hasFlag("GlobalFlag_LordInDangerAA")) then
+			to:setFlags("-GlobalFlag_LordInDangerAA")
+			to:setFlags("-GlobalFlag_LordInDangerSA")
 		end
 		if card:isKindOf("Collateral") then sgs.ai_collateral = true end
 		if card:isKindOf("Dismantlement") or card:isKindOf("Snatch")
@@ -1865,9 +1865,9 @@ function SmartAI:filterEvent(event, player, data)
 		local lord = self.room:getLord()
 		if card and lord and lord:getHp() == 1 and self:aoeIsEffective(card, lord, from) then
 			if card:isKindOf("SavageAssault") then
-				lord:setFlags("lord_in_danger_SA")
+				lord:setFlags("GlobalFlag_LordInDangerSA")
 			elseif card:isKindOf("ArcheryAttack") then
-				lord:setFlags("lord_in_danger_AA")
+				lord:setFlags("GlobalFlag_LordInDangerAA")
 			end
 		end
 
@@ -1883,8 +1883,8 @@ function SmartAI:filterEvent(event, player, data)
 		local struct = data:toCardUse()
 		local card = struct.card
 		local lord = self.room:getLord()
-		if card and lord and card:isKindOf("Duel") and lord:hasFlag("NeedToWake") then
-			lord:setFlags("-NeedToWake")
+		if card and lord and card:isKindOf("Duel") and lord:hasFlag("GlobalFlag_NeedToWake") then
+			lord:setFlags("-GlobalFlag_NeedToWake")
 		end
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
@@ -1971,7 +1971,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 
-			if player:hasFlag("PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
+			if player:hasFlag("GlobalFlag_PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
 				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD and not self:needBear(player)
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluateRoleTrends(player) == "neutral")
@@ -2025,7 +2025,7 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.updateIntention(caiwenji, player, intention)
 		end
 	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
-		player:setFlags("PlayPhaseNotSkipped")
+		player:setFlags("GlobalFlag_PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 
@@ -3043,8 +3043,8 @@ function SmartAI:askForSinglePeach(dying)
 		if not sgs.GetConfig("EnableHegemony", false) and lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
 			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
 			and ((sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach)
-				or (lord:hasFlag("lord_in_danger_SA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
-				or (lord:hasFlag("lord_in_danger_AA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
+				or (lord:hasFlag("GlobalFlag_LordInDangerSA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
+				or (lord:hasFlag("GlobalFlag_LordInDangerAA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
 			return "."
 		end
 

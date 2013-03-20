@@ -329,7 +329,7 @@ jixi_skill.getTurnUseCard = function(self)
 		end
 	end
 
-	if not can_use then self.room:setPlayerFlag(self.player, "ForbidJixi") end
+	if not can_use then self.player:setFlags("ForbidJixi") end
 
 	if self.jixisnatch then
 		local use = { to = sgs.SPlayerList(), isDummy = true }

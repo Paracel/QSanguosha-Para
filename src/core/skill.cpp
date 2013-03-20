@@ -104,14 +104,6 @@ void Skill::playAudioEffect(int index) const{
     }
 }
 
-void Skill::setFlag(ServerPlayer *player) const{
-    player->getRoom()->setPlayerFlag(player, objectName());
-}
-
-void Skill::unsetFlag(ServerPlayer *player) const{
-    player->getRoom()->setPlayerFlag(player, "-" + objectName());
-}
-
 Skill::Frequency Skill::getFrequency() const{
     return frequency;
 }

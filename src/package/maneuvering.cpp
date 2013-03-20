@@ -168,7 +168,7 @@ public:
                 log.arg2 = effect.slash->objectName();
                 room->sendLog(log);
 
-                effect.to->setFlags("NonSkillNullify");
+                effect.to->setFlags("GlobalFlag_NonSkillNullify");
                 return true;
             }
         } else if (event == CardEffected) {
@@ -182,7 +182,7 @@ public:
                 log.arg2 = effect.card->objectName();
                 room->sendLog(log);
 
-                effect.to->setFlags("NonSkillNullify");
+                effect.to->setFlags("GlobalFlag_NonSkillNullify");
                 return true;
             }
         } else if (event == DamageInflicted) {

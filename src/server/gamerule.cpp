@@ -403,7 +403,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (data.canConvert<CardEffectStruct>()) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
                 if (room->isCanceled(effect)) {
-                    effect.to->setFlags("NonSkillNullify");
+                    effect.to->setFlags("GlobalFlag_NonSkillNullify");
                     return true;
                 }
                 if (effect.to->isAlive() || effect.card->isKindOf("Slash"))

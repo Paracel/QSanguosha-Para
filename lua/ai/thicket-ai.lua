@@ -276,7 +276,6 @@ sgs.ai_skill_use["@@yinghun"] = function(self, prompt)
 				and not (self:needKongcheng(enemy) and enemy:getCards("he"):length() == x - 1)
 				and not self:doNotDiscard(enemy, "he", true) then
 				self.yinghunchoice = "d1tx"
-				self.player:setFlags("yinghun_to_enemy")
 				return "@YinghunCard=.->" .. enemy:objectName()
 			end
 		end

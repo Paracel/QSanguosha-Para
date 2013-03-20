@@ -409,7 +409,7 @@ void Room::gameOver(const QString &winner) {
             foreach (const Card *card, player->getHandcards())
                 handcards << Sanguosha->getEngineCard(card->getId())->getLogName();
             QString handcard = handcards.join(", ").toUtf8().toBase64();
-            setPlayerFlag(player, QString("LastHandCards:%1").arg(handcard));
+            setPlayerFlag(player, QString("GlobalFlag_LastHandCards:%1").arg(handcard));
         }
     }
 
@@ -457,10 +457,10 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
     thread->trigger(SlashEffectStart, this, effect.from, data);
 
     if (thread->trigger(SlashEffected, this, effect.to, data)) {
-        if (!effect.to->hasFlag("NonSkillNullify"))
+        if (!effect.to->hasFlag("GlobalFlag_NonSkillNullify"))
             setEmotion(effect.to, "skill_nullify");
         else
-            effect.to->setFlags("-NonSkillNullify");
+            effect.to->setFlags("-GlobalFlag_NonSkillNullify");
         removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // prevent the effect
     }
 }
@@ -2794,10 +2794,10 @@ bool Room::cardEffect(const CardEffectStruct &effect) {
         if (!thread->trigger(CardEffected, this, effect.to, data)) {
             cancel = true;
         } else {
-            if (!effect.to->hasFlag("NonSkillNullify"))
+            if (!effect.to->hasFlag("GlobalFlag_NonSkillNullify"))
                 setEmotion(effect.to, "skill_nullify");
             else
-                effect.to->setFlags("-NonSkillNullify");
+                effect.to->setFlags("-GlobalFlag_NonSkillNullify");
         }
     }
     thread->trigger(PostCardEffected, this, effect.to, data);
@@ -3624,7 +3624,7 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
                                    || cards_moves[i].from_place == Player::DiscardPile
                                    || cards_moves[i].to_place == Player::DiscardPile)
                                    // any card from/to discard pile should be visible
-                                   || player->hasFlag("GongxinOperator");
+                                   || player->hasFlag("GlobalFlag_GongxinOperator");
                                    // the player put someone's cards to the drawpile
             arg[i + 1] = cards_moves[i].toJsonValue();
         }
@@ -4070,9 +4070,9 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
     QList<int> to_exchange;
     if (ai) {
         // share the same callback interface
-        player->setFlags("AIDiscardExchanging");
+        player->setFlags("GlobalFlag_AIDiscardExchanging");
         to_exchange = ai->askForDiscard(reason, discard_num, discard_num, optional, include_equip);
-        player->setFlags("-AIDiscardExchanging");
+        player->setFlags("-GlobalFlag_AIDiscardExchanging");
     } else {
         Json::Value exchange_str(Json::arrayValue);
         exchange_str[0] = discard_num;
@@ -4245,11 +4245,11 @@ void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
     if (result == "discard")
         throwCard(card_id, target, shenlvmeng);
     else {
-        shenlvmeng->setFlags("GongxinOperator");
+        shenlvmeng->setFlags("GlobalFlag_GongxinOperator");
         CardMoveReason reason(CardMoveReason::S_REASON_PUT, shenlvmeng->objectName(),
                               QString(), Sanguosha->getCard(card_id)->getSkillName(), QString());
         moveCardTo(Sanguosha->getCard(card_id), target, NULL, Player::DrawPile, reason, true);
-        shenlvmeng->setFlags("-GongxinOperator");
+        shenlvmeng->setFlags("-GlobalFlag_GongxinOperator");
     }
 }
 

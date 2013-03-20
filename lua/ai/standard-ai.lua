@@ -1868,7 +1868,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 							use.to:append(lord)
 							use.to:append(ap)
 						end
-						self.room:setPlayerFlag(lord, "NeedToWake")
+						lord:setFlags("GlobalFlag_NeedToWake")
 						return
 					elseif self:isFriend(ap) then
 						f_target = ap
@@ -1890,7 +1890,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 						use.to:append(lord)
 						use.to:append(target)
 					end
-					self.room:setPlayerFlag(lord, "NeedToWake")
+					lord:setFlags("GlobalFlag_NeedToWake")
 					return
 				end
 			end

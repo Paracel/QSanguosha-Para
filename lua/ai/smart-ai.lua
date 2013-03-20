@@ -41,7 +41,7 @@ sgs.ai_cardshow = {}
 sgs.ai_skill_cardchosen = {}
 sgs.ai_skill_use = {}
 sgs.ai_cardneed = {}
-sgs.ai_skill_use_func =	{}
+sgs.ai_skill_use_func = {}
 sgs.ai_skills = {}
 sgs.ai_slash_weaponfilter = {}
 sgs.ai_slash_prohibit = {}
@@ -3128,8 +3128,7 @@ function SmartAI:getTurnUse()
 
 	local i = 0
 	for _, card in ipairs(cards) do
-		local dummy_use = {}
-		dummy_use.isDummy = true
+		local dummy_use = { isDummy = true }
 		local hp = self.player:getHp()
 		if self.player:hasSkill("benghuai") and hp > 4 then hp = 4 end
 

@@ -31,7 +31,7 @@ zhiyuan_skill.getTurnUseCard = function(self)
 	return nil
 end
 
-sgs.ai_skill_use_func["ZhiyuanCard"] = function(card, use, self)
+sgs.ai_skill_use_func.ZhiyuanCard = function(card, use, self)
 	if self.player:usedTimes("ZhiyuanCard") > 1 then return end
 	self:sort(self.friends_noself, "handcard")
 	for _, friend in ipairs(self.friends_noself) do
@@ -55,7 +55,7 @@ taichen_fight_skill.getTurnUseCard = function(self)
 	return taichen_card
 end
 
-sgs.ai_skill_use_func["TaichenFightCard"] = function(card, use, self)
+sgs.ai_skill_use_func.TaichenFightCard = function(card, use, self)
 	if self.player:usedTimes("TaichenFightCard") > 0 then return end
 	local lord = self.room:getLord()
 	if lord and self.player:getHp() >= lord:getHp() then
@@ -92,7 +92,7 @@ flood_skill.getTurnUseCard = function(self)
 	return flood_card
 end
 
-sgs.ai_skill_use_func["FloodCard"] = function(card, use, self)
+sgs.ai_skill_use_func.FloodCard = function(card, use, self)
 	local eqs = 0
 
 	local players = self.room:getOtherPlayers(self.player)

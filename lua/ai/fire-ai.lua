@@ -336,6 +336,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	if self.player:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 then
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isKongcheng() and self:hasLoseHandcardEffective(enemy) and not (enemy:hasSkill("tuntian") and enemy:getHandcardNum() > 2) then
+				sgs.ai_use_priority.TianyiCard = 1.2
 				use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
 				if use.to then use.to:append(enemy) end
 				return
@@ -351,6 +352,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	if slash then self:useBasicCard(slash, dummy_use) end
 	self.room:setPlayerFlag(self.player, "-slashNoDistanceLimit")
 
+	sgs.ai_use_priority.TianyiCard = (slashcount >= 1 and dummy_use.card) and 7.2 or 1.2
 	if slashcount >= 1 and dummy_use.card then
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
@@ -458,7 +460,6 @@ sgs.ai_card_intention.TianyiCard = 0
 sgs.dynamic_value.control_card.TianyiCard = true
 
 sgs.ai_use_value.TianyiCard = 8.5
-sgs.ai_use_priority.TianyiCard = 4.2
 
 sgs.ai_chaofeng.taishici = 3
 

@@ -265,15 +265,7 @@ sgs.ai_skill_choice.xuanhuo = function(self, choices)
 	return "give"
 end
 
-sgs.ai_skill_playerchosen.xuanhuo = function(self, targets)
-	targets = sgs.QList2Table(targets)
-	self:sort(targets, "defense")
-	for _, target in ipairs(targets) do
-		if self:isEnemy(target) and not target:hasSkill("buqu") then
-			return target
-		end
-	end
-end
+sgs.ai_skill_playerchosen.xuanhuo = sgs.ai_skill_playerchosen.zero_card_as_slash
 
 sgs.ai_skill_cardask["xuanhuo-slash"] = function(self, data, pattern, target, target2)
 	if target and target2 and self:isEnemy(target2) then

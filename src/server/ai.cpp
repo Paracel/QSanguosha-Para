@@ -211,6 +211,7 @@ QString TrustAI::askForKingdom() {
     QString role;
     ServerPlayer *lord = room->getLord();
     QStringList kingdoms = Sanguosha->getKingdoms();
+    kingdoms.removeOne("god");
     if (!lord) return kingdoms.at(qrand() % kingdoms.length());
 
     switch(self->getRoleEnum()) {

@@ -1274,35 +1274,21 @@ function SmartAI:useCardDuel(duel, use)
 	local friends = self:exclude(self.friends_noself, duel)
 	local n1 = self:getCardsNum("Slash")
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
+	local targets = {}
 
 	local canUseDuelTo = function(target)
 		return self:hasTrickEffective(duel, target) and self:damageIsEffective(target, sgs.DamageStruct_Normal) and not self.room:isProhibited(self.player, target, duel)
 	end
 
 	for _, friend in ipairs(friends) do
-		if friend:hasSkill("jieming") and canUseDuelTo(friend) and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))then
-			use.card = duel
-			if use.to then
-				use.to:append(friend)
-			end
-			return
+		if friend:hasSkill("jieming") and canUseDuelTo(friend) and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)) then
+			table.insert(targets, friend)
 		end
 	end
 
 	for _, enemy in ipairs(enemies) do
 		if self.player:hasFlag("duelTo" .. enemy:objectName()) and canUseDuelTo(enemy) then
-
-			local godsalvation = self:getCard("GodSalvation")
-			if godsalvation and godsalvation:getId()~= duel:getId() and self:willUseGodSalvation(godsalvation) and not enemy:isWounded() then
-				use.card = godsalvation return
-			end
-
-			use.card = duel
-			if use.to then
-				use.to:append(enemy)
-				self:speak("duel", self.player:isFemale())
-			end
-			return
+			table.insert(targets, enemy)
 		end
 	end
 
@@ -1344,21 +1330,41 @@ function SmartAI:useCardDuel(duel, use)
 					or ((self:hasSkills("jianxiong") or self.player:getMark("shuangxiong") > 0) and sgs.isGoodHp(self.player))
 
 		if self:objectiveLevel(enemy) > 3 and canUseDuelTo(enemy) and not self:cantbeHurt(enemy) and useduel and sgs.isGoodTarget(enemy, enemies, self) then
-			local godsalvation = self:getCard("GodSalvation")
-			if godsalvation and godsalvation:getId()~= duel:getId() and self:willUseGodSalvation(godsalvation) and not enemy:isWounded() then
-				use.card = godsalvation
-				return
-			end
+			if not table.contains(targets, enemy) then table.insert(targets, enemy) end
+		end
+	end
 
-			use.card = duel
-			if use.to then
-				use.to:append(enemy)
-				self:speak("duel", self.player:isFemale())
-			end
-			if self.player:getPhase() == sgs.Player_Play then
-				self.player:setFlags("duelTo" .. enemy:objectName())
-			end
+	if #targets > 0 then
+		local godsalvation = self:getCard("GodSalvation")
+		if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
+			use.card = godsalvation
 			return
+		end
+
+		local targets_num = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, duel)
+		local enemySlash = 0
+		local setFlag = false
+
+		use.card = duel
+
+		for i = 1, #targets, 1 do
+			local n2 = getCardsNum("Slash", targets[i])
+			if sgs.card_lack[targets[i]:objectName()]["Slash"] == 1 then n2 = 0 end
+			if self:isEnemy(targets[i]) then enemySlash = enemySlash + n2 end
+
+			if use.to then
+				if i == 1 then
+					use.to:append(targets[i])
+					self:speak("duel", self.player:isFemale())
+				elseif n1 >= enemySlash then
+					use.to:append(targets[i])
+				end
+				if not setFlag and self.player:getPhase() == sgs.Player_Play and self:isEnemy(targets[i]) then 
+					self.player:setFlags("duelTo" .. targets[i]:objectName())
+					setFlag = true
+				end
+				if use.to:length() == targets_num then return end
+			end
 		end
 	end
 end

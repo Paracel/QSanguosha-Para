@@ -482,7 +482,6 @@ local songci_skill = {}
 songci_skill.name = "songci"
 table.insert(sgs.ai_skills, songci_skill)
 songci_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("SongciCard") then return end
 	return sgs.Card_Parse("@SongciCard=.")
 end
 
@@ -501,13 +500,11 @@ sgs.ai_skill_use_func.SongciCard = function(card, use, self)
 	self:sort(self.enemies, "handcard")
 	self.enemies = sgs.reverse(self.enemies)
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude() then
-			if not ((self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getEquips():length() > 0)
-					or self:needToThrowArmor(enemy)) then
-				use.card = sgs.Card_Parse("@SongciCard=.")
-				if use.to then use.to:append(enemy) end
-				return
-			end
+		if enemy:getMark("@songci") == 0 and enemy:getHandcardNum() > enemy:getHp() and not enemy:isNude()
+			and not self:doNotDiscard(enemy, "nil", false, 2) then
+			use.card = sgs.Card_Parse("@SongciCard=.")
+			if use.to then use.to:append(enemy) end
+			return
 		end
 	end
 end

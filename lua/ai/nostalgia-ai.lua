@@ -105,7 +105,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	end
 
 	if index == 3 then
-		to = self:findPlayerToDraw("noself", 3)
+		to = self:findPlayerToDraw(false, 3)
 		if not to then return end
 		if use.to then use.to:append(to) end
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(abandon_card, "+"))

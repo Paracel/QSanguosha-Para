@@ -4575,25 +4575,34 @@ function SmartAI:needToThrowArmor(player)
 	return false
 end
 
-function SmartAI:doNotDiscard(to, flags, conservative)
+function SmartAI:doNotDiscard(to, flags, conservative, n)
 	if not to then global_room:writeToConsole(debug.traceback()) return end
 	flags = flags or "he"
+	n = n or 1
 	if to:isNude() then return true end
-	if flags:match("e") then
-		if to:hasSkills("jieyin+xiaoji") and to:getDefensiveHorse() then return false end
-		if to:hasSkills("jieyin+xiaoji") and to:getArmor() and not to:getArmor():isKindOf("SilverLion") then return false end
-	end
 	conservative = conservative or (sgs.turncount <= 2 and self.room:alivePlayerCount() > 2)
 	if to:hasSkill("tuntian") and to:getPhase() == sgs.Player_NotActive and (conservative or #self.enemies > 1) then return true end
-	if flags == "h" or (flags == "he" and not to:hasEquip()) then
-		if to:isKongcheng() then return true end
-		if not self:hasLoseHandcardEffective(to) then return true end
-		if #self.friends > 1 and to:getHandcardNum() == 1 and to:hasSkill("sijian") then return false end
-		if to:getHandcardNum() == 1 and self:needKongcheng(to) then return true end
-	elseif flags:match("e") then
-		if not to:hasEquip() then return true end
-		if self:hasSkills(sgs.lose_equip_skill, to) and to:isKongcheng() then return true end
-		if to:getCardCount(true) == 1 and to:getArmor() and self:needToThrowArmor(to) then return true end
+
+	if flags == "nil" then
+		if to:hasSkill("lirang") and #self.enemies > 1 then return true end
+		if self:needKongcheng(to) and to:getHandcardNum() <= n then return true end
+		if self:getLeastHandcardNum(to) <= n then return true end
+		if self:hasSkills(sgs.lose_equip_skill, to) and to:hasEquip() then return true end
+		if self:needToThrowArmor(to) then return true end
+	else
+		if flags:match("e") then
+			if to:hasSkills("jieyin+xiaoji") and to:getDefensiveHorse() then return false end
+			if to:hasSkills("jieyin+xiaoji") and to:getArmor() and not to:getArmor():isKindOf("SilverLion") then return false end
+		end
+		if flags == "h" or (flags == "he" and not to:hasEquip()) then
+			if to:isKongcheng() then return true end
+			if not self:hasLoseHandcardEffective(to) then return true end
+			if #self.friends > 1 and to:getHandcardNum() <= n and to:hasSkill("sijian") then return false end
+			if to:getHandcardNum() <= n and self:needKongcheng(to) then return true end
+		elseif flags:match("e") then
+			if self:hasSkills(sgs.lose_equip_skill, to) and to:getHandcardNum() < n then return true end
+			if to:getCardCount(true) <= n and to:getArmor() and self:needToThrowArmor(to) then return true end
+		end
 	end
 	return false
 end
@@ -4717,19 +4726,24 @@ function SmartAI:findPlayerToDraw(include_self, drawnum)
 
 	self:sort(friends, "defense")
 	for _, friend in ipairs(friends) do
-		if friend:getHandcardNum() < 2 and not self:needKongcheng(friend) then
+		if friend:getHandcardNum() < 2 and not self:needKongcheng(friend) and not self:willSkipPlayPhase(friend) then
 			return friend
 		end
 	end
 
 	for _, friend in ipairs(friends) do
-		if self:hasSkills(sgs.cardneed_skill, friend) then
+		if self:hasSkills(sgs.cardneed_skill, friend) and not self:willSkipPlayPhase(friend) then
 			return friend
 		end
 	end
 
 	self:sort(friends, "handcard")
-	return friends[1]
+	for _, friend in ipairs(friends) do
+		if not self:needKongcheng(friend) and not self:willSkipPlayPhase(friend) then
+			return friend
+		end
+	end
+	return nil
 end
 
 function getBestHp(player)

@@ -197,7 +197,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 				return enemy
 			end
 		end
-		return "."
+		return nil
 	end
 
 	self.yinghun = nil

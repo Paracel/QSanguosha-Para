@@ -434,7 +434,11 @@ function SmartAI:getDynamicUsePriority(card)
 		if use_card:isKindOf("DelayedTrick") and not use_card:isKindOf("YanxiaoCard") and #use_card:getSkillName() > 0 then
 			return sgs.ai_use_priority[use_card:getClassName()] - 0.01
 		end
-		if use_card:isKindOf("Duel") and (self:hasCrossbowEffect(self.player) or self.player:hasFlag("xianzhen_success") or self.player:canSlashWithoutCrossbow()) then
+		if use_card:isKindOf("Duel")
+			and (self:hasCrossbowEffect(self.player)
+			or self.player:hasFlag("xianzhen_success")
+			or self.player:canSlashWithoutCrossbow()
+			or self.player:hasUsed("FenxunCard")) then
 			return sgs.ai_use_priority.Slash - 0.1
 		end
 

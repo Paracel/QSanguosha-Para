@@ -1013,6 +1013,10 @@ SPPackage::SPPackage()
     chenlin->addSkill(new Bifa);
     chenlin->addSkill(new Songci);
 
+    /*
+    General *erqiao = new General(this, "erqiao", "wu", 3, false);
+    */
+
     General *tw_diaochan = new General(this, "tw_diaochan", "qun", 3, false, true);
     tw_diaochan->addSkill("lijian");
     tw_diaochan->addSkill("biyue");

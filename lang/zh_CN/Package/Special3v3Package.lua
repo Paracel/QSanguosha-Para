@@ -56,4 +56,6 @@ return {
 	["@fight"] = "战",
 	["$ZhanshenAnimate"] = "image=image/animate/zhanshen.png",
 	["#ZhanshenWake"] = "%from 已受伤且有己方角色已死亡，触发 %arg 觉醒",
+
+	["wenpin"] = "文聘",
 }

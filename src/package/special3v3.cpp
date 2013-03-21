@@ -448,6 +448,10 @@ Special3v3_2013Package::Special3v3_2013Package()
     vs_lvbu->addSkill("wushuang");
     vs_lvbu->addSkill(new Zhanshen);
 
+    /*
+    General *wenpin = new General(this, "wenpin", "wei");
+    */
+
     addMetaObject<ZhongyiCard>();
 }
 

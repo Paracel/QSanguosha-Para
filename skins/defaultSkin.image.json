@@ -100,6 +100,15 @@
 "playerGeneralIcon-guanxingzhangbao-7": "image/generals/big/guanxingzhangbao.png",
 "playerGeneralIcon-guanxingzhangbao-8": "image/generals/kof/guanxingzhangbao.png",
 
+"playerGeneralIcon-erqiao-0": ["image/generals/big/erqiao.png", [0, 0, 134, 134], [40, 40]],
+"playerGeneralIcon-erqiao-1": "image/generals/small/erqiao.png",
+"playerGeneralIcon-erqiao-2": "image/generals/big/erqiao.png",
+"playerGeneralIcon-erqiao-4": "image/generals/big/erqiao.png",
+"playerGeneralIcon-erqiao-5": ["image/generals/big/erqiao.png", [0, 0, 124, 134], [61, 70]],
+"playerGeneralIcon-erqiao-6": "image/generals/small/erqiao.png",
+"playerGeneralIcon-erqiao-7": "image/generals/big/erqiao.png",
+"playerGeneralIcon-erqiao-8": "image/generals/kof/erqiao.png",
+
 "playerGeneralIcon-nos_guanxingzhangbao-0": ["image/generals/big/nos_guanxingzhangbao.png", [0, 0, 134, 134], [40, 40]],
 "playerGeneralIcon-nos_guanxingzhangbao-1": "image/generals/small/nos_guanxingzhangbao.png",
 "playerGeneralIcon-nos_guanxingzhangbao-2": "image/generals/big/nos_guanxingzhangbao.png",

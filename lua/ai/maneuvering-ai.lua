@@ -288,8 +288,9 @@ end
 
 function SmartAI:useCardIronChain(card, use)
 	local needTarget = (card:getSkillName() == "guhuo" or card:getSkillName() == "qice")
-	use.card = card
+	if not (self.player:hasSkill("noswuyan") and needTarget) then use.card = card end
 	if not needTarget then
+		if self.player:hasSkill("noswuyan") then return end
 		if self.player:isCardLimited(card, sgs.Card_MethodUse) then return end
 		if #self.enemies == 1 and #(self:getChainedFriends()) <= 1 then return end
 		if self:needBear() then return end

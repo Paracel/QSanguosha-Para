@@ -141,7 +141,7 @@ bool QiceCard::targetsFeasible(const QList<const Player *> &targets, const Playe
 }
 
 const Card *QiceCard::validate(const CardUseStruct *card_use) const{
-    Card *use_card = Sanguosha->cloneCard(user_string, SuitToBeDecided, -1);
+    Card *use_card = Sanguosha->cloneCard(user_string);
     use_card->setSkillName("qice");
     foreach (int id, this->getSubcards())
         use_card->addSubcard(id);

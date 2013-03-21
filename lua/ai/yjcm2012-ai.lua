@@ -9,7 +9,7 @@ end
 
 sgs.ai_skill_playerchosen.qianxi = function(self, targets)
 	local enemies = {}
-	local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash")
 	local isRed = (self.player:getTag("qianxi"):toString() == "red")
 
 	for _, target in sgs.qlist(targets) do
@@ -248,7 +248,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefenseSlash(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -259,7 +259,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+		local slash = sgs.Sanguosha:cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -744,7 +744,7 @@ qice_skill.getTurnUseCard = function(self)
 	local aoe_available, ge_available, ex_available = true, true, true
 	for i = 1, #qicetricks do
 		local forbiden = qicetricks[i]
-		forbid = sgs.Sanguosha:cloneCard(forbiden, suit, 0)
+		forbid = sgs.Sanguosha:cloneCard(forbiden, suit)
 		if self.player:isCardLimited(forbid, sgs.Card_MethodUse, true) or not forbid:isAvailable(self.player) then
 			if forbid:isKindOf("AOE") then aoe_available = false end
 			if forbid:isKindOf("GlobalEffect") then ge_available = false end
@@ -776,7 +776,7 @@ qice_skill.getTurnUseCard = function(self)
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
+				aoe = sgs.Sanguosha:cloneCard(newqice)
 				if self:getAoeValue(aoe) > -5 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
@@ -797,7 +797,7 @@ qice_skill.getTurnUseCard = function(self)
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
+				aoe = sgs.Sanguosha:cloneCard(newqice)
 				if self:getAoeValue(aoe) > 0 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
@@ -816,7 +816,7 @@ qice_skill.getTurnUseCard = function(self)
 	if aoe_available then
 		for i = 1, #aoenames do
 			local newqice = aoenames[i]
-			aoe = sgs.Sanguosha:cloneCard(newqice, sgs.Card_NoSuit, 0)
+			aoe = sgs.Sanguosha:cloneCard(newqice)
 			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence")
 				and not self.player:hasSkill("jueqing") and self:aoeIsEffective(aoe, caocao, self.player) then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)

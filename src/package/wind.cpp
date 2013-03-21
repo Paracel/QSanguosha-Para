@@ -725,12 +725,12 @@ QGroupBox *GuhuoDialog::createLeft() {
     foreach (const Card *card, cards) {
         if (card->getTypeId() == Card::TypeBasic && !map.contains(card->objectName())
             && !Config.BanPackages.contains(card->getPackage())) {
-            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
+            Card *c = Sanguosha->cloneCard(card->objectName());
             c->setParent(this);
             layout->addWidget(createButton(c));
 
             if (card->objectName() == "slash"  && !Config.BanPackages.contains("maneuvering")) {
-                Card *c2 = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
+                Card *c2 = Sanguosha->cloneCard(card->objectName());
                 c2->setParent(this);
                 layout->addWidget(createButton(c2));
             }
@@ -757,7 +757,7 @@ QGroupBox *GuhuoDialog::createRight() {
     foreach (const Card *card, cards) {
         if (card->isNDTrick() && !map.contains(card->objectName())
             && !Config.BanPackages.contains(card->getPackage())) {
-            Card *c = Sanguosha->cloneCard(card->objectName(), Card::NoSuit, 0);
+            Card *c = Sanguosha->cloneCard(card->objectName());
             c->setSkillName(object_name);
             c->setParent(this);
 
@@ -912,7 +912,7 @@ bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player 
 bool GuhuoCard::targetFixed() const{
     if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
         if (!ClientInstance->hasNoTargetResponding()) {
-            CardStar card = Sanguosha->cloneCard(user_string, NoSuit, 0);
+            CardStar card = Sanguosha->cloneCard(user_string);
             Self->tag["guhuo"] = QVariant::fromValue(card);
             return card && card->targetFixed();
         } else

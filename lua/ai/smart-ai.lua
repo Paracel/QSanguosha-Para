@@ -3035,7 +3035,7 @@ end
 
 function SmartAI:askForSinglePeach(dying)
 	local card_str
-	local forbid = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuit, 0)
+	local forbid = sgs.Sanguosha:cloneCard("peach")
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
 	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
 		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
@@ -3110,7 +3110,7 @@ function SmartAI:getTurnUse()
 	cards = sgs.QList2Table(cards)
 
 	local turnUse = {}
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash")
 	local slashAvail = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, slash)
 	self.predictedRange = self.player:getAttackRange()
 	self.predictNewHorse = false

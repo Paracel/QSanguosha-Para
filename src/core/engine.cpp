@@ -411,24 +411,22 @@ Card *Engine::cloneCard(const Card *card) const{
     return result;
 }
 
-Card *Engine::cloneCard(const QString &name, Card::Suit suit, int number) const{
+Card *Engine::cloneCard(const QString &name, Card::Suit suit, int number, const QStringList &flags) const{
+    Card *card = NULL;
     const QMetaObject *meta = metaobjects.value(name, NULL);
     if (meta == NULL)
         meta = metaobjects.value(className2objectName.key(name, QString()), NULL);
     if (meta) {
         QObject *card_obj = meta->newInstance(Q_ARG(Card::Suit, suit), Q_ARG(int, number));
         card_obj->setObjectName(className2objectName.value(name, name));
-        return qobject_cast<Card *>(card_obj);
-    } else
-        return NULL;
-}
-
-Card *Engine::cloneCard(const QString &name, Card::Suit suit, int number, const QStringList &flags) const{
-    Card *card = cloneCard(name, suit, number);
+        card = qobject_cast<Card *>(card_obj);
+    }
     if (!card) return NULL;
     card->clearFlags();
-    foreach (QString flag, flags)
-        card->setFlags(flag);
+    if (!flags.isEmpty()) {
+        foreach (QString flag, flags)
+            card->setFlags(flag);
+    }
     return card;
 }
 

@@ -434,7 +434,7 @@ end
 function sgs.ai_cardneed.luoyi(to, card, self)
 	local slash_num = 0
 	local target
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash")
 
 	local cards = to:getHandcards()
 	local need_slash = true
@@ -844,7 +844,7 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	for _, card in ipairs(cards) do
 		if card:isRed() and not card:isKindOf("Slash")
 			and not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player)
-			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)) > 0) then
+			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash")) > 0) then
 			red_card = card
 			break
 		end
@@ -1222,7 +1222,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 		return false
 	end
 
-	local slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)
+	local slash = sgs.Sanguosha:cloneCard("slash")
 	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
@@ -1778,7 +1778,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	end
 
 	local lord = self.room:getLord()
-	local duel = sgs.Sanguosha:cloneCard("duel", sgs.Card_NoSuit, 0)
+	local duel = sgs.Sanguosha:cloneCard("duel")
 
 	if not sgs.GetConfig("EnableHegemony", false)
 		and (self.role == "rebel" or (self.role == "renegade" and sgs.current_mode_players["loyalist"] + 1 > sgs.current_mode_players["rebel"])) then

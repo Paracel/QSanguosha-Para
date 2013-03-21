@@ -842,8 +842,9 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do
-		if card:isRed() and not card:isKindOf("Slash") and not isCard("Peach", card, self.player) 				--not peach
-			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive) then
+		if card:isRed() and not card:isKindOf("Slash")
+			and not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player)
+			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuit, 0)) > 0) then
 			red_card = card
 			break
 		end

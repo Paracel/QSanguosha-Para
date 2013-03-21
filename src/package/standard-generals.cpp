@@ -234,7 +234,7 @@ public:
         events << AskForRetrial;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (player->isKongcheng())
             return false;
 
@@ -244,7 +244,12 @@ public:
         prompt_list << "@guicai-card" << judge->who->objectName()
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
-        const Card *card = room->askForCard(player, ".", prompt, data, Card::MethodResponse, judge->who, true);
+        bool forced = false;
+        if (player->getMark("JilveEvent") == (int)event)
+            forced = true;
+        const Card *card = room->askForCard(player, forced ? ".!" : "." , prompt, data, Card::MethodResponse, judge->who, true);
+        if (forced && card == NULL)
+            card = player->getRandomHandCard();
         if (card) {
             if (player->hasInnateSkill("guicai") || !player->hasSkill("jilve"))
                 room->broadcastSkillInvoke(objectName());

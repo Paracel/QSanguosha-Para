@@ -799,25 +799,25 @@ function SmartAI:needBear(player)
 	return player:hasSkill("renjie") and not player:hasSkill("jilve") and player:getMark("@bear") < 4
 end
 
-sgs.ai_skill_invoke.jilve = function(self, data)
+sgs.ai_skill_invoke.jilve_jizhi = function(self, data)
 	local n = self.player:getMark("@bear")
 	local use = (n > 2 or self:getOverflow() > 0)
-	local event = self.player:getMark("JilveEvent")
-	if event == sgs.AskForRetrial then
-		local judge = data:toJudge()
-		if not self:needRetrial(judge) then return false end
-		return (use or judge.who == self.player or judge.reason == "lightning")
-				and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
-	elseif event == sgs.Damaged then
-		if #self.enemies == 0 then return false end
-		return (sgs.ai_skill_playerchosen.fangzhu(self, self.room:getOtherPlayers(self.player)) ~= nil)
-	elseif event == sgs.CardUsed or event == sgs.CardResponded then
-		local card = data:toCardResponse().m_card
-		card = card or data:toCardUse().card
-		return use or card:isKindOf("ExNihilo")
-	else
-		assert(false)
-	end
+	local card = data:toCardResponse().m_card
+	card = card or data:toCardUse().card
+	return use or card:isKindOf("ExNihilo")
+end
+
+sgs.ai_skill_invoke.jilve_guicai = function(self, data)
+	local n = self.player:getMark("@bear")
+	local use = (n > 2 or self:getOverflow() > 0)
+	local judge = data:toJudge()
+	if not self:needRetrial(judge) then return false end
+	return (use or judge.who == self.player or judge.reason == "lightning")
+			and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
+end
+
+sgs.ai_skill_invoke.jilve_fangzhu = function(self, data)
+	return (sgs.ai_skill_playerchosen.fangzhu(self, self.room:getOtherPlayers(self.player)) ~= nil)
 end
 
 local jilve_skill = {}

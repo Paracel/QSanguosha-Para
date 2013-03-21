@@ -47,9 +47,10 @@ public:
     Fangzhu(): MasochismSkill("fangzhu") {
     }
 
-    virtual void onDamaged(ServerPlayer *caopi, const DamageStruct &damage) const{
+    virtual void onDamaged(ServerPlayer *caopi, const DamageStruct &) const{
         Room *room = caopi->getRoom();
-        ServerPlayer *to = room->askForPlayerChosen(caopi, room->getOtherPlayers(caopi), objectName(), "fangzhu-invoke", true, true);
+        ServerPlayer *to = room->askForPlayerChosen(caopi, room->getOtherPlayers(caopi), objectName(),
+                                                    "fangzhu-invoke", caopi->getMark("JilveEvent") != int(Damaged), true);
         if (to) {
             to->drawCards(caopi->getLostHp());
 

@@ -2239,6 +2239,8 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                         dashboard->selectOnlyCard();
                 }
             } else {
+                if (pattern.endsWith("!"))
+                    pattern = pattern.mid(0, pattern.length() - 1);
                 response_skill->setPattern(pattern);
                 if (newStatus == Client::RespondingForDiscard)
                     response_skill->setRequest(Card::MethodDiscard);

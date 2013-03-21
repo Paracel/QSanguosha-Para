@@ -1068,20 +1068,23 @@ public:
         if (event == CardUsed) {
             CardStar card = data.value<CardUseStruct>().card;
 
-            if (card && card->isNDTrick() && player->askForSkillInvoke("jilve", data)) {
+            if (card && card->isNDTrick() && player->askForSkillInvoke("jilve_jizhi", data)) {
+                room->notifySkillInvoked(player, objectName());
                 player->loseMark("@bear");
                 room->broadcastSkillInvoke(objectName(), 5);
                 player->drawCards(1);
             }
         } else if (event == AskForRetrial) {
             const TriggerSkill *guicai = Sanguosha->getTriggerSkill("guicai");
-            if (guicai && !player->isKongcheng() && player->askForSkillInvoke("jilve", data)) {
+            if (guicai && !player->isKongcheng() && player->askForSkillInvoke("jilve_guicai", data)) {
+                room->notifySkillInvoked(player, objectName());
                 player->loseMark("@bear");
                 guicai->trigger(event, room, player, data);
             }
         } else if (event == Damaged) {
             const TriggerSkill *fangzhu = Sanguosha->getTriggerSkill("fangzhu");
-            if (fangzhu && player->askForSkillInvoke("jilve", data)) {
+            if (fangzhu && player->askForSkillInvoke("jilve_fangzhu", data)) {
+                room->notifySkillInvoked(player, objectName());
                 player->loseMark("@bear");
                 fangzhu->trigger(event, room, player, data);
             }

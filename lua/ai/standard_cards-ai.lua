@@ -1695,6 +1695,18 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
+	for _, enemy in ipairs(enemies) do
+		if (self:hasTrickEffective(card, enemy) or isYinling) and enemy:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(enemy) then
+			use.card = card
+			if use.to then
+				sgs.ai_skill_cardchosen[name] = enemy:getArmor():getEffectiveId()
+				use.to:append(enemy)
+				self:speak("hostile", self.player:isFemale())
+			end
+			return
+		end
+	end
+
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
 			if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling)

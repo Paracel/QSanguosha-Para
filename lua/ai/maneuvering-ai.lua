@@ -325,46 +325,72 @@ function SmartAI:useCardIronChain(card, use)
 						and (self:getCardId("NatureSlash") or (self:getCardId("Slash") and (self.player:hasWeapon("fan") or self:hasSkill("lihuo")))
 						or (self:getCardId("FireAttack") and self.player:getHandcardNum() > 2))
 
+	local targets_num = 2 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card)
 	if not self.player:hasSkill("noswuyan") then
 		if #friendtargets > 1 then
-			if use.to then use.to:append(friendtargets[1]) end
-			if use.to then use.to:append(friendtargets[2]) end
+			if use.to then
+				for _, friend in ipairs(friendtargets) do
+					use.to:append(friend)
+					if use.to:length() == targets_num then return end
+				end
+			end
 		elseif #friendtargets == 1 then
 			if #enemytargets > 0 then
-				if use.to then use.to:append(friendtargets[1]) end
-				if use.to then use.to:append(enemytargets[1]) end
+				if use.to then
+					use.to:append(friendtargets[1])
+					for _, enemy in ipairs(enemytargets) do
+						use.to:append(enemy)
+						if use.to:length() == targets_num then return end
+					end
+				end
 			elseif chainSelf then
 				if use.to then use.to:append(friendtargets[1]) end
 				if use.to then use.to:append(self.player) end
 			elseif liuxie and self:isFriend(liuxie) and liuxie:getHp() > 0 and #otherfriends > 0 then
-				if use.to then use.to:append(friendtargets[1]) end
-				if use.to then use.to:append(otherfriends[1]) end
+				if use.to then
+					use.to:append(friendtargets[1])
+					for _, friend in ipairs(otherfriends) do
+						use.to:append(friend)
+						if use.to:length() == math.min(targets_num, liuxie:getHp() + 1) then return end
+					end
+				end
 			elseif yangxiu and self:isFriend(yangxiu) then
 				if use.to then use.to:append(friendtargets[1]) end
 				if use.to then use.to:append(yangxiu) end
 			end
 		elseif #enemytargets > 1 then
-			if use.to then use.to:append(enemytargets[1]) end
-			if use.to then use.to:append(enemytargets[2]) end
+			if use.to then
+				for _, enemy in ipairs(enemytargets) do
+					use.to:append(enemy)
+					if use.to:length() == targets_num then return end
+				end
+			end
 		elseif #enemytargets == 1 then
 			if chainSelf then
 				if use.to then use.to:append(enemytargets[1]) end
 				if use.to then use.to:append(self.player) end
 			elseif liuxie and self:isFriend(liuxie) and liuxie:getHp() > 0 and #otherfriends > 0 then
-				if use.to then use.to:append(enemytargets[1]) end
-				if use.to then use.to:append(otherfriends[1]) end
+				if use.to then
+					use.to:append(enemytargets[1])
+					for _, friend in ipairs(otherfriends) do
+						use.to:append(friend)
+						if use.to:length() == math.min(targets_num, liuxie:getHp() + 1) then return end
+					end
+				end
 			elseif yangxiu and self:isFriend(yangxiu) then
 				if use.to then use.to:append(enemytargets[1]) end
 				if use.to then use.to:append(yangxiu) end
 			end
 		elseif #friendtargets == 0 and #enemytargets == 0 then
-			if liuxie and self:isFriend(liuxie) and #otherfriends > 0 then
-				if liuxie:getHp() > 0 and use.to then use.to:append(otherfriends[1]) end
-				if liuxie:getHp() > 1 and #otherfriends > 1 and use.to then use.to:append(otherfriends[2]) end
+			if use.to and liuxie and self:isFriend(liuxie) and liuxie:getHp() > 0 and #otherfriends > 0 then
+				for _, friend in ipairs(otherfriends) do
+					use.to:append(friend)
+					if use.to:length() == math.min(targets_num, liuxie:getHp()) then return end
+				end
 			end
 		end
 	end
-	if use.to then assert(use.to:length() < 3) end
+	if use.to then assert(use.to:length() < targets_num + 1) end
 end
 
 sgs.ai_card_intention.IronChain = function(self, card, from, tos)

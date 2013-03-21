@@ -83,17 +83,17 @@ sgs.ai_card_intention.QuhuCard = 30
 
 sgs.dynamic_value.control_card.QuhuCard = true
 
-sgs.ai_skill_use["@@jieming"] = function(self, prompt)
+sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	local friends = {}
 	for _, player in ipairs(self.friends) do
-		if player:isAlive() and not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) then
+		if player:isAlive() and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then
 			table.insert(friends, player)
 		end
 	end
 	self:sort(friends)
 
 	local max_x = 0
-	local target
+	local target = nil
 	local Shenfen_user
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if player:hasFlag("ShenfenUsing") then
@@ -118,18 +118,18 @@ sgs.ai_skill_use["@@jieming"] = function(self, prompt)
 		end
 	end
 
-	if target then
-		return "@JiemingCard=.->" .. target:objectName()
-	else
-		return "."
-	end
+	return target
 end
 
 sgs.ai_need_damaged.jieming = function (self, attacker)
 	return self:getJiemingChaofeng(self.player) <= -6
 end
 
-sgs.ai_card_intention.JiemingCard = -80
+sgs.ai_playerchosen_intention.jieming = function(from, to)
+	if to:getHandcardNum() < math.min(5, to:getMaxHp()) then
+		sgs.updateIntention(from, to, -80)
+	end
+end
 
 sgs.ai_chaofeng.xunyu = 3
 

@@ -323,7 +323,7 @@ public:
         if (dying.who == player || (room->getMode().startsWith("06_") && AI::GetRelation3v3(dying.who, player) != AI::Friend))
             return false;
         while (dying.who->getHp() <= 0) {
-            if (player->getHp() <= 1)
+            if (player->getHp() <= 1 || player->isNude())
                 break;
             if (room->askForCard(player, ".", "@jiuzhu", data, objectName())) {
                 room->loseHp(player);

@@ -11,8 +11,7 @@ return {
 	["@quhu-damage"] = "请选择 %src 攻击范围内的一名角色",
 	["jieming"] = "节命",
 	[":jieming"] = "每当你受到1点伤害后，你可以令一名角色将手牌数补至等于体力上限的张数（至多五张）。",
-	["@jieming"] = "请选择“节命”的目标",
-	["~jieming"] = "选择一名角色→点击确定",
+	["jieming-invoke"] = "你可以发动“节命”<br/> <b>操作提示</b>: 选择一名角色→点击确定<br/>",
 	["#QuhuNoWolf"] = "%from “<font color=\"yellow\"><b>驱虎</b></font>”拼点赢，由于 %to 攻击范围内没有其他角色，结算中止",
 
 	["#dianwei"] = "古之恶来",

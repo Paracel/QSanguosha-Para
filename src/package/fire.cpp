@@ -61,51 +61,23 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
     }
 }
 
-JiemingCard::JiemingCard() {
-}
-
-bool JiemingCard::targetFilter(const QList<const Player *> &targets, const Player *, const Player *) const{
-    return targets.isEmpty();
-}
-
-void JiemingCard::onEffect(const CardEffectStruct &effect) const{
-    int upper = qMin(5, effect.to->getMaxHp());
-    int x = upper - effect.to->getHandcardNum();
-    if (x <= 0)
-        return;
-
-    effect.to->drawCards(x);
-}
-
-class JiemingViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    JiemingViewAsSkill(): ZeroCardViewAsSkill("jieming") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@jieming";
-    }
-
-    virtual const Card *viewAs() const{
-        return new JiemingCard;
-    }
-};
-
 class Jieming: public MasochismSkill {
 public:
     Jieming(): MasochismSkill("jieming") {
-        view_as_skill = new JiemingViewAsSkill;
     }
 
     virtual void onDamaged(ServerPlayer *xunyu, const DamageStruct &damage) const{
         Room *room = xunyu->getRoom();
         for (int i = 0; i < damage.damage; i++) {
-            if (!room->askForUseCard(xunyu, "@@jieming", "@jieming"))
-                break;
+            ServerPlayer *to = room->askForPlayerChosen(xunyu, room->getAlivePlayers(), objectName(), "jieming-invoke", true, true);
+            if (!to) break;
+
+            int upper = qMin(5, to->getMaxHp());
+            int x = upper - to->getHandcardNum();
+            if (x <= 0) continue;
+
+            room->broadcastSkillInvoke(objectName());
+            to->drawCards(x);
         }
     }
 };
@@ -606,7 +578,6 @@ FirePackage::FirePackage()
     pangde->addSkill(new SPConvertSkill("pangde", "sp_pangde"));
 
     addMetaObject<QuhuCard>();
-    addMetaObject<JiemingCard>();
     addMetaObject<QiangxiCard>();
     addMetaObject<TianyiCard>();
 }

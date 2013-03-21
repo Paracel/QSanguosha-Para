@@ -42,50 +42,24 @@ public:
     }
 };
 
-FangzhuCard::FangzhuCard() {
-    mute = true;
-}
-
-void FangzhuCard::onEffect(const CardEffectStruct &effect) const{
-    int x = effect.from->getLostHp();
-    effect.to->drawCards(x);
-
-    Room *room = effect.to->getRoom();
-    if (effect.from->hasInnateSkill("fangzhu") || !effect.from->hasSkill("jilve"))
-        room->broadcastSkillInvoke("fangzhu", effect.to->faceUp() ? 1 : 2);
-    else
-        room->broadcastSkillInvoke("jilve", 2);
-
-    effect.to->turnOver();
-}
-
-class FangzhuViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    FangzhuViewAsSkill(): ZeroCardViewAsSkill("fangzhu") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@fangzhu";
-    }
-
-    virtual const Card *viewAs() const{
-        return new FangzhuCard;
-    }
-};
-
 class Fangzhu: public MasochismSkill {
 public:
     Fangzhu(): MasochismSkill("fangzhu") {
-        view_as_skill = new FangzhuViewAsSkill;
     }
 
     virtual void onDamaged(ServerPlayer *caopi, const DamageStruct &damage) const{
         Room *room = caopi->getRoom();
-        room->askForUseCard(caopi, "@@fangzhu", "@fangzhu");
+        ServerPlayer *to = room->askForPlayerChosen(caopi, room->getOtherPlayers(caopi), objectName(), "fangzhu-invoke", true, true);
+        if (to) {
+            to->drawCards(caopi->getLostHp());
+
+            if (caopi->hasInnateSkill("fangzhu") || !caopi->hasSkill("jilve"))
+                room->broadcastSkillInvoke("fangzhu", to->faceUp() ? 1 : 2);
+            else
+                room->broadcastSkillInvoke("jilve", 2);
+
+            to->turnOver();
+        }
     }
 };
 
@@ -372,64 +346,9 @@ public:
     }
 };
 
-YinghunCard::YinghunCard() {
-    mute = true;
-}
-
-void YinghunCard::onEffect(const CardEffectStruct &effect) const{
-    int x = effect.from->getLostHp();
-
-    int index = 1;
-    if (!effect.from->hasInnateSkill("yinghun") && effect.from->hasSkill("hunzi"))
-        index += 2;
-    Room *room = effect.from->getRoom();
-
-    if (x == 1) {
-        room->broadcastSkillInvoke("yinghun", index);
-
-        effect.to->drawCards(1);
-        room->askForDiscard(effect.to, "yinghun", 1, 1, false, true);
-    } else {
-        effect.to->setFlags("YinghunTarget");
-        QString choice = room->askForChoice(effect.from, "yinghun", "d1tx+dxt1");
-        effect.to->setFlags("-YinghunTarget");
-        if (choice == "d1tx") {
-            room->broadcastSkillInvoke("yinghun", index + 1);
-
-            effect.to->drawCards(1);
-            room->askForDiscard(effect.to, "yinghun", x, x, false, true);
-        } else {
-            room->broadcastSkillInvoke("yinghun", index);
-
-            effect.to->drawCards(x);
-            room->askForDiscard(effect.to, "yinghun", 1, 1, false, true);
-        }
-    }
-}
-
-class YinghunViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    YinghunViewAsSkill(): ZeroCardViewAsSkill("yinghun") {
-    }
-
-    virtual const Card *viewAs() const{
-        return new YinghunCard;
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@yinghun";
-    }
-};
-
 class Yinghun: public PhaseChangeSkill {
 public:
     Yinghun(): PhaseChangeSkill("yinghun") {
-        default_choice = "d1tx";
-        view_as_skill = new YinghunViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -440,8 +359,36 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *sunjian) const{
         Room *room = sunjian->getRoom();
-        room->askForUseCard(sunjian, "@@yinghun", "@yinghun");
+        ServerPlayer *to = room->askForPlayerChosen(sunjian, room->getOtherPlayers(sunjian), objectName(), "yinghun-invoke", true, true);
+        if (to) {
+            int x = sunjian->getLostHp();
 
+            int index = 1;
+            if (!sunjian->hasInnateSkill("yinghun") && sunjian->hasSkill("hunzi"))
+                index += 2;
+
+            if (x == 1) {
+                room->broadcastSkillInvoke(objectName(), index);
+
+                to->drawCards(1);
+                room->askForDiscard(to, objectName(), 1, 1, false, true);
+            } else {
+                to->setFlags("YinghunTarget");
+                QString choice = room->askForChoice(sunjian, objectName(), "d1tx+dxt1");
+                to->setFlags("-YinghunTarget");
+                if (choice == "d1tx") {
+                    room->broadcastSkillInvoke(objectName(), index + 1);
+
+                    to->drawCards(1);
+                    room->askForDiscard(to, objectName(), x, x, false, true);
+                } else {
+                    room->broadcastSkillInvoke(objectName(), index);
+
+                    to->drawCards(x);
+                    room->askForDiscard(to, objectName(), 1, 1, false, true);
+                }
+            }
+        }
         return false;
     }
 };
@@ -1044,8 +991,6 @@ ThicketPackage::ThicketPackage()
 
     addMetaObject<DimengCard>();
     addMetaObject<LuanwuCard>();
-    addMetaObject<YinghunCard>();
-    addMetaObject<FangzhuCard>();
     addMetaObject<HaoshiCard>();
 }
 

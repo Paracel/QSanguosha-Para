@@ -11,15 +11,6 @@ public:
     ThicketPackage();
 };
 
-class YinghunCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE YinghunCard();
-
-    virtual void onEffect(const CardEffectStruct &effect) const;
-};
-
 class HaoshiCard: public SkillCard {
     Q_OBJECT
 
@@ -49,14 +40,6 @@ public:
     Q_INVOKABLE LuanwuCard();
 
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-    virtual void onEffect(const CardEffectStruct &effect) const;
-};
-
-class FangzhuCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE FangzhuCard();
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 

@@ -70,6 +70,13 @@ config = {
 		"你也忒坏了吧？！"
 	},
 
+	roles_ban = {
+		"vs_xiahoudun",
+		"vs_guanyu",
+		"vs_zhaoyun",
+		"vs_lvbu"
+	},
+
 	kof_ban = {
 		"sunquan",
 		"huatuo"

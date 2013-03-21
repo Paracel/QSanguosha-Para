@@ -1080,7 +1080,9 @@ public:
         Room *room = zuoci->getRoom();
         if (room->getMode().endsWith("p")
             || room->getMode().endsWith("pd")
-            || room->getMode().endsWith("pz"))
+            || room->getMode().endsWith("pz")
+            || room->getMode().contains("_mini_")
+            || room->getMode() == "custom_scenario")
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
         else if (room->getMode() == "04_1v3")
             all.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());

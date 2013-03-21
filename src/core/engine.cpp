@@ -291,7 +291,9 @@ int Engine::getGeneralCount(bool include_banned) const{
             total--;
         else if ((ServerInfo.GameMode.endsWith("p")
                  || ServerInfo.GameMode.endsWith("pd")
-                 || ServerInfo.GameMode.endsWith("pz"))
+                 || ServerInfo.GameMode.endsWith("pz")
+                 || ServerInfo.GameMode.contains("_mini_")
+                 || ServerInfo.GameMode == "custom_scenario")
                  && Config.value("Banlist/Roles").toStringList().contains(general->objectName()))
             total--;
         else if (ServerInfo.GameMode == "04_1v3"
@@ -678,8 +680,10 @@ QStringList Engine::getLords(bool contain_banned) const{
             continue;
         if (!contain_banned) {
             if (ServerInfo.GameMode.endsWith("p")
-               || ServerInfo.GameMode.endsWith("pd")
-               || ServerInfo.GameMode.endsWith("pz"))
+                || ServerInfo.GameMode.endsWith("pd")
+                || ServerInfo.GameMode.endsWith("pz")
+                || ServerInfo.GameMode.contains("_mini_")
+                || ServerInfo.GameMode == "custom_scenario")
                 if (Config.value("Banlist/Roles", "").toStringList().contains(lord))
                     continue;
             if (Config.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
@@ -782,7 +786,9 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
 
     if (ServerInfo.GameMode.endsWith("p")
         || ServerInfo.GameMode.endsWith("pd")
-        || ServerInfo.GameMode.endsWith("pz"))
+        || ServerInfo.GameMode.endsWith("pz")
+        || ServerInfo.GameMode.contains("_mini_")
+        || ServerInfo.GameMode == "custom_scenario")
         general_set.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
     else if (ServerInfo.GameMode == "04_1v3")
         general_set.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());

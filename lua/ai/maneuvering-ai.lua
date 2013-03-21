@@ -492,10 +492,10 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 						and not (enemy:isChained() and not self:isGoodChainTarget(enemy))))
 	end
 
-	local targets = {}
+	local enemies, targets = {}, {}
 	for _, enemy in ipairs(self.enemies) do
 		if can_attack(enemy) then
-			table.insert(targets, enemy)
+			table.insert(enemies, enemy)
 		end
 	end
 
@@ -505,62 +505,54 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		and self:hasTrickEffective(fire_attack, self.player)
 		and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
 			or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
-		local godsalvation = self:getCard("GodSalvation")
-		if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
-			use.card = godsalvation
-			return
-		end
 
-		use.card = fire_attack
-		if use.to then use.to:append(self.player) end
-		return
+		table.insert(targets, self.player)
 	end
 
-	if #targets == 0 then return end
-
-	for _, enemy in ipairs(targets) do
+	for _, enemy in ipairs(enemies) do
 		if enemy:getHandcardNum() == 1 then
 			local handcards = sgs.QList2Table(enemy:getHandcards())
 			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
 			if handcards[1]:hasFlag("visible") or handcards[1]:hasFlag(flag) then
 				local suitstring = handcards[1]:getSuitString()
 				if not lack[suitstring] then
-					local godsalvation = self:getCard("GodSalvation")
-					if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
-						use.card = godsalvation
-						return
-					end
-					use.card = fire_attack
-					if use.to then use.to:append(enemy) end
-					return
+					table.insert(targets, enemy)
 				end
 			end
 		end
 	end
 
-	if (suitnum == 2 and not lack.diamond and not lack.spade and self:getOverflow() <= 0) or suitnum <= 1 then return end
+	if ((suitnum == 2 and lack.diamond == false) or suitnum <= 1) and self:getOverflow() <= 0 and #targets == 0 then return end
 
-	for _, enemy in ipairs(targets) do
-		if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
-			local godsalvation = self:getCard("GodSalvation")
-			if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
-				use.card = godsalvation
-				return
-			end
-			use.card = fire_attack
-			if use.to then use.to:append(enemy) end
-			return
+	for _, enemy in ipairs(enemies) do
+		local damage = 1
+		if not enemy:hasArmorEffect("silver_lion") then
+			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
+			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
+		end
+		if not self.player:hasSkill("jueqing") and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) and damage > 1 then
+			if not table.contains(targets, enemy) then table.insert(targets, enemy) end
 		end
 	end
-	for _, enemy in ipairs(targets) do
+	for _, enemy in ipairs(enemies) do
+		if not table.contains(targets, enemy) then table.insert(targets, enemy) end
+	end
+
+	if #targets > 0 then
 		local godsalvation = self:getCard("GodSalvation")
 		if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
 			use.card = godsalvation
 			return
 		end
+
+		local targets_num = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, fire_attack)
 		use.card = fire_attack
-		if use.to then use.to:append(enemy) end
-		return
+		for i = 1, #targets, 1 do
+			if use.to then
+				use.to:append(targets[i])
+				if use.to:length() == targets_num then return end
+			end
+		end
 	end
 end
 

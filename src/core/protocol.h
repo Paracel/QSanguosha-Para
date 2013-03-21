@@ -89,6 +89,7 @@ namespace QSanProtocol {
         S_COMMAND_CHANGE_MAXHP,
         S_COMMAND_CHEAT,
         S_COMMAND_SURRENDER,
+        S_COMMAND_ENABLE_SURRENDER,
         S_COMMAND_GAME_OVER,
         S_COMMAND_GAME_START,
         S_COMMAND_MOVE_CARD,
@@ -98,6 +99,7 @@ namespace QSanProtocol {
         S_COMMAND_LOG_SKILL,
         S_COMMAND_UPDATE_CARD,
         S_COMMAND_CARD_LIMITATION,
+        S_COMMAND_JILEI,
         S_COMMAND_ADD_HISTORY,
         S_COMMAND_SET_EMOTION,
         S_COMMAND_FILL_AMAZING_GRACE,
@@ -106,7 +108,8 @@ namespace QSanProtocol {
         S_COMMAND_FIXED_DISTANCE,
         S_COMMAND_KILL_PLAYER,
         S_COMMAND_REVIVE_PLAYER,
-        S_COMMAND_ATTACH_SKILL
+        S_COMMAND_ATTACH_SKILL,
+        S_COMMAND_NULLIFICATION_ASKED
     };
 
     enum GameEventType {

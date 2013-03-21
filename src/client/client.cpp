@@ -74,8 +74,9 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["setScreenName"] = &Client::setScreenName;
     m_callbacks[S_COMMAND_FIXED_DISTANCE] = &Client::setFixedDistance;
     m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
-    callbacks["jilei"] = &Client::jilei;
-    callbacks["setNullification"] = &Client::setNullification;
+    m_callbacks[S_COMMAND_JILEI] = &Client::jilei;
+    m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
+    m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
 
     callbacks["updateStateItem"] = &Client::updateStateItem;
 
@@ -658,15 +659,19 @@ void Client::cardLimitation(const Json::Value &limit) {
     }
 }
 
-void Client::jilei(const QString &jilei_str) {
-    Self->jilei(jilei_str);
+void Client::jilei(const Json::Value &jilei_str) {
+    if (!jilei_str.isString()) return;
+    QString astr = toQString(jilei_str);
+    Self->jilei(astr);
 }
 
-void Client::setNullification(const QString &str) {
-    if (str != ".") {
+void Client::setNullification(const Json::Value &str) {
+    if (!str.isString()) return;
+    QString astr = toQString(str);
+    if (astr != ".") {
         if (m_noNullificationTrickName == ".") {
             m_noNullificationThisTime = false;
-            m_noNullificationTrickName = str;
+            m_noNullificationTrickName = astr;
             emit nullification_asked(true);
         }
     } else {
@@ -674,6 +679,12 @@ void Client::setNullification(const QString &str) {
         m_noNullificationTrickName = ".";
         emit nullification_asked(false);
     }
+}
+
+void Client::enableSurrender(const Json::Value &enabled) {
+    if (!enabled.isBool()) return;
+    bool en = enabled.asBool();
+    emit surrender_enabled(en);
 }
 
 QString Client::getSkillLine() const{
@@ -1155,8 +1166,8 @@ void Client::gameOver(const Json::Value &arg) {
 }
 
 void Client::killPlayer(const Json::Value &player_arg) {
-    if (!player_arg.isArray() || player_arg.size() != 1 || !player_arg[0].isString()) return;
-    QString player_name = toQString(player_arg[0]);
+    if (!player_arg.isString()) return;
+    QString player_name = toQString(player_arg);
 
     alive_count--;
     ClientPlayer *player = getPlayer(player_name);
@@ -1191,8 +1202,8 @@ void Client::killPlayer(const Json::Value &player_arg) {
 }
 
 void Client::revivePlayer(const Json::Value &player_arg) {
-    if (!player_arg.isArray() || player_arg.size() != 1 || !player_arg[0].isString()) return;
-    QString player_name = toQString(player_arg[0]);
+    if (!player_arg.isString()) return;
+    QString player_name = toQString(player_arg);
 
     alive_count++;
     emit player_revived(player_name);

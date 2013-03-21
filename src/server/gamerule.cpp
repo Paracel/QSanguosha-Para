@@ -5,6 +5,7 @@
 #include "maneuvering.h"
 #include "engine.h"
 #include "settings.h"
+#include "jsonutils.h"
 
 #include <QTime>
 
@@ -199,6 +200,10 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (data.canConvert<CardUseStruct>()) {
                 CardUseStruct card_use = data.value<CardUseStruct>();
                 const Card *card = card_use.card;
+                if (card_use.from->hasFlag("GlobalFlag_ForbidSurrender")) {
+                    card_use.from->setFlags("-GlobalFlag_ForbidSurrender");
+                    room->doNotify(card_use.from, QSanProtocol::S_COMMAND_ENABLE_SURRENDER, Json::Value(true));
+                }
                 if (card_use.from->hasFlag("jijiang_failed"))
                     room->setPlayerFlag(card_use.from, "-jijiang_failed");
 
@@ -249,7 +254,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
             if (use.card->isKindOf("AOE") || use.card->isKindOf("GlobalEffect")) {
                 foreach (ServerPlayer *p, room->getAlivePlayers())
-                    p->invoke("setNullification", ".");
+                    room->doNotify(p, QSanProtocol::S_COMMAND_NULLIFICATION_ASKED, QSanProtocol::Utils::toJsonString("."));
             }
 
             break;
@@ -793,7 +798,6 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
     return winner;
 }
 
-#include "jsonutils.h"
 HulaoPassMode::HulaoPassMode(QObject *parent)
     : GameRule(parent)
 {

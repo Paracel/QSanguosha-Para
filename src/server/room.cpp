@@ -243,10 +243,7 @@ void Room::revivePlayer(ServerPlayer *player) {
         broadcastProperty(m_alivePlayers.at(i), "seat");
     }
 
-    Json::Value arg(Json::arrayValue);
-    arg[0] = toJsonString(player->objectName());
-    doBroadcastNotify(S_COMMAND_REVIVE_PLAYER, arg);
-
+    doBroadcastNotify(S_COMMAND_REVIVE_PLAYER, toJsonString(player->objectName()));
     updateStateItem();
 }
 
@@ -305,9 +302,7 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
     broadcastProperty(victim, "alive");
     broadcastProperty(victim, "role");
 
-    Json::Value arg(Json::arrayValue);
-    arg[0] = toJsonString(victim->objectName());
-    doBroadcastNotify(S_COMMAND_KILL_PLAYER, arg);
+    doBroadcastNotify(S_COMMAND_KILL_PLAYER, toJsonString(victim->objectName()));
 
     thread->trigger(GameOverJudge, this, victim, data);
 
@@ -867,7 +862,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     if (!validHumanPlayers.empty()) {
         if (trick->isKindOf("AOE") || trick->isKindOf("GlobalEffect")) {
             foreach (ServerPlayer *p, validHumanPlayers)
-                p->invoke("setNullification", trick->objectName());
+                doNotify(p, S_COMMAND_NULLIFICATION_ASKED, toJsonString(trick->objectName()));
         }
         repliedPlayer = doBroadcastRaceRequest(validHumanPlayers, S_COMMAND_NULLIFICATION,
                                                timeOut, &Room::verifyNullificationResponse);
@@ -1404,7 +1399,8 @@ void Room::setPlayerCardLock(ServerPlayer *player, const QString &name) {
 
 void Room::setPlayerJilei(ServerPlayer *player, const QString &name) {
     player->jilei(name);
-    player->invoke("jilei", name);
+    // @todo: combine it with S_COMMAND_CARD_LIMITATION
+    doNotify(player, S_COMMAND_JILEI, toJsonString(name));
 }
 
 void Room::setCardFlag(const Card *card, const QString &flag, ServerPlayer *who) {
@@ -1946,6 +1942,9 @@ bool Room::makeSurrender(ServerPlayer *initiator) {
     }
 
     m_surrenderRequestReceived = false;
+
+    initiator->setFlags("GlobalFlag_ForbidSurrender");
+    doNotify(initiator, S_COMMAND_ENABLE_SURRENDER, Json::Value(false));
     return true;
 }
 

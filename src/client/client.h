@@ -127,8 +127,9 @@ public:
     void skillInvoked(const Json::Value &invoke_str);
     void animate(const QString &animate_str);
     void cardLimitation(const Json::Value &limit);
-    void jilei(const QString &jilei_str);
-    void setNullification(const QString &str);
+    void jilei(const Json::Value &jilei_str);
+    void setNullification(const Json::Value &str);
+    void enableSurrender(const Json::Value &enabled);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const QString &state_str);
@@ -319,6 +320,7 @@ signals:
     void do_filter();
 
     void nullification_asked(bool asked);
+    void surrender_enabled(bool enabled);
 
     void ag_filled(const QList<int> &card_ids, const QList<int> &disabled_ids);
     void ag_taken(ClientPlayer *taker, int card_id);

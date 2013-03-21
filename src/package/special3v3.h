@@ -15,11 +15,27 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
+class ZhongyiCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE ZhongyiCard();
+
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
 class Special3v3Package: public Package {
     Q_OBJECT
 
 public:
     Special3v3Package();
+};
+
+class Special3v3_2013Package: public Package {
+    Q_OBJECT
+
+public:
+    Special3v3_2013Package();
 };
 
 class New3v3CardPackage: public Package {

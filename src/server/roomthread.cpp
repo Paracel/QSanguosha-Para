@@ -351,8 +351,10 @@ void RoomThread::action3v3(ServerPlayer *player) {
     }
 
     if (all_actioned) {
-        foreach (ServerPlayer *player, room->m_alivePlayers)
+        foreach (ServerPlayer *player, room->m_alivePlayers) {
             room->setPlayerFlag(player, "-actioned");
+            trigger(ActionedReset, room, player);
+        }
     }
 }
 

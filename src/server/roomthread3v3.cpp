@@ -46,8 +46,11 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
         /*
         QStringList list_remove, list_add;
         list_remove << "zhangjiao" << "caoren" << "lvmeng" << "xiahoudun" << "weiyan"
-                    << "luxun" << "huangzhong" << "xuchu" << "zhoutai";
-        list_add << "sunjian" << "xuhuang" << "pangde" << "jiaxu" << "sunce" << "jiangwei" << "zhugejin";
+                    << "luxun" << "huangzhong" << "xuchu" << "zhoutai" << "zhaoyun"
+                    << "guanyu" << "lvbu";
+        list_add << "sunjian" << "xuhuang" << "pangde" << "jiaxu" << "sunce"
+                 << "jiangwei" << "zhugejin" << "vs_xiahoudun" << "vs_guanyu"
+                 << "vs_zhaoyun" << "vs_lvbu";
         foreach (QString general_name, list_remove)
             generals.removeOne(Sanguosha->getGeneral(general_name));
         foreach (QString general_name, list_add)

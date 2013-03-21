@@ -25,6 +25,7 @@ config = {
 		"YJCM2012",
 		"Assassins", 
 		"Special3v3",
+		"Special3v3_2013",
 		"SP",
 		"BGM",
 		"BGMDIY",

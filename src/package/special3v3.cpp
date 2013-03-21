@@ -60,7 +60,7 @@ public:
         if (room->askForSkillInvoke(zhugejin, objectName())) {
             room->broadcastSkillInvoke(objectName());
             zhugejin->setFlags("hongyuan");
-            if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode") {
+            if (room->getMode().startsWith("06_")) {
                 QStringList names = getTeammateNames(zhugejin);
                 room->setTag("HongyuanTargets", QVariant::fromValue(names));
             }
@@ -118,7 +118,7 @@ public:
         JudgeStar judge = data.value<JudgeStar>();
 
         bool can_invoke = false;
-        if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode") {
+        if (room->getMode().startsWith("06_")) {
             foreach (ServerPlayer *teammate, getTeammates(player)) {
                 if (teammate == judge->who) {
                     can_invoke = true;
@@ -201,6 +201,200 @@ public:
     }
 };
 
+class VsGanglie: public MasochismSkill {
+public:
+    VsGanglie(): MasochismSkill("vsganglie") {
+    }
+
+    virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &) const{
+        Room *room = xiahou->getRoom();
+        ServerPlayer *from = room->askForPlayerChosen(xiahou, room->getOtherPlayers(xiahou), objectName(), "vsganglie-invoke", true, true);
+        if (!from) return;
+
+        room->broadcastSkillInvoke("ganglie");
+
+        JudgeStruct judge;
+        judge.pattern = QRegExp("(.*):(heart):(.*)");
+        judge.good = false;
+        judge.reason = objectName();
+        judge.who = xiahou;
+
+        room->judge(judge);
+        if (from->isDead()) return;
+        if (judge.isGood()) {
+            if (!room->askForDiscard(from, objectName(), 2, 2, true)) {
+                DamageStruct damage;
+                damage.from = xiahou;
+                damage.to = from;
+                damage.reason = objectName();
+                room->damage(damage);
+            }
+        }
+    }
+};
+
+ZhongyiCard::ZhongyiCard() {
+    mute = true;
+    will_throw = false;
+    target_fixed = true;
+    handling_method = Card::MethodNone;
+}
+
+void ZhongyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    room->broadcastSkillInvoke("zhongyi");
+    room->doLightbox("$ZhongyiAnimate");
+    source->loseMark("@loyal");
+    source->addToPile("loyal", this);
+}
+
+class Zhongyi: public OneCardViewAsSkill {
+public:
+    Zhongyi(): OneCardViewAsSkill("zhongyi") {
+        frequency = Limited;
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return !to_select->isEquipped() && to_select->isRed();
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->isKongcheng() && player->getMark("@loyal") > 0;
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        ZhongyiCard *card = new ZhongyiCard;
+        card->addSubcard(originalCard);
+        return card;
+    }
+};
+
+class ZhongyiAction: public TriggerSkill {
+public:
+    ZhongyiAction(): TriggerSkill("#zhongyi-action") {
+        events << ConfirmDamage << EventPhaseStart << ActionedReset;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        QString mode = room->getMode();
+        if (event == ConfirmDamage) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.card && damage.card->isKindOf("Slash")) {
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (p->getPile("loyal").isEmpty()) continue;
+                    bool on_effect = false;
+                    if (room->getMode().startsWith("06_"))
+                        on_effect = (AI::GetRelation3v3(player, p) == AI::Friend);
+                    else
+                        on_effect = (room->askForSkillInvoke(p, "zhongyi", data));
+                    if (on_effect) {
+                        LogMessage log;
+                        log.type = "#ZhongyiBuff";
+                        log.from = p;
+                        log.to << damage.to;
+                        log.arg = QString::number(damage.damage);
+                        log.arg2 = QString::number(++damage.damage);
+                        room->sendLog(log);
+                    }
+                }
+            }
+            data = QVariant::fromValue(damage);
+        } else if ((mode.startsWith("06_") && event == ActionedReset) || (!mode.startsWith("06_") && event == EventPhaseStart)) {
+            if (event == EventPhaseStart && player->getPhase() != Player::RoundStart)
+                return false;
+            if (player->getPile("loyal").length() > 0)
+                player->clearOnePrivatePile("loyal");
+        }
+        return false;
+    }
+};
+
+class Jiuzhu: public TriggerSkill {
+public:
+    Jiuzhu(): TriggerSkill("jiuzhu") {
+        events << Dying;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DyingStruct dying = data.value<DyingStruct>();
+        if (dying.who == player || (room->getMode().startsWith("06_") && AI::GetRelation3v3(dying.who, player) != AI::Friend))
+            return false;
+        while (dying.who->getHp() <= 0) {
+            if (player->getHp() <= 1)
+                break;
+            if (room->askForCard(player, ".", "@jiuzhu", data, objectName())) {
+                room->loseHp(player);
+                room->broadcastSkillInvoke(objectName());
+                RecoverStruct recover;
+                recover.who = player;
+                room->recover(dying.who, recover);
+            }
+        }
+        return (dying.who->getHp() > 0);
+    }
+};
+
+class Zhanshen: public TriggerSkill {
+public:
+    Zhanshen(): TriggerSkill("zhanshen") {
+        events << Death << EventPhaseStart;
+        frequency = Wake;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == Death) {
+            DeathStruct death = data.value<DeathStruct>();
+            if (death.who != player)
+                return false;
+            foreach (ServerPlayer *lvbu, room->findPlayersBySkillName(objectName())) {
+                if (room->getMode().startsWith("06_")) {
+                    if (lvbu->getMark(objectName()) == 0 && lvbu->getMark("zhanshen_fight") == 0
+                        && AI::GetRelation3v3(lvbu, player) == AI::Friend)
+                        lvbu->addMark("zhanshen_fight");
+                } else {
+                    if (lvbu->getMark(objectName()) == 0 && lvbu->getMark("@fight") == 0
+                        && room->askForSkillInvoke(player, objectName(), "mark:" + lvbu->objectName()))
+                        room->addPlayerMark(lvbu, "@fight");
+                }
+            }
+        } else if (TriggerSkill::triggerable(player)
+                   && player->getPhase() == Player::Start
+                   && player->getMark(objectName()) == 0
+                   && player->isWounded()
+                   && (player->getMark("zhanshen_fight") > 0 || player->getMark("@fight") > 0)) {
+            room->notifySkillInvoked(player, objectName());
+
+            LogMessage log;
+            log.type = "#ZhanshenWake";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            room->broadcastSkillInvoke(objectName());
+            room->doLightbox("$ZhanshenAnimate");
+
+            if (player->getMark("@fight") > 0)
+                room->setPlayerMark(player, "@fight", 0);
+            player->setMark("zhanshen_fight", 0);
+            room->addPlayerMark(player, objectName());
+            if (room->changeMaxHpForAwakenSkill(player)) {
+                if (player->getWeapon())
+                    room->throwCard(player->getWeapon(), player);
+                room->acquireSkill(player, "mashu");
+                room->acquireSkill(player, "shenji");
+            }
+        }
+        return false;
+    }
+};
+
 New3v3CardPackage::New3v3CardPackage()
     : Package("New3v3Card")
 {
@@ -217,9 +411,10 @@ New3v3CardPackage::New3v3CardPackage()
 
 ADD_PACKAGE(New3v3Card)
 
-Special3v3Package::Special3v3Package():Package("Special3v3")
+Special3v3Package::Special3v3Package()
+    : Package("Special3v3")
 {
-    General *zhugejin = new General(this, "zhugejin", "wu", 3, true);
+    General *zhugejin = new General(this, "zhugejin", "wu", 3);
     zhugejin->addSkill(new Hongyuan);
     zhugejin->addSkill(new HongyuanDraw);
     zhugejin->addSkill(new Huanshi);
@@ -230,4 +425,31 @@ Special3v3Package::Special3v3Package():Package("Special3v3")
 }
 
 ADD_PACKAGE(Special3v3)
+
+Special3v3_2013Package::Special3v3_2013Package()
+    : Package("Special3v3_2013")
+{
+    General *vs_xiahoudun = new General(this, "vs_xiahoudun", "wei");
+    vs_xiahoudun->addSkill(new VsGanglie);
+
+    General *vs_guanyu = new General(this, "vs_guanyu", "shu");
+    vs_guanyu->addSkill("wusheng");
+    vs_guanyu->addSkill(new Zhongyi);
+    vs_guanyu->addSkill(new ZhongyiAction);
+    vs_guanyu->addSkill(new MarkAssignSkill("@loyal", 1));
+    related_skills.insertMulti("zhongyi", "#zhongyi-action");
+    related_skills.insertMulti("zhongyi", "#@loyal-1");
+
+    General *vs_zhaoyun = new General(this, "vs_zhaoyun", "shu");
+    vs_zhaoyun->addSkill("longdan");
+    vs_zhaoyun->addSkill(new Jiuzhu);
+
+    General *vs_lvbu = new General(this, "vs_lvbu", "qun");
+    vs_lvbu->addSkill("wushuang");
+    vs_lvbu->addSkill(new Zhanshen);
+
+    addMetaObject<ZhongyiCard>();
+}
+
+ADD_PACKAGE(Special3v3_2013)
 

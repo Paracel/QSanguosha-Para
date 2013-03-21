@@ -36,6 +36,7 @@ GameRule::GameRule(QObject *)
     skill_mark["shichou"] = "@hate";
     skill_mark["fenxin"] = "@burnheart";
     skill_mark["xiongyi"] = "@arise";
+    skill_mark["zhongyi"] = "@loyal";
 }
 
 bool GameRule::triggerable(const ServerPlayer *target) const{

@@ -98,6 +98,7 @@ function SmartAI:cantbeHurt(player, from, damageNum)
 		if player:getHp() <= 1 then
 			if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
 			if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end
+			if from:getMaxHp() <= 3 or (self.room:getLord() and from:getRole() == "renegade") then return true end
 		end
 	elseif player:hasSkill("tianxiang") then
 		if getKnownCard(player, "diamond", false) + getKnownCard(player, "club", false) == player:getHandcardNum() then

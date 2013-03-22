@@ -1855,7 +1855,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	if lord and self:isFriend(lord) and lord:hasSkill("hunzi") and lord:getHp() == 2 and lord:getMark("hunzi") == 0
 		and self:hasTrickEffective(duel, lord) then
 
-		local enemycount = self:playerGetRound(lord, self.player, 1)
+		local enemycount = self:getEnemyNumBySeat(self.player, lord) 
 		local peaches = self:getAllPeachNum()
 		if peaches >= enemycount then
 			local f_target, e_target

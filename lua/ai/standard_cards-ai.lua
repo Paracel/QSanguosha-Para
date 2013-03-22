@@ -2103,25 +2103,11 @@ function SmartAI:enemiesContainsTrick(enemy_count)
 	return trick_all
 end
 
-function SmartAI:playerGetRound(player, source, friend_or_enemy)
+function SmartAI:playerGetRound(player, source)
 	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
 	source = source or self.player
 	if player:objectName() == source:objectName() then return 0 end
-	local round = 0
-	for i = 1, self.room:alivePlayerCount() do
-		if friend_or_enemy then
-			if friend_or_enemy == 0 and self:isFriend(source) then
-				round = round + 1
-			elseif friend_or_enemy == 1 and not self:isEnemy(source) then
-				round = round + 1
-			end
-		else
-			round = round + 1
-		end
-		if source:getNextAlive():objectName() == player:objectName() then break end
-		source = source:getNextAlive()
-	end
-	return round
+	return (player:getSeat() - source:getSeat()) % self.room:alivePlayerCount()
 end
 
 function SmartAI:useCardIndulgence(card, use)

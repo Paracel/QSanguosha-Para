@@ -1003,7 +1003,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 								"nosjujian|lieren|pojun|qixi|yinling|duoshi|jizhi|zhaoxin|gongqi|drjiedao" ..
 								"neoluoyi|luoyi|wenjiu|jie|jiangchi|wusheng|longdan|jueqing|xueji|yinghun|" ..
 								"longhun|jiuchi|qingcheng|shuangren|kuangfu|nosgongqi|wushen|lianhuan|" ..
-								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|drluoyi|huoshui|" ..
+								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|drluoyi|huoshui|bifa" ..
 								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|noszhenlie|kurou|wansha|lianpo|" ..
 								"yicong|nosshangshi|shangshi|lianying|tianyi|xianzhen|sijian|zongshi|keji|paoxiao|" ..
 								"kuiwei|yuanhu|neojushou|jushou|huoji|roulin|lihuo|xiaoji|xuanfeng|nosxuanfeng|" ..

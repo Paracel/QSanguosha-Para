@@ -294,27 +294,28 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 		end
 	elseif self:getCardsNum("Slash", self.player, "he") >= 2 then
 		for _,enemy in ipairs(self.enemies) do
-		if enemy:hasLordSkill("huangtian") and not enemy:hasFlag("HuangtianInvoked") and not enemy:hasSkill("manjuan") and enemy:isKongcheng() then
-			table.insert(targets, enemy)
-		end
-		if #targets > 0 then
-			local flag = false
-			if self.player:hasSkill("tianyi") and not self.player:hasUsed("TianyiCard") then
-				flag = true
-			elseif self.player:hasSkill("xianzhen") and not self.player:hasUsed("XianzhenCard") then
-				flag = true
+			if enemy:hasLordSkill("huangtian") and not enemy:hasFlag("HuangtianInvoked") and not enemy:hasSkill("manjuan") and enemy:isKongcheng() then
+				table.insert(targets, enemy)
 			end
-			if flag then
-				local maxCard = self:getMaxCard(self.player)
-				if maxCard:getNumber() > card:getNumber() then
-					self:sort(targets, "handcard") 
-					for _, enemy in ipairs(targets) do
-						if self.player:canSlash(enemy, nil, false) and not enemy:hasSkill("tuntian") and self:hasLoseHandcardEffective(enemy)
-							and (self.player:hasSkill("tianyi") or self:canAttack(enemy, self.player)) then
-							use.card = card
-							enemy:setFlags("GlobalFlag_HuangtianPindian")
-							if use.to then use.to:append(enemy) end
-							break
+			if #targets > 0 then
+				local flag = false
+				if self.player:hasSkill("tianyi") and not self.player:hasUsed("TianyiCard") then
+					flag = true
+				elseif self.player:hasSkill("xianzhen") and not self.player:hasUsed("XianzhenCard") then
+					flag = true
+				end
+				if flag then
+					local maxCard = self:getMaxCard(self.player)
+					if maxCard:getNumber() > card:getNumber() then
+						self:sort(targets, "handcard") 
+						for _, enemy in ipairs(targets) do
+							if self.player:canSlash(enemy, nil, false) and not enemy:hasSkill("tuntian") and self:hasLoseHandcardEffective(enemy)
+								and (self.player:hasSkill("tianyi") or self:canAttack(enemy, self.player)) then
+								use.card = card
+								enemy:setFlags("GlobalFlag_HuangtianPindian")
+								if use.to then use.to:append(enemy) end
+								break
+							end
 						end
 					end
 				end

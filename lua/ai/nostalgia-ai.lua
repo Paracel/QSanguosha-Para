@@ -449,11 +449,22 @@ end
 sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
-	if self:isFriend(target) then
-		return (self:hasSkills(sgs.lose_equip_skill, target) and not self:isWeak(target)) or self:needToThrowArmor(target)
-	end
+	if target:getCards("e"):length() == 1 and target:getArmor() and self:hasSkills("bazhen|yizhong") then return false end
+	if self:hasSkills(sgs.lose_equip_skill, target) and not (self:isFriend(target) and not self:isWeak(target)) then return false end
+	local benefit = (target:getCards("e"):length() == 1 and target:getArmor() and self:needToThrowArmor(target))
+	if not self:isFriend(target) then benefit = not benefit end
+	if not benefit then return false end
 
-	return true
+	for i = 0, 3 do
+		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
+			return true
+		end
+	end
+	if who:getArmor() and self:evaluateArmor(who:getArmor()) >= self:evaluateArmor(self.player:getArmor()) then return true end
+	if who:getDefensiveHorse() or who:getOffensiveHorse() then return true end
+	if who:getWeapon() and self:evaluateWeapon(who:getWeapon()) >= self:evaluateWeapon(self.player:getWeapon()) then return true end
+
+	return false
 end
 
 function sgs.ai_cardneed.noszhenggong(to, card, self)
@@ -464,10 +475,14 @@ end
 
 sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and who:getEquip(i) then
+		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
 			return who:getEquip(i)
 		end
 	end
+	if who:getArmor() and self:evaluateArmor(who:getArmor()) >= self:evaluateArmor(self.player:getArmor()) then return who:getArmor() end
+	if who:getDefensiveHorse() then return who:getDefensiveHorse() end
+	if who:getOffensiveHorse() then return who:getOffensiveHorse() end
+	if who:getWeapon() and self:evaluateWeapon(who:getWeapon()) >= self:evaluateWeapon(self.player:getWeapon()) then return who:getWeapon() end
 
 	return sgs.Sanguosha:getCard(self:askForCardChosen(who, flags, "dummy"))
 end

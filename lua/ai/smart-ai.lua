@@ -2423,7 +2423,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	else
 		if flags:match("e") and self:getDangerousCard(who) then return self:getDangerousCard(who) end
-		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return who:getArmor() end
+		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return who:getArmor():getId() end
 		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e") then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
 			if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end

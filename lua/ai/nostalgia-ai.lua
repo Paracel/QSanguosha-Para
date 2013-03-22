@@ -469,7 +469,7 @@ sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
 		end
 	end
 
-	return sgs.Sanguosha:getCard(self:askForCardChosen(who, flags))
+	return sgs.Sanguosha:getCard(self:askForCardChosen(who, flags, "dummy"))
 end
 
 sgs.ai_skill_use["@@nosquanji"] = function(self, prompt)

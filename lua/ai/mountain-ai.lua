@@ -82,7 +82,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 
 		if card == nil or target == nil then
 			if not who:hasEquip() or self:hasSkills(sgs.lose_equip_skill, who) then return nil end
-			local card_id = self:askForCardChosen(who, "e", "snatch")
+			local card_id = self:askForCardChosen(who, "e", "dummy")
 			if who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
 			if card then
 				if card:isKindOf("Armor") or card:isKindOf("DefensiveHorse") then

@@ -1504,22 +1504,35 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	if not isYinling and self.player:hasSkill("noswuyan") then return end
 	local players = self.room:getOtherPlayers(self.player)
 	local tricks
+	local usecard = false
+
+	local targets = {}
+	local targets_num = isYinling and 1 or (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card))
+
+	local addTarget = function(player, cardid)
+		if not usecard then 
+			use.card = card
+			usecard = true
+		end
+		if usecard and use.to and use.to:length() < targets_num and not table.contains(targets, player:objectName()) then
+			table.insert(targets, player:objectName())
+			use.to:append(player)
+			sgs.Sanguosha:getCard(cardid):setFlags("GlobalFlag_SDCardChosen_" .. name)
+			if use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
+		end
+	end
+
 	players = self:exclude(players, card)
 	if not isYinling then
 		for _, player in ipairs(players) do
 			if not player:getJudgingArea():isEmpty() and self:hasTrickEffective(card, player)
 				and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
-				use.card = card
-				if use.to then
-					tricks = player:getCards("j")
-					for _, trick in sgs.qlist(tricks) do
-						if trick:isKindOf("Lightning") then
-							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
-						end
+				tricks = player:getCards("j")
+				for _, trick in sgs.qlist(tricks) do
+					if trick:isKindOf("Lightning") then
+						addTarget(player, trick:getEffectiveId())
 					end
-					use.to:append(player)
 				end
-				return
 			end
 		end
 	end
@@ -1554,13 +1567,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			if self:getDangerousCard(enemy) then
-				use.card = card
-				if use.to then
-					sgs.ai_skill_cardchosen[name] = self:getDangerousCard(enemy)
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				end
-				return
+				addTarget(enemy, self:getDangerousCard(enemy))
 			end
 		end
 	end
@@ -1569,28 +1576,25 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		for _, friend in ipairs(friends) do
 			if (friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")) and not friend:containsTrick("YanxiaoCard")
 				and self:hasTrickEffective(card, friend) then
-				use.card = card
-				if use.to then
-					tricks = friend:getJudgingArea()
-					for _, trick in sgs.qlist(tricks) do
-						if trick:isKindOf("Indulgence") then
-							if friend:getHp() <= friend:getHandcardNum() or friend:isLord() or name == "snatch" then
-								sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
-								break
-							end
-						end
-						if trick:isKindOf("SupplyShortage") then
-							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
-							break
-						end
-						if trick:isKindOf("Indulgence") then
-							sgs.ai_skill_cardchosen[name] = trick:getEffectiveId()
+				local cardchosen
+				tricks = friend:getJudgingArea()
+				for _, trick in sgs.qlist(tricks) do
+					if trick:isKindOf("Indulgence") then
+						if friend:getHp() <= friend:getHandcardNum() or friend:isLord() or name == "snatch" then
+							cardchosen = trick:getEffectiveId()
 							break
 						end
 					end
-					use.to:append(friend)
+					if trick:isKindOf("SupplyShortage") then
+						cardchosen = trick:getEffectiveId()
+						break
+					end
+					if trick:isKindOf("Indulgence") then
+						cardchosen = trick:getEffectiveId()
+						break
+					end
 				end
-				return
+				if cardchosen then addTarget(friend, cardchosen) end
 			end
 		end
 	end
@@ -1605,13 +1609,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			if self:getValuableCard(enemy) then
-				use.card = card
-				if use.to then
-					sgs.ai_skill_cardchosen[name] = self:getValuableCard(enemy)
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				end
-				return
+				addTarget(enemy, self:getValuableCard(enemy))
 			end
 		end
 	end
@@ -1635,12 +1633,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			if yanxiao_card and yanxiao_target then break end
 		end
 		if yanxiao_prior and yanxiao_card and yanxiao_target then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
-				use.to:append(yanxiao_target)
-			end
-			return
+			addTarget(yanxiao_target, yanxiao_card:getEffectiveId())
 		end
 	end
 
@@ -1650,13 +1643,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		if #cards <= 2 and (self:hasTrickEffective(card, enemy) or isYinling) and not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h", true) then
 			for _, cc in ipairs(cards) do
 				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "h")
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
+					addTarget(enemy, self:getCardRandomly(enemy, "h"))
 				end
 			end
 		end
@@ -1683,13 +1670,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 				end
 
 				if cardchosen then
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen[name] = cardchosen
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
+					addTarget(enemy, cardchosen)
 				end
 			end
 		end
@@ -1697,13 +1678,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	for _, enemy in ipairs(enemies) do
 		if (self:hasTrickEffective(card, enemy) or isYinling) and enemy:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(enemy) then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = enemy:getArmor():getEffectiveId()
-				use.to:append(enemy)
-				self:speak("hostile", self.player:isFemale())
-			end
-			return
+			addTarget(enemy, enemy:getArmor():getEffectiveId())
 		end
 	end
 
@@ -1720,13 +1695,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					else
 						cardchosen = self:getCardRandomly(enemy, "h")
 					end
-					use.card = card
-					if use.to then
-						sgs.ai_skill_cardchosen[name] = cardchosen
-						use.to:append(enemy)
-						self:speak("hostile", self.player:isFemale())
-					end
-					return
+					addTarget(enemy, cardchosen)
 				end
 			end
 		end
@@ -1734,43 +1703,21 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and self:getValuableCard(enemy) and (self:hasTrickEffective(card, enemy) or isYinling) then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = self:getValuableCard(enemy)
-				use.to:append(enemy)
-				self:speak("hostile", self.player:isFemale())
-			end
-			return
+			addTarget(enemy, self:getValuableCard(enemy))
 		end
 	end
 
 	if hasLion then
-		use.card = card
-		if use.to then
-			sgs.ai_skill_cardchosen[name] = target:getArmor():getEffectiveId()
-			use.to:append(target)
-		end
-		return
+		addTarget(target, target:getArmor():getEffectiveId())
 	end
 
 	if not isYinling and yanxiao_card and yanxiao_target then
-		use.card = card
-		if use.to then
-			sgs.ai_skill_cardchosen[name] = yanxiao_card:getEffectiveId()
-			use.to:append(yanxiao_target)
-		end
-		return
+		addTarget(yanxiao_target, yanxiao_card:getEffectiveId())
 	end
 
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h") and (self:hasTrickEffective(card, enemy) or isYinling) and self:hasSkills(sgs.cardneed_skill, enemy) then
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "h")
-				use.to:append(enemy)
-				self:speak("hostile", self.player:isFemale())
-			end
-			return
+			addTarget(enemy, self:getCardRandomly(enemy, "h"))
 		end
 	end
 
@@ -1786,13 +1733,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			elseif enemy:getWeapon() then
 				cardchosen = enemy:getWeapon():getEffectiveId()
 			end
-			use.card = card
-			if use.to then
-				sgs.ai_skill_cardchosen[name] = cardchosen
-				use.to:append(enemy)
-				self:speak("hostile", self.player:isFemale())
-			end
-			return
+			addTarget(enemy, cardchosen)
 		end
 	end
 
@@ -1800,16 +1741,12 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		for _, enemy in ipairs(enemies) do
 			local equips = enemy:getEquips()
 			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not self:doNotDiscard(enemy, "he") then
-				use.card = card
-				if use.to then
-					if not equips:isEmpty() and not self:doNotDiscard(enemy, "e") then
-						sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "e")
-					else
-						sgs.ai_skill_cardchosen[name] = self:getCardRandomly(enemy, "h") end
-					use.to:append(enemy)
-					self:speak("hostile", self.player:isFemale())
-				end
-				return
+				local cardchosen
+				if not equips:isEmpty() and not self:doNotDiscard(enemy, "e") then
+					cardchosen = self:getCardRandomly(enemy, "e")
+				else
+					cardchosen = self:getCardRandomly(enemy, "h") end
+				addTarget(enemy, cardchosen)
 			end
 		end
 	end

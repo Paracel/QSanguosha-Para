@@ -2372,6 +2372,16 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	end
 
+	if ("snatch|dismantlement"):match(reason) then
+		local flag = "GlobalFlag_SDCardChosen_" .. reason
+		for _, card in sgs.qlist(who:getCards(flags)) do
+			if card:hasFlag(reason) then
+				card:setFlags("-" .. flag)
+				return card:getId()
+			end
+		end
+	end
+
 	if self:isFriend(who) then
 		if flags:match("j") and not who:containsTrick("YanxiaoCard") and not who:hasSkill("qiaobian") then
 			local tricks = who:getCards("j")

@@ -2058,8 +2058,9 @@ local function hp_subtract_handcard(a, b)
 	return diff1 < diff2
 end
 
-function SmartAI:enemiesContainsTrick()
+function SmartAI:enemiesContainsTrick(enemy_count)
 	local trick_all, possible_indul_enemy, possible_ss_enemy = 0, 0, 0
+	local enemy_num, temp_enemy = 0
 
 	local zhanghe = self.room:findPlayerBySkillName("qiaobian")
 	if zhanghe and (not self:isEnemy(zhanghe) or zhanghe:isKongcheng() or not zhanghe:faceUp()) then zhanghe = nil end
@@ -2075,6 +2076,10 @@ function SmartAI:enemiesContainsTrick()
 			and enemy:getHandcardNum() > 0) and not self:hasSkills("keji", enemy) then
 			if enemy:containsTrick("indulgence") and (not zhanghe or self:playerGetRound(enemy) >= self:playerGetRound(zhanghe)) then
 				trick_all = trick_all + 1
+				if not temp_enemy or temp_enemy:objectName() ~= enemy:objectName() then
+					enemy_num = enemy_num + 1
+					temp_enemy = enemy
+				end
 			else
 				possible_indul_enemy = possible_indul_enemy + 1
 			end
@@ -2082,6 +2087,10 @@ function SmartAI:enemiesContainsTrick()
 		if not self:hasSkills("shensu", enemy) and (self.player:distanceTo(enemy) == 1 or self.player:hasSkill("duanliang") and self.player:distanceTo(enemy) <= 2) then
 			if enemy:containsTrick("supply_shortage") and (not zhanghe or self:playerGetRound(enemy) >= self:playerGetRound(zhanghe)) then
 				trick_all = trick_all + 1
+				if not temp_enemy or temp_enemy:objectName() ~= enemy:objectName() then
+					enemy_num = enemy_num + 1
+					temp_enemy = enemy
+				end
 			else
 				possible_ss_enemy  = possible_ss_enemy + 1
 			end
@@ -2090,7 +2099,7 @@ function SmartAI:enemiesContainsTrick()
 
 	indul_num = math.min(possible_indul_enemy, indul_num)
 	ss_num = math.min(possible_ss_enemy, ss_num)
-	trick_all = trick_all + indul_num + ss_num
+	trick_all = (enemy_count and enemy_num or trick_all) + indul_num + ss_num
 	return trick_all
 end
 
@@ -2126,19 +2135,24 @@ function SmartAI:useCardIndulgence(card, use)
 	else
 		enemies = self:exclude(self.enemies, card)
 	end
+	if #enemies == 0 then return end
 
 	local zhanghe = self.room:findPlayerBySkillName("qiaobian")
-	local zhanghe_seat = zhanghe and zhanghe:faceUp() and self:isEnemy(zhanghe) and zhanghe:getSeat() or 0
+	local zhanghe_seat = zhanghe and zhanghe:faceUp() and not self:isFriend(zhanghe) and zhanghe:getSeat() or 0
 
-	if #enemies == 0 then return end
+	local sb_daqiao = self.room:findPlayerBySkillName("yanxiao")
+	local yanxiao = sb_daqiao and not self:isFriend(sb_daqiao) and not self:willSkipPlayPhase(sb_daqiao) and (getKnownCard(sb_daqiao, "diamond", nil, "he") > 0 or sb_daqiao:getHandcardNum() > 3)
 
 	local getvalue = function(enemy)
 		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard")
-			or (self:hasSkills("qiaobian", enemy) and not enemy:isKongcheng()) then
+			or (self:hasSkills("qiaobian", enemy) and not enemy:isKongcheng()) and self:enemiesContainsTrick() == 0 then
 			return -100
 		end
-		if zhanghe_seat > 0 and (self:playerGetRound(zhanghe) <= self:playerGetRound(enemy) and self:enemiesContainsTrick() <= 1 or not enemy:faceUp()) then
-			return - 100
+		if zhanghe_seat > 0 and (self:playerGetRound(zhanghe) <= self:playerGetRound(enemy) and self:enemiesContainsTrick() == 0 or not enemy:faceUp()) then
+			return -100
+		end
+		if yanxiao and (self:playerGetRound(sb_daqiao) <= self:playerGetRound(enemy) and self:enemiesContainsTrick(true) == 0 or not enemy:faceUp()) then
+			return -100
 		end
 
 		local value = enemy:getHandcardNum() - enemy:getHp()

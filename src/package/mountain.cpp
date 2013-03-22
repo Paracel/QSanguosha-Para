@@ -1048,11 +1048,13 @@ public:
     }
 
     static void AcquireGenerals(ServerPlayer *zuoci, int n) {
+        QVariantList huashens = zuoci->tag["Huashens"].toList();
         QStringList list = GetAvailableGenerals(zuoci);
         qShuffle(list);
+        if (list.isEmpty()) return;
+        n = qMin(n, list.length());
 
         QStringList acquired = list.mid(0, n);
-        QVariantList huashens = zuoci->tag["Huashens"].toList();
         foreach (QString huashen, acquired) {
             huashens << huashen;
             const General *general = Sanguosha->getGeneral(huashen);
@@ -1063,7 +1065,14 @@ public:
 
         zuoci->tag["Huashens"] = huashens;
 
-        zuoci->invoke("animate", "huashen:" + acquired.join(":"));
+        QStringList hidden;
+        for (int i = 0; i < n; i++) hidden << "unknown";
+        foreach (ServerPlayer *p, zuoci->getRoom()->getAllPlayers()) {
+            if (p == zuoci)
+                p->invoke("animate", QString("huashen:%1:%2").arg(zuoci->objectName()).arg(acquired.join(":")));
+            else
+                p->invoke("animate", QString("huashen:%1:%2").arg(zuoci->objectName()).arg(hidden.join(":")));
+        }
 
         LogMessage log;
         log.type = "#GetHuashen";
@@ -1307,13 +1316,9 @@ public:
     }
 
     virtual void onDamaged(ServerPlayer *zuoci, const DamageStruct &damage) const{
-        int n = damage.damage;
-        if (n == 0)
-            return;
-
         if (zuoci->askForSkillInvoke(objectName())) {
             Huashen::playAudioEffect(zuoci, objectName());
-            Huashen::AcquireGenerals(zuoci, n);
+            Huashen::AcquireGenerals(zuoci, damage.damage);
         }
     }
 };

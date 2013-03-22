@@ -3527,22 +3527,37 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
 }
 
 void RoomScene::doHuashen(const QString &, const QStringList &args) {
-    QVariantList huashen_list = Self->tag["Huashens"].toList();
+    Q_ASSERT(args.length() >= 2);
+
+    QStringList hargs = args;
+    QString name = hargs.first();
+    hargs.removeOne(name);
+    ClientPlayer *player = ClientInstance->getPlayer(name);
+    bool owner = (hargs.first() != "unknown");
+
+    QVariantList huashen_list;
+    if (owner)
+        huashen_list = Self->tag["Huashens"].toList();
     QList<CardItem *> generals;
-    foreach (QString arg, args) {
-        huashen_list << arg;
+
+    foreach (QString arg, hargs) {
+        if (owner) huashen_list << arg;
         CardItem *item = new CardItem(arg);
         item->setPos(this->m_tableCenterPos);
         addItem(item);
         generals.append(item);
     }
     CardsMoveStruct move;
+    move.to = player;
     move.from_place = Player::DrawPile;
     move.to_place = Player::PlaceSpecial;
     move.to_pile_name = "huashen";
-    dashboard->addCardItems(generals, move);
 
-    Self->tag["Huashens"] = huashen_list;
+    GenericCardContainer *container = _getGenericCardContainer(Player::PlaceHand, player);
+    container->addCardItems(generals, move);
+
+    if (owner)
+        Self->tag["Huashens"] = huashen_list;
 }
 
 void RoomScene::showIndicator(const QString &from, const QString &to) {

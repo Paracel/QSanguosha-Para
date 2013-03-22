@@ -53,3 +53,9 @@ card_intention.txt
 ai.html
 *.sh
 /src/lua/print.c
+/image/system/ark.png
+/image/system/big-back.png
+/image/system/settings.png
+/image/system/skill-dock.png
+/image/system/small-back.png
+/image/system/to.png

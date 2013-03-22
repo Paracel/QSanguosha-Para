@@ -508,16 +508,97 @@ end
 
 sgs.ai_card_intention.DawuCard = -70
 
+function getGuixinValue(self, player)
+	if player:isAllNude() then return 0 end
+	local card_id = self:askForCardChosen(player, "hej", "dummy")
+	if self:isEnemy(player) then
+		for _, card in sgs.qlist(player:getJudgingArea()) do
+			if card:getEffectiveId() == card_id then
+				if card:isKindOf("YanxiaoCard") then return 0
+				elseif card:isKindOf("Lightning") then
+					if self:hasWizard(self.enemies, true) then return 0.8
+					elseif self:hasWizard(self.friends, true) then return 0.4
+					else return 0.5 * (#self.friends) / (#self.friends + #self.enemies) end
+				else
+					return -0.2
+				end
+			end
+		end
+		for i = 0, 3 do
+			local card = player:getEquip(i)
+			if card and card:getEffectiveId() == card_id then
+				if card:isKindOf("Armor") and self:needToThrowArmor(player) then return 0 end
+				local value = 0
+				if self:getDangerousCard(player) == card_id then value = 1.5
+				elseif self:getValuableCard(player) == card_id then value = 1.1
+				elseif i == 1 then value = 1
+				elseif i == 3 then value = 0.8
+				elseif i == 0 then value = 0.7
+				elseif i == 2 then value = 0.5
+				end
+				if self:hasSkills(sgs.lose_equip_skill) then value = value - 0.2 end
+				return value
+			end
+		end
+		if self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0 end
+		if not self:hasLoseHandcardEffective() then return 0.1
+		else return 0.2 + 0.6 / (player:getHandcardNum() + 1) end
+	elseif self:isFriend(player) then
+		for _, card in sgs.qlist(player:getJudgingArea()) do
+			if card:getEffectiveId() == card_id then
+				if card:isKindOf("YanxiaoCard") then return 0
+				elseif card:isKindOf("Lightning") then
+					if self:hasWizard(self.enemies, true) then return 1
+					elseif self:hasWizard(self.friends, true) then return 0.8
+					else return 0.4 * (#self.enemies) / (#self.friends + #self.enemies) end
+				else
+					return 1.5
+				end
+			end
+		end
+		for i = 0, 3 do
+			local card = player:getEquip(i)
+			if card and card:getEffectiveId() == card_id then
+				if card:isKindOf("Armor") and self:needToThrowArmor(player) then return 0.9 end
+				local value = 0
+				if i == 1 then value = 0.1
+				elseif i == 3 then value = 0.2
+				elseif i == 0 then value = 0.25
+				elseif i == 2 then value = 0.25
+				end
+				if self:hasSkills(sgs.lose_equip_skill) then value = value + 0.1 end
+				return value
+			end
+		end
+		if self:needKongcheng(player, true) and player:getHandcardNum() == 1 then return 0.5
+		elseif self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0.3 end
+		if not self:hasLoseHandcardEffective() then return 0.2
+		else return 0.2 - 0.4 / (player:getHandcardNum() + 1) end
+	end
+	return 0.3
+end
+
 sgs.ai_skill_invoke.guixin = function(self, data)
 	local damage = data:toDamage()
-	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
 	local diaochan = self.room:findPlayerBySkillName("lihun")
-	if diaochan and self:isEnemy(diaochan) and self.room:alivePlayerCount() > 5 then return false end
-	return self.room:alivePlayerCount() > 2 or damage.damage > 1
+	local lihun_eff = (diaochan and self:isEnemy(diaochan))
+	local manjuan_eff = (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive)
+	if lihun_eff and not manjuan_eff then return false end
+	if not self.player:faceUp() then return true
+	else
+		if manjuan_eff then return false end
+		local value = 0
+		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			value = value + getGuixinValue(self, player)
+		end
+		self.room:writeToConsole("GuixinValue: " .. value)
+		local left_num = damage.damage - self.player:getMark("GuixinTimes")
+		return value >= 1.3 or left_num > 0
+	end
 end
 
 sgs.ai_need_damaged.guixin = function (self, attacker)
-	if self.room:alivePlayerCount() <= 3 then return false end
+	if self.room:alivePlayerCount() <= 3 or self.player:hasSkill("manjuan") then return false end
 	local diaochan = self.room:findPlayerBySkillName("lihun")
 	if diaochan and self:isEnemy(diaochan) then return false end
 	local num = self.player:getHandcardNum()

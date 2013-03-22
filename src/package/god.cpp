@@ -433,9 +433,13 @@ public:
 
     virtual void onDamaged(ServerPlayer *shencc, const DamageStruct &damage) const{
         Room *room = shencc->getRoom();
+        int n = shencc->getMark("GuixinTimes"); // mark for AI
+        shencc->setMark("GuixinTimes", 0);
+        QVariant data = QVariant::fromValue(damage);
         QList<ServerPlayer *> players = room->getOtherPlayers(shencc);
         for (int i = 0; i < damage.damage; i++) {
-            if (shencc->askForSkillInvoke(objectName())) {
+            shencc->addMark("GuixinTimes");
+            if (shencc->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
 
                 room->setPlayerFlag(shencc, "GuixinUsing");
@@ -456,6 +460,7 @@ public:
             } else
                 break;
         }
+        shencc->setMark("GuixinTimes", n);
     }
 };
 

@@ -2578,15 +2578,17 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	for _, friend in ipairs(self.friends_noself) do
-		if self:willSkipPlayPhase(friend, true) or self:willSkipDrawPhase(friend, true) or self:needToThrowArmor(friend) then
-			if self:hasTrickEffective(sgs.Sanguosha:cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and isCard("Snatch", card, self.player) and self.player:distanceTo(friend) == 1 then
-				ag_snatch = card:getEffectiveId()
-				hasTrick = true
-			elseif (isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
-					or (card:isBlack() and self.player:hasSkill("yinling") and self.player:getPile("brocade"):length() < 4) then
-				ag_dismantlement = card:getEffectiveId()
-				hasTrick = true
+	for _, card in ipairs(cards) do
+		for _, friend in ipairs(self.friends_noself) do
+			if self:willSkipPlayPhase(friend, true) or self:willSkipDrawPhase(friend, true) or self:needToThrowArmor(friend) then
+				if self:hasTrickEffective(sgs.Sanguosha:cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and isCard("Snatch", card, self.player) and self.player:distanceTo(friend) == 1 then
+					ag_snatch = card:getEffectiveId()
+					hasTrick = true
+				elseif (isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
+						or (card:isBlack() and self.player:hasSkill("yinling") and self.player:getPile("brocade"):length() < 4) then
+					ag_dismantlement = card:getEffectiveId()
+					hasTrick = true
+				end
 			end
 		end
 	end

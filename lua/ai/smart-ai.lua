@@ -2681,7 +2681,8 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()
 			and (to:getHandcardNum() > 3 or getKnownCard(to, "red") > 0) then dmg = dmg - 1 end
 	end
-	return return_value and dmg or (dmg > 1)
+	if return_value then return dmg end
+	return dmg > 1
 end
 
 function SmartAI:needKongcheng(player, need_keep)

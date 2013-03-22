@@ -92,6 +92,10 @@ sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	end
 	self:sort(friends)
 
+	local CP = self.room:getCurrent()
+	if CP and self:isFriend(CP) and self:hasCrossbowEffect(CP) and math.min(CP:getMaxHp(), 5) > CP:getHandcardNum() + 1 then
+		return CP
+	end
 	local max_x = 0
 	local target = nil
 	local Shenfen_user

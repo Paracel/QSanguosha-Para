@@ -660,28 +660,36 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        bool effected = false;
         if (event == EventPhaseStart) {
             if (TriggerSkill::triggerable(player) && player->getPhase() == Player::RoundStart) {
+                effected = true;
                 setHuoshuiFlag(room, player, false);
             }
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (TriggerSkill::triggerable(player) && change.to == Player::NotActive)
+            if (TriggerSkill::triggerable(player) && change.to == Player::NotActive) {
+                effected = true;
                 setHuoshuiFlag(room, player, true);
+            }
         } else if (event == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player)
                 return false;
-            if (player->hasSkill(objectName()))
+            if (player->hasSkill(objectName())) {
+                effected = true;
                 setHuoshuiFlag(room, player, true);
+            }
         } else if (event == EventLoseSkill) {
-            if (data.toString() == objectName()
-                && room->getCurrent() && room->getCurrent() == player)
+            if (data.toString() == objectName() && room->getCurrent() && room->getCurrent() == player) {
+                effected = true;
                 setHuoshuiFlag(room, player, true);
+            }
         } else if (event == EventAcquireSkill) {
-            if (data.toString() == objectName()
-                && room->getCurrent() && room->getCurrent() == player)
+            if (data.toString() == objectName() && room->getCurrent() && room->getCurrent() == player) {
+                effected = true;
                 setHuoshuiFlag(room, player, false);
+            }
         } else if (event == PostHpReduced) {
             if (player->hasFlag(objectName())) {
                 int reduce = 0;
@@ -692,11 +700,14 @@ public:
                     reduce = data.toInt();
                 int hp = player->getHp();
                 int maxhp_2 = (player->getMaxHp() + 1) / 2;
-                if (hp < maxhp_2 && hp + reduce >= maxhp_2)
+                if (hp < maxhp_2 && hp + reduce >= maxhp_2) {
+                    effected = true;
                     room->filterCards(player, player->getCards("he"), false);
+                }
             }
         } else if (event == MaxHpChanged) {
             if (player->hasFlag(objectName())) {
+                effected = true;
                 room->filterCards(player, player->getCards("he"), true);
             }
         } else if (event == HpRecover) {
@@ -705,14 +716,18 @@ public:
             if (player->hasFlag(objectName())) {
                 int hp = player->getHp();
                 int maxhp_2 = (player->getMaxHp() + 1) / 2;
-                if (hp >= maxhp_2 && hp - recover < maxhp_2)
+                if (hp >= maxhp_2 && hp - recover < maxhp_2) {
+                    effected = true;
                     room->filterCards(player, player->getCards("he"), true);
+                }
             }
         }
 
-        Json::Value args;
-        args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
-        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+        if (effected) {
+            Json::Value args;
+            args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+        }
 
         return false;
     }
@@ -801,6 +816,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (player->getPhase() == Player::RoundStart) {
             QStringList Qingchenglist = player->tag["Qingcheng"].toStringList();
+            if (Qingchenglist.isEmpty()) return false;
             foreach (QString skill_name, Qingchenglist) {
                 room->setPlayerMark(player, "Qingcheng" + skill_name, 0);
                 if (player->hasSkill(skill_name)) {

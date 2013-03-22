@@ -833,8 +833,10 @@ public:
                 return false;
         }
 
-        foreach (ServerPlayer *p, room->getAllPlayers())
-            room->setPlayerMark(p, "@late", 0);
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (player->getMark("@late") > 0)
+                room->setPlayerMark(p, "@late", 0);
+        }
 
         return false;
     }

@@ -2470,13 +2470,19 @@ bool Room::_setPlayerGeneral(ServerPlayer *player, const QString &generalName, b
 }
 
 void Room::speakCommand(ServerPlayer *player, const QString &arg) {
-    broadcastInvoke("speak", QString("%1:%2").arg(player->objectName()).arg(arg));
-    QString sentence = QString::fromUtf8(QByteArray::fromBase64(arg.toAscii()));
+#define _NO_BROADCAST_SPEAKING {\
+                                   broadcast = false;\
+                                   player->invoke("speak", QString("%1:%2").arg(player->objectName()).arg(arg));\
+                               }
+    bool broadcast = true;
     if (player && Config.EnableCheat) {
+        QString sentence = QString::fromUtf8(QByteArray::fromBase64(arg.toAscii()));
         if (sentence == ".BroadcastRoles") {
+            _NO_BROADCAST_SPEAKING
             foreach (ServerPlayer *p, m_alivePlayers)
                 broadcastProperty(p, "role", p->getRole());
         } else if (sentence.startsWith(".BroadcastRoles=")) {
+            _NO_BROADCAST_SPEAKING
             QString name = sentence.mid(12);
             foreach (ServerPlayer *p, m_alivePlayers) {
                 if (p->objectName() == name || p->getGeneralName() == name) {
@@ -2485,9 +2491,10 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 }
             }
         } else if (sentence.startsWith(".ShowHandCards")) {
+            _NO_BROADCAST_SPEAKING
             QString split("----------");
             split = split.toUtf8().toBase64();
-            speakCommand(player, split);
+            player->invoke("speak", QString("%1:%2").arg(player->objectName()).arg(split));
             foreach (ServerPlayer *p, m_alivePlayers) {
                 if (!p->isKongcheng()) {
                     QStringList handcards;
@@ -2495,11 +2502,13 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                         handcards << QString("<b>%1</b>")
                                              .arg(Sanguosha->getEngineCard(card->getId())->getLogName());
                     QString hand = handcards.join(", ");
-                    speakCommand(p, hand.toUtf8().toBase64());
+                    hand = hand.toUtf8().toBase64();
+                    player->invoke("speak", QString("%1:%2").arg(p->objectName()).arg(hand));
                 }
             }
-            speakCommand(player, split);
+            player->invoke("speak", QString("%1:%2").arg(player->objectName()).arg(split));
         } else if (sentence.startsWith(".ShowHandCards=")) {
+            _NO_BROADCAST_SPEAKING
             QString name = sentence.mid(15);
             foreach (ServerPlayer *p, m_alivePlayers) {
                 if (p->objectName() == name || p->getGeneralName() == name) {
@@ -2509,29 +2518,34 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                             handcards << QString("<b>%1</b>")
                                                  .arg(Sanguosha->getEngineCard(card->getId())->getLogName());
                         QString hand = handcards.join(", ");
-                        speakCommand(p, hand.toUtf8().toBase64());
+                        hand = hand.toUtf8().toBase64();
+                        player->invoke("speak", QString("%1:%2").arg(p->objectName()).arg(hand));
                     }
                     break;
                 }
             }
         } else if (sentence.startsWith(".ShowPrivatePile=")) {
+            _NO_BROADCAST_SPEAKING
             QStringList arg = sentence.mid(17).split(":");
-            if (arg.length() != 2) return;
-            QString name = arg.first();
-            QString pile_name = arg.last();
-            foreach (ServerPlayer *p, m_alivePlayers) {
-                if (p->objectName() == name || p->getGeneralName() == name) {
-                    if (!p->getPile(pile_name).isEmpty()) {
-                        QStringList pile_cards;
-                        foreach (int id, p->getPile(pile_name))
-                            pile_cards << QString("<b>%1</b>").arg(Sanguosha->getEngineCard(id)->getLogName());
-                        QString pile = pile_cards.join(", ");
-                        speakCommand(p, pile.toUtf8().toBase64());
+            if (arg.length() == 2) {
+                QString name = arg.first();
+                QString pile_name = arg.last();
+                foreach (ServerPlayer *p, m_alivePlayers) {
+                    if (p->objectName() == name || p->getGeneralName() == name) {
+                        if (!p->getPile(pile_name).isEmpty()) {
+                            QStringList pile_cards;
+                            foreach (int id, p->getPile(pile_name))
+                                pile_cards << QString("<b>%1</b>").arg(Sanguosha->getEngineCard(id)->getLogName());
+                            QString pile = pile_cards.join(", ");
+                            pile = pile.toUtf8().toBase64();
+                            player->invoke("speak", QString("%1:%2").arg(p->objectName()).arg(pile));
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         } else if (sentence == ".ShowHuashen") {
+            _NO_BROADCAST_SPEAKING
             QList<ServerPlayer *> zuocis = findPlayersBySkillName("huashen");
             QStringList huashen_name;
             foreach (ServerPlayer *zuoci, zuocis) {
@@ -2540,7 +2554,8 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 foreach (QVariant name, huashens)
                     huashen_name << QString("<b>%1</b>").arg(Sanguosha->translate(name.toString()));
                 QString huashen = huashen_name.join(", ");
-                speakCommand(zuoci, huashen.toUtf8().toBase64());
+                huashen = huashen.toUtf8().toBase64();
+                player->invoke("speak", QString("%1:%2").arg(zuoci->objectName()).arg(huashen));
             }
         } else if (sentence.startsWith(".SetAIDelay=")) {
             bool ok = false;
@@ -2554,6 +2569,9 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
             Config.setValue("GameMode", Config.GameMode);
         }
     }
+    if (broadcast)
+        broadcastInvoke("speak", QString("%1:%2").arg(player->objectName()).arg(arg));
+#undef _NO_BROADCAST_SPEAKING
 }
 
 void Room::processResponse(ServerPlayer *player, const QSanGeneralPacket *packet) {

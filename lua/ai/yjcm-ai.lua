@@ -193,14 +193,14 @@ function sgs.ai_cardneed.enyuan(to, card)
 	return getKnownCard(to, "Card", false) < 2
 end
 
-sgs.ai_skill_use["@@xuanhuo"] = function(self, prompt)
+sgs.ai_skill_playerchosen.xuanhuo = function(self, targets)
 	local lord = self.room:getLord()
 	local killloyal = 0
 	local robequip = 0
 	if lord and self:isEnemy(lord) then
 		for _, enemy in ipairs(self.enemies) do
 			if lord:canSlash(enemy) and (enemy:getHp() < 2 and not enemy:hasSkill("buqu"))
-			and sgs.getDefense(enemy) < 2 then
+				and sgs.getDefense(enemy) < 2 then
 				killloyal = killloyal + 1
 			end
 		end
@@ -213,32 +213,32 @@ sgs.ai_skill_use["@@xuanhuo"] = function(self, prompt)
 	end
 	if #self.enemies < 2 and killloyal < 1 and robequip < 1 then return "." end
 	if lord and self:isEnemy(lord) and killloyal > 0 then
-		return "@XuanhuoCard=.->" .. lord:objectName()
+		return lord
 	end
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getCards("e"):length() > 1 and getCardsNum("Slash", enemy) == 0
 			and not self:hasSkills(sgs.lose_equip_skill, enemy) then
-			return "@XuanhuoCard=.->" .. enemy:objectName()
+			return enemy
 		end
 	end
 	self:sort(self.enemies, "defense")
 	for _, friend in ipairs(self.friends_noself) do
 		for _, enemy in ipairs(self.enemies) do
 			if friend:canSlash(enemy) and (enemy:getHp() < 2 and not enemy:hasSkill("buqu"))
-			and sgs.getDefense(enemy) < 2 then
-				return "@XuanhuoCard=.->" .. friend:objectName()
+				and sgs.getDefense(enemy) < 2 then
+				return friend
 			end
 		end
 	end
 	for _, friend in ipairs(self.friends_noself) do
 		if self:hasSkills(sgs.lose_equip_skill, friend) and not friend:getEquips():isEmpty() then
-			return "@XuanhuoCard=.->" .. friend:objectName()
+			return friend
 		end
 	end
 
-	if #self.friends_noself == 0 then return end
+	if #self.friends_noself == 0 then return nil end
 	self:sort(self.friends_noself, "defense")
-	return "@XuanhuoCard=.->" .. self.friends_noself[1]:objectName()
+	return self.friends_noself[1]
 end
 
 sgs.ai_skill_choice.xuanhuo = function(self, choices)
@@ -260,7 +260,8 @@ sgs.ai_skill_choice.xuanhuo = function(self, choices)
 	return "give"
 end
 
-sgs.ai_skill_playerchosen.xuanhuo = sgs.ai_skill_playerchosen.zero_card_as_slash
+sgs.ai_skill_playerchosen.xuanhuo_slash = sgs.ai_skill_playerchosen.zero_card_as_slash
+sgs.ai_playerchosen_intention.xuanhuo_slash = 80
 
 sgs.ai_skill_cardask["xuanhuo-slash"] = function(self, data, pattern, target, target2)
 	if target and target2 and self:isEnemy(target2) then
@@ -284,9 +285,6 @@ sgs.ai_skill_cardask["xuanhuo-slash"] = function(self, data, pattern, target, ta
 	end
 	return "."
 end
-
-sgs.ai_playerchosen_intention.xuanhuo = 80
-sgs.ai_card_intention.XuanhuoCard = -30
 
 sgs.ai_chaofeng.fazheng = -3
 

@@ -302,110 +302,68 @@ public:
     }
 };
 
-XuanhuoCard::XuanhuoCard() {
-}
-
-bool XuanhuoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self;
-}
-
-void XuanhuoCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.from->getRoom();
-    room->drawCards(effect.to, 2);
-    if (!effect.from->isAlive() || !effect.to->isAlive())
-        return;
-
-    bool can_use = false;
-    foreach (ServerPlayer *p, room->getOtherPlayers(effect.to)) {
-        if (effect.to->canSlash(p)) {
-            can_use = true;
-            break;
-        }
-    }
-    ServerPlayer *victim = NULL;
-    if (can_use) {
-        QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *victim, room->getOtherPlayers(effect.to)) {
-            if (effect.to->canSlash(victim))
-                targets << victim;
-        }
-        victim = room->askForPlayerChosen(effect.from, targets, "xuanhuo", "@dummy-slash2:" + effect.to->objectName());
-
-        LogMessage log;
-        log.type = "#CollateralSlash";
-        log.from = effect.from;
-        log.to << victim;
-        room->sendLog(log);
-
-        QString prompt = QString("xuanhuo-slash:%1:%2").arg(effect.from->objectName()).arg(victim->objectName());
-        if (!room->askForUseSlashTo(effect.to, victim, prompt)) {
-            if (effect.to->isNude())
-                return;
-            room->setPlayerFlag(effect.to, "xuanhuo_InTempMoving");
-            int first_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
-            Player::Place original_place = room->getCardPlace(first_id);
-            DummyCard *dummy = new DummyCard;
-            dummy->addSubcard(first_id);
-            effect.to->addToPile("#xuanhuo", dummy, false);
-            if (!effect.to->isNude()) {
-                int second_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
-                dummy->addSubcard(second_id);
-            }
-
-            //move the first card back temporarily
-            room->moveCardTo(Sanguosha->getCard(first_id), effect.to, original_place, false);
-            room->setPlayerFlag(effect.to, "-xuanhuo_InTempMoving");
-            room->moveCardTo(dummy, effect.from, Player::PlaceHand, false);
-            delete dummy;
-        }
-    } else {
-        if (effect.to->isNude())
-            return;
-        room->setPlayerFlag(effect.to, "xuanhuo_InTempMoving");
-        int first_id = room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo");
-        Player::Place original_place = room->getCardPlace(first_id);
-        DummyCard *dummy = new DummyCard;
-        dummy->addSubcard(first_id);
-        effect.to->addToPile("#xuanhuo", dummy, false);
-        if (!effect.to->isNude())
-            dummy->addSubcard(room->askForCardChosen(effect.from, effect.to, "he", "xuanhuo"));
-
-        //move the first card back temporarily
-        room->moveCardTo(Sanguosha->getCard(first_id), effect.to, original_place, false);
-        room->setPlayerFlag(effect.to, "-xuanhuo_InTempMoving");
-        room->moveCardTo(dummy, effect.from, Player::PlaceHand, false);
-        delete dummy;
-    }
-}
-
-class XuanhuoViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    XuanhuoViewAsSkill(): ZeroCardViewAsSkill("xuanhuo") {
-    }
-
-    virtual const Card *viewAs() const{
-        return new XuanhuoCard;
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return  pattern == "@@xuanhuo";
-    }
-};
-
 class Xuanhuo: public PhaseChangeSkill {
 public:
     Xuanhuo(): PhaseChangeSkill("xuanhuo") {
-        view_as_skill = new XuanhuoViewAsSkill;
     }
 
     virtual bool onPhaseChange(ServerPlayer *fazheng) const{
         Room *room = fazheng->getRoom();
-        if (fazheng->getPhase() == Player::Draw && room->askForUseCard(fazheng, "@@xuanhuo", "@xuanhuo-card"))
-            return true;
+        if (fazheng->getPhase() == Player::Draw) {
+            ServerPlayer *to = room->askForPlayerChosen(fazheng, room->getOtherPlayers(fazheng), objectName(), "xuanhuo-invoke", true, true);
+            if (to) {
+                room->broadcastSkillInvoke(objectName());
+                room->drawCards(to, 2);
+                if (!fazheng->isAlive() || !to->isAlive())
+                    return true;
+
+                bool can_use = false;
+                foreach (ServerPlayer *p, room->getOtherPlayers(to)) {
+                    if (to->canSlash(p)) {
+                        can_use = true;
+                        break;
+                    }
+                }
+                ServerPlayer *victim = NULL;
+                if (can_use) {
+                    QList<ServerPlayer *> targets;
+                    foreach (ServerPlayer *vic, room->getOtherPlayers(to)) {
+                        if (to->canSlash(vic))
+                            targets << vic;
+                    }
+                    victim = room->askForPlayerChosen(fazheng, targets, "xuanhuo_slash", "@dummy-slash2:" + to->objectName());
+
+                    LogMessage log;
+                    log.type = "#CollateralSlash";
+                    log.from = fazheng;
+                    log.to << victim;
+                    room->sendLog(log);
+                }
+
+                if (victim == NULL || !room->askForUseSlashTo(to, victim, QString("xuanhuo-slash:%1:%2").arg(fazheng->objectName()).arg(victim->objectName()))) {
+                    if (to->isNude())
+                        return true;
+                    room->setPlayerFlag(to, "xuanhuo_InTempMoving");
+                    int first_id = room->askForCardChosen(fazheng, to, "he", "xuanhuo");
+                    Player::Place original_place = room->getCardPlace(first_id);
+                    DummyCard *dummy = new DummyCard;
+                    dummy->addSubcard(first_id);
+                    to->addToPile("#xuanhuo", dummy, false);
+                    if (!to->isNude()) {
+                        int second_id = room->askForCardChosen(fazheng, to, "he", "xuanhuo");
+                        dummy->addSubcard(second_id);
+                    }
+
+                    //move the first card back temporarily
+                    room->moveCardTo(Sanguosha->getCard(first_id), to, original_place, false);
+                    room->setPlayerFlag(to, "-xuanhuo_InTempMoving");
+                    room->moveCardTo(dummy, fazheng, Player::PlaceHand, false);
+                    delete dummy;
+                }
+
+                return true;
+            }
+        }
 
         return false;
     }
@@ -1324,7 +1282,6 @@ YJCMPackage::YJCMPackage()
     addMetaObject<GanluCard>();
     addMetaObject<XianzhenCard>();
     addMetaObject<XianzhenSlashCard>();
-    addMetaObject<XuanhuoCard>();
     addMetaObject<XinzhanCard>();
     addMetaObject<JujianCard>();
     addMetaObject<PaiyiCard>();

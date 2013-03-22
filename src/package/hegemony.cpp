@@ -43,50 +43,23 @@ public:
     }
 };
 
-ShushenCard::ShushenCard() {
-}
-
-bool ShushenCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self;
-}
-
-void ShushenCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.to->getRoom();
-    room->broadcastSkillInvoke("shushen", effect.to->getGeneralName().contains("liubei") ? 2 : 1);
-    effect.to->drawCards(1);
-}
-
-class ShushenViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    ShushenViewAsSkill(): ZeroCardViewAsSkill("shushen") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@shushen";
-    }
-
-    virtual const Card *viewAs() const{
-        return new ShushenCard;
-    }
-};
-
 class Shushen: public TriggerSkill {
 public:
     Shushen(): TriggerSkill("shushen") {
         events << HpRecover;
-        view_as_skill = new ShushenViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
         RecoverStruct recover_struct = data.value<RecoverStruct>();
         int recover = recover_struct.recover;
         for (int i = 0; i < recover; i++) {
-            if (!room->askForUseCard(player, "@@shushen", "@shushen-draw"))
+            ServerPlayer *target = room->askForPlayerChosen(player, room->getOtherPlayers(player), objectName(), "shushen-invoke", true, true);
+            if (target) {
+                room->broadcastSkillInvoke(objectName(), target->getGeneralName().contains("liubei") ? 2 : 1);
+                target->drawCards(1);
+            } else {
                 break;
+            }
         }
         return false;
     }
@@ -315,48 +288,10 @@ public:
     }
 };
 
-SijianCard::SijianCard() {
-    mute = true;
-}
-
-void SijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    room->broadcastSkillInvoke("sijian", card_use.to.first()->isLord() ? 2 : 1);
-    SkillCard::onUse(room, card_use);
-}
-
-bool SijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && !to_select->isNude() && to_select != Self;
-}
-
-void SijianCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.from->getRoom();
-    int card_id = room->askForCardChosen(effect.from, effect.to, "he", objectName());
-    room->throwCard(card_id, effect.to, effect.from);
-}
-
-class SijianViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    SijianViewAsSkill(): ZeroCardViewAsSkill("sijian") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@sijian";
-    }
-
-    virtual const Card *viewAs() const{
-        return new SijianCard;
-    }
-};
-
 class Sijian: public TriggerSkill {
 public:
     Sijian(): TriggerSkill("sijian") {
         events << BeforeCardsMove << CardsMoveOneTime;
-        view_as_skill = new SijianViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *tianfeng, QVariant &data) const{
@@ -372,16 +307,19 @@ public:
                 if (tianfeng->getMark(objectName()) == 0)
                     return false;
                 tianfeng->removeMark(objectName());
-                bool can_invoke = false;
                 QList<ServerPlayer *> other_players = room->getOtherPlayers(tianfeng);
+                QList<ServerPlayer *> targets;
                 foreach (ServerPlayer *p, other_players) {
-                    if (!p->isNude()) {
-                        can_invoke = true;
-                        break;
-                    }
+                    if (!p->isNude())
+                        targets << p;
                 }
-                if (!can_invoke) return false;
-                room->askForUseCard(tianfeng, "@@sijian", "@sijian-discard");
+                if (targets.isEmpty()) return false;
+                ServerPlayer *to = room->askForPlayerChosen(tianfeng, targets, objectName(), "sijian-invoke", true, true);
+                if (to) {
+                    room->broadcastSkillInvoke(objectName(), to->isLord() ? 2 : 1);
+                    int card_id = room->askForCardChosen(tianfeng, to, "he", objectName());
+                    room->throwCard(card_id, to, tianfeng);
+                }
             }
         }
 
@@ -920,12 +858,10 @@ HegemonyPackage::HegemonyPackage()
     heg_diaochan->addSkill("lijian");
     heg_diaochan->addSkill("biyue");
 
-    addMetaObject<ShushenCard>();
     addMetaObject<DuoshiCard>();
     addMetaObject<FenxunCard>();
     addMetaObject<ShuangrenCard>();
     addMetaObject<XiongyiCard>();
-    addMetaObject<SijianCard>();
     addMetaObject<QingchengCard>();
 }
 

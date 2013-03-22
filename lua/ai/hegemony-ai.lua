@@ -103,14 +103,12 @@ sgs.ai_cardneed.xiaoguo = function(to, card)
 	return getKnownCard(to, "BasicCard", true) == 0 and card:getTypeId() == sgs.Card_TypeBasic
 end
 
-sgs.ai_skill_use["@@shushen"] = function(self, prompt)
-	if #self.friends_noself == 0 then return "." end
-	local to = self:findPlayerToDraw(false, 1)
-	if to then return ("@ShushenCard=.->%s"):format(to:objectName()) end
-	return "."
+sgs.ai_skill_playerchosen.shushen = function(self, targets)
+	if #self.friends_noself == 0 then return nil end
+	return self:findPlayerToDraw(false, 1)
 end
 
-sgs.ai_card_intention.ShushenCard = -80
+sgs.ai_playerchosen_intention.shushen = -80
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
 	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
@@ -366,19 +364,16 @@ sgs.ai_skill_askforyiji.lirang = function(self, card_ids)
 	return nil, -1
 end
 
-sgs.ai_skill_use["@@sijian"] = function(self, prompt)
-	local player = self:findPlayerToDiscard()
-	if player then return ("@SijianCard=.->%s"):format(player:objectName()) end
-	return "."
+sgs.ai_skill_playerchosen.sijian = function(self, targets)
+	return self:findPlayerToDiscard()
 end
 
-sgs.ai_card_intention.SijianCard = function(self, card, from, tos)
+sgs.ai_playerchosen_intention.sijian = function(from, to)
 	local intention = 80
-	local to = tos[1]
-	if to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2 then
-		intention = -10
-	elseif self:needToThrowArmor(to) then
-		intention = -10
+	if (to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2)
+		or (to:hasSkills("bazhen|yizhong") and to:getArmor())
+		or (to:hasArmorEffect("silver_lion") and to:getHp() <= 2) then
+		intention = 0
 	end
 	sgs.updateIntention(from, to, intention)
 end

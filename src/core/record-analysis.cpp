@@ -6,6 +6,8 @@
 #include <QFile>
 #include <QMessageBox>
 
+using namespace QSanProtocol;
+
 RecAnalysis::RecAnalysis(QString dir): m_recordPlayers(0) {
     initialize(dir);
 }
@@ -36,18 +38,18 @@ void RecAnalysis::initialize(QString dir) {
 
     QStringList role_list;
     foreach (QString line, records_line) {
-        if (line.contains(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))) {
+        if (line.contains(QString(S_PLAYER_SELF_REFERENCE_ID))) {
             line = line.split("[").last().remove("]");
             line.remove(QRegExp("[^a-zA-Z0-9_,]"));
             QStringList self_info = line.split(",");
             if (self_info.at(1) == "objectName")
-                getPlayer(self_info.at(2), QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_screenName = Config.UserName;
+                getPlayer(self_info.at(2), QString(S_PLAYER_SELF_REFERENCE_ID))->m_screenName = Config.UserName;
             else if (self_info.at(1) == "role")
-                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_role = self_info.at(2);
+                getPlayer(QString(S_PLAYER_SELF_REFERENCE_ID))->m_role = self_info.at(2);
             else if (self_info.at(1) == "general")
-                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_generalName = self_info.at(2);
+                getPlayer(QString(S_PLAYER_SELF_REFERENCE_ID))->m_generalName = self_info.at(2);
             else if (self_info.at(1) == "general2")
-                getPlayer(QString(QSanProtocol::S_PLAYER_SELF_REFERENCE_ID))->m_general2Name = self_info.at(2);
+                getPlayer(QString(S_PLAYER_SELF_REFERENCE_ID))->m_general2Name = self_info.at(2);
 
             continue;
         }
@@ -137,7 +139,7 @@ void RecAnalysis::initialize(QString dir) {
             continue;
         }
 
-        if (line.contains("1044,31,")) { // means hpChange
+        if (line.contains(QString("%1,%2,").arg(int(S_SRC_ROOM | S_TYPE_NOTIFICATION | S_DEST_CLIENT)).arg(int(S_COMMAND_CHANGE_HP)))) { // means hpChange
             QString name = line.split("[").last().split(",").first();
             name = name.mid(1, name.length() - 2);
             QString delta = line.split(",").at(5);
@@ -190,9 +192,8 @@ void RecAnalysis::initialize(QString dir) {
     winners = records_line.last().remove("\"");
     winners.remove(0, winners.lastIndexOf("[") + 1);
     QStringList roles_order = winners.remove(QRegExp("[^a-z,]+")).split(",");
-    for (int i = 0; i < role_list.length(); i++) {
+    for (int i = 0; i < role_list.length(); i++)
         getPlayer(role_list.at(i))->m_role = roles_order.at(i);
-    }
 
     setDesignation();
 }

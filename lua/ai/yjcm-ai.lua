@@ -640,6 +640,17 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	if max_card:isKindOf("Slash") then slashcount = slashcount - 1 end
 
 	if slashcount > 0 then
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:hasFlag("GlobalFlag_HuangtianPindian") and enemy:getHandcardNum() == 1 then
+				use.card = sgs.Card_Parse("@XianzhenCard=" .. max_card:getId())
+				if use.to then
+					use.to:append(enemy)
+					enemy:setFlags("-GlobalFlag_HuangtianPindian")
+				end
+				return
+			end
+		end
+
 		local slash = self:getCard("Slash")
 		assert(slash)
 		local dummy_use = { isDummy = true }

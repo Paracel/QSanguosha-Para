@@ -343,6 +343,17 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 			end
 		end
 	end
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:hasFlag("GlobalFlag_HuangtianPindian") and enemy:getHandcardNum() == 1 then
+			sgs.ai_use_priority.TianyiCard = 7.2
+			use.card = sgs.Card_Parse("@TianyiCard=" .. max_card:getId())
+			if use.to then
+				use.to:append(enemy)
+				enemy:setFlags("-GlobalFlag_HuangtianPindian")
+			end
+			return
+		end
+	end
 
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 

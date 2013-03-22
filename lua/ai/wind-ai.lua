@@ -245,7 +245,6 @@ end
 local huangtianv_skill = {}
 huangtianv_skill.name = "huangtianv"
 table.insert(sgs.ai_skills, huangtianv_skill)
-
 huangtianv_skill.getTurnUseCard = function(self)
 	if self.player:hasFlag("ForbidHuangtian") then return nil end
 	if self.player:getKingdom() ~= "qun" then return nil end
@@ -277,6 +276,9 @@ huangtianv_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
+	if self:needBear() or self:getCardsNum("Jink", self.player, "h") <= 1 then
+		return "."
+	end
 	local targets = {}
 	for _, friend in ipairs(self.friends_noself) do
 		if friend:hasLordSkill("huangtian") and not friend:hasFlag("HuangtianInvoked") and not friend:hasSkill("manjuan") then
@@ -284,16 +286,50 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 		end
 	end
 
-	if #targets == 0 then return end
-	if self:needBear() or self:getCardsNum("Jink", self.player, "h") <= 1 then return "." end
-	use.card = card
-	self:sort(targets, "defense")
-	if use.to then
-		use.to:append(targets[1])
+	if #targets > 0 then
+		use.card = card
+		self:sort(targets, "defense")
+		if use.to then
+			use.to:append(targets[1])
+		end
+	elseif self:getCardsNum("Slash", self.player, "he") >= 2 then
+		for _,enemy in ipairs(self.enemies) do
+		if enemy:hasLordSkill("huangtian") and not enemy:hasFlag("HuangtianInvoked") and not enemy:hasSkill("manjuan") and enemy:isKongcheng() then
+			table.insert(targets, enemy)
+		end
+		if #targets > 0 then
+			local flag = false
+			if self.player:hasSkill("tianyi") and not self.player:hasUsed("TianyiCard") then
+				flag = true
+			elseif self.player:hasSkill("xianzhen") and not self.player:hasUsed("XianzhenCard") then
+				flag = true
+			end
+			if flag then
+				local maxCard = self:getMaxCard(self.player)
+				if maxCard:getNumber() > card:getNumber() then
+					self:sort(targets, "handcard") 
+					for _, enemy in ipairs(targets) do
+						if self.player:canSlash(enemy, nil, false) and not enemy:hasSkill("tuntian") and self:hasLoseHandcardEffective(enemy)
+							and (self.player:hasSkill("tianyi") or self:canAttack(enemy, self.player)) then
+							use.card = card
+							enemy:setFlags("GlobalFlag_HuangtianPindian")
+							if use.to then use.to:append(enemy) end
+							break
+						end
+					end
+				end
+			end
+		end
 	end
 end
 
-sgs.ai_card_intention.HuangtianCard = -80
+sgs.ai_card_intention.HuangtianCard = function(self, card, from, tos)
+	if tos[1]:isKongcheng() and ((from:hasSkill("tianyi") and not from:hasUsed("TianyiCard"))
+								or (from:hasSkill("xianzhen") and not from:hasUsed("XianzhenCard"))) then
+	else
+		sgs.updateIntention(from, tos[1], -80)
+	end
+end
 
 sgs.ai_use_priority.HuangtianCard = 10
 sgs.ai_use_value.HuangtianCard = 8.5

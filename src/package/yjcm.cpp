@@ -317,20 +317,13 @@ public:
                 if (!fazheng->isAlive() || !to->isAlive())
                     return true;
 
-                bool can_use = false;
-                foreach (ServerPlayer *p, room->getOtherPlayers(to)) {
-                    if (to->canSlash(p)) {
-                        can_use = true;
-                        break;
-                    }
+                QList<ServerPlayer *> targets;
+                foreach (ServerPlayer *vic, room->getOtherPlayers(to)) {
+                    if (to->canSlash(vic))
+                        targets << vic;
                 }
                 ServerPlayer *victim = NULL;
-                if (can_use) {
-                    QList<ServerPlayer *> targets;
-                    foreach (ServerPlayer *vic, room->getOtherPlayers(to)) {
-                        if (to->canSlash(vic))
-                            targets << vic;
-                    }
+                if (!targets.isEmpty()) {
                     victim = room->askForPlayerChosen(fazheng, targets, "xuanhuo_slash", "@dummy-slash2:" + to->objectName());
 
                     LogMessage log;

@@ -3255,6 +3255,7 @@ function SmartAI:needRetrial(judge)
 		if self:isFriend(who) then
 			if who:getHp() - who:getHandcardNum() >= 2 then return false end
 			if who:hasSkill("tuxi") and who:getHp() > 2 then return false end
+			if who:isKongcheng() and who:isSkipped(sgs.Player_Draw) then return false end
 			return not judge:isGood()
 		else
 			return judge:isGood()
@@ -3290,6 +3291,10 @@ function SmartAI:needRetrial(judge)
 			end
 		end
 		if target and target:isKongcheng() and not self:hasEightDiagramEffect(target) and not self.player:hasSkill("guidao") then return false end
+	end
+
+	if reason == "tuntian" then
+		if not who:hasSkill("jixi") then return false end
 	end
 
 	if self:isFriend(who) then
@@ -3348,14 +3353,15 @@ end
 -- @return the retrial card id or -1 if not found
 function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
+
 	for _, card in ipairs(cards) do
-		local card_x = card
-		if judge.who:hasSkill("hongyan") and sgs.Sanguosha:getEngineCard(card_x:getEffectiveId()):getSuit() == sgs.Card_Spade then
+		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
+		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
 		end
-		if self:isFriend(judge.who) and judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
-				table.insert(can_use, card)
-		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card:isKindOf("Peach")) then
+		if self:isFriend(judge.who) and judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card_x:isKindOf("Peach")) then
+			table.insert(can_use, card)
+		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)
 		end
 	end

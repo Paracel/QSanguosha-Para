@@ -591,7 +591,6 @@ sgs.ai_skill_invoke.guixin = function(self, data)
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 			value = value + getGuixinValue(self, player)
 		end
-		self.room:writeToConsole("GuixinValue: " .. value)
 		local left_num = damage.damage - self.player:getMark("GuixinTimes")
 		return value >= 1.3 or left_num > 0
 	end

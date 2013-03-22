@@ -3066,10 +3066,9 @@ function SmartAI:askForSinglePeach(dying)
 
 		if sgs.turncount > 1 and not dying:isLord() and dying:objectName() ~= self.player:objectName() then
 			local possible_friend = 0
-			local currentp = self.room:getCurrent()
 			for _, friend in ipairs(self.friends_noself) do
 				if (self:getKnownNum(friend) == friend:getHandcardNum() and getCardsNum("Peach", friend) == 0)
-					or (self:playerGetRound(friend, currentp) < self:playerGetRound(self.player, currentp)) then
+					or (self:playerGetRound(friend) < self:playerGetRound(self.player)) then
 				elseif sgs.card_lack[friend:objectName()]["Peach"] == 1 then
 				elseif friend:getHandcardNum() > 0 or getCardsNum("Peach", friend) > 0 then
 					possible_friend = possible_friend + 1
@@ -4176,6 +4175,10 @@ function SmartAI:getAoeValueTo(card, to, from)
 				if to:hasSkills("shenfen+kuangbao") then
 					value = value + math.min(25, to:getMark("@wrath") * 5)
 				end
+			end
+		elseif not to:hasSkill("buqu") then
+			if from:hasSkill("wansha") and getCardsNum("Peach", to) == 0 and not (self:isFriend(to, friend) and getCardsNum("Peach", friend) >= 1) then
+				value = value - 30
 			end
 		end
 	else

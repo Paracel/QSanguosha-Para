@@ -487,6 +487,22 @@ function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
+sgs.ai_skill_invoke.yiji = function(self)
+	local sb_diaochan = self.room:getCurrent()
+	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then
+		local invoke
+		for _, friend in ipairs(self.friends) do
+			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
+				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true) then
+				invoke = true
+				break
+			end
+		end
+		return invoke
+	end
+	return true
+end
+
 sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 	local Shenfen_user
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
@@ -498,6 +514,38 @@ sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 
 	if self.player:getHandcardNum() <= 2 and not Shenfen_user then
 		return nil, -1
+	end
+
+	local sb_diaochan = self.room:getCurrent()
+	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then
+		local card, target = self:getCardNeedPlayer(cards)
+		local new_friends = {}
+		local CanKeep
+		for _, friend in ipairs(self.friends) do
+			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
+				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true) then
+				if self.player:objectName() == friend:objectName() then
+					CanKeep = true
+				else
+					table.insert(new_friends, friend)
+					if friend:objectName() == target:objectName() then return friend, card:getId() end
+				end
+			end
+		end
+		if #new_friends > 0 then
+			self:sort(new_friends, "defense")
+			return new_friends[1], card_ids[1]
+		elseif CanKeep then
+			return nil, -1
+		else
+			local other = {}
+			for _, p in sgs.qlist(self.room:getOtherPlayers(sb_diaochan)) do
+				if p:objectName() ~= self.player:objectName() then
+					table.insert(other, p)
+				end
+			end
+			return other[math.random(1, #other)], card_ids[math.random(1, #card_ids)]
+		end
 	end
 
 	local available_friends = {}

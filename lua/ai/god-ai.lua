@@ -536,13 +536,18 @@ function getGuixinValue(self, player)
 				elseif i == 0 then value = 0.7
 				elseif i == 3 then value = 0.5
 				end
-				if self:hasSkills(sgs.lose_equip_skill) then value = value - 0.2 end
+				if player:hasSkills(sgs.lose_equip_skill) or self:doNotDiscard(player, "e", true) then value = value - 0.2 end
 				return value
 			end
 		end
 		if self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0 end
 		if not self:hasLoseHandcardEffective() then return 0.1
-		else return 0.2 + 0.6 / (player:getHandcardNum() + 1) end
+		else
+			local index = self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", player) and 0.7 or 0.6
+			local value = 0.2 + index / (player:getHandcardNum() + 1)
+			if self:doNotDiscard(player, "h", true) then value = value - 0.1 end
+			return value
+		end
 	elseif self:isFriend(player) then
 		for _, card in sgs.qlist(player:getJudgingArea()) do
 			if card:getEffectiveId() == card_id then
@@ -566,14 +571,20 @@ function getGuixinValue(self, player)
 				elseif i == 0 then value = 0.25
 				elseif i == 3 then value = 0.25
 				end
-				if self:hasSkills(sgs.lose_equip_skill) then value = value + 0.1 end
+				if player:hasSkills(sgs.lose_equip_skill) then value = value + 0.1 end
+				if player:hasSkills("tuntian+zaoxian") then value = value + 0.1 end
 				return value
 			end
 		end
 		if self:needKongcheng(player, true) and player:getHandcardNum() == 1 then return 0.5
 		elseif self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0.3 end
 		if not self:hasLoseHandcardEffective() then return 0.2
-		else return 0.2 - 0.4 / (player:getHandcardNum() + 1) end
+		else
+			local index = self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", player) and 0.5 or 0.4
+			local value = 0.2 - index / (player:getHandcardNum() + 1)
+			if player:hasSkills("tuntian+zaoxian") then value = value + 0.1 end
+			return value
+		end
 	end
 	return 0.3
 end

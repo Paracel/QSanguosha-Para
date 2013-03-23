@@ -1440,6 +1440,13 @@ function SmartAI:getValuableCard(who)
 		if offhorse and who:distanceTo(friend) > 1 then return offhorse:getEffectiveId() end
 	end
 
+	if armor then
+		local lord = self.room:getLord()
+		if lord and self:isFriend(who, lord) and lord:hasLordSkill("hujia") and who:getKingdom == "wei" and armor:isKindOf("EightDiagram") then
+			return armor:getEffectiveId()
+		end
+	end
+
 	if weapon then
 		if (weapon:isKindOf("MoonSpear") and who:hasSkill("keji") and who:getHandcardNum() > 5)
 			or self:hasSkills("qiangxi|zhulou", who) then

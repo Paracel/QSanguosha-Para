@@ -2,6 +2,7 @@
 #include "carditem.h"
 #include "standard.h"
 #include "engine.h"
+#include "client.h"
 
 #include <QCommandLinkButton>
 #include <QVBoxLayout>
@@ -12,30 +13,33 @@
 PlayerCardDialog::PlayerCardDialog(const ClientPlayer *player, const QString &flags)
     : player(player)
 {
-    QVBoxLayout *vlayout = new QVBoxLayout;
+    QVBoxLayout *vlayout1 = new QVBoxLayout, *vlayout2 = new QVBoxLayout;
     QHBoxLayout *layout = new QHBoxLayout;
 
     static QChar handcard_flag('h');
     static QChar equip_flag('e');
     static QChar judging_flag('j');
 
-    layout->addWidget(createAvatar());
+    vlayout1->addWidget(createAvatar());
+    vlayout1->addStretch();
 
     if (flags.contains(handcard_flag))
-        vlayout->addWidget(createHandcardButton());
+        vlayout2->addWidget(createHandcardButton());
 
     if (flags.contains(equip_flag))
-        vlayout->addWidget(createEquipArea());
+        vlayout2->addWidget(createEquipArea());
 
     if (flags.contains(judging_flag))
-        vlayout->addWidget(createJudgingArea());
+        vlayout2->addWidget(createJudgingArea());
 
-    layout->addLayout(vlayout);
+    layout->addLayout(vlayout1);
+    layout->addLayout(vlayout2);
     setLayout(layout);
 }
 
 QWidget *PlayerCardDialog::createAvatar() {
-    QGroupBox *box = new QGroupBox(player->screenName());
+    QGroupBox *box = new QGroupBox(ClientInstance->getPlayerName(player->objectName()));
+    box->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     QLabel *avatar = new QLabel(box);
     avatar->setPixmap(QPixmap(G_ROOM_SKIN.getGeneralPixmap(player->getGeneralName(), QSanRoomSkin::S_GENERAL_ICON_SIZE_LARGE)));

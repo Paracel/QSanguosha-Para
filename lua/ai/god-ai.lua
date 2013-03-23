@@ -733,7 +733,7 @@ local function getShenfenUseValueOf_HE_Cards(self, to)
 		hcard = hcard - 0.9 * to:getLostHp()
 	end
 	value_h = (hcard > 4) and 16 / hcard or hcard
-	if to:hasSkill("tuntian") then value = value * 0.95 end
+	if to:hasSkills("tuntian+zaoxian") then value = value * 0.95 end
 	if (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getHp() > 2 and to:getMark("zhiji") == 0)) and not to:isKongcheng() then value_h = value_h * 0.7 end
 	if self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", to) then value_h = value_h * 0.95 end
 	value = value + value_h

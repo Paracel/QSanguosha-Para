@@ -680,7 +680,7 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	local shouldUse = self:getOverflow() > 0
 	if shouldUse then
 		for _, enemy in ipairs(self.enemies) do
-			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and not enemy:hasSkill("tuntian") then
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and not enemy:hasSkills("tuntian+zaoxian") then
 				use.card = sgs.Card_Parse("@XianzhenCard=" .. cards[1]:getId())
 				if use.to then use.to:append(enemy) end
 				return

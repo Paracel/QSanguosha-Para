@@ -226,7 +226,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 
 			local cards = sgs.QList2Table(enemy:getHandcards())
 			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
-			if not enemy:isKongcheng() and not enemy:hasSkill("tuntian") then
+			if not enemy:isKongcheng() and not enemy:hasSkills("tuntian+zaoxian") then
 				for _, cc in ipairs(cards) do
 					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 						target = enemy
@@ -245,7 +245,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 	end
 	if not target then
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:hasSkill("tuntian") and not friend:hasSkill("manjuan") then
+			if friend:hasSkills("tuntian+zaoxian") and not friend:hasSkill("manjuan") then
 				target = friend
 				break
 			end

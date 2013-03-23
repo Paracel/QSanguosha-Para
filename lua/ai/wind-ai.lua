@@ -335,7 +335,7 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 					if maxCard:getNumber() > card:getNumber() then
 						self:sort(targets, "handcard") 
 						for _, enemy in ipairs(targets) do
-							if self.player:canSlash(enemy, nil, false) and not enemy:hasSkill("tuntian") and self:hasLoseHandcardEffective(enemy)
+							if self.player:canSlash(enemy, nil, false) and not enemy:hasSkills("tuntian+zaoxian") and self:hasLoseHandcardEffective(enemy)
 								and (self.player:hasSkill("tianyi") or self:canAttack(enemy, self.player)) then
 								use.card = card
 								enemy:setFlags("GlobalFlag_HuangtianPindian")

@@ -123,7 +123,7 @@ function sgs.getDefenseSlash(player)
 		if player:hasSkill("guicai") or player:hasSkill("huanshi") then defense = defense + 0.3 end
 	end
 
-	if player:hasSkill("tuntian") and getCardsNum("Jink", player) > 0 then
+	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 then
 		defense = defense + 1.5
 	end
 
@@ -607,7 +607,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 				if self:canUseJieyuanDecrease(target) then return "." end
 				if (self:getCardsNum("Peach") > 0 or (self:getCardsNum("Analeptic") > 0 and self:isWeak()))
-					and not self.player:hasSkill("tuntian") and not self:willSkipPlayPhase() then
+					and not self.player:hasSkills("tuntian+zaoxian") and not self:willSkipPlayPhase() then
 					return "."
 				end
 			end
@@ -829,7 +829,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		local num = target:getHandcardNum()
 		if self.player:hasSkill("tieji") or (self.player:hasSkill("liegong")
 			and (num >= self.player:getHp() or num <= self.player:getAttackRange())) then return false end
-		if target:hasSkill("tuntian") then return false end
+		if target:hasSkills("tuntian+zaoxian") then return false end
 		if self:hasSkills(sgs.need_kongcheng, target) then return false end
 		if target:getCards("he"):length() < 4 and target:getCards("he"):length() > 1 then return true end
 		return false
@@ -1442,7 +1442,7 @@ function SmartAI:getValuableCard(who)
 
 	if armor then
 		local lord = self.room:getLord()
-		if lord and self:isFriend(who, lord) and lord:hasLordSkill("hujia") and who:getKingdom == "wei" and armor:isKindOf("EightDiagram") then
+		if lord and self:isFriend(who, lord) and lord:hasLordSkill("hujia") and who:getKingdom() == "wei" and armor:isKindOf("EightDiagram") then
 			return armor:getEffectiveId()
 		end
 	end

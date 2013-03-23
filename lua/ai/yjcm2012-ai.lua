@@ -444,7 +444,7 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 
 	local enemies = {}
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasSkill("tuntian") and not (enemy:isKongcheng() or (enemy:getHandcardNum() <= 1 and self:needKongcheng(enemy))) then
+		if not enemy:hasSkills("tuntian+zaoxian") and not (enemy:isKongcheng() or (enemy:getHandcardNum() <= 1 and self:needKongcheng(enemy))) then
 			table.insert(enemies, enemy)
 		end
 	end

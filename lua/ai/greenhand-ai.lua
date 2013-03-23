@@ -15,12 +15,12 @@ sgs.ai_playerchosen_intention.gh_tuxi = function(from, to)
 	if sgs.evaluateRoleTrends(from) == "neutral" and sgs.evaluateRoleTrends(to) == "neutral"
 		and lord and not lord:isKongcheng()
 		and not (lord:hasSkills("kongcheng|zhiji") and lord:getHandcardNum() == 1)
-		and not (lord:hasSkill("lianying") and lord:getHandcardNum() == 1) and not lord:hasSkill("tuntian") and from:aliveCount() >= 4 then
+		and not (lord:hasSkill("lianying") and lord:getHandcardNum() == 1) and not lord:hasSkills("tuntian+zaoxian") and from:aliveCount() >= 4 then
 		sgs.updateIntention(from, lord, -35)
 		return
 	end
 	if from:getState() == "online" then
-		if (to:hasSkills("kongcheng|zhiji|lianying") and to:getHandcardNum() == 1) or to:hasSkill("tuntian") then
+		if (to:hasSkills("kongcheng|zhiji|lianying") and to:getHandcardNum() == 1) or to:hasSkills("tuntian+zaoxian") then
 		else
 			sgs.updateIntention(from, to, 80)
 		end

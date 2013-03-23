@@ -201,13 +201,13 @@ function sgs.ai_cardneed.guidao(to, card, self)
 	end
 end
 
-sgs.ai_skill_use["@@leiji"] = function(self, prompt)
+sgs.ai_skill_playerchosen.leiji = function(self, targets)
 	local mode = self.room:getMode()
 	if mode:find("_mini_17") or mode:find("_mini_19") or mode:find("_mini_20") or mode:find("_mini_26") then
 		local players = self.room:getAllPlayers();
 		for _, aplayer in sgs.qlist(players) do
 			if aplayer:getState() ~= "robot" then
-				return "@LeijiCard=.->" .. aplayer:objectName()
+				return aplayer
 			end
 		end
 	end
@@ -234,12 +234,12 @@ sgs.ai_skill_use["@@leiji"] = function(self, prompt)
 
 	table.sort(self.enemies, cmp)
 	for _,enemy in ipairs(self.enemies) do
-		if getCmpValue(enemy) < 100 then return "@LeijiCard=.->"..enemy:objectName() end
+		if getCmpValue(enemy) < 100 then return enemy end
 	end
-	return "."
+	return nil
 end
 
-sgs.ai_card_intention.LeijiCard = 80
+sgs.ai_playerchosen_intention.leiji = 80
 
 function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 	if self:isFriend(to, from) then return false end

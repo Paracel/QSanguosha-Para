@@ -48,70 +48,41 @@ public:
     }
 };
 
-LeijiCard::LeijiCard() {
-}
-
-bool LeijiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty();
-}
-
-void LeijiCard::onEffect(const CardEffectStruct &effect) const{
-    ServerPlayer *zhangjiao = effect.from;
-    ServerPlayer *target = effect.to;
-
-    Room *room = zhangjiao->getRoom();
-
-    JudgeStruct judge;
-    judge.pattern = QRegExp("(.*):(spade):(.*)");
-    judge.good = false;
-    judge.negative = true;
-    judge.reason = "leiji";
-    judge.who = target;
-
-    room->judge(judge);
-
-    if (judge.isBad()) {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.damage = 2;
-        damage.from = zhangjiao;
-        damage.to = target;
-        damage.nature = DamageStruct::Thunder;
-        damage.reason = "leiji";
-
-        room->damage(damage);
-    }
-}
-
-class LeijiViewAsSkill: public ZeroCardViewAsSkill {
-public:
-    LeijiViewAsSkill(): ZeroCardViewAsSkill("leiji") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return  pattern == "@@leiji";
-    }
-
-    virtual const Card *viewAs() const{
-        return new LeijiCard;
-    }
-};
-
 class Leiji: public TriggerSkill {
 public:
     Leiji(): TriggerSkill("leiji") {
         events << CardResponded;
-        view_as_skill = new LeijiViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhangjiao, QVariant &data) const{
         CardStar card_star = data.value<CardResponseStruct>().m_card;
-        if (card_star->isKindOf("Jink"))
-            room->askForUseCard(zhangjiao, "@@leiji", "@leiji");
+        if (card_star->isKindOf("Jink")) {
+            ServerPlayer *target = room->askForPlayerChosen(zhangjiao, room->getAlivePlayers(), objectName(), "leiji-invoke", true, true);
+            if (target) {
+                room->broadcastSkillInvoke(objectName());
+
+                JudgeStruct judge;
+                judge.pattern = QRegExp("(.*):(spade):(.*)");
+                judge.good = false;
+                judge.negative = true;
+                judge.reason = objectName();
+                judge.who = target;
+
+                room->judge(judge);
+
+                if (judge.isBad()) {
+                    DamageStruct damage;
+                    damage.card = NULL;
+                    damage.damage = 2;
+                    damage.from = zhangjiao;
+                    damage.to = target;
+                    damage.nature = DamageStruct::Thunder;
+                    damage.reason = objectName();
+
+                    room->damage(damage);
+                }
+            }
+        }
         return false;
     }
 };
@@ -1128,7 +1099,6 @@ WindPackage::WindPackage()
     addMetaObject<ShensuCard>();
     addMetaObject<TianxiangCard>();
     addMetaObject<HuangtianCard>();
-    addMetaObject<LeijiCard>();
     addMetaObject<GuhuoCard>();
 
     skills << new HuangtianViewAsSkill;

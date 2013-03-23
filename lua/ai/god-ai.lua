@@ -532,9 +532,9 @@ function getGuixinValue(self, player)
 				if self:getDangerousCard(player) == card_id then value = 1.5
 				elseif self:getValuableCard(player) == card_id then value = 1.1
 				elseif i == 1 then value = 1
-				elseif i == 3 then value = 0.8
+				elseif i == 2 then value = 0.8
 				elseif i == 0 then value = 0.7
-				elseif i == 2 then value = 0.5
+				elseif i == 3 then value = 0.5
 				end
 				if self:hasSkills(sgs.lose_equip_skill) then value = value - 0.2 end
 				return value
@@ -562,9 +562,9 @@ function getGuixinValue(self, player)
 				if card:isKindOf("Armor") and self:needToThrowArmor(player) then return 0.9 end
 				local value = 0
 				if i == 1 then value = 0.1
-				elseif i == 3 then value = 0.2
+				elseif i == 2 then value = 0.2
 				elseif i == 0 then value = 0.25
-				elseif i == 2 then value = 0.25
+				elseif i == 3 then value = 0.25
 				end
 				if self:hasSkills(sgs.lose_equip_skill) then value = value + 0.1 end
 				return value

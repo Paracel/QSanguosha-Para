@@ -3079,6 +3079,14 @@ function SmartAI:askForSinglePeach(dying)
 			end
 		end
 
+		local CP = self.room:getCurrent()
+		if CP and lord and dying:objectName() ~= lord:objectName() and dying:objectName() ~= self.player:objectName() and lord:getHp() == 1
+			and self:isFriend(lord) and self:isEnemy(CP) and getCardsNum("Peach", lord) == 0 and getCardsNum("Analeptic", lord) == 0 and #self.friends_noself <= 2
+			and CP:canSlash(lord) and self:slashIsAvailable(CP)
+			and self:damageIsEffective(CP, nil, lord) and self:getCardsNum("Peach") <= self:getEnemyNumBySeat(CP, lord) + 1 then
+			return "."
+		end
+
 		local buqu = dying:getPile("buqu")
 		local weaklord = 0
 		if not buqu:isEmpty() then

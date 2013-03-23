@@ -1267,20 +1267,20 @@ public:
     }
 };
 
-class HuashenEnd: public TriggerSkill {
+class HuashenEnd: public PhaseChangeSkill {
 public:
-    HuashenEnd(): TriggerSkill("#huashen-end") {
-        events << EventPhaseChanging;
+    HuashenEnd(): PhaseChangeSkill("#huashen-end") {
     }
 
     virtual int getPriority() const{
         return 1;
     }
 
-    virtual bool trigger(TriggerEvent , Room *, ServerPlayer *zuoci, QVariant &data) const{
-        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.to != Player::NotActive)
-            return false;
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return PhaseChangeSkill::triggerable(target) && target->getPhase() == Player::NotActive;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *zuoci) const{
         if (zuoci->askForSkillInvoke("huashen"))
             Huashen::SelectSkill(zuoci);
         return false;

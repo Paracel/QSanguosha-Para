@@ -161,18 +161,10 @@ QString ClientLogBox::bold(const QString &str, QColor color) const{
 }
 
 void ClientLogBox::appendLog(const QStringList &log_str) {
-    bool valid = true;
     QString err_string = QString();
-    if (log_str.length() != 6) {
-        valid = false;
-    } else if (!log_str.first().startsWith("$") && !log_str.first().startsWith("#")) {
-        valid = false;
-        err_string = QString("%1:%2->%3:%4:%5:%6")
-                             .arg(log_str[0]).arg(log_str[1]).arg(log_str[2])
-                             .arg(log_str[3]).arg(log_str[4]).arg(log_str[5]);
-    }
-    if (!valid) {
-        append(tr("Log string is not well formatted: %1").arg(err_string));
+    if (log_str.length() != 6 || (!log_str.first().startsWith("$") && !log_str.first().startsWith("#"))) {
+        err_string = tr("Log string is not well formatted: %1").arg(log_str.join(","));
+        append(QString("<font color='%2'>%1</font>").arg(err_string).arg(Config.TextEditColor.name()));
         return;
     }
     appendLog(log_str[0], log_str[1], log_str[2].isEmpty() ? QStringList() : log_str[2].split("+"),

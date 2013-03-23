@@ -139,7 +139,10 @@ QList<ServerPlayer *> Room::getAllPlayers(bool include_dead) const{
     if (current == NULL)
         return count_players;
 
-    int index = count_players.indexOf(current);
+    ServerPlayer *starter = current;
+    if (current->getPhase() == Player::NotActive)
+        starter = current->getNextAlive();
+    int index = count_players.indexOf(starter);
     if (index == -1)
         return count_players;
 

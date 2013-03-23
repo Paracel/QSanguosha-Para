@@ -402,6 +402,7 @@
     </message>
     <message>
         <location filename="../../src/ui/clientlogbox.cpp" line="97"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="129"/>
         <source>use skill</source>
         <translation>发动了</translation>
     </message>

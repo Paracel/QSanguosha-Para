@@ -191,11 +191,6 @@ void MainWindow::checkVersion(const QString &server_version, const QString &serv
     if (server_version == client_version) {
         client->signup();
         connect(client, SIGNAL(server_connected()), SLOT(enterRoom()));
-
-        if (qApp->arguments().contains("-hall")) {
-            HallDialog *dialog = HallDialog::getInstance(this);
-            connect(client, SIGNAL(server_connected()), dialog, SLOT(accept()));
-        }
         return;
     }
 

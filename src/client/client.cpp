@@ -34,14 +34,6 @@ Client::Client(QObject *parent, const QString &filename)
     m_isGameOver = false;
 
     callbacks["checkVersion"] = &Client::checkVersion;
-
-    callbacks["roomBegin"] = &Client::roomBegin;
-    callbacks["room"] = &Client::room;
-    callbacks["roomEnd"] = &Client::roomEnd;
-    callbacks["roomCreated"] = &Client::roomCreated;
-    callbacks["roomError"] = &Client::roomError;
-    callbacks["hallEntered"] = &Client::hallEntered;
-
     callbacks["setup"] = &Client::setup;
     callbacks["networkDelayTest"] = &Client::networkDelayTest;
     callbacks["addPlayer"] = &Client::addPlayer;

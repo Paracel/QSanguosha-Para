@@ -45,13 +45,6 @@ public:
     explicit Client(QObject *parent, const QString &filename = QString());
     ~Client();
 
-    void roomBegin(const QString &begin_str);
-    void room(const QString &room_str);
-    void roomEnd(const QString &);
-    void roomCreated(const QString &idstr);
-    void roomError(const QString &errorStr);
-    void hallEntered(const QString &);
-
     // cheat functions
     void requestCheatGetOneCard(int card_id);
     void requestCheatChangeGeneral(const QString &name, bool isSecondaryHero = false);

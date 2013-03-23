@@ -1015,7 +1015,7 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
     ServerPlayer *shensimayi = card_use.from;
 
     QStringList choices;
-    if (!shensimayi->hasFlag("JilveZhiheng"))
+    if (!shensimayi->hasFlag("JilveZhiheng") && !shensimayi->isNude())
         choices << "zhiheng";
     if (!shensimayi->hasFlag("JilveWansha"))
         choices << "wansha";

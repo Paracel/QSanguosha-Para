@@ -1207,7 +1207,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return pattern.contains("peach") && player->getPhase() == Player::NotActive;
+        return pattern.contains("peach") && player->getPhase() == Player::NotActive && !player->isNude();
     }
 
     virtual bool viewFilter(const Card *to_select) const{

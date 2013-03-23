@@ -350,6 +350,19 @@ public:
         ServerPlayer *huatuo = room->findPlayerBySkillName(objectName());
         if (!huatuo || huatuo->isNude()) return false;
 
+        bool has_red = false;
+        if (huatuo->isKongcheng()) {
+            for (int i = 0; i < 4; i++) {
+                const EquipCard *equip = huatuo->getEquip(i);
+                if (equip && equip->isRed()) {
+                    has_red = true;
+                    break;
+                }
+            }
+        } else
+            has_red = true;
+        if (!has_red) return false;
+
         DamageStruct damage = data.value<DamageStruct>();
         if (room->askForCard(huatuo, ".|.|.|.|red", "@DrJijiuDecrease", data, objectName())) {
             room->broadcastSkillInvoke("jijiu");

@@ -282,7 +282,7 @@ public:
                 xiahouyuan->skip(Player::Draw);
             }
         } else if (Slash::IsAvailable(xiahouyuan) && change.to == Player::Play && !xiahouyuan->isSkipped(Player::Play)) {
-            if (room->askForUseCard(xiahouyuan, "@@shensu2", "@shensu2", 2, Card::MethodDiscard))
+            if (!xiahouyuan->isNude() && room->askForUseCard(xiahouyuan, "@@shensu2", "@shensu2", 2, Card::MethodDiscard))
                 xiahouyuan->skip(Player::Play);
         }
         return false;

@@ -445,7 +445,7 @@ public:
     }
 
     virtual bool onPhaseChange(ServerPlayer *jiling) const{
-        if (jiling->getPhase() == Player::Play) {
+        if (jiling->getPhase() == Player::Play && !jiling->isKongcheng()) {
             Room *room = jiling->getRoom();
             bool can_invoke = false;
             QList<ServerPlayer *> other_players = room->getOtherPlayers(jiling);

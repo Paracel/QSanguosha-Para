@@ -688,7 +688,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Finish && !player->isKongcheng()) {
             room->askForUseCard(player, "@@bifa", "@bifa-remove", -1, Card::MethodNone);
         } else if (player->getPhase() == Player::RoundStart && player->getPile("bifa").length() > 0) {

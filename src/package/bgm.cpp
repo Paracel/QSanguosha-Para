@@ -996,7 +996,7 @@ public:
         if (event == GameStart && player->hasLordSkill("shichou")) {
             room->addPlayerMark(player, "@hate");
         } else if (event == EventPhaseStart && player->getMark("xhate") == 0 && player->hasLordSkill("shichou")
-                  && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
+                   && player->getPhase() == Player::Start && player->getCards("he").length() > 1) {
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (p->getKingdom() == "shu") {
                     room->askForUseCard(player, "@@shichou", "@shichou-give", -1, Card::MethodNone);
@@ -1628,7 +1628,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *simazhao, QVariant &) const{
         if (simazhao->getPhase() != Player::Draw)
             return false;
-        if (!Slash::IsAvailable(simazhao))
+        if (simazhao->isKongcheng() || !Slash::IsAvailable(simazhao))
             return false;
 
         QList<ServerPlayer *> targets;

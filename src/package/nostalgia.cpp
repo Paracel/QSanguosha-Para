@@ -1181,8 +1181,8 @@ NostalYJCM2012Package::NostalYJCM2012Package()
     related_skills.insertMulti("nosgongqi", "#nosgongqi-target");
 
     General *nos_madai = new General(this, "nos_madai", "shu");
-    nos_madai->addSkill(new NosQianxi);
     nos_madai->addSkill("mashu");
+    nos_madai->addSkill(new NosQianxi);
 
     General *nos_wangyi = new General(this, "nos_wangyi", "wei", 3, false);
     nos_wangyi->addSkill(new NosZhenlie);

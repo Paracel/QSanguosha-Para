@@ -958,8 +958,8 @@ SPPackage::SPPackage()
     sp_sunshangxiang->addSkill("xiaoji");
 
     General *sp_pangde = new General(this, "sp_pangde", "wei", 4, true, true);
-    sp_pangde->addSkill("mengjin");
     sp_pangde->addSkill("mashu");
+    sp_pangde->addSkill("mengjin");
 
     General *sp_guanyu = new General(this, "sp_guanyu", "wei", 4);
     sp_guanyu->addSkill("wusheng");

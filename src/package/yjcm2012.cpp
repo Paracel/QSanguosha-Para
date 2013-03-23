@@ -987,9 +987,9 @@ YJCM2012Package::YJCM2012Package()
     liubiao->addSkill(new Zongshi);
 
     General *madai = new General(this, "madai", "shu");
+    madai->addSkill("mashu");
     madai->addSkill(new Qianxi);
     madai->addSkill(new QianxiClear);
-    madai->addSkill("mashu");
     related_skills.insertMulti("qianxi", "#qianxi-clear");
 
     General *wangyi = new General(this, "wangyi", "wei", 3, false);

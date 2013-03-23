@@ -176,7 +176,7 @@
     <message>
         <location filename="../../src/dialog/choosegeneraldialog.cpp" line="173"/>
         <source>Your role is %1</source>
-        <translation>你的角色是 %1</translation>
+        <translation>你的身份是 %1</translation>
     </message>
     <message>
         <location filename="../../src/dialog/choosegeneraldialog.cpp" line="174"/>
@@ -199,7 +199,7 @@
     <message>
         <location filename="../../src/client/client.cpp" line="583"/>
         <source>Your role is %1</source>
-        <translation>您的角色是 %1</translation>
+        <translation>你的身份是 %1</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="585"/>
@@ -221,7 +221,7 @@
     <message>
         <location filename="../../src/client/client.cpp" line="839"/>
         <source>Do you want to invoke skill [%1] ?</source>
-        <translation>你想发动技能“%1”吗 ?</translation>
+        <translation>你想发动技能“%1”吗?</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="801"/>
@@ -261,7 +261,7 @@
     <message>
         <location filename="../../src/client/client.cpp" line="1110"/>
         <source>Please discard %1 card(s), include equip</source>
-        <translation>请弃置 %1 张牌，包括装备</translation>
+        <translation>请弃置 %1 张牌，包括装备区的牌</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="1112"/>
@@ -271,7 +271,7 @@
     <message>
         <location filename="../../src/client/client.cpp" line="1126"/>
         <source>Exchange string is not well formatted!</source>
-        <translation>交换字符串没有格式化好!</translation>
+        <translation>交换字符串没有格式化好！</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="1137"/>
@@ -321,12 +321,12 @@
     <message>
         <location filename="../../src/client/client.cpp" line="1523"/>
         <source>Please play a card for pindian</source>
-        <translation>请出一张卡牌以用于拼点</translation>
+        <translation>请出一张卡牌用于拼点</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="1526"/>
         <source>%1 ask for you to play a card to pindian</source>
-        <translation>%1 要求你出一张卡牌以用于拼点</translation>
+        <translation>%1 要求你出一张卡牌用于拼点</translation>
     </message>
     <message>
         <location filename="../../src/client/client.cpp" line="1539"/>
@@ -448,28 +448,29 @@
     </message>
     <message>
         <location filename="../../src/ui/clientlogbox.cpp" line="121"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="132"/>
         <source>%from %5 [%1] %6 %4 %2 as %3</source>
         <translation>%from %5“%1”%6将 %2 当成 %3 %4</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="131"/>
-        <source>%from use skill [%1] %4 %2 as %3</source>
+        <location filename="../../src/ui/clientlogbox.cpp" line="134"/>
+        <source>Due to the effect of [%1], %from %4 %2 as %3</source>
         <translation>由于“%1”的效果，%from 的 %2 被视为 %3 %4</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="133"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="136"/>
         <source>%from %2 %1</source>
         <translation>%from %2了 %1</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="135"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="138"/>
         <source>, target is %to</source>
         <translation>，目标是 %to</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="172"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="175"/>
         <source>Log string is not well formatted: %1</source>
-        <translation>提示信息没有格式化好: %1</translation>
+        <translation>游戏日志没有格式化好: %1</translation>
     </message>
 </context>
 <context>
@@ -1032,7 +1033,7 @@
     <message>
         <location filename="../../src/dialog/customassigndialog.cpp" line="1367"/>
         <source>Two many lords in the game</source>
-        <translation>主公角色设置过多</translation>
+        <translation>主公设置过多</translation>
     </message>
     <message>
         <location filename="../../src/dialog/customassigndialog.cpp" line="1375"/>
@@ -2519,7 +2520,7 @@
     <message>
         <location filename="../../src/dialog/roleassigndialog.cpp" line="131"/>
         <source>The roles that you assigned do not comform with the current game mode</source>
-        <translation>您所分配的身份不符合当前游戏的身份设置</translation>
+        <translation>你所分配的身份不符合当前游戏的身份设置</translation>
     </message>
 </context>
 <context>
@@ -2889,7 +2890,7 @@
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2929"/>
         <source>Role</source>
-        <translation>角色</translation>
+        <translation>身份</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2931"/>

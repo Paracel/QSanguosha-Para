@@ -266,6 +266,16 @@ end
 function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	if not slash or not to then self.room:writeToConsole(debug.traceback()) return false end
 	from = from or self.player
+	if not ignore_armor and from:objectName() == self.player:objectName() then
+		if to:getArmor() and from:hasSkill("moukui") then
+			if not self:isFriend(to) or (to:getArmor() and self:needToThrowArmor(to)) then
+				if not (self:isEnemy(to) and self:doNotDiscard(to)) then
+					local id = self:askForCardChosen(to, "he", "moukui")
+					if id == to:getArmor():getEffectiveId() then ignore_armor = true end
+				end
+			end
+		end
+	end
 	if to:getPile("dream"):length() > 0 and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then
@@ -318,6 +328,7 @@ function SmartAI:useCardSlash(card, use)
 		and not self.player:canSlashWithoutCrossbow() then
 		return
 	end
+
 	local basicnum = 0
 	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
@@ -347,15 +358,14 @@ function SmartAI:useCardSlash(card, use)
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
-		if (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0
-			and friend:getHandcardNum() < 3)
-		or self:getDamagedEffects(friend, self.player)
-		or (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
-			and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)))
-		and (self:hasExplicitRebel() or not friend:isLord()))
-		or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
-		or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))
-		then
+		if (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
+			or self:getDamagedEffects(friend, self.player)
+			or (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
+				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)))
+				and (self:hasExplicitRebel() or not friend:isLord()))
+			or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
+			or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))) then
+
 			if not slash_prohibit then
 				if ((self.player:canSlash(friend, card, not no_distance, rangefix))
 					or (use.isDummy and (self.player:distanceTo(friend, rangefix) <= self.predictedRange)))

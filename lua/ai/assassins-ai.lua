@@ -7,10 +7,7 @@ end
 sgs.ai_skill_choice.moukui = function(self, choices, data)
 	local target = self.moukuitarget
 	if not target then return "draw" end
-	local equip_num = target:getEquips():length()
-	if self:isEnemy(target) and self:doNotDiscard(target) then
-		return "draw"
-	end
+	if self:isEnemy(target) and self:doNotDiscard(target) then return "draw" end
 	return "discard"
 end
 

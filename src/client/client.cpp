@@ -77,6 +77,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_JILEI] = &Client::jilei;
     m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
     m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
+    m_callbacks[S_COMMAND_EXCHANGE_KNOWN_CARDS] = &Client::exchangeKnownCards;
 
     callbacks["updateStateItem"] = &Client::updateStateItem;
 
@@ -685,6 +686,18 @@ void Client::enableSurrender(const Json::Value &enabled) {
     if (!enabled.isBool()) return;
     bool en = enabled.asBool();
     emit surrender_enabled(en);
+}
+
+void Client::exchangeKnownCards(const Json::Value &players) {
+    if (!players.isArray() || players.size() != 2 || !players[0].isString() || !players[1].isString()) return;
+    ClientPlayer *a = getPlayer(toQString(players[0])), *b = getPlayer(toQString(players[1]));
+    QList<int> a_known, b_known;
+    foreach (const Card *card, a->getCards())
+        a_known << card->getId();
+    foreach (const Card *card, b->getCards())
+        b_known << card->getId();
+    a->setCards(b_known);
+    b->setCards(a_known);
 }
 
 QString Client::getSkillLine() const{

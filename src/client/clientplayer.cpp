@@ -68,7 +68,8 @@ void ClientPlayer::removeCard(const Card *card, Place place) {
     switch (place) {
     case PlaceHand: {
             handcard_num--;
-            if (card) known_cards.removeOne(card);
+            if (card)
+                known_cards.removeOne(card);
             break;
         }
     case PlaceEquip:{

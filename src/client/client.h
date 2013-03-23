@@ -130,6 +130,7 @@ public:
     void jilei(const Json::Value &jilei_str);
     void setNullification(const Json::Value &str);
     void enableSurrender(const Json::Value &enabled);
+    void exchangeKnownCards(const Json::Value &players);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const QString &state_str);

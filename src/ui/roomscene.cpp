@@ -1304,6 +1304,31 @@ void RoomScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
         private_pile->setEnabled(enabled);
         menu->addSeparator();
 
+        if (ServerInfo.EnableCheat) {
+            QMenu *known_cards = menu->addMenu(tr("Known cards"));
+
+            foreach (PlayerCardContainer *container, item2player.keys()) {
+                const ClientPlayer *player = item2player.value(container, NULL);
+                if (player == Self) continue;
+                QList<const Card *> known = player->getCards();
+                if (known.isEmpty()) {
+                    known_cards->addAction(ClientInstance->getPlayerName(player->objectName()))->setEnabled(false);
+                } else {
+                    QMenu *submenu = known_cards->addMenu(ClientInstance->getPlayerName(player->objectName()));
+                    QAction *action = submenu->addAction(tr("View in new dialog"));
+                    action->setData(player->objectName());
+                    connect(action, SIGNAL(triggered()), this, SLOT(showPlayerCards()));
+
+                    submenu->addSeparator();
+                    foreach (const Card *card, known) {
+                        const Card *engine_card = Sanguosha->getEngineCard(card->getId());
+                        submenu->addAction(G_ROOM_SKIN.getCardSuitPixmap(engine_card->getSuit()), engine_card->getFullName());
+                    }
+                }
+            }
+            menu->addSeparator();
+        }
+
         QAction *distance = menu->addAction(tr("View distance"));
         connect(distance, SIGNAL(triggered()), this, SLOT(viewDistance()));
         QAction *discard = menu->addAction(tr("View Discard pile"));
@@ -3196,21 +3221,37 @@ void RoomScene::showOwnerButtons(bool owner) {
 void RoomScene::showPlayerCards() {
     QAction *action = qobject_cast<QAction *>(sender());
     if (action) {
-        QString name = action->data().toString();
-        QString player_name = name.split(".").first(), pile_name = name.split(".").last();
+        QStringList names = action->data().toString().split(".");
+        QString player_name = names.first();
         const ClientPlayer *player = ClientInstance->getPlayer(player_name);
-        QList<const Card *> cards;
-        foreach (int id, player->getPile(pile_name)) {
-            const Card *card = Sanguosha->getEngineCard(id);
-            if (card) cards << card;
-        }
+        if (names.length() > 1) {
+            QString pile_name = names.last();
+            QList<const Card *> cards;
+            foreach (int id, player->getPile(pile_name)) {
+                const Card *card = Sanguosha->getEngineCard(id);
+                if (card) cards << card;
+            }
 
-        CardOverview *overview = new CardOverview;
-        overview->setWindowTitle(QString("%1 %2")
-                                 .arg(ClientInstance->getPlayerName(player_name))
-                                 .arg(Sanguosha->translate(pile_name)));
-        overview->loadFromList(cards);
-        overview->show();
+            CardOverview *overview = new CardOverview;
+            overview->setWindowTitle(QString("%1 %2")
+                                     .arg(ClientInstance->getPlayerName(player_name))
+                                     .arg(Sanguosha->translate(pile_name)));
+            overview->loadFromList(cards);
+            overview->show();
+        } else {
+            QList<const Card *> cards;
+            foreach (const Card *card, player->getCards()) {
+                const Card *engine_card = Sanguosha->getEngineCard(card->getId());
+                if (engine_card) cards << engine_card;
+            }
+
+            CardOverview *overview = new CardOverview;
+            overview->setWindowTitle(QString("%1 %2")
+                                     .arg(ClientInstance->getPlayerName(player_name))
+                                     .arg(tr("Known cards")));
+            overview->loadFromList(cards);
+            overview->show();
+        }
     }
 }
 

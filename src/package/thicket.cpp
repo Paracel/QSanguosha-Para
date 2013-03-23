@@ -550,6 +550,7 @@ const Card *DimengCard::validate(const CardUseStruct *card_use) const{
     return this;
 }
 
+#include "jsonutils.h"
 void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *a = targets.at(0);
     ServerPlayer *b = targets.at(1);
@@ -563,6 +564,11 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     if (diff != 0)
         room->askForDiscard(source, "dimeng", diff, diff, false, true);
 
+    foreach (ServerPlayer *p, room->getAlivePlayers()) {
+        if (p != a && p != b)
+            room->doNotify(p, QSanProtocol::S_COMMAND_EXCHANGE_KNOWN_CARDS,
+                           QSanProtocol::Utils::toJsonArray(a->objectName(), b->objectName()));
+    }
     QList<CardsMoveStruct> exchangeMove;
     CardsMoveStruct move1;
     move1.card_ids = a->handCards();

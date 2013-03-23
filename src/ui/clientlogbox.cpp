@@ -107,13 +107,10 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
             QString subcard_str = subcard_list.join(", ");
             if (card->getTypeId() == Card::TypeSkill) {
                 const SkillCard *skill_card = qobject_cast<const SkillCard *>(card);
-                if (subcard_list.isEmpty() || !skill_card->willThrow()) {
+                if (subcard_list.isEmpty() || !skill_card->willThrow())
                     log = tr("%from %2 [%1] %3").arg(skill_name).arg(meth).arg(suffix);
-                } else {
-                    if (card->isKindOf("DummyCard"))
-                        skill_name = bold(Sanguosha->translate("free-discard"), Qt::yellow);
+                else
                     log = tr("%from %3 [%1] %4, and the cost is %2").arg(skill_name).arg(subcard_str).arg(meth).arg(suffix);
-                }
             } else {
                 if (subcard_list.isEmpty() || card->getSkillName() == "guhuo")
                     log = tr("%from %4 [%1] %5, %3 [%2]").arg(skill_name).arg(card_name).arg(reason).arg(meth).arg(suffix);

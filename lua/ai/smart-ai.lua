@@ -4452,10 +4452,6 @@ function SmartAI:getSameEquip(card, player)
 	elseif card:isKindOf("OffensiveHorse") then return player:getOffensiveHorse() end
 end
 
-function SmartAI:hasSameEquip(card, player) -- obsolete
-	if self:getSameEquip(card, player) then return true else return false end
-end
-
 function SmartAI:useEquipCard(card, use)
 	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if self:hasSkills("xiaoji") and self:evaluateArmor(card) > -5 then

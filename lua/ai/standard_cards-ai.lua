@@ -1823,8 +1823,7 @@ function SmartAI:useCardCollateral(card, use)
 	if needCrossbow then
 		for i = #fromList, 1, -1 do
 			local friend = fromList[i]
-			if friend:getWeapon() and friend:getWeapon():isKindOf("Crossbow")
-				and not friend:hasSkill("weimu") and not self.room:isProhibited(self.player, friend, card) then
+			if friend:getWeapon() and friend:getWeapon():isKindOf("Crossbow") and self:hasTrickEffective(card, friend) then
 				for _, enemy in ipairs(toList) do
 					if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then
 						self.player:setFlags("GlobalFlag_CollateralNeedCrossbow")
@@ -1841,10 +1840,8 @@ function SmartAI:useCardCollateral(card, use)
 	local n = nil
 	local final_enemy = nil
 	for _, enemy in ipairs(fromList) do
-		if not self.room:isProhibited(self.player, enemy, card)
-			and self:hasTrickEffective(card, enemy)
+		if self:hasTrickEffective(card, enemy)
 			and not self:hasSkills(sgs.lose_equip_skill, enemy)
-			and not enemy:hasSkill("weimu")
 			and self:objectiveLevel(enemy) >= 0
 			and enemy:getWeapon() then
 
@@ -1900,9 +1897,8 @@ function SmartAI:useCardCollateral(card, use)
 
 	for _, friend in ipairs(fromList) do
 		if friend:getWeapon() and getCardsNum("Slash", friend) >= 1
-			and not friend:hasSkill("weimu")
-			and self:objectiveLevel(friend) < 0
-			and not self.room:isProhibited(self.player, friend, card) then
+			and self:hasTrickEffective(card, friend)
+			and self:objectiveLevel(friend) < 0 then
 
 			for _, enemy in ipairs(toList) do
 				if friend:canSlash(enemy, nil) and self:objectiveLevel(enemy) > 3 and friend:objectName() ~= enemy:objectName()
@@ -1920,10 +1916,9 @@ function SmartAI:useCardCollateral(card, use)
 
 	for _, friend in ipairs(fromList) do
 		if friend:getWeapon() and self:hasSkills(sgs.lose_equip_skill, friend)
-			and not friend:hasSkill("weimu")
+			and self:hasTrickEffective(card, friend)
 			and self:objectiveLevel(friend) < 0
-			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", to) > 1)
-			and not self.room:isProhibited(self.player, friend, card) then
+			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", to) > 1) then
 
 			for _, enemy in ipairs(toList) do
 				if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then

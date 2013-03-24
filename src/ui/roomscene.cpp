@@ -3276,6 +3276,9 @@ void KOFOrderBox::revealGeneral(const QString &name) {
     if (revealed < 3) {
         avatars[revealed]->setPixmap(G_ROOM_SKIN.getGeneralPixmap(name, QSanRoomSkin::S_GENERAL_ICON_SIZE_KOF));
         avatars[revealed]->setObjectName(name);
+        const General *general = Sanguosha->getGeneral(name);
+        if (general)
+            avatars[revealed]->setToolTip(general->getSkillDescription(true));
         revealed++;
     }
 }

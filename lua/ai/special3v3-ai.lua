@@ -97,3 +97,16 @@ sgs.mingzhe_suit_value = {
 	heart = 4.0,
 	diamond = 4.0
 }
+
+sgs.ai_skill_discard.vsganglie = sgs.ai_skill_discard_ganglie
+
+sgs.ai_skill_invoke.zhongyi = function(self, data)
+	local damage = data:toDamage()
+	return self:isEnemy(damage.to)
+end
+
+sgs.ai_skill_invoke.zhanshen = function(self, data)
+	local obj = data:toString():split(":")[2]
+	local lvbu = self:findPlayerByObjectName(obj)
+	return self:isFriend(obj)
+end

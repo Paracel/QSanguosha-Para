@@ -213,7 +213,7 @@ end
 sgs.ai_need_damaged.ganglie = function (self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
-		and not (self:hasSkills(sgs.need_kongcheng.."|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self.enemies, self) then
+		and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self.enemies, self) then
 		return true
 	end
 	return false

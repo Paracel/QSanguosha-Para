@@ -76,13 +76,13 @@ function setInitialTables()
 	sgs.draw_pile = global_room:getDrawPile()
 	sgs.lose_equip_skill = "xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji"
+	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
 							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao"
-	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|buqu|yiji|neoganglie|ganglie|guixin|jieming|nosmiji"
+	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|buqu|yiji|neoganglie|vsganglie|ganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|kanpo|" ..
 							"jieyin|renjie|zhiheng|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo|neoluoyi"
@@ -4172,6 +4172,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 					value = value + (card:isVirtualCard() and card:subcardsLength() * 15 or 30)
 				end
 				if to:hasSkill("ganglie") then value = value + 10 end
+				if to:hasSkill("vsganglie") then value = value + 15 end
 				if to:hasSkill("neoganglie") then value = value + 20 end
 				if to:hasSkill("guixin") then
 					value = value + (not to:faceUp() and 20 or 0)

@@ -527,7 +527,7 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 		if only_enemy:getLostHp() < 3 then return end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|ganglie|neoganglie|fankui|jianxiong|enyuan|nosenyuan" ..
+		for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|jianxiong|enyuan|nosenyuan" ..
 								"|qingguo|longdan|xiangle|jiang|yanzheng|tianming|" ..
 								"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
 								"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" ..

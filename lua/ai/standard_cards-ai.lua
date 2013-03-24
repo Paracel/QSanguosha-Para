@@ -40,7 +40,7 @@ function sgs.isGoodHp(player)
 end
 
 function sgs.isGoodTarget(player, targets, self)
-	local arr = { "jieming", "yiji", "guixin", "fangzhu", "neoganglie", "nosmiji" }
+	local arr = { "jieming", "yiji", "guixin", "fangzhu", "neoganglie", "vsganglie", "nosmiji" }
 	local m_skill = false
 	local attacker = global_room:getCurrent()
 	if attacker:hasSkill("jueqing") then return true end

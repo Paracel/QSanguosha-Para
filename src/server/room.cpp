@@ -4202,8 +4202,12 @@ void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
     Q_ASSERT(!target->isKongcheng());
     notifyMoveFocus(shenlvmeng, S_COMMAND_SKILL_GONGXIN);
 
-    foreach (int id, target->handCards())
-        setCardFlag(id, "visible");
+    LogMessage log;
+    log.type = "$ViewAllCards";
+    log.from = shenlvmeng;
+    log.to << target;
+    log.card_str = Card::IdsToStrings(target->handCards()).join("+");
+    doNotify(shenlvmeng, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
     shenlvmeng->tag["GongxinTarget"] = QVariant::fromValue((PlayerStar)target);
     int card_id;
@@ -4630,6 +4634,13 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
     }
 
     if (isUnicast) {
+        LogMessage log;
+        log.type = "$ViewAllCards";
+        log.from = to;
+        log.to << player;
+        log.card_str = Card::IdsToStrings(player->handCards()).join("+");
+        doNotify(to, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
         notifyMoveFocus(to, S_COMMAND_SKILL_GONGXIN);
         doRequest(to, S_COMMAND_SKILL_GONGXIN, gongxinArgs, true);
     } else {

@@ -121,6 +121,7 @@ return {
  	["$Dismantlement"] = "%from 的 %card 被弃置",
 	["$ShowCard"] = "%from 展示了 %card",
 	["$ShowAllCards"] = "%from 展示了所有手牌 %card",
+	["$ViewAllCards"] = "%from 观看了 %to 的所有手牌 %card",
 	["$JileiShowAllCards"] = "%from 受“<font color=\"yellow\"><b>鸡肋</b></font>”效果影响，展示了剩余手牌 %card",
 	["$PutCard"] = "%from 的 %card 被置于牌堆顶",
 	["#PutCard"] = "%from 的 %arg 张牌被置于牌堆顶",

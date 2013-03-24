@@ -183,16 +183,17 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 		nextAlive = nextAlive:getNextAlive()
 	until nextAlive:faceUp()
 
-	local peach, ex_nihilo, jink, slash
+	local peach, ex_nihilo, jink, nullification, slash
 	local valuable
 	for _, id in ipairs(card_ids) do
 		local card = sgs.Sanguosha:getCard(id)
 		if card:isKindOf("Peach") then peach = id end
 		if card:isKindOf("ExNihilo") then ex_nihilo = id end
 		if card:isKindOf("Jink") then jink = id end
+		if card:isKindOf("Nullification") then nullification = id end
 		if card:isKindOf("Slash") then slash = id end
 	end
-	valuable = peach or ex_nihilo or jink or slash or card_ids[1]
+	valuable = peach or ex_nihilo or jink or nullification or slash or card_ids[1]
 
 	local willUseExNihilo, willRecast
 	if self:getCardsNum("ExNihilo") > 0 then
@@ -225,6 +226,10 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 			end
 		end
 		if card:isKindOf("Jink") and self:getCardsNum("Jink") == 0 then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+		if card:isKindOf("Nullification") and self:getCardsNum("Nullification") == 0 then
 			self.gongxinchoice = "put"
 			return valuable
 		end
@@ -297,6 +302,10 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 			self.gongxinchoice = "put"
 			return valuable
 		end
+		if nullification and valuable == nullification and getCardsNum("Nullification", nextAlive) < 1 then
+			self.gongxinchoice = "put"
+			return valuable
+		end
 		if slash and valuable == slash and self:hasCrossbowEffect(nextAlive) then
 			self.gongxinchoice = "put"
 			return valuable
@@ -307,7 +316,7 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 	local keep = false
 	if card:isKindOf("Slash") or card:isKindOf("Jink")
 		or card:isKindOf("EquipCard")
-		or card:isKindOf("Disaster") or card:isKindOf("GlobalEffect")
+		or card:isKindOf("Disaster") or card:isKindOf("GlobalEffect") or card:isKindOf("Nullification")
 		or target:isCardLimited(card, sgs.Card_MethodUse) then
 		keep = true
 	end

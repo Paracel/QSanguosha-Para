@@ -641,7 +641,7 @@ void JiefanCard::onEffect(const CardEffectStruct &effect) const{
 
     PlayerStar target = effect.from->tag["JiefanTarget"].value<PlayerStar>();
     QVariant data = effect.from->tag["JiefanTarget"];
-    if (target && !room->askForCard(effect.to, ".Weapon", "@jiefan-discard", data))
+    if (target && !room->askForCard(effect.to, ".Weapon", "@jiefan-discard::" + target->objectName(), data))
         target->drawCards(1);
 }
 

@@ -344,7 +344,8 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
 
             if (Config.AlterAIDelayAD)
                 Config.AIDelay = Config.AIDelayAD;
-            if (victim->isOnline() && Config.SurrenderAtDeath && askForSkillInvoke(victim, "surrender", "yes"))
+            if (victim->isOnline() && Config.SurrenderAtDeath && mode != "02_1v1" && mode != "06_XMode"
+                && askForSkillInvoke(victim, "surrender", "yes"))
                 makeSurrender(victim);
         }
     }

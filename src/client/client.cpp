@@ -71,15 +71,14 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
     m_callbacks[S_COMMAND_EXCHANGE_KNOWN_CARDS] = &Client::exchangeKnownCards;
 
-    callbacks["updateStateItem"] = &Client::updateStateItem;
+    m_callbacks[S_COMMAND_UPDATE_STATE_ITEM] = &Client::updateStateItem;
 
     m_callbacks[S_COMMAND_GET_CARD] = &Client::getCards;
     m_callbacks[S_COMMAND_LOSE_CARD] = &Client::loseCards;
     m_callbacks[S_COMMAND_SET_PROPERTY] = &Client::updateProperty;
-    callbacks["clearPile"] = &Client::resetPiles;
-    callbacks["setPileNumber"] = &Client::setPileNumber;
+    m_callbacks[S_COMMAND_RESET_PILE] = &Client::resetPiles;
+    m_callbacks[S_COMMAND_UPDATE_PILE] = &Client::setPileNumber;
     m_callbacks[S_COMMAND_CARD_FLAG] = &Client::setCardFlag;
-    callbacks["playSystemAudioEffect"] = &Client::playSystemAudioEffect;
 
     // interactive methods    
     m_interactions[S_COMMAND_CHOOSE_GENERAL] = &Client::askForGeneral;
@@ -1055,16 +1054,16 @@ QTextDocument *Client::getPromptDoc() const{
     return prompt_doc;
 }
 
-void Client::resetPiles(const QString &) {
+void Client::resetPiles(const Json::Value &) {
     discarded_list.clear();
     swap_pile++;
     updatePileNum();
     emit pile_reset();
 }
 
-void Client::setPileNumber(const QString &pile_str) {
-    pile_num = pile_str.toInt();
-
+void Client::setPileNumber(const Json::Value &pile_str) {
+    if (!pile_str.isInt()) return;
+    pile_num = pile_str.asInt();
     updatePileNum();
 }
 
@@ -1075,10 +1074,6 @@ void Client::setCardFlag(const Json::Value &pattern_str) {
     int id = pattern_str[0].asInt();
     QString flag = toQString(pattern_str[1]);
     Sanguosha->getCard(id)->setFlags(flag);
-}
-
-void Client::playSystemAudioEffect(const QString &effect_str) {
-    Sanguosha->playSystemAudioEffect(effect_str);
 }
 
 void Client::updatePileNum() {
@@ -1614,6 +1609,8 @@ void Client::log(const Json::Value &log_str) {
     else {
         QStringList log;
         tryParse(log_str, log);
+        if (log.first() == "#BasaraReveal")
+            Sanguosha->playSystemAudioEffect("choose-item");
         emit log_received(log);
     }
 }
@@ -1770,7 +1767,8 @@ void Client::onPlayerChooseOrder() {
     setStatus(NotActive);
 }
 
-void Client::updateStateItem(const QString &state_str) {
-    emit role_state_changed(state_str);
+void Client::updateStateItem(const Json::Value &state_str) {
+    if (!state_str.isString()) return;
+    emit role_state_changed(toQString(state_str));
 }
 

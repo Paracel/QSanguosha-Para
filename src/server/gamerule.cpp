@@ -1049,7 +1049,6 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
     log.arg2 = player->getGeneral2Name();
 
     room->sendLog(log);
-    room->broadcastInvoke("playSystemAudioEffect", "choose-item");
 }
 
 bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{

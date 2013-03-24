@@ -110,7 +110,10 @@ namespace QSanProtocol {
         S_COMMAND_REVIVE_PLAYER,
         S_COMMAND_ATTACH_SKILL,
         S_COMMAND_NULLIFICATION_ASKED,
-        S_COMMAND_EXCHANGE_KNOWN_CARDS // For Dimeng only
+        S_COMMAND_EXCHANGE_KNOWN_CARDS, // For Dimeng only
+        S_COMMAND_UPDATE_PILE,
+        S_COMMAND_RESET_PILE,
+        S_COMMAND_UPDATE_STATE_ITEM
     };
 
     enum GameEventType {

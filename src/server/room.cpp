@@ -63,7 +63,6 @@ void Room::initCallbacks() {
     m_requestResponsePair[S_COMMAND_PINDIAN] = S_COMMAND_RESPONSE_CARD;
     m_requestResponsePair[S_COMMAND_EXCHANGE_CARD] = S_COMMAND_DISCARD_CARD;
     m_requestResponsePair[S_COMMAND_CHOOSE_DIRECTION] = S_COMMAND_MULTIPLE_CHOICE;
-    //m_requestResponsePair[S_COMMAND_SHOW_ALL_CARDS] = S_COMMAND_SKILL_GONGXIN;
 
     // client request handlers
     m_callbacks[S_COMMAND_SURRENDER] = &Room::processRequestSurrender;
@@ -272,7 +271,7 @@ void Room::updateStateItem() {
         roles.append(c);
     }
 
-    broadcastInvoke("updateStateItem", roles);
+    doBroadcastNotify(S_COMMAND_UPDATE_STATE_ITEM, toJsonString(roles));
 }
 
 void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
@@ -384,7 +383,7 @@ QList<int> Room::getNCards(int n, bool update_pile_number) {
         card_ids << drawCard();
 
     if (update_pile_number)
-        broadcastInvoke("setPileNumber", QString::number(m_drawPile->length()));
+        doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 
     return card_ids;
 }
@@ -1504,8 +1503,8 @@ void Room::swapPile() {
 
     qSwap(m_drawPile, m_discardPile);
 
-    broadcastInvoke("clearPile");
-    broadcastInvoke("setPileNumber", QString::number(m_drawPile->length()));
+    doBroadcastNotify(S_COMMAND_RESET_PILE, Json::Value::null);
+    doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 
     qShuffle(*m_drawPile);
     foreach (int card_id, *m_drawPile)
@@ -3024,7 +3023,7 @@ void Room::startGame() {
     // initialize the place_map and owner_map;
     foreach (int card_id, *m_drawPile)
         setCardMapping(card_id, NULL, Player::DrawPile);
-    broadcastInvoke("setPileNumber", QString::number(m_drawPile->length()));
+    doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 
     thread = new RoomThread(this);
     if (mode != "02_1v1" && mode != "06_3v3" && mode != "06_XMode") thread->resetRoomState();

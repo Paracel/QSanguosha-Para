@@ -101,8 +101,8 @@ public:
     void startGame(const Json::Value &);
     void hpChange(const Json::Value &change_str);
     void maxhpChange(const Json::Value &change_str);
-    void resetPiles(const QString &);
-    void setPileNumber(const QString &pile_num);
+    void resetPiles(const Json::Value &);
+    void setPileNumber(const Json::Value &pile_str);
     void gameOver(const Json::Value &);
     void loseCards(const Json::Value &);
     void getCards(const Json::Value &);
@@ -126,9 +126,8 @@ public:
     void exchangeKnownCards(const Json::Value &players);
     void setScreenName(const QString &set_str);
     void setFixedDistance(const Json::Value &set_str);
-    void updateStateItem(const QString &state_str);
+    void updateStateItem(const Json::Value &state_str);
     void setCardFlag(const Json::Value &pattern_str);
-    void playSystemAudioEffect(const QString &effect_str);
     void updateCard(const Json::Value &arg);
 
     void fillAG(const Json::Value &cards_str);

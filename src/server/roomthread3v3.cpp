@@ -141,6 +141,13 @@ void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name) {
     player->addToSelected(name);
 
     QString group = player->isLord() ? "warm" : "cool";
+
+    LogMessage log;
+    log.type = "#VsTakeGeneral";
+    log.arg = group;
+    log.arg2 = name;
+    room->sendLog(log);
+
     room->broadcastInvoke("takeGeneral", QString("%1:%2").arg(group).arg(name));
 
     room->sem->release();

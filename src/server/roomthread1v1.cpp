@@ -78,6 +78,15 @@ void RoomThread1v1::takeGeneral(ServerPlayer *player, const QString &name) {
         player->invoke("recoverGeneral", QString("%1:%2").arg(index).arg(general_name));
     }
 
+    QString namearg = unknown_rx.exactMatch(name) ? "anjiang" : name;
+    foreach (ServerPlayer *p ,room->getPlayers()) {
+        LogMessage log;
+        log.type = "#VsTakeGeneral";
+        log.arg = group;
+        log.arg2 = (p == player) ? general_name : namearg;
+        room->doNotify(p, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    }
+
     player->invoke("takeGeneral", QString("%1:%2").arg(group).arg(general_name));
 
     general_names.removeOne(name);

@@ -4316,6 +4316,8 @@ function SmartAI:hasTrickEffective(card, to, from)
 		end
 	end
 
+	if to:hasSkill("wuyan") and card:isKindOf("Lightning") then return false end
+
 	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
 		if card:isKindOf("TrickCard") and
 		  (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then

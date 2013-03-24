@@ -154,14 +154,14 @@ local gongxin_skill = {}
 gongxin_skill.name = "gongxin"
 table.insert(sgs.ai_skills, gongxin_skill)
 gongxin_skill.getTurnUseCard = function(self)
-		local card_str = ("@GongxinCard=.")
-		local gongxin_card = sgs.Card_Parse(card_str)
-		assert(gongxin_card)
-		return gongxin_card
+	local card_str = ("@GongxinCard=.")
+	local gongxin_card = sgs.Card_Parse(card_str)
+	assert(gongxin_card)
+	return gongxin_card
 end
 
 sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
-	if self.player:usedTimes("GongxinCard") > 0 then return end
+	if self.player:hasUsed("GongxinCard") then return end
 	self:sort(self.enemies, "handcard")
 
 	for index = #self.enemies, 1, -1 do
@@ -175,7 +175,149 @@ sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 	end
 end
 
--- @todo: move the AI of GongXin here
+sgs.ai_skill_askforag.gongxin = function(self, card_ids)
+	local target = self.player:getTag("GongxinTarget"):toPlayer()
+	if not target or self:isFriend(target) then return -1 end
+	local nextAlive = self.player
+	repeat
+		nextAlive = nextAlive:getNextAlive()
+	until nextAlive:faceUp()
+
+	local peach, ex_nihilo, jink, slash
+	local valuable
+	for _, id in ipairs(card_ids) do
+		local card = sgs.Sanguosha:getCard(id)
+		if card:isKindOf("Peach") then peach = id end
+		if card:isKindOf("ExNihilo") then ex_nihilo = id end
+		if card:isKindOf("Jink") then jink = id end
+		if card:isKindOf("Slash") then slash = id end
+	end
+	valuable = peach or ex_nihilo or jink or slash or card_ids[1]
+
+	local willUseExNihilo, willRecast
+	if self:getCardsNum("ExNihilo") > 0 then
+		local ex_nihilo = self:getCard("ExNihilo")
+		if ex_nihilo then
+			local dummy_use = { isDummy = true }
+			self:useTrickCard(ex_nihilo, dummy_use)
+			if dummy_use.card then willUseExNihilo = true end
+		end
+	elseif self:getCardsNum("IronChain") > 0 then
+		local iron_chain = self:getCard("IronChain")
+		if iron_chain then
+			local dummy_use = { to = sgs.SPlayerList(), isDummy = true }
+			self:useTrickCard(iron_chain, dummy_use)
+			if dummy_use.card and dummy_use.to:isEmpty() then willRecast = true end
+		end
+	end
+	if willUseExNihilo or willRecast then
+		local card = sgs.Sanguosha:getCard(valuable)
+		if card:isKindOf("Peach") then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+		if card:isKindOf("TrickCard") or card:isKindOf("Indulgence") or card:isKindOf("SupplyShortage") then
+			local dummy_use = { isDummy = true }
+			self:useTrickCard(card, dummy_use)
+			if dummy_use.card then
+				self.gongxinchoice = "put"
+				return valuable
+			end
+		end
+		if card:isKindOf("Jink") and self:getCardsNum("Jink") == 0 then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+		if card:isKindOf("Slash") and self:slashIsAvailable() then
+			local dummy_use = { isDummy = true }
+			self:useBasicCard(card, dummy_use)
+			if dummy_use.card then
+				self.gongxinchoice = "put"
+				return valuable
+			end
+		end
+		self.gongxinchoice = "discard"
+		return valuable
+	end
+
+	local hasLightning, hasIndulgence, hasSupplyShortage
+	local tricks = nextAlive:getJudgingArea()
+	if not tricks:isEmpty() and not nextAlive:containsTrick("YanxiaoCard") then
+		local trick = tricks:at(tricks:length() - 1)
+		if self:hasTrickEffective(trick, nextAlive) then
+			if trick:isKindOf("Lightning") then hasLightning = true
+			elseif trick:isKindOf("Indulgence") then hasIndulgence = true
+			elseif trick:isKindOf("SupplyShortage") then hasSupplyShortage = true
+			end
+		end
+	end
+
+	if self:isEnemy(nextAlive) and nextAlive:hasSkill("luoshen") and valuable then
+		self.gongxinchoice = "put"
+		return valuable
+	end
+	if nextAlive:hasSkill("yinghun") and nextAlive:isWounded() then
+		self.gongxinchoice = self:isFriend(nextAlive) and "put" or "discard"
+		return valuable
+	end
+	if target:hasSkill("hongyan") and hasLightning and self:isEnemy(nextAlive) and not (nextAlive:hasSkill("qiaobian") and nextAlive:getHandcardNum() > 0) then
+		for _, id in ipairs(card_ids) do
+			local card = sgs.Sanguosha:getEngineCard(id)
+			if card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 then
+				self.gongxinchoice = "put"
+				return id
+			end
+		end
+	end
+	if hasIndulgence and self:isFriend(nextAlive) then
+		self.gongxinchoice = "put"
+		return valuable
+	end
+	if hasSupplyShortage and self:isEnemy(nextAlive) and not (nextAlive:hasSkill("qiaobian") and nextAlive:getHandcardNum() > 0) then
+		local enemy_null = 0
+		for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			if self:isFriend(p) then enemy_null = enemy_null - getCardsNum("Nullification", p) end
+			if self:isEnemy(p) then enemy_null = enemy_null + getCardsNum("Nullification", p) end
+		end
+		enemy_null = enemy_null - self:getCardsNum("Nullification")
+		if enemy_null < 0.8 then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+	end
+
+	if self:isFriend(nextAlive) and not self:willSkipDrawPhase() and not self:willSkipPlayPhase()
+		and not nextAlive:hasSkill("luoshen")
+		and not nextAlive:hasSkill("tuxi") and not (nextAlive:hasSkill("qiaobian") and nextAlive:getHandcardNum() > 0) then
+		if (peach and valuable == peach) or (ex_nihilo and valuable == ex_nihilo) then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+		if jink and valuable == jink and getCardsNum("Jink", nextAlive) < 1 then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+		if slash and valuable == slash and self:hasCrossbowEffect(nextAlive) then
+			self.gongxinchoice = "put"
+			return valuable
+		end
+	end
+
+	local card = sgs.Sanguosha:getCard(valuable)
+	local keep = false
+	if card:isKindOf("Slash") or card:isKindOf("Jink")
+		or card:isKindOf("EquipCard")
+		or card:isKindOf("Disaster") or card:isKindOf("GlobalEffect")
+		or target:isCardLimited(card, sgs.Card_MethodUse) then
+		keep = true
+	end
+	self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
+	return valuable
+end
+
+sgs.ai_skill_choice.gongxin = function(self, choices)
+	return self.gongxinchoice or "discard"
+end
 
 sgs.ai_use_value.GongxinCard = 8.5
 sgs.ai_use_priority.GongxinCard = 9.5

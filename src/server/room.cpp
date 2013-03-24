@@ -4199,69 +4199,55 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, bool up_
 }
 
 void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
+    Q_ASSERT(!target->isKongcheng());
     notifyMoveFocus(shenlvmeng, S_COMMAND_SKILL_GONGXIN);
-    //@todo: this thing should be put in AI!!!!!!!!!!
-    if (!shenlvmeng->isOnline()) {
-        // a better way of using gongxin for ai, but we still want to move this to god-ai.lua
-        QList<const Card *> cards = target->getHandcards();
-        const Card *has_jink = NULL;
-        const Card *has_peach = NULL;
-        const Card *has_null = NULL;
-        ServerPlayer *nextplayer = shenlvmeng->getNextAlive();
-        bool nextfriend = false;
-        bool hasindul = false;
-        nextfriend = (shenlvmeng->getRole() == nextplayer->getRole() || (shenlvmeng->getRole() == "loyalist" && nextplayer->isLord()));
-        if (nextplayer->containsTrick("indulgence"))
-            hasindul = true;
-        foreach (const Card *card, cards) {
-            if (card->getSuit() == Card::Heart) {
-                has_null = card;
-                if (card->isKindOf("Jink"))
-                    has_jink = card;
-                else if (card->isKindOf("Peach"))
-                    has_peach = card;
-            }
+
+    foreach (int id, target->handCards())
+        setCardFlag(id, "visible");
+
+    shenlvmeng->tag["GongxinTarget"] = QVariant::fromValue((PlayerStar)target);
+    int card_id;
+    AI *ai = shenlvmeng->getAI();
+    if (ai) {
+        QList<int> hearts;
+        foreach (int id, target->handCards()) {
+            if (Sanguosha->getCard(id)->getSuit() == Card::Heart)
+                hearts << id;
         }
-        if (nextfriend && has_peach) {
-            CardMoveReason reason(CardMoveReason::S_REASON_PUT, shenlvmeng->objectName(),
-                                  QString(), Sanguosha->getCard(has_peach->getEffectiveId())->getSkillName(), QString());
-            moveCardTo(has_peach, target, NULL, Player::DrawPile, reason, true);
-        } else if (nextplayer == target && has_jink && !hasindul) {
-            CardMoveReason reason(CardMoveReason::S_REASON_PUT, shenlvmeng->objectName(),
-                                  QString(), Sanguosha->getCard(has_jink->getEffectiveId())->getSkillName(), QString());
-            moveCardTo(has_jink, target, NULL, Player::DrawPile, reason, true);
-        } else if (nextfriend && hasindul && has_null) {
-            CardMoveReason reason(CardMoveReason::S_REASON_PUT, shenlvmeng->objectName(),
-                                  QString(), Sanguosha->getCard(has_null->getEffectiveId())->getSkillName(), QString());
-            moveCardTo(has_null, target, NULL, Player::DrawPile, reason, true);
-        } else if (has_peach) {
-            throwCard(has_peach, target, shenlvmeng);
-        } else if (has_null) {
-            throwCard(has_null, target, shenlvmeng);
+        if (hearts.isEmpty()) {
+            shenlvmeng->tag.remove("GongxinTarget");
+            return;
         }
-        return;
+        card_id = ai->askForAG(hearts, true, "gongxin");
+        if (card_id == -1) {
+            shenlvmeng->tag.remove("GongxinTarget");
+            return;
+        }
+    } else {
+        foreach (int cardId, target->handCards()) {
+            WrappedCard *card = Sanguosha->getWrappedCard(cardId);
+            if (card->isModified())
+                notifyUpdateCard(shenlvmeng, cardId, card);
+            else
+                notifyResetCard(shenlvmeng, cardId);
+        }
+
+        Json::Value gongxinArgs(Json::arrayValue);
+        gongxinArgs[0] = toJsonString(target->objectName());
+        gongxinArgs[1] = true;
+        gongxinArgs[2] = toJsonArray(target->handCards());
+        bool success = doRequest(shenlvmeng, S_COMMAND_SKILL_GONGXIN, gongxinArgs, true);
+        Json::Value clientReply = shenlvmeng->getClientReply();
+        if (!success || !clientReply.isInt() || !target->handCards().contains(clientReply.asInt())) {
+            shenlvmeng->tag.remove("GongxinTarget");
+            return;
+        }
+
+        card_id = clientReply.asInt();
     }
-
-    foreach (int cardId, target->handCards()) {
-        WrappedCard *card = Sanguosha->getWrappedCard(cardId);
-        if (card->isModified())
-            notifyUpdateCard(shenlvmeng, cardId, card);
-        else
-            notifyResetCard(shenlvmeng, cardId);
-    }
-
-    Json::Value gongxinArgs(Json::arrayValue);
-    gongxinArgs[0] = toJsonString(target->objectName());
-    gongxinArgs[1] = true;
-    gongxinArgs[2] = toJsonArray(target->handCards());
-    bool success = doRequest(shenlvmeng, S_COMMAND_SKILL_GONGXIN, gongxinArgs, true);
-    Json::Value clientReply = shenlvmeng->getClientReply();
-    if (!success || !clientReply.isInt() || !target->handCards().contains(clientReply.asInt()))
-        return;
-
-    int card_id = clientReply.asInt();
 
     QString result = askForChoice(shenlvmeng, "gongxin", "discard+put");
+    shenlvmeng->tag.remove("GongxinTarget");
     if (result == "discard")
         throwCard(card_id, target, shenlvmeng);
     else {

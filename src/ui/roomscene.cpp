@@ -3827,6 +3827,15 @@ void RoomScene::takeGeneral(const QString &who, const QString &name) {
     y = y + G_COMMON_LAYOUT.m_cardNormalHeight / 2;
     general_item->setHomePos(QPointF(x, y));
     general_item->goBack(true);
+
+    if (ServerInfo.GameMode == "06_3v3" && (Self->getRole() != "lord" && Self->getRole() != "renegade")
+        && general_items.isEmpty()) {
+        if (selector_box) {
+            selector_box->hide();
+            delete selector_box;
+            selector_box = NULL;
+        }
+    }
 }
 
 void RoomScene::recoverGeneral(int index, const QString &name) {

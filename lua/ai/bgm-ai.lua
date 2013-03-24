@@ -75,7 +75,8 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 	cards = sgs.QList2Table(cards)
 
 	if not self.player:hasUsed("LihunCard") then
-		self:sort(self.enemies, "hp")
+		self:sort(self.enemies, "handcard")
+		self.enemies = sgs.reverse(self.enemies)
 		local target
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isMale() and not enemy:hasSkill("kongcheng") then
@@ -90,11 +91,23 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 		end
 		if not self.player:faceUp() and not target then
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:isMale() then
+				if enemy:isMale() and not enemy:isKongcheng() then
 					if enemy:getHandcardNum() >= enemy:getHp() then
 						target = enemy
 						break
 					end
+				end
+			end
+		end
+
+		if not target and (self:hasCrossbowEffect() or self:getCardsNum("Crossbow") > 0) then
+			local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash")
+			for _, enemy in ipairs(self.enemies) do
+				if self:slashIsEffective(slash, enemy) and self.player:distanceTo(enemy) == 1 and
+					not self:hasSkill("fenyong|zhichi|fankui|neoganglie|vsganglie|ganglie|enyuan|nosenyuan|langgu|guixin|kongcheng", enemy)
+					and self:getCardsNum("Slash") + getKnownCard(enemy, "Slash") >= 3 then
+					target = enemy
+					break
 				end
 			end
 		end
@@ -104,6 +117,33 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 			if use.to then use.to:append(target) end
 		end
 	end
+end
+
+function SmartAI:isLihunTarget(player, drawCardNum)
+	player = player or self.player
+	drawCardNum = drawCardNum or 1
+	local handCardNum = player:getHandcardNum() + drawCardNum
+
+	if not player:isMale() then return false end
+
+	local sb_diaochan = self.room:findPlayerBySkillName("lihun")
+	local lihun = sb_diaochan and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan)
+
+	if not lihun then return false end
+
+	if sb_diaochan:getPhase() == sgs.Player_Play then
+		if (handCardNum - player:getHp() >= 2)
+			or (handCardNum > 0 and handCardNum - player:getHp() >= -1 and not sb_diaochan:faceUp()) then
+			return true
+		end
+	else
+		if sb_diaochan:faceUp() and not self:willSkipPlayPhase(sb_diaochan)
+			and self:playerGetRound(player) > self:playerGetRound(sb_diaochan) and handCardNum >= player:getHp() + 2 then
+			return true
+		end
+	end
+
+	return false
 end
 
 sgs.ai_skill_discard.lihun = function(self, discard_num, min_num, optional, include_equip)

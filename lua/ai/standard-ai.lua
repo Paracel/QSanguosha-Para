@@ -493,7 +493,8 @@ sgs.ai_skill_invoke.yiji = function(self)
 		local invoke
 		for _, friend in ipairs(self.friends) do
 			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
-				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true) then
+				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true)
+				and not self:isLihunTarget(friend) then
 				invoke = true
 				break
 			end
@@ -516,46 +517,14 @@ sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 		return nil, -1
 	end
 
-	local sb_diaochan = self.room:getCurrent()
-	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then
-		local card, target = self:getCardNeedPlayer(cards)
-		local new_friends = {}
-		local CanKeep
-		for _, friend in ipairs(self.friends) do
-			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
-				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true) then
-				if self.player:objectName() == friend:objectName() then
-					CanKeep = true
-				else
-					table.insert(new_friends, friend)
-					if friend:objectName() == target:objectName() then return friend, card:getId() end
-				end
-			end
-		end
-		if #new_friends > 0 then
-			self:sort(new_friends, "defense")
-			return new_friends[1], card_ids[1]
-		elseif CanKeep then
-			return nil, -1
-		else
-			local other = {}
-			for _, p in sgs.qlist(self.room:getOtherPlayers(sb_diaochan)) do
-				if p:objectName() ~= self.player:objectName() then
-					table.insert(other, p)
-				end
-			end
-			return other[math.random(1, #other)], card_ids[math.random(1, #card_ids)]
-		end
-	end
-
 	local available_friends = {}
-	for _, friend in ipairs(self.friends_noself) do
+	for _, friend in ipairs(self.friends) do
 		local insert = true
 		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
 		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
+		if insert and self:isLihunTarget(friend) then insert = false end
 		if insert then table.insert(available_friends, friend) end
 	end
-	table.insert(available_friends, self.player)
 
 	local cards = {}
 	for _, card_id in ipairs(card_ids) do

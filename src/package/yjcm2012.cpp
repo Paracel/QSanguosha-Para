@@ -627,7 +627,7 @@ void JiefanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
             || target->getGeneralName().contains("sunce")))
         index = 2;
     room->broadcastSkillInvoke("jiefan", index);
-    room->doLightbox("$JiefanLightbox", 2500);
+    room->doLightbox("$JiefanAnimate", 2500);
 
     foreach (ServerPlayer *player, room->getAllPlayers()) {
         if (player->isAlive() && player->inMyAttackRange(target))

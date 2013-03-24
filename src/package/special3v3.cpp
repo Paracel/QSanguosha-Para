@@ -302,7 +302,7 @@ public:
                 }
             }
             data = QVariant::fromValue(damage);
-        } else if ((mode.startsWith("06_") && event == ActionedReset) || (!mode.startsWith("06_") && event == EventPhaseStart)) {
+        } else if ((mode == "06_3v3" && event == ActionedReset) || (mode != "06_3v3" && event == EventPhaseStart)) {
             if (event == EventPhaseStart && player->getPhase() != Player::RoundStart)
                 return false;
             if (player->getPile("loyal").length() > 0)

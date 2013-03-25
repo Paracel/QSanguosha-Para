@@ -113,7 +113,14 @@ namespace QSanProtocol {
         S_COMMAND_EXCHANGE_KNOWN_CARDS, // For Dimeng only
         S_COMMAND_UPDATE_PILE,
         S_COMMAND_RESET_PILE,
-        S_COMMAND_UPDATE_STATE_ITEM
+        S_COMMAND_UPDATE_STATE_ITEM,
+        S_COMMAND_SPEAK,
+        S_COMMAND_ASK_GENERAL, // the following 6 for 1v1 and 3v3
+        S_COMMAND_ARRANGE_GENERAL,
+        S_COMMAND_FILL_GENERAL,
+        S_COMMAND_TAKE_GENERAL,
+        S_COMMAND_RECOVER_GENERAL,
+        S_COMMAND_REVEAL_GENERAL
     };
 
     enum GameEventType {

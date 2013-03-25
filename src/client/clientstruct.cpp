@@ -14,9 +14,11 @@ time_t ServerInfoStruct::getCommandTimeout(QSanProtocol::CommandType command, QS
     time_t timeOut;
     if (OperationTimeout == 0)
         return 0;
-    else if (command == QSanProtocol::S_COMMAND_CHOOSE_GENERAL) {
+    else if (command == QSanProtocol::S_COMMAND_CHOOSE_GENERAL
+             || command == QSanProtocol::S_COMMAND_ASK_GENERAL) {
         timeOut = Config.S_CHOOSE_GENERAL_TIMEOUT * 1000;
-    } else if (command == QSanProtocol::S_COMMAND_SKILL_GUANXING) {
+    } else if (command == QSanProtocol::S_COMMAND_SKILL_GUANXING
+               || command == QSanProtocol::S_COMMAND_ARRANGE_GENERAL) {
         timeOut = Config.S_GUANXING_TIMEOUT * 1000;
     } else {
         timeOut = OperationTimeout * 1000;

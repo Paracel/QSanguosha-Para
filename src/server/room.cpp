@@ -36,7 +36,7 @@ Room::Room(QObject *parent, const QString &mode)
     : QThread(parent), mode(mode), current(NULL), pile1(Sanguosha->getRandomCards()),
       m_drawPile(&pile1), m_discardPile(&pile2),
       game_started(false), game_finished(false), L(NULL), thread(NULL),
-      thread_3v3(NULL), thread_xmode(NULL), thread_1v1(NULL), sem(NULL), _m_semRaceRequest(0), _m_semRoomMutex(1),
+      thread_3v3(NULL), thread_xmode(NULL), thread_1v1(NULL), _m_semRaceRequest(0), _m_semRoomMutex(1),
       _m_raceStarted(false), provided(NULL), has_provided(false),
       m_surrenderRequestReceived(false), _virtual(false), _m_roomState(false)
 {
@@ -67,10 +67,6 @@ void Room::initCallbacks() {
     // client request handlers
     m_callbacks[S_COMMAND_SURRENDER] = &Room::processRequestSurrender;
     m_callbacks[S_COMMAND_CHEAT] = &Room::processRequestCheat;
-
-    // init callback table
-    callbacks["arrangeCommand"] = &Room::arrangeCommand;
-    callbacks["takeGeneralCommand"] = &Room::takeGeneralCommand;
 
     // Client notifications
     callbacks["toggleReadyCommand"] = &Room::toggleReadyCommand;
@@ -2249,7 +2245,6 @@ void Room::chooseGenerals() {
 void Room::run() {
     // initialize random seed for later use
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-    sem = new QSemaphore;
     Config.AIDelay = Config.OriginAIDelay;
 
     foreach (ServerPlayer *player, m_players) {
@@ -2968,11 +2963,6 @@ void Room::marshal(ServerPlayer *player) {
 }
 
 void Room::startGame() {
-    if (sem) {
-        sem = NULL;
-        delete sem;
-    }
-
     m_alivePlayers = m_players;
     for (int i = 0; i < player_count - 1; i++)
         m_players.at(i)->setNext(m_players.at(i + 1));
@@ -2994,7 +2984,7 @@ void Room::startGame() {
             broadcastProperty(player, "general");
 
         if (mode == "02_1v1")
-            broadcastInvoke("revealGeneral", QString("%1:%2").arg(player->objectName()).arg(player->getGeneralName()), player);
+            doBroadcastNotify(getOtherPlayers(player, true), S_COMMAND_REVEAL_GENERAL, toJsonArray(player->objectName(), player->getGeneralName()));
 
         if (Config.Enable2ndGeneral
             && mode != "02_1v1" && mode != "06_3v3" && mode != "06_XMode" && mode != "04_1v3"
@@ -4780,22 +4770,6 @@ QString Room::generatePlayerName() {
     static unsigned int id = 0;
     id++;
     return QString("sgs%1").arg(id);
-}
-
-void Room::arrangeCommand(ServerPlayer *player, const QString &arg) {
-    if (mode == "06_3v3")
-        thread_3v3->arrange(player, arg.split("+"));
-    else if (mode == "02_1v1")
-        thread_1v1->arrange(player, arg.split("+"));
-    else if (mode == "06_XMode")
-        thread_xmode->arrange(player, arg.split("+"));
-}
-
-void Room::takeGeneralCommand(ServerPlayer *player, const QString &arg) {
-    if (mode == "06_3v3")
-        thread_3v3->takeGeneral(player, arg);
-    else if (mode == "02_1v1")
-        thread_1v1->takeGeneral(player, arg);
 }
 
 QString Room::askForOrder(ServerPlayer *player) {

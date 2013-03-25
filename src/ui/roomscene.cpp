@@ -17,6 +17,7 @@
 #include "wind.h"
 #include "record-analysis.h"
 #include "mountain.h"
+#include "jsonutils.h"
 
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -3861,7 +3862,7 @@ void RoomScene::startGeneralSelection() {
 void RoomScene::selectGeneral() {
     CardItem *item = qobject_cast<CardItem *>(sender());
     if (item) {
-        ClientInstance->request("takeGeneral " + item->objectName());
+        ClientInstance->replyToServer(S_COMMAND_ASK_GENERAL, Utils::toJsonString(item->objectName()));
         foreach (CardItem *item, general_items) {
             item->setFlag(QGraphicsItem::ItemIsFocusable, false);
             item->disconnect(this);
@@ -4026,7 +4027,7 @@ void RoomScene::finishArrange() {
     }
     arrange_rects.clear();
 
-    ClientInstance->request("arrange " + names.join("+"));
+    ClientInstance->replyToServer(S_COMMAND_ARRANGE_GENERAL, Utils::toJsonArray(names));
 }
 
 static inline void AddRoleIcon(QMap<QChar, QPixmap> &map, char c, const QString &role) {

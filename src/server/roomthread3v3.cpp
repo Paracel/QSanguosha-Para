@@ -5,8 +5,12 @@
 #include "lua.hpp"
 #include "settings.h"
 #include "generalselector.h"
+#include "jsonutils.h"
 
 #include <QDateTime>
+
+using namespace QSanProtocol;
+using namespace QSanProtocol::Utils;
 
 RoomThread3v3::RoomThread3v3(Room *room)
     :room(room)
@@ -92,7 +96,7 @@ void RoomThread3v3::run() {
     qShuffle(general_names);
     general_names = general_names.mid(0, 16);
 
-    room->broadcastInvoke("fillGenerals", general_names.join("+"));
+    room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(general_names));
 
     QString order = room->askForOrder(warm_leader);
     ServerPlayer *first, *next;
@@ -117,8 +121,6 @@ void RoomThread3v3::run() {
 
     startArrange(first);
     startArrange(next);
-
-    room->sem->acquire(2);
 }
 
 void RoomThread3v3::askForTakeGeneral(ServerPlayer *player) {
@@ -127,13 +129,19 @@ void RoomThread3v3::askForTakeGeneral(ServerPlayer *player) {
         name = GeneralSelector::getInstance()->select3v3(player, general_names);
 
     if (name.isNull()) {
-        player->invoke("askForGeneral3v3");
+        bool success = room->doRequest(player, S_COMMAND_ASK_GENERAL, Json::Value::null, true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isString()) {
+            name = toQString(clientReply.asCString());
+            takeGeneral(player, name);
+        } else {
+            name = GeneralSelector::getInstance()->select3v3(player, general_names);
+            takeGeneral(player, name);
+        }
     } else {
         msleep(Config.AIDelay);
         takeGeneral(player, name);
     }
-
-    room->sem->acquire();
 }
 
 void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name) {
@@ -148,9 +156,7 @@ void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name) {
     log.arg2 = name;
     room->sendLog(log);
 
-    room->broadcastInvoke("takeGeneral", QString("%1:%2").arg(group).arg(name));
-
-    room->sem->release();
+    room->doBroadcastNotify(S_COMMAND_TAKE_GENERAL, toJsonArray(group, name));
 }
 
 void RoomThread3v3::startArrange(ServerPlayer *player) {
@@ -158,7 +164,16 @@ void RoomThread3v3::startArrange(ServerPlayer *player) {
         GeneralSelector *selector = GeneralSelector::getInstance();
         arrange(player, selector->arrange3v3(player));
     } else {
-        player->invoke("startArrange");
+        bool success = room->doRequest(player, S_COMMAND_ARRANGE_GENERAL, Json::Value::null, true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isArray() && clientReply.size() == 3) {
+            QStringList arranged;
+            tryParse(clientReply, arranged);
+            arrange(player, arranged);
+        } else {
+            GeneralSelector *selector = GeneralSelector::getInstance();
+            arrange(player, selector->arrange3v3(player));
+        }
     }
 }
 
@@ -180,8 +195,6 @@ void RoomThread3v3::arrange(ServerPlayer *player, const QStringList &arranged) {
         room->setTag(room->m_players.at(3)->objectName(), QStringList(arranged.at(1)));
         room->setTag(room->m_players.at(4)->objectName(), QStringList(arranged.at(2)));
     }
-
-    room->sem->release();
 }
 
 void RoomThread3v3::assignRoles(const QStringList &roles, const QString &scheme) {

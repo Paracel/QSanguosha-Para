@@ -3,8 +3,12 @@
 #include "engine.h"
 #include "settings.h"
 #include "generalselector.h"
+#include "jsonutils.h"
 
 #include <QDateTime>
+
+using namespace QSanProtocol;
+using namespace QSanProtocol::Utils;
 
 RoomThread1v1::RoomThread1v1(Room *room)
     : room(room)
@@ -25,9 +29,7 @@ void RoomThread1v1::run() {
     for (int i = 0; i < 4; i++)
         general_names[i + 6] = QString("x%1").arg(QString::number(i));
 
-    QString unknown_str = "+x0+x1+x2+x3";
-
-    room->broadcastInvoke("fillGenerals", known_list.join("+") + unknown_str);
+    room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(known_list << "x0" << "x1" << "x2" << "x3"));
 
     ServerPlayer *first = room->getPlayers().at(0), *next = room->getPlayers().at(1);
     askForTakeGeneral(first);
@@ -43,56 +45,62 @@ void RoomThread1v1::run() {
 
     startArrange(first);
     startArrange(next);
-
-    room->sem->acquire(2);
 }
 
 void RoomThread1v1::askForTakeGeneral(ServerPlayer *player) {
     QString name;
     if (general_names.length() == 1)
         name = general_names.first();
-    else if (player->getState() != "online") {
-        GeneralSelector *selector = GeneralSelector::getInstance();
-        name = selector->select1v1(general_names);
-    }
+    else if (player->getState() != "online")
+        name = GeneralSelector::getInstance()->select1v1(general_names);
 
     if (name.isNull()) {
-        player->invoke("askForGeneral1v1");
+        bool success = room->doRequest(player, S_COMMAND_ASK_GENERAL, Json::Value::null, true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isString()) {
+            name = toQString(clientReply.asCString());
+            takeGeneral(player, name);
+        } else {
+            GeneralSelector *selector = GeneralSelector::getInstance();
+            name = selector->select1v1(general_names);
+            takeGeneral(player, name);
+        }
+        //player->invoke("askForGeneral1v1");
     } else {
         msleep(Config.AIDelay);
         takeGeneral(player, name);
     }
-
-    room->sem->acquire();
 }
 
 void RoomThread1v1::takeGeneral(ServerPlayer *player, const QString &name) {
     QString group = player->isLord() ? "warm" : "cool";
-    room->broadcastInvoke("takeGeneral", QString("%1:%2").arg(group).arg(name), player);
+    room->doBroadcastNotify(room->getOtherPlayers(player, true), S_COMMAND_TAKE_GENERAL, toJsonArray(group, name));
 
     QRegExp unknown_rx("x(\\d)");
     QString general_name = name;
     if (unknown_rx.exactMatch(name)) {
         int index = unknown_rx.capturedTexts().at(1).toInt();
         general_name = unknown_list.at(index);
-        player->invoke("recoverGeneral", QString("%1:%2").arg(index).arg(general_name));
+
+        Json::Value arg(Json::arrayValue);
+        arg[0] = index;
+        arg[1] = toJsonString(general_name);
+        room->doNotify(player, S_COMMAND_RECOVER_GENERAL, arg);
     }
 
+    room->doNotify(player, S_COMMAND_TAKE_GENERAL, toJsonArray(group, general_name));
+
     QString namearg = unknown_rx.exactMatch(name) ? "anjiang" : name;
-    foreach (ServerPlayer *p ,room->getPlayers()) {
+    foreach (ServerPlayer *p, room->getPlayers()) {
         LogMessage log;
         log.type = "#VsTakeGeneral";
         log.arg = group;
         log.arg2 = (p == player) ? general_name : namearg;
-        room->doNotify(p, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        room->doNotify(p, S_COMMAND_LOG_SKILL, log.toJsonValue());
     }
-
-    player->invoke("takeGeneral", QString("%1:%2").arg(group).arg(general_name));
 
     general_names.removeOne(name);
     player->addToSelected(general_name);
-
-    room->sem->release();
 }
 
 void RoomThread1v1::startArrange(ServerPlayer *player) {
@@ -100,7 +108,17 @@ void RoomThread1v1::startArrange(ServerPlayer *player) {
         GeneralSelector *selector = GeneralSelector::getInstance();
         arrange(player, selector->arrange1v1(player));
     } else {
-        player->invoke("startArrange");
+        bool success = room->doRequest(player, S_COMMAND_ARRANGE_GENERAL, Json::Value::null, true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isArray() && clientReply.size() == 3) {
+            QStringList arranged;
+            tryParse(clientReply, arranged);
+            arrange(player, arranged);
+        } else {
+            GeneralSelector *selector = GeneralSelector::getInstance();
+            arrange(player, selector->arrange1v1(player));
+        }
+        //player->invoke("startArrange");
     }
 }
 
@@ -112,8 +130,6 @@ void RoomThread1v1::arrange(ServerPlayer *player, const QStringList &arranged) {
     player->setGeneralName(arranged.first());
 
     foreach (QString general, arranged)
-        player->invoke("revealGeneral", QString("%1:%2").arg(player->objectName()).arg(general));
-
-    room->sem->release();
+        room->doNotify(player, S_COMMAND_REVEAL_GENERAL, toJsonArray(player->objectName(), general));
 }
 

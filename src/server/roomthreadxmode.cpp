@@ -3,8 +3,12 @@
 #include "engine.h"
 #include "settings.h"
 #include "generalselector.h"
+#include "jsonutils.h"
 
 #include <QDateTime>
+
+using namespace QSanProtocol;
+using namespace QSanProtocol::Utils;
 
 RoomThreadXMode::RoomThreadXMode(Room *room)
     :room(room)
@@ -56,7 +60,6 @@ void RoomThreadXMode::run() {
         }
         startArrange(p, names);
     }
-    room->sem->acquire(6);
 
     QStringList warm_backup, cool_backup;
     foreach (ServerPlayer *player, room->m_players) {
@@ -71,8 +74,6 @@ void RoomThreadXMode::run() {
     }
     startArrange(warm_leader, warm_backup);
     startArrange(cool_leader, cool_backup);
-
-    room->sem->acquire(2);
 }
 
 void RoomThreadXMode::startArrange(ServerPlayer *player, const QStringList &to_arrange) {
@@ -81,25 +82,33 @@ void RoomThreadXMode::startArrange(ServerPlayer *player, const QStringList &to_a
         QStringList arranged = to_arrange.mid(0, 3);
         arrange(player, arranged);
     } else {
-        player->invoke("startArrange", to_arrange.join("+"));
+        bool success = room->doRequest(player, S_COMMAND_ARRANGE_GENERAL, toJsonArray(to_arrange), true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isArray() && clientReply.size() == 3) {
+            QStringList arranged;
+            tryParse(clientReply, arranged);
+            arrange(player, arranged);
+        } else {
+            QStringList arranged = to_arrange.mid(0, 3);
+            arrange(player, arranged);
+        }
+        //player->invoke("startArrange", to_arrange.join("+"));
     }
 }
 
 void RoomThreadXMode::arrange(ServerPlayer *player, const QStringList &arranged) {
     Q_ASSERT(arranged.length() == 3);
 
-    if (!player->hasFlag("XModeGeneralSelected")) {
+    if (!player->hasFlag("GlobalFlag_XModeGeneralSelected")) {
         QStringList left = arranged.mid(1, 2);
         player->tag["XModeBackup"] = QVariant::fromValue(left);
         player->setGeneralName(arranged.first());
-        player->setFlags("XModeGeneralSelected");
+        player->setFlags("GlobalFlag_XModeGeneralSelected");
     } else {
-        player->setFlags("-XModeGeneralSelected");
+        player->setFlags("-GlobalFlag_XModeGeneralSelected");
         QStringList backup = arranged;
         player->tag["XModeBackup"] = QVariant::fromValue(backup);
     }
-
-    room->sem->release();
 }
 
 void RoomThreadXMode::assignRoles(const QStringList &roles, const QString &scheme) {

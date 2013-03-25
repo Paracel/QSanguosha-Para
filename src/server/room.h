@@ -402,7 +402,6 @@ private:
     RoomThread3v3 *thread_3v3;
     RoomThreadXMode *thread_xmode;
     RoomThread1v1 *thread_1v1;
-    QSemaphore *sem; // Legacy semaphore, expected to be reomved after new synchronization is fully deployed.
     QSemaphore _m_semRaceRequest; // When race starts, server waits on his semaphore for the first replier
     QSemaphore _m_semRoomMutex; // Provide per-room  (rather than per-player) level protection of any shared variables
 
@@ -440,8 +439,6 @@ private:
     AI *cloneAI(ServerPlayer *player);
     void broadcast(const QString &message, ServerPlayer *except = NULL);
     void initCallbacks();
-    void arrangeCommand(ServerPlayer *player, const QString &arg);
-    void takeGeneralCommand(ServerPlayer *player, const QString &arg);
     QString askForOrder(ServerPlayer *player);
     QString askForRole(ServerPlayer *player, const QStringList &roles, const QString &scheme);
 

@@ -124,7 +124,6 @@ public:
     void setNullification(const Json::Value &str);
     void enableSurrender(const Json::Value &enabled);
     void exchangeKnownCards(const Json::Value &players);
-    void setScreenName(const QString &set_str);
     void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const Json::Value &state_str);
     void setCardFlag(const Json::Value &pattern_str);
@@ -164,13 +163,13 @@ public:
     void askForDirection(const Json::Value &);    
 
     // 3v3 & 1v1 methods
-    void fillGenerals(const QString &generals);
-    void askForGeneral3v3(const QString &);
-    void takeGeneral(const QString &take_str);
-    void startArrange(const QString &to_arrange);
+    void fillGenerals(const Json::Value &generals);
+    void askForGeneral3v3(const Json::Value &);
+    void takeGeneral(const Json::Value &take_str);
+    void startArrange(const Json::Value &to_arrange);
     
-    void recoverGeneral(const QString &);
-    void revealGeneral(const QString &);
+    void recoverGeneral(const Json::Value &);
+    void revealGeneral(const Json::Value &);
 
     void attachSkill(const Json::Value &skill);
     

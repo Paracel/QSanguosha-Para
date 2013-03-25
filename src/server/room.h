@@ -326,7 +326,6 @@ public:
     void toggleReadyCommand(ServerPlayer *player, const QString &);
     void speakCommand(ServerPlayer *player, const QString &arg);
     void trustCommand(ServerPlayer *player, const QString &arg);
-    void kickCommand(ServerPlayer *player, const QString &arg);
     void processResponse(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *arg);
     void addRobotCommand(ServerPlayer *player, const QString &arg);
     void fillRobotsCommand(ServerPlayer *player, const QString &arg);

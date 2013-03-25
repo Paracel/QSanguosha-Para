@@ -3679,31 +3679,6 @@ void RoomScene::showServerInformation() {
     dialog->show();
 }
 
-void RoomScene::kick() {
-    if (Self->getRole() != "lord") {
-        QMessageBox::warning(main_window, tr("Warning"), tr("Only the lord can kick!"));
-        return;
-    }
-
-    QStringList items;
-    QList<const ClientPlayer *> players = ClientInstance->getPlayers();
-    if (players.isEmpty())
-        return;
-
-    foreach (const ClientPlayer *player, players) {
-        QString general_name = Sanguosha->translate(player->getGeneralName());
-        items << QString("%1 [%2]").arg(player->screenName()).arg(general_name);
-    }
-
-    bool ok;
-    QString item = QInputDialog::getItem(main_window, tr("Kick"),
-                                         tr("Please select the player to kick"), items, 0, false, &ok);
-    if (ok) {
-        int index = items.indexOf(item);
-        ClientInstance->kick(players.at(index)->objectName());
-    }
-}
-
 void RoomScene::surrender() {
     if (Self->getPhase() != Player::Play) {
         QMessageBox::warning(main_window, tr("Warning"), tr("You can only initiate a surrender poll at your play phase!"));

@@ -51,7 +51,6 @@
     <addaction name="actionView_distance"/>
     <addaction name="actionServerInformation"/>
     <addaction name="actionSurrender"/>
-    <addaction name="actionKick"/>
     <addaction name="actionSaveRecord"/>
    </widget>
    <widget class="QMenu" name="menuHelp">

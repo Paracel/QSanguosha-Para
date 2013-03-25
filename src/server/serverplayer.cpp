@@ -455,11 +455,6 @@ bool ServerPlayer::hasNullification() const{
     return false;
 }
 
-void ServerPlayer::kick() {
-    if (socket)
-        socket->disconnectFromHost();
-}
-
 bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Card *card1) {
     LogMessage log;
     log.type = "#Pindian";

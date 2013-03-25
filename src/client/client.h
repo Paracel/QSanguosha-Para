@@ -76,7 +76,6 @@ public:
     QList<const ClientPlayer *> getPlayers() const;
     void speakToServer(const QString &text);
     ClientPlayer *getPlayer(const QString &name);
-    void kick(const QString &to_kick);
     bool save(const QString &filename) const;
     QList<QString> getRecords() const;
     QString getReplayPath() const;

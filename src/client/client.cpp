@@ -1006,10 +1006,6 @@ ClientPlayer *Client::getPlayer(const QString &name) {
         return findChild<ClientPlayer *>(name);
 }
 
-void Client::kick(const QString &to_kick) {
-    request("kick " + to_kick);
-}
-
 bool Client::save(const QString &filename) const{
     if (recorder)
         return recorder->save(filename);

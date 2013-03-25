@@ -75,7 +75,6 @@ void Room::initCallbacks() {
 
     callbacks["speakCommand"] = &Room::speakCommand;
     callbacks["trustCommand"] = &Room::trustCommand;
-    callbacks["kickCommand"] = &Room::kickCommand;
 
     //Client request
     callbacks["networkDelayTestCommand"] = &Room::networkDelayTestCommand;
@@ -4367,18 +4366,6 @@ QString Room::askForGeneral(ServerPlayer *player, const QStringList &generals, Q
 
 QString Room::askForGeneral(ServerPlayer *player, const QString &generals, QString default_choice) {
     return askForGeneral(player, generals.split("+"), default_choice); // For Lua only!!!
-}
-
-void Room::kickCommand(ServerPlayer *player, const QString &arg) {
-    // only the lord can kick others
-    if (player != getLord())
-        return;
-
-    ServerPlayer *to_kick = findChild<ServerPlayer *>(arg);
-    if (to_kick == NULL)
-        return;
-
-    to_kick->kick();
 }
 
 bool Room::makeCheat(ServerPlayer *player) {

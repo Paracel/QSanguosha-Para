@@ -190,14 +190,6 @@
     <string>Server information</string>
    </property>
   </action>
-  <action name="actionKick">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Kick</string>
-   </property>
-  </action>
   <action name="actionReplay">
    <property name="text">
     <string>Replay</string>

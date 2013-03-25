@@ -125,6 +125,10 @@ public:
     Duoshi(): OneCardViewAsSkill("duoshi") {
     }
 
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return player->usedTimes("DuoshiCard") < 4;
+    }
+
     virtual bool viewFilter(const Card *to_select) const{
         return to_select->isRed() && !to_select->isEquipped() && !Self->isJilei(to_select);
     }

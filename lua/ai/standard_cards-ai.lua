@@ -2281,26 +2281,36 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	end
 	if (not friendNeedPeach and peach) or peachnum > 1 then return peach end
 
-	local exnihilo, jink, analeptic, nullification
+	local exnihilo, jink, analeptic, nullification, snatch, dismantlement
 	for _, card in ipairs(cards) do
 		if card:isKindOf("ExNihilo") then
 			if not nextPlayerCanUse or (not self:willSkipPlayPhase() and (self:hasSkills("jizhi|zhiheng|rende") or not self:hasSkills("jizhi|zhiheng", nextp))) then
 				exnihilo = card:getEffectiveId()
 			end
-		end
-		if card:isKindOf("Jink") then
+		elseif card:isKindOf("Jink") then
 			jink = card:getEffectiveId()
-		end
-		if card:isKindOf("Analeptic") then
+		elseif card:isKindOf("Analeptic") then
 			analeptic = card:getEffectiveId()
-		end
-		if card:isKindOf("Nullification") then
+		elseif card:isKindOf("Nullification") then
 			nullification = card:getEffectiveId()
+		elseif card:isKindOf("Snatch") then
+			snatch = card
+		elseif card:isKindOf("Dismantlement") then
+			dismantlement = card
 		end
 	end
 
-	for _, friend in ipairs(self.friends) do
-		if self:willSkipPlayPhase(friend) or self:willSkipDrawPhase(friend) then return nullification end
+	for _, target in sgs.qlist(self.room:getAlivePlayers()) do
+		if self:willSkipPlayPhase(target) or self:willSkipDrawPhase(target) then
+			if nullification then return nullification
+			elseif self:isFriend(target) and snatch and self:hasTrickEffective(snatch, target, self.player)
+					and not self:willSkipPlayPhase() and self.player:distanceTo(target) == 1 then
+				return snatch:getEffectiveId()
+			elseif self:isFriend(target) and dismantlement and self:hasTrickEffective(dismantlement, target, self.player)
+					and not self:willSkipPlayPhase() and self.player:objectName() ~= target:objectName() then
+				return dismantlement:getEffectiveId()
+			end
+		end
 	end
 
 	if selfIsCurrent then
@@ -2309,7 +2319,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			return jink or analeptic
 		end
 	else
-		local enemy_num = self:playerGetRound(self.player, self.room:getCurrent(), 1)
+		local enemy_num = self:playerGetRound(self.room:getCurrent(), self.player)
 		local InAttackRange = 0
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:inMyAttackRange(self.player) then

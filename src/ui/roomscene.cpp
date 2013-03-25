@@ -2173,6 +2173,13 @@ void RoomScene::doTimeout() {
             ok_button->click();
             break;
         }
+    case Client::AskForGeneralTaken: {
+            break;
+        }
+    case Client::AskForArrangement: {
+            arrange_items << down_generals.mid(0, 3 - arrange_items.length());
+            finishArrange();
+        }
     default:
             break;
     }
@@ -2392,6 +2399,14 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         }
     case Client::AskForGongxin: {
             ok_button->setEnabled(true);
+            cancel_button->setEnabled(false);
+            discard_button->setEnabled(false);
+
+            break;
+        }
+    case Client::AskForGeneralTaken:
+    case Client::AskForArrangement: {
+            ok_button->setEnabled(false);
             cancel_button->setEnabled(false);
             discard_button->setEnabled(false);
 
@@ -3704,6 +3719,7 @@ void RoomScene::surrender() {
 void RoomScene::fillGenerals1v1(const QStringList &names) {
     selector_box = new QSanSelectableItem("image/system/1v1/select.png", true);
     selector_box->setPos(m_tableCenterPos);
+    selector_box->setFlag(QGraphicsItem::ItemIsMovable);
     addItem(selector_box);
     selector_box->setZValue(10000);
 
@@ -3749,6 +3765,7 @@ void RoomScene::fillGenerals3v3(const QStringList &names) {
 
     QString path = QString("image/system/3v3/select-%1.png").arg(temperature);
     selector_box = new QSanSelectableItem(path, true);
+    selector_box->setFlag(QGraphicsItem::ItemIsMovable);
     addItem(selector_box);
     selector_box->setZValue(10000);
     selector_box->setPos(m_tableCenterPos);
@@ -3867,6 +3884,7 @@ void RoomScene::selectGeneral() {
             item->setFlag(QGraphicsItem::ItemIsFocusable, false);
             item->disconnect(this);
         }
+        ClientInstance->setStatus(Client::NotActive);
     }
 }
 
@@ -3915,11 +3933,14 @@ void RoomScene::startArrange(const QString &to_arrange) {
             positions << QPointF(173, 335) << QPointF(303, 335) << QPointF(433, 335);
         QString path = QString("image/system/XMode/arrange%1.png").arg((arrangeList.length() == 5) ? 1 : 2);
         selector_box = new QSanSelectableItem(path, true);
+        selector_box->setFlag(QGraphicsItem::ItemIsMovable);
         selector_box->setPos(m_tableCenterPos);
         addItem(selector_box);
         selector_box->setZValue(10000);
-    } else
+    } else {
         selector_box->load(QString("image/system/%1/arrange.png").arg(mode));
+        selector_box->setPos(m_tableCenterPos);
+    }
 
     if (ServerInfo.GameMode == "06_XMode") {
         Q_ASSERT(!to_arrange.isNull());
@@ -4028,6 +4049,7 @@ void RoomScene::finishArrange() {
     arrange_rects.clear();
 
     ClientInstance->replyToServer(S_COMMAND_ARRANGE_GENERAL, Utils::toJsonArray(names));
+    ClientInstance->setStatus(Client::NotActive);
 }
 
 static inline void AddRoleIcon(QMap<QChar, QPixmap> &map, char c, const QString &role) {

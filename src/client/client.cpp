@@ -289,7 +289,7 @@ void Client::processServerPacket(const char *cmd) {
 }
 
 bool Client::processServerRequest(const QSanGeneralPacket &packet) {
-    setStatus(Client::NotActive);
+    setStatus(NotActive);
     _m_lastServerSerial = packet.m_globalSerial;
     CommandType command = packet.getCommandType();
     Json::Value msg = packet.getMessageBody();    
@@ -1700,6 +1700,7 @@ void Client::fillGenerals(const Json::Value &generals) {
 
 void Client::askForGeneral3v3(const Json::Value &) {
     emit general_asked();
+    setStatus(AskForGeneralTaken);
 }
 
 void Client::takeGeneral(const Json::Value &take_str) {
@@ -1719,6 +1720,7 @@ void Client::startArrange(const Json::Value &to_arrange) {
         tryParse(to_arrange, arrangelist);
         emit arrange_started(arrangelist.join("+"));
     }
+    setStatus(AskForArrangement);
 }
 
 void Client::onPlayerChooseRole3v3() {

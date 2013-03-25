@@ -34,6 +34,8 @@ public:
         AskForGuanxing = 0x0A,
         AskForGongxin = 0x0B,
         AskForShowOrPindian = 0x0C,
+        AskForGeneralTaken = 0x0D,
+        AskForArrangement = 0x0E,
 
         RespondingUse = 0x11,
         RespondingForDiscard = 0x21,

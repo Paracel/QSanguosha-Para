@@ -4322,6 +4322,7 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
             QVariant decisionData = QVariant::fromValue("skillInvoke:" + skillName + ":yes");
             thread->trigger(ChoiceMade, this, player, decisionData);
 
+            broadcastInvoke("animate", QString("indicate:%1:%2").arg(player->objectName()).arg(choice->objectName()));
             LogMessage log;
             log.type = "#ChoosePlayerWithSkill";
             log.from = player;

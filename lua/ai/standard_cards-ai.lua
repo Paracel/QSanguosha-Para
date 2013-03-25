@@ -1583,8 +1583,9 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local hasLion, target
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
-			if self:getDangerousCard(enemy) then
-				addTarget(enemy, self:getDangerousCard(enemy))
+			local dangerous = self:getDangerousCard(enemy)
+			if dangerous then
+				addTarget(enemy, dangerous)
 			end
 		end
 	end
@@ -1625,8 +1626,9 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
-			if self:getValuableCard(enemy) then
-				addTarget(enemy, self:getValuableCard(enemy))
+			local valuable = self:getValuableCard(enemy)
+			if valuable then
+				addTarget(enemy, valuable)
 			end
 		end
 	end
@@ -1686,9 +1688,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					cardchosen = self:getCardRandomly(enemy, "h")
 				end
 
-				if cardchosen then
-					addTarget(enemy, cardchosen)
-				end
+				if cardchosen then addTarget(enemy, cardchosen) end
 			end
 		end
 	end
@@ -1712,15 +1712,18 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					else
 						cardchosen = self:getCardRandomly(enemy, "h")
 					end
-					addTarget(enemy, cardchosen)
+					if cardchosen then addTarget(enemy, cardchosen) end
 				end
 			end
 		end
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and self:getValuableCard(enemy) and (self:hasTrickEffective(card, enemy) or isYinling) then
-			addTarget(enemy, self:getValuableCard(enemy))
+		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
+			local valuable = self:getValuableCard(enemy)
+			if valuable then
+				addTarget(enemy, valuable)
+			end
 		end
 	end
 
@@ -1750,7 +1753,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			elseif enemy:getWeapon() then
 				cardchosen = enemy:getWeapon():getEffectiveId()
 			end
-			addTarget(enemy, cardchosen)
+			if cardchosen then addTarget(enemy, cardchosen) end
 		end
 	end
 
@@ -1763,7 +1766,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 					cardchosen = self:getCardRandomly(enemy, "e")
 				else
 					cardchosen = self:getCardRandomly(enemy, "h") end
-				addTarget(enemy, cardchosen)
+				if cardchosen then addTarget(enemy, cardchosen) end
 			end
 		end
 	end

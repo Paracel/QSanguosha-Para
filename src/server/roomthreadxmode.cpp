@@ -92,7 +92,6 @@ void RoomThreadXMode::startArrange(ServerPlayer *player, const QStringList &to_a
             QStringList arranged = to_arrange.mid(0, 3);
             arrange(player, arranged);
         }
-        //player->invoke("startArrange", to_arrange.join("+"));
     }
 }
 

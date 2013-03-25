@@ -2992,8 +2992,8 @@ function SmartAI:askForYiji(card_ids, reason)
 	if reason then
 		local callback = sgs.ai_skill_askforyiji[string.gsub(reason, "%-", "_")]
 		if type(callback) == "function" then
-			local cardid, target = callback(self, card_ids)
-			if cardid or target then return cardid, target end
+			local target, cardid = callback(self, card_ids)
+			if target and cardid then return target, cardid end
 		end
 	end
 	return nil, -1

@@ -118,7 +118,6 @@ void RoomThread1v1::startArrange(ServerPlayer *player) {
             GeneralSelector *selector = GeneralSelector::getInstance();
             arrange(player, selector->arrange1v1(player));
         }
-        //player->invoke("startArrange");
     }
 }
 

@@ -1087,7 +1087,7 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 	end
 	if handang and self:isFriend(handang) and dying > 0 then return false end
 	if self.player:hasFlag("dahe") then return false end
-	if sgs.hujiasource and not self:isFriend(sgs.hujiasource) then return false end
+	if sgs.hujiasource and (not self:isFriend(sgs.hujiasource) or sgs.hujiasource:hasFlag("dahe")) then return false end
 	if self.player:hasSkill("tiandu") then return true end
 	local zhangjiao = self.room:findPlayerBySkillName("guidao")
 	if zhangjiao and self:isEnemy(zhangjiao) and self:getFinalRetrial(zhangjiao) == 2 and getKnownCard(zhangjiao, "black", false, "he") > 0 then

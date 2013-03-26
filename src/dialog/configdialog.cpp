@@ -28,14 +28,11 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     ui->enableBgMusicCheckBox->setChecked(Config.EnableBgMusic);
     ui->noIndicatorCheckBox->setChecked(Config.value("NoIndicator", false).toBool());
     ui->noEquipAnimCheckBox->setChecked(Config.value("NoEquipAnim", false).toBool());
-    ui->minimizecCheckBox->setChecked(Config.value("EnableMinimizeDialog", false).toBool());
 
     ui->bgmVolumeSlider->setValue(100 * Config.BGMVolume);
     ui->effectVolumeSlider->setValue(100 * Config.EffectVolume);
 
     // tab 2
-    ui->nullificationSpinBox->setValue(Config.NullificationCountDown);
-    ui->gameStartSpinBox->setValue(Config.CountDownSeconds);
     ui->neverNullifyMyTrickCheckBox->setChecked(Config.NeverNullifyMyTrick);
     ui->autoTargetCheckBox->setChecked(Config.EnableAutoTarget);
     ui->intellectualSelectionCheckBox->setChecked(Config.EnableIntellectualSelection);
@@ -92,14 +89,6 @@ void ConfigDialog::on_resetBgButton_clicked() {
 }
 
 void ConfigDialog::saveConfig() {
-    int count_down = ui->nullificationSpinBox->value();
-    Config.NullificationCountDown = count_down;
-    Config.setValue("NullificationCountDown", count_down);
-
-    int gs_count_down = ui->gameStartSpinBox->value();
-    Config.CountDownSeconds = gs_count_down;
-    Config.setValue("CountDownSeconds", gs_count_down);
-
     float volume = ui->bgmVolumeSlider->value() / 100.0;
     Config.BGMVolume = volume;
     Config.setValue("BGMVolume", volume);
@@ -130,9 +119,6 @@ void ConfigDialog::saveConfig() {
 
     Config.EnableIntellectualSelection = ui->intellectualSelectionCheckBox->isChecked();
     Config.setValue("EnableIntellectualSelection", Config.EnableIntellectualSelection);
-
-    Config.EnableMinimizeDialog = ui->minimizecCheckBox->isChecked();
-    Config.setValue("EnableMinimizeDialog", Config.EnableMinimizeDialog);
 }
 
 void ConfigDialog::on_browseBgMusicButton_clicked() {

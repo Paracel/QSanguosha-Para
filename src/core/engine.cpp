@@ -549,6 +549,7 @@ QString Engine::getSetupString() const{
     setup_items << server_name
                 << Config.GameMode
                 << QString::number(timeout)
+                << QString::number(Config.NullificationCountDown)
                 << Sanguosha->getBanPackages().join("+")
                 << flags;
 

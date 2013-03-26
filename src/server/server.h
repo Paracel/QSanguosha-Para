@@ -79,7 +79,7 @@ private:
     QWidget *createBasicTab();
     QWidget *createPackageTab();
     QWidget *createAdvancedTab();
-    QWidget *createAITab();
+    QWidget *createMiscTab();
     QLayout *createButtonLayout();
 
     QGroupBox *createGameModeBox();
@@ -122,6 +122,9 @@ private:
     QPushButton *mini_scene_button;
     QLineEdit *address_edit;
     QLineEdit *port_edit;
+    QSpinBox *game_start_spinbox;
+    QSpinBox *nullification_spinbox;
+    QCheckBox *minimize_dialog_checkbox;
     QCheckBox *ai_enable_checkbox;
     QCheckBox *role_predictable_checkbox;
     QCheckBox *ai_chat_checkbox;

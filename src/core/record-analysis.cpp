@@ -55,21 +55,21 @@ void RecAnalysis::initialize(QString dir) {
         }
 
         if (line.contains("setup")) {
-            QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)(\\s+)?");
+            QRegExp rx("(.*):(@?\\w+):(\\d+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)(\\s+)?");
             if (!rx.exactMatch(line))
                 continue;
 
             QStringList texts = rx.capturedTexts();
             m_recordGameMode = texts.at(2);
             m_recordPlayers = texts.at(2).split("_").first().remove(QRegExp("[^0-9]")).toInt();
-            QStringList ban_packages = texts.at(4).split("+");
+            QStringList ban_packages = texts.at(5).split("+");
             foreach (Package *package, Sanguosha->findChildren<Package *>()) {
                 if (!ban_packages.contains(package->objectName())
                    && Sanguosha->getScenario(package->objectName()) == NULL)
                     m_recordPackages << Sanguosha->translate(package->objectName());
             }
 
-            QString flags = texts.at(5);
+            QString flags = texts.at(6);
             if (flags.contains("R")) m_recordServerOptions << tr("RandomSeats");
             if (flags.contains("C")) m_recordServerOptions << tr("EnableCheat");
             if (flags.contains("F")) m_recordServerOptions << tr("FreeChoose");

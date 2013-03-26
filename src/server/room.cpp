@@ -894,6 +894,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     }
 
     broadcastInvoke("animate", QString("nullification:%1:%2").arg(repliedPlayer->objectName()).arg(to->objectName()));
+    thread->delay(500);
 
     CardUseStruct use;
     use.card = card;

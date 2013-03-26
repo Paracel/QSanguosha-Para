@@ -15,21 +15,23 @@ time_t ServerInfoStruct::getCommandTimeout(QSanProtocol::CommandType command, QS
     if (OperationTimeout == 0)
         return 0;
     else if (command == QSanProtocol::S_COMMAND_CHOOSE_GENERAL
-             || command == QSanProtocol::S_COMMAND_ASK_GENERAL) {
-        timeOut = Config.S_CHOOSE_GENERAL_TIMEOUT * 1000;
-    } else if (command == QSanProtocol::S_COMMAND_SKILL_GUANXING
-               || command == QSanProtocol::S_COMMAND_ARRANGE_GENERAL) {
-        timeOut = Config.S_GUANXING_TIMEOUT * 1000;
-    } else {
+             || command == QSanProtocol::S_COMMAND_ASK_GENERAL)
+        timeOut = OperationTimeout * 1500;
+    else if (command == QSanProtocol::S_COMMAND_SKILL_GUANXING
+             || command == QSanProtocol::S_COMMAND_ARRANGE_GENERAL)
+        timeOut = OperationTimeout * 2000;
+    else if (command == QSanProtocol::S_COMMAND_NULLIFICATION)
+        timeOut = NullificationCountDown * 1000;
+    else
         timeOut = OperationTimeout * 1000;
-    }
+
     if (instance == QSanProtocol::S_SERVER_INSTANCE)
         timeOut += Config.S_SERVER_TIMEOUT_GRACIOUS_PERIOD;
     return timeOut;
 }
 
 bool ServerInfoStruct::parse(const QString &str) {
-    QRegExp rx("(.*):(@?\\w+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)");
+    QRegExp rx("(.*):(@?\\w+):(\\d+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)");
     if (!rx.exactMatch(str)) {
         // older version, just take the player count
         int count = str.split(":").at(1).toInt();
@@ -48,8 +50,9 @@ bool ServerInfoStruct::parse(const QString &str) {
 
         GameMode = texts.at(2);
         OperationTimeout = texts.at(3).toInt();
+        NullificationCountDown = texts.at(4).toInt();
 
-        QStringList ban_packages = texts.at(4).split("+");
+        QStringList ban_packages = texts.at(5).split("+");
         QList<const Package *> packages = Sanguosha->findChildren<const Package *>();
         foreach (const Package *package, packages) {
             if (package->inherits("Scenario"))
@@ -62,7 +65,7 @@ bool ServerInfoStruct::parse(const QString &str) {
             Extensions << package_name;
         }
 
-        QString flags = texts.at(5);
+        QString flags = texts.at(6);
 
         RandomSeat = flags.contains("R");
         EnableCheat = flags.contains("C");

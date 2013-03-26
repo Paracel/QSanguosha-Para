@@ -40,7 +40,7 @@ ServerDialog::ServerDialog(QWidget *parent)
     tab_widget->addTab(createBasicTab(), tr("Basic"));
     tab_widget->addTab(createPackageTab(), tr("Game Pacakge Selection"));
     tab_widget->addTab(createAdvancedTab(), tr("Advanced"));
-    tab_widget->addTab(createAITab(), tr("Artificial intelligence"));
+    tab_widget->addTab(createMiscTab(), tr("Miscellaneous"));
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(tab_widget);
@@ -353,7 +353,23 @@ QWidget *ServerDialog::createAdvancedTab() {
     return widget;
 }
 
-QWidget *ServerDialog::createAITab() {
+QWidget *ServerDialog::createMiscTab() {
+    game_start_spinbox = new QSpinBox;
+    game_start_spinbox->setRange(0, 10);
+    game_start_spinbox->setValue(Config.CountDownSeconds);
+    game_start_spinbox->setSuffix(tr(" seconds"));
+
+    nullification_spinbox = new QSpinBox;
+    nullification_spinbox->setRange(5, 15);
+    nullification_spinbox->setValue(Config.NullificationCountDown);
+    nullification_spinbox->setSuffix(tr(" seconds"));
+
+    minimize_dialog_checkbox = new QCheckBox(tr("Minimize the dialog when server runs"));
+    minimize_dialog_checkbox->setChecked(Config.EnableMinimizeDialog);
+
+    QGroupBox *ai_groupbox = new QGroupBox(tr("Artificial intelligence"));
+    ai_groupbox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
     QVBoxLayout *layout = new QVBoxLayout;
 
     ai_enable_checkbox = new QCheckBox(tr("Enable AI"));
@@ -393,10 +409,18 @@ QWidget *ServerDialog::createAITab() {
     layout->addWidget(ai_delay_altered_checkbox);
     layout->addLayout(HLay(new QLabel(tr("AI delay After Death")), ai_delay_ad_spinbox));
     layout->addWidget(surrender_at_death_checkbox);
-    layout->addStretch();
+
+    ai_groupbox->setLayout(layout);
+
+    QVBoxLayout *tablayout = new QVBoxLayout;
+    tablayout->addLayout(HLay(new QLabel(tr("Game start count down")), game_start_spinbox));
+    tablayout->addLayout(HLay(new QLabel(tr("Nullification count down")), nullification_spinbox));
+    tablayout->addWidget(minimize_dialog_checkbox);
+    tablayout->addWidget(ai_groupbox);
+    tablayout->addStretch();
 
     QWidget *widget = new QWidget;
-    widget->setLayout(layout);
+    widget->setLayout(tablayout);
     return widget;
 }
 
@@ -990,6 +1014,9 @@ bool ServerDialog::config() {
         Config.PreventAwakenBelow3 = prevent_awaken_below3_checkbox->isChecked();
     }
     Config.Address = address_edit->text();
+    Config.CountDownSeconds = game_start_spinbox->value();
+    Config.NullificationCountDown = nullification_spinbox->value();
+    Config.EnableMinimizeDialog = minimize_dialog_checkbox->isChecked();
     Config.EnableAI = ai_enable_checkbox->isChecked();
     Config.OriginAIDelay = ai_delay_spinbox->value();
     Config.AIDelay = Config.OriginAIDelay;
@@ -1036,6 +1063,9 @@ bool ServerDialog::config() {
     Config.setValue("MaxHpScheme", Config.MaxHpScheme);
     Config.setValue("Scheme0Subtraction", Config.Scheme0Subtraction);
     Config.setValue("PreventAwakenBelow3", Config.PreventAwakenBelow3);
+    Config.setValue("CountDownSeconds", game_start_spinbox->value());
+    Config.setValue("NullificationCountDown", nullification_spinbox->value());
+    Config.setValue("EnableMinimizeDialog", Config.EnableMinimizeDialog);
     Config.setValue("EnableAI", Config.EnableAI);
     Config.setValue("RolePredictable", role_predictable_checkbox->isChecked());
     Config.setValue("AIChat", ai_chat_checkbox->isChecked());

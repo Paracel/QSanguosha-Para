@@ -428,10 +428,22 @@ void Player::removeEquip(WrappedCard *equip) {
 
 bool Player::hasEquip(const Card *card) const{
     Q_ASSERT(card != NULL);
-    return weapon == card
-           || armor == card
-           || defensive_horse == card
-           || offensive_horse == card;
+    int weapon_id = -1, armor_id = -1, def_id = -1, off_id = -1;
+    if (weapon) weapon_id = weapon->getEffectiveId();
+    if (armor) armor_id = armor->getEffectiveId();
+    if (defensive_horse) def_id = defensive_horse->getEffectiveId();
+    if (offensive_horse) off_id = offensive_horse->getEffectiveId();
+    QList<int> ids;
+    if (card->isVirtualCard())
+        ids << card->getSubcards();
+    else
+        ids << card->getId();
+    if (ids.isEmpty()) return false;
+    foreach (int id, ids) {
+        if (id != weapon_id && id != armor_id && id != def_id && id != off_id)
+            return false;
+    }
+    return true;
 }
 
 bool Player::hasEquip() const{

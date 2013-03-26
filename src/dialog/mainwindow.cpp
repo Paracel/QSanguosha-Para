@@ -112,14 +112,16 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::restoreFromConfig() {
-    resize(Config.value("WindowSize", QSize(1042, 719)).toSize());
-    move(Config.value("WindowPosition", QPoint(20, 20)).toPoint());
+    resize(Config.value("WindowSize", QSize(1366, 706)).toSize());
+    move(Config.value("WindowPosition", QPoint(-8, -8)).toPoint());
 
     QFont font;
     if (Config.UIFont != font)
         QApplication::setFont(Config.UIFont, "QTextEdit");
 
     ui->actionEnable_Hotkey->setChecked(Config.EnableHotKey);
+    ui->actionNever_nullify_my_trick->setChecked(Config.NeverNullifyMyTrick);
+    ui->actionNever_nullify_my_trick->setEnabled(false);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
@@ -270,6 +272,7 @@ void MainWindow::enterRoom() {
     ui->actionView_distance->setEnabled(true);
     ui->actionServerInformation->setEnabled(true);
     ui->actionSurrender->setEnabled(true);
+    ui->actionNever_nullify_my_trick->setEnabled(true);
     ui->actionSaveRecord->setEnabled(true);
 
     connect(ClientInstance, SIGNAL(surrender_enabled(bool)), ui->actionSurrender, SLOT(setEnabled(bool)));
@@ -366,6 +369,13 @@ void MainWindow::on_actionEnable_Hotkey_toggled(bool checked) {
     if (Config.EnableHotKey != checked) {
         Config.EnableHotKey = checked;
         Config.setValue("EnableHotKey", checked);
+    }
+}
+
+void MainWindow::on_actionNever_nullify_my_trick_toggled(bool checked) {
+    if (Config.NeverNullifyMyTrick != checked) {
+        Config.NeverNullifyMyTrick = checked;
+        Config.setValue("NeverNullifyMyTrick", checked);
     }
 }
 

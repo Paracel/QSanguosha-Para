@@ -230,6 +230,7 @@ end
 
 function SmartAI:slashProhibit(card, enemy, from)
 	card = card or sgs.Sanguosha:cloneCard("slash")
+	from = from or self.player
 	for _, askill in sgs.qlist(enemy:getVisibleSkillList()) do
 		local filter = sgs.ai_slash_prohibit[askill:objectName()]
 		if filter and type(filter) == "function" and filter(self, from, enemy, card) then return true end

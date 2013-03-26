@@ -101,7 +101,8 @@ private slots:
     void on_actionFullscreen_triggered();
     void on_actionReplay_triggered();
     void on_actionAbout_triggered();
-    void on_actionEnable_Hotkey_toggled(bool );
+    void on_actionEnable_Hotkey_toggled(bool);
+    void on_actionNever_nullify_my_trick_toggled(bool);
     void on_actionCard_Overview_triggered();
     void on_actionGeneral_Overview_triggered();
     void on_actionStart_Server_triggered();

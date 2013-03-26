@@ -19,7 +19,7 @@ GameRule::GameRule(QObject *)
 
     events << GameStart << TurnStart
            << EventPhaseProceeding << EventPhaseEnd << EventPhaseChanging
-           << CardUsed << CardFinished << CardEffected << PostCardEffected
+           << PreCardUsed << CardUsed << CardFinished << CardEffected << PostCardEffected
            << PostHpReduced
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
@@ -197,7 +197,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             }
             break;
         }
-    case CardUsed: {
+    case PreCardUsed: {
             if (data.canConvert<CardUseStruct>()) {
                 CardUseStruct card_use = data.value<CardUseStruct>();
                 const Card *card = card_use.card;
@@ -208,11 +208,18 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 if (card_use.from->hasFlag("jijiang_failed"))
                     room->setPlayerFlag(card_use.from, "-jijiang_failed");
 
-                RoomThread *thread = room->getThread();
                 card_use.from->broadcastSkillInvoke(card);
                 if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
                     && card_use.m_isOwnerUse && card_use.from->hasSkill(card->getSkillName()))
                     room->notifySkillInvoked(card_use.from, card->getSkillName());
+            }
+            break;
+        }
+    case CardUsed: {
+            if (data.canConvert<CardUseStruct>()) {
+                CardUseStruct card_use = data.value<CardUseStruct>();
+                const Card *card = card_use.card;
+                RoomThread *thread = room->getThread();
 
                 if (card->hasPreAction())
                     card->doPreAction(room, card_use);

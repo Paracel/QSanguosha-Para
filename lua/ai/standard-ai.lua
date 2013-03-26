@@ -1975,7 +1975,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			if #others >= 1 and not others[1]:isCardLimited(duel, sgs.Card_MethodUse) then
 				table.insert(males, others[1])
 			elseif xunyu and not xunyu:isCardLimited(duel, sgs.Card_MethodUse) then
-				if getCardsNum("Slash", males) < 1 then
+				if getCardsNum("Slash", males[1]) < 1 then
 					table.insert(males, xunyu)
 				else
 					local drawcards = 0

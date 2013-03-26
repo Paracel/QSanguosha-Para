@@ -315,7 +315,7 @@ public:
 class Jiuzhu: public TriggerSkill {
 public:
     Jiuzhu(): TriggerSkill("jiuzhu") {
-        events << Dying;
+        events << AskForPeaches;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -325,7 +325,7 @@ public:
         while (dying.who->getHp() <= 0) {
             if (player->getHp() <= 1 || player->isNude())
                 break;
-            if (room->askForCard(player, ".", "@jiuzhu", data, objectName())) {
+            if (room->askForCard(player, "..", "@jiuzhu", data, objectName())) {
                 room->loseHp(player);
                 room->broadcastSkillInvoke(objectName());
                 RecoverStruct recover;

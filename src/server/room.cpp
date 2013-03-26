@@ -4357,7 +4357,8 @@ QString Room::askForGeneral(ServerPlayer *player, const QStringList &generals, Q
         bool success = doRequest(player, S_COMMAND_CHOOSE_GENERAL, options, true);
 
         Json::Value clientResponse = player->getClientReply();
-        if (!success || !clientResponse.isString() || (!Config.FreeChoose && !generals.contains(clientResponse.asCString())))
+        bool free = Config.FreeChoose || mode.startsWith("_mini_") || mode == "custom_scenario";
+        if (!success || !clientResponse.isString() || (!free && !generals.contains(clientResponse.asCString())))
             return default_choice;
         else
             return toQString(clientResponse);

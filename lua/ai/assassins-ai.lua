@@ -244,7 +244,7 @@ sgs.ai_skill_invoke.fenxin = function(self, data)
 	local target = data:toPlayer()
 	local target_role = sgs.evaluatePlayerRole(target)
 	local self_role = self.player:getRole()
-	if target_role == "renegade" or target_role == "unknown" then return false end
+	if target_role == "renegade" or target_role == "neutral" then return false end
 	local process = sgs.gameProcess(self.room)
 	return (target_role == "rebel" and self.role ~= "rebel" and process:match("rebel"))
 			or (target_role == "loyalist" and self.role ~= "loyalist" and process:match("loyal"))

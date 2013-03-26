@@ -670,7 +670,7 @@ local function findPlayerForModifyKingdom(self, players)
 	for _, player in sgs.qlist(players) do
 		if player:hasSkill("huashen") then
 		elseif lord and not player:isLord() then
-			if sgs.evaluateRoleTrends(player) == "loyalist" then
+			if sgs.evaluatePlayerRole(player) == "loyalist" then
 				local sameKingdom = player:getKingdom() == lord:getKingdom()
 				if isGood ~= sameKingdom then
 					return player
@@ -688,7 +688,7 @@ end
 local function chooseKingdomForPlayer(self, to_modify)
 	local lord = self.room:getLord()
 	local isGood = lord and self:isFriend(lord)
-	if sgs.evaluateRoleTrends(to_modify) == "loyalist" or sgs.evaluateRoleTrends(to_modify) == "renegade" then
+	if sgs.evaluatePlayerRole(to_modify) == "loyalist" or sgs.evaluatePlayerRole(to_modify) == "renegade" then
 		if isGood then
 			return lord:getKingdom()
 		else

@@ -2067,7 +2067,7 @@ function SmartAI:useCardIndulgence(card, use)
 	local enemies = {}
 	if #self.enemies == 0 then
 		if sgs.turncount == 0 and self.role == "lord" and not sgs.isRolePredictable()
-			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 30
+			and sgs.role_evaluation[self.player:getNextAlive():objectName()]["loyalist"] == 0
 			and not (self.player:hasLordSkill("shichou") and self.player:getNextAlive():getKingdom() == "shu") then
 			enemies = self:exclude({ self.player:getNextAlive() }, card)
 		end
@@ -2536,7 +2536,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		new_enemies = self.enemies
 	else
 		for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			if sgs.evaluateRoleTrends(aplayer) == "neutral" then
+			if sgs.evaluatePlayerRole(aplayer) == "neutral" then
 				table.insert(new_enemies, aplayer)
 			end
 		end

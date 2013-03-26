@@ -82,7 +82,7 @@ end
 function sgs.ai_skill_invoke.zhenlie(self, data)
 	local use = data:toCardUse()
 	if not use.from or use.from:isDead() then return false end
-	if self.role == "rebel" and sgs.evaluateRoleTrends(use.from) == "rebel" and self.player:getHp() == 1 and self:getAllPeachNum() < 1 then return false end
+	if self.role == "rebel" and sgs.evaluatePlayerRole(use.from) == "rebel" and self.player:getHp() == 1 and self:getAllPeachNum() < 1 then return false end
 
 	if self:isEnemy(use.from) or (self:isFriend(use.from) and self.role == "loyalist" and use.from:isLord() and self.player:getHp() == 1) then
 		if use.card:isKindOf("Slash") then
@@ -590,7 +590,7 @@ sgs.ai_card_intention.AnxuCard = function(self, card, from, to)
 	sgs.updateIntention(from, less, intention)
 	if kc_enemy then
 		intention = 0
-	elseif sgs.evaluateRoleTrends(more) ~= sgs.evaluateRoleTrends(less) then
+	elseif sgs.evaluatePlayerRole(more) ~= sgs.evaluatePlayerRole(less) then
 		intention = -intention
 	end
 	sgs.updateIntention(from, more, intention)

@@ -873,6 +873,8 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
             AI *ai = player->getAI();
             if (ai == NULL) continue;
             card = ai->askForNullification(aiHelper.m_trick, aiHelper.m_from, aiHelper.m_to, positive);
+            if (player->isCardLimited(card, Card::MethodUse))
+                card = NULL;
             if (card != NULL) {
                 thread->delay();
                 repliedPlayer = player;

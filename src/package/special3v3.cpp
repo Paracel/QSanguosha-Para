@@ -11,17 +11,21 @@ HongyuanCard::HongyuanCard() {
     mute = true;
 }
 
+bool HongyuanCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
+    return targets.length() <= 2 && !targets.contains(Self);
+}
+
 bool HongyuanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     return to_select != Self && targets.length() < 2;
 }
 
 void HongyuanCard::onEffect(const CardEffectStruct &effect) const{
-   effect.to->drawCards(1);
+   effect.to->setFlags("HongyuanTarget");
 }
 
 class HongyuanViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    HongyuanViewAsSkill():ZeroCardViewAsSkill("hongyuan") {
+    HongyuanViewAsSkill(): ZeroCardViewAsSkill("hongyuan") {
     }
 
     virtual const Card *viewAs() const{
@@ -44,26 +48,16 @@ public:
         view_as_skill = new HongyuanViewAsSkill;
     }
 
-    QStringList getTeammateNames(ServerPlayer *zhugejin) const{
-        Room *room = zhugejin->getRoom();
-
-        QStringList names;
-        foreach (ServerPlayer *other, room->getOtherPlayers(zhugejin)) {
-            if (AI::GetRelation3v3(zhugejin, other) == AI::Friend)
-                names << other->getGeneralName();
-        }
-        return names;
-    }
-
     virtual int getDrawNum(ServerPlayer *zhugejin, int n) const{
-        Room *room = zhugejin->getRoom();             
-        if (room->askForSkillInvoke(zhugejin, objectName())) {
+        Room *room = zhugejin->getRoom();
+        bool invoke = false;
+        if (room->getMode().startsWith("06_"))
+            invoke = room->askForSkillInvoke(zhugejin, objectName());
+        else
+            invoke = room->askForUseCard(zhugejin, "@@hongyuan", "@hongyuan");
+        if (invoke) {
             room->broadcastSkillInvoke(objectName());
             zhugejin->setFlags("hongyuan");
-            if (room->getMode().startsWith("06_")) {
-                QStringList names = getTeammateNames(zhugejin);
-                room->setTag("HongyuanTargets", QVariant::fromValue(names));
-            }
             return n - 1;
         } else
             return n;
@@ -81,13 +75,19 @@ public:
             return false;
         player->setFlags("-hongyuan");
 
-        QStringList names = room->getTag("HongyuanTargets").toStringList();
-        room->removeTag("HongyuanTargets");
-        if (!names.isEmpty())
-            foreach (QString name, names)
-                room->findPlayer(name)->drawCards(1);
-        else
-            room->askForUseCard(player, "@@hongyuan", "@hongyuan");
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+            if (room->getMode().startsWith("06_")) {
+                if (AI::GetRelation3v3(player, p) == AI::Friend)
+                    targets << p;
+            } else if (p->hasFlag("HongyuanTarget")) {
+                p->setFlags("-HongyuanTarget");
+                targets << p;
+            }
+        }
+
+        if (targets.isEmpty()) return false;
+        room->drawCards(targets, 1, "hongyuan");
         return false;
     }
 };

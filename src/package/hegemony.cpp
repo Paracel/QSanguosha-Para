@@ -102,7 +102,7 @@ bool DuoshiCard::targetFilter(const QList<const Player *> &targets, const Player
     return true;
 }
 
-bool DuoshiCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
+bool DuoshiCard::targetsFeasible(const QList<const Player *> &, const Player *) const{
     return true;
 }
 

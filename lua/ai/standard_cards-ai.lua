@@ -228,30 +228,30 @@ sgs.ai_compare_funcs["defenseSlash"] = function(a, b)
 	return sgs.getDefenseSlash(a) < sgs.getDefenseSlash(b)
 end
 
-function SmartAI:slashProhibit(card, enemy)
+function SmartAI:slashProhibit(card, enemy, from)
 	card = card or sgs.Sanguosha:cloneCard("slash")
 	for _, askill in sgs.qlist(enemy:getVisibleSkillList()) do
 		local filter = sgs.ai_slash_prohibit[askill:objectName()]
-		if filter and type(filter) == "function" and filter(self, self.player, enemy, card) then return true end
+		if filter and type(filter) == "function" and filter(self, from, enemy, card) then return true end
 	end
 
-	if self:isFriend(enemy) then
-		if card:isKindOf("FireSlash") or self.player:hasSkill("lihuo") or self.player:hasWeapon("fan") then
+	if self:isFriend(enemy, from) then
+		if card:isKindOf("FireSlash") or from:hasSkill("lihuo") or from:hasWeapon("fan") then
 			if enemy:hasArmorEffect("vine") and not (enemy:isChained() and self:isGoodChainTarget(enemy)) then return true end
 		end
-		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing"))
-			and self:slashIsEffective(card, enemy) then return true end
-		if getCardsNum("Jink", enemy) == 0 and enemy:getHp() < 2 and self:slashIsEffective(card, enemy) then return true end
-		if enemy:isLord() and self:isWeak(enemy) and self:slashIsEffective(card, enemy) then return true end
-		if self.player:hasWeapon("guding_blade") and enemy:isKongcheng() then return true end
+		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy) and not from:hasSkill("jueqing"))
+			and self:slashIsEffective(card, enemy, from) then return true end
+		if getCardsNum("Jink", enemy) == 0 and enemy:getHp() < 2 and self:slashIsEffective(card, enemy, from) then return true end
+		if enemy:isLord() and self:isWeak(enemy) and self:slashIsEffective(card, enemy, from) then return true end
+		if from:hasWeapon("guding_blade") and enemy:isKongcheng() then return true end
 	else
-		if enemy:isChained() and not self:isGoodChainTarget(enemy) and not self.player:hasSkill("jueqing") and self:slashIsEffective(card, enemy)
+		if enemy:isChained() and not self:isGoodChainTarget(enemy) and not from:hasSkill("jueqing") and self:slashIsEffective(card, enemy, from)
 			and card:isKindOf("NatureSlash") then
 			return true
 		end
 	end
 
-	return self.room:isProhibited(self.player, enemy, card) or not self:slashIsEffective(card, enemy)
+	return self.room:isProhibited(from, enemy, card) or not self:slashIsEffective(card, enemy, from)
 end
 
 function SmartAI:canLiuli(other, another)

@@ -828,7 +828,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local slashes = self:getCards("Slash")
 	for _, slash in ipairs(slashes) do
 		for _, target in ipairs(jijiangtargets) do
-			if not self:slashProhibit(slash, target) and self:slashIsEffective(slash, target) then
+			if not self:slashProhibit(slash, target, sgs.jijiangsource) and self:slashIsEffective(slash, target, sgs.jijiangsource) then
 				return slash:toString()
 			end
 		end

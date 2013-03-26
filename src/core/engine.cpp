@@ -810,7 +810,7 @@ QList<int> Engine::getRandomCards() const{
 
     if (Config.GameMode == "06_3v3") {
         using_2012_3v3 = (Config.value("3v3/OfficialRule", "2012").toString() == "2012");
-        exclude_disaters = Config.value("3v3/UsingExtension", false).toBool() && Config.value("3v3/ExcludeDisasters", true).toBool();
+        exclude_disaters = !Config.value("3v3/UsingExtension", false).toBool() || Config.value("3v3/ExcludeDisasters", true).toBool();
     }
 
     if (Config.GameMode == "04_1v3")

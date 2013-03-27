@@ -4189,6 +4189,8 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, bool up_
     i = bottom_cards;
     while (i.hasNext())
         m_drawPile->append(i.next());
+
+    doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 }
 
 void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {

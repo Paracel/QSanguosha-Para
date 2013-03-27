@@ -366,8 +366,9 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     ServerPlayer *dengai = card_use.from;
 
     QList<int> fields;
+    QList<int> total = dengai->getPile("field");
     QList<Snatch *> snatches;
-    foreach (int id, dengai->getPile("field")) {
+    foreach (int id, total) {
         Snatch *snatch = new Snatch(Card::SuitToBeDecided, -1);
         snatch->addSubcard(id);
         snatches << snatch;
@@ -391,7 +392,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
         return;
 
     QList<int> disabled;
-    foreach (int id, dengai->getPile("field")) {
+    foreach (int id, total) {
         if (!fields.contains(id))
             disabled << id;
     }
@@ -400,7 +401,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     if (fields.length() == 1)
         card_id = fields.first();
     else {
-        room->fillAG(dengai->getPile("field"), dengai, disabled);
+        room->fillAG(total, dengai, disabled);
         card_id = room->askForAG(dengai, fields, false, "jixi");
         room->clearAG(dengai);
 

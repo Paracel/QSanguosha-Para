@@ -915,8 +915,7 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
     DummyCard *dummy = new DummyCard;
 
     if (!hearts.isEmpty()) {
-        room->fillAG(cards, source);
-        while (!hearts.isEmpty()) {
+        do {
             room->fillAG(left, source, non_hearts);
             int card_id = room->askForAG(source, hearts, true, "xinzhan");
             if (card_id == -1) {
@@ -929,11 +928,11 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
 
             dummy->addSubcard(card_id);
             room->clearAG(source);
-        }
+        } while (!hearts.isEmpty());
 
         if (dummy->subcardsLength() > 0) {
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_UPDATE_PILE, Json::Value(room->getDrawPile().length() + dummy->subcardsLength()));
             source->obtainCard(dummy);
-            room->clearAG(source); // strange bug occurs with Manjuan
             foreach (int id, dummy->getSubcards())
                 room->showCard(source, id);
         }

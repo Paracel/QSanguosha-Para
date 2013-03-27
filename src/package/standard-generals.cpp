@@ -665,7 +665,8 @@ public:
             room->broadcastSkillInvoke(objectName(), index);
 
             int n = qMin(5, room->alivePlayerCount());
-            room->askForGuanxing(zhuge, room->getNCards(n, false), false);
+            QList<int> guanxing = room->getNCards(n);
+            room->askForGuanxing(zhuge, guanxing, false);
         }
 
         return false;
@@ -1392,7 +1393,8 @@ public:
             && zhuge->askForSkillInvoke(objectName())) {
             Room *room = zhuge->getRoom();
             room->broadcastSkillInvoke("guanxing", qrand() % 2 + 1);
-            room->askForGuanxing(zhuge, room->getNCards(5, false), false);
+            QList<int> guanxing = room->getNCards(5);
+            room->askForGuanxing(zhuge, guanxing, false);
         }
 
         return false;

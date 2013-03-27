@@ -477,6 +477,7 @@ sgs.ai_skill_use_func.XiongyiCard = function(card, use, self)
 end
 
 sgs.ai_card_intention.XiongyiCard = -80
+sgs.ai_use_priority.XiongyiCard = 9.31
 
 sgs.ai_skill_invoke.kuangfu = function(self, data)
 	local damage = data:toDamage()

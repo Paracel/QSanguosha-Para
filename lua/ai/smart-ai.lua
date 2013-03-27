@@ -813,16 +813,17 @@ sgs.ai_card_intention.general = function(from, to, level)
 
 	if sgs.evaluatePlayerRole(to) == "loyalist" then
 		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] - level
-		if (sgs.ai_role[from:objectName()] == "loyalist" and level > 0 and sgs.current_mode_players["rebel"] > 0)
-			or (sgs.ai_role[from:objectName()] == "rebel" and level < 0) then
+		if ((sgs.ai_role[from:objectName()] == "loyalist" and level > 0 and sgs.current_mode_players["rebel"] > 0)
+			or (sgs.ai_role[from:objectName()] == "rebel" and level < 0)) and sgs.current_mode_players["renegade"] > 0 then
 			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level) 
-		elseif sgs.ai_role[from:objectName()] ~= "rebel" and level > 0 and to:isLord() then
+		elseif sgs.ai_role[from:objectName()] ~= "rebel" and level > 0 and to:isLord() and sgs.current_mode_players["renegade"] > 0 then
 			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level)
 		end
 	end
 	if sgs.evaluatePlayerRole(to) == "rebel" then
 		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
-		if (sgs.ai_role[from:objectName()] == "rebel" and level > 0) or (sgs.ai_role[from:objectName()] == "loyalist" and level < 0) then
+		if ((sgs.ai_role[from:objectName()] == "rebel" and level > 0) or (sgs.ai_role[from:objectName()] == "loyalist" and level < 0))
+			and sgs.current_mode_players["renegade"] > 0 then
 			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level) 
 		end
 	end
@@ -905,7 +906,7 @@ function sgs.gameProcess(room, arg)
 		end
 		--end
 	end
-	local diff = loyal_value - rebel_value + (loyal_num - rebel_num) * 2
+	local diff = loyal_value - rebel_value + (loyal_num + 1 - rebel_num) * 2
 	if arg and arg == 1 then return diff end
 
 	if diff >= 2 then
@@ -1241,20 +1242,22 @@ function SmartAI:updatePlayers(clear_flags)
 
 	for i = 1, #players, 1 do
 		local p = players[i]
-		local renegade_val = sgs.current_mode_players["rebel"] == 0 and (sgs.current_mode_players["loyalist"] == 0 and -1000 or 80) or 150
-		if i <= sgs.current_mode_players["renegade"] and sgs.role_evaluation[p:objectName()]["renegade"] >= renegade_val
-			and (sgs.role_evaluation[p:objectName()]["loyalist"] >= 0
-				or math.abs(sgs.role_evaluation[p:objectName()]["loyalist"]) <= 2.5 * sgs.role_evaluation[p:objectName()]["renegade"]) then
-			sgs.ai_role[p:objectName()] = "renegade"
-		else
-			if (sgs.role_evaluation[p:objectName()]["loyalist"] > 0 and sgs.current_mode_players["loyalist"] > 0) or p:isLord() then
-				sgs.ai_role[p:objectName()] = "loyalist"
-			elseif sgs.role_evaluation[p:objectName()]["loyalist"] < 0 and sgs.current_mode_players["rebel"] > 0 then
-				sgs.ai_role[p:objectName()] = "rebel"
+		if not p:isLord() then
+			local renegade_val = sgs.current_mode_players["rebel"] == 0 and (sgs.current_mode_players["loyalist"] == 0 and -1000 or 80) or 150
+			if i <= sgs.current_mode_players["renegade"] and sgs.role_evaluation[p:objectName()]["renegade"] >= renegade_val
+				and (sgs.role_evaluation[p:objectName()]["loyalist"] >= 0
+					or math.abs(sgs.role_evaluation[p:objectName()]["loyalist"]) <= 2.5 * sgs.role_evaluation[p:objectName()]["renegade"]) then
+				sgs.ai_role[p:objectName()] = "renegade"
 			else
-				if sgs.role_evaluation[p:objectName()]["loyalist"] > 0 then sgs.ai_role[p:objectName()] = "loyalist" end
-				if sgs.role_evaluation[p:objectName()]["loyalist"] < 0 then sgs.ai_role[p:objectName()] = "rebel" end
-				if sgs.role_evaluation[p:objectName()]["loyalist"] == 0 then sgs.ai_role[p:objectName()] = "neutral" end
+				if (sgs.role_evaluation[p:objectName()]["loyalist"] > 0 and sgs.current_mode_players["loyalist"] > 0) or p:isLord() then
+					sgs.ai_role[p:objectName()] = "loyalist"
+				elseif sgs.role_evaluation[p:objectName()]["loyalist"] < 0 and sgs.current_mode_players["rebel"] > 0 then
+					sgs.ai_role[p:objectName()] = "rebel"
+				else
+					if sgs.role_evaluation[p:objectName()]["loyalist"] > 0 then sgs.ai_role[p:objectName()] = "loyalist" end
+					if sgs.role_evaluation[p:objectName()]["loyalist"] < 0 then sgs.ai_role[p:objectName()] = "rebel" end
+					if sgs.role_evaluation[p:objectName()]["loyalist"] == 0 then sgs.ai_role[p:objectName()] = "neutral" end
+				end
 			end
 		end
 	end

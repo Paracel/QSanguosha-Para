@@ -4347,8 +4347,17 @@ function SmartAI:doNotDiscard(to, flags, conservative, n)
 	flags = flags or "he"
 	n = n or 1
 	if to:isNude() then return true end
+	local enemies = self:getEnemies(to)
+	local good_enemy = false
+	for _, enemy in ipairs(enemies) do
+		if not enemy:hasSkills("qianxun|noswuyan|weimu") then
+			good_enemy = true
+			break
+		end
+	end
+	if conservative and not good_enemy then conservative = false end
 	conservative = conservative or (sgs.turncount <= 2 and self.room:alivePlayerCount() > 2)
-	if to:hasSkills("tuntian+zaoxian") and to:getPhase() == sgs.Player_NotActive and (conservative or #self.enemies > 1) then return true end
+	if to:hasSkills("tuntian+zaoxian") and to:getPhase() == sgs.Player_NotActive and (conservative or (good_enemy and #self.enemies > 1)) then return true end
 
 	if flags == "nil" then
 		if to:hasSkill("lirang") and #self.enemies > 1 then return true end

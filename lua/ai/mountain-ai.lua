@@ -295,8 +295,10 @@ function sgs.ai_cardneed.qiaobian(to, card)
 end
 
 sgs.ai_skill_invoke.tuntian = function(self, data)
-	if self.player:hasSkill("zaoxian") and #self.enemies == 1 and self.enemies[1]:hasSkill("qianxun")
-		and self.player:getPile("field"):length() < 3 and self.player:getMark("zaoxian") == 0 then
+	if self.player:hasSkill("zaoxian") and self.player:getPile("field"):length() < 3 and self.player:getMark("zaoxian") == 0 then
+		for _, enemy in ipairs(self.enemies) do
+			if not enemy:hasSkills("qianxun|noswuyan") then return true end
+		end
 		return false
 	end
 	return true
@@ -305,7 +307,14 @@ end
 sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
 	if self:isFriend(to, from) or not to:hasSkill("zaoxian") then return false end
 	local enemies = self:getEnemies(to)
-	if #enemies == 1 and enemies[1]:hasSkill("qianxun") then return false end
+	local good_enemy = false
+	for _, enemy in ipairs(enemies) do
+		if not enemy:hasSkills("qianxun|noswuyan|weimu") then
+			good_enemy = true
+			break
+		end
+	end
+	if not good_enemy then return false end
 	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
 	if to:getHandcardNum() >= 3 then return true end
 	return false

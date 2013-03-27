@@ -207,7 +207,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		self.friends_noself = sgs.reverse(self.friends_noself)
 		for _, friend in ipairs(self.friends_noself) do
 			if self:hasSkills(sgs.lose_equip_skill, friend) and friend:getCards("e"):length() > 0
-			  and not friend:hasSkill("manjuan") then
+				and not friend:hasSkill("manjuan") then
 				self.yinghun = friend
 				break
 			end
@@ -255,7 +255,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		self:sort(self.friends_noself)
 		for _, friend in ipairs(self.friends_noself) do
 			if self:hasSkills(sgs.lose_equip_skill, friend) and friend:getCards("e"):length() > 0
-			  and not friend:hasSkill("manjuan") then
+				and not friend:hasSkill("manjuan") then
 				self.yinghun = friend
 				break
 			end

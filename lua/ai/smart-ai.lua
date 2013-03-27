@@ -1682,7 +1682,7 @@ function SmartAI:filterEvent(event, player, data)
 			end
 
 			if move.to_place == sgs.Player_PlaceHand then
-				if (not from or sgs.card_lack[from:objectName()]["Peach"] == 0) and to and not card:hasFlag("visible") and  sgs.card_lack[to:objectName()]["Peach"] == 1 then
+				if (not from or sgs.card_lack[from:objectName()]["Peach"] == 0) and to and not card:hasFlag("visible") and sgs.card_lack[to:objectName()]["Peach"] == 1 then
 					sgs.card_lack[toobjectName()]["Peach"] = 0
 				end
 			end
@@ -2836,10 +2836,9 @@ function SmartAI:askForSinglePeach(dying)
 			end
 			if not same then return "." end
 		end
-		if (self.player:objectName() == dying:objectName()) then
+		if self.player:objectName() == dying:objectName() then
 			card_str = self:getCardId("Analeptic")
-			if not card_str then
-			 card_str = self:getCardId("Peach") end
+			if not card_str then card_str = self:getCardId("Peach") end
 		elseif dying:isLord() then
 			card_str = self:getCardId("Peach")
 		elseif self:doNotSave(dying) then return "."
@@ -4058,7 +4057,7 @@ function SmartAI:hasTrickEffective(card, to, from)
 
 	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
 		if card:isKindOf("TrickCard") and
-		  (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+			(card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
 			return false
 		end
 	end

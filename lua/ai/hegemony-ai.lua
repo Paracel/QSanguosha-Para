@@ -263,7 +263,7 @@ sgs.ai_skill_use_func.FenxunCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			for _, slash in ipairs(self:getCards("Slash")) do
 				if self.player:distanceTo(enemy) > 1 and not self:slashProhibit(slash, enemy)
-				  and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
+					and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
 					target = enemy
 					break
 				end

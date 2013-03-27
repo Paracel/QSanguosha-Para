@@ -2048,7 +2048,7 @@ function SmartAI:enemiesContainsTrick(enemy_count)
 					temp_enemy = enemy
 				end
 			else
-				possible_ss_enemy  = possible_ss_enemy + 1
+				possible_ss_enemy = possible_ss_enemy + 1
 			end
 		end
 	end

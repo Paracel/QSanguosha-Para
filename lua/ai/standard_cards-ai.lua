@@ -1486,32 +1486,32 @@ function SmartAI:getValuableCard(who)
 
 	local equips = sgs.QList2Table(who:getEquips())
 	for _, equip in ipairs(equips) do
-		if who:hasSkill("longhun") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
-		if who:hasSkill("qixi|yinling") and equip:isBlack() then return equip:getEffectiveId() end
-		if who:hasSkill("guidao") and equip:isBlack() then return equip:getEffectiveId() end
-		if who:hasSkill("guose|yanxiao") and equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
-		if who:hasSkill("jijiu") and equip:isRed() then return equip:getEffectiveId() end
-		if who:hasSkill("wusheng|xueji") and equip:isRed() then return equip:getEffectiveId() end
-		if who:hasSkill("duanliang") and equip:isBlack() then return equip:getEffectiveId() end
-		if self:hasSkills("shensu|mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi", who) then return equip:getEffectiveId() end
-		if who:hasSkill("baobian") and who:getHp() <= 2 then return equip:getEffectiveId() end
+		if who:hasSkills("longhun|guose|yanxiao") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
+		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
+		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
+		if who:hasSkills("shensu|mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi") then return equip:getEffectiveId() end
+		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
 	end
 
-	if weapon then
+	if armor and not self:needToThrowArmor(who) and not self:doNotDiscard(who, "e") then
+		return armor:getEffectiveId()
+	end
+
+	if offhorse and who:getHandcardNum() > 1 then
 		if not self:doNotDiscard(who, "e", true) then
 			for _, friend in ipairs(self.friends) do
-				if who:distanceTo(friend) <= who:getAttackRange() and who:distanceTo(friend) > 1 then
-					return weapon:getEffectiveId()
+				if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
+					return offhorse:getEffectiveId()
 				end
 			end
 		end
 	end
 
-	if offhorse then
+	if weapon and who:getHandcardNum() > 1 then
 		if not self:doNotDiscard(who, "e", true) then
 			for _, friend in ipairs(self.friends) do
-				if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
-					return offhorse:getEffectiveId()
+				if (who:distanceTo(friend) <= who:getAttackRange()) and (who:distanceTo(friend) > 1) then
+					return weapon:getEffectiveId()
 				end
 			end
 		end

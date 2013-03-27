@@ -1394,10 +1394,13 @@ sgs.ai_use_priority.Duel = 2.9
 sgs.dynamic_value.damage_card.Duel = true
 
 sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
+	if self.player:getPhase() == sgs.Player_Play then return self:getCardId("Slash") end
+
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
-	if self.player:hasFlag("NeedToWake") then return "." end
+	if self.player:hasFlag("GlobalFlag_NeedToWake") then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
+	if self:cantbeHurt(target) then return "." end
 	if self:getDamagedEffects(self.player, target) or self.player:getHp() > getBestHp(self.player) then return "." end
 	if self:isFriend(target) and target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
 	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, target) then return "." end

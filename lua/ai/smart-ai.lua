@@ -3169,7 +3169,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 
 	if sgs.isGoodHp(player) then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
-			local callback = sgs.ai_need_damaged[askill]
+			local callback = sgs.ai_need_damaged[askill:objectName()]
 			if type(callback) == "function" and callback(self, attacker) then return true end
 		end
 	end

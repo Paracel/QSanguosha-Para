@@ -125,7 +125,7 @@ sgs.ai_playerchosen_intention.vsganglie = function(from, to)
 	elseif from:getState() == "online" then
 		if not from:hasSkill("jueqing") then
 			for _, askill in sgs.qlist(to:getVisibleSkillList()) do
-				local callback = sgs.ai_need_damaged[askill]
+				local callback = sgs.ai_need_damaged[askill:objectName()]
 				if type(callback) == "function" and callback(self, attacker) then return end
 			end
 		end

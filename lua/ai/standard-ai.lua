@@ -207,10 +207,10 @@ sgs.ai_skill_invoke.ganglie = function(self, data)
 		end
 		return false
 	end
-	return not self:isFriend(damage.from)
+	return not self:isFriend(damage.from) and self:canAttack(damage.from)
 end
 
-sgs.ai_need_damaged.ganglie = function (self, attacker)
+sgs.ai_need_damaged.ganglie = function(self, attacker)
 	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
 		and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self.enemies, self) then
@@ -219,7 +219,9 @@ sgs.ai_need_damaged.ganglie = function (self, attacker)
 	return false
 end
 
-sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, include_equip)
+function ganglie_discard(self, discard_num, min_num, optional, include_equip, skillName)
+	local xiahou = self.room:findPlayerBySkillName(skillName)
+	if xiahou and (not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, xiahou) or self:getDamagedEffects(self.player, xiahou)) then return {} end
 	local to_discard = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local index = 0
@@ -248,7 +250,12 @@ sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, in
 	end
 end
 
+sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, include_equip)
+	return ganglie_discard(self, discard_num, min_num, optional, include_equip, "ganglie")
+end
+
 function sgs.ai_slash_prohibit.ganglie(self, from, to)
+	if self:isFriend(from, to) then return false end
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("nosjiefanUsed") then return false end
 	return from:getHandcardNum() + from:getHp() < 4

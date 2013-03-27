@@ -303,9 +303,9 @@ sgs.ai_skill_invoke.tuntian = function(self, data)
 end
 
 sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
-	if self:isFriend(to, from) then return false end
+	if self:isFriend(to, from) or not to:hasSkill("zaoxian") then return false end
 	local enemies = self:getEnemies(to)
-	if to:hasSkill("zaoxian") and #enemies == 1 and enemies[1]:hasSkill("qianxun") then return false end
+	if #enemies == 1 and enemies[1]:hasSkill("qianxun") then return false end
 	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
 	if to:getHandcardNum() >= 3 then return true end
 	return false

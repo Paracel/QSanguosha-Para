@@ -823,13 +823,19 @@ QList<int> Engine::getRandomCards() const{
         if (exclude_disaters && card->isKindOf("Disaster"))
             continue;
 
-        if (card->getPackage() == "New3v3Card" && using_2012_3v3)
+        if (card->getPackage() == "New3v3Card" && (using_2012_3v3 || using_2013_3v3))
+            list << card->getId();
+        else if (card->getPackage() == "New3v3_2013Card" && using_2013_3v3)
             list << card->getId();
         else if (!getBanPackages().contains(card->getPackage()))
             list << card->getId();
     }
-    if (using_2012_3v3)
+    if (using_2012_3v3 || using_2013_3v3)
         list.removeOne(98);
+    if (using_2013_3v3) {
+        list.removeOne(53);
+        list.removeOne(54);
+    }
 
     qShuffle(list);
 

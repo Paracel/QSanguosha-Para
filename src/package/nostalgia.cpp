@@ -377,7 +377,7 @@ public:
         if (to_select->getTypeId() != Card::TypeEquip)
             return false;
 
-        if (Self->getWeapon() && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->objectName() == "crossbow")
+        if (Self->getWeapon() && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->isKindOf("Crossbow"))
             return Self->canSlashWithoutCrossbow();
         else
             return true;

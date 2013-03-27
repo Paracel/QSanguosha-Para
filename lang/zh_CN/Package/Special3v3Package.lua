@@ -23,6 +23,7 @@ return {
 	[":mingzhe"] = "你的回合外，每当你的一张红色牌因使用、打出或弃置而进入弃牌堆后，你可以摸一张牌。",
 
 	["Special3v3_2013"] = "2013-3v3",
+	["New3v3_2013Card"] = "2013-3v3卡牌",
 
 	["vs_xiahoudun"] = "夏侯惇3v3",
 	["&vs_xiahoudun"] = "夏侯惇",
@@ -58,4 +59,8 @@ return {
 	["#ZhanshenWake"] = "%from 已受伤且有己方角色已死亡，触发 %arg 觉醒",
 
 	["wenpin"] = "文聘",
+
+	["vscrossbow"] = "连弩",
+	[":vscrossbow"] = "装备牌·武器<br />攻击范围：１<br />武器特效：<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你可以额外使用三张【杀】。",
+
 }

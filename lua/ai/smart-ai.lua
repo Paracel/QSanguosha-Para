@@ -333,7 +333,7 @@ function SmartAI:getUseValue(card)
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
-			if self.player:hasWeapon("crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
+			if self.player:hasWeapon("Crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
 			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
 			if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 1 or -1) end
 		elseif card:isKindOf("Jink") then
@@ -2855,6 +2855,8 @@ function SmartAI:getTurnUse()
 
 	if self.player:hasWeapon("crossbow") then
 		slashAvail = 100
+	elseif self.player:hasWeapon("vscrossbow") then
+		slashAvail = slashAvail + 3
 	end
 
 	local i = 0
@@ -2883,6 +2885,7 @@ function SmartAI:getTurnUse()
 				end
 				if card:isKindOf("OffensiveHorse") then self.predictNewHorse = true end
 				if card:objectName() == "crossbow" then slashAvail = 100 end
+				if card:objectName() == "vscrossbow" then slashAvail = slashAvail + 3 end
 				if card:isKindOf("Snatch") then i = i - 1 end
 				if card:isKindOf("Peach") then i = i + 2 end
 				if card:isKindOf("Collateral") then i = i - 1 end
@@ -4105,7 +4108,7 @@ end
 
 function SmartAI:hasCrossbowEffect(player)
 	player = player or self.player
-	return player:hasWeapon("crossbow") or player:hasSkill("paoxiao")
+	return player:hasWeapon("Crossbow") or player:hasSkill("paoxiao")
 end
 
 sgs.ai_weapon_value = {}

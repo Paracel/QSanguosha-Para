@@ -14,6 +14,7 @@ config = {
 		"Nostalgia",
 		"GreenHandCard",
 		"New3v3Card",
+		"New3v3_2013Card",
 
 		"Standard",
 		"Wind",

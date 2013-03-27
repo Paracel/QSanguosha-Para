@@ -1289,7 +1289,7 @@ bool Longhun::viewFilter(const QList<const Card *> &selected, const Card *card) 
                 return true;
             else if (Slash::IsAvailable(Self) && card->getSuit() == Card::Diamond) {
                 if (Self->getWeapon() && card->getEffectiveId() == Self->getWeapon()->getId()
-                    && card->objectName() == "crossbow")
+                    && card->isKindOf("Crossbow"))
                     return Self->canSlashWithoutCrossbow();
                 else
                     return true;

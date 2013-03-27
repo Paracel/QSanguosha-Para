@@ -395,6 +395,12 @@ public:
     }
 };
 
+VSCrossbow::VSCrossbow(Suit suit, int number)
+    : Crossbow(suit, number)
+{
+    setObjectName("vscrossbow");
+}
+
 New3v3CardPackage::New3v3CardPackage()
     : Package("New3v3Card")
 {
@@ -425,6 +431,21 @@ Special3v3Package::Special3v3Package()
 }
 
 ADD_PACKAGE(Special3v3)
+
+New3v3_2013CardPackage::New3v3_2013CardPackage()
+    : Package("New3v3_2013Card")
+{
+    QList<Card *> cards;
+    cards << new VSCrossbow(Card::Club)
+          << new VSCrossbow(Card::Diamond);
+
+    foreach (Card *card, cards)
+        card->setParent(this);
+
+    type = CardPack;
+}
+
+ADD_PACKAGE(New3v3_2013Card)
 
 Special3v3_2013Package::Special3v3_2013Package()
     : Package("Special3v3_2013")

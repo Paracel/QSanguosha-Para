@@ -4,6 +4,7 @@
 #include "package.h"
 #include "card.h"
 #include "skill.h"
+#include "standard-equips.h"
 
 class HongyuanCard: public SkillCard {
     Q_OBJECT
@@ -25,6 +26,13 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+class VSCrossbow: public Crossbow {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE VSCrossbow(Card::Suit suit, int number = 1);
+};
+
 class Special3v3Package: public Package {
     Q_OBJECT
 
@@ -44,6 +52,13 @@ class New3v3CardPackage: public Package {
 
 public:
     New3v3CardPackage();
+};
+
+class New3v3_2013CardPackage: public Package {
+    Q_OBJECT
+
+public:
+    New3v3_2013CardPackage();
 };
 
 #endif

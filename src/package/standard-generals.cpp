@@ -520,7 +520,7 @@ public:
             return false;
 
         if (Self->getWeapon()
-            && card->getEffectiveId() == Self->getWeapon()->getId() && card->objectName() == "crossbow")
+            && card->getEffectiveId() == Self->getWeapon()->getId() && card->isKindOf("Crossbow"))
             return Self->canSlashWithoutCrossbow();
         else
             return true;

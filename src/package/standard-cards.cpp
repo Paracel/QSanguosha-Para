@@ -26,8 +26,15 @@ bool Slash::IsAvailable(const Player *player, const Card *slash) {
 #define THIS_SLASH (slash == NULL ? newslash : slash)
     if (player->isCardLimited(THIS_SLASH, Card::MethodUse))
        return false;
+
+    if (player->hasWeapon("crossbow") || player->canSlashWithoutCrossbow())
+        return true;
+    int used = player->getSlashCount();
+    int valid = 1 + Sanguosha->correctCardTarget(TargetModSkill::Residue, player, newslash);
+    if (player->hasWeapon("vscrossbow") && used < valid + 3)
+        return true;
+    return false;
 #undef THIS_SLASH
-    return (player->hasWeapon("crossbow") || player->canSlashWithoutCrossbow());
 }
 
 bool Slash::isAvailable(const Player *player) const{
@@ -145,7 +152,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         room->setEmotion(player, "weapon/fan");
     if (player->getPhase() == Player::Play
         && player->hasFlag("MoreSlashInOneTurn")
-        && player->hasWeapon("crossbow")
+        && (player->hasWeapon("crossbow") || player->hasWeapon("vscrossbow"))
         && !player->hasSkill("paoxiao")
         && !player->hasSkill("huxiao"))
         room->setEmotion(player, "weapon/crossbow");
@@ -903,8 +910,22 @@ bool ExNihilo::isAvailable(const Player *player) const{
     return !player->isProhibited(player, this) && TrickCard::isAvailable(player);
 }
 
+#include "ai.h"
+#include "settings.h"
 void ExNihilo::onEffect(const CardEffectStruct &effect) const{
-    effect.to->drawCards(2);
+    Room *room = effect.to->getRoom();
+    int extra = 0;
+    if (room->getMode() == "06_3v3" && Config.value("3v3/OfficialRule", "2012").toString() == "2013") {
+        int friend_num = 0, enemy_num = 0;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (AI::GetRelation3v3(effect.to, p) == AI::Friend)
+                friend_num++;
+            else
+                enemy_num++;
+        }
+        if (friend_num < enemy_num) extra = 1;
+    }
+    effect.to->drawCards(2 + extra);
 }
 
 Duel::Duel(Suit suit, int number)

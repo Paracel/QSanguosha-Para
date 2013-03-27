@@ -110,3 +110,6 @@ sgs.ai_skill_invoke.zhanshen = function(self, data)
 	local lvbu = self:findPlayerByObjectName(obj)
 	return self:isFriend(obj)
 end
+
+sgs.weapon_range.VSCrossbow = sgs.weapon_range.Crossbow
+sgs.ai_use_priority.VSCrossbow = sgs.ai_use_priority.Crossbow

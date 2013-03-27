@@ -1093,7 +1093,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 }
 
 bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QString &prompt, int notice_index,
-                         Card::HandlingMethod method) {
+                         Card::HandlingMethod method, bool addHistory) {
     notifyMoveFocus(player, S_COMMAND_USE_CARD);
     _m_roomState.setCurrentCardUsePattern(pattern);
     _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
@@ -1127,7 +1127,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
     if (isCardUsed && card_use.isValid(pattern)) {
         QVariant decisionData = QVariant::fromValue(card_use);
         thread->trigger(ChoiceMade, this, player, decisionData);
-        useCard(card_use);
+        useCard(card_use, addHistory);
         return true;
     } else {
         QVariant decisionData = QVariant::fromValue("cardUsed:" + pattern + ":" + prompt + ":nil");
@@ -1137,7 +1137,8 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
     return false;
 }
 
-bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const QString &prompt, bool distance_limit, bool disable_extra) {
+bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const QString &prompt,
+                            bool distance_limit, bool disable_extra, bool addHistory) {
     Q_ASSERT(!victims.isEmpty());
 
     //The realization of this function in the Slash::onUse and Slash::targetFilter.
@@ -1157,13 +1158,13 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
 
     do {
         setPlayerFlag(slasher, "-guhuo_failed");
-        use = askForUseCard(slasher, "slash", prompt);
+        use = askForUseCard(slasher, "slash", prompt, -1, Card::MethodUse, addHistory);
     } while (slasher->hasFlag("guhuo_failed"));
 
     if (slasher->hasFlag("jijiang_failed")) {
         do {
             setPlayerFlag(slasher, "-guhuo_failed");
-            use = askForUseCard(slasher, "slash", prompt);
+            use = askForUseCard(slasher, "slash", prompt, -1, Card::MethodUse, addHistory);
         } while(slasher->hasFlag("guhuo_failed"));
         setPlayerFlag(slasher, "-jijiang_failed");
     }
@@ -1182,7 +1183,8 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
     return use;
 }
 
-bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const QString &prompt, bool distance_limit, bool disable_extra) {
+bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const QString &prompt,
+                            bool distance_limit, bool disable_extra, bool addHistory) {
     Q_ASSERT(victim != NULL);
     QList<ServerPlayer *> victims;
     victims << victim;

@@ -707,8 +707,8 @@ sgs.ai_skill_invoke.zhiyu = function(self, data)
 		if self:isFriend(damage.from) and (not damage.from:isKongcheng() or manjuan) then
 			return false
 		elseif self:isEnemy(damage.from) then
-			if #self.friends > 1 and damage.from:getHandcardNum() == 1 and damage.from:hasSkill("sijian") then return false end
 			if manjuan and self.player:isKongcheng() then return false end
+			if self:doNotDiscard(target, "h") and not target:isKongcheng() then return false end
 			return true
 		end
 	end

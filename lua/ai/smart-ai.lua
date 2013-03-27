@@ -90,7 +90,7 @@ function setInitialTables()
 	sgs.drawpeach_skill = "tuxi|qiaobian"
 	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
 	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
-							"yinling|jilve|qingcheng|neoluoyi"
+							"yinling|jilve|qingcheng|neoluoyi|diyyicong"
 
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
 		table.insert(sgs.role_evaluation, aplayer:objectName())
@@ -2180,6 +2180,9 @@ function SmartAI:askForCardChosen(who, flags, reason)
 						return self:getCardRandomly(who, "h")
 					end
 				end
+			end
+			if who:getHandcardNum() == 1 and sgs.getDefenseSlash(who) < 3 and who:getHp() <= 2 and not self:doNotDiscard(who, "h") then
+				return self:getCardRandomly(who, "h")
 			end
 		end
 

@@ -315,6 +315,10 @@ sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
 		end
 	end
 	if not good_enemy then return false end
+	if from:hasSkill("tieji")
+		or (from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play and (to:getHandcardNum() <= from:getAttackRange() or to:getHandcardNum() >= from:getHp())) then
+		return false
+	end
 	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
 	if to:getHandcardNum() >= 3 then return true end
 	return false

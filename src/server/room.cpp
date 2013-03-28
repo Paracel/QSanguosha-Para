@@ -1880,6 +1880,8 @@ void Room::reportDisconnection() {
     }
 
     if (player->isOwner()) {
+        player->setOwner(false);
+        broadcastProperty(player, "owner");
         foreach (ServerPlayer *p, m_players) {
             if (p->getState() == "online") {
                 p->setOwner(true);

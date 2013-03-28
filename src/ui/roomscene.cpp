@@ -1219,7 +1219,7 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
     case Qt::Key_F6: {
             if (!Self || !Self->isOwner() || ClientInstance->getPlayers().length() < Sanguosha->getPlayerCount(ServerInfo.GameMode)) break;
             foreach (const ClientPlayer *p, ClientInstance->getPlayers()) {
-                if (p != Self && p->getState() != "robot")
+                if (p != Self && p->isAlive() && p->getState() != "robot")
                     break;
             }
             bool paused = pausing_text->isVisible();

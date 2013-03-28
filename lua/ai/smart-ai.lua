@@ -2780,7 +2780,7 @@ function SmartAI:askForPlayerChosen(targets, reason)
 	end
 end
 
-function SmartAI:askForSinglePeach(dying)
+function SmartAI:willUsePeachTo(dying)
 	local card_str
 	local forbid = sgs.Sanguosha:cloneCard("peach")
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
@@ -2855,6 +2855,12 @@ function SmartAI:askForSinglePeach(dying)
 			end
 		end
 	end
+	if not card_str then return nil end
+	return card_str
+end
+
+function SmartAI:askForSinglePeach(dying)
+	local card_str = self:willUsePeachTo(dying)
 	return card_str or "."
 end
 

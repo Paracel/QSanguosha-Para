@@ -166,13 +166,23 @@ sgs.ai_skill_invoke.zhongyi = function(self, data)
 	return self:isEnemy(damage.to)
 end
 
+function SmartAI:ableToSave(saver, dying)
+	local current = self.room:getCurrent()
+	if current and current:getPhase() ~= sgs.Player_NotActive and current:hasSkill("wansha")
+		and current:objectName() ~= saver:objectName() and current:objectName() ~= dying:objectName() then
+		return false
+	end
+	if saver:getMark("@qianxi_red") > 0 or saver:getMark("@jilei_basic") > 0 then return false end
+	return true
+end
+
 sgs.ai_skill_cardask["@jiuzhu"] = function(self, data)
 	local dying = data:toDying()
 	if not self:isFriend(dying.who) then return "." end
 	if dying.who:hasSkill("jiushi") and dying.who:faceUp() then return "." end
-	if self:getCardsNum("Peach") > 0 or self.player:getPile("wine"):length() > 0 then return "." end
+	if (self:getCardsNum("Peach") > 0 and self:ableToSave(self.player, dying.who)) or self.player:getPile("wine"):length() > 0 then return "." end
 	for _, friend in ipairs(self.friends_noself) do
-		if getKnownCard(friend, "Peach", true, "he") > 0 then return "." end
+		if getKnownCard(friend, "Peach", true, "he") > 0 and self:ableToSave(friend, dying.who) then return "." end
 	end
 	local must_save = false
 	if self.room:getMode() == "06_3v3" then
@@ -180,7 +190,7 @@ sgs.ai_skill_cardask["@jiuzhu"] = function(self, data)
 	elseif dying.who:isLord() and (self.role == "loyalist" or (self.role == "renegade" and room:alivePlayerCount() > 2)) then
 		must_save = true
 	end
-	if not must_save and self:askForSinglePeach(dying.who) == "." then return "." end
+	if not must_save and self:willUsePeachTo(dying.who) == "." then return "." end
 	if not must_save and self:isWeak() and not self.player:hasArmorEffect("silver_lion") then return "." end
 
 	local cards = self.player:getHandcards()

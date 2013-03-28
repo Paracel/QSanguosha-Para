@@ -1013,6 +1013,7 @@ function turnUse_spear(self, inclusive, skill_name)
 
 	if newcards[1]:isBlack() and newcards[2]:isBlack() then
 		local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitBlack)
+		black_slash:addSubcard(0)
 		local nosuit_slash = sgs.Sanguosha:cloneCard("slash")
 
 		self:sort(self.enemies, "defenseSlash")

@@ -1483,7 +1483,7 @@ function SmartAI:filterEvent(event, player, data)
 
 	if self ~= sgs.recorder then return end
 
-	if event == sgs.CardEffect then
+	if event == sgs.CardEffected then
 		local struct = data:toCardEffect()
 		local card = struct.card
 		local from = struct.from
@@ -1492,20 +1492,18 @@ function SmartAI:filterEvent(event, player, data)
 			to:setFlags("-GlobalFlag_LordInDangerAA")
 			to:setFlags("-GlobalFlag_LordInDangerSA")
 		end
-		if card:isKindOf("Collateral") then sgs.ai_collateral = true end
+	elseif event == sgs.CardEffect then
+		local struct = data:toCardEffect()
+		local card = struct.card
+		local from = struct.from
+		local to = struct.to
+
+		sgs.ai_snat_disma_effect = false
+		sgs.ai_snat_dism_from = nil
 		if card:isKindOf("Dismantlement") or card:isKindOf("Snatch")
 			or card:isKindOf("YinlingCard") then
 			sgs.ai_snat_disma_effect = true
-			sgs.ai_snat_dism_from = struct.from
-			if to:getCards("j"):isEmpty()
-				and not to:hasArmorEffect("silver_lion") then
-				sgs.updateIntention(from, to, 80)
-			end
-		end
-		if card:isKindOf("Slash") and to:hasSkill("leiji")
-			and (getCardsNum("Jink", to) > 0 or self:hasEightDiagramEffect(to)) then
-			if to:isLord() and not self:hasExplicitRebel() then sgs.updateIntention(from, to, 50) end
-			sgs.ai_leiji_effect = true
+			sgs.ai_snat_dism_from = from
 		end
 	elseif event == sgs.PreDamageDone then
 		local damage = data:toDamage()
@@ -1560,7 +1558,20 @@ function SmartAI:filterEvent(event, player, data)
 		if from then str = str .. from:getGeneralName() .. "->" .. table.concat(toname, "+") end
 		if source then str = str .. "#" .. source:getGeneralName() end
 		sgs.laststr = str
-		--self.room:writeToConsole(str)
+
+		if card:isKindOf("Collateral") then sgs.ai_collateral = true end
+
+		sgs.ai_leiji_effect = {}
+		if card:isKindOf("Slash") then
+			for _, t in ipairs(to) do
+				if t:hasSkill("leiji")
+					and (getCardsNum("Jink", t) > 0 or self:hasEightDiagramEffect(t)) then
+					if not (t:isLord() and not self:hasExplicitRebel()) then
+						table.insert(sgs.ai_leiji_effect, t)
+					end
+				end
+			end
+		end
 
 		local callback = sgs.ai_card_intention[card:getClassName()]
 		if #to > 0 and callback then
@@ -1599,7 +1610,9 @@ function SmartAI:filterEvent(event, player, data)
 			if not lord then return end
 			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluatePlayerRole(who) == "neutral" then
 				local aplayer = self:exclude({ lord }, card, player)
-				if #aplayer == 1 then sgs.updateIntention(player, lord, -70) end
+				if #aplayer == 1 and (lord:getJudgingArea():isEmpty() or lord:containsTrick("YanxiaoCard")) and not self:doNotDiscard(lord, "he") then
+					sgs.updateIntention(player, lord, -50)
+				end
 			end
 		end
 	elseif event == sgs.CardFinished then

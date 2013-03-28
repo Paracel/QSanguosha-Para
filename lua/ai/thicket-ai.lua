@@ -96,12 +96,12 @@ sgs.ai_playerchosen_intention.fangzhu = function(self, from, to)
 end
 
 sgs.ai_need_damaged.fangzhu = function(self, attacker, player)
-	local friends = self:getFriends(player)
+	local friends = self:getFriendsNoself(player)
 	self:sort(friends)
 	for _, friend in ipairs(friends) do
-		if player:objectName() ~= friend:objectName() and not toTurnOver(self, friend, player:getLostHp() + 1) then return true end
+		if not toTurnOver(self, friend, player:getLostHp() + 1) then return true end
 	end
-	if player:getLostHp() <= 1 and sgs.turncount > 2 then return true end
+	if not player:isWounded() and sgs.turncount > 2 and #(self:getEnemies(player)) > 0 then return true end
 	return false
 end
 

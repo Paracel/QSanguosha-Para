@@ -574,25 +574,19 @@ end
 sgs.ai_card_intention.Slash = function(self, card, from, tos)
 	for _, to in ipairs(tos) do
 		local value = 80
-		if sgs.ai_collateral then sgs.ai_collateral = false value = 0 end
-
-		if sgs.ai_leiji_effect then
-			if from and from:hasSkill("liegong") then return end
-			sgs.ai_leiji_effect = false
-			if sgs.ai_pojun_effect then
-				value = value / 1.5
-			else
-				--value = -value / 1.5
-				value = 0
-			end
+		if sgs.ai_collateral then
+			sgs.ai_collateral = false
+			goto label_continue
+		end
+		if table.contains(sgs.ai_leiji_effect, to) and not (from and from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play) then
+			table.removeOne(sgs.ai_leiji_effect, to)
+			goto label_continue
 		end
 		speakTrigger(card, from, to)
-		if to:hasSkill("yiji") then
-			-- value = value*(2-to:getHp()) / 1.1
-			value = math.max(value*(2-to:getHp()) / 1.1, 0)
-		end
-		if from:hasSkill("pojun") and to:getHp() > 3 then value = 0 end
+		if self:getDamagedEffects(to, from, true) then goto label_continue end
+		if from:hasSkill("pojun") and to:getHp() > 3 then goto label_continue end
 		sgs.updateIntention(from, to, value)
+::label_continue::
 	end
 end
 
@@ -1783,17 +1777,11 @@ sgs.ai_use_value.Snatch = 9
 sgs.ai_use_priority.Snatch = 4.3
 
 sgs.dynamic_value.control_card.Snatch = true
-function sgs.ai_card_intention.Snatch()
-	sgs.ai_snat_disma_effect = false
-end
 
 SmartAI.useCardDismantlement = SmartAI.useCardSnatchOrDismantlement
 
 sgs.ai_use_value.Dismantlement = 5.6
 sgs.ai_use_priority.Dismantlement = 4.4
-function sgs.ai_card_intention.Dismantlement()
-	sgs.ai_snat_disma_effect = false
-end
 
 sgs.dynamic_value.control_card.Dismantlement = true
 

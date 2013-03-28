@@ -618,7 +618,8 @@ public:
 
     virtual bool triggerable(const ServerPlayer *target) const{
         ServerPlayer *jiaxu = target->getRoom()->getCurrent();
-        return jiaxu && jiaxu->hasSkill(objectName()) && jiaxu->isAlive() && target->getHp() <= 0;
+        return jiaxu && jiaxu->getPhase() != Player::NotActive && jiaxu->hasSkill(objectName())
+               && jiaxu->isAlive() && target->getHp() <= 0;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

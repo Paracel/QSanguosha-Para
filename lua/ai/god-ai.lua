@@ -761,10 +761,11 @@ end
 sgs.ai_need_damaged.guixin = function(self, attacker, player)
 	if self.room:alivePlayerCount() <= 3 or player:hasSkill("manjuan") then return false end
 	local diaochan = self.room:findPlayerBySkillName("lihun")
-	if diaochan and self:isEnemy(diaochan, player) then return false end
-	local num = player:getHandcardNum()
-	if player:faceUp() and num - player:getHp() > 2 then return false end
-	return true
+	local drawcards = 0
+	for _, aplayer in sgs.qlist(self.room:getOtherPlayers(player)) do
+		if aplayer:getCards("hej"):length() > 0 then drawcards = drawcards + 1 end
+	end
+	return not self:isLihunTarget(player, drawcards)
 end
 
 sgs.ai_chaofeng.shencaocao = -6

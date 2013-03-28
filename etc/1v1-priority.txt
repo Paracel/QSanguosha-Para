@@ -93,6 +93,8 @@ sp_guanyu				56
 caohong					36					
 guanyinping				42					
 xiahouba				40					
+chenlin					43					
+erqiao					60					
 fuwan					68					
 liuxie					37					
 lingju					66					
@@ -121,7 +123,10 @@ tianfeng				22
 panfeng					45					
 zoushi					43					
 zhugejin				60					
-chenlin					43					
+vs_xiahoudun			62					
+vs_guanyu				58					
+vs_zhaoyun				68					
+vs_lvbu					76					
 nos_zhouyu				90					
 nos_zhonghui			78					
 nos_shencaocao			35					

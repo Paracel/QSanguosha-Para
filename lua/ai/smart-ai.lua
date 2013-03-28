@@ -2041,7 +2041,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 									elseif analeptic_num > 0 and (enemy:hasWeapon("axe") or self:getCardsNum("Axe", enemy) > 0) then
 										return null_card
 									elseif crossbow_num > 0 and getCardsNum("Slash", enemy) >= 3 then
-										local slash = sgs.Sanguosha:clone("slash")
+										local slash = sgs.Sanguosha:cloneCard("slash")
 										for _, friend in ipairs(self.friens) do
 											if enemy:distanceTo(friend) == 1 and self:slashIsEffective(slash, friend, enemy) then
 												return null_card
@@ -2185,9 +2185,6 @@ function SmartAI:askForCardChosen(who, flags, reason)
 					end
 				end
 			end
-			if who:getHandcardNum() == 1 and sgs.getDefenseSlash(who) < 3 and who:getHp() <= 2 and not self:doNotDiscard(who, "h") then
-				return self:getCardRandomly(who, "h")
-			end
 		end
 
 		if flags:match("j") then
@@ -2208,8 +2205,8 @@ function SmartAI:askForCardChosen(who, flags, reason)
 			end
 		end
 
-		if flags:match("h") then
-			if self:hasSkills(sgs.cardneed_skill, who) and not self:doNotDiscard(who, "h") then
+		if flags:match("h") and not self:doNotDiscard(who, "h") then
+			if (who:getHandcardNum() == 1 and sgs.getDefenseSlash(who) < 3 and who:getHp() <= 2) or self:hasSkills(sgs.cardneed_skill, who) then
 				return self:getCardRandomly(who, "h")
 			end
 		end

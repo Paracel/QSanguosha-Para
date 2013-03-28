@@ -563,7 +563,7 @@ TianxiangCard::TianxiangCard() {
 
 void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
-    room->setPlayerFlag(effect.to, "TianxiangTarget");
+    effect.to->addMark("TianxiangTarget");
     DamageStruct damage = effect.from->tag.value("TianxiangDamage").value<DamageStruct>();
 
     if (damage.card && damage.card->isKindOf("Slash") && effect.from->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
@@ -627,11 +627,11 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (player->isAlive() && player->hasFlag("TianxiangTarget") && damage.transfer) {
+        if (player->isAlive() && player->getMark("TianxiangTarget") > 0 && damage.transfer) {
             player->drawCards(player->getLostHp());
-            room->setPlayerFlag(player, "-TianxiangTarget");
+            player->removeMark("TianxiangTarget");
         }
 
         return false;

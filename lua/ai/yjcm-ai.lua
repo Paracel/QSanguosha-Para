@@ -445,15 +445,29 @@ sgs.ai_skill_invoke.buyi = function(self, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.buyi = function(player, promptlist)
+	local dying
+	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
+		if p:hasFlag("dying") then
+			dying = p
+			break
+		end
+	end
 	if promptlist[#promptlist] == "yes" then
-		local dying
-		for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
-			if p:hasFlag("dying") then
-				dying = p
-				break
+		if dying then sgs.updateIntention(player, dying, -80) end
+	elseif promptlist[#promptlist] == "no" then
+		if not dying or dying:isKongcheng() then return end
+		local allBasicCard = true
+		local knownNum = 0
+		local cards = dying:getHandcards()
+		for _, card in sgs.qlist(cards) do
+			local flag = string.format("%s_%s_%s","visible", player:objectName(), dying:objectName())
+			if dying.who:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
+				knownNum = knownNum + 1
+				if card:getTypeId() ~= sgs.Card_TypeBasic then allBasicCard = false end
 			end
 		end
-		if dying then sgs.updateIntention(player, dying, -80) end
+		if knownNum < dying.who:getHandcardNum() then allBasicCard = false end
+		if not allBasicCard then sgs.updateIntention(player, dying, 80) end
 	end
 end
 

@@ -986,6 +986,7 @@ public:
                 damage.damage = 2;
                 room->damage(damage);
 
+                if (!player->isAlive()) return false;
                 QList<const Card *> equips = target->getEquips();
                 if (!equips.isEmpty()) {
                     DummyCard *dummy = new DummyCard;

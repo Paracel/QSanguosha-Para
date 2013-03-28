@@ -36,6 +36,8 @@ public:
     inline int getId() const { return _m_Id; } 
     bool isFull() const;
     bool isFinished() const;
+    bool canPause(ServerPlayer *p) const;
+    bool isPaused() const;
     int getLack() const;
     QString getMode() const;
     const Scenario *getScenario() const;
@@ -328,6 +330,7 @@ public:
     void toggleReadyCommand(ServerPlayer *player, const QString &);
     void speakCommand(ServerPlayer *player, const QString &arg);
     void trustCommand(ServerPlayer *player, const QString &arg);
+    void pauseCommand(ServerPlayer *player, const QString &arg);
     void processResponse(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *arg);
     void addRobotCommand(ServerPlayer *player, const QString &arg);
     void fillRobotsCommand(ServerPlayer *player, const QString &arg);
@@ -396,6 +399,7 @@ private:
     QList<int> *m_drawPile, *m_discardPile;
     bool game_started;
     bool game_finished;
+    bool game_paused;
     lua_State *L;
     QList<AI *> ais;
 

@@ -124,6 +124,8 @@ void RoomThread3v3::run() {
 }
 
 void RoomThread3v3::askForTakeGeneral(ServerPlayer *player) {
+    while (room->isPaused()) {}
+
     QString name;
     if (general_names.length() == 1 || player->getState() != "online")
         name = GeneralSelector::getInstance()->select3v3(player, general_names);
@@ -160,6 +162,8 @@ void RoomThread3v3::takeGeneral(ServerPlayer *player, const QString &name) {
 }
 
 void RoomThread3v3::startArrange(ServerPlayer *player) {
+    while (room->isPaused()) {}
+
     if (!player->isOnline()) {
         GeneralSelector *selector = GeneralSelector::getInstance();
         arrange(player, selector->arrange3v3(player));

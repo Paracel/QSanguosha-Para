@@ -205,6 +205,9 @@ private:
     QMap<PlayerCardContainer *, const ClientPlayer *> item2player;
     QDialog *m_choiceDialog; // Dialog for choosing generals, suits, card/equip, or kingdoms
 
+    QGraphicsRectItem *pausing_item;
+    QGraphicsSimpleTextItem *pausing_text;
+
     int timer_id;
     int tick;
     

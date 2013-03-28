@@ -48,6 +48,8 @@ void RoomThread1v1::run() {
 }
 
 void RoomThread1v1::askForTakeGeneral(ServerPlayer *player) {
+    while (room->isPaused()) {}
+
     QString name;
     if (general_names.length() == 1)
         name = general_names.first();
@@ -65,7 +67,6 @@ void RoomThread1v1::askForTakeGeneral(ServerPlayer *player) {
             name = selector->select1v1(general_names);
             takeGeneral(player, name);
         }
-        //player->invoke("askForGeneral1v1");
     } else {
         msleep(Config.AIDelay);
         takeGeneral(player, name);
@@ -104,6 +105,8 @@ void RoomThread1v1::takeGeneral(ServerPlayer *player, const QString &name) {
 }
 
 void RoomThread1v1::startArrange(ServerPlayer *player) {
+    while (room->isPaused()) {}
+
     if (player->getState() != "online") {
         GeneralSelector *selector = GeneralSelector::getInstance();
         arrange(player, selector->arrange1v1(player));

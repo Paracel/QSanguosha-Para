@@ -137,7 +137,8 @@ namespace QSanProtocol {
         S_GAME_EVENT_CHANGE_GENDER,
         S_GAME_EVENT_CHANGE_HERO,
         S_GAME_EVENT_PLAYER_REFORM,
-        S_GAME_EVENT_SKILL_INVOKED
+        S_GAME_EVENT_SKILL_INVOKED,
+        S_GAME_EVENT_PAUSE
     };
 
     enum Game3v3ChooseOrderCommand {

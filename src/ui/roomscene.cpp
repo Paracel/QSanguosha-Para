@@ -325,6 +325,25 @@ RoomScene::RoomScene(QMainWindow *main_window)
         control_panel = NULL;
     }
     animations = new EffectAnimation();
+
+    pausing_item = new QGraphicsRectItem;
+    pausing_text = new QGraphicsSimpleTextItem(tr("Paused ..."));
+    addItem(pausing_item);
+    addItem(pausing_text);
+
+    QBrush pausing_brush(G_DASHBOARD_LAYOUT.m_trustEffectColor);
+    pausing_item->setBrush(pausing_brush);
+    pausing_item->setOpacity(0.36);
+    pausing_item->setZValue(1002.0);
+
+    QFont font= Config.BigFont;
+    font.setPixelSize(100);
+    pausing_text->setFont(font);
+    pausing_text->setBrush(Qt::white);
+    pausing_text->setZValue(1002.1);
+
+    pausing_item->hide();
+    pausing_text->hide();
 }
 
 void RoomScene::handleGameEvent(const Json::Value &arg) {
@@ -497,8 +516,20 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             }
             break;
         }
+    case S_GAME_EVENT_PAUSE: {
+            bool paused = arg[1].asBool();
+            if (pausing_item->isVisible() != paused) {
+                pausing_item->setVisible(paused);
+                pausing_text->setVisible(paused);
+                if (paused) {
+                    bringToFront(pausing_item);
+                    bringToFront(pausing_text);
+                }
+            }
+            break;
+        }
     default:
-        break;
+            break;
     }
 }
 
@@ -843,6 +874,9 @@ void RoomScene::updateTable() {
     card_container->setPos(m_tableCenterPos);
     guanxing_box->setPos(m_tableCenterPos);
     prompt_box->setPos(m_tableCenterPos);
+    pausing_text->setPos(m_tableCenterPos - pausing_text->boundingRect().center());
+    pausing_item->setRect(sceneRect());
+    pausing_item->setPos(0, 0);
 
     int *seatToRegion;
     bool pkMode = false;
@@ -1180,6 +1214,17 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
                     ClientInstance->addRobot();
             } else if (fill_robots && fill_robots->isVisible())
                 ClientInstance->fillRobots();
+            break;
+        }
+    case Qt::Key_F6: {
+            if (!Self || !Self->isOwner() || ClientInstance->getPlayers().length() < Sanguosha->getPlayerCount(ServerInfo.GameMode)) break;
+            foreach (const ClientPlayer *p, ClientInstance->getPlayers()) {
+                if (p != Self && p->getState() != "robot")
+                    break;
+            }
+            bool paused = pausing_text->isVisible();
+            QString message = QString("pause %1").arg((paused ? "false" : "true"));
+            ClientInstance->request(message);
             break;
         }
     case Qt::Key_F12: {

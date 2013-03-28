@@ -3,7 +3,7 @@ sgs.ai_skill_playerchosen.gh_tuxi = function(self, targets)
 	if cardstr:match("->") then
 		local targetstr = cardstr:split("->")[2]:split("+")
 		if #targetstr > 0 then
-			local target = self:findPlayerByObjectName(targetstr[1])
+			local target = findPlayerByObjectName(self.room, targetstr[1])
 			return target
 		end
 	end

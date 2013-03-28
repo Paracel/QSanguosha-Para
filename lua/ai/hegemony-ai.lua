@@ -382,7 +382,7 @@ end
 sgs.ai_skill_invoke.suishi = function(self, data)
 	local promptlist = data:toString():split(":")
 	local effect = promptlist[1]
-	local tianfeng = findPlayerByObjectName(promptlist[2])
+	local tianfeng = findPlayerByObjectName(self.room, promptlist[2])
 	if effect == "draw" then
 		return tianfeng and self:isFriend(tianfeng)
 	elseif effect == "losehp" then

@@ -62,7 +62,8 @@ sgs.ai_choicemade_filter = {
 	skillChoice = {},
 	Nullification = {},
 	playerChosen = {},
-	Yiji = {}
+	Yiji = {},
+	viewCards = {}
 }
 
 sgs.card_lack = {}
@@ -1388,16 +1389,23 @@ end
 sgs.ai_choicemade_filter.playerChosen.general = function(self, from, promptlist)
 	if from:objectName() == promptlist[3] then return end
 	local reason = string.gsub(promptlist[2], "%-", "_")
-	local to
-	for _, p in sgs.qlist(from:getRoom():getAlivePlayers()) do
-		if p:objectName() == promptlist[3] then to = p break end
-	end
+	local to = findPlayerByObjectName(self.room, promptlist[3])
 	local callback = sgs.ai_playerchosen_intention[reason]
 	if callback then
 		if type(callback) == "number" then
 			sgs.updateIntention(from, to, sgs.ai_playerchosen_intention[reason])
 		elseif type(callback) == "function" then
 			callback(self, from, to)
+		end
+	end
+end
+
+sgs.ai_choicemade_filter.viewCards.general = function(self, from, promptlist)
+	local to = findPlayerByObjectName(self.room, promptlist[#promptlist])
+	if to and not to:isKongcheng() then
+		local flag = string.format("%s_%s_%s", "visible", from:objectName(), to:objectName())
+		for _, card in sgs.qlist(to:getHandcards()) do
+			if not card:hasFlag("visible") then card:setFlags(flag) end
 		end
 	end
 end
@@ -1658,7 +1666,7 @@ function SmartAI:filterEvent(event, player, data)
 				if move.from and player:objectName() == move.from:objectName()
 					and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
 					local flag = string.format("%s_%s_%s", "visible", move.from:objectName(), move.to:objectName())
-					global_room:setCardFlag(card_id, flag, from)
+					card:setFlags(flag)
 				end
 			end
 

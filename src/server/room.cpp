@@ -4267,6 +4267,9 @@ void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
     log.card_str = Card::IdsToStrings(target->handCards()).join("+");
     doNotify(shenlvmeng, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
+    QVariant decisionData = QVariant::fromValue("viewCards:" + shenlvmeng->objectName() + ":" + target->objectName());
+    thread->trigger(ChoiceMade, this, shenlvmeng, decisionData);
+
     shenlvmeng->tag["GongxinTarget"] = QVariant::fromValue((PlayerStar)target);
     int card_id;
     AI *ai = shenlvmeng->getAI();
@@ -4694,6 +4697,9 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
         log.to << player;
         log.card_str = Card::IdsToStrings(player->handCards()).join("+");
         doNotify(to, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
+        QVariant decisionData = QVariant::fromValue("viewCards:" + to->objectName() + ":" + player->objectName());
+        thread->trigger(ChoiceMade, this, to, decisionData);
 
         notifyMoveFocus(to, S_COMMAND_SKILL_GONGXIN);
         doRequest(to, S_COMMAND_SKILL_GONGXIN, gongxinArgs, true);

@@ -218,8 +218,8 @@ end
 
 sgs.ai_skill_invoke.zhanshen = function(self, data)
 	local obj = data:toString():split(":")[2]
-	local lvbu = self:findPlayerByObjectName(obj)
-	return self:isFriend(obj)
+	local lvbu = findPlayerByObjectName(self.room, obj)
+	return self:isFriend(lvbu)
 end
 
 sgs.weapon_range.VSCrossbow = sgs.weapon_range.Crossbow

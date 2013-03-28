@@ -302,7 +302,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return WeaponSkill::triggerable(target) && !target->isSexLess();
+        return WeaponSkill::triggerable(target);
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -311,8 +311,7 @@ public:
             return false;
 
         foreach (ServerPlayer *to, use.to) {
-            if (use.from->isMale() != to->isMale()
-                && !to->isSexLess()
+            if (((use.from->isMale() && to->isFemale()) || (use.from->isFemale() && to->isMale()))
                 && use.card->isKindOf("Slash")) {
                 if (use.from->askForSkillInvoke(objectName())) {
                     to->getRoom()->setEmotion(use.from, "weapon/double_sword");

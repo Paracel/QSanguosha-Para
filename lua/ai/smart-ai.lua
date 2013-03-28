@@ -2426,8 +2426,13 @@ end
 
 function SmartAI:needKongcheng(player, need_keep)
 	player = player or self.player
-	return (player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)))
-			or (not need_keep and not self:isWeak(player) and self:hasSkills(sgs.need_kongcheng, player))
+	if need_keep then
+		return player:isKongcheng() and (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0))
+	end
+	if not self:hasLoseHandcardEffective() then return true end
+	if player:hasSkill("zhiji") and player:getMark("zhiji") == 0 then return true end
+	if player:hasSkill("shude") and player:getPhase() == sgs.Player_Play then return true end
+	return self:hasSkills(sgs.need_kongcheng, player)
 end
 
 function SmartAI:getLeastHandcardNum(player)

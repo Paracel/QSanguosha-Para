@@ -10,12 +10,11 @@ sgs.ai_skill_playerchosen.gh_tuxi = function(self, targets)
 	return nil
 end
 
-sgs.ai_playerchosen_intention.gh_tuxi = function(from, to)
+sgs.ai_playerchosen_intention.gh_tuxi = function(self, from, to)
 	local lord = self.room:getLord()
 	if sgs.evaluatePlayerRole(from) == "neutral" and sgs.evaluatePlayerRole(to) == "neutral"
 		and lord and not lord:isKongcheng()
-		and not (lord:hasSkills("kongcheng|zhiji") and lord:getHandcardNum() == 1)
-		and not (lord:hasSkill("lianying") and lord:getHandcardNum() == 1) and not lord:hasSkills("tuntian+zaoxian") and from:aliveCount() >= 4 then
+		and not self:doNotDiscard(lord, "h", true) and from:aliveCount() >= 4 then
 		sgs.updateIntention(from, lord, -35)
 		return
 	end

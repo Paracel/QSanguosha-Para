@@ -488,8 +488,6 @@ end
 
 table.insert(sgs.ai_global_flags, "questioner")
 
-table.insert(sgs.ai_choicemade_filter.cardUsed, guhuo_filter)
-
 sgs.ai_skill_choice.guhuo = function(self, choices)
 	local yuji = self.room:findPlayerBySkillName("guhuo")
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
@@ -527,7 +525,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	return self.player:objectName() == questioner:objectName() and x ~= 1 and "question" or "noquestion"
 end
 
-sgs.ai_choicemade_filter.skillChoice.guhuo = function(player, promptlist)
+sgs.ai_choicemade_filter.skillChoice.guhuo = function(self, player, promptlist)
 	if promptlist[#promptlist] == "question" then
 		sgs.questioner = player
 	end

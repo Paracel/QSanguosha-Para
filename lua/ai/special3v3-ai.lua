@@ -119,16 +119,11 @@ sgs.ai_skill_playerchosen.vsganglie = function(self, targets)
 	return nil
 end
 
-sgs.ai_playerchosen_intention.vsganglie = function(from, to)
+sgs.ai_playerchosen_intention.vsganglie = function(self, from, to)
 	if sgs.ai_ganglie_effect and sgs.ai_ganglie_effect == string.format("%s_%s_%d", from:objectName(), to:objectName(), sgs.turncount) then
 		sgs.updateIntention(from, to, -10)
 	elseif from:getState() == "online" then
-		if not from:hasSkill("jueqing") then
-			for _, askill in sgs.qlist(to:getVisibleSkillList()) do
-				local callback = sgs.ai_need_damaged[askill:objectName()]
-				if type(callback) == "function" and callback(self, attacker, to) then return end
-			end
-		end
+		if not from:hasSkill("jueqing") and self:getDamagedEffects(to, from) then return end
 		sgs.updateIntention(from, to, 40)
 	else
 		sgs.updateIntention(from, to, 80)

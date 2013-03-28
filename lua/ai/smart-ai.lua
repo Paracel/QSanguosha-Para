@@ -1318,8 +1318,8 @@ end
 
 sgs.ai_nullification_level = {}
 sgs.ai_trick_struct = { "source", "target", "trick" }
-sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
-	local room = player:getRoom()
+sgs.ai_choicemade_filter.Nullification.general = function(self, player, promptlist)
+	local room = self.room
 	local null_source = player:objectName()
 	local trick_class = promptlist[2]
 	local trick_target = promptlist[3]
@@ -1385,7 +1385,7 @@ sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
 	end
 end
 
-sgs.ai_choicemade_filter.playerChosen.general = function(from, promptlist)
+sgs.ai_choicemade_filter.playerChosen.general = function(self, from, promptlist)
 	if from:objectName() == promptlist[3] then return end
 	local reason = string.gsub(promptlist[2], "%-", "_")
 	local to
@@ -1397,7 +1397,7 @@ sgs.ai_choicemade_filter.playerChosen.general = function(from, promptlist)
 		if type(callback) == "number" then
 			sgs.updateIntention(from, to, sgs.ai_playerchosen_intention[reason])
 		elseif type(callback) == "function" then
-			callback(from, to)
+			callback(self, from, to)
 		end
 	end
 end
@@ -1431,7 +1431,7 @@ function SmartAI:filterEvent(event, player, data)
 			end
 			for _, callback in ipairs(sgs.ai_choicemade_filter.cardUsed) do
 				if type(callback) == "function" then
-					callback(player, carduse)
+					callback(self, player, carduse)
 				end
 			end
 		elseif data:toString() then
@@ -1441,7 +1441,7 @@ function SmartAI:filterEvent(event, player, data)
 				local index = (promptlist[1] == "cardResponded") and 3 or 2
 				local callback = callbacktable[promptlist[index]] or callbacktable.general
 				if type(callback) == "function" then
-					callback(player, promptlist)
+					callback(self, player, promptlist)
 				end
 			end
 			if data:toString() == "skillInvoke:fenxin:yes" then
@@ -2713,7 +2713,7 @@ function SmartAI:askForYiji(card_ids, reason)
 	return nil, -1
 end
 
-sgs.ai_choicemade_filter.Yiji.general = function(from, promptlist)
+sgs.ai_choicemade_filter.Yiji.general = function(self, from, promptlist)
 	if from:objectName() == promptlist[4] then return end
 	local to
 	for _, p in sgs.qlist(from:getRoom():getAlivePlayers()) do

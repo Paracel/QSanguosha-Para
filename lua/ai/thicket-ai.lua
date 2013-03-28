@@ -84,15 +84,10 @@ end
 
 sgs.ai_playerchosen_intention.songwei = -50
 
-sgs.ai_playerchosen_intention.fangzhu = function(from, to)
+sgs.ai_playerchosen_intention.fangzhu = function(self, from, to)
 	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then sgs.updateIntention(from, to, 80) end
 	local intention = 80 / math.max(from:getLostHp(), 1)
-	if to:faceUp() then
-		if to:hasFlag("ShenfenUsing") or to:hasFlag("GuixinUsing") then intention = -80 end
-		if to:hasSkill("lihun") and not to:hasUsed("LihunCard") then intention = -10 end
-	else
-		intention = -80
-	end
+	if not toTurnOver(to) then intention = -intention end
 	if from:getLostHp() < 3 then
 		sgs.updateIntention(from, to, intention)
 	else
@@ -355,16 +350,16 @@ sgs.ai_skill_choice.yinghun = function(self, choices)
 	return self.yinghunchoice
 end
 
-sgs.ai_playerchosen_intention.yinghun = function(from, to)
+sgs.ai_playerchosen_intention.yinghun = function(self, from, to)
 	if from:getLostHp() > 1 then return end
 	local intention = -80
 	if to:hasSkill("manjuan") then intention = -intention end
 	sgs.updateIntention(from, to, intention)
 end
 
-sgs.ai_choicemade_filter.skillChoice.yinghun = function(player, promptlist)
+sgs.ai_choicemade_filter.skillChoice.yinghun = function(self, player, promptlist)
 	local to
-	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
+	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if p:hasFlag("YinghunTarget") then
 			to = p
 			break

@@ -24,7 +24,7 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 	return self.room:getLieges("wei", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
 end
 
-sgs.ai_choicemade_filter.skillInvoke.hujia = function(player, promptlist)
+sgs.ai_choicemade_filter.skillInvoke.hujia = function(self, player, promptlist)
 	if promptlist[#promptlist] == "yes" then
 		sgs.hujiasource = player
 	end
@@ -36,11 +36,11 @@ function sgs.ai_slash_prohibit.hujia(self, from, to)
 	if guojia and guojia:getKingdom() == "wei" and self:isFriend(to, guojia) then return sgs.ai_slash_prohibit.tiandu(self, from, guojia) end
 end
 
-sgs.ai_choicemade_filter.cardResponded["@hujia-jink"] = function(player, promptlist)
+sgs.ai_choicemade_filter.cardResponded["@hujia-jink"] = function(self, player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
 		sgs.updateIntention(player, sgs.hujiasource, -80)
 		sgs.hujiasource = nil
-	elseif sgs.hujiasource and player:objectName() == player:getRoom():getLieges("wei", sgs.hujiasource):last():objectName() then
+	elseif sgs.hujiasource and player:objectName() == self.room:getLieges("wei", sgs.hujiasource):last():objectName() then
 		sgs.hujiasource = nil
 	end
 end
@@ -731,7 +731,7 @@ end
 sgs.dynamic_value.benefit.RendeCard = true
 
 table.insert(sgs.ai_global_flags, "jijiangsource")
-local jijiang_filter = function(player, carduse)
+local jijiang_filter = function(self, player, carduse)
 	if carduse.card:isKindOf("JijiangCard") then
 		sgs.jijiangsource = player
 	else
@@ -758,7 +758,7 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 	return self.room:getLieges("shu", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
 end
 
-sgs.ai_choicemade_filter.skillInvoke.jijiang = function(player, promptlist)
+sgs.ai_choicemade_filter.skillInvoke.jijiang = function(self, player, promptlist)
 	if promptlist[#promptlist] == "yes" then
 		sgs.jijiangsource = player
 	end
@@ -808,7 +808,7 @@ sgs.ai_card_intention.JijiangCard = function(self, card, from, tos)
 	end
 end
 
-sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(player, promptlist)
+sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(self, player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
 		sgs.updateIntention(player, sgs.jijiangsource, -40)
 		sgs.jijiangsource = nil
@@ -2038,7 +2038,7 @@ end
 sgs.ai_use_value.LijianCard = 8.5
 sgs.ai_use_priority.LijianCard = 4
 
-lijian_filter = function(player, carduse)
+lijian_filter = function(self, player, carduse)
 	if carduse.card:isKindOf("LijianCard") then
 		sgs.ai_lijian_effect = true
 	end

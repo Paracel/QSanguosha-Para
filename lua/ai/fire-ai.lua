@@ -67,7 +67,7 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 	end
 end
 
-local quhu_filter = function(player, carduse)
+local quhu_filter = function(self, player, carduse)
 	if carduse.card:isKindOf("QuhuCard") then
 		sgs.ai_quhu_effect = true
 	end
@@ -129,7 +129,7 @@ sgs.ai_need_damaged.jieming = function(self, attacker, player)
 	return self:getJiemingChaofeng(player) <= -6
 end
 
-sgs.ai_playerchosen_intention.jieming = function(from, to)
+sgs.ai_playerchosen_intention.jieming = function(self, from, to)
 	if to:getHandcardNum() < math.min(5, to:getMaxHp()) then
 		sgs.updateIntention(from, to, -80)
 	end

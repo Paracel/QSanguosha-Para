@@ -37,9 +37,9 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 	return "."
 end
 
-sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(player, promptlist)
+sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(self, player, promptlist)
 	if promptlist[#promptlist] ~= "_nil_" then
-		local current = player:getRoom():getCurrent()
+		local current = self.room:getCurrent()
 		if not current then return end
 		local intention = 50
 		if (current:hasArmorEffect("silver_lion") and current:isWounded() and self:isWeak(current))
@@ -371,11 +371,9 @@ sgs.ai_skill_playerchosen.sijian = function(self, targets)
 	return self:findPlayerToDiscard()
 end
 
-sgs.ai_playerchosen_intention.sijian = function(from, to)
+sgs.ai_playerchosen_intention.sijian = function(self, from, to)
 	local intention = 80
-	if (to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2)
-		or (to:hasSkills("bazhen|yizhong") and to:getArmor())
-		or (to:hasArmorEffect("silver_lion") and to:getHp() <= 2) then
+	if (to:hasSkill("kongcheng") and to:getHandcardNum() == 1) or self:needToThrowArmor(to) then
 		intention = 0
 	end
 	sgs.updateIntention(from, to, intention)

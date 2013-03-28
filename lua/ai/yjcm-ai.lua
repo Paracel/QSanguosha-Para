@@ -302,12 +302,10 @@ sgs.ai_skill_playerchosen.xuanfeng = function(self, targets)
 	return player or targets[1]
 end
 
-sgs.ai_playerchosen_intention.xuanfeng = function(from, to)
+sgs.ai_playerchosen_intention.xuanfeng = function(self, from, to)
 	local intention = 80
-	if to:hasSkill("kongcheng") and to:getHandcardNum() == 1 and to:getHp() <= 2 then
-		intention = -10
-	elseif self:needToThrowArmor(to) then
-		intention = -10
+	if (to:hasSkill("kongcheng") and to:getHandcardNum() == 1) or self:needToThrowArmor(to) then
+		intention = 0
 	end
 	sgs.updateIntention(from, to, intention)
 end
@@ -444,7 +442,7 @@ sgs.ai_skill_invoke.buyi = function(self, data)
 	return isFriend and not allBasicCard
 end
 
-sgs.ai_choicemade_filter.skillInvoke.buyi = function(player, promptlist)
+sgs.ai_choicemade_filter.skillInvoke.buyi = function(self, player, promptlist)
 	local dying
 	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
 		if p:hasFlag("dying") then
@@ -453,15 +451,15 @@ sgs.ai_choicemade_filter.skillInvoke.buyi = function(player, promptlist)
 		end
 	end
 	if promptlist[#promptlist] == "yes" then
-		if dying then sgs.updateIntention(player, dying, -80) end
+		if dying and dying:objectName() ~= self.player:objectName() then sgs.updateIntention(player, dying, -80) end
 	elseif promptlist[#promptlist] == "no" then
-		if not dying or dying:isKongcheng() then return end
+		if not dying or dying:isKongcheng() or dying:objectName() == self.player:objectName() then return end
 		local allBasicCard = true
 		local knownNum = 0
 		local cards = dying:getHandcards()
 		for _, card in sgs.qlist(cards) do
 			local flag = string.format("%s_%s_%s","visible", player:objectName(), dying:objectName())
-			if dying.who:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
+			if card:hasFlag("visible") or card:hasFlag(flag) then
 				knownNum = knownNum + 1
 				if card:getTypeId() ~= sgs.Card_TypeBasic then allBasicCard = false end
 			end

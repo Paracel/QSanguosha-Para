@@ -516,6 +516,101 @@ sgs.ai_card_intention.SongciCard = function(self, card, from, to)
 	sgs.updateIntention(from, to[1], to[1]:getHandcardNum() > to[1]:getHp() and 80 or -80)
 end
 
+sgs.ai_skill_cardask["@xingwu"] = function(self, data)
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	if #cards <= 1 and self.player:getPile("xingwu"):length() == 1 then return "." end
+
+	local good_enemies = {}
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:isMale() and ((self:damageIsEffective(enemy) and not self:cantbeHurt(enemy, self.player, 2))
+								or (not self:damageIsEffective(enemy) and not enemy:getEquips():isEmpty()
+									and not (enemy:getEquips():length() == 1 and enemy:getArmor() and self:needToThrowArmor()))) then
+			table.insert(good_enemies, enemy)
+		end
+	end
+	if #good_enemies == 0 and (not self.player:getPile("xingwu"):isEmpty() or not self.player:hasSkill("luoyan")) then return "." end
+
+	local red_avail, black_avail
+	local n = self.player:getMark("xingwu")
+	if bit32.band(n, 2) == 0 then red_avail = true end
+	if bit32.band(n, 1) == 0 then black_avail = true end
+
+	self:sortByKeepValue(cards)
+	local xwcard
+	local heart = 0
+	for _, card in ipairs(cards) do
+		xwcard = nil
+		if self.player:hasSkill("tianxiang") and card:getSuit() == sgs.Card_Heart and heart < math.min(self.player:getHp(), 2) then
+			heart = heart + 1
+			goto label_break
+		elseif card:isKindOf("Jink") then
+			if self.player:hasSkill("liuli") and self.room:alivePlayerCount() > 2 then
+				for _, p in ipairs(self.room:getOtherPlayers(self.player)) do
+					local to_brk = false
+					if self:canLiuli(self.player, p) then
+						xwcard = card
+						goto label_break
+					end
+				end
+			elseif self:getCardsNum("Jink") >= 2 then
+				xwcard = card
+			end
+		elseif not isCard("Peach", card, self.player) and not (self:isWeak() and isCard("Analeptic", card, self.player)) then
+			xwcard = card
+		end
+::label_break::
+		if xwcard and ((red_avail and xwcard:isRed()) or (black_avail and xwcard:isBlack())) then break end
+	end
+
+	if xwcard then return "$" .. xwcard:getEffectiveId() else return "." end
+end
+
+sgs.ai_skill_playerchosen.xingwu = function(self, targets)
+	local good_enemies = {}
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:isMale() then
+			table.insert(good_enemies, enemy)
+		end
+	end
+	if #good_enemies == 0 then return targets:first() end
+
+	local getCmpValue = function(enemy)
+		local value = 0
+		if self:damageIsEffective(enemy) then
+			local dmg = enemy:hasArmorEffect("silver_lion") and 1 or 2
+			if enemy:getHp() <= dmg then value = 5 else value = value + enemy:getHp() / (enemy:getHp() - dmg) end
+			if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 2 end
+			if self:cantbeHurt(enemy, self.player, dmg) then value = value - 5 end
+			if enemy:isLord() then value = value + 2 end
+			if enemy:hasArmorEffect("silver_lion") then value = value - 1.5 end
+			if self:hasSkills(sgs.exclusive_skill, enemy) then value = value - 1 end
+			if self:hasSkills(sgs.masochism_skill, enemy) then value = value - 0.5 end
+		end
+		if not enemy:getEquips():isEmpty() then
+			local len = enemy:getEquips():length()
+			if enemy:hasSkills(sgs.lose_equip_skill) then value = value - 0.6 * len end
+			if enemy:getArmor() and self:needToThrowArmor() then value = value - 1.5 end
+			if enemy:hasArmorEffect("silver_lion") then value = value - 0.5 end
+
+			if enemy:getWeapon() then value = value + 0.8 end
+			if enemy:getArmor() then value = value + 1 end
+			if enemy:getDefensiveHorse() then value = value + 0.9 end
+			if enemy:getOffensiveHorse() then value = value + 0.7 end
+			if self:getDangerousCard(enemy) then value = value + 0.3 end
+			if self:getValuableCard(enemy) then value = value + 0.15 end
+		end
+		return value
+	end
+
+	local cmp = function(a, b)
+		return getCmpValue(a) > getCmpValue(b)
+	end
+	table.sort(good_enemies, cmp)
+	return good_enemies[1]
+end
+
+sgs.ai_playerchosen_intention.xingwu = 80
+
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
 	if lord and lord:hasLordSkill("shichou") then

@@ -100,7 +100,7 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
             QList<int> card_ids = card->getSubcards();
             QStringList subcard_list;
             foreach (int card_id, card_ids) {
-                const Card *subcard = Sanguosha->getCard(card_id);
+                const Card *subcard = Sanguosha->getEngineCard(card_id);
                 subcard_list << bold(subcard->getLogName(), Qt::yellow);
             }
 

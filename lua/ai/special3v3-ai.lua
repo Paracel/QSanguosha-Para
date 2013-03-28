@@ -126,7 +126,7 @@ sgs.ai_playerchosen_intention.vsganglie = function(from, to)
 		if not from:hasSkill("jueqing") then
 			for _, askill in sgs.qlist(to:getVisibleSkillList()) do
 				local callback = sgs.ai_need_damaged[askill:objectName()]
-				if type(callback) == "function" and callback(self, attacker) then return end
+				if type(callback) == "function" and callback(self, attacker, to) then return end
 			end
 		end
 		sgs.updateIntention(from, to, 40)
@@ -135,9 +135,9 @@ sgs.ai_playerchosen_intention.vsganglie = function(from, to)
 	end
 end
 
-sgs.ai_need_damaged.vsganglie = function(self, attacker)
+sgs.ai_need_damaged.vsganglie = function(self, attacker, player)
 	for _, enemy in ipairs(self.enemies) do
-		if self:isEnemy(enemy) and enemy:getHp() + enemy:getHandcardNum() <= 3
+		if self:isEnemy(enemy, player) and enemy:getHp() + enemy:getHandcardNum() <= 3
 			and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", enemy) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			return true
 		end

@@ -3169,7 +3169,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 		end
 	end
 	if player:hasLordSkill("shichou") then
-		return sgs.ai_need_damaged.shichou(self, attacker) == 1
+		return sgs.ai_need_damaged.shichou(self, attacker, player) == 1
 	end
 
 	if self:hasHeavySlashDamage(attacker) then return false end
@@ -3177,7 +3177,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 	if sgs.isGoodHp(player) then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 			local callback = sgs.ai_need_damaged[askill:objectName()]
-			if type(callback) == "function" and callback(self, attacker) then return true end
+			if type(callback) == "function" and callback(self, attacker, player) then return true end
 		end
 	end
 	return false

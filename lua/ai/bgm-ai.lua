@@ -539,8 +539,7 @@ sgs.ai_skill_use["@@shichou"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_need_damaged.shichou = function(self, attacker)
-	local player = self.player
+sgs.ai_need_damaged.shichou = function(self, attacker, player)
 	if player:hasLordSkill("shichou") then
 		local victim
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
@@ -555,9 +554,9 @@ sgs.ai_need_damaged.shichou = function(self, attacker)
 				role = "rebel"
 			end
 			local need_damage = false
-			if (self.player:getRole() == "loyalist" or self.player:isLord()) and role == "rebel" then need_damage = true end
-			if self.player:getRole() == "rebel" and role ~= "rebel" then need_damage = true end
-			if self.player:getRole() == "renegade" then need_damage = true end
+			if (sgs.evaluatePlayerRole(player) == "loyalist" or player:isLord()) and role == "rebel" then need_damage = true end
+			if sgs.evaluatePlayerRole(player) == "rebel" and role ~= "rebel" then need_damage = true end
+			if sgs.evaluatePlayerRole(player) == "renegade" then need_damage = true end
 			if victim:isAlive() and need_damage then
 				return victim:hasSkill("wuhun") and 2 or 1
 			end

@@ -125,8 +125,8 @@ sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	return target
 end
 
-sgs.ai_need_damaged.jieming = function (self, attacker)
-	return self:getJiemingChaofeng(self.player) <= -6
+sgs.ai_need_damaged.jieming = function(self, attacker, player)
+	return self:getJiemingChaofeng(player) <= -6
 end
 
 sgs.ai_playerchosen_intention.jieming = function(from, to)

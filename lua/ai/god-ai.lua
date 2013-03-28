@@ -758,12 +758,12 @@ sgs.ai_skill_invoke.guixin = function(self, data)
 	end
 end
 
-sgs.ai_need_damaged.guixin = function (self, attacker)
-	if self.room:alivePlayerCount() <= 3 or self.player:hasSkill("manjuan") then return false end
+sgs.ai_need_damaged.guixin = function(self, attacker, player)
+	if self.room:alivePlayerCount() <= 3 or player:hasSkill("manjuan") then return false end
 	local diaochan = self.room:findPlayerBySkillName("lihun")
-	if diaochan and self:isEnemy(diaochan) then return false end
-	local num = self.player:getHandcardNum()
-	if self.player:faceUp() and num - self.player:getHp() > 2 then return false end
+	if diaochan and self:isEnemy(diaochan, player) then return false end
+	local num = player:getHandcardNum()
+	if player:faceUp() and num - player:getHp() > 2 then return false end
 	return true
 end
 

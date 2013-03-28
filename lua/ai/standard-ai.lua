@@ -62,7 +62,7 @@ end
 
 sgs.ai_skill_invoke.fankui = function(self, data)
 	local target = data:toPlayer()
-	if sgs.ai_need_damaged.fankui(self, target) then return true end
+	if sgs.ai_need_damaged.fankui(self, target, self.player) then return true end
 
 	if self:isFriend(target) then
 		if self:getOverflow(target) > 2 then return true end
@@ -81,7 +81,7 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 end
 
 sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
-	local suit = sgs.ai_need_damaged.fankui(self, who)
+	local suit = sgs.ai_need_damaged.fankui(self, who, self.player)
 	if not suit then return nil end
 
 	local cards = sgs.QList2Table(who:getEquips())
@@ -97,26 +97,29 @@ sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
 	return nil
 end
 
-sgs.ai_need_damaged.fankui = function (self, attacker)
-	if not self.player:hasSkill("guicai") then return false end
-	local need_retrial = function(player)
+sgs.ai_need_damaged.fankui = function(self, attacker, player)
+	if not player:hasSkill("guicai") then return false end
+	local need_retrial = function(splayer)
 		local alive_num = self.room:alivePlayerCount()
-		return alive_num + player:getSeat() % alive_num > self.room:getCurrent():getSeat()
-				and player:getSeat() < alive_num + self.player:getSeat() % alive_num
+		return alive_num + splayer:getSeat() % alive_num > self.room:getCurrent():getSeat()
+				and splayer:getSeat() < alive_num + self.player:getSeat() % alive_num
 	end
 	local retrial_card ={ ["spade"] = nil, ["heart"] = nil, ["club"] = nil }
 	local attacker_card ={ ["spade"] = nil, ["heart"]= nil, ["club"] = nil }
 
-	local handcards = sgs.QList2Table(self.player:getHandcards())
+	local handcards = sgs.QList2Table(player:getHandcards())
 	for i = 1, #handcards, 1 do
-		if handcards[i]:getSuit() == sgs.Card_Spade and handcards[i]:getNumber() >= 2 and handcards[i]:getNumber() <= 9 then
-			retrial_card.spade = true
-		end
-		if handcards[i]:getSuit() == sgs.Card_Heart then
-			retrial_card.heart = true
-		end
-		if handcards[i]:getSuit() == sgs.Card_Club then
-			retrial_card.club = true
+		local flag = string.format("%s_%s_%s", "visible", attacker:objectName(), player:objectName())
+		if player:objectName() == self.player:objectName() or handcards[i]:hasFlag("visible") or handcards[1]:hasFlag(flag) then
+			if handcards[i]:getSuit() == sgs.Card_Spade and handcards[i]:getNumber() >= 2 and handcards[i]:getNumber() <= 9 then
+				retrial_card.spade = true
+			end
+			if handcards[i]:getSuit() == sgs.Card_Heart then
+				retrial_card.heart = true
+			end
+			if handcards[i]:getSuit() == sgs.Card_Club then
+				retrial_card.club = true
+			end
 		end
 	end
 
@@ -136,17 +139,17 @@ sgs.ai_need_damaged.fankui = function (self, attacker)
 		end
 	end
 
-	local players = self.room:getOtherPlayers(self.player)
-	for _, player in sgs.qlist(players) do
-		if player:containsTrick("lightning") and self:getFinalRetrial(player) == 1 and need_retrial(player) then
+	local players = self.room:getOtherPlayers(player)
+	for _, p in sgs.qlist(players) do
+		if p:containsTrick("lightning") and self:getFinalRetrial(p) == 1 and need_retrial(p) then
 			if not retrial_card.spade and attacker_card.spade then return attacker_card.spade end
 		end
 
-		if self:isFriend(player) and not player:containsTrick("YanxiaoCard") and not player:hasSkill("qiaobian") then
-			if player:containsTrick("indulgence") and self:getFinalRetrial(player) == 1 and need_retrial(player) and player:getHandcardNum() >= player:getHp() then
+		if self:isFriend(p, player) and not p:containsTrick("YanxiaoCard") and not p:hasSkill("qiaobian") then
+			if p:containsTrick("indulgence") and self:getFinalRetrial(p) == 1 and need_retrial(p) and p:getHandcardNum() >= p:getHp() then
 				if not retrial_card.heart and attacker_card.heart then return attacker_card.heart end
 			end
-			if player:containsTrick("supply_shortage") and self:getFinalRetrial(player) == 1 and need_retrial(player) and self:hasSkills("yongshi", player) then
+			if p:containsTrick("supply_shortage") and self:getFinalRetrial(p) == 1 and need_retrial(p) and self:hasSkills("yongsi", p) then
 				if not retrial_card.club and attacker_card.club then return attacker_card.club end
 			end
 		end
@@ -210,10 +213,10 @@ sgs.ai_skill_invoke.ganglie = function(self, data)
 	return not self:isFriend(damage.from) and self:canAttack(damage.from)
 end
 
-sgs.ai_need_damaged.ganglie = function(self, attacker)
-	if self:getDamagedEffects(attacker, self.player) then return self:isFriend(attacker) end
+sgs.ai_need_damaged.ganglie = function(self, attacker, player)
+	if not attacker:hasSkill("ganglie") and self:getDamagedEffects(attacker, player) then return self:isFriend(attacker, player) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
-		and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self.enemies, self) then
+		and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self:getEnemies(attacker), self) then
 		return true
 	end
 	return false
@@ -555,19 +558,20 @@ sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 	return nil, -1
 end
 
-sgs.ai_need_damaged.yiji = function(self, attacker)
+sgs.ai_need_damaged.yiji = function(self, attacker, player)
 	local need_card = false
 	local current = self.room:getCurrent()
 	if current:hasWeapon("Crossbow") or current:hasSkill("paoxiao") or current:hasFlag("shuangxiong") then need_card = true end
 	if self:hasSkills("jieyin|jijiu", current) and self:getOverflow(current) <= 0 then need_card = true end
-	if self:isFriend(current) and need_card then return true end
+	if self:isFriend(current, player) and need_card then return true end
 
-	self:sort(self.friends, "hp")
+	local friends = self:getFriends(player)
+	self:sort(friends, "hp")
 
-	if self.friends[1]:objectName() == self.player:objectName() and self:isWeak() and self:getCardsNum("Peach") == 0 then return false end
-	if #self.friends > 1 and self:isWeak(self.friends[2]) then return true end
+	if #friends > 0 and friends[1]:objectName() == player:objectName() and self:isWeak(player) and getCardsNum("Peach", player) == 0 then return false end
+	if #friends > 1 and self:isWeak(friends[2]) then return true end
 
-	return self.player:getHp() > 2 and sgs.turncount > 2 and #self.friends > 1
+	return player:getHp() > 2 and sgs.turncount > 2 and #friends > 1
 end
 
 sgs.ai_chaofeng.guojia = -4

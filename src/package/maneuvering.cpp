@@ -308,17 +308,10 @@ void FireAttack::onEffect(const CardEffectStruct &effect) const{
     QString prompt = QString("@fire-attack:%1::%2").arg(effect.to->objectName()).arg(suit_str);
     if (effect.from->isAlive()) {
         const Card *card_to_throw = room->askForCard(effect.from, pattern, prompt);
-        if (card_to_throw) {
-            DamageStruct damage;
-            damage.card = this;
-            damage.from = effect.from;
-            damage.to = effect.to;
-            damage.nature = DamageStruct::Fire;
-
-            room->damage(damage);
-        } else {
+        if (card_to_throw)
+            room->damage(DamageStruct(this, effect.from, effect.to, 1, DamageStruct::Fire));
+        else
             effect.from->setFlags("FireAttackFailed_" + effect.to->objectName()); // For AI
-        }
     }
 
     if (card->isVirtualCard())

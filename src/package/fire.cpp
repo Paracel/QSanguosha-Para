@@ -42,22 +42,9 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
         }
 
         ServerPlayer *wolf = room->askForPlayerChosen(xunyu, wolves, "quhu", QString("@quhu-damage:%1").arg(tiger->objectName()));
-
-        DamageStruct damage;
-        damage.from = tiger;
-        damage.to = wolf;
-        damage.reason = "quhu";
-
-        room->damage(damage);
-
+        room->damage(DamageStruct("quhu", tiger, wolf));
     } else {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.from = tiger;
-        damage.to = xunyu;
-        damage.reason = "quhu";
-
-        room->damage(damage);
+        room->damage(DamageStruct("quhu", tiger, xunyu));
     }
 }
 
@@ -124,13 +111,7 @@ void QiangxiCard::onEffect(const CardEffectStruct &effect) const{
     if (subcards.isEmpty())
         room->loseHp(effect.from);
 
-    DamageStruct damage;
-    damage.card = NULL;
-    damage.from = effect.from;
-    damage.to = effect.to;
-    damage.reason = "qiangxi";
-
-    room->damage(damage);
+    room->damage(DamageStruct("qiangxi", effect.from, effect.to));
 }
 
 class Qiangxi: public ViewAsSkill {

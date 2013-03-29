@@ -37,13 +37,8 @@ public:
         ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "@sp_moonspear", true);
         if (!target) return false;
         room->setEmotion(player, "weapon/moonspear");
-        if (!room->askForCard(target, "jink", "@moon-spear-jink", QVariant(), Card::MethodResponse, player)) {
-            DamageStruct damage;
-            damage.from = player;
-            damage.to = target;
-            damage.reason = objectName();
-            room->damage(damage);
-        }
+        if (!room->askForCard(target, "jink", "@moon-spear-jink", QVariant(), Card::MethodResponse, player))
+            room->damage(DamageStruct(objectName(), player, target));
         return false;
     }
 };
@@ -476,6 +471,7 @@ bool XuejiCard::targetFilter(const QList<const Player *> &targets, const Player 
 void XuejiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     DamageStruct damage;
     damage.from = source;
+    damage.reason = "xueji";
 
     foreach (ServerPlayer *p, targets) {
         damage.to = p;
@@ -980,11 +976,7 @@ public:
                 if (males.isEmpty()) return false;
 
                 ServerPlayer *target = room->askForPlayerChosen(player, males, objectName());
-                DamageStruct damage;
-                damage.from = player;
-                damage.to = target;
-                damage.damage = 2;
-                room->damage(damage);
+                room->damage(DamageStruct(objectName(), player, target, 2));
 
                 if (!player->isAlive()) return false;
                 QList<const Card *> equips = target->getEquips();

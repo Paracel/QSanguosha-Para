@@ -299,14 +299,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                     peach = room->askForSinglePeach(player, dying.who);
                 if (peach == NULL)
                     break;
-
-                CardUseStruct use;
-                use.card = peach;
-                use.from = player;
-                if (player != dying.who)
-                    use.to << dying.who;
-
-                room->useCard(use, false);
+                room->useCard(CardUseStruct(peach, player, dying.who), false);
             }
 
             break;
@@ -502,13 +495,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
     case SlashHit: {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
 
-            DamageStruct damage;
-            damage.card = effect.slash;
-            damage.from = effect.from;
-            damage.to = effect.to;
-            damage.nature = effect.nature;
-            if (effect.drank > 0) damage.to->setMark("SlashIsDrank", effect.drank);
-            room->damage(damage);
+            if (effect.drank > 0) effect.to->setMark("SlashIsDrank", effect.drank);
+            room->damage(DamageStruct(effect.slash, effect.from, effect.to, 1, effect.nature));
 
             break;
         }

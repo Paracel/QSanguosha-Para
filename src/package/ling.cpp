@@ -88,15 +88,8 @@ void NeoFanjianCard::onEffect(const CardEffectStruct &effect) const{
     target->obtainCard(this);
     room->showCard(target, card_id);
 
-    if (card->getSuit() != suit) {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.from = zhouyu;
-        damage.to = target;
-        damage.reason = "neofanjian";
-
-        room->damage(damage);
-    }
+    if (card->getSuit() != suit)
+        room->damage(DamageStruct("neofanjian", zhouyu, target));
 }
 
 class NeoFanjian: public OneCardViewAsSkill {
@@ -221,15 +214,10 @@ public:
                 choicelist << "damage";
                 if (from->getHandcardNum() > 1)
                     choicelist << "throw";
-                QString choice = room->askForChoice(xiahou, "neoganglie", choicelist.join("+"));
-                if (choice == "damage") {
-                    DamageStruct damage;
-                    damage.from = xiahou;
-                    damage.to = from;
-                    damage.reason = objectName();
-
-                    room->damage(damage);
-                } else
+                QString choice = room->askForChoice(xiahou, objectName(), choicelist.join("+"));
+                if (choice == "damage")
+                    room->damage(DamageStruct(objectName(), xiahou, from));
+                else
                     room->askForDiscard(from, objectName(), 2, 2);
             }
         }

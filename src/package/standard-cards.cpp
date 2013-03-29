@@ -712,14 +712,8 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
         drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
     }
     // ================================
-    if (!slash || !drwushuang_effect) {
-        DamageStruct damage;
-        damage.card = this;
-        damage.from = effect.from->isAlive() ? effect.from : NULL;
-        damage.to = effect.to;
-
-        room->damage(damage);
-    }
+    if (!slash || !drwushuang_effect)
+        room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
 }
 
 ArcheryAttack::ArcheryAttack(Card::Suit suit, int number)
@@ -753,14 +747,8 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
         drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
     }
     // ================================
-    if (!jink || !drwushuang_effect) {
-        DamageStruct damage;
-        damage.card = this;
-        damage.from = effect.from->isAlive() ? effect.from : NULL;
-        damage.to = effect.to;
-
-        room->damage(damage);
-    }
+    if (!jink || !drwushuang_effect)
+        room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
 }
 
 void SingleTargetTrick::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -988,12 +976,7 @@ void Duel::onEffect(const CardEffectStruct &effect) const{
     room->setPlayerMark(first, "WushuangTarget", 0);
     room->setPlayerMark(second, "WushuangTarget", 0);
 
-    DamageStruct damage;
-    damage.card = this;
-    damage.from = second->isAlive() ? second : NULL;
-    damage.to = first;
-
-    room->damage(damage);
+    room->damage(DamageStruct(this, second->isAlive() ? second : NULL, first));
 }
 
 Snatch::Snatch(Suit suit, int number):SingleTargetTrick(suit, number, true) {
@@ -1123,14 +1106,7 @@ Lightning::Lightning(Suit suit, int number):Disaster(suit, number) {
 }
 
 void Lightning::takeEffect(ServerPlayer *target) const{
-    DamageStruct damage;
-    damage.card = this;
-    damage.damage = 3;
-    damage.from = NULL;
-    damage.to = target;
-    damage.nature = DamageStruct::Thunder;
-
-    target->getRoom()->damage(damage);
+    target->getRoom()->damage(DamageStruct(this, NULL, target, 3, DamageStruct::Thunder));
 }
 
 // EX cards

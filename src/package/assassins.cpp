@@ -173,11 +173,7 @@ public:
         if (winner->canSlash(loser, NULL, false)) {
             Slash *slash = new Slash(Card::NoSuit, 0);
             slash->setSkillName("MIZHAO");
-            CardUseStruct card_use;
-            card_use.from = winner;
-            card_use.to << loser;
-            card_use.card = slash;
-            room->useCard(card_use, false);
+            room->useCard(CardUseStruct(slash, winner, loser), false);
         }
 
         return false;

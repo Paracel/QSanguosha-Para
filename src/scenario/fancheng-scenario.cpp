@@ -118,14 +118,8 @@ void FloodCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->throwAllEquips();
 
     Room *room = effect.to->getRoom();
-    if (!room->askForDiscard(effect.to, "flood", 2, 2, true)) {
-        DamageStruct damage;
-        damage.from = effect.from;
-        damage.to = effect.to;
-        damage.reason = "flood";
-
-        room->damage(damage);
-    }
+    if (!room->askForDiscard(effect.to, "flood", 2, 2, true))
+        room->damage(DamageStruct("flood", effect.from, effect.to));
 }
 
 class Flood: public ViewAsSkill {
@@ -157,7 +151,7 @@ TaichenFightCard::TaichenFightCard() {
     target_fixed = true;
 }
 
-void TaichenFightCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+void TaichenFightCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->loseHp(source);
 
     if (source->isAlive()) {
@@ -165,13 +159,9 @@ void TaichenFightCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer 
         duel->setSkillName("TAICHENFIGHT");
         duel->setCancelable(false);
 
-        room->setPlayerMark(source, "WushuangTarget", 1);
-        CardUseStruct use;
-        use.from = source;
-        use.to << room->getLord();
-        use.card = duel;
-        room->useCard(use);
-        room->setPlayerMark(source, "WushuangTarget", 0);
+        room->addPlayerMark(source, "WushuangTarget");
+        room->useCard(CardUseStruct(duel, source, room->getLord()));
+        room->removePlayerMark(source, "WushuangTarget");
     }
 }
 

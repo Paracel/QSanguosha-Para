@@ -50,6 +50,26 @@ DamageStruct::DamageStruct()
 {
 }
 
+DamageStruct::DamageStruct(const Card *card, ServerPlayer *from, ServerPlayer *to, int damage, DamageStruct::Nature nature)
+    : chain(false), transfer(false), reason(QString())
+{
+    this->card = card;
+    this->from = from;
+    this->to = to;
+    this->damage = damage;
+    this->nature = nature;
+}
+
+DamageStruct::DamageStruct(const QString &reason, ServerPlayer *from, ServerPlayer *to, int damage, DamageStruct::Nature nature)
+    : card(NULL), chain(false), transfer(false)
+{
+    this->from = from;
+    this->to = to;
+    this->damage = damage;
+    this->nature = nature;
+    this->reason = reason;
+}
+
 QString DamageStruct::getReason() const{
     if (reason != QString())
         return reason;
@@ -167,8 +187,24 @@ PhaseChangeStruct::PhaseChangeStruct()
 }
 
 CardUseStruct::CardUseStruct()
-    : card(NULL), from(NULL), m_isOwnerUse(true)
+    : card(NULL), from(NULL), m_isOwnerUse(true), m_addHistory(true)
 {
+}
+
+CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse) {
+    this->card = card;
+    this->from = from;
+    this->to = to;
+    this->m_isOwnerUse = isOwnerUse;
+    this->m_addHistory = true;
+}
+
+CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, ServerPlayer *target, bool isOwnerUse) {
+    this->card = card;
+    this->from = from;
+    this->to << target;
+    this->m_isOwnerUse = isOwnerUse;
+    this->m_addHistory = true;
 }
 
 bool CardUseStruct::isValid(const QString &pattern) const{

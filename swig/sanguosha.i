@@ -473,6 +473,7 @@ struct CardUseStruct {
     ServerPlayer *from;
     QList<ServerPlayer *> to;
     bool m_isOwnerUse;
+    bool m_addHistory;
 };
 
 struct CardsMoveStruct {

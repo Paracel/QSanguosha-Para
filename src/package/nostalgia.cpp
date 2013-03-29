@@ -270,22 +270,13 @@ public:
                     room->broadcastSkillInvoke(objectName(), 1);
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName(objectName());
-
-                    CardUseStruct card_use;
-                    card_use.card = slash;
-                    card_use.from = lingtong;
-                    card_use.to << target;
-                    room->useCard(card_use, false);
+                    room->useCard(CardUseStruct(slash, lingtong, target), false);
                 } else if (choice == "damage") {
                     room->broadcastSkillInvoke(objectName(), 2);
                     room->notifySkillInvoked(lingtong, objectName());
 
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage", "@nosxuanfeng-damage");
-                    DamageStruct damage;
-                    damage.from = lingtong;
-                    damage.to = target;
-                    damage.reason = "nosxuanfeng";
-                    room->damage(damage);
+                    room->damage(DamageStruct("nosxuanfeng", lingtong, target));
                 }
             }
         }
@@ -479,10 +470,6 @@ public:
                 } else {
                     Peach *peach = new Peach(damage.card->getSuit(), damage.card->getNumber());
                     peach->setSkillName(objectName());
-                    CardUseStruct use;
-                    use.card = peach;
-                    use.from = handang;
-                    use.to << target;
 
                     room->setCardFlag(damage.card, "nosjiefan_success");
                     if ((target->getGeneralName().contains("sunquan")
@@ -490,7 +477,7 @@ public:
                          || target->getGeneralName().contains("sunjian"))
                         && target->isLord())
                         room->setPlayerFlag(handang, "NosJiefanToLord");
-                    room->useCard(use);
+                    room->useCard(CardUseStruct(peach, handang, target));
                     room->setPlayerFlag(handang, "-NosJiefanToLord");
                 }
                 return true;
@@ -655,15 +642,8 @@ void NosFanjianCard::onEffect(const CardEffectStruct &effect) const{
     room->sendLog(log);
     room->showCard(zhouyu, card_id);
 
-    if (card->getSuit() != suit) {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.from = zhouyu;
-        damage.to = target;
-        damage.reason = "nosfanjian";
-
-        room->damage(damage);
-    }
+    if (card->getSuit() != suit)
+        room->damage(DamageStruct("nosfanjian", zhouyu, target));
 
     room->getThread()->delay();
     if (target->isAlive())

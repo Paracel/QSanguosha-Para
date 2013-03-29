@@ -670,11 +670,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     if (choice == "use") {
         Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("MINGCE");
-        CardUseStruct card_use;
-        card_use.from = effect.to;
-        card_use.to << target;
-        card_use.card = slash;
-        room->useCard(card_use, false);
+        room->useCard(CardUseStruct(slash, effect.to, target), false);
     } else if (choice == "draw") {
         effect.to->drawCards(1);
     }
@@ -1098,15 +1094,8 @@ void PaiyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
                           target->objectName(), "paiyi", QString());
     room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
     room->drawCards(target, 2, "paiyi");
-    if (target->getHandcardNum() > zhonghui->getHandcardNum()) {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.from = zhonghui;
-        damage.to = target;
-        damage.reason = "paiyi";
-
-        room->damage(damage);
-    }
+    if (target->getHandcardNum() > zhonghui->getHandcardNum())
+        room->damage(DamageStruct("paiyi", zhonghui, target));
 }
 
 class Paiyi: public ZeroCardViewAsSkill {

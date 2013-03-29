@@ -113,15 +113,8 @@ void FanjianCard::onEffect(const CardEffectStruct &effect) const{
     target->obtainCard(card);
     room->showCard(target, card_id);
 
-    if (card->getSuit() != suit) {
-        DamageStruct damage;
-        damage.card = NULL;
-        damage.from = zhouyu;
-        damage.to = target;
-        damage.reason = "fanjian";
-
-        room->damage(damage);
-    }
+    if (card->getSuit() != suit)
+        room->damage(DamageStruct("fanjian", zhouyu, target));
 }
 
 KurouCard::KurouCard() {
@@ -185,12 +178,7 @@ void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
     Duel *duel = new Duel(Card::NoSuit, 0);
     duel->setCancelable(false);
     duel->setSkillName("LIJIAN");
-
-    CardUseStruct use;
-    use.from = from;
-    use.to << to;
-    use.card = duel;
-    room->useCard(use);
+    room->useCard(CardUseStruct(duel, from, to));
 }
 
 QingnangCard::QingnangCard() {
@@ -292,12 +280,7 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
             foreach (ServerPlayer *target, targets)
                 target->setFlags("-JijiangTarget");
 
-            CardUseStruct card_use;
-            card_use.card = slash;
-            card_use.from = liubei;
-            card_use.to << targets;
-            card_use.m_isOwnerUse = false;
-            room->useCard(card_use);
+            room->useCard(CardUseStruct(slash, liubei, targets, false));
             return;
         }
     }

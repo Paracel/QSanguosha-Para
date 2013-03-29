@@ -14,13 +14,15 @@ class GameRule;
 #include <json/json.h>
 
 struct DamageStruct {
-    DamageStruct();
-
     enum Nature {
         Normal, // normal slash, duel and most damage caused by skill
         Fire,  // fire slash, fire attack and few damage skill (Yeyan, etc)
         Thunder // lightning, thunder slash, and few damage skill (Leiji, etc)
     };
+
+    DamageStruct();
+    DamageStruct(const Card *card, ServerPlayer *from, ServerPlayer *to, int damage = 1, Nature nature = Normal);
+    DamageStruct(const QString &reason, ServerPlayer *from, ServerPlayer *to, int damage = 1, Nature nature = Normal);
 
     ServerPlayer *from;
     ServerPlayer *to;
@@ -70,6 +72,8 @@ struct CardUseStruct {
     } m_reason;
 
     CardUseStruct();
+    CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse = true);
+    CardUseStruct(const Card *card, ServerPlayer *from, ServerPlayer *target, bool isOwnerUse = true);
     bool isValid(const QString &pattern) const;
     void parse(const QString &str, Room *room);
     bool tryParse(const Json::Value &, Room *room);
@@ -78,6 +82,7 @@ struct CardUseStruct {
     ServerPlayer *from;
     QList<ServerPlayer *> to;
     bool m_isOwnerUse;
+    bool m_addHistory;
 };
 
 class CardMoveReason {

@@ -30,12 +30,7 @@ public:
             room->broadcastSkillInvoke(objectName(), 1);
             if (!room->askForCard(player, ".Equip", "@xiaoguo-discard", QVariant())) {
                 room->broadcastSkillInvoke(objectName(), 2);
-                DamageStruct damage;
-                damage.card = NULL;
-                damage.from = yuejin;
-                damage.to = player;
-                damage.reason = "xiaoguo";
-                room->damage(damage);
+                room->damage(DamageStruct("xiaoguo", yuejin, player));
             } else
                 room->broadcastSkillInvoke(objectName(), 3);
         }
@@ -406,12 +401,7 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
 
         Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("SHUANGREN");
-
-        CardUseStruct card_use;
-        card_use.card = slash;
-        card_use.from = effect.from;
-        card_use.to << target;
-        room->useCard(card_use, false);
+        room->useCard(CardUseStruct(slash, effect.from, target), false);
     } else {
         room->broadcastSkillInvoke("shuangren", 3);
         room->setPlayerFlag(effect.from, "SkipPlay");

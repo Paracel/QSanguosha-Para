@@ -70,17 +70,8 @@ public:
 
                 room->judge(judge);
 
-                if (judge.isBad()) {
-                    DamageStruct damage;
-                    damage.card = NULL;
-                    damage.damage = 2;
-                    damage.from = zhangjiao;
-                    damage.to = target;
-                    damage.nature = DamageStruct::Thunder;
-                    damage.reason = objectName();
-
-                    room->damage(damage);
-                }
+                if (judge.isBad())
+                    room->damage(DamageStruct(objectName(), zhangjiao, target, 2, DamageStruct::Thunder));
             }
         }
         return false;
@@ -194,12 +185,7 @@ bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player
 void ShensuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     Slash *slash = new Slash(Card::NoSuit, 0);
     slash->setSkillName("SHENSU");
-    CardUseStruct use;
-    use.card = slash;
-    use.from = source;
-    use.to = targets;
-
-    room->useCard(use);
+    room->useCard(CardUseStruct(slash, source, targets));
 }
 
 class ShensuViewAsSkill: public ViewAsSkill {

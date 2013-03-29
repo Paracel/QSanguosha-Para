@@ -905,13 +905,8 @@ public:
                     CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "chunlao", QString());
                     room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
                     Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
-                    analeptic->setSkillName(objectName());
-                    CardUseStruct use;
-                    use.card = analeptic;
-                    use.from = dying.who;
-                    use.to << dying.who;
-                    use.m_isOwnerUse = false;
-                    room->useCard(use);
+                    analeptic->setSkillName("CHUNLAO");
+                    room->useCard(CardUseStruct(analeptic, dying.who, dying.who, false));
                 }
             }
         }

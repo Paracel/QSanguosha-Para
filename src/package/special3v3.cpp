@@ -222,13 +222,8 @@ public:
         room->judge(judge);
         if (from->isDead()) return;
         if (judge.isGood()) {
-            if (!room->askForDiscard(from, objectName(), 2, 2, true)) {
-                DamageStruct damage;
-                damage.from = xiahou;
-                damage.to = from;
-                damage.reason = objectName();
-                room->damage(damage);
-            }
+            if (!room->askForDiscard(from, objectName(), 2, 2, true))
+                room->damage(DamageStruct(objectName(), xiahou, from));
         }
     }
 };

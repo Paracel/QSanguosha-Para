@@ -230,16 +230,7 @@ public:
 };
 
 void YeyanCard::damage(ServerPlayer *shenzhouyu, ServerPlayer *target, int point) const{
-    DamageStruct damage;
-
-    damage.card = NULL;
-    damage.from = shenzhouyu;
-    damage.to = target;
-    damage.damage = point;
-    damage.nature = DamageStruct::Fire;
-    damage.reason = "yeyan";
-
-    shenzhouyu->getRoom()->damage(damage);
+    shenzhouyu->getRoom()->damage(DamageStruct("yeyan", shenzhouyu, target, point, DamageStruct::Fire));
 }
 
 GreatYeyanCard::GreatYeyanCard() {
@@ -580,13 +571,7 @@ void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> 
 
     QList<ServerPlayer *> players = room->getOtherPlayers(shenlvbu);
     foreach (ServerPlayer *player, players) {
-        DamageStruct damage;
-        damage.card = this;
-        damage.from = shenlvbu;
-        damage.to = player;
-        damage.reason = "shenfen";
-
-        room->damage(damage);
+        room->damage(DamageStruct("shenfen", shenlvbu, player));
         room->getThread()->delay();
     }
 

@@ -889,16 +889,8 @@ public:
 
         if (choice == "damage") {
             room->broadcastSkillInvoke("zhaolie", 1);
-            if (no_basic > 0) {
-                DamageStruct damage;
-                damage.card = NULL;
-                damage.from = liubei;
-                damage.to = victim;
-                damage.damage = no_basic;
-                damage.reason = "zhaolie";
-
-                room->damage(damage);
-            }
+            if (no_basic > 0)
+                room->damage(DamageStruct("zhaolie", liubei, victim, no_basic));
             if (!cards.empty()) {
                 DummyCard *dummy_card = new DummyCard;
                 foreach (const Card *c, cards)
@@ -1003,7 +995,7 @@ public:
                     break;
                 }
             }
-        } else if (event == DamageInflicted && player->hasLordSkill(objectName()) && !player->hasFlag("ShichouTarget")) {
+        } else if (event == DamageInflicted && player->hasLordSkill(objectName()) && player->getMark("ShichouTarget") == 0) {
             ServerPlayer *target = NULL;
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (p->getMark("hate_" + player->objectName()) > 0 && p->getMark("@hate_to") > 0) {
@@ -1030,7 +1022,7 @@ public:
             newdamage.to = target;
             newdamage.transfer = true;
 
-            room->setPlayerFlag(target, "ShichouTarget");
+            target->addMark("ShichouTarget");
             room->damage(newdamage);
             return true;
         } else if (event == Dying) {
@@ -1054,11 +1046,11 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (player->isAlive() && player->hasFlag("ShichouTarget") && damage.transfer) {
+        if (player->isAlive() && player->getMark("ShichouTarget") > 0 && damage.transfer) {
             player->drawCards(damage.damage);
-            room->setPlayerFlag(player, "-ShichouTarget");
+            player->removeMark("ShichouTarget");
         }
 
         return false;
@@ -1464,11 +1456,7 @@ public:
 
                 Slash *slash = new Slash(Card::NoSuit, 0);
                 slash->setSkillName(objectName());
-                CardUseStruct card_use;
-                card_use.from = xiahou;
-                card_use.to << victim;
-                card_use.card = slash;
-                room->useCard(card_use, false);
+                room->useCard(CardUseStruct(slash, xiahou, victim), false);
             } else {
                 room->broadcastSkillInvoke(objectName(), 1);
                 room->setPlayerFlag(player, "xuehen_InTempMoving");
@@ -1592,12 +1580,7 @@ void ZhaoxinCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &t
 
     Slash *slash = new Slash(Card::NoSuit, 0);
     slash->setSkillName("ZHAOXIN");
-    CardUseStruct use;
-    use.card = slash;
-    use.from = source;
-    use.to = targets;
-
-    room->useCard(use);
+    room->useCard(CardUseStruct(slash, source, targets));
 }
 
 class ZhaoxinViewAsSkill: public ZeroCardViewAsSkill {

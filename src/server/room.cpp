@@ -902,11 +902,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     }
 
     broadcastInvoke("animate", QString("nullification:%1:%2").arg(repliedPlayer->objectName()).arg(to->objectName()));
-
-    CardUseStruct use;
-    use.card = card;
-    use.from = repliedPlayer;
-    useCard(use);
+    useCard(CardUseStruct(card, repliedPlayer, QList<ServerPlayer *>()));
 
     LogMessage log;
     log.type = "#NullificationDetails";
@@ -2678,6 +2674,7 @@ void Room::processResponse(ServerPlayer *player, const QSanGeneralPacket *packet
 
 void Room::useCard(const CardUseStruct &use, bool add_history) {
     CardUseStruct card_use = use;
+    card_use.m_addHistory = false;
     const Card *card = card_use.card;
 
     if (card_use.from->isCardLimited(card, card->getHandlingMethod())
@@ -2699,8 +2696,10 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
     if (!card) return;
 
     if (card_use.from->getPhase() == Player::Play && add_history) {
-        if (!slash_not_record)
+        if (!slash_not_record) {
+            card_use.m_addHistory = true;
             addPlayerHistory(card_use.from, key);
+        }
         addPlayerHistory(NULL, "pushPile");
     }
 
@@ -4531,14 +4530,7 @@ void Room::makeDamage(const QString &source, const QString &target, QSanProtocol
     }
 
     if (targetPlayer == NULL) return;
-
-    DamageStruct damage;
-    damage.from = sourcePlayer;
-    damage.to = targetPlayer;
-    damage.damage = point;
-    damage.nature = nature_map[nature];
-    damage.reason = "cheat";
-    this->damage(damage);
+    this->damage(DamageStruct("cheat", sourcePlayer, targetPlayer, point, nature_map[nature]));
 }
 
 void Room::makeKilling(const QString &killerName, const QString &victimName) {
@@ -4550,9 +4542,7 @@ void Room::makeKilling(const QString &killerName, const QString &victimName) {
     if (victim == NULL) return;
     if (killer == NULL) return killPlayer(victim);
 
-    DamageStruct damage;
-    damage.from = killer;
-    damage.to = victim;
+    DamageStruct damage("cheat", killer, victim);
     killPlayer(victim, &damage);
 }
 

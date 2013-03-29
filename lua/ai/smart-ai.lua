@@ -4158,7 +4158,8 @@ function SmartAI:useTrickCard(card, use)
 	if use.to then
 		if not use.to:isEmpty() and sgs.dynamic_value.damage_card[card:getClassName()] then
 			for _, target in sgs.qlist(use.to) do
-				if self:damageIsEffective(target) then return end
+				local nature = card:isKindOf("FireAttack") and sgs.DamageStruct_Fire or sgs.DamageStruct_Normal
+				if self:damageIsEffective(target, nature) then return end
 			end
 			use.card = nil
 		end

@@ -328,8 +328,6 @@ RoomScene::RoomScene(QMainWindow *main_window)
     addItem(pausing_item);
     addItem(pausing_text);
 
-    QBrush pausing_brush(G_DASHBOARD_LAYOUT.m_trustEffectColor);
-    pausing_item->setBrush(pausing_brush);
     pausing_item->setOpacity(0.36);
     pausing_item->setZValue(1002.0);
 
@@ -516,12 +514,14 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
     case S_GAME_EVENT_PAUSE: {
             bool paused = arg[1].asBool();
             if (pausing_item->isVisible() != paused) {
-                pausing_item->setVisible(paused);
-                pausing_text->setVisible(paused);
                 if (paused) {
+                    QBrush pausing_brush(QColor(qrand() % 256, qrand() % 256, qrand() % 256));
+                    pausing_item->setBrush(pausing_brush);
                     bringToFront(pausing_item);
                     bringToFront(pausing_text);
                 }
+                pausing_item->setVisible(paused);
+                pausing_text->setVisible(paused);
             }
             break;
         }

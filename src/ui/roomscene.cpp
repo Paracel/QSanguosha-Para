@@ -282,9 +282,6 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     addItem(prompt_box);
 
-    timer_id = 0;
-    tick = 0;
-
     QHBoxLayout *skill_dock_layout = new QHBoxLayout;
     QMargins margins = skill_dock_layout->contentsMargins();
     margins.setTop(0);

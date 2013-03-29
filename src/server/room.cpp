@@ -2903,6 +2903,7 @@ void Room::damage(DamageStruct &damage_data) {
         return;
     }
 
+    bool enter_stack = false;
     do {
         bool prevent = thread->trigger(DamageForseen, this, damage_data.to, data);
         if (prevent)
@@ -2919,6 +2920,7 @@ void Room::damage(DamageStruct &damage_data) {
         if (broken)
             break;
 
+        enter_stack = true;
         m_damageStack.push_back(damage_data);
         setTag("CurrentDamageStruct", data);
 
@@ -2934,11 +2936,13 @@ void Room::damage(DamageStruct &damage_data) {
     damage_data = data.value<DamageStruct>();
     thread->trigger(DamageComplete, this, damage_data.to, data);
 
-    m_damageStack.pop();
-    if (m_damageStack.isEmpty())
-        removeTag("CurrentDamageStruct");
-    else
-        setTag("CurrentDamageStruct", QVariant::fromValue(m_damageStack.first()));
+    if (enter_stack) {
+        m_damageStack.pop();
+        if (m_damageStack.isEmpty())
+            removeTag("CurrentDamageStruct");
+        else
+            setTag("CurrentDamageStruct", QVariant::fromValue(m_damageStack.first()));
+    }
 }
 
 void Room::sendDamageLog(const DamageStruct &data) {

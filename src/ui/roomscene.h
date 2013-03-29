@@ -207,9 +207,6 @@ private:
 
     QGraphicsRectItem *pausing_item;
     QGraphicsSimpleTextItem *pausing_text;
-
-    int timer_id;
-    int tick;
     
     QList<QGraphicsPixmapItem *> role_items;
     CardContainer *card_container;

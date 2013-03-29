@@ -848,6 +848,7 @@ sgs.ai_skill_invoke.fenyong = function(self, data)
 			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
 				return true
 			end
+			if self.player:getLostHp() == 1 and self:needToThrowArmor(current) then return true end
 		end
 		return false
 	end
@@ -883,6 +884,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 		end
 	end
 	if self:isFriend(current) then
+		if self.player:getLostHp() == 1 and self:needToThrowArmor(current) then return "discard" end
 		for _, enemy in ipairs(self.enemies) do
 			local slash = sgs.Sanguosha:cloneCard("slash")
 			local eff = self:slashIsEffective(slash, enemy)

@@ -833,7 +833,25 @@ sgs.yinling_suit_value = {
 }
 
 sgs.ai_skill_invoke.fenyong = function(self, data)
+	self.fenyong_choice = nil
 	if sgs.turncount == 0 and #self.enemies == 0 then return end
+
+	local current = self.room:getCurrent()
+	if not current or current:getPhase() >= sgs.Player_Finish then return true end
+	if self:isFriend(current) then
+		self:sort(self.enemies, "defenseSlash")
+		for _, enemy in ipairs(self.enemies) do
+			local def = sgs.getDefenseSlash(enemy)
+			local slash = sgs.Sanguosha:cloneCard("slash")
+			local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
+
+			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
+				return true
+			end
+		end
+		return false
+	end
+
 	return true
 end
 
@@ -844,7 +862,8 @@ function sgs.ai_slash_prohibit.fenyong(self, from, to)
 end
 
 sgs.ai_skill_choice.xuehen = function(self, choices)
-	local current = self.room:getCurrent();
+	if self.fenyong_choice then return self.fenyong_choice end
+	local current = self.room:getCurrent()
 	if self:isEnemy(current) then
 		if self.player:getLostHp() >= 3 and current:getCardCount(true) >= 3 and not self:needKongcheng(current)
 			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < self.player:getLostHp()) then

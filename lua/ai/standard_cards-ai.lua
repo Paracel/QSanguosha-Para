@@ -340,8 +340,6 @@ function SmartAI:useCardSlash(card, use)
 	self.slash_targets = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card)
 	if self.player:hasSkill("duanbing") then self.slash_targets = self.slash_targets + 1 end
 
-	self.predictedRange = self.player:getAttackRange()
-
 	local rangefix = 0
 	if card:isVirtualCard() then
 		if self.player:getWeapon() and card:getSubcards():contains(self.player:getWeapon():getEffectiveId()) then
@@ -359,9 +357,7 @@ function SmartAI:useCardSlash(card, use)
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
-		if (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
-			or self:getDamagedEffects(friend, self.player)
-			or (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
+		if (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
 				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)))
 				and (self:hasExplicitRebel() or not friend:isLord()))
 			or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
@@ -407,7 +403,7 @@ function SmartAI:useCardSlash(card, use)
 			if self:canLiuli(target, friend) and self:slashIsEffective(card, friend) and #targets > 1 and friend:getHp() < 3 then canliuli = true end
 		end
 		if (self.player:canSlash(target, card, not no_distance, rangefix)
-			or (use.isDummy and self.predictedRange and (self.player:distanceTo(target) <= self.predictedRange)))
+			or (use.isDummy and self.predictedRange and self.player:distanceTo(target, rangefix) <= self.predictedRange))
 			and self:objectiveLevel(target) > 3
 			and self:slashIsEffective(card, target)
 			and not (target:hasSkill("xiangle") and basicnum < 2) and not canliuli
@@ -471,6 +467,39 @@ function SmartAI:useCardSlash(card, use)
 					use.to:append(target)
 				end
 				if self.slash_targets <= use.to:length() then return end
+			end
+		end
+	end
+
+	for _, friend in ipairs(self.friends_noself) do
+		local slash_prohibit = self:slashProhibit(card, friend)
+		if (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
+			or self:getDamagedEffects(friend, self.player) then
+
+			if not slash_prohibit then
+				if ((self.player:canSlash(friend, card, not no_distance, rangefix))
+					or (use.isDummy and self.predictedRange and self.player:distanceTo(friend, rangefix) <= self.predictedRange))
+					and self:slashIsEffective(card, friend) then
+					use.card = card
+					if use.to then
+						if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
+							local has_extra = false
+							for _, tg in sgs.qlist(use.to) do
+								if self.player:distanceTo(tg, rangefix) == 1 then
+									has_extra = true
+									break
+								end
+							end
+							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
+								use.to:append(friend)
+							end
+						else
+							use.to:append(friend)
+						end
+						self:speak("hostile", self.player:isFemale())
+						if self.slash_targets <= use.to:length() then return end
+					end
+				end
 			end
 		end
 	end

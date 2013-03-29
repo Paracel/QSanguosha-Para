@@ -2920,7 +2920,7 @@ function SmartAI:getTurnUse()
 		self["use" .. sgs.ai_type_name[type + 1] .. "Card"](self, card, dummy_use)
 
 		if dummy_use.card then
-			if (card:isKindOf("Slash")) then
+			if card:isKindOf("Slash") then
 				if slashAvail > 0 then
 					slashAvail = slashAvail - 1
 					table.insert(turnUse, card)

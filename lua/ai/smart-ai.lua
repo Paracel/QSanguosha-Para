@@ -3013,83 +3013,6 @@ function SmartAI:hasWizard(players, onlyharm)
 	end
 end
 
---- Determine that the current judge is worthy retrial
--- @param judge The JudgeStruct that contains the judge information
--- @return True if it is needed to retrial
-function SmartAI:needRetrial(judge)
-	local reason = judge.reason
-	local lord = self.room:getLord()
-	local who = judge.who
-	if reason == "lightning" then
-		if self:hasSkills("wuyan|hongyan", who) then return false end
-
-		if lord and (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
-			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
-			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not judge:isGood()
-		end
-
-		if self:isFriend(who) then
-			if who:isChained() and self:isGoodChainTarget(who) then return false end
-		else
-			if who:isChained() and not self:isGoodChainTarget(who) then return judge:isGood() end
-		end
-	end
-
-	if reason == "indulgence" then
-		if self:isFriend(who) then
-			if who:getHp() - who:getHandcardNum() >= 2 then return false end
-			if who:hasSkill("tuxi") and who:getHp() > 2 then return false end
-			if who:isKongcheng() and who:isSkipped(sgs.Player_Draw) then return false end
-			return not judge:isGood()
-		else
-			return judge:isGood()
-		end
-	end
-
-	if reason == "supply_shortage" then
-		if self:isFriend(who) then
-			if who:hasSkill("tiandu") or (who:hasSkill("guidao") and getKnownCard(who, "club") > 0) then return false end
-			return not judge:isGood()
-		else
-			return judge:isGood()
-		end
-	end
-
-	if reason == "luoshen" then
-		if self:isFriend(who) then
-			if who:getHandcardNum() > 30 then return false end
-			if self:hasCrossbowEffect(who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
-			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
-			return not judge:isGood()
-		else
-			return judge:isGood()
-		end
-	end
-
-	if reason == "tieji" then
-		local target
-		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-			if p:hasFlag("TiejiTarget") then
-				target = p
-				break
-			end
-		end
-		if target and target:isKongcheng() and not self:hasEightDiagramEffect(target) and not self.player:hasSkill("guidao") then return false end
-	end
-
-	if reason == "tuntian" then
-		if not who:hasSkill("jixi") then return false end
-	end
-
-	if self:isFriend(who) then
-		return not judge:isGood()
-	elseif self:isEnemy(who) then
-		return judge:isGood()
-	else
-		return false
-	end
-end
-
 function SmartAI:canRetrial(player, to_retrial)
 	player = player or self.player
 	to_retrial = to_retrial or self.player
@@ -3131,21 +3054,117 @@ function SmartAI:getFinalRetrial(player)
 	else return 2 end
 end
 
+--- Determine that the current judge is worthy retrial
+-- @param judge The JudgeStruct that contains the judge information
+-- @return True if it is needed to retrial
+function SmartAI:needRetrial(judge)
+	local reason = judge.reason
+	local lord = self.room:getLord()
+	local who = judge.who
+	local good = judge:isGood()
+	if reason == "lightning" then
+		if self:hasSkills("wuyan|hongyan", who) then return false end
+
+		if lord and (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
+			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
+			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not good
+		end
+
+		if self:isFriend(who) then
+			if who:isChained() and self:isGoodChainTarget(who) then return false end
+		else
+			if who:isChained() and not self:isGoodChainTarget(who) then return good end
+		end
+	end
+
+	if reason == "indulgence" then
+		if who:isSkipped(sgs.Player_Draw) and who:isKongcheng() then
+			if (who:hasSkill("shenfen") and who:getMark("@wrath") >= 6)
+				or (who:hasSkill("kurou") and who:getHp() >= 3) 
+				or (who:hasSkill("jixi") and who:getPile("field"):length() > 2)
+				or (who:hasSkill("lihun") and self:IsLihunTarget(self:getEnemies(who), 0))
+				or (who:hasSkill("xiongyi") and who:getMark("@arise") > 0) then
+				if self:isFriend(to) then
+					return not good
+				else
+					return good
+				end
+			end
+		end
+		if self:isFriend(who) then
+			if who:getHp() - who:getHandcardNum() >= 2 then return false end
+			if who:hasSkill("tuxi") and who:getHp() > 2 then return false end
+			return not good
+		else
+			return good
+		end
+	end
+
+	if reason == "supply_shortage" then
+		if self:isFriend(who) then
+			if who:hasSkill("tiandu") or (who:hasSkill("guidao") and getKnownCard(who, "club") > 0) then return false end
+			return not good
+		else
+			return good
+		end
+	end
+
+	if reason == "luoshen" then
+		if self:isFriend(who) then
+			if who:getHandcardNum() > 30 then return false end
+			if self:hasCrossbowEffect(who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
+			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
+			return not good
+		else
+			return good
+		end
+	end
+
+	if reason == "tieji" then
+		local target
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			if p:hasFlag("TiejiTarget") then
+				target = p
+				break
+			end
+		end
+		if target and target:isKongcheng() and not self:hasEightDiagramEffect(target) and not self.player:hasSkill("guidao") then return false end
+	end
+
+	if reason == "tuntian" then
+		if not who:hasSkill("jixi") then return false end
+	end
+
+	if self:isFriend(who) then
+		return not good
+	elseif self:isEnemy(who) then
+		return good
+	else
+		return false
+	end
+end
+
 --- Get the retrial cards with the lowest keep value
 -- @param cards the table that contains all cards can use in retrial skill
 -- @param judge the JudgeStruct that contains the judge information
 -- @return the retrial card id or -1 if not found
 function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
+	local dontRespondPeach
+	if judge.reason == "tuntian" and judge.who:getMark("zaoxian") == 0 and judge.who:getPile("field"):length() < 2 then dontRespondPeach = true
+	elseif (judge.reason == "eight_diagram" or judge.reason == "bazhen")
+			and self:isFriend(judge.who) and not self:isWeak(judge.who) then dontRespondPeach = true
+	elseif judge.reason == "nosmiji" and judge.who:getLostHp() == 1 then dontRespondPeach = true
+	end
 
 	for _, card in ipairs(cards) do
 		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
 		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
 		end
-		if self:isFriend(judge.who) and judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card_x:isKindOf("Peach")) then
+		if self:isFriend(judge.who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or dontRespondPeach) and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)
-		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not (self:getFinalRetrial() == 2 and card_x:isKindOf("Peach")) then
+		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or dontRespondPeach) and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)
 		end
 	end

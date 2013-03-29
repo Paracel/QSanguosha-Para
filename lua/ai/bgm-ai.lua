@@ -122,8 +122,16 @@ end
 function SmartAI:isLihunTarget(player, drawCardNum)
 	player = player or self.player
 	drawCardNum = drawCardNum or 1
-	local handCardNum = player:getHandcardNum() + drawCardNum
+	if type(player) == "table" then
+		if #player == 0 then return false end
+		local found
+		for _, ap in ipairs(player) do
+			if self:isLihunTarget(ap, drawCardNum) then return true end
+		end
+		return false
+	end
 
+	local handCardNum = player:getHandcardNum() + drawCardNum
 	if not player:isMale() then return false end
 
 	local sb_diaochan = self.room:findPlayerBySkillName("lihun")

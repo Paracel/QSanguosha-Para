@@ -327,6 +327,22 @@ sgs.ai_skill_invoke.pojun = function(self, data)
 	end
 end
 
+sgs.ai_choicemade_filter.skillInvoke.pojun = function(self, player, promptlist)
+	local intention = 60
+	local index = promptlist[#promptlist] == "yes" and 1 or -1
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.to then
+		if not damage.to:faceUp() then
+			intention = index * intention
+		elseif damage.to:getHp() > 2 then
+			intention = -index / 2 * intention
+		elseif index == -1 then
+			intention = -20
+		end
+		sgs.updateIntention(damage.from, damage.to, intention)
+	end
+end
+
 ganlu_skill = {}
 ganlu_skill.name = "ganlu"
 table.insert(sgs.ai_skills, ganlu_skill)

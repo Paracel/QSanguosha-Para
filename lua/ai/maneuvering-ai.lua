@@ -504,7 +504,8 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		end
 	end
 
-	if self.player:isChained() and self:isGoodChainTarget(self.player) and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing")
+	if self.role ~= "renegade" and self.player:isChained() and self:isGoodChainTarget(self.player)
+		and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing")
 		and not self.room:isProhibited(self.player, self.player, fire_attack)
 		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
 		and self:hasTrickEffective(fire_attack, self.player)

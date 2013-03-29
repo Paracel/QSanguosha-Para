@@ -958,7 +958,7 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
         card_id = who->getRandomHandCardId();
     Q_ASSERT(card_id != Card::S_UNKNOWN_CARD_ID);
 
-    QVariant decisionData = QVariant::fromValue("cardChosen:"+reason+":"+QString::number(card_id));
+    QVariant decisionData = QVariant::fromValue("cardChosen:" + reason + ":" + QString::number(card_id));
     thread->trigger(ChoiceMade, this, player, decisionData);
     return card_id;
 }
@@ -2919,6 +2919,9 @@ void Room::damage(DamageStruct &damage_data) {
         if (broken)
             break;
 
+        m_damageStack.push_back(damage_data);
+        setTag("CurrentDamageStruct", data);
+
         thread->trigger(PreDamageDone, this, damage_data.to, data);
         thread->trigger(DamageDone, this, damage_data.to, data);
 
@@ -2926,10 +2929,16 @@ void Room::damage(DamageStruct &damage_data) {
             thread->trigger(Damage, this, damage_data.from, data);
 
         thread->trigger(Damaged, this, damage_data.to, data);
-    } while(false);
+    } while (false);
 
     damage_data = data.value<DamageStruct>();
     thread->trigger(DamageComplete, this, damage_data.to, data);
+
+    m_damageStack.pop();
+    if (m_damageStack.isEmpty())
+        removeTag("CurrentDamageStruct");
+    else
+        setTag("CurrentDamageStruct", QVariant::fromValue(m_damageStack.first()));
 }
 
 void Room::sendDamageLog(const DamageStruct &data) {

@@ -578,13 +578,13 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 			sgs.ai_collateral = false
 			goto label_continue
 		end
-		if table.contains(sgs.ai_leiji_effect, to) and not (from and from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play) then
+		if table.contains(sgs.ai_leiji_effect, to) then
 			table.removeOne(sgs.ai_leiji_effect, to)
 			goto label_continue
 		end
 		speakTrigger(card, from, to)
 		if self:getDamagedEffects(to, from, true) then goto label_continue end
-		if from:hasSkill("pojun") and to:getHp() > 3 then goto label_continue end
+		if from:hasSkill("pojun") and to:getHp() > 2 then goto label_continue end
 		sgs.updateIntention(from, to, value)
 ::label_continue::
 	end

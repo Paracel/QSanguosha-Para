@@ -17,6 +17,7 @@ struct LogMessage;
 #include "protocol.h"
 #include "RoomState.h"
 #include <qmutex.h>
+#include <QStack>
 
 class Room: public QThread {
     Q_OBJECT
@@ -397,6 +398,7 @@ private:
     QList<int> pile1, pile2;
     QList<int> table_cards;
     QList<int> *m_drawPile, *m_discardPile;
+    QStack<DamageStruct> m_damageStack;
     bool game_started;
     bool game_finished;
     bool game_paused;

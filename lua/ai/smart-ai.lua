@@ -58,6 +58,7 @@ sgs.dynamic_value = {
 sgs.ai_choicemade_filter = {
 	cardUsed = {},
 	cardResponded = {},
+	cardChosen = {},
 	skillInvoke = {},
 	skillChoice = {},
 	Nullification = {},
@@ -1566,7 +1567,7 @@ function SmartAI:filterEvent(event, player, data)
 			for _, t in ipairs(to) do
 				if t:hasSkill("leiji")
 					and (getCardsNum("Jink", t) > 0 or self:hasEightDiagramEffect(t)) then
-					if not (t:isLord() and not self:hasExplicitRebel()) then
+					if not (t:isLord() and not self:hasExplicitRebel()) and not (from and from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play) then
 						table.insert(sgs.ai_leiji_effect, t)
 					end
 				end

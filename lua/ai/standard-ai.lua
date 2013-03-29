@@ -76,7 +76,6 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 			end
 		end
 	end
-	--self:updateLoyalty(-0.8 * sgs.ai_loyalty[target:objectName()], self.player:objectName())
 	return true
 end
 
@@ -155,6 +154,29 @@ sgs.ai_need_damaged.fankui = function(self, attacker, player)
 		end
 	end
 	return false
+end
+
+sgs.ai_choicemade_filter.skillInvoke.fankui = function(self, player, promptlist)
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.to and promptlist[#promptlist] ~= "yes" then
+		if not self:doNotDiscard(damage.from, "he") then
+			sgs.updateIntention(damage.to, damage.from, -40)
+		end
+	end
+end
+
+sgs.ai_choicemade_filter.cardChosen.fankui = function(self, player, promptlist)
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.to then
+		local id = tonumber(promptlist[#promptlist])
+		local place = self.room:getCardPlace(id)
+		if sgs.ai_need_damaged.fankui(self, damage.from, damage.to) then
+		elseif damage.from:getArmor() and self:needToThrowArmor(damage.from) and id == damage.from:getArmor():getEffectiveId() then
+		elseif self:getOverflow(damage.from) > 2 or (damage.from:hasSkills(sgs.lose_equip_skill) and place == sgs.Player_PlaceEquip) then
+		else
+			sgs.updateIntention(damage.to, damage.from, 60)
+		end
+	end
 end
 
 sgs.ai_skill_cardask["@guicai-card"] = function(self, data)

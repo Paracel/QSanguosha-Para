@@ -227,9 +227,10 @@ sgs.ai_use_value.SupplyShortage = 7
 sgs.ai_use_priority.SupplyShortage = 0.5
 sgs.ai_card_intention.SupplyShortage = 120
 
-function SmartAI:getChainedFriends()
+function SmartAI:getChainedFriends(player)
+	player = player or self.player
 	local chainedFriends = {}
-	for _, friend in ipairs(self.friends) do
+	for _, friend in ipairs(self:getFriends(player)) do
 		if friend:isChained() then
 			table.insert(chainedFriends, friend)
 		end
@@ -237,9 +238,10 @@ function SmartAI:getChainedFriends()
 	return chainedFriends
 end
 
-function SmartAI:getChainedEnemies()
+function SmartAI:getChainedEnemies(player)
+	player = player or self.player
 	local chainedEnemies = {}
-	for _, enemy in ipairs(self.enemies) do
+	for _, enemy in ipairs(self:getEnemies(player)) do
 		if enemy:isChained() then
 			table.insert(chainedEnemies, enemy)
 		end
@@ -256,20 +258,21 @@ function SmartAI:isGoodChainPartner(player)
 	return false
 end
 
-function SmartAI:isGoodChainTarget(who)
+function SmartAI:isGoodChainTarget(who, source)
 	if not who:isChained() then return false end
-	local good = #(self:getChainedEnemies(self.player))
-	local bad = #(self:getChainedFriends(self.player))
+	source = source or self.player
+	local good = #(self:getChainedEnemies(source))
+	local bad = #(self:getChainedFriends(source))
 
 	if not sgs.GetConfig("EnableHegemony", false) then
 		local lord = self.room:getLord()
-		if lord and self:isWeak(lord) and lord:isChained() and not self:isEnemy(lord) then
+		if lord and self:isWeak(lord) and lord:isChained() and not self:isEnemy(lord, source) then
 			return false
 		end
 	end
 
-	for _, friend in ipairs(self:getChainedFriends(self.player)) do
-		if self:cantbeHurt(friend) then
+	for _, friend in ipairs(self:getChainedFriends(source)) do
+		if self:cantbeHurt(friend, source) then
 			return false
 		end
 		if self:isGoodChainPartner(friend) then
@@ -278,8 +281,8 @@ function SmartAI:isGoodChainTarget(who)
 			good = good - 1
 		end
 	end
-	for _, enemy in ipairs(self:getChainedEnemies(self.player)) do
-		if self:cantbeHurt(enemy) then
+	for _, enemy in ipairs(self:getChainedEnemies(source)) do
+		if self:cantbeHurt(enemy, source) then
 			return false
 		end
 		if self:isGoodChainPartner(enemy) then

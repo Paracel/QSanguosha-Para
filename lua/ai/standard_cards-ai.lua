@@ -358,8 +358,8 @@ function SmartAI:useCardSlash(card, use)
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
 		if (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
-				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and self:hasEightDiagramEffect(friend)))
-				and (self:hasExplicitRebel() or not friend:isLord()))
+				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and (self:hasEightDiagramEffect(friend) and not self.player:hasWeapon("qinggang_sword"))))
+				and self:findLeijiTarget(friend, 50))
 			or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
 			or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))) then
 

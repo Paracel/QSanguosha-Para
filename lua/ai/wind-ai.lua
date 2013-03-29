@@ -201,6 +201,34 @@ function sgs.ai_cardneed.guidao(to, card, self)
 	end
 end
 
+function SmartAI:findLeijiTarget(player, leiji_value)
+	local getCmpValue = function(enemy)
+		local value = 0
+		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder, player) then return 99 end
+		if enemy:hasSkill("hongyan") then return 99 end
+		if self:cantbeHurt(enemy, player, 2) or self:objectiveLevel(enemy) < 3 or (enemy:isChained() and not self:isGoodChainTarget(enemy, player)) then return 100 end
+		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value + 50 end
+		if enemy:hasArmorEffect("silver_lion") then value = value + 20 end
+		if self:hasSkills(sgs.exclusive_skill, enemy) then value = value + 10 end
+		if self:hasSkills(sgs.masochism_skill, enemy) then value = value + 5 end
+		if enemy:isChained() and self:isGoodChainTarget(enemy, player) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
+		if enemy:isLord() then value = value - 5 end
+		value = value + enemy:getHp() + sgs.getDefenseSlash(enemy) * 0.01
+		return value
+	end
+
+	local cmp = function(a, b)
+		return getCmpValue(a) < getCmpValue(b)
+	end
+
+	local enemies = self:getEnemies(player)
+	table.sort(enemies, cmp)
+	for _,enemy in ipairs(enemies) do
+		if getCmpValue(enemy) < leiji_value then return enemy end
+	end
+	return nil
+end
+
 sgs.ai_skill_playerchosen.leiji = function(self, targets)
 	local mode = self.room:getMode()
 	if mode:find("_mini_17") or mode:find("_mini_19") or mode:find("_mini_20") or mode:find("_mini_26") then
@@ -213,30 +241,7 @@ sgs.ai_skill_playerchosen.leiji = function(self, targets)
 	end
 
 	self:updatePlayers()
-	local getCmpValue = function(enemy)
-		local value = 0
-		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder) then return 99 end
-		if enemy:hasSkill("hongyan") then return 99 end
-		if self:cantbeHurt(enemy, self.player, 2) or self:objectiveLevel(enemy) < 3 or (enemy:isChained() and not self:isGoodChainTarget(enemy)) then return 100 end
-		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value + 50 end
-		if enemy:hasArmorEffect("silver_lion") then value = value + 20 end
-		if self:hasSkills(sgs.exclusive_skill, enemy) then value = value + 10 end
-		if self:hasSkills(sgs.masochism_skill, enemy) then value = value + 5 end
-		if enemy:isChained() and self:isGoodChainTarget(enemy) and #(self:getChainedEnemies()) > 1 then value = value - 25 end
-		if enemy:isLord() then value = value - 5 end
-		value = value + enemy:getHp() + sgs.getDefenseSlash(enemy) * 0.01
-		return value
-	end
-
-	local cmp = function(a, b)
-		return getCmpValue(a) < getCmpValue(b)
-	end
-
-	table.sort(self.enemies, cmp)
-	for _,enemy in ipairs(self.enemies) do
-		if getCmpValue(enemy) < 100 then return enemy end
-	end
-	return nil
+	return self:findLeijiTarget(self.player, 100)
 end
 
 sgs.ai_playerchosen_intention.leiji = 80

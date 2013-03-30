@@ -522,6 +522,11 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     if (card_use.from && card_use.to.length() > 1)
         qSort(card_use.to.begin(), card_use.to.end(), ServerPlayer::CompareByActionOrder);
 
+    QList<ServerPlayer *> targets = card_use.to;
+    if (room->getMode() == "06_3v3" && (isKindOf("AOE") || isKindOf("GlobalEffect")))
+        room->reverseFor3v3(this, player, targets);
+    card_use.to = targets;
+
     LogMessage log;
     log.from = player;
     if (!card_use.card->targetFixed() || card_use.to.length() > 1 || !card_use.to.contains(card_use.from))

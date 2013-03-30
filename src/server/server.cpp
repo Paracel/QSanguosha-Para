@@ -612,6 +612,33 @@ void ServerDialog::edit1v1Banlist() {
     dialog->exec();
 }
 
+QGroupBox *ServerDialog::create1v1Box() {
+    QGroupBox *box = new QGroupBox(tr("1v1 options"));
+    box->setEnabled(Config.GameMode == "02_1v1");
+    box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    QVBoxLayout *vlayout = new QVBoxLayout;
+
+    QComboBox *officialComboBox = new QComboBox;
+    officialComboBox->addItem(tr("Classical"), "Classical");
+    officialComboBox->addItem("2013", "2013");
+
+    official_1v1_ComboBox = officialComboBox;
+
+    QString rule = Config.value("1v1/Rule", "Classical").toString();
+    if (rule == "2013")
+        officialComboBox->setCurrentIndex(1);
+
+    kof_using_extension_checkbox = new QCheckBox(tr("Using extensions"));
+    kof_using_extension_checkbox->setChecked(Config.value("1v1/UsingExtension", false).toBool());
+
+    vlayout->addLayout(HLay(new QLabel(tr("Rule option")), official_1v1_ComboBox));
+    vlayout->addWidget(kof_using_extension_checkbox);
+    box->setLayout(vlayout);
+
+    return box;
+}
+
 QGroupBox *ServerDialog::create3v3Box() {
     QGroupBox *box = new QGroupBox(tr("3v3 options"));
     box->setEnabled(Config.GameMode == "06_3v3");
@@ -709,7 +736,12 @@ QGroupBox *ServerDialog::createGameModeBox() {
         button->setObjectName(itor.key());
         mode_group->addButton(button);
 
-        if (itor.key() == "06_3v3") {
+        if (itor.key() == "02_1v1") {
+            QGroupBox *box = create1v1Box();
+            connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
+
+            item_list << button << box;
+        } else if (itor.key() == "06_3v3") {
             QGroupBox *box = create3v3Box();
             connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
@@ -795,7 +827,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
     for (int i = 0; i < item_list.length(); i++) {
         QObject *item = item_list.at(i);
 
-        QVBoxLayout *side = i <= item_list.length() / 2 - 2 ? left : right;
+        QVBoxLayout *side = i <= item_list.length() / 2 - 4 ? left : right;
 
         if (item->isWidgetType()) {
             QWidget *widget = qobject_cast<QWidget *>(item);
@@ -804,7 +836,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
             QLayout *item_layout = qobject_cast<QLayout *>(item);
             side->addLayout(item_layout);
         }
-        if (i == item_list.length() / 2 - 2)
+        if (i == item_list.length() / 2 - 4)
             side->addStretch();
     }
 
@@ -1082,6 +1114,11 @@ bool ServerDialog::config() {
     Config.setValue("RoleChoose", role_choose_ComboBox->itemData(role_choose_ComboBox->currentIndex()).toString());
     Config.setValue("ExcludeDisaster", exclude_disaster_checkbox->isChecked());
     Config.setValue("OfficialRule", official_3v3_ComboBox->itemData(official_3v3_ComboBox->currentIndex()).toString());
+    Config.endGroup();
+
+    Config.beginGroup("1v1");
+    Config.setValue("Rule", official_1v1_ComboBox->itemData(official_1v1_ComboBox->currentIndex()).toString());
+    Config.setValue("UsingExtension", kof_using_extension_checkbox->isChecked());
     Config.endGroup();
 
     Config.beginGroup("XMode");

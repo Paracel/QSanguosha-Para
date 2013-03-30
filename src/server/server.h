@@ -83,6 +83,7 @@ private:
     QLayout *createButtonLayout();
 
     QGroupBox *createGameModeBox();
+    QGroupBox *create1v1Box();
     QGroupBox *create3v3Box();
     QGroupBox *createXModeBox();
 
@@ -136,6 +137,8 @@ private:
     QComboBox *official_3v3_ComboBox;
     QComboBox *role_choose_ComboBox;
     QCheckBox *exclude_disaster_checkbox;
+    QComboBox *official_1v1_ComboBox;
+    QCheckBox *kof_using_extension_checkbox;
     QComboBox *role_choose_xmode_ComboBox;
     QCheckBox *disable_lua_checkbox;
 

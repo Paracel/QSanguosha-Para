@@ -3734,7 +3734,9 @@ void RoomScene::surrender() {
 }
 
 void RoomScene::fillGenerals1v1(const QStringList &names) {
-    selector_box = new QSanSelectableItem("image/system/1v1/select.png", true);
+    int len = names.length() / 2;
+    QString path = QString("image/system/1v1/select%1.png").arg(len == 5 ? QString() : "2");
+    selector_box = new QSanSelectableItem(path, true);
     selector_box->setPos(m_tableCenterPos);
     selector_box->setFlag(QGraphicsItem::ItemIsMovable);
     addItem(selector_box);
@@ -3757,12 +3759,12 @@ void RoomScene::fillGenerals1v1(const QStringList &names) {
     double scaleRatio = 116.0 / G_COMMON_LAYOUT.m_cardNormalHeight;
     for (int i = 0; i < n; i++) {
         int row, column;
-        if (i < 5) {
+        if (i < len) {
             row = 1;
             column = i;
         } else {
             row = 2;
-            column = i - 5;
+            column = i - len;
         }
 
         CardItem *general_item = general_items.at(i);
@@ -3939,11 +3941,14 @@ void RoomScene::startArrange(const QString &to_arrange) {
         positions << QPointF(279, 356) << QPointF(407, 356) << QPointF(535, 356);
     } else if (ServerInfo.GameMode == "02_1v1") {
         mode = "1v1";
-        positions << QPointF(130, 335) << QPointF(260, 335) << QPointF(390, 335);
+        if (down_generals.length() == 5)
+            positions << QPointF(130, 335) << QPointF(260, 335) << QPointF(390, 335);
+        else
+            positions << QPointF(173, 335) << QPointF(303, 335) << QPointF(433, 335);
     }
 
-    QStringList arrangeList = to_arrange.split("+");
     if (ServerInfo.GameMode == "06_XMode") {
+        QStringList arrangeList = to_arrange.split("+");
         if (arrangeList.length() == 5)
             positions << QPointF(130, 335) << QPointF(260, 335) << QPointF(390, 335);
         else
@@ -3955,7 +3960,8 @@ void RoomScene::startArrange(const QString &to_arrange) {
         addItem(selector_box);
         selector_box->setZValue(10000);
     } else {
-        selector_box->load(QString("image/system/%1/arrange.png").arg(mode));
+        QString path = QString("image/system/%1/arrange%2.png").arg(mode).arg(down_generals.length() == 5 ? QString() : "2");
+        selector_box->load(path);
         selector_box->setPos(m_tableCenterPos);
     }
 

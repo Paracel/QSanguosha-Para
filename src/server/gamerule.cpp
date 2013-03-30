@@ -530,8 +530,12 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 QStringList list = player->tag["1v1Arrange"].toStringList();
 
                 if (!list.isEmpty()) {
-                    player->tag["1v1ChangeGeneral"] = list.takeFirst();
-                    player->tag["1v1Arrange"] = list;
+                    if (Config.value("1v1/Rule", "Classical").toString() == "Classical") {
+                        player->tag["1v1ChangeGeneral"] = list.takeFirst();
+                        player->tag["1v1Arrange"] = list;
+                    } else {
+                        player->tag["1v1ChangeGeneral"] = list.first();
+                    }
 
                     QStringList card_list = player->tag["CurrentCardUse"].toStringList();
                     if (death.damage == NULL && card_list.isEmpty()) {
@@ -605,8 +609,17 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     Config.AIDelay = Config.OriginAIDelay;
 
     Room *room = player->getRoom();
-    QString new_general = player->tag["1v1ChangeGeneral"].toString();
-    player->tag.remove("1v1ChangeGeneral");
+    bool classical = (Config.value("1v1/Rule", "Classical").toString() == "Classical");
+    QString new_general;
+    if (classical) {
+        new_general = player->tag["1v1ChangeGeneral"].toString();
+        player->tag.remove("1v1ChangeGeneral");
+    } else {
+        QStringList list = player->tag["1v1Arrange"].toStringList();
+        new_general = room->askForGeneral(player, list);
+        list.removeOne(new_general);
+        player->tag["1v1Arrange"] = QVariant::fromValue(list);
+    }
     room->revivePlayer(player);
     room->changeHero(player, new_general, true, true);
     if (player->getGeneral()->getKingdom() == "god") {
@@ -624,7 +637,8 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     if (player->getKingdom() != player->getGeneral()->getKingdom())
         room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
 
-    room->doBroadcastNotify(room->getOtherPlayers(player, true), QSanProtocol::S_COMMAND_REVEAL_GENERAL,
+    QList<ServerPlayer *> notified = classical ? room->getOtherPlayers(player, true) : room->getPlayers();
+    room->doBroadcastNotify(notified, QSanProtocol::S_COMMAND_REVEAL_GENERAL,
                             QSanProtocol::Utils::toJsonArray(player->objectName(), new_general));
 
     if (!player->faceUp())
@@ -634,7 +648,8 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
         room->setPlayerProperty(player, "chained", false);
 
     room->setTag("FirstRound", true); //For Manjuan
-    player->drawCards(4);
+    int draw_num = classical ? 4 : player->getMaxHp();
+    player->drawCards(draw_num);
     room->setTag("FirstRound", false);
 }
 

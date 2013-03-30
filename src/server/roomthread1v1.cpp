@@ -19,18 +19,39 @@ RoomThread1v1::RoomThread1v1(Room *room)
 void RoomThread1v1::run() {
     // initialize the random seed for this thread
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
+    bool new_rule = (Config.value("1v1/Rule", "Classical").toString() == "2013");
+    int total_num = new_rule ? 12 : 10;
 
-    QSet<QString> banset = Config.value("Banlist/1v1").toStringList().toSet();
-    general_names = Sanguosha->getRandomGenerals(10, banset);
+    if (!Config.value("1v1/UsingExtension", false).toBool()) {
+        const Package *stdpack = Sanguosha->findChild<const Package *>("standard");
+        const Package *windpack = Sanguosha->findChild<const Package *>("wind");
 
-    QStringList known_list = general_names.mid(0, 6);
-    unknown_list = general_names.mid(6, 4);
+        QStringList candidates;
+        foreach (const General *general, stdpack->findChildren<const General *>())
+            candidates << general->objectName();
+        foreach (const General *general, windpack->findChildren<const General *>())
+            candidates << general->objectName();
+        if (new_rule)
+            candidates << "dianwei" << "xuhuang" << "menghuo" << "zhurong"
+                       << "jiangwei" << "sunjian" << "pangde" << "yanliangwenchou";
+        qShuffle(candidates);
+        general_names = candidates.mid(0, total_num);
+    } else {
+        QSet<QString> banset = Config.value("Banlist/1v1").toStringList().toSet();
+        general_names = Sanguosha->getRandomGenerals(total_num, banset);
+    }
 
-    for (int i = 0; i < 4; i++)
-        general_names[i + 6] = QString("x%1").arg(QString::number(i));
+    if (!new_rule) {
+        QStringList known_list = general_names.mid(0, 6);
+        unknown_list = general_names.mid(6, 4);
 
-    room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(known_list << "x0" << "x1" << "x2" << "x3"));
+        for (int i = 0; i < 4; i++)
+            general_names[i + 6] = QString("x%1").arg(QString::number(i));
 
+        room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(known_list << "x0" << "x1" << "x2" << "x3"));
+    } else {
+        room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(general_names));
+    }
     ServerPlayer *first = room->getPlayers().at(0), *next = room->getPlayers().at(1);
     askForTakeGeneral(first);
 
@@ -131,7 +152,9 @@ void RoomThread1v1::arrange(ServerPlayer *player, const QStringList &arranged) {
     player->tag["1v1Arrange"] = QVariant::fromValue(left);
     player->setGeneralName(arranged.first());
 
-    foreach (QString general, arranged)
+    foreach (QString general, arranged) {
         room->doNotify(player, S_COMMAND_REVEAL_GENERAL, toJsonArray(player->objectName(), general));
+        if (Config.value("1v1/Rule", "Classical").toString() == "2013") break;
+    }
 }
 

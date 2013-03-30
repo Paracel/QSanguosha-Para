@@ -2106,7 +2106,7 @@ sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 end
 
 sgs.ai_skill_invoke.biyue = function(self, data)
-	return not self.player:isKongcheng() and self:needKongcheng(self.player, true)
+	return not (self.player:isKongcheng() and self:needKongcheng(self.player, true))
 end
 
 sgs.dynamic_value.damage_card.LijianCard = true

@@ -147,6 +147,9 @@ void GlobalEffect::onUse(Room *room, const CardUseStruct &card_use) const{
             targets << player;
     }
 
+    if (room->getMode() == "06_3v3")
+        room->reverseFor3v3(this, source, targets);
+
     CardUseStruct use = card_use;
     use.to = targets;
     TrickCard::onUse(room, use);
@@ -202,6 +205,9 @@ void AOE::onUse(Room *room, const CardUseStruct &card_use) const{
         } else
             targets << player;
     }
+
+    if (room->getMode() == "06_3v3")
+        room->reverseFor3v3(this, source, targets);
 
     CardUseStruct use = card_use;
     use.to = targets;

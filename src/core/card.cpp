@@ -572,13 +572,7 @@ void Card::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets)
     if (targets.length() == 1) {
         room->cardEffect(this, source, targets.first());
     } else {
-        QList<ServerPlayer *> players = targets;
-        if (room->getMode() == "06_3v3") {
-           if (isKindOf("AOE") || isKindOf("GlobalEffect"))
-               room->reverseFor3v3(this, source, players);
-        }
-
-        foreach (ServerPlayer *target, players) {
+        foreach (ServerPlayer *target, targets) {
             CardEffectStruct effect;
             effect.card = this;
             effect.from = source;

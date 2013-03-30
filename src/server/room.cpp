@@ -3069,6 +3069,11 @@ void Room::startGame() {
     }
 
     preparePlayers();
+
+    QList<int> drawPile = *m_drawPile;
+    qShuffle(drawPile);
+    doBroadcastNotify(S_COMMAND_AVAILABLE_CARDS, toJsonArray(drawPile));
+
     doBroadcastNotify(S_COMMAND_GAME_START, Json::Value::null);
     game_started = true;
 

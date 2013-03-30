@@ -120,7 +120,8 @@ namespace QSanProtocol {
         S_COMMAND_FILL_GENERAL,
         S_COMMAND_TAKE_GENERAL,
         S_COMMAND_RECOVER_GENERAL,
-        S_COMMAND_REVEAL_GENERAL
+        S_COMMAND_REVEAL_GENERAL,
+        S_COMMAND_AVAILABLE_CARDS
     };
 
     enum GameEventType {

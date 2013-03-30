@@ -127,6 +127,7 @@ public:
     void exchangeKnownCards(const Json::Value &players);
     void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const Json::Value &state_str);
+    void setAvailableCards(const Json::Value &pile);
     void setCardFlag(const Json::Value &pattern_str);
     void updateCard(const Json::Value &arg);
 
@@ -182,12 +183,15 @@ public:
         m_countdown = countdown;
         m_mutexCountdown.unlock();
     }
+
     inline QSanProtocol::Countdown getCountdown() {
         m_mutexCountdown.lock();
         QSanProtocol::Countdown countdown = m_countdown;
         m_mutexCountdown.unlock();
         return countdown;
     }
+
+    inline QList<int> getAvailableCards() const{ return available_cards; }
 
     // public fields
     bool m_isDiscardActionRefusable;
@@ -239,6 +243,7 @@ private:
     int pile_num;
     QString skill_title, skill_line;
     QString skill_to_invoke;
+    QList<int> available_cards;
 
     unsigned int _m_lastServerSerial;
 

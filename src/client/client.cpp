@@ -71,6 +71,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_EXCHANGE_KNOWN_CARDS] = &Client::exchangeKnownCards;
 
     m_callbacks[S_COMMAND_UPDATE_STATE_ITEM] = &Client::updateStateItem;
+    m_callbacks[S_COMMAND_AVAILABLE_CARDS] = &Client::setAvailableCards;
 
     m_callbacks[S_COMMAND_GET_CARD] = &Client::getCards;
     m_callbacks[S_COMMAND_LOSE_CARD] = &Client::loseCards;
@@ -1763,3 +1764,9 @@ void Client::updateStateItem(const Json::Value &state_str) {
     emit role_state_changed(toQString(state_str));
 }
 
+void Client::setAvailableCards(const Json::Value &pile) {
+    if (!pile.isArray()) return;
+    QList<int> drawPile;
+    tryParse(pile, drawPile);
+    available_cards = drawPile;
+}

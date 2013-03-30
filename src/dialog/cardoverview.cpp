@@ -99,7 +99,7 @@ void CardOverview::askCard() {
     int row = ui->tableWidget->currentRow();
     if (row >= 0) {
         int card_id = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toInt();
-        if (!ServerInfo.Extensions.contains(Sanguosha->getEngineCard(card_id)->getPackage())) {
+        if (!ClientInstance->getAvailableCards().contains(card_id)) {
             QMessageBox::warning(this, tr("Warning"), tr("These packages don't contain this card"));
             return;
         }

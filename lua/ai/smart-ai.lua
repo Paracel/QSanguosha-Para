@@ -2811,16 +2811,13 @@ end
 function SmartAI:askForPlayerChosen(targets, reason)
 	self:log("askForPlayerChosen:" .. reason)
 	local playerchosen = sgs.ai_skill_playerchosen[string.gsub(reason, "%-", "_")]
-	local target
+	local target = nil
 	if type(playerchosen) == "function" then
 		target = playerchosen(self, targets)
-	end
-	if target then
 		return target
-	else
-		local r = math.random(0, targets:length() - 1)
-		return targets:at(r)
 	end
+	local r = math.random(0, targets:length() - 1)
+	return targets:at(r)
 end
 
 function SmartAI:willUsePeachTo(dying)

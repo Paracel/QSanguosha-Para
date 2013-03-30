@@ -31,10 +31,13 @@ sgs.ai_skill_playerchosen.qianxi = function(self, targets)
 			end
 		else
 			for _, enemy in ipairs(enemies) do
-				if getKnownCard(enemy, "Jink", false, "h") > 0 and self:slashIsEffective(slash, enemy) then return enemy end
+				if getKnownCard(enemy, "Jink", false, "h") > 0 and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then return enemy end
 			end
 			for _, enemy in ipairs(enemies) do
-				if getCardsNum("Peach", enemy) > 0 or enemy:hasSkill("jijiu") then return enemy end
+				if getKnownCard(enemy, "Peach", true, "h") > 0 or enemy:hasSkill("jijiu") then return enemy end
+			end
+			for _, enemy in ipairs(enemies) do
+				if getKnownCard(enemy, "Jink", false, "h") > 0 and self:slashIsEffective(slash, enemy) then return enemy end
 			end
 		end
 		for _, enemy in ipairs(enemies) do

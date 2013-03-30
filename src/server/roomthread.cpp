@@ -79,7 +79,7 @@ QString DamageStruct::getReason() const{
 }
 
 CardEffectStruct::CardEffectStruct()
-    : card(NULL), from(NULL), to(NULL), multiple(false)
+    : card(NULL), from(NULL), to(NULL)
 {
 }
 

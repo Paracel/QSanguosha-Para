@@ -577,7 +577,6 @@ void Card::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets)
             effect.card = this;
             effect.from = source;
             effect.to = target;
-            effect.multiple = true;
 
             room->cardEffect(effect);
         }

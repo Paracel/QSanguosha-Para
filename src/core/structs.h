@@ -43,8 +43,6 @@ struct CardEffectStruct {
 
     ServerPlayer *from;
     ServerPlayer *to;
-
-    bool multiple;
 };
 
 struct SlashEffectStruct {

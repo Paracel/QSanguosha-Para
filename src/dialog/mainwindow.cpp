@@ -717,7 +717,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
         item = new QTableWidgetItem;
         QString generals = Sanguosha->translate(rec->m_generalName);
         if (!rec->m_general2Name.isEmpty())
-            generals += "+" + Sanguosha->translate(rec->m_general2Name) + tr("(General2)");
+            generals += "/" + Sanguosha->translate(rec->m_general2Name);
         item->setText(generals);
         table->setItem(i, 1, item);
 

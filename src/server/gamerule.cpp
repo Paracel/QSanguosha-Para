@@ -71,8 +71,8 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
         }
     case Player::Draw: {
             int num = 2;
-            if (player->hasFlag("FirstRound")) {
-                room->setPlayerFlag(player, "-FirstRound");
+            if (player->hasFlag("GlobalFlag_FirstRound")) {
+                room->setPlayerFlag(player, "-GlobalFlag_FirstRound");
                 if (room->getMode() == "02_1v1") num--;
             }
 
@@ -157,7 +157,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             player = room->getCurrent();
             if (room->getTag("FirstRound").toBool()) {
                 room->setTag("FirstRound", false);
-                room->setPlayerFlag(player, "FirstRound");
+                room->setPlayerFlag(player, "GlobalFlag_FirstRound");
             }
 
             LogMessage log;
@@ -165,7 +165,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             room->sendLog(log);
 
             if (!player->faceUp()) {
-                room->setPlayerFlag(player, "-FirstRound");
+                room->setPlayerFlag(player, "-GlobalFlag_FirstRound");
                 player->turnOver();
             } else if (player->isAlive())
                 player->play();

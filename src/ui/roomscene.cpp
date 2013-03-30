@@ -3020,7 +3020,27 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
         } else {
             QIcon icon(QString("image/system/roles/%1.png").arg(player->getRole()));
             item->setIcon(icon);
-            item->setText(Sanguosha->translate(player->getRole()));
+            QString role = player->getRole();
+            if (ServerInfo.GameMode.startsWith("06_")) {
+                if (role == "lord" || role == "renegade")
+                    role = "leader";
+                else
+                    role = "guard";
+            } else if (ServerInfo.GameMode == "04_1v3") {
+                int seat = player->getSeat();
+                switch (seat) {
+                case 1: role = "lvbu"; break;
+                case 2: role = "vanguard"; break;
+                case 3: role = "mainstay"; break;
+                case 4: role = "general"; break;
+                }
+            } else if (ServerInfo.GameMode == "02_1v1") {
+                if (role == "lord")
+                    role = "defensive";
+                else
+                    role = "offensive";
+            }
+            item->setText(Sanguosha->translate(role));
         }
         if (!player->isAlive())
             item->setFlags(item->flags() & ~Qt::ItemIsEnabled);

@@ -1,4 +1,16 @@
 return {
+	["lord"] = "主公",
+	["loyalist"] = "忠臣",
+	["rebel"] = "反贼",
+	["renegade"] = "内奸",
+	["leader"] = "主帅",
+	["guard"] = "前锋",
+	["vanguard"] = "先锋",
+	["mainstay"] = "中坚",
+	["general"] = "大将",
+	["defensive"] = "先手",
+	["offensive"] = "后手",
+
 	["Pairs"] = "双将",
 	["XMode"] = "血战到底",
 	["cancel"] = "取消",
@@ -20,10 +32,6 @@ return {
 	["equip"] = "装备牌",
 	["ndtrick"] = "非延时锦囊",
 
-	["lord"] = "主公",
-	["loyalist"] = "忠臣",
-	["rebel"] = "反贼",
-	["renegade"] = "内奸",
 	["spade_char"] = "♠",
 	["club_char"] = "♣",
 	["heart_char"] = "♥",

@@ -29,6 +29,7 @@ sgs.ai_use_value = {}
 sgs.ai_use_priority = {}
 sgs.ai_chaofeng = {}
 sgs.ai_global_flags = {}
+sgs.ai_current_judge = {}
 sgs.ai_skill_invoke = {}
 sgs.ai_skill_suit = {}
 sgs.ai_skill_cardask = {}
@@ -1761,6 +1762,26 @@ function SmartAI:filterEvent(event, player, data)
 			if player:objectName() == caiwenji:objectName() then intention = 0 end
 			sgs.updateIntention(caiwenji, player, intention)
 		end
+
+		local judgex = { who = judge.who, reason = judge.reason, good = judge:isGood() }
+		table.insert(sgs.ai_current_judge, judgex)
+	elseif event == sgs.AskForRetrial then
+		local judge = data:toJudge()
+
+		local judge_len = #sgs.ai_current_judge
+		local last_judge = sgs.ai_current_judge[judge_len]
+		table.remove(sgs.ai_current_judge, judge_len)
+
+		if not last_judge.good and judge:isGood() then
+			sgs.updateIntention(player, last_judge.who, -30)
+		elseif last_judge.good and not judge:isGood() then
+			sgs.updateIntention(player, last_judge.who, 30)
+		end
+
+		last_judge.good = judge:isGood()
+		table.insert(sgs.ai_current_judge, last_judge)
+	elseif event == sgs.FinishJudge then
+		table.remove(sgs.ai_current_judge, #sgs.ai_current_judge)
 	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
 		player:setFlags("GlobalFlag_PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then

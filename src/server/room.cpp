@@ -4770,7 +4770,6 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
         QVariant data = QVariant::fromValue(resp);
         thread->trigger(CardResponded, this, player, data);
     }
-    tag["retrial"] = true;
 }
 
 bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name, bool is_preview, bool visible, int optional, int max_num) {

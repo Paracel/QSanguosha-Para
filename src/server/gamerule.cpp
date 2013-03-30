@@ -582,8 +582,6 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 room->getThread()->delay(Config.S_JUDGE_LONG_DELAY);
             }
 
-            room->removeTag("retrial");
-
             break;
         }
     case FinishJudge: {

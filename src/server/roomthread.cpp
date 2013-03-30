@@ -166,8 +166,7 @@ void JudgeStruct::updateResult() {
         _m_result = TRIAL_RESULT_BAD;
 }
 
-bool JudgeStruct::isGood() const
-{
+bool JudgeStruct::isGood() const{
     Q_ASSERT(_m_result != TRIAL_RESULT_UNKNOWN);
     return _m_result == TRIAL_RESULT_GOOD;
 }

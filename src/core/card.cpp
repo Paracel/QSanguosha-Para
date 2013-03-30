@@ -87,6 +87,7 @@ int Card::getEffectiveId() const{
 }
 
 int Card::getNumber() const{
+    if (m_number > 0) return m_number;
     if (isVirtualCard()) {
         if (subcardsLength() == 0)
             return 0;
@@ -119,6 +120,8 @@ QString Card::getNumberString() const{
 }
 
 Card::Suit Card::getSuit() const{
+    if (m_suit != NoSuit && m_suit != SuitToBeDecided)
+        return m_suit;
     if (isVirtualCard()) {
         if (subcardsLength() == 0)
             return NoSuit;

@@ -109,7 +109,7 @@ QString GeneralSelector::selectSecond(ServerPlayer *player, const QStringList &c
 }
 
 QString GeneralSelector::select3v3(ServerPlayer *, const QStringList &candidates) {
-    return selectHighest(priority_3v3_table, candidates, 0);
+    return selectHighest(priority_3v3_table, candidates, 5);
 }
 
 QString GeneralSelector::select1v1(const QStringList &candidates) {

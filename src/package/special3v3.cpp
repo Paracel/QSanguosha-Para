@@ -381,6 +381,32 @@ VSCrossbow::VSCrossbow(Suit suit, int number)
     setObjectName("vscrossbow");
 }
 
+Drowning::Drowning(Suit suit, int number)
+    : SingleTargetTrick(suit, number, false)
+{
+    setObjectName("drowning");
+}
+
+bool Drowning::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    int total_num = 1 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
+    if (targets.length() >= total_num)
+        return false;
+
+    if (to_select == Self)
+        return false;
+
+    return true;
+}
+
+void Drowning::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.to->getRoom();
+    if (!effect.to->getEquips().isEmpty()
+        && room->askForChoice(effect.to, objectName(), "throw+damage", QVariant::fromValue(effect)) == "throw")
+        effect.to->throwAllEquips();
+    else
+        room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
+}
+
 New3v3CardPackage::New3v3CardPackage()
     : Package("New3v3Card")
 {

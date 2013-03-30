@@ -83,14 +83,17 @@ void ServerPlayer::throwAllEquips() {
     if (equips.isEmpty()) return;
 
     DummyCard *card = new DummyCard;
-    foreach (const Card *equip, equips)
-        card->addSubcard(equip);
-    room->throwCard(card, this);
+    foreach (const Card *equip, equips) {
+        if (!isJilei(card))
+            card->addSubcard(equip);
+    }
+    if (card->subcardsLength() > 0)
+        room->throwCard(card, this);
     card->deleteLater();
 }
 
 void ServerPlayer::throwAllHandCards() {
-    int card_length = getCardCount(false);
+    int card_length = getHandcardNum();
     room->askForDiscard(this, QString(), card_length, card_length);
 }
 

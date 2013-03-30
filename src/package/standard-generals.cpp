@@ -197,7 +197,7 @@ public:
             room->judge(judge);
             if (!from || from->isDead()) return;
             if (judge.isGood()) {
-                if (!room->askForDiscard(from, objectName(), 2, 2, true))
+                if (from->getHandcardNum() < 2 || !room->askForDiscard(from, objectName(), 2, 2, true))
                     room->damage(DamageStruct(objectName(), xiahou, from));
             }
         }

@@ -273,7 +273,8 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 				if self:isWeak() and (self.player:getHp() < 2 and self:getCardsNum("Peach") < 1) then
 					wf = true
 				end
-			else
+			end
+			if not wf then
 				for _, friend in ipairs(self.friends_noself) do
 					if self:isWeak(friend) then
 						wf = true

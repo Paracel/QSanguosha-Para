@@ -8,8 +8,8 @@ return {
 	["vanguard"] = "先锋",
 	["mainstay"] = "中坚",
 	["general"] = "大将",
-	["defensive"] = "先手",
-	["offensive"] = "后手",
+	["offensive"] = "先手",
+	["defensive"] = "后手",
 
 	["Pairs"] = "双将",
 	["XMode"] = "血战到底",

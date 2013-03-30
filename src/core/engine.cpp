@@ -828,7 +828,11 @@ QList<int> Engine::getRandomCards() const{
             list << card->getId();
         else if (card->getPackage() == "New3v3_2013Card" && using_2013_3v3)
             list << card->getId();
-        else if (!getBanPackages().contains(card->getPackage()))
+
+        if (!Config.value("3v3/UsingExtension", false).toBool()
+            && card->getPackage() != "standard_cards" && card->getPackage() != "standard_ex_cards")
+            continue;
+        if (!getBanPackages().contains(card->getPackage()))
             list << card->getId();
     }
     if (using_2012_3v3 || using_2013_3v3)

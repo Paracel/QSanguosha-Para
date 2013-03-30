@@ -2908,7 +2908,7 @@
         <translation>你真的要投降吗？</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="4000"/>
+        <location filename="../../src/ui/roomscene.cpp" line="4001"/>
         <source>Complete</source>
         <translation>完成</translation>
     </message>
@@ -3555,7 +3555,7 @@ P = 你自己, R = 你所在的房间</translation>
 <context>
     <name>ServerPlayer</name>
     <message>
-        <location filename="../../src/server/serverplayer.cpp" line="316"/>
+        <location filename="../../src/server/serverplayer.cpp" line="319"/>
         <source>Anonymous</source>
         <translation>匿名</translation>
     </message>

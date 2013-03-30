@@ -685,6 +685,32 @@ rende_skill.getTurnUseCard = function(self)
 	if self.player:isKongcheng() then return end
 	local mode = string.lower(global_room:getMode())
 	if self.player:usedTimes("RendeCard") > 1 and mode:find("04_1v3") then return end
+
+	if (self:hasCrossbowEffect() or self:getCardsNum("Crossbow") > 0) and self:getCardsNum("Slash") > 0 then
+		self:sort(self.enemies, "defense")
+		for _, enemy in ipairs(self.enemies) do
+			if self.player:distanceTo(enemy) == 1 and sgs.isGoodTarget(enemy, self.enemies, self) then
+				local slashs = self:getCards("Slash")
+				local slash_count = 0
+				for _, slash in ipairs(slashs) do
+					if not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) then
+						slash_count = slash_count + 1
+					end
+				end
+				if slash_count >= enemy:getHp() then return false end
+			end
+		end
+	end
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:canSlash(self.player) and not self:slashProhibit(nil, self.player, enemy) and self:playerGetRound(enemy) <= 3 then
+			if enemy:hasWeapon("guding_blade") and self.player:getHandcardNum() == 1 and getCardsNum("Slash", enemy) >= 1 then
+				return false
+			elseif self:hasCrossbowEffect(enemy) and getCardsNum("Slash", enemy) > 1 and self:getOverflow() <= 0 then
+				return false
+			end
+		end
+	end
+
 	for _, player in ipairs(self.friends_noself) do
 		if (player:hasSkill("haoshi") and not player:containsTrick("supply_shortage")) or player:hasSkill("jijiu") then
 			return sgs.Card_Parse("@RendeCard=.")

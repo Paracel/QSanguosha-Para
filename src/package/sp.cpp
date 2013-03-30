@@ -24,7 +24,8 @@ public:
             card = data.value<CardResponseStruct>().m_card;
         }
 
-        if (card == NULL || !card->isBlack())
+        if (card == NULL || !card->isBlack()
+            || (card->getHandlingMethod() != Card::MethodUse && card->getHandlingMethod() != Card::MethodResponse))
             return false;
 
         QList<ServerPlayer *> targets;
@@ -931,7 +932,7 @@ public:
                 if (response.m_isUse)
                    card = response.m_card;
             }
-            if (card && card->getTypeId() != Card::TypeSkill) {
+            if (card && card->getHandlingMethod() == Card::MethodUse) {
                 int n = player->getMark(objectName());
                 if (card->isBlack())
                     n |= 1;

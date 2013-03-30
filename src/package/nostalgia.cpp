@@ -25,7 +25,8 @@ public:
             card = data.value<CardResponseStruct>().m_card;
         }
 
-        if (card == NULL || !card->isBlack())
+        if (card == NULL || !card->isBlack()
+            || (card->getHandlingMethod() != Card::MethodUse && card->getHandlingMethod() != Card::MethodResponse))
             return false;
 
         player->setFlags("MoonspearUse");

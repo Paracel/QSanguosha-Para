@@ -2083,7 +2083,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 										return null_card
 									elseif crossbow_num > 0 and getCardsNum("Slash", enemy) >= 3 then
 										local slash = sgs.Sanguosha:cloneCard("slash")
-										for _, friend in ipairs(self.friens) do
+										for _, friend in ipairs(self.friends) do
 											if enemy:distanceTo(friend) == 1 and self:slashIsEffective(slash, friend, enemy) then
 												return null_card
 											end

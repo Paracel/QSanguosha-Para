@@ -827,28 +827,6 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             }
             break;
         }
-    case CardUsed: {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Weapon")
-                && (player->isCardLimited(use.card, Card::MethodUse)
-                    || player->askForSkillInvoke("weapon_recast", data))) {
-                CardMoveReason reason(CardMoveReason::S_REASON_RECAST, player->objectName());
-                reason.m_skillName = "weapon_recast";
-                room->moveCardTo(use.card, player, NULL, Player::DiscardPile, reason);
-                player->broadcastSkillInvoke("@recast");
-
-                LogMessage log;
-                log.type = "#Card_Recast";
-                log.from = player;
-                log.card_str = use.card->toString();
-                room->sendLog(log);
-
-                player->drawCards(1);
-                return false;
-            }
-
-            break;
-        }
     case HpChanged: {
             if (player->isLord() && player->getHp() <= 4 && player->getMark("secondMode") == 0)
                 throw StageChange;

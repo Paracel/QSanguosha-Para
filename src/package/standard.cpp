@@ -59,9 +59,13 @@ bool EquipCard::isAvailable(const Player *player) const{
 }
 
 void EquipCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    ServerPlayer *player = card_use.from;
+    CardUseStruct use = card_use;
 
-    QVariant data = QVariant::fromValue(card_use);
+    ServerPlayer *player = use.from;
+    if (use.to.isEmpty())
+        use.to << player;
+
+    QVariant data = QVariant::fromValue(use);
     RoomThread *thread = room->getThread();
     thread->trigger(PreCardUsed, room, player, data);
     thread->trigger(CardUsed, room, player, data);
@@ -327,6 +331,30 @@ int Weapon::getRange() const{
 
 QString Weapon::getSubtype() const{
     return "weapon";
+}
+
+void Weapon::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    ServerPlayer *player = card_use.from;
+    if (room->getMode() == "04_1v3"
+        && use.card->isKindOf("Weapon")
+        && (player->isCardLimited(use.card, Card::MethodUse)
+            || player->askForSkillInvoke("weapon_recast", QVariant::fromValue(use)))) {
+        CardMoveReason reason(CardMoveReason::S_REASON_RECAST, player->objectName());
+        reason.m_skillName = "weapon_recast";
+        room->moveCardTo(use.card, player, NULL, Player::DiscardPile, reason);
+        player->broadcastSkillInvoke("@recast");
+
+        LogMessage log;
+        log.type = "#Card_Recast";
+        log.from = player;
+        log.card_str = use.card->toString();
+        room->sendLog(log);
+
+        player->drawCards(1);
+        return;
+    }
+    EquipCard::onUse(room, use);
 }
 
 EquipCard::Location Weapon::location() const{

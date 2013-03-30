@@ -47,7 +47,7 @@ private:
     bool cancelable;
 };
 
-class EquipCard:public Card {
+class EquipCard: public Card {
     Q_OBJECT
     Q_ENUMS(Location)
 
@@ -239,6 +239,7 @@ public:
     Weapon(Suit suit, int number, int range);
     int getRange() const;
 
+    virtual void onUse(Room *room, const CardUseStruct &card_use) const;
     virtual QString getSubtype() const;
 
     virtual Location location() const;

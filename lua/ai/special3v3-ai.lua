@@ -16,7 +16,7 @@ sgs.ai_skill_invoke.huanshi = true
 
 sgs.ai_skill_choice.huanshi = function(self, choices)
 	local zhugejin = self.room:findPlayerBySkillName("huanshi")
-	if self:objectiveLevel(zhugejin) > 2 then return "reject" end
+	if zhugejin and self:isEnemy(zhugejin) then return "reject" end
 	return "accept"
 end
 
@@ -30,6 +30,13 @@ function sgs.ai_cardneed.huanshi(to, card, self)
 				return card:getSuit() == sgs.Card_Heart and not self:hasSuit("heart", true, to)
 			end
 		end
+	end
+end
+
+sgs.ai_choicemade_filter.skillChoice.huanshi = function(self, player, promptlist)
+	if promptlist[#promptlist] == "reject" then
+		local zhugejin = self.room:findPlayerBySkillName("huanshi")
+		if zhugejin then sgs.updateIntention(player, zhugejin, 60) end
 	end
 end
 

@@ -98,18 +98,6 @@ public:
         events << AskForRetrial;
     }
 
-    QList<ServerPlayer *> getTeammates(ServerPlayer *zhugejin) const{
-        Room *room = zhugejin->getRoom();
-
-        QList<ServerPlayer *> teammates;
-        teammates << zhugejin;
-        foreach (ServerPlayer *other, room->getOtherPlayers(zhugejin)) {
-            if (AI::GetRelation3v3(zhugejin, other) == AI::Friend)
-                teammates << other;
-        }
-        return teammates;
-    }
-
     virtual bool triggerable(const ServerPlayer *target) const{
         return TriggerSkill::triggerable(target) && !target->isNude();
     }
@@ -119,22 +107,19 @@ public:
 
         bool can_invoke = false;
         if (room->getMode().startsWith("06_")) {
-            foreach (ServerPlayer *teammate, getTeammates(player)) {
-                if (teammate == judge->who) {
-                    can_invoke = true;
-                    break;
-                }
-            }
-         } else if (!player->isNude())
+            can_invoke = (AI::GetRelation3v3(player, judge->who) == AI::Friend);
+        } else if (!player->isNude())
             can_invoke = (judge->who == player || room->askForChoice(judge->who, "huanshi", "accept+reject") == "accept");
 
         if (!can_invoke) {
-            LogMessage log;
-            log.type = "#ZhibaReject";
-            log.from = judge->who;
-            log.to << player;
-            log.arg = objectName();
-            room->sendLog(log);
+            if (!room->getMode().startsWith("06_")) {
+                LogMessage log;
+                log.type = "#ZhibaReject";
+                log.from = judge->who;
+                log.to << player;
+                log.arg = objectName();
+                room->sendLog(log);
+            }
 
             return false;
         }

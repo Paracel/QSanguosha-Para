@@ -3960,7 +3960,8 @@ void RoomScene::startArrange(const QString &to_arrange) {
         addItem(selector_box);
         selector_box->setZValue(10000);
     } else {
-        QString path = QString("image/system/%1/arrange%2.png").arg(mode).arg(down_generals.length() == 5 ? QString() : "2");
+        QString suffix = (mode == "1v1" && down_generals.length() == 6) ? "2" : QString();
+        QString path = QString("image/system/%1/arrange%2.png").arg(mode).arg(suffix);
         selector_box->load(path);
         selector_box->setPos(m_tableCenterPos);
     }

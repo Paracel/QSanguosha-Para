@@ -651,15 +651,15 @@ QGroupBox *ServerDialog::create3v3Box() {
     QComboBox *officialComboBox = new QComboBox;
     officialComboBox->addItem(tr("Classical"), "Classical");
     officialComboBox->addItem("2012", "2012");
-    //official_rule_ComboBox->addItem("2013", "2013");
+    officialComboBox->addItem("2013", "2013");
 
     official_3v3_ComboBox = officialComboBox;
 
     QString rule = Config.value("3v3/OfficialRule", "2012").toString();
     if (rule == "2012")
         officialComboBox->setCurrentIndex(1);
-    //else if (rule == "2013")
-    //    officialComboBox->setCurrentIndex(2);
+    else if (rule == "2013")
+        officialComboBox->setCurrentIndex(2);
 
     QRadioButton *extend = new QRadioButton(tr("Extension mode"));
     QPushButton *extend_edit_button = new QPushButton(tr("General selection ..."));

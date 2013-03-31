@@ -22,8 +22,6 @@ const int Settings::S_PROGRESS_BAR_UPDATE_INTERVAL = 200;
 const int Settings::S_SERVER_TIMEOUT_GRACIOUS_PERIOD = 1000;
 const int Settings::S_MOVE_CARD_ANIMATION_DURAION = 600;
 const int Settings::S_JUDGE_ANIMATION_DURATION = 1200;
-const int Settings::S_REGULAR_ANIMATION_SLOW_DURAION = 1200;
-const int Settings::S_JUDGE_SHORT_DELAY = 100;
 const int Settings::S_JUDGE_LONG_DELAY = 800;
 
 Settings::Settings()

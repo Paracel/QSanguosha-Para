@@ -6,10 +6,11 @@ struct CardMoveStruct;
 class AI;
 class Recorder;
 
+struct PhaseStruct;
+
 #include "player.h"
 #include "socket.h"
 #include "protocol.h"
-#include "structs.h"
 
 #include <QSemaphore>
 #include <QDateTime>

@@ -31,7 +31,7 @@ public:
     void setHomePos(QPointF home_pos);
     QPointF homePos() const;    
     QAbstractAnimation *getGoBackAnimation(bool doFadeEffect, bool smoothTransition = false,
-                                           int duration = Config.S_MOVE_CARD_ANIMATION_DURAION);
+                                           int duration = Config.S_MOVE_CARD_ANIMATION_DURATION);
     void goBack(bool playAnimation, bool doFade = true);
     inline QAbstractAnimation *getCurrentAnimation(bool doFade) { return m_currentAnimation; }
     inline void setHomeOpacity(double opacity) { m_opacityAtHome = opacity; }

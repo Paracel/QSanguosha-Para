@@ -629,11 +629,21 @@ QGroupBox *ServerDialog::create1v1Box() {
     if (rule == "2013")
         officialComboBox->setCurrentIndex(1);
 
-    kof_using_extension_checkbox = new QCheckBox(tr("Using extensions"));
+    kof_using_extension_checkbox = new QCheckBox(tr("General extensions"));
     kof_using_extension_checkbox->setChecked(Config.value("1v1/UsingExtension", false).toBool());
 
+    kof_card_extension_checkbox = new QCheckBox(tr("Card extensions"));
+    kof_card_extension_checkbox->setChecked(Config.value("1v1/UsingCardExtension", false).toBool());
+
     vlayout->addLayout(HLay(new QLabel(tr("Rule option")), official_1v1_ComboBox));
-    vlayout->addWidget(kof_using_extension_checkbox);
+
+    QHBoxLayout *hlayout = new QHBoxLayout;
+    hlayout->addWidget(new QLabel(tr("Extension setting")));
+    hlayout->addStretch();
+    hlayout->addWidget(kof_using_extension_checkbox);
+    hlayout->addWidget(kof_card_extension_checkbox);
+
+    vlayout->addLayout(hlayout);
     box->setLayout(vlayout);
 
     return box;
@@ -1119,6 +1129,7 @@ bool ServerDialog::config() {
     Config.beginGroup("1v1");
     Config.setValue("Rule", official_1v1_ComboBox->itemData(official_1v1_ComboBox->currentIndex()).toString());
     Config.setValue("UsingExtension", kof_using_extension_checkbox->isChecked());
+    Config.setValue("UsingCardExtension", kof_card_extension_checkbox->isChecked());
     Config.endGroup();
 
     Config.beginGroup("XMode");

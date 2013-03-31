@@ -139,6 +139,7 @@ private:
     QCheckBox *exclude_disaster_checkbox;
     QComboBox *official_1v1_ComboBox;
     QCheckBox *kof_using_extension_checkbox;
+    QCheckBox *kof_card_extension_checkbox;
     QComboBox *role_choose_xmode_ComboBox;
     QCheckBox *disable_lua_checkbox;
 

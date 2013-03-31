@@ -357,7 +357,8 @@ function SmartAI:useCardSlash(card, use)
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
-		if (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
+		if not self:hasHeavySlashDamage(self.player, card, friend)
+			and (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
 				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and (self:hasEightDiagramEffect(friend) and not self.player:hasWeapon("qinggang_sword"))))
 				and self:findLeijiTarget(friend, 50))
 			or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
@@ -473,7 +474,8 @@ function SmartAI:useCardSlash(card, use)
 
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = self:slashProhibit(card, friend)
-		if (not use.to or not use.to:contains(friend))
+		if not self:hasHeavySlashDamage(self.player, card, friend)
+			and (not use.to or not use.to:contains(friend))
 			and (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
 			or self:getDamagedEffects(friend, self.player)
 			or self:needToLoseHp(friend, self.player, true) then
@@ -614,8 +616,8 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 			goto label_continue
 		end
 		speakTrigger(card, from, to)
-		if self:getDamagedEffects(to, from, true) or self:needToLoseHp(to, from, true) then goto label_continue end
-		if from:hasSkill("pojun") and to:getHp() > 2 then goto label_continue end
+		if not self:hasHeavySlashDamage(from, card, to) and (self:getDamagedEffects(to, from, true) or self:needToLoseHp(to, from, true)) then goto label_continue end
+		if from:hasSkill("pojun") and to:getHp() > 2 + self:hasHeavySlashDamage(from, card, to, true) then goto label_continue end
 		sgs.updateIntention(from, to, value)
 ::label_continue::
 	end

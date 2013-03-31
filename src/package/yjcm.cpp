@@ -269,10 +269,14 @@ public:
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->to == player && move->from && move->from->isAlive() && move->from != move->to
                 && move->card_ids.size() >= 2
-                && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE
-                && room->askForSkillInvoke(player, objectName(), data)) {
-                room->drawCards((ServerPlayer *)move->from, 1);
-                room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
+                && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE) {
+                move->from->setFlags("EnyuanDrawTarget");
+                bool invoke = room->askForSkillInvoke(player, objectName(), data);
+                move->from->setFlags("-EnyuanDrawTarget");
+                if (invoke) {
+                    room->drawCards((ServerPlayer *)move->from, 1);
+                    room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
+                }
             }
         } else if (event == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();

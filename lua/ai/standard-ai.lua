@@ -286,6 +286,19 @@ function sgs.ai_slash_prohibit.ganglie(self, from, to)
 	return from:getHandcardNum() + from:getHp() < 4
 end
 
+sgs.ai_choicemade_filter.skillInvoke.ganglie = function(self, player, promptlist)
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.to then
+		if promptlist[#promptlist] == "yes" then
+			if not self:getDamagedEffects(damage.from, player) then
+				sgs.updateIntention(damage.to, damage.from, 40)
+			end
+		elseif self:canAttack(damage.from) then
+			sgs.updateIntention(damage.to, damage.from, -40)
+		end
+	end
+end
+
 sgs.ai_chaofeng.xiahoudun = -3
 
 sgs.ai_skill_use["@@tuxi"] = function(self, prompt)

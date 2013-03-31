@@ -109,7 +109,7 @@ bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QStringList &result) 
     return true;
 }
 
-bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QRect& result)
+bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QRect &result)
 {
     if (!arg.isArray() || arg.size() != 4) return false;
     result.setLeft(arg[0].asInt());

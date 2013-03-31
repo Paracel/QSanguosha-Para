@@ -59,7 +59,7 @@ return {
 	["$RuoyuAnimate"] = "image=image/animate/ruoyu.png",
 	["#XiangleAvoid"] = "%to 的“%arg”效果被触发，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】无效",
 	["#Fangquan"] = "%from 发动了“<font color=\"yellow\"><b>放权</b></font>”，%to 将进行一个额外的回合",
-	["#RuoyuWake"] = "%from 的体力值(%arg)为场上最少，触发“%arg2”觉醒",
+	["#RuoyuWake"] = "%from 的体力值 %arg 为场上最少，触发“%arg2”觉醒",
 
 	["#sunce"] = "江东的小霸王",
 	["sunce"] = "孙策",
@@ -77,7 +77,7 @@ return {
 	["#HunziWake"] = "%from 的体力值为 <font color=\"yellow\"><b>1</b></font>，触发“%arg”觉醒",
 
 	["#erzhang"] = "经天纬地",
-	["erzhang"] = "张昭·张纮",
+	["erzhang"] = "张昭＆张纮",
 	["&erzhang"] = "张昭张纮",
 	["illustrator:erzhang"] = "废柴男",
 	["zhijian"] = "直谏",

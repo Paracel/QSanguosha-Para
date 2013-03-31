@@ -43,7 +43,7 @@ return {
 	["danji"] = "单骑",
 	[":danji"] = "<font color=\"purple\"><b>觉醒技。</b></font>回合开始阶段开始时，若你的手牌数大于体力值，且本局游戏主公为曹操，你失去1点体力上限，然后获得技能“马术”。",
 	["$DanjiAnimate"] = "image=image/animate/danji.png",
-	["#DanjiWake"] = "%from 的手牌数(%arg)大于体力值(%arg2)，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
+	["#DanjiWake"] = "%from 的手牌数 %arg 大于体力值 %arg2 ，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
 
 	["#caohong"] = "福将",
 	["caohong"] = "曹洪",
@@ -85,7 +85,7 @@ return {
 	["@songci"] = "颂词",
 
 	["#erqiao"] = "江东之花",
-	["erqiao"] = "大乔·小乔",
+	["erqiao"] = "大乔＆小乔",
 	["&erqiao"] = "大乔小乔",
 	["illustrator:erqiao"] = "木美人",
 	["xingwu"] = "星舞",

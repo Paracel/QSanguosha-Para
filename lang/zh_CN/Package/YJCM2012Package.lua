@@ -56,7 +56,7 @@ return {
 	["$FuliAnimate"] = "image=image/animate/fuli.png",
 
 	["#guanxingzhangbao"] = "将门虎子",
-	["guanxingzhangbao"] = "关兴·张苞",
+	["guanxingzhangbao"] = "关兴＆张苞",
 	["&guanxingzhangbao"] = "关兴张苞",
 	["designer:guanxingzhangbao"] = "诺思冥羽",
 	["illustrator:guanxingzhangbao"] = "HOOO",

@@ -55,7 +55,7 @@ return {
 	[":xueyi"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>场上每有一名存活的其他群雄角色，你的手牌上限+2。",
 
 	["#yanliangwenchou"] = "虎狼兄弟",
-	["yanliangwenchou"] = "颜良·文丑",
+	["yanliangwenchou"] = "颜良＆文丑",
 	["&yanliangwenchou"] = "颜良文丑",
 	["shuangxiong"] = "双雄",
 	[":shuangxiong"] = "摸牌阶段，你可以放弃摸牌并进行一次判定：若如此做，你获得此判定牌，你可以将与此判定牌颜色不同的牌当【决斗】使用，直到回合结束。",

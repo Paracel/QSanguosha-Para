@@ -21,7 +21,7 @@
 #include <QLabel>
 #include <QRadioButton>
 #include <QApplication>
-#include <QHttp>
+#include <QHostInfo>
 #include <QAction>
 
 static QLayout *HLay(QWidget *left, QWidget *right) {
@@ -878,29 +878,14 @@ QLayout *ServerDialog::createButtonLayout() {
 }
 
 void ServerDialog::onDetectButtonClicked() {
-    QString host = "www.net.cn";
-    QString path = "/static/customercare/yourIP.asp";
-    QHttp *http = new QHttp(this);
-    http->setHost(host);
-
-    connect(http, SIGNAL(done(bool)), this, SLOT(onHttpDone(bool)));
-    http->get(path);
-}
-
-void ServerDialog::onHttpDone(bool error) {
-    QHttp *http = qobject_cast<QHttp *>(sender());
-
-    if (error) {
-        QMessageBox::warning(this, tr("Warning"), http->errorString());
-    } else {
-        QRegExp rx("(\\d+\\.\\d+\\.\\d+\\.\\d+)");
-        int index = rx.indexIn(http->readAll());
-        if (index != -1) {
-            QString addr = rx.capturedTexts().at(0);
-            address_edit->setText(addr);
+    QHostInfo vHostInfo = QHostInfo::fromName(QHostInfo::localHostName());
+    QList<QHostAddress> vAddressList = vHostInfo.addresses();
+    foreach (QHostAddress address, vAddressList) {
+        if (!address.isNull() && address != QHostAddress::LocalHost
+            && address.protocol() ==  QAbstractSocket::IPv4Protocol) {
+            address_edit->setText(address.toString());
+            return;
         }
-
-        http->deleteLater();
     }
 }
 

@@ -24,7 +24,7 @@ void CardItem::_initialize() {
     auto_back = true;
     frozen = false;
     resetTransform();
-    this->translate(-_m_width / 2, -_m_height / 2);
+    setTransform(QTransform::fromTranslate(-_m_width / 2, -_m_height / 2), true);
 }
 
 CardItem::CardItem(const Card *card) {

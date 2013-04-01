@@ -10,7 +10,7 @@
 CardContainer::CardContainer()
     : _m_background("image/system/card-container.png")
 {
-    translate(-_m_background.width() / 2, -_m_background.height() / 2);
+    setTransform(QTransform::fromTranslate(-_m_background.width() / 2, -_m_background.height() / 2), true);
     _m_boundingRect = QRectF(QPoint(0, 0), _m_background.size());
     setFlag(ItemIsFocusable);
     setFlag(ItemIsMovable);

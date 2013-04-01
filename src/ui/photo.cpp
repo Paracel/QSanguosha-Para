@@ -44,7 +44,7 @@ Photo::Photo(): PlayerCardContainer() {
     _m_frameType = S_FRAME_NO_FRAME;
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
-    translate(-G_PHOTO_LAYOUT.m_normalWidth / 2, -G_PHOTO_LAYOUT.m_normalHeight / 2);
+    setTransform(QTransform::fromTranslate(-G_PHOTO_LAYOUT.m_normalWidth / 2, -G_PHOTO_LAYOUT.m_normalHeight / 2), true);
     _m_skillNameItem = new QGraphicsPixmapItem(_m_groupMain);
         
     emotion_item = new QGraphicsPixmapItem(_m_groupMain);
@@ -81,7 +81,7 @@ QRectF Photo::boundingRect() const{
 
 void Photo::repaintAll() {
     resetTransform();
-    translate(-G_PHOTO_LAYOUT.m_normalWidth / 2, -G_PHOTO_LAYOUT.m_normalHeight / 2);
+    setTransform(QTransform::fromTranslate(-G_PHOTO_LAYOUT.m_normalWidth / 2, -G_PHOTO_LAYOUT.m_normalHeight / 2), true);
     _paintPixmap(_m_mainFrame, G_PHOTO_LAYOUT.m_mainFrameArea, QSanRoomSkin::S_SKIN_KEY_MAINFRAME);
     setFrame(_m_frameType);
     hideSkillName(); // @todo: currently we don't adjust skillName's position for simplicity,

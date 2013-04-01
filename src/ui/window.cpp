@@ -97,7 +97,7 @@ void Window::addCloseButton(const QString &label) {
 
 void Window::shift(int pos_x, int pos_y) {
     resetTransform();
-    translate((pos_x - size.width()) / 2, (pos_y - size.height()) / 2);
+    setTransform(QTransform::fromTranslate((pos_x - size.width()) / 2, (pos_y - size.height()) / 2), true);
 }
 
 void Window::keepWhenDisappear() {

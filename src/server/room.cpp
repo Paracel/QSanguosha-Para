@@ -438,6 +438,13 @@ void Room::gameOver(const QString &winner) {
     }
     Config.AIDelay = Config.OriginAIDelay;
 
+    if (!getTag("NextGameMode").toString().isNull()) {
+        QString name = getTag("NextGameMode").toString();
+        Config.GameMode = name;
+        Config.setValue("GameMode", name);
+        removeTag("NextGameMode");
+    }
+
     Json::Value arg(Json::arrayValue);
     arg[0] = toJsonString(winner);
     arg[1] = toJsonArray(all_roles);
@@ -2611,8 +2618,8 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 Config.setValue("OriginAIDelay", delay);
             }
         } else if (sentence.startsWith(".SetGameMode=")) {
-            Config.GameMode = sentence.mid(13);
-            Config.setValue("GameMode", Config.GameMode);
+            QString name = sentence.mid(13);
+            setTag("NextGameMode", name);
         } else if (sentence == ".Pause") {
             _NO_BROADCAST_SPEAKING
             pauseCommand(player, "true");

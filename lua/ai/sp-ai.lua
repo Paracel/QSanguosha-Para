@@ -438,24 +438,29 @@ sgs.ai_skill_use["@@bifa"] = function(self, prompt)
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
 	self:sort(self.enemies, "handcard")
-	if #self.enemies > 0 then
-		for _, c in ipairs(cards) do
-			if c:isKindOf("EquipCard") then return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() end
-		end
-		for _, c in ipairs(cards) do
-			if c:isKindOf("TrickCard") and not (c:isKindOf("Nullification") and self:getCardsNum("Nullification") == 1) then
-				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
+	if #self.enemies == 0 then return "." end
+	for _, enemy in ipairs(self.enemies) do
+		if not self:needToLoseHp(enemy) then
+			for _, c in ipairs(cards) do
+				if c:isKindOf("EquipCard") then return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() end
 			end
-		end
-		for _, c in ipairs(cards) do
-			if c:isKindOf("Slash") then
-				return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
+			for _, c in ipairs(cards) do
+				if c:isKindOf("TrickCard") and not (c:isKindOf("Nullification") and self:getCardsNum("Nullification") == 1) then
+					return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
+				end
+			end
+			for _, c in ipairs(cards) do
+				if c:isKindOf("Slash") then
+					return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName()
+				end
 			end
 		end
 	end
+	return "."
 end
 
 sgs.ai_skill_cardask["@bifa-give"] = function(self, data)
+	if self:needToLostHp() then return "." end
 	local card_type = data:toString()
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)

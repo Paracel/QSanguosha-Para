@@ -221,7 +221,7 @@ sgs.ai_skill_invoke.neoganglie = function(self, data)
 		return zhangjiao and self:isFriend(zhangjiao)
 	end
 	local target = damage.from
-	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target, self.player)) and target:getHandcardNum() <= 1 then return false end
+	if (self:needToLoseHp(target, self.player) or self:getDamagedEffects(target, self.player)) and target:isKongcheng() then return false end
 	if not self:isFriend(target) then
 		target:setFlags("ganglie_target")
 		return true
@@ -250,8 +250,8 @@ sgs.ai_skill_choice.neoganglie = function(self, choices)
 			target:setFlags("-ganglie_target")
 		end
 	end
-	if self:getDamagedEffects(target, self.player) and self:isFriend(target) then return "damage" end
-	if (self:hasSkills(sgs.masochism_skill, target) or self:getDamagedEffects(target, self.player)) and target:getHandcardNum() > 1 then
+	if (self:getDamagedEffects(target, self.player) or self:needToLostHp(target, self.player)) and self:isFriend(target) then return "damage" end
+	if (self:getDamagedEffects(target, self.player) or self:needToLostHp(target, self.player, false, true)) and self:isEnemy(target) and not target:isKongcheng() then
 		return "throw"
 	end
 	return "damage"
@@ -275,3 +275,5 @@ sgs.ai_skill_discard.neoganglie = function(self, discard_num, min_num, optional,
 	end
 	return to_discard
 end
+
+sgs.ai_choicemade_filter.skillInvoke.neoganglie = sgs.ai_choicemade_filter.skillInvoke.ganglie

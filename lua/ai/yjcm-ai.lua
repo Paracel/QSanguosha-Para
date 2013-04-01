@@ -125,7 +125,7 @@ sgs.ai_skill_invoke.enyuan = function(self, data)
 	local damage = data:toDamage()
 	if damage and damage.from then
 		if damage.from and damage.from:isAlive() then
-			if self:isFriend(damage.from) then return self:getOverflow(damage.from) > 2 else return true end
+			if self:isFriend(damage.from) then return (self:getOverflow(damage.from) > 2 or self:needToLostHp(damage.from)) else return true end
 		end
 	else
 		local move = data:toMoveOneTime()
@@ -138,6 +138,7 @@ sgs.ai_skill_invoke.enyuan = function(self, data)
 end
 
 sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, include_equip)
+	if self:needToLoseHp() then return {} end
 	local to_discard = {}
 	local cards = self.player:getHandcards()
 	local fazheng = self.room:findPlayerBySkillName("enyuan")
@@ -180,7 +181,9 @@ function sgs.ai_slash_prohibit.enyuan(self, from, to)
 end
 
 sgs.ai_need_damaged.enyuan = function(self, attacker, player)
-	if self:isEnemy(attacker, player) and self:isWeak(attacker) and attacker:getHandcardNum() < 3 and not self:hasSkills("lianying|kongcheng", attacker) then
+	if self:isEnemy(attacker, player) and self:isWeak(attacker)
+		and attacker:getHandcardNum() < 3 and not self:hasSkills("lianying|kongcheng", attacker)
+		and not self:needToLoseHp(attacker) then
 		return true
 	end
 	return false
@@ -206,7 +209,7 @@ sgs.ai_choicemade_filter.skillInvoke.enyuan = function(self, player, promptlist)
 		if not damage.from then return end
 		if not invoked then
 			sgs.updateIntention(player, damage.from, -40)
-		elseif self:getOverflow(damage.from) <= 2 then
+		elseif self:getOverflow(damage.from) <= 2 or not self:needToLostHp(damage.from) then
 			sgs.updateIntention(player, damage.from, 40)
 		end
 	end

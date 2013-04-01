@@ -1978,7 +1978,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 		if not self:damageIsEffective(to, sgs.DamageStruct_Normal) and (trick:isKindOf("Duel") or trick:isKindOf("AOE")) then return nil end
 		if not self:damageIsEffective(to, sgs.DamageStruct_Fire) and trick:isKindOf("FireAttack") then return nil end
 	end
-	if to:getHp() > getBestHp(to) and self:isFriend(to)
+	if self:needToLoseHp(to) and self:isFriend(to)
 		and (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("AOE")) then
 		return nil
 	end
@@ -2309,8 +2309,7 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 
 	if effect and self:hasHeavySlashDamage(target, effect.slash) then return end
 	if effect and target and target:hasWeapon("ice_sword") and self.player:getCards("he"):length() > 1 then return end
-	if self:getDamagedEffects(self.player) or self.player:getHp() > getBestHp(self.player) then return "." end
-	if self.player:getHp() > getBestHp(self.player) then return "." end
+	if self:getDamagedEffects(self.player) or self:needToLoseHp(self.player) then return "." end
 	if self:getDamagedEffects(self.player, target) then return "." end
 	if self:needBear() and self.player:getHp() > 2 then return "." end
 	if self.player:hasSkill("zili") and not self.player:hasSkill("paiyi") and self.player:getLostHp() < 2 then return "." end
@@ -2320,15 +2319,6 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 		local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr, sgs.Card_MethodDiscard)
 		if willTianxiang ~= "." then return "." end
 	elseif self.player:hasSkill("longhun") and self.player:getHp() > 1 then
-		return "."
-	end
-	local sunshangxiang = self.room:findPlayerBySkillName("jieyin")
-	if sunshangxiang and sunshangxiang:isWounded() and self:isFriend(sunshangxiang) and not self.player:isWounded()
-		and self.player:isMale() then
-		self:sort(self.friends, "hp")
-		for _, friend in ipairs(self.friends) do
-			if friend:isMale() and friend:isWounded() then return end
-		end
 		return "."
 	end
 end
@@ -3256,10 +3246,10 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 
 	if attacker:hasSkill("jueqing") then return false end
 	if isSlash then
-		if attacker:hasSkill("nosqianxi") and attacker:distanceTo(player) == 1 then
+		if attacker:hasSkill("nosqianxi") and attacker:distanceTo(player) == 1 and not self:isFriend(player, attacker) then
 			return false
 		end
-		if attacker:hasWeapon("ice_sword") and player:getCards("he"):length() > 1 then
+		if attacker:hasWeapon("ice_sword") and player:getCards("he"):length() > 1 and not self:isFriend(player, attacker) then
 			return false
 		end
 	end
@@ -4633,7 +4623,7 @@ function SmartAI:findPlayerToDraw(include_self, drawnum)
 end
 
 function getBestHp(player)
-	local arr = { ganlu = 1, yinghun = 1, nosmiji = 1, xueji = 1, baobian = math.max(0, player:getMaxHp() - 3) }
+	local arr = { ganlu = 1, yinghun = 1, nosmiji = 1, xueji = 1, baobian = math.max(0, player:getMaxHp() - 3), shangshi = 1, nosshangshi = 1 }
 
 	if player:hasSkill("longhun") and player:getCards("he"):length() > 2 then return 1 end
 	if player:hasSkills("renjie+baiyin") and player:getMark("baiyin") == 0 then return (player:getMaxHp() - 1) end
@@ -4648,19 +4638,51 @@ function getBestHp(player)
 	return player:getMaxHp()
 end
 
-function SmartAI:needToLoseHp(to, from, isSlash)
+function SmartAI:haveFriendsToDraw(player)
+	player = player or self.player
+	local friends = self:getFriendsNoself(player)
+	if #friends < 1 then return false end
+	for _, friend in ipairs(friends) do
+		if not friend:hasSkill("manjuan") and not self:needKongcheng(friend, true) then return true end
+	end
+	return false
+end
+
+function SmartAI:needToLoseHp(to, from, isSlash, passive)
 	from = from or self.room:getCurrent()
 	to = to or self.player
 	if isSlash and not from:hasSkill("jueqing") then
 		if from:hasSkill("nosqianxi") and from:distanceTo(to) == 1 then
 			return false
 		end
-		if from:hasWeapon("ice_sword") and to:getCards("he"):length() > 1 then
+		if from:hasWeapon("ice_sword") and to:getCards("he"):length() > 1 and not self:isFriend(from, to) then
 			return false
 		end
 	end
 	if self:hasHeavySlashDamage(from) then return false end
+	if from:hasSkill("jueqing") and self:hasSkills(sgs.masochism_skill, to) then return false end
 	if to:getHp() > getBestHp(to) then return true end
+
+	if not passive then
+		if to:getLostHp() < 1 and to:getHp() > 2 then
+			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:haveFriendsToDraw(to) then return true end
+		end
+	end
+
+	local friends = self:getFriendsNoself(to)
+	local need_jieyin
+	local sunshangxiang = self.room:findPlayerBySkillName("jieyin")
+	if sunshangxiang and sunshangxiang:isWounded() and self:isFriend(sunshangxiang, to)
+		and not sunshangxiang:isNude() and not self:willSkipPlayPhase(sunshangxiang)
+		and not to:isWounded() and to:isMale() then
+		need_jieyin = true
+		self:sort(friends, "hp")
+		for _, friend in ipairs(friends) do
+			if friend:isMale() and friend:isWounded() then need_jieyin = false end
+		end
+		if need_jieyin then return true end
+	end
+
 	return false
 end
 

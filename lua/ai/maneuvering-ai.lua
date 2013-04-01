@@ -252,7 +252,7 @@ end
 
 function SmartAI:isGoodChainPartner(player)
 	player = player or self.player
-	if player:hasSkill("buqu") or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0) or player:getHp() > getBestHp(player)
+	if player:hasSkill("buqu") or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0) or self:needToLoseHp(player)
 		or self:getDamagedEffects(player) or (player:hasSkill("fuli") and player:getMark("@laoji") > 0) then
 		return true
 	end
@@ -324,13 +324,13 @@ function SmartAI:useCardIronChain(card, use)
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isChained() and not self.room:isProhibited(self.player, enemy, card) and not enemy:hasSkill("danlao")
 				and self:hasTrickEffective(card, enemy) and not (self:objectiveLevel(enemy) <= 3)
-				and not self:getDamagedEffects(enemy) and not (enemy:getHp() > getBestHp(enemy)) and sgs.isGoodTarget(enemy, self.enemies, self) then
+				and not self:getDamagedEffects(enemy) and not self:needToLoseHp(enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 				table.insert(enemytargets, enemy)
 			end
 		end
 	end
 
-	local chainSelf = (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player)) and not self.player:isChained()
+	local chainSelf = (self:needToLoseHp(self.player) or self:getDamagedEffects(self.player)) and not self.player:isChained()
 						and not self.player:hasSkill("jueqing")
 						and (self:getCardId("NatureSlash") or (self:getCardId("Slash") and (self.player:hasWeapon("fan") or self:hasSkill("lihuo")))
 						or (self:getCardId("FireAttack") and self.player:getHandcardNum() > 2))

@@ -161,7 +161,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			end
 		else
 			if use.card:isKindOf("TrickCard") then
-				if not self:doNotDiscard(use.from) and self.player:getHp() > getBestHp(self.player) then
+				if not self:doNotDiscard(use.from) and self:needToLoseHp(self.player) then
 					return true
 				end
 			end

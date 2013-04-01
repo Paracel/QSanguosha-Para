@@ -582,17 +582,17 @@ sgs.ai_skill_cardask["@tiaoxin-slash"] = function(self, data, pattern, target)
 			if self:slashIsEffective(slash, target) and self:isFriend(target) and target:hasSkill("leiji") then
 				return slash:toString()
 			end
-			if (self:slashIsEffective(slash, target) and not (self:getDamagedEffects(target, self.player, true) or target:getHp() > getBestHp(target)))
+			if (self:slashIsEffective(slash, target) and not (self:getDamagedEffects(target, self.player, true) or self:needToLoseHp(target, self.player, true, true)))
 				and self:isEnemy(target) then
 				return slash:toString()
 			end
-			if (not self:slashIsEffective(slash, target) or self:getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target))
+			if (not self:slashIsEffective(slash, target) or self:getDamagedEffects(target, self.player, true) or self:needToLoseHp(target, self.player, true))
 				and self:isFriend(target) then
 				return slash:toString()
 			end
 		end
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if (not (self:getDamagedEffects(target, self.player) or target:getHp() > getBestHp(target)) or not self:slashIsEffective(slash, target))
+			if (not (self:getDamagedEffects(target, self.player) or self:needToLoseHp(target)) or not self:slashIsEffective(slash, target))
 				and not self:isFriend(target) then
 				return slash:toString()
 			end

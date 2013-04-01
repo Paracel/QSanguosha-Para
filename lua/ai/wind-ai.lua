@@ -438,7 +438,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 			elseif friend:getHp() >= 2 and dmg.damage < 2
 					and (self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
 						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
-						or friend:getHp() > getBestHp(friend)
+						or self:needToLoseHp(friend)
 						or (friend:getHandcardNum() < 3 and friend:hasSkill("rende"))) then
 				return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
 			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
@@ -515,7 +515,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	else
 		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
-	if self.player:getHp() > getBestHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) and x ~= 1 then return "question" end
+	if self:needToLoseHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) and x ~= 1 then return "question" end
 
 	local questioner
 	for _, friend in ipairs(self.friends) do

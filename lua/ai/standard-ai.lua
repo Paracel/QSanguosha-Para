@@ -247,6 +247,7 @@ end
 function ganglie_discard(self, discard_num, min_num, optional, include_equip, skillName)
 	local xiahou = self.room:findPlayerBySkillName(skillName)
 	if xiahou and (not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, xiahou) or self:getDamagedEffects(self.player, xiahou)) then return {} end
+	if xiahou and self:needToLoseHp(self.player, xiahou) then return {} end
 	local to_discard = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local index = 0
@@ -290,7 +291,7 @@ sgs.ai_choicemade_filter.skillInvoke.ganglie = function(self, player, promptlist
 	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 	if damage.from and damage.to then
 		if promptlist[#promptlist] == "yes" then
-			if not self:getDamagedEffects(damage.from, player) then
+			if not self:getDamagedEffects(damage.from, player) and not self:needToLoseHp(damage.from, player) then
 				sgs.updateIntention(damage.to, damage.from, 40)
 			end
 		elseif self:canAttack(damage.from) then

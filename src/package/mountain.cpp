@@ -639,7 +639,7 @@ public:
 class Zhiba: public TriggerSkill {
 public:
     Zhiba(): TriggerSkill("zhiba$") {
-        events << GameStart << Pindian << EventPhaseChanging;
+        events << GameStart << EventAcquireSkill << EventLoseSkill << Pindian << EventPhaseChanging;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -647,18 +647,40 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == GameStart && player->isLord()) {
+        if ((event == GameStart && player->isLord())
+            || (event == EventAcquireSkill && data.toString() == "zhiba")) {
             QList<ServerPlayer *> lords;
-            foreach (ServerPlayer *p, room->getAlivePlayers())
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
                     lords << p;
+            }
+            if (lords.isEmpty()) return false;
 
-            foreach (ServerPlayer *lord, lords) {
-                QList<ServerPlayer *> players = room->getOtherPlayers(lord);
-                foreach (ServerPlayer *p, players) {
-                    if (!p->hasSkill("zhiba_pindian"))
-                        room->attachSkillToPlayer(p, "zhiba_pindian");
-                }
+            QList<ServerPlayer *> players;
+            if (lords.length() > 1)
+                players = room->getAlivePlayers();
+            else
+                players = room->getOtherPlayers(lords.first());
+            foreach (ServerPlayer *p, players) {
+                if (!p->hasSkill("zhiba_pindian"))
+                    room->attachSkillToPlayer(p, "zhiba_pindian");
+            }
+        } else if (event == EventLoseSkill && data.toString() == "zhiba") {
+            QList<ServerPlayer *> lords;
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (p->hasLordSkill(objectName()))
+                    lords << p;
+            }
+            if (lords.length() > 2) return false;
+
+            QList<ServerPlayer *> players;
+            if (lords.isEmpty())
+                players = room->getAlivePlayers();
+            else
+                players << lords.first();
+            foreach (ServerPlayer *p, players) {
+                if (p->hasSkill("zhiba_pindian"))
+                    room->detachSkillFromPlayer(p, "zhiba_pindian", true);
             }
         } else if (event == Pindian) {
             PindianStar pindian = data.value<PindianStar>();

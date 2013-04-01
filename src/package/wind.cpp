@@ -133,8 +133,8 @@ public:
 
 class Huangtian: public TriggerSkill {
 public:
-    Huangtian():TriggerSkill("huangtian$") {
-        events << GameStart << EventPhaseChanging;
+    Huangtian(): TriggerSkill("huangtian$") {
+        events << GameStart << EventAcquireSkill << EventLoseSkill << EventPhaseChanging;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -142,18 +142,40 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == GameStart && player->isLord()) {
+        if ((event == GameStart && player->isLord())
+            || (event == EventAcquireSkill && data.toString() == "huangtian")) {
             QList<ServerPlayer *> lords;
-            foreach (ServerPlayer *p, room->getAlivePlayers())
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
                     lords << p;
+            }
+            if (lords.isEmpty()) return false;
 
-            foreach (ServerPlayer *lord, lords) {
-                QList<ServerPlayer *> players = room->getOtherPlayers(lord);
-                foreach (ServerPlayer *p, players) {
-                    if (!p->hasSkill("huangtianv"))
-                        room->attachSkillToPlayer(p, "huangtianv");
-                }
+            QList<ServerPlayer *> players;
+            if (lords.length() > 1)
+                players = room->getAlivePlayers();
+            else
+                players = room->getOtherPlayers(lords.first());
+            foreach (ServerPlayer *p, players) {
+                if (!p->hasSkill("huangtianv"))
+                    room->attachSkillToPlayer(p, "huangtianv");
+            }
+        } else if (event == EventLoseSkill && data.toString() == "huangtian") {
+            QList<ServerPlayer *> lords;
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (p->hasLordSkill(objectName()))
+                    lords << p;
+            }
+            if (lords.length() > 2) return false;
+
+            QList<ServerPlayer *> players;
+            if (lords.isEmpty())
+                players = room->getAlivePlayers();
+            else
+                players << lords.first();
+            foreach (ServerPlayer *p, players) {
+                if (p->hasSkill("huangtianv"))
+                    room->detachSkillFromPlayer(p, "huangtianv", true);
             }
         } else if (event == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();

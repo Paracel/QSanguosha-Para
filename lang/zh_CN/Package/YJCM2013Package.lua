@@ -44,6 +44,9 @@ return {
 	["designer:liufeng"] = "香蒲神殇",
 	["illustrator:liufeng"] = "Thinking",
 	["xiansi"] = "陷嗣",
+	["@xiansi-card"] = "你可以发动“突袭”",
+	["~xiansi"] = "选择 1-2 名其他角色→点击确定",
+	["xiansi_slash"] = "陷嗣（杀）",
 
 	["#panzhangmazhong"] = "擒龙伏虎",
 	["panzhangmazhong"] = "潘璋＆马忠",

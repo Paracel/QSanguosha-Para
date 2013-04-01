@@ -304,16 +304,22 @@ void QSanInvokeSkillDock::update() {
 
         int numButtons = regular_buttons.length();
         int lordskillNum = lordskill_buttons.length();
-        Q_ASSERT(lordskillNum <= 3); // HuangTian, ZhiBa and DrJiuYuan
+        Q_ASSERT(lordskillNum <= 6); // HuangTian, ZhiBa, DrJiuYuan and XianSi
         int rows = (numButtons == 0) ? 0 : (numButtons - 1) / 3 + 1;
         int rowH = G_DASHBOARD_LAYOUT.m_skillButtonsSize[0].height();
-        int *btnNum = new int[rows + 1 + 1]; // we allocate one more row in case we need it.
+        int *btnNum = new int[rows + 2 + 1]; // we allocate one more row in case we need it.
         int remainingBtns = numButtons;
         for (int i = 0; i < rows; i++) {
             btnNum[i] = qMin(3, remainingBtns);
             remainingBtns -= 3;
         }
-        if (lordskillNum > 0) btnNum[rows] = lordskillNum;
+        if (lordskillNum > 3) {
+            int half = lordskillNum / 2;
+            btnNum[rows] = half;
+            btnNum[rows] = lordskillNum - half;
+        } else if (lordskillNum > 0) {
+            btnNum[rows] = lordskillNum;
+        }
 
         // If the buttons in rows are 3, 1, then balance them to 2, 2
         if (rows >= 2) {
@@ -322,6 +328,7 @@ void QSanInvokeSkillDock::update() {
                 btnNum[rows - 2] = 2;
             }
         } else if (rows == 1 && btnNum[0] == 3) {
+            if (lordskillNum > 3) btnNum[3] = btnNum[2];
             if (lordskillNum > 0) btnNum[2] = btnNum[1];
             btnNum[0] = 2;
             btnNum[1] = 1;
@@ -329,7 +336,7 @@ void QSanInvokeSkillDock::update() {
         }
 
         int m = 0;
-        int x_ls = (lordskillNum > 0) ? 1 : 0;
+        int x_ls = (lordskillNum > 0) ? ((lordskillNum > 3) ? 2 : 1) : 0;
         for (int i = 0; i < rows + x_ls; i++) {
             int rowTop = (- rows - x_ls + i) * rowH;
             int btnWidth = _m_width / btnNum[i];

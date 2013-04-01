@@ -899,7 +899,7 @@ public:
                    && chengpu->askForSkillInvoke(objectName(), data)) {
                 QList<int> cards = chengpu->getPile("wine");
                 room->fillAG(cards, chengpu);
-                int card_id = room->askForAG(chengpu, cards, true, objectName());
+                int card_id = room->askForAG(chengpu, cards, false, objectName());
                 room->clearAG();
                 if (card_id != -1) {
                     CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "chunlao", QString());

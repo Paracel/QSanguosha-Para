@@ -78,7 +78,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return  pattern == "@@tuxi";
+        return pattern == "@@tuxi";
     }
 };
 

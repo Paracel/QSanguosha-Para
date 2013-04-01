@@ -640,7 +640,7 @@
     <ClCompile Include="Release\moc_roomthreadxmode.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="yjcm2013.cpp">
+    <ClCompile Include="..\..\src\package\yjcm2013.cpp">
       <Filter>package</Filter>
     </ClCompile>
     <ClCompile Include="Debug\moc_yjcm2013.cpp">
@@ -906,7 +906,7 @@
     <CustomBuild Include="..\..\src\server\roomthreadxmode.h">
       <Filter>server</Filter>
     </CustomBuild>
-    <CustomBuild Include="yjcm2013.h">
+    <CustomBuild Include="..\..\src\package\yjcm2013.h">
       <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>

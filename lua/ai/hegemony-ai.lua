@@ -529,17 +529,19 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 		if only_enemy:getLostHp() < 3 then return end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|jianxiong|enyuan|nosenyuan" ..
-								"|qingguo|longdan|xiangle|jiang|yanzheng|tianming|" ..
-								"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
-								"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" ..
-								"guzheng|xingshang|shushen"):split("|")) do
-			if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
-				use.card = card
-				if use.to then
-					use.to:append(enemy)
+		if self:getFriendNumBySeat(self.player, enemy) > 1 then
+			for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|fangzhu|jianxiong|enyuan|nosenyuan|" ..
+									"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
+									"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
+									"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|" ..
+									"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji"):split("|")) do
+				if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
+					use.card = card
+					if use.to then
+						use.to:append(enemy)
+					end
+					return
 				end
-				return
 			end
 		end
 	end
@@ -557,10 +559,11 @@ end
 
 sgs.ai_skill_choice.qingcheng = function(self, choices, data)
 	local target = data:toPlayer()
-	for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|qingguo|longdan|xiangle|jiang|yanzheng|tianming|" ..
-							"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|tianxiang|leiji|" ..
-							"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|zhiyu|hongyan|tiandu|lirang|" ..
-							"guzheng|xingshang|shushen"):split("|")) do
+	for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|fangzhu|jianxiong|enyuan|nosenyuan|" ..
+							"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
+							"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
+							"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|" ..
+							"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji"):split("|")) do
 		if target:hasSkill(askill, true) and target:getMark("Qingcheng" .. askill) == 0 then
 			return askill
 		end

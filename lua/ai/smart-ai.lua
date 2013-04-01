@@ -2443,7 +2443,7 @@ function sgs.ai_cardneed.weapon(to, card, self)
 end
 
 function SmartAI:getEnemyNumBySeat(from, to)
-	local players = sgs.QList2Table(global_room:getAllPlayers())
+	local players = sgs.QList2Table(self.room:getAllPlayers())
 	local to_seat = (to:getSeat() - from:getSeat()) % #players
 	local enemynum = 0
 	for _, p in ipairs(players) do
@@ -2452,6 +2452,18 @@ function SmartAI:getEnemyNumBySeat(from, to)
 		end
 	end
 	return enemynum
+end
+
+function SmartAI:getFriendNumBySeat(from, to)
+	local players = sgs.QList2Table(self.room:getAllPlayers())
+	local to_seat = (to:getSeat() - from:getSeat()) % #players
+	local friendnum = 0
+	for _, p in ipairs(players) do
+		if self:isFriend(from, p) and ((p:getSeat() - from:getSeat()) % #players) < to_seat then
+			friendnum = friendnum + 1
+		end
+	end
+	return friendnum
 end
 
 function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)

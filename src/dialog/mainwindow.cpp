@@ -8,7 +8,6 @@
 #include "ui_mainwindow.h"
 #include "scenario-overview.h"
 #include "window.h"
-#include "halldialog.h"
 #include "pixmapanimation.h"
 #include "record-analysis.h"
 

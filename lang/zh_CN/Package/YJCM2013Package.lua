@@ -15,6 +15,8 @@ return {
 	["designer:guohuai"] = "曹涵雪",
 	["illustrator:guohuai"] = "DH",
 	["jingce"] = "精策",
+	["jingce:draw"] = "摸一张牌",
+	["jingce:recover"] = "回复1点体力",
 
 	["#manchong"] = "",
 	["manchong"] = "满宠",
@@ -28,6 +30,7 @@ return {
 	["designer:guanping"] = "昂翼天使",
 	["illustrator:guanping"] = "樱花闪乱",
 	["longyin"] = "龙吟",
+	["@longyin"] = "你可以弃置一张黑色手牌发动“龙吟”",
 
 	["#jianyong"] = "",
 	["jianyong"] = "简雍",

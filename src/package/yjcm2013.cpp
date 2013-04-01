@@ -65,12 +65,84 @@ public:
     }
 };
 
+class Jingce: public TriggerSkill {
+public:
+    Jingce(): TriggerSkill("jingce") {
+        events << PreCardUsed << CardResponded << EventPhaseStart << EventPhaseEnd;
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if ((event == PreCardUsed || event == CardResponded) && player->getPhase() <= Player::Play) {
+            CardStar card = NULL;
+            if (event == PreCardUsed)
+                card = data.value<CardUseStruct>().card;
+            else {
+                CardResponseStruct response = data.value<CardResponseStruct>();
+                if (response.m_isUse)
+                   card = response.m_card;
+            }
+            if (card && card->getHandlingMethod() == Card::MethodUse)
+                player->addMark(objectName());
+        } else if (event == EventPhaseStart && player->getPhase() == Player::RoundStart) {
+                player->setMark(objectName(), 0);
+        } else if (event == EventPhaseEnd) {
+            if (player->getPhase() == Player::Play && player->getMark(objectName()) > player->getHp()) {
+                if (room->askForSkillInvoke(player, objectName())) {
+                    if (player->isWounded() && room->askForChoice(player, objectName(), "draw+recover") == "recover") {
+                        RecoverStruct recover;
+                        recover.who = player;
+                        room->recover(player, recover);
+                    } else {
+                        player->drawCards(1);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class Longyin: public TriggerSkill {
+public:
+    Longyin(): TriggerSkill("longyin") {
+        events << CardUsed;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target->getPhase() == Player::Play;
+    }
+
+    virtual int getPriority() const{
+        return 1;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash") && use.m_addHistory) {
+            ServerPlayer *guanping = room->findPlayerBySkillName(objectName());
+            if (guanping && !guanping->isKongcheng()
+                && room->askForCard(guanping, ".black", "@longyin", data, objectName())) {
+                room->addPlayerHistory(player, use.card->getClassName(), -1);
+                if (use.card->isRed())
+                    guanping->drawCards(1);
+            }
+        }
+        return false;
+    }
+};
+
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
     General *caochong = new General(this, "caochong", "wei", 3);
     caochong->addSkill(new Chengxiang);
     caochong->addSkill(new Bingxin);
+
+    General *guohuai = new General(this, "guohuai", "wei");
+    guohuai->addSkill(new Jingce);
+
+    General *guanping = new General(this, "guanping", "shu", 4);
+    guanping->addSkill(new Longyin);
 }
 
 ADD_PACKAGE(YJCM2013)

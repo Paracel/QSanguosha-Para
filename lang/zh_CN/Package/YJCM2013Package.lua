@@ -1,0 +1,80 @@
+-- translation for YJCM2013 Package
+
+return {
+	["YJCM2013"] = "Ò»½«³ÉÃû2013",
+
+	["#caochong"] = "",
+	["caochong"] = "²Ü³å",
+	["designer:caochong"] = "ºìÄ§¹í",
+	["illustrator:caochong"] = "Amo",
+	["chengxiang"] = "³ÆÏó",
+	["bingxin"] = "±ùĞÄ",
+
+	["#guohuai"] = "´¹ÎÊÇØÓº",
+	["guohuai"] = "¹ù»´",
+	["designer:guohuai"] = "²Üº­Ñ©",
+	["illustrator:guohuai"] = "DH",
+	["jingce"] = "¾«²ß",
+
+	["#manchong"] = "",
+	["manchong"] = "Âú³è",
+	["designer:manchong"] = "samrosen",
+	["illustrator:manchong"] = "Aimer²ÊÈı",
+	["junxing"] = "¾şĞÌ",
+	["yuce"] = "Óù²ß",
+
+	["#guanping"] = "",
+	["guanping"] = "¹ØÆ½",
+	["designer:guanping"] = "°ºÒíÌìÊ¹",
+	["illustrator:guanping"] = "Ó£»¨ÉÁÂÒ",
+	["longyin"] = "ÁúÒ÷",
+
+	["#jianyong"] = "",
+	["jianyong"] = "¼òÓº",
+	["designer:jianyong"] = "Nocihoo",
+	["illustrator:jianyong"] = "Thinking",
+	["qiaoshui"] = "ÇÉËµ",
+	["zongshih"] = "×İÊÊ",
+
+	["#liufeng"] = "",
+	["liufeng"] = "Áõ·â",
+	["designer:liufeng"] = "ÏãÆÑÉñéä",
+	["illustrator:liufeng"] = "Thinking",
+	["xiansi"] = "ÏİËÃ",
+
+	["#panzhangmazhong"] = "ÇÜÁú·ü»¢",
+	["panzhangmazhong"] = "ÅËè°£¦ÂíÖÒ",
+	["&panzhangmazhong"] = "ÅËè°ÂíÖÒ",
+	["designer:panzhangmazhong"] = "ïL²ĞÈ~Âä",
+	["illustrator:panzhangmazhong"] = "zzyzzyy",
+	["duodao"] = "¶áµ¶",
+	["anjian"] = "°µ¼ı",
+
+	["#yufan"] = "",
+	["yufan"] = "Óİ·­",
+	["designer:yufan"] = "»Ãµº",
+	["illustrator:yufan"] = "L",
+	["zongxuan"] = "×İĞş",
+	["zhiyan"] = "Ö±ÑÔ",
+
+	["#zhuran"] = "",
+	["zhuran"] = "ÖìÈ»",
+	["designer:zhuran"] = "Ñòæ¤",
+	["illustrator:zhuran"] = "Ccat",
+	["danshou"] = "µ¨ÊØ",
+
+	["#fuhuanghou"] = "",
+	["fuhuanghou"] = "·ü»Êºó",
+	["designer:fuhuanghou"] = "HIEI",
+	["illustrator:fuhuanghou"] = "Ğ¡İ·",
+	["zhuikong"] = "ã·¿Ö",
+	["qiuyuan"] = "ÇóÔ®",
+
+	["#liru"] = "",
+	["liru"] = "ÀîÈå",
+	["designer:liru"] = "½ø»¯ÂÛ",
+	["illustrator:liru"] = "MSNZero",
+	["juece"] = "¾ø²ß",
+	["mieji"] = "Ãğ¼Æ",
+	["fencheng"] = "·Ù³Ç",
+}

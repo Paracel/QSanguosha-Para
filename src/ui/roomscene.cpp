@@ -2237,14 +2237,16 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         Q_ASSERT(button != NULL);
         const ViewAsSkill *vsSkill = button->getViewAsSkill();
         if (vsSkill != NULL) {
-            CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
-            if (newStatus == Client::Responding)
-                reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
-            else if (newStatus == Client::RespondingUse)
-                reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
-            else if (newStatus == Client::Playing)
-                reason = CardUseStruct::CARD_USE_REASON_PLAY;
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+            QRegExp rx("@@?([A-Za-z]+)(\\d+)?!?");
+            CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
+            if ((newStatus & Client::ClientStatusBasicMask) == Client::Responding) {
+                if (newStatus == Client::RespondingUse)
+                    reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
+                else if (newStatus == Client::Responding || rx.exactMatch(pattern))
+                    reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+            } else if (newStatus == Client::Playing)
+                reason = CardUseStruct::CARD_USE_REASON_PLAY;
             button->setEnabled(vsSkill->isAvailable(Self, reason, pattern) && !pattern.endsWith("!"));
         } else {
             const Skill *skill = button->getSkill();

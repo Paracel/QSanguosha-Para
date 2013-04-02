@@ -1114,9 +1114,19 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 		if aplayer:getHp() < 1 and not aplayer:hasSkill("buqu") then dying = 1 break end
 	end
 	if handang and self:isFriend(handang) and dying > 0 then return false end
-	if self.player:hasFlag("dahe") then return false end
+
+	local heart_jink = false
+	for _, card in sgs.qlist(self.player:getCards("he")) do
+		if card:getSuit() == sgs.Card_Heart and isCard("Jink", card, self.player) then
+			heart_jink = true
+			break
+		end
+	end
+	if self.player:hasFlag("dahe") then
+		if self.player:hasSkills("tiandu|leiji") and not heart_jink then return true else return false end
+	end
 	if sgs.hujiasource and (not self:isFriend(sgs.hujiasource) or sgs.hujiasource:hasFlag("dahe")) then return false end
-	if self.player:hasSkill("tiandu") then return true end
+	if self.player:hasSkills("tiandu|leiji") then return true end
 	local zhangjiao = self.room:findPlayerBySkillName("guidao")
 	if zhangjiao and self:isEnemy(zhangjiao) and self:getFinalRetrial(zhangjiao) == 2 and getKnownCard(zhangjiao, "black", false, "he") > 0 then
 		return false
@@ -1189,7 +1199,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if menghuo and aoe:isKindOf("SavageAssault") then attacker = menghuo end
 
 	if not self:damageIsEffective(nil, nil, attacker) then return "." end
-	if self:getDamagedEffects(self.player, attacker) or self:needToLoseHp(self.player) then return "." end
+	if self:getDamagedEffects(self.player, attacker) or self:needToLoseHp(self.player, attacker) then return "." end
 
 	if self.player:hasSkill("wuyan") and not attacker:hasSkill("jueqing") then return "." end
 	if attacker:hasSkill("wuyan") and not attacker:hasSkill("jueqing") then return "." end
@@ -1428,7 +1438,7 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
 	if self:cantbeHurt(target) then return "." end
-	if self:getDamagedEffects(self.player, target) or self:needToLoseHp(self.player) then return "." end
+	if self:getDamagedEffects(self.player, target) or self:needToLoseHp(self.player, target) then return "." end
 	if self:isFriend(target) and target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
 	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, target) then return "." end
 	if (not self:isFriend(target) and self:getCardsNum("Slash") * 2 >= target:getHandcardNum())

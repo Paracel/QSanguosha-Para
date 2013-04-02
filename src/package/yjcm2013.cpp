@@ -118,11 +118,12 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash") && use.m_addHistory) {
+        if (use.card->isKindOf("Slash")) {
             ServerPlayer *guanping = room->findPlayerBySkillName(objectName());
             if (guanping && !guanping->isKongcheng()
                 && room->askForCard(guanping, ".black", "@longyin", data, objectName())) {
-                room->addPlayerHistory(player, use.card->getClassName(), -1);
+                if (use.m_addHistory)
+                    room->addPlayerHistory(player, use.card->getClassName(), -1);
                 if (use.card->isRed())
                     guanping->drawCards(1);
             }

@@ -201,7 +201,20 @@ function sgs.ai_cardneed.guidao(to, card, self)
 	end
 end
 
-function SmartAI:findLeijiTarget(player, leiji_value)
+function SmartAI:findLeijiTarget(player, leiji_value, slasher)
+	if slasher then
+		if not player:hasSkill("leiji") then return nil end
+		if not self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), player, slasher, slasher:hasWeapon("qinggang_sword")) then return nil end
+		if slasher:hasSkill("liegong") and slasher:getPhase() == sgs.Player_Play and self:isEnemy(player, slasher)
+			and (player:getHandcardNum() >= slasher:getHp() or player:getHandcardNum() <= slasher:getAttackRange()) then
+			return nil
+		end
+		if not self:hasSuit("spade", true, player) then return nil end
+		if not (getKnownCard(player, "Jink", true) > 0 or getCardsNum("Jink", player) >= 1
+				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
+			return nil
+		end
+	end
 	local getCmpValue = function(enemy)
 		local value = 0
 		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder, player) then return 99 end

@@ -358,11 +358,9 @@ function SmartAI:useCardSlash(card, use)
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
 		if not self:hasHeavySlashDamage(self.player, card, friend)
-			and (friend:hasSkill("leiji") and not self.player:hasFlag("luoyi") and self:hasSuit("spade", true, friend)
-				and (getKnownCard(friend, "Jink", true) >= 1 or (not self:isWeak(friend) and (self:hasEightDiagramEffect(friend) and not self.player:hasWeapon("qinggang_sword"))))
-				and self:findLeijiTarget(friend, 50))
-			or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
-			or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))) then
+			and (self:findLeijiTarget(friend, 50, self.player)
+				or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
+				or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))) then
 
 			if not slash_prohibit then
 				if ((self.player:canSlash(friend, card, not no_distance, rangefix))
@@ -1128,8 +1126,9 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 	if sgs.hujiasource and (not self:isFriend(sgs.hujiasource) or sgs.hujiasource:hasFlag("dahe")) then return false end
 	if self.player:hasSkills("tiandu|leiji") then return true end
 	local zhangjiao = self.room:findPlayerBySkillName("guidao")
-	if zhangjiao and self:isEnemy(zhangjiao) and self:getFinalRetrial(zhangjiao) == 2 and getKnownCard(zhangjiao, "black", false, "he") > 0 then
-		return false
+	if zhangjiao and self:isEnemy(zhangjiao) and self:getFinalRetrial(zhangjiao) == 2 then
+		if getKnownCard(zhangjiao, "black", false, "he") > 1 then return false end
+		if self:getCardsNum("Jink") > 1 and getKnownCard(zhangjiao, "black", false, "he") > 0 then return false end
 	end
 	if self:getDamagedEffects(self.player, nil, true) or self:needToLoseHp(self.player, nil, true) then return false end
 	return true
@@ -1988,11 +1987,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 	if target2 and target2:hasFlag("GlobalFlag_CollateralNeedCrossbow") and self:isFriend(target2) then
 		return "."
 	end
-	if self:isFriend(target) and target:hasSkill("leiji")
-		and (self:hasSuit("spade", true, target) or target:getHandcardNum() >= 3)
-		and self:findLeijiTarget(target, 50)
-		and (getKnownCard(target, "Jink", true) >= 1
-			or (not self:isWeak(target) and self:hasEightDiagramEffect(target) and not self.player:hasWeapon("qinggang_sword"))) then
+	if self:isFriend(target) and self:findLeijiTarget(target, 50, self.player) then
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:slashIsEffective(slash, target) then
 				return slash:toString()

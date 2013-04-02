@@ -46,7 +46,7 @@ return {
 	["xiansi"] = "陷嗣",
 	["@xiansi-card"] = "你可以发动“陷嗣”",
 	["~xiansi"] = "选择 1-2 名其他角色→点击确定",
-	["xiansi_slash"] = "陷嗣（杀）",
+	["xiansi_slash"] = "陷嗣(杀)",
 	["counter"] = "逆",
 
 	["#panzhangmazhong"] = "擒龙伏虎",

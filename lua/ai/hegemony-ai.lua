@@ -29,7 +29,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 		end
 	elseif self:isEnemy(currentplayer) then
 		if not self:damageIsEffective(currentplayer) then return "." end
-		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer) then return "." end
+		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer, self.player) then return "." end
 		if self:needToThrowArmor() then return "." end
 		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
 		return "$" .. card:getEffectiveId()
@@ -66,7 +66,7 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 		return "."
 	end
 
-	if self:needToLoseHp(player) then
+	if self:needToLoseHp(player, yuejin) then
 		return "."
 	end
 

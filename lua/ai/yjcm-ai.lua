@@ -842,7 +842,7 @@ sgs.ai_skill_use_func.PaiyiCard = function(card, use, self)
 	if not target then
 		for _, friend in ipairs(self.friends_noself) do
 			if friend:getHandcardNum() + 2 > self.player:getHandcardNum() 
-				and (self:getDamagedEffects(friend, self.player) or self:needToLoseHp(friend))
+				and (self:getDamagedEffects(friend, self.player) or self:needToLoseHp(friend, self.player))
 				and not friend:hasSkill("manjuan") then
 				target = friend
 			end

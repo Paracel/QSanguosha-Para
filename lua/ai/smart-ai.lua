@@ -80,7 +80,7 @@ function setInitialTables()
 	sgs.draw_pile = global_room:getDrawPile()
 	sgs.lose_equip_skill = "xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji"
+	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
@@ -2309,9 +2309,8 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 
 	if effect and self:hasHeavySlashDamage(target, effect.slash) then return end
 	if effect and target and target:hasWeapon("ice_sword") and self.player:getCards("he"):length() > 1 then return end
-	if self:getDamagedEffects(self.player) or self:needToLoseHp(self.player) then return "." end
-	if self:getDamagedEffects(self.player, target) then return "." end
-	if self:needBear() and self.player:getHp() > 2 then return "." end
+	if self:getDamagedEffects(self.player, target) or self:needToLoseHp(self.player, target) then return "." end
+	if self:needBear() and self.player:getLostHp() == 0 then return "." end
 	if self.player:hasSkill("zili") and not self.player:hasSkill("paiyi") and self.player:getLostHp() < 2 then return "." end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 and self.player:getHp() > 2 then return "." end
 	if self.player:hasSkill("tianxiang") then
@@ -4626,8 +4625,6 @@ function getBestHp(player)
 	local arr = { ganlu = 1, yinghun = 1, nosmiji = 1, xueji = 1, baobian = math.max(0, player:getMaxHp() - 3), shangshi = 1, nosshangshi = 1 }
 
 	if player:hasSkill("longhun") and player:getCards("he"):length() > 2 then return 1 end
-	if player:hasSkills("renjie+baiyin") and player:getMark("baiyin") == 0 then return (player:getMaxHp() - 1) end
-	if player:hasSkills("quanji+zili") and player:getMark("zili") == 0 then return (player:getMaxHp() - 1) end
 	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 then return 1 end
 
 	for skill, dec in pairs(arr) do
@@ -4635,6 +4632,9 @@ function getBestHp(player)
 			return math.max((player:isLord() and 3 or 2), player:getMaxHp() - dec)
 		end
 	end
+
+	if player:hasSkills("renjie+baiyin") and player:getMark("baiyin") == 0 then return (player:getMaxHp() - 1) end
+	if player:hasSkills("quanji+zili") and player:getMark("zili") == 0 then return (player:getMaxHp() - 1) end
 	return player:getMaxHp()
 end
 
@@ -4661,11 +4661,12 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 	end
 	if self:hasHeavySlashDamage(from) then return false end
 	if from:hasSkill("jueqing") and self:hasSkills(sgs.masochism_skill, to) then return false end
-	if to:getHp() > getBestHp(to) then return true end
 
+	local n = getBestHp(to)
 	if not passive then
-		if to:getLostHp() < 1 and to:getHp() > 2 then
-			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:haveFriendsToDraw(to) then return true end
+		if to:getMaxHp() > 2 then
+			if self:hasSkills("miji|nosmiji", to) and self:haveFriendsToDraw(to) then n = math.min(n, to:getMaxHp() - 1) end
+			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:haveFriendsToDraw(to) then n = math.min(n, to:getMaxHp() - 1) end
 		end
 	end
 
@@ -4680,10 +4681,10 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 		for _, friend in ipairs(friends) do
 			if friend:isMale() and friend:isWounded() then need_jieyin = false end
 		end
-		if need_jieyin then return true end
+		if need_jieyin then n = math.min(n, to:getMaxHp() - 1) end
 	end
 
-	return false
+	return to:getHp() > n
 end
 
 dofile "lua/ai/debug-ai.lua"

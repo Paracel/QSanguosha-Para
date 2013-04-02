@@ -499,8 +499,8 @@ qingcheng_skill.getTurnUseCard = function(self, inclusive)
 	if self:needToThrowArmor() then
 		equipcard = self.player:getArmor()
 	else
-		for _, card in sgs.qlist(self.player:getCards("he")) do
-			if card:isKindOf("EquipCard") and not self.player:hasEquip(card) then
+		for _, card in sgs.qlist(self.player:getHandcards()) do
+			if card:isKindOf("EquipCard") then
 				equipcard = card
 				break
 			end
@@ -528,37 +528,65 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 		local only_enemy = self.room:getOtherPlayers(self.player):first()
 		if only_enemy:getLostHp() < 3 then return end
 	end
+	local target
+	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
 		if self:getFriendNumBySeat(self.player, enemy) > 1 then
+			if enemy:getHp() < 1 and enemy:hasSkill("buqu", true) and enemy:getMark("Qingchengbuqu") == 0 then
+				target = enemy
+				break
+			end
+			if self:isWeak(enemy) then
+				for _, askill in ipairs((sgs.exclusive_skill .. "|" .. sgs.save_skill):split("|")) do
+					if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
+						target = enemy
+						break
+					end
+				end
+				if target then break end
+			end
 			for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|fangzhu|jianxiong|enyuan|nosenyuan|" ..
 									"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
 									"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
 									"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|xiaoji|mingshi|" ..
 									"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji"):split("|")) do
 				if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
-					use.card = card
-					if use.to then
-						use.to:append(enemy)
-					end
-					return
+					target = enemy
+					break
 				end
 			end
+			if target then break end
 		end
 	end
-	for _, friend in ipairs(self.friends_noself) do
-		if friend:hasSkill("shiyong", true) and friend:getMark("Qingchengshiyong") == 0 then
-			use.card = card
-			if use.to then
-				use.to:append(friend)
+	if not target then
+		for _, friend in ipairs(self.friends_noself) do
+			if friend:hasSkill("shiyong", true) and friend:getMark("Qingchengshiyong") == 0 then
+				target = friend
+				break
 			end
-			return
 		end
 	end
-	return
+
+	if not target then return end
+	use.card = card
+	if use.to then
+		use.to:append(target)
+	end
 end
 
 sgs.ai_skill_choice.qingcheng = function(self, choices, data)
 	local target = data:toPlayer()
+	if self:isFriend(target) then
+		if target:hasSkill("shiyong", true) and target:getMark("Qingchengshiyong") == 0 then return "shiyong" end
+	end
+	if target:getHp() < 1 and target:hasSkill("buqu", true) and target:getMark("Qingchengbuqu") == 0 then return "buqu" end 
+	if self:isWeak(target) then
+		for _, askill in ipairs((sgs.exclusive_skill .. "|" .. sgs.save_skill):split("|")) do
+			if target:hasSkill(askill, true) and target:getMark("Qingcheng" .. askill) == 0 then
+				return askill
+			end
+		end
+	end
 	for _, askill in ipairs(("noswuyan|wuyan|weimu|kanpo|liuli|yiji|jieming|neoganglie|vsganglie|ganglie|fankui|fangzhu|jianxiong|enyuan|nosenyuan|" ..
 							"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
 							"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
@@ -571,8 +599,21 @@ sgs.ai_skill_choice.qingcheng = function(self, choices, data)
 end
 
 sgs.ai_use_value.QingchengCard = 2
-sgs.ai_use_priority.QingchengCard = 2.2
-sgs.ai_card_intention.QingchengCard = 30
+sgs.ai_use_priority.QingchengCard = 7.2
+sgs.ai_card_intention.QingchengCard = 0
+
+sgs.ai_choicemade_filter.skillChoice.qingcheng = function(self, player, promptlist)
+	local choice = promptlist[#promptlist]
+	local target = nil
+	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
+		if p:hasSkill(choice, true) then
+			target = p
+			break
+		end
+	end
+	if not target then return end
+	if choice == "shiyong" then sgs.updateIntention(player, target, -30) else sgs.updateIntention(player, target, 30) end
+end
 
 sgs.ai_skill_invoke.cv_caopi = function(self, data)
 	if math.random(0, 2) == 0 then return true end

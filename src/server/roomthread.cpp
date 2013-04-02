@@ -463,7 +463,7 @@ void RoomThread::run() {
                                 room->setPlayerFlag(player, "-actioned");
 
                             if (player->getPhase() != Player::NotActive) {
-                                trigger(EventPhaseEnd, room, player);
+                                game_rule->trigger(EventPhaseEnd, room, player, QVariant());
                                 player->changePhase(player->getPhase(), Player::NotActive);
                             }
                         }
@@ -505,8 +505,7 @@ void RoomThread::run() {
         if (event == GameFinished) {
             Sanguosha->unregisterRoom();
             return;
-        }
-        else
+        } else
             Q_ASSERT(false);
     }
 }

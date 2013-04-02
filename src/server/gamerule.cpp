@@ -822,6 +822,11 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             room->changeHero(lord, "shenlvbu2", true, true);
             room->doLightbox("$StageChange", 5000);
 
+            foreach (int id, Sanguosha->getRandomCards()) {
+                if (room->getCardPlace(id) == Player::PlaceTable)
+                    room->moveCardTo(Sanguosha->getCard(id), NULL, Player::DiscardPile, true);
+            }
+
             QList<const Card *> tricks = lord->getJudgingArea();
             foreach (const Card *trick, tricks) {
                 CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());

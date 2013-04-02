@@ -884,8 +884,15 @@ public:
     }
 
     virtual int getDrawNum(ServerPlayer *player, int n) const{
-        player->getRoom()->broadcastSkillInvoke("shenwei");
-        player->getRoom()->notifySkillInvoked(player, objectName());
+        Room *room = player->getRoom();
+        room->broadcastSkillInvoke("shenwei");
+        room->notifySkillInvoked(player, objectName());
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = player;
+        log.arg = "shenwei";
+        room->sendLog(log);
+
         return n + 2;
     }
 };

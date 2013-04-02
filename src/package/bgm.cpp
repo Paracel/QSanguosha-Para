@@ -91,7 +91,7 @@ public:
 class Lihun: public TriggerSkill {
 public:
     Lihun(): TriggerSkill("lihun") {
-        events << EventPhaseEnd;
+        events << EventPhaseStart << EventPhaseEnd;
         view_as_skill = new LihunSelect;
     }
 
@@ -99,8 +99,8 @@ public:
         return target != NULL && target->hasUsed("LihunCard");
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *diaochan, QVariant &) const{
-        if (diaochan->getPhase() == Player::Play) {
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *diaochan, QVariant &) const{
+        if (event == EventPhaseEnd && diaochan->getPhase() == Player::Play) {
             ServerPlayer *target = NULL;
             foreach (ServerPlayer *other, room->getOtherPlayers(diaochan)) {
                 if (other->hasFlag("LihunTarget")) {
@@ -128,6 +128,11 @@ public:
             reason.m_playerId = target->objectName();
             room->moveCardTo(to_goback, diaochan, target, Player::PlaceHand, reason);
             delete to_goback;
+        } else if (event == EventPhaseStart && diaochan->getPhase() == Player::NotActive) {
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (p->hasFlag("LihunTarget"))
+                    p->setFlags("-LihunTarget");
+            }
         }
 
         return false;

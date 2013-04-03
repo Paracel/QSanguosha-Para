@@ -180,14 +180,15 @@ public:
             room->setPlayerFlag(jianyong, "-qiaoshui_success");
 
             QList<ServerPlayer *> available_targets;
-            foreach (ServerPlayer *p, room->getAlivePlayers()) {
-                if (use.to.contains(p) || room->isProhibited(jianyong, p, use.card)) continue;
-                if (use.card->isKindOf("AOE") && p == jianyong) continue;
-                if (use.card->targetFixed()) {
-                    available_targets << p;
-                } else {
-                    if (use.card->targetFilter(QList<const Player *>(), p, jianyong))
+            if (!use.card->isKindOf("AOE") && !use.card->isKindOf("GlobalEffect")) {
+                foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                    if (use.to.contains(p) || room->isProhibited(jianyong, p, use.card)) continue;
+                    if (use.card->targetFixed()) {
                         available_targets << p;
+                    } else {
+                        if (use.card->targetFilter(QList<const Player *>(), p, jianyong))
+                            available_targets << p;
+                    }
                 }
             }
             QStringList choices;

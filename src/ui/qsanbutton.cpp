@@ -316,7 +316,7 @@ void QSanInvokeSkillDock::update() {
         if (lordskillNum > 3) {
             int half = lordskillNum / 2;
             btnNum[rows] = half;
-            btnNum[rows] = lordskillNum - half;
+            btnNum[rows + 1] = lordskillNum - half;
         } else if (lordskillNum > 0) {
             btnNum[rows] = lordskillNum;
         }
@@ -327,18 +327,18 @@ void QSanInvokeSkillDock::update() {
                 btnNum[rows - 1] = 2;
                 btnNum[rows - 2] = 2;
             }
-        } else if (rows == 1 && btnNum[0] == 3) {
-            if (lordskillNum > 3) btnNum[3] = btnNum[2];
-            if (lordskillNum > 0) btnNum[2] = btnNum[1];
+        } else if (rows == 1 && btnNum[0] == 3 && lordskillNum == 0) {
             btnNum[0] = 2;
             btnNum[1] = 1;
             rows = 2;
         }
 
         int m = 0;
-        int x_ls = (lordskillNum > 0) ? ((lordskillNum > 3) ? 2 : 1) : 0;
+        int x_ls = 0;
+        if (lordskillNum > 0) x_ls++;
+        if (lordskillNum > 3) x_ls++;
         for (int i = 0; i < rows + x_ls; i++) {
-            int rowTop = (- rows - x_ls + i) * rowH;
+            int rowTop = (-rows - x_ls + i) * rowH;
             int btnWidth = _m_width / btnNum[i];
             for (int j = 0; j < btnNum[i]; j++) {
                 QSanInvokeSkillButton *button = all_buttons[m++];

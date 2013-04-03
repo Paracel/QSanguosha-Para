@@ -1230,7 +1230,9 @@ function SmartAI:useCardAmazingGrace(card, use)
 	end
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		local index = 0
-		if self:isFriend(player) then index = 1 elseif self:isEnemy(player) then index = -1 end
+		if self:hasTrickEffective(card, player, self.player) then
+			if self:isFriend(player) then index = 1 elseif self:isEnemy(player) then index = -1 end
+		end
 		value = value + index * suf
 		if value < 0 then return end
 		suf = suf * coeff

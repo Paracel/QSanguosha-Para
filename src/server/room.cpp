@@ -1487,7 +1487,7 @@ bool Room::isFinished() const{
 
 bool Room::canPause(ServerPlayer *player) const{
     if (!isFull()) return false;
-    if (!player->isOwner()) return false;
+    if (!player || !player->isOwner()) return false;
     foreach (ServerPlayer *p, m_players) {
         if (!p->isAlive() || p->isOwner()) continue;
         if (p->getState() != "robot")

@@ -16,10 +16,6 @@ public:
         return target != NULL;
     }
 
-    virtual int getPriority() const{
-        return 1;
-    }
-
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &) const{
         if (player->getPhase() != Player::Finish)
             return false;
@@ -581,7 +577,7 @@ public:
     }
 
     virtual int getPriority() const{
-        return 4;
+        return 5;
     }
 
     void setHuoshuiFlag(Room *room, ServerPlayer *player, bool is_lose) const{
@@ -742,7 +738,7 @@ public:
     }
 
     virtual int getPriority() const{
-        return 4;
+        return 5;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{

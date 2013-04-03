@@ -112,10 +112,6 @@ public:
         return target->getPhase() == Player::Play;
     }
 
-    virtual int getPriority() const{
-        return 1;
-    }
-
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("Slash")) {

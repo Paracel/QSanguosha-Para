@@ -757,10 +757,6 @@ public:
         view_as_skill = new NosQuanjiViewAsSkill;
     }
 
-    virtual int getPriority() const{
-        return 5;
-    }
-
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }

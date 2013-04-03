@@ -739,10 +739,6 @@ public:
         return target != NULL;
     }
 
-    virtual int getPriority() const{
-        return 1;
-    }
-
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         ServerPlayer *lvmeng = room->findPlayerBySkillName(objectName());
 
@@ -1385,10 +1381,6 @@ public:
         return target != NULL;
     }
 
-    virtual int getPriority() const{
-        return 1;
-    }
-
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const {
         ServerPlayer *zuoci = room->findPlayerBySkillName("fenyong");
         if (zuoci == NULL)
@@ -1426,10 +1418,6 @@ public:
 
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
-    }
-
-    virtual int getPriority() const{
-        return 1;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{

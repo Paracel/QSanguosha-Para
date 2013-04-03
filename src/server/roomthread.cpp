@@ -511,9 +511,9 @@ void RoomThread::run() {
 }
 
 static bool CompareByPriority(const TriggerSkill *a, const TriggerSkill *b) {
-    if (a->getPriority() == b->getPriority())
+    if (a->getDynamicPriority() == b->getDynamicPriority())
         return b->inherits("WeaponSkill") || b->inherits("ArmorSkill") || b->inherits("GameRule");
-    return a->getPriority() > b->getPriority();
+    return a->getDynamicPriority() > b->getDynamicPriority();
 }
 
 bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, QVariant &data) {
@@ -524,8 +524,25 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
     bool broken = false;
     QList<const TriggerSkill *> triggered;
     const QList<const TriggerSkill *> &skills = skill_table[event];
-    for (int i = 0; i < skills.size(); i++) {
-        const TriggerSkill *skill = skills[i];
+    QList<TriggerSkill *> mutable_skills;
+    foreach (const TriggerSkill *skill, skills) {
+        double priority = skill->getPriority();
+        int len = room->getPlayers().length();
+        foreach (ServerPlayer *p, room->getAllPlayers(true)) {
+            if (p->hasSkill(skill->objectName())) {
+                priority += (double)len / 100;
+                break;
+            }
+            len--;
+        }
+        TriggerSkill *mutable_skill = const_cast<TriggerSkill *>(skill);
+        mutable_skill->setDynamicPriority(priority);
+        mutable_skills << mutable_skill;
+    }
+    qStableSort(mutable_skills.begin(), mutable_skills.end(), CompareByPriority);
+
+    for (int i = 0; i < mutable_skills.size(); i++) {
+        const TriggerSkill *skill = mutable_skills[i];
         if (skill->triggerable(target) && !triggered.contains(skill)) {
             while (room->isPaused()) {}
             triggered.append(skill);
@@ -565,7 +582,7 @@ void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
     foreach (TriggerEvent event, events) {
         QList<const TriggerSkill *> &table = skill_table[event];
         table << skill;
-        qStableSort(table.begin(), table.end(), CompareByPriority);
+        //qStableSort(table.begin(), table.end(), CompareByPriority);
     }
 
     if (skill->isVisible()) {

@@ -116,9 +116,15 @@ public:
     virtual bool triggerable(const ServerPlayer *target) const;
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const = 0;
 
+    inline double getDynamicPriority() const{ return dynamic_priority; }
+    inline void setDynamicPriority(double value) { dynamic_priority = value; }
+
 protected:
     const ViewAsSkill *view_as_skill;
     QList<TriggerEvent> events;
+
+private:
+    mutable double dynamic_priority;
 };
 
 class Scenario;

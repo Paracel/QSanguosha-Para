@@ -543,6 +543,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
             log.from = card_use.from;
             log.to << victim;
             room->sendLog(log);
+            room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(card_use.to.first()->objectName()).arg(victim->objectName()));
         }
     }
 

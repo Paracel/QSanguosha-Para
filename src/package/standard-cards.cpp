@@ -821,9 +821,7 @@ void Collateral::onUse(Room *room, const CardUseStruct &card_use) const{
 
     CardUseStruct new_use = card_use;
     new_use.to.removeAt(1);
-
     killer->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)victim);
-    room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(killer->objectName()).arg(victim->objectName()));
 
     SingleTargetTrick::onUse(room, new_use);
 }

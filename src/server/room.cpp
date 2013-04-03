@@ -2685,7 +2685,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
     const Card *card = card_use.card;
 
     if (card_use.from->isCardLimited(card, card->getHandlingMethod())
-        || (card->canRecast() && card_use.from->isCardLimited(card, Card::MethodRecast)))
+        && (!card->canRecast() || card_use.from->isCardLimited(card, Card::MethodRecast)))
         return;
 
     QString key;

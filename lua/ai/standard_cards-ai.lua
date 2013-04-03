@@ -1957,7 +1957,7 @@ function SmartAI:useCardCollateral(card, use)
 		if friend:getWeapon() and self:hasSkills(sgs.lose_equip_skill, friend)
 			and self:hasTrickEffective(card, friend)
 			and self:objectiveLevel(friend) < 0
-			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", to) > 1) then
+			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", friend) > 1) then
 
 			for _, enemy in ipairs(toList) do
 				if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then

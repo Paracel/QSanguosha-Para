@@ -561,13 +561,27 @@ sgs.ai_skill_use_func.TiaoxinCard = function(card, use, self)
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:distanceTo(self.player) <= enemy:getAttackRange() and
-			((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1) or getCardsNum("Slash", enemy) == 0 or self:getCardsNum("Jink") > 0)
+			((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1)
+				or getCardsNum("Slash", enemy) == 0
+				or self:getCardsNum("Jink") > 0
+				or self:findLeijiTarget(self.player, 50, enemy))
 			and not enemy:isNude() and not self:doNotDiscard(enemy) then
 			table.insert(targets, enemy)
 		end
 	end
 
 	if #targets == 0 then return end
+
+	if not self.player:getArmor() and not self.player:isKongcheng() then
+		for _, card in sgs.qlist(self.player:getCards("h")) do
+			if card:isKindOf("Armor") and self:evaluateArmor(card) > 3 then
+				sgs.ai_use_priority.TiaoxinCard = 5.9
+				break
+			end
+		end
+	else
+		sgs.ai_use_priority.TiaoxinCard = 8
+	end
 
 	if use.to then
 		self:sort(targets, "defenseSlash")
@@ -602,7 +616,6 @@ sgs.ai_skill_cardask["@tiaoxin-slash"] = function(self, data, pattern, target)
 end
 
 sgs.ai_card_intention.TiaoxinCard = 80
-sgs.ai_use_priority.TiaoxinCard = 8
 
 sgs.ai_skill_choice.zhiji = function(self, choice)
 	if self.player:getHp() < self.player:getMaxHp() - 1 then return "recover" end

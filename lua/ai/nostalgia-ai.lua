@@ -159,7 +159,7 @@ function sgs.ai_slash_prohibit.nosenyuan(self, from, to, card)
 	if from:getHp() > 3 then return false end
 
 	local n = 0
-	local cards = self.player:getHandcards()
+	local cards = from:getHandcards()
 	for _, hcard in sgs.qlist(cards) do
 		if hcard:getSuit() == sgs.Card_Heart and not (isCard("Peach", hcard, to) or isCard("ExNihilo", hcard, to)) then
 			if not hcard:isKindOf("Slash") then return false end

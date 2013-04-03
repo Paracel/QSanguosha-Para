@@ -186,6 +186,7 @@ public:
     int getCardCount(bool include_equip) const;
 
     QList<int> getPile(const char *pile_name);
+    QStringList getPileNames() const;
     QString getPileName(int card_id) const;
 
     void addHistory(const char *name, int times = 1);

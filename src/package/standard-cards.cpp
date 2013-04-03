@@ -630,8 +630,8 @@ void AmazingGrace::doPreAction(Room *room, const CardUseStruct &) const{
 }
 
 void AmazingGrace::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    QList<ServerPlayer *> players = targets.isEmpty() ? room->getAllPlayers() : targets;
-    GlobalEffect::use(room, source, players);
+    GlobalEffect::use(room, source, targets);
+    if (targets.isEmpty()) return;
     QVariantList ag_list;
     ag_list = room->getTag("AmazingGrace").toList();
 
@@ -760,9 +760,6 @@ void SingleTargetTrick::use(Room *room, ServerPlayer *source, QList<ServerPlayer
             effect.to = tmp;
             room->cardEffect(effect);
         }
-    } else {
-        effect.to = source;
-        room->cardEffect(effect);
     }
 
     if (room->getCardPlace(this->getEffectiveId()) == Player::PlaceTable) {

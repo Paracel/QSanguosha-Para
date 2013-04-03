@@ -132,6 +132,134 @@ public:
     }
 };
 
+QiaoshuiCard::QiaoshuiCard() {
+    will_throw = false;
+    handling_method = Card::MethodPindian;
+}
+
+bool QiaoshuiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isKongcheng() && to_select != Self;
+}
+
+void QiaoshuiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    bool success = source->pindian(targets.first(), "qiaoshui", this);
+    if (success)
+        room->setPlayerFlag(source, "qiaoshui_success");
+    else
+        room->setPlayerCardLimitation(source, "use", "TrickCard+^DelayedTrick", true);
+}
+
+class QiaoshuiViewAsSkill: public OneCardViewAsSkill {
+public:
+    QiaoshuiViewAsSkill(): OneCardViewAsSkill("qiaoshui") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("QiaoshuiCard") && !player->isKongcheng();
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return !to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        Card *card = new QiaoshuiCard;
+        card->addSubcard(originalCard);
+        return card;
+    }
+};
+
+class Qiaoshui: public TriggerSkill {
+public:
+    Qiaoshui(): TriggerSkill("qiaoshui") {
+        events << PreCardUsed;
+        view_as_skill = new QiaoshuiViewAsSkill;
+    }
+
+    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *jianyong, QVariant &data) const{
+        if (!jianyong->hasFlag("qiaoshui_success")) return false;
+
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isNDTrick() && !use.card->isKindOf("Nullification")) {
+            room->setPlayerFlag(jianyong, "-qiaoshui_success");
+
+            QList<ServerPlayer *> available_targets;
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (use.to.contains(p) || room->isProhibited(jianyong, p, use.card)) continue;
+                if (use.card->isKindOf("AOE") && p == jianyong) continue;
+                if (use.card->targetFixed()) {
+                    available_targets << p;
+                } else {
+                    if (use.card->targetFilter(QList<const Player *>(), p, jianyong))
+                        available_targets << p;
+                }
+            }
+            QStringList choices;
+            choices << "remove" << "cancel";
+            if (!available_targets.isEmpty()) choices.prepend("add");
+
+            QString choice = room->askForChoice(jianyong, objectName(), choices.join("+"), data);
+            if (choice == "cancel")
+                return false;
+            else if (choice == "add") {
+                ServerPlayer *extra = room->askForPlayerChosen(jianyong, available_targets, objectName());
+                use.to.append(extra);
+                qSort(use.to.begin(), use.to.end(), ServerPlayer::CompareByActionOrder);
+
+                LogMessage log;
+                log.type = "#QiaoshuiAdd";
+                log.from = jianyong;
+                log.to << extra;
+                log.arg = use.card->objectName();
+                log.arg2 = objectName();
+                room->sendLog(log);
+            } else {
+                ServerPlayer *removed = room->askForPlayerChosen(jianyong, use.to, objectName());
+                use.to.removeOne(removed);
+
+                LogMessage log;
+                log.type = "#QiaoshuiRemove";
+                log.from = jianyong;
+                log.to << removed;
+                log.arg = use.card->objectName();
+                log.arg2 = objectName();
+                room->sendLog(log);
+            }
+        }
+        data.setValue(QVariant::fromValue(use));
+
+        return false;
+    }
+};
+
+class Zongshih: public TriggerSkill {
+public:
+    Zongshih(): TriggerSkill("zongshih") {
+        events << Pindian;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        PindianStar pindian = data.value<PindianStar>();
+        if (TriggerSkill::triggerable(pindian->from) && room->askForSkillInvoke(pindian->from, objectName(), data)) {
+            if (pindian->from_number > pindian->to_number)
+                pindian->from->obtainCard(pindian->to_card);
+            else
+                pindian->from->obtainCard(pindian->from_card);
+        } else if (TriggerSkill::triggerable(pindian->to) && room->askForSkillInvoke(pindian->to, objectName(), data)) {
+            if (pindian->from_number < pindian->to_number)
+                pindian->to->obtainCard(pindian->from_card);
+            else
+                pindian->to->obtainCard(pindian->to_card);
+        }
+
+        return false;
+    }
+};
+
 XiansiCard::XiansiCard() {
 }
 
@@ -287,11 +415,16 @@ YJCM2013Package::YJCM2013Package()
     General *guanping = new General(this, "guanping", "shu", 4);
     guanping->addSkill(new Longyin);
 
+    General *jianyong = new General(this, "jianyong", "shu", 3);
+    jianyong->addSkill(new Qiaoshui);
+    jianyong->addSkill(new Zongshih);
+
     General *liufeng = new General(this, "liufeng", "shu");
     liufeng->addSkill(new Xiansi);
     liufeng->addSkill(new XiansiAttach);
     related_skills.insertMulti("xiansi", "#xiansi-attach");
 
+    addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();
 

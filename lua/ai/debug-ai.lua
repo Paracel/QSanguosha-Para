@@ -83,10 +83,10 @@ function debugFunc(self, room, player, data)
 	until false
 end
 
-function logmsg(fname, fmt, arg)
+function logmsg(fname, fmt)
 	local fp = io.open(fname, "ab")
 	if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
-	fp:write(string.format(fmt, unpack(arg)) .. "\r\n")
+	fp:write(fmt .. "\r\n")
 	fp:close()
 end
 

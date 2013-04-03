@@ -22,7 +22,6 @@ return {
 	["#Jiangchi2"] = "%from 发动了“%arg”，少摸一张牌",
 	["jiangchi:jiang"] = "额外摸一张牌",
 	["jiangchi:chi"] = "少摸一张牌",
-	["jiangchi:cancel"] = "不发动",
 
 	["#wangyi"] = "决意的巾帼",
 	["wangyi"] = "王异",

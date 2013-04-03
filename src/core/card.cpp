@@ -556,6 +556,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
     thread->trigger(PreCardUsed, room, player, data);
+    card_use = data.value<CardUseStruct>();
  
     if (getTypeId() != TypeSkill) {
         CardMoveReason reason(CardMoveReason::S_REASON_USE, player->objectName(), QString(), card_use.card->getSkillName(), QString());

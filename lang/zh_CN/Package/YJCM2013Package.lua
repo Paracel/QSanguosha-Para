@@ -32,12 +32,16 @@ return {
 	["longyin"] = "龙吟",
 	["@longyin"] = "你可以弃置一张黑色手牌发动“龙吟”",
 
-	["#jianyong"] = "",
+	["#jianyong"] = "优游风议",
 	["jianyong"] = "简雍",
 	["designer:jianyong"] = "Nocihoo",
 	["illustrator:jianyong"] = "Thinking",
 	["qiaoshui"] = "巧说",
+	["qiaoshui:add"] = "增加一个目标",
+	["qiaoshui:remove"] = "减少一个目标",
 	["zongshih"] = "纵适",
+	["#QiaoshuiAdd"] = "%from 发动了“%arg2”为【%arg】增加了额外目标 %to",
+	["#QiaoshuiRemove"] = "%from 发动了“arg2”为【%arg】减少了目标 %to",
 
 	["#liufeng"] = "",
 	["liufeng"] = "刘封",
@@ -70,7 +74,7 @@ return {
 	["illustrator:zhuran"] = "Ccat",
 	["danshou"] = "胆守",
 
-	["#fuhuanghou"] = "",
+	["#fuhuanghou"] = "孤注一掷",
 	["fuhuanghou"] = "伏皇后",
 	["designer:fuhuanghou"] = "HIEI",
 	["illustrator:fuhuanghou"] = "小莘",

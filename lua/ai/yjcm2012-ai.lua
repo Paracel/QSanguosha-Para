@@ -85,9 +85,10 @@ end
 function sgs.ai_skill_invoke.zhenlie(self, data)
 	local use = data:toCardUse()
 	if not use.from or use.from:isDead() then return false end
-	if self.role == "rebel" and sgs.evaluatePlayerRole(use.from) == "rebel" and self.player:getHp() == 1 and self:getAllPeachNum() < 1 then return false end
+	if self.role == "rebel" and sgs.evaluatePlayerRole(use.from) == "rebel" and not use.from:hasSkill("jueqing")
+		and self.player:getHp() == 1 and self:getAllPeachNum() < 1 then return false end
 
-	if self:isEnemy(use.from) or (self:isFriend(use.from) and self.role == "loyalist" and use.from:isLord() and self.player:getHp() == 1) then
+	if self:isEnemy(use.from) or (self:isFriend(use.from) and self.role == "loyalist" and not use.from:hasSkill("jueqing") and use.from:isLord() and self.player:getHp() == 1) then
 		if use.card:isKindOf("Slash") then
 			if not self:slashIsEffective(use.card, self.player, use.from) then return false end
 			if self:hasHeavySlashDamage(use.from, use.card, self.player) then return true end
@@ -107,7 +108,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 
 				if self.player:isChained() and not self:isGoodChainTarget(self.player) and use.card:isKindOf("NatureSlash") then return true end
 				if use.from:hasSkill("nosqianxi") and use.from:distanceTo(self.player) == 1 then return true end
-				if self:isFriend(use.from) and self.role == "loyalist" and use.from:isLord() and self.player:getHp() == 1 then return true end
+				if self:isFriend(use.from) and self.role == "loyalist" and not use.from:hasSkill("jueqing") and use.from:isLord() and self.player:getHp() == 1 then return true end
 				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))
 					and not self:doNotDiscard(use.from) then
 					return true
@@ -128,39 +129,38 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			friend_null = friend_null + self:getCardsNum("Nullification")
 			local sj_num = self:getCardsNum(use.card:isKindOf("SavageAssault") and "Slash" or "Jink")
 
-			if not self:hasTrickEffective(use.card, self.player) then return false end
+			if not self:hasTrickEffective(use.card, self.player, from) then return false end
 			if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, from) then return false end
-			if self:isFriend(from) and self.role == "loyalist" and from:isLord() and self.player:getHp() == 1 then return true end
 			if use.from:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 and self:hasLoseHandcardEffective() then return true end
 			if sj_num == 0 and friend_null <= 0 then
+				if self:isEnemy(from) and from:hasSkill("jueqing") then return not self:doNotDiscard(from) end
+				if self:isFriend(from) and self.role == "loyalist" and from:isLord() and self.player:getHp() == 1 and not from:hasSkill("jueqing") then return true end
 				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))
 					and not self:doNotDiscard(use.from) then
 					return true
 				end
 			end
-		end
-	elseif self:isEnemy(use.from) then
-		if use.card:isKindOf("FireAttack") then
-			if not self:hasTrickEffective(use.card, self.player) then return false end
-			if not self:damageIsEffective(self.player, sgs,DamageStruct_Fire, use.from) then return false end
-			if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
-				and not (use.from:hasSkill("hongyan") and getKnownCard(self.player, "spade") > 0) then
-				return not self:doNotDiscard(use.from)
-			elseif self.player:isChained() and not self:isGoodChainTarget(self.player) then
-				return not self:doNotDiscard(use.from)
-			end
-		elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))
-				and self:getCardsNum("Peach") == self.player:getHandcardNum() and not self.player:isKongcheng() then
-			if not self:hasTrickEffective(use.card, self.player) then return false end
-			return not self:doNotDiscard(use.from)
-		elseif use.card:isKindOf("Duel") then
-			if self:getCardsNum("Slash") == 0 or self:getCardsNum("Slash") < getCardsNum("Slash", use.from) then
+		elseif self:isEnemy(use.from) then
+			if use.card:isKindOf("FireAttack") then
 				if not self:hasTrickEffective(use.card, self.player) then return false end
-				if not self:damageIsEffective(self.player, sgs,DamageStruct_Normal, use.from) then return false end
+				if not self:damageIsEffective(self.player, sgs,DamageStruct_Fire, use.from) then return false end
+				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
+					and not (use.from:hasSkill("hongyan") and getKnownCard(self.player, "spade") > 0) then
+					return not self:doNotDiscard(use.from)
+				elseif self.player:isChained() and not self:isGoodChainTarget(self.player) then
+					return not self:doNotDiscard(use.from)
+				end
+			elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))
+					and self:getCardsNum("Peach") == self.player:getHandcardNum() and not self.player:isKongcheng() then
+				if not self:hasTrickEffective(use.card, self.player) then return false end
 				return not self:doNotDiscard(use.from)
-			end
-		else
-			if use.card:isKindOf("TrickCard") then
+			elseif use.card:isKindOf("Duel") then
+				if self:getCardsNum("Slash") == 0 or self:getCardsNum("Slash") < getCardsNum("Slash", use.from) then
+					if not self:hasTrickEffective(use.card, self.player) then return false end
+					if not self:damageIsEffective(self.player, sgs,DamageStruct_Normal, use.from) then return false end
+					return not self:doNotDiscard(use.from)
+				end
+			elseif use.card:isKindOf("TrickCard") and not use.card:isKindOf("AmazingGrace") then
 				if not self:doNotDiscard(use.from) and self:needToLoseHp(self.player) then
 					return true
 				end

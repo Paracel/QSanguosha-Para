@@ -27,7 +27,7 @@ public:
     virtual void removeCard(const Card *card, Place place);
     virtual void addCard(const Card *card, Place place);
     virtual void addKnownHandCard(const Card *card);
-    virtual bool isLastHandCard(const Card *card) const;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const;
     virtual void setMark(const QString &mark, int value);
 
 private:

@@ -201,7 +201,7 @@ public:
 
     virtual bool isProhibited(const Player *to, const Card *card) const;
     bool canSlashWithoutCrossbow() const;
-    virtual bool isLastHandCard(const Card *card) const = 0;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
     void jilei(const QString &type);
     bool isJilei(const Card *card) const;

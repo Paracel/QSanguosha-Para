@@ -205,7 +205,7 @@ public:
 
     virtual bool isProhibited(const Player *to, const Card *card) const;
     bool canSlashWithoutCrossbow() const;
-    virtual bool isLastHandCard(const Card *card) const = 0;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
     void jilei(const char *type);
     bool isJilei(const Card *card) const;
@@ -288,7 +288,7 @@ public:
     virtual int getHandcardNum() const;
     virtual void removeCard(const Card *card, Place place);
     virtual void addCard(const Card *card, Place place);
-    virtual bool isLastHandCard(const Card *card) const;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const;
 
     void addVictim(ServerPlayer *victim);
     QList<ServerPlayer *> getVictims() const;
@@ -335,7 +335,7 @@ public:
     virtual void removeCard(const Card *card, Place place);
     virtual void addCard(const Card *card, Place place);
     virtual void addKnownHandCard(const Card *card);
-    virtual bool isLastHandCard(const Card *card) const;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const;
 };
 
 extern ClientPlayer *Self;

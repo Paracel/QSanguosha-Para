@@ -390,15 +390,23 @@ void ServerPlayer::addCard(const Card *card, Place place) {
     }
 }
 
-bool ServerPlayer::isLastHandCard(const Card *card) const{
+bool ServerPlayer::isLastHandCard(const Card *card, bool contain) const{
     if (!card->isVirtualCard()) {
         return handcards.length() == 1 && handcards.first()->getEffectiveId() == card->getEffectiveId();
     } else if (card->getSubcards().length() > 0) {
-        foreach (int card_id, card->getSubcards()) {
-            if (!handcards.contains(Sanguosha->getCard(card_id)))
-                return false;
+        if (!contain) {
+            foreach (int card_id, card->getSubcards()) {
+                if (!handcards.contains(Sanguosha->getCard(card_id)))
+                    return false;
+            }
+            return handcards.length() == card->getSubcards().length();
+        } else {
+            foreach (const Card *card, handcards) {
+                if (!card->getSubcards().contains(card->getEffectiveId()))
+                    return false;
+            }
+            return true;
         }
-        return handcards.length() == card->getSubcards().length();
     }
     return false;
 }

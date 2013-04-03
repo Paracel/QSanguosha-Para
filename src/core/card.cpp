@@ -536,7 +536,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     room->sendLog(log);
 
     if (card_use.card->isKindOf("Collateral")) { // put it here for I don't wanna repeat these codes in Card::onUse
-        ServerPlayer *victim = room->getTag("collateralVictim").value<PlayerStar>();
+        ServerPlayer *victim = card_use.to.first()->tag["collateralVictim"].value<PlayerStar>();
         if (victim) {
             LogMessage log;
             log.type = "#CollateralSlash";

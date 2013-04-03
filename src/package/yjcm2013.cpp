@@ -128,6 +128,43 @@ public:
     }
 };
 
+ExtraCollateralCard::ExtraCollateralCard() {
+}
+
+bool ExtraCollateralCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    const Card *coll = NULL;
+    foreach (QString flag, Self->getFlagList()) {
+        if (flag.startsWith("ExtraCollateral:")) {
+            flag = flag.mid(16);
+            coll = Card::Parse(flag);
+            break;
+        }
+    }
+    QStringList tos;
+    foreach (QString flag, Self->getFlagList()) {
+        if (flag.startsWith("ExtraCollateralCurrentTargets:")) {
+            flag = flag.mid(30);
+            tos = flag.split("+");
+            break;
+        }
+    }
+
+    if (targets.isEmpty())
+        return !tos.contains(to_select->objectName())
+               && !Self->isProhibited(to_select, coll) && coll->targetFilter(targets, to_select, Self);
+    else
+        return coll->targetFilter(targets, to_select, Self);
+}
+
+void ExtraCollateralCard::onUse(Room *, const CardUseStruct &card_use) const{
+    Q_ASSERT(card_use.to.length() == 2);
+    ServerPlayer *killer = card_use.to.first();
+    ServerPlayer *victim = card_use.to.last();
+
+    killer->setFlags("ExtraCollateralTarget");
+    killer->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)victim);
+}
+
 QiaoshuiCard::QiaoshuiCard() {
     will_throw = false;
     handling_method = Card::MethodPindian;
@@ -145,23 +182,37 @@ void QiaoshuiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
         room->setPlayerCardLimitation(source, "use", "TrickCard+^DelayedTrick", true);
 }
 
-class QiaoshuiViewAsSkill: public OneCardViewAsSkill {
+class QiaoshuiViewAsSkill: public ViewAsSkill {
 public:
-    QiaoshuiViewAsSkill(): OneCardViewAsSkill("qiaoshui") {
+    QiaoshuiViewAsSkill(): ViewAsSkill("qiaoshui") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("QiaoshuiCard") && !player->isKongcheng();
     }
 
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@qiaoshui!";
     }
 
-    virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new QiaoshuiCard;
-        card->addSubcard(originalCard);
-        return card;
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+        if (pattern == "@@qiaoshui!")
+            return false;
+        else
+            return selected.isEmpty() && !to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+        if (pattern == "@@qiaoshui!") {
+            return new ExtraCollateralCard;
+        } else {
+            if (cards.length() != 1) return NULL;
+            Card *card = new QiaoshuiCard;
+            card->addSubcard(cards.first());
+            return card;
+        }
     }
 };
 
@@ -199,7 +250,40 @@ public:
             if (choice == "cancel")
                 return false;
             else if (choice == "add") {
-                ServerPlayer *extra = room->askForPlayerChosen(jianyong, available_targets, objectName());
+                ServerPlayer *extra = NULL;
+                if (!use.card->isKindOf("Collateral"))
+                    extra = room->askForPlayerChosen(jianyong, available_targets, objectName(), "@qiaoshui-add:::" + use.card->objectName());
+                else {
+                    QString flag = "ExtraCollateral:" + use.card->toString();
+                    QStringList tos;
+                    foreach (ServerPlayer *t, use.to)
+                        tos.append(t->objectName());
+                    QString flag2 = "ExtraCollateralCurrentTargets:" + tos.join("+");
+                    room->setPlayerFlag(jianyong, flag);
+                    room->setPlayerFlag(jianyong, flag2);
+                    room->askForUseCard(jianyong, "@@qiaoshui!", "@qiaoshui-add:::collateral");
+                    room->setPlayerFlag(jianyong, "-" + flag);
+                    room->setPlayerFlag(jianyong, "-" + flag2);
+                    foreach (ServerPlayer *p, room->getOtherPlayers(jianyong)) {
+                        if (p->hasFlag("ExtraCollateralTarget")) {
+                            p->setFlags("-ExtraCollateralTarget");
+                            extra = p;
+                            break;
+                        }
+                    }
+                    if (extra == NULL) {
+                        extra = available_targets.at(qrand() % available_targets.length() - 1);
+                        QList<ServerPlayer *> victims;
+                        foreach (ServerPlayer *p, room->getOtherPlayers(extra)) {
+                            if (extra->canSlash(p)
+                                && (!(p == jianyong && p->hasSkill("kongcheng") && p->isLastHandCard(use.card, true)))) {
+                                victims << p;
+                            }
+                        }
+                        Q_ASSERT(!victims.isEmpty());
+                        extra->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)(victims.at(qrand() % victims.length() - 1)));
+                    }
+                }
                 use.to.append(extra);
                 qSort(use.to.begin(), use.to.end(), ServerPlayer::CompareByActionOrder);
 
@@ -210,8 +294,21 @@ public:
                 log.arg = use.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
+                room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(jianyong->objectName()).arg(extra->objectName()));
+
+                if (use.card->isKindOf("Collateral")) {
+                    ServerPlayer *victim = extra->tag["collateralVictim"].value<PlayerStar>();
+                    if (victim) {
+                        LogMessage log;
+                        log.type = "#CollateralSlash";
+                        log.from = jianyong;
+                        log.to << victim;
+                        room->sendLog(log);
+                        room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(extra->objectName()).arg(victim->objectName()));
+                    }
+                }
             } else {
-                ServerPlayer *removed = room->askForPlayerChosen(jianyong, use.to, objectName());
+                ServerPlayer *removed = room->askForPlayerChosen(jianyong, use.to, objectName(), "@qiaoshui-remove:::" + use.card->objectName());
                 use.to.removeOne(removed);
 
                 LogMessage log;
@@ -424,6 +521,7 @@ YJCM2013Package::YJCM2013Package()
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();
+    addMetaObject<ExtraCollateralCard>();
 
     skills << new XiansiSlashViewAsSkill;
 }

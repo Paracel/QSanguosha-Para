@@ -80,7 +80,7 @@ public:
     virtual int getHandcardNum() const;
     virtual void removeCard(const Card *card, Place place);
     virtual void addCard(const Card *card, Place place);
-    virtual bool isLastHandCard(const Card *card) const;
+    virtual bool isLastHandCard(const Card *card, bool contain = false) const;
 
     void addVictim(ServerPlayer *victim);
     QList<ServerPlayer *> getVictims() const;

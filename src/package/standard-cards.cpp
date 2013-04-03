@@ -799,12 +799,19 @@ bool Collateral::targetFilter(const QList<const Player *> &targets,
         Q_ASSERT(targets.length() <= 2);
         if (targets.length() == 2) return false;
         const Player *slashFrom = targets[0];
-        if (to_select == Self && to_select->hasSkill("kongcheng"))
-            if (to_select->isLastHandCard(this)) return false;
+        if (to_select == Self && to_select->hasSkill("kongcheng") && Self->isLastHandCard(this, true))
+            return false;
         return slashFrom->canSlash(to_select);
+    } else {
+        if (!to_select->getWeapon() || to_select == Self)
+            return false;
+        foreach (const Player *p, to_select->getSiblings()) {
+            if (to_select->canSlash(p)
+                && (!(p == Self && p->hasSkill("kongcheng") && Self->isLastHandCard(this, true))))
+                return true;
+        }
     }
-
-    return to_select->getWeapon() != NULL && to_select != Self;
+    return false;
 }
 
 void Collateral::onUse(Room *room, const CardUseStruct &card_use) const{
@@ -815,7 +822,7 @@ void Collateral::onUse(Room *room, const CardUseStruct &card_use) const{
     CardUseStruct new_use = card_use;
     new_use.to.removeAt(1);
 
-    room->setTag("collateralVictim", QVariant::fromValue((PlayerStar)victim));
+    killer->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)victim);
     room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(killer->objectName()).arg(victim->objectName()));
 
     SingleTargetTrick::onUse(room, new_use);
@@ -832,8 +839,8 @@ void Collateral::onEffect(const CardEffectStruct &effect) const{
     ServerPlayer *source = effect.from;
     Room *room = source->getRoom();
     ServerPlayer *killer = effect.to;
-    ServerPlayer *victim = room->getTag("collateralVictim").value<PlayerStar>();
-    room->removeTag("collateralVictim");
+    ServerPlayer *victim = effect.to->tag["collateralVictim"].value<PlayerStar>();
+    effect.to->tag.remove("collateralVictim");
     if (!victim) return;
     WrappedCard *weapon = killer->getWeapon();
 

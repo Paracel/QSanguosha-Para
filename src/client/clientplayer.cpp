@@ -49,17 +49,25 @@ void ClientPlayer::addKnownHandCard(const Card *card) {
         known_cards << card;
 }
 
-bool ClientPlayer::isLastHandCard(const Card *card) const{
+bool ClientPlayer::isLastHandCard(const Card *card, bool contain) const{
     if (!card->isVirtualCard()) {
         if (known_cards.length() != 1)
             return false;
         return known_cards.first()->getId() == card->getEffectiveId();
     } else if (card->getSubcards().length() > 0) {
-        foreach (int card_id, card->getSubcards()) {
-            if (!known_cards.contains(Sanguosha->getCard(card_id)))
-                return false;
+        if (!contain) {
+            foreach (int card_id, card->getSubcards()) {
+                if (!known_cards.contains(Sanguosha->getCard(card_id)))
+                    return false;
+            }
+            return known_cards.length() == card->getSubcards().length();
+        } else {
+            foreach (const Card *card, known_cards) {
+                if (!card->getSubcards().contains(card->getEffectiveId()))
+                    return false;
+            }
+            return true;
         }
-        return known_cards.length() == card->getSubcards().length();
     }
     return false;
 }

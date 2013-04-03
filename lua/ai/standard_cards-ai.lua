@@ -1973,7 +1973,7 @@ sgs.ai_use_value.Collateral = 5.8
 sgs.ai_use_priority.Collateral = 2.75
 
 sgs.ai_card_intention.Collateral = function(self, card, from, tos)
-	assert(#tos == 1)
+	--assert(#tos == 1)
 	-- bugs here?
 	--[[if sgs.compareRoleEvaluation(tos[1], "rebel", "loyalist") ~= sgs.compareRoleEvaluation(from, "rebel", "loyalist") then
 		sgs.updateIntention(from, tos[1], 80)

@@ -636,19 +636,19 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if self.player:isChained() and self:isGoodChainTarget(self.player) then return "." end
 		end
 	else
-		if not self:hasHeavySlashDamage(target, effect.slash) then
-			if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
-				if self:doNotDiscard(self.player, "he", true) then return end
-				if self.player:getCards("he"):length() == 1 and not self.player:getArmor() then return end
-				if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
-				if self:canUseJieyuanDecrease(target) then return "." end
-				if (self:getCardsNum("Peach") > 0 or (self:getCardsNum("Analeptic") > 0 and self:isWeak()))
-					and not self.player:hasSkills("tuntian+zaoxian") and not self:willSkipPlayPhase() then
-					return "."
-				end
+		if self:hasHeavySlashDamage(target, effect.slash) then return end
+		if self.player:getHandcardNum() == 1 and self:needKongcheng() then return end
+		if not self:hasLoseHandcardEffective() and not self.player:isKongcheng() then return end
+		if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
+			if self:doNotDiscard(self.player, "he", true) then return end
+			if self.player:getCards("he"):length() == 1 and not self.player:getArmor() then return end
+			if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
+			if self:canUseJieyuanDecrease(target) then return "." end
+			if (self:getCardsNum("Peach") > 0 or (self:getCardsNum("Analeptic") > 0 and self:isWeak()))
+				and not self.player:hasSkills("tuntian+zaoxian") and not self:willSkipPlayPhase() then
+				return "."
 			end
 		end
-		if (self.player:getHandcardNum() == 1 and self:needKongcheng()) or not self:hasLoseHandcardEffective() then return end
 		if not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 			if target:hasWeapon("axe") then
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 and target:getCards("he"):length() > 2 then return "." end

@@ -479,8 +479,8 @@ end
 
 sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	local to = tos[1]
+	if self:getDamagedEffects(to) or self:needToLoseHp(to) then return end
 	local intention = 10
-	local friend = false
 	if (to:getHp() >= 2 and self:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", to))
 		or (to:getHandcardNum() < 3 and to:hasSkill("rende"))
 		or to:hasSkill("buqu") then

@@ -1769,6 +1769,7 @@ sgs.ai_chaofeng.huatuo = 6
 
 sgs.ai_skill_cardask["@wushuang-slash-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
+	if self:canUseJieyuanDecrease(target) then return "." end
 	if self.player:hasSkill("wuyan") or target:hasSkill("wuyan") then return "." end
 	if self:getCardsNum("Slash") < 2 and not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng)) then return "." end
 end
@@ -1777,9 +1778,9 @@ sgs.ai_skill_cardask["@double-jink-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
 	if self:hasSkill("kongcheng") then
-		if not (self.player:getHandcardNum() == 1 and self:getCardsNum("Jink") == 1) or target:hasWeapon("guding_blade") then return "." end
+		if self.player:getHandcardNum() == 1 and self:getCardsNum("Jink") == 1 and target:hasWeapon("guding_blade") then return "." end
 	else
-		if self:getCardsNum("Jink") < 2 and self.player:getHandcardNum() > self:getLeastHandcardNum() then return "." end
+		if self:getCardsNum("Jink") < 2 and self:hasLoseHandcardEffective() then return "." end
 	end
 end
 
@@ -1994,8 +1995,8 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 
 					use.card = card
 					if use.to then
-						use.to:append(enemy)
 						use.to:append(shenguanyu)
+						use.to:append(enemy)
 					end
 					return
 				end

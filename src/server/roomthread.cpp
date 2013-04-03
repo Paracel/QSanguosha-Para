@@ -523,8 +523,7 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
 
     bool broken = false;
     QList<const TriggerSkill *> triggered;
-    const QList<const TriggerSkill *> &skills = skill_table[event];
-    QList<TriggerSkill *> mutable_skills;
+    QList<const TriggerSkill *> &skills = skill_table[event];
     foreach (const TriggerSkill *skill, skills) {
         double priority = skill->getPriority();
         int len = room->getPlayers().length();
@@ -537,12 +536,11 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
         }
         TriggerSkill *mutable_skill = const_cast<TriggerSkill *>(skill);
         mutable_skill->setDynamicPriority(priority);
-        mutable_skills << mutable_skill;
     }
-    qStableSort(mutable_skills.begin(), mutable_skills.end(), CompareByPriority);
+    qStableSort(skills.begin(), skills.end(), CompareByPriority);
 
-    for (int i = 0; i < mutable_skills.size(); i++) {
-        const TriggerSkill *skill = mutable_skills[i];
+    for (int i = 0; i < skills.size(); i++) {
+        const TriggerSkill *skill = skills[i];
         if (skill->triggerable(target) && !triggered.contains(skill)) {
             while (room->isPaused()) {}
             triggered.append(skill);

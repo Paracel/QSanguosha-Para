@@ -813,21 +813,21 @@ sgs.ai_card_intention.general = function(from, to, level)
 	sgs.outputRoleValues(from, level)
 
 	if sgs.evaluatePlayerRole(to) == "loyalist" then
-		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] - level
-		if ((sgs.ai_role[from:objectName()] == "loyalist" and level > 0 and sgs.current_mode_players["rebel"] > 0)
-			or (sgs.ai_role[from:objectName()] == "rebel" and level < 0)) and sgs.current_mode_players["renegade"] > 0 then
-			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level) 
+		if ((sgs.role_evaluation[from:objectName()]["loyalist"] > 0 and level > 0 and sgs.current_mode_players["rebel"] > 0)
+			or (sgs.role_evaluation[from:objectName()]["loyalist"] < 0 and level < 0)) and sgs.current_mode_players["renegade"] > 0 then
+			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level)
 		elseif sgs.ai_role[from:objectName()] ~= "rebel" and sgs.ai_role[from:objectName()] ~= "neutral"
 				and level > 0 and to:isLord() and sgs.current_mode_players["renegade"] > 0 then
 			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level)
+		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] - level
 		end
 	end
 	if sgs.evaluatePlayerRole(to) == "rebel" then
-		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
-		if ((sgs.ai_role[from:objectName()] == "rebel" and level > 0) or (sgs.ai_role[from:objectName()] == "loyalist" and level < 0))
+		if ((sgs.role_evaluation[from:objectName()]["loyalist"] < 0 and level > 0) or (sgs.role_evaluation[from:objectName()]["loyalist"] > 0 and level < 0))
 			and sgs.current_mode_players["renegade"] > 0 then
 			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level) 
 		end
+		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
 	end
 	sgs.outputRoleValues(from, level)
 end

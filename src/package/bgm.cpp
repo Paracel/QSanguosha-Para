@@ -30,7 +30,10 @@ public:
                 foreach (ServerPlayer *p, use.to) {
                     if (p->isKongcheng()) continue;
                     QVariant data = QVariant::fromValue((PlayerStar)p);
-                    if (player->askForSkillInvoke(objectName(), data)) {
+                    p->setFlags("ChongzhenTarget");
+                    bool invoke = player->askForSkillInvoke(objectName(), data);
+                    p->setFlags("-ChongzhenTarget");
+                    if (invoke) {
                         room->broadcastSkillInvoke("chongzhen", 2);
                         int card_id = room->askForCardChosen(player, p, "h", objectName());
                         CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, player->objectName());

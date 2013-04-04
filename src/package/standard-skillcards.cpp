@@ -217,12 +217,12 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
     if (!targets.isEmpty())
         return false;
 
-    if (to_select->hasFlag("slash_source"))
+    if (to_select->hasFlag("LiuliSlashSource"))
         return false;
 
     const Player *from = NULL;
     foreach (const Player *p, Self->getSiblings()) {
-        if (p->hasFlag("slash_source")) {
+        if (p->hasFlag("LiuliSlashSource")) {
             from = p;
             break;
         }
@@ -255,8 +255,7 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 void LiuliCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.to->getRoom();
-    room->setPlayerFlag(effect.to, "liuli_target");
+    effect.to->setFlags("LiuliTarget");
 }
 
 JijiangCard::JijiangCard() {
@@ -286,6 +285,6 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
     }
     foreach (ServerPlayer *target, targets)
         target->setFlags("-JijiangTarget");
-    room->setPlayerFlag(liubei, "jijiang_failed");
+    room->setPlayerFlag(liubei, "JijiangFailed");
 }
 

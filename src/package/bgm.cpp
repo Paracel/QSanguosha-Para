@@ -235,7 +235,7 @@ public:
 
     void doManjuan(ServerPlayer *sp_pangtong, int card_id) const{
         Room *room = sp_pangtong->getRoom();
-        room->setPlayerFlag(sp_pangtong, "ManjuanInvoke");
+        sp_pangtong->setFlags("ManjuanInvoke");
         QList<int> DiscardPile = room->getDiscardPile(), toGainList;
         const Card *card = Sanguosha->getCard(card_id);
         foreach (int id, DiscardPile) {
@@ -254,14 +254,14 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *sp_pangtong, QVariant &data) const{
         if (sp_pangtong->hasFlag("ManjuanInvoke")) {
-            room->setPlayerFlag(sp_pangtong, "-ManjuanInvoke");
+            sp_pangtong->setFlags("-ManjuanInvoke");
             return false;
         }
 
         int card_id = -1;
         CardMoveReason reason(CardMoveReason::S_REASON_PUT, sp_pangtong->objectName(), "manjuan", QString());
         if (event == CardsMoving) {
-            if (sp_pangtong->hasFlag("NoManjuan"))
+            if (sp_pangtong->hasFlag("ManjuanNullified"))
                 return false;
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->to != sp_pangtong || move->to_place != Player::PlaceHand)
@@ -274,7 +274,7 @@ public:
         } else if (event == CardDrawing) {
             if (room->getTag("FirstRound").toBool())
                 return false;
-            if (sp_pangtong->hasFlag("NoManjuan"))
+            if (sp_pangtong->hasFlag("ManjuanNullified"))
                 return false;
             if (sp_pangtong->getMark("has_drawn_card") == 0)
                 room->broadcastSkillInvoke(objectName());
@@ -383,11 +383,11 @@ public:
             log.card_str = Card::IdsToStrings(zuixiang).join("+");
             room->sendLog(log);
 
-            room->setPlayerFlag(player, "NoManjuan");
+            player->setFlags("ManjuanNullified");
             CardMoveReason reason(CardMoveReason::S_REASON_PUT, player->objectName(), QString(), "zuixiang", "");
             CardsMoveStruct move(zuixiang, player, Player::PlaceHand, reason);
             room->moveCardsAtomic(move, true);
-            room->setPlayerFlag(player, "-NoManjuan");
+            player->setFlags("-ManjuanNullified");
         }
     }
 
@@ -649,7 +649,7 @@ void TanhuCard::use(Room *room, ServerPlayer *lvmeng, QList<ServerPlayer *> &tar
     if (success) {
         room->broadcastSkillInvoke("tanhu", 2);
         lvmeng->tag["TanhuInvoke"] = QVariant::fromValue(targets.first());
-        room->setPlayerFlag(targets.first(), "TanhuTarget");
+        targets.first()->setFlags("TanhuTarget");
         room->setFixedDistance(lvmeng, targets.first(), 1);
     } else {
         room->broadcastSkillInvoke("tanhu", 3);
@@ -707,7 +707,7 @@ public:
 
             ServerPlayer *target = player->tag["TanhuInvoke"].value<PlayerStar>();
 
-            room->setPlayerFlag(target, "-TanhuTarget");
+            target->setFlags("-TanhuTarget");
             room->setFixedDistance(player, target, -1);
             player->tag.remove("TanhuInvoke");
         }
@@ -839,7 +839,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liubei, QVariant &) const{
         if (!liubei->hasFlag("zhaolie")) return false;
-        room->setPlayerFlag(liubei, "-zhaolie");
+        liubei->setFlags("-zhaolie");
 
         ServerPlayer *victim = NULL;
         foreach (ServerPlayer *p, room->getOtherPlayers(liubei)) {
@@ -2016,7 +2016,7 @@ public:
         switch (event) {
         case CardAsked: {
                 QString pattern = data.toStringList().first();
-                if (pattern == "slash" && !liuxie->hasFlag("jijiang_failed")) {
+                if (pattern == "slash" && !liuxie->hasFlag("JijiangFailed")) {
                     QVariant data_for_ai = "jijiang";
                     if (room->askForSkillInvoke(liuxie, "hantong_acquire", data_for_ai)) {
                         RemoveEdict(liuxie);
@@ -2034,7 +2034,7 @@ public:
         case TargetConfirmed: {
                 CardUseStruct use = data.value<CardUseStruct>();
                 if (!use.card->isKindOf("Peach") || use.from == NULL || use.from->getKingdom() != "wu"
-                    || liuxie == use.from || !liuxie->hasFlag("dying"))
+                    || liuxie == use.from || !liuxie->hasFlag("Global_Dying"))
                     return false;
 
                 QVariant data_for_ai = "jiuyuan";

@@ -261,7 +261,7 @@ QList<int> TrustAI::askForDiscard(const QString &, int discard_num, int min_num,
     if (optional)
         return to_discard;
     else
-        return self->forceToDiscard(discard_num, include_equip, self->hasFlag("GlobalFlag_AIDiscardExchanging"));
+        return self->forceToDiscard(discard_num, include_equip, self->hasFlag("Global_AIDiscardExchanging"));
 }
 
 const Card *TrustAI::askForNullification(const TrickCard *trick, ServerPlayer *, ServerPlayer *to, bool positive) {

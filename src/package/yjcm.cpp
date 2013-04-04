@@ -422,7 +422,7 @@ public:
                 && (move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)
                 lingtong->setMark("xuanfeng", lingtong->getMark("xuanfeng") + move->card_ids.length());
 
-            if ((lingtong->getMark("xuanfeng") >= 2 && !lingtong->hasFlag("xuanfeng_used"))
+            if ((lingtong->getMark("xuanfeng") >= 2 && !lingtong->hasFlag("XuanfengUsed"))
                 || move->from_places.contains(Player::PlaceEquip)) {
                 bool can_invoke = false;
                 QList<ServerPlayer *> other_players = room->getOtherPlayers(lingtong);
@@ -437,7 +437,7 @@ public:
 
                 if (lingtong->askForSkillInvoke(objectName())) {
                     if (lingtong->getMark("xuanfeng") >= 2)
-                        room->setPlayerFlag(lingtong, "xuanfeng_used");
+                        lingtong->setFlags("XuanfengUsed");
                     room->broadcastSkillInvoke(objectName());
                     QList<ServerPlayer *> targets;
                     foreach (ServerPlayer *target, room->getOtherPlayers(lingtong)) {
@@ -511,7 +511,7 @@ void XianzhenCard::onEffect(const CardEffectStruct &effect) const{
     if (effect.from->pindian(effect.to, "xianzhen", card)) {
         PlayerStar target = effect.to;
         effect.from->tag["XianzhenTarget"] = QVariant::fromValue(target);
-        room->setPlayerFlag(effect.from, "xianzhen_success");
+        room->setPlayerFlag(effect.from, "XianzhenSuccess");
         room->setFixedDistance(effect.from, effect.to, 1);
         room->addPlayerMark(effect.to, "Armor_Nullified");
     } else {
@@ -545,7 +545,7 @@ public:
             return true;
         Slash *slashx = new Slash(Card::NoSuit, 0);
         slashx->deleteLater();
-        if (!player->isCardLimited(slashx, Card::MethodUse) && player->hasFlag("xianzhen_success"))
+        if (!player->isCardLimited(slashx, Card::MethodUse) && player->hasFlag("XianzhenSuccess"))
             return true;
 
         return false;
@@ -570,7 +570,7 @@ public:
             card->addSubcards(cards);
 
             return card;
-        } else if (Self->hasFlag("xianzhen_success")) {
+        } else if (Self->hasFlag("XianzhenSuccess")) {
             if (!cards.isEmpty())
                 return NULL;
 
@@ -604,7 +604,7 @@ public:
                 if (death.who == target) {
                     room->setFixedDistance(gaoshun, target, -1);
                     gaoshun->tag.remove("XianzhenTarget");
-                    room->setPlayerFlag(gaoshun, "-xianzhen_success");
+                    room->setPlayerFlag(gaoshun, "-XianzhenSuccess");
                 }
                 return false;
             }

@@ -114,7 +114,7 @@ sgs.ai_use_priority.XinzhanCard = 9.4
 
 function sgs.ai_slash_prohibit.huilei(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	if self:isFriend(to, from) and self:isWeak(to) then return true end
 	return #(self:getEnemies(from)) > 1 and self:isWeak(to) and from:getHandcardNum() > 3
 end
@@ -174,7 +174,7 @@ end
 
 function sgs.ai_slash_prohibit.enyuan(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	local num = from:getHandcardNum()
 	if num >= 3 or from:hasSkill("lianying") or (from:hasSkill("kongcheng") and num == 2) then return false end
 	return true
@@ -484,7 +484,7 @@ end
 sgs.ai_choicemade_filter.skillInvoke.buyi = function(self, player, promptlist)
 	local dying
 	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
-		if p:hasFlag("dying") then
+		if p:hasFlag("Global_Dying") then
 			dying = p
 			break
 		end
@@ -665,7 +665,7 @@ xianzhen_skill.name = "xianzhen"
 table.insert(sgs.ai_skills, xianzhen_skill)
 xianzhen_skill.getTurnUseCard = function(self)
 	if not self.player:hasUsed("XianzhenCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@XianzhenCard=.")
-	elseif self.player:hasUsed("XianzhenCard") and self.player:hasFlag("xianzhen_success") then
+	elseif self.player:hasUsed("XianzhenCard") and self.player:hasFlag("XianzhenSuccess") then
 		local card_str = "@XianzhenSlashCard=."
 		local card = sgs.Card_Parse(card_str)
 		return card
@@ -690,11 +690,11 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 
 	if slashcount > 0 then
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:hasFlag("GlobalFlag_HuangtianPindian") and enemy:getHandcardNum() == 1 then
+			if enemy:hasFlag("AI_HuangtianPindian") and enemy:getHandcardNum() == 1 then
 				use.card = sgs.Card_Parse("@XianzhenCard=" .. max_card:getId())
 				if use.to then
 					use.to:append(enemy)
-					enemy:setFlags("-GlobalFlag_HuangtianPindian")
+					enemy:setFlags("-AI_HuangtianPindian")
 				end
 				return
 			end

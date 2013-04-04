@@ -1340,7 +1340,7 @@ function SmartAI:useCardDuel(duel, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if self.player:hasFlag("duelTo" .. enemy:objectName()) and canUseDuelTo(enemy) then
+		if self.player:hasFlag("AI_DuelTo_" .. enemy:objectName()) and canUseDuelTo(enemy) then
 			table.insert(targets, enemy)
 		end
 	end
@@ -1413,7 +1413,7 @@ function SmartAI:useCardDuel(duel, use)
 					use.to:append(targets[i])
 				end
 				if not setFlag and self.player:getPhase() == sgs.Player_Play and self:isEnemy(targets[i]) then 
-					self.player:setFlags("duelTo" .. targets[i]:objectName())
+					self.player:setFlags("AI_DuelTo_" .. targets[i]:objectName())
 					setFlag = true
 				end
 				if use.to:length() == targets_num then return end
@@ -1439,7 +1439,7 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if self.player:getPhase() == sgs.Player_Play then return self:getCardId("Slash") end
 
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
-	if self.player:hasFlag("GlobalFlag_NeedToWake") then return "." end
+	if self.player:hasFlag("AIGlobal_NeedToWake") then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
 	if self:cantbeHurt(target) then return "." end
@@ -1580,7 +1580,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		if usecard and use.to and use.to:length() < targets_num and not table.contains(targets, player:objectName()) then
 			table.insert(targets, player:objectName())
 			use.to:append(player)
-			sgs.Sanguosha:getCard(cardid):setFlags("GlobalFlag_SDCardChosen_" .. name)
+			sgs.Sanguosha:getCard(cardid):setFlags("AIGlobal_SDCardChosen_" .. name)
 			if use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
 		end
 	end
@@ -1869,7 +1869,7 @@ function SmartAI:useCardCollateral(card, use)
 			if friend:getWeapon() and friend:getWeapon():isKindOf("Crossbow") and self:hasTrickEffective(card, friend) then
 				for _, enemy in ipairs(toList) do
 					if friend:canSlash(enemy, nil) and friend:objectName() ~= enemy:objectName() then
-						self.player:setFlags("GlobalFlag_CollateralNeedCrossbow")
+						self.player:setFlags("AI_CollateralNeedCrossbow")
 						use.card = card
 						if use.to then use.to:append(friend) end
 						if use.to then use.to:append(enemy) end
@@ -1990,7 +1990,7 @@ end
 sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
-	if target2 and target2:hasFlag("GlobalFlag_CollateralNeedCrossbow") and self:isFriend(target2) then
+	if target2 and target2:hasFlag("AI_CollateralNeedCrossbow") and self:isFriend(target2) then
 		return "."
 	end
 	if self:isFriend(target) and self:findLeijiTarget(target, 50, self.player) then

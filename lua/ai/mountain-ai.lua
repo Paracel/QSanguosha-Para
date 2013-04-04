@@ -328,7 +328,7 @@ local jixi_skill = {}
 jixi_skill.name = "jixi"
 table.insert(sgs.ai_skills, jixi_skill)
 jixi_skill.getTurnUseCard = function(self)
-	if self.player:hasFlag("ForbidJixi")
+	if self.player:hasFlag("AI_JixiForbid")
 		or self.player:getPile("field"):isEmpty()
 		or (self.player:getHandcardNum() >= self.player:getHp() + 2
 			and self.player:getPile("field"):length() <= self.room:getAlivePlayers():length() / 2 - 1) then
@@ -350,7 +350,7 @@ jixi_skill.getTurnUseCard = function(self)
 		end
 	end
 
-	if not can_use then self.player:setFlags("ForbidJixi") end
+	if not can_use then self.player:setFlags("AI_JixiForbid") end
 
 	if self.jixisnatch then
 		local use = { to = sgs.SPlayerList(), isDummy = true }
@@ -968,7 +968,7 @@ end
 
 function sgs.ai_slash_prohibit.duanchang(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	if to:getHp() > 1 or #(self:getEnemies(from)) == 1 then return false end
 	if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
 	if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end

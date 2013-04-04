@@ -223,7 +223,7 @@ sgs.ai_skill_invoke.neoganglie = function(self, data)
 	local target = damage.from
 	if (self:needToLoseHp(target, self.player) or self:getDamagedEffects(target, self.player)) and target:isKongcheng() then return false end
 	if not self:isFriend(target) then
-		target:setFlags("ganglie_target")
+		target:setFlags("GanglieTarget")
 		return true
 	else
 		if self:getDamagedEffects(target, self.player) then
@@ -245,9 +245,9 @@ end
 sgs.ai_skill_choice.neoganglie = function(self, choices)
 	local target
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if player:hasFlag("ganglie_target") then
+		if player:hasFlag("GanglieTarget") then
 			target = player
-			target:setFlags("-ganglie_target")
+			target:setFlags("-GanglieTarget")
 		end
 	end
 	if (self:getDamagedEffects(target, self.player) or self:needToLostHp(target, self.player)) and self:isFriend(target) then return "damage" end

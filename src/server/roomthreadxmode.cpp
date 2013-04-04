@@ -98,13 +98,13 @@ void RoomThreadXMode::startArrange(ServerPlayer *player, const QStringList &to_a
 void RoomThreadXMode::arrange(ServerPlayer *player, const QStringList &arranged) {
     Q_ASSERT(arranged.length() == 3);
 
-    if (!player->hasFlag("GlobalFlag_XModeGeneralSelected")) {
+    if (!player->hasFlag("Global_XModeGeneralSelected")) {
         QStringList left = arranged.mid(1, 2);
         player->tag["XModeBackup"] = QVariant::fromValue(left);
         player->setGeneralName(arranged.first());
-        player->setFlags("GlobalFlag_XModeGeneralSelected");
+        player->setFlags("Global_XModeGeneralSelected");
     } else {
-        player->setFlags("-GlobalFlag_XModeGeneralSelected");
+        player->setFlags("-Global_XModeGeneralSelected");
         QStringList backup = arranged;
         player->tag["XModeBackup"] = QVariant::fromValue(backup);
     }

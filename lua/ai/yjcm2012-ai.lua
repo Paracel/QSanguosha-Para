@@ -563,7 +563,7 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 			if use.to then
 				use.to:append(tg_enemy)
 				use.to:append(second_enemy)
-				self.player:setFlags("anxu_isenemy_" .. second_enemy:objectName())
+				self.player:setFlags("AI_AnxuToEnemy_" .. second_enemy:objectName())
 			end
 			return
 		end
@@ -587,7 +587,7 @@ sgs.ai_card_intention.AnxuCard = function(self, card, from, to)
 		kc_enemy = true
 		intention = 80
 	else
-		if from:hasFlag("anxu_isenemy_" .. less:objectName()) then intention = -intention end
+		if from:hasFlag("AI_AnxuToEnemy_" .. less:objectName()) then intention = -intention end
 		intention = intention / (less:getHandcardNum() + 1)
 	end
 	sgs.updateIntention(from, less, intention)

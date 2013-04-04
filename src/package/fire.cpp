@@ -448,7 +448,7 @@ bool TianyiCard::targetFilter(const QList<const Player *> &targets, const Player
 void TianyiCard::use(Room *room, ServerPlayer *taishici, QList<ServerPlayer *> &targets) const{
     bool success = taishici->pindian(targets.first(), "tianyi", this);
     if (success)
-        room->setPlayerFlag(taishici, "tianyi_success");
+        room->setPlayerFlag(taishici, "TianyiSuccess");
     else
         room->setPlayerCardLimitation(taishici, "use", "Slash", true);
 }
@@ -481,12 +481,12 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target && target->hasFlag("tianyi_success");
+        return target && target->hasFlag("TianyiSuccess");
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *taishici, QVariant &data) const{
         if (data.toString() == objectName())
-            room->setPlayerFlag(taishici, "-tianyi_success");
+            room->setPlayerFlag(taishici, "-TianyiSuccess");
 
         return false;
     }
@@ -499,21 +499,21 @@ public:
     }
 
     virtual int getResidueNum(const Player *from, const Card *) const{
-        if (from->hasSkill("tianyi") && from->hasFlag("tianyi_success"))
+        if (from->hasSkill("tianyi") && from->hasFlag("TianyiSuccess"))
             return 1;
         else
             return 0;
     }
 
     virtual int getDistanceLimit(const Player *from, const Card *) const{
-        if (from->hasSkill("tianyi") && from->hasFlag("tianyi_success"))
+        if (from->hasSkill("tianyi") && from->hasFlag("TianyiSuccess"))
             return 1000;
         else
             return 0;
     }
 
     virtual int getExtraTargetNum(const Player *from, const Card *) const{
-        if (from->hasSkill("tianyi") && from->hasFlag("tianyi_success"))
+        if (from->hasSkill("tianyi") && from->hasFlag("TianyiSuccess"))
             return 1;
         else
             return 0;

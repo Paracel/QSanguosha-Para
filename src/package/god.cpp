@@ -392,7 +392,7 @@ public:
         }
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shenzhouyu, QVariant &data) const{
+    virtual bool trigger(TriggerEvent event, Room *, ServerPlayer *shenzhouyu, QVariant &data) const{
         if (shenzhouyu->getPhase() != Player::Discard)
             return false;
 
@@ -401,16 +401,16 @@ public:
             if (move->from == shenzhouyu && move->to_place == Player::DiscardPile
                 && (move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                 shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move->card_ids.size());
-                if (!shenzhouyu->hasFlag("qinyin_used") && shenzhouyu->getMark("qinyin") >= 2) {
+                if (!shenzhouyu->hasFlag("QinyinUsed") && shenzhouyu->getMark("qinyin") >= 2) {
                     if (shenzhouyu->askForSkillInvoke(objectName())) {
-                        room->setPlayerFlag(shenzhouyu, "qinyin_used");
+                        shenzhouyu->setFlags("QinyinUsed");
                         perform(shenzhouyu);
                     }
                 }
             }
         } else if (event == EventPhaseStart) {
             shenzhouyu->setMark("qinyin", 0);
-            shenzhouyu->setFlags("-qinyin_used");
+            shenzhouyu->setFlags("-QinyinUsed");
         }
 
         return false;
@@ -433,7 +433,7 @@ public:
             if (shencc->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
 
-                room->setPlayerFlag(shencc, "GuixinUsing");
+                shencc->setFlags("GuixinUsing");
                 if (players.length() >= 4)
                     room->doLightbox("$GuixinAnimate");
 
@@ -447,7 +447,7 @@ public:
                 }
 
                 shencc->turnOver();
-                room->setPlayerFlag(shencc, "-GuixinUsing");
+                shencc->setFlags("-GuixinUsing");
             } else
                 break;
         }
@@ -564,7 +564,7 @@ ShenfenCard::ShenfenCard() {
 }
 
 void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> &) const{
-    room->setPlayerFlag(shenlvbu, "ShenfenUsing");
+    shenlvbu->setFlags("ShenfenUsing");
     room->broadcastSkillInvoke("shenfen");
     room->doLightbox("$ShenfenAnimate", 5000);
     shenlvbu->loseMark("@wrath", 6);
@@ -590,7 +590,7 @@ void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> 
     }
 
     shenlvbu->turnOver();
-    room->setPlayerFlag(shenlvbu, "-ShenfenUsing");
+    shenlvbu->setFlags("-ShenfenUsing");
 }
 
 WuqianCard::WuqianCard() {
@@ -605,8 +605,8 @@ void WuqianCard::onEffect(const CardEffectStruct &effect) const{
 
     effect.from->loseMark("@wrath", 2);
     room->acquireSkill(effect.from, "wushuang", false);
-    room->setPlayerFlag(effect.from, "WuqianSource");
-    room->setPlayerFlag(effect.to, "WuqianTarget");
+    effect.from->setFlags("WuqianSource");
+    effect.to->setFlags("WuqianTarget");
     room->addPlayerMark(effect.to, "Armor_Nullified");
 }
 
@@ -649,7 +649,7 @@ public:
 
         foreach (ServerPlayer *p , room->getAllPlayers()) {
             if (p->hasFlag("WuqianTarget")) {
-                room->setPlayerFlag(p, "-WuqianTarget");
+                p->setFlags("-WuqianTarget");
                 if (p->getMark("Armor_Nullified") > 0)
                     room->removePlayerMark(p, "Armor_Nullified");
             }

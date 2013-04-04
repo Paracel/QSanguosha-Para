@@ -334,7 +334,7 @@ function SmartAI:getUseValue(card)
 		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
-			if self.player:hasFlag("tianyi_success") or self.player:hasFlag("jiangchi_invoke")
+			if self.player:hasFlag("TianyiSuccess") or self.player:hasFlag("JiangchiInvoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
 			if self.player:hasWeapon("Crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
 			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
@@ -441,7 +441,7 @@ function SmartAI:getDynamicUsePriority(card)
 		end
 		if use_card:isKindOf("Duel")
 			and (self:hasCrossbowEffect(self.player)
-			or self.player:hasFlag("xianzhen_success")
+			or self.player:hasFlag("XianzhenSuccess")
 			or self.player:canSlashWithoutCrossbow()
 			or self.player:hasUsed("FenxunCard")) then
 			return sgs.ai_use_priority.Slash - 0.1
@@ -1510,9 +1510,9 @@ function SmartAI:filterEvent(event, player, data)
 		local card = struct.card
 		local from = struct.from
 		local to = struct.to
-		if card and card:isKindOf("AOE") and to and to:isLord() and (to:hasFlag("GlobalFlag_LordInDangerSA") or to:hasFlag("GlobalFlag_LordInDangerAA")) then
-			to:setFlags("-GlobalFlag_LordInDangerAA")
-			to:setFlags("-GlobalFlag_LordInDangerSA")
+		if card and card:isKindOf("AOE") and to and to:isLord() and (to:hasFlag("AIGlobal_LordInDangerSA") or to:hasFlag("AIGlobal_LordInDangerAA")) then
+			to:setFlags("-AIGlobal_LordInDangerAA")
+			to:setFlags("-AIGlobal_LordInDangerSA")
 		end
 	elseif event == sgs.CardEffect then
 		local struct = data:toCardEffect()
@@ -1618,9 +1618,9 @@ function SmartAI:filterEvent(event, player, data)
 		local lord = self.room:getLord()
 		if card and lord and lord:getHp() == 1 and self:aoeIsEffective(card, lord, from) then
 			if card:isKindOf("SavageAssault") then
-				lord:setFlags("GlobalFlag_LordInDangerSA")
+				lord:setFlags("AIGlobal_LordInDangerSA")
 			elseif card:isKindOf("ArcheryAttack") then
-				lord:setFlags("GlobalFlag_LordInDangerAA")
+				lord:setFlags("AIGlobal_LordInDangerAA")
 			end
 		end
 
@@ -1638,8 +1638,8 @@ function SmartAI:filterEvent(event, player, data)
 		local struct = data:toCardUse()
 		local card = struct.card
 		local lord = self.room:getLord()
-		if card and lord and card:isKindOf("Duel") and lord:hasFlag("GlobalFlag_NeedToWake") then
-			lord:setFlags("-GlobalFlag_NeedToWake")
+		if card and lord and card:isKindOf("Duel") and lord:hasFlag("AIGlobal_NeedToWake") then
+			lord:setFlags("-AIGlobal_NeedToWake")
 		end
 	elseif event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
@@ -1726,7 +1726,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 
-			if player:hasFlag("GlobalFlag_PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
+			if player:hasFlag("AIGlobal_PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
 				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD and not self:needBear(player)
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluatePlayerRole(player) == "neutral")
@@ -1800,7 +1800,7 @@ function SmartAI:filterEvent(event, player, data)
 	elseif event == sgs.FinishJudge then
 		table.remove(sgs.ai_current_judge, #sgs.ai_current_judge)
 	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
-		player:setFlags("GlobalFlag_PlayPhaseNotSkipped")
+		player:setFlags("AIGlobal_PlayPhaseNotSkipped")
 	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 
@@ -2165,7 +2165,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 	end
 
 	if ("snatch|dismantlement"):match(reason) then
-		local flag = "GlobalFlag_SDCardChosen_" .. reason
+		local flag = "AIGlobal_SDCardChosen_" .. reason
 		for _, card in sgs.qlist(who:getCards(flags)) do
 			if card:hasFlag(reason) then
 				card:setFlags("-" .. flag)
@@ -2855,8 +2855,8 @@ function SmartAI:willUsePeachTo(dying)
 		if not sgs.GetConfig("EnableHegemony", false) and lord and self.player:objectName() ~= dying:objectName() and not dying:isLord()
 			and (self.role == "loyalist" or (self.role == "renegade" and self.room:alivePlayerCount() > 2))
 			and ((sgs.lordNeedPeach and #self:getCards("Peach") <= sgs.lordNeedPeach)
-				or (lord:hasFlag("GlobalFlag_LordInDangerSA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
-				or (lord:hasFlag("GlobalFlag_LordInDangerAA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
+				or (lord:hasFlag("AIGlobal_LordInDangerSA") and getCardsNum("Slash", lord) <= 1 and #self:getCards("Peach") < 2)
+				or (lord:hasFlag("AIGlobal_LordInDangerAA") and getCardsNum("Jink", lord) <= 1 and #self:getCards("Peach") < 2)) then
 			return "."
 		end
 

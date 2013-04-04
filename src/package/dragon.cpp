@@ -230,7 +230,7 @@ bool DrJiedaoCard::targetFilter(const QList<const Player *> &targets, const Play
 void DrJiedaoCard::onEffect(const CardEffectStruct &effect) const{
     if (!effect.to->getWeapon()) return;
     effect.from->tag["DrJiedaoWeapon"] = effect.to->getWeapon()->getEffectiveId();
-    effect.to->getRoom()->setPlayerFlag(effect.to, "DrJiedaoTarget");
+    effect.to->setFlags("DrJiedaoTarget");
 
     QList<CardsMoveStruct> exchangeMove;
     CardsMoveStruct move1;
@@ -282,7 +282,7 @@ public:
         ServerPlayer *target = NULL;
         foreach (ServerPlayer *p, room->getOtherPlayers(player))
             if (p->hasFlag("DrJiedaoTarget")) {
-                room->setPlayerFlag(p, "-DrJiedaoTarget");
+                p->setFlags("-DrJiedaoTarget");
                 target = p;
                 break;
             }

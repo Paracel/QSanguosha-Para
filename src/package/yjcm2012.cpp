@@ -250,7 +250,7 @@ public:
             log.type = "#Jiangchi2";
             room->sendLog(log);
             room->broadcastSkillInvoke(objectName(), 2);
-            room->setPlayerFlag(caozhang, "jiangchi_invoke");
+            room->setPlayerFlag(caozhang, "JiangchiInvoke");
             return n - 1;
         }
     }
@@ -263,14 +263,14 @@ public:
     }
 
     virtual int getResidueNum(const Player *from, const Card *) const{
-        if (from->hasSkill("jiangchi") && from->hasFlag("jiangchi_invoke"))
+        if (from->hasSkill("jiangchi") && from->hasFlag("JiangchiInvoke"))
             return 1;
         else
             return 0;
     }
 
     virtual int getDistanceLimit(const Player *from, const Card *) const{
-        if (from->hasSkill("jiangchi") && from->hasFlag("jiangchi_invoke"))
+        if (from->hasSkill("jiangchi") && from->hasFlag("JiangchiInvoke"))
             return 1000;
         else
             return 0;

@@ -408,12 +408,12 @@ public:
         if (!current || current->isDead())
             return false;
         if (event == PreCardUsed) {
-            if (!handang->hasFlag("nosjiefanUsed"))
+            if (!handang->hasFlag("NosJiefanUsed"))
                 return false;
 
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash")) {
-                room->setPlayerFlag(handang, "-nosjiefanUsed");
+                handang->setFlags("-NosJiefanUsed");
                 room->setCardFlag(use.card, "nosjiefan-slash");
             }
         } else if (event == AskForPeaches && current != handang
@@ -421,8 +421,8 @@ public:
             DyingStruct dying = data.value<DyingStruct>();
 
             forever {
-                if (handang->hasFlag("nosjiefan_failed")) {
-                    room->setPlayerFlag(handang, "-nosjiefan_failed");
+                if (handang->hasFlag("NosJiefanFailed")) {
+                    handang->setFlags("-NosJiefanFailed");
                     break;
                 }
 
@@ -430,11 +430,11 @@ public:
                     || !current || current->isDead() || !handang->canSlash(current, NULL, false))
                     break;
 
-                room->setPlayerFlag(handang, "nosjiefanUsed");
+                handang->setFlags("NosJiefanUsed");
                 room->setTag("NosJiefanTarget", data);
                 bool use_slash = room->askForUseSlashTo(handang, current, "jiefan-slash:" + current->objectName(), false);
                 if (!use_slash) {
-                    room->setPlayerFlag(handang, "-nosjiefanUsed");
+                    handang->setFlags("-NosJiefanUsed");
                     room->removeTag("NosJiefanTarget");
                     break;
                 }
@@ -477,9 +477,9 @@ public:
                          || target->getGeneralName().contains("sunce")
                          || target->getGeneralName().contains("sunjian"))
                         && target->isLord())
-                        room->setPlayerFlag(handang, "NosJiefanToLord");
+                        handang->setFlags("NosJiefanToLord");
                     room->useCard(CardUseStruct(peach, handang, target));
-                    room->setPlayerFlag(handang, "-NosJiefanToLord");
+                    handang->setFlags("-NosJiefanToLord");
                 }
                 return true;
             }
@@ -488,7 +488,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->hasFlag("nosjiefan-slash")) {
                 if (!use.card->hasFlag("nosjiefan_success"))
-                    room->setPlayerFlag(handang, "nosjiefan_failed");
+                    handang->setFlags("NosJiefanFailed");
                 room->removeTag("NosJiefanTarget");
             }
         }

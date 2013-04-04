@@ -154,7 +154,7 @@ end
 
 function sgs.ai_slash_prohibit.nosenyuan(self, from, to, card)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	if self:needToLoseHp(from) then return false end
 	if from:getHp() > 3 then return false end
 
@@ -279,7 +279,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 		end
 
 		if willUse then
-			target:setFlags("nosxuanhuo_target")
+			target:setFlags("NosXuanhuoTarget")
 			use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. card:getEffectiveId())
 			if use.to then use.to:append(target) end
 		end
@@ -289,13 +289,13 @@ end
 sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	for _, player in sgs.qlist(targets) do
 		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player)
-			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
+			and not player:hasFlag("NosXuanhuoTarget") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end
 	for _, player in sgs.qlist(targets) do
 		if self:isFriend(player)
-			and not player:hasFlag("nosxuanhuo_target") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
+			and not player:hasFlag("NosXuanhuoTarget") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end

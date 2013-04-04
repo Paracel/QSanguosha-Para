@@ -431,14 +431,14 @@ JijiangViewAsSkill::JijiangViewAsSkill(): ZeroCardViewAsSkill("jijiang$") {
 }
 
 bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
-    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("jijiang_failed")
+    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("JijiangFailed")
            && Slash::IsAvailable(player);
 }
 
 bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString &pattern) const{
     return hasShuGenerals(player)
            && pattern == "slash" && !ClientInstance->hasNoTargetResponding()
-           && !player->hasFlag("jijiang_failed");
+           && !player->hasFlag("JijiangFailed");
 }
 
 const Card *JijiangViewAsSkill::viewAs() const{
@@ -767,7 +767,7 @@ public:
         if (event == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Peach") && use.from && use.from->getKingdom() == "wu"
-                && sunquan != use.from && sunquan->hasFlag("dying")) {
+                && sunquan != use.from && sunquan->hasFlag("Global_Dying")) {
                 room->setCardFlag(use.card, "jiuyuan");
             }
         } else if (event == PreHpRecover) {
@@ -991,7 +991,7 @@ public:
 
             if (can_invoke) {
                 QString prompt = "@liuli:" + use.from->objectName();
-                room->setPlayerFlag(use.from, "slash_source");
+                room->setPlayerFlag(use.from, "LiuliSlashSource");
                 // a temp nasty trick
                 daqiao->tag["liuli-card"] = QVariant::fromValue((CardStar)use.card); // for the server (AI)
                 QString flag = "LiuliFlag:" + use.card->toString(); // for the client (UI)
@@ -999,20 +999,20 @@ public:
                 if (room->askForUseCard(daqiao, "@@liuli", prompt, -1, Card::MethodDiscard)) {
                     daqiao->tag.remove("liuli-card");
                     room->setPlayerFlag(daqiao, "-" + flag);
-                    room->setPlayerFlag(use.from, "-slash_source");
+                    room->setPlayerFlag(use.from, "-LiuliSlashSource");
                     foreach (ServerPlayer *p, players) {
-                        if (p->hasFlag("liuli_target")) {
+                        if (p->hasFlag("LiuliTarget")) {
                             use.to.insert(use.to.indexOf(daqiao), p);
                             use.to.removeOne(daqiao);
                             data = QVariant::fromValue(use);
-                            room->setPlayerFlag(p, "-liuli_target");
+                            p->setFlags("-LiuliTarget");
                             return true;
                         }
                     }
                 } else {
                     daqiao->tag.remove("liuli-card");
                     room->setPlayerFlag(daqiao, "-" + flag);
-                    room->setPlayerFlag(use.from, "-slash_source");
+                    room->setPlayerFlag(use.from, "-LiuliSlashSource");
                 }
             }
         }

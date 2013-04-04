@@ -483,7 +483,7 @@ public:
 
             if (duplicate_numbers.isEmpty()) {
                 room->broadcastSkillInvoke(objectName());
-                room->setPlayerFlag(zhoutai, "-dying");
+                room->setPlayerFlag(zhoutai, "-Global_Dying");
                 return true;
             } else {
                 LogMessage log;
@@ -878,7 +878,7 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
     room->setTag("Guhuoing", false);
     room->removeTag("GuhuoType");
     if (!success)
-        room->setPlayerFlag(yuji, "guhuo_failed");
+        room->setPlayerFlag(yuji, "GuhuoFailed");
 
     return success;
 }

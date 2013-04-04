@@ -400,7 +400,7 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
         room->useCard(CardUseStruct(slash, effect.from, target), false);
     } else {
         room->broadcastSkillInvoke("shuangren", 3);
-        room->setPlayerFlag(effect.from, "SkipPlay");
+        room->setPlayerFlag(effect.from, "ShuangrenSkipPlay");
     }
 }
 
@@ -448,7 +448,7 @@ public:
 
             if (can_invoke)
                 room->askForUseCard(jiling, "@@shuangren", "@shuangren-card", -1, Card::MethodPindian);
-            if (jiling->hasFlag("SkipPlay"))
+            if (jiling->hasFlag("ShuangrenSkipPlay"))
                 return true;
         }
 

@@ -221,7 +221,7 @@ WeidiCard::WeidiCard() {
 
 void WeidiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     if (!room->askForUseCard(source, "@jijiang", "@weidi-jijiang"))
-        room->setPlayerFlag(source, "jijiang_failed");
+        room->setPlayerFlag(source, "JijiangFailed");
 }
 
 class WeidiViewAsSkill: public ZeroCardViewAsSkill {

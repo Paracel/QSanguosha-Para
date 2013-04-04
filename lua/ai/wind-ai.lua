@@ -356,7 +356,7 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 							if self.player:canSlash(enemy, nil, false) and not enemy:hasSkills("tuntian+zaoxian") and self:hasLoseHandcardEffective(enemy)
 								and (self.player:hasSkill("tianyi") or self:canAttack(enemy, self.player)) then
 								use.card = card
-								enemy:setFlags("GlobalFlag_HuangtianPindian")
+								enemy:setFlags("AI_HuangtianPindian")
 								if use.to then use.to:append(enemy) end
 								break
 							end
@@ -491,7 +491,7 @@ end
 
 function sgs.ai_slash_prohibit.tianxiang(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	if self:isFriend(to, from) then return false end
 	return self:cantbeHurt(to, from)
 end
@@ -515,7 +515,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
 	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:hasCrossbowEffect(yuji))) then return "noquestion" end
-	if yuji:hasFlag("guhuo_failed") and math.random(1, 6) == 1 and self:isEnemy(yuji) and self.player:getHp() >= 3
+	if yuji:hasFlag("GuhuoFailed") and math.random(1, 6) == 1 and self:isEnemy(yuji) and self.player:getHp() >= 3
 		and self.player:getHp() > self.player:getLostHp() then return "question" end
 	local players = self.room:getOtherPlayers(self.player)
 	players = sgs.QList2Table(players)

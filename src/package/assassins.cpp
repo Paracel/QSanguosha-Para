@@ -265,8 +265,10 @@ public:
             return false;
         if (!TriggerSkill::triggerable(killer) || killer->getMark("@burnheart") == 0)
             return false;
-        room->setPlayerFlag(player, "FenxinTarget");
-        if (room->askForSkillInvoke(killer, objectName(), QVariant::fromValue(player))) {
+        player->setFlags("FenxinTarget");
+        bool invoke = room->askForSkillInvoke(killer, objectName(), QVariant::fromValue(player));
+        player->setFlags("-FenxinTarget");
+        if (invoke) {
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$FenxinAnimate");
             killer->loseMark("@burnheart");
@@ -276,7 +278,6 @@ public:
             player->setRole(role1);
             room->setPlayerProperty(player, "role", role1);
         }
-        room->setPlayerFlag(player, "-FenxinTarget");
         return false;
     }
 };

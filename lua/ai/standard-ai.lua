@@ -283,7 +283,7 @@ end
 function sgs.ai_slash_prohibit.ganglie(self, from, to)
 	if self:isFriend(from, to) then return false end
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	return from:getHandcardNum() + from:getHp() < 4
 end
 
@@ -322,7 +322,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 			end
 		end
 		if isfriend and isfriend == 1 then
-			self.player:setFlags("tuxi_isfriend_" .. player:objectName())
+			self.player:setFlags("AI_TuxiToFriend_" .. player:objectName())
 		end
 		return #targets
 	end
@@ -434,7 +434,7 @@ sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 		end
 	else
 		for _, to in ipairs(tos) do
-			local intention = from:hasFlag("tuxi_isfriend_" .. to:objectName()) and -5 or 80
+			local intention = from:hasFlag("AI_TuxiToFriend_" .. to:objectName()) and -5 or 80
 			sgs.updateIntention(from, to, intention)
 		end
 	end
@@ -832,7 +832,7 @@ table.insert(sgs.ai_skills, jijiang_skill)
 jijiang_skill.getTurnUseCard = function(self)
 	local lieges = self.room:getLieges("shu", self.player)
 	if lieges:isEmpty() then return end
-	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("jijiang_failed") or not self:slashIsAvailable() then return end
+	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("JijiangFailed") or not self:slashIsAvailable() then return end
 	local card_str = "@JijiangCard=."
 	local slash = sgs.Card_Parse(card_str)
 	assert(slash)
@@ -1452,7 +1452,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	others = sgs.QList2Table(others)
 	local source
 	for _, player in ipairs(others) do
-		if player:hasFlag("slash_source") then
+		if player:hasFlag("LiuliSlashSource") then
 			source = player
 			break
 		end
@@ -1559,7 +1559,7 @@ end
 
 function sgs.ai_slash_prohibit.liuli(self, from, to, card)
 	if self:isFriend(to, from) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	if to:isNude() then return false end
 	for _, friend in ipairs(self:getFriendsNoself(from)) do
 		if to:canSlash(friend, card) and self:slashIsEffective(card, friend, from) then return true end
@@ -1672,7 +1672,7 @@ sgs.ai_skill_use_func.JieyinCard = function(card, use, self)
 			if other:isWounded() and other:isMale() then
 				if (sgs.ai_chaofeng[other:getGeneralName()] or 0) <= 2 and not self:hasSkills(sgs.masochism_skill, other) then
 					target = other
-					self.player:setFlags("jieyin_isenemy_" .. other:objectName())
+					self.player:setFlags("AI_JieyinToEnemy_" .. other:objectName())
 					break
 				end
 			end
@@ -1689,7 +1689,7 @@ end
 sgs.ai_use_priority.JieyinCard = 3.0
 
 sgs.ai_card_intention.JieyinCard = function(self, card, from, tos)
-	if not from:hasFlag("jieyin_isenemy_" .. tos[1]:objectName()) then
+	if not from:hasFlag("AI_JieyinToEnemy_" .. tos[1]:objectName()) then
 		sgs.updateIntention(from, tos[1], -80)
 	end
 end
@@ -1950,7 +1950,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 							use.to:append(lord)
 							use.to:append(ap)
 						end
-						lord:setFlags("GlobalFlag_NeedToWake")
+						lord:setFlags("AIGlobal_NeedToWake")
 						return
 					elseif self:isFriend(ap) then
 						f_target = ap
@@ -1972,7 +1972,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 						use.to:append(lord)
 						use.to:append(target)
 					end
-					lord:setFlags("GlobalFlag_NeedToWake")
+					lord:setFlags("AIGlobal_NeedToWake")
 					return
 				end
 			end

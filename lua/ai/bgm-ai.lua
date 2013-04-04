@@ -518,7 +518,7 @@ end
 local function will_invoke_shichou(self)
 	local enemynum = 0
 	local shu = 0
-	local first = self.player:hasFlag("FirstRound")
+	local first = self.player:hasFlag("Global_FirstRound")
 	local players = self.room:getOtherPlayers(self.player)
 	local shenguanyu = self.room:findPlayerBySkillName("wuhun");
 	if shenguanyu ~= nil then
@@ -884,7 +884,7 @@ end
 
 function sgs.ai_slash_prohibit.fenyong(self, from, to)
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	return to:getMark("@fenyong") > 0 and to:hasSkill("fenyong")
 end
 

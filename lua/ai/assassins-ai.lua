@@ -112,7 +112,7 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 			if not (enemy:hasSkill("manjuan") and enemy:isKongcheng()) then
 				use.card = card
 				if use.to then
-					enemy:setFlags("mizhao_target")
+					enemy:setFlags("MizhaoTarget")
 					use.to:append(enemy)
 				end
 				return
@@ -126,7 +126,7 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 		if not friend:hasSkill("manjuan") then
 			use.card = card
 			if use.to then
-				friend:setFlags("mizhao_target")
+				friend:setFlags("MizhaoTarget")
 				use.to:append(friend)
 			end
 			return
@@ -143,9 +143,9 @@ sgs.ai_skill_playerchosen.mizhao = function(self, targets)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local from
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if player:hasFlag("mizhao_target") then
+		if player:hasFlag("MizhaoTarget") then
 			from = player
-			from:setFlags("-mizhao_target")
+			from:setFlags("-MizhaoTarget")
 			break
 		end
 	end

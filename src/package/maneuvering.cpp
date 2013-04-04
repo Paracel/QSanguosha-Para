@@ -73,7 +73,7 @@ void Analeptic::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     room->setEmotion(effect.to, "analeptic");
 
-    if (effect.to->hasFlag("dying")) {
+    if (effect.to->hasFlag("Global_Dying")) {
         // recover hp
         RecoverStruct recover;
         recover.card = this;
@@ -168,7 +168,7 @@ public:
                 log.arg2 = effect.slash->objectName();
                 room->sendLog(log);
 
-                effect.to->setFlags("GlobalFlag_NonSkillNullify");
+                effect.to->setFlags("Global_NonSkillNullify");
                 return true;
             }
         } else if (event == CardEffected) {
@@ -182,7 +182,7 @@ public:
                 log.arg2 = effect.card->objectName();
                 room->sendLog(log);
 
-                effect.to->setFlags("GlobalFlag_NonSkillNullify");
+                effect.to->setFlags("Global_NonSkillNullify");
                 return true;
             }
         } else if (event == DamageInflicted) {
@@ -245,7 +245,7 @@ public:
                 if (move->from_places[i] != Player::PlaceEquip) continue;
                 const Card *card = Sanguosha->getEngineCard(move->card_ids[i]);
                 if (card->objectName() == objectName()) {
-                    room->setPlayerFlag(player, "-lion_rec");
+                    player->setFlags("-lion_rec");
                     if (player->isWounded()) {
                         room->setEmotion(player, "armor/silver_lion");
                         RecoverStruct recover;
@@ -271,7 +271,7 @@ void SilverLion::onUninstall(ServerPlayer *player) const{
     if (player->isAlive()
         && player->getMark("Qinggang_Armor_Nullified") == 0 && player->getMark("Armor_Nullified") == 0
         && player->getMark("Equips_Nullified_to_Yourself") == 0) {
-        player->getRoom()->setPlayerFlag(player, "lion_rec");
+        player->setFlags("lion_rec");
     }
 }
 

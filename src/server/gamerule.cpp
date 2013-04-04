@@ -51,7 +51,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
     Room *room = player->getRoom();
     switch(player->getPhase()) {
     case Player::PhaseNone: {
-        Q_ASSERT(false);
+            Q_ASSERT(false);
         }
     case Player::RoundStart:{
             break;
@@ -71,8 +71,8 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
         }
     case Player::Draw: {
             int num = 2;
-            if (player->hasFlag("GlobalFlag_FirstRound")) {
-                room->setPlayerFlag(player, "-GlobalFlag_FirstRound");
+            if (player->hasFlag("Global_FirstRound")) {
+                room->setPlayerFlag(player, "-Global_FirstRound");
                 if (room->getMode() == "02_1v1") num--;
             }
 
@@ -157,7 +157,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             player = room->getCurrent();
             if (room->getTag("FirstRound").toBool()) {
                 room->setTag("FirstRound", false);
-                room->setPlayerFlag(player, "GlobalFlag_FirstRound");
+                room->setPlayerFlag(player, "Global_FirstRound");
             }
 
             LogMessage log;
@@ -165,7 +165,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             room->sendLog(log);
 
             if (!player->faceUp()) {
-                room->setPlayerFlag(player, "-GlobalFlag_FirstRound");
+                room->setPlayerFlag(player, "-Global_FirstRound");
                 player->turnOver();
             } else if (player->isAlive())
                 player->play();
@@ -201,12 +201,12 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (data.canConvert<CardUseStruct>()) {
                 CardUseStruct card_use = data.value<CardUseStruct>();
                 const Card *card = card_use.card;
-                if (card_use.from->hasFlag("GlobalFlag_ForbidSurrender")) {
-                    card_use.from->setFlags("-GlobalFlag_ForbidSurrender");
+                if (card_use.from->hasFlag("Global_ForbidSurrender")) {
+                    card_use.from->setFlags("-Global_ForbidSurrender");
                     room->doNotify(card_use.from, QSanProtocol::S_COMMAND_ENABLE_SURRENDER, Json::Value(true));
                 }
-                if (card_use.from->hasFlag("jijiang_failed"))
-                    room->setPlayerFlag(card_use.from, "-jijiang_failed");
+                if (card_use.from->hasFlag("JijiangFailed"))
+                    room->setPlayerFlag(card_use.from, "-JijiangFailed");
 
                 card_use.from->broadcastSkillInvoke(card);
                 if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
@@ -409,7 +409,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (data.canConvert<CardEffectStruct>()) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
                 if (room->isCanceled(effect)) {
-                    effect.to->setFlags("GlobalFlag_NonSkillNullify");
+                    effect.to->setFlags("Global_NonSkillNullify");
                     return true;
                 }
                 if (effect.to->isAlive() || effect.card->isKindOf("Slash"))

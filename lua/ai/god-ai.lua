@@ -46,7 +46,7 @@ end
 
 function sgs.ai_slash_prohibit.wuhun(self, from, to)
 	if from:hasSkill("jueqing") then return false end
-	if from:hasFlag("nosjiefanUsed") then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
 	local damageNum = self:hasHeavySlashDamage(from, nil, to, true)
 
 	local maxfriendmark = 0

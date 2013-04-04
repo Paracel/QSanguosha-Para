@@ -24,7 +24,7 @@ sgs.ai_playerchosen_intention.gh_tuxi = function(self, from, to)
 			sgs.updateIntention(from, to, 80)
 		end
 	else
-		local intention = from:hasFlag("tuxi_isfriend_" .. to:objectName()) and -5 or 80
+		local intention = from:hasFlag("AI_TuxiToFriend_" .. to:objectName()) and -5 or 80
 		sgs.updateIntention(from, to, intention)
 	end
 end

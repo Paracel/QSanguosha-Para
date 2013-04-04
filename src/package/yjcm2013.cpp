@@ -177,7 +177,7 @@ bool QiaoshuiCard::targetFilter(const QList<const Player *> &targets, const Play
 void QiaoshuiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     bool success = source->pindian(targets.first(), "qiaoshui", this);
     if (success)
-        room->setPlayerFlag(source, "qiaoshui_success");
+        source->setFlags("QiaoshuiSuccess");
     else
         room->setPlayerCardLimitation(source, "use", "TrickCard+^DelayedTrick", true);
 }
@@ -224,11 +224,11 @@ public:
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *jianyong, QVariant &data) const{
-        if (!jianyong->hasFlag("qiaoshui_success")) return false;
+        if (!jianyong->hasFlag("QiaoshuiSuccess")) return false;
 
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isNDTrick() && !use.card->isKindOf("Nullification")) {
-            room->setPlayerFlag(jianyong, "-qiaoshui_success");
+            jianyong->setFlags("-QiaoshuiSuccess");
 
             QList<ServerPlayer *> available_targets;
             if (!use.card->isKindOf("AOE") && !use.card->isKindOf("GlobalEffect")) {

@@ -3072,8 +3072,8 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
         item = new QTableWidgetItem;
         QString handcards;
         foreach (QString flag, player->getFlagList()) {
-            if (flag.startsWith("GlobalFlag_LastHandCards:")) {
-                handcards = QString::fromUtf8(QByteArray::fromBase64(flag.mid(25).toAscii()));
+            if (flag.startsWith("Global_LastHandCards:")) {
+                handcards = QString::fromUtf8(QByteArray::fromBase64(flag.mid(21).toAscii()));
                 handcards.replace("<img src='image/system/log/spade.png' height = 12/>", tr("Spade"));
                 handcards.replace("<img src='image/system/log/heart.png' height = 12/>", tr("Heart"));
                 handcards.replace("<img src='image/system/log/club.png' height = 12/>", tr("Club"));

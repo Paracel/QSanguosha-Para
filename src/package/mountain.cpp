@@ -374,9 +374,8 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
         snatches << snatch;
         if (!snatch->isAvailable(dengai))
             continue;
-        QList<const Player *> empty_list;
         foreach (ServerPlayer *p, room->getAlivePlayers()) {
-            if (!snatch->targetFilter(empty_list, p, dengai))
+            if (!snatch->targetFilter(QList<const Player *>(), p, dengai))
                 continue;
             if (dengai->isProhibited(p, snatch))
                 continue;
@@ -414,9 +413,8 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     snatch->addSubcard(card_id);
 
     QList<ServerPlayer *> targets;
-    QList<const Player *> empty_list;
     foreach (ServerPlayer *p, room->getAlivePlayers()) {
-        if (!snatch->targetFilter(empty_list, p, dengai))
+        if (!snatch->targetFilter(QList<const Player *>(), p, dengai))
             continue;
         if (dengai->isProhibited(p, snatch))
             continue;
@@ -485,9 +483,8 @@ public:
             snatch->deleteLater();
             if (!snatch->isAvailable(player))
                 continue;
-            QList<const Player *> empty_list;
             foreach (const Player *p, player->getSiblings()) {
-                if (!snatch->targetFilter(empty_list, p, player))
+                if (!snatch->targetFilter(QList<const Player *>(), p, player))
                     continue;
                 if (player->isProhibited(p, snatch))
                     continue;

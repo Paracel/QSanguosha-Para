@@ -489,10 +489,9 @@ private:
         }
         if (!liufeng) return false;
 
-        QList<const Player *> empty_list;
         Slash *slash = new Slash(Card::SuitToBeDecided, -1);
         slash->deleteLater();
-        return slash->targetFilter(empty_list, liufeng, player);
+        return slash->targetFilter(QList<const Player *>(), liufeng, player);
     }
 };
 

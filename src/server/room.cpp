@@ -1152,7 +1152,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
 }
 
 bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims, const QString &prompt,
-                            bool distance_limit, bool disable_extra, bool addHistory) {
+                            bool distance_limit, bool disable_extra, bool addHistory, const QString &pattern) {
     Q_ASSERT(!victims.isEmpty());
 
     //The realization of this function in the Slash::onUse and Slash::targetFilter.
@@ -1172,13 +1172,13 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
 
     do {
         setPlayerFlag(slasher, "-GuhuoFailed");
-        use = askForUseCard(slasher, "slash", prompt, -1, Card::MethodUse, addHistory);
+        use = askForUseCard(slasher, pattern, prompt, -1, Card::MethodUse, addHistory);
     } while (slasher->hasFlag("GuhuoFailed"));
 
     if (slasher->hasFlag("JijiangFailed")) {
         do {
             setPlayerFlag(slasher, "-GuhuoFailed");
-            use = askForUseCard(slasher, "slash", prompt, -1, Card::MethodUse, addHistory);
+            use = askForUseCard(slasher, pattern, prompt, -1, Card::MethodUse, addHistory);
         } while(slasher->hasFlag("GuhuoFailed"));
         setPlayerFlag(slasher, "-JijiangFailed");
     }
@@ -1198,11 +1198,11 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
 }
 
 bool Room::askForUseSlashTo(ServerPlayer *slasher, ServerPlayer *victim, const QString &prompt,
-                            bool distance_limit, bool disable_extra, bool addHistory) {
+                            bool distance_limit, bool disable_extra, bool addHistory, const QString &pattern) {
     Q_ASSERT(victim != NULL);
     QList<ServerPlayer *> victims;
     victims << victim;
-    return askForUseSlashTo(slasher, victims, prompt, distance_limit, disable_extra);
+    return askForUseSlashTo(slasher, victims, prompt, distance_limit, disable_extra, addHistory, pattern);
 }
 
 int Room::askForAG(ServerPlayer *player, const QList<int> &card_ids, bool refusable, const QString &reason) {

@@ -12,6 +12,7 @@ sgs.ai_skill_choice.moukui = function(self, choices, data)
 end
 
 sgs.ai_skill_invoke.tianming = function(self, data)
+	self.tianming_discard = nil
 	if self:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
 	if self.player:hasArmorEffect("eight_diagram") and self.player:getCardCount(true) == 2 then return false end
 	if self:getCardsNum("Jink") == 0 or self.player:isNude() then return true end
@@ -69,72 +70,18 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 	end
 
 	if #unpreferedCards >= 2 or #unpreferedCards == #cards then
+		self.tianming_discard = unpreferedCards
 		return true
 	end
 end
 
 sgs.ai_skill_discard.tianming = function(self, discard_num, min_num, optional, include_equip)
-	local unpreferedCards = {}
-	local cards = sgs.QList2Table(self.player:getHandcards())
-
-	local zcards = self.player:getCards("he")
-	for _, zcard in sgs.qlist(zcards) do
-		if not isCard("Peach", zcard, self.player) then
-			table.insert(unpreferedCards, zcard:getId())
-		end
+	local discard = self.tianming_discard
+	if discard and #discard >= 2 then
+		return { discard[1], discard[2] }
+	else
+		return self:askForDiscard("dummyreason", 2, 2, false, true)
 	end
-
-	if #unpreferedCards == 0 then
-		if self:getCardsNum("Slash") > 1 then
-			self:sortByKeepValue(cards)
-			for _, card in ipairs(cards) do
-				if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
-			end
-			table.remove(unpreferedCards, 1)
-		end
-
-		local num = self:getCardsNum("Jink") - 1
-		if self.player:getArmor() then num = num + 1 end
-		if num > 0 then
-			for _, card in ipairs(cards) do
-				if card:isKindOf("Jink") and num > 0 then
-					table.insert(unpreferedCards, card:getId())
-					num = num - 1
-				end
-			end
-		end
-		for _, card in ipairs(cards) do
-			if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse")
-				or self:getSameEquip(card, self.player) or	card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
-				table.insert(unpreferedCards, card:getId())
-			end
-		end
-
-		if self.player:getWeapon() and self.player:getHandcardNum() < 3 then
-			table.insert(unpreferedCards, self.player:getWeapon():getId())
-		end
-
-		if self:needToThrowArmor() then
-			table.insert(unpreferedCards, self.player:getArmor():getId())
-		end
-
-		if self.player:getOffensiveHorse() and self.player:getWeapon() then
-			table.insert(unpreferedCards, self.player:getOffensiveHorse():getId())
-		end
-	end
-
-	for index = #unpreferedCards, 1, -1 do
-		if self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.remove(unpreferedCards, index) end
-	end
-
-	local to_discard = {}
-	local count = 0
-	for index = #unpreferedCards, 1, -1 do
-		table.insert(to_discard, unpreferedCards[index])
-		count = count + 1
-		if count == 2 then return to_discard end
-	end
-	return to_discard
 end
 
 local mizhao_skill = {}
@@ -157,31 +104,61 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 	local trash = self:getCard("Disaster") or self:getCard("GodSalvation") or self:getCard("AmazingGrace")
 	local count = 0
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:isKongcheng() then count = count + 1 end
+		if not enemy:isKongcheng() then count = count + 1 end
 	end
-	if handcardnum == 1 and trash and #self.enemies - count >= 2 and #self.friends_noself == 0 then
-		self:sort(self.enemies, "hp")
-		use.card = card
-		if use.to then use.to:append(self.enemies[1]) end
-		return
+	if handcardnum == 1 and trash and count >= 1 and #self.enemies > 1 then
+		self:sort(self.enemies, "handcard")
+		for _, enemy in ipairs(self.enemies) do
+			if not (enemy:hasSkill("manjuan") and enemy:isKongcheng()) then
+				use.card = card
+				if use.to then
+					enemy:setFlags("mizhao_target")
+					use.to:append(enemy)
+				end
+				return
+			end
+		end
 	end
-	self:sort(self.friends_noself, "hp")
+	self:sort(self.friends_noself, "defense")
+	self.friends_noself = sgs.reverse(self.friends_noself)
+	if count < 1 then return end
 	for _, friend in ipairs(self.friends_noself) do
 		if not friend:hasSkill("manjuan") then
 			use.card = card
-			if use.to then use.to:append(friend) end
+			if use.to then
+				friend:setFlags("mizhao_target")
+				use.to:append(friend)
+			end
 			return
 		end
 	end
 end
 
 sgs.ai_use_priority.MizhaoCard = 1.5
-sgs.ai_card_intention.MizhaoCard = -20
+sgs.ai_card_intention.MizhaoCard = 0
+sgs.ai_playerchosen_intention.mizhao = 10
 
 sgs.ai_skill_playerchosen.mizhao = function(self, targets)
-	self:sort(self.enemies, "hp")
-	for _, enemy in ipairs(self.enemies) do
-		if targets:contains(enemy) then return enemy end
+	self:sort(self.enemies, "defense")
+	local slash = sgs.Sanguosha:cloneCard("slash")
+	local from
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if player:hasFlag("mizhao_target") then
+			from = player
+			from:setFlags("-mizhao_target")
+			break
+		end
+	end
+	for _, to in ipairs(self.enemies) do
+		if targets:contains(to) and self:slashIsEffective(slash, to, nil, from) and not self:getDamagedEffects(to, from, true)
+			and not self:needToLoseHp(to, from, true) and not self:findLeijiTarget(to, 50, from) then
+			return to
+		end
+	end
+	for _, to in ipairs(self.enemies) do
+		if targets:contains(to) then
+			return to
+		end
 	end
 end
 

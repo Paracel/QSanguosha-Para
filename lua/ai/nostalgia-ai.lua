@@ -113,7 +113,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 	end
 
 	if self:getOverflow() > 0 then
-		local discard = self:askForDiscard("dummyreason", math.min(self:getOverflow(), 3))
+		local discard = self:askForDiscard("dummyreason", math.min(self:getOverflow(), 3), nil, false, true)
 		to = self:findPlayerToDraw(false, math.min(self:getOverflow(), 3))
 		if not to then return end
 		use.card = sgs.Card_Parse("@NosJujianCard=" .. table.concat(discard, "+"))

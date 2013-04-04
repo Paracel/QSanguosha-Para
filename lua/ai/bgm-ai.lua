@@ -9,7 +9,7 @@ end
 
 sgs.ai_choicemade_filter.cardChosen.chongzhen = function(self, player, promptlist)
 	local target
-	for _, p in sgs.qlist(self.room:getOtherPlayers(player) do
+	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if p:hasFlag("ChongzhenTarget") then
 			target = p
 			break

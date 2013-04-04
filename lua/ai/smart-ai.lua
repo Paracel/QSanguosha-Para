@@ -2395,7 +2395,7 @@ function SmartAI:askForAG(card_ids, refusable, reason)
 	end
 	for _, card in ipairs(cards) do
 		if card:isKindOf("Indulgence") and not (self:isWeak() and self:getCardsNum("Jink") == 0) then return card:getEffectiveId() end
-		if card:isKindOf("AOE") and not (self:isWeak() and self:getCardsNum("Jink", self.player) == 0) then return card:getEffectiveId() end
+		if card:isKindOf("AOE") and not (self:isWeak() and self:getCardsNum("Jink") == 0) then return card:getEffectiveId() end
 	end
 	self:sortByCardNeed(cards)
 	return cards[#cards]:getEffectiveId()
@@ -3461,6 +3461,7 @@ function SmartAI:getCards(class_name, player, flag)
 end
 
 function getCardsNum(class_name, player)
+	if not player then global_room:writeToConsole(debug.traceback()) end
 	local cards = sgs.QList2Table(player:getHandcards())
 	local num = 0
 	local shownum = 0

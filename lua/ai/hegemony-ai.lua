@@ -42,10 +42,8 @@ sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(self, player, prom
 		local current = self.room:getCurrent()
 		if not current then return end
 		local intention = 50
-		if (current:hasArmorEffect("silver_lion") and current:isWounded() and self:isWeak(current))
-			or (current:getArmor() and current:hasSkills("bazhen|yizhong")) then
-			intention = -30
-		end
+		if self:hasSkills(sgs.lose_equip_skill, current) and current:getCards("e"):length() > 0 then return end
+		if self:needToThrowArmor(current) then return end
 		sgs.updateIntention(player, current, intention)
 	end
 end

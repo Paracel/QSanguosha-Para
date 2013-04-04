@@ -149,10 +149,12 @@ sgs.ai_skill_playerchosen.mizhao = function(self, targets)
 			break
 		end
 	end
-	for _, to in ipairs(self.enemies) do
-		if targets:contains(to) and self:slashIsEffective(slash, to, nil, from) and not self:getDamagedEffects(to, from, true)
-			and not self:needToLoseHp(to, from, true) and not self:findLeijiTarget(to, 50, from) then
-			return to
+	if from then
+		for _, to in ipairs(self.enemies) do
+			if targets:contains(to) and self:slashIsEffective(slash, to, nil, from) and not self:getDamagedEffects(to, from, true)
+				and not self:needToLoseHp(to, from, true) and not self:findLeijiTarget(to, 50, from) then
+				return to
+			end
 		end
 	end
 	for _, to in ipairs(self.enemies) do

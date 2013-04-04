@@ -1590,11 +1590,8 @@ function SmartAI:filterEvent(event, player, data)
 		sgs.ai_leiji_effect = {}
 		if card:isKindOf("Slash") then
 			for _, t in ipairs(to) do
-				if t:hasSkill("leiji")
-					and (getCardsNum("Jink", t) > 0 or self:hasEightDiagramEffect(t)) then
-					if not (t:isLord() and not self:hasExplicitRebel()) and not (from and from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play) then
-						table.insert(sgs.ai_leiji_effect, t)
-					end
+				if self:findLeijiTarget(t, 50, from) then
+					table.insert(sgs.ai_leiji_effect, t)
 				end
 			end
 		end

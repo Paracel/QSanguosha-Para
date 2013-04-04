@@ -209,7 +209,7 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 			and (player:getHandcardNum() >= slasher:getHp() or player:getHandcardNum() <= slasher:getAttackRange()) then
 			return nil
 		end
-		if not self:hasSuit("spade", true, player) then return nil end
+		if not self:hasSuit("spade", true, player) and player:getHandcardNum() < 3 then return nil end
 		if not (getKnownCard(player, "Jink", true) > 0 or getCardsNum("Jink", player) >= 1
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
 			return nil

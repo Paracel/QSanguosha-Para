@@ -563,12 +563,14 @@ end
 sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local targetlist = sgs.QList2Table(targets)
-	local arrBestHp, canAvoidSlash = {}, {}
+	local arrBestHp, canAvoidSlash, forbidden = {}, {}, {}
 	self:sort(targetlist, "defenseSlash")
 	for _, target in ipairs(targetlist) do
 		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.isGoodTarget(target, targetlist, self) then
 			if self:slashIsEffective(slash, target) then
-				if self:needToLoseHp(target, self.player, true, true) then
+				if self:getDamagedEffects(target, self.player, true) or self:findLeijiTarget(target, 50, self.player) then
+					table.insert(forbidden, target)
+				elseif self:needToLoseHp(target, self.player, true) then
 					table.insert(arrBestHp, target)
 				else
 					return target
@@ -581,7 +583,8 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	for _, target in ipairs(targetlist) do
 		if not self:slashProhibit(slash, target) then
 			if self:slashIsEffective(slash, target) then
-				if self:isFriend(target) and (self:needToLoseHp(target, self.player, true) or self:getDamagedEffects(target, self.player, true)) then
+				if self:isFriend(target) and (self:needToLoseHp(target, self.player, true) or self:getDamagedEffects(target, self.player, true))
+					or self:findLeijiTarget(target, 50, self.player) then
 					return target
 				end
 			else
@@ -595,7 +598,7 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 	self:sort(targetlist, "defenseSlash")
 	targetlist = sgs.reverse(targetlist)
 	for _, target in ipairs(targetlist) do
-		if target:objectName() ~= self.player:objectName() and not self:isFriend(target) then
+		if target:objectName() ~= self.player:objectName() and not self:isFriend(target) and not table.contains(forbidden, target) then
 			return target
 		end
 	end
@@ -629,6 +632,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	--if not target then self.room:writeToConsole(debug.traceback()) end
 	if not target then return end
 	if self:isFriend(target) then
+		if self:findLeijiTarget(self.player, 50, target) then return end
 		if not target:hasSkill("jueqing") then
 			if target:hasSkill("rende") and self.player:hasSkill("jieming") then return "." end
 			if target:hasSkill("pojun") and not self.player:faceUp() then return "." end

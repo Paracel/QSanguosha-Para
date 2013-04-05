@@ -1060,20 +1060,29 @@ end
 local function need_huangen(self, who)
 	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
 	if card == nil then return false end
+	local from = self.room:getCurrent()
 	if self:isEnemy(who) then
-		if card:isKindOf("GodSalvation") and who:isWounded() and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive
-			and self:hasTrickEffective(card, who) then
-			return true
-		end
-		if card:isKindOf("GodSalvation") and who:isWounded() and self:isWeak(who) and self:hasTrickEffective(card, who) then
-			return true
+		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who, from) then
+			if who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then return true end
+			if self:isWeak(who) then return true end
+			if self:hasSkills(sgs.masochism_skill, who) then return true end
 		end
 		return false
 	elseif self:isFriend(who) then
-		if self:hasSkills("noswuyan", who) and self.room:getCurrent():objectName() ~= who:objectName() then return true end
-		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who) then return false end
-		if card:isKindOf("IronChain") and who:isChained() and self:hasTrickEffective(card, who) then return false end
-		if card:isKindOf("AmazingGrace") then return not self:hasTrickEffective(card, who) end
+		if self:hasSkills("noswuyan", who) and from:objectName() ~= who:objectName() then return true end
+		if card:isKindOf("GodSalvation") and not who:isWounded() then
+			if who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then return false end
+			if self:needKongcheng(who, true) then return false end
+			return true
+		end
+		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who, from) then
+			if who:getHp() > getBestHp(who) and not self:needKongcheng(who, true) then return true end
+			return false
+		end
+		if card:isKindOf("IronChain") and (self:needKongcheng(who, true) or (who:isChained() and self:hasTrickEffective(card, who, from))) then
+			return false
+		end
+		if card:isKindOf("AmazingGrace") then return not self:hasTrickEffective(card, who, from) end
 		return true
 	end
 end
@@ -1140,6 +1149,7 @@ sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)
 	for _, to in ipairs(tos) do
 		local intention = -80
 		if cardx:isKindOf("GodSalvation") and to:isWounded() and ((to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive) or self:isWeak(to)) then intention = 50 end
+		if self:needKongcheng(to, true) then intention = 0 end
 		sgs.updateIntention(from, to, intention)
 	end
 end

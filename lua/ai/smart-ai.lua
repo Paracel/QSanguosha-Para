@@ -4184,7 +4184,27 @@ function SmartAI:useTrickCard(card, use)
 	end
 	if self:needRende() then return end
 	if card:isKindOf("AOE") then
-		if self:hasSkills("wuyan|noswuyan") then return end
+		local others = self.room:getOtherPlayers(self.player)
+		others = sgs.QList2Table(others)
+		local avail = #others
+		local avail_friends = 0
+		for _, other in ipairs(others) do
+			if self.room:isProhibited(self.player, other, card) then
+				avail = avail - 1
+			elseif self:isFriend(other) then
+				avail_friends = avail_friends + 1
+			end
+		end
+		if avail < 1 then return end
+
+		local menghuo = nil
+		if card:isKindOf("SavageAssault") then menghuo = self.room:findPlayerBySkillName("huoshou") end
+		if self.player:hasSkill("noswuyan")
+			or (self.player:hasSkill("wuyan")
+				and not (menghuo and (not menghuo:hasSkill("wuyan") or menghuo:hasSkill("jueqing")) and avail > 1)
+				and not self.player:hasSkill("jueqing")) then
+			if self.player:hasSkill("huangen") and self.player:getHp() > 0 and avail > 1 and avail_friends > 0 then use.card = card else return end
+		end
 
 		local mode = global_room:getMode()
 		if mode:find("p") and mode >= "04p" then
@@ -4193,15 +4213,6 @@ function SmartAI:useTrickCard(card, use)
 			if self.role == "rebel" and sgs.turncount < 2 and card:isKindOf("SavageAssault") then return end
 		end
 
-		local others = self.room:getOtherPlayers(self.player)
-		others = sgs.QList2Table(others)
-		local aval = #others
-		for _, other in ipairs(others) do
-			if self.room:isProhibited(self.player, other, card) then
-				aval = aval - 1
-			end
-		end
-		if aval < 1 then return end
 		local good = self:getAoeValue(card)
 		if good > 0 then
 			use.card = card
@@ -4672,8 +4683,8 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 		if from:hasWeapon("ice_sword") and to:getCards("he"):length() > 1 and not self:isFriend(from, to) then
 			return false
 		end
+		if self:hasHeavySlashDamage(from) then return false end
 	end
-	if self:hasHeavySlashDamage(from) then return false end
 	if from:hasSkill("jueqing") and self:hasSkills(sgs.masochism_skill, to) then return false end
 
 	local n = getBestHp(to)

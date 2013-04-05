@@ -274,8 +274,7 @@ public:
             killer->loseMark("@burnheart");
             QString role1 = killer->getRole();
             killer->setRole(player->getRole());
-            room->setPlayerProperty(killer, "role", player->getRole());
-            player->setRole(role1);
+            room->notifyProperty(killer, killer, "role", player->getRole());
             room->setPlayerProperty(player, "role", role1);
         }
         return false;

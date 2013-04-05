@@ -85,7 +85,6 @@
     <addaction name="actionDamage_maker"/>
     <addaction name="actionDeath_note"/>
     <addaction name="actionRevive_wand"/>
-    <addaction name="actionSend_lowlevel_command"/>
     <addaction name="actionExecute_script_at_server_side"/>
    </widget>
    <addaction name="menuGame"/>

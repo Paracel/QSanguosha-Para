@@ -286,7 +286,8 @@ void Client::processServerPacket(const char *cmd) {
                 processServerRequest(packet);
         }
     }
-    else processObsoleteServerPacket(cmd);
+    else
+        processObsoleteServerPacket(cmd);
 }
 
 bool Client::processServerRequest(const QSanGeneralPacket &packet) {
@@ -313,20 +314,11 @@ void Client::processObsoleteServerPacket(const QString &cmd) {
     QStringList args = cmd.trimmed().split(" ");
     QString method = args[0];
 
-    if (replayer && (method.startsWith("askFor") || method.startsWith("do") || method == "activate"))
-        return;
-
-    static QSet<QString> deprecated;
-    if (deprecated.isEmpty()) {
-        deprecated << "increaseSlashCount" // replaced by addHistory
-                   << "addProhibitSkill"; // add all prohibit skill at game start
-    }
-
     Callback callback = callbacks.value(method, NULL);
     if (callback) {
         QString arg_str = args[1];
         (this->*callback)(arg_str);
-    } else if (!deprecated.contains(method))
+    } else
         QMessageBox::information(NULL, tr("Warning"), tr("No such invokable method named \"%1\"").arg(method));
 
 }

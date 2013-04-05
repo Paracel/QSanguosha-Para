@@ -289,7 +289,6 @@ void MainWindow::enterRoom() {
         connect(ui->actionDeath_note, SIGNAL(triggered()), room_scene, SLOT(makeKilling()));
         connect(ui->actionDamage_maker, SIGNAL(triggered()), room_scene, SLOT(makeDamage()));
         connect(ui->actionRevive_wand, SIGNAL(triggered()), room_scene, SLOT(makeReviving()));
-        connect(ui->actionSend_lowlevel_command, SIGNAL(triggered()), this, SLOT(sendLowLevelCommand()));
         connect(ui->actionExecute_script_at_server_side, SIGNAL(triggered()), room_scene, SLOT(doScript()));
     } else {
         ui->menuCheat->setEnabled(false);
@@ -785,12 +784,6 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     rec_dialog->setLayout(layout);
 
     rec_dialog->exec();
-}
-
-void MainWindow::sendLowLevelCommand() {
-    QString command = QInputDialog::getText(this, tr("Send low level command"), tr("Please input the raw low level command"));
-    if (!command.isEmpty())
-        ClientInstance->request(command);
 }
 
 void MainWindow::on_actionView_ban_list_triggered() {

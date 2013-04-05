@@ -373,8 +373,6 @@ public:
 };
 
 ShuangrenCard::ShuangrenCard() {
-    will_throw = false;
-    handling_method = Card::MethodPindian;
 }
 
 bool ShuangrenCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -383,7 +381,7 @@ bool ShuangrenCard::targetFilter(const QList<const Player *> &targets, const Pla
 
 void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-    bool success = effect.from->pindian(effect.to, "shuangren", this);
+    bool success = effect.from->pindian(effect.to, "shuangren", NULL);
     if (success) {
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *target, room->getAlivePlayers()) {
@@ -404,9 +402,9 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
     }
 }
 
-class ShuangrenViewAsSkill: public OneCardViewAsSkill {
+class ShuangrenViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    ShuangrenViewAsSkill(): OneCardViewAsSkill("shuangren") {
+    ShuangrenViewAsSkill(): ZeroCardViewAsSkill("shuangren") {
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -417,14 +415,8 @@ public:
         return  pattern == "@@shuangren";
     }
 
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const Card *originalcard) const{
-        Card *card = new ShuangrenCard;
-        card->addSubcard(originalcard);
-        return card;
+    virtual const Card *viewAs() const{
+        return new ShuangrenCard;
     }
 };
 
@@ -447,7 +439,7 @@ public:
             }
 
             if (can_invoke)
-                room->askForUseCard(jiling, "@@shuangren", "@shuangren-card", -1, Card::MethodPindian);
+                room->askForUseCard(jiling, "@@shuangren", "@shuangren-card");
             if (jiling->hasFlag("ShuangrenSkipPlay"))
                 return true;
         }

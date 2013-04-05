@@ -497,8 +497,6 @@ public:
 };
 
 XianzhenCard::XianzhenCard() {
-    will_throw = false;
-    handling_method = Card::MethodPindian;
 }
 
 bool XianzhenCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -507,8 +505,7 @@ bool XianzhenCard::targetFilter(const QList<const Player *> &targets, const Play
 
 void XianzhenCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-    const Card *card = Sanguosha->getCard(subcards.first());
-    if (effect.from->pindian(effect.to, "xianzhen", card)) {
+    if (effect.from->pindian(effect.to, "xianzhen", NULL)) {
         PlayerStar target = effect.to;
         effect.from->tag["XianzhenTarget"] = QVariant::fromValue(target);
         room->setPlayerFlag(effect.from, "XianzhenSuccess");
@@ -535,9 +532,9 @@ void XianzhenSlashCard::onUse(Room *room, const CardUseStruct &card_use) const{
     room->askForUseSlashTo(card_use.from, target, "@xianzhen-slash");
 }
 
-class XianzhenViewAsSkill: public ViewAsSkill {
+class XianzhenViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    XianzhenViewAsSkill(): ViewAsSkill("xianzhen") {
+    XianzhenViewAsSkill(): ZeroCardViewAsSkill("xianzhen") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -551,31 +548,12 @@ public:
         return false;
     }
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
-        if (!selected.isEmpty())
-            return false;
-
-        if (Self->hasUsed("XianzhenCard"))
-            return false;
-
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (!Self->hasUsed("XianzhenCard")) {
-            if (cards.length() != 1)
-                return NULL;
-
-            XianzhenCard *card = new XianzhenCard;
-            card->addSubcards(cards);
-
-            return card;
-        } else if (Self->hasFlag("XianzhenSuccess")) {
-            if (!cards.isEmpty())
-                return NULL;
-
+    virtual const Card *viewAs() const{
+        if (!Self->hasUsed("XianzhenCard"))
+            return new XianzhenCard;
+        else if (Self->hasFlag("XianzhenSuccess"))
             return new XianzhenSlashCard;
-        } else
+        else
             return NULL;
     }
 };

@@ -8,8 +8,6 @@
 
 QuhuCard::QuhuCard() {
     mute = true;
-    will_throw = false;
-    handling_method = Card::MethodPindian;
 }
 
 bool QuhuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -21,7 +19,7 @@ void QuhuCard::use(Room *room, ServerPlayer *xunyu, QList<ServerPlayer *> &targe
 
     room->broadcastSkillInvoke("quhu", 1);
 
-    bool success = xunyu->pindian(tiger, "quhu", this);
+    bool success = xunyu->pindian(tiger, "quhu", NULL);
     if (success) {
         room->broadcastSkillInvoke("quhu", 2);
 
@@ -69,23 +67,17 @@ public:
     }
 };
 
-class Quhu: public OneCardViewAsSkill {
+class Quhu: public ZeroCardViewAsSkill {
 public:
-    Quhu(): OneCardViewAsSkill("quhu") {
+    Quhu(): ZeroCardViewAsSkill("quhu") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("QuhuCard") && !player->isKongcheng();
     }
 
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        QuhuCard *card = new QuhuCard;
-        card->addSubcard(originalCard);
-        return card;
+    virtual const Card *viewAs() const{
+        return new QuhuCard;
     }
 };
 
@@ -437,8 +429,6 @@ public:
 };
 
 TianyiCard::TianyiCard() {
-    will_throw = false;
-    handling_method = Card::MethodPindian;
 }
 
 bool TianyiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -446,30 +436,24 @@ bool TianyiCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void TianyiCard::use(Room *room, ServerPlayer *taishici, QList<ServerPlayer *> &targets) const{
-    bool success = taishici->pindian(targets.first(), "tianyi", this);
+    bool success = taishici->pindian(targets.first(), "tianyi", NULL);
     if (success)
         room->setPlayerFlag(taishici, "TianyiSuccess");
     else
         room->setPlayerCardLimitation(taishici, "use", "Slash", true);
 }
 
-class TianyiViewAsSkill: public OneCardViewAsSkill {
+class TianyiViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    TianyiViewAsSkill(): OneCardViewAsSkill("tianyi") {
+    TianyiViewAsSkill(): ZeroCardViewAsSkill("tianyi") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("TianyiCard") && !player->isKongcheng();
     }
 
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new TianyiCard;
-        card->addSubcard(originalCard);
-        return card;
+    virtual const Card *viewAs() const{
+        return new TianyiCard;
     }
 };
 

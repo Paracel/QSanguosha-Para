@@ -487,11 +487,12 @@ sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
 	return sgs.Sanguosha:getCard(self:askForCardChosen(who, flags, "dummy"))
 end
 
-sgs.ai_skill_use["@@nosquanji"] = function(self, prompt)
+sgs.ai_skill_invoke.nosquanji = function(self, data)
 	local current = self.room:getCurrent()
 	if self:isFriend(current) then
 		if current:hasSkill("zhiji") and not current:hasSkill("guanxing") and current:getHandcardNum() == 1 then
-			return "@NosQuanjiCard=" .. self:getMinCard(self.player):getId() .. "->."
+			self.nosquanji_card = self:getMinCard(self.player):getId()
+			return true
 		end
 
 	elseif self:isEnemy(current) then
@@ -507,11 +508,23 @@ sgs.ai_skill_use["@@nosquanji"] = function(self, prompt)
 		if self:isWeak(current) and self.player:getHandcardNum() > 1 and current:getCards("j"):isEmpty() then invoke = true end
 
 		if invoke and self:getMaxCard(self.player):getNumber() > 7 then
-			return "@NosQuanjiCard=" .. self:getMaxCard(self.player):getId() .. "->."
+			self.nosquanji_card = self:getMaxCard(self.player):getId()
+			return true
 		end
 	end
 
-	return "."
+	return false
+end
+
+function sgs.ai_skill_pindian.nosquanji(minusecard, self, requestor, maxcard)
+	if self.player:objectName() == requestor:objectName() then
+		if self.nosquanji_card then
+			return self.nosquanji_card
+		else
+			self.room:writeToConsole("Pindian card not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
 end
 
 sgs.ai_skill_invoke.nosyexin = function(self, data)

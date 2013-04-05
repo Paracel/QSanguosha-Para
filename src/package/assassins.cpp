@@ -125,7 +125,9 @@ void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
 
     if (!targets.isEmpty()) {
         ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "mizhao", "@mizhao-pindian:" + effect.to->objectName());
+        target->setFlags("MizhaoPindianTarget");
         effect.to->pindian(target, "mizhao", NULL);
+        target->setFlags("-MizhaoPindianTarget");
     }
 }
 

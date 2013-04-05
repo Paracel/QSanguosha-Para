@@ -1111,6 +1111,7 @@ public:
     bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const char *skill_name = NULL,
                     bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1);
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const char *reason);
+    QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const char *reason,
                                      const char *prompt = NULL, bool optional = false, bool notify_skill = false);
     QString askForGeneral(ServerPlayer *player, const QStringList &generals, char *default_choice = NULL);

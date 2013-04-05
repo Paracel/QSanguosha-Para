@@ -709,52 +709,10 @@ public:
     }
 };
 
-NosQuanjiCard::NosQuanjiCard() {
-    target_fixed = true;
-    will_throw = false;
-    handling_method = Card::MethodPindian;
-}
-
-void NosQuanjiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    ServerPlayer *target = room->getTag("QuanjiTarget").value<PlayerStar>();
-    room->cardEffect(this, source, target);
-}
-
-void NosQuanjiCard::onEffect(const CardEffectStruct &effect) const{
-    if (effect.from->pindian(effect.to, "nosquanji", Sanguosha->getCard(this->getSubcards().first())))
-        effect.from->setFlags("quanji_win");
-}
-
-class NosQuanjiViewAsSkill: public OneCardViewAsSkill {
-public:
-    NosQuanjiViewAsSkill(): OneCardViewAsSkill("nosquanji") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@nosquanji";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new NosQuanjiCard;
-        card->addSubcard(originalCard);
-
-        return card;
-    }
-};
-
 class NosQuanji: public TriggerSkill {
 public:
     NosQuanji(): TriggerSkill("nosquanji") {
         events << EventPhaseStart;
-        view_as_skill = new NosQuanjiViewAsSkill;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -766,31 +724,26 @@ public:
             return false;
 
         bool skip = false;
-        room->setTag("QuanjiTarget", QVariant::fromValue((PlayerStar)player));
         foreach (ServerPlayer *zhonghui, room->findPlayersBySkillName(objectName())) {
             if (zhonghui == player || zhonghui->isKongcheng()
                 || zhonghui->getMark("nosbaijiang") > 0 || player->isKongcheng())
                 continue;
 
-            if (room->askForUseCard(zhonghui, "@@nosquanji", "@quanji-pindian", -1, Card::MethodPindian)
-                && zhonghui->hasFlag("quanji_win")) {
-                zhonghui->setFlags("-quanji_win");
-                if (!skip) {
-                    room->broadcastSkillInvoke(objectName(), 2);
-                    player->skip(Player::Start);
-                    player->skip(Player::Judge);
-                    skip = true;
-                } else {
-                    room->broadcastSkillInvoke(objectName(), 3);
+            if (room->askForSkillInvoke(zhonghui, "nosquanji")) {
+                room->broadcastSkillInvoke(objectName(), 1);
+                if (zhonghui->pindian(player, objectName(), NULL)) {
+                    if (!skip) {
+                        room->broadcastSkillInvoke(objectName(), 2);
+                        player->skip(Player::Start);
+                        player->skip(Player::Judge);
+                        skip = true;
+                    } else {
+                        room->broadcastSkillInvoke(objectName(), 3);
+                    }
                 }
             }
         }
-        room->removeTag("QuanjiTarget");
         return skip;
-    }
-
-    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
-        return 1;
     }
 };
 
@@ -1108,7 +1061,6 @@ NostalGeneralPackage::NostalGeneralPackage()
     nos_shencaocao->addSkill("feiying");
 
     addMetaObject<NosFanjianCard>();
-    addMetaObject<NosQuanjiCard>();
     addMetaObject<NosYexinCard>();
 
     skills << new NosYexin << new NosYexinClear << new FakeMoveSkill("nosyexin") << new NosPaiyi;

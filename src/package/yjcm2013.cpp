@@ -166,8 +166,6 @@ void ExtraCollateralCard::onUse(Room *, const CardUseStruct &card_use) const{
 }
 
 QiaoshuiCard::QiaoshuiCard() {
-    will_throw = false;
-    handling_method = Card::MethodPindian;
 }
 
 bool QiaoshuiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -175,16 +173,16 @@ bool QiaoshuiCard::targetFilter(const QList<const Player *> &targets, const Play
 }
 
 void QiaoshuiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    bool success = source->pindian(targets.first(), "qiaoshui", this);
+    bool success = source->pindian(targets.first(), "qiaoshui", NULL);
     if (success)
         source->setFlags("QiaoshuiSuccess");
     else
         room->setPlayerCardLimitation(source, "use", "TrickCard+^DelayedTrick", true);
 }
 
-class QiaoshuiViewAsSkill: public ViewAsSkill {
+class QiaoshuiViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    QiaoshuiViewAsSkill(): ViewAsSkill("qiaoshui") {
+    QiaoshuiViewAsSkill(): ZeroCardViewAsSkill("qiaoshui") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -195,24 +193,12 @@ public:
         return pattern == "@@qiaoshui!";
     }
 
-    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+    virtual const Card *viewAs() const{
         QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
         if (pattern == "@@qiaoshui!")
-            return false;
-        else
-            return selected.isEmpty() && !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-        if (pattern == "@@qiaoshui!") {
             return new ExtraCollateralCard;
-        } else {
-            if (cards.length() != 1) return NULL;
-            Card *card = new QiaoshuiCard;
-            card->addSubcard(cards.first());
-            return card;
-        }
+        else
+            return new QiaoshuiCard;
     }
 };
 

@@ -4387,6 +4387,74 @@ const Card *Room::askForPindian(ServerPlayer *player, ServerPlayer *from, Server
     }
 }
 
+QList<const Card *> Room::askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason) {
+    if (!from->isAlive() || !to->isAlive())
+        return QList<const Card *>() << NULL << NULL;
+    Q_ASSERT(!from->isKongcheng() && !to->isKongcheng());
+    while (isPaused()) {}
+    Countdown countdown;
+    countdown.m_max = ServerInfo.getCommandTimeout(S_COMMAND_PINDIAN, S_CLIENT_INSTANCE);
+    countdown.m_type = Countdown::S_COUNTDOWN_USE_SPECIFIED;
+    notifyMoveFocus(QList<ServerPlayer *>() << from << to, S_COMMAND_PINDIAN, countdown);
+
+    const Card *from_card = NULL, *to_card = NULL;
+
+    if (from->getHandcardNum() == 1)
+        from_card = from->getHandcards().first();
+    if (to->getHandcardNum() == 1)
+        to_card = to->getHandcards().first();
+
+    AI *ai;
+    if (!from_card) {
+        ai = from->getAI();
+        if (ai)
+            from_card = ai->askForPindian(from, reason);
+    }
+    if (!to_card) {
+        ai = to->getAI();
+        if (ai)
+            to_card = ai->askForPindian(from, reason);
+    }
+    if (from_card && to_card) {
+        thread->delay();
+        return QList<const Card *>() << from_card << to_card;
+    }
+
+    QList<ServerPlayer *> players;
+    if (!from_card) {
+        from->m_commandArgs = toJsonArray(from->objectName(), to->objectName());
+        players << from;
+    }
+    if (!to_card) {
+        to->m_commandArgs = toJsonArray(from->objectName(), to->objectName());
+        players << to;
+    }
+
+    doBroadcastRequest(players, S_COMMAND_PINDIAN);
+
+    foreach (ServerPlayer *player, players) {
+        const Card *c = NULL;
+        Json::Value clientReply = player->getClientReply();
+        if (!player->m_isClientResponseReady || !clientReply.isString()) {
+            int card_id = player->getRandomHandCardId();
+            c = Sanguosha->getCard(card_id);
+        } else {
+            const Card *card = Card::Parse(toQString(clientReply));
+            if (card->isVirtualCard()) {
+                const Card *real_card = Sanguosha->getCard(card->getEffectiveId());
+                delete card;
+                c = real_card;
+            } else
+                c = card;
+        }
+        if (player == from)
+            from_card = c;
+        else
+            to_card = c;
+    }
+    return QList<const Card *>() << from_card << to_card;
+}
+
 ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const QString &skillName,
                                        const QString &prompt, bool optional, bool notify_skill) {
     if (targets.isEmpty())

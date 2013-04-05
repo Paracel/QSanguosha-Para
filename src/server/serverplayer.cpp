@@ -473,13 +473,18 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     log.to << target;
     room->sendLog(log);
 
-    if (card1 == NULL)
-        card1 = room->askForPindian(this, this, target, reason);
-    else if (card1->isVirtualCard()) {
-        int card_id = card1->getEffectiveId();
-        card1 = Sanguosha->getCard(card_id);
+    const Card *card2;
+    if (card1 == NULL) {
+        QList<const Card *> cards = room->askForPindianRace(this, target, reason);
+        card1 = cards.first();
+        card2 = cards.last();
+    } else {
+        if (card1->isVirtualCard()) {
+            int card_id = card1->getEffectiveId();
+            card1 = Sanguosha->getCard(card_id);
+        }
+        card2 = room->askForPindian(target, this, target, reason);
     }
-    const Card *card2 = room->askForPindian(target, this, target, reason);
 
     if (card1 == NULL || card2 == NULL) return false;
 

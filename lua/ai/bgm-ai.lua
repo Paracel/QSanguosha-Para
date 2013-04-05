@@ -297,7 +297,8 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 	if self.player:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 then
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isKongcheng() then
-				use.card = sgs.Card_Parse("@DaheCard=" .. max_card:getId())
+				self.dahe_card = max_card:getId()
+				use.card = sgs.Card_Parse("@DaheCard=.")
 				if use.to then use.to:append(enemy) end
 				return
 			end
@@ -319,7 +320,8 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 				if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
 					or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
 					or (not enemy_max_card and max_point > 10) then
-					use.card = sgs.Card_Parse("@DaheCard=" .. max_card:getId())
+					self.dahe_card = max_card:getId()
+					use.card = sgs.Card_Parse("@DaheCard=.")
 					if use.to then use.to:append(enemy) end
 					return
 				end
@@ -329,6 +331,14 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 end
 
 function sgs.ai_skill_pindian.dahe(minusecard, self, requestor)
+	if self.player:objectName() == requestor:objectName() then
+		if self.dahe_card then
+			return self.dahe_card
+		else
+			self.room:writeToConsole("Pindian card not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
 	if self:isFriend(requestor) then return minusecard end
 	return self:getMaxCard(self.player):getId()
 end
@@ -360,10 +370,7 @@ local tanhu_skill = {}
 tanhu_skill.name = "tanhu"
 table.insert(sgs.ai_skills, tanhu_skill)
 tanhu_skill.getTurnUseCard = function(self)
-	if not self.player:hasUsed("TanhuCard") and not self.player:isKongcheng() then
-		local max_card = self:getMaxCard()
-		return sgs.Card_Parse("@TanhuCard=" .. max_card:getEffectiveId())
-	end
+	if not self.player:hasUsed("TanhuCard") and not self.player:isKongcheng() then return sgs.Card_Parse("@TanhuCard=.") end
 end
 
 sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
@@ -375,12 +382,9 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	if max_card:isKindOf("Slash") then slashcount = slashcount - 1 end
 	if not ptarget:isKongcheng() and slashcount > 0 and self.player:canSlash(ptarget, nil, false)
 		and not (ptarget:hasSkill("kongcheng") and ptarget:getHandcardNum() == 1) then
-		local card_id = max_card:getEffectiveId()
-		local card_str = "@TanhuCard=" .. card_id
-		if use.to then
-			use.to:append(ptarget)
-		end
-		use.card = sgs.Card_Parse(card_str)
+		self.tanhu_card = max_card:getEffectiveId()
+		use.card = sgs.Card_Parse("@TanhuCard=.")
+		if use.to then use.to:append(ptarget) end
 		return
 	end
 	self:sort(self.enemies, "defense")
@@ -396,9 +400,8 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 				or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
 				or (not enemy_max_card and max_point > 10)
 				and (self:getDangerousCard(enemy) or self:getValuableCard(enemy)) then
-					local card_id = max_card:getEffectiveId()
-					local card_str = "@TanhuCard=" .. card_id
-					use.card = sgs.Card_Parse(card_str)
+					self.tanhu_card = max_card:getEffectiveId()
+					use.card = sgs.Card_Parse("@TanhuCard=.")
 					if use.to then use.to:append(enemy)	end
 					return
 			end
@@ -409,17 +412,15 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	if self:getUseValue(cards[1]) >= 6 or self:getKeepValue(cards[1]) >= 6 then return end
 	if self:getOverflow() > 0 then
 		if not ptarget:isKongcheng() then
-			local card_id = max_card:getEffectiveId()
-			local card_str = "@TanhuCard=" .. card_id
-			if use.to then
-				use.to:append(ptarget)
-			end
-			use.card = sgs.Card_Parse(card_str)
+			self.tanhu_card = max_card:getEffectiveId()
+			use.card = sgs.Card_Parse("@TanhuCard=.")
+			if use.to then use.to:append(ptarget) end
 			return
 		end
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and not enemy:hasSkills("tuntian+zaoxian") then
-				use.card = sgs.Card_Parse("@TanhuCard=" .. cards[1]:getId())
+				self.tanhu_card = cards[1]:getId()
+				use.card = sgs.Card_Parse("@TanhuCard=.")
 				if use.to then use.to:append(enemy) end
 				return
 			end
@@ -431,6 +432,17 @@ sgs.ai_cardneed.tanhu = sgs.ai_cardneed.bignumber
 sgs.ai_card_intention.TanhuCard = 30
 sgs.dynamic_value.control_card.TanhuCard = true
 sgs.ai_use_priority.TanhuCard = 8
+
+function sgs.ai_skill_pindian.tanhu(minusecard, self, requestor)
+	if self.player:objectName() == requestor:objectName() then
+		if self.tanhu_card then
+			return self.tanhu_card
+		else
+			self.room:writeToConsole("Pindian card not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
+end
 
 local function need_mouduan(self)
 	local cardsCount = self.player:getHandcardNum()

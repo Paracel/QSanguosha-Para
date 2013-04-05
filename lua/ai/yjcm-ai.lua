@@ -691,7 +691,8 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	if slashcount > 0 then
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:hasFlag("AI_HuangtianPindian") and enemy:getHandcardNum() == 1 then
-				use.card = sgs.Card_Parse("@XianzhenCard=" .. max_card:getId())
+				self.xianzhen_card = max_card:getId()
+				use.card = sgs.Card_Parse("@XianzhenCard=.")
 				if use.to then
 					use.to:append(enemy)
 					enemy:setFlags("-AI_HuangtianPindian")
@@ -709,7 +710,8 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 				local enemy_max_card = self:getMaxCard(enemy)
 				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
 				if max_point > enemy_max_point then
-					use.card = sgs.Card_Parse("@XianzhenCard=" .. max_card:getId())
+					self.xianzhen_card = max_card:getId()
+					use.card = sgs.Card_Parse("@XianzhenCard=.")
 					if use.to then use.to:append(enemy) end
 					return
 				end
@@ -718,7 +720,8 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and self:canAttack(enemy, self.player) then
 				if max_point >= 10 then
-					use.card = sgs.Card_Parse("@XianzhenCard=" .. max_card:getId())
+					self.xianzhen_card = max_card:getId()
+					use.card = sgs.Card_Parse("@XianzhenCard=.")
 					if use.to then use.to:append(enemy) end
 					return
 				end
@@ -732,7 +735,8 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	if shouldUse then
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and not enemy:hasSkills("tuntian+zaoxian") then
-				use.card = sgs.Card_Parse("@XianzhenCard=" .. cards[1]:getId())
+				self.xianzhen_card = card[1]:getId()
+				use.card = sgs.Card_Parse("@XianzhenCard=.")
 				if use.to then use.to:append(enemy) end
 				return
 			end
@@ -760,6 +764,14 @@ sgs.ai_cardneed.xianzhen = function(to, card, self)
 end
 
 function sgs.ai_skill_pindian.xianzhen(minusecard, self, requestor)
+	if self.player:objectName() == requestor:objectName() then
+		if self.xianzhen_card then
+			return self.xianzhen_card
+		else
+			self.room:writeToConsole("Pindian card not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
 	if self:isFriend(requestor) then return end
 	if requestor:getHandcardNum() <= 2 then return minusecard end
 end

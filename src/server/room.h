@@ -321,6 +321,7 @@ public:
     bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name = QString(),
                     bool is_preview = true, bool visible = false, int optional = true, int max_num = -1);
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const QString &reason);
+    QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const QString &reason,
                                      const QString &prompt = QString(), bool optional = false, bool notify_skill = false);
     QString askForGeneral(ServerPlayer *player, const QStringList &generals, QString default_choice = QString());    

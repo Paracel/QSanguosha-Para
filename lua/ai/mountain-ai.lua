@@ -689,11 +689,13 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		if self:isEnemy(lord) and max_num > 10 and max_num > lord_max_num then
 			if isCard("Jink", max_card, self.player) and self:getCardsNum("Jink") == 1 then return end
 			if isCard("Peach", max_card, self.player) or isCard("Analeptic", max_card, self.player) then return end
-			zhiba_str = "@ZhibaCard=" .. max_card:getEffectiveId()
+			self.zhiba_card = max_card:getEffectiveId()
+			zhiba_str = "@ZhibaCard=."
 		end
 		if self:isFriend(lord) and not lord:hasSkill("manjuan") and ((lord_max_num > 0 and min_num <= lord_max_num) or min_num < 7) then
 			if isCard("Jink", min_card, self.player) and self:getCardsNum("Jink") == 1 then return end
-			zhiba_str = "@ZhibaCard=" .. min_card:getEffectiveId()
+			self.zhiba_card = min_card:getEffectiveId()
+			zhiba_str = "@ZhibaCard=."
 		end
 
 		if zhiba_str then
@@ -731,6 +733,14 @@ sgs.ai_skill_choice.zhiba_pindian = function(self, choices)
 end
 
 function sgs.ai_skill_pindian.zhiba_pindian(minusecard, self, requestor, maxcard)
+	if self.player:objectName() == requestor:objectName() then
+		if self.zhiba_card then
+			return self.zhiba_card
+		else
+			self.room:writeToConsole("Pindian card not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
 	local cards, maxcard = sgs.QList2Table(self.player:getHandcards())
 	local function compare_func(a, b)
 		return a:getNumber() > b:getNumber()

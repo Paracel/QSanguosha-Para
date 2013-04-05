@@ -3037,8 +3037,9 @@ function SmartAI:getOverflow(player)
 				kingdom_num = kingdom_num + 1
 			end
 		end
+		kingdom_num = math.min(kingdom_num, self.player:getCardCount(true))
 	end
-	return math.max(player:getHandcardNum() + kingdom_num / 2 - player:getHp(), 0)
+	return math.max(kingdom_num, player:getHandcardNum() - player:getHp())
 end
 
 function SmartAI:isWeak(player)

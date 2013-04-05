@@ -99,6 +99,13 @@ function sgs.ai_armor_value.vine(player, self)
 	return 3.5
 end
 
+function SmartAI:useCardAnaleptic(card, use)
+	if not self.player:hasEquip(card) and not self:hasLoseHandcardEffective() and not self:isWeak()
+		and sgs.Analeptic_IsAvailable(self.player, card) then
+		use.card = card
+	end
+end
+
 function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if not self.toUse then return nil end
 

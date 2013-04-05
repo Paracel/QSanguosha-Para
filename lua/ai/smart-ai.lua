@@ -4322,7 +4322,7 @@ function SmartAI:useEquipCard(card, use)
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)
 	self:useCardByClassName(card, use)
-	if use.card or use.broken then return end
+	if use.card then return end
 	if card:isKindOf("Weapon") then
 		if self:needBear() then return end
 		if same and self:hasSkill("zhulou") then return end
@@ -4337,16 +4337,16 @@ function SmartAI:useEquipCard(card, use)
 			end
 		end
 		if self:hasSkills("paoxiao|nosfuhun", self.player) and card:isKindOf("Crossbow") then return end
-		if not self:hasSkills(sgs.lose_equip_skill) and self:getOverflow() <= 0 and not canUseSlash then return end
+		if not self:needKongcheng() and not self:hasSkills(sgs.lose_equip_skill) and self:getOverflow() <= 0 and not canUseSlash then return end
 		if not self.player:getWeapon() or self:evaluateWeapon(card) > self:evaluateWeapon(self.player:getWeapon()) then
 			if (not use.to) and self.weaponUsed and (not self:hasSkills(sgs.lose_equip_skill)) then return end
 			if (self.player:hasSkill("zhiheng") or self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0)
 				and not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() and not card:isKindOf("Crossbow") then return end
-			if self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
+			if not self:needKongcheng() and self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
 			use.card = card
 		end
 	elseif card:isKindOf("Armor") then
-			if self:needBear() and self.player:getLostHp() == 0 then return end
+		if self:needBear() and self.player:getLostHp() == 0 then return end
 		local lion = self:getCard("SilverLion")
 		if lion and self.player:isWounded() and not self.player:hasArmorEffect("silver_lion") and not card:isKindOf("SilverLion")
 			and not (self:hasSkills("bazhen|yizhong") and not self.player:getArmor()) then

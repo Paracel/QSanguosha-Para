@@ -52,10 +52,10 @@ public:
     virtual void revivePlayer();
     void selectCard(const QString &pattern, bool forward = true, bool multiple = false);
     void selectEquip(int position);
-    void selectOnlyCard();
+    void selectOnlyCard(bool need_only = false);
     void useSelected();
     const Card *getSelected() const;
-    void unselectAll();
+    void unselectAll(const CardItem *except= NULL);
     void hideAvatar();
 
     void disableAllCards();

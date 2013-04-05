@@ -278,41 +278,42 @@ void Dashboard::selectEquip(int position) {
     }
 }
 
-void Dashboard::selectOnlyCard() {
+void Dashboard::selectOnlyCard(bool need_only) {
     if (selected && selected->isSelected())
         selected->clickItem();
 
-    int count = 0, equip_pos = -1;
-    bool is_equip = false;
-    CardItem *item = NULL;
+    int count = 0;
 
+    QList<CardItem *> items;
     foreach (CardItem *card_item, m_handCards) {
         if (card_item->isEnabled()) {
-            item = card_item;
+            items << card_item;
             count++;
-            if (count > 1) {
+            if (need_only && count > 1) {
                 unselectAll();
                 return;
             }
         }
     }
 
+    QList<int> equip_pos;
     for (int i = 0; i < 4; i++) {
         if (_m_equipCards[i] && _m_equipCards[i]->isMarkable()) {
-            is_equip = true;
-            equip_pos = i;
+            equip_pos << i;
             count++;
-            if (count > 1) return;
+            if (need_only && count > 1) return;
         }
     }
     if (count == 0) return;
-    if (is_equip) {
-        _m_equipCards[equip_pos]->mark(!_m_equipCards[equip_pos]->isMarked());
-        update();
-    } else if (item) {
+    if (!items.isEmpty()) {
+        CardItem *item = items.first();
         item->clickItem();
         selected = item;
         adjustCards();
+    } else if (!equip_pos.isEmpty()) {
+        int pos = equip_pos.first();
+        _m_equipCards[pos]->mark(!_m_equipCards[pos]->isMarked());
+        update();
     }
 }
 
@@ -340,15 +341,17 @@ void Dashboard::selectCard(CardItem *item, bool isSelected) {
     m_mutex.unlock();
 }
 
-void Dashboard::unselectAll() {
+void Dashboard::unselectAll(const CardItem *except) {
     selected = NULL;
 
-    foreach (CardItem *card_item, m_handCards)
-        selectCard(card_item, false);
+    foreach (CardItem *card_item, m_handCards) {
+        if (card_item != except)
+            selectCard(card_item, false);
+    }
 
     adjustCards(true);
     for (int i = 0; i < 4; i++) {
-        if (_m_equipCards[i])
+        if (_m_equipCards[i] && _m_equipCards[i] != except)
             _m_equipCards[i]->mark(false);
     }
     if (view_as_skill) {
@@ -847,6 +850,8 @@ void Dashboard::onCardItemClicked() {
             selectCard(card_item, false);
             pendings.removeOne(card_item);
         } else {
+            if (view_as_skill->inherits("OneCardViewAsSkill"))
+                unselectAll();
             selectCard(card_item, true);
             pendings << card_item;
         }
@@ -872,9 +877,12 @@ void Dashboard::updatePending() {
     foreach (CardItem *item, pendings)
         cards.append(item->getCard());
 
+    QList<const Card *> pended;
+    if (!view_as_skill->inherits("OneCardViewAsSkill"))
+        pended = cards;
     foreach (CardItem *item, m_handCards) {
         if (!item->isSelected() || pendings.isEmpty())
-            item->setEnabled(view_as_skill->viewFilter(cards, item->getCard()));
+            item->setEnabled(view_as_skill->viewFilter(pended, item->getCard()));
         if (!item->isEnabled())
             animations->effectOut(item);
     }
@@ -882,7 +890,7 @@ void Dashboard::updatePending() {
     for (int i = 0; i < 4; i++) {
         CardItem *equip = _m_equipCards[i];
         if (equip && !equip->isMarked())
-            equip->setMarkable(view_as_skill->viewFilter(cards, equip->getCard()));
+            equip->setMarkable(view_as_skill->viewFilter(pended, equip->getCard()));
     }
 
     const Card *new_pending_card = view_as_skill->viewAs(cards);
@@ -921,8 +929,11 @@ void Dashboard::onMarkChanged() {
 
     if (card_item) {
         if (card_item->isMarked()) {
-            if (!pendings.contains(card_item))
+            if (!pendings.contains(card_item)) {
+                if (view_as_skill && view_as_skill->inherits("OneCardViewAsSkill"))
+                    unselectAll(card_item);
                 pendings.append(card_item);
+            }
         } else
             pendings.removeOne(card_item);
 

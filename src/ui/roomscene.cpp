@@ -2487,7 +2487,7 @@ void RoomScene::onSkillActivated() {
         if (card && card->targetFixed() && card->isAvailable(Self)) {
             useSelectedCard();
         } else if (skill->inherits("OneCardViewAsSkill") && Config.EnableIntellectualSelection)
-            dashboard->selectOnlyCard();
+            dashboard->selectOnlyCard(ClientInstance->getStatus() == Client::Playing);
     }
 }
 

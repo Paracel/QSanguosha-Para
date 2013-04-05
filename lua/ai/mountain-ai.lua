@@ -733,14 +733,6 @@ sgs.ai_skill_choice.zhiba_pindian = function(self, choices)
 end
 
 function sgs.ai_skill_pindian.zhiba_pindian(minusecard, self, requestor, maxcard)
-	if self.player:objectName() == requestor:objectName() then
-		if self.zhiba_card then
-			return self.zhiba_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
 	local cards, maxcard = sgs.QList2Table(self.player:getHandcards())
 	local function compare_func(a, b)
 		return a:getNumber() > b:getNumber()

@@ -516,17 +516,6 @@ sgs.ai_skill_invoke.nosquanji = function(self, data)
 	return false
 end
 
-function sgs.ai_skill_pindian.nosquanji(minusecard, self, requestor, maxcard)
-	if self.player:objectName() == requestor:objectName() then
-		if self.nosquanji_card then
-			return self.nosquanji_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
-end
-
 sgs.ai_skill_invoke.nosyexin = function(self, data)
 	return true
 end

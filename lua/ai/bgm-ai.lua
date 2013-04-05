@@ -331,14 +331,6 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 end
 
 function sgs.ai_skill_pindian.dahe(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.dahe_card then
-			return self.dahe_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
 	if self:isFriend(requestor) then return minusecard end
 	return self:getMaxCard(self.player):getId()
 end
@@ -432,17 +424,6 @@ sgs.ai_cardneed.tanhu = sgs.ai_cardneed.bignumber
 sgs.ai_card_intention.TanhuCard = 30
 sgs.dynamic_value.control_card.TanhuCard = true
 sgs.ai_use_priority.TanhuCard = 8
-
-function sgs.ai_skill_pindian.tanhu(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.tanhu_card then
-			return self.tanhu_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
-end
 
 local function need_mouduan(self)
 	local cardsCount = self.player:getHandcardNum()

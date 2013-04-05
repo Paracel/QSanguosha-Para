@@ -455,14 +455,6 @@ sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
 end
 
 function sgs.ai_skill_pindian.shuangren(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.shuangren_card then
-			return self.shuangren_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
 	local maxcard = self:getMaxCard()
 	return self:isFriend(requestor) and self:getMinCard() or (maxcard:getNumber() < 6 and minusecard or maxcard)
 end

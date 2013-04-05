@@ -764,14 +764,6 @@ sgs.ai_cardneed.xianzhen = function(to, card, self)
 end
 
 function sgs.ai_skill_pindian.xianzhen(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.xianzhen_card then
-			return self.xianzhen_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
 	if self:isFriend(requestor) then return end
 	if requestor:getHandcardNum() <= 2 then return minusecard end
 end

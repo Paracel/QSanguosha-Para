@@ -2795,6 +2795,15 @@ sgs.ai_choicemade_filter.Yiji.general = function(self, from, promptlist)
 end
 
 function SmartAI:askForPindian(requestor, reason)
+	local passive = { "mizhao", "lieren" }
+	if self.player:objectName() == requestor:objectName() and not table.contains(passive, reason) then
+		if self[reason .. "_card"] then
+			return self[reason .. "_card"]
+		else
+			self.room:writeToConsole("Pindian card for " .. reason .. " not found!!")
+			return self:getMaxCard(self.player):getId()
+		end
+	end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local compare_func = function(a, b)
 		return a:getNumber() < b:getNumber()

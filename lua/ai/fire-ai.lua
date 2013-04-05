@@ -73,17 +73,6 @@ sgs.ai_playerchosen_intention.quhu = 80
 sgs.ai_card_intention.QuhuCard = 0
 sgs.dynamic_value.control_card.QuhuCard = true
 
-function sgs.ai_skill_pindian.quhu(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.quhu_card then
-			return self.quhu_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
-end
-
 sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	local friends = {}
 	for _, player in ipairs(self.friends) do
@@ -458,14 +447,6 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 end
 
 function sgs.ai_skill_pindian.tianyi(minusecard, self, requestor)
-	if self.player:objectName() == requestor:objectName() then
-		if self.tianyi_card then
-			return self.tianyi_card
-		else
-			self.room:writeToConsole("Pindian card not found!!")
-			return self:getMaxCard(self.player):getId()
-		end
-	end
 	local maxcard = self:getMaxCard()
 	return self:isFriend(requestor) and self:getMinCard() or (maxcard:getNumber() < 6 and minusecard or maxcard)
 end

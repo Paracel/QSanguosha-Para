@@ -24,7 +24,7 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 				for _, enemy2 in ipairs(self.enemies) do
 					if (enemy:objectName() ~= enemy2:objectName())
 						and enemy:distanceTo(enemy2) <= enemy:getAttackRange() then
-						self.quhu_card = card_id
+						self.quhu_card = max_card:getEffectiveId()
 						use.card = sgs.Card_Parse("@QuhuCard=.")
 						if use.to then use.to:append(enemy) end
 						return

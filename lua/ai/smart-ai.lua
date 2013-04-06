@@ -4499,6 +4499,9 @@ function SmartAI:doNotDiscard(to, flags, conservative, n)
 			if to:getCardCount(true) <= n and to:getArmor() and self:needToThrowArmor(to) then return true end
 		end
 	end
+	if flags == "he" and n > 2 then
+		if to:getCardCount(true) < n then return true end
+	end
 	return false
 end
 

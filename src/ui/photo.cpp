@@ -146,19 +146,6 @@ void Photo::hideEmotion() {
     emotion_item->hide();
 }
 
-void Photo::showCard(int card_id) {
-    const Card *card = Sanguosha->getCard(card_id);
-
-    CardItem *card_item = new CardItem(card);
-    scene()->addItem(card_item);
-
-    QPointF card_pos(pos() + QPointF(0, 20));
-    card_item->setPos(card_pos);
-    card_item->setHomePos(card_pos);
-
-    QTimer::singleShot(2000, card_item, SLOT(deleteLater()));
-}
-
 const ClientPlayer *Photo::getPlayer() const{
     return m_player;
 }

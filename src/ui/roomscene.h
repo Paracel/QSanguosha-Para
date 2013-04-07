@@ -195,12 +195,13 @@ private:
     QMap<QString, Photo *> name2photo;
     Dashboard *dashboard;
     TablePile *m_tablePile;
-    // QQueue<CardItem *> piled_discards;
     QMainWindow *main_window;
     QSanButton *ok_button, *cancel_button, *discard_button;
     QSanButton *trust_button;
     QMenu *miscellaneous_menu, *change_general_menu;
     Window *prompt_box;
+    Window *pindian_box;
+    CardItem *pindian_from_card, *pindian_to_card;
     QGraphicsItem *control_panel;
     QMap<PlayerCardContainer *, const ClientPlayer *> item2player;
     QDialog *m_choiceDialog; // Dialog for choosing generals, suits, card/equip, or kingdoms
@@ -281,6 +282,8 @@ private:
     void fillGenerals1v1(const QStringList &names);
     void fillGenerals3v3(const QStringList &names);
 
+    void showPindianBox(const QString &from_name, int from_id, const QString &to_name, int to_id);
+
     // animation related functions
     typedef void (RoomScene::*AnimationFunc)(const QString &, const QStringList &);
     QGraphicsObject *getAnimationObject(const QString &name) const;
@@ -292,6 +295,7 @@ private:
     void doIndicate(const QString &name, const QStringList &args);
     void animatePopup(const QString &name, const QStringList &args);
     EffectAnimation *animations;
+    bool pindian_success;
 
     // re-layout attempts
     bool game_started;
@@ -355,6 +359,8 @@ private slots:
     void doGongxin(const QList<int> &card_ids, bool enable_heart);
 
     void startAssign();
+
+    void doPindianAnimation();
 
     // 3v3 mode & 1v1 mode
     void fillGenerals(const QStringList &names);

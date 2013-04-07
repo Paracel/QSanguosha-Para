@@ -8,7 +8,7 @@ class Window: public QGraphicsObject {
     Q_OBJECT
 
 public:
-    explicit Window(const QString &title, const QSizeF &size);
+    explicit Window(const QString &title, const QSizeF &size, const QString &path = QString());
     void addContent(const QString &content);
     void addCloseButton(const QString &label);
     void shift(int pos_x = 0, int pos_y = 0);

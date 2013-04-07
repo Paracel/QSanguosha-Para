@@ -531,7 +531,14 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     log.card_str.clear();
     room->sendLog(log);
 
-    room->setEmotion(this, pindian_struct.success ? "success" : "no-success");
+    Json::Value arg(Json::arrayValue);
+    arg[0] = (int)S_GAME_EVENT_REVEAL_PINDIAN;
+    arg[1] = toJsonString(objectName());
+    arg[2] = pindian_struct.from_card->getEffectiveId();
+    arg[3] = toJsonString(target->objectName());
+    arg[4] = pindian_struct.to_card->getEffectiveId();
+    arg[5] = pindian_struct.success;
+    room->doBroadcastNotify(S_COMMAND_LOG_EVENT, arg);
 
     pindian_star = &pindian_struct;
     data = QVariant::fromValue(pindian_star);

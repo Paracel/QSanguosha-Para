@@ -8,13 +8,16 @@
 #include <QPropertyAnimation>
 #include <QGraphicsDropShadowEffect>
 
-Window::Window(const QString &title, const QSizeF &size)
+Window::Window(const QString &title, const QSizeF &size, const QString &path)
     : title(title), size(size), keep_when_disappear(false)
 {
     setFlags(ItemIsMovable);
 
     QPixmap *bg;
-    bg = size.width()>size.height() ? new QPixmap("image/system/tip.png") : new QPixmap("image/system/about.png");
+    if (!path.isEmpty())
+        bg = new QPixmap(path);
+    else
+        bg = size.width() > size.height() ? new QPixmap("image/system/tip.png") : new QPixmap("image/system/about.png");
     QImage bgimg = bg->toImage();
     outimg = new QImage(size.toSize(), QImage::Format_ARGB32);
 
@@ -112,7 +115,7 @@ void Window::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     QRectF window_rect = boundingRect();
 
     painter->setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |QPainter::SmoothPixmapTransform);
-    painter->drawImage(window_rect,*outimg);
+    painter->drawImage(window_rect, *outimg);
 }
 
 void Window::appear() {
@@ -145,7 +148,7 @@ void Window::disappear() {
     group->addAnimation(scale_y);
     group->addAnimation(opacity);
 
-    group->start();
+    group->start(QAbstractAnimation::DeleteWhenStopped);
 
     if (!keep_when_disappear)
         connect(group, SIGNAL(finished()), this, SLOT(deleteLater()));

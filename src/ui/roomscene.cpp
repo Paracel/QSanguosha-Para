@@ -339,6 +339,17 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     pausing_item->hide();
     pausing_text->hide();
+
+    pindian_box = new Window(tr("pindian"), QSize(255, 200),"image/system/pindian.png");
+    pindian_box->setOpacity(0);
+    pindian_box->setFlag(QGraphicsItem::ItemIsMovable);
+    pindian_box->shift();
+    pindian_box->setZValue(10);
+    pindian_box->keepWhenDisappear();
+    addItem(pindian_box);
+
+    pindian_from_card = NULL;
+    pindian_to_card = NULL;
 }
 
 void RoomScene::handleGameEvent(const Json::Value &arg) {
@@ -524,6 +535,17 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
                 pausing_text->setVisible(paused);
             }
             break;
+        }
+    case S_GAME_EVENT_REVEAL_PINDIAN: {
+            QString from_name = arg[1].asCString(), to_name = arg[3].asCString();
+            int from_id = arg[2].asInt(), to_id = arg[4].asInt();
+            bool success = arg[5].asBool();
+            pindian_success = success;
+
+            if (Config.value("EnablePindianBox", true).toBool())
+                showPindianBox(from_name, from_id, to_name, to_id);
+            else
+                setEmotion(from_name, success ? "success" : "no-success");
         }
     default:
             break;
@@ -3644,7 +3666,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
         int duration = args.value(1, "2000").toInt();
         appear->setDuration(duration);
 
-        appear->start();
+        appear->start(QAbstractAnimation::DeleteWhenStopped);
 
         connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));
     }
@@ -3770,7 +3792,7 @@ void RoomScene::fillGenerals1v1(const QStringList &names) {
     const static int height = 121;
 
     foreach (QString name, names) {
-        CardItem *item =  new CardItem(name);
+        CardItem *item = new CardItem(name);
         item->setObjectName(name);
         general_items << item;
     }
@@ -4096,6 +4118,56 @@ void RoomScene::finishArrange() {
 
     ClientInstance->replyToServer(S_COMMAND_ARRANGE_GENERAL, Utils::toJsonArray(names));
     ClientInstance->setStatus(Client::NotActive);
+}
+
+void RoomScene::showPindianBox(const QString &from_name, int from_id, const QString &to_name, int to_id) {
+    pindian_box->setOpacity(0.0);
+    pindian_box->setPos(m_tableCenterPos);
+
+    if (pindian_from_card) {
+        delete pindian_from_card;
+        pindian_from_card = NULL;
+    }
+    if (pindian_to_card) {
+        delete pindian_to_card;
+        pindian_to_card = NULL;
+    }
+
+    pindian_from_card = new CardItem(Sanguosha->getCard(from_id));
+    pindian_from_card->setParentItem(pindian_box);
+    pindian_from_card->setPos(QPointF(28 + pindian_from_card->boundingRect().width() / 2,
+                                      44 + pindian_from_card->boundingRect().height() / 2));
+    pindian_from_card->setFlag(QGraphicsItem::ItemIsMovable, false);
+    pindian_from_card->setHomePos(pindian_from_card->pos());
+    pindian_from_card->setFootnote(ClientInstance->getPlayerName(from_name));
+
+    pindian_to_card = new CardItem(Sanguosha->getCard(to_id));
+    pindian_to_card->setParentItem(pindian_box);
+    pindian_to_card->setPos(QPointF(126 + pindian_to_card->boundingRect().width() / 2,
+                                    44 + pindian_to_card->boundingRect().height() / 2));
+    pindian_to_card->setFlag(QGraphicsItem::ItemIsMovable, false);
+    pindian_to_card->setHomePos(pindian_to_card->pos());
+    pindian_to_card->setFootnote(ClientInstance->getPlayerName(to_name));
+
+    bringToFront(pindian_box);
+    pindian_box->appear();
+    QTimer::singleShot(500, this, SLOT(doPindianAnimation()));
+}
+
+void RoomScene::doPindianAnimation() {
+    if (!pindian_box->isVisible() || !pindian_from_card || !pindian_to_card) return;
+
+    QString emotion = pindian_success ? "success" : "no-success";
+    PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(pindian_from_card, emotion);
+    if (pma) {
+        QTimer *timer = new QTimer();
+        timer->setInterval(500);
+        connect(pma, SIGNAL(finished()), timer, SLOT(start()));
+        connect(timer, SIGNAL(timeout()), pindian_box, SLOT(disappear()));
+        connect(timer, SIGNAL(timeout()), timer, SLOT(deleteLater()));
+    } else {
+        pindian_box->disappear();
+    }
 }
 
 static inline void AddRoleIcon(QMap<QChar, QPixmap> &map, char c, const QString &role) {

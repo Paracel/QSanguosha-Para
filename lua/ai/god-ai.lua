@@ -44,6 +44,21 @@ sgs.ai_skill_playerchosen.wuhun = function(self, targets)
 	return targetlist[1]
 end
 
+function SmartAI:getWuhunRevengeTargets()
+	local targets = {}
+	local maxcount = 0
+	for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+		local count = p:getMark("@nightmare")
+		if count > maxcount then
+			targets = { p }
+			maxcount = count
+		elseif count == maxcount then
+			table.insert(targets, p)
+		end
+	end
+	return targets
+end
+
 function sgs.ai_slash_prohibit.wuhun(self, from, to)
 	if from:hasSkill("jueqing") then return false end
 	if from:hasFlag("NosJiefanUsed") then return false end

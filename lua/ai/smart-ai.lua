@@ -1714,6 +1714,10 @@ function SmartAI:filterEvent(event, player, data)
 		local from_places = sgs.QList2Table(move.from_places)
 
 		for i = 1, move.card_ids:length() do
+			local place = move.from_places:at(i - 1)
+			local card_id = move.card_ids:at(i - 1)
+			local card = sgs.Sanguosha:getCard(card_id)
+
 			if move.to_place == sgs.Player_PlaceHand and move.to and player:objectName() == move.to:objectName() then
 				if card:hasFlag("visible") then
 					if is_a_slash(move.to, card) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
@@ -2935,6 +2939,22 @@ function SmartAI:willUsePeachTo(dying)
 				card_str = self:getCardId("Peach")
 			end
 		end
+	else
+		if dying:hasSkill("wuhun") then
+			local lord = self.room:getLord()
+			if not lord or self:isEnemy(lord) then return "." end
+			local revengeTargets = self:getWuhunRevengeTargets()
+			if table.contains(revengeTargets, lord) then
+				local finalRetrial, wizard = self:getFinalRetrial(self.room:getCurrent(), "wuhun")
+				if finalRetrial == 0 or finalRetrial == 2 then
+					card_str = self:getCardId("Peach")
+				elseif finalRetrial == 1 then
+					local flag = wizard:hasSkill("huanshi") and "he" or "h"
+					if getKnownCard(wizard, "Peach", false, flag) > 0 or getKnownCard(wizard, "GodSalvation", false, flag) > 0 then return "." end
+					card_str = self:getCardId("Peach")
+				end
+			end
+		end
 	end
 	if not card_str then return nil end
 	return card_str
@@ -3073,10 +3093,10 @@ function SmartAI:hasWizard(players, onlyharm)
 	end
 end
 
-function SmartAI:canRetrial(player, to_retrial)
+function SmartAI:canRetrial(player, to_retrial, reason)
 	player = player or self.player
 	to_retrial = to_retrial or self.player
-	if player:hasSkill("guidao") then
+	if player:hasSkill("guidao") and not (reason and reason == "wuhun") then
 		local blackequipnum = 0
 		for _, equip in sgs.qlist(player:getEquips()) do
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
@@ -3087,31 +3107,38 @@ function SmartAI:canRetrial(player, to_retrial)
 	elseif player:hasSkill("jilve") then
 		return player:getHandcardNum() > 0 and player:getMark("@bear") > 0
 	elseif player:hasSkill("huanshi") then
-		return not player:isNude() and (self:isFriend(player, to_retrial) or player:objectName() == to_retrial:objectName())
+		return not player:isNude() and self:isFriend(player, to_retrial)
 	end
 end
 
-function SmartAI:getFinalRetrial(player)
+function SmartAI:getFinalRetrial(player, reason)
 	local maxfriendseat = -1
 	local maxenemyseat = -1
 	local tmpfriend
 	local tmpenemy
+	local wizardf, wizarde
 	player = player or self.room:getCurrent()
 	for _, aplayer in ipairs(self.friends) do
-		if self:hasSkills(sgs.wizard_harm_skill, aplayer) and self:canRetrial(aplayer, player) then
+		if self:hasSkills(sgs.wizard_harm_skill, aplayer) and self:canRetrial(aplayer, player, reason) then
 			tmpfriend = (aplayer:getSeat() - player:getSeat()) % (global_room:alivePlayerCount())
-			if tmpfriend > maxfriendseat then maxfriendseat = tmpfriend end
+			if tmpfriend > maxfriendseat then
+				maxfriendseat = tmpfriend
+				wizardf = aplayer
+			end
 		end
 	end
 	for _, aplayer in ipairs(self.enemies) do
-		if self:hasSkills(sgs.wizard_harm_skill, aplayer) and self:canRetrial(aplayer, player) then
+		if self:hasSkills(sgs.wizard_harm_skill, aplayer) and self:canRetrial(aplayer, player, reason) then
 			tmpenemy = (aplayer:getSeat() - player:getSeat()) % (global_room:alivePlayerCount())
-			if tmpenemy > maxenemyseat then maxenemyseat = tmpenemy end
+			if tmpenemy > maxenemyseat then
+				maxenemyseat = tmpenemy
+				wizarde = aplayer
+			end
 		end
 	end
-	if maxfriendseat == -1 and maxenemyseat == -1 then return 0
-	elseif maxfriendseat > maxenemyseat then return 1
-	else return 2 end
+	if maxfriendseat == -1 and maxenemyseat == -1 then return 0, nil
+	elseif maxfriendseat > maxenemyseat then return 1, wizardf
+	else return 2, wizarde end
 end
 
 --- Determine that the current judge is worthy retrial

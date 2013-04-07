@@ -103,6 +103,7 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 	local handcardnum = self.player:getHandcardNum()
 	local trash = self:getCard("Disaster") or self:getCard("GodSalvation") or self:getCard("AmazingGrace")
 	local count = 0
+	local target
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isKongcheng() then count = count + 1 end
 	end
@@ -110,26 +111,32 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 		self:sort(self.enemies, "handcard")
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("manjuan") and enemy:isKongcheng()) then
-				use.card = card
-				if use.to then
-					enemy:setFlags("MizhaoTarget")
-					use.to:append(enemy)
-				end
-				return
+				target = enemy
 			end
 		end
 	end
-	self:sort(self.friends_noself, "defense")
-	self.friends_noself = sgs.reverse(self.friends_noself)
-	if count < 1 then return end
-	for _, friend in ipairs(self.friends_noself) do
-		if not friend:hasSkill("manjuan") then
-			use.card = card
-			if use.to then
-				friend:setFlags("MizhaoTarget")
-				use.to:append(friend)
+	if not target then
+		self:sort(self.friends_noself, "defense")
+		self.friends_noself = sgs.reverse(self.friends_noself)
+		if count < 1 then return end
+		for _, friend in ipairs(self.friends_noself) do
+			if not friend:hasSkill("manjuan") then
+				target = friend
 			end
-			return
+		end
+	end
+	if target then
+		for _, acard in sgs.qlist(self.player:getHandcards()) do
+			if isCard("Peach", acard, self.player) and self.player:getHandcardNum() > 1 and self.player:isWounded()
+				and not self:needToLoseHp(self.player) then
+					use.card = acard
+					return
+			end
+		end
+		use.card = card
+		if use.to then
+			target:setFlags("AI_MizhaoTarget")
+			use.to:append(target)
 		end
 	end
 end
@@ -143,9 +150,9 @@ sgs.ai_skill_playerchosen.mizhao = function(self, targets)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local from
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if player:hasFlag("MizhaoTarget") then
+		if player:hasFlag("AI_MizhaoTarget") then
 			from = player
-			from:setFlags("-MizhaoTarget")
+			from:setFlags("-AI_MizhaoTarget")
 			break
 		end
 	end

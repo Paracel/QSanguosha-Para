@@ -849,8 +849,16 @@ sgs.ai_skill_use_func.QiceCard = function(card, use, self)
 	local qicecard = sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
 	qicecard:setSkillName("qice")
 	self:useTrickCard(qicecard, use)
-	if not use.card then return end
-	use.card = card
+	if use.card then
+		for _, acard in sgs.qlist(self.player:getHandcards()) do
+			if isCard("Peach", acard, self.player) and self.player:getHandcardNum() > 1 and self.player:isWounded()
+				and not self:needToLoseHp(self.player) then
+					use.card = acard
+					return
+			end
+		end
+		use.card = card
+	end
 end
 
 sgs.ai_use_priority.QiceCard = 1.5

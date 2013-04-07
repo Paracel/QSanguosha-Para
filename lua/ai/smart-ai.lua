@@ -1336,7 +1336,7 @@ function getTrickIntention(trick_class, target)
 		if trick_class == "Snatch" or trick_class == "Dismantlement" then
 			local judgelist = target:getCards("j")
 			if not judgelist or judgelist:isEmpty() then
-				if not target:hasArmorEffect("silver_lion") then
+				if not target:hasArmorEffect("silver_lion") or not target:isWounded() then
 					return 80
 				end
 			end
@@ -1683,8 +1683,8 @@ function SmartAI:filterEvent(event, player, data)
 						end
 					end
 				elseif place == sgs.Player_PlaceHand then
-					if player:hasSkill("kongcheng") and player:isKongcheng() then
-						intention = - (intention / 10)
+					if (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)) and player:getHandcardNum() == 1 then
+						intention = 0
 					end
 				end
 				if from then sgs.updateIntention(sgs.ai_snat_dism_from, from, intention) end

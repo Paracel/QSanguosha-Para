@@ -186,7 +186,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 						if self:isFriend(aplayer) and not aplayer:containsTrick("YanxiaoCard")
 							and (aplayer:containsTrick("indulgence") or aplayer:containsTrick("supply_shortage")
 								or (aplayer:containsTrick("lightning") and self:hasWizard(self.enemies))) then
-							aplayer:setFlags("YuanhuToChoose")
+							aplayer:setFlags("AI_YuanhuToChoose")
 							return friend
 						end
 					end
@@ -194,7 +194,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 				self:sort(self.enemies, "defense")
 				for _, enemy in ipairs(self.enemies) do
 					if friend:distanceTo(enemy) == 1 and not enemy:isNude() then
-						enemy:setFlags("YuanhuToChoose")
+						enemy:setFlags("AI_YuanhuToChoose")
 						return friend
 					end
 				end
@@ -267,8 +267,8 @@ end
 sgs.ai_skill_playerchosen.yuanhu = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, p in ipairs(targets) do
-		if p:hasFlag("YuanhuToChoose") then
-			p:setFlags("-YuanhuToChoose")
+		if p:hasFlag("AI_YuanhuToChoose") then
+			p:setFlags("-AI_YuanhuToChoose")
 			return p
 		end
 	end

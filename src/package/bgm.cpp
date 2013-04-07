@@ -1630,10 +1630,10 @@ public:
                 judge.reason = objectName();
 
                 if (damage.from && damage.from->hasSkill("hongyan"))
-                    simazhao->setFlags("langgu_hongyan"); //for AI
+                    simazhao->setFlags("LangguForHongyan"); //for AI
                 room->judge(judge);
-                if (simazhao->hasFlag("langgu_hongyan"))
-                    simazhao->setFlags("-langgu_hongyan");
+                if (simazhao->hasFlag("LangguForHongyan"))
+                    simazhao->setFlags("-LangguForHongyan");
 
                 if (damage.from && damage.from->isAlive() && !damage.from->isKongcheng()) {
                     room->showAllCards(damage.from, simazhao);

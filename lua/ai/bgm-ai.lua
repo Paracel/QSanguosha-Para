@@ -949,7 +949,7 @@ end
 sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 	local judge = data:toJudge()
 
-	if self.player:hasFlag("langgu_hongyan") and judge.card:getSuit() ~= sgs.Card_Heart then
+	if self.player:hasFlag("LangguForHongyan") and judge.card:getSuit() ~= sgs.Card_Heart then
 		local cards = sgs.QList2Table(self.player:getHandcards())
 		for _, card in ipairs(cards) do
 			if card:getSuit() == sgs.Card_Heart and not isCard("Peach", card, self.player) then

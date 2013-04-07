@@ -75,7 +75,7 @@ end
 sgs.ai_skill_playerchosen.songwei = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, target in ipairs(targets) do
-		if self:isFriend(target) and not target:hasFlag("songwei_used") and target:isAlive() then
+		if self:isFriend(target) and target:isAlive() then
 			return target
 		end
 	end
@@ -736,7 +736,7 @@ end
 sgs.ai_skill_playerchosen.baonue = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	for _, target in ipairs(targets) do
-		if self:isFriend(target) and not target:hasFlag("baonue_used") and target:isAlive() then
+		if self:isFriend(target) and target:isAlive() then
 			if target:isWounded() then
 				return target
 			end

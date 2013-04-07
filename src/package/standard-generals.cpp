@@ -841,8 +841,8 @@ public:
         if (event == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Discard) {
-                if (!lvmeng->hasFlag("keji_use_slash") && lvmeng->askForSkillInvoke(objectName())) {
-                    lvmeng->setFlags("-keji_use_slash");
+                if (!lvmeng->hasFlag("KejiUseSlash") && lvmeng->askForSkillInvoke(objectName())) {
+                    lvmeng->setFlags("-KejiUseSlash");
                     if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
                         int index = qrand() % 2 + 1;
                         if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
@@ -860,7 +860,7 @@ public:
                 card = data.value<CardResponseStruct>().m_card;
 
             if (card->isKindOf("Slash"))
-                lvmeng->setFlags("keji_use_slash");
+                lvmeng->setFlags("KejiUseSlash");
         }
 
         return false;

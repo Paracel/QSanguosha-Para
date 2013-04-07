@@ -190,7 +190,7 @@ function sgs.ai_skill_pindian.mizhao(minusecard, self, requestor, maxcard)
 	local function compare_func2(a, b)
 		return a:getNumber() < b:getNumber()
 	end
-	if self:isFriend(requestor) and self.player:getHp() > req:getHp() then
+	if self:isFriend(req) and self.player:getHp() > req:getHp() then
 		table.sort(cards, compare_func2)
 	else
 		table.sort(cards, compare_func1)

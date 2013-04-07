@@ -237,7 +237,7 @@ public:
                 damage.damage = 1;
                 data = QVariant::fromValue(damage);
             }
-        } else if (player->hasFlag("lion_rec")) {
+        } else if (player->hasFlag("SilverLionRecover")) {
             CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
             if (move->from != player || !move->from_places.contains(Player::PlaceEquip))
                 return false;
@@ -245,7 +245,7 @@ public:
                 if (move->from_places[i] != Player::PlaceEquip) continue;
                 const Card *card = Sanguosha->getEngineCard(move->card_ids[i]);
                 if (card->objectName() == objectName()) {
-                    player->setFlags("-lion_rec");
+                    player->setFlags("-SilverLionRecover");
                     if (player->isWounded()) {
                         room->setEmotion(player, "armor/silver_lion");
                         RecoverStruct recover;
@@ -271,7 +271,7 @@ void SilverLion::onUninstall(ServerPlayer *player) const{
     if (player->isAlive()
         && player->getMark("Qinggang_Armor_Nullified") == 0 && player->getMark("Armor_Nullified") == 0
         && player->getMark("Equips_Nullified_to_Yourself") == 0) {
-        player->setFlags("lion_rec");
+        player->setFlags("SilverLionRecover");
     }
 }
 

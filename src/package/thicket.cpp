@@ -98,14 +98,10 @@ public:
                     room->sendLog(log);
 
                     caopi->drawCards(1);
-                    caopi->setFlags("songwei_used"); //for AI
                     caopis.removeOne(caopi);
                 } else
                     break;
             }
-                    
-            foreach (ServerPlayer *caopi, room->getAllPlayers())
-                caopi->setFlags("-songwei_used");
         }
 
         return false;
@@ -907,7 +903,6 @@ public:
             while (!dongzhuos.isEmpty()) {
                 ServerPlayer *dongzhuo = room->askForPlayerChosen(player, dongzhuos, objectName(), "@baonue-to", true);
                 if (dongzhuo) {
-                    dongzhuo->setFlags("baonue_used"); //for AI
                     dongzhuos.removeOne(dongzhuo);
 
                     LogMessage log;
@@ -936,9 +931,6 @@ public:
                 } else
                     break;
             }
-
-            foreach (ServerPlayer *dongzhuo, room->getAllPlayers())
-                dongzhuo->setFlags("-baonue_used");
         }
         return false;
     }

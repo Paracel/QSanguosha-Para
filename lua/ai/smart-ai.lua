@@ -326,7 +326,7 @@ function SmartAI:getUseValue(card)
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
 		if self:hasSkills("qiangxi|zhulou") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
-		if (self:hasSkill("bazhen") or self:hasSkill("yizhong")) and card:isKindOf("Armor") then v = 2 end
+		if (self.player:hasSkill("bazhen") or self.player:hasSkill("yizhong")) and card:isKindOf("Armor") then v = 2 end
 		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong")
 			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
 			v = 9
@@ -336,7 +336,7 @@ function SmartAI:getUseValue(card)
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("TianyiSuccess") or self.player:hasFlag("JiangchiInvoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
-			if self.player:hasWeapon("Crossbow") or self:hasSkill("paoxiao") then v = v + 4 end
+			if self.player:hasWeapon("Crossbow") or self.player:hasSkill("paoxiao") then v = v + 4 end
 			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
 			if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 1 or -1) end
 		elseif card:isKindOf("Jink") then
@@ -2000,7 +2000,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if self:isFriend(to) and to:isNude() then return nil end
 		end
 		if from and self:isEnemy(from) and (sgs.evaluatePlayerRole(from) ~= "neutral" or sgs.isRolePredictable()) then
-			if self:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandCard(null_card) and trick:isKindOf("SingleTargetTrick") then return null_card end
+			if self.player:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 and self.player:isLastHandCard(null_card) and trick:isKindOf("SingleTargetTrick") then return null_card end
 			if trick:isKindOf("ExNihilo") and (self:isWeak(from) or self:hasSkills(sgs.cardneed_skill, from) or from:hasSkill("manjuan")) then return null_card end
 			if trick:isKindOf("IronChain") and not to:hasArmorEffect("vine") then return nil end
 			if self:isFriend(to) then
@@ -2389,7 +2389,7 @@ function SmartAI:askForAG(card_ids, refusable, reason)
 		if card_id then return card_id end
 	end
 
-	if refusable and self:hasSkill("xinzhan") then
+	if refusable and self.player:hasSkill("xinzhan") then
 		local next_player = self.player:getNextAlive()
 		if self:isFriend(next_player) and next_player:containsTrick("indulgence") then
 			if #card_ids == 1 then return -1 end
@@ -4360,15 +4360,15 @@ function SmartAI:useEquipCard(card, use)
 		or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
 		or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
 		or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
-		or (self:hasSkill("jijiu") and (card:isRed() or same:isRed())) then return end
+		or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed())) then return end
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)
 	self:useCardByClassName(card, use)
 	if use.card then return end
 	if card:isKindOf("Weapon") then
 		if self:needBear() then return end
-		if same and self:hasSkill("zhulou") then return end
-		if same and self:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
+		if same and self.player:hasSkill("zhulou") then return end
+		if same and self.player:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
 			local dummy_use = { isDummy = true }
 			self:useSkillCard(sgs.Card_Parse("@QiangxiCard=" .. same:getEffectiveId()), dummy_use)
 			if dummy_use.card then return end

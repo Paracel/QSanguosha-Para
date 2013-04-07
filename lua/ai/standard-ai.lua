@@ -628,7 +628,7 @@ end
 function SmartAI:willSkipPlayPhase(player, no_null)
 	local player = player or self.player
 	if player:isSkipped(sgs.Player_Play) then return false end
-	if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji") or (self:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
+	if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji") or (self.player:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
 	local friend_null, friend_snatch_dismantlement = 0, 0
 	if self.player:getPhase() == sgs.Player_Play and self.player:objectName() ~= player:objectName() and self:isFriend(player) then
 		for _, hcard in sgs.qlist(self.player:getCards("he")) do
@@ -655,7 +655,7 @@ end
 function SmartAI:willSkipDrawPhase(player, no_null)
 	local player = player or self.player
 	if player:isSkipped(sgs.Player_Draw) then return false end
-	if self.player:containsTrick("YanxiaoCard") or (self:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
+	if self.player:containsTrick("YanxiaoCard") or (self.player:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
 	local friend_null, friend_snatch_dismantlement = 0, 0
 	if self.player:getPhase() == sgs.Player_Play and self.player:objectName() ~= player:objectName() and self:isFriend(player) then
 		for _, hcard in sgs.qlist(self.player:getCards("he")) do
@@ -1777,7 +1777,7 @@ end
 sgs.ai_skill_cardask["@double-jink-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
-	if self:hasSkill("kongcheng") then
+	if self.player:hasSkill("kongcheng") then
 		if self.player:getHandcardNum() == 1 and self:getCardsNum("Jink") == 1 and target:hasWeapon("guding_blade") then return "." end
 	else
 		if self:getCardsNum("Jink") < 2 and self:hasLoseHandcardEffective() then return "." end

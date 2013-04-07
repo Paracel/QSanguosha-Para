@@ -130,7 +130,7 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 			local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash")
 			for _, enemy in ipairs(self.enemies) do
 				if self:slashIsEffective(slash, enemy) and self.player:distanceTo(enemy) == 1 and
-					not self:hasSkill("fenyong|zhichi|fankui|neoganglie|vsganglie|ganglie|enyuan|nosenyuan|langgu|guixin|kongcheng", enemy)
+					not self.player:hasSkill("fenyong|zhichi|fankui|neoganglie|vsganglie|ganglie|enyuan|nosenyuan|langgu|guixin|kongcheng", enemy)
 					and self:getCardsNum("Slash") + getKnownCard(enemy, "Slash") >= 3 then
 					target = enemy
 					break

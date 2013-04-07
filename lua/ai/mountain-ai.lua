@@ -931,7 +931,7 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 		self:sortByKeepValue(new_cards)
 		local valueless, slash
 		for _, card in ipairs(new_cards) do
-			if card:isKindOf("Lightning") and not self:hasSkill("guicai|guidao", who) then
+			if card:isKindOf("Lightning") and not self:hasSkills(sgs.wizard_harm_skill, who) then
 				return card:getEffectiveId()
 			end
 

@@ -1649,7 +1649,7 @@ function SmartAI:filterEvent(event, player, data)
 		if card and lord and card:isKindOf("Duel") and lord:hasFlag("AIGlobal_NeedToWake") then
 			lord:setFlags("-AIGlobal_NeedToWake")
 		end
-	elseif event == sgs.CardsMoveOneTime then
+	elseif event == sgs.BeforeCardsMove then
 		local move = data:toMoveOneTime()
 		local from = nil -- convert move.from from const Player * to ServerPlayer *
 		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
@@ -1690,6 +1690,30 @@ function SmartAI:filterEvent(event, player, data)
 				if from then sgs.updateIntention(sgs.ai_snat_dism_from, from, intention) end
 			end
 
+			if reason.m_skillName == "qiaobian" and from and move.to and self.room:getCurrent():objectName() == player:objectName() then
+				if table.contains(from_places, sgs.Player_PlaceDelayedTrick) then
+					if card:isKindOf("YanxiaoCard") then
+						sgs.updateIntention(player, from, 80)
+						sgs.updateIntention(player, move.to, -80)
+					end
+					if card:isKindOf("SupplyShortage") or card:isKindOf("Indulgence") then
+						sgs.updateIntention(player, from, -80)
+						sgs.updateIntention(player, move.to, 80)
+					end
+				end
+				if table.contains(from_places, sgs.Player_PlaceEquip) then
+					sgs.updateIntention(player, move.to, -80)
+				end
+			end
+		end
+	elseif event == sgs.CardsMoveOneTime then
+		local move = data:toMoveOneTime()
+		local from = nil -- convert move.from from const Player * to ServerPlayer *
+		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
+		local reason = move.reason
+		local from_places = sgs.QList2Table(move.from_places)
+
+		for i = 1, move.card_ids:length() do
 			if move.to_place == sgs.Player_PlaceHand and move.to and player:objectName() == move.to:objectName() then
 				if card:hasFlag("visible") then
 					if is_a_slash(move.to, card) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
@@ -1705,26 +1729,6 @@ function SmartAI:filterEvent(event, player, data)
 					and move.from:objectName() ~= move.to:objectName() and place == sgs.Player_PlaceHand and not card:hasFlag("visible") then
 					local flag = string.format("%s_%s_%s", "visible", move.from:objectName(), move.to:objectName())
 					card:setFlags(flag)
-				end
-			end
-
-			--[[if move.to_place == sgs.Player_DiscardPile then
-				global_room:clearCardFlag(card)
-			end]]
-
-			if reason.m_skillName == "qiaobian" and from and move.to and self.room:getCurrent():objectName() == player:objectName() then
-				if table.contains(from_places, sgs.Player_PlaceDelayedTrick) then
-					if card:isKindOf("YanxiaoCard") then
-						sgs.updateIntention(player, from, 80)
-						sgs.updateIntention(player, move.to, -80)
-					end
-					if card:isKindOf("SupplyShortage") or card:isKindOf("Indulgence") then
-						sgs.updateIntention(player, from, -80)
-						sgs.updateIntention(player, move.to, 80)
-					end
-				end
-				if table.contains(from_places, sgs.Player_PlaceEquip) then
-					sgs.updateIntention(player, move.to, -80)
 				end
 			end
 

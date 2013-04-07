@@ -1670,9 +1670,9 @@ function SmartAI:filterEvent(event, player, data)
 				elseif place == sgs.Player_PlaceEquip then
 					if player:getLostHp() > 1 and card:isKindOf("SilverLion") then
 						if self:hasSkills(sgs.use_lion_skill, player) then
-							intention = player:containsTrick("indulgence") and -intention or 0
+							intention = self:willSkipPlayPhase(player) and -intention / 2 or 0
 						else
-							intention = self:isWeak(player) and -intention or -intention / 10
+							intention = self:isWeak(player) and -intention / 2 or -intention / 10
 						end
 					end
 					if self:hasSkills(sgs.lose_equip_skill, player) then

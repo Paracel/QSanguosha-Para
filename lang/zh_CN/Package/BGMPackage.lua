@@ -55,7 +55,7 @@ return {
 	["illustrator:bgm_zhangfei"] = "绿豆粥",
 	["designer:bgm_zhangfei"] = "Serendipity",
 	["jie"] = "嫉恶",
-	[":jie"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用的红色【杀】将要造成的伤害+1。",
+	[":jie"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用的红色【杀】对目标角色造成伤害时，此伤害+1。",
 	["dahe"] = "大喝",
 	[":dahe"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以与一名其他角色拼点：若你赢，你可以将该角色的拼点牌交给一名体力值不多于你的角色，该角色使用的非<font color=\"red\">♥</font>【闪】无效，直到回合结束；若你没赢，你展示所有手牌，然后弃置一张手牌。",
 	["@dahe-give"] = "你可以将拼点牌交给一名体力值不多于你的角色",

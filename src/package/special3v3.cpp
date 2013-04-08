@@ -251,7 +251,7 @@ public:
 class ZhongyiAction: public TriggerSkill {
 public:
     ZhongyiAction(): TriggerSkill("#zhongyi-action") {
-        events << ConfirmDamage << EventPhaseStart << ActionedReset;
+        events << DamageCaused << EventPhaseStart << ActionedReset;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -260,8 +260,9 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         QString mode = room->getMode();
-        if (event == ConfirmDamage) {
+        if (event == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
+            if (damage.chain || damage.transfer) return false;
             if (damage.card && damage.card->isKindOf("Slash")) {
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
                     if (p->getPile("loyal").isEmpty()) continue;

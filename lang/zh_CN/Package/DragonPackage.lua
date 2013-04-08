@@ -6,7 +6,7 @@ return {
 	["dr_xuchu"] = "龙版许褚",
 	["$dr_xuchu"] = "许褚",
 	["drluoyi"] = "裸衣",
-	[":drluoyi"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的装备区没有武器牌，你使用且你为伤害来源的【杀】将要造成的伤害+1。",
+	[":drluoyi"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的装备区没有武器牌，你使用且你为伤害来源的【杀】对目标角色造成伤害时，此伤害+1。",
 
 	["#dr_machao"] = "一骑当千",
 	["dr_machao"] = "龙版马超",

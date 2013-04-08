@@ -36,7 +36,7 @@ public:
 class NeoLuoyiBuff: public TriggerSkill {
 public:
     NeoLuoyiBuff(): TriggerSkill("#neoluoyi") {
-        events << ConfirmDamage;
+        events << DamageCaused;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -45,9 +45,8 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xuchu, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-
+        if (damage.chain || damage.transfer) return false;
         const Card *reason = damage.card;
-
         if (reason && (reason->isKindOf("Slash") || reason->isKindOf("Duel"))) {
             LogMessage log;
             log.type = "#LuoyiBuff";

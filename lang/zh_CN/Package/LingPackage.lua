@@ -13,7 +13,7 @@ return {
 	["neo_xuchu"] = "许褚-新",
 	["&neo_xuchu"] = "许褚",
 	["neoluoyi"] = "裸衣",
-	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张装备牌：若如此做，你使用且你为伤害来源的【杀】或【决斗】将要造成的伤害+1，直到回合结束。",
+	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张装备牌：若如此做，你使用且你为伤害来源的【杀】或【决斗】对目标角色造成伤害时，此伤害+1，直到回合结束。",
 	["#LuoyiBuff"] = "%from 的“<font color=\"yellow\"><b>裸衣</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 
 	["neo_caoren"] = "曹仁-新",

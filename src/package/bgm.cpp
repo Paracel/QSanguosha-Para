@@ -490,13 +490,14 @@ public:
 class Jie: public TriggerSkill {
 public:
     Jie(): TriggerSkill("jie") {
-        events << ConfirmDamage;
+        events << DamageCaused;
         frequency = Compulsory;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (!damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
+        if (damage.chain || damage.transfer
+            || !damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
             return false;
 
         room->notifySkillInvoked(player, objectName());

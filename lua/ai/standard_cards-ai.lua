@@ -1530,8 +1530,8 @@ function SmartAI:getValuableCard(who)
 		if who:hasSkills("longhun|guose|yanxiao") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
 		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
 		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
-		if who:hasSkills("shensu|mingce|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi") then return equip:getEffectiveId() end
 		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
+		if self:hasSkills(sgs.need_equip_skill, who) and not self:hasSkills(sgs.lose_equip_skill, who) then return equip:getEffectiveId() end
 	end
 
 	if armor and not self:needToThrowArmor(who) and not self:doNotDiscard(who, "e") then

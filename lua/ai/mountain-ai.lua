@@ -42,7 +42,13 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 				for _, friend in ipairs(self.friends) do
 					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName()
-						and self:hasSkills(sgs.lose_equip_skill .. "|shensu", friend) then
+						and self:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill, friend) then
+						target = friend
+						break
+					end
+				end
+				for _, friend in ipairs(self.friends) do
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
 						target = friend
 						break
 					end
@@ -797,6 +803,14 @@ sgs.ai_skill_use_func.ZhijianCard = function(card, use, self)
 
 	local select_equip, target
 	for _, friend in ipairs(self.friends_noself) do
+		for _, equip in ipairs(equips) do
+			if not self:getSameEquip(equip, friend) and self:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill, friend) then
+				target = friend
+				select_equip = equip
+				break
+			end
+		end
+		if target then break end
 		for _, equip in ipairs(equips) do
 			if not self:getSameEquip(equip, friend) then
 				target = friend

@@ -46,6 +46,7 @@ typedef struct BlockCnt {
   lu_byte nactvar;  /* # active locals outside the block */
   lu_byte upval;  /* true if some variable in the block is an upvalue */
   lu_byte isloop;  /* true if `block' is a loop */
+  int continuelist;
 } BlockCnt;
 
 
@@ -443,6 +444,7 @@ static void enterblock (FuncState *fs, BlockCnt *bl, lu_byte isloop) {
   bl->upval = 0;
   bl->previous = fs->bl;
   fs->bl = bl;
+  bl->continuelist = NO_JUMP;
   lua_assert(fs->freereg == fs->nactvar);
 }
 
@@ -1190,6 +1192,25 @@ static void gotostat (LexState *ls, int pc) {
   findlabel(ls, g);  /* close it if label already defined */
 }
 
+static void continuestat(LexState *ls) {
+  FuncState *fs = ls->fs;
+  BlockCnt *bl = fs->bl;
+  int upval = 0;
+  while(bl && !bl->isloop)  {
+    upval |= bl->upval;
+    bl = bl->previous;
+  }
+
+  if(!bl) {
+    luaX_syntaxerror(ls, "no loop to continue");
+  }
+
+  if(upval) {
+    luaK_codeABC(fs, OP_CLOSURE, bl->nactvar, 0, 0);
+  }
+
+  luaK_concat(fs, &bl->continuelist, luaK_jump(fs));
+}
 
 /* check for repeated labels on the same block */
 static void checkrepeated (FuncState *fs, Labellist *ll, TString *label) {
@@ -1243,6 +1264,7 @@ static void whilestat (LexState *ls, int line) {
   checknext(ls, TK_DO);
   block(ls);
   luaK_jumpto(fs, whileinit);
+  luaK_patchlist(fs, bl.continuelist, whileinit);  /* continue goes to start, too */
   check_match(ls, TK_END, TK_WHILE, line);
   leaveblock(fs);
   luaK_patchtohere(fs, condexit);  /* false conditions finish the loop */
@@ -1259,6 +1281,7 @@ static void repeatstat (LexState *ls, int line) {
   enterblock(fs, &bl2, 0);  /* scope block */
   luaX_next(ls);  /* skip REPEAT */
   statlist(ls);
+  luaK_patchtohere(fs, bl1.continuelist);
   check_match(ls, TK_UNTIL, TK_REPEAT, line);
   condexit = cond(ls);  /* read condition (inside scope block) */
   if (bl2.upval)  /* upvalues? */
@@ -1294,6 +1317,7 @@ static void forbody (LexState *ls, int base, int line, int nvars, int isnum) {
   block(ls);
   leaveblock(fs);  /* end of scope for declared variables */
   luaK_patchtohere(fs, prep);
+  luaK_patchtohere(fs, bl.previous->continuelist);  /* continue, if any, jumps to here */
   if (isnum)  /* numeric for? */
     endfor = luaK_codeAsBx(fs, OP_FORLOOP, base, NO_JUMP);
   else {  /* generic for */
@@ -1581,6 +1605,11 @@ static void statement (LexState *ls) {
     case TK_BREAK:   /* stat -> breakstat */
     case TK_GOTO: {  /* stat -> 'goto' NAME */
       gotostat(ls, luaK_jump(ls->fs));
+      break;
+    }
+    case TK_CONTINUE: {
+      luaX_next(ls);
+      continuestat(ls);
       break;
     }
     default: {  /* stat -> func | assignment */

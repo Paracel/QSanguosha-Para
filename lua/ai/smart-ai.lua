@@ -3348,7 +3348,11 @@ function isCard(class_name, card, player)
 	if not player or not card then global_room:writeToConsole(debug.traceback()) end
 	if not card:isKindOf(class_name) then
 		if getSkillViewCard(card, class_name, player, player:getRoom():getCardPlace(card:getEffectiveId())) then return true end
+		if player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart and class_name == "Slash" then return true end
+		if player:hasSkill("jinjiu") and card:isKindOf("Analeptic") and class_name == "Slash" then return true end
 	else
+		if player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart and class_name ~= "Slash" then return false end
+		if player:hasSkill("jinjiu") and class_name == "Analeptic" then return false end
 		if not prohibitUseDirectly(card, player) then return true end
 	end
 	return false

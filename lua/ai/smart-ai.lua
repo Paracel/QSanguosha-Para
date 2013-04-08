@@ -3231,27 +3231,54 @@ function SmartAI:needRetrial(judge)
 	end
 end
 
+function SmartAI:dontRespondPeachInJudge(judge)
+	local peach_num = self:getCardsNum("Peach")
+	if peach_num == 0 then return false end
+	if self:willSkipPlayPhase() and self:getCardsNum("Peach") > self.player:getMaxCards() then return false end
+
+	if peach_num <= self.player:getLostHp() then
+		return true
+	else
+		for _, friend in ipairs(self.friends) do
+			if friend:isWeak() then return true end
+		end
+	end
+
+	if not judge or not type(judge) ~= "userdata" then self.room:writeToConsole(debug.traceback()) end
+
+	if judge.reason == "tuntian" and judge.who:getMark("zaoxian") == 0 and judge.who:getPile("field"):length() < 2 then return true
+	elseif (judge.reason == "eight_diagram" or judge.reason == "bazhen") and self:isFriend(judge.who) and not self:isWeak(judge.who) then return true
+	elseif judge.reason == "nosmiji" and judge.who:getLostHp() == 1 then return true
+	elseif judge.reason == "tieji" then
+		local target
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			if p:hasFlag("TiejiTarget") then
+				target = p
+				break
+			end
+		end
+		if target then return not (self:isEnemy(target) and self:isWeak(target)) else return true end
+	elseif judge.reason == "qianxi" then return true
+	end
+
+	return false
+end
+
 --- Get the retrial cards with the lowest keep value
 -- @param cards the table that contains all cards can use in retrial skill
 -- @param judge the JudgeStruct that contains the judge information
 -- @return the retrial card id or -1 if not found
 function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
-	local dontRespondPeach
-	if judge.reason == "tuntian" and judge.who:getMark("zaoxian") == 0 and judge.who:getPile("field"):length() < 2 then dontRespondPeach = true
-	elseif (judge.reason == "eight_diagram" or judge.reason == "bazhen")
-			and self:isFriend(judge.who) and not self:isWeak(judge.who) then dontRespondPeach = true
-	elseif judge.reason == "nosmiji" and judge.who:getLostHp() == 1 then dontRespondPeach = true
-	end
 
 	for _, card in ipairs(cards) do
 		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
 		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
 		end
-		if self:isFriend(judge.who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or dontRespondPeach) and card_x:isKindOf("Peach")) then
+		if self:isFriend(judge.who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)
-		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or dontRespondPeach) and card_x:isKindOf("Peach")) then
+		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)
 		end
 	end

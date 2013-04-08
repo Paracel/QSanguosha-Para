@@ -555,7 +555,7 @@ int Player::getMaxCards() const {
     }
     extra += Sanguosha->correctMaxCards(this);
 
-    return (qMax(hp, 0) + rule + extra);
+    return qMax((qMax(hp, 0) + rule + extra), 0);
 }
 
 QString Player::getKingdom() const {

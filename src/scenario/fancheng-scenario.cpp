@@ -105,7 +105,7 @@ FloodCard::FloodCard() {
 void FloodCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->setTag("Flood", true);
 
-    room->setPlayerFlag(source, "flood");
+    room->setPlayerMark(source, "flood", 1);
 
     QList<ServerPlayer *> players = room->getOtherPlayers(source);
     foreach (ServerPlayer *player, players) {
@@ -129,7 +129,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasFlag("flood");
+        return player->getMark("flood") == 0;
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
@@ -296,6 +296,7 @@ public:
                 ServerPlayer *caoren = room->findPlayer("caoren");
                 room->installEquip(caoren, "renwang_shield");
                 room->acquireSkill(caoren, "zhiyuan");
+                room->acquireSkill(caoren, "#caoren-max-cards", false);
 
 
                 break;
@@ -317,6 +318,19 @@ public:
     }
 };
 
+class CaorenMaxCards: public MaxCardsSkill {
+public:
+    CaorenMaxCards():MaxCardsSkill("#caoren-max-cards") {
+    }
+
+    virtual int getExtra(const Player *target) const{
+        if (target->getMark("CaorenMaxCards") > 0)
+            return -1;
+        else
+            return 0;
+    }
+};
+
 FanchengScenario::FanchengScenario()
     : Scenario("fancheng")
 {
@@ -332,7 +346,8 @@ FanchengScenario::FanchengScenario()
            << new Flood
            << new TaichenFight
            << new Xiansheng
-           << new Zhiyuan;
+           << new Zhiyuan
+           << new CaorenMaxCards;
 
     addMetaObject<DujiangCard>();
     addMetaObject<FloodCard>();
@@ -350,11 +365,11 @@ void FanchengScenario::onTagSet(Room *room, const QString &key) const{
 
         ServerPlayer *caoren = room->findPlayer("caoren");
         if (caoren)
-            room->setPlayerProperty(caoren, "xueyi", -1);
+            room->setPlayerMark(caoren, "CaorenMaxCards", 1);
     } else if (key == "Dujiang") {
         ServerPlayer *caoren = room->findPlayer("caoren");
         if (caoren)
-            room->setPlayerProperty(caoren, "xueyi", 0);
+            room->setPlayerMark(caoren, "CaorenMaxCards", 0);
     }
 }
 

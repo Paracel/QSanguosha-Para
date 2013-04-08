@@ -1068,9 +1068,6 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
         return false;
     }
 
-    player->tag["event"] = event;
-    player->tag["event_data"] = data;
-
     switch (event) {
     case CardEffected: {
             if (player->getPhase() == Player::NotActive) {

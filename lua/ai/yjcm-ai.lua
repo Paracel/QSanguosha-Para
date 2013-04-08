@@ -388,7 +388,7 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 
 	for _, friend in ipairs(self.friends) do
 		for _, enemy in ipairs(self.enemies) do
-			if not self:hasSkills(sgs.lose_equip_skill, enemy) then
+			if not self:hasSkills(sgs.lose_equip_skill, enemy) and not enemy:hasSkills("tuntian+zaoxian") then
 				local ee = enemy:getEquips():length()
 				local fe = friend:getEquips():length()
 				local value = self:evaluateArmor(enemy:getArmor(), friend) - self:evaluateArmor(friend:getArmor(), enemy)
@@ -420,8 +420,12 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 
 	target = nil
 	for _, friend in ipairs(self.friends) do
-		if self:needToThrowArmor(friend) or (self:hasSkills(sgs.lose_equip_skill, friend)
-			and not friend:getEquips():isEmpty()) then target = friend break end
+		if self:needToThrowArmor(friend) or ((self:hasSkills(sgs.lose_equip_skill, friend)
+											or (friend:hasSkills("tuntian+zaoxian") and friend:getPhase() == sgs.Player_NotActive))
+			and not friend:getEquips():isEmpty()) then
+			target = friend
+			break
+		end
 	end
 	if not target then return end
 	for _, friend in ipairs(self.friends) do

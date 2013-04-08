@@ -23,10 +23,10 @@ local function card_for_qiaobian(self, who, return_prompt)
 		if not target and not equips:isEmpty() and self:hasSkills(sgs.lose_equip_skill, who) then
 			for _, equip in sgs.qlist(equips) do
 				if equip:isKindOf("OffensiveHorse") then card = equip break
+				elseif equip:isKindOf("Weapon") then card = equip break
 				elseif equip:isKindOf("DefensiveHorse") and not self:isWeak(who) then
 					card = equip
 					break
-				elseif equip:isKindOf("Weapon") then card = equip break
 				elseif equip:isKindOf("Armor") and not self:isWeak(who) then
 					card = equip
 					break

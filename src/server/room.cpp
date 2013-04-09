@@ -2547,7 +2547,7 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                     break;
                 }
             }
-        } else if (sentence.startsWith(".ShowHandCards")) {
+        } else if (sentence == ".ShowHandCards") {
             _NO_BROADCAST_SPEAKING
             QString split("----------");
             split = split.toUtf8().toBase64();

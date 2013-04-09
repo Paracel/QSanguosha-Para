@@ -72,37 +72,34 @@ void EquipCard::onUse(Room *room, const CardUseStruct &card_use) const{
     thread->trigger(CardFinished, room, player, data);
 }
 
-void EquipCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+void EquipCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets) const{
     int equipped_id = Card::S_UNKNOWN_CARD_ID;
-    ServerPlayer *target = targets.value(0, source);
-    if (room->getCardOwner(getId()) != source) return;
+    ServerPlayer *target = targets.first();
     if (target->getEquip(location()))
         equipped_id = target->getEquip(location())->getEffectiveId();
 
-    if (room->getCardPlace(getId()) == Player::PlaceHand) {
-            QList<CardsMoveStruct> exchangeMove;
-            CardsMoveStruct move1;
-            move1.card_ids << getId();
-            move1.to = target;
-            move1.to_place = Player::PlaceEquip;
-            move1.reason = CardMoveReason(CardMoveReason::S_REASON_USE, target->objectName());
-            exchangeMove.push_back(move1);
-            if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
-                CardsMoveStruct move2;
-                move2.card_ids << equipped_id;
-                move2.to = NULL;
-                move2.to_place = Player::DiscardPile;
-                move2.reason = CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName());
-                exchangeMove.push_back(move2);
-            }
-            LogMessage log;
-            log.from = target;
-            log.type = "$Install";
-            log.card_str = QString::number(getEffectiveId());
-            room->sendLog(log);
+    QList<CardsMoveStruct> exchangeMove;
+    CardsMoveStruct move1;
+    move1.card_ids << getId();
+    move1.to = target;
+    move1.to_place = Player::PlaceEquip;
+    move1.reason = CardMoveReason(CardMoveReason::S_REASON_USE, target->objectName());
+    exchangeMove.push_back(move1);
+    if (equipped_id != Card::S_UNKNOWN_CARD_ID) {
+         CardsMoveStruct move2;
+         move2.card_ids << equipped_id;
+         move2.to = NULL;
+         move2.to_place = Player::DiscardPile;
+         move2.reason = CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName());
+         exchangeMove.push_back(move2);
+    }
+    LogMessage log;
+    log.from = target;
+    log.type = "$Install";
+    log.card_str = QString::number(getEffectiveId());
+    room->sendLog(log);
 
-            room->moveCardsAtomic(exchangeMove, true);
-        }
+    room->moveCardsAtomic(exchangeMove, true);
 }
 
 void EquipCard::onInstall(ServerPlayer *player) const{

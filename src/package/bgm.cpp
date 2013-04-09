@@ -5,9 +5,9 @@
 #include "engine.h"
 #include "settings.h"
 
-class ChongZhen: public TriggerSkill {
+class Chongzhen: public TriggerSkill {
 public:
-    ChongZhen(): TriggerSkill("chongzhen") {
+    Chongzhen(): TriggerSkill("chongzhen") {
         events << CardResponded << TargetConfirmed;
     }
 
@@ -1471,7 +1471,7 @@ public:
 BGMPackage::BGMPackage(): Package("BGM") {
     General *bgm_zhaoyun = new General(this, "bgm_zhaoyun", "qun", 3);
     bgm_zhaoyun->addSkill("longdan");
-    bgm_zhaoyun->addSkill(new ChongZhen);
+    bgm_zhaoyun->addSkill(new Chongzhen);
 
     General *bgm_diaochan = new General(this, "bgm_diaochan", "qun", 3, false);
     bgm_diaochan->addSkill(new Lihun);

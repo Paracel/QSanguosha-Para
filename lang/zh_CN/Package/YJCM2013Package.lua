@@ -63,6 +63,7 @@ return {
 	["illustrator:panzhangmazhong"] = "zzyzzyy",
 	["duodao"] = "夺刀",
 	["anjian"] = "暗箭",
+	["#AnjianBuff"] = "%from 的“<font color=\"yellow\"><b>暗箭</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 
 	["#yufan"] = "",
 	["yufan"] = "虞翻",

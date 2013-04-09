@@ -481,6 +481,64 @@ private:
     }
 };
 
+DuodaoCard::DuodaoCard() {
+}
+
+bool DuodaoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isKongcheng() && to_select != Self && to_select->getWeapon() != NULL;
+}
+
+void DuodaoCard::use(Room *room, ServerPlayer *panma, QList<ServerPlayer *> &targets) const{
+    ServerPlayer *target = targets.first();
+    bool success = panma->pindian(target, "duodao", NULL);
+    if (success) {
+        if (target->getWeapon())
+            room->obtainCard(panma, target->getWeapon());
+    } else
+        room->setPlayerCardLimitation(panma, "use", "Slash", true);
+}
+
+class Duodao: public ZeroCardViewAsSkill {
+public:
+    Duodao(): ZeroCardViewAsSkill("duodao") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("DuodaoCard") && !player->isKongcheng();
+    }
+
+    virtual const Card *viewAs() const{
+        return new DuodaoCard;
+    }
+};
+
+class Anjian: public TriggerSkill {
+public:
+    Anjian(): TriggerSkill("anjian") {
+        events << DamageCaused;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.chain || damage.transfer) return false;
+        if (damage.from && !damage.to->inMyAttackRange(damage.from)
+            && damage.card && damage.card->isKindOf("Slash")) {
+            LogMessage log;
+            log.type = "#AnjianBuff";
+            log.from = damage.from;
+            log.to << damage.to;
+            log.arg = QString::number(damage.damage);
+            log.arg2 = QString::number(++damage.damage);
+            room->sendLog(log);
+
+            data = QVariant::fromValue(damage);
+        }
+
+        return false;
+    }
+};
+
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
@@ -503,9 +561,14 @@ YJCM2013Package::YJCM2013Package()
     liufeng->addSkill(new XiansiAttach);
     related_skills.insertMulti("xiansi", "#xiansi-attach");
 
+    General *panzhangmazhong = new General(this, "panzhangmazhong", "wu");
+    panzhangmazhong->addSkill(new Duodao);
+    panzhangmazhong->addSkill(new Anjian);
+
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();
+    addMetaObject<DuodaoCard>();
     addMetaObject<ExtraCollateralCard>();
 
     skills << new XiansiSlashViewAsSkill;

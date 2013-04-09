@@ -1633,7 +1633,7 @@ function SmartAI:filterEvent(event, player, data)
 			end
 		end
 
-		if sgs.turncount == 1 and #to > 0 then
+		if sgs.turncount <= 1 and #to > 0 then
 			local who = to[1]
 			if not lord then return end
 			if (card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard")) and sgs.evaluatePlayerRole(who) == "neutral" then

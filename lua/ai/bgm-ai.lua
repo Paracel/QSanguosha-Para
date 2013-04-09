@@ -853,7 +853,7 @@ sgs.yinling_suit_value = {
 
 sgs.ai_skill_invoke.fenyong = function(self, data)
 	self.fenyong_choice = nil
-	if sgs.turncount == 0 and #self.enemies == 0 then return end
+	if sgs.turncount <= 1 and #self.enemies == 0 then return end
 
 	local current = self.room:getCurrent()
 	if not current or current:getPhase() >= sgs.Player_Finish then return true end

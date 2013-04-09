@@ -328,7 +328,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	end
 
 	local lord = self.room:getLord()
-	if lord and self:isEnemy(lord) and sgs.turncount ==1 and not lord:isKongcheng() then
+	if lord and self:isEnemy(lord) and sgs.turncount == 1 and not lord:isKongcheng() then
 		add_player(lord)
 	end
 

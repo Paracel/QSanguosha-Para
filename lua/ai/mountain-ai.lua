@@ -1029,7 +1029,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			for _, askill in ipairs(("drqingnang|qingnang|jieyin|juejing|nosmiji|rende"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
-			if self.player:getHp() < 2 and self.player:getHandcardNum() == 1 then
+			if self.player:getHp() < 2 and self.player:getHandcardNum() == 1 and self:getCardsNum("Peach") == 0 then
 				if str:matchOne("shenzhi") then return "shenzhi" end
 			end
 			if str:matchOne("miji") and #self.friends > 1 then return "miji" end

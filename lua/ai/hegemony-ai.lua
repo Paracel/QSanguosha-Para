@@ -109,8 +109,11 @@ end
 sgs.ai_playerchosen_intention.shushen = -80
 
 sgs.ai_skill_invoke.shenzhi = function(self, data)
-	return self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() <= self.player:getHp() + math.max(3, self.player:getHp())
-			and self.player:getLostHp() > 0 and self:getCardsNum("Peach") == 0
+	if self:getCardsNum("Peach") > 0 then return false end
+	if self.player:getHandcardNum() >= 4 then return false end
+	if self.player:getHandcardNum() >= self.player:getHp() and self.player:isWounded() then return true end
+	if self.player:hasSkill("sijian") and self.player:getHandcardNum() == 1 then return true end
+	return false
 end
 
 function sgs.ai_cardneed.shenzhi(to, card)

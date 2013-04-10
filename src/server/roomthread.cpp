@@ -323,7 +323,31 @@ void RoomThread::constructTriggerTable() {
         addPlayerSkills(player, true);
 }
 
-void RoomThread::run3v3() {
+ServerPlayer *RoomThread::find3v3Next(QList<ServerPlayer *> *first, QList<ServerPlayer *> *second) {
+    ServerPlayer *current = room->getCurrent();
+    if (current != first->first()) {
+        ServerPlayer *another;
+        if (current == first->last())
+            another = first->at(1);
+        else
+            another = first->last();
+        if (!another->hasFlag("actioned") && another->isAlive())
+            return another;
+    }
+
+    QList<ServerPlayer *> targets;
+    do {
+        qSwap(first, second);
+        foreach (ServerPlayer *player, *first) {
+            if (!player->hasFlag("actioned") && player->isAlive())
+                targets << player;
+        }
+    } while (targets.isEmpty());
+
+    return room->askForPlayerChosen(first->first(), targets, "3v3-action", "@3v3-action");
+}
+
+QList<QList<ServerPlayer *> *> RoomThread::prepare3v3() {
     QList<ServerPlayer *> warm, cool;
     foreach (ServerPlayer *player, room->m_players) {
         switch (player->getRoleEnum()) {
@@ -344,30 +368,46 @@ void RoomThread::run3v3() {
         first = &cool;
         second = &warm;
     }
+    QList<QList<ServerPlayer *> *> list;
+    list << first << second;
+    return list;
+}
 
-    action3v3(first->first());
-
-    forever {
-        qSwap(first, second);
-
-        QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *player, *first) {
-            if (!player->hasFlag("actioned") && player->isAlive())
-                targets << player;
+void RoomThread::run3v3(QList<ServerPlayer *> *first, QList<ServerPlayer *> *second, GameRule *game_rule, ServerPlayer *current) {
+    try {
+        forever {
+            action3v3(current);
+            current = find3v3Next(first, second);
         }
-
-        ServerPlayer *to_action = room->askForPlayerChosen(first->first(), targets, "3v3-action", "@3v3-action");
-        if (to_action) {
-            action3v3(to_action);
-            if (to_action != first->first()) {
-                ServerPlayer *another;
-                if (to_action == first->last())
-                    another = first->at(1);
-                else
-                    another = first->last();
-                if (!another->hasFlag("actioned") && another->isAlive())
-                    action3v3(another);
+    }
+    catch (TriggerEvent event) {
+        if (event == TurnBroken) {
+            ServerPlayer *player = room->getCurrent();
+            if (player->getPhase() != Player::NotActive) {
+                game_rule->trigger(EventPhaseEnd, room, player, QVariant());
+                player->changePhase(player->getPhase(), Player::NotActive);
             }
+            if (!player->hasFlag("actioned"))
+                room->setPlayerFlag(player, "actioned");
+
+            bool all_actioned = true;
+            foreach (ServerPlayer *player, room->m_alivePlayers) {
+                if (!player->hasFlag("actioned")) {
+                    all_actioned = false;
+                    break;
+                }
+            }
+
+            if (all_actioned) {
+                foreach (ServerPlayer *player, room->m_alivePlayers) {
+                    room->setPlayerFlag(player, "-actioned");
+                    trigger(ActionedReset, room, player);
+                }
+            }
+
+            run3v3(first, second, game_rule, find3v3Next(first, second));
+        } else {
+            throw event;
         }
     }
 }
@@ -393,6 +433,135 @@ void RoomThread::action3v3(ServerPlayer *player) {
     }
 }
 
+ServerPlayer *RoomThread::findHulaoPassNext(ServerPlayer *shenlvbu, QList<ServerPlayer *> league, int stage) {
+    ServerPlayer *current = room->getCurrent();
+    if (stage == 1) {
+        if (current == shenlvbu) {
+            foreach (ServerPlayer *p, league) {
+                if (p->isAlive() && !p->hasFlag("actioned"))
+                    return p;
+            }
+        } else {
+            return shenlvbu;
+        }
+    } else {
+        Q_ASSERT(stage == 2);
+        return current->getNextAlive();
+    }
+}
+
+void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> league, GameRule *game_rule, int stage) {
+    try {
+        if (stage == 1) {
+            forever {
+                ServerPlayer *current = room->getCurrent();
+                trigger(TurnStart, room, current);
+
+                ServerPlayer *next = findHulaoPassNext(shenlvbu, league, 1);
+                if (current != shenlvbu) {
+                    if (current->isAlive() && !current->hasFlag("actioned"))
+                        room->setPlayerFlag(current, "actioned");
+                } else {
+                    bool all_actioned = true;
+                    foreach (ServerPlayer *player, league) {
+                        if (player->isAlive() && !player->hasFlag("actioned")) {
+                            all_actioned = false;
+                            break;
+                        }
+                    }
+                    if (all_actioned) {
+                        foreach (ServerPlayer *player, league) {
+                            if (player->hasFlag("actioned"))
+                                room->setPlayerFlag(player, "-actioned");
+                        }
+                        foreach (ServerPlayer *player, league) {
+                            if (player->isDead())
+                                trigger(TurnStart, room, player);
+                        }
+                    }
+                }
+
+                room->setCurrent(next);
+            }
+        } else {
+            Q_ASSERT(stage == 2);
+            forever {
+                ServerPlayer *current = room->getCurrent();
+                trigger(TurnStart, room, current);
+
+                ServerPlayer *next = findHulaoPassNext(shenlvbu, league, 2);
+
+                if (current == shenlvbu) {
+                    foreach (ServerPlayer *player, league) {
+                        if (player->isDead())
+                            trigger(TurnStart, room, player);
+                    }
+                }
+                room->setCurrent(next);
+            }
+        }
+    }
+    catch (TriggerEvent event) {
+        if (event == StageChange) {
+            stage = 2;
+            trigger(event, (Room *)room, NULL);
+            foreach (ServerPlayer *player, room->getPlayers()) {
+                if (player != shenlvbu) {
+                    if (player->hasFlag("actioned"))
+                        room->setPlayerFlag(player, "-actioned");
+
+                    if (player->getPhase() != Player::NotActive) {
+                        game_rule->trigger(EventPhaseEnd, room, player, QVariant());
+                        player->changePhase(player->getPhase(), Player::NotActive);
+                    }
+                }
+            }
+
+            room->setCurrent(shenlvbu);
+            actionHulaoPass(shenlvbu, league, game_rule, 2);
+        } else if (event == TurnBroken) {
+            ServerPlayer *player = room->getCurrent();
+            ServerPlayer *next = findHulaoPassNext(shenlvbu, league, stage);
+            if (player->getPhase() != Player::NotActive) {
+                game_rule->trigger(EventPhaseEnd, room, player, QVariant());
+                player->changePhase(player->getPhase(), Player::NotActive);
+                if (player != shenlvbu && stage == 1)
+                    room->setPlayerFlag(player, "actioned");
+            }
+
+            room->setCurrent(next);
+            actionHulaoPass(shenlvbu, league, game_rule, stage);
+        } else {
+            throw event;
+        }
+    }
+}
+
+void RoomThread::actionNormal(GameRule *game_rule) {
+    try {
+        forever {
+            trigger(TurnStart, room, room->getCurrent());
+            if (room->isFinished()) break;
+            room->setCurrent(room->getCurrent()->getNextAlive());
+        }
+    }
+    catch (TriggerEvent event) {
+        if (event == TurnBroken) {
+            ServerPlayer *player = room->getCurrent();
+            ServerPlayer *next = player->getNextAlive();
+            if (player->getPhase() != Player::NotActive) {
+                game_rule->trigger(EventPhaseEnd, room, player, QVariant());
+                player->changePhase(player->getPhase(), Player::NotActive);
+            }
+
+            room->setCurrent(next);
+            actionNormal(game_rule);
+        } else {
+            throw event;
+        }
+    }
+}
+
 void RoomThread::run() {
     qsrand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
     Sanguosha->registerRoom(room);
@@ -410,96 +579,25 @@ void RoomThread::run() {
         if (rule) addTriggerSkill(rule);
     }
 
-    // start game, draw initial 4 cards
+    // start game
     try {        
         trigger(GameStart, (Room *)room, NULL);
         constructTriggerTable();
         if (room->mode == "06_3v3") {
-            run3v3();
+            QList<QList<ServerPlayer *> *> list = prepare3v3();
+            run3v3(list.first(), list.last(), game_rule, list.first()->first());
         } else if (room->getMode() == "04_1v3") {
             ServerPlayer *shenlvbu = room->getLord();
             QList<ServerPlayer *> league = room->getPlayers();
             league.removeOne(shenlvbu);
-            QList<ServerPlayer *> alive;
 
-            try {            
-                forever {
-                    foreach (ServerPlayer *player, league)
-                        if (player->hasFlag("actioned")) room->setPlayerFlag(player, "-actioned");
-
-                    alive.clear();
-                    foreach (ServerPlayer *player, league) {
-                        if (player->isDead())
-                            trigger(TurnStart, room, player);
-                        else
-                            alive << player;
-                    }
-
-                    foreach (ServerPlayer *player, league) {
-                        if (!alive.contains(player)) continue;
-                        bool shenlvbu_turn = false;
-                        if (player->isAlive()) {
-                            shenlvbu_turn = true;
-                            room->setCurrent(player);
-                            trigger(TurnStart, room, room->getCurrent());
-
-                            if (player->isAlive() && !player->hasFlag("actioned"))
-                                room->setPlayerFlag(player, "actioned");
-                        }
-
-                        if (shenlvbu_turn) {
-                            room->setCurrent(shenlvbu);
-                            trigger(TurnStart, room, room->getCurrent());
-                        }
-                    }
-                }
-            }
-            catch (TriggerEvent event) {
-                if (event == StageChange) {
-                    trigger(event, (Room *)room, NULL);
-                    foreach (ServerPlayer *player, room->getPlayers()) {
-                        if (player != shenlvbu) {
-                            if (player->hasFlag("actioned"))
-                                room->setPlayerFlag(player, "-actioned");
-
-                            if (player->getPhase() != Player::NotActive) {
-                                game_rule->trigger(EventPhaseEnd, room, player, QVariant());
-                                player->changePhase(player->getPhase(), Player::NotActive);
-                            }
-                        }
-                    }
-
-                    forever {
-                        room->setCurrent(shenlvbu);
-                        trigger(TurnStart, room, room->getCurrent());
-
-                        alive.clear();
-                        foreach (ServerPlayer *player, league) {
-                            if (player->isDead())
-                                trigger(TurnStart, room, player);
-                            else
-                                alive << player;
-                        }
-
-                        foreach (ServerPlayer *player, league) {
-                            if (!alive.contains(player)) continue;
-                            if (player->isAlive()) {
-                                room->setCurrent(player);
-                                trigger(TurnStart, room, room->getCurrent());
-                            }
-                        }
-                    }
-                }
-            }
+            room->setCurrent(league.first());
+            actionHulaoPass(shenlvbu, league, game_rule, 1);
         } else {
             if (room->getMode() == "02_1v1")
                 room->setCurrent(room->getPlayers().at(1));
 
-            forever {
-                trigger(TurnStart, room, room->getCurrent());
-                if (room->isFinished()) break;
-                room->setCurrent(room->getCurrent()->getNextAlive());
-            }
+            actionNormal(game_rule);
         }
     } catch (TriggerEvent event) {
         if (event == GameFinished) {

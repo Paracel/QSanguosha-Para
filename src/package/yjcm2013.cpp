@@ -676,6 +676,23 @@ public:
     }
 };
 
+class Danshou: public TriggerSkill {
+public:
+    Danshou(): TriggerSkill("danshou") {
+        events << Damage;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (room->askForSkillInvoke(player, objectName(), data)) {
+            player->drawCards(1);
+            ServerPlayer *current = room->getCurrent();
+            if (current && current->isAlive() && current->getPhase() != Player::NotActive)
+                throw TurnBroken;
+        }
+        return false;
+    }
+};
+
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
@@ -707,6 +724,9 @@ YJCM2013Package::YJCM2013Package()
     yufan->addSkill(new FakeMoveSkill("zongxuan", FakeMoveSkill::SourceOnly));
     yufan->addSkill(new Zhiyan);
 	related_skills.insertMulti("zongxuan", "#zongxuan-fake-move");
+
+    General *zhuran = new General(this, "zhuran", "wu");
+    zhuran->addSkill(new Danshou);
 
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();

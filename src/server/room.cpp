@@ -2739,25 +2739,38 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
         addPlayerHistory(NULL, "pushPile");
     }
 
-    if (card_use.card->getRealCard() == card) {
-        if (card->isKindOf("DelayedTrick") && card->isVirtualCard() && card->subcardsLength() == 1) {
-            Card *trick = Sanguosha->cloneCard(card);
-            Q_ASSERT(trick != NULL);
-            WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getSubcards().first());
-            wrapped->takeOver(trick);
-            broadcastUpdateCard(getPlayers(), wrapped->getId(), wrapped);
-            card_use.card = wrapped;
-            wrapped->onUse(this, card_use);
-            return;
+    try {
+        if (card_use.card->getRealCard() == card) {
+            if (card->isKindOf("DelayedTrick") && card->isVirtualCard() && card->subcardsLength() == 1) {
+                Card *trick = Sanguosha->cloneCard(card);
+                Q_ASSERT(trick != NULL);
+                WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getSubcards().first());
+                wrapped->takeOver(trick);
+                broadcastUpdateCard(getPlayers(), wrapped->getId(), wrapped);
+                card_use.card = wrapped;
+                wrapped->onUse(this, card_use);
+                return;
+            }
+            if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
+                card_use.from->setFlags("MoreSlashInOneTurn");
+            card_use.card->onUse(this, card_use);
+        } else if (card) {
+            CardUseStruct new_use = card_use;
+            new_use.card = card;
+            useCard(new_use);
         }
-        if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
-            setPlayerFlag(card_use.from, "MoreSlashInOneTurn");
-        card_use.card->onUse(this, card_use);
-        if (card_use.from->hasFlag("MoreSlashInOneTurn")) setPlayerFlag(card_use.from, "-MoreSlashInOneTurn");
-    } else if (card) {
-        CardUseStruct new_use = card_use;
-        new_use.card = card;
-        useCard(new_use);
+    }
+    catch (TriggerEvent event) {
+        if (event == StageChange || event == TurnBroken) {
+            if (getCardPlace(card_use.card->getEffectiveId()) == Player::PlaceTable) {
+                CardMoveReason reason(CardMoveReason::S_REASON_USE, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
+                if (card_use.to.size() == 1) reason.m_targetId = card_use.to.first()->objectName();
+                moveCardTo(card_use.card, card_use.from, NULL, Player::DiscardPile, reason, true);
+            }
+            QVariant data = QVariant::fromValue(card_use);
+            thread->trigger(CardFinished, this, card_use.from, data);
+        }
+        throw event;
     }
 }
 
@@ -4568,7 +4581,8 @@ QString Room::askForGeneral(ServerPlayer *player, const QString &generals, QStri
 }
 
 bool Room::makeCheat(ServerPlayer *player) {
-    Json::Value &arg = player->m_cheatArgs;
+    Json::Value arg = player->m_cheatArgs;
+    player->m_cheatArgs = Json::Value::null;
     if (!arg.isArray() || !arg[0].isInt()) return false;
     CheatCode code = (CheatCode)arg[0].asInt();
     if (code == S_CHEAT_KILL_PLAYER) {
@@ -4605,7 +4619,6 @@ bool Room::makeCheat(ServerPlayer *player) {
         bool isSecondaryHero = arg[2].asBool();
         changeHero(player, generalName, false, true, isSecondaryHero);
     }
-    arg = Json::Value::null;
     return true;
 }
 

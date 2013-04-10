@@ -3495,7 +3495,9 @@ function SmartAI:getCardId(class_name, player, acard)
 		local viewas, cardid
 		viewas = #viewArr > 0 and viewArr[1]
 		cardid = #cardArr > 0 and cardArr[1]
-		return self:hasSkills("chongzhen|jinjiu", player) and (viewas or cardid) or (cardid or viewas)
+		local viewCard
+		if viewas then viewCard = sgs.Card_Parse(viewas) end
+		return (player:hasSkill("chongzhen") and viewCard and viewCard:getSkillName() == "longdan") and (viewas or cardid) or (cardid or viewas)
 	end
 	return cardsView(class_name, player)
 end

@@ -671,19 +671,11 @@ sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
 sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
 
 sgs.ai_skill_invoke.cv_yuanshu = function(self, data)
-	if math.random(0, 2) == 0 then return true end
-	return false
+	return math.random(0, 2) == 0
 end
 
-sgs.ai_skill_invoke.cv_zhaoyun = function(self, data)
-	if math.random(0, 2) == 0 then return true end
-	return false
-end
-
-sgs.ai_skill_invoke.cv_ganning = function(self, data)
-	if math.random(0, 2) == 0 then return true end
-	return false
-end
+sgs.ai_skill_invoke.cv_zhaoyun = sgs.ai_skill_invoke.cv_yuanshu
+sgs.ai_skill_invoke.cv_ganning = sgs.ai_skill_invoke.cv_yuanshu
 
 sgs.ai_skill_invoke.cv_daqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
@@ -714,3 +706,12 @@ sgs.ai_skill_invoke.cv_lvbu = function(self, data)
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_lvbu = "tw_lvbu" return true
 	else sgs.ai_skill_choice.cv_lvbu = "heg_lvbu" return true end
 end
+
+sgs.ai_skill_invoke.cv_zhangliao = sgs.ai_skill_invoke.cv_yuanshu
+sgs.ai_skill_invoke.cv_luxun = sgs.ai_skill_invoke.cv_yuanshu
+
+sgs.ai_skill_invoke.cv_huanggai = function(self, data)
+	return math.random(0, 4) == 0
+end
+
+sgs.ai_skill_invoke.cv_guojia = sgs.ai_skill_invoke.cv_huanggai

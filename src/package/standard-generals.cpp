@@ -1256,6 +1256,7 @@ void StandardPackage::addGenerals() {
 
     General *zhangliao = new General(this, "zhangliao", "wei");
     zhangliao->addSkill(new Tuxi);
+    zhangliao->addSkill(new SPConvertSkill("zhangliao", "tw_zhangliao"));
 
     General *xuchu = new General(this, "xuchu", "wei");
     xuchu->addSkill(new Luoyi);
@@ -1266,6 +1267,7 @@ void StandardPackage::addGenerals() {
     guojia->addSkill(new Tiandu);
     guojia->addSkill(new Yiji);
     guojia->addSkill(new FakeMoveSkill("yiji", FakeMoveSkill::SourceOnly));
+    guojia->addSkill(new SPConvertSkill("guojia", "tw_guojia"));
     related_skills.insertMulti("yiji", "#yiji-fake-move");
 
     General *zhenji = new General(this, "zhenji", "wei", 3, false);
@@ -1319,6 +1321,7 @@ void StandardPackage::addGenerals() {
 
     General *huanggai = new General(this, "huanggai", "wu");
     huanggai->addSkill(new Kurou);
+    huanggai->addSkill(new SPConvertSkill("huanggai", "tw_huanggai"));
 
     General *zhouyu = new General(this, "zhouyu", "wu", 3);
     zhouyu->addSkill(new Yingzi);
@@ -1333,6 +1336,7 @@ void StandardPackage::addGenerals() {
     General *luxun = new General(this, "luxun", "wu", 3);
     luxun->addSkill(new Qianxun);
     luxun->addSkill(new Lianying);
+    luxun->addSkill(new SPConvertSkill("luxun", "tw_luxun"));
 
     General *sunshangxiang = new General(this, "sunshangxiang", "wu", 3, false);
     sunshangxiang->addSkill(new Jieyin);

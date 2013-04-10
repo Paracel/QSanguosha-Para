@@ -77,6 +77,26 @@ return {
 	["illustrator:tw_lvbu"] = "焚烧的大葱",
 	["cv_lvbu:convert"] = "你可以替换为国战吕布或台版吕布",
 
+	["tw_zhangliao"] = "台版张辽",
+	["&tw_zhangliao"] = "张辽", 
+	["illustrator:tw_zhangliao"] = "",
+	["cv_zhangliao:convert"] = "你可以替换为台版张辽",
+
+	["tw_luxun"] = "台版陆逊",
+	["&tw_luxun"] = "陆逊", 
+	["illustrator:tw_luxun"] = "",
+	["cv_luxun:convert"] = "你可以替换为台版陆逊",
+
+	["tw_guojia"] = "台版郭嘉",
+	["&tw_guojia"] = "郭嘉", 
+	["illustrator:tw_guojia"] = "",
+	["cv_guojia:convert"] = "你可以替换为台版郭嘉",
+
+	["tw_huanggai"] = "台版黄盖",
+	["&tw_huanggai"] = "黄盖", 
+	["illustrator:tw_huanggai"] = "",
+	["cv_huanggai:convert"] = "你可以替换为台版黄盖",
+
 	["wz_daqiao"] = "王战大乔",
 	["&wz_daqiao"] = "大乔", 
 	["illustrator:wz_daqiao"] = "Natsu",

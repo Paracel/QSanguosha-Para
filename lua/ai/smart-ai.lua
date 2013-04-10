@@ -1771,7 +1771,10 @@ function SmartAI:filterEvent(event, player, data)
 						end
 						if player:canSlash(target, card, true) and self:slashIsEffective(card, target)
 							and not has_slash_prohibit_skill and sgs.isGoodTarget(target, self.enemies, self) then
-							if is_neutral then sgs.updateIntention(player, target, -35) end
+							if is_neutral then
+								sgs.updateIntention(player, target, -35)
+								self:updatePlayers()
+							end
 						end
 					end
 				end
@@ -1780,7 +1783,10 @@ function SmartAI:filterEvent(event, player, data)
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						if not (target:containsTrick("indulgence") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
 							local aplayer = self:exclude({ target }, card, player)
-							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -35) end
+							if #aplayer == 1 and is_neutral then
+								sgs.updateIntention(player, target, -35)
+								self:updatePlayers()
+							end
 						end
 					end
 				end
@@ -1790,7 +1796,10 @@ function SmartAI:filterEvent(event, player, data)
 						if player:distanceTo(target) <= (player:hasSkill("duanliang") and 2 or 1)
 							and not (target:containsTrick("supply_shortage") or target:containsTrick("YanxiaoCard") or self:hasSkills("qiaobian", target)) then
 							local aplayer = self:exclude({ target }, card, player)
-							if #aplayer == 1 and is_neutral then sgs.updateIntention(player, target, -35) end
+							if #aplayer == 1 and is_neutral then
+								sgs.updateIntention(player, target, -35)
+								self:updatePlayers()
+							end
 						end
 					end
 				end

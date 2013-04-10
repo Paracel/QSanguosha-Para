@@ -854,6 +854,30 @@ void ChunlaoCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) con
     source->addToPile("wine", this);
 }
 
+ChunlaoWineCard::ChunlaoWineCard() {
+    m_skillName = "chunlao";
+    mute = true;
+    target_fixed = true;
+}
+
+void ChunlaoWineCard::use(Room *room, ServerPlayer *chengpu, QList<ServerPlayer *> &) const{
+    if (chengpu->getPile("wine").isEmpty()) return;
+    ServerPlayer *who = room->getCurrentDyingPlayer();
+    if (!who) return;
+
+    QList<int> cards = chengpu->getPile("wine");
+    room->fillAG(cards, chengpu);
+    int card_id = room->askForAG(chengpu, cards, false, "chunlao");
+    room->clearAG();
+    if (card_id != -1) {
+        CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "chunlao", QString());
+        room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
+        Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
+        analeptic->setSkillName("CHUNLAO");
+        room->useCard(CardUseStruct(analeptic, who, who, false));
+    }
+}
+
 class ChunlaoViewAsSkill: public ViewAsSkill {
 public:
     ChunlaoViewAsSkill(): ViewAsSkill("chunlao") {
@@ -863,29 +887,39 @@ public:
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@chunlao";
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        return pattern == "@@chunlao"
+               || (pattern.contains("peach") && !player->getPile("wine").isEmpty());
     }
 
     virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
-        return to_select->isKindOf("Slash");
+        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+        if (pattern == "@@chunlao")
+            return to_select->isKindOf("Slash");
+        else
+            return false;
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (cards.length() == 0)
-            return NULL;
+        QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
+        if (pattern == "@@chunlao") {
+            if (cards.length() == 0) return NULL;
 
-        Card *acard = new ChunlaoCard;
-        acard->addSubcards(cards);
-        acard->setSkillName(objectName());
-        return acard;
+            Card *acard = new ChunlaoCard;
+            acard->addSubcards(cards);
+            acard->setSkillName(objectName());
+            return acard;
+        } else {
+            if (cards.length() != 0) return NULL;
+            return new ChunlaoWineCard;
+        }
     }
 };
 
 class Chunlao: public TriggerSkill {
 public:
     Chunlao(): TriggerSkill("chunlao") {
-        events << EventPhaseStart << AskForPeaches;
+        events << EventPhaseStart;
         view_as_skill = new ChunlaoViewAsSkill;
     }
 
@@ -893,22 +927,6 @@ public:
         if (event == EventPhaseStart && chengpu->getPhase() == Player::Finish
             && !chengpu->isKongcheng() && chengpu->getPile("wine").isEmpty()) {
             room->askForUseCard(chengpu, "@@chunlao", "@chunlao", -1, Card::MethodNone);
-        } else if (event == AskForPeaches && !chengpu->getPile("wine").isEmpty()) {
-            DyingStruct dying = data.value<DyingStruct>();
-            while (dying.who->getHp() < 1 && !chengpu->getPile("wine").isEmpty()
-                   && chengpu->askForSkillInvoke(objectName(), data)) {
-                QList<int> cards = chengpu->getPile("wine");
-                room->fillAG(cards, chengpu);
-                int card_id = room->askForAG(chengpu, cards, false, objectName());
-                room->clearAG();
-                if (card_id != -1) {
-                    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "chunlao", QString());
-                    room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
-                    Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
-                    analeptic->setSkillName("CHUNLAO");
-                    room->useCard(CardUseStruct(analeptic, dying.who, dying.who, false));
-                }
-            }
         }
         return false;
     }
@@ -998,6 +1016,7 @@ YJCM2012Package::YJCM2012Package()
 
     addMetaObject<QiceCard>();
     addMetaObject<ChunlaoCard>();
+    addMetaObject<ChunlaoWineCard>();
     addMetaObject<GongqiCard>();
     addMetaObject<JiefanCard>();
     addMetaObject<AnxuCard>();

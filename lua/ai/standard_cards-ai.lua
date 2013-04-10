@@ -414,7 +414,7 @@ function SmartAI:useCardSlash(card, use)
 				if self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0 then
 				elseif self.player:hasWeapon("crossbow") and self:getCardsNum("Slash") > 1 then
 				else
-					local equips = self:getCards("EquipCard", self.player, "h")
+					local equips = self:getCards("EquipCard", "h")
 					for _, equip in ipairs(equips) do
 						local callback = sgs.ai_slash_weaponfilter[equip:objectName()]
 						if callback and type(callback) == "function" and callback(target, self)
@@ -1011,7 +1011,7 @@ function cardsView_spear(player, skill_name)
 	return card_str
 end
 
-function sgs.ai_cardsview.spear(class_name, player)
+function sgs.ai_cardsview.spear(self, class_name, player)
 	if class_name == "Slash" then
 		return cardsView_spear(player, "spear")
 	end

@@ -1,4 +1,4 @@
-function sgs.ai_cardsview.jiushi(class_name, player)
+function sgs.ai_cardsview.jiushi(self, class_name, player)
 	if class_name == "Analeptic" then
 		if player:hasSkill("jiushi") and player:faceUp() then
 			return ("analeptic:jiushi[no_suit:0]=.")
@@ -486,13 +486,7 @@ sgs.ai_skill_invoke.buyi = function(self, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.buyi = function(self, player, promptlist)
-	local dying
-	for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
-		if p:hasFlag("Global_Dying") then
-			dying = p
-			break
-		end
-	end
+	local dying = self.room:getCurrentDyingPlayer()
 	if promptlist[#promptlist] == "yes" then
 		if dying and dying:objectName() ~= self.player:objectName() then sgs.updateIntention(player, dying, -80) end
 	elseif promptlist[#promptlist] == "no" then

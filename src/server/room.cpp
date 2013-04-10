@@ -176,6 +176,10 @@ void Room::outputEventStack() {
 
 void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
     setPlayerFlag(player, "Global_Dying");
+    QStringList currentdying = getTag("CurrentDying").toStringList();
+    currentdying << player->objectName();
+    setTag("CurrentDying", QVariant::fromValue(currentdying));
+
     Json::Value arg(Json::arrayValue);
     arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_DYING;
     arg[1] = toJsonString(player->objectName());
@@ -192,36 +196,57 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
             break;
     }
 
-    if (player->isDead()) return;
+    if (player->isAlive()) {
+        if (player->getHp() > 0) {
+            setPlayerFlag(player, "-Global_Dying");
+        } else {
+            LogMessage log;
+            log.type = "#AskForPeaches";
+            log.from = player;
+            log.to = getAllPlayers();
+            log.arg = QString::number(1 - player->getHp());
+            sendLog(log);
 
-    if (player->getHp() > 0) {
-        setPlayerFlag(player, "-Global_Dying");
-    } else {
-        LogMessage log;
-        log.type = "#AskForPeaches";
-        log.from = player;
-        log.to = getAllPlayers();
-        log.arg = QString::number(1 - player->getHp());
-        sendLog(log);
+            thread->trigger(PreAskForPeaches, this, player, dying_data);
 
-        thread->trigger(PreAskForPeaches, this, player, dying_data);
+            foreach (ServerPlayer *saver, getAllPlayers()) {
+                if (player->getHp() > 0 || player->isDead())
+                    break;
 
-        foreach (ServerPlayer *saver, getAllPlayers()) {
-            if (player->getHp() > 0 || player->isDead())
-                break;
-            thread->trigger(AskForPeaches, this, saver, dying_data);
+                QString cd = saver->property("currentdying").toString();
+                setPlayerProperty(saver, "currentdying", player->objectName());
+                thread->trigger(AskForPeaches, this, saver, dying_data);
+                setPlayerProperty(saver, "currentdying", cd);
+            }
+
+            setPlayerFlag(player, "-Global_Dying");
+            thread->trigger(AskForPeachesDone, this, player, dying_data);
         }
 
-        setPlayerFlag(player, "-Global_Dying");
-        thread->trigger(AskForPeachesDone, this, player, dying_data);
+        if (player->isAlive()) {
+            Json::Value arg(Json::arrayValue);
+            arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_QUITDYING;
+            arg[1] = toJsonString(player->objectName());
+            doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
+        }
     }
+    currentdying = getTag("CurrentDying").toStringList();
+    currentdying.removeOne(player->objectName());
+    setTag("CurrentDying", QVariant::fromValue(currentdying));
+}
 
-    if (player->isAlive()) {
-        Json::Value arg(Json::arrayValue);
-        arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_QUITDYING;
-        arg[1] = toJsonString(player->objectName());
-        doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
+ServerPlayer *Room::getCurrentDyingPlayer() const {
+    QStringList currentdying = getTag("CurrentDying").toStringList();
+    if (currentdying.isEmpty()) return NULL;
+    QString dyingobj = currentdying.last();
+    ServerPlayer *who = NULL;
+    foreach (ServerPlayer *p, m_alivePlayers) {
+        if (p->objectName() == dyingobj) {
+            who = p;
+            break;
+        }
     }
+    return who;
 }
 
 void Room::revivePlayer(ServerPlayer *player) {

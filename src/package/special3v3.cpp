@@ -293,28 +293,54 @@ public:
     }
 };
 
-class Jiuzhu: public TriggerSkill {
+JiuzhuCard::JiuzhuCard() {
+    target_fixed = true;
+}
+
+void JiuzhuCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> &) const{
+    ServerPlayer *who = room->getCurrentDyingPlayer();
+    if (!who) return;
+
+    room->loseHp(player);
+    RecoverStruct recover;
+    recover.who = player;
+    room->recover(who, recover);
+}
+
+class Jiuzhu: public OneCardViewAsSkill {
 public:
-    Jiuzhu(): TriggerSkill("jiuzhu") {
-        events << AskForPeaches;
+    Jiuzhu(): OneCardViewAsSkill("jiuzhu") {
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        DyingStruct dying = data.value<DyingStruct>();
-        if (dying.who == player || (room->getMode().startsWith("06_") && AI::GetRelation3v3(dying.who, player) != AI::Friend))
-            return false;
-        while (dying.who->getHp() <= 0) {
-            if (player->getHp() <= 1 || player->isNude())
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        if (pattern != "peach" || player->isNude() || player->getHp() <= 1) return false;
+        QString dyingobj = player->property("currentdying").toString();
+        const Player *who = NULL;
+        foreach (const Player *p, player->getSiblings()) {
+            if (p->isAlive() && p->objectName() == dyingobj) {
+                who = p;
                 break;
-            if (room->askForCard(player, "..", "@jiuzhu", data, objectName())) {
-                room->loseHp(player);
-                room->broadcastSkillInvoke(objectName());
-                RecoverStruct recover;
-                recover.who = player;
-                room->recover(dying.who, recover);
             }
         }
-        return (dying.who->getHp() > 0);
+        if (!who) return false;
+        if (ServerInfo.GameMode.startsWith("06_"))
+            return player->getRole().at(0) == who->getRole().at(0);
+        else
+            return true;
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        JiuzhuCard *card = new JiuzhuCard;
+        card->addSubcard(originalCard);
+        return card;
     }
 };
 
@@ -481,6 +507,7 @@ Special3v3_2013Package::Special3v3_2013Package()
     */
 
     addMetaObject<ZhongyiCard>();
+    addMetaObject<JiuzhuCard>();
 }
 
 ADD_PACKAGE(Special3v3_2013)

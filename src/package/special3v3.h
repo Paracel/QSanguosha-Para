@@ -26,6 +26,16 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+class JiuzhuCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE JiuzhuCard();
+
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+
 class VSCrossbow: public Crossbow {
     Q_OBJECT
 

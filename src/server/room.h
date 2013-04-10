@@ -53,6 +53,7 @@ public:
     void output(const QString &message);
     void outputEventStack();
     void enterDying(ServerPlayer *player, DamageStruct *reason);
+    ServerPlayer *getCurrentDyingPlayer() const;
     void killPlayer(ServerPlayer *victim, DamageStruct *reason = NULL);
     void revivePlayer(ServerPlayer *player);
     QStringList aliveRoles(ServerPlayer *except = NULL) const;

@@ -957,6 +957,7 @@ public:
     QList<ServerPlayer *> getAllPlayers(bool include_dead = false) const;
     QList<ServerPlayer *> getAlivePlayers() const;
     void enterDying(ServerPlayer *player, DamageStruct *reason);
+    ServerPlayer *getCurrentDyingPlayer() const;
     void killPlayer(ServerPlayer *victim, DamageStruct *reason = NULL);
     void revivePlayer(ServerPlayer *player);
     QStringList aliveRoles(ServerPlayer *except = NULL) const;

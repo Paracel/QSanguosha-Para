@@ -67,7 +67,7 @@ end
 
 sgs.ai_skill_invoke.fuli = true
 
-function sgs.ai_cardsview.fuhun(class_name, player)
+function sgs.ai_cardsview.fuhun(self, class_name, player)
 	if class_name == "Slash"
 		and (sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE
 			or sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_PLAY) then
@@ -677,9 +677,15 @@ sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_skill_invoke.chunlao = function(self, data)
-	local dying = data:toDying()
-	return self:isFriend(dying.who) and self.player:getPile("wine"):length() > 0
+function sgs.ai_cardsview_valuable.chunlao(self, class_name, player)
+	if class_name == "Peach" and player:getPile("wine"):length() > 0 then
+		local dying = player:getRoom():getCurrentDyingPlayer()
+		if dying then
+			local anal = sgs.Sanguosha:cloneCard("analeptic")
+			if dying:isCardLimited(anal, sgs.Card_MethodUse) then return nil end
+			return "@ChunlaoWineCard=.->."
+		end
+	end
 end
 
 function sgs.ai_cardneed.chunlao(to, card)

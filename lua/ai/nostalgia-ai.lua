@@ -382,22 +382,20 @@ function sgs.ai_cardneed.nosgongqi(to, card)
 	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, "EquipCard", true) == 0
 end
 
-sgs.ai_skill_invoke.nosjiefan = function(self, data)
-	local dying = data:toDying()
-	local slashnum = 0
-	local friend = dying.who
-	local currentplayer = self.room:getCurrent()
-	for _, slash in ipairs(self:getCards("Slash")) do
-		if self:slashIsEffective(slash, currentplayer) then
-			slashnum = slashnum + 1
-		end
+function sgs.ai_cardsview_valuable.nosjiefan(self, class_name, player)
+	if class_name == "Peach" and not player:hasFlag("NosJiefanFailed") then
+		local dying = player:getRoom():getCurrentDyingPlayer()
+		if not dying then return nil end
+		local current = player:getRoom():getCurrent()
+		if not current or current:isDead() or current:getPhase() == sgs.Player_NotActive
+			or current:objectName() == player:objectName() or (current:hasSkill("wansha") and player:objectName() ~= dying:objectName())
+			or (self:isEnemy(current) and self:findLeijiTarget(current, 50, player)) then return nil end
+		return "@NosJiefanCard=.->."
 	end
-	return self:isFriend(friend) and not (self:isEnemy(currentplayer) and (currentplayer:hasSkill("leiji") or currentplayer:hasSkill("wansha"))
-		and (currentplayer:getHandcardNum() > 2 or self:hasEightDiagramEffect(currentplayer))) and slashnum > 0
 end
 
 sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
-	target = global_room:getCurrent()
+	if self:isEnemy(target) and self:findLeijiTarget(target, 50, self.player) then return "." end
 	for _, slash in ipairs(self:getCards("Slash")) do
 		if self:slashIsEffective(slash, target) then
 			return slash:toString()

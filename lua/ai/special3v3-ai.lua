@@ -168,59 +168,22 @@ sgs.ai_skill_invoke.zhongyi = function(self, data)
 	return self:isEnemy(damage.to)
 end
 
-function SmartAI:ableToSave(saver, dying)
-	local current = self.room:getCurrent()
-	if current and current:getPhase() ~= sgs.Player_NotActive and current:hasSkill("wansha")
-		and current:objectName() ~= saver:objectName() and current:objectName() ~= dying:objectName() then
-		return false
-	end
-	if saver:getMark("@qianxi_red") > 0 or saver:getMark("@jilei_basic") > 0 then return false end
-	return true
-end
-
-sgs.ai_skill_cardask["@jiuzhu"] = function(self, data)
-	local dying = data:toDying()
-	if not self:isFriend(dying.who) then return "." end
-	if dying.who:hasSkill("jiushi") and dying.who:faceUp() then return "." end
-	if (self:getCardsNum("Peach") > 0 and self:ableToSave(self.player, dying.who)) or self.player:getPile("wine"):length() > 0 then return "." end
-	for _, friend in ipairs(self.friends_noself) do
-		if getKnownCard(friend, "Peach", true, "he") > 0 and self:ableToSave(friend, dying.who) then return "." end
-	end
-	local must_save = false
-	if self.room:getMode() == "06_3v3" then
-		if dying.who:getRole() == "renegade" or dying.who:getRole() == "lord" then must_save = true end
-	elseif dying.who:isLord() and (self.role == "loyalist" or (self.role == "renegade" and room:alivePlayerCount() > 2)) then
-		must_save = true
-	end
-	if not must_save and self:willUsePeachTo(dying.who) == "." then return "." end
-	if not must_save and self:isWeak() and not self.player:hasArmorEffect("silver_lion") then return "." end
-
-	local cards = self.player:getHandcards()
-	cards = sgs.QList2Table(cards)
-	self:sortByKeepValue(cards)
-	local card_id
-	local lightning = self:getCard("Lightning")
-
-	if self:needToThrowArmor() then
-		card_id = self.player:getArmor():getId()
-	elseif lightning and not self:willUseLightning(lightning) then
-		card_id = lightning:getEffectiveId()
-	else
-		for _, acard in ipairs(cards) do
-			if (acard:isKindOf("BasicCard") or acard:isKindOf("EquipCard") or acard:isKindOf("AmazingGrace"))
-				and not acard:isKindOf("Peach") then
-				card_id = acard:getEffectiveId()
-				break
-			end
+function sgs.ai_cardsview.jiuzhu(self, class_name, player)
+	if class_name == "Peach" and player:getHp() > 1 and not player:isNude() then
+		local dying = player:getRoom():getCurrentDyingPlayer()
+		if not dying then return nil end
+		if (self.room:getMode() == "06_3v3" or self.room:getMode() == "06_XMode") and not self:isFriend(dying) then return nil end
+		local must_save = false
+		if self.room:getMode() == "06_3v3" then
+			if dying.who:getRole() == "renegade" or dying.who:getRole() == "lord" then must_save = true end
+		elseif dying.who:isLord() and (self.role == "loyalist" or (self.role == "renegade" and room:alivePlayerCount() > 2)) then
+			must_save = true
 		end
+		if not must_save and self:isWeak() and not self.player:hasArmorEffect("silver_lion") then return nil end
+		local to_discard = self:askForDiscard(player, "dummyreason", 1, 1, false, true)
+		if #to_discard == 1 then return "@JiuzhuCard=" .. to_discard[1] .. "->." end
+		return nil
 	end
-	if not card_id and not self.player:getEquips():isEmpty() then
-		if self.player:getOffensiveHorse() then card_id = self.player:getOffensiveHorse():getId()
-		elseif self.player:getDefensiveHorse() then card_id = self.player:getDefensiveHorse():getId()
-		elseif self.player:getWeapon() then card_id = self.player:getWeapon():getId()
-		end
-	end
-	if card_id then return "$" .. card_id else return "." end
 end
 
 sgs.ai_skill_invoke.zhanshen = function(self, data)

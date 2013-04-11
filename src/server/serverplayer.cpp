@@ -1026,16 +1026,18 @@ void ServerPlayer::exchangeFreelyFromPrivatePile(const QString &skill_name, cons
     delete dummy;
 }
 
-void ServerPlayer::gainAnExtraTurn(ServerPlayer *clearflag) {
+void ServerPlayer::gainAnExtraTurn() {
     ServerPlayer *current = room->getCurrent();
-    room->setCurrent(this);
-
-    if (clearflag)
-        clearflag->clearFlags();
-    room->getThread()->trigger(TurnStart, room, this);
-    if (clearflag)
-        clearflag->clearHistory();
-    room->setCurrent(current);
+    try {
+        room->setCurrent(this);
+        room->getThread()->trigger(TurnStart, room, this);
+        room->setCurrent(current);
+    }
+    catch (TriggerEvent event) {
+        if (event == TurnBroken)
+            room->setCurrent(current);
+        throw event;
+    }
 }
 
 void ServerPlayer::copyFrom(ServerPlayer *sp) {

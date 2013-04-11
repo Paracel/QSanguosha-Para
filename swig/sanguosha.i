@@ -318,7 +318,7 @@ public:
     void addToPile(const char *pile_name, int card_id, bool open = true);
     void addToPile(const QString &pile_name, QList<int> card_ids, bool open = true);
     void exchangeFreelyFromPrivatePile(const char *skill_name, const char *pile_name, int upperlimit = 1000, bool include_equip = false);
-    void gainAnExtraTurn(ServerPlayer *clearflag = NULL);
+    void gainAnExtraTurn();
 };
 
 %extend ServerPlayer {

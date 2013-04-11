@@ -2484,7 +2484,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         return;
 
     // do timeout
-    if (newStatus != Client::NotActive) {
+    if (newStatus != Client::NotActive && newStatus != oldStatus) {
         QApplication::alert(main_window);
         connect(dashboard, SIGNAL(progressBarTimedOut()), this, SLOT(doTimeout()));
         dashboard->showProgressBar(ClientInstance->getCountdown());

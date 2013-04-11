@@ -9,6 +9,10 @@ void TimedProgressBar::show() {
         m_mutex.unlock();
         return;
     }
+    if (m_timer != 0) {
+        killTimer(m_timer);
+        m_timer = 0;
+    }
     m_timer = startTimer(m_step);
     this->setMaximum(m_max);
     this->setValue(m_val);

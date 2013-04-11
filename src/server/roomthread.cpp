@@ -420,6 +420,8 @@ ServerPlayer *RoomThread::findHulaoPassNext(ServerPlayer *shenlvbu, QList<Server
                 if (p->isAlive())
                     return p;
             }
+            Q_ASSERT(false);
+            return league.first();
         } else {
             return shenlvbu;
         }

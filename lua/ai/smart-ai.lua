@@ -249,7 +249,6 @@ function SmartAI:assignKeep(num, start)
 		if not self.keepValue[card:getId()] then
 			self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
 			table.insert(self.kept, card)
-			--self:log(card:getClassName())
 			self:assignKeep(num - 1)
 			break
 		end
@@ -2869,7 +2868,6 @@ sgs.ai_skill_playerchosen.damage = function(self, targets)
 end
 
 function SmartAI:askForPlayerChosen(targets, reason)
-	self:log("askForPlayerChosen:" .. reason)
 	local playerchosen = sgs.ai_skill_playerchosen[string.gsub(reason, "%-", "_")]
 	local target = nil
 	if type(playerchosen) == "function" then

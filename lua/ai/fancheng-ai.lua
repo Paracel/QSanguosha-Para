@@ -148,7 +148,6 @@ sgs.ai_skill_use["@@smalltuxi"] = function(self, prompt)
 		end
 	end
 
-	self:log(self.enemies[first_index]:getGeneralName())
 	local first = self.enemies[first_index]:objectName()
 	return ("@SmallTuxiCard=.->%s"):format(first)
 end

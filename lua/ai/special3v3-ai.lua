@@ -85,7 +85,6 @@ sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)
 
 	if not second_index then return "." end
 
-	self:log(self.friends_noself[first_index]:getGeneralName() .. "+" .. self.friends_noself[second_index]:getGeneralName())
 	local first = self.friends_noself[first_index]:objectName()
 	local second = self.friends_noself[second_index]:objectName()
 	return ("@HongyuanCard=.->%s+%s"):format(first, second)

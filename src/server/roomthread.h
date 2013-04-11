@@ -49,9 +49,8 @@ public:
 
     void addTriggerSkill(const TriggerSkill *skill);
     void delay(long msecs = -1);
-    ServerPlayer *find3v3Next(QList<ServerPlayer *> *first, QList<ServerPlayer *> *second);
-    QList<QList<ServerPlayer *> *> prepare3v3();
-    void run3v3(QList<ServerPlayer *> *first, QList<ServerPlayer *> *last, GameRule *game_rule, ServerPlayer *current);
+    ServerPlayer *find3v3Next(QList<ServerPlayer *> &first, QList<ServerPlayer *> &second);
+    void run3v3(QList<ServerPlayer *> &first, QList<ServerPlayer *> &last, GameRule *game_rule, ServerPlayer *current);
     void action3v3(ServerPlayer *player);
     void actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> league, GameRule *game_rule, int stage);
     ServerPlayer *findHulaoPassNext(ServerPlayer *shenlvbu, QList<ServerPlayer *> league, int stage);

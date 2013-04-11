@@ -323,57 +323,32 @@ void RoomThread::constructTriggerTable() {
         addPlayerSkills(player, true);
 }
 
-ServerPlayer *RoomThread::find3v3Next(QList<ServerPlayer *> *first, QList<ServerPlayer *> *second) {
+ServerPlayer *RoomThread::find3v3Next(QList<ServerPlayer *> &first, QList<ServerPlayer *> &second) {
     ServerPlayer *current = room->getCurrent();
-    if (current != first->first()) {
+    if (current != first.first()) {
         ServerPlayer *another;
-        if (current == first->last())
-            another = first->at(1);
+        if (current == first.last())
+            another = first.at(1);
         else
-            another = first->last();
+            another = first.last();
         if (!another->hasFlag("actioned") && another->isAlive())
             return another;
     }
 
     QList<ServerPlayer *> targets;
     do {
+        targets.clear();
         qSwap(first, second);
-        foreach (ServerPlayer *player, *first) {
+        foreach (ServerPlayer *player, first) {
             if (!player->hasFlag("actioned") && player->isAlive())
                 targets << player;
         }
     } while (targets.isEmpty());
 
-    return room->askForPlayerChosen(first->first(), targets, "3v3-action", "@3v3-action");
+    return room->askForPlayerChosen(first.first(), targets, "3v3-action", "@3v3-action");
 }
 
-QList<QList<ServerPlayer *> *> RoomThread::prepare3v3() {
-    QList<ServerPlayer *> warm, cool;
-    foreach (ServerPlayer *player, room->m_players) {
-        switch (player->getRoleEnum()) {
-        case Player::Lord: warm.prepend(player); break;
-        case Player::Loyalist: warm.append(player); break;
-        case Player::Renegade: cool.prepend(player); break;
-        case Player::Rebel: cool.append(player); break;
-        }
-    }
-
-    QString order = room->askForOrder(cool.first());
-    QList<ServerPlayer *> *first, *second;
-
-    if (order == "warm") {
-        first = &warm;
-        second = &cool;
-    } else {
-        first = &cool;
-        second = &warm;
-    }
-    QList<QList<ServerPlayer *> *> list;
-    list << first << second;
-    return list;
-}
-
-void RoomThread::run3v3(QList<ServerPlayer *> *first, QList<ServerPlayer *> *second, GameRule *game_rule, ServerPlayer *current) {
+void RoomThread::run3v3(QList<ServerPlayer *> &first, QList<ServerPlayer *> &second, GameRule *game_rule, ServerPlayer *current) {
     try {
         forever {
             action3v3(current);
@@ -439,6 +414,10 @@ ServerPlayer *RoomThread::findHulaoPassNext(ServerPlayer *shenlvbu, QList<Server
         if (current == shenlvbu) {
             foreach (ServerPlayer *p, league) {
                 if (p->isAlive() && !p->hasFlag("actioned"))
+                    return p;
+            }
+            foreach (ServerPlayer *p, league) {
+                if (p->isAlive())
                     return p;
             }
         } else {
@@ -584,8 +563,27 @@ void RoomThread::run() {
         trigger(GameStart, (Room *)room, NULL);
         constructTriggerTable();
         if (room->mode == "06_3v3") {
-            QList<QList<ServerPlayer *> *> list = prepare3v3();
-            run3v3(list.first(), list.last(), game_rule, list.first()->first());
+            QList<ServerPlayer *> warm, cool;
+            foreach (ServerPlayer *player, room->m_players) {
+                switch (player->getRoleEnum()) {
+                case Player::Lord: warm.prepend(player); break;
+                case Player::Loyalist: warm.append(player); break;
+                case Player::Renegade: cool.prepend(player); break;
+                case Player::Rebel: cool.append(player); break;
+                }
+            }
+
+            QString order = room->askForOrder(cool.first());
+            QList<ServerPlayer *> first, second;
+
+            if (order == "warm") {
+                first = warm;
+                second = cool;
+            } else {
+                first = cool;
+                second = warm;
+            }
+            run3v3(first, second, game_rule, first.first());
         } else if (room->getMode() == "04_1v3") {
             ServerPlayer *shenlvbu = room->getLord();
             QList<ServerPlayer *> league = room->getPlayers();

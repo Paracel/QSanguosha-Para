@@ -24,15 +24,14 @@ struct LogMessage {
 
 class EventTriplet {
 public:
-    inline EventTriplet(TriggerEvent event, Room *room, ServerPlayer *target, QVariant *data)
-               : _m_event(event), _m_room(room), _m_target(target), _m_data(data) {}
+    inline EventTriplet(TriggerEvent event, Room *room, ServerPlayer *target)
+               : _m_event(event), _m_room(room), _m_target(target) {}
     QString toString() const;
 
 private:
     TriggerEvent _m_event;
     Room *_m_room;
     ServerPlayer *_m_target;
-    QVariant *_m_data;
 };
 
 class RoomThread: public QThread {

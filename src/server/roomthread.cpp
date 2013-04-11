@@ -286,11 +286,11 @@ void CardUseStruct::parse(const QString &str, Room *room) {
 }
 
 QString EventTriplet::toString() const{
-    return QString("event = %1, room = %2, target = %3[%4], data = %5[%6]")
+    return QString("event[%1], room[%2], target = %3[%4]\n")
                    .arg(_m_event)
                    .arg(_m_room->getId())
-                   .arg(_m_target->objectName()).arg(_m_target->getGeneralName())
-                   .arg(_m_data->toString()).arg(_m_data->typeName());
+                   .arg(_m_target ? _m_target->objectName() : "NULL")
+                   .arg(_m_target ? _m_target->getGeneralName() : QString());
 }
 
 RoomThread::RoomThread(Room *room)
@@ -614,7 +614,7 @@ static bool CompareByPriority(const TriggerSkill *a, const TriggerSkill *b) {
 
 bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, QVariant &data) {
     // push it to event stack
-    EventTriplet triplet(event, room, target, &data);
+    EventTriplet triplet(event, room, target);
     event_stack.push_back(triplet);
 
     bool broken = false;

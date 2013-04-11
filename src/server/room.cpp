@@ -167,10 +167,10 @@ void Room::output(const QString &message) {
 }
 
 void Room::outputEventStack() {
-    QString msg;
+    QString msg = "End of Event Stack.";
     foreach (EventTriplet triplet, *thread->getEventStack())
         msg.prepend(triplet.toString());
-
+    msg.prepend("Event Stack:\n");
     output(msg);
 }
 

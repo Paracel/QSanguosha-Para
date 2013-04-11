@@ -28,7 +28,7 @@ private:
 
     QStringList getGeneralsWithoutExtension() const;
     void askForTakeGeneral(ServerPlayer *player);
-    void startArrange(ServerPlayer *player);
+    void startArrange(QList<ServerPlayer *> &players);
     void assignRoles(const QStringList &roles, const QString &scheme);
 };
 

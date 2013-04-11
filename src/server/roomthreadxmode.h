@@ -24,7 +24,7 @@ private:
     QStringList general_names;
     QString result;
 
-    void startArrange(ServerPlayer *player, const QStringList &to_arrange);
+    void startArrange(QList<ServerPlayer *> &players, QList<QStringList> &to_arrange);
     void assignRoles(const QStringList &roles, const QString &scheme);
 };
 

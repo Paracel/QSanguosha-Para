@@ -51,15 +51,17 @@ void RoomThreadXMode::run() {
     qShuffle(general_names);
 
     int index = 0;
+    QList<QStringList> all_names;
     QStringList names;
-    foreach (ServerPlayer *p, room->m_players) {
+    for (int i = 0; i < room->m_players.length(); i++) {
         names.clear();
-        for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
             names << general_names.at(index);
             index++;
         }
-        startArrange(p, names);
+        all_names << names;
     }
+    startArrange(room->m_players, all_names);
 
     QStringList warm_backup, cool_backup;
     foreach (ServerPlayer *player, room->m_players) {
@@ -72,24 +74,46 @@ void RoomThreadXMode::run() {
         }
         player->tag.remove("XModeBackup");
     }
-    startArrange(warm_leader, warm_backup);
-    startArrange(cool_leader, cool_backup);
+    startArrange(QList<ServerPlayer *>() << warm_leader << cool_leader,
+                 QList<QStringList>() << warm_backup << cool_backup);
 }
 
-void RoomThreadXMode::startArrange(ServerPlayer *player, const QStringList &to_arrange) {
-    if (!player->isOnline()) {
-        // @todo: AI
-        QStringList arranged = to_arrange.mid(0, 3);
-        arrange(player, arranged);
-    } else {
-        bool success = room->doRequest(player, S_COMMAND_ARRANGE_GENERAL, toJsonArray(to_arrange), true);
+void RoomThreadXMode::startArrange(QList<ServerPlayer *> &players, QList<QStringList> &to_arrange) {
+    while (room->isPaused()) {}
+    QList<ServerPlayer *> online;
+    for (int i = 0; i < players.length(); i++) {
+        ServerPlayer *player = players.at(i);
+        if (!player->isOnline()) {
+            // @todo: AI
+            QStringList mutable_to_arrange = to_arrange.at(i);
+            qShuffle(mutable_to_arrange);
+            QStringList arranged = mutable_to_arrange.mid(0, 3);
+            arrange(player, arranged);
+            to_arrange.removeAt(i);
+        } else {
+            online << player;
+        }
+    }
+    if (online.isEmpty()) return;
+
+    for (int i = 0; i < online.length(); i++) {
+        ServerPlayer *player = online.at(i);
+        player->m_commandArgs = toJsonArray(to_arrange.at(i));
+    }
+
+    room->doBroadcastRequest(online, S_COMMAND_ARRANGE_GENERAL);
+
+    for (int i = 0; i < online.length(); i++) {
+        ServerPlayer *player = online.at(i);
         Json::Value clientReply = player->getClientReply();
-        if (success && clientReply.isArray() && clientReply.size() == 3) {
+        if (player->m_isClientResponseReady && clientReply.isArray() && clientReply.size() == 3) {
             QStringList arranged;
             tryParse(clientReply, arranged);
             arrange(player, arranged);
         } else {
-            QStringList arranged = to_arrange.mid(0, 3);
+            QStringList mutable_to_arrange = to_arrange.at(i);
+            qShuffle(mutable_to_arrange);
+            QStringList arranged = mutable_to_arrange.mid(0, 3);
             arrange(player, arranged);
         }
     }

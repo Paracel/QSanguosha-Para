@@ -362,6 +362,11 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
                     broadcastProperty(player, "role");
             }
 
+            static QStringList continue_list;
+            continue_list << "02_1v1" << "04_1v3" << "06_XMode";
+            if (continue_list.contains(Config.GameMode))
+                return;
+
             if (Config.AlterAIDelayAD)
                 Config.AIDelay = Config.AIDelayAD;
             if (victim->isOnline() && Config.SurrenderAtDeath && mode != "02_1v1" && mode != "06_XMode"

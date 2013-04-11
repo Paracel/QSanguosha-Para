@@ -114,10 +114,11 @@ return {
 	["shenji"] = "神戟",
 	[":shenji"] = "若你的装备区没有武器牌，每当你使用【杀】时，你可以额外选择至多两个目标。",
 
+	["#HulaoTransfigure"] = "%arg 变身为 %arg2, 第二阶段开始！",
 	["#Reforming"] = "%from 进入重整状态",
 	["#ReformingRecover"] = "%from 在重整状态中回复了 %arg 点体力",
 	["#ReformingDraw"] = "%from 在重整状态中摸了 %arg 张牌",
-	["#ReformingRevive"] = "%from 从重整状态中复活!",
+	["#ReformingRevive"] = "%from 从重整状态中复活！",
 	["draw_1v3"] = "重整摸牌",
 	["weapon_recast"] = "武器重铸",
 	["Hulaopass:recover"] = "回复1点体力",

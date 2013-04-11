@@ -819,13 +819,27 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
     case StageChange: {
             ServerPlayer *lord = room->getLord();
             room->setPlayerMark(lord, "secondMode", 1);
-            room->changeHero(lord, "shenlvbu2", true, true);
+            room->changeHero(lord, "shenlvbu2", true, true, false, false);
+
+            LogMessage log;
+            log.type = "$AppendSeparator";
+            room->sendLog(log);
+
+            log.type = "#HulaoTransfigure";
+            log.arg = "#shenlvbu1";
+            log.arg2 = "#shenlvbu2";
+            room->sendLog(log);
+
             room->doLightbox("$StageChange", 5000);
 
             QList<const Card *> tricks = lord->getJudgingArea();
-            foreach (const Card *trick, tricks) {
+            if (!tricks.isEmpty()) {
+                DummyCard *dummy = new DummyCard;
+                foreach (const Card *trick, tricks)
+                    dummy->addSubcard(trick);
                 CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString());
-                room->throwCard(trick, reason, NULL);
+                room->throwCard(dummy, reason, NULL);
+                delete dummy;
             }
             break;
         }

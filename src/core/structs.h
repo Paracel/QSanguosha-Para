@@ -479,7 +479,7 @@ enum TriggerEvent {
     FetchDrawPileCard, // For miniscenarios only
     ActionedReset, // For 3v3 only
 
-    TurnBroken, // For the **ing skill 'DanShou'
+    TurnBroken, // For the skill 'DanShou'. Do not use it to trigger events
 
     NumOfEvents
 };

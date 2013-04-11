@@ -137,9 +137,7 @@ function SmartAI:initialize(player)
 				self.room:writeToConsole(result1)
 				self.room:writeToConsole(method_name)
 				self.room:writeToConsole(debug.traceback())
-				self.room:writeToConsole("Event stack:")
 				self.room:outputEventStack()
-				self.room:writeToConsole("End of Event Stack")
 			else
 				return result1, result2
 			end
@@ -2186,7 +2184,6 @@ function SmartAI:getCardRandomly(who, flags)
 end
 
 function SmartAI:askForCardChosen(who, flags, reason)
-	self.room:output(reason)
 	local cardchosen = sgs.ai_skill_cardchosen[string.gsub(reason, "%-", "_")]
 	local card
 	if type(cardchosen) == "function" then
@@ -2353,7 +2350,6 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 end
 
 function SmartAI:askForCard(pattern, prompt, data)
-	self.room:output(prompt)
 	local target, target2
 	local parsedPrompt = prompt:split(":")
 	if parsedPrompt[2] then

@@ -83,35 +83,11 @@ function debugFunc(self, room, player, data)
 	until false
 end
 
-function logmsg(fname, fmt)
+function logmsg(fname, fmt, ...)
 	local fp = io.open(fname, "ab")
 	if type(fmt) == "boolean" then fmt = fmt and "true" or "false" end
-	fp:write(fmt .. "\r\n")
+	fp:write(fmt .. "\r\n", ...)
 	fp:close()
-end
-
-function SmartAI:printStand()
-	self.room:output(self.player:getRole())
-	self.room:output("enemies:")
-	for _, player in ipairs(self.enemies) do
-		self.room:output(player:getGeneralName())
-	end
-	self.room:output("end of enemies")
-	self.room:output("friends:")
-	for _, player in ipairs(self.friends) do
-		self.room:output(player:getGeneralName())
-	end
-	self.room:output("end of friends")
-end
-
-function SmartAI:printFEList()
-	for _, player in ipairs(self.enemies) do
-		self.room:writeToConsole("enemy " .. player:getGeneralName() .. (sgs.role_evaluation[player:objectName()][player:getRole()] or "") .. player:getRole())
-	end
-	for _, player in ipairs(self.friends_noself) do
-		self.room:writeToConsole("friend " .. player:getGeneralName() .. (sgs.role_evaluation[player:objectName()][player:getRole()] or "") .. player:getRole())
-	end
-	self.room:writeToConsole(self.player:getGeneralName() .. " list end")
 end
 
 function SmartAI:log(outString)

@@ -268,16 +268,5 @@ if sgs.GetConfig("EnableHegemony", false) then
 								.. " Q" .. math.floor((sgs.ai_loyalty["qun"][name] or 0) * 10) / 10
 								.. " E" .. (sgs.ai_explicit[name] or "nil"))
 	end
-
-	SmartAI.printFEList = function(self)
-		for _, player in ipairs(self.enemies) do
-			self.room:writeToConsole("enemy " .. self:getHegGeneralName(player))
-		end
-
-		for _, player in ipairs (self.friends_noself) do
-			self.room:writeToConsole("friend " .. self:getHegGeneralName(player))
-		end
-		self.room:writeToConsole(self:getHegGeneralName() .. " list end")
-	end
 end
 

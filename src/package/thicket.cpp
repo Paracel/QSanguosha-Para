@@ -334,6 +334,12 @@ public:
                 if (card->hasFlag("real_SA") && player != move->from) {
                     room->notifySkillInvoked(player, objectName());
                     room->broadcastSkillInvoke(objectName());
+                    LogMessage log;
+                    log.type = "#TriggerSkill";
+                    log.from = player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
                     player->obtainCard(card);
                 }
             }

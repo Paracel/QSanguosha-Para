@@ -44,7 +44,7 @@ return {
 	["~qiaoshui"] = "选择【借刀杀人】的目标角色→选择【杀】的目标角色→点击确定",
 	["zongshih"] = "纵适",
 	["#QiaoshuiAdd"] = "%from 发动了“%arg2”为【%arg】增加了额外目标 %to",
-	["#QiaoshuiRemove"] = "%from 发动了“arg2”为【%arg】减少了目标 %to",
+	["#QiaoshuiRemove"] = "%from 发动了“%arg2”为【%arg】减少了目标 %to",
 
 	["#liufeng"] = "",
 	["liufeng"] = "刘封",

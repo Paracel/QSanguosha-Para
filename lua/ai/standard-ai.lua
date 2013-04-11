@@ -1185,7 +1185,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 		end
 
 		for _, card in ipairs(cards) do
-			if card:getTypeId() == sgs.Card_TypeTrick then
+			if card:isNDTrick() then
 				local dummy_use = { isDummy = true }
 				self:useTrickCard(card, dummy_use)
 				if not dummy_use.card then table.insert(unpreferedCards, card:getId()) end

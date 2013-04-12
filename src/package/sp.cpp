@@ -1191,16 +1191,16 @@ SPPackage::SPPackage()
     General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true);
     tw_zhangliao->addSkill("tuxi");
 
-    General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true);
-    tw_luxun->addSkill("qianxun");
-    tw_luxun->addSkill("lianying");
+    General *tw_huanggai = new General(this, "tw_huanggai", "wu", 4, true, true);
+    tw_huanggai->addSkill("kurou");
 
     General *tw_guojia = new General(this, "tw_guojia", "wei", 3, true, true);
     tw_guojia->addSkill("tiandu");
     tw_guojia->addSkill("yiji");
 
-    General *tw_huanggai = new General(this, "tw_huanggai", "wu", 4, true, true);
-    tw_huanggai->addSkill("kurou");
+    General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true);
+    tw_luxun->addSkill("qianxun");
+    tw_luxun->addSkill("lianying");
 
     General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true);
     wz_daqiao->addSkill("guose");

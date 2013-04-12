@@ -79,22 +79,22 @@ return {
 
 	["tw_zhangliao"] = "台版张辽",
 	["&tw_zhangliao"] = "张辽", 
-	["illustrator:tw_zhangliao"] = "",
+	["illustrator:tw_zhangliao"] = "巴萨小马",
 	["cv_zhangliao:convert"] = "你可以替换为台版张辽",
 
 	["tw_luxun"] = "台版陆逊",
 	["&tw_luxun"] = "陆逊", 
-	["illustrator:tw_luxun"] = "",
+	["illustrator:tw_luxun"] = "巴萨小马",
 	["cv_luxun:convert"] = "你可以替换为台版陆逊",
 
 	["tw_guojia"] = "台版郭嘉",
 	["&tw_guojia"] = "郭嘉", 
-	["illustrator:tw_guojia"] = "",
+	["illustrator:tw_guojia"] = "巴萨小马",
 	["cv_guojia:convert"] = "你可以替换为台版郭嘉",
 
 	["tw_huanggai"] = "台版黄盖",
 	["&tw_huanggai"] = "黄盖", 
-	["illustrator:tw_huanggai"] = "",
+	["illustrator:tw_huanggai"] = "巴萨小马",
 	["cv_huanggai:convert"] = "你可以替换为台版黄盖",
 
 	["wz_daqiao"] = "王战大乔",

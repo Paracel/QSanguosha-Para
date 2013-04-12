@@ -620,42 +620,56 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
     event_stack.push_back(triplet);
 
     bool broken = false;
-    QList<const TriggerSkill *> triggered;
-    QList<const TriggerSkill *> &skills = skill_table[event];
-    foreach (const TriggerSkill *skill, skills) {
-        double priority = skill->getPriority();
-        int len = room->getPlayers().length();
-        foreach (ServerPlayer *p, room->getAllPlayers(true)) {
-            if (p->hasSkill(skill->objectName())) {
-                priority += (double)len / 100;
-                break;
+
+    try {
+        QList<const TriggerSkill *> triggered;
+        QList<const TriggerSkill *> &skills = skill_table[event];
+        foreach (const TriggerSkill *skill, skills) {
+            double priority = skill->getPriority();
+            int len = room->getPlayers().length();
+            foreach (ServerPlayer *p, room->getAllPlayers(true)) {
+                if (p->hasSkill(skill->objectName())) {
+                    priority += (double)len / 100;
+                    break;
+                }
+                len--;
             }
-            len--;
+            TriggerSkill *mutable_skill = const_cast<TriggerSkill *>(skill);
+            mutable_skill->setDynamicPriority(priority);
         }
-        TriggerSkill *mutable_skill = const_cast<TriggerSkill *>(skill);
-        mutable_skill->setDynamicPriority(priority);
-    }
-    qStableSort(skills.begin(), skills.end(), CompareByPriority);
+        qStableSort(skills.begin(), skills.end(), CompareByPriority);
 
-    for (int i = 0; i < skills.size(); i++) {
-        const TriggerSkill *skill = skills[i];
-        if (skill->triggerable(target) && !triggered.contains(skill)) {
-            while (room->isPaused()) {}
-            triggered.append(skill);
-            broken = skill->trigger(event, room, target, data);
-            if (broken) break;
+        for (int i = 0; i < skills.size(); i++) {
+            const TriggerSkill *skill = skills[i];
+            if (skill->triggerable(target) && !triggered.contains(skill)) {
+                while (room->isPaused()) {}
+                triggered.append(skill);
+                broken = skill->trigger(event, room, target, data);
+                if (broken) break;
+            }
         }
+
+        if (target) {
+            foreach (AI *ai, room->ais)
+                ai->filterEvent(event, target, data);
+        }
+
+        // pop event stack
+        event_stack.pop_back();
+    }
+    catch (TriggerEvent throwed_event) {
+        if (target) {
+            foreach (AI *ai, room->ais)
+                ai->filterEvent(event, target, data);
+        }
+
+        // pop event stack
+        event_stack.pop_back();
+
+        throw throwed_event;
     }
 
-    if (target) {
-        foreach (AI *ai, room->ais)
-            ai->filterEvent(event, target, data);
-    }
-
-    // pop event stack
-    event_stack.pop_back();
     while (room->isPaused()) {}
-
     return broken;
 }
 

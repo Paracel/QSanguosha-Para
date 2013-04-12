@@ -366,8 +366,8 @@ function SmartAI:getUsePriority(card)
 	local v = 0
 	if card:isKindOf("EquipCard") then
 		if self:hasSkills(sgs.lose_equip_skill) then return 15 end
-		if card:isKindOf("Armor") and not self.player:getArmor() then v = 6
-		elseif card:isKindOf("Weapon") and not self.player:getWeapon() then v = 5.7
+		if card:isKindOf("Armor") and not self.player:getArmor() then v = (sgs.ai_use_priority[class_name] or 0) + 5.2
+		elseif card:isKindOf("Weapon") and not self.player:getWeapon() then v = (sgs.ai_use_priority[class_name] or 0) + 3
 		elseif card:isKindOf("DefensiveHorse") and not self.player:getDefensiveHorse() then v = 5.8
 		elseif card:isKindOf("OffensiveHorse") and not self.player:getOffensiveHorse() then v = 5.5
 		end
@@ -1926,12 +1926,16 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	if type(callback) == "function" then
 		local cb = callback(self, discard_num, min_num, optional, include_equip)
 		if cb then
-			for _, card_id in ipairs(cb) do
-				if not table.contains(exchange, reason) and self.player:isJilei(sgs.Sanguosha:getCard(card_id)) then
-					return {}
+			if type(cb) == "number" and not self.player:isJilei(sgs.Sanguosha:getCard(cb)) then return { cb }
+			elseif type(cb) == "table" then
+				for _, card_id in ipairs(cb) do
+					if not table.contains(exchange, reason) and self.player:isJilei(sgs.Sanguosha:getCard(card_id)) then
+						return {}
+					end
 				end
+				return cb
 			end
-			return cb
+			return {}
 		end
 	elseif optional then
 		return {}
@@ -4395,7 +4399,7 @@ function SmartAI:evaluateWeapon(card)
 		end
 	end
 
-	if card:isKindOf("Crossbow") and deltaSelfThreat ~= 0 then
+	if card:isKindOf("Crossbow") and not self.player:hasSkill("paoxiao") and deltaSelfThreat ~= 0 then
 		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat * 2 + 10 end
 		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 2 - 2
 	end
@@ -4404,6 +4408,8 @@ function SmartAI:evaluateWeapon(card)
 		deltaSelfThreat = deltaSelfThreat + (callback(self) or 0)
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:distanceTo(enemy) <= currentRange and callback then
+				local added = sgs.ai_slash_weaponfilter[card:objectName()]
+				if added and type(added) == "function" and added(enemy, self) then deltaSelfThreat = deltaSelfThreat + 1 end
 				deltaSelfThreat = deltaSelfThreat + (callback(self, enemy) or 0)
 			end
 		end
@@ -4459,7 +4465,8 @@ function SmartAI:useEquipCard(card, use)
 		or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
 		or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
 		or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
-		or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed())) then return end
+		or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed()))
+		or (self.player:hasSkill("guidao") and same:isBlack() and card:isRed()) then return end
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)
 	self:useCardByClassName(card, use)
@@ -4479,11 +4486,11 @@ function SmartAI:useEquipCard(card, use)
 		end
 		if self:hasSkills("paoxiao|nosfuhun", self.player) and card:isKindOf("Crossbow") then return end
 		if not self:needKongcheng() and not self:hasSkills(sgs.lose_equip_skill) and self:getOverflow() <= 0 and not canUseSlash then return end
+		if (not use.to) and self.weaponUsed and not self:hasSkills(sgs.lose_equip_skill) then return end
+		if (self.player:hasSkill("zhiheng") or self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0)
+			and not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() and not card:isKindOf("Crossbow") then return end
+		if not self:needKongcheng() and self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
 		if not self.player:getWeapon() or self:evaluateWeapon(card) > self:evaluateWeapon(self.player:getWeapon()) then
-			if (not use.to) and self.weaponUsed and (not self:hasSkills(sgs.lose_equip_skill)) then return end
-			if (self.player:hasSkill("zhiheng") or self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0)
-				and not self.player:hasUsed("ZhihengCard") and self.player:getWeapon() and not card:isKindOf("Crossbow") then return end
-			if not self:needKongcheng() and self.player:getHandcardNum() <= self.player:getHp() - 2 then return end
 			use.card = card
 		end
 	elseif card:isKindOf("Armor") then

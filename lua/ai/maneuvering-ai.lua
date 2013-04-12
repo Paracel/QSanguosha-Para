@@ -20,7 +20,8 @@ sgs.ai_use_priority.FireSlash = 2.3
 
 sgs.weapon_range.Fan = 4
 sgs.ai_use_priority.Fan = 2.655
-sgs.ai_use_priority.Vine = 1.6
+sgs.ai_use_priority.Vine = 0.95
+sgs.ai_use_priority.SilverLion = 1.0
 
 sgs.ai_skill_invoke.fan = function(self, data)
 	local use = data:toCardUse()
@@ -84,9 +85,9 @@ function sgs.ai_armor_value.vine(player, self)
 	if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
 	for _, enemy in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if not self:isFriend(enemy, player) then
-			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -1 end
-			if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -1 end
-			if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 then return -1 end
+			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -2 end
+			if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -2 end
+			if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 or getKnownCard(enemy, "Fan") >= 1 then return -2 end
 		end
 	end
 

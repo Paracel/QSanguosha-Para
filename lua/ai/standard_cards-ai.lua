@@ -414,14 +414,24 @@ function SmartAI:useCardSlash(card, use)
 				if self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0 then
 				elseif self.player:hasWeapon("crossbow") and self:getCardsNum("Slash") > 1 then
 				else
-					local equips = self:getCards("EquipCard", "h")
-					for _, equip in ipairs(equips) do
-						local callback = sgs.ai_slash_weaponfilter[equip:objectName()]
-						if callback and type(callback) == "function" and callback(target, self)
-							and self.player:distanceTo(target) <= (sgs.weapon_range[equip:getClassName()] or 0) then
-							self:useEquipCard(equip, use)
-							if use.card then return end
+					local Weapons = {}
+					for _, acard in sgs.qlist(self.player:getHandcards()) do
+						if acard:isKindOf("Weapon") then
+							local callback = sgs.ai_slash_weaponfilter[acard:objectName()]
+							if callback and type(callback) == "function" and callback(target, self)
+								and self.player:distanceTo(target) <= (sgs.weapon_range[acard:getClassName()] or 1) then
+								self:useEquipCard(acard, use)
+								if use.card then table.insert(Weapons, acard) end
+							end
 						end
+					end
+					if #Weapons > 0 then
+						local cmp = function(a, b)
+							return self:evaluateWeapon(a) > self:evaluateWeapon(b)
+						end
+						table.sort(Weapons, cmp)
+						use.card = Weapons[1]
+						return
 					end
 				end
 				if target:isChained() and self:isGoodChainTarget(target) and not use.card then
@@ -696,6 +706,29 @@ function SmartAI:useCardPeach(card, use)
 	end
 	if self.player:isLord() and (self.player:hasSkill("hunzi") and self.player:getMark("hunzi") == 0)
 		and self.player:getHp() < 4 and self.player:getHp() > peaches then return end
+	if self.player:hasSkill("rende") and #self.friends_noself > 0 then return end
+	if self.player:hasArmorEffect("silver_lion") then
+		for _, card in sgs.qlist(self.player:getHandcards()) do
+			if card:isKindOf("Armor") and self:evaluateArmor(card) > 0 then
+				use.card = card
+				return
+			end
+		end
+	end
+
+	local SilverLion, OtherArmor
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if card:isKindOf("SilverLion") then
+			SilverLion = card
+		elseif card:isKindOf("Armor") and self:evaluateArmor(card) > 0 then
+			OtherArmor = true
+		end
+	end
+	if SilverLion and OtherArmor then
+		use.card = SilverLion
+		return
+	end
+
 	for _, enemy in ipairs(self.enemies) do
 		if self.player:getHandcardNum() < 3 and
 			(self:hasSkills(sgs.drawpeach_skill, enemy) or getCardsNum("Dismantlement", enemy) >= 1
@@ -704,9 +737,6 @@ function SmartAI:useCardPeach(card, use)
 			or (not self.player:hasSkill("qianxun") and getCardsNum("Snatch", enemy) >= 1 and (enemy:distanceTo(self.player) == 1 or enemy:hasSkill("qicai")))) then
 			mustusepeach = true
 		end
-	end
-	if self.player:hasSkill("rende") and #self.friends_noself > 0 then
-		return
 	end
 
 	if mustusepeach or (self.player:hasSkill("buqu") and self.player:getHp() < 1) or peaches > self.player:getHp() then
@@ -784,7 +814,7 @@ function sgs.ai_slash_weaponfilter.double_sword(to, self)
 end
 
 function sgs.ai_weapon_value.double_sword(self, enemy)
-	if enemy and enemy:isMale() ~= self.player:isMale() then return 3 end
+	if enemy and enemy:isMale() ~= self.player:isMale() then return 4 end
 end
 
 function SmartAI:getExpectedJinkNum(use)
@@ -985,7 +1015,7 @@ sgs.ai_skill_cardask["blade-slash"] = function(self, data, pattern, target)
 end
 
 function sgs.ai_weapon_value.blade(self, enemy)
-	if not enemy then return self:getCardsNum("Slash") end
+	if not enemy then return math.min(self:getCardsNum("Slash"), 3) end
 end
 
 function cardsView_spear(player, skill_name)
@@ -1081,6 +1111,15 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	return turnUse_spear(self, inclusive, "spear")
 end
 
+function sgs.ai_weapon_value.spear(self, enemy)
+	if enemy and self:getCardsNum("Slash") == 0 then
+		if self:getOverflow() > 0 then return 2
+		elseif self.player:getHandcardNum() > 2 then return 1
+		end
+	end
+	return 0
+end
+
 function sgs.ai_slash_weaponfilter.fan(to)
 	return to:hasArmorEffect("vine")
 end
@@ -1163,6 +1202,8 @@ function sgs.ai_armor_value.silver_lion(player, self)
 			if player:containsTrick("lightning") then return 5 end
 		end
 	end
+	if self.player:isWounded() and not self.player:getArmor() then return 9 end
+	if self.player:isWounded() and self:getCardsNum("Armor", self.player, "h") >= 2 then return 8 end
 	return 1
 end
 
@@ -1175,9 +1216,8 @@ sgs.ai_use_priority.DoubleSword = 2.665
 sgs.ai_use_priority.Spear = 2.66
 sgs.ai_use_priority.IceSword = 2.65
 sgs.ai_use_priority.QinggangSword = 2.645
-sgs.ai_use_priority.Axe = 2.64
+sgs.ai_use_priority.Axe = 2.688
 sgs.ai_use_priority.Crossbow = 2.63
-sgs.ai_use_priority.SilverLion = 0.9
 sgs.ai_use_priority.EightDiagram = 0.8
 sgs.ai_use_priority.RenwangShield = 0.7
 sgs.ai_use_priority.DefensiveHorse = 2.75

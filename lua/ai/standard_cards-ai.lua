@@ -706,7 +706,7 @@ function SmartAI:useCardPeach(card, use)
 	end
 	if self.player:isLord() and (self.player:hasSkill("hunzi") and self.player:getMark("hunzi") == 0)
 		and self.player:getHp() < 4 and self.player:getHp() > peaches then return end
-	if self.player:hasSkill("rende") and #self.friends_noself > 0 then return end
+	if self.player:hasSkill("rende") and self:haveFriendsToDraw() then return end
 	if self.player:hasArmorEffect("silver_lion") then
 		for _, card in sgs.qlist(self.player:getHandcards()) do
 			if card:isKindOf("Armor") and self:evaluateArmor(card) > 0 then
@@ -2548,7 +2548,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 
 		if halberd and #self.enemies >= 2 then
-			if self.player:hasSkill("rende") and #self.friends_noself > 0 then return halberd end
+			if self.player:hasSkill("rende") and self:haveFriendsToDraw() then return halberd end
 			if selfIsCurrent and self.player:getHandcardNum() == 1 and self.player:getHandcards():first():isKindOf("Slash") then return halberd end
 		end
 

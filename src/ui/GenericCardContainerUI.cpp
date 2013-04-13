@@ -604,7 +604,7 @@ void PlayerCardContainer::addEquips(QList<CardItem *> &equips) {
 
         _mutexEquipAnim.lock();
         _m_equipRegions[index]->setPos(_m_layout->m_equipAreas[index].topLeft()
-                                        + QPoint(_m_layout->m_equipAreas[index].width() / 2, 0));
+                                       + QPoint(_m_layout->m_equipAreas[index].width() / 2, 0));
         _m_equipRegions[index]->setOpacity(0);
         _m_equipRegions[index]->show();
         _m_equipAnim[index]->stop();

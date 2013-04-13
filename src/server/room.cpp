@@ -3488,6 +3488,7 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
         updateCardsOnLose(move);
 
     // Now, process add cards
+    notifyMoveCards(false, cards_moves, forceMoveVisible);
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
         for (int j = 0; j < cards_move.card_ids.size(); j++) {
@@ -3514,7 +3515,6 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
 
     foreach (CardsMoveStruct move, cards_moves)
         updateCardsOnGet(move);
-    notifyMoveCards(false, cards_moves, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);
@@ -3643,11 +3643,6 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         }
     }
 
-    for (int i = 0; i < cards_moves.size(); i++) {
-        CardsMoveStruct &cards_move = cards_moves[i];
-        output(QString("%4 from:%1 to:%2 ids:%3").arg(cards_move.from ? cards_move.from->getGeneralName() : QString()).arg(cards_move.to ? cards_move.to->getGeneralName() : QString()).arg(Card::IdsToStrings(cards_move.card_ids).join("+")).arg(i));
-    }
-
     moveOneTimes = _mergeMoves(cards_moves);
     i = 0;
     foreach (CardsMoveOneTimeStruct moveOneTime, moveOneTimes) {
@@ -3662,12 +3657,30 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
     }
     cards_moves = _separateMoves(moveOneTimes);
 
-    for (int i = 0; i < cards_moves.size(); i++) {
-        CardsMoveStruct &cards_move = cards_moves[i];
-        output(QString("from:%1 to:%2 ids:%3").arg(cards_move.from ? cards_move.from->getGeneralName() : QString()).arg(cards_move.to ? cards_move.to->getGeneralName() : QString()).arg(Card::IdsToStrings(cards_move.card_ids).join("+")));
-    }
-
     // Now, process add cards
+    QList<CardsMoveStruct> origin_x;
+    foreach (CardsMoveStruct m, origin) {
+        CardsMoveStruct m_x = m;
+        m_x.card_ids.clear();
+        m_x.to = NULL;
+        m_x.to_place = Player::DiscardPile;
+        foreach (int id, m.card_ids) {
+            bool sure = false;
+            foreach (CardsMoveStruct cards_move, cards_moves) {
+                if (cards_move.card_ids.contains(id)) {
+                    m_x.card_ids << id;
+                    if (!sure) {
+                        m_x.to = cards_move.to;
+                        m_x.to_place = cards_move.to_place;
+                        sure = true;
+                    }
+                }
+            }
+        }
+        origin_x.append(m_x);
+    }
+    notifyMoveCards(false, origin_x, forceMoveVisible);
+
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
         cards_move.from_place = Player::PlaceTable;
@@ -3695,22 +3708,6 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
 
     foreach (CardsMoveStruct move, cards_moves)
         updateCardsOnGet(move);
-
-    QList<CardsMoveStruct> origin_x;
-    foreach (CardsMoveStruct m, origin) {
-        CardsMoveStruct m_x = m;
-        m_x.card_ids.clear();
-        foreach (int id, m.card_ids) {
-            if (getCardPlace(id) == m.to_place && getCardOwner(id) == m.to)
-                m_x.card_ids << id;
-            else {
-                m_x.to_place = getCardPlace(id);
-                m_x.to = getCardOwner(id);
-            }
-        }
-        origin_x.append(m_x);
-    }
-    notifyMoveCards(false, origin_x, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);

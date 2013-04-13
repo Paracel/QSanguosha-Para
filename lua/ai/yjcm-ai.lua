@@ -501,7 +501,7 @@ sgs.ai_choicemade_filter.skillInvoke.buyi = function(self, player, promptlist)
 				if card:getTypeId() ~= sgs.Card_TypeBasic then allBasicCard = false end
 			end
 		end
-		if knownNum < dying.who:getHandcardNum() then allBasicCard = false end
+		if knownNum < dying:getHandcardNum() then allBasicCard = false end
 		if not allBasicCard then sgs.updateIntention(player, dying, 80) end
 	end
 end

@@ -490,9 +490,11 @@ struct CardsMoveOneTimeStruct {
     Player::Place to_place;
     CardMoveReason reason;
     Player *from, *to;
+    QStringList from_pile_names;
+    QString to_pile_name;
+    
+    QList<bool> open; // helper to prevent sending card_id to unrelevant clients
 };
-
-typedef const CardsMoveOneTimeStruct *CardsMoveOneTimeStar;
 
 struct DyingStruct {
     DyingStruct();
@@ -631,9 +633,7 @@ enum TriggerEvent {
     CardAsked,
     CardResponded,
     BeforeCardsMove, // sometimes we need to record cards before the move
-    CardsMoving,
     CardsMoveOneTime,
-    CardDrawing,
 
     PreCardUsed, // for AI to filter events only.
     CardUsed,

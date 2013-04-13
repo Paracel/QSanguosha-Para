@@ -973,8 +973,8 @@ public:
                 player->setMark(objectName(), 0);
             }
         } else if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->to == player && move->to_place == Player::PlaceSpecial && player->getPile(objectName()).length() >= 3) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.to == player && move.to_place == Player::PlaceSpecial && player->getPile(objectName()).length() >= 3) {
                 player->clearOnePrivatePile(objectName());
                 QList<ServerPlayer *> males;
                 foreach (ServerPlayer *p, room->getAlivePlayers()) {
@@ -1025,9 +1025,9 @@ public:
                 room->acquireSkill(player, "liuli");
             }
         } else if (event == BeforeCardsMove && TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == player && move->from_places.contains(Player::PlaceSpecial)) {
-                foreach (int id, move->card_ids) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == player && move.from_places.contains(Player::PlaceSpecial)) {
+                foreach (int id, move.card_ids) {
                     if (player->getPileName(id) == "xingwu") {
                         player->setFlags("LuoyanDetach");
                         break;
@@ -1035,9 +1035,9 @@ public:
                 }
             }
         } else if (event == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->to == player && move->to_place == Player::PlaceSpecial) {
-                foreach (int id, move->card_ids) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.to == player && move.to_place == Player::PlaceSpecial) {
+                foreach (int id, move.card_ids) {
                     if (player->getPileName(id) == "xingwu") {
                         if (player->getPile("xingwu").length() == 1) {
                             room->notifySkillInvoked(player, objectName());

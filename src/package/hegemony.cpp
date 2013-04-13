@@ -236,21 +236,21 @@ public:
 class Lirang: public TriggerSkill {
 public:
     Lirang(): TriggerSkill("lirang") {
-        events << CardsMoving;
+        events << BeforeCardsMove;
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *kongrong, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from != kongrong)
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from != kongrong)
             return false;
-        if (move->to_place == Player::DiscardPile
-            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+        if (move.to_place == Player::DiscardPile
+            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
 
             int i = 0;
             QList<int> lirang_card;
-            foreach (int card_id, move->card_ids) {
-                if (room->getCardPlace(card_id) == Player::DiscardPile
-                    && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip)) {
+            foreach (int card_id, move.card_ids) {
+                if (room->getCardOwner(card_id) == move.from
+                    && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip)) {
                         lirang_card << card_id;
                 }
                 i++;
@@ -261,23 +261,20 @@ public:
                 return false;
 
             room->broadcastSkillInvoke(objectName());
-            room->setPlayerFlag(kongrong, "lirang_InTempMoving");
 
-            CardsMoveStruct move2;
-            move2.card_ids = lirang_card;
-            move2.to_place = Player::PlaceHand;
-            move2.to = kongrong;
-            room->moveCardsAtomic(move2, true);
-
+            QList<int> original_lirang = lirang_card;
             while (room->askForYiji(kongrong, lirang_card, objectName(), false, true)) {}
 
-            CardsMoveStruct move3;
-            move3.card_ids = lirang_card;
-            move3.to_place = Player::DiscardPile;
-            move3.reason = move->reason;
-            room->moveCardsAtomic(move3, true);
-
-            room->setPlayerFlag(kongrong, "-lirang_InTempMoving");
+            QList<int> ids = move.card_ids;
+            i = 0;
+            foreach (int card_id, ids) {
+                if (original_lirang.contains(card_id) && !lirang_card.contains(card_id)) {
+                    move.card_ids.removeOne(card_id);
+                    move.from_places.removeAt(i);
+                }
+                i++;
+            }
+            data = QVariant::fromValue(move);
         }
         return false;
     }
@@ -290,11 +287,11 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *tianfeng, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from == tianfeng && move->from_places.contains(Player::PlaceHand)) {
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from == tianfeng && move.from_places.contains(Player::PlaceHand)) {
             if (event == BeforeCardsMove) {
                 foreach (int id, tianfeng->handCards()) {
-                    if (!move->card_ids.contains(id))
+                    if (!move.card_ids.contains(id))
                         return false;
                 }
                 tianfeng->addMark(objectName());
@@ -787,8 +784,6 @@ HegemonyPackage::HegemonyPackage()
     General *kongrong = new General(this, "kongrong", "qun", 3);
     kongrong->addSkill(new Mingshi);
     kongrong->addSkill(new Lirang);
-    kongrong->addSkill(new FakeMoveSkill("lirang", FakeMoveSkill::SourceOnly));
-    related_skills.insertMulti("lirang", "#lirang-fake-move");
 
     General *jiling = new General(this, "jiling", "qun", 4);
     jiling->addSkill(new Shuangren);

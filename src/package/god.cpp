@@ -397,10 +397,10 @@ public:
             return false;
 
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == shenzhouyu && move->to_place == Player::DiscardPile
-                && (move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
-                shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move->card_ids.size());
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == shenzhouyu && move.to_place == Player::DiscardPile
+                && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+                shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move.card_ids.size());
                 if (!shenzhouyu->hasFlag("QinyinUsed") && shenzhouyu->getMark("qinyin") >= 2) {
                     if (shenzhouyu->askForSkillInvoke(objectName())) {
                         shenzhouyu->setFlags("QinyinUsed");
@@ -920,10 +920,10 @@ public:
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardsMoveOneTime) {
             if (player->getPhase() == Player::Discard) {
-                CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-                if (move->from == player && move->to_place == Player::DiscardPile
-                    && (move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
-                    int n = move->card_ids.length();
+                CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+                if (move.from == player && move.to_place == Player::DiscardPile
+                    && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+                    int n = move.card_ids.length();
                     if (n > 0) {
                         room->broadcastSkillInvoke(objectName());
                         room->notifySkillInvoked(player, objectName());

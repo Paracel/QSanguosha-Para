@@ -238,12 +238,12 @@ public:
                 data = QVariant::fromValue(damage);
             }
         } else if (player->hasFlag("SilverLionRecover")) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from != player || !move->from_places.contains(Player::PlaceEquip))
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from != player || !move.from_places.contains(Player::PlaceEquip))
                 return false;
-            for (int i = 0; i < move->card_ids.size(); i++) {
-                if (move->from_places[i] != Player::PlaceEquip) continue;
-                const Card *card = Sanguosha->getEngineCard(move->card_ids[i]);
+            for (int i = 0; i < move.card_ids.size(); i++) {
+                if (move.from_places[i] != Player::PlaceEquip) continue;
+                const Card *card = Sanguosha->getEngineCard(move.card_ids[i]);
                 if (card->objectName() == objectName()) {
                     player->setFlags("-SilverLionRecover");
                     if (player->isWounded()) {

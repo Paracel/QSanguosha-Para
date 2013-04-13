@@ -270,10 +270,10 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == player
-                && (move->from_places.contains(Player::PlaceHand)
-                    || move->from_places.contains(Player::PlaceEquip))
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == player
+                && (move.from_places.contains(Player::PlaceHand)
+                    || move.from_places.contains(Player::PlaceEquip))
                 && player->askForSkillInvoke("tuntian", data)) {
                 room->broadcastSkillInvoke("tuntian");
                 JudgeStruct judge;
@@ -831,18 +831,18 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
         ServerPlayer *current = room->getCurrent();
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
 
-        if (player != move->from || erzhang == NULL || erzhang == current)
+        if (player != move.from || erzhang == NULL || erzhang == current)
             return false;
 
         if (current->getPhase() == Player::Discard) {
             QVariantList guzhengToGet = erzhang->tag["GuzhengToGet"].toList();
             QVariantList guzhengOther = erzhang->tag["GuzhengOther"].toList();
 
-            foreach (int card_id, move->card_ids) {
-                if ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
-                    if (move->from == current)
+            foreach (int card_id, move.card_ids) {
+                if ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+                    if (move.from == current)
                         guzhengToGet << card_id;
                     else if (!guzhengToGet.contains(card_id))
                         guzhengOther << card_id;

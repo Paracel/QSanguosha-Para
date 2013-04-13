@@ -308,7 +308,7 @@ public:
 class Juxiang: public TriggerSkill {
 public:
     Juxiang(): TriggerSkill("juxiang") {
-        events << CardUsed << CardsMoving;
+        events << CardUsed << BeforeCardsMove;
         frequency = Compulsory;
     }
 
@@ -327,11 +327,11 @@ public:
                     room->setCardFlag(use.card->getEffectiveId(), "real_SA");
             }
         } else if (TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->card_ids.length() == 1 && move->from_places.contains(Player::PlaceTable) && move->to_place == Player::DiscardPile
-                && move->reason.m_reason == CardMoveReason::S_REASON_USE) {
-                Card *card = Sanguosha->getCard(move->card_ids.first());
-                if (card->hasFlag("real_SA") && player != move->from) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.card_ids.length() == 1 && move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
+                && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
+                Card *card = Sanguosha->getCard(move.card_ids.first());
+                if (card->hasFlag("real_SA") && player != move.from) {
                     room->notifySkillInvoked(player, objectName());
                     room->broadcastSkillInvoke(objectName());
                     LogMessage log;
@@ -341,6 +341,8 @@ public:
                     room->sendLog(log);
 
                     player->obtainCard(card);
+                    move.card_ids.clear();
+                    data = QVariant::fromValue(move);
                 }
             }
         }

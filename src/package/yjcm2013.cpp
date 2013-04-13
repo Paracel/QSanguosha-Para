@@ -306,7 +306,7 @@ public:
                 room->sendLog(log);
             }
         }
-        data.setValue(QVariant::fromValue(use));
+        data = QVariant::fromValue(use);
 
         return false;
     }
@@ -586,22 +586,22 @@ public:
 class Zongxuan: public TriggerSkill {
 public:
     Zongxuan(): TriggerSkill("zongxuan") {
-        events << CardsMoving;
+        events << BeforeCardsMove;
         view_as_skill = new ZongxuanViewAsSkill;
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from != player)
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from != player)
             return false;
-        if (move->to_place == Player::DiscardPile
-            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+        if (move.to_place == Player::DiscardPile
+            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
 
             int i = 0;
             QList<int> zongxuan_card;
-            foreach (int card_id, move->card_ids) {
-                if (room->getCardPlace(card_id) == Player::DiscardPile
-                    && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip)) {
+            foreach (int card_id, move.card_ids) {
+                if (room->getCardOwner(card_id) == move.from
+                    && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip)) {
                         zongxuan_card << card_id;
                 }
                 i++;
@@ -609,14 +609,7 @@ public:
             if (zongxuan_card.isEmpty())
                 return false;
 
-            room->setPlayerFlag(player, "zongxuan_InTempMoving");
-
-            CardsMoveStruct move2;
-            move2.card_ids = zongxuan_card;
-            move2.to_place = Player::PlaceHand;
-            move2.to = player;
-            room->moveCardsAtomic(move2, true);
-
+            QList<int> original_zongxuan = zongxuan_card;
             do {
                 QStringList zongxuan;
                 foreach (int card_id, zongxuan_card)
@@ -629,15 +622,16 @@ public:
                 }
             } while (!zongxuan_card.isEmpty());
 
-            if (!zongxuan_card.isEmpty()) {
-                CardsMoveStruct move3;
-                move3.card_ids = zongxuan_card;
-                move3.to_place = Player::DiscardPile;
-                move3.reason = move->reason;
-                room->moveCardsAtomic(move3, true);
+            QList<int> ids = move.card_ids;
+            i = 0;
+            foreach (int id, ids) {
+                if (original_zongxuan.contains(id) && !zongxuan_card.contains(id)) {
+                    move.card_ids.removeOne(id);
+                    move.from_places.removeAt(i);
+                }
+                i++;
             }
-
-            room->setPlayerFlag(player, "-zongxuan_InTempMoving");
+            data = QVariant::fromValue(move);
         }
         return false;
     }
@@ -721,9 +715,7 @@ YJCM2013Package::YJCM2013Package()
 
     General *yufan = new General(this, "yufan", "wu", 3);
     yufan->addSkill(new Zongxuan);
-    yufan->addSkill(new FakeMoveSkill("zongxuan", FakeMoveSkill::SourceOnly));
     yufan->addSkill(new Zhiyan);
-	related_skills.insertMulti("zongxuan", "#zongxuan-fake-move");
 
     General *zhuran = new General(this, "zhuran", "wu");
     zhuran->addSkill(new Danshou);

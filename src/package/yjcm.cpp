@@ -41,29 +41,29 @@ public:
 class Luoying: public TriggerSkill {
 public:
     Luoying(): TriggerSkill("luoying") {
-        events << CardsMoving;
+        events << BeforeCardsMove;
         frequency = Frequent;
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *caozhi, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from == caozhi || move->from == NULL)
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from == caozhi || move.from == NULL)
             return false;
-        if (move->to_place == Player::DiscardPile
-            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
-                ||move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE)) {
+        if (move.to_place == Player::DiscardPile
+            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
+                ||move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE)) {
             QList<CardsMoveStruct> exchangeMove;
             CardsMoveStruct luoyingget;
-            luoyingget.from = move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE ? NULL : move->from;
+            luoyingget.from = move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE ? NULL : move.from;
             luoyingget.to = caozhi;
             luoyingget.to_place = Player::PlaceHand;
             int i = 0;
-            foreach (int card_id, move->card_ids) {
+            foreach (int card_id, move.card_ids) {
                 if (Sanguosha->getCard(card_id)->getSuit() == Card::Club
-                    && room->getCardPlace(card_id) == Player::DiscardPile
-                    && ((move->reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE && move->from_places[i] == Player::PlaceJudge)
-                        || (move->reason.m_reason != CardMoveReason::S_REASON_JUDGEDONE
-                            && (move->from_places[i] == Player::PlaceHand || move->from_places[i] == Player::PlaceEquip))))
+                    && ((move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE && move.from_places[i] == Player::PlaceJudge)
+                        || (move.reason.m_reason != CardMoveReason::S_REASON_JUDGEDONE
+                            && room->getCardOwner(card_id) == move.from
+                            && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip))))
                     luoyingget.card_ids << card_id;
                 i++;
             }
@@ -82,6 +82,17 @@ public:
                 }
 
                 if (!luoyingget.card_ids.empty()) {
+                    QList<int> ids = move.card_ids;
+                    int i = 0;
+                    foreach (int id, ids) {
+                        if (luoyingget.card_ids.contains(id)) {
+                            move.card_ids.removeOne(id);
+                            move.from_places.removeAt(i);
+                        }
+                        i++;
+                    }
+                    data = QVariant::fromValue(move);
+
                     exchangeMove.push_back(luoyingget);
                     room->broadcastSkillInvoke("luoying");
                     room->moveCardsAtomic(exchangeMove, true);
@@ -266,15 +277,15 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->to == player && move->from && move->from->isAlive() && move->from != move->to
-                && move->card_ids.size() >= 2
-                && move->reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE) {
-                move->from->setFlags("EnyuanDrawTarget");
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.to == player && move.from && move.from->isAlive() && move.from != move.to
+                && move.card_ids.size() >= 2
+                && move.reason.m_reason != CardMoveReason::S_REASON_PREVIEWGIVE) {
+                move.from->setFlags("EnyuanDrawTarget");
                 bool invoke = room->askForSkillInvoke(player, objectName(), data);
-                move->from->setFlags("-EnyuanDrawTarget");
+                move.from->setFlags("-EnyuanDrawTarget");
                 if (invoke) {
-                    room->drawCards((ServerPlayer *)move->from, 1);
+                    room->drawCards((ServerPlayer *)move.from, 1);
                     room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
                 }
             }
@@ -414,16 +425,16 @@ public:
         if (event == EventPhaseStart) {
             lingtong->setMark("xuanfeng", 0);
         } else if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from != lingtong)
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from != lingtong)
                 return false;
 
-            if (move->to_place == Player::DiscardPile && lingtong->getPhase() == Player::Discard
-                && (move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)
-                lingtong->setMark("xuanfeng", lingtong->getMark("xuanfeng") + move->card_ids.length());
+            if (move.to_place == Player::DiscardPile && lingtong->getPhase() == Player::Discard
+                && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)
+                lingtong->setMark("xuanfeng", lingtong->getMark("xuanfeng") + move.card_ids.length());
 
             if ((lingtong->getMark("xuanfeng") >= 2 && !lingtong->hasFlag("XuanfengUsed"))
-                || move->from_places.contains(Player::PlaceEquip)) {
+                || move.from_places.contains(Player::PlaceEquip)) {
                 bool can_invoke = false;
                 QList<ServerPlayer *> other_players = room->getOtherPlayers(lingtong);
                 foreach (ServerPlayer *player, other_players) {
@@ -1138,12 +1149,12 @@ int Shangshi::getMaxLostHp(ServerPlayer *zhangchunhua) const{
 bool Shangshi::trigger(TriggerEvent event, Room *room, ServerPlayer *zhangchunhua, QVariant &data) const{
     int losthp = getMaxLostHp(zhangchunhua);
     if (event == CardsMoveOneTime) {
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (zhangchunhua->getPhase() == Player::Discard) {
             bool changed = false;
-            if (move->from == zhangchunhua && move->from_places.contains(Player::PlaceHand))
+            if (move.from == zhangchunhua && move.from_places.contains(Player::PlaceHand))
                 changed = true;
-            if (move->to == zhangchunhua && move->to_place == Player::PlaceHand)
+            if (move.to == zhangchunhua && move.to_place == Player::PlaceHand)
                 changed = true;
             if (changed)
                 zhangchunhua->addMark("shangshi");
@@ -1153,11 +1164,11 @@ bool Shangshi::trigger(TriggerEvent event, Room *room, ServerPlayer *zhangchunhu
         if (zhangchunhua->getPhase() == Player::Discard)
             zhangchunhua->addMark("shangshi");
     } else if (event == CardsMoveOneTime) {
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         bool can_invoke = false;
-        if (move->from == zhangchunhua && move->from_places.contains(Player::PlaceHand))
+        if (move.from == zhangchunhua && move.from_places.contains(Player::PlaceHand))
             can_invoke = true;
-        if (move->to == zhangchunhua && move->to_place == Player::PlaceHand)
+        if (move.to == zhangchunhua && move.to_place == Player::PlaceHand)
             can_invoke = true;
         if (!can_invoke)
             return false;

@@ -150,22 +150,22 @@ public:
         if (player->getPhase() != Player::NotActive)
             return false;
 
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from != player)
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from != player)
             return false;
 
         if (event == BeforeCardsMove) {
-            CardMoveReason reason = move->reason;
+            CardMoveReason reason = move.reason;
 
             if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_USE
                 || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
                 || (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE) {
                 const Card *card;
                 int i = 0;
-                foreach (int card_id, move->card_ids) {
+                foreach (int card_id, move.card_ids) {
                     card = Sanguosha->getCard(card_id);
-                    if (card->isRed() && (move->from_places[i] == Player::PlaceHand
-                                          || move->from_places[i] == Player::PlaceEquip)) {
+                    if (card->isRed() && (move.from_places[i] == Player::PlaceHand
+                                          || move.from_places[i] == Player::PlaceEquip)) {
                         player->addMark(objectName());
                     }
                     i++;

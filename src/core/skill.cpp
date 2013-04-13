@@ -408,7 +408,7 @@ int SlashNoDistanceLimitSkill::getDistanceLimit(const Player *from, const Card *
 FakeMoveSkill::FakeMoveSkill(const QString &name, FakeCondition condition)
     : TriggerSkill(QString("#%1-fake-move").arg(name)), name(name), condition(condition)
 {
-    events << BeforeCardsMove << CardsMoving << CardsMoveOneTime;
+    events << BeforeCardsMove << CardsMoveOneTime;
 }
 
 int FakeMoveSkill::getPriority() const{
@@ -421,6 +421,11 @@ bool FakeMoveSkill::triggerable(const ServerPlayer *target) const{
 
 bool FakeMoveSkill::trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
     QString flag = QString("%1_InTempMoving").arg(name);
+
+    QString flag2 = QString("%1_Global_InTempMoving").arg(name); // override the condition to be Global
+    foreach (ServerPlayer *p, room->getAllPlayers())
+        if (p->hasFlag(flag2)) return true;
+
     if (condition == Global) {
         foreach (ServerPlayer *p, room->getAllPlayers())
             if (p->hasFlag(flag)) return true;

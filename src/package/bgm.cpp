@@ -229,7 +229,7 @@ public:
 class Manjuan: public TriggerSkill {
 public:
     Manjuan(): TriggerSkill("manjuan") {
-        events << CardsMoving << CardDrawing;
+        events << BeforeCardsMove;
         frequency = Frequent;
     }
 
@@ -258,53 +258,37 @@ public:
             return false;
         }
 
-        int card_id = -1;
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        QList<int> ids;
         CardMoveReason reason(CardMoveReason::S_REASON_PUT, sp_pangtong->objectName(), "manjuan", QString());
-        if (event == CardsMoving) {
-            if (sp_pangtong->hasFlag("ManjuanNullified"))
-                return false;
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->to != sp_pangtong || move->to_place != Player::PlaceHand)
-                return false;
-            room->broadcastSkillInvoke(objectName());
-            foreach (int card_id, move->card_ids) {
-                const Card *card = Sanguosha->getCard(card_id);
-                room->moveCardTo(card, NULL, NULL, Player::DiscardPile, reason);
-            }
-        } else if (event == CardDrawing) {
-            if (room->getTag("FirstRound").toBool())
-                return false;
-            if (sp_pangtong->hasFlag("ManjuanNullified"))
-                return false;
-            if (sp_pangtong->getMark("has_drawn_card") == 0)
-                room->broadcastSkillInvoke(objectName());
-            card_id = data.toInt();
+        if (room->getTag("FirstRound").toBool())
+            return false;
+        if (sp_pangtong->hasFlag("ManjuanNullified"))
+            return false;
+        if (move.to != sp_pangtong || move.to_place != Player::PlaceHand)
+            return false;
+        room->broadcastSkillInvoke(objectName());
+        foreach (int card_id, move.card_ids) {
             const Card *card = Sanguosha->getCard(card_id);
             room->moveCardTo(card, NULL, NULL, Player::DiscardPile, reason);
         }
+        ids = move.card_ids;
+        move.card_ids.clear();
+        data = QVariant::fromValue(move);
 
         LogMessage log;
         log.type = "$ManjuanGot";
         log.from = sp_pangtong;
-        if (event == CardsMoving) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            log.card_str = Card::IdsToStrings(move->card_ids).join("+");
-        }
-        else
-            log.card_str = Sanguosha->getCard(card_id)->toString();
+        log.card_str = Card::IdsToStrings(ids).join("+");
         room->sendLog(log);
 
         if (sp_pangtong->getPhase() == Player::NotActive || !sp_pangtong->askForSkillInvoke(objectName(), data))
-            return event != CardsMoving;
+            return false;
 
-        if (event == CardsMoving) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            foreach (int _card_id, move->card_ids)
-                doManjuan(sp_pangtong, _card_id);
-        } else {
-            doManjuan(sp_pangtong, card_id);
-        }
-        return event != CardsMoving;
+        foreach (int _card_id, ids)
+            doManjuan(sp_pangtong, _card_id);
+
+        return false;
     }
 };
 
@@ -731,8 +715,8 @@ public:
         ServerPlayer *lvmeng = room->findPlayerBySkillName(objectName());
 
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == player && player->getMark("@wu") > 0 && player->getHandcardNum() <= 2) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == player && player->getMark("@wu") > 0 && player->getHandcardNum() <= 2) {
                 room->broadcastSkillInvoke(objectName());
 
                 LogMessage log;
@@ -1925,7 +1909,7 @@ public:
 class Hantong: public TriggerSkill {
 public:
     Hantong(): TriggerSkill("hantong") {
-        events << CardsMoving;
+        events << BeforeCardsMove;
         view_as_skill = new HantongViewAsSkill;
     }
 
@@ -1933,23 +1917,28 @@ public:
         if (liuxie->getPhase() != Player::Discard)
             return false;
 
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from != liuxie)
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from != liuxie)
             return false;
-        if (move->to_place == Player::DiscardPile
-            && ((move->reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+        if (move.to_place == Player::DiscardPile
+            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
             if (liuxie->askForSkillInvoke(objectName())) {
                 room->broadcastSkillInvoke(objectName(), 1);
                 int i = 0;
                 DummyCard *dummy = new DummyCard;
-                foreach (int card_id, move->card_ids) {
-                    if (room->getCardPlace(card_id) == Player::DiscardPile && move->from_places[i] == Player::PlaceHand)
+                QList<int> ids = move.card_ids;
+                foreach (int card_id, ids) {
+                    if (room->getCardPlace(card_id) == Player::DiscardPile && move.from_places[i] == Player::PlaceHand) {
                         dummy->addSubcard(card_id);
+                        move.card_ids.removeOne(card_id);
+                        move.from_places.removeAt(i);
+                    }
                     i++;
                 }
                 if (dummy->subcardsLength() > 0)
                     liuxie->addToPile("edict", dummy);
                 dummy->deleteLater();
+                data = QVariant::fromValue(move);
             }
         }
         return false;

@@ -245,8 +245,8 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *lingtong, QVariant &data) const{
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == lingtong && move->from_places.contains(Player::PlaceEquip)) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == lingtong && move.from_places.contains(Player::PlaceEquip)) {
                 QStringList choicelist;
                 choicelist << "nothing";
                 QList<ServerPlayer *> targets1;
@@ -602,7 +602,7 @@ public:
             room->judge(judge);
 
             if (judge.isGood() && wangyi->isAlive()) {
-                room->setPlayerFlag(wangyi, "nosmiji_InTempMoving");
+                room->setPlayerFlag(wangyi, "nosmiji_Global_InTempMoving");
                 int x = wangyi->getLostHp();
                 wangyi->drawCards(x); //It should be preview, not draw
                 ServerPlayer *target = room->askForPlayerChosen(wangyi, room->getAllPlayers(), objectName());
@@ -627,6 +627,8 @@ public:
                 move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEWGIVE,
                                              wangyi->objectName(), target->objectName(), objectName());
                 if (target != wangyi) {
+                    room->setPlayerFlag(wangyi, "-nosmiji_Global_InTempMoving");
+                    room->setPlayerFlag(wangyi, "nosmiji_InTempMoving");
                     room->moveCardsAtomic(move, false);
                     room->setPlayerFlag(wangyi, "-nosmiji_InTempMoving");
                 } else {
@@ -634,7 +636,7 @@ public:
                     DummyCard *dummy = new DummyCard;
                     foreach (int id, ids)
                         dummy->addSubcard(id);
-                    room->setPlayerFlag(wangyi, "-nosmiji_InTempMoving");
+                    room->setPlayerFlag(wangyi, "-nosmiji_Global_InTempMoving");
                     wangyi->obtainCard(dummy, false);
                     dummy->deleteLater();
                 }

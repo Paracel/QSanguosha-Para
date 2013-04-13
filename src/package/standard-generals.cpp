@@ -142,7 +142,7 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         if (!room->askForSkillInvoke(guojia, objectName()))
             return;
         room->broadcastSkillInvoke("yiji");
-        room->setPlayerFlag(guojia, "yiji_InTempMoving");
+        room->setPlayerFlag(guojia, "yiji_Global_InTempMoving");
         QList<int> yiji_cards;
         for (int j = 0; j < n; j++)
             yiji_cards.append(room->drawCard());
@@ -153,23 +153,21 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
         room->moveCardsAtomic(move, false);
 
-        if (yiji_cards.isEmpty()) {
-            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
-            continue;
-        }
-
+        room->setPlayerFlag(guojia, "-yiji_Global_InTempMoving");
+        room->setPlayerFlag(guojia, "yiji_InTempMoving");
         while (room->askForYiji(guojia, yiji_cards, objectName())) {}
+        room->setPlayerFlag(guojia, "-yiji_InTempMoving");
 
-        if (yiji_cards.isEmpty()) {
-            room->setPlayerFlag(guojia, "-yiji_InTempMoving");
+        if (!yiji_cards.isEmpty())
+            room->setPlayerFlag(guojia, "yiji_Global_InTempMoving");
+        else
             continue;
-        }
 
         guojia->addToPile("#yiji_tempPile", yiji_cards, false);
         DummyCard *dummy = new DummyCard;
         foreach (int id, yiji_cards)
             dummy->addSubcard(id);
-        room->setPlayerFlag(guojia, "-yiji_InTempMoving");
+        room->setPlayerFlag(guojia, "-yiji_Global_InTempMoving");
         guojia->obtainCard(dummy, false);
         dummy->deleteLater();
     }
@@ -686,8 +684,8 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (player->isKongcheng()) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from == player && move->from_places.contains(Player::PlaceHand))
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from == player && move.from_places.contains(Player::PlaceHand))
                 room->broadcastSkillInvoke("kongcheng");
         }
 
@@ -875,11 +873,11 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *luxun, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from == luxun && move->from_places.contains(Player::PlaceHand)) {
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from == luxun && move.from_places.contains(Player::PlaceHand)) {
             if (event == BeforeCardsMove) {
                 foreach (int id, luxun->handCards()) {
-                    if (!move->card_ids.contains(id))
+                    if (!move.card_ids.contains(id))
                         return false;
                 }
                 luxun->addMark(objectName());
@@ -1055,10 +1053,10 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *sunshangxiang, QVariant &data) const{
-        CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-        if (move->from == sunshangxiang && move->from_places.contains(Player::PlaceEquip)) {
-            for (int i = 0; i < move->card_ids.size(); i++)
-                if (move->from_places[i] == Player::PlaceEquip
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from == sunshangxiang && move.from_places.contains(Player::PlaceEquip)) {
+            for (int i = 0; i < move.card_ids.size(); i++)
+                if (move.from_places[i] == Player::PlaceEquip
                     && room->askForSkillInvoke(sunshangxiang, objectName())) {
                     room->broadcastSkillInvoke(objectName());
                     sunshangxiang->drawCards(2);
@@ -1473,10 +1471,10 @@ public:
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *gaodayihao, QVariant &data) const{
         if (event == CardsMoveOneTime) {
-            CardsMoveOneTimeStar move = data.value<CardsMoveOneTimeStar>();
-            if (move->from != gaodayihao && move->to != gaodayihao)
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.from != gaodayihao && move.to != gaodayihao)
                 return false;
-            if ((move->to_place != Player::PlaceHand && !move->from_places.contains(Player::PlaceHand))
+            if ((move.to_place != Player::PlaceHand && !move.from_places.contains(Player::PlaceHand))
                 || gaodayihao->getPhase() == Player::Discard) {
                 return false;
             }

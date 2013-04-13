@@ -116,6 +116,13 @@ public:
     bool tryParse(const Json::Value &);
     Json::Value toJsonValue() const;
 
+    inline bool operator == (const CardMoveReason &other) const{
+        return m_reason == other.m_reason
+               && m_playerId == other.m_playerId && m_targetId == other.m_targetId
+               && m_skillName == other.m_skillName
+               && m_eventName == other.m_eventName;
+    }
+
     static const int S_REASON_UNKNOWN = 0x00;
     static const int S_REASON_USE = 0x01;
     static const int S_REASON_RESPONSE = 0x02;
@@ -204,6 +211,10 @@ struct CardsMoveOneTimeStruct {
     Player::Place to_place;
     CardMoveReason reason;
     Player *from, *to;
+    QStringList from_pile_names;
+    QString to_pile_name;
+
+    QList<bool> open; // helper to prevent sending card_id to unrelevant clients
 };
 
 struct CardsMoveStruct {
@@ -212,7 +223,6 @@ struct CardsMoveStruct {
         to_place = Player::PlaceUnknown;
         from = NULL;
         to = NULL;
-        countAsOneTime = false;
     }
 
     inline CardsMoveStruct(const QList<int> &ids, Player *from, Player *to, Player::Place to_place, CardMoveReason reason) {
@@ -259,7 +269,6 @@ struct CardsMoveStruct {
     Player *from, *to;
     CardMoveReason reason;
     bool open; // helper to prevent sending card_id to unrelevant clients
-    bool countAsOneTime; // helper to identify distinct move counted as one time
     bool tryParse(const Json::Value &);
     Json::Value toJsonValue() const;
     inline bool isRelevant(const Player *player) {
@@ -459,9 +468,7 @@ enum TriggerEvent {
     CardAsked,
     CardResponded,
     BeforeCardsMove, // sometimes we need to record cards before the move
-    CardsMoving,
     CardsMoveOneTime,
-    CardDrawing,
 
     PreCardUsed, // for AI to filter events only.
     CardUsed,
@@ -489,19 +496,14 @@ typedef ServerPlayer *PlayerStar;
 typedef JudgeStruct *JudgeStar;
 typedef DamageStruct *DamageStar;
 typedef PindianStruct *PindianStar;
-typedef const CardMoveStruct *CardMoveStar;
-typedef const CardsMoveOneTimeStruct *CardsMoveOneTimeStar;
-typedef const CardsMoveStruct *CardsMoveStar;
 
 Q_DECLARE_METATYPE(DamageStruct)
 Q_DECLARE_METATYPE(CardEffectStruct)
 Q_DECLARE_METATYPE(SlashEffectStruct)
 Q_DECLARE_METATYPE(CardUseStruct)
 Q_DECLARE_METATYPE(CardsMoveStruct)
-Q_DECLARE_METATYPE(CardsMoveStar)
-Q_DECLARE_METATYPE(CardsMoveOneTimeStar)
+Q_DECLARE_METATYPE(CardsMoveOneTimeStruct)
 Q_DECLARE_METATYPE(CardMoveStruct)
-Q_DECLARE_METATYPE(CardMoveStar)
 Q_DECLARE_METATYPE(CardStar)
 Q_DECLARE_METATYPE(PlayerStar)
 Q_DECLARE_METATYPE(DyingStruct)

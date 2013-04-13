@@ -386,10 +386,44 @@ private:
         Player *m_to;
     };
 
+    struct _MoveSeparateClassifier {
+        inline _MoveSeparateClassifier(Player *from, Player *to,
+                                       Player::Place from_place, Player::Place to_place,
+                                       QString from_pile_name, QString to_pile_name,
+                                       bool open,
+                                       CardMoveReason reason) {
+            m_from = from; m_to = to;
+            m_from_place = from_place; m_to_place = to_place;
+            m_from_pile_name = from_pile_name; m_to_pile_name = to_pile_name;
+            m_open = open;
+            m_reason = reason;
+        }
+
+        inline bool operator ==(const _MoveSeparateClassifier &other) const{
+            return m_from == other.m_from && m_to == other.m_to
+                   && m_from_place == other.m_from_place && m_to_place == other.m_to_place
+                   && m_from_pile_name == other.m_from_pile_name && m_to_pile_name == other.m_to_pile_name
+                   && m_open == other.m_open && m_reason == other.m_reason;
+        }
+        inline bool operator < (const _MoveSeparateClassifier &other) const{
+            return m_from < other.m_from && m_to < other.m_to
+                    && m_from_place < other.m_from_place && m_to_place < other.m_to_place
+                    && m_from_pile_name < other.m_from_pile_name && m_to_pile_name < other.m_to_pile_name
+                    && m_open < other.m_open;
+        }
+        Player *m_from;
+        Player *m_to;
+        Player::Place m_from_place, m_to_place;
+        QString m_from_pile_name, m_to_pile_name;
+        bool m_open;
+        CardMoveReason m_reason;
+    };
+
     int _m_lastMovementId;
     void _fillMoveInfo(CardMoveStruct &move) const;
     void _fillMoveInfo(CardsMoveStruct &moves, int card_index) const;
     QList<CardsMoveOneTimeStruct> _mergeMoves(QList<CardsMoveStruct> cards_moves);
+    QList<CardsMoveStruct> _separateMoves(QList<CardsMoveOneTimeStruct> moveOneTimes);
     void _moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible, bool ignoreChanges);
     QString _chooseDefaultGeneral(ServerPlayer *player) const;
     bool _setPlayerGeneral(ServerPlayer *player, const QString &generalName, bool isFirst);

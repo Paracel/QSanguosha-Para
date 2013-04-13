@@ -599,7 +599,8 @@ void RoomThread::run() {
 
             actionNormal(game_rule);
         }
-    } catch (TriggerEvent event) {
+    }
+    catch (TriggerEvent event) {
         if (event == GameFinished) {
             Sanguosha->unregisterRoom();
             return;

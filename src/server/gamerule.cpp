@@ -147,7 +147,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 }
             }
             room->setTag("FirstRound", true);
-            room->drawCards(room->getPlayers(), 4, NULL);
+            room->drawCards(room->getPlayers(), 4, QString());
         }
         return false;
     }

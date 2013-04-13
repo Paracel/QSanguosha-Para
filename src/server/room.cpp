@@ -2774,6 +2774,19 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             }
             QVariant data = QVariant::fromValue(card_use);
             thread->trigger(CardFinished, this, card_use.from, data);
+
+            foreach (ServerPlayer *p, m_alivePlayers) {
+                removePlayerMark(p, "Qinggang_Armor_Nullified");
+                foreach (QString flag, p->getFlagList()) {
+                    if (flag.endsWith("_InTempMoving") || flag == "Global_GongxinOperator")
+                        p->setFlags("-" + flag);
+                }
+            }
+
+            foreach (int id, Sanguosha->getRandomCards()) {
+                if (getCardPlace(id) == Player::PlaceTable || getCardPlace(id) == Player::PlaceJudge)
+                    moveCardTo(Sanguosha->getCard(id), NULL, Player::DiscardPile, true);
+            }
         }
         throw event;
     }

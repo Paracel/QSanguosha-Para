@@ -60,7 +60,9 @@ public:
             int i = 0;
             foreach (int card_id, move.card_ids) {
                 if (Sanguosha->getCard(card_id)->getSuit() == Card::Club
-                    && ((move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE && move.from_places[i] == Player::PlaceJudge)
+                    && ((move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE
+                         && move.from_places[i] == Player::PlaceJudge
+                         && move.to_place == Player::DiscardPile)
                         || (move.reason.m_reason != CardMoveReason::S_REASON_JUDGEDONE
                             && room->getCardOwner(card_id) == move.from
                             && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip))))

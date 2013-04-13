@@ -1894,7 +1894,8 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         if (!card_str.isEmpty())
             log_box->appendLog("$GotCardBack", to_general, QStringList(), card_str);
     }
-    if (move.from_place == Player::DiscardPile && move.to_place == Player::PlaceHand && move.from == NULL) {
+    if ((move.from_place == Player::DiscardPile || move.from_place == Player::PlaceTable || move.from_place == Player::PlaceJudge)
+        && move.to_place == Player::PlaceHand && move.from == NULL) {
         QString to_general = move.to->objectName();
         QString card_str = Card::IdsToStrings(move.card_ids).join("+");
         log_box->appendLog("$RecycleCard", to_general, QStringList(), card_str);

@@ -602,11 +602,10 @@ public:
             room->judge(judge);
 
             if (judge.isGood() && wangyi->isAlive()) {
-                room->setPlayerFlag(wangyi, "nosmiji_Global_InTempMoving");
-                int x = wangyi->getLostHp();
-                wangyi->drawCards(x); //It should be preview, not draw
+                QList<int> pile_ids = room->getNCards(wangyi->getLostHp(), false);
+                room->fillAG(pile_ids, wangyi);
                 ServerPlayer *target = room->askForPlayerChosen(wangyi, room->getAllPlayers(), objectName());
-
+                room->clearAG(wangyi);
                 if (target == wangyi)
                     room->broadcastSkillInvoke(objectName(), 2);
                 else if (target->getGeneralName().contains("machao"))
@@ -614,32 +613,13 @@ public:
                 else
                     room->broadcastSkillInvoke(objectName(), 3);
 
-                QList<const Card *> miji_cards = wangyi->getHandcards().mid(wangyi->getHandcardNum() - x);
-                QList<int> ids;
-                foreach (const Card *card, miji_cards)
-                    ids << card->getId();
-                CardsMoveStruct move;
-                move.card_ids = ids;
-                move.from = wangyi;
-                move.from_place = Player::PlaceHand;
-                move.to = target;
-                move.to_place = Player::PlaceHand;
-                move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEWGIVE,
-                                             wangyi->objectName(), target->objectName(), objectName());
-                if (target != wangyi) {
-                    room->setPlayerFlag(wangyi, "-nosmiji_Global_InTempMoving");
-                    room->setPlayerFlag(wangyi, "nosmiji_InTempMoving");
-                    room->moveCardsAtomic(move, false);
-                    room->setPlayerFlag(wangyi, "-nosmiji_InTempMoving");
-                } else {
-                    wangyi->addToPile("#nosmiji_tempPile", ids, false);
-                    DummyCard *dummy = new DummyCard;
-                    foreach (int id, ids)
-                        dummy->addSubcard(id);
-                    room->setPlayerFlag(wangyi, "-nosmiji_Global_InTempMoving");
-                    wangyi->obtainCard(dummy, false);
-                    dummy->deleteLater();
-                }
+                DummyCard *dummy = new DummyCard;
+                foreach (int id, pile_ids)
+                    dummy->addSubcard(id);
+                wangyi->setFlags("Global_GongxinOperator");
+                target->obtainCard(dummy, false);
+                wangyi->setFlags("-Global_GongxinOperator");
+                delete dummy;
             }
         }
         return false;
@@ -1133,8 +1113,6 @@ NostalYJCM2012Package::NostalYJCM2012Package()
     General *nos_wangyi = new General(this, "nos_wangyi", "wei", 3, false);
     nos_wangyi->addSkill(new NosZhenlie);
     nos_wangyi->addSkill(new NosMiji);
-    nos_wangyi->addSkill(new FakeMoveSkill("nosmiji", FakeMoveSkill::SourceOnly));
-    related_skills.insertMulti("nosmiji", "#nosmiji-fake-move");
 
     addMetaObject<NosJiefanCard>();
 }

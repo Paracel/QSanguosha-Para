@@ -3282,7 +3282,7 @@ function SmartAI:dontRespondPeachInJudge(judge)
 		return true
 	else
 		for _, friend in ipairs(self.friends) do
-			if friend:isWeak() then return true end
+			if self:isWeak(friend) then return true end
 		end
 	end
 

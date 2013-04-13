@@ -1666,9 +1666,10 @@ bool RoomScene::_shouldIgnoreDisplayMove(CardsMoveStruct &movement) {
         || (to == Player::PlaceSpecial && !to_pile.isEmpty() && to_pile.startsWith('#')))
         return true;
     else {
-        QList<Player::Place> ignore_place;
+        static QList<Player::Place> ignore_place;
         ignore_place << Player::DiscardPile << Player::PlaceTable << Player::PlaceJudge;
-        return ignore_place.contains(from) && ignore_place.contains(to);
+        return movement.reason.m_skillName != "manjuan"
+               && ignore_place.contains(from) && ignore_place.contains(to);
     }
 }
 
@@ -1705,6 +1706,8 @@ void RoomScene::getCards(int moveId, QList<CardsMoveStruct> card_moves) {
             card->setFlag(QGraphicsItem::ItemIsMovable, false);
             int card_id = card->getId();
             if (!card_moves[i].card_ids.contains(card_id)) {
+                card->setVisible(false);
+                card->deleteLater();
                 cards.removeAt(j);
                 j--;
             } else

@@ -674,8 +674,7 @@ QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids) {
         card_item = CardItem::FindItem(m_handCards, card_id);
         new_card = _createCard(card_id);
         Q_ASSERT(card_item);
-        if (card_item)
-        {
+        if (card_item) {
             new_card->setPos(card_item->pos());
             new_card->setHomePos(card_item->homePos());
         }
@@ -684,13 +683,10 @@ QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids) {
     return result;
 }
 
-QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids)
-{
+QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids) {
     QList<CardItem *> result;
     CardItem *card_item;
-    foreach (int card_id, card_ids)
-    {
-
+    foreach (int card_id, card_ids) {
         card_item = CardItem::FindItem(m_handCards, card_id);
         if (card_item == selected) selected = NULL;
         Q_ASSERT(card_item);
@@ -698,7 +694,7 @@ QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids)
             m_handCards.removeOne(card_item);
             card_item->hideFrame();
             card_item->disconnect(this);
-            result.append(card_item);            
+            result.append(card_item);
         }
     }
     updateHandcardNum();
@@ -725,7 +721,7 @@ QList<CardItem *> Dashboard::removeCardItems(const QList<int> &card_ids, Player:
 
     Q_ASSERT(result.size() == card_ids.size());
     if (place == Player::PlaceHand)    
-        adjustCards();   
+        adjustCards();
     else if (result.size() > 1 || place == Player::PlaceSpecial) {
         QRect rect(0, 0, _dlayout->m_disperseWidth, 0);
         QPointF center(0, 0);

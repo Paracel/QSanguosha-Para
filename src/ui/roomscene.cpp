@@ -1883,7 +1883,8 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
                                QString::number(move.card_ids.length()));
 
     }
-    if (move.from_place == Player::PlaceTable && move.to_place == Player::PlaceHand) {
+    if (move.from_place == Player::PlaceTable && move.to_place == Player::PlaceHand
+        && move.reason.m_reason != CardMoveReason::S_REASON_PREVIEW) {
         QString to_general = move.to->objectName();
         QString card_str = QString();
         foreach (int card_id, move.card_ids) {
@@ -1897,7 +1898,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         if (!card_str.isEmpty())
             log_box->appendLog("$GotCardBack", to_general, QStringList(), card_str);
     }
-    if ((move.from_place == Player::DiscardPile || move.from_place == Player::PlaceTable || move.from_place == Player::PlaceJudge)
+    if ((move.from_place == Player::DiscardPile || move.from_place == Player::PlaceJudge)
         && move.to_place == Player::PlaceHand && move.from == NULL) {
         QString to_general = move.to->objectName();
         QString card_str = Card::IdsToStrings(move.card_ids).join("+");

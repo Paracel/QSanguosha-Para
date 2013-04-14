@@ -12,7 +12,7 @@ QList<CardItem *> TablePile::removeCardItems(const QList<int> &card_ids, Player:
     _disperseCards(result, m_cardsDisplayRegion, Qt::AlignCenter, false, true);
     foreach (CardItem *card, result) {
         for (int i = m_visibleCards.size() - 1; i >= 0; i--) {
-            if (m_visibleCards[i]->getCard()->getId() == card->getId()) {
+            if (m_visibleCards[i]->getCard() && m_visibleCards[i]->getCard()->getId() == card->getId()) {
                 card->setPos(m_visibleCards[i]->pos());
                 break;
             }
@@ -134,16 +134,26 @@ bool TablePile::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStru
        rightMostPos += QPointF(G_COMMON_LAYOUT.m_cardNormalWidth, 0);
     }
 
-    m_visibleCards.append(card_items);
-    int numAdded = card_items.size();
+    int numAdded = 0;
+    foreach (CardItem *card_item, card_items) {
+        if (card_item->getCard()) {
+            m_visibleCards.append(card_item);
+            numAdded++;
+        }
+    }
     int numRemoved = m_visibleCards.size() - qMax(m_numCardsVisible, numAdded + 1);
     
-    for (int i = 0; i <  numRemoved; i++) {
+    for (int i = 0; i < numRemoved; i++) {
         CardItem *toRemove = m_visibleCards[i];
         _markClearance(toRemove);
     }
     
     foreach (CardItem *card_item, card_items) {
+        if (!card_item->getCard()) {
+            card_item->setVisible(false);
+            card_item->deleteLater();
+            continue;
+        }
         card_item->setHomeOpacity(1.0);
         card_item->showFootnote();
         if (moveInfo.from_place == Player::DrawPile
@@ -162,6 +172,7 @@ bool TablePile::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStru
 }
     
 void TablePile::adjustCards() {
+    if (m_visibleCards.length() == 0) return;
     _disperseCards(m_visibleCards, m_cardsDisplayRegion, Qt::AlignCenter, true, true);
     QParallelAnimationGroup *animation = new QParallelAnimationGroup;
     foreach (CardItem *card_item, m_visibleCards)

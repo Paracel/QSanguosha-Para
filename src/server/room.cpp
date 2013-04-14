@@ -2778,8 +2778,10 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             foreach (ServerPlayer *p, m_alivePlayers) {
                 removePlayerMark(p, "Qinggang_Armor_Nullified");
                 foreach (QString flag, p->getFlagList()) {
-                    if (flag.endsWith("_InTempMoving") || flag == "Global_GongxinOperator")
+                    if (flag == "Global_GongxinOperator")
                         p->setFlags("-" + flag);
+                    else if (flag.endsWith("_InTempMoving"))
+                        setPlayerFlag(p, "-" + flag);
                 }
             }
 
@@ -5010,7 +5012,9 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
                                                 .arg(Card::IdsToStrings(ids).join("+")));
     thread->trigger(ChoiceMade, this, guojia, decisionData);
 
+    guojia->setFlags("Global_GongxinOperator");
     moveCardTo(dummy_card, target, Player::PlaceHand, reason, visible);
+    guojia->setFlags("-Global_GongxinOperator");
     delete dummy_card;
 
     return true;

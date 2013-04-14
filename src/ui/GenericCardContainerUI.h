@@ -45,8 +45,6 @@ private slots:
 
 private:
     static bool _horizontalPosLessThan(const CardItem *card1, const CardItem *card2);
-    QList<CardItem *> _cardsToBeDestroyed;
-    QMutex _mutex_cardsToBeDestroyed;
 
 signals:
     void animation_finished();

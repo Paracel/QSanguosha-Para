@@ -142,34 +142,65 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         if (!room->askForSkillInvoke(guojia, objectName()))
             return;
         room->broadcastSkillInvoke("yiji");
-        room->setPlayerFlag(guojia, "yiji_Global_InTempMoving");
-        QList<int> yiji_cards;
-        for (int j = 0; j < n; j++)
-            yiji_cards.append(room->drawCard());
+        QList<int> yiji_cards = room->getNCards(n, false);
+
         CardsMoveStruct move;
         move.card_ids = yiji_cards;
+        move.from = NULL;
+        move.from_place = Player::PlaceTable;
         move.to = guojia;
+        move.to_player_name = guojia->objectName();
         move.to_place = Player::PlaceHand;
         move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
-        room->moveCardsAtomic(move, false);
+        QList<CardsMoveStruct> moves;
+        moves.append(move);
+        room->notifyMoveCards(true, moves, false);
+        room->notifyMoveCards(false, moves, false);
 
-        room->setPlayerFlag(guojia, "-yiji_Global_InTempMoving");
-        room->setPlayerFlag(guojia, "yiji_InTempMoving");
-        while (room->askForYiji(guojia, yiji_cards, objectName())) {}
-        room->setPlayerFlag(guojia, "-yiji_InTempMoving");
+        QList<int> origin_yiji = yiji_cards;
+        while (room->askForYiji(guojia, yiji_cards, objectName())) {
+            CardsMoveStruct move;
+            move.from = guojia;
+            move.from_player_name = guojia->objectName();
+            move.from_place = Player::PlaceHand;
+            move.to = NULL;
+            move.to_place = Player::PlaceTable;
+            move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
+            foreach (int id, origin_yiji) {
+                if (room->getCardPlace(id) != Player::DrawPile) {
+                    move.card_ids << id;
+                    yiji_cards.removeOne(id);
+                }
+            }
+            origin_yiji = yiji_cards;
+            QList<CardsMoveStruct> moves;
+            moves.append(move);
+            room->notifyMoveCards(true, moves, false);
+            room->notifyMoveCards(false, moves, false);
+        }
 
-        if (!yiji_cards.isEmpty())
-            room->setPlayerFlag(guojia, "yiji_Global_InTempMoving");
-        else
+        if (!yiji_cards.isEmpty()) {
+            CardsMoveStruct move;
+            move.from = guojia;
+            move.from_player_name = guojia->objectName();
+            move.from_place = Player::PlaceHand;
+            move.to = NULL;
+            move.to_place = Player::PlaceTable;
+            move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
+            move.card_ids = yiji_cards;
+            QList<CardsMoveStruct> moves;
+            moves.append(move);
+            room->notifyMoveCards(true, moves, false);
+            room->notifyMoveCards(false, moves, false);
+
+            DummyCard *dummy = new DummyCard;
+            foreach (int id, yiji_cards)
+                dummy->addSubcard(id);
+            guojia->obtainCard(dummy, false);
+            delete dummy;
+        } else {
             continue;
-
-        guojia->addToPile("#yiji_tempPile", yiji_cards, false);
-        DummyCard *dummy = new DummyCard;
-        foreach (int id, yiji_cards)
-            dummy->addSubcard(id);
-        room->setPlayerFlag(guojia, "-yiji_Global_InTempMoving");
-        guojia->obtainCard(dummy, false);
-        dummy->deleteLater();
+        }
     }
 }
 
@@ -1264,9 +1295,7 @@ void StandardPackage::addGenerals() {
     General *guojia = new General(this, "guojia", "wei", 3);
     guojia->addSkill(new Tiandu);
     guojia->addSkill(new Yiji);
-    guojia->addSkill(new FakeMoveSkill("yiji", FakeMoveSkill::SourceOnly));
     guojia->addSkill(new SPConvertSkill("guojia", "tw_guojia"));
-    related_skills.insertMulti("yiji", "#yiji-fake-move");
 
     General *zhenji = new General(this, "zhenji", "wei", 3, false);
     zhenji->addSkill(new Luoshen);

@@ -257,18 +257,12 @@ protected:
     QString name;
 };
 
-// a nasty way for 'fake moves'
+// a nasty way for 'fake moves', usually used in the process of multi-card chosen
 class FakeMoveSkill: public TriggerSkill {
     Q_OBJECT
-    Q_ENUMS(FakeCondition)
 
 public:
-    enum FakeCondition {
-        Global,
-        SourceOnly
-    };
-
-    FakeMoveSkill(const QString &skillname, FakeCondition condition = Global);
+    FakeMoveSkill(const QString &skillname);
 
     virtual int getPriority() const;
     virtual bool triggerable(const ServerPlayer *target) const;
@@ -276,7 +270,6 @@ public:
 
 private:
     QString name;
-    FakeCondition condition;
 };
 
 class WeaponSkill: public TriggerSkill {

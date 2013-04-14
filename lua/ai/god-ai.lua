@@ -90,7 +90,7 @@ function SmartAI:cantbeHurt(player, from, damageNum)
 	local maxfriendmark = 0
 	local maxenemymark = 0
 	local dyingfriend = 0
-	if player:hasSkill("wuhun") and #(self:getFriendsNoself(player)) > 0 then
+	if player:hasSkill("wuhun") and not player:isLord() and #(self:getFriendsNoself(player)) > 0 then
 		for _, friend in ipairs(self:getFriends(from)) do
 			local friendmark = friend:getMark("@nightmare")
 			if friendmark > maxfriendmark then maxfriendmark = friendmark end
@@ -100,25 +100,21 @@ function SmartAI:cantbeHurt(player, from, damageNum)
 			if enemymark > maxenemymark and enemy:objectName() ~= player:objectName() then maxenemymark = enemymark end
 		end
 		if self:isEnemy(player, from) then
-			if not (player:isLord() and from:getRole() == "rebel")
-				and maxfriendmark + damageNum >= maxenemymark and not (#(self:getEnemies(from)) == 1 and #(self:getFriends(from)) + #(self:getEnemies(from)) == self.room:alivePlayerCount())
+			if maxfriendmark + damageNum >= maxenemymark and not (#(self:getEnemies(from)) == 1 and #(self:getFriends(from)) + #(self:getEnemies(from)) == self.room:alivePlayerCount())
 				and not (from:getMark("@nightmare") == maxfriendmark and from:getRole() == "loyalist") then
 				return true
 			end
 		elseif maxfriendmark + damageNum > maxenemymark then
 			return true
 		end
-	elseif player:hasSkill("duanchang") then
-		if player:getHp() > 1 or #(self:getEnemies(from)) == 1 then return false end
-		if player:getHp() <= 1 then
-			if from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse() then return false end
+	end
+	if player:hasSkill("duanchang") and not player:isLord() and #(self:getFriendsNoself(player)) > 0 and player:getHp() <= 1 then
+		if not (from:getMaxHp() == 3 and from:getArmor() and from:getDefensiveHorse()) then
 			if from:getMaxHp() <= 3 or (from:isLord() and self:isWeak(from)) then return true end
 			if from:getMaxHp() <= 3 or (self.room:getLord() and from:getRole() == "renegade") then return true end
 		end
-	elseif player:hasSkill("tianxiang") then
-		if getKnownCard(player, "diamond", false) + getKnownCard(player, "club", false) == player:getHandcardNum() then
-			return false
-		end
+	end
+	if player:hasSkill("tianxiang") and getKnownCard(player, "diamond", false) + getKnownCard(player, "club", false) < player:getHandcardNum() then
 		local peach_num = self.player:objectName() == from:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", from)
 		for _, friend in ipairs(self:getFriends(from)) do
 			if friend:getHp() < 2 and peach_num then

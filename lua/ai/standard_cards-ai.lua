@@ -2159,7 +2159,8 @@ function SmartAI:useCardIndulgence(card, use)
 
 	local getvalue = function(enemy)
 		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard")
-			or (self:hasSkills("qiaobian", enemy) and not enemy:isKongcheng()) and self:enemiesContainsTrick() == 0 then
+			or (enemy:hasSkill("qiaobian") and not enemy:isKongcheng()
+				and not enemy:containsTrick("supply_shortage") and not enemy:containsTrick("indulgence")) then
 			return -100
 		end
 		if zhanghe_seat > 0 and (self:playerGetRound(zhanghe) <= self:playerGetRound(enemy) and self:enemiesContainsTrick() <= 1 or not enemy:faceUp()) then

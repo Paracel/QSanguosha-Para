@@ -357,7 +357,7 @@ function SmartAI:useCardSlash(card, use)
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = false
 		slash_prohibit = self:slashProhibit(card, friend)
-		if not self:hasHeavySlashDamage(self.player, card, friend)
+		if not self:hasHeavySlashDamage(self.player, card, friend) and card:getSkillName() ~= "lihuo"
 			and (self:findLeijiTarget(friend, 50, self.player)
 				or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
 				or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo)))) then
@@ -383,8 +383,8 @@ function SmartAI:useCardSlash(card, use)
 							use.to:append(friend)
 						end
 						self:speak("hostile", self.player:isFemale())
-						if self.slash_targets <= use.to:length() then return end
 					end
+					if not use.to or self.slash_targets <= use.to:length() then return end
 				end
 			end
 		end
@@ -475,14 +475,14 @@ function SmartAI:useCardSlash(card, use)
 				else
 					use.to:append(target)
 				end
-				if self.slash_targets <= use.to:length() then return end
 			end
+			if not use.to or self.slash_targets <= use.to:length() then return end
 		end
 	end
 
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = self:slashProhibit(card, friend)
-		if not self:hasHeavySlashDamage(self.player, card, friend)
+		if not self:hasHeavySlashDamage(self.player, card, friend) and card:getSkillName() ~= "lihuo"
 			and (not use.to or not use.to:contains(friend))
 			and (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
 			or self:getDamagedEffects(friend, self.player)
@@ -509,8 +509,8 @@ function SmartAI:useCardSlash(card, use)
 							use.to:append(friend)
 						end
 						self:speak("hostile", self.player:isFemale())
-						if self.slash_targets <= use.to:length() then return end
 					end
+					if not use.to or self.slash_targets <= use.to:length() then return end
 				end
 			end
 		end
@@ -540,9 +540,16 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		if ret == nil or ret == "." then return "." end
 		slash = sgs.Card_Parse(ret)
 		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50 or self.player:hasFlag("slashNoDistanceLimit")
-		if self.player:canSlash(target, slash, not no_distance) then return ret .. "->" .. target:objectName() end
+		local targets = {}
+		local use = { to = sgs.SPlayerList() }
+		if self.player:canSlash(target, slash, not no_distance) then use.to:append(target) else return "." end
+
+		self:useCardSlash(slash, use)
+		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end
+		if table.contains(target:objectName()) then return ret .. "->" .. table.concat(targets, "+") end
 		return "."
 	end
+	local useslash, target
 	local slashes = self:getCards("Slash")
 	self:sort(self.enemies, "defenseSlash")
 	for _, slash in ipairs(slashes) do
@@ -551,9 +558,21 @@ sgs.ai_skill_use.slash = function(self, prompt)
 			if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
 				and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 				and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+				useslash = slash
+				target = enemy
+				break
 				return ("%s->%s"):format(slash:toString(), enemy:objectName())
 			end
 		end
+	end
+	if useslash and target then
+		local targets = {}
+		local use = { to = sgs.SPlayerList() }
+		use.to:append(target)
+
+		self:useCardSlash(useslash, use)
+		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end
+		if table.contains(target:objectName()) then return useslash:toString() .. "->" .. table.concat(targets, "+") end
 	end
 	return "."
 end

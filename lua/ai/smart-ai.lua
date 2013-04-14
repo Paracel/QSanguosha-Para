@@ -1045,7 +1045,15 @@ function SmartAI:objectiveLevel(player)
 		if player:isLord() then return -2 end
 		if self.role == "loyalist" and loyal_num == 1 and renegade_num == 0 then return 5 end
 		if process:match("rebel") and rebel_num > 1 and target_role == "renegade" then return -1 end
-		if sgs.evaluatePlayerRole(player) == "neutral" then return 0 end
+		if sgs.evaluatePlayerRole(player) == "neutral" then
+			local current_friend_num = 1
+			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+				if sgs.evaluatePlayerRole(aplayer) == "loyalist" or sgs.evaluatePlayerRole(aplayer) == "renegade" then
+					current_friend_num = current_friend_num + 1
+				end
+			end
+			return current_friend_num == loyal_num + renegade_num and 5 or 0
+		end
 
 		if rebel_num == 0 then
 			if #players == 2 and self.role == "loyalist" then return 5 end
@@ -1086,13 +1094,32 @@ function SmartAI:objectiveLevel(player)
 			if not (sgs.evaluatePlayerRole(player) == "loyalist" or sgs.evaluatePlayerRole(player) == "loyalist") then return 5 end
 		end
 
+		if loyal_num + 1 > rebel_num and renegade_num > 0 and (process == "loyalist" or process == "loyalish")
+			and sgs.ai_role[player:objectName()] == "renegade" then
+			return 5
+		end
+
 		if process == "rebel" and rebel_num > loyal_num and target_role == "renegade" then return -2 end
 		if sgs.evaluatePlayerRole(player) == "rebel" then return 5
 		elseif sgs.evaluatePlayerRole(player) == "loyalist" then return -2
 		else return 0 end
 	elseif self.role == "rebel" then
 		if loyal_num == 0 and renegade_num == 0 then return player:isLord() and 5 or -2 end
-		if sgs.evaluatePlayerRole(player) == "neutral" then return 0 end
+		if sgs.evaluatePlayerRole(player) == "neutral" then
+			local current_friend_num = 1
+			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+				if sgs.ai_role[aplayer:objectName()] == "rebel" then
+					current_friend_num = current_friend_num + 1
+				end
+			end
+			return current_friend_num == rebel_num and 5 or 0
+		end
+
+		if rebel_num > loyal_num + renegade_num + 1 and (process == "rebel" or process == "rebelish")
+			and sgs.ai_role[player:objectName()] == "renegade" then
+			return 5
+		end
+
 		if process == "loyalist" and renegade_num > 0 and sgs.evaluatePlayerRole(player) == "renegade" then return -2 end
 		if player:isLord() then return 5
 		elseif sgs.evaluatePlayerRole(player) == "loyalist" then return 5

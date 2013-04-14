@@ -517,7 +517,15 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		end
 	end
 
-	if self.role ~= "renegade" and self.player:isChained() and self:isGoodChainTarget(self.player)
+	local can_FireAttack_self
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if (not isCard("Peach", card, self.player) or self:getCardsNum("Peach") >= 3)
+			and (not isCard("Analeptic", card, self.player) or self:getCardsNum("Analeptic") >= 2) then
+			can_FireAttack_self = true
+		end
+	end
+
+	if self.role ~= "renegade" and can_FireAttack_self and self.player:isChained() and self:isGoodChainTarget(self.player)
 		and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing")
 		and not self.room:isProhibited(self.player, self.player, fire_attack)
 		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
@@ -576,24 +584,17 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 end
 
 sgs.ai_cardshow.fire_attack = function(self, requestor)
-	local priority = {
-		heart = 4,
-		spade = 3,
-		club = 2,
-		diamond = 1
-	}
-	if requestor:hasSkill("hongyan") then
-		priority = {
-			spade = 10,
-			club = 2,
-			diamond = 1,
-			heart = 0
-		}
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	if requestor:objectName() == self.player:objectName() then
+		self:sortByUseValue(cards, true)
+		return cards[1]
 	end
+
+	local priority = { heart = 4, spade = 3, club = 2, diamond = 1 }
+	if requestor:hasSkill("hongyan") then priority = { spade = 10, club = 2, diamond = 1, heart = 0 } end
 	local index = -1
 	local result
-	local cards = self.player:getHandcards()
-	for _, card in sgs.qlist(cards) do
+	for _, card in ipairs(cards) do
 		if priority[card:getSuitString()] > index then
 			result = card
 			index = priority[card:getSuitString()]

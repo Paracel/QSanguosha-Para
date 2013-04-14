@@ -634,6 +634,7 @@ local lihuo_skill = {}
 lihuo_skill.name = "lihuo"
 table.insert(sgs.ai_skills, lihuo_skill)
 lihuo_skill.getTurnUseCard = function(self)
+	if self:isWeak() then return nil end
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)
 	local slash_card
@@ -646,7 +647,18 @@ lihuo_skill.getTurnUseCard = function(self)
 	end
 
 	if not slash_card then return nil end
-	if self:isWeak() then return nil end
+	local dummy_use = { to = sgs.SPlayerList(), isDummy = true }
+	self:useCardFireSlash(slash_card, dummy_use)
+	if dummy_use.card and dummy_use.to:length() > 0 then
+		local use = sgs.CardUseStruct()
+		use.from = self.player
+		use.to = dummy_use.to
+		use.card = slash_card
+		local data = sgs.QVariant()
+		data:setValue(use)
+		if not sgs.ai_skill_invoke.lihuo(self, data) then return nil end
+	else return nil end
+
 	local suit = slash_card:getSuitString()
 	local number = slash_card:getNumberString()
 	local card_id = slash_card:getEffectiveId()

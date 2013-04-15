@@ -279,7 +279,7 @@ public:
         LogMessage log;
         log.type = "$ManjuanGot";
         log.from = sp_pangtong;
-        log.card_str = Card::IdsToStrings(ids).join("+");
+        log.card_str = IntList2StringList(ids).join("+");
         room->sendLog(log);
 
         if (sp_pangtong->getPhase() == Player::NotActive || !sp_pangtong->askForSkillInvoke(objectName(), data))
@@ -364,7 +364,7 @@ public:
             log.type = "$ZuixiangGot";
             log.from = player;
 
-            log.card_str = Card::IdsToStrings(zuixiang).join("+");
+            log.card_str = IntList2StringList(zuixiang).join("+");
             room->sendLog(log);
 
             player->setFlags("ManjuanNullified");
@@ -1096,7 +1096,7 @@ public:
 
         foreach (const Card *delayed_trick, target->getJudgingArea())
             move.card_ids << delayed_trick->getEffectiveId();
-        log.card_str = Card::IdsToStrings(move.card_ids).join("+");
+        log.card_str = IntList2StringList(move.card_ids).join("+");
         target->getRoom()->sendLog(log);
 
         move.to = target;

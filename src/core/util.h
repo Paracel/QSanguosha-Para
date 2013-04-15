@@ -23,5 +23,8 @@ void DoLuaScripts(lua_State *L, const QStringList &scripts);
 
 QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 
+QStringList IntList2StringList(const QList<int> &intlist);
+QList<int> StringList2IntList(const QStringList &stringlist);
+
 #endif
 

@@ -1825,7 +1825,7 @@ void RoomScene::keepLoseCardLog(const CardsMoveStruct &move) {
         if (hidden)
             log_box->appendLog(type, from_general, QStringList(), QString(), QString::number(move.card_ids.length()));
         else
-            log_box->appendLog(type, from_general, QStringList(), Card::IdsToStrings(move.card_ids).join("+"));
+            log_box->appendLog(type, from_general, QStringList(), IntList2StringList(move.card_ids).join("+"));
     }
 }
 
@@ -1851,7 +1851,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         if (hiden)
             log_box->appendLog("#RemoveFromGame", QString(), QStringList(), QString(), move.to_pile_name, QString::number(move.card_ids.length()));
         else
-            log_box->appendLog("$AddToPile", QString(), QStringList(), Card::IdsToStrings(move.card_ids).join("+"), move.to_pile_name);
+            log_box->appendLog("$AddToPile", QString(), QStringList(), IntList2StringList(move.card_ids).join("+"), move.to_pile_name);
     }
     if (move.from_place == Player::PlaceSpecial && move.to
         && move.reason.m_reason == CardMoveReason::S_REASON_EXCHANGE_FROM_PILE) {
@@ -1862,7 +1862,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
                 break;
             }
         if (!hiden)
-            log_box->appendLog("$GotCardFromPile", move.to->objectName(), QStringList(), Card::IdsToStrings(move.card_ids).join("+"), move.from_pile_name);
+            log_box->appendLog("$GotCardFromPile", move.to->objectName(), QStringList(), IntList2StringList(move.card_ids).join("+"), move.from_pile_name);
         else
             log_box->appendLog("#GotNCardFromPile", move.to->objectName(), QStringList(), QString(), move.from_pile_name, QString::number(move.card_ids.length()));
     }
@@ -1876,7 +1876,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
                 break;
             }
         if (!hiden)
-            log_box->appendLog("$DrawCards", to_general, QStringList(), Card::IdsToStrings(move.card_ids).join("+"),
+            log_box->appendLog("$DrawCards", to_general, QStringList(), IntList2StringList(move.card_ids).join("+"),
                                QString::number(move.card_ids.length()));
         else
             log_box->appendLog("#DrawNCards", to_general, QStringList(), QString(),
@@ -1901,7 +1901,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
     if ((move.from_place == Player::DiscardPile || move.from_place == Player::PlaceJudge)
         && move.to_place == Player::PlaceHand && move.from == NULL) {
         QString to_general = move.to->objectName();
-        QString card_str = Card::IdsToStrings(move.card_ids).join("+");
+        QString card_str = IntList2StringList(move.card_ids).join("+");
         log_box->appendLog("$RecycleCard", to_general, QStringList(), card_str);
     }
     if (move.from && move.from_place != Player::PlaceHand && move.to_place != Player::PlaceDelayedTrick
@@ -1936,7 +1936,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         if (hiden)
             log_box->appendLog("#MoveNCards", from_general, tos, QString(), QString::number(move.card_ids.length()));
         else
-            log_box->appendLog("$MoveCard", from_general, tos, Card::IdsToStrings(move.card_ids).join("+"));
+            log_box->appendLog("$MoveCard", from_general, tos, IntList2StringList(move.card_ids).join("+"));
     }
     if (move.from && move.to) {
         // both src and dest are player
@@ -1961,7 +1961,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
             log_box->appendLog(type, to_general, QStringList(), QString::number(card_id));
     }
     if (move.reason.m_reason == CardMoveReason::S_REASON_TURNOVER)
-        log_box->appendLog("$TurnOver", move.reason.m_playerId, QStringList(), Card::IdsToStrings(move.card_ids).join("+"));
+        log_box->appendLog("$TurnOver", move.reason.m_playerId, QStringList(), IntList2StringList(move.card_ids).join("+"));
 }
 
 void RoomScene::addSkillButton(const Skill *skill, bool) {

@@ -614,10 +614,7 @@ public:
                 return false;
 
             QList<int> original_zongxuan = zongxuan_card;
-            QStringList zongxuan;
-            foreach (int card_id, zongxuan_card)
-                zongxuan << QString::number(card_id);
-            room->setPlayerProperty(player, "zongxuan", zongxuan.join("+"));
+            room->setPlayerProperty(player, "zongxuan", IntList2StringList(zongxuan_card).join("+"));
             do {
                 if (!room->askForUseCard(player, "@@zongxuan", "@zongxuan-put")) break;
                 QStringList zongxuan = player->property("zongxuan").toString().split("+");

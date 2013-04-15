@@ -121,7 +121,7 @@ YijiViewAsSkill::YijiViewAsSkill()
 
 void YijiViewAsSkill::setCards(const QString &card_str) {
     QStringList cards = card_str.split("+");
-    ids = Card::StringsToIds(cards);
+    ids = StringList2IntList(cards);
 }
 
 void YijiViewAsSkill::setMaxNum(int max_num) {

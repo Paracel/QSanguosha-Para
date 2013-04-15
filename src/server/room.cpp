@@ -1078,7 +1078,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
                 to_discard.append(card->getSubcards());
             else
                 to_discard << card->getEffectiveId();
-            log.card_str = Card::IdsToStrings(to_discard).join("+");
+            log.card_str = IntList2StringList(to_discard).join("+");
             if (!skill_name.isEmpty())
                 log.arg = skill_name;
             sendLog(log);
@@ -3252,7 +3252,7 @@ void Room::throwCard(const Card *card, const CardMoveReason &reason, ServerPlaye
     } else {
         log.type = "$EnterDiscardPile";
     }
-    log.card_str = Card::IdsToStrings(to_discard).join("+");
+    log.card_str = IntList2StringList(to_discard).join("+");
     sendLog(log);
 
     QList<CardsMoveStruct> moves;
@@ -4201,7 +4201,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
 
                 foreach (int card_id, jilei_list)
                     setCardFlag(card_id, "visible");
-                log.card_str = Card::IdsToStrings(jilei_list).join("+");
+                log.card_str = IntList2StringList(jilei_list).join("+");
                 sendLog(log);
 
                 doBroadcastNotify(S_COMMAND_SHOW_ALL_CARDS, gongxinArgs);
@@ -4389,7 +4389,7 @@ void Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target) {
     log.type = "$ViewAllCards";
     log.from = shenlvmeng;
     log.to << target;
-    log.card_str = Card::IdsToStrings(target->handCards()).join("+");
+    log.card_str = IntList2StringList(target->handCards()).join("+");
     doNotify(shenlvmeng, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
     QVariant decisionData = QVariant::fromValue("viewCards:" + shenlvmeng->objectName() + ":" + target->objectName());
@@ -4881,7 +4881,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
         log.type = "$ViewAllCards";
         log.from = to;
         log.to << player;
-        log.card_str = Card::IdsToStrings(player->handCards()).join("+");
+        log.card_str = IntList2StringList(player->handCards()).join("+");
         doNotify(to, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
         QVariant decisionData = QVariant::fromValue("viewCards:" + to->objectName() + ":" + player->objectName());
@@ -4895,7 +4895,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
         log.from = player;
         foreach (int card_id, player->handCards())
             setCardFlag(card_id, "visible");
-        log.card_str = Card::IdsToStrings(player->handCards()).join("+");
+        log.card_str = IntList2StringList(player->handCards()).join("+");
         sendLog(log);
 
         doBroadcastNotify(S_COMMAND_SHOW_ALL_CARDS, gongxinArgs);
@@ -5022,7 +5022,7 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
 
     QVariant decisionData = QVariant::fromValue(QString("Yiji:%1:%2:%3:%4")
                                                 .arg(skill_name).arg(guojia->objectName()).arg(target->objectName())
-                                                .arg(Card::IdsToStrings(ids).join("+")));
+                                                .arg(IntList2StringList(ids).join("+")));
     thread->trigger(ChoiceMade, this, guojia, decisionData);
 
     guojia->setFlags("Global_GongxinOperator");

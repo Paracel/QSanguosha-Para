@@ -753,8 +753,6 @@ public:
     static const Card *Parse(const char *str);
     static Card *Clone(const Card *card);
     static QString Suit2String(Suit suit);
-    static QStringList IdsToStrings(const QList<int> &ids);
-    static QList<int> StringsToIds(const QStringList &strings);
 };
 
 %extend Card {

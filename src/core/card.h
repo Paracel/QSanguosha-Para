@@ -135,8 +135,6 @@ public:
     static bool CompareByType(const Card *a, const Card *b);
     static Card *Clone(const Card *card);
     static QString Suit2String(Suit suit);
-    static QStringList IdsToStrings(const QList<int> &ids);
-    static QList<int> StringsToIds(const QStringList &strings);
     static const int S_UNKNOWN_CARD_ID;
 
     static Card *tryParse(Json::Value val);

@@ -910,6 +910,7 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand)) {
             if (event == BeforeCardsMove) {
+                if (luxun->isKongcheng()) return false;
                 foreach (int id, luxun->handCards()) {
                     if (!move.card_ids.contains(id))
                         return false;

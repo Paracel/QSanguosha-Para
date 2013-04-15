@@ -290,6 +290,7 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == tianfeng && move.from_places.contains(Player::PlaceHand)) {
             if (event == BeforeCardsMove) {
+                if (tianfeng->isKongcheng()) return false;
                 foreach (int id, tianfeng->handCards()) {
                     if (!move.card_ids.contains(id))
                         return false;

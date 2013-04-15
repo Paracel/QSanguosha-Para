@@ -164,8 +164,9 @@ public:
                 int i = 0;
                 foreach (int card_id, move.card_ids) {
                     card = Sanguosha->getCard(card_id);
-                    if (card->isRed() && (move.from_places[i] == Player::PlaceHand
-                                          || move.from_places[i] == Player::PlaceEquip)) {
+                    if (room->getCardOwner(card_id) == player && card->isRed()
+                        && (move.from_places[i] == Player::PlaceHand
+                            || move.from_places[i] == Player::PlaceEquip)) {
                         player->addMark(objectName());
                     }
                     i++;

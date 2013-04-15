@@ -3658,6 +3658,11 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         }
     }
 
+    for (int i = 0; i < cards_moves.size(); i++) {
+        CardsMoveStruct &cards_move = cards_moves[i];
+        cards_move.from_place = Player::PlaceTable;
+    }
+
     moveOneTimes = _mergeMoves(cards_moves);
     i = 0;
     foreach (CardsMoveOneTimeStruct moveOneTime, moveOneTimes) {
@@ -3698,7 +3703,6 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
 
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
-        cards_move.from_place = Player::PlaceTable;
         for (int j = 0; j < cards_move.card_ids.size(); j++) {
             int card_id = cards_move.card_ids[j];
             if (forceMoveVisible && cards_move.to_place == Player::PlaceHand)

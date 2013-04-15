@@ -828,6 +828,7 @@ void Dashboard::stopPending() {
         if (equip != NULL) {
             equip->mark(false);
             equip->setMarkable(false);
+            _m_equipRegions[i]->setOpacity(1.0);
             equip->setEnabled(false);
             disconnect(equip, SIGNAL(mark_changed()));
         }
@@ -887,6 +888,12 @@ void Dashboard::updatePending() {
         CardItem *equip = _m_equipCards[i];
         if (equip && !equip->isMarked())
             equip->setMarkable(view_as_skill->viewFilter(pended, equip->getCard()));
+        if (equip) {
+            if (!equip->isMarkable())
+                _m_equipRegions[i]->setOpacity(0.7);
+            else
+                _m_equipRegions[i]->setOpacity(1.0);
+        }
     }
 
     const Card *new_pending_card = view_as_skill->viewAs(cards);

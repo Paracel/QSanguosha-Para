@@ -2455,8 +2455,10 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             cancel_button->setEnabled(ClientInstance->m_isDiscardActionRefusable);
             discard_button->setEnabled(false);
 
-            yiji_skill->setCards(Sanguosha->currentRoomState()->getCurrentCardUsePattern().split("=").last());
-            yiji_skill->setMaxNum(Sanguosha->currentRoomState()->getCurrentCardUsePattern().split("=").first().toInt());
+            QStringList yiji_info = Sanguosha->currentRoomState()->getCurrentCardUsePattern().split("=");
+            yiji_skill->setCards(yiji_info.at(1));
+            yiji_skill->setMaxNum(yiji_info.first().toInt());
+            yiji_skill->setPlayerNames(yiji_info.last().split("+"));
             dashboard->startPending(yiji_skill);
 
             showPromptBox();

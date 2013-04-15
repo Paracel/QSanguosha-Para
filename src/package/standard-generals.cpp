@@ -161,7 +161,7 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         room->notifyMoveCards(false, moves, false, _guojia);
 
         QList<int> origin_yiji = yiji_cards;
-        while (room->askForYiji(guojia, yiji_cards, objectName())) {
+        while (room->askForYiji(guojia, yiji_cards, objectName(), true, false, true, -1, room->getAlivePlayers())) {
             CardsMoveStruct move;
             move.from = guojia;
             move.from_player_name = guojia->objectName();

@@ -94,10 +94,29 @@ bool ShowOrPindianSkill::matchPattern(const Player *player, const Card *card) co
 
 // -------------------------------------------
 
+class YijiCard: public RendeCard {
+public:
+    YijiCard() {
+        target_fixed = false;
+    }
+
+    void setPlayerNames(const QStringList &names) {
+        set = names.toSet();
+    }
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *) const{
+        return targets.isEmpty() && set.contains(to_select->objectName());
+    }
+
+private:
+    QSet<QString> set;
+};
+
 YijiViewAsSkill::YijiViewAsSkill()
     : ViewAsSkill("yiji")
 {
-    card = new RendeCard;
+    card = new YijiCard;
+    card->setParent(this);
 }
 
 void YijiViewAsSkill::setCards(const QString &card_str) {
@@ -107,6 +126,10 @@ void YijiViewAsSkill::setCards(const QString &card_str) {
 
 void YijiViewAsSkill::setMaxNum(int max_num) {
     this->max_num = max_num;
+}
+
+void YijiViewAsSkill::setPlayerNames(const QStringList &names) {
+    card->setPlayerNames(names);
 }
 
 bool YijiViewAsSkill::viewFilter(const QList<const Card *> &selected, const Card *card) const{

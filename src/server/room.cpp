@@ -4949,9 +4949,13 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     }
 }
 
-bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name, bool is_preview, bool visible, int optional, int max_num) {
+bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name,
+                      bool is_preview, bool visible, int optional, int max_num,
+                      QList<ServerPlayer *> players) {
     if (max_num == -1)
         max_num = cards.length();
+    if (players.isEmpty())
+        players = getOtherPlayers(guojia);
     if (cards.isEmpty() || max_num == 0)
         return false;
     CardMoveReason reason(NULL, guojia->objectName());
@@ -4981,6 +4985,10 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
         arg[0] = toJsonArray(cards);
         arg[1] = optional;
         arg[2] = max_num;
+        QStringList player_names;
+        foreach (ServerPlayer *player, players)
+            player_names << player->objectName();
+        arg[3] = toJsonArray(player_names);
         bool success = doRequest(guojia, S_COMMAND_SKILL_YIJI, arg, true);
 
         //Validate client response

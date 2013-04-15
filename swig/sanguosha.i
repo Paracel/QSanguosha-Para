@@ -1110,7 +1110,8 @@ public:
     int askForAG(ServerPlayer *player, const QList<int> &card_ids, bool refusable, const char *reason);
     const Card *askForCardShow(ServerPlayer *player, ServerPlayer *requestor, const char *reason);
     bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const char *skill_name = NULL,
-                    bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1);
+                    bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1,
+                    QList<ServerPlayer *> players = QList<ServerPlayer *>());
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const char *reason);
     QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const char *reason,

@@ -134,13 +134,8 @@ bool TablePile::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStru
        rightMostPos += QPointF(G_COMMON_LAYOUT.m_cardNormalWidth, 0);
     }
 
-    int numAdded = 0;
-    foreach (CardItem *card_item, card_items) {
-        if (card_item->getCard()) {
-            m_visibleCards.append(card_item);
-            numAdded++;
-        }
-    }
+    m_visibleCards.append(card_items);
+    int numAdded = card_items.length();
     int numRemoved = m_visibleCards.size() - qMax(m_numCardsVisible, numAdded + 1);
     
     for (int i = 0; i < numRemoved; i++) {
@@ -149,11 +144,6 @@ bool TablePile::_addCardItems(QList<CardItem *> &card_items, const CardsMoveStru
     }
     
     foreach (CardItem *card_item, card_items) {
-        if (!card_item->getCard()) {
-            card_item->setVisible(false);
-            card_item->deleteLater();
-            continue;
-        }
         card_item->setHomeOpacity(1.0);
         card_item->showFootnote();
         if (moveInfo.from_place == Player::DrawPile

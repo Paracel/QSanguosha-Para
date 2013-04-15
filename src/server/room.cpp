@@ -3787,7 +3787,8 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move) {
     }
 }
 
-bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves, bool forceVisible) {
+bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves, bool forceVisible, QList<ServerPlayer *> players) {
+    if (players.isEmpty()) players = m_players;
     // Notify clients
     int moveId;
     if (isLostPhase)
@@ -3795,7 +3796,7 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
     else
         moveId = --_m_lastMovementId;
     Q_ASSERT(_m_lastMovementId >= 0);
-    foreach (ServerPlayer *player, m_players) {
+    foreach (ServerPlayer *player, players) {
         if (player->isOffline()) continue;
         Json::Value arg(Json::arrayValue);
         arg[0] = moveId;

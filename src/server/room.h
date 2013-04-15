@@ -206,7 +206,7 @@ public:
     // @param forceVisible
     //        If true, all players will be able to see the face of card regardless of whether the movement is
     //        relevant or not.
-    bool notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> move, bool forceVisible);
+    bool notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> move, bool forceVisible, QList<ServerPlayer *> players = QList<ServerPlayer *>());
     bool notifyProperty(ServerPlayer *playerToNotify, const ServerPlayer *propertyOwner, const char *propertyName, const QString &value = QString());
     bool notifyUpdateCard(ServerPlayer *player, int cardId, const Card *newCard);
     bool broadcastUpdateCard(const QList<ServerPlayer *> &players, int cardId, const Card *newCard);

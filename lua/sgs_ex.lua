@@ -163,15 +163,14 @@ function sgs.CreateViewAsSkill(spec)
 	local n = spec.n or 0
 
 	function skill:view_as(cards)
-			return spec.view_as(self,cards)
+		return spec.view_as(self,cards)
 	end
 
 	function skill:view_filter(selected, to_select)
-			if #selected>=n then
-				return false
-			end
-			
-			return spec.view_filter(self, selected, to_select)
+		if #selected >= n then
+			return false
+		end
+		return spec.view_filter(self, selected, to_select)
 	end
 
 	skill.enabled_at_play = spec.enabled_at_play
@@ -279,7 +278,7 @@ end
 
 function table:removeTable(list)
 	for _, e in ipairs(list) do
-		table.removeAll(self,e)
+		table.removeAll(self, e)
 	end
 end
 

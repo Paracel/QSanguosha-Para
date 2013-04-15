@@ -142,6 +142,9 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         if (!room->askForSkillInvoke(guojia, objectName()))
             return;
         room->broadcastSkillInvoke("yiji");
+
+        QList<ServerPlayer *> _guojia;
+        _guojia.append(guojia);
         QList<int> yiji_cards = room->getNCards(n, false);
 
         CardsMoveStruct move;
@@ -154,8 +157,8 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
         move.reason = CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString());
         QList<CardsMoveStruct> moves;
         moves.append(move);
-        room->notifyMoveCards(true, moves, false);
-        room->notifyMoveCards(false, moves, false);
+        room->notifyMoveCards(true, moves, false, _guojia);
+        room->notifyMoveCards(false, moves, false, _guojia);
 
         QList<int> origin_yiji = yiji_cards;
         while (room->askForYiji(guojia, yiji_cards, objectName())) {
@@ -175,8 +178,8 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
             origin_yiji = yiji_cards;
             QList<CardsMoveStruct> moves;
             moves.append(move);
-            room->notifyMoveCards(true, moves, false);
-            room->notifyMoveCards(false, moves, false);
+            room->notifyMoveCards(true, moves, false, _guojia);
+            room->notifyMoveCards(false, moves, false, _guojia);
         }
 
         if (!yiji_cards.isEmpty()) {
@@ -190,8 +193,8 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
             move.card_ids = yiji_cards;
             QList<CardsMoveStruct> moves;
             moves.append(move);
-            room->notifyMoveCards(true, moves, false);
-            room->notifyMoveCards(false, moves, false);
+            room->notifyMoveCards(true, moves, false, _guojia);
+            room->notifyMoveCards(false, moves, false, _guojia);
 
             DummyCard *dummy = new DummyCard;
             foreach (int id, yiji_cards)

@@ -137,10 +137,6 @@ public:
     static QString Suit2String(Suit suit);
     static const int S_UNKNOWN_CARD_ID;
 
-    static Card *tryParse(Json::Value val);
-    virtual Json::Value toJsonValue() const;
-
-    // to be deprecated
     static const Card *Parse(const QString &str);
     virtual QString toString() const;
     

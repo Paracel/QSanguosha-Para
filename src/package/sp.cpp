@@ -1004,7 +1004,7 @@ public:
 class Luoyan: public TriggerSkill {
 public:
     Luoyan(): TriggerSkill("luoyan") {
-        events << BeforeCardsMove << CardsMoveOneTime << EventAcquireSkill << EventLoseSkill;
+        events << CardsMoveOneTime << EventAcquireSkill << EventLoseSkill;
         frequency = Compulsory;
     }
 
@@ -1024,31 +1024,16 @@ public:
                 room->acquireSkill(player, "tianxiang");
                 room->acquireSkill(player, "liuli");
             }
-        } else if (event == BeforeCardsMove && TriggerSkill::triggerable(player)) {
+        }else if (event == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.from == player && move.from_places.contains(Player::PlaceSpecial)) {
-                foreach (int id, move.card_ids) {
-                    if (player->getPileName(id) == "xingwu") {
-                        player->setFlags("LuoyanDetach");
-                        break;
-                    }
+            if (move.to == player && move.to_place == Player::PlaceSpecial && move.to_pile_name == "xingwu") {
+                if (player->getPile("xingwu").length() == 1) {
+                    room->notifySkillInvoked(player, objectName());
+                    room->acquireSkill(player, "tianxiang");
+                    room->acquireSkill(player, "liuli");
                 }
-            }
-        } else if (event == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.to == player && move.to_place == Player::PlaceSpecial) {
-                foreach (int id, move.card_ids) {
-                    if (player->getPileName(id) == "xingwu") {
-                        if (player->getPile("xingwu").length() == 1) {
-                            room->notifySkillInvoked(player, objectName());
-                            room->acquireSkill(player, "tianxiang");
-                            room->acquireSkill(player, "liuli");
-                        }
-                        break;
-                    }
-                }
-            } else if (player->hasFlag("LuoyanDetach")) {
-                player->setFlags("-LuoyanDetach");
+            } else if (move.from == player && move.from_places.contains(Player::PlaceSpecial)
+                       && move.from_pile_names.contains("xingwu")) {
                 if (player->getPile("xingwu").isEmpty()) {
                     if (player->getAcquiredSkills().contains("tianxiang"))
                         room->detachSkillFromPlayer(player, "tianxiang");

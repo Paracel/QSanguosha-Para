@@ -549,6 +549,10 @@ void ZongxuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     CardMoveReason reason(CardMoveReason::S_REASON_PUT, source->objectName(),
                           QString(), "zongxuan", QString());
     room->moveCardTo(this, source, NULL, Player::DrawPile, reason, true);
+    QStringList zongxuan = source->property("zongxuan").toString().split("+");
+    foreach (int id, this->subcards)
+        zongxuan.removeOne(QString::number(id));
+    room->setPlayerProperty(source, "zongxuan", zongxuan.join("+"));
 }
 
 class ZongxuanViewAsSkill: public ViewAsSkill {
@@ -610,14 +614,15 @@ public:
                 return false;
 
             QList<int> original_zongxuan = zongxuan_card;
+            QStringList zongxuan;
+            foreach (int card_id, zongxuan_card)
+                zongxuan << QString::number(card_id);
+            room->setPlayerProperty(player, "zongxuan", zongxuan.join("+"));
             do {
-                QStringList zongxuan;
-                foreach (int card_id, zongxuan_card)
-                    zongxuan << QString::number(card_id);
-                room->setPlayerProperty(player, "zongxuan", zongxuan.join("+"));
                 if (!room->askForUseCard(player, "@@zongxuan", "@zongxuan-put")) break;
+                QStringList zongxuan = player->property("zongxuan").toString().split("+");
                 foreach (int id, zongxuan_card) {
-                    if (!player->handCards().contains(id))
+                    if (!zongxuan.contains(QString::number(id)))
                         zongxuan_card.removeOne(id);
                 }
             } while (!zongxuan_card.isEmpty());

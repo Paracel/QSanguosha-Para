@@ -26,6 +26,7 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     connect(ui->enableEffectCheckBox, SIGNAL(toggled(bool)), ui->enableLastWordCheckBox, SLOT(setEnabled(bool)));
 
     ui->enableBgMusicCheckBox->setChecked(Config.EnableBgMusic);
+    ui->fullSkinCheckBox->setChecked(Config.value("UseFullSkin", false).toBool());
     ui->noIndicatorCheckBox->setChecked(Config.value("NoIndicator", false).toBool());
     ui->noEquipAnimCheckBox->setChecked(Config.value("NoEquipAnim", false).toBool());
 
@@ -108,6 +109,7 @@ void ConfigDialog::saveConfig() {
     Config.EnableBgMusic = enabled;
     Config.setValue("EnableBgMusic", enabled);
 
+    Config.setValue("UseFullSkin", ui->fullSkinCheckBox->isChecked());
     Config.setValue("NoIndicator", ui->noIndicatorCheckBox->isChecked());
     Config.setValue("NoEquipAnim", ui->noEquipAnimCheckBox->isChecked());
 

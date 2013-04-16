@@ -299,7 +299,7 @@
      <widget class="QCheckBox" name="noIndicatorCheckBox">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>140</x>
         <y>100</y>
         <width>95</width>
         <height>16</height>
@@ -312,7 +312,7 @@
      <widget class="QCheckBox" name="noEquipAnimCheckBox">
       <property name="geometry">
        <rect>
-        <x>140</x>
+        <x>270</x>
         <y>100</y>
         <width>111</width>
         <height>16</height>
@@ -320,6 +320,19 @@
       </property>
       <property name="text">
        <string>No equip anim</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="fullSkinCheckBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>111</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Use full skin</string>
       </property>
      </widget>
     </widget>

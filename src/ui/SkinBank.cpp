@@ -940,11 +940,11 @@ const QSanSkinScheme &QSanSkinFactory::getCurrentSkinScheme() {
 bool QSanSkinFactory::switchSkin(QString skinName) {
     if (skinName == _m_skinName) return false;
     bool success = false;
-    if (_m_skinName != "default") {
-        success = _sm_currentSkin.load(_m_skinList["default"]);
+    if (_m_skinName != S_DEFAULT_SKIN_NAME) {
+        success = _sm_currentSkin.load(_m_skinList[S_DEFAULT_SKIN_NAME.toAscii().constData()]);
         if (!success) qWarning("Cannot load default skin!");
     }
-    if (skinName != "default")
+    if (skinName != S_DEFAULT_SKIN_NAME)
         success = _sm_currentSkin.load(_m_skinList[skinName.toAscii().constData()]);
     if (!success)
         qWarning("Loading skin %s failed", skinName.toAscii().constData());
@@ -952,12 +952,18 @@ bool QSanSkinFactory::switchSkin(QString skinName) {
     return success;
 }
 
+#include "settings.h"
 QSanSkinFactory::QSanSkinFactory(const char *fileName) {
+    bool use_full = Config.value("UseFullSkin", false).toBool();
+    QString suf = use_full ? "full" : QString();
+    S_DEFAULT_SKIN_NAME = suf + "default";
+    S_COMPACT_SKIN_NAME = suf + "compact";
+
     Json::Reader reader;
     ifstream file(fileName);
     reader.parse(file, this->_m_skinList, false);
     _m_skinName = "";
-    switchSkin("default");
+    switchSkin(S_DEFAULT_SKIN_NAME);
     file.close();
 }
 

@@ -666,20 +666,20 @@ void RoomScene::adjustItems() {
 
     QSize minSize, maxSize;
     _getSceneSizes(minSize, maxSize);
-    if (skinName == "default") {
+    if (skinName == factory.S_DEFAULT_SKIN_NAME) {
         if (displayRegion.width() < minSize.width() || displayRegion.height() < minSize.height()) {
             QThread *thread = QCoreApplication::instance()->thread();
             thread->blockSignals(true);
-            factory.switchSkin("compact");
+            factory.switchSkin(factory.S_COMPACT_SKIN_NAME);
             thread->blockSignals(false);
             foreach (Photo *photo, photos)
                 photo->repaintAll();
         }
-    } else if (skinName == "compact") {
+    } else if (skinName == factory.S_COMPACT_SKIN_NAME) {
         if (displayRegion.width() > maxSize.width() && displayRegion.height() > maxSize.height()) {
             QThread *thread = QCoreApplication::instance()->thread();
             thread->blockSignals(true);
-            factory.switchSkin("default");
+            factory.switchSkin(factory.S_DEFAULT_SKIN_NAME);
             thread->blockSignals(false);
             foreach (Photo *photo, photos)
                 photo->repaintAll();

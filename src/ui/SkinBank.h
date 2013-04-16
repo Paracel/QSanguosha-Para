@@ -390,6 +390,9 @@ public:
     const QSanSkinScheme &getCurrentSkinScheme();
     bool switchSkin(QString skinName);
 
+    QString S_DEFAULT_SKIN_NAME;
+    QString S_COMPACT_SKIN_NAME;
+
 protected:
     QSanSkinFactory(const char *fileName);
     static QSanSkinFactory* _sm_singleton;

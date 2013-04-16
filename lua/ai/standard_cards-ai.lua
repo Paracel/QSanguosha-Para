@@ -546,7 +546,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 
 		self:useCardSlash(slash, use)
 		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end
-		if table.contains(target:objectName()) then return ret .. "->" .. table.concat(targets, "+") end
+		if table.contains(targets, target:objectName()) then return ret .. "->" .. table.concat(targets, "+") end
 		return "."
 	end
 	local useslash, target
@@ -572,7 +572,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 
 		self:useCardSlash(useslash, use)
 		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end
-		if table.contains(target:objectName()) then return useslash:toString() .. "->" .. table.concat(targets, "+") end
+		if table.contains(targets, target:objectName()) then return useslash:toString() .. "->" .. table.concat(targets, "+") end
 	end
 	return "."
 end

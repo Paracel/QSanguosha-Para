@@ -557,7 +557,11 @@ sgs.ai_skill_use["@@shichou"] = function(self, prompt)
 	if will_invoke_shichou(self) then
 		local to_discard = self:askForDiscard("shichou", 2, 2, false, true)
 		if #to_discard == 2 then
-			local target = player_chosen_shichou(self, self.room:getOtherPlayers(self.player))
+			local shu_generals = sgs.SPlayerList()
+			for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+				if p:getKingdom() == "shu" then shu_generals:append(p) end
+			end
+			local target = player_chosen_shichou(self, shu_generals)
 			if target then
 				return ("@ShichouCard=%d+%d->%s"):format(to_discard[1], to_discard[2], target:objectName())
 			end

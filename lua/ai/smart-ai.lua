@@ -4298,10 +4298,20 @@ function SmartAI:getAoeValue(card, player)
 		end
 	end
 
+	local enemy_num = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(attacker)) do
 		if not attacker:hasSkill("jueqing") and self:cantbeHurt(player) and self:aoeIsEffective(card, player, attacker) then
-			bad = bad + 250
+			if player:hasSkill("wuhun") and not self:isWeak(player) and attacker:getMark("@nightmare") == 0 then
+				if attacker:objectName() == self.player:objectName() and self.role ~= "renegade" and self.role ~= "lord" then
+				elseif attacker:objectName() ~= self.player:objectName() and not (self:isFriend(attacker) and attacker:objectName() == lord:objectName()) then
+				else
+					bad = bad + 250
+				end
+			else
+				bad = bad + 250
+			end
 		end
+		if self:aoeIsEffective(card, player, attacker) and not self:isFriend(player, attacker) then enemy_num = enemy_num + 1 end
 	end
 
 	local forbid_start = true
@@ -4311,11 +4321,11 @@ function SmartAI:getAoeValue(card, player)
 	end
 	if attacker:hasSkills("shenfen+kuangbao") and not attacker:hasSkill("jueqing") then
 		forbid_start = false
-		good = good + 15
+		good = good + 4 * enemy_num
 		if not self.player:hasSkill("wumou") then
-			good = good + 10
+			good = good + 3 * enemy_num
 		elseif self.player:getMark("@wrath") > 0 then
-			good = good + 5
+			good = good + 1.5 * enemy_num
 		end
 	end
 
@@ -4327,6 +4337,8 @@ function SmartAI:getAoeValue(card, player)
 			bad = bad + 300
 		end
 	end
+
+	if self:hasSkills("jianxiong|luanji|qice|manjuan") then good = good + 2 * enemy_num end
 
 	return good - bad
 end
@@ -4346,7 +4358,7 @@ function SmartAI:hasTrickEffective(card, to, from)
 		end
 	end
 
-	if to:hasSkill("wuyan") and card:isKindOf("Lightning") then return false end
+	if to:hasSkills("wuyan|hongyan") and card:isKindOf("Lightning") then return false end
 
 	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
 		if card:isKindOf("TrickCard") and
@@ -4404,9 +4416,6 @@ function SmartAI:useTrickCard(card, use)
 		local good = self:getAoeValue(card)
 		if good > 0 then
 			use.card = card
-		end
-		if self:hasSkills("jianxiong|luanji|qice|manjuan") then
-			if good > -5 then use.card = card end
 		end
 	else
 		self:useCardByClassName(card, use)

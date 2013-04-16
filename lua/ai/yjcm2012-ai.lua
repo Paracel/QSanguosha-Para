@@ -745,7 +745,7 @@ local function get_handcard_suit(cards)
 	for _, c in ipairs(cards) do
 		if black ~= c:isBlack() then return sgs.Card_NoSuit end
 	end
-	if black then return sgs.Card_NoSuitBlack else return sgs.Card_NoSuitRed end
+	return black and sgs.Card_NoSuitBlack or sgs.Card_NoSuitRed
 end
 
 local qice_skill = {}
@@ -778,16 +778,16 @@ qice_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("QiceCard") then return end
 	for _, friend in ipairs(self.friends) do
 		if friend:isWounded() then
-			good = good + 10 / (friend:getHp())
-			if friend:isLord() then good = good + 10 / (friend:getHp()) end
+			good = good + 10 / friend:getHp()
+			if friend:isLord() then good = good + 10 / friend:getHp() end
 		end
 	end
 
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:isWounded() then
-			bad = bad + 10/(enemy:getHp())
+			bad = bad + 10 / enemy:getHp()
 			if enemy:isLord() then
-				bad = bad + 10/(enemy:getHp())
+				bad = bad + 10 / enemy:getHp()
 			end
 		end
 	end
@@ -796,18 +796,19 @@ qice_skill.getTurnUseCard = function(self)
 		table.insert(allcard, card:getId())
 	end
 
+	local godsalvation = sgs.Sanguosha:cloneCard("god_salvation", suit, 0)
 	if self.player:getHandcardNum() < 3 then
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
 				aoe = sgs.Sanguosha:cloneCard(newqice)
-				if self:getAoeValue(aoe) > -5 then
+				if self:getAoeValue(aoe) > 0 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
 				end
 			end
 		end
-		if ge_available and good > bad then
+		if ge_available and self:willUseGodSalvation(godsalvation) then
 			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end
@@ -828,7 +829,7 @@ qice_skill.getTurnUseCard = function(self)
 				end
 			end
 		end
-		if ge_available and good > bad and self.player:isWounded() then
+		if ge_available and self:willUseGodSalvation(godsalvation) and self.player:isWounded() then
 			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end
@@ -841,7 +842,7 @@ qice_skill.getTurnUseCard = function(self)
 		for i = 1, #aoenames do
 			local newqice = aoenames[i]
 			aoe = sgs.Sanguosha:cloneCard(newqice)
-			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not caocao:containsTrick("indulgence")
+			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not self:willSkipPlayPhase(caocao)
 				and not self.player:hasSkill("jueqing") and self:aoeIsEffective(aoe, caocao, self.player) then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 				return parsed_card
@@ -850,7 +851,7 @@ qice_skill.getTurnUseCard = function(self)
 	end
 	if self:getCardsNum("Jink") == 0 and self:getCardsNum("Peach") == 0 and self:getCardsNum("Analeptic") == 0
 		and self:getCardsNum("Nullification") == 0 and self.player:getHandcardNum() <= 3 then
-		if ge_available and good > bad and self.player:isWounded() then
+		if ge_available and self:willUseGodSalvation(godsalvation) and self.player:isWounded() then
 			local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. "god_salvation")
 			return parsed_card
 		end

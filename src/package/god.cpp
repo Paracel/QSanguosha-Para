@@ -1016,6 +1016,7 @@ void JilveCard::onUse(Room *room, const CardUseStruct &card_use) const{
     }
 
     shensimayi->loseMark("@bear");
+    room->notifySkillInvoked(shensimayi, "jilve");
 
     if (choice == "wansha") {
         room->setPlayerFlag(shensimayi, "JilveWansha");

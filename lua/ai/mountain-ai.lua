@@ -697,12 +697,12 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		if self:isEnemy(lord) and max_num > 10 and max_num > lord_max_num then
 			if isCard("Jink", max_card, self.player) and self:getCardsNum("Jink") == 1 then return end
 			if isCard("Peach", max_card, self.player) or isCard("Analeptic", max_card, self.player) then return end
-			self.zhiba_card = max_card:getEffectiveId()
+			self.zhiba_pindian_card = max_card:getEffectiveId()
 			zhiba_str = "@ZhibaCard=."
 		end
 		if self:isFriend(lord) and not lord:hasSkill("manjuan") and ((lord_max_num > 0 and min_num <= lord_max_num) or min_num < 7) then
 			if isCard("Jink", min_card, self.player) and self:getCardsNum("Jink") == 1 then return end
-			self.zhiba_card = min_card:getEffectiveId()
+			self.zhiba_pindian_card = min_card:getEffectiveId()
 			zhiba_str = "@ZhibaCard=."
 		end
 

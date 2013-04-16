@@ -3158,8 +3158,11 @@ end
 function SmartAI:isWeak(player)
 	player = player or self.player
 	local hcard = player:getHandcardNum()
-	if player:hasSkill("longhun") then hcard = player:getCards("he"):length() end
-	return ((player:getHp() <= 2 and hcard <= 2) or (player:getHp() <= 1 and not (player:hasSkill("longhun") and hcard > 2))) and not (player:hasSkill("buqu") and player:getPile("buqu"):length() < 4)
+	if player:hasSkill("buqu") and player:getPile("buqu"):length() < 4 then return false end
+	if player:hasSkill("longhun") and player:getCards("he"):length() > 2 then return false end
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and player:getHp() > 1 then return false end
+	if (player:getHp() <= 2 and hcard <= 2) or player:getHp() <= 1 then return true end
+	return false
 end
 
 function SmartAI:useCardByClassName(card, use)
@@ -4053,8 +4056,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 	local players = self.room:getAlivePlayers()
 	players = sgs.QList2Table(players)
 
-	local armor = to:getArmor()
-	if armor and armor:isKindOf("Vine") then
+	if to:hasArmorEffect("vine") then
 		return false
 	end
 	if self.room:isProhibited(self.player, to, card) then

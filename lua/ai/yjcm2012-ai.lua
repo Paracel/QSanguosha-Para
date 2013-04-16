@@ -729,7 +729,7 @@ sgs.ai_skill_invoke.zhiyu = function(self, data)
 			return false
 		elseif self:isEnemy(damage.from) then
 			if manjuan and self.player:isKongcheng() then return false end
-			if self:doNotDiscard(target, "h") and not target:isKongcheng() then return false end
+			if self:doNotDiscard(damage.from, "h") and not damage.from:isKongcheng() then return false end
 			return true
 		end
 	end

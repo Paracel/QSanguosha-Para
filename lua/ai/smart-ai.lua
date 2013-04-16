@@ -1714,34 +1714,34 @@ function SmartAI:filterEvent(event, player, data)
 			local place = move.from_places:at(i - 1)
 			local card_id = move.card_ids:at(i - 1)
 			local card = sgs.Sanguosha:getCard(card_id)
-
 			if sgs.ai_snat_disma_effect then
 				sgs.ai_snat_disma_effect = false
+				if not from then return end
 				local intention = 70
 				if place == sgs.Player_PlaceDelayedTrick then
 					if not card:isKindOf("Disaster") then intention = -intention else intention = 0 end
 					if card:isKindOf("YanxiaoCard") then intention = -intention end
 				elseif place == sgs.Player_PlaceEquip then
-					if player:getLostHp() > 1 and card:isKindOf("SilverLion") then
-						if self:hasSkills(sgs.use_lion_skill, player) then
-							intention = self:willSkipPlayPhase(player) and -intention / 2 or 0
+					if from:getLostHp() > 1 and card:isKindOf("SilverLion") then
+						if self:hasSkills(sgs.use_lion_skill, from) then
+							intention = self:willSkipPlayPhase(from) and -intention / 2 or 0
 						else
-							intention = self:isWeak(player) and -intention / 2 or -intention / 10
+							intention = self:isWeak(from) and -intention / 2 or -intention / 10
 						end
 					end
-					if self:hasSkills(sgs.lose_equip_skill, player) then
-						if self:isWeak(player) and (card:isKindOf("DefensiveHorse") or card:isKindOf("Armor")) then
+					if self:hasSkills(sgs.lose_equip_skill, from) then
+						if self:isWeak(from) and (card:isKindOf("DefensiveHorse") or card:isKindOf("Armor")) then
 							intention = math.abs(intention)
 						else
 							intention = 0
 						end
 					end
 				elseif place == sgs.Player_PlaceHand then
-					if (player:hasSkill("kongcheng") or (player:hasSkill("zhiji") and player:getMark("zhiji") == 0)) and player:getHandcardNum() == 1 then
+					if (from:hasSkill("kongcheng") or (from:hasSkill("zhiji") and from:getMark("zhiji") == 0)) and from:getHandcardNum() == 1 then
 						intention = 0
 					end
 				end
-				if from then sgs.updateIntention(sgs.ai_snat_dism_from, from, intention) end
+				sgs.updateIntention(sgs.ai_snat_dism_from, from, intention)
 			end
 
 			if reason.m_skillName == "qiaobian" and from and move.to and self.room:getCurrent():objectName() == player:objectName() then

@@ -1321,7 +1321,7 @@ function SmartAI:willUseGodSalvation(card)
 		end
 	end
 
-	if self.player:hasSkill("noswuyan") and self.player:isWounded() then return true end
+	if self.player:hasSkill("noswuyan") then return (self.player:isWounded() or self.player:hasSkill("jizhi")) end
 	if self.player:hasSkill("jizhi") then good = good + 6 end
 	if (self:hasSkills("kongcheng") and self.player:getHandcardNum() == 1) or not self:hasLoseHandcardEffective() then good = good + 5 end
 

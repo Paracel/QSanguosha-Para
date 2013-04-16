@@ -1154,6 +1154,7 @@ sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)
 		local intention = -80
 		if cardx:isKindOf("GodSalvation") and to:isWounded() and ((to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive) or self:isWeak(to)) then intention = 50 end
 		if self:needKongcheng(to, true) then intention = 0 end
+		if cardx:isKindOf("AmazingGrace") and self:hasTrickEffective(cardx, to) then intention = 0 end
 		sgs.updateIntention(from, to, intention)
 	end
 end

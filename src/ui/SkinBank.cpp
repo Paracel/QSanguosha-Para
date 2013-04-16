@@ -412,21 +412,25 @@ bool IQSanComponentSkin::AnchoredRect::tryParse(Json::Value value) {
 }
 
 // Load pixmap from a file and map it to the given key.
-const QPixmap& QSanPixmapCache::getPixmap(const QString &key, const QString &fileName) {
+const QPixmap &QSanPixmapCache::getPixmap(const QString &key, const QString &fileName) {
     if (!_m_pixmapBank.contains(key)) {
-        bool success = !fileName.isEmpty() && _m_pixmapBank[key].load(fileName);
-        if (!success) {
-            qWarning("Unable to open resource file \"%s\" for key \"%s\"\n",
-                     fileName.toAscii().constData(),
-                     key.toAscii().constData());
-            _m_pixmapBank[key] = QPixmap(1, 1); // make Qt happy
+        if (fileName == "deprecated") {
+            _m_pixmapBank[key] = QPixmap(1, 1);
+        } else {
+            bool success = !fileName.isEmpty() && _m_pixmapBank[key].load(fileName);
+            if (!success) {
+                qWarning("Unable to open resource file \"%s\" for key \"%s\"\n",
+                         fileName.toAscii().constData(),
+                         key.toAscii().constData());
+                _m_pixmapBank[key] = QPixmap(1, 1); // make Qt happy
+            }
         }
     }
     return _m_pixmapBank[key];
 }
 
 // Load pixmap from a file.
-const QPixmap& QSanPixmapCache::getPixmap(const QString &fileName) {
+const QPixmap &QSanPixmapCache::getPixmap(const QString &fileName) {
     return getPixmap(fileName, fileName);
 }
 
@@ -628,9 +632,20 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
     if (!S_IMAGE_KEY2PIXMAP.contains(totalKey)) {
         QPixmap pixmap = QSanPixmapCache::getPixmap(fileName);
         if (clipping) {
-            pixmap = pixmap.copy(clipRegion);
+            QRect actualClip = clipRegion;
+            if (actualClip.right() > pixmap.width())
+                actualClip.setRight(pixmap.width());
+            if (actualClip.bottom() > pixmap.height())
+                actualClip.setBottom(pixmap.height());
+
+            QPixmap clipped = QPixmap(clipRegion.size());
+            clipped.fill(Qt::transparent);
+            QPainter painter(&clipped);
+            painter.drawPixmap(0, 0, pixmap.copy(actualClip));
+
             if (scaled)
-                pixmap = pixmap.scaled(scaleRegion, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                clipped = clipped.scaled(scaleRegion, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            pixmap = clipped;
         }
         S_IMAGE_KEY2PIXMAP[totalKey] = pixmap;
     }

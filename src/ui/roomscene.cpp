@@ -661,7 +661,7 @@ void RoomScene::adjustItems() {
     QRectF displayRegion = sceneRect();
 
     // switch between default & compact skin depending on scene size
-    QSanSkinFactory &factory =  QSanSkinFactory::getInstance();
+    QSanSkinFactory &factory = QSanSkinFactory::getInstance();
     QString skinName = factory.getCurrentSkinName();
 
     QSize minSize, maxSize;

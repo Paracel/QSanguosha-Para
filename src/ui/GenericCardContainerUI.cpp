@@ -183,7 +183,7 @@ void PlayerCardContainer::updateAvatar() {
                                               m_player->screenName());
     }
     if (general != NULL) {
-        _m_avatarArea->setToolTip(general->getSkillDescription());
+        _m_avatarArea->setToolTip(m_player->getSkillDescription());
         QPixmap avatarIcon = _getAvatarIcon(general->objectName());
         _paintPixmap(_m_avatarIcon, _m_layout->m_avatarArea, avatarIcon, _getAvatarParent());
         // this is just avatar general, perhaps game has not started yet.
@@ -215,6 +215,7 @@ void PlayerCardContainer::updateAvatar() {
 
 QPixmap PlayerCardContainer::paintByMask(QPixmap &source) {
     QPixmap tmp = G_ROOM_SKIN.getPixmap(QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_MASK, QString::number(_m_layout->m_circleImageSize));
+    if (tmp.height() <= 1 && tmp.width() <= 1) return source;
     QPainter p(&tmp);
     p.setCompositionMode(QPainter::CompositionMode_SourceIn);
     p.drawPixmap(0, 0, _m_layout->m_smallAvatarArea.width(), _m_layout->m_smallAvatarArea.height(), source);
@@ -235,13 +236,13 @@ void PlayerCardContainer::updateSmallAvatar() {
         _paintPixmap(_m_circleItem, _m_layout->m_circleArea,
                      QString(QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_IMAGE).arg(_m_layout->m_circleImageSize),
                      _getAvatarParent());
-        _m_smallAvatarArea->setToolTip(general->getSkillDescription());
+        _m_smallAvatarArea->setToolTip(m_player->getSkillDescription());
         QString name = Sanguosha->translate("&" + general->objectName());
         if (name.startsWith("&"))
             name = Sanguosha->translate(general->objectName());
         _m_layout->m_smallAvatarNameFont.paintText(_m_smallAvatarNameItem,
                                                    _m_layout->m_smallAvatarNameArea,
-                                                   Qt::AlignLeft, name);
+                                                   Qt::AlignLeft | Qt::AlignJustify, name);
         _m_smallAvatarIcon->show();
     } else {
         _m_smallAvatarArea->setToolTip(QString());

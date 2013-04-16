@@ -152,7 +152,7 @@
     "primaryAvatarImageType": 7,
     "circleImageType": 1,
     "avatarArea": [8, 10, 134, 134],
-    "secondaryAvatarArea": [81, 10, 61, 70],
+    "secondaryAvatarArea": [81, 10, 70, 70],
     "circleArea": [8, 10, 134, 134],
     "avatarNameArea": [8, 28, 30, 89],
     "focusFrameArea": [8, 10, 134, 134],

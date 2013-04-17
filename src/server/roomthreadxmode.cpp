@@ -89,7 +89,6 @@ void RoomThreadXMode::startArrange(QList<ServerPlayer *> &players, QList<QString
             qShuffle(mutable_to_arrange);
             QStringList arranged = mutable_to_arrange.mid(0, 3);
             arrange(player, arranged);
-            to_arrange.removeAt(i);
         } else {
             online << player;
         }

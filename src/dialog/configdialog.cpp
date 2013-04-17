@@ -26,7 +26,10 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     connect(ui->enableEffectCheckBox, SIGNAL(toggled(bool)), ui->enableLastWordCheckBox, SLOT(setEnabled(bool)));
 
     ui->enableBgMusicCheckBox->setChecked(Config.EnableBgMusic);
-    ui->fullSkinCheckBox->setChecked(Config.value("UseFullSkin", false).toBool());
+
+    bool enabled_full = QFile::exists("skins/fulldefaultSkin.layout.json");
+    ui->fullSkinCheckBox->setEnabled(enabled_full);
+    ui->fullSkinCheckBox->setChecked(enabled_full && Config.value("UseFullSkin", false).toBool());
     ui->noIndicatorCheckBox->setChecked(Config.value("NoIndicator", false).toBool());
     ui->noEquipAnimCheckBox->setChecked(Config.value("NoEquipAnim", false).toBool());
 

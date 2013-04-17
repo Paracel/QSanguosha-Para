@@ -142,6 +142,8 @@ void DistanceViewDialog::showDistance() {
             edit->setText(QString("+%1").arg(correct));
         else if (correct < 0)
             edit->setText(QString::number(correct));
+        else
+            edit->setText(QString());
     }
 
     ui->in_attack->setText(from->inMyAttackRange(to) ? tr("Yes") : tr("No"));

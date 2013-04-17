@@ -423,7 +423,7 @@ function SmartAI:getDynamicUsePriority(card)
 	local value = self:getUsePriority(card)
 	if dummy_use.card then
 		local use_card = dummy_use.card
-		local card_name = use_card:getClassName()
+		local class_name = use_card:getClassName()
 		local dynamic_value
 
 		-- direct control

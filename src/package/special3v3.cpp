@@ -403,6 +403,97 @@ public:
     }
 };
 
+class ZhenweiDistance: public DistanceSkill {
+public:
+    ZhenweiDistance(): DistanceSkill("#zhenwei") {
+    }
+
+    virtual int getCorrect(const Player *from, const Player *to) const{
+        if (to->hasSkill("zhenwei")) {
+            return 0;
+        } else {
+            bool hasWenpin = false;
+            foreach (const Player *p, to->getSiblings()) {
+                if (p->hasSkill("zhenwei")) {
+                    hasWenpin = true;
+                    break;
+                }
+            }
+            if (!hasWenpin) return 0;
+        }
+        if (ServerInfo.GameMode.startsWith("06_")) {
+            if (from->getRole().at(0) != to->getRole().at(0)) {
+                foreach (const Player *p, to->getSiblings()) {
+                    if (p->hasSkill(objectName()) && p->getRole().at(0) == to->getRole().at(0))
+                        return 1;
+                }
+            }
+        } else if (to->getMark("@defense") > 0 && from->getMark("@defense") == 0 && !from->hasSkill("zhenwei")) {
+            return 1;
+        }
+        return 0;
+    }
+};
+
+ZhenweiCard::ZhenweiCard() {
+}
+
+bool ZhenweiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    int total = Self->getSiblings().length() + 1;
+    return targets.length() < total / 2 - 1 && to_select != Self;
+}
+
+void ZhenweiCard::onEffect(const CardEffectStruct &effect) const{
+    effect.to->gainMark("@defense");
+}
+
+class ZhenweiViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    ZhenweiViewAsSkill(): ZeroCardViewAsSkill("zhenwei") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@zhenwei";
+    }
+
+    virtual const Card *viewAs() const{
+        return new ZhenweiCard;
+    }
+};
+
+class Zhenwei: public TriggerSkill {
+public:
+    Zhenwei(): TriggerSkill("zhenwei") {
+        events << EventPhaseChanging << EventLoseSkill;
+        view_as_skill = new ZhenweiViewAsSkill;
+        frequency = Compulsory;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return !target->getRoom()->getMode().startsWith("06_");
+    }
+
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == EventLoseSkill && data.toString() == objectName()) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(player))
+                room->setPlayerMark(p, "@defense", 0);
+        }
+        if (!TriggerSkill::triggerable(player)) return false;
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to == Player::NotActive) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(player))
+                room->setPlayerMark(p, "@defense", 0);
+            if (Sanguosha->getPlayerCount(room->getMode()) > 3)
+                room->askForUseCard(player, "@@zhenwei", "@zhenwei");
+        }
+        return false;
+    }
+};
+
 VSCrossbow::VSCrossbow(Suit suit, int number)
     : Crossbow(suit, number)
 {
@@ -503,12 +594,14 @@ Special3v3_2013Package::Special3v3_2013Package()
     vs_lvbu->addSkill("wushuang");
     vs_lvbu->addSkill(new Zhanshen);
 
-    /*
     General *wenpin = new General(this, "wenpin", "wei");
-    */
+    wenpin->addSkill(new Zhenwei);
+    wenpin->addSkill(new ZhenweiDistance);
+    related_skills.insert("zhenwei", "#zhenwei");
 
     addMetaObject<ZhongyiCard>();
     addMetaObject<JiuzhuCard>();
+    addMetaObject<ZhenweiCard>();
 }
 
 ADD_PACKAGE(Special3v3_2013)

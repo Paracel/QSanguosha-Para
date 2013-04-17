@@ -458,7 +458,7 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 	if #enemies > 0 then most_enemy = enemies[1] end
 	local prior_enemy, kongcheng_enemy, manjuan_enemy
 	for _, enemy in ipairs(enemies) do
-		if enemy:getHandcardNum() >= 2 and self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", enemy) then
+		if enemy:getHandcardNum() >= 2 and self:hasSkills(sgs.cardneed_skill, enemy) then
 			if not prior_enemy then prior_enemy = enemy end
 		end
 		if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then

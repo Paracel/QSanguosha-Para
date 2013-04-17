@@ -58,7 +58,16 @@ return {
 	["$ZhanshenAnimate"] = "image=image/animate/zhanshen.png",
 	["#ZhanshenWake"] = "%from 已受伤且有己方角色已死亡，触发 %arg 觉醒",
 
+	["#wenpin"] = "坚城宿将",
 	["wenpin"] = "文聘",
+	["illustrator:wenpin"] = "木美人",
+	["zhenwei"] = "镇卫",
+	["#zhenwei"] = "镇卫",
+	[":zhenwei"] = "<font color=\"blue\"><b>锁定技。</b></font>对方角色到其他己方角色的距离+1。",
+					--[[身份局：回合结束时，你可以令至多X名其他角色获得一枚“卫”标记，直到下回合结束。除你和拥有“卫”标记的角色到拥有“卫”标记的角色距离+1（X为本场游戏人数的一半减1，向下取整）。]]
+	["@defense"] = "卫",
+	["@zhenwei"] = "你可以发动“镇卫”",
+	["~zhenwei"] = "选择至多X名其他角色→点击确定",
 
 	["vscrossbow"] = "连弩",
 	[":vscrossbow"] = "装备牌·武器<br />攻击范围：１<br />武器特效：<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你可以额外使用三张【杀】。",

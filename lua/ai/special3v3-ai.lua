@@ -191,5 +191,27 @@ sgs.ai_skill_invoke.zhanshen = function(self, data)
 	return self:isFriend(lvbu)
 end
 
+sgs.ai_skill_use["@@zhenwei"] = function(self, prompt)
+	local total = math.floor(sgs.Sanguosha:getPlayerCount(self.room:getMode()) / 2) - 1
+	if total == 0 then return "." end
+	local targets = {}
+	if #self.friends_noself > 0 then
+		self:sort(self.friends_noself, "defense")
+		for _, friend in ipairs(self.friends_noself) do
+			table.insert(targets, friend:objectName())
+			if #targets == total then break end
+		end
+	elseif #self.enemies > 0 and sgs.turncount >= 2 then
+		self:sort(self.enemies, "defense")
+		for _, enemy in ipairs(self.enemies) do
+			table.insert(targets, enemy:objectName())
+			if #targets == total then break end
+		end
+	end
+	if #targets == 0 then return "."
+	else return "@ZhenweiCard=.->" .. table.concat(targets, "+")
+	end
+end
+
 sgs.weapon_range.VSCrossbow = sgs.weapon_range.Crossbow
 sgs.ai_use_priority.VSCrossbow = sgs.ai_use_priority.Crossbow

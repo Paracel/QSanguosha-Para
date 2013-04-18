@@ -209,7 +209,7 @@ function sgs.ai_skill_pindian.mizhao(minusecard, self, requestor, maxcard)
 	return maxcard or cards[1]
 end
 
-sgs.ai_skill_cardask["@JieyuanIncrease"] = function(self, data)
+sgs.ai_skill_cardask["@jieyuan-increase"] = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
 	if self:isFriend(target) then return "." end
@@ -222,7 +222,7 @@ sgs.ai_skill_cardask["@JieyuanIncrease"] = function(self, data)
 	return "."
 end
 
-sgs.ai_skill_cardask["@JieyuanDecrease"] = function(self, data)
+sgs.ai_skill_cardask["@jieyuan-decrease"] = function(self, data)
 	local damage = data:toDamage()
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)

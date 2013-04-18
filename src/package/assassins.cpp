@@ -210,7 +210,7 @@ public:
         if (event == DamageCaused) {
             if (damage.to && damage.to->isAlive()
                 && damage.to->getHp() >= player->getHp() && damage.to != player && !player->isKongcheng()
-                && room->askForCard(player, ".black", "@JieyuanIncrease", data, objectName())) {
+                && room->askForCard(player, ".black", "@jieyuan-increase:" + damage.to->objectName(), data, objectName())) {
                 room->broadcastSkillInvoke(objectName(), 1);
 
                 LogMessage log;
@@ -225,7 +225,7 @@ public:
         } else if (event == DamageInflicted) {
             if (damage.from && damage.from->isAlive()
                 && damage.from->getHp() >= player->getHp() && damage.from != player && !player->isKongcheng()
-                && room->askForCard(player, ".red", "@JieyuanDecrease", data, objectName())) {
+                && room->askForCard(player, ".red", "@jieyuan-decrease:" + damage.from->objectName(), data, objectName())) {
                 room->broadcastSkillInvoke(objectName(), 2);
 
                 LogMessage log;

@@ -6,11 +6,12 @@ sgs.ai_skill_use["@@drzhiheng"] = function(self, prompt)
 			table.insert(to_discard, zcard:getId())
 		end
 	end
-	for index = #to_discard, 1, -1 do
-		if self.player:isJilei(sgs.Sanguosha:getCard(to_discard[index])) then table.remove(to_discard, index) end
+	local use_cards = {}
+	for index = #unpreferedCards, 1, -1 do
+		if not self.player:isJilei(sgs.Sanguosha:getCard(to_discard[index])) then table.insert(use_cards, to_discard[index]) end
 	end
-	if #to_discard > 0 then
-		return ("@DrZhihengCard=" .. table.concat(to_discard, "+"))
+	if #use_cards > 0 then
+		return ("@DrZhihengCard=" .. table.concat(use_cards, "+"))
 	else
 		return ("@DrZhihengCard=.")
 	end

@@ -65,12 +65,13 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 		end
 	end
 
+	local use_cards = {}
 	for index = #unpreferedCards, 1, -1 do
-		if self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.remove(unpreferedCards, index) end
+		if not self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.insert(use_cards, unpreferedCards[index]) end
 	end
 
-	if #unpreferedCards >= 2 or #unpreferedCards == #cards then
-		self.tianming_discard = unpreferedCards
+	if #use_cards >= 2 or #use_cards == #cards then
+		self.tianming_discard = use_cards
 		return true
 	end
 end

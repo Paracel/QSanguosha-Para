@@ -1193,12 +1193,13 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 		end
 	end
 
+	local use_cards = {}
 	for index = #unpreferedCards, 1, -1 do
-		if self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.remove(unpreferedCards, index) end
+		if not self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then table.insert(use_cards, unpreferedCards[index]) end
 	end
 
-	if #unpreferedCards > 0 then
-		use.card = sgs.Card_Parse("@ZhihengCard=" .. table.concat(unpreferedCards, "+"))
+	if #use_cards > 0 then
+		use.card = sgs.Card_Parse("@ZhihengCard=" .. table.concat(use_cards, "+"))
 		return
 	end
 end

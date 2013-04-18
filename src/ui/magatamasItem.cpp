@@ -109,20 +109,22 @@ void MagatamasBoxItem::update() {
 void MagatamasBoxItem::_doHpChangeAnimation(int newHp) {
     if (newHp >= m_hp) return;
 
+    int width = m_imageArea.width();
+    int height = m_imageArea.height();
     int xStep, yStep;
     if (this->m_orientation == Qt::Horizontal) {
-        xStep = m_iconSize.width();
+        xStep = width;
         yStep = 0;
     } else {
         xStep = 0;
-        yStep = m_iconSize.height();
+        yStep = height;
     }
 
     for (int i = newHp; i < m_hp; i++) {
         Sprite *aniMaga = new Sprite();
         aniMaga->setPixmap(_icons[qBound(0, i, 5)]);
         aniMaga->setParentItem(this);
-        aniMaga->setOffset(QPoint(-m_iconSize.width() / 2, -m_iconSize.height() / 2));
+        aniMaga->setOffset(QPoint(-(width - m_imageArea.left()) / 2, -(height - m_imageArea.top()) / 2));
 
         int pos = m_maxHp > 5 ? 0 : i;
         aniMaga->setPos(QPoint(xStep * pos - aniMaga->offset().x(), yStep * pos - aniMaga->offset().y()));
@@ -146,8 +148,7 @@ void MagatamasBoxItem::_doHpChangeAnimation(int newHp) {
     }
 }
 
-void MagatamasBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
+void MagatamasBoxItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     if (m_maxHp <= 0) return;
     int imageIndex = qBound(0, m_hp, 5);
     if (m_hp == m_maxHp) imageIndex = 5;

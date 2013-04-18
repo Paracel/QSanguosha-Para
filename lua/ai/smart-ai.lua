@@ -436,7 +436,7 @@ function SmartAI:getDynamicUsePriority(card)
 		if use_card:isKindOf("Peach") and self.player:hasSkill("kuanggu") then return 1.01 end
 		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then return 0.1 end
 		if use_card:isKindOf("DelayedTrick") and not use_card:isKindOf("YanxiaoCard") and #use_card:getSkillName() > 0 then
-			return sgs.ai_use_priority[use_card:getClassName()] - 0.01
+			return (sgs.ai_use_priority[use_card:getClassName()] or 0.01) - 0.01
 		end
 		if use_card:isKindOf("Duel")
 			and (self:hasCrossbowEffect(self.player)
@@ -2948,6 +2948,24 @@ function SmartAI:willUsePeachTo(dying)
 		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
 		return "."
 	end
+
+	if self.player:isLord() and dying:objectName() ~= self.player:objectName() and self:getEnemyNumBySeat(self.room:getCurrent(), self.player) > 0
+		and self:getCardsNum("Peach") == 1 and self:isWeak() and self.player:getHp() == 1 then return "." end
+
+	if sgs.ai_role[dying:objectName()] == "renegade" and dying:objectName() ~= self.player:objectName() then
+		if self.role == "loyalist" or self.role == "lord" then
+			if sgs.current_mode_players["loyalist"] + sgs.current_mode_players["renegade"] >= sgs.current_mode_players["rebel"] then return "."
+			elseif sgs.gameProcess(self.room) == "loyalist" or sgs.gameProcess(self.room) == "loyalish" or sgs.gameProcess(self.room) == "dilemma" then return "."
+			end
+		elseif self.role == "rebel" then
+			if sgs.current_mode_players["rebel"] + sgs.current_mode_players["renegade"] - 1 >= sgs.current_mode_players["loyalist"] + 1 then return "."
+			elseif sgs.gameProcess(self.room) == "rebelish" or sgs.gameProcess(self.room) == "rebel" or sgs.gameProcess(self.room) == "dilemma" then return "."
+			end
+		elseif self.role == "renegade" then
+			return "."
+		end
+	end
+
 	if self:isFriend(dying) then
 		if self:needDeath(dying) then return "." end
 

@@ -865,34 +865,22 @@ public:
 class Keji: public TriggerSkill {
 public:
     Keji(): TriggerSkill("keji") {
-        events << EventPhaseChanging << CardUsed << CardResponded;
+        events << EventPhaseChanging;
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
-        if (event == EventPhaseChanging) {
-            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::Discard) {
-                if (!lvmeng->hasFlag("KejiUseSlash") && lvmeng->askForSkillInvoke(objectName())) {
-                    lvmeng->setFlags("-KejiUseSlash");
-                    if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
-                        int index = qrand() % 2 + 1;
-                        if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
-                            index += 2;
-                        room->broadcastSkillInvoke(objectName(), index);
-                    }
-                    lvmeng->skip(Player::Discard);
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to == Player::Discard) {
+            if (!lvmeng->hasFlag("Global_SlashInPlayPhase") && lvmeng->askForSkillInvoke(objectName())) {
+                if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
+                    int index = qrand() % 2 + 1;
+                    if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
+                        index += 2;
+                    room->broadcastSkillInvoke(objectName(), index);
                 }
+                lvmeng->skip(Player::Discard);
             }
-        } else if (lvmeng->getPhase() == Player::Play) {
-            CardStar card = NULL;
-            if (event == CardUsed)
-                card = data.value<CardUseStruct>().card;
-            else
-                card = data.value<CardResponseStruct>().m_card;
-
-            if (card->isKindOf("Slash"))
-                lvmeng->setFlags("KejiUseSlash");
         }
 
         return false;

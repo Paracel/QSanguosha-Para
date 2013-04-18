@@ -20,6 +20,7 @@ GameRule::GameRule(QObject *)
     events << GameStart << TurnStart
            << EventPhaseProceeding << EventPhaseEnd << EventPhaseChanging
            << PreCardUsed << CardUsed << CardFinished << CardEffected << PostCardEffected
+           << CardResponded
            << PostHpReduced
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
@@ -195,6 +196,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 player->clearFlags();
                 room->clearPlayerCardLimitation(player, true);
             }
+            if (player->hasFlag("Global_SlashInPlayPhase"))
+                player->setFlags("-Global_SlashInPlayPhase");
             break;
         }
     case PreCardUsed: {
@@ -207,6 +210,8 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 }
                 if (card_use.from->hasFlag("JijiangFailed"))
                     room->setPlayerFlag(card_use.from, "-JijiangFailed");
+                if (card->isKindOf("Slash"))
+                    card_use.from->setFlags("Global_SlashInPlayPhase");
 
                 card_use.from->broadcastSkillInvoke(card);
                 if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
@@ -266,6 +271,12 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             }
 
             break;
+        }
+    case CardResponded: {
+            const Card *card = data.value<CardResponseStruct>().m_card;
+            if (card->isKindOf("Slash"))
+                player->setFlags("Global_SlashInPlayPhase");
+			break;
         }
     case EventAcquireSkill:
     case EventLoseSkill: {

@@ -3137,7 +3137,7 @@ end
 function SmartAI:getOverflow(player)
 	player = player or self.player
 	local kingdom_num = 0
-	if player:hasSkill("yongsi") and player:getPhase() <= sgs.Player_Discard and not (player:hasSkill("keji") and not player:hasFlag("KejiUseSlash")) then
+	if player:hasSkill("yongsi") and player:getPhase() <= sgs.Player_Discard and not (player:hasSkill("keji") and not player:hasFlag("Global_SlashInPlayPhase")) then
 			local kingdoms = {}
 			for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
 				if not kingdoms[ap:getKingdom()] then

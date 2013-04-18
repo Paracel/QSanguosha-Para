@@ -4762,15 +4762,15 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
             move = data.value<CardsMoveOneTimeStruct>();
         }
 
-        player->addCard(Sanguosha->getCard(card_id), Player::PlaceHand);
-        setCardMapping(card_id, player, Player::PlaceHand);
-        setCardFlag(card_id, "visible");
-        QList<const Card *>cards;
-        cards << Sanguosha->getCard(card_id);
-        filterCards(player, cards, false);
-        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
-
         if (move.card_ids.length() > 0) {
+            player->addCard(Sanguosha->getCard(card_id), Player::PlaceHand);
+            setCardMapping(card_id, player, Player::PlaceHand);
+            setCardFlag(card_id, "visible");
+            QList<const Card *>cards;
+            cards << Sanguosha->getCard(card_id);
+            filterCards(player, cards, false);
+            doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
+
             data = QVariant::fromValue(move);
             foreach (ServerPlayer *p, getAllPlayers())
                 thread->trigger(CardsMoveOneTime, this, p, data);

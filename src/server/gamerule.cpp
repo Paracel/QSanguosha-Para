@@ -276,7 +276,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             const Card *card = data.value<CardResponseStruct>().m_card;
             if (card->isKindOf("Slash"))
                 player->setFlags("Global_SlashInPlayPhase");
-			break;
+            break;
         }
     case EventAcquireSkill:
     case EventLoseSkill: {

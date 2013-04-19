@@ -66,7 +66,8 @@ sgs.ai_choicemade_filter = {
 	Nullification = {},
 	playerChosen = {},
 	Yiji = {},
-	viewCards = {}
+	viewCards = {},
+	pindian = {}
 }
 
 sgs.card_lack = {}
@@ -2879,7 +2880,7 @@ function SmartAI:askForPindian(requestor, reason)
 	local passive = { "mizhao", "lieren" }
 	if self.player:objectName() == requestor:objectName() and not table.contains(passive, reason) then
 		if self[reason .. "_card"] then
-			return self[reason .. "_card"]
+			return sgs.Sanguosha:getCard(self[reason .. "_card"])
 		else
 			self.room:writeToConsole("Pindian card for " .. reason .. " not found!!")
 			return self:getMaxCard(self.player):getId()

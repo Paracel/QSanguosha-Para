@@ -752,11 +752,12 @@ function sgs.ai_skill_pindian.zhiba_pindian(minusecard, self, requestor, maxcard
 	return maxcard or cards[1]
 end
 
-function sgs.ai_card_intention.ZhibaCard(self, card, from, tos)
-	assert(#tos == 1)
-	local number = sgs.Sanguosha:getCard(card:getSubcards():first()):getNumber()
-	if number < 6 then sgs.updateIntention(from, tos[1], -60)
-	elseif number > 8 then sgs.updateIntention(from, tos[1], 60) end
+sgs.ai_card_intention.ZhibaCard = 0
+sgs.ai_choicemade_filter.pindian.zhiba_pindian = function(self, from, promptlist)
+	local current = self.room:getCurrent()
+	local number = sgs.Sanguosha:getCard(tonumber(promptlist[3])):getNumber()
+	if number < 6 then sgs.updateIntention(from, current, -60)
+	elseif number > 8 then sgs.updateIntention(from, current, 60) end
 end
 
 local zhijian_skill = {}

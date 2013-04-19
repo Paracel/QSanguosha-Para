@@ -225,8 +225,10 @@ QString TrustAI::askForKingdom() {
             break;
     }
     case Player::Loyalist: {
-            if (lord->getGeneral()->isLord() || (lord->getGeneral2() && lord->getGeneral2()->isLord()))
-                role = room->getLord()->getKingdom();
+            if (lord->getGeneral()->isLord())
+                role = lord->getKingdom();
+            else if (lord->getGeneral2() && lord->getGeneral2()->isLord())
+                role = lord->getGeneral2()->getKingdom();
             else {
                 if (lord->hasSkill("yongsi")) kingdoms.removeOne(lord->getKingdom());
                 role = kingdoms.at(qrand() % kingdoms.length());

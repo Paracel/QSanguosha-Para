@@ -492,7 +492,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	self:sort(self.enemies, "defense")
 
 	local can_attack = function(enemy)
-		if self.player:hasFlag("FireAttackFailed_" .. enemy:objectName()) and self:getOverflow() <= 0 and not self.player:hasSkill("jizhi") then
+		if self.player:hasFlag("FireAttackFailed_" .. enemy:objectName()) then
 			return false
 		end
 		local damage = 1
@@ -542,7 +542,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
 			if handcards[1]:hasFlag("visible") or handcards[1]:hasFlag(flag) then
 				local suitstring = handcards[1]:getSuitString()
-				if not lack[suitstring] then
+				if not lack[suitstring] and not table.contains(targets, enemy) then
 					table.insert(targets, enemy)
 				end
 			end

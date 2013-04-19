@@ -194,7 +194,8 @@ void Engine::addPackage(Package *package) {
     foreach (General *general, all_generals) {
         addSkills(general->findChildren<const Skill *>());
 
-        if (general->isHidden() && !Config.value("EnableHidden", false).toBool()) {
+        if ((general->isHidden() && !Config.value("EnableHidden", false).toBool())
+            || (general->objectName() == "shenlvbu1" || general->objectName() == "shenlvbu2")) {
             hidden_generals.insert(general->objectName(), general);
             continue;
         }

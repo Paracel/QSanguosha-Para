@@ -155,62 +155,73 @@ public:
 class Beige: public TriggerSkill {
 public:
     Beige(): TriggerSkill("beige") {
-        events << Damaged;
+        events << Damaged << FinishJudge;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        DamageStruct damage = data.value<DamageStruct>();
-        if (damage.card == NULL || !damage.card->isKindOf("Slash") || damage.to->isDead())
-            return false;
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (event == Damaged) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.card == NULL || !damage.card->isKindOf("Slash") || damage.to->isDead())
+                return false;
 
-        QList<ServerPlayer *> cais = room->findPlayersBySkillName(objectName());
-        foreach (ServerPlayer *caiwenji, cais) {
-            if (!caiwenji->isNude() && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
-                JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(.*):(.*)");
-                judge.good = true;
-                judge.play_animation = false;
-                judge.who = player;
-                judge.reason = objectName();
+            QList<ServerPlayer *> cais = room->findPlayersBySkillName(objectName());
+            foreach (ServerPlayer *caiwenji, cais) {
+                if (!caiwenji->isNude() && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
+                    JudgeStruct judge;
+                    judge.pattern = QRegExp("(.*):(.*):(.*)");
+                    judge.good = true;
+                    judge.play_animation = false;
+                    judge.who = player;
+                    judge.reason = objectName();
 
-                room->judge(judge);
+                    room->judge(judge);
 
-                switch (judge.card->getSuit()) {
-                case Card::Heart: {
-                        room->broadcastSkillInvoke(objectName(), 4);
-                        RecoverStruct recover;
-                        recover.who = caiwenji;
-                        room->recover(player, recover);
+                    QVariantList judgelist = player->tag[objectName()].toList();
+                    Card::Suit suit = (Card::Suit)(judgelist.takeLast().toInt());
+                    player->tag[objectName()] = QVariant::fromValue(judgelist);
+                    switch (suit) {
+                    case Card::Heart: {
+                            room->broadcastSkillInvoke(objectName(), 4);
+                            RecoverStruct recover;
+                            recover.who = caiwenji;
+                            room->recover(player, recover);
 
-                        break;
+                            break;
+                        }
+                    case Card::Diamond: {
+                            room->broadcastSkillInvoke(objectName(), 3);
+                            player->drawCards(2);
+                            break;
+                        }
+                    case Card::Club: {
+                            room->broadcastSkillInvoke(objectName(), 1);
+                            if (damage.from && damage.from->isAlive())
+                                room->askForDiscard(damage.from, "beige", 2, 2, false, true);
+
+                            break;
+                        }
+                    case Card::Spade: {
+                            room->broadcastSkillInvoke(objectName(), 2);
+                            if (damage.from && damage.from->isAlive())
+                                damage.from->turnOver();
+
+                            break;
+                        }
+                    default:
+                            break;
                     }
-                case Card::Diamond: {
-                        room->broadcastSkillInvoke(objectName(), 3);
-                        player->drawCards(2);
-                        break;
-                    }
-                case Card::Club: {
-                        room->broadcastSkillInvoke(objectName(), 1);
-                        if (damage.from && damage.from->isAlive())
-                            room->askForDiscard(damage.from, "beige", 2, 2, false, true);
-
-                        break;
-                    }
-                case Card::Spade: {
-                        room->broadcastSkillInvoke(objectName(), 2);
-                        if (damage.from && damage.from->isAlive())
-                            damage.from->turnOver();
-
-                        break;
-                    }
-                default:
-                    break;
                 }
             }
+        } else {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason != objectName()) return false;
+            QVariantList judgelist = player->tag[objectName()].toList();
+            judgelist.append(QVariant::fromValue(int(judge->card->getSuit())));
+            player->tag[objectName()] = QVariant::fromValue(judgelist);
         }
         return false;
     }

@@ -250,8 +250,8 @@ sgs.ai_skill_choice.neoganglie = function(self, choices)
 			target:setFlags("-AI_GanglieTarget")
 		end
 	end
-	if (self:getDamagedEffects(target, self.player) or self:needToLostHp(target, self.player)) and self:isFriend(target) then return "damage" end
-	if (self:getDamagedEffects(target, self.player) or self:needToLostHp(target, self.player, false, true)) and self:isEnemy(target) and not target:isKongcheng() then
+	if (self:getDamagedEffects(target, self.player) or self:needToLoseHp(target, self.player)) and self:isFriend(target) then return "damage" end
+	if (self:getDamagedEffects(target, self.player) or self:needToLoseHp(target, self.player, false, true)) and self:isEnemy(target) and not target:isKongcheng() then
 		return "throw"
 	end
 	return "damage"

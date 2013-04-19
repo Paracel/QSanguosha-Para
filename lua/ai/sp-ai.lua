@@ -460,7 +460,7 @@ sgs.ai_skill_use["@@bifa"] = function(self, prompt)
 end
 
 sgs.ai_skill_cardask["@bifa-give"] = function(self, data)
-	if self:needToLostHp() then return "." end
+	if self:needToLoseHp() then return "." end
 	local card_type = data:toString()
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)

@@ -125,7 +125,7 @@ sgs.ai_skill_invoke.enyuan = function(self, data)
 	local damage = data:toDamage()
 	if damage and damage.from then
 		if damage.from and damage.from:isAlive() then
-			if self:isFriend(damage.from) then return (self:getOverflow(damage.from) > 2 or self:needToLostHp(damage.from)) else return true end
+			if self:isFriend(damage.from) then return (self:getOverflow(damage.from) > 2 or self:needToLoseHp(damage.from)) else return true end
 		end
 	else
 		local move = data:toMoveOneTime()
@@ -209,7 +209,7 @@ sgs.ai_choicemade_filter.skillInvoke.enyuan = function(self, player, promptlist)
 		if not damage.from then return end
 		if not invoked then
 			sgs.updateIntention(player, damage.from, -40)
-		elseif self:getOverflow(damage.from) <= 2 or not self:needToLostHp(damage.from) then
+		elseif self:getOverflow(damage.from) <= 2 or not self:needToLoseHp(damage.from) then
 			sgs.updateIntention(player, damage.from, 40)
 		end
 	end
@@ -854,7 +854,7 @@ sgs.ai_skill_use_func.PaiyiCard = function(card, use, self)
 			if enemy:hasSkill("manjuan")
 				and not (self:hasSkills(sgs.masochism_skill, enemy) and not self.player:hasSkill("jueqing")) 
 				and self:damageIsEffective(enemy, sgs.DamageStruct_Normal, self.player)
-				and not (self:getDamagedEffects(enemy, self.player) or self:needToLostHp(enemy))
+				and not (self:getDamagedEffects(enemy, self.player) or self:needToLoseHp(enemy))
 				and enemy:getHandcardNum() > self.player:getHandcardNum() then
 				target = enemy
 			end
@@ -866,7 +866,7 @@ sgs.ai_skill_use_func.PaiyiCard = function(card, use, self)
 					and not self:hasSkills(sgs.cardneed_skill, enemy)
 					and not self:hasSkills("jijiu|tianxiang|buyi", enemy)
 					and self:damageIsEffective(enemy, sgs.DamageStruct_Normal, self.player)
-					and not (self:getDamagedEffects(enemy, self.player) or self:needToLostHp(enemy))
+					and not (self:getDamagedEffects(enemy, self.player) or self:needToLoseHp(enemy))
 					and enemy:getHandcardNum() + 2 > self.player:getHandcardNum()
 					and not enemy:hasSkill("manjuan") then
 					target = enemy

@@ -91,7 +91,7 @@ public slots:
     void updateHp();
     void updateHandcardNum();
     void updateDrankState();
-    void updateDuanchang();
+    virtual void updateDuanchang();
     void updatePile(const QString &pile_name);
     void updateRole(const QString &role);
     void updateMarks();

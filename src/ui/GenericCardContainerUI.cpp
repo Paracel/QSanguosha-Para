@@ -353,10 +353,7 @@ void PlayerCardContainer::updateDrankState() {
 }
 
 void PlayerCardContainer::updateDuanchang() {
-    QGraphicsColorizeEffect *effect = new QGraphicsColorizeEffect();
-    effect->setColor(G_PHOTO_LAYOUT.m_duanchangMaskColor);
-    effect->setStrength(0.4);
-    setGraphicsEffect(m_player->getMark("@duanchang") > 0 ? effect : NULL);
+    return;
 }
 
 void PlayerCardContainer::updateHandcardNum() {

@@ -50,6 +50,14 @@ Photo::Photo(): PlayerCardContainer() {
     emotion_item = new QGraphicsPixmapItem(_m_groupMain);
     emotion_item->moveBy(10, 0);
 
+    _m_duanchangMask = new QGraphicsRectItem(_m_groupMain);
+    _m_duanchangMask->setRect(boundingRect());
+    _m_duanchangMask->setZValue(32767.0);
+    _m_duanchangMask->setOpacity(0.4);
+    _m_duanchangMask->hide();
+    QBrush duanchang_brush(G_PHOTO_LAYOUT.m_duanchangMaskColor);
+    _m_duanchangMask->setBrush(duanchang_brush);
+
     _createControls();
 }
 
@@ -144,6 +152,11 @@ void Photo::hideSkillName() {
 
 void Photo::hideEmotion() {
     emotion_item->hide();
+}
+
+void Photo::updateDuanchang() {
+    if (!m_player) return;
+    _m_duanchangMask->setVisible(m_player->getMark("@duanchang") > 0);
 }
 
 const ClientPlayer *Photo::getPlayer() const{

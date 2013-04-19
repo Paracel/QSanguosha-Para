@@ -460,24 +460,6 @@ function SmartAI:getDynamicUsePriority(card)
 					else dynamic_value = dynamic_value + ((player:getHandcardNum() + player:getHp()) / player:getHp()) * dynamic_value
 					end
 				end
-			elseif use_card:isKindOf("GodSalvation") then
-				local weak_mate, weak_enemy = 0, 0
-				for _, player in sgs.qlist(self.room:getAllPlayers()) do
-					if player:getHp() <= 1 and player:getHandcardNum() <= 1 then
-						if self:isEnemy(player) then weak_enemy = weak_enemy + 1
-						elseif self:isFriend(player) then weak_mate = weak_mate + 1
-						end
-					end
-				end
-				if weak_enemy > weak_mate then
-					for _, card in sgs.qlist(self.player:getHandcards()) do
-						if card:isAvailable(self.player) and sgs.dynamic_value.damage_card[card:getClassName()] then
-							if self:getDynamicUsePriority(card) - 0.5 > self:getUsePriority(card) then
-								dynamic_value = -5
-							end
-						end
-					end
-				end
 			elseif use_card:isKindOf("Peach") then
 				dynamic_value = 7.85
 			elseif use_card:isKindOf("QingnangCard") and self:getCardsNum("Snatch") > 0 and good_null >= bad_null then

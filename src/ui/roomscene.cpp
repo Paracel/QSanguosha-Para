@@ -4168,15 +4168,10 @@ void RoomScene::doPindianAnimation() {
 
     QString emotion = pindian_success ? "success" : "no-success";
     PixmapAnimation *pma = PixmapAnimation::GetPixmapAnimation(pindian_from_card, emotion);
-    if (pma) {
-        QTimer *timer = new QTimer();
-        timer->setInterval(500);
-        connect(pma, SIGNAL(finished()), timer, SLOT(start()));
-        connect(timer, SIGNAL(timeout()), pindian_box, SLOT(disappear()));
-        connect(timer, SIGNAL(timeout()), timer, SLOT(deleteLater()));
-    } else {
+    if (pma)
+        connect(pma, SIGNAL(finished()), pindian_box, SLOT(disappear()));
+    else
         pindian_box->disappear();
-    }
 }
 
 static inline void AddRoleIcon(QMap<QChar, QPixmap> &map, char c, const QString &role) {

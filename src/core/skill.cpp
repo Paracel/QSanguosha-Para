@@ -297,6 +297,7 @@ SPConvertSkill::SPConvertSkill(const QString &from, const QString &to)
 bool SPConvertSkill::triggerable(const ServerPlayer *target) const{
     if (target == NULL) return false;
     if (!Config.value("EnableSPConvert", true).toBool()) return false;
+    if (Config.value("EnableHidden", false).toBool()) return false;
     bool canInvoke = Config.GameMode.endsWith("p") || Config.GameMode.endsWith("pd")
                      || Config.GameMode.endsWith("pz");
     if (!canInvoke) return false;

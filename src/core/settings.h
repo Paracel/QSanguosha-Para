@@ -77,7 +77,7 @@ public:
     QString BackgroundImage;
 
     // consts
-    static const int S_SURRNDER_REQUEST_MIN_INTERVAL;
+    static const int S_SURRENDER_REQUEST_MIN_INTERVAL;
     static const int S_PROGRESS_BAR_UPDATE_INTERVAL;
     static const int S_SERVER_TIMEOUT_GRACIOUS_PERIOD;
     static const int S_MOVE_CARD_ANIMATION_DURATION;

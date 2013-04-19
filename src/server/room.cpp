@@ -2042,7 +2042,7 @@ bool Room::processRequestSurrender(ServerPlayer *player, const QSanProtocol::QSa
     if (player == NULL || !player->m_isWaitingReply)
         return false;
     if (!_m_isFirstSurrenderRequest
-        && _m_timeSinceLastSurrenderRequest.elapsed() <= Config.S_SURRNDER_REQUEST_MIN_INTERVAL)
+        && _m_timeSinceLastSurrenderRequest.elapsed() <= Config.S_SURRENDER_REQUEST_MIN_INTERVAL)
         return false; //@todo: warn client here after new protocol has been enacted on the warn request
 
     _m_isFirstSurrenderRequest = false;

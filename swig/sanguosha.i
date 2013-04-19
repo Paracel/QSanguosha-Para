@@ -747,8 +747,8 @@ public:
     virtual const Card *getRealCard() const;
 
     // static functions
-    static bool CompareByColor(const Card *a, const Card *b);
-    static bool CompareBySuitNumber(const Card *a, const Card *b);
+    static bool CompareByNumber(const Card *a, const Card *b);
+    static bool CompareBySuit(const Card *a, const Card *b);
     static bool CompareByType(const Card *a, const Card *b);
     static const Card *Parse(const char *str);
     static Card *Clone(const Card *card);

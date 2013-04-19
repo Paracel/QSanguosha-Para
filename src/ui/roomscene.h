@@ -128,6 +128,7 @@ public:
     void showPromptBox();
     static void FillPlayerNames(QComboBox *ComboBox, bool add_none);
     void updateTable();
+    inline QMainWindow *mainWindow() { return main_window; }
 
 public slots:
     void addPlayer(ClientPlayer *player);

@@ -5,6 +5,7 @@
 #include "room.h"
 #include "structs.h"
 #include "lua-wrapper.h"
+#include "standard.h"
 #include <QFile>
 
 const int Card::S_UNKNOWN_CARD_ID = -1;
@@ -157,14 +158,18 @@ bool Card::match(const QString &pattern) const{
     return false;
 }
 
-bool Card::CompareByColor(const Card *a, const Card *b) {
-    if (a->m_suit != b->m_suit)
-        return a->m_suit < b->m_suit;
-    else
+bool Card::CompareByNumber(const Card *a, const Card *b) {
+    static Suit new_suits[] = { Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit };
+    Suit suit1 = new_suits[a->getSuit()];
+    Suit suit2 = new_suits[b->getSuit()];
+
+    if (a->m_number != b->m_number)
         return a->m_number < b->m_number;
+    else
+        return suit1 < suit2;
 }
 
-bool Card::CompareBySuitNumber(const Card *a, const Card *b) {
+bool Card::CompareBySuit(const Card *a, const Card *b) {
     static Suit new_suits[] = { Spade, Heart, Club, Diamond, NoSuitBlack, NoSuitRed, NoSuit };
     Suit suit1 = new_suits[a->getSuit()];
     Suit suit2 = new_suits[b->getSuit()];
@@ -176,12 +181,61 @@ bool Card::CompareBySuitNumber(const Card *a, const Card *b) {
 }
 
 bool Card::CompareByType(const Card *a, const Card *b) {
-    int order1 = a->getTypeId() * 10000 + a->m_id;
-    int order2 = b->getTypeId() * 10000 + b->m_id;
+    int order1 = a->getTypeId();
+    int order2 = b->getTypeId();
     if (order1 != order2)
         return order1 < order2;
-    else
-        return CompareBySuitNumber(a, b);
+    else {
+        static QStringList basic;
+        basic << "slash" << "thunder_slash" << "fire_slash" << "jink" << "peach" << "analeptic";
+        switch (a->getTypeId()) {
+        case TypeBasic: {
+                foreach (QString object_name, basic) {
+                    if (a->objectName() == object_name) {
+                        if (b->objectName() == object_name)
+                            return CompareBySuit(a, b);
+                        else
+                            return true;
+                    }
+                    if (b->objectName() == object_name)
+                        return false;
+                }
+                return CompareBySuit(a, b);
+                break;
+            }
+        case TypeTrick: {
+                if (a->objectName() == b->objectName())
+                    return CompareBySuit(a, b);
+                else
+                    return a->objectName() < b->objectName();
+                break;
+            }
+        case TypeEquip: {
+                const EquipCard *eq_a = qobject_cast<const EquipCard *>(a->getRealCard());
+                const EquipCard *eq_b = qobject_cast<const EquipCard *>(b->getRealCard());
+                if (eq_a->location() == eq_b->location()) {
+                    if (eq_a->isKindOf("Weapon")) {
+                        const Weapon *wep_a = qobject_cast<const Weapon *>(a->getRealCard());
+                        const Weapon *wep_b = qobject_cast<const Weapon *>(b->getRealCard());
+                        if (wep_a->getRange() == wep_b->getRange())
+                            return CompareBySuit(a, b);
+                        else
+                            return wep_a->getRange() < wep_b->getRange();
+                    } else {
+                        if (a->objectName() == b->objectName())
+                            return CompareBySuit(a, b);
+                        else
+                            return a->objectName() < b->objectName();
+                    }
+                } else {
+                    return eq_a->location() < eq_b->location();
+                }
+                break;
+            }
+        default:
+                return CompareBySuit(a, b);
+        }
+    }
 }
 
 bool Card::isNDTrick() const{

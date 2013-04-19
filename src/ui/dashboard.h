@@ -23,8 +23,11 @@
 
 class Dashboard: public PlayerCardContainer {
     Q_OBJECT
+    Q_ENUMS(SortType)
 
 public:
+    enum SortType { ByType, BySuit, ByNumber };
+
     Dashboard(QGraphicsItem *button_widget);
     virtual QRectF boundingRect() const;
     void setWidth(int width);
@@ -90,7 +93,8 @@ public:
     static const int S_PENDING_OFFSET_Y = -25;
 
 public slots:
-    void sortCards(bool doAnmiation = true);
+    void sortCards();
+    void beginSorting();
     void reverseSelection();
     void cancelNullification();
     void skillButtonActivated();
@@ -174,6 +178,8 @@ protected:
 
     void drawEquip(QPainter *painter, const CardItem *equip, int order);
     void setSelectedItem(CardItem *card_item);
+
+    QMenu *_m_sort_menu;
 
 protected slots:
     virtual void _onEquipSelectChanged();

@@ -4,6 +4,7 @@
 #include "client.h"
 #include "standard.h"
 #include "playercarddialog.h"
+#include "roomscene.h"
 
 #include <QPainter>
 #include <QGraphicsScene>
@@ -39,7 +40,7 @@ Dashboard::Dashboard(QGraphicsItem *widget)
     // called by its graphics parent.
     //
     _m_width = G_DASHBOARD_LAYOUT.m_leftWidth + G_DASHBOARD_LAYOUT.m_rightWidth + 20; 
-    
+
     _createLeft();
     _createMiddle();
     _createRight();
@@ -47,6 +48,8 @@ Dashboard::Dashboard(QGraphicsItem *widget)
     // only do this after you create all frames.
     _createControls();
     _createExtraButtons();
+
+    _m_sort_menu = new QMenu(RoomSceneInstance->mainWindow());
 }
 
 bool Dashboard::isAvatarUnderMouse() {
@@ -513,8 +516,7 @@ void Dashboard::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
 void Dashboard::mousePressEvent(QGraphicsSceneMouseEvent *) {
 }
 
-void Dashboard::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent)
-{
+void Dashboard::mouseReleaseEvent(QGraphicsSceneMouseEvent *mouseEvent) {
     PlayerCardContainer::mouseReleaseEvent(mouseEvent);
 
     CardItem *to_select = NULL;
@@ -740,14 +742,56 @@ QList<CardItem *> Dashboard::removeCardItems(const QList<int> &card_ids, Player:
     return result;
 }
 
+static bool CompareByNumber(const CardItem *a, const CardItem *b)  {
+    return Card::CompareByNumber(a->getCard(), b->getCard());
+}
+
+static bool CompareBySuit(const CardItem *a, const CardItem *b)  {
+    return Card::CompareBySuit(a->getCard(), b->getCard());
+}
+
 static bool CompareByType(const CardItem *a, const CardItem *b)  {
     return Card::CompareByType(a->getCard(), b->getCard());
 }
 
-void Dashboard::sortCards(bool doAnimation) {
-    qSort(m_handCards.begin(), m_handCards.end(), CompareByType);    
-    if (doAnimation)
-        adjustCards();
+void Dashboard::sortCards() {
+    if (m_handCards.length() == 0) return;
+
+    QMenu *menu = _m_sort_menu;
+    menu->clear();
+    menu->setTitle(tr("Sort handcards"));
+
+    QAction *action1 = menu->addAction(tr("Sort by type"));
+    action1->setData((int)ByType);
+
+    QAction *action2 = menu->addAction(tr("Sort by suit"));
+    action2->setData((int)BySuit);
+
+    QAction *action3 = menu->addAction(tr("Sort by number"));
+    action3->setData((int)ByNumber);
+
+    connect(action1, SIGNAL(triggered()), this, SLOT(beginSorting()));
+    connect(action2, SIGNAL(triggered()), this, SLOT(beginSorting()));
+    connect(action3, SIGNAL(triggered()), this, SLOT(beginSorting()));
+
+    QPointF posf = QCursor::pos();
+    menu->popup(QPoint(posf.x(), posf.y()));
+}
+
+void Dashboard::beginSorting() {
+    QAction *action = qobject_cast<QAction *>(sender());
+    SortType type = ByType;
+    if (action)
+        type = (SortType)(action->data().toInt());
+
+    switch (type) {
+    case ByType: qSort(m_handCards.begin(), m_handCards.end(), CompareByType); break;
+    case BySuit: qSort(m_handCards.begin(), m_handCards.end(), CompareBySuit); break;
+    case ByNumber: qSort(m_handCards.begin(), m_handCards.end(), CompareByNumber); break;
+    default: Q_ASSERT(false);
+    }
+
+    adjustCards();
 }
 
 void Dashboard::reverseSelection() {

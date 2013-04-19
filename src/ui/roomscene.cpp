@@ -1225,7 +1225,7 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_F1: break;
     case Qt::Key_F2: chooseSkillButton(); break;
-    case Qt::Key_F3: dashboard->sortCards(); break;
+    case Qt::Key_F3: dashboard->beginSorting(); break;
     case Qt::Key_F4: dashboard->reverseSelection(); break;
     case Qt::Key_F5: {
             if (control_is_down) {

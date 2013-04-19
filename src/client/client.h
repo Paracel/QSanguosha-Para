@@ -80,7 +80,6 @@ public:
     QList<QString> getRecords() const;
     QString getReplayPath() const;
     void setLines(const QString &skill_name);
-    QString getSkillLine() const;
     Replayer *getReplayer() const;
     QString getPlayerName(const QString &str);
     QString getSkillNameToInvoke() const;    
@@ -241,7 +240,6 @@ private:
     Replayer *replayer;
     QTextDocument *lines_doc, *prompt_doc;
     int pile_num;
-    QString skill_title, skill_line;
     QString skill_to_invoke;
     QList<int> available_cards;
 

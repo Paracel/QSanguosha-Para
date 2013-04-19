@@ -683,10 +683,6 @@ void Client::exchangeKnownCards(const Json::Value &players) {
     b->setCards(a_known);
 }
 
-QString Client::getSkillLine() const{
-    return skill_line;
-}
-
 Replayer *Client::getReplayer() const{
     return replayer;
 }
@@ -1024,13 +1020,10 @@ void Client::setLines(const QString &filename) {
     QRegExp rx(".+/(\\w+\\d?).ogg");
     if (rx.exactMatch(filename)) {
         QString skill_name = rx.capturedTexts().at(1);
-        skill_line = Sanguosha->translate("$" + skill_name);
 
         QChar last_char = skill_name[skill_name.length() - 1];
         if (last_char.isDigit())
             skill_name.chop(1);
-
-        skill_title = Sanguosha->translate(skill_name);
     }
 }
 
@@ -1170,7 +1163,7 @@ void Client::killPlayer(const Json::Value &player_arg) {
         QString last_word = Sanguosha->translate(QString("~%1").arg(general_name));
         if (last_word.startsWith("~")) {
             QStringList origin_generals = general_name.split("_");
-            if (origin_generals.length()>1)
+            if (origin_generals.length() > 1)
                 last_word = Sanguosha->translate(("~") +  origin_generals.at(1));
         }
 
@@ -1180,9 +1173,6 @@ void Client::killPlayer(const Json::Value &player_arg) {
             if (Sanguosha->getGeneral(origin_general))
                 last_word = Sanguosha->translate(("~") + origin_general);
         }
-        skill_title = tr("%1[dead]").arg(Sanguosha->translate(general_name));
-        skill_line = last_word;
-
         updatePileNum();
     }
 

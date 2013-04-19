@@ -1590,6 +1590,8 @@ function SmartAI:filterEvent(event, player, data)
 				local xunyu = self.room:findPlayerBySkillName("quhu")
 				intention = 80
 				from = xunyu
+			elseif damage.from:hasFlag("ShenfenUsing") then
+				return
 			else
 				intention = 100
 			end

@@ -949,7 +949,7 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 					if not can_use then return else value_d = value_d * 0.1 end
 				end
 				if self:canSaveSelf(player) then
-					value = value * 0.9
+					value_d = value_d * 0.9
 				elseif self:isFriend(player) and friend_save_num > 0 then
 					friend_save_num = friend_save_num - 1
 					value_d = value_d * 0.9

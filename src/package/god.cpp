@@ -137,13 +137,13 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("wuhun") && target->tag.value("Wuhun", false).toBool();
+        return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (data.toString() != "wuhun") return false;
         foreach (ServerPlayer *p, room->getAllPlayers())
             p->loseAllMarks("@nightmare");
-        player->tag.remove("Wuhun");
         return false;
     }
 };

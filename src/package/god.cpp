@@ -1364,8 +1364,10 @@ GodPackage::GodPackage()
     shenguanyu->addSkill(new WushenTargetMod);
     shenguanyu->addSkill(new Wuhun);
     shenguanyu->addSkill(new WuhunRevenge);
+    shenguanyu->addSkill(new WuhunClear);
     related_skills.insertMulti("wushen", "#wushen-target");
     related_skills.insertMulti("wuhun", "#wuhun");
+    related_skills.insertMulti("wuhun", "#wuhun-clear");
 
     General *shenlvmeng = new General(this, "shenlvmeng", "god", 3);
     shenlvmeng->addSkill(new Shelie);

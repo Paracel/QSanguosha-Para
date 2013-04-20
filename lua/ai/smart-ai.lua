@@ -2204,7 +2204,7 @@ end
 function SmartAI:getCardRandomly(who, flags)
 	local cards = who:getCards(flags)
 	if cards:isEmpty() then return end
-	local r = math.random(0, cards:length()-1)
+	local r = math.random(0, cards:length() - 1)
 	local card = cards:at(r)
 	if who:hasArmorEffect("silver_lion") then
 		if self:isEnemy(who) and who:isWounded() and card == who:getArmor() then

@@ -471,7 +471,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 				hasCrossbow = false
 				break
 			elseif not slashTo and self:slashIsAvailable() and self:slashIsEffective(slash, enemy)
-				and self.player:canSlash(enemy, slash, true, range_fix) and self:getCardsNum("Jink", enemy) < 1 then
+				and self.player:canSlash(enemy, slash, true, range_fix) and getCardsNum("Jink", enemy) < 1 then
 				shouldUse = shouldUse + 1
 				slashTo = true
 			end

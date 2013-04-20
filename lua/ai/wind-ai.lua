@@ -594,7 +594,7 @@ guhuo_skill.getTurnUseCard = function(self)
 		table.insertTable(GuhuoCard_str, otherSuit_str)
 	end
 
-	local peach_str = self:getGuhuoCard("Peach", self.player, true)
+	local peach_str = self:getGuhuoCard("Peach", true)
 	if peach_str then table.insert(GuhuoCard_str, peach_str) end
 
 	local fakeCards = {}
@@ -693,7 +693,7 @@ guhuo_skill.getTurnUseCard = function(self)
 		end
 	end
 
-	local slash_str = self:getGuhuoCard("Slash", self.player, true)
+	local slash_str = self:getGuhuoCard("Slash", true)
 	if slash_str and self:slashIsAvailable() then
 		local card = sgs.Card_Parse(slash_str)
 		local slash = sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
@@ -715,9 +715,9 @@ end
 
 sgs.ai_use_priority.GuhuoCard = 10
 
-local function getGuhuoViewCard(self, class_name, player)
+function SmartAI:getGuhuoViewCard(class_name)
 	local card_use = {}
-	card_use = self:getCards(class_name, player)
+	card_use = self:getCards(class_name, "h")
 
 	if #card_use > 1 or (#card_use > 0 and card_use[1]:getSuit() == sgs.Card_Heart) then
 		local index = 1
@@ -728,8 +728,8 @@ local function getGuhuoViewCard(self, class_name, player)
 	end
 end
 
-function SmartAI:getGuhuoCard(class_name, player, at_play)
-	player = player or self.player
+function SmartAI:getGuhuoCard(class_name, at_play)
+	local player = self.player
 	if not player or not player:hasSkill("guhuo") then return end
 	if at_play then
 		if class_name == "Peach" and not player:isWounded() then return
@@ -738,7 +738,7 @@ function SmartAI:getGuhuoCard(class_name, player, at_play)
 		elseif class_name == "Jink" or class_name == "Nullification" then return
 		end
 	end
-	return getGuhuoViewCard(self, class_name, player)
+	return self:getGuhuoViewCard(class_name)
 end
 
 sgs.guhuo_suit_value = {

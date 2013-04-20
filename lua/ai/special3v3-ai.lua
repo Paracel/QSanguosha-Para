@@ -76,7 +76,7 @@ sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)
 	if first_index and not second_index then
 		local others = self.room:getOtherPlayers(self.player)
 		for _, other in sgs.qlist(others) do
-			if (not self:isFriend(other) and (self:needKongcheng(other) and others:getHandcardNum() == 0 or other:hasSkill("manjuan"))) and
+			if (not self:isFriend(other) and (self:needKongcheng(other) and other:getHandcardNum() == 0 or other:hasSkill("manjuan"))) and
 				self.friends_noself[first_index]:objectName() ~= other:objectName() then
 				return ("@HongyuanCard=.->%s+%s"):format(self.friends_noself[first_index]:objectName(), other:objectName())
 			end

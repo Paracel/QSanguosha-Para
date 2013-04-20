@@ -3339,7 +3339,7 @@ function SmartAI:dontRespondPeachInJudge(judge)
 		end
 	end
 
-	if not judge or not type(judge) ~= "userdata" then self.room:writeToConsole(debug.traceback()) end
+	if not judge then self.room:writeToConsole(debug.traceback()) end
 
 	if judge.reason == "tuntian" and judge.who:getMark("zaoxian") == 0 and judge.who:getPile("field"):length() < 2 then return true
 	elseif (judge.reason == "eight_diagram" or judge.reason == "bazhen") and self:isFriend(judge.who) and not self:isWeak(judge.who) then return true

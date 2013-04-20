@@ -4750,6 +4750,8 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
     arg[1] = card_id;
 
     if (player) {
+        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
+
         CardsMoveOneTimeStruct move;
         move.from = NULL;
         move.from_places << Player::DrawPile;
@@ -4769,7 +4771,6 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
             QList<const Card *>cards;
             cards << Sanguosha->getCard(card_id);
             filterCards(player, cards, false);
-            doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
 
             data = QVariant::fromValue(move);
             foreach (ServerPlayer *p, getAllPlayers())

@@ -475,9 +475,14 @@ void XiongyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     SkillCard::onUse(room, use);
 }
 
-void XiongyiCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->drawCards(3);
-    effect.from->addMark("xiongyi");
+void XiongyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    foreach (ServerPlayer *p, targets)
+        p->drawCards(3);
+    if (targets.length() <= room->getAlivePlayers().length() / 2 && source->isWounded()) {
+        RecoverStruct recover;
+        recover.who = source;
+        room->recover(source, recover);
+    }
 }
 
 class Xiongyi: public ZeroCardViewAsSkill {
@@ -492,25 +497,6 @@ public:
 
     virtual const Card *viewAs() const{
         return new XiongyiCard;
-    }
-};
-
-class XiongyiRecover: public TriggerSkill {
-public:
-    XiongyiRecover(): TriggerSkill("#xiongyi") {
-        events << CardFinished;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        if (player->getMark("@arise") < 1 && player->getMark("xiongyi") > 0) {
-            if (player->getMark("xiongyi") <= (room->getAlivePlayers().length()) / 2) {
-                RecoverStruct recover;
-                recover.who = player;
-                room->recover(player, recover);
-                player->setMark("xiongyi", 0);
-            }
-        }
-        return false;
     }
 };
 
@@ -778,8 +764,6 @@ HegemonyPackage::HegemonyPackage()
     mateng->addSkill("mashu");
     mateng->addSkill(new MarkAssignSkill("@arise", 1));
     mateng->addSkill(new Xiongyi);
-    mateng->addSkill(new XiongyiRecover);
-    related_skills.insertMulti("xiongyi", "#xiongyi");
     related_skills.insertMulti("xiongyi", "#@arise-1");
 
     General *kongrong = new General(this, "kongrong", "qun", 3);

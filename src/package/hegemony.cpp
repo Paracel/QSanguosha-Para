@@ -501,7 +501,7 @@ public:
         events << CardFinished;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (player->getMark("@arise") < 1 && player->getMark("xiongyi") > 0) {
             if (player->getMark("xiongyi") <= (room->getAlivePlayers().length()) / 2) {
                 RecoverStruct recover;

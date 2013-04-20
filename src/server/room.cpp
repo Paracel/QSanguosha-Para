@@ -2768,7 +2768,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
     catch (TriggerEvent event) {
         if (event == StageChange || event == TurnBroken) {
             if (getCardPlace(card_use.card->getEffectiveId()) == Player::PlaceTable) {
-                CardMoveReason reason(CardMoveReason::S_REASON_USE, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
+                CardMoveReason reason(CardMoveReason::S_REASON_UNKNOWN, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
                 if (card_use.to.size() == 1) reason.m_targetId = card_use.to.first()->objectName();
                 moveCardTo(card_use.card, card_use.from, NULL, Player::DiscardPile, reason, true);
             }

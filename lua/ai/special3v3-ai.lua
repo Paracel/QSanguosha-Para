@@ -116,6 +116,7 @@ sgs.ai_skill_playerchosen.vsganglie = function(self, targets)
 	for _, enemy in ipairs(self.enemies) do
 		if self:canAttack(enemy) or enemy:getHandcardNum() > 3 then return enemy end
 	end
+	if self.room:getMode() == "06_3v3" or self.room:getMode() == "06_XMode" then return nil end
 	for _, friend in ipairs(self.friends_noself) do
 		if self:damageIsEffective(friend, sgs.DamageStruct_Normal, friend) and not self:cantBeHurt(friend) and self:getDamagedEffects(damage.from, self.player) then
 			sgs.ai_ganglie_effect = string.format("%s_%s_%d", self.player:objectName(), friend:objectName(), sgs.turncount)

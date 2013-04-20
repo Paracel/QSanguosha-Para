@@ -279,10 +279,6 @@
         <translation>请选择用于交换的 %1 张手牌</translation>
     </message>
     <message>
-        <source>%1[dead]</source>
-        <translation type="obsolete">%1【阵亡】</translation>
-    </message>
-    <message>
         <location filename="../../src/client/client.cpp" line="1194"/>
         <source>Game is over now</source>
         <translation>游戏已经结束</translation>

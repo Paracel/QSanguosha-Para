@@ -194,7 +194,14 @@ public:
 
     virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &) const{
         Room *room = xiahou->getRoom();
-        ServerPlayer *from = room->askForPlayerChosen(xiahou, room->getOtherPlayers(xiahou), objectName(), "vsganglie-invoke", true, true);
+        QString mode = room->getMode();
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(xiahou)) {
+            if (!mode.startsWith("06_") || AI::GetRelation3v3(xiahou, p) == AI::Enemy)
+                targets << p;
+        }
+
+        ServerPlayer *from = room->askForPlayerChosen(xiahou, targets, objectName(), "vsganglie-invoke", true, true);
         if (!from) return;
 
         room->broadcastSkillInvoke("ganglie");

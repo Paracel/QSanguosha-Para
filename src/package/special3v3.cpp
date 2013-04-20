@@ -475,7 +475,7 @@ public:
 class Zhenwei: public TriggerSkill {
 public:
     Zhenwei(): TriggerSkill("zhenwei") {
-        events << EventPhaseChanging << EventLoseSkill;
+        events << EventPhaseChanging << Death << EventLoseSkill;
         view_as_skill = new ZhenweiViewAsSkill;
         frequency = Compulsory;
     }
@@ -488,6 +488,12 @@ public:
         if (event == EventLoseSkill && data.toString() == objectName()) {
             foreach (ServerPlayer *p, room->getOtherPlayers(player))
                 room->setPlayerMark(p, "@defense", 0);
+        } else if (event == Death) {
+            DeathStruct death = data.value<DeathStruct>();
+            if (death.who == player && player->hasSkill(objectName())) {
+                foreach (ServerPlayer *p, room->getOtherPlayers(player))
+                    room->setPlayerMark(p, "@defense", 0);
+            }
         }
         if (!TriggerSkill::triggerable(player)) return false;
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();

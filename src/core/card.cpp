@@ -543,8 +543,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
     CardUseStruct card_use = use;
     ServerPlayer *player = card_use.from;
 
-    if (card_use.from && card_use.to.length() > 1)
-        qSort(card_use.to.begin(), card_use.to.end(), ServerPlayer::CompareByActionOrder);
+    room->sortByActionOrder(card_use.to);
 
     QList<ServerPlayer *> targets = card_use.to;
     if (room->getMode() == "06_3v3" && (isKindOf("AOE") || isKindOf("GlobalEffect")))

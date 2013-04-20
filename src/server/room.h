@@ -254,6 +254,8 @@ public:
     void reconnect(ServerPlayer *player, ClientSocket *socket);
     void marshal(ServerPlayer *player);
 
+    void sortByActionOrder(QList<ServerPlayer *> &players);
+
     bool isVirtual();
     void setVirtual();
     void copyFrom(Room *rRoom);

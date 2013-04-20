@@ -292,9 +292,8 @@ void GreatYeyanCard::use(Room *room, ServerPlayer *shenzhouyu, QList<ServerPlaye
         room->broadcastSkillInvoke("yeyan", (totalvictim > 1) ? 2 : 1);
         room->doLightbox("$YeyanAnimate");
 
-        QList<ServerPlayer *>targets = map.keys();
-        if (targets.size() > 1)
-            qSort(targets.begin(), targets.end(), ServerPlayer::CompareByActionOrder);
+        QList<ServerPlayer *> targets = map.keys();
+        room->sortByActionOrder(targets);
         foreach (ServerPlayer *sp, targets)
             damage(shenzhouyu, sp, map[sp]);
     }

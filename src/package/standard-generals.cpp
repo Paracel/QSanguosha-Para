@@ -1023,11 +1023,13 @@ public:
                     room->setPlayerFlag(use.from, "-LiuliSlashSource");
                     foreach (ServerPlayer *p, players) {
                         if (p->hasFlag("LiuliTarget")) {
-                            use.to.insert(use.to.indexOf(daqiao), p);
-                            use.to.removeOne(daqiao);
-                            data = QVariant::fromValue(use);
                             p->setFlags("-LiuliTarget");
-                            return true;
+                            use.to.removeOne(daqiao);
+                            use.to.append(p);
+                            room->sortByActionOrder(use.to);
+                            data = QVariant::fromValue(use);
+                            room->getThread()->trigger(TargetConfirming, room, p, data);
+                            return false;
                         }
                     }
                 } else {

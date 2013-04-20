@@ -271,7 +271,7 @@ public:
                     }
                 }
                 use.to.append(extra);
-                qSort(use.to.begin(), use.to.end(), ServerPlayer::CompareByActionOrder);
+                room->sortByActionOrder(use.to);
 
                 LogMessage log;
                 log.type = "#QiaoshuiAdd";

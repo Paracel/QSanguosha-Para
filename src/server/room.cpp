@@ -5076,6 +5076,11 @@ void Room::networkDelayTestCommand(ServerPlayer *player, const QString &) {
     speakCommand(player, reportStr.toUtf8().toBase64());
 }
 
+void Room::sortByActionOrder(QList<ServerPlayer *> &players) {
+    if (players.length() > 1)
+        qSort(players.begin(), players.end(), ServerPlayer::CompareByActionOrder);
+}
+
 bool Room::isVirtual() {
     return _virtual;
 }

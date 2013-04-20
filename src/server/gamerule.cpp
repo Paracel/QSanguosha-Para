@@ -229,15 +229,12 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 if (card->hasPreAction())
                     card->doPreAction(room, card_use);
 
-                ServerPlayer *target;
                 QList<ServerPlayer *> targets = card_use.to;
-
                 if (card_use.from && !card_use.to.empty()) {
                     foreach (ServerPlayer *to, card_use.to) {
-                        target = to;
-                        while (thread->trigger(TargetConfirming, room, target, data)) {
+                        if (targets.contains(to)) {
+                            thread->trigger(TargetConfirming, room, to, data);
                             CardUseStruct new_use = data.value<CardUseStruct>();
-                            target = new_use.to.at(targets.indexOf(target));
                             targets = new_use.to;
                         }
                     }

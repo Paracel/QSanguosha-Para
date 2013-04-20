@@ -102,7 +102,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             ServerPlayer *extra_target = room->askForPlayerChosen(player, targets_ts, "slash_extra_targets", "@slash_extra_targets", true);
             if (extra_target) {
                 use.to.append(extra_target);
-                qSort(use.to.begin(), use.to.end(), ServerPlayer::CompareByActionOrder);
+                room->sortByActionOrder(use.to);
             } else
                 break;
             targets_ts.clear();

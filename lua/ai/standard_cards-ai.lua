@@ -2421,15 +2421,14 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			return jink or analeptic
 		end
 	else
-		local enemy_num = self:playerGetRound(self.room:getCurrent(), self.player)
-		local InAttackRange = 0
+		local CP = self.room:getCurrent()
+		local possible_attack = 0
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:inMyAttackRange(self.player) then
-				InAttackRange = InAttackRange + 1
+			if enemy:inMyAttackRange(self.player) and self:playerGetRound(CP, enemy) < self:playerGetRound(CP, self.player) then
+				possible_attack = possible_attack + 1
 			end
 		end
-		local possible_attack = math.min(enemy_num, InAttackRange)
-		if possible_attack > self:getCardsNum("Jink") and self:getCardsNum("Jink") <= 2 then
+		if possible_attack > self:getCardsNum("Jink") and self:getCardsNum("Jink") <= 2 and sgs.getDefenseSlash(self.player) <= 2 then
 			if jink or analeptic or exnihilo then return jink or analeptic or exnihilo end
 		else
 			if exnihilo then return exnihilo end
@@ -2523,12 +2522,22 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	if analeptic then
 		local slashs = self:getCards("Slash")
+		local hit_num = 0
 		for _, enemy in ipairs(self.enemies) do
 			for _, slash in ipairs(slashs) do
-				if (self:getCardsNum("Jink", enemy) < 1 or enemy:isKongcheng()) and self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash) then
-					return analeptic
+				if self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash) and self:slashIsAvailable() then
+					hit_num = hit_num + 1
+					if self:getCardsNum("Jink", enemy) < 1
+						or enemy:isKongcheng() 
+						or self.player:hasSkills("tieji|liegong|wushuang|dahe|qianxi")
+						or self.player:hasSkill("roulin") and enemy:isFemale()
+						or (self.player:hasWeapon("axe") or self:getCardsNum("Axe") > 0) and self.player:getCards("he"):length() > 4 then
+						return analeptic
+					end
 				end
 			end
+			if (self.player:hasWeapon("blade") or self:getCardsNum("Blade") > 0) and getCardsNum("Jink", enemy) <= hit_num then return analeptic end
+			if self:hasCrossbowEffect(self.player) and hit_num >= 2 then return analeptic end
 		end
 	end
 

@@ -754,10 +754,11 @@ end
 
 sgs.ai_card_intention.ZhibaCard = 0
 sgs.ai_choicemade_filter.pindian.zhiba_pindian = function(self, from, promptlist)
-	local current = self.room:getCurrent()
-	local number = sgs.Sanguosha:getCard(tonumber(promptlist[3])):getNumber()
-	if number < 6 then sgs.updateIntention(from, current, -60)
-	elseif number > 8 then sgs.updateIntention(from, current, 60) end
+	local number = sgs.Sanguosha:getCard(tonumber(promptlist[4])):getNumber()
+	local lord = findPlayerByObjectName(self.room, promptlist[5])
+	if not lord then return end
+	if number < 6 then sgs.updateIntention(from, lord, -60)
+	elseif number > 8 then sgs.updateIntention(from, lord, 60) end
 end
 
 local zhijian_skill = {}

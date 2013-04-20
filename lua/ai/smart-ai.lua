@@ -4471,7 +4471,7 @@ function SmartAI:evaluateWeapon(card)
 	end
 
 	if card:isKindOf("Crossbow") and not self.player:hasSkill("paoxiao") and deltaSelfThreat ~= 0 then
-		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat * 2 + 10 end
+		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Peach") + self:getCardsNum("Analeptic") + self.player:getHp() end
 		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 2 - 2
 	end
 	local callback = sgs.ai_weapon_value[card:objectName()]
@@ -4486,6 +4486,9 @@ function SmartAI:evaluateWeapon(card)
 		end
 	end
 
+	if self.player:hasSkill("jijiu") and card:isRed() then deltaSelfThreat = deltaSelfThreat + 0.5 end
+	if self.player:hasSkills("qixi|guidao") and card:isBlack() then deltaSelfThreat = deltaSelfThreat + 0.5 end
+
 	return deltaSelfThreat
 end
 
@@ -4494,18 +4497,22 @@ sgs.ai_armor_value = {}
 function SmartAI:evaluateArmor(card, player)
 	player = player or self.player
 	local ecard = card or player:getArmor()
+	if not ecard then return 0 end
+
+	local value = 0
+	if self.player:hasSkill("jijiu") and ecard:isRed() then value = value + 0.5 end
+	if self.player:hasSkills("qixi|guidao") and ecard:isBlack() then value = value + 0.5 end
 	for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 		local callback = sgs.ai_armor_value[askill:objectName()]
 		if type(callback) == "function" then
-			return (callback(ecard, player, self) or 0)
+			return value + (callback(ecard, player, self) or 0)
 		end
 	end
-	if not ecard then return 0 end
 	local callback = sgs.ai_armor_value[ecard:objectName()]
 	if type(callback) == "function" then
-		return (callback(player, self) or 0)
+		return value + (callback(player, self) or 0)
 	end
-	return 0.5
+	return value + 0.5
 end
 
 function SmartAI:getSameEquip(card, player)

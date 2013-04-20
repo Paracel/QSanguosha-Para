@@ -2522,8 +2522,8 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	if analeptic then
 		local slashs = self:getCards("Slash")
-		local hit_num = 0
 		for _, enemy in ipairs(self.enemies) do
+			local hit_num = 0
 			for _, slash in ipairs(slashs) do
 				if self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash) and self:slashIsAvailable() then
 					hit_num = hit_num + 1

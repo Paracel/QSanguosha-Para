@@ -689,12 +689,110 @@ public:
     }
 };
 
+class Zhuikong: public TriggerSkill {
+public:
+    Zhuikong(): TriggerSkill("zhuikong") {
+        events << EventPhaseStart;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (player->getPhase() != Player::RoundStart || player->isKongcheng())
+            return false;
+
+        bool skip = false;
+        foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
+            if (fuhuanghou->isWounded() && fuhuanghou->pindian(player, objectName(), NULL)) {
+                if (!skip) {
+                    player->skip(Player::Play);
+                    skip = true;
+                } else {
+                    room->setFixedDistance(player, fuhuanghou, 1);
+                    QVariantList zhuikonglist = player->tag[objectName()].toList();
+                    zhuikonglist.append(QVariant::fromValue((PlayerStar)fuhuanghou));
+                    player->tag[objectName()] = QVariant::fromValue(zhuikonglist);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class ZhuikongClear: public TriggerSkill {
+public:
+    ZhuikongClear(): TriggerSkill("#zhuikong-clear") {
+        events << EventPhaseChanging;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to != Player::NotActive)
+            return false;
+
+        QVariantList zhuikonglist = player->tag["zhuikong"].toList();
+        if (zhuikonglist.isEmpty()) return false;
+        foreach (QVariant p, zhuikonglist) {
+            PlayerStar fuhuanghou = p.value<PlayerStar>();
+            room->setFixedDistance(player, fuhuanghou, -1);
+        }
+        player->tag.remove("zhuikong");
+        return false;
+    }
+};
+
+class Qiuyuan: public TriggerSkill {
+public:
+    Qiuyuan(): TriggerSkill("qiuyuan") {
+        events << TargetConfirming;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash")) {
+            QList<ServerPlayer *> targets;
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (!p->isKongcheng() && p != use.from)
+                    targets << p;
+            }
+            if (targets.isEmpty()) return false;
+            ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "qiuyuan-invoke", true, true);
+            if (target) {
+                const Card *card = room->askForExchange(target, objectName(), 1, false, "qiuyuan-give");
+                player->obtainCard(card);
+                room->showCard(player, card->getEffectiveId());
+                if (!card->isKindOf("Jink")) {
+                    if (use.from->canSlash(target, use.card, false)) {
+                        use.to.append(target);
+                        room->sortByActionOrder(use.to);
+                        data = QVariant::fromValue(use);
+                        room->getThread()->trigger(TargetConfirming, room, target, data);
+                    }
+                }
+            }
+        }
+        return false;
+    }
+};
+
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
     General *caochong = new General(this, "caochong", "wei", 3);
     caochong->addSkill(new Chengxiang);
     caochong->addSkill(new Bingxin);
+
+    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3);
+    fuhuanghou->addSkill(new Zhuikong);
+    fuhuanghou->addSkill(new ZhuikongClear);
+    fuhuanghou->addSkill(new Qiuyuan);
+    related_skills.insertMulti("zhuikong", "#zhuikong-clear");
 
     General *guohuai = new General(this, "guohuai", "wei");
     guohuai->addSkill(new Jingce);

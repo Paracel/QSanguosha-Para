@@ -1611,7 +1611,7 @@ function SmartAI:getWoundedFriend(maleOnly)
 	local list1 = {}  -- need help
 	local list2 = {}  -- do not need help
 	local addToList = function(p, index)
-		if ((not maleOnly) or (maleOnly and p:isMale())) and p:isWounded() then
+		if (not maleOnly or p:isMale()) and p:isWounded() then
 			table.insert(index == 1 and list1 or list2, p)
 		end
 	end
@@ -1654,6 +1654,8 @@ end
 
 sgs.ai_skill_use_func.JieyinCard = function(card, use, self)
 	local arr1, arr2 = self:getWoundedFriend(true)
+	table.removeOne(arr1, self.player)
+	table.removeOne(arr2, self.player)
 	local target = nil
 
 	repeat
@@ -1981,7 +1983,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	end
 
 	local shenguanyu = self.room:findPlayerBySkillName("wuhun")
-	if shenguanyu and shenguanyu:isMale() then
+	if shenguanyu and shenguanyu:isMale() and shenguanyu:objectName() ~= self.player:objectName() then
 		if self.role == "rebel" and lord and lord:isMale() and not lord:hasSkill("jueqing") and self:hasTrickEffective(duel, shenguanyu, lord) then
 			use.card = card
 			if use.to then

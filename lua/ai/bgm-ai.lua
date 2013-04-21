@@ -799,13 +799,15 @@ sgs.ai_use_priority.YinlingCard = sgs.ai_use_priority.Dismantlement + 1
 sgs.ai_card_intention.YinlingCard = sgs.ai_card_intention.Dismantlement
 
 sgs.ai_skill_invoke.junwei = function(self, data)
-	return #self.enemies > 0
+	for _, enemy in ipairs(self.enemies) do
+		if not (enemy:hasEquip() and self:doNotDiscard(enemy, "e")) then return true end
+	end
 end
 
 sgs.ai_skill_playerchosen.junwei = function(self, targets)
 	local tos = {}
 	for _, target in sgs.qlist(targets) do
-		if self:isEnemy(target) and not (target:getArmor() and target:getEquips():length() == 1 and self:needToThrowArmor(target))then
+		if self:isEnemy(target) and not (target:hasEquip() and self:doNotDiscard(target, "e")) then
 			table.insert(tos, target)
 		end
 	end
@@ -821,7 +823,7 @@ sgs.ai_playerchosen_intention.junwei = 80
 sgs.ai_skill_playerchosen.junweigive = function(self, targets)
 	local tos = {}
 	for _, target in sgs.qlist(targets) do
-		if self:isFriend(target) and not target:hasSkill("manjuan") and not (target:hasSkill("kongcheng") and target:isKongcheng()) then
+		if self:isFriend(target) and not target:hasSkill("manjuan") and not self:needKongcheng(target, true) then
 			table.insert(tos, target)
 		end
 	end

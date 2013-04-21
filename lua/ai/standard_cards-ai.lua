@@ -1788,7 +1788,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 				end
 
 				if not cardchosen and enemy:getDefensiveHorse() then cardchosen = enemy:getDefensiveHorse():getEffectiveId() end
-				if not cardchosen and enemy:getArmor() and not enemy:getArmor():isKindOf("SilverLion") then
+				if not cardchosen and enemy:getArmor() and not self:needToThrowArmor(enemy) then
 					cardchosen = enemy:getArmor():getEffectiveId()
 				end
 				if not cardchosen and not enemy:isKongcheng() and enemy:getHandcardNum() <= 3 then

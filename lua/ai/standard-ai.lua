@@ -1232,7 +1232,7 @@ qixi_skill.getTurnUseCard = function(self, inclusive)
 			local shouldUse = true
 			if card:isKindOf("Armor") then
 				if not self.player:getArmor() then shouldUse = false
-				elseif self:hasEquip(card) and not (card:isKindOf("SilverLion") and self.player:isWounded()) then shouldUse = false
+				elseif self:hasEquip(card) and not self:needToThrowArmor() then shouldUse = false
 				end
 			end
 

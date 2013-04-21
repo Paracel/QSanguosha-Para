@@ -4673,6 +4673,13 @@ function SmartAI:needToThrowArmor(player)
 			return true
 		end
 	end
+	local FS = sgs.Sanguosha:cloneCard("fire_slash")
+	if player:objectName() ~= self.player:objectName() and self:isEnemy(player) and self.player:getPhase() == sgs.Player_Play and self:slashIsAvailable()
+		and not self:slashProhibit(FS, player, self.player) and player:hasArmorEffect("vine") and not IgnoreArmor(self.player, player)
+		and (self:getCard("FireSlash") or (self:getCard("Slash") and (self:hasWeapon("fan") or self.player:hasSkill("lihuo") or self:getCardsNum("Fan") >= 1)))
+		and (player:isKongcheng() or sgs.card_lack[player:objectName()]["Jink"] == 1 or getCardsNum("Jink", player) < 1) then
+		return true
+	end
 	return false
 end
 

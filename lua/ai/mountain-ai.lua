@@ -434,6 +434,7 @@ function sgs.ai_slash_prohibit.xiangle(self, from, to)
 		anal_num = getCardsNum("Analpetic", from)
 		jink_num = getCardsNum("Jink", from)
 	end
+	if self:needKongcheng() and self.player:getHandcardNum() == 2 then return slash_num + anal_num + jink_num < 2 end
 	return slash_num + anal_num + math.max(jink_num - 1, 0) < 2
 end
 

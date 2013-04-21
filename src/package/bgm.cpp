@@ -716,7 +716,8 @@ public:
 
         if (event == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.from == player && player->getMark("@wu") > 0 && player->getHandcardNum() <= 2) {
+            if (move.from == player && TriggerSkill::triggerable(player)
+                && player->getMark("@wu") > 0 && player->getHandcardNum() <= 2) {
                 room->broadcastSkillInvoke(objectName());
 
                 LogMessage log;
@@ -724,6 +725,7 @@ public:
                 log.from = player;
                 log.arg = "mouduan";
                 room->sendLog(log);
+                room->notifySkillInvoked(player, objectName());
 
                 player->loseMark("@wu");
                 player->gainMark("@wen");

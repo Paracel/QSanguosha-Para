@@ -1248,6 +1248,7 @@ public:
             Config.AIDelay = ai_delay;
 
             ServerPlayer *target = room->askForPlayerChosen(ganning, room->getAllPlayers(), objectName());
+            room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(ganning->objectName()).arg(target->objectName()));
             QVariant ai_data = QVariant::fromValue((PlayerStar)ganning);
             const Card *card = room->askForCard(target, "Jink", "@junwei-show", ai_data, Card::MethodNone);
             if (card) {

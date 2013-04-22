@@ -25,43 +25,37 @@ public:
     }
 };
 
-class Bingxin: public TriggerSkill {
+RenxinCard::RenxinCard() {
+    target_fixed = true;
+}
+
+void RenxinCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> &) const{
+    ServerPlayer *who = room->getCurrentDyingPlayer();
+    if (!who) return;
+
+    player->turnOver();
+    room->obtainCard(who, player->wholeHandCards(), false);
+
+    RecoverStruct recover;
+    recover.who = player;
+    room->recover(who, recover);
+}
+
+class Renxin: public ZeroCardViewAsSkill {
 public:
-    Bingxin(): TriggerSkill("bingxin") {
-        events << Dying;
+    Renxin(): ZeroCardViewAsSkill("renxin") {
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        DyingStruct dying = data.value<DyingStruct>();
-        if (player != dying.who || player->isNude()) return false;
-        if (room->askForSkillInvoke(player, objectName(), data)) {
-            QList<int> ids;
-            foreach (const Card *card, player->getCards("he"))
-                ids << card->getEffectiveId();
-
-            while (room->askForYiji(player, ids, objectName(), false, false, false)) {}
-            if (!ids.isEmpty()) {
-                while (!ids.isEmpty()) {
-                    int len = ids.length();
-                    qShuffle(ids);
-                    int give = qrand() % len + 1;
-                    len -= give;
-                    QList<int> to_give = ids.mid(0, give);
-                    ServerPlayer *receiver = room->getOtherPlayers(player).at(qrand() % (player->aliveCount() - 1));
-                    DummyCard *dummy = new DummyCard;
-                    foreach (int id, to_give) {
-                        dummy->addSubcard(id);
-                        ids.removeOne(id);
-                    }
-                    room->obtainCard(receiver, dummy, false);
-                    delete dummy;
-                    if (len == 0)
-                        break;
-                }
-            }
-            player->turnOver();
-        }
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        return pattern == "peach" && !player->isKongcheng();
+    }
+
+    virtual const Card *viewAs() const{
+        return new RenxinCard;
     }
 };
 
@@ -811,7 +805,7 @@ YJCM2013Package::YJCM2013Package()
 {
     General *caochong = new General(this, "caochong", "wei", 3);
     caochong->addSkill(new Chengxiang);
-    caochong->addSkill(new Bingxin);
+    caochong->addSkill(new Renxin);
 
     General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3);
     fuhuanghou->addSkill(new Zhuikong);
@@ -847,6 +841,7 @@ YJCM2013Package::YJCM2013Package()
     General *zhuran = new General(this, "zhuran", "wu");
     zhuran->addSkill(new Danshou);
 
+    addMetaObject<RenxinCard>();
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();

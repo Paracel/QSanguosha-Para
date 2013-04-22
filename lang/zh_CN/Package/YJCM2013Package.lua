@@ -8,7 +8,7 @@ return {
 	["designer:caochong"] = "红魔鬼",
 	["illustrator:caochong"] = "Amo",
 	["chengxiang"] = "称象",
-	["bingxin"] = "冰心",
+	["renxin"] = "仁心",
 
 	["#guohuai"] = "垂问秦雍",
 	["guohuai"] = "郭淮",

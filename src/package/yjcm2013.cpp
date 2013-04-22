@@ -195,7 +195,7 @@ public:
         if (use.card->isKindOf("Slash")) {
             ServerPlayer *guanping = room->findPlayerBySkillName(objectName());
             if (guanping && !guanping->isKongcheng()
-                && room->askForCard(guanping, ".black", "@longyin", data, objectName())) {
+                && room->askForCard(guanping, "..", "@longyin", data, objectName())) {
                 if (use.m_addHistory)
                     room->addPlayerHistory(player, use.card->getClassName(), -1);
                 if (use.card->isRed())
@@ -255,7 +255,7 @@ void QiaoshuiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     if (success)
         source->setFlags("QiaoshuiSuccess");
     else
-        room->setPlayerCardLimitation(source, "use", "TrickCard+^DelayedTrick", true);
+        room->setPlayerCardLimitation(source, "use", "TrickCard", true);
 }
 
 class QiaoshuiViewAsSkill: public ZeroCardViewAsSkill {

@@ -392,7 +392,8 @@ sgs.ai_skill_use["@@jixi!"] = function(self, prompt)
 	return "@JixiSnatchCard=.->" .. table.concat(target, "+")
 end
 
-sgs.ai_card_intention.JixiCard = sgs.ai_card_intention.Snatch
+sgs.ai_card_intention.JixiCard = 0
+sgs.ai_card_intention.JixiSnatchCard = 0 -- update later
 
 sgs.dynamic_value.control_card.JixiCard = true
 

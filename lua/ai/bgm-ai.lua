@@ -796,7 +796,7 @@ end
 
 sgs.ai_use_value.YinlingCard = sgs.ai_use_value.Dismantlement + 1
 sgs.ai_use_priority.YinlingCard = sgs.ai_use_priority.Dismantlement + 1
-sgs.ai_card_intention.YinlingCard = sgs.ai_card_intention.Dismantlement
+sgs.ai_card_intention.YinlingCard = 0 -- update later
 
 sgs.ai_skill_invoke.junwei = function(self, data)
 	for _, enemy in ipairs(self.enemies) do

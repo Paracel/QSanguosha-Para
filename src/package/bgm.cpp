@@ -1219,8 +1219,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *ganning, QVariant &) const{
-        if (ganning->getPhase() == Player::Finish && ganning->getPile("brocade").length() >= 3
-            && ganning->askForSkillInvoke(objectName())) {
+        if (ganning->getPhase() == Player::Finish && ganning->getPile("brocade").length() >= 3) {
+            ServerPlayer *target = room->askForPlayerChosen(ganning, room->getAllPlayers(), objectName(), "junwei-invoke", true, true);
+            if (!target) return false;
             QList<int> brocade = ganning->getPile("brocade");
             room->broadcastSkillInvoke(objectName());
 
@@ -1249,8 +1250,6 @@ public:
 
             Config.AIDelay = ai_delay;
 
-            ServerPlayer *target = room->askForPlayerChosen(ganning, room->getAllPlayers(), objectName());
-            room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(ganning->objectName()).arg(target->objectName()));
             QVariant ai_data = QVariant::fromValue((PlayerStar)ganning);
             const Card *card = room->askForCard(target, "Jink", "@junwei-show", ai_data, Card::MethodNone);
             if (card) {

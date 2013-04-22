@@ -213,24 +213,31 @@ public:
         if (!jianyong->hasFlag("QiaoshuiSuccess")) return false;
 
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isNDTrick() && !use.card->isKindOf("Nullification")) {
+        if (use.card->isNDTrick() || use.card->isKindOf("BasicCard")) {
             jianyong->setFlags("-QiaoshuiSuccess");
+            if (Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY)
+                return false;
 
             QList<ServerPlayer *> available_targets;
             if (!use.card->isKindOf("AOE") && !use.card->isKindOf("GlobalEffect")) {
+                room->setPlayerFlag(jianyong, "QiaoshuiExtraTarget");
                 foreach (ServerPlayer *p, room->getAlivePlayers()) {
                     if (use.to.contains(p) || room->isProhibited(jianyong, p, use.card)) continue;
                     if (use.card->targetFixed()) {
-                        available_targets << p;
+                        if (!use.card->isKindOf("Peach") || p->isWounded())
+                            available_targets << p;
                     } else {
                         if (use.card->targetFilter(QList<const Player *>(), p, jianyong))
                             available_targets << p;
                     }
                 }
+                room->setPlayerFlag(jianyong, "-QiaoshuiExtraTarget");
             }
             QStringList choices;
-            choices << "remove" << "cancel";
+            choices << "cancel";
+            if (use.to.length() > 1) choices.prepend("remove");
             if (!available_targets.isEmpty()) choices.prepend("add");
+            if (choices.length() == 1) return false;
 
             QString choice = room->askForChoice(jianyong, objectName(), choices.join("+"), data);
             if (choice == "cancel")
@@ -309,6 +316,21 @@ public:
         data = QVariant::fromValue(use);
 
         return false;
+    }
+};
+
+class QiaoshuiTargetMod: public TargetModSkill {
+public:
+    QiaoshuiTargetMod(): TargetModSkill("#qiaoshui-target") {
+        frequency = NotFrequent;
+        pattern = "Slash,TrickCard+^DelayedTrick";
+    }
+
+    virtual int getDistanceLimit(const Player *from, const Card *) const{
+        if (from->hasFlag("QiaoshuiExtraTarget"))
+            return 1000;
+        else
+            return 0;
     }
 };
 
@@ -805,7 +827,9 @@ YJCM2013Package::YJCM2013Package()
 
     General *jianyong = new General(this, "jianyong", "shu", 3);
     jianyong->addSkill(new Qiaoshui);
+    jianyong->addSkill(new QiaoshuiTargetMod);
     jianyong->addSkill(new Zongshih);
+    related_skills.insertMulti("qiaoshui", "#qiaoshui-target");
 
     General *liufeng = new General(this, "liufeng", "shu");
     liufeng->addSkill(new Xiansi);

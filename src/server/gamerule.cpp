@@ -178,13 +178,15 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             break;
         }
     case EventPhaseEnd: {
-            if (player->getMark("drank") > 0) {
-                LogMessage log;
-                log.type = "#UnsetDrankEndOfTurn";
-                log.from = player;
-                room->sendLog(log);
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (p->getMark("drank") > 0) {
+                    LogMessage log;
+                    log.type = "#UnsetDrankEndOfTurn";
+                    log.from = p;
+                    room->sendLog(log);
 
-                room->setPlayerMark(player, "drank", 0);
+                    room->setPlayerMark(p, "drank", 0);
+                }
             }
             if (player->getPhase() == Player::Play)
                 room->addPlayerHistory(player, ".");

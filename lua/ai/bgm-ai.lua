@@ -889,13 +889,14 @@ end
 
 sgs.ai_skill_choice.xuehen = function(self, choices)
 	if self.fenyong_choice then return self.fenyong_choice end
+	local n = self.player:getLostHp()
 	local current = self.room:getCurrent()
 	if self:isEnemy(current) then
-		if self.player:getLostHp() >= 3 and current:getCardCount(true) >= 3 and not self:needKongcheng(current)
-			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < self.player:getLostHp()) then
+		if n >= 3 and current:getCardCount(true) >= 3 and not (self:needKongcheng(current) and player:getCards("e"):length() < 3)
+			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < n) then
 			return "discard"
 		end
-		if self:hasSkills("jijiu|tuntian+zaoxian|beige", current) and self.player:getLostHp() >= 2 and current:getCardCount(true) >= 2 then return "discard" end
+		if self:hasSkills("jijiu|tuntian+zaoxian|beige", current) and n >= 2 and current:getCardCount(true) >= 2 then return "discard" end
 	end
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
@@ -908,8 +909,21 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 			return "slash"
 		end
 	end
+	if self:isEnemy(current) then
+		for _, enemy in ipairs(self.enemies) do
+			local slash = sgs.Sanguosha:cloneCard("slash")
+			local eff = self:slashIsEffective(slash, enemy)
+
+			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and self:hasHeavySlashDamage(self.player, slash, enemy) then
+				self.xuehentarget = enemy
+				return "slash"
+			end
+		end
+		local armor = current:getArmor()
+		if armor and self:evaluateArmor(armor, current) >= 3 and not self:doNotDiscard(current, "e") then return "discard" end
+	end
 	if self:isFriend(current) then
-		if self.player:getLostHp() == 1 and self:needToThrowArmor(current) then return "discard" end
+		if n == 1 and self:needToThrowArmor(current) then return "discard" end
 		for _, enemy in ipairs(self.enemies) do
 			local slash = sgs.Sanguosha:cloneCard("slash")
 			local eff = self:slashIsEffective(slash, enemy)
@@ -924,7 +938,13 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 end
 
 sgs.ai_skill_playerchosen.xuehen = function(self, targets)
-	return self.xuehentarget or targets[1]
+	local to = self.xuehentarget
+	if to then 
+		self.xuehentarget = nil
+		return to
+	end
+	to = sgs.ai_skill_playerchosen.zero_card_as_slash
+	return to or targets[1]
 end
 
 --AI for DIY generals

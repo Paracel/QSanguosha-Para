@@ -475,48 +475,6 @@ function SmartAI:getDynamicUsePriority(card)
 				end
 			end
 			value = value + dynamic_value
-		elseif sgs.dynamic_value.damage_card[class_name] then
-			local others
-			if dummy_use.to then others = dummy_use.to else others = self.room:getOtherPlayers(self.player) end
-			dummy_use.probably_hit = {}
-
-			for _, enemy in sgs.qlist(others) do
-				if self:isEnemy(enemy) and (enemy:getHp() <= 2 or enemy:isKongcheng())
-					and getCardsNum("Analeptic", enemy) == 0 and getCardsNum("Peach", enemy) == 0 then
-					table.insert(dummy_use.probably_hit, enemy)
-					break
-				end
-			end
-			if #dummy_use.probably_hit > 0 then
-				self:sort(dummy_use.probably_hit, "defense")
-				local probably_hit
-				for _, hit in ipairs(dummy_use.probably_hit) do
-					if not self:hasSkills(sgs.masochism_skill, hit) then
-						probably_hit = hit
-						break
-					end
-				end
-				if not probably_hit then
-					probably_hit = dummy_use.probably_hit[1]
-					value = value + 12.5
-				else
-					value = value + 14
-				end
-				value = value - (probably_hit:getHp() - 1) / 2.0
-
-				if use_card:isKindOf("Slash") and getCardsNum("Jink", probably_hit) == 0 then
-					value = value + 5
-				elseif use_card:isKindOf("FireAttack") then
-					value = value + 0.5 + self.player:getHandcardNum()
-				elseif use_card:isKindOf("Duel") then
-					value = value + 2 + (self.player:getHandcardNum() - getCardsNum("Slash", probably_hit))
-				end
-			end
-		elseif sgs.dynamic_value.control_card[class_name] then
-			if use_card:getTypeId() == sgs.Card_TypeTrick then dynamic_value = 7 - bad_null / good_null else dynamic_value = 6.65 end
-			value = value + dynamic_value
-		elseif sgs.dynamic_value.lucky_chance[class_name] then
-			value = value + (#self.enemies - #self.friends)
 		end
 	end
 

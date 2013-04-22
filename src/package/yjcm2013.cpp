@@ -788,8 +788,13 @@ public:
         if (room->askForSkillInvoke(player, objectName(), data)) {
             player->drawCards(1);
             ServerPlayer *current = room->getCurrent();
-            if (current && current->isAlive() && current->getPhase() != Player::NotActive)
+            if (current && current->isAlive() && current->getPhase() != Player::NotActive) {
+                LogMessage log;
+                log.type = "#TurnBroken";
+                log.from = current;
+                room->sendLog(log);
                 throw TurnBroken;
+            }
         }
         return false;
     }

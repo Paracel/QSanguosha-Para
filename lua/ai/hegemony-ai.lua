@@ -28,7 +28,10 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 			end
 		end
 	elseif self:isEnemy(currentplayer) then
-		if not self:damageIsEffective(currentplayer) then return "." end
+		self.handCardToDec = 1
+		local eff = self:damageIsEffective(currentplayer)
+		self.handCardToDec = 0
+		if not eff then return "." end
 		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer, self.player) then return "." end
 		if self:needToThrowArmor() then return "." end
 		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end

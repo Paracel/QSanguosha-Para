@@ -188,6 +188,19 @@ function SmartAI:initialize(player)
 	self:updatePlayers()
 end
 
+function sgs.getCardNumInHand(card, player)
+	if not card:isVirtualCard() then return 1
+	elseif card:subcardsLength() == 0 then return 0
+	else
+		local num = 0
+		if player:getHandcardNum() == 0 then return 0 end
+		for _, id in sgs.qlist(card:getSubcards()) do
+			if player:handCards():contains(id) then num = num + 1 end
+		end
+		return num
+	end
+end
+
 function sgs.getValue(player)
 	if not player then global_room:writeToConsole(debug.traceback()) end
 	return player:getHp() * 2 + player:getHandcardNum()
@@ -3307,7 +3320,7 @@ function SmartAI:damageIsEffective(player, nature, source)
 
 	if player:getMark("@fenyong") > 0 then return false end
 	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
-	if self:isFriend(source, player) and player:hasSkill("mingshi") then return false end
+	if player:hasSkill("mingshi") and source:getHandcardNum() - (self.handCardToDec or 0) <= player:getHandcardNum() then return false end
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate_to") == 0 then
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
@@ -4004,11 +4017,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 		return false
 	end
 
-	if to:hasSkill("mingshi") and self:isFriend(to) then
-		return false
-	end
-
-	if not self:damageIsEffective(to, sgs.DamageStruct_Normal, source) then
+	if not self:hasTrickEffective(card, to, source) or not self:damageIsEffective(to, sgs.DamageStruct_Normal, source) then
 		return false
 	end
 
@@ -4284,10 +4293,13 @@ function SmartAI:hasTrickEffective(card, to, from)
 
 	local nature = sgs.DamageStruct_Normal
 	if card:isKindOf("FireAttack") then nature = sgs.DamageStruct_Fire end
-	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault"))
-		and not self:damageIsEffective(to, nature, from) then
-		return false
+	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+		self.handCardToDec = sgs.getCardNumInHand(card, from)
+		local eff = self:damageIsEffective(to, nature, from)
+		self.handCardToDec = 0
+		if not eff then return false end
 	end
+
 	return true
 end
 

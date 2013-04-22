@@ -1365,7 +1365,10 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 
 	for _, enemy in ipairs(self.enemies) do
-		if self:canAttack(enemy) and not self:hasSkills("qingnang|jijiu", enemy) then
+		self.handCardToDec = 2
+		local can_attack = self:canAttack(enemy)
+		self.handCardToDec = 0
+		if can_attack and not self:hasSkills("qingnang|jijiu", enemy) then
 			use.card = card
 			if use.to then use.to:append(enemy) end
 			return

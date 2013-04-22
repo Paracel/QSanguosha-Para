@@ -207,14 +207,10 @@ public:
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.from) {
-            room->notifySkillInvoked(player, objectName());
-            room->broadcastSkillInvoke(objectName());
-            QString choice;
-            if (!damage.from->isKongcheng())
-                choice = room->askForChoice(damage.from, objectName(), "yes+no", data);
-            else
-                choice = "yes";
-            if (choice == "no") {
+            if (damage.from->getHandcardNum() <= player->getHandcardNum()) {
+                room->notifySkillInvoked(player, objectName());
+                room->broadcastSkillInvoke(objectName());
+
                 LogMessage log;
                 log.type = "#Mingshi";
                 log.from = player;
@@ -225,8 +221,6 @@ public:
                 if (damage.damage < 1)
                     return true;
                 data = QVariant::fromValue(damage);
-            } else {
-                room->showAllCards(damage.from);
             }
         }
         return false;

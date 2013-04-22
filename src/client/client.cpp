@@ -1387,7 +1387,7 @@ QList<const ClientPlayer *> Client::getPlayers() const{
 }
 
 void Client::alertFocus() {
-    if (Self->getPhase() != Player::NotActive)
+    if (Self->getPhase() == Player::Play)
         QApplication::alert(QApplication::focusWidget());
 }
 

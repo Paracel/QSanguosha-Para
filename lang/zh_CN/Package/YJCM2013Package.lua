@@ -92,4 +92,5 @@ return {
 	["juece"] = "绝策",
 	["mieji"] = "灭计",
 	["fencheng"] = "焚城",
+	["@burn"] = "焚城",
 }

@@ -33,6 +33,7 @@ GameRule::GameRule(QObject *)
     skill_mark["luanwu"] = "@chaos";
     skill_mark["fuli"] = "@laoji";
     skill_mark["jiefan"] = "@rescue";
+    skill_mark["fencheng"] = "@burn";
     skill_mark["zuixiang"] = "@sleep";
     skill_mark["shichou"] = "@hate";
     skill_mark["fenxin"] = "@burnheart";

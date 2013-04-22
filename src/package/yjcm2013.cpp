@@ -995,7 +995,7 @@ public:
 
         bool skip = false;
         foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
-            if (fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
+            if (player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
                 && room->askForSkillInvoke(fuhuanghou, objectName())) {
                 if (fuhuanghou->pindian(player, objectName(), NULL)) {
                     if (!skip) {
@@ -1057,7 +1057,9 @@ public:
             if (targets.isEmpty()) return false;
             ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "qiuyuan-invoke", true, true);
             if (target) {
-                const Card *card = room->askForExchange(target, objectName(), 1, false, "qiuyuan-give");
+                const Card *card = room->askForCard(target, ".!", "@qiuyuan-give:" + player->objectName(), data, Card::MethodNone);
+                if (!card)
+                    card = target->getHandcards().at(qrand() % target->getHandcardNum() - 1);
                 player->obtainCard(card);
                 room->showCard(player, card->getEffectiveId());
                 if (!card->isKindOf("Jink")) {

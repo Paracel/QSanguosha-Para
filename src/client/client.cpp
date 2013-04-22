@@ -973,10 +973,8 @@ int Client::alivePlayerCount() const{
 void Client::onPlayerResponseCard(const Card *card) {
     if (card)
         replyToServer(S_COMMAND_RESPONSE_CARD, toJsonString(card->toString()));
-        //request(QString("responseCard %1").arg(card->toString()));
     else
         replyToServer(S_COMMAND_RESPONSE_CARD, Json::Value::null);
-        //request("responseCard .");
 
     _m_roomState.setCurrentCardUsePattern(QString());
     setStatus(NotActive);
@@ -1104,8 +1102,16 @@ void Client::askForExchange(const Json::Value &exchange_str) {
     if (prompt.isEmpty())
         prompt = tr("Please give %1 cards to exchange").arg(discard_num);
     else {
-        prompt = Sanguosha->translate(prompt);
-        prompt = prompt.replace("%arg", QString::number(discard_num));
+        QStringList texts = prompt.split(":");
+        prompt = Sanguosha->translate(texts.first());
+
+        if (texts.length() >= 2)
+            prompt.replace("%src", getPlayerName(texts.at(1)));
+
+        if (texts.length() >= 3)
+            prompt.replace("%dest", getPlayerName(texts.at(2)));
+
+        prompt.replace("%arg", QString::number(discard_num));
     }
 
     prompt_doc->setHtml(prompt);

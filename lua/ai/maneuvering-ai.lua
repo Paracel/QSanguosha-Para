@@ -429,8 +429,6 @@ end
 sgs.ai_use_value.IronChain = 5.4
 sgs.ai_use_priority.IronChain = 9.1
 
-sgs.dynamic_value.benefit.IronChain = true
-
 sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local convert = { [".S"] = "spade", [".D"] = "diamond", [".H"] = "heart", [".C"] = "club" }

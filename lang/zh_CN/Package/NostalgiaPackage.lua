@@ -45,7 +45,7 @@ return {
 	["designer:nos_lingtong"] = "ShadowLee",
 	["illustrator:nos_lingtong"] = "绵Myan",
 	["nosxuanfeng"] = "旋风",
-	[":nosxuanfeng"] = "每当你失去一次装备区里的牌后，你可以选择一项：1.视为对一名其他角色使用一张【杀】。（此【杀】无距离限制且不计入每回合的使用限制）2.对距离1的一名角色造成1点伤害",
+	[":nosxuanfeng"] = "每当你失去一次装备区里的牌后，你可以选择一项：1.视为对一名其他角色使用一张【杀】。（此【杀】无距离限制且不计入出牌阶段使用次数限制）2.对距离1的一名角色造成1点伤害",
 	["nosxuanfeng:nothing"] = "不发动",
 	["nosxuanfeng:damage"] = "对距离1的其他角色造成1点伤害",
 	["nosxuanfeng:slash"] = "视为对一名其他角色使用一张【杀】",

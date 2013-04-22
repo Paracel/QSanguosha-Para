@@ -30,6 +30,9 @@ return {
 	["basic"] = "基本牌",
 	["trick"] = "锦囊牌",
 	["equip"] = "装备牌",
+	["BasicCard"] = "基本牌",
+	["TrickCard"] = "锦囊牌",
+	["EquipCard"] = "装备牌",
 	["ndtrick"] = "非延时锦囊",
 
 	["spade_char"] = "♠",

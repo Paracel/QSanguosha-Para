@@ -98,6 +98,14 @@ function setInitialTables()
 							"yinling|jilve|qingcheng|neoluoyi|diyyicong"
 	sgs.need_equip_skill = "shensu|mingce|jujian|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi|longhun"
 
+	sgs.Friend_All = 0
+	sgs.Friend_Draw = 1
+	sgs.Friend_Male = 2
+	sgs.Friend_Female = 3
+	sgs.Friend_Wounded = 4
+	sgs.Friend_MaleWounded = 5
+	sgs.Friend_FemaleWounded = 6
+
 	for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
 		table.insert(sgs.role_evaluation, aplayer:objectName())
 		table.insert(sgs.ai_role, aplayer:objectName())
@@ -4787,12 +4795,27 @@ function getBestHp(player)
 	return player:getMaxHp()
 end
 
-function SmartAI:haveFriendsToDraw(player)
+function SmartAI:findFriendsByType(prompt, player)
 	player = player or self.player
 	local friends = self:getFriendsNoself(player)
 	if #friends < 1 then return false end
-	for _, friend in ipairs(friends) do
-		if not friend:hasSkill("manjuan") and not self:needKongcheng(friend, true) then return true end
+	if prompt == sgs.Friend_Draw then
+		for _, friend in ipairs(friends) do
+			if not friend:hasSkill("manjuan") and not self:needKongcheng(friend, true) then return true end
+		end
+	elseif prompt == sgs.Friend_Male then
+		for _, friend in ipairs(friends) do
+			if friend:isMale() then return true end
+		end
+	elseif prompt == sgs.Friend_MaleWounded then
+		for _, friend in ipairs(friends) do
+			if friend:isMale() and friend:isWounded() then return true end
+		end
+	elseif prompt == sgs.Friend_All then
+		return true
+	else
+		global_room:writeToConsole(debug.traceback())
+		return
 	end
 	return false
 end
@@ -4814,8 +4837,8 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 	local n = getBestHp(to)
 	if not passive then
 		if to:getMaxHp() > 2 then
-			if self:hasSkills("miji|nosmiji", to) and self:haveFriendsToDraw(to) then n = math.min(n, to:getMaxHp() - 1) end
-			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:haveFriendsToDraw(to) then n = math.min(n, to:getMaxHp() - 1) end
+			if self:hasSkills("miji|nosmiji", to) and self:findFriendsByType(sgs.Friend_Draw, to) then n = math.min(n, to:getMaxHp() - 1) end
+			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:findFriendsByType(sgs.Friend_Draw, to) then n = math.min(n, to:getMaxHp() - 1) end
 		end
 	end
 

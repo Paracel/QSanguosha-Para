@@ -262,7 +262,7 @@ private slots:
     void notifyRoleChange(const QString &new_role);
     void onPlayerChooseSuit();
     void onPlayerChooseKingdom();
-    void clearTurnTag();
+    void alertFocus();
     void onPlayerChooseOrder();
     void onPlayerChooseRole3v3();
 

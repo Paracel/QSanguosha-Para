@@ -127,7 +127,7 @@ Client::Client(QObject *parent, const QString &filename)
     Self = new ClientPlayer(this);
     Self->setScreenName(Config.UserName);
     Self->setProperty("avatar", Config.UserAvatar);
-    connect(Self, SIGNAL(phase_changed()), this, SLOT(clearTurnTag()));
+    connect(Self, SIGNAL(phase_changed()), this, SLOT(alertFocus()));
     connect(Self, SIGNAL(role_changed(QString)), this, SLOT(notifyRoleChange(QString)));
 
     players << Self;
@@ -1386,24 +1386,8 @@ QList<const ClientPlayer *> Client::getPlayers() const{
     return players;
 }
 
-void Client::clearTurnTag() {
-    switch (Self->getPhase()) {
-    case Player::Start: {
-            QApplication::alert(QApplication::focusWidget());
-            break;
-        }
-    case Player::Play: {
-            Self->clearHistory();
-            break;
-        }
-    case Player::NotActive: {
-            Self->clearFlags();
-            Self->clearCardLimitation(true);
-            break;
-        }
-    default:
-            break;
-    }
+void Client::alertFocus() {
+    QApplication::alert(QApplication::focusWidget());
 }
 
 void Client::showCard(const Json::Value &show_str) {

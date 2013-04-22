@@ -132,6 +132,10 @@ QStringList Player::getFlagList() const{
 }
 
 void Player::setFlags(const QString &flag) {
+    if (flag == ".") {
+        clearFlags();
+        return;
+    }
     static QChar unset_symbol('-');
     if (flag.startsWith(unset_symbol)) {
         QString copy = flag;

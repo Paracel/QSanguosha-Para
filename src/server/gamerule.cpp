@@ -87,7 +87,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
             break;
         }
     case Player::Play: {
-            player->clearHistory();
+            room->addPlayerHistory(player, ".");
             while (player->isAlive()) {
                 CardUseStruct card_use;
                 room->activate(player, card_use);
@@ -196,7 +196,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
     case EventPhaseChanging: {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive) {
-                player->clearFlags();
+                room->setPlayerFlag(player, ".");
                 room->clearPlayerCardLimitation(player, true);
             }
             if (player->hasFlag("Global_SlashInPlayPhase"))
@@ -643,7 +643,7 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
         log.arg = new_kingdom;
         room->sendLog(log);
     }
-    player->clearHistory();
+    room->addPlayerHistory(player, ".");
 
     if (player->getKingdom() != player->getGeneral()->getKingdom())
         room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
@@ -689,7 +689,7 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
         log.arg = new_kingdom;
         room->sendLog(log);
     }
-    player->clearHistory();
+    room->addPlayerHistory(player, ".");
 
     if (player->getKingdom() != player->getGeneral()->getKingdom())
         room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());

@@ -1387,7 +1387,8 @@ QList<const ClientPlayer *> Client::getPlayers() const{
 }
 
 void Client::alertFocus() {
-    QApplication::alert(QApplication::focusWidget());
+    if (Self->getPhase() != Player::NotActive)
+        QApplication::alert(QApplication::focusWidget());
 }
 
 void Client::showCard(const Json::Value &show_str) {

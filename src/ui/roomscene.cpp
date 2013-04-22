@@ -2488,6 +2488,8 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             break;
         }
     }
+    if (newStatus != oldStatus && newStatus != Client::Playing && newStatus != Client::NotActive)
+        QApplication::alert(QApplication::focusWidget());
 
     if (ServerInfo.OperationTimeout == 0)
         return;

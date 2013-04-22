@@ -705,15 +705,18 @@ public:
 
         bool skip = false;
         foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
-            if (fuhuanghou->isWounded() && fuhuanghou->pindian(player, objectName(), NULL)) {
-                if (!skip) {
-                    player->skip(Player::Play);
-                    skip = true;
-                } else {
-                    room->setFixedDistance(player, fuhuanghou, 1);
-                    QVariantList zhuikonglist = player->tag[objectName()].toList();
-                    zhuikonglist.append(QVariant::fromValue((PlayerStar)fuhuanghou));
-                    player->tag[objectName()] = QVariant::fromValue(zhuikonglist);
+            if (fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
+                && room->askForSkillInvoke(fuhuanghou, objectName())) {
+                if (fuhuanghou->pindian(player, objectName(), NULL)) {
+                    if (!skip) {
+                        player->skip(Player::Play);
+                        skip = true;
+                    } else {
+                        room->setFixedDistance(player, fuhuanghou, 1);
+                        QVariantList zhuikonglist = player->tag[objectName()].toList();
+                        zhuikonglist.append(QVariant::fromValue((PlayerStar)fuhuanghou));
+                        player->tag[objectName()] = QVariant::fromValue(zhuikonglist);
+                    }
                 }
             }
         }

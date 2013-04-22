@@ -1,4 +1,5 @@
 #include "yjcm2013.h"
+#include "settings.h"
 #include "skill.h"
 #include "standard.h"
 #include "client.h"
@@ -369,27 +370,21 @@ void XiansiCard::onEffect(const CardEffectStruct &effect) const{
     effect.from->addToPile("counter", id);
 }
 
-class XiansiViewAsSkill: public OneCardViewAsSkill {
+class XiansiViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    XiansiViewAsSkill(): OneCardViewAsSkill("xiansi") {
+    XiansiViewAsSkill(): ZeroCardViewAsSkill("xiansi") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
+    virtual bool isEnabledAtPlay(const Player *) const{
         return false;
     }
 
-    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return !player->isKongcheng() && pattern == "@@xiansi";
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@xiansi";
     }
 
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        XiansiCard *card = new XiansiCard;
-        card->addSubcard(originalCard);
-        return card;
+    virtual const Card *viewAs() const{
+        return new XiansiCard;
     }
 };
 
@@ -402,7 +397,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (player->getPhase() == Player::Start)
-            room->askForUseCard(player, "@@xiansi", "@xiansi-card", -1, Card::MethodDiscard);
+            room->askForUseCard(player, "@@xiansi", "@xiansi-card");
         return false;
     }
 };
@@ -441,20 +436,32 @@ XiansiSlashCard::XiansiSlashCard() {
 
 void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     ServerPlayer *liufeng = room->findPlayerBySkillName("xiansi");
-    if (!liufeng || liufeng->getPile("counter").isEmpty()) return;
+    if (!liufeng || liufeng->getPile("counter").length() < 2) return;
 
-    int id = -1;
-    if (liufeng->getPile("counter").length() == 1) {
-        id = liufeng->getPile("counter").first();
+    DummyCard *dummy = new DummyCard;
+    if (liufeng->getPile("counter").length() == 2) {
+        dummy->addSubcard(liufeng->getPile("counter").first());
+        dummy->addSubcard(liufeng->getPile("counter").last());
     } else {
+        int ai_delay = Config.AIDelay;
+        Config.AIDelay = 0;
+
         QList<int> ids = liufeng->getPile("counter");
-        room->fillAG(ids, source);
-        id = room->askForAG(source, ids, false, "xiansi");
-        room->clearAG(source);
+        for (int i = 0; i < 2; i++) {
+            room->fillAG(ids, source);
+            int id = room->askForAG(source, ids, false, "xiansi");
+            dummy->addSubcard(id);
+            ids.removeOne(id);
+            room->clearAG(source);
+        }
+
+        Config.AIDelay = ai_delay;
+
     }
 
     CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "xiansi", QString());
-    room->throwCard(Sanguosha->getCard(id), reason, NULL);
+    room->throwCard(dummy, reason, NULL);
+    delete dummy;
 
     Slash *slash = new Slash(Card::SuitToBeDecided, -1);
     slash->setSkillName("XIANSI");
@@ -484,7 +491,7 @@ private:
     static bool canSlashLiufeng(const Player *player) {
         const Player *liufeng = NULL;
         foreach (const Player *p, player->getSiblings()) {
-            if (p->isAlive() && p->hasSkill("xiansi") && !p->getPile("counter").isEmpty()) {
+            if (p->isAlive() && p->hasSkill("xiansi") && p->getPile("counter").length() > 1) {
                 liufeng = p;
                 break;
             }

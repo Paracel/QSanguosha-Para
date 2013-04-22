@@ -214,5 +214,13 @@ sgs.ai_skill_use["@@zhenwei"] = function(self, prompt)
 	end
 end
 
+sgs.ai_card_intention.ZhenweiCard = function(self, card, from, tos)
+	if #(self:getFriendsNoself(from)) > 0 then
+		for _, to in ipairs(tos) do
+			sgs.updateIntention(from, to, -50)
+		end
+	end
+end
+
 sgs.weapon_range.VSCrossbow = sgs.weapon_range.Crossbow
 sgs.ai_use_priority.VSCrossbow = sgs.ai_use_priority.Crossbow

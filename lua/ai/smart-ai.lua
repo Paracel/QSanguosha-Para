@@ -1326,7 +1326,7 @@ function getTrickIntention(trick_class, target)
 	return 0
 end
 
-sgs.ai_choicemade_filter.Nullification.general = function(player, promptlist)
+sgs.ai_choicemade_filter.Nullification.general = function(self, player, promptlist)
 	local trick_class = promptlist[2]
 	local target_objectName = promptlist[3]
 	if trick_class == "Nullification" then

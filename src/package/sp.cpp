@@ -1173,6 +1173,14 @@ SPPackage::SPPackage()
     tw_machao->addSkill("mashu");
     tw_machao->addSkill("tieji");
 
+    /* General *tw_zhugeliang = new General(this, "tw_zhugeliang", "shu", 3, true, true);
+    tw_zhugeliang->addSkill("guanxing");
+    tw_zhugeliang->addSkill("kongcheng");
+
+    General *tw_huangyueying = new General(this, "tw_huangyueying", "shu", 3, false, true);
+    tw_huangyueying->addSkill("jizhi");
+    tw_huangyueying->addSkill("qicai"); */
+
     General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true);
     tw_zhangliao->addSkill("tuxi");
 

@@ -3103,17 +3103,11 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
         table->setItem(i, 8, item);
 
         item = new QTableWidgetItem;
-        QString handcards;
-        foreach (QString flag, player->getFlagList()) {
-            if (flag.startsWith("Global_LastHandCards:")) {
-                handcards = QString::fromUtf8(QByteArray::fromBase64(flag.mid(21).toAscii()));
-                handcards.replace("<img src='image/system/log/spade.png' height = 12/>", tr("Spade"));
-                handcards.replace("<img src='image/system/log/heart.png' height = 12/>", tr("Heart"));
-                handcards.replace("<img src='image/system/log/club.png' height = 12/>", tr("Club"));
-                handcards.replace("<img src='image/system/log/diamond.png' height = 12/>", tr("Diamond"));
-                break;
-            }
-        }
+        QString handcards = QString::fromUtf8(QByteArray::fromBase64(player->property("last_handcards").toString().toAscii()));
+        handcards.replace("<img src='image/system/log/spade.png' height = 12/>", tr("Spade"));
+        handcards.replace("<img src='image/system/log/heart.png' height = 12/>", tr("Heart"));
+        handcards.replace("<img src='image/system/log/club.png' height = 12/>", tr("Club"));
+        handcards.replace("<img src='image/system/log/diamond.png' height = 12/>", tr("Diamond"));
         item->setText(handcards);
         table->setItem(i, 9, item);
     }

@@ -210,22 +210,9 @@ ExtraCollateralCard::ExtraCollateralCard() {
 }
 
 bool ExtraCollateralCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    const Card *coll = NULL;
-    foreach (QString flag, Self->getFlagList()) {
-        if (flag.startsWith("ExtraCollateral:")) {
-            flag = flag.mid(16);
-            coll = Card::Parse(flag);
-            break;
-        }
-    }
-    QStringList tos;
-    foreach (QString flag, Self->getFlagList()) {
-        if (flag.startsWith("ExtraCollateralCurrentTargets:")) {
-            flag = flag.mid(30);
-            tos = flag.split("+");
-            break;
-        }
-    }
+    const Card *coll = Card::Parse(Self->property("extra_collateral").toString());
+    if (!coll) return false;
+    QStringList tos = Self->property("extra_collateral_current_targets").toString().split("+");
 
     if (targets.isEmpty())
         return !tos.contains(to_select->objectName())
@@ -325,16 +312,14 @@ public:
                 if (!use.card->isKindOf("Collateral"))
                     extra = room->askForPlayerChosen(jianyong, available_targets, objectName(), "@qiaoshui-add:::" + use.card->objectName());
                 else {
-                    QString flag = "ExtraCollateral:" + use.card->toString();
                     QStringList tos;
                     foreach (ServerPlayer *t, use.to)
                         tos.append(t->objectName());
-                    QString flag2 = "ExtraCollateralCurrentTargets:" + tos.join("+");
-                    room->setPlayerFlag(jianyong, flag);
-                    room->setPlayerFlag(jianyong, flag2);
+                    room->setPlayerProperty(jianyong, "extra_collateral", use.card->toString());
+                    room->setPlayerProperty(jianyong, "extra_collateral_current_targets", tos.join("+"));
                     room->askForUseCard(jianyong, "@@qiaoshui!", "@qiaoshui-add:::collateral");
-                    room->setPlayerFlag(jianyong, "-" + flag);
-                    room->setPlayerFlag(jianyong, "-" + flag2);
+                    room->setPlayerProperty(jianyong, "extra_collateral", QString());
+                    room->setPlayerProperty(jianyong, "extra_collateral_current_targets", QString("+"));
                     foreach (ServerPlayer *p, room->getOtherPlayers(jianyong)) {
                         if (p->hasFlag("ExtraCollateralTarget")) {
                             p->setFlags("-ExtraCollateralTarget");
@@ -891,16 +876,14 @@ public:
                 }
                 if (targets.isEmpty()) return false;
 
-                QString flag = "ExtraCollateral:" + use.card->toString();
                 QStringList tos;
                 foreach (ServerPlayer *t, use.to)
                     tos.append(t->objectName());
-                QString flag2 = "ExtraCollateralCurrentTargets:" + tos.join("+");
-                room->setPlayerFlag(player, flag);
-                room->setPlayerFlag(player, flag2);
+                room->setPlayerProperty(player, "extra_collateral", use.card->toString());
+                room->setPlayerProperty(player, "extra_collateral_current_targets", tos.join("+"));
                 bool used = room->askForUseCard(player, "@@mieji", "@qiaoshui-add:::collateral");
-                room->setPlayerFlag(player, "-" + flag);
-                room->setPlayerFlag(player, "-" + flag2);
+                room->setPlayerProperty(player, "extra_collateral", QString());
+                room->setPlayerProperty(player, "extra_collateral_current_targets", QString());
                 if (!used) return false;
                 foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                     if (p->hasFlag("ExtraCollateralTarget")) {

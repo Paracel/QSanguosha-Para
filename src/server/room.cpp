@@ -433,7 +433,7 @@ void Room::gameOver(const QString &winner) {
             foreach (const Card *card, player->getHandcards())
                 handcards << Sanguosha->getEngineCard(card->getId())->getLogName();
             QString handcard = handcards.join(", ").toUtf8().toBase64();
-            setPlayerFlag(player, QString("Global_LastHandCards:%1").arg(handcard));
+            setPlayerProperty(player, "last_handcards", handcard);
         }
     }
 

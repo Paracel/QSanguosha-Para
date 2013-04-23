@@ -435,8 +435,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     if (targets.isEmpty())
         return;
 
-    QString flag = QString("JixiSnatch:%1").arg(snatch->toString());
-    room->setPlayerFlag(dengai, flag);
+    room->setPlayerProperty(dengai, "jixi_snatch", snatch->toString());
 
     CardUseStruct use;
     use.card = snatch;
@@ -452,7 +451,7 @@ void JixiCard::onUse(Room *room, const CardUseStruct &card_use) const{
     } else {
         use.to << targets.at(qrand() % targets.length());
     }
-    room->setPlayerFlag(dengai, QString("-%1").arg(flag));
+    room->setPlayerProperty(dengai, "jixi_snatch", QString());
     room->useCard(use);
 }
 
@@ -460,13 +459,7 @@ JixiSnatchCard::JixiSnatchCard() {
 }
 
 bool JixiSnatchCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    const Card *card = NULL;
-    foreach (QString flag, Self->getFlagList()) {
-        if (flag.startsWith("JixiSnatch:")) {
-            card = Card::Parse(flag.mid(11));
-            break;
-        }
-    }
+    const Card *card = Card::Parse(Self->property("jixi_snatch").toString());
     if (card == NULL)
         return false;
     else {

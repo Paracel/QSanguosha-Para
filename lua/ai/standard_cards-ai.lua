@@ -292,9 +292,9 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	}
 
 	local nature = natures[slash:getClassName()]
-	self.handCardToDec = sgs.getCardNumAtCertainPlace(slash, from, sgs.Player_PlaceEquip)
+	self.equipsToDec = sgs.getCardNumAtCertainPlace(slash, from, sgs.Player_PlaceEquip)
 	local eff = self:damageIsEffective(to, nature, from)
-	self.handCardToDec = 0
+	self.equipsToDec = 0
 	if not eff then return false end
 
 	if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and self:getCardId("FireSlash") and slash:isKindOf("ThunderSlash") and self:objectiveLevel(to) >= 3 then
@@ -564,7 +564,6 @@ sgs.ai_skill_use.slash = function(self, prompt)
 				useslash = slash
 				target = enemy
 				break
-				return ("%s->%s"):format(slash:toString(), enemy:objectName())
 			end
 		end
 	end
@@ -1010,11 +1009,14 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 		end
 
 		if #cards == 2 then
-			if self:hasHeavySlashDamage(self.player, effect.slash, target) then
-				for _, id in ipairs(cards) do
-					if not self.player:hasEquip(sgs.Sanguosha:getCard(id)) then return "." end
-				end
+			local num = 0
+			for _, id in ipairs(cards) do
+				if self.player:hasEquip(sgs.Sanguosha:getCard(id)) then num = num + 1 end
 			end
+			self.equipsToDec = num
+			local eff = self:damageIsEffective(effect.to, effect.nature, self.player)
+			self.equipsToDec = 0
+			if not eff then return "." end
 			return "$" .. table.concat(cards, "+")
 		end
 	end

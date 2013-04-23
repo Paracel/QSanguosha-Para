@@ -72,6 +72,10 @@ return {
 	["illustrator:tw_ganning"] = "greey",
 	["cv_ganning:convert"] = "你可以替换为台版甘宁",
 
+	["tw_zhugeliang"] = "台版诸葛亮",
+	["&tw_zhugeliang"] = "诸葛亮", 
+	["illustrator:tw_zhugeliang"] = "巴萨小马",
+
 	["tw_lvbu"] = "台版吕布",
 	["&tw_lvbu"] = "吕布", 
 	["illustrator:tw_lvbu"] = "焚烧的大葱",
@@ -126,7 +130,7 @@ return {
 	["heg_zhugeliang"] = "国战诸葛亮",
 	["&heg_zhugeliang"] = "诸葛亮", 
 	["illustrator:heg_zhugeliang"] = "木美人",
-	["cv_zhugeliang:convert"] = "你可以替换为国战诸葛亮",
+	["cv_zhugeliang:convert"] = "你可以替换为国战诸葛亮或台版诸葛亮",
 
 	["heg_huangyueying"] = "国战黄月英",
 	["&heg_huangyueying"] = "黄月英", 

@@ -1311,7 +1311,7 @@ void StandardPackage::addGenerals() {
     zhugeliang->addSkill(new Kongcheng);
     zhugeliang->addSkill(new KongchengEffect);
     related_skills.insertMulti("kongcheng", "#kongcheng-effect");
-    zhugeliang->addSkill(new SPConvertSkill("zhugeliang", "heg_zhugeliang"));
+    zhugeliang->addSkill(new SPConvertSkill("zhugeliang", "heg_zhugeliang+tw_zhugeliang"));
 
     General *zhaoyun = new General(this, "zhaoyun", "shu");
     zhaoyun->addSkill(new Longdan);

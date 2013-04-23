@@ -776,7 +776,7 @@ public:
         }
 
         foreach (ServerPlayer *p, room->getAllPlayers()) {
-            if (player->getMark("@late") > 0)
+            if (p->getMark("@late") > 0)
                 room->setPlayerMark(p, "@late", 0);
         }
 

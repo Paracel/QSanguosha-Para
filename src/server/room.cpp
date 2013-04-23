@@ -1784,17 +1784,7 @@ void Room::prepareForStart() {
 
         for (int i = 0; i < 2; i++)
             broadcastProperty(m_players.at(i), "role");
-    } else if (mode == "04_1v3") {
-        ServerPlayer *lord = m_players.at(qrand() % 4);
-        for (int i = 0; i < 4; i++) {
-            ServerPlayer *player = m_players.at(i);
-            if (player == lord)
-                player->setRole("lord");
-            else
-                player->setRole("rebel");
-            broadcastProperty(player, "role");
-        }
-    } else if (Config.EnableCheat && Config.value("FreeAssign", false).toBool()) {
+    } else if (!Config.EnableHegemony && Config.EnableCheat && Config.value("FreeAssign", false).toBool()) {
         ServerPlayer *owner = getOwner();
         notifyMoveFocus(owner, S_COMMAND_CHOOSE_ROLE);
         if (owner && owner->isOnline()) {
@@ -1809,8 +1799,6 @@ void Room::prepareForStart() {
                 QString role = toQString(clientReply[1][0]);
                 ServerPlayer *player_self = findChild<ServerPlayer *>(name);
                 setPlayerProperty(player_self, "role", role);
-                if (role == "lord" && !ServerInfo.EnableHegemony)
-                    broadcastProperty(player_self, "role", "lord");
 
                 QList<ServerPlayer *> all_players = m_players;
                 all_players.removeOne(player_self);
@@ -1826,8 +1814,12 @@ void Room::prepareForStart() {
                     player->setRole(role);
                     if (role == "lord" && !ServerInfo.EnableHegemony)
                         broadcastProperty(player, "role", "lord");
-                    else
-                        notifyProperty(player, player, "role");
+                    else {
+                        if (mode == "04_1v3")
+                            broadcastProperty(player, "role", role);
+                        else
+                            notifyProperty(player, player, "role");
+                    }
                 }
             } else {
                 for (unsigned int i = 0; i < clientReply[0].size(); i++) {
@@ -1839,6 +1831,18 @@ void Room::prepareForStart() {
 
                     m_players.swap(i, m_players.indexOf(player));
                 }
+            }
+        } else if (mode == "04_1v3") {
+            if (Config.RandomSeat)
+                qShuffle(m_players);
+            ServerPlayer *lord = m_players.at(qrand() % 4);
+            for (int i = 0; i < 4; i++) {
+                ServerPlayer *player = m_players.at(i);
+                if (player == lord)
+                    player->setRole("lord");
+                else
+                    player->setRole("rebel");
+                broadcastProperty(player, "role");
             }
         } else {
             if (Config.RandomSeat)

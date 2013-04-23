@@ -1079,14 +1079,16 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *sunshangxiang, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == sunshangxiang && move.from_places.contains(Player::PlaceEquip)) {
-            for (int i = 0; i < move.card_ids.size(); i++)
-                if (move.from_places[i] == Player::PlaceEquip
-                    && room->askForSkillInvoke(sunshangxiang, objectName())) {
-                    room->broadcastSkillInvoke(objectName());
-                    sunshangxiang->drawCards(2);
-                } else {
-                    break;
+            for (int i = 0; i < move.card_ids.size(); i++) {
+                if (move.from_places[i] == Player::PlaceEquip) {
+                    if (room->askForSkillInvoke(sunshangxiang, objectName())) {
+                        room->broadcastSkillInvoke(objectName());
+                        sunshangxiang->drawCards(2);
+                    } else {
+                        break;
+                    }
                 }
+            }
         }
 
         return false;

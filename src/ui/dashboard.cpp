@@ -942,6 +942,10 @@ void Dashboard::updatePending() {
 
     const Card *new_pending_card = view_as_skill->viewAs(cards);
     if (pending_card != new_pending_card) {
+        if (pending_card && !pending_card->parent() && pending_card->isVirtualCard()) {
+            delete pending_card;
+            pending_card = NULL;
+        }
         pending_card = new_pending_card;
         emit card_selected(pending_card);
     }

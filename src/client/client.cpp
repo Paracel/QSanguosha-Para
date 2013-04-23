@@ -513,6 +513,8 @@ void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targ
 
         replyToServer(S_COMMAND_USE_CARD, toJsonArray(card->toString(), targetNames));
 
+        if (card->isVirtualCard() && !card->parent())
+            delete card;
         if ((status & ClientStatusBasicMask) == Responding)
             _m_roomState.setCurrentCardUsePattern(QString());
     }
@@ -971,9 +973,11 @@ int Client::alivePlayerCount() const{
 }
 
 void Client::onPlayerResponseCard(const Card *card) {
-    if (card)
+    if (card) {
         replyToServer(S_COMMAND_RESPONSE_CARD, toJsonString(card->toString()));
-    else
+        if (card->isVirtualCard() && !card->parent())
+            delete card;
+    } else
         replyToServer(S_COMMAND_RESPONSE_CARD, Json::Value::null);
 
     _m_roomState.setCurrentCardUsePattern(QString());
@@ -1303,6 +1307,8 @@ void Client::onPlayerDiscardCards(const Card *cards) {
     else {
         foreach (int card_id, cards->getSubcards())
             val.append(card_id);
+        if (cards->isVirtualCard() && !cards->parent())
+            delete cards;
     }
     replyToServer(S_COMMAND_DISCARD_CARD, val);
 

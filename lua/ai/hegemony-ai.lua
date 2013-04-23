@@ -28,10 +28,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 			end
 		end
 	elseif self:isEnemy(currentplayer) then
-		self.handCardToDec = 1
-		local eff = self:damageIsEffective(currentplayer)
-		self.handCardToDec = 0
-		if not eff then return "." end
+		if not self:damageIsEffective(currentplayer) then return "." end
 		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer, self.player) then return "." end
 		if self:needToThrowArmor() then return "." end
 		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
@@ -283,11 +280,6 @@ end
 sgs.ai_use_value.FenxunCard = 5.5
 sgs.ai_use_priority.FenxunCard = 8
 sgs.ai_card_intention.FenxunCard = 50
-
-sgs.ai_skill_choice.mingshi = function(self, choices, data)
-	local damage = data:toDamage()
-	return (self:isFriend(damage.to) or damage.damage > 1) and "no" or "yes"
-end
 
 sgs.ai_skill_invoke.lirang = function(self, data)
 	if #self.friends_noself == 0 then return false end

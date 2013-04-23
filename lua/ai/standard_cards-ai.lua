@@ -292,7 +292,7 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	}
 
 	local nature = natures[slash:getClassName()]
-	self.handCardToDec = sgs.getCardNumInHand(slash, from)
+	self.handCardToDec = sgs.getCardNumAtCertainPlace(slash, from, sgs.Player_PlaceEquip)
 	local eff = self:damageIsEffective(to, nature, from)
 	self.handCardToDec = 0
 	if not eff then return false end

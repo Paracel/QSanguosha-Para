@@ -473,14 +473,12 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	assert(greatyeyan)
 
 	self:sort(self.enemies, "hp")
-	self.handCardToDec = 4
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:hasArmorEffect("silver_lion")
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if enemy:isChained() and self:isGoodChainTarget(enemy) then
 					if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
-						self.handCardToDec = 0
 						use.card = greatyeyan
 						if use.to then
 							use.to:append(enemy)
@@ -497,7 +495,6 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if enemy:isChained() and self:isGoodChainTarget(enemy) then
-					self.handCardToDec = 0
 					use.card = greatyeyan
 					if use.to then
 						use.to:append(enemy)
@@ -514,7 +511,6 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if not enemy:isChained() then
 					if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
-						self.handCardToDec = 0
 						use.card = greatyeyan
 						if use.to then
 							use.to:append(enemy)
@@ -531,7 +527,6 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
 				if not enemy:isChained() then
-					self.handCardToDec = 0
 					use.card = greatyeyan
 					if use.to then
 						use.to:append(enemy)
@@ -542,7 +537,6 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 				end
 		end
 	end
-	self.handCardToDec = 0
 end
 
 sgs.ai_use_value.GreatYeyanCard = 8

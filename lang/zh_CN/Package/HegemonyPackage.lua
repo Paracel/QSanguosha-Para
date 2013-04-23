@@ -46,7 +46,7 @@ return {
 	["kongrong"] = "孔融",
 	["illustrator:kongrong"] = "苍月白龙",
 	["mingshi"] = "名士",
-	[":mingshi"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到伤害时，若伤害来源手牌数不大于你的手牌数，此伤害-1。",
+	[":mingshi"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到伤害时，若伤害来源装备区的牌数不大于你的装备区的牌数，此伤害-1。",
 	["mingshi:yes"] = "展示所有手牌",
 	["mingshi:no"] = "不展示",
 	["lirang"] = "礼让",

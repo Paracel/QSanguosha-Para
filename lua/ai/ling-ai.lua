@@ -101,10 +101,7 @@ sgs.ai_skill_use_func.NeoFanjianCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 	local target
 	for _, enemy in ipairs(self.enemies) do
-		self.handCardToDec = 2
-		local can_attack = self:canAttack(enemy)
-		self.handCardToDec = 0
-		if can_attack and not self:hasSkills("qingnang|tianxiang", enemy) then
+		if self:canAttack(enemy) and not self:hasSkills("qingnang|tianxiang", enemy) then
 			target = enemy
 
 			local wuguotai = self.room:findPlayerBySkillName("buyi")

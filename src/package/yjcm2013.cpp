@@ -496,7 +496,8 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == GameStart || (event == EventAcquireSkill && data.toString() == "xiansi")) {
+        if ((event == GameStart && TriggerSkill::triggerable(player))
+             || (event == EventAcquireSkill && data.toString() == "xiansi")) {
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (!p->hasSkill("xiansi_slash"))
                     room->attachSkillToPlayer(p, "xiansi_slash");

@@ -188,14 +188,17 @@ function SmartAI:initialize(player)
 	self:updatePlayers()
 end
 
-function sgs.getCardNumInHand(card, player)
-	if not card:isVirtualCard() then return 1
+function sgs.getCardNumAtCertainPlace(card, player, place)
+	if not card:isVirtualCard() and place == sgs.Player_PlaceHand then return 1
 	elseif card:subcardsLength() == 0 then return 0
 	else
 		local num = 0
-		if player:getHandcardNum() == 0 then return 0 end
 		for _, id in sgs.qlist(card:getSubcards()) do
-			if player:handCards():contains(id) then num = num + 1 end
+			if place == sgs.Player_PlaceHand then
+				if player:handCards():contains(id) then num = num + 1 end
+			elseif place == sgs.Player_PlaceEquip then
+				if player:hasEquip(sgs.Sanguosha:getCard(id)) then num = num + 1 end
+			end
 		end
 		return num
 	end
@@ -3320,7 +3323,7 @@ function SmartAI:damageIsEffective(player, nature, source)
 
 	if player:getMark("@fenyong") > 0 then return false end
 	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
-	if player:hasSkill("mingshi") and source:getHandcardNum() - (self.handCardToDec or 0) <= player:getHandcardNum() then return false end
+	if player:hasSkill("mingshi") and source:getEquips():length() - (self.equipsToDec or 0) <= player:getEquips():length() then return false end
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate_to") == 0 then
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
@@ -4294,9 +4297,9 @@ function SmartAI:hasTrickEffective(card, to, from)
 	local nature = sgs.DamageStruct_Normal
 	if card:isKindOf("FireAttack") then nature = sgs.DamageStruct_Fire end
 	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
-		self.handCardToDec = sgs.getCardNumInHand(card, from)
+		self.equipsToDec = sgs.getCardNumAtCertainPlace(card, from, sgs.Player_PlaceEquip)
 		local eff = self:damageIsEffective(to, nature, from)
-		self.handCardToDec = 0
+		self.equipsToDec = 0
 		if not eff then return false end
 	end
 

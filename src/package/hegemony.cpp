@@ -207,7 +207,7 @@ public:
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.from) {
-            if (damage.from->getHandcardNum() <= player->getHandcardNum()) {
+            if (damage.from->getEquips().length() <= player->getEquips().length()) {
                 room->notifySkillInvoked(player, objectName());
                 room->broadcastSkillInvoke(objectName());
 

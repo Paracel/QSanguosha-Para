@@ -217,7 +217,7 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
     if (!targets.isEmpty())
         return false;
 
-    if (to_select->hasFlag("LiuliSlashSource"))
+    if (to_select->hasFlag("LiuliSlashSource") || to_select == Self)
         return false;
 
     const Player *from = NULL;

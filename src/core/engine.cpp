@@ -272,6 +272,16 @@ QList<const Skill *> Engine::getRelatedSkills(const QString &skill_name) const{
     return skills;
 }
 
+const Skill *Engine::getMainSkill(const QString &skill_name) const{
+    const Skill *skill = getSkill(skill_name);
+    if (!skill || skill->isVisible() || related_skills.keys().contains(skill_name)) return skill;
+    foreach (QString key, related_skills.keys()) {
+        foreach (QString name, related_skills.values(key))
+            if (name == skill_name) return getSkill(key);
+    }
+    return skill;
+}
+
 const General *Engine::getGeneral(const QString &name) const{
     if (generals.contains(name))
         return generals.value(name);

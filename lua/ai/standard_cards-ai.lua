@@ -382,7 +382,7 @@ function SmartAI:useCardSlash(card, use)
 							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
 								use.to:append(friend)
 							end
-						else
+						elseif use.to:length() < self.slash_targets then
 							use.to:append(friend)
 						end
 						self:speak("hostile", self.player:isFemale())
@@ -475,7 +475,7 @@ function SmartAI:useCardSlash(card, use)
 					if has_extra or self.player:distanceTo(target, rangefix) == 1 then
 						use.to:append(target)
 					end
-				else
+				elseif use.to:length() < self.slash_targets then
 					use.to:append(target)
 				end
 			end
@@ -508,7 +508,7 @@ function SmartAI:useCardSlash(card, use)
 							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
 								use.to:append(friend)
 							end
-						else
+						elseif use.to:length() < self.slash_targets then
 							use.to:append(friend)
 						end
 						self:speak("hostile", self.player:isFemale())

@@ -34,6 +34,7 @@ private slots:
     void playAudioEffect();
     void copyLines();
     void askTransfiguration();
+    void askChangeSkin();
     void on_tableWidget_itemSelectionChanged();
     void on_tableWidget_itemDoubleClicked(QTableWidgetItem *item);
 };

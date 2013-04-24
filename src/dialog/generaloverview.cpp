@@ -32,6 +32,7 @@ GeneralOverview::GeneralOverview(QWidget *parent)
         ui->changeGeneralButton->hide();
         ui->changeGeneral2Button->hide();
     }
+    connect(ui->changeHeroSkinButton, SIGNAL(clicked()), this, SLOT(askChangeSkin()));
 }
 
 void GeneralOverview::fillGenerals(const QList<const General *> &generals) {
@@ -296,3 +297,25 @@ void GeneralOverview::on_tableWidget_itemDoubleClicked(QTableWidgetItem *) {
     }
 }
 
+#include "settings.h"
+void GeneralOverview::askChangeSkin() {
+    int row = ui->tableWidget->currentRow();
+    QString general_name = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toString();
+
+    int n = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
+    n++;
+    Config.beginGroup("HeroSkin");
+    Config.setValue(general_name, n);
+    Config.endGroup();
+    QPixmap pixmap = G_ROOM_SKIN.getCardMainPixmap(general_name);
+    if (pixmap.width() <= 1 && pixmap.height() <= 1) {
+        Config.beginGroup("HeroSkin");
+        Config.remove(general_name);
+        Config.endGroup();
+        if (n > 1)
+            pixmap = G_ROOM_SKIN.getCardMainPixmap(general_name);
+        else
+            return;
+    }
+    ui->generalPhoto->setPixmap(pixmap);
+}

@@ -3,6 +3,7 @@
 #include "protocol.h"
 #include "uiUtils.h"
 #include "engine.h"
+#include "settings.h"
 #include <fstream>
 #include <QGraphicsPixmapItem>
 #include <QTextItem>
@@ -419,9 +420,9 @@ const QPixmap &QSanPixmapCache::getPixmap(const QString &key, const QString &fil
         } else {
             bool success = !fileName.isEmpty() && _m_pixmapBank[key].load(fileName);
             if (!success) {
-                qWarning("Unable to open resource file \"%s\" for key \"%s\"\n",
+                /*qWarning("Unable to open resource file \"%s\" for key \"%s\"\n",
                          fileName.toAscii().constData(),
-                         key.toAscii().constData());
+                         key.toAscii().constData());*/
                 _m_pixmapBank[key] = QPixmap(1, 1); // make Qt happy
             }
         }
@@ -594,6 +595,7 @@ QString IQSanComponentSkin::_readImageConfig(const QString &key, QRect &rect,
 QHash<QString, QString> IQSanComponentSkin::S_IMAGE_KEY2FILE;
 QHash<QString, QList<QString> > IQSanComponentSkin::S_IMAGE_GROUP_KEYS;
 QHash<QString, QPixmap> IQSanComponentSkin::S_IMAGE_KEY2PIXMAP;
+QHash<QString, int> IQSanComponentSkin::S_HERO_SKIN_INDEX;
 
 QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) const{
     // the order of attempts are:
@@ -629,7 +631,26 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
         }
     }
 
-    if (!S_IMAGE_KEY2PIXMAP.contains(totalKey)) {
+    // Hero skin?
+    bool change_cache = false;
+    QString general_name = fileName.split("/").last().split(".").first();
+    if (Sanguosha->getGeneral(general_name)) {
+        change_cache = true;
+        int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
+        int saved_index = 0;
+        if (S_HERO_SKIN_INDEX.contains(general_name))
+            saved_index = S_HERO_SKIN_INDEX[general_name];
+        if (saved_index != skin_index) {
+            S_HERO_SKIN_INDEX[general_name] = skin_index;
+            change_cache = true;
+        }
+        if (skin_index > 0) {
+            fileName.replace("image/", "image/heroskin/");
+            fileName.replace(general_name, QString("%1_%2").arg(general_name).arg(skin_index));
+        }
+    }
+
+    if (!S_IMAGE_KEY2PIXMAP.contains(totalKey) || change_cache) {
         QPixmap pixmap = QSanPixmapCache::getPixmap(fileName);
         if (clipping) {
             QRect actualClip = clipRegion;

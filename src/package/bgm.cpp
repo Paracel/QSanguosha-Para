@@ -1455,19 +1455,19 @@ public:
 };
 
 BGMPackage::BGMPackage(): Package("BGM") {
-    General *bgm_zhaoyun = new General(this, "bgm_zhaoyun", "qun", 3);
+    General *bgm_zhaoyun = new General(this, "bgm_zhaoyun", "qun", 3); // *SP 001
     bgm_zhaoyun->addSkill("longdan");
     bgm_zhaoyun->addSkill(new Chongzhen);
 
-    General *bgm_diaochan = new General(this, "bgm_diaochan", "qun", 3, false);
+    General *bgm_diaochan = new General(this, "bgm_diaochan", "qun", 3, false); // *SP 002
     bgm_diaochan->addSkill(new Lihun);
     bgm_diaochan->addSkill("biyue");
 
-    General *bgm_caoren = new General(this, "bgm_caoren", "wei");
+    General *bgm_caoren = new General(this, "bgm_caoren", "wei"); // *SP 003
     bgm_caoren->addSkill(new Kuiwei);
     bgm_caoren->addSkill(new Yanzheng);
 
-    General *bgm_pangtong = new General(this, "bgm_pangtong", "qun", 3);
+    General *bgm_pangtong = new General(this, "bgm_pangtong", "qun", 3); // *SP 004
     bgm_pangtong->addSkill(new Manjuan);
     bgm_pangtong->addSkill(new Zuixiang);
     bgm_pangtong->addSkill(new ZuixiangClear);
@@ -1475,13 +1475,13 @@ BGMPackage::BGMPackage(): Package("BGM") {
     related_skills.insertMulti("zuixiang", "#zuixiang-clear");
     related_skills.insertMulti("zuixiang", "#@sleep-1");
 
-    General *bgm_zhangfei = new General(this, "bgm_zhangfei", "shu");
+    General *bgm_zhangfei = new General(this, "bgm_zhangfei", "shu"); // *SP 005
     bgm_zhangfei->addSkill(new Jie);
     bgm_zhangfei->addSkill(new Dahe);
     bgm_zhangfei->addSkill(new DahePindian);
     related_skills.insertMulti("dahe", "#dahe");
 
-    General *bgm_lvmeng = new General(this, "bgm_lvmeng", "wu", 3);
+    General *bgm_lvmeng = new General(this, "bgm_lvmeng", "wu", 3); // *SP 006
     bgm_lvmeng->addSkill(new Tanhu);
     bgm_lvmeng->addSkill(new MouduanStart);
     bgm_lvmeng->addSkill(new Mouduan);
@@ -1489,7 +1489,7 @@ BGMPackage::BGMPackage(): Package("BGM") {
     related_skills.insertMulti("mouduan", "#mouduan-start");
     related_skills.insertMulti("mouduan", "#mouduan-clear");
 
-    General *bgm_liubei = new General(this, "bgm_liubei$", "shu");
+    General *bgm_liubei = new General(this, "bgm_liubei$", "shu"); // *SP 007
     bgm_liubei->addSkill(new Zhaolie);
     bgm_liubei->addSkill(new ZhaolieAct);
     bgm_liubei->addSkill(new Shichou);
@@ -1497,11 +1497,11 @@ BGMPackage::BGMPackage(): Package("BGM") {
     related_skills.insertMulti("zhaolie", "#zhaolie");
     related_skills.insertMulti("shichou", "#shichou");
 
-    General *bgm_daqiao = new General(this, "bgm_daqiao", "wu", 3, false);
+    General *bgm_daqiao = new General(this, "bgm_daqiao", "wu", 3, false); // *SP 008
     bgm_daqiao->addSkill(new Yanxiao);
     bgm_daqiao->addSkill(new Anxian);
 
-    General *bgm_ganning = new General(this, "bgm_ganning", "qun");
+    General *bgm_ganning = new General(this, "bgm_ganning", "qun"); // *SP 009
     bgm_ganning->addSkill(new Yinling);
     bgm_ganning->addSkill(new YinlingClear);
     bgm_ganning->addSkill(new Junwei);
@@ -1509,7 +1509,7 @@ BGMPackage::BGMPackage(): Package("BGM") {
     related_skills.insertMulti("yinling", "#yinling-clear");
     related_skills.insertMulti("junwei", "#junwei-got");
 
-    General *bgm_xiahoudun = new General(this, "bgm_xiahoudun", "wei");
+    General *bgm_xiahoudun = new General(this, "bgm_xiahoudun", "wei"); // *SP 010
     bgm_xiahoudun->addSkill(new Fenyong);
     bgm_xiahoudun->addSkill(new FenyongClear);
     bgm_xiahoudun->addSkill(new FenyongForHuashen);
@@ -2217,17 +2217,17 @@ public:
 };
 
 BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
-    General *diy_simazhao = new General(this, "diy_simazhao", "wei", 3);
+    General *diy_simazhao = new General(this, "diy_simazhao", "wei", 3); // DIY 001
     diy_simazhao->addSkill(new Zhaoxin);
     diy_simazhao->addSkill(new Langgu);
 
-    General *diy_wangyuanji = new General(this, "diy_wangyuanji", "wei", 3, false);
+    General *diy_wangyuanji = new General(this, "diy_wangyuanji", "wei", 3, false); // DIY 002
     diy_wangyuanji->addSkill(new Fuluan);
     diy_wangyuanji->addSkill(new FuluanForbid);
     diy_wangyuanji->addSkill(new Shude);
     related_skills.insertMulti("fuluan", "#fuluan-forbid");
 
-    General *diy_liuxie = new General(this, "diy_liuxie", "qun");
+    General *diy_liuxie = new General(this, "diy_liuxie", "qun"); // DIY 003
     diy_liuxie->addSkill(new Huangen);
     diy_liuxie->addSkill(new Hantong);
     diy_liuxie->addSkill(new HantongAcquire);
@@ -2237,7 +2237,7 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     related_skills.insertMulti("hantong", "#hantong-detach");
     related_skills.insertMulti("hantong", "#hantong-clear");
 
-    General *diy_gongsunzan = new General(this, "diy_gongsunzan", "qun");
+    General *diy_gongsunzan = new General(this, "diy_gongsunzan", "qun"); // DIY 004
     diy_gongsunzan->addSkill(new DIYYicong);
     diy_gongsunzan->addSkill(new DIYYicongDistance);
     diy_gongsunzan->addSkill(new DIYYicongClear);

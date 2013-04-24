@@ -1379,10 +1379,10 @@ public:
 MountainPackage::MountainPackage()
     : Package("mountain")
 {
-    General *zhanghe = new General(this, "zhanghe", "wei");
+    General *zhanghe = new General(this, "zhanghe", "wei"); // WEI 009
     zhanghe->addSkill(new Qiaobian);
 
-    General *dengai = new General(this, "dengai", "wei", 4);
+    General *dengai = new General(this, "dengai", "wei", 4); // WEI 015
     dengai->addSkill(new Tuntian);
     dengai->addSkill(new TuntianDistance);
     dengai->addSkill(new TuntianClear);
@@ -1391,31 +1391,31 @@ MountainPackage::MountainPackage()
     related_skills.insertMulti("tuntian", "#tuntian-dist");
     related_skills.insertMulti("tuntian", "#tuntian-clear");
 
-    General *jiangwei = new General(this, "jiangwei", "shu");
+    General *jiangwei = new General(this, "jiangwei", "shu"); // SHU 012
     jiangwei->addSkill(new Tiaoxin);
     jiangwei->addSkill(new Zhiji);
     related_skills.insertMulti("zhiji", "guanxing");
 
-    General *liushan = new General(this, "liushan$", "shu", 3);
+    General *liushan = new General(this, "liushan$", "shu", 3); // SHU 013
     liushan->addSkill(new Xiangle);
     liushan->addSkill(new Fangquan);
     liushan->addSkill(new FangquanGive);
     liushan->addSkill(new Ruoyu);
     related_skills.insertMulti("fangquan", "#fangquan-give");
 
-    General *sunce = new General(this, "sunce$", "wu");
+    General *sunce = new General(this, "sunce$", "wu"); // WU 010
     sunce->addSkill(new Jiang);
     sunce->addSkill(new Hunzi);
     sunce->addSkill(new Zhiba);
     related_skills.insertMulti("hunzi", "yinghun");
 
-    General *erzhang = new General(this, "erzhang", "wu", 3);
+    General *erzhang = new General(this, "erzhang", "wu", 3); // WU 015
     erzhang->addSkill(new Zhijian);
     erzhang->addSkill(new Guzheng);
     erzhang->addSkill(new GuzhengGet);
     related_skills.insertMulti("guzheng", "#guzheng-get");
 
-    General *zuoci = new General(this, "zuoci", "qun", 3);
+    General *zuoci = new General(this, "zuoci", "qun", 3); // QUN 009
     zuoci->addSkill(new Huashen);
     zuoci->addSkill(new HuashenBegin);
     zuoci->addSkill(new HuashenEnd);
@@ -1426,7 +1426,7 @@ MountainPackage::MountainPackage()
     related_skills.insertMulti("huashen", "#huashen-clear");
     zuoci->addSkill("#lianpo-count"); // For LianPo we need a nasty trick
 
-    General *caiwenji = new General(this, "caiwenji", "qun", 3, false);
+    General *caiwenji = new General(this, "caiwenji", "qun", 3, false); // QUN 012
     caiwenji->addSkill(new Beige);
     caiwenji->addSkill(new Duanchang);
     caiwenji->addSkill(new SPConvertSkill("caiwenji", "sp_caiwenji"));

@@ -1196,13 +1196,13 @@ bool Shangshi::trigger(TriggerEvent event, Room *room, ServerPlayer *zhangchunhu
 YJCMPackage::YJCMPackage()
     : Package("YJCM")
 {
-    General *caozhi = new General(this, "caozhi", "wei", 3);
+    General *caozhi = new General(this, "caozhi", "wei", 3); // YJ 001
     caozhi->addSkill(new Luoying);
     caozhi->addSkill(new Jiushi);
     caozhi->addSkill(new JiushiFlip);
     related_skills.insertMulti("jiushi", "#jiushi-flip");
 
-    General *chengong = new General(this, "chengong", "qun", 3);
+    General *chengong = new General(this, "chengong", "qun", 3); // YJ 002
     chengong->addSkill(new Zhichi);
     chengong->addSkill(new ZhichiProtect);
     chengong->addSkill(new ZhichiClear);
@@ -1210,42 +1210,42 @@ YJCMPackage::YJCMPackage()
     related_skills.insertMulti("zhichi", "#zhichi-protect");
     related_skills.insertMulti("zhichi", "#zhichi-clear");
 
-    General *fazheng = new General(this, "fazheng", "shu", 3);
+    General *fazheng = new General(this, "fazheng", "shu", 3); // YJ 003
     fazheng->addSkill(new Enyuan);
     fazheng->addSkill(new Xuanhuo);
     fazheng->addSkill(new FakeMoveSkill("xuanhuo"));
     related_skills.insertMulti("xuanhuo", "#xuanhuo-fake-move");
 
-    General *gaoshun = new General(this, "gaoshun", "qun");
+    General *gaoshun = new General(this, "gaoshun", "qun"); // YJ 004
     gaoshun->addSkill(new Xianzhen);
     gaoshun->addSkill(new Jinjiu);
 
-    General *lingtong = new General(this, "lingtong", "wu");
+    General *lingtong = new General(this, "lingtong", "wu"); // YJ 005
     lingtong->addSkill(new Xuanfeng);
 
-    General *masu = new General(this, "masu", "shu", 3);
+    General *masu = new General(this, "masu", "shu", 3); // YJ 006
     masu->addSkill(new Xinzhan);
     masu->addSkill(new Huilei);
 
-    General *wuguotai = new General(this, "wuguotai", "wu", 3, false);
+    General *wuguotai = new General(this, "wuguotai", "wu", 3, false); // YJ 007
     wuguotai->addSkill(new Ganlu);
     wuguotai->addSkill(new Buyi);
 
-    General *xusheng = new General(this, "xusheng", "wu");
+    General *xusheng = new General(this, "xusheng", "wu"); // YJ 008
     xusheng->addSkill(new Pojun);
 
-    General *xushu = new General(this, "xushu", "shu", 3);
+    General *xushu = new General(this, "xushu", "shu", 3); // YJ 009
     xushu->addSkill(new Wuyan);
     xushu->addSkill(new Jujian);
 
-    General *yujin = new General(this, "yujin", "wei");
+    General *yujin = new General(this, "yujin", "wei"); // YJ 010
     yujin->addSkill(new Yizhong);
 
-    General *zhangchunhua = new General(this, "zhangchunhua", "wei", 3, false);
+    General *zhangchunhua = new General(this, "zhangchunhua", "wei", 3, false); // YJ 011
     zhangchunhua->addSkill(new Jueqing);
     zhangchunhua->addSkill(new Shangshi);
 
-    General *zhonghui = new General(this, "zhonghui", "wei");
+    General *zhonghui = new General(this, "zhonghui", "wei"); // YJ 012
     zhonghui->addSkill(new QuanjiKeep);
     zhonghui->addSkill(new Quanji);
     zhonghui->addSkill(new QuanjiClear);

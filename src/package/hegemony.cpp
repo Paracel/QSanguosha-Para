@@ -739,78 +739,78 @@ public:
 HegemonyPackage::HegemonyPackage()
     : Package("hegemony")
 {
-    General *yuejin = new General(this, "yuejin", "wei");
+    General *yuejin = new General(this, "yuejin", "wei"); // WEI 016
     yuejin->addSkill(new Xiaoguo);
 
-    General *ganfuren = new General(this, "ganfuren", "shu", 3, false);
+    General *ganfuren = new General(this, "ganfuren", "shu", 3, false); // SHU 016
     ganfuren->addSkill(new Shushen);
     ganfuren->addSkill(new Shenzhi);
 
-    General *heg_luxun = new General(this, "heg_luxun", "wu", 3);
+    General *heg_luxun = new General(this, "heg_luxun", "wu", 3); // WU 007 G
     heg_luxun->addSkill("qianxun");
     heg_luxun->addSkill(new Duoshi);
 
-    General *dingfeng = new General(this, "dingfeng", "wu");
+    General *dingfeng = new General(this, "dingfeng", "wu"); // WU 016
     dingfeng->addSkill(new Skill("duanbing"));
     dingfeng->addSkill(new Fenxun);
 
-    General *mateng = new General(this, "mateng", "qun");
+    General *mateng = new General(this, "mateng", "qun"); // QUN 013
     mateng->addSkill("mashu");
     mateng->addSkill(new MarkAssignSkill("@arise", 1));
     mateng->addSkill(new Xiongyi);
     related_skills.insertMulti("xiongyi", "#@arise-1");
 
-    General *kongrong = new General(this, "kongrong", "qun", 3);
+    General *kongrong = new General(this, "kongrong", "qun", 3); // QUN 014
     kongrong->addSkill(new Mingshi);
     kongrong->addSkill(new Lirang);
 
-    General *jiling = new General(this, "jiling", "qun", 4);
+    General *jiling = new General(this, "jiling", "qun", 4); // QUN 015
     jiling->addSkill(new Shuangren);
     jiling->addSkill(new SlashNoDistanceLimitSkill("shuangren"));
     related_skills.insertMulti("shuangren", "#shuangren-slash-ndl");
 
-    General *tianfeng = new General(this, "tianfeng", "qun", 3);
+    General *tianfeng = new General(this, "tianfeng", "qun", 3); // QUN 016
     tianfeng->addSkill(new Sijian);
     tianfeng->addSkill(new Suishi);
 
-    General *panfeng = new General(this, "panfeng", "qun");
+    General *panfeng = new General(this, "panfeng", "qun"); // QUN 017
     panfeng->addSkill(new Kuangfu);
 
-    General *zoushi = new General(this, "zoushi", "qun", 3, false);
+    General *zoushi = new General(this, "zoushi", "qun", 3, false); // QUN 018
     zoushi->addSkill(new Huoshui);
     zoushi->addSkill(new Qingcheng);
 
-    General *heg_caopi = new General(this, "heg_caopi$", "wei", 3, true, true);
+    General *heg_caopi = new General(this, "heg_caopi$", "wei", 3, true, true); // WEI 014 G
     heg_caopi->addSkill("fangzhu");
     heg_caopi->addSkill("xingshang");
     heg_caopi->addSkill("songwei");
 
-    General *heg_zhenji = new General(this, "heg_zhenji", "wei", 3, false, true);
+    General *heg_zhenji = new General(this, "heg_zhenji", "wei", 3, false, true); // WEI 007 G
     heg_zhenji->addSkill("qingguo");
     heg_zhenji->addSkill("luoshen");
 
-    General *heg_zhugeliang = new General(this, "heg_zhugeliang", "shu", 3, true, true);
+    General *heg_zhugeliang = new General(this, "heg_zhugeliang", "shu", 3, true, true); // SHU 004 G
     heg_zhugeliang->addSkill("guanxing");
     heg_zhugeliang->addSkill("kongcheng");
     heg_zhugeliang->addSkill("#kongcheng-effect");
 
-    General *heg_huangyueying = new General(this, "heg_huangyueying", "shu", 3, false, true);
+    General *heg_huangyueying = new General(this, "heg_huangyueying", "shu", 3, false, true); // SHU 007 G
     heg_huangyueying->addSkill("jizhi");
     heg_huangyueying->addSkill("qicai");
 
-    General *heg_zhouyu = new General(this, "heg_zhouyu", "wu", 3, true, true);
+    General *heg_zhouyu = new General(this, "heg_zhouyu", "wu", 3, true, true); // WU 005 G
     heg_zhouyu->addSkill("yingzi");
     heg_zhouyu->addSkill("fanjian");
 
-    General *heg_xiaoqiao = new General(this, "heg_xiaoqiao", "wu", 3, false, true);
+    General *heg_xiaoqiao = new General(this, "heg_xiaoqiao", "wu", 3, false, true); // WU 011 G
     heg_xiaoqiao->addSkill("tianxiang");
     heg_xiaoqiao->addSkill("#tianxiang");
     heg_xiaoqiao->addSkill("hongyan");
 
-    General *heg_lvbu = new General(this, "heg_lvbu", "qun", 4, true, true);
+    General *heg_lvbu = new General(this, "heg_lvbu", "qun", 4, true, true); // QUN 002 G
     heg_lvbu->addSkill("wushuang");
 
-    General *heg_diaochan = new General(this, "heg_diaochan", "qun", 3, false, true);
+    General *heg_diaochan = new General(this, "heg_diaochan", "qun", 3, false, true); // QUN 003 G
     heg_diaochan->addSkill("lijian");
     heg_diaochan->addSkill("biyue");
 

@@ -947,33 +947,33 @@ public:
 ThicketPackage::ThicketPackage()
     : Package("thicket")
 {
-    General *xuhuang = new General(this, "xuhuang", "wei");
+    General *xuhuang = new General(this, "xuhuang", "wei"); // WEI 010
     xuhuang->addSkill(new Duanliang);
     xuhuang->addSkill(new DuanliangTargetMod);
     related_skills.insertMulti("duanliang", "#duanliang-target");
 
-    General *caopi = new General(this, "caopi$", "wei", 3);
+    General *caopi = new General(this, "caopi$", "wei", 3); // WEI 014
     caopi->addSkill(new Xingshang);
     caopi->addSkill(new Fangzhu);
     caopi->addSkill(new Songwei);
     caopi->addSkill(new SPConvertSkill("caopi", "heg_caopi"));
 
-    General *menghuo = new General(this, "menghuo", "shu");
+    General *menghuo = new General(this, "menghuo", "shu"); // SHU 014
     menghuo->addSkill(new SavageAssaultAvoid("huoshou"));
     menghuo->addSkill(new Huoshou);
     menghuo->addSkill(new Zaiqi);
     related_skills.insertMulti("huoshou", "#sa_avoid_huoshou");
 
-    General *zhurong = new General(this, "zhurong", "shu", 4, false);
+    General *zhurong = new General(this, "zhurong", "shu", 4, false); // SHU 015
     zhurong->addSkill(new SavageAssaultAvoid("juxiang"));
     zhurong->addSkill(new Juxiang);
     zhurong->addSkill(new Lieren);
     related_skills.insertMulti("juxiang", "#sa_avoid_juxiang");
 
-    General *sunjian = new General(this, "sunjian", "wu");
+    General *sunjian = new General(this, "sunjian", "wu"); // WU 009
     sunjian->addSkill(new Yinghun);
 
-    General *lusu = new General(this, "lusu", "wu", 3);
+    General *lusu = new General(this, "lusu", "wu", 3); // WU 014
     lusu->addSkill(new Haoshi);
     lusu->addSkill(new HaoshiViewAsSkill);
     lusu->addSkill(new HaoshiGive);
@@ -981,13 +981,13 @@ ThicketPackage::ThicketPackage()
     related_skills.insertMulti("haoshi", "#haoshi");
     related_skills.insertMulti("haoshi", "#haoshi-give");
 
-    General *dongzhuo = new General(this, "dongzhuo$", "qun", 8);
+    General *dongzhuo = new General(this, "dongzhuo$", "qun", 8); // QUN 006
     dongzhuo->addSkill(new Jiuchi);
     dongzhuo->addSkill(new Roulin);
     dongzhuo->addSkill(new Benghuai);
     dongzhuo->addSkill(new Baonue);
 
-    General *jiaxu = new General(this, "jiaxu", "qun", 3);
+    General *jiaxu = new General(this, "jiaxu", "qun", 3); // QUN 007
     jiaxu->addSkill(new Wansha);
     jiaxu->addSkill(new WanshaPrevent);
     related_skills.insertMulti("wansha", "#wansha-prevent");

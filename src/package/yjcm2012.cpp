@@ -961,16 +961,16 @@ public:
 YJCM2012Package::YJCM2012Package()
     : Package("YJCM2012")
 {
-    General *bulianshi = new General(this, "bulianshi", "wu", 3, false);
+    General *bulianshi = new General(this, "bulianshi", "wu", 3, false); // YJ 101
     bulianshi->addSkill(new Anxu);
     bulianshi->addSkill(new Zhuiyi);
 
-    General *caozhang = new General(this, "caozhang", "wei");
+    General *caozhang = new General(this, "caozhang", "wei"); // YJ 102
     caozhang->addSkill(new Jiangchi);
     caozhang->addSkill(new JiangchiTargetMod);
     related_skills.insertMulti("jiangchi", "#jiangchi-target");
 
-    General *chengpu = new General(this, "chengpu", "wu");
+    General *chengpu = new General(this, "chengpu", "wu"); // YJ 103
     chengpu->addSkill(new Lihuo);
     chengpu->addSkill(new LihuoTargetMod);
     chengpu->addSkill(new Chunlao);
@@ -978,39 +978,39 @@ YJCM2012Package::YJCM2012Package()
     related_skills.insertMulti("lihuo", "#lihuo-target");
     related_skills.insertMulti("chunlao", "#chunlao-clear");
 
-    General *guanxingzhangbao = new General(this, "guanxingzhangbao", "shu");
+    General *guanxingzhangbao = new General(this, "guanxingzhangbao", "shu"); // YJ 104
     guanxingzhangbao->addSkill(new Fuhun);
 
-    General *handang = new General(this, "handang", "wu");
+    General *handang = new General(this, "handang", "wu"); // YJ 105
     handang->addSkill(new Gongqi);
     handang->addSkill(new Jiefan);
     handang->addSkill(new MarkAssignSkill("@rescue", 1));
     related_skills.insertMulti("jiefan", "#@rescue-1");
 
-    General *huaxiong = new General(this, "huaxiong", "qun", 6);
+    General *huaxiong = new General(this, "huaxiong", "qun", 6); // YJ 106
     huaxiong->addSkill(new Shiyong);
 
-    General *liaohua = new General(this, "liaohua", "shu");
+    General *liaohua = new General(this, "liaohua", "shu"); // YJ 107
     liaohua->addSkill(new Dangxian);
     liaohua->addSkill(new MarkAssignSkill("@laoji", 1));
     liaohua->addSkill(new Fuli);
     related_skills.insertMulti("fuli", "#@laoji-1");
 
-    General *liubiao = new General(this, "liubiao", "qun", 4);
+    General *liubiao = new General(this, "liubiao", "qun", 4); // YJ 108
     liubiao->addSkill(new Zishou);
     liubiao->addSkill(new Zongshi);
 
-    General *madai = new General(this, "madai", "shu");
+    General *madai = new General(this, "madai", "shu"); // YJ 109
     madai->addSkill("mashu");
     madai->addSkill(new Qianxi);
     madai->addSkill(new QianxiClear);
     related_skills.insertMulti("qianxi", "#qianxi-clear");
 
-    General *wangyi = new General(this, "wangyi", "wei", 3, false);
+    General *wangyi = new General(this, "wangyi", "wei", 3, false); // YJ 110
     wangyi->addSkill(new Zhenlie);
     wangyi->addSkill(new Miji);
 
-    General *xunyou = new General(this, "xunyou", "wei", 3);
+    General *xunyou = new General(this, "xunyou", "wei", 3); // YJ 111
     xunyou->addSkill(new Qice);
     xunyou->addSkill(new Zhiyu);
 

@@ -1358,7 +1358,7 @@ int Longhun::getEffHp(const Player *zhaoyun) const{
 GodPackage::GodPackage()
     : Package("god")
 {
-    General *shenguanyu = new General(this, "shenguanyu", "god", 5);
+    General *shenguanyu = new General(this, "shenguanyu", "god", 5); // LE 001
     shenguanyu->addSkill(new Wushen);
     shenguanyu->addSkill(new WushenTargetMod);
     shenguanyu->addSkill(new Wuhun);
@@ -1368,17 +1368,17 @@ GodPackage::GodPackage()
     related_skills.insertMulti("wuhun", "#wuhun");
     related_skills.insertMulti("wuhun", "#wuhun-clear");
 
-    General *shenlvmeng = new General(this, "shenlvmeng", "god", 3);
+    General *shenlvmeng = new General(this, "shenlvmeng", "god", 3); // LE 002
     shenlvmeng->addSkill(new Shelie);
     shenlvmeng->addSkill(new Gongxin);
 
-    General *shenzhouyu = new General(this, "shenzhouyu", "god");
+    General *shenzhouyu = new General(this, "shenzhouyu", "god"); // LE 003
     shenzhouyu->addSkill(new Qinyin);
     shenzhouyu->addSkill(new MarkAssignSkill("@flame", 1));
     shenzhouyu->addSkill(new Yeyan);
     related_skills.insertMulti("yeyan", "#@flame-1");
 
-    General *shenzhugeliang = new General(this, "shenzhugeliang", "god", 3);
+    General *shenzhugeliang = new General(this, "shenzhugeliang", "god", 3); // LE 004
     shenzhugeliang->addSkill(new Qixing);
     shenzhugeliang->addSkill(new QixingStart);
     shenzhugeliang->addSkill(new QixingAsk);
@@ -1391,11 +1391,11 @@ GodPackage::GodPackage()
     related_skills.insertMulti("qixing", "#qixing-clear");
     related_skills.insertMulti("qixing", "#qixing-fake-move");
 
-    General *shencaocao = new General(this, "shencaocao", "god", 3);
+    General *shencaocao = new General(this, "shencaocao", "god", 3); // LE 005
     shencaocao->addSkill(new Guixin);
     shencaocao->addSkill(new Feiying);
 
-    General *shenlvbu = new General(this, "shenlvbu", "god", 5);
+    General *shenlvbu = new General(this, "shenlvbu", "god", 5); // LE 006
     shenlvbu->addSkill(new Kuangbao);
     shenlvbu->addSkill(new KuangbaoClear);
     related_skills.insertMulti("kuangbao", "#kuangbao-clear");
@@ -1405,13 +1405,13 @@ GodPackage::GodPackage()
     shenlvbu->addSkill(new Shenfen);
     related_skills.insertMulti("kuangbao", "#@wrath-2");
 
-    General *shenzhaoyun = new General(this, "shenzhaoyun", "god", 2);
+    General *shenzhaoyun = new General(this, "shenzhaoyun", "god", 2); // LE 007
     shenzhaoyun->addSkill(new JuejingKeep);
     shenzhaoyun->addSkill(new Juejing);
     shenzhaoyun->addSkill(new Longhun);
     related_skills.insertMulti("juejing", "#juejing-draw");
 
-    General *shensimayi = new General(this, "shensimayi", "god", 4);
+    General *shensimayi = new General(this, "shensimayi", "god", 4); // LE 008
     shensimayi->addSkill(new Renjie);
     shensimayi->addSkill(new RenjieClear);
     related_skills.insertMulti("renjie", "#renjie-clear");

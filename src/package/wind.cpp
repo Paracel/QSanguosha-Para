@@ -1068,40 +1068,40 @@ public:
 WindPackage::WindPackage()
     :Package("wind")
 {
-    General *xiahouyuan = new General(this, "xiahouyuan", "wei");
+    General *xiahouyuan = new General(this, "xiahouyuan", "wei"); // WEI 008
     xiahouyuan->addSkill(new Shensu);
     xiahouyuan->addSkill(new SlashNoDistanceLimitSkill("shensu"));
     related_skills.insertMulti("shensu", "#shensu-slash-ndl");
 
-    General *caoren = new General(this, "caoren", "wei");
+    General *caoren = new General(this, "caoren", "wei"); // WEI 011
     caoren->addSkill(new Jushou);
 
-    General *huangzhong = new General(this, "huangzhong", "shu");
+    General *huangzhong = new General(this, "huangzhong", "shu"); // SHU 008
     huangzhong->addSkill(new Liegong);
 
-    General *weiyan = new General(this, "weiyan", "shu");
+    General *weiyan = new General(this, "weiyan", "shu"); // SHU 009
     weiyan->addSkill(new Kuanggu);
 
-    General *xiaoqiao = new General(this, "xiaoqiao", "wu", 3, false);
+    General *xiaoqiao = new General(this, "xiaoqiao", "wu", 3, false); // WU 011
     xiaoqiao->addSkill(new Tianxiang);
     xiaoqiao->addSkill(new TianxiangDraw);
     xiaoqiao->addSkill(new Hongyan);
     related_skills.insertMulti("tianxiang", "#tianxiang");
     xiaoqiao->addSkill(new SPConvertSkill("xiaoqiao", "wz_xiaoqiao+heg_xiaoqiao"));
 
-    General *zhoutai = new General(this, "zhoutai", "wu");
+    General *zhoutai = new General(this, "zhoutai", "wu"); // WU 013
     zhoutai->addSkill(new Buqu);
     zhoutai->addSkill(new BuquRemove);
     zhoutai->addSkill(new BuquClear);
     related_skills.insertMulti("buqu", "#buqu-remove");
     related_skills.insertMulti("buqu", "#buqu-clear");
 
-    General *zhangjiao = new General(this, "zhangjiao$", "qun", 3);
+    General *zhangjiao = new General(this, "zhangjiao$", "qun", 3); // QUN 010
     zhangjiao->addSkill(new Guidao);
     zhangjiao->addSkill(new Leiji);
     zhangjiao->addSkill(new Huangtian);
 
-    General *yuji = new General(this, "yuji", "qun", 3);
+    General *yuji = new General(this, "yuji", "qun", 3); // QUN 011
     yuji->addSkill(new Guhuo);
 
     addMetaObject<ShensuCard>();

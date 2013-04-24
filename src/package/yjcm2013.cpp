@@ -1065,29 +1065,29 @@ public:
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
-    General *caochong = new General(this, "caochong", "wei", 3);
+    General *caochong = new General(this, "caochong", "wei", 3); // YJ 201
     caochong->addSkill(new Chengxiang);
     caochong->addSkill(new Renxin);
 
-    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3);
+    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3); // YJ 202
     fuhuanghou->addSkill(new Zhuikong);
     fuhuanghou->addSkill(new ZhuikongClear);
     fuhuanghou->addSkill(new Qiuyuan);
     related_skills.insertMulti("zhuikong", "#zhuikong-clear");
 
-    General *guohuai = new General(this, "guohuai", "wei");
+    General *guohuai = new General(this, "guohuai", "wei"); // YJ 203
     guohuai->addSkill(new Jingce);
 
-    General *guanping = new General(this, "guanping", "shu", 4);
+    General *guanping = new General(this, "guanping", "shu", 4); // YJ 204
     guanping->addSkill(new Longyin);
 
-    General *jianyong = new General(this, "jianyong", "shu", 3);
+    General *jianyong = new General(this, "jianyong", "shu", 3); // YJ 205
     jianyong->addSkill(new Qiaoshui);
     jianyong->addSkill(new QiaoshuiTargetMod);
     jianyong->addSkill(new Zongshih);
     related_skills.insertMulti("qiaoshui", "#qiaoshui-target");
 
-    General *liru = new General(this, "liru", "qun", 3);
+    General *liru = new General(this, "liru", "qun", 3); // YJ 206
     liru->addSkill(new Juece);
     liru->addSkill(new Mieji);
     liru->addSkill(new MiejiForExNihiloAndCollateral);
@@ -1096,24 +1096,24 @@ YJCM2013Package::YJCM2013Package()
     related_skills.insertMulti("mieji", "#mieji");
     related_skills.insertMulti("fencheng", "#@burn-1");
 
-    General *liufeng = new General(this, "liufeng", "shu");
+    General *liufeng = new General(this, "liufeng", "shu"); // YJ 207
     liufeng->addSkill(new Xiansi);
     liufeng->addSkill(new XiansiAttach);
     related_skills.insertMulti("xiansi", "#xiansi-attach");
 
-    General *manchong = new General(this, "manchong", "wei", 3);
+    General *manchong = new General(this, "manchong", "wei", 3); // YJ 208
     manchong->addSkill(new Junxing);
     manchong->addSkill(new Yuce);
 
-    General *panzhangmazhong = new General(this, "panzhangmazhong", "wu");
+    General *panzhangmazhong = new General(this, "panzhangmazhong", "wu"); // YJ 209
     panzhangmazhong->addSkill(new Duodao);
     panzhangmazhong->addSkill(new Anjian);
 
-    General *yufan = new General(this, "yufan", "wu", 3);
+    General *yufan = new General(this, "yufan", "wu", 3); // YJ 210
     yufan->addSkill(new Zongxuan);
     yufan->addSkill(new Zhiyan);
 
-    General *zhuran = new General(this, "zhuran", "wu");
+    General *zhuran = new General(this, "zhuran", "wu"); // YJ 211
     zhuran->addSkill(new Danshou);
 
     addMetaObject<RenxinCard>();

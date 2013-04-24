@@ -507,37 +507,37 @@ public:
 FirePackage::FirePackage()
     : Package("fire")
 {
-    General *dianwei = new General(this, "dianwei", "wei");
+    General *dianwei = new General(this, "dianwei", "wei"); // WEI 012
     dianwei->addSkill(new Qiangxi);
 
-    General *xunyu = new General(this, "xunyu", "wei", 3);
+    General *xunyu = new General(this, "xunyu", "wei", 3); // WEI 013
     xunyu->addSkill(new Quhu);
     xunyu->addSkill(new Jieming);
 
-    General *pangtong = new General(this, "pangtong", "shu", 3);
+    General *pangtong = new General(this, "pangtong", "shu", 3); // SHU 010
     pangtong->addSkill(new Lianhuan);
     pangtong->addSkill(new MarkAssignSkill("@nirvana", 1));
     pangtong->addSkill(new Niepan);
     related_skills.insertMulti("niepan", "#@nirvana-1");
 
-    General *wolong = new General(this, "wolong", "shu", 3);
+    General *wolong = new General(this, "wolong", "shu", 3); // SHU 011
     wolong->addSkill(new Huoji);
     wolong->addSkill(new Kanpo);
     wolong->addSkill(new Bazhen);
 
-    General *taishici = new General(this, "taishici", "wu");
+    General *taishici = new General(this, "taishici", "wu"); // WU 012
     taishici->addSkill(new Tianyi);
     taishici->addSkill(new TianyiTargetMod);
     related_skills.insertMulti("tianyi", "#tianyi-target");
 
-    General *yuanshao = new General(this, "yuanshao$", "qun");
+    General *yuanshao = new General(this, "yuanshao$", "qun"); // QUN 004
     yuanshao->addSkill(new Luanji);
     yuanshao->addSkill(new Xueyi);
 
-    General *yanliangwenchou = new General(this, "yanliangwenchou", "qun");
+    General *yanliangwenchou = new General(this, "yanliangwenchou", "qun"); // QUN 005
     yanliangwenchou->addSkill(new Shuangxiong);
 
-    General *pangde = new General(this, "pangde", "qun");
+    General *pangde = new General(this, "pangde", "qun"); // QUN 008
     pangde->addSkill("mashu");
     pangde->addSkill(new Mengjin);
     pangde->addSkill(new SPConvertSkill("pangde", "sp_pangde"));

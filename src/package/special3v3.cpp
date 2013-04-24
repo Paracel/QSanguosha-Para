@@ -558,7 +558,7 @@ ADD_PACKAGE(New3v3Card)
 Special3v3Package::Special3v3Package()
     : Package("Special3v3")
 {
-    General *zhugejin = new General(this, "zhugejin", "wu", 3);
+    General *zhugejin = new General(this, "zhugejin", "wu", 3); // WU 018
     zhugejin->addSkill(new Hongyuan);
     zhugejin->addSkill(new HongyuanDraw);
     zhugejin->addSkill(new Huanshi);
@@ -607,7 +607,7 @@ Special3v3_2013Package::Special3v3_2013Package()
     vs_lvbu->addSkill("wushuang");
     vs_lvbu->addSkill(new Zhanshen);
 
-    General *wenpin = new General(this, "wenpin", "wei");
+    General *wenpin = new General(this, "wenpin", "wei"); // WEI 019
     wenpin->addSkill(new Zhenwei);
     wenpin->addSkill(new ZhenweiDistance);
     related_skills.insert("zhenwei", "#zhenwei");

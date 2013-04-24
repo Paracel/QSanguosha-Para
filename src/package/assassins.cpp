@@ -284,16 +284,16 @@ public:
 };
 
 AssassinsPackage::AssassinsPackage(): Package("assassins") {
-    General *fuwan = new General(this, "fuwan", "qun", 4);
+    General *fuwan = new General(this, "fuwan", "qun", 4); //SP 018
     fuwan->addSkill(new Moukui);
 
-    General *liuxie = new General(this, "liuxie", "qun", 3);
+    General *liuxie = new General(this, "liuxie", "qun", 3); // SP 016
     liuxie->addSkill(new Tianming);
     liuxie->addSkill(new Mizhao);
     liuxie->addSkill(new MizhaoSlashNoDistanceLimit);
     related_skills.insertMulti("mizhao", "#mizhao-slash-ndl");
 
-    General *lingju = new General(this, "lingju", "qun", 3, false);
+    General *lingju = new General(this, "lingju", "qun", 3, false); // SP 017
     lingju->addSkill(new Jieyuan);
     lingju->addSkill(new Fenxin);
     lingju->addSkill(new MarkAssignSkill("@burnheart", 1));

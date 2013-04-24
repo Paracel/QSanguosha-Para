@@ -1060,43 +1060,43 @@ ADD_PACKAGE(SPCard)
 SPPackage::SPPackage()
     : Package("sp")
 {
-    General *yangxiu = new General(this, "yangxiu", "wei", 3);
+    General *yangxiu = new General(this, "yangxiu", "wei", 3); // SP 001
     yangxiu->addSkill(new Jilei);
     yangxiu->addSkill(new JileiClear);
     yangxiu->addSkill(new Danlao);
     related_skills.insertMulti("jilei", "#jilei-clear");
 
-    General *sp_diaochan = new General(this, "sp_diaochan", "qun", 3, false, true);
+    General *sp_diaochan = new General(this, "sp_diaochan", "qun", 3, false, true); // SP 002
     sp_diaochan->addSkill("lijian");
     sp_diaochan->addSkill("biyue");
 
-    General *gongsunzan = new General(this, "gongsunzan", "qun");
+    General *gongsunzan = new General(this, "gongsunzan", "qun"); // SP 003
     gongsunzan->addSkill(new Yicong);
     gongsunzan->addSkill(new YicongEffect);
     related_skills.insertMulti("yicong", "#yicong_effect");
 
-    General *yuanshu = new General(this, "yuanshu", "qun");
+    General *yuanshu = new General(this, "yuanshu", "qun"); // SP 004
     yuanshu->addSkill(new Yongsi);
     yuanshu->addSkill(new Weidi);
     yuanshu->addSkill(new SPConvertSkill("yuanshu", "tw_yuanshu"));
 
-    General *sp_sunshangxiang = new General(this, "sp_sunshangxiang", "shu", 3, false, true);
+    General *sp_sunshangxiang = new General(this, "sp_sunshangxiang", "shu", 3, false, true); // SP 005
     sp_sunshangxiang->addSkill("jieyin");
     sp_sunshangxiang->addSkill("xiaoji");
 
-    General *sp_pangde = new General(this, "sp_pangde", "wei", 4, true, true);
+    General *sp_pangde = new General(this, "sp_pangde", "wei", 4, true, true); // SP 006
     sp_pangde->addSkill("mashu");
     sp_pangde->addSkill("mengjin");
 
-    General *sp_guanyu = new General(this, "sp_guanyu", "wei", 4);
+    General *sp_guanyu = new General(this, "sp_guanyu", "wei", 4); // SP 007
     sp_guanyu->addSkill("wusheng");
     sp_guanyu->addSkill(new Danji);
 
-    General *shenlvbu1 = new General(this, "shenlvbu1", "god", 8, true, true);
+    General *shenlvbu1 = new General(this, "shenlvbu1", "god", 8, true, true); // SP 008 (2-1)
     shenlvbu1->addSkill("mashu");
     shenlvbu1->addSkill("wushuang");
 
-    General *shenlvbu2 = new General(this, "shenlvbu2", "god", 4, true, true);
+    General *shenlvbu2 = new General(this, "shenlvbu2", "god", 4, true, true); // SP 008 (2-2)
     shenlvbu2->addSkill("mashu");
     shenlvbu2->addSkill("wushuang");
     shenlvbu2->addSkill(new Xiuluo);
@@ -1105,24 +1105,25 @@ SPPackage::SPPackage()
     shenlvbu2->addSkill(new Shenji);
     related_skills.insertMulti("shenwei", "#shenwei-draw");
 
-    General *sp_caiwenji = new General(this, "sp_caiwenji", "wei", 3, false, true);
+    General *sp_caiwenji = new General(this, "sp_caiwenji", "wei", 3, false, true); // SP 009
     sp_caiwenji->addSkill("beige");
     sp_caiwenji->addSkill("duanchang");
 
-    General *sp_machao = new General(this, "sp_machao", "qun", 4, true, true);
+    General *sp_machao = new General(this, "sp_machao", "qun", 4, true, true); // SP 011
     sp_machao->addSkill("mashu");
     sp_machao->addSkill("tieji");
 
-    General *sp_jiaxu = new General(this, "sp_jiaxu", "wei", 3, true, true);
+    General *sp_jiaxu = new General(this, "sp_jiaxu", "wei", 3, true, true); // SP 012
     sp_jiaxu->addSkill("wansha");
+    sp_jiaxu->addSkill("#wansha-prevent");
     sp_jiaxu->addSkill("luanwu");
     sp_jiaxu->addSkill("weimu");
     sp_jiaxu->addSkill("#@chaos-1");
 
-    General *caohong = new General(this, "caohong", "wei");
+    General *caohong = new General(this, "caohong", "wei"); // SP 013
     caohong->addSkill(new Yuanhu);
 
-    General *guanyinping = new General(this, "guanyinping", "shu", 3, false);
+    General *guanyinping = new General(this, "guanyinping", "shu", 3, false); // SP 014
     guanyinping->addSkill(new Xueji);
     guanyinping->addSkill(new Huxiao);
     guanyinping->addSkill(new HuxiaoCount);
@@ -1133,73 +1134,74 @@ SPPackage::SPPackage()
     related_skills.insertMulti("huxiao", "#huxiao-count");
     related_skills.insertMulti("huxiao", "#huxiao-clear");
 
-    General *xiahouba = new General(this, "xiahouba", "shu");
+    General *xiahouba = new General(this, "xiahouba", "shu"); // SP 019
     xiahouba->addSkill(new Baobian);
 
-    General *chenlin = new General(this, "chenlin", "wei", 3);
+    General *chenlin = new General(this, "chenlin", "wei", 3); // SP 020
     chenlin->addSkill(new Bifa);
     chenlin->addSkill(new Songci);
 
-    General *erqiao = new General(this, "erqiao", "wu", 3, false);
+    General *erqiao = new General(this, "erqiao", "wu", 3, false); // SP 021
     erqiao->addSkill(new Xingwu);
     erqiao->addSkill(new Luoyan);
 
-    General *tw_diaochan = new General(this, "tw_diaochan", "qun", 3, false, true);
+    General *tw_diaochan = new General(this, "tw_diaochan", "qun", 3, false, true); // TW SP 002
     tw_diaochan->addSkill("lijian");
     tw_diaochan->addSkill("biyue");
 
-    General *tw_yuanshu = new General(this, "tw_yuanshu", "qun", 4, true, true);
+    General *tw_yuanshu = new General(this, "tw_yuanshu", "qun", 4, true, true); // TW SP 004
     tw_yuanshu->addSkill("yongsi");
     tw_yuanshu->addSkill("weidi");
 
-    General *tw_daqiao = new General(this, "tw_daqiao", "wu", 3, false, true);
+    General *tw_daqiao = new General(this, "tw_daqiao", "wu", 3, false, true); // TW SP 005
     tw_daqiao->addSkill("guose");
     tw_daqiao->addSkill("liuli");
 
-    General *tw_zhaoyun = new General(this, "tw_zhaoyun", "shu", 4, true, true);
+    General *tw_zhaoyun = new General(this, "tw_zhaoyun", "shu", 4, true, true); // TW SP 006
     tw_zhaoyun->addSkill("longdan");
 
-    General *tw_zhenji = new General(this, "tw_zhenji", "wei", 3, false, true);
+    General *tw_zhenji = new General(this, "tw_zhenji", "wei", 3, false, true); // TW SP 007
     tw_zhenji->addSkill("qingguo");
     tw_zhenji->addSkill("luoshen");
 
-    General *tw_lvbu = new General(this, "tw_lvbu", "qun", 4, true, true);
+    General *tw_lvbu = new General(this, "tw_lvbu", "qun", 4, true, true); // TW SP 008
     tw_lvbu->addSkill("wushuang");
 
-    General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true);
+    General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true); // TW SP 009
     tw_ganning->addSkill("qixi");
 
-    General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true);
+    General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true); // TW SP 010
     tw_machao->addSkill("mashu");
     tw_machao->addSkill("tieji");
 
-    General *tw_zhugeliang = new General(this, "tw_zhugeliang", "shu", 3, true, true);
+    General *tw_zhugeliang = new General(this, "tw_zhugeliang", "shu", 3, true, true); // TW SP 011
     tw_zhugeliang->addSkill("guanxing");
     tw_zhugeliang->addSkill("kongcheng");
+    tw_zhugeliang->addSkill("#kongcheng-effect");
 
-    /* General *tw_huangyueying = new General(this, "tw_huangyueying", "shu", 3, false, true);
+    /* General *tw_huangyueying = new General(this, "tw_huangyueying", "shu", 3, false, true); // TW SP 012
     tw_huangyueying->addSkill("jizhi");
     tw_huangyueying->addSkill("qicai"); */
 
-    General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true);
+    General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true); // TW SP 013
     tw_zhangliao->addSkill("tuxi");
 
-    General *tw_huanggai = new General(this, "tw_huanggai", "wu", 4, true, true);
+    General *tw_huanggai = new General(this, "tw_huanggai", "wu", 4, true, true); // TW SP 014
     tw_huanggai->addSkill("kurou");
 
-    General *tw_guojia = new General(this, "tw_guojia", "wei", 3, true, true);
+    General *tw_guojia = new General(this, "tw_guojia", "wei", 3, true, true); // TW SP 015
     tw_guojia->addSkill("tiandu");
     tw_guojia->addSkill("yiji");
 
-    General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true);
+    General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true); // TW SP 016
     tw_luxun->addSkill("qianxun");
     tw_luxun->addSkill("lianying");
 
-    General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true);
+    General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true); // WZ 001
     wz_daqiao->addSkill("guose");
     wz_daqiao->addSkill("liuli");
 
-    General *wz_xiaoqiao = new General(this, "wz_xiaoqiao", "wu", 3, false, true);
+    General *wz_xiaoqiao = new General(this, "wz_xiaoqiao", "wu", 3, false, true); // WZ 002
     wz_xiaoqiao->addSkill("tianxiang");
     wz_xiaoqiao->addSkill("#tianxiang");
     wz_xiaoqiao->addSkill("hongyan");
@@ -1216,7 +1218,7 @@ ADD_PACKAGE(SP)
 HegemonySPPackage::HegemonySPPackage()
     : Package("hegemony_sp")
 {
-    General *sp_heg_zhouyu = new General(this, "sp_heg_zhouyu", "wu", 3, true, true);
+    General *sp_heg_zhouyu = new General(this, "sp_heg_zhouyu", "wu", 3, true, true); // GSP 001
     sp_heg_zhouyu->addSkill("yingzi");
     sp_heg_zhouyu->addSkill("fanjian");
 }

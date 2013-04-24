@@ -485,24 +485,24 @@ public:
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == EventLoseSkill && data.toString() == objectName()) {
-            foreach (ServerPlayer *p, room->getOtherPlayers(player))
-                room->setPlayerMark(p, "@defense", 0);
+        if (event == EventLoseSkill) {
+            if (data.toString() != objectName())
+                return false;
         } else if (event == Death) {
             DeathStruct death = data.value<DeathStruct>();
-            if (death.who == player && player->hasSkill(objectName())) {
-                foreach (ServerPlayer *p, room->getOtherPlayers(player))
-                    room->setPlayerMark(p, "@defense", 0);
-            }
+            if (death.who != player || !player->hasSkill(objectName()))
+                return false;
+        } else if (event == EventPhaseChanging) {
+            if (!TriggerSkill::triggerable(player))
+                return false;
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to != Player::NotActive)
+                return false;
         }
-        if (!TriggerSkill::triggerable(player)) return false;
-        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.to == Player::NotActive) {
-            foreach (ServerPlayer *p, room->getOtherPlayers(player))
-                room->setPlayerMark(p, "@defense", 0);
-            if (Sanguosha->getPlayerCount(room->getMode()) > 3)
-                room->askForUseCard(player, "@@zhenwei", "@zhenwei");
-        }
+        foreach (ServerPlayer *p, room->getOtherPlayers(player))
+            room->setPlayerMark(p, "@defense", 0);
+        if (event == EventPhaseChanging && Sanguosha->getPlayerCount(room->getMode()) > 3)
+            room->askForUseCard(player, "@@zhenwei", "@zhenwei");
         return false;
     }
 };

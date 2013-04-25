@@ -639,10 +639,11 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
     if (Sanguosha->getGeneral(general_name)) {
         int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
         int saved_index = 0;
-        if (S_HERO_SKIN_INDEX.contains(general_name))
-            saved_index = S_HERO_SKIN_INDEX[general_name];
+        QString name = QString("%1 %2").arg(general_name).arg(totalKey);
+        if (S_HERO_SKIN_INDEX.contains(name))
+            saved_index = S_HERO_SKIN_INDEX[name];
         if (saved_index != skin_index) {
-            S_HERO_SKIN_INDEX[general_name] = skin_index;
+            S_HERO_SKIN_INDEX[name] = skin_index;
             update_cache = true;
             if (from_cache)
                 _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);

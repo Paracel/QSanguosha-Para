@@ -406,6 +406,7 @@ void PlayerCardContainer::repaintAll() {
     _m_avatarArea->setRect(_m_layout->m_avatarArea);
     _m_smallAvatarArea->setRect(_m_layout->m_smallAvatarArea);
 
+    updateAvatar();
     updateSmallAvatar();
     updatePhase();
     updateMarks();

@@ -3355,11 +3355,11 @@ QList<CardsMoveOneTimeStruct> Room::_mergeMoves(QList<CardsMoveStruct> cards_mov
     QList<CardsMoveOneTimeStruct> result;
     foreach (_MoveMergeClassifier cls, moveMap.keys()) {
         CardsMoveOneTimeStruct moveOneTime;
-        moveOneTime.from = moveMap[cls].first().from;
+        moveOneTime.from = cls.m_from;
         moveOneTime.reason = moveMap[cls].first().reason;
-        moveOneTime.to = moveMap[cls].first().to;
-        moveOneTime.to_place = moveMap[cls].first().to_place;
-        moveOneTime.to_pile_name = moveMap[cls].first().to_pile_name;
+        moveOneTime.to = cls.m_to;
+        moveOneTime.to_place = cls.m_to_place;
+        moveOneTime.to_pile_name = cls.m_to_pile_name;
         foreach (CardsMoveStruct move, moveMap[cls]) {
             moveOneTime.card_ids.append(move.card_ids);
             for (int i = 0; i < move.card_ids.size(); i++) {
@@ -3382,14 +3382,7 @@ QList<CardsMoveStruct> Room::_separateMoves(QList<CardsMoveOneTimeStruct> moveOn
     QList<QList<int> > ids;
     foreach (CardsMoveOneTimeStruct moveOneTime, moveOneTimes) {
         for (int i = 0; i < moveOneTime.card_ids.size(); i++) {
-            _MoveSeparateClassifier classifier(moveOneTime.from,
-                                               moveOneTime.to,
-                                               moveOneTime.from_places[i],
-                                               moveOneTime.to_place,
-                                               moveOneTime.from_pile_names[i],
-                                               moveOneTime.to_pile_name,
-                                               moveOneTime.open[i],
-                                               moveOneTime.reason);
+            _MoveSeparateClassifier classifier(moveOneTime, i);
             if (classifiers.contains(classifier)) {
                 int pos = classifiers.indexOf(classifier);
                 ids[pos].append(moveOneTime.card_ids[i]);

@@ -377,28 +377,32 @@ private:
     };
 
     struct _MoveMergeClassifier {
-        inline _MoveMergeClassifier(const CardsMoveStruct &move) { m_from = move.from; m_to = move.to; }
+        inline _MoveMergeClassifier(const CardsMoveStruct &move) {
+            m_from = move.from; m_to = move.to;
+            m_to_place = move.to_place;
+            m_to_pile_name = move.to_pile_name;
+        }
         inline bool operator ==(const _MoveMergeClassifier &other) const{
-            return m_from == other.m_from && m_to == other.m_to;
+            return m_from == other.m_from && m_to == other.m_to
+                   && m_to_place == other.m_to_place && m_to_pile_name == other.m_to_pile_name;
         }
         inline bool operator < (const _MoveMergeClassifier &other) const{
-            return m_from < other.m_from || m_to < other.m_to;
+            return m_from < other.m_from || m_to < other.m_to
+                   || m_to_place < other.m_to_place || m_to_pile_name < other.m_to_pile_name;
         }
         Player *m_from;
         Player *m_to;
+        Player::Place m_to_place;
+        QString m_to_pile_name;
     };
 
     struct _MoveSeparateClassifier {
-        inline _MoveSeparateClassifier(Player *from, Player *to,
-                                       Player::Place from_place, Player::Place to_place,
-                                       QString from_pile_name, QString to_pile_name,
-                                       bool open,
-                                       CardMoveReason reason) {
-            m_from = from; m_to = to;
-            m_from_place = from_place; m_to_place = to_place;
-            m_from_pile_name = from_pile_name; m_to_pile_name = to_pile_name;
-            m_open = open;
-            m_reason = reason;
+        inline _MoveSeparateClassifier(const CardsMoveOneTimeStruct &moveOneTime, int index) {
+            m_from = moveOneTime.from; m_to = moveOneTime.to;
+            m_from_place = moveOneTime.from_places[index]; m_to_place = moveOneTime.to_place;
+            m_from_pile_name = moveOneTime.from_pile_names[index]; m_to_pile_name = moveOneTime.to_pile_name;
+            m_open = moveOneTime.open[index];
+            m_reason = moveOneTime.reason;
         }
 
         inline bool operator ==(const _MoveSeparateClassifier &other) const{

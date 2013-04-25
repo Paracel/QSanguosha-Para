@@ -1842,26 +1842,16 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
     }
     // private pile
     if (move.to_place == Player::PlaceSpecial && !move.to_pile_name.isNull() && !move.to_pile_name.startsWith('#')) {
-        bool hiden = false;
-        foreach (int card_id, move.card_ids)
-            if (card_id == Card::S_UNKNOWN_CARD_ID) {
-                hiden = true;
-                break;
-            }
-        if (hiden)
+        bool hidden = (move.card_ids.contains(Card::S_UNKNOWN_CARD_ID));
+        if (hidden)
             log_box->appendLog("#RemoveFromGame", QString(), QStringList(), QString(), move.to_pile_name, QString::number(move.card_ids.length()));
         else
             log_box->appendLog("$AddToPile", QString(), QStringList(), IntList2StringList(move.card_ids).join("+"), move.to_pile_name);
     }
     if (move.from_place == Player::PlaceSpecial && move.to
         && move.reason.m_reason == CardMoveReason::S_REASON_EXCHANGE_FROM_PILE) {
-        bool hiden = false;
-        foreach (int card_id, move.card_ids)
-            if (card_id == Card::S_UNKNOWN_CARD_ID) {
-                hiden = true;
-                break;
-            }
-        if (!hiden)
+        bool hidden = (move.card_ids.contains(Card::S_UNKNOWN_CARD_ID));
+        if (!hidden)
             log_box->appendLog("$GotCardFromPile", move.to->objectName(), QStringList(), IntList2StringList(move.card_ids).join("+"), move.from_pile_name);
         else
             log_box->appendLog("#GotNCardFromPile", move.to->objectName(), QStringList(), QString(), move.from_pile_name, QString::number(move.card_ids.length()));
@@ -1869,13 +1859,8 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
     //DrawNCards
     if (move.from_place == Player::DrawPile && move.to_place == Player::PlaceHand) {
         QString to_general = move.to->objectName();
-        bool hiden = false;
-        foreach (int card_id, move.card_ids)
-            if (card_id == Card::S_UNKNOWN_CARD_ID) {
-                hiden = true;
-                break;
-            }
-        if (!hiden)
+        bool hidden = (move.card_ids.contains(Card::S_UNKNOWN_CARD_ID));
+        if (!hidden)
             log_box->appendLog("$DrawCards", to_general, QStringList(), IntList2StringList(move.card_ids).join("+"),
                                QString::number(move.card_ids.length()));
         else
@@ -1883,23 +1868,18 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
                                QString::number(move.card_ids.length()));
 
     }
-    if (move.from_place == Player::PlaceTable && move.to_place == Player::PlaceHand
+    if ((move.from_place == Player::PlaceTable || move.from_place == Player::PlaceJudge)
+        && move.to_place == Player::PlaceHand
         && move.reason.m_reason != CardMoveReason::S_REASON_PREVIEW) {
         QString to_general = move.to->objectName();
-        QString card_str = QString();
-        foreach (int card_id, move.card_ids) {
-            if (card_id != Card::S_UNKNOWN_CARD_ID) {
-                if (card_str.isEmpty())
-                    card_str = QString::number(card_id);
-                else
-                    card_str += "+" + QString::number(card_id);
-            }
-        }
-        if (!card_str.isEmpty())
+        QList<int> ids = move.card_ids;
+        ids.removeAll(Card::S_UNKNOWN_CARD_ID);
+        if (!ids.isEmpty()) {
+            QString card_str = IntList2StringList(ids).join("+");
             log_box->appendLog("$GotCardBack", to_general, QStringList(), card_str);
+        }
     }
-    if ((move.from_place == Player::DiscardPile || move.from_place == Player::PlaceJudge)
-        && move.to_place == Player::PlaceHand) {
+    if (move.from_place == Player::DiscardPile && move.to_place == Player::PlaceHand) {
         QString to_general = move.to->objectName();
         QString card_str = IntList2StringList(move.card_ids).join("+");
         log_box->appendLog("$RecycleCard", to_general, QStringList(), card_str);
@@ -1909,31 +1889,22 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         QString from_general = move.from->objectName();
         QStringList tos;
         tos << move.to->objectName();
-        int hide = 0;
-        QString card_str = QString();
-        foreach (int card_id, move.card_ids) {
-            if (card_id != Card::S_UNKNOWN_CARD_ID) {
-                if (card_str.isEmpty())
-                    card_str = QString::number(card_id);
-                else
-                    card_str += "+" + QString::number(card_id);
-            } else
-                hide++;
+        QList<int> ids = move.card_ids;
+        ids.removeAll(Card::S_UNKNOWN_CARD_ID);
+        int hide = move.card_ids.length() - ids.length();
+        if (!ids.isEmpty()) {
+            QString card_str = IntList2StringList(ids).join("+");
+            log_box->appendLog("$MoveCard", from_general, tos, card_str);
         }
-        if (!card_str.isEmpty()) log_box->appendLog("$MoveCard", from_general, tos, card_str);
-        if (hide > 0) log_box->appendLog("#MoveNCards", from_general, tos, QString(), QString::number(hide));
+        if (hide > 0)
+            log_box->appendLog("#MoveNCards", from_general, tos, QString(), QString::number(hide));
     }
     if (move.from_place == Player::PlaceHand && move.to_place == Player::PlaceHand) {
         QString from_general = move.from->objectName();
         QStringList tos;
         tos << move.to->objectName();
-        bool hiden = false;
-        foreach (int card_id, move.card_ids)
-            if (card_id == Card::S_UNKNOWN_CARD_ID) {
-                hiden = true;
-                break;
-            }
-        if (hiden)
+        bool hidden = (move.card_ids.contains(Card::S_UNKNOWN_CARD_ID));
+        if (hidden)
             log_box->appendLog("#MoveNCards", from_general, tos, QString(), QString::number(move.card_ids.length()));
         else
             log_box->appendLog("$MoveCard", from_general, tos, IntList2StringList(move.card_ids).join("+"));

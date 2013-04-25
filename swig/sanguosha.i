@@ -300,7 +300,7 @@ public:
 
     void setNext(ServerPlayer *next);
     ServerPlayer *getNext() const;
-    ServerPlayer *getNextAlive() const;
+    ServerPlayer *getNextAlive(int n = 1) const;
 
     // 3v3 methods
     void addToSelected(const char *general);

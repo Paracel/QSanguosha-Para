@@ -811,11 +811,13 @@ ServerPlayer *ServerPlayer::getNext() const{
     return next;
 }
 
-ServerPlayer *ServerPlayer::getNextAlive() const{
-    ServerPlayer *next = this->next;
-    while (next->isDead())
-        next = next->getNext();
-
+ServerPlayer *ServerPlayer::getNextAlive(int n) const{
+    ServerPlayer *next = const_cast<ServerPlayer *>(this);
+    for (int i = 0; i < n; i++) {
+        next = next->next;
+        while (next->isDead())
+            next = next->next;
+    }
     return next;
 }
 

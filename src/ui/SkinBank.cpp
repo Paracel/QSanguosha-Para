@@ -612,9 +612,11 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
 
     // case 1 and 2
     if (arg.isNull()) totalKey = key; else totalKey = key.arg(arg);
-    if (S_IMAGE_KEY2FILE.contains(totalKey)) // first, search cache
+    bool from_cache = false;
+    if (S_IMAGE_KEY2FILE.contains(totalKey)) { // first, search cache
         fileName = S_IMAGE_KEY2FILE[totalKey];
-    else if (isImageKeyDefined(totalKey)) { // then, read from config file
+        from_cache = true;
+    } else if (isImageKeyDefined(totalKey)) { // then, read from config file
         fileName = _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);
         S_IMAGE_KEY2FILE[totalKey].append(fileName);
     } else { // case 3: use default
@@ -632,17 +634,18 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
     }
 
     // Hero skin?
-    bool change_cache = false;
+    bool update_cache = false;
     QString general_name = fileName.split("/").last().split(".").first();
     if (Sanguosha->getGeneral(general_name)) {
-        change_cache = true;
         int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
         int saved_index = 0;
         if (S_HERO_SKIN_INDEX.contains(general_name))
             saved_index = S_HERO_SKIN_INDEX[general_name];
         if (saved_index != skin_index) {
             S_HERO_SKIN_INDEX[general_name] = skin_index;
-            change_cache = true;
+            update_cache = true;
+            if (from_cache)
+                _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);
         }
         if (skin_index > 0) {
             fileName.replace("image/", "image/heroskin/");
@@ -650,7 +653,7 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
         }
     }
 
-    if (!S_IMAGE_KEY2PIXMAP.contains(totalKey) || change_cache) {
+    if (!S_IMAGE_KEY2PIXMAP.contains(totalKey) || update_cache) {
         QPixmap pixmap = QSanPixmapCache::getPixmap(fileName);
         if (clipping) {
             QRect actualClip = clipRegion;

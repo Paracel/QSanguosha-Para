@@ -126,7 +126,7 @@ QPixmap PlayerCardContainer::_getPixmap(const QString &key, const QString &sArg)
     
         rKey = key.arg(getResourceKeyName());
         return G_ROOM_SKIN.getPixmap(rKey, sArg); // then try "%1key = ..."
-    } else  {
+    } else {
         return G_ROOM_SKIN.getPixmap(key, sArg); // finally, try "key = ..."
     }
 }
@@ -227,9 +227,7 @@ void PlayerCardContainer::updateSmallAvatar() {
     const General *general = NULL;
     if (m_player) general = m_player->getGeneral2();
     if (general != NULL) {
-        QPixmap smallAvatarIcon = G_ROOM_SKIN.getGeneralPixmap(
-            general->objectName(),
-            QSanRoomSkin::GeneralIconSize(_m_layout->m_smallAvatarSize));
+        QPixmap smallAvatarIcon = G_ROOM_SKIN.getGeneralPixmap(general->objectName(), QSanRoomSkin::GeneralIconSize(_m_layout->m_smallAvatarSize));
         smallAvatarIcon = paintByMask(smallAvatarIcon);
         _paintPixmap(_m_smallAvatarIcon, _m_layout->m_smallAvatarArea,
                      smallAvatarIcon, _getAvatarParent());
@@ -408,7 +406,6 @@ void PlayerCardContainer::repaintAll() {
     _m_avatarArea->setRect(_m_layout->m_avatarArea);
     _m_smallAvatarArea->setRect(_m_layout->m_smallAvatarArea);
 
-    updateAvatar();
     updateSmallAvatar();
     updatePhase();
     updateMarks();

@@ -674,6 +674,7 @@ void RoomScene::adjustItems() {
             thread->blockSignals(false);
             foreach (Photo *photo, photos)
                 photo->repaintAll();
+            dashboard->repaintAll();
         }
     } else if (skinName == factory.S_COMPACT_SKIN_NAME) {
         if (displayRegion.width() > maxSize.width() && displayRegion.height() > maxSize.height()) {
@@ -683,6 +684,7 @@ void RoomScene::adjustItems() {
             thread->blockSignals(false);
             foreach (Photo *photo, photos)
                 photo->repaintAll();
+            dashboard->repaintAll();
         }
     }
 
@@ -1228,11 +1230,9 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
     case Qt::Key_F3: dashboard->beginSorting(); break;
     case Qt::Key_F4: dashboard->reverseSelection(); break;
     case Qt::Key_F5: {
-            if (control_is_down) {
-                if (add_robot && add_robot->isVisible())
-                    ClientInstance->addRobot();
-            } else if (fill_robots && fill_robots->isVisible())
-                ClientInstance->fillRobots();
+            foreach (Photo *photo, photos)
+                photo->repaintAll();
+            dashboard->repaintAll();
             break;
         }
     case Qt::Key_F6: {
@@ -1244,6 +1244,14 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
             bool paused = pausing_text->isVisible();
             QString message = QString("pause %1").arg((paused ? "false" : "true"));
             ClientInstance->request(message);
+            break;
+        }
+    case Qt::Key_F7: {
+            if (control_is_down) {
+                if (add_robot && add_robot->isVisible())
+                    ClientInstance->addRobot();
+            } else if (fill_robots && fill_robots->isVisible())
+                ClientInstance->fillRobots();
             break;
         }
     case Qt::Key_F12: {

@@ -1,6 +1,7 @@
 #include "generaloverview.h"
 #include "ui_generaloverview.h"
 #include "engine.h"
+#include "settings.h"
 #include "SkinBank.h"
 #include "clientstruct.h"
 #include "client.h"
@@ -126,6 +127,37 @@ GeneralOverview::~GeneralOverview() {
     delete ui;
 }
 
+bool GeneralOverview::hasSkin(const QString &general_name) {
+    int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
+    if (skin_index == 0) {
+        Config.beginGroup("HeroSkin");
+        Config.setValue(general_name, 1);
+        Config.endGroup();
+        QPixmap pixmap = G_ROOM_SKIN.getCardMainPixmap(general_name);
+        Config.beginGroup("HeroSkin");
+        Config.remove(general_name);
+        Config.endGroup();
+        if (pixmap.width() <= 1 && pixmap.height() <= 1)
+            return false;
+    }
+    return true;
+}
+
+QString GeneralOverview::getIllustratorInfo(const QString &general_name) {
+    int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
+    QString suffix = (skin_index > 0) ? QString("_%1").arg(skin_index) : QString();
+    QString illustrator_text = Sanguosha->translate(QString("illustrator:%1%2").arg(general_name).arg(suffix));
+    if (!illustrator_text.startsWith("illustrator:"))
+        return illustrator_text;
+    else {
+        illustrator_text = Sanguosha->translate("illustrator:" + general_name);
+        if (!illustrator_text.startsWith("illustrator:"))
+            return illustrator_text;
+        else
+            return Sanguosha->translate("DefaultIllustrator");
+    }
+}
+
 void GeneralOverview::addLines(const Skill *skill) {
     QString skill_name = Sanguosha->translate(skill->objectName());
     QStringList sources = skill->getSources();
@@ -184,6 +216,8 @@ void GeneralOverview::on_tableWidget_itemSelectionChanged() {
     QString general_name = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toString();
     const General *general = Sanguosha->getGeneral(general_name);
     ui->generalPhoto->setPixmap(G_ROOM_SKIN.getCardMainPixmap(general->objectName()));
+    ui->changeHeroSkinButton->setVisible(hasSkin(general_name));
+
     QList<const Skill *> skills = general->getVisibleSkillList();
     foreach (const Skill *skill, skills) {
         if (skill->inherits("SPConvertSkill")) skills.removeOne(skill);
@@ -256,11 +290,7 @@ void GeneralOverview::on_tableWidget_itemSelectionChanged() {
     else
         ui->cvLineEdit->setText(tr("Official"));
 
-    QString illustrator_text = Sanguosha->translate("illustrator:" + general->objectName());
-    if (!illustrator_text.startsWith("illustrator:"))
-        ui->illustratorLineEdit->setText(illustrator_text);
-    else
-        ui->illustratorLineEdit->setText(Sanguosha->translate("DefaultIllustrator"));
+    ui->illustratorLineEdit->setText(getIllustratorInfo(general->objectName()));
 
     button_layout->addStretch();
     ui->skillTextEdit->append(general->getSkillDescription());
@@ -297,7 +327,6 @@ void GeneralOverview::on_tableWidget_itemDoubleClicked(QTableWidgetItem *) {
     }
 }
 
-#include "settings.h"
 void GeneralOverview::askChangeSkin() {
     int row = ui->tableWidget->currentRow();
     QString general_name = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toString();
@@ -318,4 +347,5 @@ void GeneralOverview::askChangeSkin() {
             return;
     }
     ui->generalPhoto->setPixmap(pixmap);
+    ui->illustratorLineEdit->setText(getIllustratorInfo(general_name));
 }

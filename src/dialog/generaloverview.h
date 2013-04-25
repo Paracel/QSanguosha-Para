@@ -29,6 +29,8 @@ private:
     void resetButtons();
     void addLines(const Skill *skill);
     void addCopyAction(QCommandLinkButton *button);
+    bool hasSkin(const QString &general_name);
+    QString getIllustratorInfo(const QString &general_name);
 
 private slots:
     void playAudioEffect();

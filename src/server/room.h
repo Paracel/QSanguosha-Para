@@ -422,7 +422,6 @@ private:
     };
 
     int _m_lastMovementId;
-    void _fillMoveInfo(CardMoveStruct &move) const;
     void _fillMoveInfo(CardsMoveStruct &moves, int card_index) const;
     QList<CardsMoveOneTimeStruct> _mergeMoves(QList<CardsMoveStruct> cards_moves);
     QList<CardsMoveStruct> _separateMoves(QList<CardsMoveOneTimeStruct> moveOneTimes);

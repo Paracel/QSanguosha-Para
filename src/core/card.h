@@ -14,7 +14,6 @@ class ClientPlayer;
 class CardItem;
 
 struct CardEffectStruct;
-struct CardMoveStruct;
 struct CardUseStruct;
 
 class Card: public QObject {

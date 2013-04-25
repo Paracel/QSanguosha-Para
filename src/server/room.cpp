@@ -3309,30 +3309,6 @@ void Room::moveCards(CardsMoveStruct cards_move, bool forceMoveVisible, bool ign
     moveCards(cards_moves, forceMoveVisible, ignoreChanges);
 }
 
-void Room::_fillMoveInfo(CardMoveStruct &move) const{
-    int card_id = move.card_id;
-    if (!move.from)
-        move.from = getCardOwner(card_id);
-    move.from_place = getCardPlace(card_id);
-    if (move.from) { // Hand/Equip/Judge
-        if (move.from_place == Player::PlaceSpecial)
-            move.from_pile_name = move.from->getPileName(card_id);
-        move.from_player_name = move.from->objectName();
-    }
-    if (move.to) {
-        if (move.to->isAlive()) {
-            move.to_player_name = move.to->objectName();
-            int card_id = move.card_id;
-            if (move.to_place == Player::PlaceSpecial)
-                move.to_pile_name = move.to->getPileName(card_id);
-        } else {
-            move.to = NULL;
-            move.to_place = Player::DiscardPile;
-            return;
-        }
-    }
-}
-
 void Room::_fillMoveInfo(CardsMoveStruct &moves, int card_index) const{
     int card_id = moves.card_ids[card_index];
     if (!moves.from)
@@ -3518,7 +3494,7 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
             case Player::DrawPile: m_drawPile->prepend(card_id); break;
             case Player::PlaceSpecial: table_cards.append(card_id); break;
             default:
-                break;
+                    break;
             }
 
             setCardMapping(card_id, (ServerPlayer *)cards_move.to, cards_move.to_place);

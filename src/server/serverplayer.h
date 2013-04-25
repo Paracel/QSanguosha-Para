@@ -2,7 +2,6 @@
 #define _SERVER_PLAYER_H
 
 class Room;
-struct CardMoveStruct;
 class AI;
 class Recorder;
 

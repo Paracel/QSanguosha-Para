@@ -176,35 +176,6 @@ public:
     static const int S_MASK_BASIC_REASON = 0x0F;
 };
 
-struct CardMoveStruct {
-    inline CardMoveStruct() {
-        from_place = Player::PlaceUnknown;
-        to_place = Player::PlaceUnknown;
-        from = NULL;
-        to = NULL;
-    }
-    int card_id;
-    Player::Place from_place, to_place;
-    QString from_player_name, to_player_name;
-    QString from_pile_name, to_pile_name;
-    Player *from, *to;
-    CardMoveReason reason;
-    bool open;    
-    bool tryParse(const Json::Value &);
-    Json::Value toJsonValue() const;
-    inline bool isRelevant(Player *player) {
-        return player != NULL && (from == player || (to == player && to_place != Player::PlaceSpecial));
-    }
-    inline bool hasSameSourceAs(const CardMoveStruct &move) {
-        return from == move.from && from_place == move.from_place
-               && from_player_name == move.from_player_name && from_pile_name == move.from_pile_name;
-    }
-    inline bool hasSameDestinationAs(const CardMoveStruct &move) {
-        return to == move.to && to_place == move.to_place
-               && to_player_name == move.to_player_name && to_pile_name == move.to_pile_name;
-    } 
-};
-
 struct CardsMoveOneTimeStruct {
     QList<int> card_ids;
     QList<Player::Place> from_places;
@@ -274,7 +245,6 @@ struct CardsMoveStruct {
     inline bool isRelevant(const Player *player) {
         return player != NULL && (from == player || (to == player && to_place != Player::PlaceSpecial));
     }
-    QList<CardMoveStruct> flatten();    
 };
 
 struct DyingStruct {
@@ -503,7 +473,6 @@ Q_DECLARE_METATYPE(SlashEffectStruct)
 Q_DECLARE_METATYPE(CardUseStruct)
 Q_DECLARE_METATYPE(CardsMoveStruct)
 Q_DECLARE_METATYPE(CardsMoveOneTimeStruct)
-Q_DECLARE_METATYPE(CardMoveStruct)
 Q_DECLARE_METATYPE(CardStar)
 Q_DECLARE_METATYPE(PlayerStar)
 Q_DECLARE_METATYPE(DyingStruct)

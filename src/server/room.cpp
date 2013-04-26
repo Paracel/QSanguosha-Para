@@ -1072,6 +1072,14 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
     const Card *result = NULL;
 
     if (card) {
+        if (!card->isVirtualCard()) {
+            WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
+            if (wrapped->isModified())
+                broadcastUpdateCard(getPlayers(), card->getEffectiveId(), wrapped);
+            else
+                broadcastResetCard(getPlayers(), card->getEffectiveId());
+        }
+
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
             LogMessage log;
             log.card_str = card->toString();
@@ -2766,6 +2774,13 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             }
             if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
                 card_use.from->setFlags("MoreSlashInOneTurn");
+            if (!card_use.card->isVirtualCard()) {
+                WrappedCard *wrapped = Sanguosha->getWrappedCard(card_use.card->getEffectiveId());
+                if (wrapped->isModified())
+                    broadcastUpdateCard(getPlayers(), card_use.card->getEffectiveId(), wrapped);
+                else
+                    broadcastResetCard(getPlayers(), card_use.card->getEffectiveId());
+            }
             card_use.card->onUse(this, card_use);
         } else if (card) {
             CardUseStruct new_use = card_use;
@@ -3778,7 +3793,7 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move) {
         QList<const Card *> cards;
         foreach (int cardId, move.card_ids)
             cards.append(getCard(cardId));
-        filterCards(player, cards, move.from_place != Player::DrawPile);
+        filterCards(player, cards, true);
     }
 }
 

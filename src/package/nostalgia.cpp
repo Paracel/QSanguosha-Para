@@ -518,7 +518,7 @@ public:
         return false;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *player, const Card *) const {
+    virtual int getEffectIndex(const ServerPlayer *player, const Card *) const{
         if (player->hasFlag("NosJiefanToLord"))
             return 2;
         else

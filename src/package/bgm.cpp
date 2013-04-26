@@ -252,7 +252,7 @@ public:
         room->clearAG(sp_pangtong);
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *sp_pangtong, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *sp_pangtong, QVariant &data) const{
         if (sp_pangtong->hasFlag("ManjuanInvoke")) {
             sp_pangtong->setFlags("-ManjuanInvoke");
             return false;
@@ -1283,7 +1283,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const {
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();
         if (change.to != Player::NotActive || player->getPile("junwei_equip").length() == 0)
             return false;
@@ -1327,7 +1327,7 @@ public:
         events << Damaged << DamageInflicted;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &) const {
+    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &) const{
         if (event == Damaged) {
             if (player->getMark("@fenyong") == 0 && room->askForSkillInvoke(player, objectName())) {
                 player->gainMark("@fenyong");
@@ -1358,7 +1358,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const {
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         ServerPlayer *zuoci = room->findPlayerBySkillName("fenyong");
         if (zuoci == NULL)
             return false;
@@ -1452,7 +1452,7 @@ public:
         return false;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *, const Card *) const {
+    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
         return -2;
     }
 };

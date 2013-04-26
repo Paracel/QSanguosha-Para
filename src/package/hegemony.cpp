@@ -439,7 +439,7 @@ public:
         return false;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const {
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
         if (card->isKindOf("Slash"))
             return 2;
         else

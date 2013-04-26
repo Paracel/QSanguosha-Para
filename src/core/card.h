@@ -84,7 +84,7 @@ public:
     virtual void clearFlags() const;
 
     virtual QString getPackage() const;
-    inline virtual QString getClassName() const { return metaObject()->className(); }
+    inline virtual QString getClassName() const{ return metaObject()->className(); }
     virtual bool isVirtualCard() const;
     virtual bool isEquipped() const;
     virtual QString getCommonEffectName() const;
@@ -112,7 +112,7 @@ public:
                               int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
     
-    inline virtual const Card *getRealCard() const { return this; }
+    inline virtual const Card *getRealCard() const{ return this; }
     virtual const Card *validate(const CardUseStruct *cardUse) const;
     virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const;
 
@@ -122,11 +122,11 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
     virtual bool isCancelable(const CardEffectStruct &effect) const;
 
-    inline virtual bool isKindOf(const char *cardType) const { return inherits(cardType); }
-    inline virtual QStringList getFlags() const { return flags; }
+    inline virtual bool isKindOf(const char *cardType) const{ return inherits(cardType); }
+    inline virtual QStringList getFlags() const{ return flags; }
 
-    inline virtual bool isModified() const { return false; }
-    inline virtual void onNullified(ServerPlayer *target) const { return; }
+    inline virtual bool isModified() const{ return false; }
+    inline virtual void onNullified(ServerPlayer *target) const{ return; }
 
     // static functions
     static bool CompareByNumber(const Card *a, const Card *b);

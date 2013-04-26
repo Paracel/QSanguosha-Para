@@ -660,6 +660,8 @@ void ServerPlayer::play(QList<Player::Phase> set_phases) {
         }
         if (getPhase() != NotActive)
             thread->trigger(EventPhaseEnd, room, this);
+        else
+            break;
     }
 }
 
@@ -813,7 +815,9 @@ ServerPlayer *ServerPlayer::getNext() const{
 }
 
 ServerPlayer *ServerPlayer::getNextAlive(int n) const{
+    bool hasAlive = (room->getAlivePlayers().length() > 0);
     ServerPlayer *next = const_cast<ServerPlayer *>(this);
+    if (!hasAlive) return next;
     for (int i = 0; i < n; i++) {
         next = next->next;
         while (next->isDead())

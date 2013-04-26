@@ -34,7 +34,7 @@ public:
 
     explicit Room(QObject *parent, const QString &mode);
     ServerPlayer *addSocket(ClientSocket *socket);
-    inline int getId() const { return _m_Id; } 
+    inline int getId() const{ return _m_Id; } 
     bool isFull() const;
     bool isFinished() const;
     bool canPause(ServerPlayer *p) const;
@@ -231,7 +231,7 @@ public:
     void swapPile();
     QList<int> getDiscardPile();
     inline QList<int> &getDrawPile() { return *m_drawPile; }
-    inline const QList<int> &getDrawPile() const { return *m_drawPile; }
+    inline const QList<int> &getDrawPile() const{ return *m_drawPile; }
     int getCardFromPile(const QString &card_name);
     ServerPlayer *findPlayer(const QString &general_name, bool include_dead = false) const;
     QList<ServerPlayer *> findPlayersBySkillName(const QString &skill_name) const;

@@ -13,7 +13,7 @@ class Player;
 class CardPattern {
 public:
     virtual bool match(const Player *player, const Card *card) const = 0;
-    virtual bool willThrow() const {
+    virtual bool willThrow() const{
         return true;
     }
 };

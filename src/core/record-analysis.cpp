@@ -65,7 +65,7 @@ void RecAnalysis::initialize(QString dir) {
             QStringList ban_packages = texts.at(5).split("+");
             foreach (Package *package, Sanguosha->findChildren<Package *>()) {
                 if (!ban_packages.contains(package->objectName())
-                   && Sanguosha->getScenario(package->objectName()) == NULL)
+                    && Sanguosha->getScenario(package->objectName()) == NULL)
                     m_recordPackages << Sanguosha->translate(package->objectName());
             }
 

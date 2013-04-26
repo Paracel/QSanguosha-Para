@@ -829,7 +829,7 @@ public:
     int getRoleIndex() const;
 
     const CardPattern *getPattern(const char *name) const;
-    const Card::HandlingMethod getCardHandlingMethod(const char *method_name) const;
+    Card::HandlingMethod getCardHandlingMethod(const char *method_name) const;
     QList<const Skill *> getRelatedSkills(const char *skill_name) const;
     const Skill *getMainSkill(const QString &skill_name) const;
 

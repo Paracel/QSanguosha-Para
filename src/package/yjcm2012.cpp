@@ -825,7 +825,7 @@ public:
         return false;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *, const Card *) const {
+    virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
         return 1;
     }
 };
@@ -931,7 +931,7 @@ public:
         return false;
     }
 
-    virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const {
+    virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const{
         if (card->isKindOf("Analeptic")) {
             if (player->getGeneralName().contains("zhouyu"))
                 return 3;

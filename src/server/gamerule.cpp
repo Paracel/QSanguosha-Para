@@ -424,13 +424,13 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
                 CardEffectStruct effect = data.value<CardEffectStruct>();
                 QStringList card_list = effect.to->tag["CurrentCardUse"].toStringList();
                 if (effect.card && card_list.contains(effect.card->toString())) {
+                    card_list.removeOne(effect.card->toString());
+                    effect.to->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
                     if (room->getMode() == "02_1v1" && effect.to->isDead()) {
                         QString new_general = effect.to->tag["1v1ChangeGeneral"].toString();
                         if (!new_general.isEmpty())
                             changeGeneral1v1(effect.to);
                     }
-                    card_list.removeOne(effect.card->toString());
-                    effect.to->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
                 }
             }
             break;
@@ -620,6 +620,11 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
         new_general = room->askForGeneral(player, list);
         list.removeOne(new_general);
         player->tag["1v1Arrange"] = QVariant::fromValue(list);
+    }
+
+    if (player->getPhase() != Player::NotActive) {
+        player->setPhase(Player::NotActive);
+        room->broadcastProperty(player, "phase");
     }
     room->revivePlayer(player);
     room->changeHero(player, new_general, true, true);

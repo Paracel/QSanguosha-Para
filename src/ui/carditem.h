@@ -25,7 +25,7 @@ public:
 
     const Card *getCard() const;
     void setCard(const Card *card);
-    inline int getId() const { return m_cardId; }
+    inline int getId() const{ return m_cardId; }
 
     // For move card animation
     void setHomePos(QPointF home_pos);
@@ -45,7 +45,7 @@ public:
     void changeGeneral(const QString &general_name);
     void setFootnote(const QString &desc);
 
-    bool isSelected() const { return m_isSelected; }
+    bool isSelected() const{ return m_isSelected; }
     inline void setSelected(bool selected) { m_isSelected = selected; }
     bool isEquipped() const;
 

@@ -103,7 +103,7 @@ public:
     }
 
     inline virtual bool isVirtualCard() const{ return false; }
-    //inline virtual bool isEquipped() const { return m_card->isEquipped(); }
+    //inline virtual bool isEquipped() const{ return m_card->isEquipped(); }
     inline virtual QString getCommonEffectName() const{
         Q_ASSERT(m_card != NULL);
         return m_card->getCommonEffectName();

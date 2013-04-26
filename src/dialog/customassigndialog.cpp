@@ -1499,7 +1499,7 @@ bool CustomAssignDialog::save(QString path) {
     }
 
     QString filename = path;
-    if (path.size()<1)
+    if (path.size() < 1)
         filename = QFileDialog::getSaveFileName(this,
                                                 tr("Save mini scenario settings"),
                                                 "etc/customScenes/",

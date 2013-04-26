@@ -285,8 +285,7 @@ void Client::processServerPacket(const char *cmd) {
             if (!replayer)
                 processServerRequest(packet);
         }
-    }
-    else
+    } else
         processObsoleteServerPacket(cmd);
 }
 
@@ -1346,7 +1345,6 @@ void Client::clearAG(const Json::Value &) {
 }
 
 void Client::askForSinglePeach(const Json::Value &arg) {
-    
     if (!arg.isArray() || arg.size() != 2 || !arg[0].isString() || !arg[1].isInt()) return;
 
     ClientPlayer *dying = getPlayer(toQString(arg[0]));

@@ -539,7 +539,7 @@ void Player::setPhase(Phase phase) {
     emit phase_changed();
 }
 
-bool Player::faceUp() const {
+bool Player::faceUp() const{
     return face_up;
 }
 
@@ -550,7 +550,7 @@ void Player::setFaceUp(bool face_up) {
     }
 }
 
-int Player::getMaxCards() const {
+int Player::getMaxCards() const{
     int rule = 0, total = 0, extra = 0;
     if (Config.MaxHpScheme == 3 && general2) {
         total = general->getMaxHp() + general2->getMaxHp();
@@ -562,7 +562,7 @@ int Player::getMaxCards() const {
     return qMax((qMax(hp, 0) + rule + extra), 0);
 }
 
-QString Player::getKingdom() const {
+QString Player::getKingdom() const{
     if (kingdom.isEmpty() && general)
         return general->getKingdom();
     else

@@ -130,10 +130,6 @@ public:
         } else
             return NULL;
     }
-
-    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
-        return 2 - card->subcardsLength();
-    }
 };
 
 class Luanji: public ViewAsSkill {

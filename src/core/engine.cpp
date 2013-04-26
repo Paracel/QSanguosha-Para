@@ -247,7 +247,7 @@ const CardPattern *Engine::getPattern(const QString &name) const{
     return new ExpPattern(name);
 }
 
-const Card::HandlingMethod Engine::getCardHandlingMethod(const QString &method_name) const{
+Card::HandlingMethod Engine::getCardHandlingMethod(const QString &method_name) const{
     if (method_name == "use")
         return Card::MethodUse;
     else if (method_name == "response")
@@ -649,7 +649,6 @@ QString Engine::getRoles(const QString &mode) const{
             return "ZCCCNFFF";
         else if (n == 6)
             return "ZCCNFF";
-
     } else {
         const Scenario *scenario = getScenario(mode);
         if (scenario)

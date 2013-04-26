@@ -63,7 +63,7 @@ public:
     inline int getVotes() { return _m_votesGot; }
     inline void setMaxVotes(int maxVotes) { _m_maxVotes = maxVotes; }
     // See _m_floatingArea for more information
-    inline QRect getFloatingArea() const { return _m_floatingAreaRect; }
+    inline QRect getFloatingArea() const{ return _m_floatingAreaRect; }
     inline void setSaveMeIcon(bool visible) { _m_saveMeIcon->setVisible(visible); }
     void setFloatingArea(QRect rect);
     

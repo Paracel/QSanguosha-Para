@@ -235,7 +235,7 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
     setTag("CurrentDying", QVariant::fromValue(currentdying));
 }
 
-ServerPlayer *Room::getCurrentDyingPlayer() const {
+ServerPlayer *Room::getCurrentDyingPlayer() const{
     QStringList currentdying = getTag("CurrentDying").toStringList();
     if (currentdying.isEmpty()) return NULL;
     QString dyingobj = currentdying.last();
@@ -4050,6 +4050,8 @@ void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
 
         qint64 diff = Config.AIDelay - timer.elapsed();
         if (diff > 0) thread->delay(diff);
+    } else if (player->getPhase() != Player::Play) {
+        return;
     } else {
         bool success = doRequest(player, S_COMMAND_PLAY_CARD, toJsonString(player->objectName()), true);
         Json::Value clientReply = player->getClientReply();

@@ -49,7 +49,6 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
 
         if (damage.from && damage.from != player) {
-            player->tag["Wuhun"] = true;
             damage.from->gainMark("@nightmare", damage.damage);
             damage.from->getRoom()->broadcastSkillInvoke(objectName(), 1);
             room->notifySkillInvoked(player, objectName());

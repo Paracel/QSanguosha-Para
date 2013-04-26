@@ -640,7 +640,8 @@ ZongxuanCard::ZongxuanCard() {
 void ZongxuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     CardMoveReason reason(CardMoveReason::S_REASON_PUT, source->objectName(),
                           QString(), "zongxuan", QString());
-    room->moveCardTo(this, source, NULL, Player::DrawPile, reason, true);
+    foreach (int id, this->subcards)
+        room->moveCardTo(Sanguosha->getCard(id), source, NULL, Player::DrawPile, reason, true);
     QStringList zongxuan = source->property("zongxuan").toString().split("+");
     foreach (int id, this->subcards)
         zongxuan.removeOne(QString::number(id));

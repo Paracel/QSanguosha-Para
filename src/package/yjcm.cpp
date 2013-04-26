@@ -4,6 +4,7 @@
 #include "maneuvering.h"
 #include "clientplayer.h"
 #include "engine.h"
+#include "settings.h"
 #include "ai.h"
 #include "general.h"
 
@@ -52,11 +53,7 @@ public:
         if (move.to_place == Player::DiscardPile
             && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
                 ||move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE)) {
-            QList<CardsMoveStruct> exchangeMove;
-            CardsMoveStruct luoyingget;
-            luoyingget.from = move.reason.m_reason == CardMoveReason::S_REASON_JUDGEDONE ? NULL : move.from;
-            luoyingget.to = caozhi;
-            luoyingget.to_place = Player::PlaceHand;
+            QList<int> card_ids;
             int i = 0;
             foreach (int card_id, move.card_ids) {
                 if (Sanguosha->getCard(card_id)->getSuit() == Card::Club
@@ -66,28 +63,31 @@ public:
                         || (move.reason.m_reason != CardMoveReason::S_REASON_JUDGEDONE
                             && room->getCardOwner(card_id) == move.from
                             && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip))))
-                    luoyingget.card_ids << card_id;
+                    card_ids << card_id;
                 i++;
             }
-            if (luoyingget.card_ids.empty())
+            if (card_ids.empty())
                 return false;
             else if (caozhi->askForSkillInvoke(objectName(), data)) {
-                while (!luoyingget.card_ids.empty()) {
-                    room->fillAG(luoyingget.card_ids, caozhi);
-                    int id = room->askForAG(caozhi, luoyingget.card_ids, true, objectName());
+                int ai_delay = Config.AIDelay;
+                Config.AIDelay = 0;
+                while (!card_ids.empty()) {
+                    room->fillAG(card_ids, caozhi);
+                    int id = room->askForAG(caozhi, card_ids, true, objectName());
                     if (id == -1) {
                         room->clearAG(caozhi);
                         break;
                     }
-                    luoyingget.card_ids.removeOne(id);
+                    card_ids.removeOne(id);
                     room->clearAG(caozhi);
                 }
+                Config.AIDelay = ai_delay;
 
-                if (!luoyingget.card_ids.empty()) {
+                if (!card_ids.empty()) {
                     QList<int> ids = move.card_ids;
                     int i = 0;
                     foreach (int id, ids) {
-                        if (luoyingget.card_ids.contains(id)) {
+                        if (card_ids.contains(id)) {
                             move.card_ids.removeOne(id);
                             move.from_places.removeAt(i);
                         }
@@ -95,9 +95,9 @@ public:
                     }
                     data = QVariant::fromValue(move);
 
-                    exchangeMove.push_back(luoyingget);
                     room->broadcastSkillInvoke("luoying");
-                    room->moveCardsAtomic(exchangeMove, true);
+                    foreach (int id, card_ids)
+                        room->obtainCard(caozhi, id);
                 }
             }
         }

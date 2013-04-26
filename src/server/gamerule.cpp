@@ -349,10 +349,6 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
             if (damage.from && !damage.from->isAlive())
                 damage.from = NULL;
             data = QVariant::fromValue(damage);
-            if (damage.card && damage.card->isKindOf("Slash") && player->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
-                room->removePlayerMark(player, "Qinggang_Armor_Nullified"); // before reduce Hp
-                room->addPlayerMark(player, "Qinggang_Armor_Nullified_Clear");
-            }
             room->sendDamageLog(damage);
 
             room->applyDamage(player, damage);
@@ -370,12 +366,6 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
         }
     case DamageComplete: {
             DamageStruct damage = data.value<DamageStruct>();
-            if (player->getMark("Qinggang_Armor_Nullified_Clear") == 0) {
-                if (damage.card && damage.card->isKindOf("Slash"))
-                    room->removePlayerMark(player, "Qinggang_Armor_Nullified"); // otherwise
-            } else
-                room->setPlayerMark(player, "Qinggang_Armor_Nullified_Clear", 0);
-
             if (room->getTag("is_chained").toInt() > 0) {
                 DamageStruct damage = data.value<DamageStruct>();
                 if (damage.nature != DamageStruct::Normal && !damage.chain) {

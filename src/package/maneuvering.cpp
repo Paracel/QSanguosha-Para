@@ -217,9 +217,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target && target->isAlive()
-               && target->getMark("Qinggang_Armor_Nullified") == 0 && target->getMark("Armor_Nullified") == 0
-               && target->getMark("Equips_Nullified_to_Yourself") == 0;
+        return target && target->isAlive();
     }
 
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -268,9 +266,7 @@ SilverLion::SilverLion(Suit suit, int number)
 }
 
 void SilverLion::onUninstall(ServerPlayer *player) const{
-    if (player->isAlive()
-        && player->getMark("Qinggang_Armor_Nullified") == 0 && player->getMark("Armor_Nullified") == 0
-        && player->getMark("Equips_Nullified_to_Yourself") == 0) {
+    if (player->isAlive() && player->hasArmorEffect(objectName())) {
         player->setFlags("SilverLionRecover");
     }
 }

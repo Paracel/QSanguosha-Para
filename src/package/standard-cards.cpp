@@ -355,8 +355,10 @@ public:
             bool do_anim = false;
             foreach (ServerPlayer *p, use.to.toSet()) {
                 if (p->getMark("Equips_of_Others_Nullified_to_You") == 0) {
-                    room->addPlayerMark(p, "Qinggang_Armor_Nullified");
-                    if (p->getArmor() || p->hasSkill("bazhen"))  do_anim = true;
+                    do_anim = (p->getArmor() && p->hasArmorEffect(p->getArmor()->objectName())) || p->hasArmorEffect("bazhen");
+                    QStringList qinggang = p->tag["Qinggang"].toStringList();
+                    qinggang.append(use.card->toString());
+                    p->tag["Qinggang"] = QVariant::fromValue(qinggang);
                 }
             }
             if (do_anim)

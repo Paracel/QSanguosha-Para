@@ -492,7 +492,13 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
             setEmotion(effect.to, "skill_nullify");
         else
             effect.to->setFlags("-Global_NonSkillNullify");
-        removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // prevent the effect
+        if (effect.slash) {
+            QStringList qinggang = effect.to->tag["Qinggang"].toStringList();
+            if (!qinggang.isEmpty()) {
+                qinggang.removeOne(effect.slash->toString());
+                effect.to->tag["Qinggang"] = qinggang;
+            }
+        }
     }
 }
 
@@ -509,7 +515,13 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
     else {
         if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
             setEmotion(effect.to, "jink");
-        removePlayerMark(effect.to, "Qinggang_Armor_Nullified"); // use Jink to nullify the Slash
+        if (effect.slash) {
+            QStringList qinggang = effect.to->tag["Qinggang"].toStringList();
+            if (!qinggang.isEmpty()) {
+                qinggang.removeOne(effect.slash->toString());
+                effect.to->tag["Qinggang"] = qinggang;
+            }
+        }
         thread->trigger(SlashMissed, this, effect.from, data);
     }
 }
@@ -2772,7 +2784,8 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             thread->trigger(CardFinished, this, card_use.from, data);
 
             foreach (ServerPlayer *p, m_alivePlayers) {
-                removePlayerMark(p, "Qinggang_Armor_Nullified");
+                p->tag.remove("Qinggang");
+
                 foreach (QString flag, p->getFlagList()) {
                     if (flag == "Global_GongxinOperator")
                         p->setFlags("-" + flag);
@@ -2962,8 +2975,13 @@ void Room::damage(DamageStruct &damage_data) {
 
     // Predamage
     if (thread->trigger(Predamage, this, damage_data.from, data)) {
-        if (damage_data.card && damage_data.card->isKindOf("Slash"))
-            removePlayerMark(damage_data.to, "Qinggang_Armor_Nullified"); // no damage
+        if (damage_data.card && damage_data.card->isKindOf("Slash")) {
+            QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
+            if (!qinggang.isEmpty()) {
+                qinggang.removeOne(damage_data.card->toString());
+                damage_data.to->tag["Qinggang"] = qinggang;
+            }
+        }
         return;
     }
 
@@ -2989,6 +3007,14 @@ void Room::damage(DamageStruct &damage_data) {
         setTag("CurrentDamageStruct", data);
 
         thread->trigger(PreDamageDone, this, damage_data.to, data);
+
+        if (damage_data.card && damage_data.card->isKindOf("Slash")) {
+            QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
+            if (!qinggang.isEmpty()) {
+                qinggang.removeOne(damage_data.card->toString());
+                damage_data.to->tag["Qinggang"] = qinggang;
+            }
+        }
         thread->trigger(DamageDone, this, damage_data.to, data);
 
         if (damage_data.from)

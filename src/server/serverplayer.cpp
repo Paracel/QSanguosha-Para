@@ -326,14 +326,15 @@ void ServerPlayer::removeCard(const Card *card, Place place) {
             break;
         }
     case PlaceEquip: {
-            WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
-            removeEquip(wrapped);
             const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
             if (equip == NULL)
                 equip = qobject_cast<const EquipCard *>(Sanguosha->getEngineCard(card->getEffectiveId()));
             Q_ASSERT(equip != NULL);
-
             equip->onUninstall(this);
+
+            WrappedCard *wrapped = Sanguosha->getWrappedCard(card->getEffectiveId());
+            removeEquip(wrapped);
+
             bool show_log = true;
             foreach (QString flag, flags)
                 if (flag.endsWith("_InTempMoving")) {

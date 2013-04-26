@@ -512,7 +512,7 @@ bool Player::hasWeapon(const QString &weapon_name) const{
 }
 
 bool Player::hasArmorEffect(const QString &armor_name) const{
-    if (getMark("Qinggang_Armor_Nullified") > 0 || getMark("Armor_Nullified") > 0
+    if (!tag["Qinggang"].toStringList().isEmpty() || getMark("Armor_Nullified") > 0
         || getMark("Equips_Nullified_to_Yourself") > 0)
         return false;
     if (armor_name == "bazhen")

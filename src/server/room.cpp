@@ -3469,7 +3469,6 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
         updateCardsOnLose(move);
 
     // Now, process add cards
-    notifyMoveCards(false, cards_moves, forceMoveVisible);
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
         for (int j = 0; j < cards_move.card_ids.size(); j++) {
@@ -3496,6 +3495,7 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
 
     foreach (CardsMoveStruct move, cards_moves)
         updateCardsOnGet(move);
+    notifyMoveCards(false, cards_moves, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);
@@ -3667,7 +3667,6 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         }
         origin_x.append(m_x);
     }
-    notifyMoveCards(false, origin_x, forceMoveVisible);
 
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
@@ -3695,6 +3694,7 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
 
     foreach (CardsMoveStruct move, cards_moves)
         updateCardsOnGet(move);
+    notifyMoveCards(false, origin_x, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);
@@ -3748,14 +3748,7 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move) {
         QList<const Card *> cards;
         foreach (int cardId, move.card_ids)
             cards.append(getCard(cardId));
-
-        bool refilter = true;
-        if (move.from_place == Player::DrawPile)
-            refilter = false;
-        else if (move.from == player && (move.from_place == Player::PlaceHand
-                                         || move.from_place == Player::PlaceEquip))
-            refilter = false;
-        filterCards(player, cards, refilter);
+        filterCards(player, cards, move.from_place != Player::DrawPile);
     }
 }
 
@@ -3885,16 +3878,15 @@ void Room::changePlayerGeneral2(ServerPlayer *player, const QString &new_general
 void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool refilter) {
     if (refilter) {
         for (int i = 0; i < cards.size(); i++) {
-            // this doesn't work actually
             WrappedCard *card = qobject_cast<WrappedCard *>(getCard(cards[i]->getId()));
-            //if (card->isModified()) {
+            if (card->isModified()) {
                 int cardId = card->getId();
                 resetCard(cardId);
-            //  if (getCardPlace(cardId) != Player::PlaceHand)
-                    broadcastResetCard(getPlayers(), cardId);
-            //  else
-            //      notifyResetCard(player, cardId);
-            //}
+                if (getCardPlace(cardId) != Player::PlaceHand)
+                    broadcastResetCard(m_players, cardId);
+                else
+                    notifyResetCard(player, cardId);
+            }
         }
     }
 

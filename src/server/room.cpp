@@ -3494,6 +3494,16 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
     foreach (CardsMoveStruct move, cards_moves)
         updateCardsOnLose(move);
 
+    for (int i = 0; i < cards_moves.size(); i++) {
+        CardsMoveStruct &cards_move = cards_moves[i];
+        for (int j = 0; j < cards_move.card_ids.size(); j++) {
+            setCardMapping(cards_move.card_ids[j], (ServerPlayer *)cards_move.to, cards_move.to_place);
+        }
+    }
+    foreach (CardsMoveStruct move, cards_moves)
+        updateCardsOnGet(move);
+    notifyMoveCards(false, cards_moves, forceMoveVisible);
+
     // Now, process add cards
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
@@ -3514,14 +3524,8 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
             default:
                     break;
             }
-
-            setCardMapping(card_id, (ServerPlayer *)cards_move.to, cards_move.to_place);
         }
     }
-
-    foreach (CardsMoveStruct move, cards_moves)
-        updateCardsOnGet(move);
-    notifyMoveCards(false, cards_moves, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);
@@ -3672,6 +3676,15 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
     cards_moves = _separateMoves(moveOneTimes);
 
     // Now, process add cards
+    for (int i = 0; i < cards_moves.size(); i++) {
+        CardsMoveStruct &cards_move = cards_moves[i];
+        for (int j = 0; j < cards_move.card_ids.size(); j++) {
+            setCardMapping(cards_move.card_ids[j], (ServerPlayer *)cards_move.to, cards_move.to_place);
+        }
+    }
+    foreach (CardsMoveStruct move, cards_moves)
+        updateCardsOnGet(move);
+
     QList<CardsMoveStruct> origin_x;
     foreach (CardsMoveStruct m, origin) {
         CardsMoveStruct m_x = m;
@@ -3693,6 +3706,7 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         }
         origin_x.append(m_x);
     }
+    notifyMoveCards(false, origin_x, forceMoveVisible);
 
     for (int i = 0; i < cards_moves.size(); i++) {
         CardsMoveStruct &cards_move = cards_moves[i];
@@ -3711,16 +3725,10 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
             case Player::DrawPile: m_drawPile->prepend(card_id); break;
             case Player::PlaceSpecial: table_cards.append(card_id); break;
             default:
-                break;
+                    break;
             }
-
-            setCardMapping(card_id, (ServerPlayer *)cards_move.to, cards_move.to_place);
         }
     }
-
-    foreach (CardsMoveStruct move, cards_moves)
-        updateCardsOnGet(move);
-    notifyMoveCards(false, origin_x, forceMoveVisible);
 
     //trigger event
     moveOneTimes = _mergeMoves(cards_moves);
@@ -3736,14 +3744,9 @@ void Room::updateCardsOnLose(const CardsMoveStruct &move) {
     for (int i = 0; i < move.card_ids.size(); i++) {
         WrappedCard *card = qobject_cast<WrappedCard *>(getCard(move.card_ids[i]));
         if (card->isModified()) {
-            if (move.to_place == Player::DiscardPile || (move.to && move.to_place != Player::PlaceDelayedTrick)) {
+            if (move.to_place == Player::DiscardPile) {
                 resetCard(move.card_ids[i]);
-                if (move.to_place != Player::PlaceHand)
-                    broadcastResetCard(getPlayers(), move.card_ids[i]);
-            } else if (move.from != NULL && move.from_place == Player::PlaceHand
-                       && move.to != NULL && move.to_place != Player::PlaceDelayedTrick) {
-                resetCard(move.card_ids[i]);
-                notifyResetCard((ServerPlayer *)move.from, move.card_ids[i]);
+                broadcastResetCard(getPlayers(), move.card_ids[i]);
             }
         }
     }
@@ -3770,7 +3773,8 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move) {
     player = (ServerPlayer *)move.to;
     if (player != NULL && (move.to_place == Player::PlaceHand
                            || move.to_place == Player::PlaceEquip
-                           || move.to_place == Player::PlaceJudge)) {
+                           || move.to_place == Player::PlaceJudge
+                           || move.to_place == Player::PlaceSpecial)) {
         QList<const Card *> cards;
         foreach (int cardId, move.card_ids)
             cards.append(getCard(cardId));

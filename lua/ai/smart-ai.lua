@@ -4143,7 +4143,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 				end
 			end
 		elseif not to:hasSkill("buqu") then
-			if from:hasSkill("wansha") and getCardsNum("Peach", to) == 0 and not (self:isFriend(to, friend) and getCardsNum("Peach", friend) >= 1) then
+			if from:hasSkill("wansha") and getCardsNum("Peach", to) == 0 and not (self:isFriend(to, from) and getCardsNum("Peach", from) >= 1) then
 				value = value - 30
 			end
 		end

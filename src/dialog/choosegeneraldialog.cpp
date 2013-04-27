@@ -133,23 +133,28 @@ ChooseGeneralDialog::ChooseGeneralDialog(const QStringList &general_names, QWidg
             layout->addWidget(button);
     } else {
         QGridLayout *grid_layout = new QGridLayout;
-        layout = grid_layout;
+        QHBoxLayout *hlayout = new QHBoxLayout;
+        QVBoxLayout *lord_layout = new QVBoxLayout;
 
         if (lord_name.size() && !ServerInfo.EnableHegemony && !no_icon) {
             const General *lord = Sanguosha->getGeneral(lord_name);
 
             QLabel *label = new QLabel;
-            label->setPixmap(G_ROOM_SKIN.getGeneralPixmap(lord->objectName(), icon_type));
+            label->setPixmap(G_ROOM_SKIN.getCardMainPixmap(lord->objectName()));
             label->setToolTip(lord->getSkillDescription(true));
-            grid_layout->addWidget(label, 0, 0);
+            lord_layout->addWidget(label);
         }
+        lord_layout->addStretch();
+        hlayout->addLayout(lord_layout);
 
         int columns_x = qMin(columns, (buttons.length() + 1) / 2);
         for (int i = 0; i < buttons.length(); i++) {
             int row = i / columns_x;
             int column = i % columns_x;
-            grid_layout->addWidget(buttons.at(i), row, column + 1);
+            grid_layout->addWidget(buttons.at(i), row, column);
         }
+        hlayout->addLayout(grid_layout);
+        layout = hlayout;
     }
 
     QString default_name = generals.first()->objectName();

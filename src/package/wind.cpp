@@ -584,7 +584,13 @@ void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
 
     damage.to = effect.to;
     damage.transfer = true;
-    room->damage(damage);
+    try {
+        room->damage(damage);
+    }
+    catch (TriggerEvent event) {
+        effect.to->removeMark("TianxiangTarget");
+        throw event;
+    }
 }
 
 class TianxiangViewAsSkill: public OneCardViewAsSkill {

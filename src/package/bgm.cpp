@@ -1001,7 +1001,13 @@ public:
             newdamage.transfer = true;
 
             target->addMark("ShichouTarget");
-            room->damage(newdamage);
+            try {
+                room->damage(newdamage);
+            }
+            catch (TriggerEvent event) {
+                target->removeMark("ShichouTarget");
+                throw event;
+            }
             return true;
         } else if (event == Dying) {
             DyingStruct dying = data.value<DyingStruct>();

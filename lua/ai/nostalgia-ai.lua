@@ -390,7 +390,7 @@ function sgs.ai_cardsview_valuable.nosjiefan(self, class_name, player)
 		if not current or current:isDead() or current:getPhase() == sgs.Player_NotActive
 			or current:objectName() == player:objectName() or (current:hasSkill("wansha") and player:objectName() ~= dying:objectName())
 			or (self:isEnemy(current) and self:findLeijiTarget(current, 50, player)) then return nil end
-		return "@NosJiefanCard=.->."
+		return "@NosJiefanCard=."
 	end
 end
 

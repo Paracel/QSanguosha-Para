@@ -695,7 +695,7 @@ function sgs.ai_cardsview_valuable.chunlao(self, class_name, player)
 		if dying then
 			local anal = sgs.Sanguosha:cloneCard("analeptic")
 			if dying:isCardLimited(anal, sgs.Card_MethodUse) then return nil end
-			return "@ChunlaoWineCard=.->."
+			return "@ChunlaoWineCard=."
 		end
 	end
 end

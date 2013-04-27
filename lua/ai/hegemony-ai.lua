@@ -194,6 +194,7 @@ fenxun_skill.name = "fenxun"
 table.insert(sgs.ai_skills, fenxun_skill)
 fenxun_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("FenxunCard") then return end
+	if #self.enemies == 0 then return end
 	if self:needBear() then return end
 	if not self.player:isNude() then
 		local card_id
@@ -258,21 +259,25 @@ fenxun_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.FenxunCard = function(card, use, self)
-	if not self.player:hasUsed("FenxunCard") then
-		self:sort(self.enemies, "defense")
-		local target
-		for _, enemy in ipairs(self.enemies) do
-			for _, slash in ipairs(self:getCards("Slash")) do
-				if self.player:distanceTo(enemy) > 1 and not self:slashProhibit(slash, enemy)
-					and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
-					target = enemy
-					break
+	self:sort(self.enemies, "defense")
+	local target_num, target, hastarget = 0
+	for _, enemy in ipairs(self.enemies) do
+		for _, slash in ipairs(self:getCards("Slash")) do
+			if not self:slashProhibit(slash, enemy) and self.player:canSlash(enemy, slash, false) and sgs.isGoodTarget(enemy, self.enemies, self) then
+				if self.player:distanceTo(enemy) > 1 and not target then target = enemy
+				elseif self.player:distanceTo(enemy) == 1 then hastarget = true
+				end
+				if self.player:inMyAttackRange(enemy) then
+					target_num = target_num + 1
 				end
 			end
 		end
-		if target and self:getCardsNum("Slash") > 0 then
-			use.card = card
-			if use.to then use.to:append(target) end
+	end
+	if hastarget and target_num >= 2 then return end
+	if target and self:getCardsNum("Slash") > 0 then
+		use.card = card
+		if use.to then
+			use.to:append(target)
 		end
 	end
 end

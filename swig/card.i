@@ -116,6 +116,7 @@ public:
     
 protected:
     DamageStruct::Nature nature;
+    mutable int drank;
 };
 
 class Analeptic: public BasicCard {

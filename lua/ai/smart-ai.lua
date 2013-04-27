@@ -1605,6 +1605,8 @@ function SmartAI:filterEvent(event, player, data)
 			end
 		end
 	elseif event == sgs.CardUsed then
+		local struct = data:toCardUse()
+		local card = struct.card
 		if card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard") then
 			local reason = { ["Snatch"] = "snatch", ["Dismantlement"] = "dismantlement", ["YinlingCard"] = "yinling" }
 			for _, p in sgs.qlist(struct.to) do

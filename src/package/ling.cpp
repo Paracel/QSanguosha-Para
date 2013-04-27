@@ -155,7 +155,7 @@ public:
         if (gongsun->getPhase() == Player::Finish && gongsun->askForSkillInvoke(objectName())) {
             gongsun->drawCards(2);
             room->broadcastSkillInvoke("zhulou");
-            if (!room->askForCard(gongsun, ".Weapon", "@zhulou-discard", QVariant()))
+            if (!room->askForCard(gongsun, ".Weapon", "@zhulou-discard"))
                 room->loseHp(gongsun);
         }
         return false;

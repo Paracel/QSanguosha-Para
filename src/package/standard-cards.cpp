@@ -10,6 +10,7 @@ Slash::Slash(Suit suit, int number): BasicCard(suit, number)
 {
     setObjectName("slash");
     nature = DamageStruct::Normal;
+    drank = 0;
 }
 
 DamageStruct::Nature Slash::getNature() const{
@@ -174,11 +175,10 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
 }
 
 void Slash::onEffect(const CardEffectStruct &card_effect) const{
-    Room *room = card_effect.from->getRoom();
-    int n = 0;
+    Room *room = card_effect.from->getRoom(); // FIX THIS!!!
     if (card_effect.from->getMark("drank") > 0) {
         room->setCardFlag(this, "drank");
-        n = card_effect.from->getMark("drank");
+        this->drank = card_effect.from->getMark("drank");
         room->setPlayerMark(card_effect.from, "drank", 0);
     }
 
@@ -188,7 +188,7 @@ void Slash::onEffect(const CardEffectStruct &card_effect) const{
     effect.slash = this;
 
     effect.to = card_effect.to;
-    effect.drank = n;
+    effect.drank = this->drank;
 
     room->slashEffect(effect);
 }
@@ -548,7 +548,7 @@ public:
                 return false;
 
             if (player == NULL) return false;
-            if (!player->askForSkillInvoke("kylin_bow", data))
+            if (!player->askForSkillInvoke(objectName(), data))
                 return false;
 
             room->setEmotion(player, "weapon/kylin_bow");
@@ -573,12 +573,12 @@ KylinBow::KylinBow(Suit suit, int number)
 
 class EightDiagramSkill: public ArmorSkill {
 public:
-    EightDiagramSkill(): ArmorSkill("eight_diagram") {
+    EightDiagramSkill(): ArmorSkill("EightDiagram") {
         events << CardAsked;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        QString asked = data.toStringList().first();
+        QString asked = data.toString();
         if (asked == "jink") {
             if (room->askForSkillInvoke(player, "eight_diagram")) {
                 room->setCardFlag(player->getArmor()->getId(), "using");

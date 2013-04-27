@@ -434,18 +434,18 @@ ManeuveringPackage::ManeuveringPackage()
           << new Nullification(Card::Spade, 13);
    // club
     cards << new SilverLion(Card::Club, 1)
-            << new Vine(Card::Club, 2)
-            << new Analeptic(Card::Club, 3)
-            << new SupplyShortage(Card::Club, 4)
-            << new ThunderSlash(Card::Club, 5)
-            << new ThunderSlash(Card::Club, 6)
-            << new ThunderSlash(Card::Club, 7)
-            << new ThunderSlash(Card::Club, 8)
-            << new Analeptic(Card::Club, 9)
-            << new IronChain(Card::Club, 10)
-            << new IronChain(Card::Club, 11)
-            << new IronChain(Card::Club, 12)
-            << new IronChain(Card::Club, 13);
+          << new Vine(Card::Club, 2)
+          << new Analeptic(Card::Club, 3)
+          << new SupplyShortage(Card::Club, 4)
+          << new ThunderSlash(Card::Club, 5)
+          << new ThunderSlash(Card::Club, 6)
+          << new ThunderSlash(Card::Club, 7)
+          << new ThunderSlash(Card::Club, 8)
+          << new Analeptic(Card::Club, 9)
+          << new IronChain(Card::Club, 10)
+          << new IronChain(Card::Club, 11)
+          << new IronChain(Card::Club, 12)
+          << new IronChain(Card::Club, 13);
 
      // heart
     cards << new Nullification(Card::Heart, 1)

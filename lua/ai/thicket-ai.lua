@@ -462,7 +462,7 @@ end
 function DimengIsWorth(self, friend, enemy, mycards, myequips)
 	local hand1 = enemy:getHandcardNum()
 	local hand2 = friend:getHandcardNum()
-	if hand1 < hand2 then
+	if hand1 < hand2 or (hand1 == 0 and hand2 == 0) then
 		return false
 	elseif hand1 == hand2 and hand1 > 0 then
 		return friend:hasSkills("tuntian+zaoxian")

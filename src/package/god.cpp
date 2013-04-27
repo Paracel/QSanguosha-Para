@@ -426,30 +426,37 @@ public:
         shencc->setMark("GuixinTimes", 0);
         QVariant data = QVariant::fromValue(damage);
         QList<ServerPlayer *> players = room->getOtherPlayers(shencc);
-        for (int i = 0; i < damage.damage; i++) {
-            shencc->addMark("GuixinTimes");
-            if (shencc->askForSkillInvoke(objectName(), data)) {
-                room->broadcastSkillInvoke(objectName());
+        try {
+            for (int i = 0; i < damage.damage; i++) {
+                shencc->addMark("GuixinTimes");
+                if (shencc->askForSkillInvoke(objectName(), data)) {
+                    room->broadcastSkillInvoke(objectName());
 
-                shencc->setFlags("GuixinUsing");
-                if (players.length() >= 4)
-                    room->doLightbox("$GuixinAnimate");
+                    shencc->setFlags("GuixinUsing");
+                    if (players.length() >= 4)
+                        room->doLightbox("$GuixinAnimate");
 
-                foreach (ServerPlayer *player, players) {
-                    if (player->isAlive() && !player->isAllNude()) {
-                        CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, shencc->objectName());
-                        int card_id = room->askForCardChosen(shencc, player, "hej", objectName());
-                        room->obtainCard(shencc, Sanguosha->getCard(card_id),
-                                         reason, room->getCardPlace(card_id) != Player::PlaceHand);
+                    foreach (ServerPlayer *player, players) {
+                        if (player->isAlive() && !player->isAllNude()) {
+                            CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, shencc->objectName());
+                            int card_id = room->askForCardChosen(shencc, player, "hej", objectName());
+                            room->obtainCard(shencc, Sanguosha->getCard(card_id),
+                                             reason, room->getCardPlace(card_id) != Player::PlaceHand);
+                        }
                     }
-                }
 
-                shencc->turnOver();
-                shencc->setFlags("-GuixinUsing");
-            } else
-                break;
+                    shencc->turnOver();
+                    shencc->setFlags("-GuixinUsing");
+                } else
+                    break;
+            }
+            shencc->setMark("GuixinTimes", n);
         }
-        shencc->setMark("GuixinTimes", n);
+        catch (TriggerEvent event) {
+            shencc->setFlags("-GuixinUsing");
+            shencc->setMark("GuixinTimes", n);
+            throw event;
+        }
     }
 };
 
@@ -567,28 +574,34 @@ void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> 
     room->doLightbox("$ShenfenAnimate", 5000);
     shenlvbu->loseMark("@wrath", 6);
 
-    QList<ServerPlayer *> players = room->getOtherPlayers(shenlvbu);
-    foreach (ServerPlayer *player, players) {
-        room->damage(DamageStruct("shenfen", shenlvbu, player));
-        room->getThread()->delay();
-    }
-
-    foreach (ServerPlayer *player, players) {
-        QList<const Card *> equips = player->getEquips();
-        player->throwAllEquips();
-        if (!equips.isEmpty())
+    try {
+        QList<ServerPlayer *> players = room->getOtherPlayers(shenlvbu);
+        foreach (ServerPlayer *player, players) {
+            room->damage(DamageStruct("shenfen", shenlvbu, player));
             room->getThread()->delay();
-    }
+        }
 
-    foreach (ServerPlayer *player, players) {
-        DummyCard *card = player->wholeHandCards();
-        room->askForDiscard(player, "shenfen", 4, 4);
-        if (card != NULL)
-            room->getThread()->delay();
-    }
+        foreach (ServerPlayer *player, players) {
+            QList<const Card *> equips = player->getEquips();
+            player->throwAllEquips();
+            if (!equips.isEmpty())
+                room->getThread()->delay();
+        }
 
-    shenlvbu->turnOver();
-    shenlvbu->setFlags("-ShenfenUsing");
+        foreach (ServerPlayer *player, players) {
+            DummyCard *card = player->wholeHandCards();
+            room->askForDiscard(player, "shenfen", 4, 4);
+            if (card != NULL)
+                room->getThread()->delay();
+        }
+
+        shenlvbu->turnOver();
+        shenlvbu->setFlags("-ShenfenUsing");
+    }
+    catch (TriggerEvent event) {
+        shenlvbu->setFlags("-ShenfenUsing");
+        throw event;
+    }
 }
 
 WuqianCard::WuqianCard() {

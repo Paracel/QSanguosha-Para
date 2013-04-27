@@ -576,7 +576,7 @@ KylinBow::KylinBow(Suit suit, int number)
 
 class EightDiagramSkill: public ArmorSkill {
 public:
-    EightDiagramSkill(): ArmorSkill("EightDiagram") {
+    EightDiagramSkill(): ArmorSkill("eight_diagram") {
         events << CardAsked;
     }
 

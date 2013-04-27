@@ -950,12 +950,18 @@ void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
 
     QList<ServerPlayer *> players = room->getOtherPlayers(source);
     source->setFlags("FenchengUsing");
-    foreach (ServerPlayer *player, players) {
-        if (player->isAlive())
-            room->cardEffect(this, source, player);
-            room->getThread()->delay();
+    try {
+        foreach (ServerPlayer *player, players) {
+            if (player->isAlive())
+                room->cardEffect(this, source, player);
+                room->getThread()->delay();
+        }
+        source->setFlags("-FenchengUsing");
     }
-    source->setFlags("-FenchengUsing");
+    catch (TriggerEvent event) {
+        source->setFlags("-FenchengUsing");
+        throw event;
+    }
 }
 
 void FenchengCard::onEffect(const CardEffectStruct &effect) const{

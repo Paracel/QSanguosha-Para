@@ -564,39 +564,46 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     int n1 = a->getHandcardNum();
     int n2 = b->getHandcardNum();
 
-    int diff = qAbs(n1 - n2);
-    if (diff != 0)
-        room->askForDiscard(source, "dimeng", diff, diff, false, true);
+    try {
+        int diff = qAbs(n1 - n2);
+        if (diff != 0)
+            room->askForDiscard(source, "dimeng", diff, diff, false, true);
 
-    foreach (ServerPlayer *p, room->getAlivePlayers()) {
-        if (p != a && p != b)
-            room->doNotify(p, QSanProtocol::S_COMMAND_EXCHANGE_KNOWN_CARDS,
-                           QSanProtocol::Utils::toJsonArray(a->objectName(), b->objectName()));
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (p != a && p != b)
+                room->doNotify(p, QSanProtocol::S_COMMAND_EXCHANGE_KNOWN_CARDS,
+                               QSanProtocol::Utils::toJsonArray(a->objectName(), b->objectName()));
+        }
+        QList<CardsMoveStruct> exchangeMove;
+        CardsMoveStruct move1;
+        move1.card_ids = a->handCards();
+        move1.to = b;
+        move1.to_place = Player::PlaceHand;
+        CardsMoveStruct move2;
+        move2.card_ids = b->handCards();
+        move2.to = a;
+        move2.to_place = Player::PlaceHand;
+        exchangeMove.push_back(move1);
+        exchangeMove.push_back(move2);
+        room->moveCards(exchangeMove, false);
+
+        LogMessage log;
+        log.type = "#Dimeng";
+        log.from = a;
+        log.to << b;
+        log.arg = QString::number(n1);
+        log.arg2 = QString::number(n2);
+        room->sendLog(log);
+        room->getThread()->delay();
+
+        a->setFlags("-DimengTarget");
+        b->setFlags("-DimengTarget");
     }
-    QList<CardsMoveStruct> exchangeMove;
-    CardsMoveStruct move1;
-    move1.card_ids = a->handCards();
-    move1.to = b;
-    move1.to_place = Player::PlaceHand;
-    CardsMoveStruct move2;
-    move2.card_ids = b->handCards();
-    move2.to = a;
-    move2.to_place = Player::PlaceHand;
-    exchangeMove.push_back(move1);
-    exchangeMove.push_back(move2);
-    room->moveCards(exchangeMove, false);
-
-    LogMessage log;
-    log.type = "#Dimeng";
-    log.from = a;
-    log.to << b;
-    log.arg = QString::number(n1);
-    log.arg2 = QString::number(n2);
-    room->sendLog(log);
-    room->getThread()->delay();
-
-    a->setFlags("-DimengTarget");
-    b->setFlags("-DimengTarget");
+    catch (TriggerEvent event) {
+        a->setFlags("-DimengTarget");
+        b->setFlags("-DimengTarget");
+        throw event;
+    }
 }
 
 class Dimeng: public ZeroCardViewAsSkill {

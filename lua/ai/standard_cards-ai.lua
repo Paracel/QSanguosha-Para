@@ -1047,7 +1047,7 @@ function sgs.ai_weapon_value.blade(self, enemy)
 	if not enemy then return math.min(self:getCardsNum("Slash"), 3) end
 end
 
-function cardsView_spear(player, skill_name)
+function cardsView_spear(self, player, skill_name)
 	local cards = player:getCards("he")
 	cards = sgs.QList2Table(cards)
 	if skill_name ~= "fuhun" or player:hasSkill("wusheng") then
@@ -1062,6 +1062,7 @@ function cardsView_spear(player, skill_name)
 		if not isCard("Slash", card, player) and not isCard("Peach", card, player) and not (isCard("ExNihilo", card, player) and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
 	if #newcards < 2 then return end
+	self:sortByKeepValue(newcards)
 
 	local card_id1 = newcards[1]:getEffectiveId()
 	local card_id2 = newcards[2]:getEffectiveId()
@@ -1072,7 +1073,7 @@ end
 
 function sgs.ai_cardsview.spear(self, class_name, player)
 	if class_name == "Slash" then
-		return cardsView_spear(player, "spear")
+		return cardsView_spear(self, player, "spear")
 	end
 end
 

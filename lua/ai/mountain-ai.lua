@@ -334,8 +334,7 @@ local jixi_skill = {}
 jixi_skill.name = "jixi"
 table.insert(sgs.ai_skills, jixi_skill)
 jixi_skill.getTurnUseCard = function(self)
-	if self.player:hasFlag("AI_JixiForbid")
-		or self.player:getPile("field"):isEmpty()
+	if self.player:getPile("field"):isEmpty()
 		or (self.player:getHandcardNum() >= self.player:getHp() + 2
 			and self.player:getPile("field"):length() <= self.room:getAlivePlayers():length() / 2 - 1) then
 		return
@@ -344,58 +343,32 @@ jixi_skill.getTurnUseCard = function(self)
 	for i = 0, self.player:getPile("field"):length() - 1, 1 do
 		local snatch = sgs.Sanguosha:getCard(self.player:getPile("field"):at(i))
 		local snatch_str = ("snatch:jixi[%s:%s]=%d"):format(snatch:getSuitString(), snatch:getNumberString(), self.player:getPile("field"):at(i))
-		self.jixisnatch = sgs.Card_Parse(snatch_str)
+		local jixisnatch = sgs.Card_Parse(snatch_str)
 
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, self.jixisnatch))
-				and not self.room:isProhibited(self.player, player, self.jixisnatch) and self:hasTrickEffective(self.jixisnatch, player) then
-				can_use = true
-				self.jixi = i + 1
-				break
+			if (self.player:distanceTo(player, 1) <= 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, jixisnatch))
+				and not self.room:isProhibited(self.player, player, self.jixisnatch) and self:hasTrickEffective(jixisnatch, player) then
+
+				local suit = snatch:getSuitString()
+				local number = snatch:getNumberString()
+				local card_id = snatch:getEffectiveId()
+				local card_str = ("snatch:jixi[%s:%s]=%d"):format(suit, number, card_id)
+				local snatch = sgs.Card_Parse(card_str)
+				assert(snatch)
+				return snatch
 			end
 		end
 	end
+end
 
-	if not can_use then self.player:setFlags("AI_JixiForbid") end
-
-	if self.jixisnatch then
-		local use = { to = sgs.SPlayerList(), isDummy = true }
-		self:useCardSnatch(self.jixisnatch, use)
-		if can_use and use.card then
-			self.jixitargets = {}
-			for _, to in sgs.qlist(use.to) do
-				table.insert(self.jixitargets, to)
-			end
-			self.jixisnatch = nil
-			return sgs.Card_Parse("@JixiCard=.")
-		end
+sgs.ai_view_as.jixi = function(card, player, card_place)
+	local suit = card:getSuitString()
+	local number = card:getNumberString()
+	local card_id = card:getEffectiveId()
+	if card_place == sgs.Player_PlaceSpecial and player:getPileName(card_id) == "field" then
+		return ("snatch:jixi[%s:%s]=%d"):format(suit, number, card_id)
 	end
-	return
 end
-
-sgs.ai_skill_use_func.JixiCard = function(card, use, self)
-	use.card = sgs.Card_Parse("@JixiCard=.")
-end
-
-sgs.ai_use_priority.JixiCard = sgs.ai_use_priority.Snatch
-
-sgs.ai_skill_askforag.jixi = function(self, card_ids)
-	if self.jixi then self.jixi = card_ids[self.jixi] else self.jixi = card_ids[math.random(1, #card_ids)] end
-	return self.jixi
-end
-
-sgs.ai_skill_use["@@jixi!"] = function(self, prompt)
-	local target = {}
-	for _, to in ipairs(self.jixitargets) do
-		table.insert(target, to:objectName())
-	end
-	return "@JixiSnatchCard=.->" .. table.concat(target, "+")
-end
-
-sgs.ai_card_intention.JixiCard = 0
-sgs.ai_card_intention.JixiSnatchCard = 0 -- update later
-
-sgs.dynamic_value.control_card.JixiCard = true
 
 sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	local target = data:toPlayer()

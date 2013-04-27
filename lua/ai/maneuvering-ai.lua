@@ -43,7 +43,7 @@ sgs.ai_view_as.fan = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:objectName() == "slash" then
+	if card_place ~= sgs.Player_PlaceSpecial and card:objectName() == "slash" then
 		return ("fire_slash:fan[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end

@@ -616,7 +616,7 @@ sgs.ai_view_as.qingguo = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:isBlack() and card_place ~= sgs.Player_PlaceEquip then
+	if card:isBlack() and card_place == sgs.Player_PlaceHand then
 		return ("jink:qingguo[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end
@@ -915,7 +915,7 @@ sgs.ai_view_as.wusheng = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:isRed() and not card:isKindOf("Peach") and not card:hasFlag("using") then
+	if card_place ~= sgs.Player_PlaceSpecial and card:isRed() and not card:isKindOf("Peach") and not card:hasFlag("using") then
 		return ("slash:wusheng[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end
@@ -948,7 +948,6 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 		local slash = sgs.Card_Parse(card_str)
 
 		assert(slash)
-
 		return slash
 	end
 end
@@ -1025,7 +1024,7 @@ sgs.ai_view_as.longdan = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card_place ~= sgs.Player_PlaceEquip then
+	if card_place == sgs.Player_PlaceHand then
 		if card:isKindOf("Jink") then
 			return ("slash:longdan[%s:%s]=%d"):format(suit, number, card_id)
 		elseif card:isKindOf("Slash") then
@@ -1754,7 +1753,7 @@ sgs.ai_view_as.jijiu = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if card:isRed() and player:getPhase() == sgs.Player_NotActive then
+	if card_place ~= sgs.Player_PlaceSpecial and card:isRed() and player:getPhase() == sgs.Player_NotActive then
 		return ("peach:jijiu[%s:%s]=%d"):format(suit, number, card_id)
 	end
 end

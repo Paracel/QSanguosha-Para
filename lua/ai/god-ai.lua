@@ -1022,7 +1022,7 @@ sgs.ai_view_as.longhun = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()
 	local card_id = card:getEffectiveId()
-	if player:getHp() > 1 then return end
+	if player:getHp() > 1 or card_place == sgs.Player_PlaceSpecial then return end
 	if card:getSuit() == sgs.Card_Diamond then
 		return ("fire_slash:longhun[%s:%s]=%d"):format(suit, number, card_id)
 	elseif card:getSuit() == sgs.Card_Club then

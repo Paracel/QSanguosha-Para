@@ -30,8 +30,8 @@ public:
             return false;
 
         player->setFlags("MoonspearUse");
-        room->askForUseCard(player, "slash", "@moon-spear-slash", -1, Card::MethodUse, false);
-        player->setFlags("-MoonspearUse");
+        if (!room->askForUseCard(player, "slash", "@moon-spear-slash", -1, Card::MethodUse, false))
+            player->setFlags("-MoonspearUse");
 
         return false;
     }

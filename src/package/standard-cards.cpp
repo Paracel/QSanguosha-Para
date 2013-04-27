@@ -131,6 +131,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         room->broadcastSkillInvoke("duanbing");
 
     if (use.from->hasFlag("BladeUse")) {
+        use.from->setFlags("-BladeUse");
         room->setEmotion(player, "weapon/blade");
 
         LogMessage log;
@@ -139,6 +140,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         log.to << use.to;
         room->sendLog(log);
     } else if (use.from->hasFlag("MoonspearUse")) {
+        use.from->setFlags("-MoonspearUse");
         room->setEmotion(player, "weapon/moonspear");
 
         LogMessage log;
@@ -175,7 +177,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
 }
 
 void Slash::onEffect(const CardEffectStruct &card_effect) const{
-    Room *room = card_effect.from->getRoom(); // FIX THIS!!!
+    Room *room = card_effect.from->getRoom();
     if (card_effect.from->getMark("drank") > 0) {
         room->setCardFlag(this, "drank");
         this->drank = card_effect.from->getMark("drank");
@@ -390,8 +392,9 @@ public:
         int weapon_id = player->getWeapon()->getId();
         room->setCardFlag(weapon_id, "using");
         effect.from->setFlags("BladeUse");
-        room->askForUseSlashTo(effect.from, effect.to, QString("blade-slash:%1").arg(effect.to->objectName()), false, true);
-        effect.from->setFlags("-BladeUse");
+        if (!room->askForUseSlashTo(effect.from, effect.to, QString("blade-slash:%1").arg(effect.to->objectName()), false, true))
+            effect.from->setFlags("-BladeUse");
+
         room->setCardFlag(weapon_id, "-using");
 
         return false;
@@ -578,7 +581,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        QString asked = data.toString();
+        QString asked = data.toStringList().first();
         if (asked == "jink") {
             if (room->askForSkillInvoke(player, "eight_diagram")) {
                 room->setCardFlag(player->getArmor()->getId(), "using");

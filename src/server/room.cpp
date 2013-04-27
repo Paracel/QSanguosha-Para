@@ -2812,6 +2812,8 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
             foreach (int id, Sanguosha->getRandomCards()) {
                 if (getCardPlace(id) == Player::PlaceTable || getCardPlace(id) == Player::PlaceJudge)
                     moveCardTo(Sanguosha->getCard(id), NULL, Player::DiscardPile, true);
+                if (Sanguosha->getCard(id)->hasFlag("using"))
+                    setCardFlag(id, "-using");
             }
         }
         throw event;

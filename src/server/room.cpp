@@ -966,7 +966,13 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
                                                 + ":" + to->objectName() + ":" + (positive ? "true" : "false"));
     thread->trigger(ChoiceMade, this, repliedPlayer, decisionData);
     setTag("NullifyingTimes", getTag("NullifyingTimes").toInt() + 1);
-    bool result = !_askForNullification((TrickCard *)card->getRealCard(), repliedPlayer, to, !positive, aiHelper);
+    const TrickCard *card_null = qobject_cast<const TrickCard *>(card->getRealCard());
+    bool result = true;
+    CardEffectStruct effect;
+    effect.card = card;
+    effect.to = repliedPlayer;
+    if (card_null->isCancelable(effect))
+        result = !_askForNullification(card_null, repliedPlayer, to, !positive, aiHelper);
     return result;
 }
 

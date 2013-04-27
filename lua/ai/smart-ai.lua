@@ -1604,6 +1604,15 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
+	elseif event == sgs.CardUsed then
+		if card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard") then
+			local reason = { ["Snatch"] = "snatch", ["Dismantlement"] = "dismantlement", ["YinlingCard"] = "yinling" }
+			for _, p in sgs.qlist(struct.to) do
+				for _, c in sgs.qlist(p:getCards("hej")) do
+					c:setFlags("-AIGlobal_SDCardChosen_" .. reason[card:getClassName()])
+				end
+			end
+		end
 	elseif event == sgs.CardFinished then
 		local struct = data:toCardUse()
 		local card = struct.card
@@ -2154,7 +2163,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	end
 
-	if ("snatch|dismantlement"):match(reason) then
+	if ("snatch|dismantlement|yinling"):match(reason) then
 		local flag = "AIGlobal_SDCardChosen_" .. reason
 		for _, card in sgs.qlist(who:getCards(flags)) do
 			if card:hasFlag(reason) then

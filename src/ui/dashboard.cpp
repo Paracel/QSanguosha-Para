@@ -858,6 +858,10 @@ void Dashboard::startPending(const ViewAsSkill *skill) {
 
 void Dashboard::stopPending() {
     m_mutexEnableCards.lock();
+    if (view_as_skill && view_as_skill->objectName() == "guhuo") {
+        foreach (CardItem *item, m_handCards)
+            item->hideFootnote();
+    }
     view_as_skill = NULL;
     pending_card = NULL;
     emit card_selected(NULL);

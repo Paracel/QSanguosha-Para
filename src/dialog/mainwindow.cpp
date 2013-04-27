@@ -19,14 +19,12 @@
 #include <QVariant>
 #include <QMessageBox>
 #include <QTime>
-#include <QProcess>
 #include <QCheckBox>
 #include <QFileDialog>
 #include <QDesktopServices>
-#include <QSystemTrayIcon>
-#include <QInputDialog>
 #include <QLabel>
-#include <QStatusBar>
+#include <QProcess>
+#include <QSystemTrayIcon>
 
 class FitView: public QGraphicsView {
 public:

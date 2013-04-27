@@ -32,7 +32,6 @@
 #include <QMenu>
 #include <QGroupBox>
 #include <QLineEdit>
-#include <QInputDialog>
 #include <QLabel>
 #include <QListWidget>
 #include <QFileDialog>
@@ -43,6 +42,7 @@
 #include <QCommandLinkButton>
 #include <QFormLayout>
 #include <QCoreApplication>
+#include <QInputDialog>
 #include <qmath.h>
 #include "uiUtils.h"
 

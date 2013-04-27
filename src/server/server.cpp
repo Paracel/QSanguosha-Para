@@ -10,7 +10,6 @@
 #include "miniscenarios.h"
 #include "SkinBank.h"
 
-#include <QInputDialog>
 #include <QMessageBox>
 #include <QFormLayout>
 #include <QComboBox>

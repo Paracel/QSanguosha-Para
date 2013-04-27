@@ -23,12 +23,8 @@ struct RoomLayout;
 
 #include <QGraphicsScene>
 #include <QTableWidget>
-#include <QQueue>
 #include <QMainWindow>
-#include <QSharedMemory>
-#include <QProgressBar>
 #include <QTextEdit>
-#include <QDockWidget>
 #include <QSpinBox>
 #include <QDialog>
 #include <QGraphicsWidget>

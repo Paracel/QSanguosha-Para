@@ -16,7 +16,6 @@
 #include <QComboBox>
 #include <QGraphicsLinearLayout>
 #include <QLineEdit>
-#include <QProgressBar>
 #include <QMutex>
 #include <QPropertyAnimation>
 

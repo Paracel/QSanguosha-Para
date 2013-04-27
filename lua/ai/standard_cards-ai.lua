@@ -79,7 +79,7 @@ function sgs.isGoodTarget(player, targets, self)
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate") == 0 then
 		for _, p in sgs.qlist(player:getRoom():getOtherPlayers(player)) do
-			if p:getMark("@hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then
+			if p:getMark("hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then
 				return false
 			end
 		end

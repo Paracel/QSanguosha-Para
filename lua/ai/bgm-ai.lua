@@ -574,7 +574,7 @@ sgs.ai_need_damaged.shichou = function(self, attacker, player)
 	if player:hasLordSkill("shichou") then
 		local victim
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
-			if p:getMark("@hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then
+			if p:getMark("hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then
 				victim = p
 				break
 			end

@@ -363,7 +363,8 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
             }
 
             static QStringList continue_list;
-            continue_list << "02_1v1" << "04_1v3" << "06_XMode";
+            if (continue_list.isEmpty())
+                continue_list << "02_1v1" << "04_1v3" << "06_XMode";
             if (continue_list.contains(Config.GameMode))
                 return;
 
@@ -525,10 +526,7 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
 
 void Room::attachSkillToPlayer(ServerPlayer *player, const QString &skill_name) {
     player->acquireSkill(skill_name);
-
-    Json::Value arg(Json::arrayValue);
-    arg[0] = toJsonString(skill_name);
-    doNotify(player, S_COMMAND_ATTACH_SKILL, arg);
+    doNotify(player, S_COMMAND_ATTACH_SKILL, toJsonString(skill_name));
 }
 
 void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name, bool is_equip) {
@@ -4282,8 +4280,15 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
     if (ai) {
         // share the same callback interface
         player->setFlags("Global_AIDiscardExchanging");
-        to_exchange = ai->askForDiscard(reason, discard_num, discard_num, optional, include_equip);
-        player->setFlags("-Global_AIDiscardExchanging");
+        try {
+            to_exchange = ai->askForDiscard(reason, discard_num, discard_num, optional, include_equip);
+            player->setFlags("-Global_AIDiscardExchanging");
+        }
+        catch (TriggerEvent triggerEvent) {
+            if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+                player->setFlags("-Global_AIDiscardExchanging");
+            throw triggerEvent;
+        }
     } else {
         Json::Value exchange_str(Json::arrayValue);
         exchange_str[0] = discard_num;

@@ -1411,9 +1411,9 @@ void Client::showCard(const Json::Value &show_str) {
 }
 
 void Client::attachSkill(const Json::Value &skill) {
-    if (!skill.isArray() || skill.size() != 1 || !skill[0].isString()) return;
+    if (!skill.isString()) return;
 
-    QString skill_name = toQString(skill[0]);
+    QString skill_name = toQString(skill);
     Self->acquireSkill(skill_name);
     emit skill_attached(skill_name, true);
 }

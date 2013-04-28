@@ -302,7 +302,6 @@ void GuanduScenario::onTagSet(Room *room, const QString &) const{
         if (guojia && !guojia->hasSkill("greatyiji")) {
             room->detachSkillFromPlayer(guojia, "yiji");
             room->acquireSkill(guojia, "greatyiji");
-            room->acquireSkill(guojia, "#yiji-fake-move", false);
             room->acquireSkill(guojia, "damagebeforeplay", false);
         }
     }

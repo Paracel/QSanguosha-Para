@@ -127,7 +127,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
     }
 }
 
-bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
     if (room->getTag("SkipGameRule").toBool()) {
         room->removeTag("SkipGameRule");
         return false;
@@ -135,7 +135,7 @@ bool GameRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVa
 
     // Handle global events
     if (player == NULL) {
-        if (event == GameStart) {
+        if (triggerEvent == GameStart) {
             foreach (ServerPlayer *player, room->getPlayers()) {
                 if (player->getGeneral()->getKingdom() == "god" && player->getGeneralName() != "anjiang") {
                     QString new_kingdom = room->askForKingdom(player);
@@ -954,7 +954,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             return false;
         }
     default:
-        break;
+            break;
     }
 
     return GameRule::trigger(event, room, player, data);

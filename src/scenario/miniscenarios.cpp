@@ -205,7 +205,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
                 room->obtainCard(sp, dummy);
                 dummy->deleteLater();
             }
-            room->setTag("FirstRound", true);
+            room->setTag("FirstRound", false);
 
             QString skills = this->players.at(i)["acquireSkills"];
             if (skills != QString()) {

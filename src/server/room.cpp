@@ -511,10 +511,13 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
     QVariant data = QVariant::fromValue(result_effect);
 
     if (jink == NULL)
-        thread->trigger(SlashHit, this, effect.from, data);
+        if (effect.to->isAlive())
+            thread->trigger(SlashHit, this, effect.from, data);
     else {
-        if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
-            setEmotion(effect.to, "jink");
+        if (effect.to->isAlive()) {
+            if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
+                setEmotion(effect.to, "jink");
+        }
         if (effect.slash) {
             QStringList qinggang = effect.to->tag["Qinggang"].toStringList();
             if (!qinggang.isEmpty()) {

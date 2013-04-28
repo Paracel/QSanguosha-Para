@@ -39,7 +39,7 @@ public:
             }
         } else if (triggerEvent == SlashMissed) {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (effect.to->getMark(objectName() + effect.slash->toString()) <= 0)
+            if (effect.to->isDead() || effect.to->getMark(objectName() + effect.slash->toString()) <= 0)
                 return false;
             if (!effect.from->isAlive() || !effect.to->isAlive() || effect.from->isNude())
                 return false;

@@ -184,7 +184,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 return true;
-            }else if (event == DamageCaused && damage.from && TriggerSkill::triggerable(damage.from)) {
+            } else if (event == DamageCaused && damage.from && TriggerSkill::triggerable(damage.from)) {
                 LogMessage log;
                 log.type = "#WuyanBad";
                 log.from = player;
@@ -407,7 +407,7 @@ public:
             killer->throwAllHandCardsAndEquips();
 
             QString killer_name = killer->getGeneralName();
-            if (killer_name == "zhugeliang" || killer_name == "wolong" || killer_name == "shenzhugeliang")
+            if (killer_name.contains("zhugeliang") || killer_name == "wolong" || killer_name == "shenzhugeliang")
                 room->broadcastSkillInvoke(objectName(), 1);
             else
                 room->broadcastSkillInvoke(objectName(), 2);
@@ -828,13 +828,13 @@ bool GanluCard::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 void GanluCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    swapEquip(targets.first(), targets[1]);
-
     LogMessage log;
     log.type = "#GanluSwap";
     log.from = source;
     log.to = targets;
     room->sendLog(log);
+
+    swapEquip(targets.first(), targets[1]);
 }
 
 class Ganlu: public ZeroCardViewAsSkill {

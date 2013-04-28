@@ -557,13 +557,35 @@ sgs.ai_skill_use.slash = function(self, prompt)
 	self:sort(self.enemies, "defenseSlash")
 	for _, slash in ipairs(slashes) do
 		local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50 or self.player:hasFlag("slashNoDistanceLimit")
-		for _, enemy in ipairs(self.enemies) do
-			if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
-				and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
-				and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+		for _, friend in ipairs(self.friends_noself) do
+			local slash_prohibit = false
+			slash_prohibit = self:slashProhibit(card, friend)
+			if not self:hasHeavySlashDamage(self.player, card, friend)
+				and self.player:canSlash(friend, slash, not no_distance) and not self:slashProhibit(slash, friend)
+				and self:slashIsEffective(slash, friend)
+				and (self:findLeijiTarget(friend, 50, self.player)
+					or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
+					or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))))
+				and not (self.player:hasFlag("slashTargetFix") and not friend:hasFlag("SlashAssignee")) then
+
 				useslash = slash
-				target = enemy
+				target = friend
 				break
+			end
+		end
+	end
+	if not useslash then
+		for _, slash in ipairs(slashes) do
+			local no_distance = sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50 or self.player:hasFlag("slashNoDistanceLimit")
+			for _, enemy in ipairs(self.enemies) do
+				if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
+					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
+					and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+
+					useslash = slash
+					target = enemy
+					break
+				end
 			end
 		end
 	end

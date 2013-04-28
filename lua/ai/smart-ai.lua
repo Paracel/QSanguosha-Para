@@ -3307,7 +3307,7 @@ function SmartAI:getRetrialCardId(cards, judge)
 	for _, card in ipairs(cards) do
 		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
 		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
-			card_x = sgs.Sanguosha:cloneCard(card:objectName(), sgs.Card_Heart, card:getNumber())
+			card_x = sgs.Sanguosha:cloneCard(card_x:objectName(), sgs.Card_Heart, card:getNumber())
 		end
 		if self:isFriend(judge.who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and card_x:isKindOf("Peach")) then
 			table.insert(can_use, card)

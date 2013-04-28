@@ -456,7 +456,52 @@ dimeng_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("DimengCard") then return end
 	card = sgs.Card_Parse("@DimengCard=.")
 	return card
+end
 
+local function DimengDiscard(self, discard_num)
+	local cards = self.player:getCards("he")
+	local to_discard = {}
+	cards = sgs.QList2Table(cards)
+
+	local aux_func = function(card)
+		local place = self.room:getCardPlace(card:getEffectiveId())
+		if place == sgs.Player_PlaceEquip then
+			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
+			elseif card:isKindOf("OffensiveHorse") then return 1
+			elseif card:isKindOf("Weapon") then return 2
+			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif card:isKindOf("Armor") then return 4
+			end
+		elseif self:getUseValue(card) > 7 then return 3
+		elseif self:hasSkills(sgs.lose_equip_skill) then return 5
+		else return 0
+		end
+		return 0
+	end
+
+	local compare_func = function(a, b)
+		if aux_func(a) ~= aux_func(b) then
+			return aux_func(a) < aux_func(b)
+		end
+		return self:getKeepValue(a) < self:getKeepValue(b)
+	end
+
+	table.sort(cards, compare_func)
+	for _, card in ipairs(cards) do
+		if not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
+		if #to_discard >= discard_num then break end
+	end
+	return to_discard
+end
+
+local function getDimengCard(self, from, to)
+	local num = math.abs(from:getHandcardNum() - to:getHandcardNum())
+	if num == 0 then return sgs.Card_Parse("@DimengCard=.")
+	else
+		local to_discard = DimengDiscard(self, num)
+		if #to_discard == num then return sgs.Card_Parse("@DimengCard=" .. table.concat(to_discard, "+"))
+		end
+	end
 end
 
 function DimengIsWorth(self, friend, enemy, mycards, myequips)
@@ -539,63 +584,33 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 			local hand1 = enemy:getHandcardNum()
 
 			if enemy:hasSkill("manjuan") and hand1 > hand2 - 1 and hand1 - hand2 <= cardNum then
-				use.card = card
-				if use.to then
-					use.to:append(enemy)
-					use.to:append(lowest_friend)
+				local dimeng_card = getDimengCard(self, enemy, lowest_friend)
+				if dimeng_card then
+					use.card = dimeng_card
+					if use.to then
+						use.to:append(enemy)
+						use.to:append(lowest_friend)
+					end
+					return
 				end
-				return
 			end
 		end
 		for _, enemy in ipairs(self.enemies) do
 			local hand1 = enemy:getHandcardNum()
 
 			if DimengIsWorth(self, lowest_friend, enemy, mycards, myequips) then
-				use.card = card
-				if use.to then
-					use.to:append(enemy)
-					use.to:append(lowest_friend)
+				local dimeng_card = getDimengCard(self, enemy, lowest_friend)
+				if dimeng_card then
+					use.card = dimeng_card
+					if use.to then
+						use.to:append(enemy)
+						use.to:append(lowest_friend)
+					end
+					return
 				end
-				return
 			end
 		end
 	end
-end
-
-sgs.ai_skill_discard.DimengCard = function(self, discard_num, min_num, optional, include_equip)
-	local cards = self.player:getCards("he")
-	local to_discard = {}
-	cards = sgs.QList2Table(cards)
-
-	local aux_func = function(card)
-		local place = self.room:getCardPlace(card:getEffectiveId())
-		if place == sgs.Player_PlaceEquip then
-			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
-			elseif card:isKindOf("OffensiveHorse") then return 1
-			elseif card:isKindOf("Weapon") then return 2
-			elseif card:isKindOf("DefensiveHorse") then return 3
-			elseif card:isKindOf("Armor") then return 4
-			end
-		elseif self:getUseValue(card) > 7 then return 3
-		elseif self:hasSkills(sgs.lose_equip_skill) then return 5
-		else return 0
-		end
-		return 0
-	end
-
-	local compare_func = function(a, b)
-		if aux_func(a) ~= aux_func(b) then
-			return aux_func(a) < aux_func(b)
-		end
-		return self:getKeepValue(a) < self:getKeepValue(b)
-	end
-
-	table.sort(cards, compare_func)
-	for _, card in ipairs(cards) do
-		if not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
-		if #to_discard >= discard_num then break end
-	end
-	return to_discard
 end
 
 sgs.ai_card_intention.DimengCard = function(self, card, from, to)

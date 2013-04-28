@@ -519,8 +519,7 @@ bool DimengCard::targetFilter(const QList<const Player *> &targets, const Player
         return true;
 
     if (targets.length() == 1) {
-        int max_diff = Self->getCardCount(true);
-        return max_diff >= qAbs(to_select->getHandcardNum() - targets.first()->getHandcardNum());
+        return qAbs(to_select->getHandcardNum() - targets.first()->getHandcardNum()) == subcardsLength();
     }
 
     return false;
@@ -528,30 +527,6 @@ bool DimengCard::targetFilter(const QList<const Player *> &targets, const Player
 
 bool DimengCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
     return targets.length() == 2;
-}
-
-const Card *DimengCard::validate(const CardUseStruct *card_use) const{
-    ServerPlayer *player = card_use->from;
-
-    ServerPlayer *a = card_use->to.at(0);
-    ServerPlayer *b = card_use->to.at(1);
-
-    int n1 = a->getHandcardNum();
-    int n2 = b->getHandcardNum();
-
-    int diff = qAbs(n1 - n2);
-    int to_discard = 0;
-
-    foreach (const Card *card, player->getHandcards()) {
-        if (!player->isJilei(card))
-            to_discard++;
-    }
-    foreach (const Card *card, player->getEquips()) {
-        if (!player->isJilei(card))
-            to_discard++;
-    }
-    if (to_discard < diff) return NULL;
-    return this;
 }
 
 #include "jsonutils.h"
@@ -565,10 +540,6 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     int n2 = b->getHandcardNum();
 
     try {
-        int diff = qAbs(n1 - n2);
-        if (diff != 0)
-            room->askForDiscard(source, "dimeng", diff, diff, false, true);
-
         foreach (ServerPlayer *p, room->getAlivePlayers()) {
             if (p != a && p != b)
                 room->doNotify(p, QSanProtocol::S_COMMAND_EXCHANGE_KNOWN_CARDS,
@@ -606,13 +577,20 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     }
 }
 
-class Dimeng: public ZeroCardViewAsSkill {
+class Dimeng: public ViewAsSkill {
 public:
-    Dimeng(): ZeroCardViewAsSkill("dimeng") {
+    Dimeng(): ViewAsSkill("dimeng") {
     }
 
-    virtual const Card *viewAs() const{
-        return new DimengCard;
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
+        return !Self->isJilei(to_select);
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        DimengCard *card = new DimengCard;
+        foreach (const Card *c, cards)
+            card->addSubcard(c);
+        return card;
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{

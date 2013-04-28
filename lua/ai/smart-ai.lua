@@ -1512,7 +1512,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				intention = 80
 				from = xunyu
 			elseif from and from:hasFlag("ShenfenUsing") then
-				return
+				intention = 0
 			else
 				intention = 100
 			end
@@ -3212,8 +3212,8 @@ function SmartAI:needRetrial(judge)
 			end
 		end
 		if self:isFriend(who) then
-			if who:getHp() - who:getHandcardNum() >= 2 then return false end
-			if who:hasSkill("tuxi") and who:getHp() > 2 then return false end
+			if who:getHp() - who:getHandcardNum() >= 2 and self:getOverflow() <= 0 then return false end
+			if who:hasSkill("tuxi") and who:getHp() > 2 and self:getOverflow() <= 0 then return false end
 			return not good
 		else
 			return good
@@ -3254,6 +3254,8 @@ function SmartAI:needRetrial(judge)
 	if reason == "tuntian" then
 		if not who:hasSkill("jixi") then return false end
 	end
+
+	if reason == "beige" then return true end
 
 	if self:isFriend(who) then
 		return not good
@@ -3303,18 +3305,51 @@ end
 -- @return the retrial card id or -1 if not found
 function SmartAI:getRetrialCardId(cards, judge)
 	local can_use = {}
+	local reason = judge.reason
+	local who = judge.who
 
 	for _, card in ipairs(cards) do
 		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
-		if judge.who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
+		if who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card_x:objectName(), sgs.Card_Heart, card:getNumber())
 		end
-		if self:isFriend(judge.who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and card_x:isKindOf("Peach")) then
+		local other_suit, hasSpade = {}
+		if reason == "beige" and not isCard("Peach", card_x, self.player) then
+			local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+			if damage.from then
+				if self:isFriend(damage.from) then
+					if not self:toTurnOver(damage.from, 0) and judge.card:getSuit() ~= sgs.Card_Spade and card_x:getSuit() == sgs.Card_Spade then
+						table.insert(can_use, card)
+						hasSpade = true
+					elseif self:getOverflow() > 0 and judge.card:getSuit() ~= card_x:getSuit() then
+						local retr = true
+						if (judge.card:getSuit() == sgs.Card_Heart and who:isWounded() and self:isFriend(who))
+							or (judge.card:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive)
+							or (judge.card:getSuit() == sgs.Card_Club and self:needToThrowArmor(damage.from)) then
+							retr = false
+						end
+						if retr
+							and ((self:isFriend(who) and card_x:getSuit() == sgs.Card_Heart and who:isWounded())
+								or (card_x:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive)
+								or (card_x:getSuit() == sgs.Card_Diamond and self:isFriend(who) and not (who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive))
+								or (card_x:getSuit() == sgs.Card_Club and (self:needToThrowArmor(damage.from) or damage.from:isNude())))
+								or (judge.card:getSuit() == sgs.Card_Spade and self:toTurnOver(damage.from, 0)) then
+							table.insert(other_suit, card)
+						end
+					end
+				else
+					if not self:toTurnOver(damage.from, 0) and card_x:getSuit() ~= sgs.Card_Spade and judge.card:getSuit() == sgs.Card_Spade then
+						table.insert(can_use, card)
+					end
+				end
+			end
+		elseif self:isFriend(who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
 			table.insert(can_use, card)
-		elseif self:isEnemy(judge.who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and card_x:isKindOf("Peach")) then
+		elseif self:isEnemy(who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
 			table.insert(can_use, card)
 		end
 	end
+	if not hasSpade and #other_suit > 0 then table.insertTable(can_use, other_suit) end
 
 	if next(can_use) then
 		self:sortByKeepValue(can_use)

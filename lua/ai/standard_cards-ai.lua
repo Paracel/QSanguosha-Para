@@ -566,7 +566,8 @@ sgs.ai_skill_use.slash = function(self, prompt)
 				and (self:findLeijiTarget(friend, 50, self.player)
 					or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
 					or (friend:hasSkill("jieming") and self.player:hasSkill("rende") and (huatuo and self:isFriend(huatuo))))
-				and not (self.player:hasFlag("slashTargetFix") and not friend:hasFlag("SlashAssignee")) then
+				and not (self.player:hasFlag("slashTargetFix") and not friend:hasFlag("SlashAssignee"))
+				and not (slash:isKindOf("XiansiSlashCard") and friend:getPile("counter"):length() < 2) then
 
 				useslash = slash
 				target = friend
@@ -580,7 +581,8 @@ sgs.ai_skill_use.slash = function(self, prompt)
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
 					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
-					and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
+					and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee"))
+					and not (slash:isKindOf("XiansiSlashCard") and enemy:getPile("counter"):length() < 2) then
 
 					useslash = slash
 					target = enemy

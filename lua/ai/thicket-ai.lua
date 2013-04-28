@@ -2,6 +2,7 @@ sgs.ai_skill_invoke.xingshang = true
 
 function SmartAI:toTurnOver(player, n)
 	if not player then global_room:writeToConsole(debug.traceback()) return end
+	n = n or 0
 	if player:hasUsed("ShenfenCard") and player:faceUp() and player:getPhase() == sgs.Player_Play
 		and (not player:hasUsed("ShenfenCard") and player:getMark("@wrath") >= 6 or player:hasFlag("ShenfenUsing")) then
 		return false

@@ -676,9 +676,9 @@ void Client::exchangeKnownCards(const Json::Value &players) {
     if (!players.isArray() || players.size() != 2 || !players[0].isString() || !players[1].isString()) return;
     ClientPlayer *a = getPlayer(toQString(players[0])), *b = getPlayer(toQString(players[1]));
     QList<int> a_known, b_known;
-    foreach (const Card *card, a->getCards())
+    foreach (const Card *card, a->getHandcards())
         a_known << card->getId();
-    foreach (const Card *card, b->getCards())
+    foreach (const Card *card, b->getHandcards())
         b_known << card->getId();
     a->setCards(b_known);
     b->setCards(a_known);

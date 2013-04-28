@@ -286,7 +286,7 @@ bool FireAttack::targetFilter(const QList<const Player *> &targets, const Player
         return false;
 
     if (to_select == Self)
-        return Self->getHandcardNum() >= 2;
+        return !Self->isLastHandCard(this, true);
     else
         return true;
 }

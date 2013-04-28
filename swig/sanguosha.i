@@ -158,6 +158,7 @@ public:
     virtual int getHandcardNum() const = 0;
     virtual void removeCard(const Card *card, Place place) = 0;
     virtual void addCard(const Card *card, Place place) = 0;
+    virtual QList<const Card *> getHandcards() const = 0;
 
     WrappedCard *getWeapon() const;
     WrappedCard *getArmor() const;
@@ -264,7 +265,7 @@ public:
     bool askForSkillInvoke(const char *skill_name, const QVariant &data = QVariant());
     QList<int> forceToDiscard(int discard_num, bool include_equip, bool is_discard = true);
     QList<int> handCards() const;
-    QList<const Card *> getHandcards() const;
+    virtual QList<const Card *> getHandcards() const;
     QList<const Card *> getCards(const char *flags) const;
     DummyCard *wholeHandCards() const;
     bool hasNullification() const;
@@ -334,6 +335,7 @@ public:
     explicit ClientPlayer(Client *client);
     virtual int aliveCount() const;
     virtual int getHandcardNum() const;
+    virtual QList<const Card *> getHandcards() const;
     virtual void removeCard(const Card *card, Place place);
     virtual void addCard(const Card *card, Place place);
     virtual void addKnownHandCard(const Card *card);

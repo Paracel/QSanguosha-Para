@@ -402,8 +402,8 @@ bool ServerPlayer::isLastHandCard(const Card *card, bool contain) const{
             }
             return handcards.length() == card->getSubcards().length();
         } else {
-            foreach (const Card *card, handcards) {
-                if (!card->getSubcards().contains(card->getEffectiveId()))
+            foreach (const Card *ncard, handcards) {
+                if (!card->getSubcards().contains(ncard->getEffectiveId()))
                     return false;
             }
             return true;

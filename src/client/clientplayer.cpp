@@ -62,8 +62,8 @@ bool ClientPlayer::isLastHandCard(const Card *card, bool contain) const{
             }
             return known_cards.length() == card->getSubcards().length();
         } else {
-            foreach (const Card *card, known_cards) {
-                if (!card->getSubcards().contains(card->getEffectiveId()))
+            foreach (const Card *ncard, known_cards) {
+                if (!card->getSubcards().contains(ncard->getEffectiveId()))
                     return false;
             }
             return true;
@@ -94,7 +94,7 @@ void ClientPlayer::removeCard(const Card *card, Place place) {
     }
 }
 
-QList<const Card *> ClientPlayer::getCards() const{
+QList<const Card *> ClientPlayer::getHandcards() const{
     return known_cards;
 }
 

@@ -56,7 +56,7 @@ QWidget *PlayerCardDialog::createHandcardButton() {
     if (!player->isKongcheng() && Self == player) {
         QGroupBox *area = new QGroupBox(tr("Handcard area"));
         QVBoxLayout *layout =  new QVBoxLayout;
-        QList<const Card *> cards = player->getCards();
+        QList<const Card *> cards = player->getHandcards();
         foreach (const Card *card, cards) {
             QCommandLinkButton *button = new QCommandLinkButton(card->getFullName());
             button->setIcon(G_ROOM_SKIN.getCardSuitPixmap(card->getSuit()));

@@ -215,7 +215,7 @@ void CloseButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
 
 void CardContainer::view(const ClientPlayer *player) {
     QList<int> card_ids;
-    QList<const Card *> cards = player->getCards();
+    QList<const Card *> cards = player->getHandcards();
     foreach (const Card *card, cards)
         card_ids << card->getEffectiveId();
 

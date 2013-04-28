@@ -1383,7 +1383,7 @@ void RoomScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
             foreach (PlayerCardContainer *container, item2player.keys()) {
                 const ClientPlayer *player = item2player.value(container, NULL);
                 if (player == Self) continue;
-                QList<const Card *> known = player->getCards();
+                QList<const Card *> known = player->getHandcards();
                 if (known.isEmpty()) {
                     known_cards->addAction(ClientInstance->getPlayerName(player->objectName()))->setEnabled(false);
                 } else {
@@ -3326,7 +3326,7 @@ void RoomScene::showPlayerCards() {
             overview->show();
         } else {
             QList<const Card *> cards;
-            foreach (const Card *card, player->getCards()) {
+            foreach (const Card *card, player->getHandcards()) {
                 const Card *engine_card = Sanguosha->getEngineCard(card->getId());
                 if (engine_card) cards << engine_card;
             }

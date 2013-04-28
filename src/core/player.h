@@ -153,6 +153,7 @@ public:
     virtual int getHandcardNum() const = 0;
     virtual void removeCard(const Card *card, Place place) = 0;
     virtual void addCard(const Card *card, Place place) = 0;
+    virtual QList<const Card *> getHandcards() const = 0;
 
     WrappedCard *getWeapon() const;
     WrappedCard *getArmor() const;

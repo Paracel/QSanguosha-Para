@@ -13,7 +13,7 @@ class ClientPlayer: public Player {
 
 public:
     explicit ClientPlayer(Client *client);
-    QList<const Card *> getCards() const;
+    virtual QList<const Card *> getHandcards() const;
     void setCards(const QList<int> &card_ids);
     QTextDocument *getMarkDoc() const;
     void changePile(const QString &name, bool add, QList<int> card_ids);

@@ -128,17 +128,26 @@ QiceCard::QiceCard() {
 
 bool QiceCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
-    return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card);
+    Card *mutable_card = const_cast<Card *>(card);
+    foreach (int id, subcards)
+        mutable_card->addSubcard(id);
+    return mutable_card && mutable_card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, mutable_card);
 }
 
 bool QiceCard::targetFixed() const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
-    return card && card->targetFixed();
+    Card *mutable_card = const_cast<Card *>(card);
+    foreach (int id, subcards)
+        mutable_card->addSubcard(id);
+    return mutable_card && mutable_card->targetFixed();
 }
 
 bool QiceCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
-    return card && card->targetsFeasible(targets, Self);
+    Card *mutable_card = const_cast<Card *>(card);
+    foreach (int id, subcards)
+        mutable_card->addSubcard(id);
+    return mutable_card && mutable_card->targetsFeasible(targets, Self);
 }
 
 const Card *QiceCard::validate(const CardUseStruct *card_use) const{

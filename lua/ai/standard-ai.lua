@@ -1776,15 +1776,20 @@ sgs.ai_skill_cardask["@wushuang-slash-1"] = function(self, data, pattern, target
 	if self:getCardsNum("Slash") < 2 and not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng)) then return "." end
 end
 
-sgs.ai_skill_cardask["@double-jink-1"] = function(self, data, pattern, target)
+sgs.ai_skill_cardask["@multi-jink-start"] = function(self, data, pattern, target, target2, arg)
+	local rest_num = tonumber(arg)
+	if rest_num == 1 then return sgs.ai_skill_cardask["slash-jink"](self, data, pattern, target) end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
+	if sgs.ai_skill_cardask["slash-jink"](self, data, pattern, target) == "." then return "." end
 	if self.player:hasSkill("kongcheng") then
 		if self.player:getHandcardNum() == 1 and self:getCardsNum("Jink") == 1 and target:hasWeapon("guding_blade") then return "." end
 	else
-		if self:getCardsNum("Jink") < 2 and self:hasLoseHandcardEffective() then return "." end
+		if self:getCardsNum("Jink") < rest_num and self:hasLoseHandcardEffective() then return "." end
 	end
 end
+
+sgs.ai_skill_cardask["@multi-jink"] = sgs.ai_skill_cardask["@multi-jink-start"]
 
 sgs.ai_chaofeng.lvbu = 1
 

@@ -313,30 +313,21 @@ public:
 class DrWushuang: public TriggerSkill {
 public:
     DrWushuang(): TriggerSkill("drwushuang") {
-        events << TargetConfirmed << CardFinished;
+        events << TargetConfirmed;
         frequency = Compulsory;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            bool can_invoke = false;
-            if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
-                can_invoke = true;
-                int count = 1;
-                int mark_n = player->getMark("double_jink" + use.card->toString());
-                for (int i = 0; i < use.to.length(); i++) {
-                    mark_n += count;
-                    player->setMark("double_jink" + use.card->toString(), mark_n);
-                    count *= 10;
-                }
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash") && use.from == player) {
+            QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+            int index = 0;
+            for (int i = 0; i < use.to.length(); i++) {
+                int n = jink_list.at(index).toInt();
+                if (n > 0 && n < 2)
+                    jink_list.replace(index, QVariant(2));
+                index++;
             }
-            if (!can_invoke) return false;
-
             LogMessage log;
             log.from = player;
             log.arg = objectName();
@@ -345,14 +336,8 @@ public:
             room->notifySkillInvoked(player, objectName());
 
             room->broadcastSkillInvoke("wushuang");
-        } else if (triggerEvent == CardFinished) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash")) {
-                if (player->getMark("double_jink" + use.card->toString()) > 0)
-                    player->setMark("double_jink" + use.card->toString(), 0);
-            }
+            player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
         }
-
         return false;
     }
 };

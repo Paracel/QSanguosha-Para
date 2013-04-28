@@ -6,6 +6,8 @@ local t = {
 	["slash"] = "杀",
 	[":slash"] = "基本牌<br />出牌时机：出牌阶段<br />使用目标：攻击范围内的一名其他角色<br />作用效果：对目标角色造成1点伤害",
 	["slash-jink"] = "%src 使用了【杀】，请使用一张【闪】",
+	["@multi-jink-start"] = "%src 使用了【杀】，你须连续使用 %arg 张【闪】",
+	["@multi-jink"] = "%src 使用了【杀】，你须再使用 %arg 张【闪】",
 	["@slash_extra_targets"] = "请选择此【杀】的额外目标",
 
 	["jink"] = "闪",

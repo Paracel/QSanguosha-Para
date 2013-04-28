@@ -625,7 +625,6 @@ enum TriggerEvent {
     GameOverJudge,
     GameFinished,
 
-    SlashEffectStart,
     SlashEffected,
     SlashProceed,
     SlashHit,

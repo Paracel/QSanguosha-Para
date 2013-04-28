@@ -959,7 +959,8 @@ void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
         source->setFlags("-FenchengUsing");
     }
     catch (TriggerEvent triggerEvent) {
-        source->setFlags("-FenchengUsing");
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+            source->setFlags("-FenchengUsing");
         throw triggerEvent;
     }
 }

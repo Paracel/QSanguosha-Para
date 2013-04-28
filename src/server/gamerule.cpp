@@ -24,7 +24,7 @@ GameRule::GameRule(QObject *)
            << PostHpReduced
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
-           << SlashEffectStart << SlashHit << SlashEffected << SlashProceed
+           << SlashHit << SlashEffected << SlashProceed
            << ConfirmDamage << DamageDone << DamageComplete
            << StartJudge << FinishRetrial << FinishJudge;
 
@@ -251,12 +251,22 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     }
                 }
 
+                QVariantList jink_list_backup;
+                if (card_use.card->isKindOf("Slash")) {
+                    jink_list_backup = card_use.from->tag["Jink_" + card_use.card->toString()].toList();
+                    QVariantList jink_list;
+                    for (int i = 0; i < card_use.to.length(); i++)
+                        jink_list.append(QVariant(1));
+                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list);
+                }
                 card_use = data.value<CardUseStruct>();
                 if (card_use.from && !card_use.to.isEmpty()) {
                     foreach (ServerPlayer *p, room->getAllPlayers())
                         thread->trigger(TargetConfirmed, room, p, data);
                 }
                 card->use(room, card_use.from, card_use.to);
+                if (!jink_list_backup.isEmpty())
+                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list_backup);
             }
 
             break;
@@ -269,6 +279,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 foreach (ServerPlayer *p, room->getAlivePlayers())
                     room->doNotify(p, QSanProtocol::S_COMMAND_NULLIFICATION_ASKED, QSanProtocol::Utils::toJsonString("."));
             }
+            if (use.card->isKindOf("Slash"))
+                use.from->tag.remove("Jink_" + use.card->toString());
 
             break;
         }
@@ -435,28 +447,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             }
             break;
         }
-    case SlashEffectStart: {
-            SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            int n_nj = effect.from->getMark("no_jink" + effect.slash->toString());
-            effect.from->setMark("no_jink" + effect.slash->toString(), n_nj / 10);
-
-            if (effect.jink_num > 0) {
-                if (n_nj % 10) {
-                    effect.jink_num = 0;
-                    data = QVariant::fromValue(effect);
-                }
-            }
-            int n_dj = effect.from->getMark("double_jink" + effect.slash->toString());
-            effect.from->setMark("double_jink" + effect.slash->toString(), n_dj / 10);
-            if (effect.jink_num == 1) {
-                if (n_dj % 10) {
-                    effect.jink_num = 2;
-                    data = QVariant::fromValue(effect);
-                }
-            }
-
-            break;
-        }
     case SlashEffected: {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
 
@@ -472,23 +462,25 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             QString slasher = effect.from->objectName();
             if (!effect.to->isAlive())
                 break;
-            if (effect.jink_num == 2) {
-                const Card *first_jink = NULL, *second_jink = NULL;
-                Card *jink = NULL;
-                first_jink = room->askForCard(effect.to, "jink", "@double-jink-1:" + slasher, QVariant(), Card::MethodUse, effect.from);
-                if (room->isJinkEffected(effect.to, first_jink)) {
-                    second_jink = room->askForCard(effect.to, "jink", "@double-jink-2:" + slasher, QVariant(), Card::MethodUse, effect.from);
-                    if (room->isJinkEffected(effect.to, second_jink)) {
-                        jink = new DummyCard;
-                        jink->addSubcard(first_jink);
-                        jink->addSubcard(second_jink);
-                    }
-                }
-
-                room->slashResult(effect, jink);
-            } else {
+            if (effect.jink_num == 1) {
                 const Card *jink = room->askForCard(effect.to, "jink", "slash-jink:" + slasher, data, Card::MethodUse, effect.from);
                 room->slashResult(effect, room->isJinkEffected(effect.to, jink) ? jink : NULL);
+            } else {
+                DummyCard *jink = new DummyCard;
+                const Card *asked_jink = NULL;
+                for (int i = effect.jink_num; i > 0; i--) {
+                    QString prompt = QString("@multi-jink%1:%2::%3").arg(i == effect.jink_num ? "-start" : QString())
+                                                                    .arg(slasher).arg(i);
+                    asked_jink = room->askForCard(effect.to, "jink", prompt, data, Card::MethodUse, effect.from);
+                    if (!room->isJinkEffected(effect.to, asked_jink)) {
+                        delete jink;
+                        room->slashResult(effect, NULL);
+                        return false;
+                    } else {
+                        jink->addSubcard(asked_jink->getEffectiveId());
+                    }
+                }
+                room->slashResult(effect, jink);
             }
 
             break;

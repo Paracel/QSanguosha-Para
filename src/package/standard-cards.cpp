@@ -192,6 +192,13 @@ void Slash::onEffect(const CardEffectStruct &card_effect) const{
     effect.to = card_effect.to;
     effect.drank = this->drank;
 
+    QVariantList jink_list = effect.from->tag["Jink_" + toString()].toList();
+    effect.jink_num = jink_list.takeFirst().toInt();
+    if (jink_list.isEmpty())
+        effect.from->tag.remove("Jink_" + toString());
+    else
+        effect.from->tag["Jink_" + toString()] = QVariant::fromValue(jink_list);
+
     room->slashEffect(effect);
 }
 

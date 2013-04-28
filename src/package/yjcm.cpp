@@ -654,7 +654,15 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
         choicelist << "use";
     }
 
-    effect.to->obtainCard(this);
+    try {
+        effect.to->obtainCard(this);
+    }
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+            if (target && target->hasFlag("MingceTarget")) target->setFlags("-MingceTarget");
+        throw triggerEvent;
+    }
+
     QString choice = room->askForChoice(effect.to, "mingce", choicelist.join("+"));
     if (target && target->hasFlag("MingceTarget")) target->setFlags("-MingceTarget");
 

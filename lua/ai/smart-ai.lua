@@ -2338,9 +2338,10 @@ function SmartAI:askForCard(pattern, prompt, data)
 		elseif pattern == ".H" then card = self.lua_ai:askForCard(".|spade,heart|.|hand", prompt, data) end
 		if card then return card:toString() end
 	end
+	local arg, arg2 = parsedPrompt[4], parsedPrompt[5]
 	local callback = sgs.ai_skill_cardask[parsedPrompt[1]]
 	if type(callback) == "function" then
-		local ret = callback(self, data, pattern, target, target2)
+		local ret = callback(self, data, pattern, target, target2, arg, arg2)
 		if ret then return ret end
 	end
 

@@ -1005,7 +1005,8 @@ public:
                 room->damage(newdamage);
             }
             catch (TriggerEvent triggerEvent) {
-                target->removeMark("ShichouTarget");
+                if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+                    target->removeMark("ShichouTarget");
                 throw triggerEvent;
             }
             return true;
@@ -1626,7 +1627,9 @@ public:
                 judge.reason = objectName();
 
                 if (damage.from && damage.from->hasSkill("hongyan"))
-                    simazhao->setFlags("LangguForHongyan"); //for AI
+                    simazhao->setFlags("LangguForHongyan"); // For AI
+                else if (simazhao->hasFlag("LangguForHongyan"))
+                    simazhao->setFlags("-LangguForHongyan");
                 room->judge(judge);
                 if (simazhao->hasFlag("LangguForHongyan"))
                     simazhao->setFlags("-LangguForHongyan");

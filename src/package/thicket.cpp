@@ -571,8 +571,10 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
         b->setFlags("-DimengTarget");
     }
     catch (TriggerEvent triggerEvent) {
-        a->setFlags("-DimengTarget");
-        b->setFlags("-DimengTarget");
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange) {
+            a->setFlags("-DimengTarget");
+            b->setFlags("-DimengTarget");
+        }
         throw triggerEvent;
     }
 }
@@ -761,7 +763,7 @@ public:
 class Roulin: public TriggerSkill {
 public:
     Roulin(): TriggerSkill("roulin") {
-        events << TargetConfirmed << CardFinished;
+        events << TargetConfirmed;
         frequency = Compulsory;
     }
 
@@ -769,62 +771,58 @@ public:
         return target != NULL && (target->hasSkill(objectName()) || target->isFemale());
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash") && player == use.from) {
-                int mark_n = player->getMark("double_jink" + use.card->toString());
-                int count = 0;
-                bool play_effect = false;
-                if (TriggerSkill::triggerable(use.from)) {
-                    count = 1;
-                    foreach (ServerPlayer *p, use.to) {
-                        if (p->isFemale()) {
-                            play_effect = true;
-                            mark_n += count;
-                            use.from->setMark("double_jink" + use.card->toString(), mark_n);
-                        }
-                        count *= 10;
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash") && player == use.from) {
+            QVariantList jink_list = use.from->tag["Jink_" + use.card->toString()].toList();
+            int index = 0;
+            bool play_effect = false;
+            if (TriggerSkill::triggerable(use.from)) {
+                foreach (ServerPlayer *p, use.to) {
+                    if (p->isFemale()) {
+                        play_effect = true;
+                        int n = jink_list.at(index).toInt();
+                        if (n > 0 && n < 2)
+                            jink_list.replace(index, QVariant(2));
                     }
-                    if (play_effect) {
-                        LogMessage log;
-                        log.from = use.from;
-                        log.arg = objectName();
-                        log.type = "#TriggerSkill";
-                        room->sendLog(log);
-                        room->notifySkillInvoked(use.from, objectName());
+                    index++;
+                }
+                use.from->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+                if (play_effect) {
+                    LogMessage log;
+                    log.from = use.from;
+                    log.arg = objectName();
+                    log.type = "#TriggerSkill";
+                    room->sendLog(log);
+                    room->notifySkillInvoked(use.from, objectName());
 
-                        room->broadcastSkillInvoke(objectName(), 1);
+                    room->broadcastSkillInvoke(objectName(), 1);
+                }
+            } else if (use.from->isFemale()) {
+                foreach (ServerPlayer *p, use.to) {
+                    if (p->hasSkill(objectName())) {
+                        play_effect = true;
+                        int n = jink_list.at(index).toInt();
+                        if (n > 0 && n < 2)
+                            jink_list.replace(index, QVariant(2));
                     }
-                } else if (use.from->isFemale()) {
-                    count = 1;
+                    index++;
+                }
+                use.from->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+                if (play_effect) {
                     foreach (ServerPlayer *p, use.to) {
                         if (p->hasSkill(objectName())) {
-                            play_effect = true;
-                            mark_n += count;
-                            use.from->setMark("double_jink" + use.card->toString(), mark_n);
+                            LogMessage log;
+                            log.from = p;
+                            log.arg = objectName();
+                            log.type = "#TriggerSkill";
+                            room->sendLog(log);
+                            room->notifySkillInvoked(p, objectName());
                         }
-                        count *= 10;
                     }
-                    if (play_effect) {
-                        foreach (ServerPlayer *p, use.to) {
-                            if (p->hasSkill(objectName())) {
-                                LogMessage log;
-                                log.from = p;
-                                log.arg = objectName();
-                                log.type = "#TriggerSkill";
-                                room->sendLog(log);
-                                room->notifySkillInvoked(p, objectName());
-                            }
-                        }
-                        room->broadcastSkillInvoke(objectName(), 2);
-                    }
+                    room->broadcastSkillInvoke(objectName(), 2);
                 }
             }
-        } else if (triggerEvent == CardFinished) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash"))
-                use.from->setMark("double_jink" + use.card->toString(), 0);
         }
 
         return false;

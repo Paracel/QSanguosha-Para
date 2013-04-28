@@ -264,7 +264,17 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
     foreach (ServerPlayer *target, targets)
         target->setFlags("JijiangTarget");
     foreach (ServerPlayer *liege, lieges) {
-        slash = room->askForCard(liege, "slash", "@jijiang-slash:" + liubei->objectName(), QVariant(), Card::MethodResponse, liubei);
+        try {
+            slash = room->askForCard(liege, "slash", "@jijiang-slash:" + liubei->objectName(), QVariant(), Card::MethodResponse, liubei);
+        }
+        catch (TriggerEvent triggerEvent) {
+            if (triggerEvent == TurnBroken || triggerEvent == StageChange) {
+                foreach (ServerPlayer *target, targets)
+                    target->setFlags("-JijiangTarget");
+            }
+            throw triggerEvent;
+        }
+
         if (slash) {
             foreach (ServerPlayer *target, targets)
                 target->setFlags("-JijiangTarget");

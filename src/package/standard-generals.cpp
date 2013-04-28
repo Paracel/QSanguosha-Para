@@ -626,53 +626,49 @@ public:
 class Tieji: public TriggerSkill {
 public:
     Tieji(): TriggerSkill("tieji") {
-        events << TargetConfirmed << CardFinished;
+        events << TargetConfirmed;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && target->hasSkill(objectName());
-    }
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (player != use.from || !use.card->isKindOf("Slash"))
+            return false;
+        QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+        int index = 0;
+        foreach (ServerPlayer *p, use.to) {
+            if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
+                room->broadcastSkillInvoke(objectName());
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (!player->isAlive() || player != use.from || !use.card->isKindOf("Slash"))
-                return false;
-            int count = 1;
-            int mark_n = player->getMark("no_jink" + use.card->toString());
-            foreach (ServerPlayer *p, use.to) {
-                if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
-                    room->broadcastSkillInvoke(objectName());
+                p->setFlags("TiejiTarget"); // For AI
 
-                    p->setFlags("TiejiTarget"); // For AI
+                JudgeStruct judge;
+                judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
+                judge.good = true;
+                judge.reason = objectName();
+                judge.who = player;
 
-                    JudgeStruct judge;
-                    judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
-                    judge.good = true;
-                    judge.reason = objectName();
-                    judge.who = player;
-
+                try {
                     room->judge(judge);
-                    if (judge.isGood()) {
-                        LogMessage log;
-                        log.type = "#NoJink";
-                        log.from = p;
-                        room->sendLog(log);
-
-                        mark_n += count;
-                        player->setMark("no_jink" + use.card->toString(), mark_n);
-                    }
-
-                    p->setFlags("-TiejiTarget");
                 }
-                count *= 10;
-            }
-        } else if (triggerEvent == CardFinished) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash"))
-                player->setMark("no_jink" + use.card->toString(), 0);
-        }
+                catch (TriggerEvent triggerEvent) {
+                    if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+                        p->setFlags("-TiejiTarget");
+                    throw triggerEvent;
+                }
 
+                if (judge.isGood()) {
+                    LogMessage log;
+                    log.type = "#NoJink";
+                    log.from = p;
+                    room->sendLog(log);
+                    jink_list.replace(index, QVariant(0));
+                }
+
+                p->setFlags("-TiejiTarget");
+            }
+            index++;
+        }
+        player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
         return false;
     }
 };
@@ -1112,13 +1108,15 @@ public:
             bool can_invoke = false;
             if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
                 can_invoke = true;
-                int count = 1;
-                int mark_n = player->getMark("double_jink" + use.card->toString());
+                QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+                int index = 0;
                 for (int i = 0; i < use.to.length(); i++) {
-                    mark_n += count;
-                    player->setMark("double_jink" + use.card->toString(), mark_n);
-                    count *= 10;
+                    int n = jink_list.at(index).toInt();
+                    if (n > 0 && n < 2)
+                        jink_list.replace(index, QVariant(2));
+                    index++;
                 }
+                player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
             }
             if (use.card->isKindOf("Duel")) {
                 if (TriggerSkill::triggerable(use.from) && use.from == player)
@@ -1140,13 +1138,9 @@ public:
                 room->setPlayerMark(player, "WushuangTarget", 1);
         } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash")) {
-                if (player->hasSkill(objectName()))
-                    player->setMark("double_jink" + use.card->toString(), 0);
-            } else if (use.card->isKindOf("Duel")) {
+            if (use.card->isKindOf("Duel")) {
                 foreach (ServerPlayer *lvbu, room->getAllPlayers())
-                    if (lvbu->getMark("WushuangTarget") > 0)
-                        room->setPlayerMark(lvbu, "WushuangTarget", 0);
+                    if (lvbu->getMark("WushuangTarget") > 0) room->setPlayerMark(lvbu, "WushuangTarget", 0);
             }
         }
 

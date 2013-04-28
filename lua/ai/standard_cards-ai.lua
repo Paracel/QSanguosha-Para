@@ -838,30 +838,17 @@ function sgs.ai_weapon_value.double_sword(self, enemy)
 end
 
 function SmartAI:getExpectedJinkNum(use)
-	local cantUseJink, needDoubleJink = false, false
-	if (use.from:getMark("no_jink" .. use.card:toString()) > 0) then
-		local num = use.from:getMark("no_jink" .. use.card:toString())
-		for _, p in sgs.qlist(use.to) do
-			if p:objectName() == self.player:objectName() and math.fmod(num, 10) > 0 then
-				cantUseJink = true
-				break
-			end
-			num = math.floor(num / 10)
+	local jink_list = use.from:getTag("Jink_" .. use.card:toString()):toStringList()
+	local index, jink_num = 1, 1
+	for _, p in sgs.qlist(use.to) do
+		if p:objectName() == self.player:objectName() then
+			local n = jink_list[index]
+			if n == 0 then return 0
+			elseif n > jink_num then jink_num = n end
 		end
+		index = index + 1
 	end
-	if (use.from:getMark("double_jink" .. use.card:toString()) > 0) then
-		local num = use.from:getMark("double_jink" .. use.card:toString())
-		for _, p in sgs.qlist(use.to) do
-			if p:objectName() == self.player:objectName() and num % 10 > 0 then
-				needDoubleJink = true
-				break
-			end
-			num = math.floor(num / 10)
-		end
-	end
-	if cantUseJink then return 0
-	elseif needDoubleJink then return 2
-	else return 1 end
+	return jink_num
 end
 
 sgs.ai_skill_cardask["double-sword-card"] = function(self, data, pattern, target)

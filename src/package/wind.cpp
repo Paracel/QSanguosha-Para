@@ -292,42 +292,30 @@ bool Jushou::onPhaseChange(ServerPlayer *target) const{
 class Liegong: public TriggerSkill {
 public:
     Liegong(): TriggerSkill("liegong") {
-        events << TargetConfirmed << CardFinished;
+        events << TargetConfirmed;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && target->hasSkill(objectName());
-    }
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
+            return false;
+        QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+        int index = 0;
+        foreach (ServerPlayer *p, use.to) {
+            int handcardnum = p->getHandcardNum();
+            if ((player->getHp() <= handcardnum || player->getAttackRange() >= handcardnum)
+                && player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
+                room->broadcastSkillInvoke(objectName());
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (!player->isAlive() || player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
-                return false;
-            int count = 1;
-            int mark_n = player->getMark("no_jink" + use.card->toString());
-            foreach (ServerPlayer *p, use.to) {
-                int handcardnum = p->getHandcardNum();
-                if ((player->getHp() <= handcardnum || player->getAttackRange() >= handcardnum)
-                    && player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
-                    room->broadcastSkillInvoke(objectName());
-
-                    LogMessage log;
-                    log.type = "#NoJink";
-                    log.from = p;
-                    room->sendLog(log);
-
-                    mark_n += count;
-                    player->setMark("no_jink" + use.card->toString(), mark_n);
-                }
-                count *= 10;
+                LogMessage log;
+                log.type = "#NoJink";
+                log.from = p;
+                room->sendLog(log);
+                jink_list.replace(index, QVariant(0));
             }
-        } else if (triggerEvent == CardFinished) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("Slash"))
-                player->setMark("no_jink" + use.card->toString(), 0);
+            index++;
         }
-
+        player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
         return false;
     }
 };
@@ -588,7 +576,8 @@ void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
         room->damage(damage);
     }
     catch (TriggerEvent triggerEvent) {
-        effect.to->removeMark("TianxiangTarget");
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+            effect.to->removeMark("TianxiangTarget");
         throw triggerEvent;
     }
 }

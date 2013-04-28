@@ -484,9 +484,6 @@ void Room::gameOver(const QString &winner) {
 
 void Room::slashEffect(const SlashEffectStruct &effect) {
     QVariant data = QVariant::fromValue(effect);
-
-    thread->trigger(SlashEffectStart, this, effect.from, data);
-
     if (thread->trigger(SlashEffected, this, effect.to, data)) {
         if (!effect.to->hasFlag("Global_NonSkillNullify"))
             setEmotion(effect.to, "skill_nullify");
@@ -503,17 +500,14 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
 }
 
 void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
-    if (!effect.to->isAlive())
-        return;
-
     SlashEffectStruct result_effect = effect;
     result_effect.jink = jink;
     QVariant data = QVariant::fromValue(result_effect);
 
-    if (jink == NULL)
+    if (jink == NULL) {
         if (effect.to->isAlive())
             thread->trigger(SlashHit, this, effect.from, data);
-    else {
+    } else {
         if (effect.to->isAlive()) {
             if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
                 setEmotion(effect.to, "jink");

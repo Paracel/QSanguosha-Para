@@ -162,8 +162,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == Damaged) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card == NULL || !damage.card->isKindOf("Slash") || damage.to->isDead())
                 return false;
@@ -279,8 +279,8 @@ public:
         return TriggerSkill::triggerable(target) && target->getPhase() == Player::NotActive;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == CardsMoveOneTime) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from == player
                 && (move.from_places.contains(Player::PlaceHand)
@@ -294,7 +294,7 @@ public:
                 judge.who = player;
                 room->judge(judge);
             }
-        } else if (event == FinishJudge) {
+        } else if (triggerEvent == FinishJudge) {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason == "tuntian" && judge->isGood())
                 player->addToPile("field", judge->card->getEffectiveId());
@@ -638,9 +638,9 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if ((event == GameStart && player->isLord())
-            || (event == EventAcquireSkill && data.toString() == "zhiba")) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if ((triggerEvent == GameStart && player->isLord())
+            || (triggerEvent == EventAcquireSkill && data.toString() == "zhiba")) {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -657,7 +657,7 @@ public:
                 if (!p->hasSkill("zhiba_pindian"))
                     room->attachSkillToPlayer(p, "zhiba_pindian");
             }
-        } else if (event == EventLoseSkill && data.toString() == "zhiba") {
+        } else if (triggerEvent == EventLoseSkill && data.toString() == "zhiba") {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -674,7 +674,7 @@ public:
                 if (p->hasSkill("zhiba_pindian"))
                     room->detachSkillFromPlayer(p, "zhiba_pindian", true);
             }
-        } else if (event == Pindian) {
+        } else if (triggerEvent == Pindian) {
             PindianStar pindian = data.value<PindianStar>();
             if (pindian->reason != "zhiba_pindian" || !pindian->to->hasLordSkill(objectName()))
                 return false;
@@ -687,7 +687,7 @@ public:
                 pindian->to->obtainCard(pindian->to_card);
             } else
                 room->broadcastSkillInvoke(objectName(), 4);
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
             if (phase_change.from != Player::Play)
                 return false;
@@ -934,8 +934,8 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *liushan, QVariant &data) const{
-        if (event == TargetConfirming) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *liushan, QVariant &data) const{
+        if (triggerEvent == TargetConfirming) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card && use.card->isKindOf("Slash")) {
                 liushan->setMark("xiangle", 0);

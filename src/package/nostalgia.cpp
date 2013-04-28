@@ -13,15 +13,15 @@ public:
         events << CardUsed << CardResponded;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (player->getPhase() != Player::NotActive)
             return false;
 
         CardStar card = NULL;
-        if (event == CardUsed) {
+        if (triggerEvent == CardUsed) {
             CardUseStruct card_use = data.value<CardUseStruct>();
             card = card_use.card;
-        } else if (event == CardResponded) {
+        } else if (triggerEvent == CardResponded) {
             card = data.value<CardResponseStruct>().m_card;
         }
 
@@ -162,8 +162,8 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == HpRecover) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == HpRecover) {
             RecoverStruct recover = data.value<RecoverStruct>();
             if (recover.who && recover.who != player) {
                 recover.who->drawCards(recover.recover);
@@ -177,7 +177,7 @@ public:
                 room->sendLog(log);
                 room->broadcastSkillInvoke("enyuan", qrand() % 2 + 1);
             }
-        } else if (event == Damaged) {
+        } else if (triggerEvent == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
             ServerPlayer *source = damage.from;
             if (source && source != player) {
@@ -243,8 +243,8 @@ public:
         default_choice = "nothing";
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *lingtong, QVariant &data) const{
-        if (event == CardsMoveOneTime) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lingtong, QVariant &data) const{
+        if (triggerEvent == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from == lingtong && move.from_places.contains(Player::PlaceEquip)) {
                 QStringList choicelist;
@@ -307,8 +307,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shuangying, QVariant &data) const{
-        if (event == EventPhaseStart && shuangying->getPhase() ==  Player::Draw && TriggerSkill::triggerable(shuangying)) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *shuangying, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && shuangying->getPhase() ==  Player::Draw && TriggerSkill::triggerable(shuangying)) {
             if (shuangying->askForSkillInvoke(objectName())) {
                 int card1 = room->drawCard();
                 int card2 = room->drawCard();
@@ -340,7 +340,7 @@ public:
 
                 return true;
             }
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive && shuangying->hasFlag(objectName())) {
                 room->detachSkillFromPlayer(shuangying, "wusheng");
@@ -449,8 +449,8 @@ public:
         view_as_skill = new NosJiefanViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *handang, QVariant &data) const{
-        if (event == PreCardUsed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *handang, QVariant &data) const{
+        if (triggerEvent == PreCardUsed) {
             if (handang->hasFlag("NosJiefanFailed"))
                 room->setPlayerFlag(handang, "-NosJiefanFailed");
 
@@ -462,7 +462,7 @@ public:
                 handang->setFlags("-NosJiefanUsed");
                 room->setCardFlag(use.card, "nosjiefan-slash");
             }
-        } else if (event == DamageCaused) {
+        } else if (triggerEvent == DamageCaused) {
             ServerPlayer *current = room->getCurrent();
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->hasFlag("nosjiefan-slash")) {
@@ -506,7 +506,7 @@ public:
                 return true;
             }
             return false;
-        } else if (event == CardFinished && !room->getTag("NosJiefanTarget").isNull()) {
+        } else if (triggerEvent == CardFinished && !room->getTag("NosJiefanTarget").isNull()) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash") && use.card->hasFlag("nosjiefan-slash")) {
                 if (!use.card->hasFlag("nosjiefan_success"))

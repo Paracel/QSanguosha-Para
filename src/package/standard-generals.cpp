@@ -342,8 +342,8 @@ public:
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *zhenji, QVariant &data) const{
-        if (event == EventPhaseStart && zhenji->getPhase() == Player::Start) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhenji, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && zhenji->getPhase() == Player::Start) {
             while (zhenji->askForSkillInvoke("luoshen")) {
                 room->broadcastSkillInvoke(objectName());
 
@@ -359,7 +359,7 @@ public:
                 if (judge.isBad())
                     break;
             }
-        } else if (event == FinishJudge) {
+        } else if (triggerEvent == FinishJudge) {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason == objectName()) {
                 bool isHegVer = zhenji->getGeneralName() != "zhenji"
@@ -633,8 +633,8 @@ public:
         return target && target->hasSkill(objectName());
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (!player->isAlive() || player != use.from || !use.card->isKindOf("Slash"))
                 return false;
@@ -667,7 +667,7 @@ public:
                 }
                 count *= 10;
             }
-        } else if (event == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
                 player->setMark("no_jink" + use.card->toString(), 0);
@@ -734,7 +734,7 @@ public:
         events << CardUsed;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *yueying, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *yueying, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
 
         if (use.card->isNDTrick() && room->askForSkillInvoke(yueying, objectName())) {
@@ -795,14 +795,14 @@ public:
         return target != NULL && target->hasLordSkill("jiuyuan");
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *sunquan, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *sunquan, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Peach") && use.from && use.from->getKingdom() == "wu"
                 && sunquan != use.from && sunquan->hasFlag("Global_Dying")) {
                 room->setCardFlag(use.card, "jiuyuan");
             }
-        } else if (event == PreHpRecover) {
+        } else if (triggerEvent == PreHpRecover) {
             RecoverStruct rec = data.value<RecoverStruct>();
             if (rec.card && rec.card->hasFlag("jiuyuan")) {
                 room->notifySkillInvoked(sunquan, "jiuyuan");
@@ -894,10 +894,10 @@ public:
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *luxun, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *luxun, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand)) {
-            if (event == BeforeCardsMove) {
+            if (triggerEvent == BeforeCardsMove) {
                 if (luxun->isKongcheng()) return false;
                 foreach (int id, luxun->handCards()) {
                     if (!move.card_ids.contains(id))
@@ -1106,8 +1106,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             bool can_invoke = false;
             if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
@@ -1138,7 +1138,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             if (use.card->isKindOf("Duel"))
                 room->setPlayerMark(player, "WushuangTarget", 1);
-        } else if (event == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash")) {
                 if (player->hasSkill(objectName()))
@@ -1493,8 +1493,8 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *gaodayihao, QVariant &data) const{
-        if (event == CardsMoveOneTime) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *gaodayihao, QVariant &data) const{
+        if (triggerEvent == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from != gaodayihao && move.to != gaodayihao)
                 return false;
@@ -1503,7 +1503,7 @@ public:
                 return false;
             }
         }
-        if (event == EventPhaseChanging) {
+        if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Draw) {
                 gaodayihao->skip(change.to);

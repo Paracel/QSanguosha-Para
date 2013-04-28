@@ -218,8 +218,8 @@ public:
         return TriggerSkill::triggerable(target) || (target && target->hasFlag("shuangxiong"));
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *shuangxiong, QVariant &data) const{
-        if (event == EventPhaseStart) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *shuangxiong, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart) {
             if (shuangxiong->getPhase() == Player::Start) {
                 room->setPlayerMark(shuangxiong, "shuangxiong", 0);
             } else if (shuangxiong->getPhase() == Player::Draw) {
@@ -242,7 +242,7 @@ public:
             } else if (shuangxiong->getPhase() == Player::NotActive && shuangxiong->hasFlag("shuangxiong")) {
                 room->setPlayerFlag(shuangxiong, "-shuangxiong");
             }
-        } else if (event == FinishJudge) {
+        } else if (triggerEvent == FinishJudge) {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason == "shuangxiong")
                 shuangxiong->obtainCard(judge->card);

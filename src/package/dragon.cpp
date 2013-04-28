@@ -165,9 +165,9 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if ((event == GameStart && player->isLord())
-            || (event == EventAcquireSkill && data.toString() == "drjiuyuan")) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if ((triggerEvent == GameStart && player->isLord())
+            || (triggerEvent == EventAcquireSkill && data.toString() == "drjiuyuan")) {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -184,7 +184,7 @@ public:
                 if (!p->hasSkill("drjiuyuanv"))
                     room->attachSkillToPlayer(p, "drjiuyuanv");
             }
-        } else if (event == EventLoseSkill && data.toString() == "drjiuyuan") {
+        } else if (triggerEvent == EventLoseSkill && data.toString() == "drjiuyuan") {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -201,7 +201,7 @@ public:
                 if (p->hasSkill("drjiuyuanv"))
                     room->detachSkillFromPlayer(p, "drjiuyuanv", true);
             }
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
             if (phase_change.from != Player::Play)
                   return false;
@@ -321,8 +321,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             bool can_invoke = false;
             if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
@@ -345,7 +345,7 @@ public:
             room->notifySkillInvoked(player, objectName());
 
             room->broadcastSkillInvoke("wushuang");
-        } else if (event == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash")) {
                 if (player->getMark("double_jink" + use.card->toString()) > 0)

@@ -1049,10 +1049,10 @@ void ServerPlayer::gainAnExtraTurn() {
         room->getThread()->trigger(TurnStart, room, this);
         room->setCurrent(current);
     }
-    catch (TriggerEvent event) {
-        if (event == TurnBroken)
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken)
             room->setCurrent(current);
-        throw event;
+        throw triggerEvent;
     }
 }
 

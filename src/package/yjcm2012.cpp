@@ -16,8 +16,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             if (TriggerSkill::triggerable(player)) {
                 CardUseStruct use = data.value<CardUseStruct>();
                 if (use.to.contains(player) && use.from != player) {
@@ -35,7 +35,7 @@ public:
                     }
                 }
             }
-        } else if (event == CardEffected) {
+        } else if (triggerEvent == CardEffected) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (!effect.card->isKindOf("Slash") && effect.card->hasFlag("ZhenlieNullify") && player->hasFlag("ZhenlieTarget")) {
                 player->setFlags("-ZhenlieTarget");
@@ -49,7 +49,7 @@ public:
 
                 return true;
             }
-        } else if (event == SlashEffected) {
+        } else if (triggerEvent == SlashEffected) {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             if (effect.slash->hasFlag("ZhenlieNullify") && player->hasFlag("ZhenlieTarget")) {
                 player->setFlags("-ZhenlieTarget");
@@ -348,12 +348,12 @@ public:
         return !target->tag["qianxi"].toString().isNull();
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == EventPhaseChanging) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
-        } else if (event == Death) {
+        } else if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player)
                 return false;
@@ -570,8 +570,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == Damage && TriggerSkill::triggerable(player)) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()
                 && player->getPhase() == Player::Play) {
@@ -581,7 +581,7 @@ public:
                 room->broadcastSkillInvoke(objectName(), 2);
                 player->setFlags(objectName());
             }
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive && player->hasFlag(objectName())) {
                 room->detachSkillFromPlayer(player, "wusheng");
@@ -797,8 +797,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == PreDamageDone) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == PreDamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()) {
                 QVariantList slash_list = damage.from->tag["InvokeLihuo"].toList();
@@ -932,8 +932,8 @@ public:
         view_as_skill = new ChunlaoViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *chengpu, QVariant &data) const{
-        if (event == EventPhaseStart && chengpu->getPhase() == Player::Finish
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *chengpu, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && chengpu->getPhase() == Player::Finish
             && !chengpu->isKongcheng() && chengpu->getPile("wine").isEmpty()) {
             room->askForUseCard(chengpu, "@@chunlao", "@chunlao", -1, Card::MethodNone);
         }

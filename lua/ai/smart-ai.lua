@@ -1390,7 +1390,7 @@ sgs.ai_choicemade_filter.viewCards.general = function(self, from, promptlist)
 	end
 end
 
-function SmartAI:filterEvent(event, player, data)
+function SmartAI:filterEvent(triggerEvent, player, data)
 	if not sgs.recorder then
 		sgs.recorder = self
 	end
@@ -1402,16 +1402,14 @@ function SmartAI:filterEvent(event, player, data)
 	else
 		sgs.debugmode = false
 	end
-	if player:objectName() == self.player:objectName() and sgs.debugmode and sgs.ai_debug_func[event] and type(sgs.ai_debug_func[event]) == "function" then
-		sgs.ai_debug_func[event](self, player, data)
+	if player:objectName() == self.player:objectName() and sgs.debugmode and sgs.ai_debug_func[triggerEvent] and type(sgs.ai_debug_func[triggerEvent]) == "function" then
+		sgs.ai_debug_func[triggerEvent](self, player, data)
 	end
-	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and player:getState() == "robot" and sgs.ai_chat_func[event] and type(sgs.ai_chat_func[event]) == "function" then
-		sgs.ai_chat_func[event](self, player, data)
+	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and player:getState() == "robot" and sgs.ai_chat_func[triggerEvent] and type(sgs.ai_chat_func[triggerEvent]) == "function" then
+		sgs.ai_chat_func[triggerEvent](self, player, data)
 	end
 
-	sgs.lastevent = event
-	sgs.lasteventdata = eventdata
-	if event == sgs.ChoiceMade and self == sgs.recorder then
+	if triggerEvent == sgs.ChoiceMade and self == sgs.recorder then
 		local carduse = data:toCardUse()
 		if carduse and carduse.card ~= nil then
 			for _, aflag in ipairs(sgs.ai_global_flags) do
@@ -1444,17 +1442,17 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardUsed or event == sgs.CardEffected or event == sgs.GameStart or event == sgs.EventPhaseStart then
+	elseif triggerEvent == sgs.CardUsed or triggerEvent == sgs.CardEffected or triggerEvent == sgs.GameStart or triggerEvent == sgs.EventPhaseStart then
 		self:updatePlayers()
-	elseif event == sgs.BuryVictim or event == sgs.HpChanged or event == sgs.MaxHpChanged then
+	elseif triggerEvent == sgs.BuryVictim or triggerEvent == sgs.HpChanged or triggerEvent == sgs.MaxHpChanged then
 		self:updatePlayers(false)
 	end
 
-	if event == sgs.BuryVictim then
+	if triggerEvent == sgs.BuryVictim then
 		if self == sgs.recorder then self:updateAlivePlayerRoles() end
 	end
 
-	if event == sgs.AskForPeaches then
+	if triggerEvent == sgs.AskForPeaches then
 		if self.player:objectName() == player:objectName() then
 			local dying = data:toDying()
 			if self:isFriend(dying.who) and dying.who:getHp() < 1 then
@@ -1465,7 +1463,7 @@ function SmartAI:filterEvent(event, player, data)
 
 	if self ~= sgs.recorder then return end
 
-	if event == sgs.CardEffected then
+	if triggerEvent == sgs.CardEffected then
 		local struct = data:toCardEffect()
 		local card = struct.card
 		local from = struct.from
@@ -1474,7 +1472,7 @@ function SmartAI:filterEvent(event, player, data)
 			to:setFlags("-AIGlobal_LordInDangerAA")
 			to:setFlags("-AIGlobal_LordInDangerSA")
 		end
-	elseif event == sgs.CardEffect then
+	elseif triggerEvent == sgs.CardEffect then
 		local struct = data:toCardEffect()
 		local card = struct.card
 		local from = struct.from
@@ -1487,7 +1485,7 @@ function SmartAI:filterEvent(event, player, data)
 			sgs.ai_snat_disma_effect = true
 			sgs.ai_snat_dism_from = from
 		end
-	elseif event == sgs.PreDamageDone then
+	elseif triggerEvent == sgs.PreDamageDone then
 		local damage = data:toDamage()
 		local lord = self.room:getLord()
 		if lord and damage.trigger_chain and lord:isChained() and self:damageIsEffective(lord, damage.nature, from) then
@@ -1499,7 +1497,7 @@ function SmartAI:filterEvent(event, player, data)
 		else
 			sgs.lordNeedPeach = nil
 		end
-	elseif event == sgs.Damaged then
+	elseif triggerEvent == sgs.Damaged then
 		local damage = data:toDamage()
 		local card = damage.card
 		local from = damage.from
@@ -1526,7 +1524,7 @@ function SmartAI:filterEvent(event, player, data)
 
 			if from then sgs.updateIntention(from, to, intention) end
 		end
-	elseif event == sgs.PreCardUsed then
+	elseif triggerEvent == sgs.PreCardUsed then
 		local struct = data:toCardUse()
 		local card = struct.card
 		local to = struct.to
@@ -1538,6 +1536,7 @@ function SmartAI:filterEvent(event, player, data)
 		local toname = {}
 		for _, ato in ipairs(to) do
 			table.insert(toname, ato:getGeneralName())
+			speakTrigger(card, from, ato)
 		end
 		if from then str = str .. from:getGeneralName() .. "->" .. table.concat(toname, "+") end
 		if source then str = str .. "#" .. source:getGeneralName() end
@@ -1604,7 +1603,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardUsed then
+	elseif triggerEvent == sgs.CardUsed then
 		local struct = data:toCardUse()
 		local card = struct.card
 		if card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("YinlingCard") then
@@ -1615,14 +1614,14 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardFinished then
+	elseif triggerEvent == sgs.CardFinished then
 		local struct = data:toCardUse()
 		local card = struct.card
 		local lord = self.room:getLord()
 		if card and lord and card:isKindOf("Duel") and lord:hasFlag("AIGlobal_NeedToWake") then
 			lord:setFlags("-AIGlobal_NeedToWake")
 		end
-	elseif event == sgs.BeforeCardsMove then
+	elseif triggerEvent == sgs.BeforeCardsMove then
 		local move = data:toMoveOneTime()
 		local from = nil -- convert move.from from const Player * to ServerPlayer *
 		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
@@ -1679,7 +1678,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.CardsMoveOneTime then
+	elseif triggerEvent == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		local from = nil -- convert move.from from const Player * to ServerPlayer *
 		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
@@ -1768,7 +1767,7 @@ function SmartAI:filterEvent(event, player, data)
 				end
 			end
 		end
-	elseif event == sgs.StartJudge then
+	elseif triggerEvent == sgs.StartJudge then
 		local judge = data:toJudge()
 		local reason = judge.reason
 		if reason == "beige" then
@@ -1780,7 +1779,7 @@ function SmartAI:filterEvent(event, player, data)
 
 		local judgex = { who = judge.who, reason = judge.reason, good = judge:isGood() }
 		table.insert(sgs.ai_current_judge, judgex)
-	elseif event == sgs.AskForRetrial then
+	elseif triggerEvent == sgs.AskForRetrial then
 		local judge = data:toJudge()
 
 		local judge_len = #sgs.ai_current_judge
@@ -1795,11 +1794,11 @@ function SmartAI:filterEvent(event, player, data)
 
 		last_judge.good = judge:isGood()
 		table.insert(sgs.ai_current_judge, last_judge)
-	elseif event == sgs.FinishJudge then
+	elseif triggerEvent == sgs.FinishJudge then
 		table.remove(sgs.ai_current_judge, #sgs.ai_current_judge)
-	elseif event == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
+	elseif triggerEvent == sgs.EventPhaseEnd and player:getPhase() == sgs.Player_Play then
 		player:setFlags("AIGlobal_PlayPhaseNotSkipped")
-	elseif event == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
+	elseif triggerEvent == sgs.EventPhaseStart and player:getPhase() == sgs.Player_NotActive then
 		if player:isLord() then sgs.turncount = sgs.turncount + 1 end
 
 		local file = io.open("lua/ai/AIDebug.Readme")
@@ -1809,7 +1808,7 @@ function SmartAI:filterEvent(event, player, data)
 		else
 			sgs.debugmode = false
 		end
-	elseif event == sgs.GameStart then
+	elseif triggerEvent == sgs.GameStart then
 		local file = io.open("lua/ai/AIDebug.Readme")
 		if file then
 			file:close()

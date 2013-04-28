@@ -355,8 +355,8 @@ void RoomThread::run3v3(QList<ServerPlayer *> &first, QList<ServerPlayer *> &sec
             current = find3v3Next(first, second);
         }
     }
-    catch (TriggerEvent event) {
-        if (event == TurnBroken) {
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
             if (player->getPhase() != Player::NotActive) {
                 game_rule->trigger(EventPhaseEnd, room, player, QVariant());
@@ -382,7 +382,7 @@ void RoomThread::run3v3(QList<ServerPlayer *> &first, QList<ServerPlayer *> &sec
 
             run3v3(first, second, game_rule, find3v3Next(first, second));
         } else {
-            throw event;
+            throw triggerEvent;
         }
     }
 }
@@ -482,10 +482,10 @@ void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> l
             }
         }
     }
-    catch (TriggerEvent event) {
-        if (event == StageChange) {
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == StageChange) {
             stage = 2;
-            trigger(event, (Room *)room, NULL);
+            trigger(triggerEvent, (Room *)room, NULL);
             foreach (ServerPlayer *player, room->getPlayers()) {
                 if (player != shenlvbu) {
                     if (player->hasFlag("actioned"))
@@ -500,7 +500,7 @@ void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> l
 
             room->setCurrent(shenlvbu);
             actionHulaoPass(shenlvbu, league, game_rule, 2);
-        } else if (event == TurnBroken) {
+        } else if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
             ServerPlayer *next = findHulaoPassNext(shenlvbu, league, stage);
             if (player->getPhase() != Player::NotActive) {
@@ -513,7 +513,7 @@ void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> l
             room->setCurrent(next);
             actionHulaoPass(shenlvbu, league, game_rule, stage);
         } else {
-            throw event;
+            throw triggerEvent;
         }
     }
 }
@@ -526,8 +526,8 @@ void RoomThread::actionNormal(GameRule *game_rule) {
             room->setCurrent(room->getCurrent()->getNextAlive());
         }
     }
-    catch (TriggerEvent event) {
-        if (event == TurnBroken) {
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
             ServerPlayer *next = player->getNextAlive();
             if (player->getPhase() != Player::NotActive) {
@@ -538,7 +538,7 @@ void RoomThread::actionNormal(GameRule *game_rule) {
             room->setCurrent(next);
             actionNormal(game_rule);
         } else {
-            throw event;
+            throw triggerEvent;
         }
     }
 }
@@ -600,8 +600,8 @@ void RoomThread::run() {
             actionNormal(game_rule);
         }
     }
-    catch (TriggerEvent event) {
-        if (event == GameFinished) {
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == GameFinished) {
             Sanguosha->unregisterRoom();
             return;
         } else
@@ -615,16 +615,16 @@ static bool CompareByPriority(const TriggerSkill *a, const TriggerSkill *b) {
     return a->getDynamicPriority() > b->getDynamicPriority();
 }
 
-bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, QVariant &data) {
+bool RoomThread::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *target, QVariant &data) {
     // push it to event stack
-    EventTriplet triplet(event, room, target);
+    EventTriplet triplet(triggerEvent, room, target);
     event_stack.push_back(triplet);
 
     bool broken = false;
 
     try {
         QList<const TriggerSkill *> triggered;
-        QList<const TriggerSkill *> &skills = skill_table[event];
+        QList<const TriggerSkill *> &skills = skill_table[triggerEvent];
         foreach (const TriggerSkill *skill, skills) {
             double priority = skill->getPriority();
             int len = room->getPlayers().length();
@@ -645,14 +645,14 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
             if (skill->triggerable(target) && !triggered.contains(skill)) {
                 while (room->isPaused()) {}
                 triggered.append(skill);
-                broken = skill->trigger(event, room, target, data);
+                broken = skill->trigger(triggerEvent, room, target, data);
                 if (broken) break;
             }
         }
 
         if (target) {
             foreach (AI *ai, room->ais)
-                ai->filterEvent(event, target, data);
+                ai->filterEvent(triggerEvent, target, data);
         }
 
         // pop event stack
@@ -661,7 +661,7 @@ bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target, Q
     catch (TriggerEvent throwed_event) {
         if (target) {
             foreach (AI *ai, room->ais)
-                ai->filterEvent(event, target, data);
+                ai->filterEvent(triggerEvent, target, data);
         }
 
         // pop event stack
@@ -678,9 +678,9 @@ const QList<EventTriplet> *RoomThread::getEventStack() const{
     return &event_stack;
 }
 
-bool RoomThread::trigger(TriggerEvent event, Room *room, ServerPlayer *target) {
+bool RoomThread::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *target) {
     QVariant data;
-    return trigger(event, room, target, data);
+    return trigger(triggerEvent, room, target, data);
 }
 
 void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
@@ -690,8 +690,8 @@ void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
     skillSet << skill->objectName();
 
     QList<TriggerEvent> events = skill->getTriggerEvents();
-    foreach (TriggerEvent event, events) {
-        QList<const TriggerSkill *> &table = skill_table[event];
+    foreach (TriggerEvent triggerEvent, events) {
+        QList<const TriggerSkill *> &table = skill_table[triggerEvent];
         table << skill;
         //qStableSort(table.begin(), table.end(), CompareByPriority);
     }

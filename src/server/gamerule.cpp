@@ -154,7 +154,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
         return false;
     }
 
-    switch (event) {
+    switch (triggerEvent) {
     case TurnStart: {
             player = room->getCurrent();
             if (room->getTag("FirstRound").toBool()) {
@@ -285,7 +285,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             bool refilter = skill->inherits("FilterSkill");
 
             if (refilter)
-                room->filterCards(player, player->getCards("he"), event == EventLoseSkill);
+                room->filterCards(player, player->getCards("he"), triggerEvent == EventLoseSkill);
 
             break;
         }
@@ -820,8 +820,8 @@ HulaoPassMode::HulaoPassMode(QObject *parent)
     default_choice = "recover";
 }
 
-bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-    switch (event) {
+bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    switch (triggerEvent) {
     case StageChange: {
             ServerPlayer *lord = room->getLord();
             room->setPlayerMark(lord, "secondMode", 1);
@@ -957,7 +957,7 @@ bool HulaoPassMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             break;
     }
 
-    return GameRule::trigger(event, room, player, data);
+    return GameRule::trigger(triggerEvent, room, player, data);
 }
 
 BasaraMode::BasaraMode(QObject *parent)
@@ -1056,10 +1056,10 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
     room->sendLog(log);
 }
 
-bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+bool BasaraMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
     // Handle global events
     if (player == NULL) {
-        if (event == GameStart) {
+        if (triggerEvent == GameStart) {
             if (Config.EnableHegemony)
                 room->setTag("SkipNormalDeathProcess", true);
             foreach (ServerPlayer *sp, room->getAlivePlayers()) {
@@ -1083,7 +1083,10 @@ bool BasaraMode::trigger(TriggerEvent event, Room *room, ServerPlayer *player, Q
         return false;
     }
 
-    switch (event) {
+    player->tag["triggerEvent"] = triggerEvent;
+    player->tag["triggerEventData"] = data; // For AI
+
+    switch (triggerEvent) {
     case CardEffected: {
             if (player->getPhase() == Player::NotActive) {
                 CardEffectStruct ces = data.value<CardEffectStruct>();

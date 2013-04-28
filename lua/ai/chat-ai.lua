@@ -6,12 +6,8 @@ function speak(to, type)
 	to:speak(sgs.ai_chat[type][i])
 end
 
-function speakTrigger(card, from, to, event)
-	if (event == "death") and from:hasSkill("ganglie") then
-		speak(from, "ganglie_death")
-	end
-
-	if not card then return end
+function speakTrigger(card, from, to)
+	if not card or not from or not to then return end
 
 	if card:isKindOf("Indulgence") and (to:getHandcardNum() > to:getHp()) then
 		speak(to, "indulgence")

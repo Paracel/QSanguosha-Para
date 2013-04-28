@@ -141,9 +141,9 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if ((event == GameStart && player->isLord())
-            || (event == EventAcquireSkill && data.toString() == "huangtian")) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if ((triggerEvent == GameStart && player->isLord())
+            || (triggerEvent == EventAcquireSkill && data.toString() == "huangtian")) {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -160,7 +160,7 @@ public:
                 if (!p->hasSkill("huangtianv"))
                     room->attachSkillToPlayer(p, "huangtianv");
             }
-        } else if (event == EventLoseSkill && data.toString() == "huangtian") {
+        } else if (triggerEvent == EventLoseSkill && data.toString() == "huangtian") {
             QList<ServerPlayer *> lords;
             foreach (ServerPlayer *p, room->getAlivePlayers()) {
                 if (p->hasLordSkill(objectName()))
@@ -177,7 +177,7 @@ public:
                 if (p->hasSkill("huangtianv"))
                     room->detachSkillFromPlayer(p, "huangtianv", true);
             }
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
             if (phase_change.from != Player::Play)
                   return false;
@@ -299,8 +299,8 @@ public:
         return target && target->hasSkill(objectName());
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (!player->isAlive() || player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
                 return false;
@@ -322,7 +322,7 @@ public:
                 }
                 count *= 10;
             }
-        } else if (event == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
                 player->setMark("no_jink" + use.card->toString(), 0);
@@ -343,12 +343,12 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (event == PreDamageDone && damage.from && damage.from->hasSkill("kuanggu") && damage.from->isAlive()) {
+        if (triggerEvent == PreDamageDone && damage.from && damage.from->hasSkill("kuanggu") && damage.from->isAlive()) {
             ServerPlayer *weiyan = damage.from;
             weiyan->tag["InvokeKuanggu"] = weiyan->distanceTo(damage.to) <= 1;
-        } else if (event == Damage && player->hasSkill("kuanggu") && player->isAlive()) {
+        } else if (triggerEvent == Damage && player->hasSkill("kuanggu") && player->isAlive()) {
             bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
             player->tag["InvokeKuanggu"] = false;
             if (invoke && player->isWounded()) {
@@ -428,8 +428,8 @@ public:
         events << PostHpReduced << AskForPeachesDone;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *zhoutai, QVariant &) const{
-        if (event == PostHpReduced && zhoutai->getHp() < 1) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &) const{
+        if (triggerEvent == PostHpReduced && zhoutai->getHp() < 1) {
             if (room->askForSkillInvoke(zhoutai, objectName())) {
                 room->setTag("Buqu", zhoutai->objectName());
                 room->broadcastSkillInvoke(objectName());
@@ -460,7 +460,7 @@ public:
                     return true;
                 }
             }
-        } else if (event == AskForPeachesDone) {
+        } else if (triggerEvent == AskForPeachesDone) {
             const QList<int> &buqu = zhoutai->getPile("buqu");
 
             if (zhoutai->getHp() > 0)
@@ -587,9 +587,9 @@ void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
     try {
         room->damage(damage);
     }
-    catch (TriggerEvent event) {
+    catch (TriggerEvent triggerEvent) {
         effect.to->removeMark("TianxiangTarget");
-        throw event;
+        throw triggerEvent;
     }
 }
 

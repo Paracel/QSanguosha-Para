@@ -24,8 +24,8 @@ void MiniSceneRule::assign(QStringList &generals, QStringList &roles) const{
     }
 }
 
-bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &) const{
-    if (event == EventPhaseStart) {
+bool MiniSceneRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+    if (triggerEvent == EventPhaseStart) {
         if (player == room->getTag("Starter").value<PlayerStar>()) {
             if (player->getPhase() == Player::Start) {
                 room->setTag("Round", room->getTag("Round").toInt() + 1);
@@ -53,7 +53,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             return false;
         room->gameOver(this->players.first()["singleTurn"]);
         return true;
-    } else if (event == FetchDrawPileCard) {
+    } else if (triggerEvent == FetchDrawPileCard) {
         if (this->players.first()["endedByPile"] != QString()) {
             const QList<int> &drawPile = room->getDrawPile();
             foreach (int id, m_fixedDrawCards) {
@@ -64,7 +64,7 @@ bool MiniSceneRule::trigger(TriggerEvent event, Room *room, ServerPlayer *player
             return true;
         }
         return false;
-    } else if (event == GameStart) {
+    } else if (triggerEvent == GameStart) {
         if (room->getTag("WaitForPlayer").toBool())
             return true;
 

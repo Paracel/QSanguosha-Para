@@ -51,7 +51,7 @@ public:
     virtual const Card *askForSinglePeach(ServerPlayer *dying) = 0;
     virtual ServerPlayer *askForYiji(const QList<int> &cards, const QString &reason, int &card_id) = 0;
     virtual void askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only) = 0;
-    virtual void filterEvent(TriggerEvent event, ServerPlayer *player, const QVariant &data);
+    virtual void filterEvent(TriggerEvent triggerEvent, ServerPlayer *player, const QVariant &data);
 
 protected:
     Room *room;
@@ -112,7 +112,7 @@ public:
     virtual ServerPlayer *askForYiji(const QList<int> &cards, const QString &reason, int &card_id);
     virtual void askForGuanxing(const QList<int> &cards, QList<int> &up, QList<int> &bottom, bool up_only);
 
-    virtual void filterEvent(TriggerEvent event, ServerPlayer *player, const QVariant &data);
+    virtual void filterEvent(TriggerEvent triggerEvent, ServerPlayer *player, const QVariant &data);
 
     LuaFunction callback;
 

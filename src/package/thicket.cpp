@@ -316,8 +316,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == CardUsed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == CardUsed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("SavageAssault")) {
                 if (use.card->isVirtualCard() && use.card->subcardsLength() != 1)
@@ -570,10 +570,10 @@ void DimengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
         a->setFlags("-DimengTarget");
         b->setFlags("-DimengTarget");
     }
-    catch (TriggerEvent event) {
+    catch (TriggerEvent triggerEvent) {
         a->setFlags("-DimengTarget");
         b->setFlags("-DimengTarget");
-        throw event;
+        throw triggerEvent;
     }
 }
 
@@ -769,8 +769,8 @@ public:
         return target != NULL && (target->hasSkill(objectName()) || target->isFemale());
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == TargetConfirmed) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash") && player == use.from) {
                 int mark_n = player->getMark("double_jink" + use.card->toString());
@@ -821,7 +821,7 @@ public:
                     }
                 }
             }
-        } else if (event == CardFinished) {
+        } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash"))
                 use.from->setMark("double_jink" + use.card->toString(), 0);
@@ -882,11 +882,11 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (event == PreDamageDone && damage.from)
+        if (triggerEvent == PreDamageDone && damage.from)
             damage.from->tag["InvokeBaonue"] = damage.from->getKingdom() == "qun";
-        else if (event == Damage && player->tag.value("InvokeBaonue", false).toBool() && player->isAlive()) {
+        else if (triggerEvent == Damage && player->tag.value("InvokeBaonue", false).toBool() && player->isAlive()) {
             QList<ServerPlayer *> dongzhuos;
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (p->hasLordSkill(objectName()))

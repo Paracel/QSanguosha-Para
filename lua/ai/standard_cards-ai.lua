@@ -647,7 +647,6 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 			table.removeOne(sgs.ai_leiji_effect, to)
 			continue
 		end
-		speakTrigger(card, from, to)
 		if not self:hasHeavySlashDamage(from, card, to) and (self:getDamagedEffects(to, from, true) or self:needToLoseHp(to, from, true)) then continue end
 		if from:hasSkill("pojun") and to:getHp() > 2 + self:hasHeavySlashDamage(from, card, to, true) then continue end
 		sgs.updateIntention(from, to, value)

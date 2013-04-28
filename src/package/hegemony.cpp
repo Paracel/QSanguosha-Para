@@ -176,13 +176,13 @@ public:
         return target != NULL && target->tag["FenxunTarget"].value<PlayerStar>() != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *dingfeng, QVariant &data) const{
-        if (event == EventPhaseChanging) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *dingfeng, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
         }
-        if (event == Death) {
+        if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != dingfeng)
                 return false;
@@ -280,10 +280,10 @@ public:
         events << BeforeCardsMove << CardsMoveOneTime;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *tianfeng, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *tianfeng, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == tianfeng && move.from_places.contains(Player::PlaceHand)) {
-            if (event == BeforeCardsMove) {
+            if (triggerEvent == BeforeCardsMove) {
                 if (tianfeng->isKongcheng()) return false;
                 foreach (int id, tianfeng->handCards()) {
                     if (!move.card_ids.contains(id))
@@ -320,9 +320,9 @@ public:
         events << Dying << Death;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         ServerPlayer *target = NULL;
-        if (event == Dying) {
+        if (triggerEvent == Dying) {
             DyingStruct dying = data.value<DyingStruct>();
             if (dying.damage && dying.damage->from)
                 target = dying.damage->from;
@@ -341,7 +341,7 @@ public:
 
                 player->drawCards(1);
             }
-        } else if (event == Death) {
+        } else if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.damage && death.damage->from)
                 target = death.damage->from;
@@ -557,20 +557,20 @@ public:
         }
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         bool effected = false;
-        if (event == EventPhaseStart) {
+        if (triggerEvent == EventPhaseStart) {
             if (TriggerSkill::triggerable(player) && player->getPhase() == Player::RoundStart) {
                 effected = true;
                 setHuoshuiFlag(room, player, false);
             }
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (TriggerSkill::triggerable(player) && change.to == Player::NotActive) {
                 effected = true;
                 setHuoshuiFlag(room, player, true);
             }
-        } else if (event == Death) {
+        } else if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player)
                 return false;
@@ -578,17 +578,17 @@ public:
                 effected = true;
                 setHuoshuiFlag(room, player, true);
             }
-        } else if (event == EventLoseSkill) {
+        } else if (triggerEvent == EventLoseSkill) {
             if (data.toString() == objectName() && room->getCurrent() && room->getCurrent() == player) {
                 effected = true;
                 setHuoshuiFlag(room, player, true);
             }
-        } else if (event == EventAcquireSkill) {
+        } else if (triggerEvent == EventAcquireSkill) {
             if (data.toString() == objectName() && room->getCurrent() && room->getCurrent() == player) {
                 effected = true;
                 setHuoshuiFlag(room, player, false);
             }
-        } else if (event == PostHpReduced) {
+        } else if (triggerEvent == PostHpReduced) {
             if (player->hasFlag(objectName())) {
                 int reduce = 0;
                 if (data.canConvert<DamageStruct>()) {
@@ -603,12 +603,12 @@ public:
                     room->filterCards(player, player->getCards("he"), false);
                 }
             }
-        } else if (event == MaxHpChanged) {
+        } else if (triggerEvent == MaxHpChanged) {
             if (player->hasFlag(objectName())) {
                 effected = true;
                 room->filterCards(player, player->getCards("he"), true);
             }
-        } else if (event == HpRecover) {
+        } else if (triggerEvent == HpRecover) {
             RecoverStruct recover_struct = data.value<RecoverStruct>();
             int recover = recover_struct.recover;
             if (player->hasFlag(objectName())) {

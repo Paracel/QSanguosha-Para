@@ -17,7 +17,7 @@ class Yongsi: public TriggerSkill {
 
 public:
     Yongsi();
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *yuanshu, QVariant &data) const;
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *yuanshu, QVariant &data) const;
 
 protected:
     virtual int getKingdoms(ServerPlayer *yuanshu) const;

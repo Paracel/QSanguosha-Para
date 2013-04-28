@@ -146,7 +146,7 @@ public:
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (player->getPhase() != Player::NotActive)
             return false;
 
@@ -154,7 +154,7 @@ public:
         if (move.from != player)
             return false;
 
-        if (event == BeforeCardsMove) {
+        if (triggerEvent == BeforeCardsMove) {
             CardMoveReason reason = move.reason;
 
             if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_USE
@@ -266,9 +266,9 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         QString mode = room->getMode();
-        if (event == DamageCaused) {
+        if (triggerEvent == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.chain || damage.transfer) return false;
             if (damage.card && damage.card->isKindOf("Slash")) {
@@ -291,8 +291,8 @@ public:
                 }
             }
             data = QVariant::fromValue(damage);
-        } else if ((mode == "06_3v3" && event == ActionedReset) || (mode != "06_3v3" && event == EventPhaseStart)) {
-            if (event == EventPhaseStart && player->getPhase() != Player::RoundStart)
+        } else if ((mode == "06_3v3" && triggerEvent == ActionedReset) || (mode != "06_3v3" && triggerEvent == EventPhaseStart)) {
+            if (triggerEvent == EventPhaseStart && player->getPhase() != Player::RoundStart)
                 return false;
             if (player->getPile("loyal").length() > 0)
                 player->clearOnePrivatePile("loyal");
@@ -363,8 +363,8 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == Death) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player)
                 return false;
@@ -484,15 +484,15 @@ public:
         return !target->getRoom()->getMode().startsWith("06_");
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == EventLoseSkill) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventLoseSkill) {
             if (data.toString() != objectName())
                 return false;
-        } else if (event == Death) {
+        } else if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player || !player->hasSkill(objectName()))
                 return false;
-        } else if (event == EventPhaseChanging) {
+        } else if (triggerEvent == EventPhaseChanging) {
             if (!TriggerSkill::triggerable(player))
                 return false;
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
@@ -501,7 +501,7 @@ public:
         }
         foreach (ServerPlayer *p, room->getOtherPlayers(player))
             room->setPlayerMark(p, "@defense", 0);
-        if (event == EventPhaseChanging && Sanguosha->getPlayerCount(room->getMode()) > 3)
+        if (triggerEvent == EventPhaseChanging && Sanguosha->getPlayerCount(room->getMode()) > 3)
             room->askForUseCard(player, "@@zhenwei", "@zhenwei");
         return false;
     }

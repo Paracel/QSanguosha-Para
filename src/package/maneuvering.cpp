@@ -156,8 +156,8 @@ public:
         events << DamageInflicted << SlashEffected << CardEffected;
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == SlashEffected) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == SlashEffected) {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             if (effect.nature == DamageStruct::Normal) {
                 room->setEmotion(player, "armor/vine");
@@ -171,7 +171,7 @@ public:
                 effect.to->setFlags("Global_NonSkillNullify");
                 return true;
             }
-        } else if (event == CardEffected) {
+        } else if (triggerEvent == CardEffected) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (effect.card->isKindOf("AOE")) {
                 room->setEmotion(player, "armor/vine");
@@ -185,7 +185,7 @@ public:
                 effect.to->setFlags("Global_NonSkillNullify");
                 return true;
             }
-        } else if (event == DamageInflicted) {
+        } else if (triggerEvent == DamageInflicted) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.nature == DamageStruct::Fire) {
                 room->setEmotion(player, "armor/vineburn");
@@ -220,8 +220,8 @@ public:
         return target && target->isAlive();
     }
 
-    virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (event == DamageInflicted && ArmorSkill::triggerable(player)) {
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == DamageInflicted && ArmorSkill::triggerable(player)) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.damage > 1) {
                 room->setEmotion(player, "armor/silver_lion");

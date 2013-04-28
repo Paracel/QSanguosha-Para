@@ -541,32 +541,39 @@ sgs.ai_skill_cardask["@xingwu"] = function(self, data)
 	if bit32.band(n, 1) == 0 then black_avail = true end
 
 	self:sortByKeepValue(cards)
-	local xwcard
+	local xwcard = nil
 	local heart = 0
+	local to_save = 0
 	for _, card in ipairs(cards) do
-		xwcard = nil
 		if self.player:hasSkill("tianxiang") and card:getSuit() == sgs.Card_Heart and heart < math.min(self.player:getHp(), 2) then
 			heart = heart + 1
-			goto label_break
-		elseif card:isKindOf("Jink") then
+		elseif isCard("Jink", card, self.player) then
 			if self.player:hasSkill("liuli") and self.room:alivePlayerCount() > 2 then
 				for _, p in ipairs(self.room:getOtherPlayers(self.player)) do
-					local to_brk = false
 					if self:canLiuli(self.player, p) then
 						xwcard = card
-						goto label_break
+						break
 					end
 				end
-			elseif self:getCardsNum("Jink") >= 2 then
+			end
+			if not xwcard and self:getCardsNum("Jink") >= 2 then
 				xwcard = card
 			end
-		elseif not isCard("Peach", card, self.player) and not (self:isWeak() and isCard("Analeptic", card, self.player)) then
+		elseif to_save > self.player:getMaxCards()
+				or (not isCard("Peach", card, self.player) and not (self:isWeak() and isCard("Analeptic", card, self.player))) then
 			xwcard = card
+		else
+			to_save = to_save + 1
 		end
-::label_break::
-		if xwcard and ((red_avail and xwcard:isRed()) or (black_avail and xwcard:isBlack())) then break end
+		if xwcard then
+			if (red_avail and xwcard:isRed()) or (black_avail and xwcard:isBlack()) then
+				break
+			else
+				xwcard = nil
+				to_save = to_save + 1
+			end
+		end
 	end
-
 	if xwcard then return "$" .. xwcard:getEffectiveId() else return "." end
 end
 

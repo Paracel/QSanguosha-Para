@@ -2486,11 +2486,11 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	if armor and not self:hasSkills("yizhong|bazhen") then
 		if eightdiagram then
 			local lord = self.room:getLord()
-			if self:hasSkills("tiandu|leiji|noszhenlie|gushou|hongyan") and not self:getSameEquip(card) then
+			if self:hasSkills("tiandu|leiji|noszhenlie|gushou|hongyan") and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram)) then
 				return eightdiagram
 			end
 			if nextPlayerIsEnemy and self:hasSkills("tiandu|leiji|noszhenlie|gushou|hongyan", nextAlive) and not self:hasSkills("bazhen|yizhong", nextAlive)
-				and not self:getSameEquip(card, nextAlive) then
+				and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram), nextAlive) then
 				return eightdiagram
 			end
 			if self.role == "loyalist" and self.player:getKingdom() == "wei"

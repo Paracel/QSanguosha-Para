@@ -151,7 +151,7 @@ return {
 	["~zhaoxin"] = "选择【杀】的目标角色→点击确定",
 	["langgu"] = "狼顾",
 	[":langgu"] = "每当你受到1点伤害后，你可以进行一次判定，然后你可以打出一张手牌代替此判定牌：若如此做，你观看伤害来源的所有手牌，然后弃置其中任意数量的与判定牌花色相同的牌。",
-	["@langgu-card"] = "请发动“%dest”来修改 %src 的 %arg 判定",
+	["@langgu-card"] = CommonTranslationTable["@askforretrial"],
 	["~langgu"] = "选择一张手牌→点击确定",
 
 	["#diy_wangyuanji"] = "文明皇后",

@@ -1,4 +1,4 @@
-return {
+CommonTranslationTable = {
 	["lord"] = "主公",
 	["loyalist"] = "忠臣",
 	["rebel"] = "反贼",
@@ -198,3 +198,5 @@ return {
 	["CAPITAL(9)"] = "九",
 	["CAPITAL(10)"] = "十",
 }
+
+return CommonTranslationTable

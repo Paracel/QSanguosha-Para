@@ -36,7 +36,7 @@ return {
 	["leiji-invoke"] = "你可以发动“雷击”<br/> <b>操作提示</b>: 选择一名角色→点击确定<br/>",
 	["guidao"] = "鬼道",
 	[":guidao"] = "每当一名角色的判定牌生效前，你可以打出一张黑色牌代替之并获得原判定牌。",
-	["@guidao-card"] = "请发动“%dest”来修改 %src 的 %arg 判定",
+	["@guidao-card"] = CommonTranslationTable["@askforretrial"],
 	["~guidao"] = "选择一张黑色牌→点击确定",
 	["huangtian"] = "黄天",
 	[":huangtian"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"green\"><b>阶段技。</b></font>其他群雄角色的出牌阶段，该角色可以交给你一张【闪】或【闪电】。",

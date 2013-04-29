@@ -18,7 +18,7 @@ return {
 	[":fankui"] = "每当你受到一次伤害后，你可以获得伤害来源的一张牌。",
 	["guicai"] = "鬼才",
 	[":guicai"] = "每当一名角色的判定牌生效前，你可以打出一张手牌代替之。",
-	["@guicai-card"] = "请发动“%dest”来修改 %src 的 %arg 判定",
+	["@guicai-card"] = CommonTranslationTable["@askforretrial"],
 	["~guicai"] = "选择一张手牌→点击确定",
 
 	["#xiahoudun"] = "独眼的罗刹",

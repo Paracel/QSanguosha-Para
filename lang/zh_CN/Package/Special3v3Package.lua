@@ -15,7 +15,7 @@ return {
 	["huanshi"] = "缓释",
 	[":huanshi"] = "每当己方角色的判定牌生效前，你可以打出一张牌代替之。",
 					--[[身份局：每当一名角色的判定牌生效前，你可以令该角色选择由你打出一张牌代替之。]]
-	["@huanshi-card"] = "请发动“%dest”来修改 %src 的 %arg 判定",
+	["@huanshi-card"] = CommonTranslationTable["@askforretrial"],
 	["~huanshi"] = "选择一张牌→点击确定",
 	["huanshi:accept"] = "接受改判",
 	["huanshi:reject"] = "拒绝改判",

@@ -866,7 +866,7 @@ function SmartAI:getExpectedJinkNum(use)
 	local index, jink_num = 1, 1
 	for _, p in sgs.qlist(use.to) do
 		if p:objectName() == self.player:objectName() then
-			local n = jink_list[index]
+			local n = tonumber(jink_list[index])
 			if n == 0 then return 0
 			elseif n > jink_num then jink_num = n end
 		end

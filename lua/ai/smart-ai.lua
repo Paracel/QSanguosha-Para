@@ -3308,12 +3308,12 @@ function SmartAI:getRetrialCardId(cards, judge)
 	local reason = judge.reason
 	local who = judge.who
 
+	local other_suit, hasSpade = {}
 	for _, card in ipairs(cards) do
 		local card_x = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
 		if who:hasSkill("hongyan") and card_x:getSuit() == sgs.Card_Spade then
 			card_x = sgs.Sanguosha:cloneCard(card_x:objectName(), sgs.Card_Heart, card:getNumber())
 		end
-		local other_suit, hasSpade = {}
 		if reason == "beige" and not isCard("Peach", card_x, self.player) then
 			local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 			if damage.from then

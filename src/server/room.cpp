@@ -695,6 +695,31 @@ bool Room::doBroadcastNotify(QSanProtocol::CommandType command, const Json::Valu
     return doBroadcastNotify(m_players, command, arg);
 }
 
+// the following functions for Lua
+bool Room::doNotify(ServerPlayer *player, int command, const QString &arg) {
+    QSanGeneralPacket packet(S_SRC_ROOM | S_TYPE_NOTIFICATION | S_DEST_CLIENT, (QSanProtocol::CommandType)command);
+    Json::Reader reader;
+    Json::Value json_arg;
+    std::string str = arg.toStdString();
+    if (reader.parse(str, json_arg)) {
+        packet.setMessageBody(json_arg);
+        player->invoke(&packet);
+    } else {
+        output("Fail to parse the Json Value " + arg);
+    }
+    return true;
+}
+
+bool Room::doBroadcastNotify(const QList<ServerPlayer *> &players, int command, const QString &arg) {
+    foreach (ServerPlayer *player, players)
+        doNotify(player, command, arg);
+    return true;
+}
+
+bool Room::doBroadcastNotify(int command, const QString &arg) {
+    return doBroadcastNotify(m_players, command, arg);
+}
+
 void Room::broadcastInvoke(const char *method, const QString &arg, ServerPlayer *except) {
     broadcast(QString("%1 %2").arg(method).arg(arg), except);
 }
@@ -5097,61 +5122,3 @@ void Room::sortByActionOrder(QList<ServerPlayer *> &players) {
     if (players.length() > 1)
         qSort(players.begin(), players.end(), ServerPlayer::CompareByActionOrder);
 }
-
-bool Room::isVirtual() {
-    return _virtual;
-}
-
-void Room::setVirtual() {
-    _virtual = true;
-}
-
-void Room::copyFrom(Room *rRoom) {
-    QMap<ServerPlayer *, ServerPlayer *> player_map;
-    for (int i = 0; i < m_players.length(); i++) {
-        ServerPlayer *a = rRoom->m_players.at(i);
-        ServerPlayer *b = m_players.at(i);
-        player_map.insert(a, b);
-        changeHero(b, a->getGeneralName(), false);
-        b->copyFrom(a);
-    }
-    for (int i = 0; i < m_players.length(); i++) {
-        ServerPlayer *a = rRoom->m_players.at(i);
-        ServerPlayer *b = m_players.at(i);
-        b->setNext(player_map.value(a->getNext()));
-    }
-
-    foreach (ServerPlayer *a, m_alivePlayers) {
-        if (!a->isAlive()) m_alivePlayers.removeOne(a);
-    }
-    current = player_map.value(rRoom->getCurrent());
-
-    pile1 = QList<int>(rRoom->pile1);
-    pile2 = QList<int>(rRoom->pile2);
-    table_cards = QList<int>(rRoom->table_cards);
-    m_drawPile = &pile1;
-    m_discardPile = &pile2;
-
-    place_map = QMap<int, Player::Place> (rRoom->place_map);
-    owner_map = QMap<int, ServerPlayer *>();
-
-    QList<int> keys = rRoom->owner_map.keys();
-
-    foreach (int i, keys)
-        owner_map.insert(i, rRoom->owner_map.value(i));
-
-    provided = rRoom->provided;
-    has_provided = rRoom->has_provided;
-
-    tag = QVariantMap(rRoom->tag);
-}
-
-Room *Room::duplicate() {
-    Server *svr = qobject_cast<Server *> (parent());
-    Room *room = svr->createNewRoom();
-    room->setVirtual();
-    room->fillRobotsCommand(NULL, 0);
-    room->copyFrom(this);
-    return room;
-}
-

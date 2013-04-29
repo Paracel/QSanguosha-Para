@@ -41,7 +41,7 @@ public:
     bool isHidden() const;
     bool isTotallyHidden() const;
 
-    enum Gender {SexLess, Male, Female, Neuter};
+    enum Gender { SexLess, Male, Female, Neuter };
     Gender getGender() const;
     void setGender(Gender gender);
 
@@ -61,10 +61,9 @@ public:
 
 class Player: public QObject {
 public:
-    enum Phase {RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone};
-    enum Place {PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge, PlaceSpecial,
-                DiscardPile, DrawPile, PlaceTable, PlaceUnknown};
-    enum Role {Lord, Loyalist, Rebel, Renegade};
+    enum Phase { RoundStart, Start, Judge, Draw, Play, Discard, Finish, NotActive, PhaseNone };
+    enum Place { PlaceHand, PlaceEquip, PlaceDelayedTrick, PlaceJudge, PlaceSpecial, DiscardPile, DrawPile, PlaceTable, PlaceUnknown };
+    enum Role { Lord, Loyalist, Rebel, Renegade };
 
     explicit Player(QObject *parent);
 
@@ -1044,15 +1043,7 @@ public:
     void signup(ServerPlayer *player, const char *screen_name, const char *avatar, bool is_robot);
     ServerPlayer *getOwner() const;
 
-    void reconnect(ServerPlayer *player, ClientSocket *socket);
-    void marshal(ServerPlayer *player);
-
     void sortByActionOrder(QList<ServerPlayer *> &players);
-
-    bool isVirtual();
-    void setVirtual();
-    void copyFrom(Room *rRoom);
-    Room *duplicate();
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
 
@@ -1115,7 +1106,7 @@ public:
                     bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1,
                     QList<ServerPlayer *> players = QList<ServerPlayer *>());
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const char *reason);
-    QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason);
+    QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const char *reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const char *reason,
                                      const char *prompt = NULL, bool optional = false, bool notify_skill = false);
     QString askForGeneral(ServerPlayer *player, const QStringList &generals, char *default_choice = NULL);
@@ -1124,10 +1115,13 @@ public:
     void addPlayerHistory(ServerPlayer *player, const char *key, int times = 1);
 
     void broadcastInvoke(const char *method, const char *arg = ".", ServerPlayer *except = NULL);
+    bool doNotify(ServerPlayer *player, int command, const char *arg); 
+    bool doBroadcastNotify(int command, const char *arg);
+    bool doBroadcastNotify(const QList<ServerPlayer *> &players, int command, const char *arg);
 
     void updateStateItem();
     bool notifyProperty(ServerPlayer *playerToNotify, const ServerPlayer *propertyOwner, const char *propertyName, const QString &value = QString());
-    bool broadcastProperty(ServerPlayer *player, const char *property_name, const QString &value = QString());
+    bool broadcastProperty(ServerPlayer *player, const char *property_name, const char *value = NULL);
 };
 
 %extend Room {

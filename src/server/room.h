@@ -166,7 +166,11 @@ public:
     bool doBroadcastNotify(QSanProtocol::CommandType command, const Json::Value &arg);
     bool doBroadcastNotify(const QList<ServerPlayer *> &players, QSanProtocol::CommandType command, const Json::Value &arg);
     
-    // Ask a server player to wait for the client response. Call is blocking until client replies or server times out, 
+    bool doNotify(ServerPlayer *player, int command, const QString &arg);
+    bool doBroadcastNotify(int command, const QString &arg);
+    bool doBroadcastNotify(const QList<ServerPlayer *> &players, int command, const QString &arg);
+
+    // Ask a server player to wait for the client response. Call is blocking until client replies or server times out,
     // whichever is earlier.
     // @param player
     //        The server player to retrieve the client response.
@@ -254,11 +258,6 @@ public:
     void marshal(ServerPlayer *player);
 
     void sortByActionOrder(QList<ServerPlayer *> &players);
-
-    bool isVirtual();
-    void setVirtual();
-    void copyFrom(Room *rRoom);
-    Room *duplicate();
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
 

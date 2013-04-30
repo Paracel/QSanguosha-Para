@@ -541,11 +541,12 @@ end
 sgs.ai_skill_use_func.TiaoxinCard = function(card, use, self)
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:distanceTo(self.player) <= enemy:getAttackRange() and
-			((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1)
-				or getCardsNum("Slash", enemy) == 0
-				or self:getCardsNum("Jink") > 0
-				or self:findLeijiTarget(self.player, 50, enemy))
+		if enemy:distanceTo(self.player) <= enemy:getAttackRange()
+			and ((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1)
+					or getCardsNum("Slash", enemy) == 0
+					or self:getCardsNum("Jink") > 0
+					or self:findLeijiTarget(self.player, 50, enemy)
+					or not enemy:canSlash(self.player))
 			and not enemy:isNude() and not self:doNotDiscard(enemy) then
 			table.insert(targets, enemy)
 		end
@@ -688,7 +689,8 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 end
 
 sgs.ai_need_damaged.hunzi = function(self, attacker, player)
-	if player:getMark("hunzi") == 0 and player:getHp() == 2 then return true end
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and
+		and (player:getHp() > 2 or (player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin")))) then return true end
 	return false
 end
 

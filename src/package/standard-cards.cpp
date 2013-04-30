@@ -646,14 +646,17 @@ void AmazingGrace::doPreAction(Room *room, const CardUseStruct &) const{
 
 void AmazingGrace::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     GlobalEffect::use(room, source, targets);
-    if (targets.isEmpty()) return;
-    QVariantList ag_list;
-    ag_list = room->getTag("AmazingGrace").toList();
+    room->clearAG();
 
     // throw the rest cards
+    QVariantList ag_list = room->getTag("AmazingGrace").toList();
+    if (ag_list.isEmpty()) return;
+    DummyCard *dummy = new DummyCard;
     foreach (QVariant card_id, ag_list)
-        room->takeAG(NULL, card_id.toInt());
-    room->clearAG();
+        dummy->addSubcard(card_id.toInt());
+    CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "amazing_grace", QString());
+    room->throwCard(dummy, reason, NULL);
+    delete dummy;
 }
 
 void AmazingGrace::onEffect(const CardEffectStruct &effect) const{

@@ -999,7 +999,7 @@ public:
     void doGongxin(ServerPlayer *shenlumeng, ServerPlayer *target);
     int drawCard();
     void fillAG(const QList<int> &card_ids, ServerPlayer *who = NULL, const QList<int> &disabled_ids = QList<int>());
-    void takeAG(ServerPlayer *player, int card_id);
+    void takeAG(ServerPlayer *player, int card_id, bool move_cards = true);
     void clearAG(ServerPlayer *player = NULL);
     void provide(const Card *card);
     QList<ServerPlayer *> getLieges(const char *kingdom, ServerPlayer *lord) const;

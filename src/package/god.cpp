@@ -176,24 +176,41 @@ public:
         qSort(card_ids.begin(), card_ids.end(), CompareBySuit);
         room->fillAG(card_ids);
 
+        QList<int> to_get, to_throw;
         while (!card_ids.isEmpty()) {
             int card_id = room->askForAG(shenlvmeng, card_ids, false, "shelie");
             card_ids.removeOne(card_id);
+            to_get << card_id;
             // throw the rest cards that matches the same suit
             const Card *card = Sanguosha->getCard(card_id);
             Card::Suit suit = card->getSuit();
 
-            room->takeAG(shenlvmeng, card_id);
+            room->takeAG(shenlvmeng, card_id, false);
 
             QMutableListIterator<int> itor(card_ids);
             while (itor.hasNext()) {
                 const Card *c = Sanguosha->getCard(itor.next());
                 if (c->getSuit() == suit) {
                     itor.remove();
-                    room->takeAG(NULL, c->getId());
+                    room->takeAG(NULL, c->getId(), false);
+                    to_throw << c->getId();
                 }
             }
         }
+        DummyCard *dummy = new DummyCard;
+        if (!to_get.isEmpty()) {
+            foreach (int id, to_get)
+                dummy->addSubcard(id);
+            shenlvmeng->obtainCard(dummy);
+        }
+        dummy->clearSubcards();
+        if (!to_throw.isEmpty()) {
+            foreach (int id, to_throw)
+                dummy->addSubcard(id);
+            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, shenlvmeng->objectName());
+            room->throwCard(dummy, reason, NULL);
+        }
+        delete dummy;
 
         room->clearAG();
 

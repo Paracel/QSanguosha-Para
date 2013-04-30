@@ -348,7 +348,7 @@ private slots:
     void onSelectChange();
     void onEnabledChange();
 
-    void takeAmazingGrace(ClientPlayer *taker, int card_id);
+    void takeAmazingGrace(ClientPlayer *taker, int card_id, bool move_cards);
 
     void attachSkill(const QString &skill_name, bool from_left);
     void detachSkill(const QString &skill_name);

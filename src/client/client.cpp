@@ -1323,20 +1323,24 @@ void Client::fillAG(const Json::Value &cards_str) {
 }
 
 void Client::takeAG(const Json::Value &take_str) {
-    if (!take_str.isArray() || take_str.size() != 2) return;
-    if (!take_str[1].isInt()) return;
+    if (!take_str.isArray() || take_str.size() != 3) return;
+    if (!take_str[1].isInt() || !take_str[2].isBool()) return;
 
     int card_id = take_str[1].asInt();
+    bool move_cards = take_str[2].asBool();
     const Card *card = Sanguosha->getCard(card_id);
 
     if (take_str[0].isNull()) {
-        discarded_list.prepend(card);
-        updatePileNum();
-        emit ag_taken(NULL, card_id);
+        if (move_cards) {
+            discarded_list.prepend(card);
+            updatePileNum();
+        }
+        emit ag_taken(NULL, card_id, move_cards);
     } else {
         ClientPlayer *taker = getPlayer(toQString(take_str[0]));
-        taker->addCard(card, Player::PlaceHand);
-        emit ag_taken(taker, card_id);
+		if (move_cards)
+            taker->addCard(card, Player::PlaceHand);
+        emit ag_taken(taker, card_id, move_cards);
     }
 }
 

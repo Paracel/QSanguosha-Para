@@ -319,7 +319,7 @@ signals:
     void surrender_enabled(bool enabled);
 
     void ag_filled(const QList<int> &card_ids, const QList<int> &disabled_ids);
-    void ag_taken(ClientPlayer *taker, int card_id);
+    void ag_taken(ClientPlayer *taker, int card_id, bool move_cards);
     void ag_cleared();
 
     void generals_filled(const QStringList &general_names);

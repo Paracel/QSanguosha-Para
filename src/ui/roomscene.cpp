@@ -185,7 +185,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(card_container, SIGNAL(item_gongxined(int)), ClientInstance, SLOT(onPlayerReplyGongxin(int)));
 
     connect(ClientInstance, SIGNAL(ag_filled(QList<int>, QList<int>)), this, SLOT(fillCards(QList<int>, QList<int>)));
-    connect(ClientInstance, SIGNAL(ag_taken(ClientPlayer *, int)), this, SLOT(takeAmazingGrace(ClientPlayer *, int)));
+    connect(ClientInstance, SIGNAL(ag_taken(ClientPlayer *, int, bool)), this, SLOT(takeAmazingGrace(ClientPlayer *, int, bool)));
     connect(ClientInstance, SIGNAL(ag_cleared()), card_container, SLOT(clear()));
 
     card_container->moveBy(-120, 0);
@@ -3140,7 +3140,7 @@ void RoomScene::revivePlayer(const QString &who) {
     }
 }
 
-void RoomScene::takeAmazingGrace(ClientPlayer *taker, int card_id) {
+void RoomScene::takeAmazingGrace(ClientPlayer *taker, int card_id, bool move_cards) {
     QList<int> card_ids;
     card_ids.append(card_id);
     m_tablePile->clear();
@@ -3153,18 +3153,22 @@ void RoomScene::takeAmazingGrace(ClientPlayer *taker, int card_id) {
     items << copy;
 
     if (taker) {
-        QString type = "$TakeAG";
-        QString from_general = taker->objectName();
-        QString card_str = QString::number(card_id);
-        log_box->appendLog(type, from_general, QStringList(), card_str);
         GenericCardContainer *container = _getGenericCardContainer(Player::PlaceHand, taker);
         bringToFront(container);
-        CardsMoveStruct move;
-        move.card_ids.append(card_id);
-        move.from_place = Player::PlaceWuGu;
-        move.to_place = Player::PlaceHand;
-        move.to = taker;
-        container->addCardItems(items, move);
+        if (move_cards) {
+            QString type = "$TakeAG";
+            QString from_general = taker->objectName();
+            QString card_str = QString::number(card_id);
+            log_box->appendLog(type, from_general, QStringList(), card_str);
+            CardsMoveStruct move;
+            move.card_ids.append(card_id);
+            move.from_place = Player::PlaceWuGu;
+            move.to_place = Player::PlaceHand;
+            move.to = taker;
+            container->addCardItems(items, move);
+        } else {
+            delete copy;
+        }
     } else
         delete copy;
 }

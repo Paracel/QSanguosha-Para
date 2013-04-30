@@ -4786,14 +4786,16 @@ void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who, const QList<int
         doBroadcastNotify(S_COMMAND_FILL_AMAZING_GRACE, arg);
 }
 
-void Room::takeAG(ServerPlayer *player, int card_id) {
+void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
     Json::Value arg(Json::arrayValue);
     arg[0] = player ? toJsonString(player->objectName()) : Json::Value::null;
     arg[1] = card_id;
+    arg[2] = move_cards;
 
     if (player) {
         doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
 
+        if (!move_cards) return;
         CardsMoveOneTimeStruct move;
         move.from = NULL;
         move.from_places << Player::DrawPile;
@@ -4819,6 +4821,8 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
                 thread->trigger(CardsMoveOneTime, this, p, data);
         }
     } else {
+        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
+        if (!move_cards) return;
         LogMessage log;
         log.type = "$EnterDiscardPile";
         log.card_str = QString::number(card_id);
@@ -4826,7 +4830,6 @@ void Room::takeAG(ServerPlayer *player, int card_id) {
 
         m_discardPile->prepend(card_id);
         setCardMapping(card_id, NULL, Player::DiscardPile);
-        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
     }
 }
 

@@ -1797,6 +1797,8 @@ QString RoomScene::_translateMovement(const CardsMoveStruct &move) {
             result.append(Sanguosha->translate("turnover"));
         else if (reason.m_reason == CardMoveReason::S_REASON_DEMONSTRATE)
             result.append(Sanguosha->translate("show"));
+        else if (reason.m_reason == CardMoveReason::S_REASON_PREVIEW)
+            result.append(Sanguosha->translate("preview"));
     } else if ((reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_PUT) {
         if (reason.m_reason == CardMoveReason::S_REASON_PUT) {
             result.append(Sanguosha->translate("put"));

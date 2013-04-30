@@ -2998,7 +2998,6 @@ function SmartAI:getTurnUse()
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local slashAvail = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, slash)
 	self.predictedRange = self.player:getAttackRange()
-	self.predictNewHorse = false
 	self.retain_thresh = 5
 	self.slash_targets = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, slash)
 	self.slash_distance_limit = (1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_DistanceLimit, self.player, slash) > 50)
@@ -3014,7 +3013,6 @@ function SmartAI:getTurnUse()
 		slashAvail = slashAvail + 3
 	end
 
-	local i = 0
 	for _, card in ipairs(cards) do
 		local dummy_use = { isDummy = true }
 		local hp = self.player:getHp()
@@ -3024,31 +3022,24 @@ function SmartAI:getTurnUse()
 		self["use" .. sgs.ai_type_name[type + 1] .. "Card"](self, card, dummy_use)
 
 		if dummy_use.card then
-			if card:isKindOf("Slash") then
+			if dummy_use.card:isKindOf("Slash") then
 				if slashAvail > 0 then
 					slashAvail = slashAvail - 1
-					table.insert(turnUse, card)
+					table.insert(turnUse, dummy_use.card)
 				end
 			else
 				if self.player:hasFlag("InfinityAttackRange") or self.player:getMark("InfinityAttackRange") > 0 then
 					self.predictedRange = 10000
-				elseif card:isKindOf("Weapon") then
+				elseif dummy_use.card:isKindOf("Weapon") then
 					self.predictedRange = sgs.weapon_range[card:getClassName()]
 					self.weaponUsed = true
 				else
 					self.predictedRange = 1
 				end
-				if card:isKindOf("OffensiveHorse") then self.predictNewHorse = true end
-				if card:objectName() == "crossbow" then slashAvail = 100 end
-				if card:objectName() == "vscrossbow" then slashAvail = slashAvail + 3 end
-				if card:isKindOf("Snatch") then i = i - 1 end
-				if card:isKindOf("Peach") then i = i + 2 end
-				if card:isKindOf("Collateral") then i = i - 1 end
-				if card:isKindOf("AmazingGrace") then i = i - 1 end
-				if card:isKindOf("ExNihilo") then i = i - 2 end
-				table.insert(turnUse, card)
+				if dummy_use.card:objectName() == "crossbow" then slashAvail = 100 end
+				if dummy_use.card:objectName() == "vscrossbow" then slashAvail = slashAvail + 3 end
+				table.insert(turnUse, dummy_use.card)
 			end
-			i = i + 1
 		end
 	end
 
@@ -4548,7 +4539,7 @@ function SmartAI:useEquipCard(card, use)
 		if same and self.player:hasSkill("qiangxi") and not self.player:hasUsed("QiangxiCard") then
 			local dummy_use = { isDummy = true }
 			self:useSkillCard(sgs.Card_Parse("@QiangxiCard=" .. same:getEffectiveId()), dummy_use)
-			if dummy_use.card then return end
+			if dummy_use.card and dummy_use.card:getSubcards():length() == 1 then return end
 		end
 		if self.player:hasSkill("rende") then
 			for _, friend in ipairs(self.friends_noself) do

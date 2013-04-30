@@ -689,7 +689,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 end
 
 sgs.ai_need_damaged.hunzi = function(self, attacker, player)
-	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0
 		and (player:getHp() > 2 or (player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin")))) then return true end
 	return false
 end

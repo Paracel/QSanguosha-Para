@@ -273,7 +273,7 @@ public:
         if (invoke) {
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$FenxinAnimate");
-            killer->loseMark("@burnheart");
+            room->removePlayerMark(killer, "@burnheart");
             QString role1 = killer->getRole();
             killer->setRole(player->getRole());
             room->notifyProperty(killer, killer, "role", player->getRole());

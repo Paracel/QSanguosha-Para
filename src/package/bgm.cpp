@@ -175,11 +175,11 @@ public:
             caoren->turnOver();
 
             if (caoren->getMark("@kuiwei") == 0)
-                caoren->gainMark("@kuiwei");
+                room->addPlayerMark(caoren, "@kuiwei");
         } else if (caoren->getPhase() == Player::Draw) {
             if (caoren->getMark("@kuiwei") == 0)
                 return false;
-
+            room->removePlayerMark(caoren, "@kuiwei");
             int n = getWeaponCount(caoren);
             if (n > 0) {
                 LogMessage log;
@@ -191,7 +191,6 @@ public:
 
                 room->askForDiscard(caoren, objectName(), n, n, false, true);
             }
-            caoren->loseMark("@kuiwei");
         }
         return false;
     }
@@ -383,7 +382,7 @@ public:
                 if (sp_pangtong->getMark("@sleep") > 0) {
                     if (!sp_pangtong->askForSkillInvoke(objectName()))
                         return false;
-                    sp_pangtong->loseMark("@sleep", 1);
+                    room->removePlayerMark(sp_pangtong, "@sleep");
                     doZuixiang(sp_pangtong);
                 } else
                     doZuixiang(sp_pangtong);
@@ -910,7 +909,7 @@ void ShichouCard::onEffect(const CardEffectStruct &effect) const{
     room->broadcastSkillInvoke("shichou");
     room->doLightbox("$ShichouAnimate", 4500);
 
-    player->loseMark("@hate", 1);
+    room->removePlayerMark(player, "@hate");
     room->setPlayerMark(player, "xhate", 1);
     victim->gainMark("@hate_to");
     room->setPlayerMark(victim, "hate_" + player->objectName(), 1);

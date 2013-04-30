@@ -427,7 +427,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$FuliAnimate", 3000);
 
-            liaohua->loseMark("@laoji");
+            room->removePlayerMark(liaohua, "@laoji");
 
             RecoverStruct recover;
             recover.recover = qMin(getKingdoms(room), liaohua->getMaxHp()) - liaohua->getHp();
@@ -627,7 +627,7 @@ bool JiefanCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void JiefanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    source->loseMark("@rescue");
+    room->removePlayerMark(source, "@rescue");
     ServerPlayer *target = targets.first();
     source->tag["JiefanTarget"] = QVariant::fromValue((PlayerStar)target);
     int index = 1;

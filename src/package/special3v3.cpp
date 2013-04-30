@@ -231,7 +231,7 @@ ZhongyiCard::ZhongyiCard() {
 void ZhongyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->broadcastSkillInvoke("zhongyi");
     room->doLightbox("$ZhongyiAnimate");
-    source->loseMark("@loyal");
+    room->removePlayerMark(source, "@loyal");
     source->addToPile("loyal", this);
 }
 

@@ -687,7 +687,7 @@ LuanwuCard::LuanwuCard() {
 }
 
 void LuanwuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    source->loseMark("@chaos");
+    room->removePlayerMark(source, "@chaos");
     room->broadcastSkillInvoke("luanwu");
     QString lightbox = "$LuanwuAnimate";
     if (source->getGeneralName() != "jiaxu" && (source->getGeneralName() == "sp_jiaxu" || source->getGeneral2Name() == "sp_jiaxu"))

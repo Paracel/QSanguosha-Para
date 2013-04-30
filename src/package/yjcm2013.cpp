@@ -978,7 +978,7 @@ FenchengCard::FenchengCard() {
 }
 
 void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    source->loseMark("@burn");
+    room->removePlayerMark(source, "@burn");
     room->broadcastSkillInvoke("fencheng");
     //room->doLightbox("$FenchengAnimate", 3000);
 

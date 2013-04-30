@@ -309,7 +309,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$NiepanAnimate");
 
-            pangtong->loseMark("@nirvana");
+            room->removePlayerMark(pangtong, "@nirvana");
 
             pangtong->throwAllHandCardsAndEquips();
             QList<const Card *> tricks = pangtong->getJudgingArea();

@@ -14,15 +14,49 @@ public:
 
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
         Room *room = target->getRoom();
-        while (room->askForSkillInvoke(target, objectName(), QVariant::fromValue(damage))) {
-            if (!target->isKongcheng())
-                room->showAllCards(target);
-            int num = 0;
-            foreach (const Card *card, target->getHandcards())
-                num += card->getNumber();
-            if (num >= 13) break;
-            target->drawCards(1);
+        if (!target->askForSkillInvoke(objectName(), QVariant::fromValue(damage))) return;
+        room->broadcastSkillInvoke(objectName());
+
+        QList<int> card_ids = room->getNCards(4);
+        room->fillAG(card_ids);
+
+        QList<int> to_get, to_throw;
+        while (true) {
+            int sum = 0;
+            foreach (int id, to_get)
+                sum += Sanguosha->getCard(id)->getNumber();
+            foreach (int id, card_ids) {
+                if (sum + Sanguosha->getCard(id)->getNumber() >= 13) {
+                    room->takeAG(NULL, id, false);
+                    card_ids.removeOne(id);
+                    to_throw << id;
+                }
+            }
+            if (card_ids.isEmpty()) break;
+
+            int card_id = room->askForAG(target, card_ids, true, objectName());
+            if (card_id == -1) break;
+            card_ids.removeOne(card_id);
+            to_get << card_id;
+            room->takeAG(target, card_id, false);
+            if (card_ids.isEmpty()) break;
         }
+        DummyCard *dummy = new DummyCard;
+        if (!to_get.isEmpty()) {
+            foreach (int id, to_get)
+                dummy->addSubcard(id);
+            target->obtainCard(dummy);
+        }
+        dummy->clearSubcards();
+        if (!to_throw.isEmpty() || !card_ids.isEmpty()) {
+            foreach (int id, to_throw + card_ids)
+                dummy->addSubcard(id);
+            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, target->objectName(), objectName(), QString());
+            room->throwCard(dummy, reason, NULL);
+        }
+        delete dummy;
+
+        room->clearAG();
     }
 };
 

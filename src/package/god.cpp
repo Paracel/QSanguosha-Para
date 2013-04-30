@@ -207,13 +207,11 @@ public:
         if (!to_throw.isEmpty()) {
             foreach (int id, to_throw)
                 dummy->addSubcard(id);
-            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, shenlvmeng->objectName());
+            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, shenlvmeng->objectName(), objectName(), QString());
             room->throwCard(dummy, reason, NULL);
         }
         delete dummy;
-
         room->clearAG();
-
         return true;
     }
 };

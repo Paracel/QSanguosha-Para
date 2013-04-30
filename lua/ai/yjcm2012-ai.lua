@@ -55,14 +55,27 @@ function sgs.ai_cardneed.dangxian(to, card)
 end
 
 sgs.ai_skill_invoke.zishou = function(self, data)
-	local chance_value = 1
-	if (self.player:getHp() <= 2) then chance_value = chance_value + 1 end
+	if self:needBear() then return true end
+	if self.player:isSkipped(sgs.Player_Play) then return true end
 
+	local chance_value = 1
 	local peach_num = self:getCardsNum("Peach")
 	local can_save_card_num = self.player:getMaxCards() - self.player:getHandcardNum()
 
-	return self.player:isSkipped(sgs.Player_Play)
-			or ((self.player:getLostHp() + 2) - can_save_card_num + peach_num <= chance_value)
+	if self.player:getHp() <= 2 and self.player:getHp() < getBestHp(self.player) then chance_value = chance_value + 1 end
+	if self.player:hasSkill("rende") and self:findFriendsByType(sgs.Friend_Draw) then chance_value = chance_value - 1 end
+	if self.player:hasSkill("qingnang") then
+		for _, friend in ipairs(self.friends) do
+			if friend:isWounded() then chance_value = chance_value - 1 break end
+		end
+	end
+	if self.player:hasSkill("jieyin") then
+		for _, friend in ipairs(self.friends) do
+			if friend:isWounded() and friend:isMale() then chance_value = chance_value - 1 break end
+		end
+	end
+
+	return 2 + self.player:getLostHp() - can_save_card_num + peach_num  <= chance_value
 end
 
 sgs.ai_skill_invoke.fuli = true

@@ -21,7 +21,16 @@ sgs.ai_skill_invoke.hujia = function(self, data)
 			return false
 		end
 	end
-	return self.room:getLieges("wei", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
+	local lieges = self.room:getLieges("wei", self.player)
+	if lieges:isEmpty() then return end
+	local has_friend = false
+	for _, p in sgs.qlist(lieges) do
+		if self:isFriend(p) then
+			has_friend = true
+			break
+		end
+	end
+	return has_friend
 end
 
 sgs.ai_choicemade_filter.skillInvoke.hujia = function(self, player, promptlist)
@@ -817,7 +826,16 @@ sgs.ai_skill_invoke.jijiang = function(self, data)
 		end
 	end
 
-	return self.room:getLieges("shu", self.player):length() > 0 and self.room:alivePlayerCount() >= 3
+	local lieges = self.room:getLieges("shu", self.player)
+	if lieges:isEmpty() then return false end
+	local has_friend = false
+	for _, p in sgs.qlist(lieges) do
+		if self:isFriend(p) then
+			has_friend = true
+			break
+		end
+	end
+	return has_friend
 end
 
 sgs.ai_choicemade_filter.skillInvoke.jijiang = function(self, player, promptlist)
@@ -832,6 +850,14 @@ table.insert(sgs.ai_skills, jijiang_skill)
 jijiang_skill.getTurnUseCard = function(self)
 	local lieges = self.room:getLieges("shu", self.player)
 	if lieges:isEmpty() then return end
+	local has_friend
+	for _, p in sgs.qlist(lieges) do
+		if self:isFriend(p) then
+			has_friend = true
+			break
+		end
+	end
+	if not has_friend then return end
 	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("JijiangFailed") or not self:slashIsAvailable() then return end
 	local card_str = "@JijiangCard=."
 	local slash = sgs.Card_Parse(card_str)
@@ -845,18 +871,14 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 	if not sgs.jijiangtarget then table.insert(sgs.ai_global_flags, "jijiangtarget") end
 	sgs.jijiangtarget = {}
 
-	local target_count = 0
-	for _, enemy in ipairs(self.enemies) do
-		if (self.player:canSlash(enemy, nil, not no_distance)
-			or (use.isDummy and self.player:distanceTo(enemy) <= (self.predictedRange or self.player:getAttackRange())))
-			and self:objectiveLevel(enemy) > 3 and self:slashIsEffective(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
-			use.card = card
-			if use.to then
-				use.to:append(enemy)
-			end
-			table.insert(sgs.jijiangtarget, enemy)
-			target_count = target_count + 1
-			if self.slash_targets <= target_count then return end
+	local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
+	local slash = sgs.Sanguosha:cloneCard("slash")
+	self:useCardSlash(slash, dummy_use)
+	if dummy_use.card and dummy_use.to:length() > 0 then
+		use.card = card
+		for _, p in sgs.qlist(dummy_use.to) do
+			table.insert(sgs.jijiangtarget, p)
+			if use.to then use.to:append(p) end
 		end
 	end
 end

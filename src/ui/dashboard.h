@@ -57,7 +57,7 @@ public:
     void selectOnlyCard(bool need_only = false);
     void useSelected();
     const Card *getSelected() const;
-    void unselectAll(const CardItem *except= NULL);
+    void unselectAll(const CardItem *except = NULL);
     void hideAvatar();
 
     void disableAllCards();

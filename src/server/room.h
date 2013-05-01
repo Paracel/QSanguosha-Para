@@ -271,7 +271,7 @@ public:
     void setCardMapping(int card_id, ServerPlayer *owner, Player::Place place);
 
     void drawCards(ServerPlayer *player, int n, const QString &reason = QString());
-    void drawCards(QList<ServerPlayer *> players, int n, const QString &reason);
+    void drawCards(QList<ServerPlayer *> players, int n, const QString &reason = QString());
     void obtainCard(ServerPlayer *target, const Card *card, bool unhide = true);
     void obtainCard(ServerPlayer *target, int card_id, bool unhide = true);
     void obtainCard(ServerPlayer *target, const Card *card,  const CardMoveReason &reason, bool unhide = true);

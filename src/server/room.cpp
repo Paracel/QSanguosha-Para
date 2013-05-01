@@ -3396,9 +3396,24 @@ void Room::_fillMoveInfo(CardsMoveStruct &moves, int card_index) const{
     }
 }
 
-static bool CompareByPlayerActionOrder(CardsMoveOneTimeStruct move1, CardsMoveOneTimeStruct move2) {
+static bool CompareByActionOrder_OneTime(CardsMoveOneTimeStruct move1, CardsMoveOneTimeStruct move2) {
     ServerPlayer *a = (ServerPlayer *)move1.from;
+    if (a == NULL) a = (ServerPlayer *)move1.to;
     ServerPlayer *b = (ServerPlayer *)move2.from;
+    if (b == NULL) b = (ServerPlayer *)move2.to;
+
+    if (a == NULL || b == NULL)
+        return a != NULL;
+
+    Room *room = a->getRoom();
+    return room->getFront(a, b) == a;
+}
+
+static bool CompareByActionOrder(CardsMoveStruct move1, CardsMoveStruct move2) {
+    ServerPlayer *a = (ServerPlayer *)move1.from;
+    if (a == NULL) a = (ServerPlayer *)move1.to;
+    ServerPlayer *b = (ServerPlayer *)move2.from;
+    if (b == NULL) b = (ServerPlayer *)move2.to;
 
     if (a == NULL || b == NULL)
         return a != NULL;
@@ -3435,7 +3450,7 @@ QList<CardsMoveOneTimeStruct> Room::_mergeMoves(QList<CardsMoveStruct> cards_mov
     }
 
     if (result.size() > 1)
-        qSort(result.begin(), result.end(), CompareByPlayerActionOrder);
+        qSort(result.begin(), result.end(), CompareByActionOrder_OneTime);
 
     return result;
 }
@@ -3479,6 +3494,8 @@ QList<CardsMoveStruct> Room::_separateMoves(QList<CardsMoveOneTimeStruct> moveOn
         card_moves.append(card_move);
         i++;
     }
+    if (card_moves.size() > 1)
+        qSort(card_moves.begin(), card_moves.end(), CompareByActionOrder);
     return card_moves;
 }
 

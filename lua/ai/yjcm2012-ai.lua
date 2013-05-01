@@ -615,14 +615,14 @@ sgs.ai_card_intention.AnxuCard = function(self, card, from, to)
 end
 
 sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
+	local lord = self.room:getLord()
+	if lord and self:isFriend(lord) and self:isWeak(lord) then return lord end
 	local to = self:findPlayerToDraw(false, 3)
 	if to then return to end
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
 	for _, friend in ipairs(targets) do
-		if self:isFriend(friend) then
-			if not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive and friend:getLostHp() == 0) then return friend end
-		end
+		if self:isFriend(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive and friend:getLostHp() == 0) then return friend end
 	end
 	return nil
 end

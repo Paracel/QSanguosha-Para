@@ -684,6 +684,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	--if not target then self.room:writeToConsole(debug.traceback()) end
 	if not target then return end
+	if not self:hasHeavySlashDamage(target, effect.slash, self.player) and self:getDamagedEffects(self.player, target, effect.slash) then return "." end
 	if self:isFriend(target) then
 		if self:findLeijiTarget(self.player, 50, target) then return end
 		if not target:hasSkill("jueqing") then

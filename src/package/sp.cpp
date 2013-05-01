@@ -66,11 +66,8 @@ public:
            return false;
 
         if (room->askForSkillInvoke(yangxiu, objectName(), data)) {
-            QString choice = room->askForChoice(yangxiu, objectName(), "basic+equip+trick");
+            QString choice = room->askForChoice(yangxiu, objectName(), "BasicCard+EquipCard+TrickCard");
             room->broadcastSkillInvoke(objectName());
-
-            room->setPlayerJilei(damage.from, choice);
-            room->setPlayerFlag(damage.from, "jilei");
 
             LogMessage log;
             log.type = "#Jilei";
@@ -78,8 +75,16 @@ public:
             log.arg = choice;
             room->sendLog(log);
 
-            if (damage.from->getMark("@jilei_" + choice) == 0)
-                room->addPlayerMark(damage.from, "@jilei_" + choice);
+            QStringList jilei_list = damage.from->tag[objectName()].toStringList();
+            if (jilei_list.contains(choice)) return false;
+            jilei_list.append(choice);
+            damage.from->tag[objectName()] = QVariant::fromValue(jilei_list);
+            QString _type = choice + "|.|.|hand"; // Handcards only
+            room->setPlayerCardLimitation(damage.from, "use,response,discard", _type, true);
+
+            QString type_name = choice.replace("Card", "").toLower();
+            if (damage.from->getMark("@jilei_" + type_name) == 0)
+                room->addPlayerMark(damage.from, "@jilei_" + type_name);
         }
 
         return false;
@@ -108,18 +113,19 @@ public:
         }
         QList<ServerPlayer *> players = room->getAllPlayers();
         foreach (ServerPlayer *player, players) {
-            if (player->hasFlag("jilei")) {
-                room->setPlayerFlag(player, "-jilei");
-
+            QStringList jilei_list = player->tag["jilei"].toStringList();
+            if (!jilei_list.isEmpty()) {
                 LogMessage log;
                 log.type = "#JileiClear";
                 log.from = player;
                 room->sendLog(log);
 
-                room->setPlayerMark(player, "@jilei_basic", 0);
-                room->setPlayerMark(player, "@jilei_equip", 0);
-                room->setPlayerMark(player, "@jilei_trick", 0);
-                room->setPlayerJilei(player, "clear");
+                foreach (QString jilei_type, jilei_list) {
+                    room->removePlayerCardLimitation(player, "use,response,discard", jilei_type + "|.|.|hand$1");
+                    QString type_name = jilei_type.replace("Card", "").toLower();
+                    room->setPlayerMark(player, "@jilei_" + type_name, 0);
+                }
+                player->tag.remove("jilei");
             }
         }
 

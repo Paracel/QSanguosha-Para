@@ -208,7 +208,6 @@ public:
     bool canSlashWithoutCrossbow() const;
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
-    void jilei(const char *type);
     bool isJilei(const Card *card) const;
 
     void setCardLocked(const char *name);
@@ -975,7 +974,6 @@ public:
     void removePlayerCardLimitation(ServerPlayer *player, const char *limit_list, const char *pattern);
     void clearPlayerCardLimitation(ServerPlayer *player, bool single_turn);
     void setPlayerCardLock(ServerPlayer *player, const char *name);
-    void setPlayerJilei(ServerPlayer *player, const char *name);
     void setCardFlag(const Card *card, const char *flag, ServerPlayer *who = NULL);
     void setCardFlag(int card_id, const char *flag, ServerPlayer *who = NULL);
     void clearCardFlag(const Card *card, ServerPlayer *who = NULL);

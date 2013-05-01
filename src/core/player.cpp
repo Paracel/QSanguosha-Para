@@ -802,32 +802,6 @@ bool Player::canSlashWithoutCrossbow() const{
     return slash_count < valid_slash_count;
 }
 
-void Player::jilei(const QString &type) {
-    if (type == "clear") { // Clear
-        removeCardLimitation("use,response,discard", "BasicCard|.|.|hand$1");
-        removeCardLimitation("use,response,discard", "EquipCard|.|.|hand$1");
-        removeCardLimitation("use,response,discard", "TrickCard|.|.|hand$1");
-        return;
-    }
-    QList<Card::HandlingMethod> limit_method;
-    limit_method << Card::MethodUse << Card::MethodResponse << Card::MethodDiscard;
-    QString _type = type;
-    if (type == "basic")
-        _type = "BasicCard";
-    else if (type == "equip")
-        _type = "EquipCard";
-    else if (type == "trick")
-        _type = "TrickCard";
-    _type = _type + "|.|.|hand"; // Handcards only
-    foreach (Card::HandlingMethod method, limit_method)
-        card_limitation[method] << _type + "$1";
-}
-
-bool Player::isJilei(const Card *card) const{
-    // Not handcard only!!!
-    return isCardLimited(card, Card::MethodDiscard);
-}
-
 void Player::setCardLocked(const QString &name) {
     static QChar unset_symbol('-');
     if (name.isEmpty())

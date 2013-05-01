@@ -65,7 +65,6 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["animate"] = &Client::animate;
     m_callbacks[S_COMMAND_FIXED_DISTANCE] = &Client::setFixedDistance;
     m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
-    m_callbacks[S_COMMAND_JILEI] = &Client::jilei;
     m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
     m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
     m_callbacks[S_COMMAND_EXCHANGE_KNOWN_CARDS] = &Client::exchangeKnownCards;
@@ -642,12 +641,6 @@ void Client::cardLimitation(const Json::Value &limit) {
         else
             Self->removeCardLimitation(limit_list, pattern);
     }
-}
-
-void Client::jilei(const Json::Value &jilei_str) {
-    if (!jilei_str.isString()) return;
-    QString astr = toQString(jilei_str);
-    Self->jilei(astr);
 }
 
 void Client::setNullification(const Json::Value &str) {

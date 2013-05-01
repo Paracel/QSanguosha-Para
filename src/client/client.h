@@ -120,7 +120,6 @@ public:
     void skillInvoked(const Json::Value &invoke_str);
     void animate(const QString &animate_str);
     void cardLimitation(const Json::Value &limit);
-    void jilei(const Json::Value &jilei_str);
     void setNullification(const Json::Value &str);
     void enableSurrender(const Json::Value &enabled);
     void exchangeKnownCards(const Json::Value &players);

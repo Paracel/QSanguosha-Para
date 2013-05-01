@@ -1498,12 +1498,6 @@ void Room::setPlayerCardLock(ServerPlayer *player, const QString &name) {
     doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
-void Room::setPlayerJilei(ServerPlayer *player, const QString &name) {
-    player->jilei(name);
-    // @todo: combine it with S_COMMAND_CARD_LIMITATION
-    doNotify(player, S_COMMAND_JILEI, toJsonString(name));
-}
-
 void Room::setCardFlag(const Card *card, const QString &flag, ServerPlayer *who) {
     if (flag.isEmpty()) return;
 

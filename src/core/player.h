@@ -204,8 +204,7 @@ public:
     bool canSlashWithoutCrossbow() const;
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
-    void jilei(const QString &type);
-    bool isJilei(const Card *card) const;
+    inline bool isJilei(const Card *card) const{ return isCardLimited(card, Card::MethodDiscard); }
 
     void setCardLocked(const QString &name);
     bool isLocked(const Card *card) const;

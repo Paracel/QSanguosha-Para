@@ -258,8 +258,9 @@ end
 function SmartAI:canLiuli(other, another)
 	if not other:hasSkill("liuli") then return false end
 	if type(another) == "table" then
+		if #another == 0 then return false end
 		for _, target in ipairs(another) do
-			if self:canLiuli(other, target) then return true end
+			if target:getHp() < 3 and self:canLiuli(other, target) then return true end
 		end
 		return false
 	end
@@ -1459,8 +1460,8 @@ function SmartAI:useCardDuel(duel, use)
 		if not self:isWeak(a) and a:hasSkill("jiang") then v1 = v1 + 5 end
 		if not self:isWeak(b) and b:hasSkill("jiang") then v2 = v2 + 5 end
 
-		if a:hasLordSkill("jijiang") then v1 = v1 + 10 end
-		if b:hasLordSkill("jijiang") then v2 = v2 + 10 end
+		if a:hasLordSkill("jijiang") then v1 = v1 + 2 * self:getJijiangSlashNum(a) end
+		if b:hasLordSkill("jijiang") then v2 = v2 + 2 * self:getJijiangSlashNum(b) end
 
 		if v1 == v2 then return sgs.getDefenseSlash(a) < sgs.getDefenseSlash(b) end
 

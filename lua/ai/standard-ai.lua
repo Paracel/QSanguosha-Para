@@ -933,6 +933,18 @@ end
 
 sgs.ai_chaofeng.liubei = -2
 
+function SmartAI:getJijiangSlashNum(player)
+	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
+	if not player:hasLordSkill("jijiang") then return 0 end
+	local slashs = 0
+	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
+		if p:getKingdom() == "shu" and ((sgs.turncount <= 1 and sgs.ai_role[p:objectName()] == "neutral") or self:isFriend(player, p)) then
+			slashs = slashs + slash_num
+		end
+	end
+	return slashs
++end
+
 sgs.ai_view_as.wusheng = function(card, player, card_place)
 	local suit = card:getSuitString()
 	local number = card:getNumberString()

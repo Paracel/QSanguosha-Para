@@ -220,17 +220,22 @@ function sgs.getDefense(player)
 	if not player:getArmor() and player:hasSkill("yizhong") then
 		defense = defense + 2
 	end
-	local m = sgs.masochism_skill:split("|")
-	for _, masochism in ipairs(m) do
-		if player:hasSkill(masochism) then
-			defense = defense + 1
+	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.5 end
+	if attacker and not attacker:hasSkill("jueqing") then
+		if sgs.isGoodHp(player) then
+			local m = sgs.masochism_skill:split("|")
+			for _, masochism in ipairs(m) do
+				if player:hasSkill(masochism) then
+					defense = defense + 1
+				end
+			end
+		end
+		if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then
+			defense = defense + 4
 		end
 	end
 	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and player:hasSkills("tiandu|leiji|noszhenlie") then
 		defense = defense + 0.5
-	end
-	if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then
-		defense = defense + 4
 	end
 	if player:hasSkill("qingguo") and player:getHandcardNum() > 1 then
 		defense = defense + 0.5
@@ -250,7 +255,7 @@ function sgs.getDefense(player)
 	-- effected by chaofeng
 	if player:hasSkill("jijiu") then defense = defense - 3 end
 	if player:hasSkill("dimeng") then defense = defense - 2.5 end
-	if player:hasSkill("guzheng") and knownJink == 0 then defense = defense - 2.5 end
+	if player:hasSkill("guzheng") and getKnownCard(player, "Jink", true) == 0 then defense = defense - 2.5 end
 	if player:hasSkill("qiaobian") then defense = defense - 2.4 end
 	if player:hasSkill("jieyin") then defense = defense - 2.3 end
 	if player:hasSkill("lijian") then defense = defense - 2.2 end

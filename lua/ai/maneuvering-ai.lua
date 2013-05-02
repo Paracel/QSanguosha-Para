@@ -135,8 +135,17 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 end
 
 function SmartAI:shouldUseAnaleptic(target, slash)
+	if sgs.turncount <= 1 and self.role == "renegade" and sgs.isLordHealthy() and self:getOverflow() < 2 then return false end
 	if target:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
 		return
+	end
+	if target:hasSkill("zhenlie") then return false end
+	if target:hasSkill("xiangle") then
+		local basicnum = 0
+		for _, acard in sgs.qlist(self.player:getHandcards()) do
+			if acard:getTypeId() == sgs.Card_TypeBasic and not acard:isKindOf("Peach") then basicnum = basicnum + 1 end
+		end
+		if basicnum < 3 then return false end
 	end
 
 	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, target)

@@ -1677,7 +1677,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			table.insert(targets, player:objectName())
 			use.to:append(player)
 			sgs.Sanguosha:getCard(cardid):setFlags("AIGlobal_SDCardChosen_" .. name)
-			if use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
+			if use.to:length() == 1 and not use.isDummy then self:speak("hostile", self.player:isFemale()) end
 		end
 	end
 

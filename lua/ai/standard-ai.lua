@@ -939,11 +939,11 @@ function SmartAI:getJijiangSlashNum(player)
 	local slashs = 0
 	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if p:getKingdom() == "shu" and ((sgs.turncount <= 1 and sgs.ai_role[p:objectName()] == "neutral") or self:isFriend(player, p)) then
-			slashs = slashs + slash_num
+			slashs = slashs + getCardsNum("Slash", p)
 		end
 	end
 	return slashs
-+end
+end
 
 sgs.ai_view_as.wusheng = function(card, player, card_place)
 	local suit = card:getSuitString()

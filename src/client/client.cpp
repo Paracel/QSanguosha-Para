@@ -709,7 +709,7 @@ void Client::onPlayerInvokeSkill(bool invoke) {
     setStatus(NotActive);
 }
 
-void Client::setPromptList(const QStringList &texts) {
+QString Client::setPromptList(const QStringList &texts) {
     QString prompt = Sanguosha->translate(texts.at(0));
     if (texts.length() >= 2)
         prompt.replace("%src", getPlayerName(texts.at(1)));
@@ -717,17 +717,18 @@ void Client::setPromptList(const QStringList &texts) {
     if (texts.length() >= 3)
         prompt.replace("%dest", getPlayerName(texts.at(2)));
 
-    if (texts.length() >= 4) {
-        QString arg = Sanguosha->translate(texts.at(3));
-        prompt.replace("%arg", arg);
-    }
-
     if (texts.length() >= 5) {
         QString arg2 = Sanguosha->translate(texts.at(4));
         prompt.replace("%arg2", arg2);
     }
 
+    if (texts.length() >= 4) {
+        QString arg = Sanguosha->translate(texts.at(3));
+        prompt.replace("%arg", arg);
+    }
+
     prompt_doc->setHtml(prompt);
+    return prompt;
 }
 
 void Client::commandFormatWarning(const QString &str, const QRegExp &rx, const char *command) {
@@ -808,30 +809,16 @@ void Client::askForSkillInvoke(const Json::Value &arg) {
     skill_to_invoke = skill_name;
         
     QString text;
-    if (data.isEmpty())
+    if (data.isEmpty()) {
         text = tr("Do you want to invoke skill [%1] ?").arg(Sanguosha->translate(skill_name));
-    else {
+        prompt_doc->setHtml(text);
+    } else {
         QStringList texts = data.split(":");
         text = Sanguosha->translate(QString("%1:%2").arg(skill_name).arg(texts.first()));
-
-        if (texts.length() >= 2)
-            text.replace("%src", getPlayerName(texts.at(1)));
-
-        if (texts.length() >= 3)
-            text.replace("%dest", getPlayerName(texts.at(2)));
-
-        if (texts.length() >= 4) {
-            QString arg = Sanguosha->translate(texts.at(3));
-            text.replace("%arg", arg);
-        }
-
-        if (texts.length() >= 5) {
-            QString arg2 = Sanguosha->translate(texts.at(4));
-            text.replace("%arg2", arg2);
-        }
+        texts.replace(1, text);
+        setPromptList(texts);
     }
 
-    prompt_doc->setHtml(text);
     setStatus(AskForSkillInvoke);
 }
 
@@ -1549,24 +1536,8 @@ void Client::askForPlayerChosen(const Json::Value &players) {
     QString prompt = toQString(players[2]);
     if (!prompt.isEmpty()) {
         QStringList texts = prompt.split(":");
+        QString text = setPromptList(texts);
         text = Sanguosha->translate(texts.first());
-
-        if (texts.length() >= 2)
-            text.replace("%src", getPlayerName(texts.at(1)));
-
-        if (texts.length() >= 3)
-            text.replace("%dest", getPlayerName(texts.at(2)));
-
-        if (texts.length() >= 4) {
-            QString arg = Sanguosha->translate(texts.at(3));
-            text.replace("%arg", arg);
-        }
-
-        if (texts.length() >= 5) {
-            QString arg2 = Sanguosha->translate(texts.at(4));
-            text.replace("%arg2", arg2);
-        }
-
         if (prompt.startsWith("@") && !description.isEmpty() && description != skill_name)
             text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
     } else {

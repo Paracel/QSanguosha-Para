@@ -205,7 +205,10 @@ public:
             types.removeOne(type_name[card->getTypeId()]);
             if (damage.from->isKongcheng()
                 || !room->askForCard(damage.from, types.join(",") + "|.|.|hand",
-                                     QString("@yuce-discard:::%1:%2").arg(types.first()).arg(types.last()), data)) {
+                                     QString("@yuce-discard:%1::%2:%3")
+                                             .arg(target->objectName())
+                                             .arg(types.first()).arg(types.last()),
+                                     data)) {
                 RecoverStruct recover;
                 recover.who = target;
                 room->recover(target, recover);

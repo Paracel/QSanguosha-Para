@@ -245,7 +245,7 @@ private:
     unsigned int _m_lastServerSerial;
 
     void updatePileNum();
-    void setPromptList(const QStringList &text);
+    QString setPromptList(const QStringList &text);
     QString _processCardPattern(const QString &pattern);
     void commandFormatWarning(const QString &str, const QRegExp &rx, const char *command);
 

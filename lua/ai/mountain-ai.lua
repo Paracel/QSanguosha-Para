@@ -169,11 +169,15 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	end
 
 	if current_phase == sgs.Player_Draw then
+		self.qiaobian_draw_targets = {}
 		if self.player:hasSkill("tuxi") and not self:willSkipDrawPhase() then return {} end
 		local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
 		if cardstr:match("->") then
 			local targetstr = cardstr:split("->")[2]
-			if #targetstr:split("+") == 2 then
+			local targets = targetstr:split("+")
+			if #targets == 2 then
+				table.insert(self.qiaobian_draw_targets, targets[1])
+				table.insert(self.qiaobian_draw_targets, targets[2])
 				return to_discard
 			else
 				return {}
@@ -244,15 +248,10 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 
 	if prompt == "@qiaobian-2" then
 		if self.player:hasSkill("tuxi") then return "." end
-		local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
-		if cardstr:match("->") then
-			local targetstr = cardstr:split("->")[2]
-			if #targetstr:split("+") == 2 then
-				return "@QiaobianCard=.->" .. targetstr
-			end
-		else
-			return "."
+		if #self.qiaobian_draw_targets == 2 then
+			return "@QiaobianCard=.->" .. table.concat(self.qiaobian_draw_targets, "+")
 		end
+		return "."
 	end
 
 	if prompt == "@qiaobian-3" then
@@ -294,7 +293,9 @@ sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
 	return "."
 end
 
-sgs.ai_card_intention.QiaobianCard = 0
+sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
+	if from:getPhase() == sgs.Player_Draw then return sgs.ai_card_intention.TuxiCard(self, card, from, tos) end
+end
 
 function sgs.ai_cardneed.qiaobian(to, card)
 	return to:getCardCount(true) <= 2

@@ -3957,7 +3957,7 @@ void RoomScene::skillStateChange(const QString &skill_name) {
     if (skill_name == "shuangxiong") {
         const Skill *skill = Sanguosha->getSkill("shuangxiong");
         addSkillButton(skill);
-    } else if (skill_name == "-shuangxiong")
+    } else if (skill_name == "-shuangxiong" || skill_name == ".")
         detachSkill("shuangxiong");
 }
 

@@ -4002,7 +4002,7 @@ function SmartAI:fillSkillCards(cards)
 		end
 	end
 	for _, skill in ipairs(sgs.ai_skills) do
-		if self:hasSkill(skill) then
+		if self:hasSkill(skill) or (skill.name == "shuangxiong" and self.player:hasFlag("shuangxiong")) then
 			local skill_card = skill.getTurnUseCard(self)
 			if #cards == 0 then skill_card = skill.getTurnUseCard(self, true) end
 			if skill_card then table.insert(cards, skill_card) end

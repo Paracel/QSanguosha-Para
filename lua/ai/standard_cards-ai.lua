@@ -269,7 +269,7 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	from = from or self.player
 	if not ignore_armor and from:objectName() == self.player:objectName() then
 		if to:getArmor() and from:hasSkill("moukui") then
-			if not self:isFriend(to) or (to:getArmor() and self:needToThrowArmor(to)) then
+			if not self:isFriend(to) or (to:getArmor() and self:needToThrowArmor(to, true)) then
 				if not (self:isEnemy(to) and self:doNotDiscard(to)) then
 					local id = self:askForCardChosen(to, "he", "moukui")
 					if id == to:getArmor():getEffectiveId() then ignore_armor = true end

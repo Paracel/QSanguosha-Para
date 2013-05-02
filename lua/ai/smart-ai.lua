@@ -4646,7 +4646,7 @@ function SmartAI:needRende()
 		and self.player:usedTimes("RendeCard") < 2 and #self.friends > 1
 end
 
-function SmartAI:needToThrowArmor(player)
+function SmartAI:needToThrowArmor(player, moukui) -- prevent an infinite loop caused by MouKui
 	player = player or self.player
 	if not player:getArmor() or not player:hasArmorEffect(player:getArmor():objectName()) then return false end
 	if self:evaluateArmor(player:getArmor(), player) <= 0 then return true end
@@ -4664,7 +4664,7 @@ function SmartAI:needToThrowArmor(player)
 	end
 	local FS = sgs.Sanguosha:cloneCard("fire_slash")
 	if player:objectName() ~= self.player:objectName() and self:isEnemy(player) and self.player:getPhase() == sgs.Player_Play and self:slashIsAvailable()
-		and not self:slashProhibit(FS, player, self.player) and player:hasArmorEffect("vine")
+		and (moukui or not self:slashProhibit(FS, player, self.player)) and player:hasArmorEffect("vine")
 		and (self:getCard("FireSlash") or (self:getCard("Slash") and (self.player:hasWeapon("fan") or self.player:hasSkill("lihuo") or self:getCardsNum("Fan") >= 1)))
 		and (player:isKongcheng() or sgs.card_lack[player:objectName()]["Jink"] == 1 or getCardsNum("Jink", player) < 1) then
 		return true

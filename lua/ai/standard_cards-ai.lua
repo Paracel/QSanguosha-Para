@@ -257,8 +257,14 @@ end
 
 function SmartAI:canLiuli(other, another)
 	if not other:hasSkill("liuli") then return false end
+	if type(another) == "table" then
+		for _, target in ipairs(another) do
+			if self:canLiuli(other, target) then return true end
+		end
+		return false
+	end
 	local n = other:getHandcardNum()
-	if n > 0 and (other:distanceTo(another) <= other:getAttackRange()) then return true
+	if n > 0 and other:distanceTo(another) <= other:getAttackRange() then return true
 	elseif other:getWeapon() and other:getOffensiveHorse() and (other:distanceTo(another) <= other:getAttackRange()) then return true
 	elseif other:getWeapon() or other:getOffensiveHorse() then return other:distanceTo(another) <= 1
 	else return false end

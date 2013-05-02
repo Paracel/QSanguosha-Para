@@ -156,7 +156,7 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 		return getCardsNum("Jink", target) < 2
 	end
 
-	if getKnownCard(target, "Jink", true, "he") >= 1 then return false end
+	if getKnownCard(target, "Jink", true, "he") >= 1 and not (self:getOverflow() > 0 and self:getCardsNum("Analeptic") > 1) then return false end
 	return self:getCardsNum("Analeptic") > 1 or getCardsNum("Jink", target) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1
 end
 

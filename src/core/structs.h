@@ -252,7 +252,6 @@ struct DyingStruct {
 
     ServerPlayer *who; // who is ask for help
     DamageStruct *damage; // if it is NULL that means the dying is caused by losing hp
-    QList<ServerPlayer *> savers; // savers are the available players who can use peach for the dying player
 };
 
 struct DeathStruct {
@@ -418,7 +417,6 @@ enum TriggerEvent {
     DamageComplete,   // the moment for trigger iron chain
 
     Dying,
-    PreAskForPeaches,
     AskForPeaches,
     AskForPeachesDone,
     Death,

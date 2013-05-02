@@ -2850,11 +2850,12 @@ end
 function SmartAI:ableToSave(saver, dying)
 	local current = self.room:getCurrent()
 	if current and current:getPhase() ~= sgs.Player_NotActive and current:hasSkill("wansha")
-		and current:objectName() ~= saver:objectName() and current:objectName() ~= dying:objectName() then
+		and current:objectName() ~= saver:objectName() and current:objectName() ~= dying:objectName()
+		and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|renxin") then
 		return false
 	end
 	local peach = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuitRed, 0)
-	if saver:isCardLimited(peach, sgs.Card_MethodUse, true) and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|jijiu") then return false end
+	if saver:isCardLimited(peach, sgs.Card_MethodUse, true) and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|renxin") then return false end
 	return true
 end
 
@@ -3399,6 +3400,7 @@ end
 
 local function prohibitUseDirectly(card, player)
 	if player:isCardLimited(card, card:getHandlingMethod()) then return true end
+	if card:isKindOf("Peach") and player:hasFlag("Global_PreventPeach") then return true end
 	return false
 end
 
@@ -3822,6 +3824,8 @@ function SmartAI:getCardsNum(class_name, player, flag, selfonly)
 			n = math.max(n, math.max(0, math.min(player:getCardCount(true), player:getHp() - 1)))
 		elseif card_str:getSkillName() == "chunlao" then
 			n = n + player:getPile("wine"):length() - 1
+		elseif card_str:getSkillName() == "renxin" then
+			n = n + 1
 		end
 	end
 

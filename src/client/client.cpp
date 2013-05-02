@@ -972,6 +972,10 @@ void Client::onPlayerResponseCard(const Card *card) {
     } else
         replyToServer(S_COMMAND_RESPONSE_CARD, Json::Value::null);
 
+    if (Self->hasFlag("Client_PreventPeach")) {
+        Self->setFlags("-Client_PreventPeach");
+        Self->removeCardLimitation("use", "Peach$0");
+    }
     _m_roomState.setCurrentCardUsePattern(QString());
     setStatus(NotActive);
 }
@@ -1348,15 +1352,38 @@ void Client::askForSinglePeach(const Json::Value &arg) {
     int peaches = arg[1].asInt();
 
     // @todo: anti-cheating of askForSinglePeach is not done yet!!!
+    QStringList pattern;
     if (dying == Self) {
         prompt_doc->setHtml(tr("You are dying, please provide %1 peach(es)(or analeptic) to save yourself").arg(peaches));
+        pattern << "peach" << "analeptic";
         _m_roomState.setCurrentCardUsePattern("peach+analeptic");
     } else {
         QString dying_general = getPlayerName(dying->objectName());
         prompt_doc->setHtml(tr("%1 is dying, please provide %2 peach(es) to save him").arg(dying_general).arg(peaches));
+        pattern << "peach";
         _m_roomState.setCurrentCardUsePattern("peach");
     }
-
+    if (Self->hasFlag("Global_PreventPeach")) {
+        bool has_skill = false;
+        foreach (const Skill *skill, Self->getVisibleSkillList(true)) {
+            const ViewAsSkill *view_as_skill = ViewAsSkill::parseViewAsSkill(skill);
+            if (view_as_skill && view_as_skill->isAvailable(Self, CardUseStruct::CARD_USE_REASON_RESPONSE_USE, pattern.join("+"))) {
+                has_skill = true;
+                break;
+            }
+        }
+        if (!has_skill) {
+            pattern.removeOne("peach");
+            if (pattern.isEmpty()) {
+                onPlayerResponseCard(NULL);
+                return;
+            }
+        } else {
+            Self->setFlags("Client_PreventPeach");
+            Self->setCardLimitation("use", "Peach");
+        }
+    }
+    _m_roomState.setCurrentCardUsePattern(pattern.join("+"));
     m_isDiscardActionRefusable = true;
     m_isUseCard = false;
     setStatus(RespondingUse);

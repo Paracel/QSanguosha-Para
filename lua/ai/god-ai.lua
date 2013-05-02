@@ -1027,7 +1027,7 @@ sgs.ai_view_as.longhun = function(card, player, card_place)
 		return ("fire_slash:longhun[%s:%s]=%d"):format(suit, number, card_id)
 	elseif card:getSuit() == sgs.Card_Club then
 		return ("jink:longhun[%s:%s]=%d"):format(suit, number, card_id)
-	elseif card:getSuit() == sgs.Card_Heart then
+	elseif card:getSuit() == sgs.Card_Heart and not player:hasFlag("Global_PreventPeach") then
 		return ("peach:longhun[%s:%s]=%d"):format(suit, number, card_id)
 	elseif card:getSuit() == sgs.Card_Spade then
 		return ("nullification:longhun[%s:%s]=%d"):format(suit, number, card_id)

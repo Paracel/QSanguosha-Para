@@ -604,64 +604,40 @@ class Wansha: public TriggerSkill {
 public:
     Wansha(): TriggerSkill("wansha") {
         frequency = Compulsory;
-        events << PreAskForPeaches;
+        events << AskForPeaches;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
         ServerPlayer *jiaxu = target->getRoom()->getCurrent();
-        return jiaxu && jiaxu->getPhase() != Player::NotActive && jiaxu->hasSkill(objectName())
-               && jiaxu->isAlive() && target->getHp() <= 0;
+        return target && jiaxu && TriggerSkill::triggerable(jiaxu) && jiaxu->getPhase() != Player::NotActive;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DyingStruct dying = data.value<DyingStruct>();
         ServerPlayer *jiaxu = room->getCurrent();
-        if (jiaxu->hasInnateSkill("wansha") || !jiaxu->hasSkill("jilve"))
-            room->broadcastSkillInvoke(objectName());
-        else
-            room->broadcastSkillInvoke("jilve", 3);
+        if (player == room->getAllPlayers().first()) {
+            if (jiaxu->hasInnateSkill("wansha") || !jiaxu->hasSkill("jilve"))
+                room->broadcastSkillInvoke(objectName());
+            else
+                room->broadcastSkillInvoke("jilve", 3);
 
-        QList<ServerPlayer *> savers;
-        savers << jiaxu;
+            QList<ServerPlayer *> savers;
+            savers << jiaxu;
 
-        LogMessage log;
-        log.from = jiaxu;
-        log.arg = objectName();
-        if (jiaxu != player) {
-            savers << player;
-            log.type = "#WanshaTwo";
-            log.to << player;
-        } else {
-            log.type = "#WanshaOne";
+            LogMessage log;
+            log.from = jiaxu;
+            log.arg = objectName();
+            if (jiaxu != player) {
+                savers << player;
+                log.type = "#WanshaTwo";
+                log.to << player;
+            } else {
+                log.type = "#WanshaOne";
+            }
+            room->sendLog(log);
         }
-        room->sendLog(log);
-        dying.savers = savers;
-
-        data = QVariant::fromValue(dying);
-        return false;
-    }
-};
-
-class WanshaPrevent: public TriggerSkill {
-public:
-    WanshaPrevent(): TriggerSkill("#wansha-prevent") {
-        events << AskForPeaches;
-    }
-
-    virtual int getPriority() const{
-        return 1;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        ServerPlayer *jiaxu = target->getRoom()->getCurrent();
-        return jiaxu && jiaxu->hasSkill("wansha") && jiaxu->isAlive();
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        DyingStruct dying = data.value<DyingStruct>();
-        ServerPlayer *current = room->getCurrent();
-        if (dying.who != player && current != player)
-            return true;
+        if (dying.who != player && jiaxu != player)
+            room->setPlayerFlag(player, "Global_PreventPeach");
         return false;
     }
 };
@@ -972,8 +948,6 @@ ThicketPackage::ThicketPackage()
 
     General *jiaxu = new General(this, "jiaxu", "qun", 3); // QUN 007
     jiaxu->addSkill(new Wansha);
-    jiaxu->addSkill(new WanshaPrevent);
-    related_skills.insertMulti("wansha", "#wansha-prevent");
     jiaxu->addSkill(new MarkAssignSkill("@chaos", 1));
     jiaxu->addSkill(new Luanwu);
     jiaxu->addSkill(new Weimu);

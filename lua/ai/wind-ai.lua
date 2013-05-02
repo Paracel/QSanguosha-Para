@@ -510,7 +510,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local yuji = self.room:findPlayerBySkillName("guhuo")
 	local guhuoname = self.room:getTag("GuhuoType"):toString()
 	if guhuoname == "peach+analeptic" then guhuoname = "peach" end
-	if guhuoname == "normal_slash" then guhuoname = "peach" end
+	if guhuoname == "normal_slash" then guhuoname = "slash" end
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
@@ -737,6 +737,8 @@ function SmartAI:getGuhuoCard(class_name, at_play)
 		elseif (class_name == "Slash" or class_name == "ThunderSlash" or class_name == "FireSlash") and not self:slashIsAvailable(player) then return
 		elseif class_name == "Jink" or class_name == "Nullification" then return
 		end
+	else
+		if class_name == "Peach" and self.player:hasFlag("Global_PreventPeach") then return end
 	end
 	return self:getGuhuoViewCard(class_name)
 end

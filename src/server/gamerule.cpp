@@ -316,13 +316,24 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             DyingStruct dying = data.value<DyingStruct>();
             const Card *peach = NULL;
 
-            while (dying.who->getHp() <= 0) {
-                peach = NULL;
-                if (dying.who->isAlive())
-                    peach = room->askForSinglePeach(player, dying.who);
-                if (peach == NULL)
-                    break;
-                room->useCard(CardUseStruct(peach, player, dying.who), false);
+            try {
+                while (dying.who->getHp() <= 0) {
+                    peach = NULL;
+                    if (dying.who->isAlive())
+                        peach = room->askForSinglePeach(player, dying.who);
+                    if (peach == NULL)
+                        break;
+                    room->useCard(CardUseStruct(peach, player, dying.who), false);
+                }
+                if (player->hasFlag("Global_PreventPeach"))
+                    room->setPlayerFlag(player, "-Global_PreventPeach");
+            }
+            catch (TriggerEvent triggerEvent) {
+                if (triggerEvent == TurnBroken || triggerEvent == StageChange) {
+                    if (player->hasFlag("Global_PreventPeach"))
+                        room->setPlayerFlag(player, "-Global_PreventPeach");
+                }
+                throw triggerEvent;
             }
 
             break;

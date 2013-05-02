@@ -188,7 +188,6 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
     DyingStruct dying;
     dying.who = player;
     dying.damage = reason;
-    dying.savers = getAllPlayers();
 
     QVariant dying_data = QVariant::fromValue(dying);
     foreach (ServerPlayer *p, getAllPlayers()) {
@@ -206,8 +205,6 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
             log.to = getAllPlayers();
             log.arg = QString::number(1 - player->getHp());
             sendLog(log);
-
-            thread->trigger(PreAskForPeaches, this, player, dying_data);
 
             foreach (ServerPlayer *saver, getAllPlayers()) {
                 if (player->getHp() > 0 || player->isDead())

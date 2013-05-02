@@ -1010,6 +1010,7 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         if (player->isKongcheng() || pattern.startsWith(".") || pattern.startsWith("@")) return false;
+        if (pattern.contains("peach") && player->hasFlag("Global_PreventPeach")) return false;
         for (int i = 0; i < pattern.length(); i++) {
             QChar ch = pattern[i];
             if (ch.isUpper() || ch.isDigit()) return false; // This is an extremely dirty hack!! For we need to prevent patterns like 'BasicCard'

@@ -89,7 +89,7 @@ SlashEffectStruct::SlashEffectStruct()
 }
 
 DyingStruct::DyingStruct()
-    : who(NULL), damage(NULL), savers(QList<ServerPlayer *>())
+    : who(NULL), damage(NULL)
 {
 }
 

@@ -193,6 +193,11 @@ void Engine::addPackage(Package *package) {
     QList<General *> all_generals = package->findChildren<General *>();
     foreach (General *general, all_generals) {
         addSkills(general->findChildren<const Skill *>());
+        foreach (QString skill_name, general->getExtraSkillSet()) {
+            if (skill_name.startsWith("#")) continue;
+            foreach (const Skill *related, getRelatedSkills(skill_name))
+                general->addSkill(related->objectName());
+        }
 
         if ((general->isHidden() && !Config.value("EnableHidden", false).toBool())
             || (general->objectName() == "shenlvbu1" || general->objectName() == "shenlvbu2")) {

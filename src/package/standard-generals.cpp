@@ -1575,7 +1575,6 @@ TestPackage::TestPackage()
     General *wuxing_zhuge = new General(this, "wuxing_zhugeliang", "shu", 3, true, true);
     wuxing_zhuge->addSkill(new SuperGuanxing);
     wuxing_zhuge->addSkill("kongcheng");
-    wuxing_zhuge->addSkill("#kongcheng-effect");
 
     General *super_yuanshu = new General(this, "super_yuanshu", "qun", 4, true, true);
     super_yuanshu->addSkill(new SuperYongsi);

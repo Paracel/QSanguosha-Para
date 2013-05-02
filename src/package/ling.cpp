@@ -261,7 +261,6 @@ LingPackage::LingPackage()
     General *neo_zhaoyun = new General(this, "neo_zhaoyun", "shu");
     neo_zhaoyun->addSkill("longdan");
     neo_zhaoyun->addSkill("yicong");
-    neo_zhaoyun->addSkill("#yicong_effect");
 
     General *neo_zhouyu = new General(this, "neo_zhouyu", "wu", 3);
     neo_zhouyu->addSkill("yingzi");
@@ -269,14 +268,11 @@ LingPackage::LingPackage()
 
     General *neo_zhoutai = new General(this, "neo_zhoutai", "wu", 4);
     neo_zhoutai->addSkill("buqu");
-    neo_zhoutai->addSkill("#buqu-remove");
-    neo_zhoutai->addSkill("#buqu-clear");
     neo_zhoutai->addSkill(new Fenji);
 
     General *neo_gongsunzan = new General(this, "neo_gongsunzan", "qun");
     neo_gongsunzan->addSkill(new Zhulou);
     neo_gongsunzan->addSkill("yicong");
-    neo_gongsunzan->addSkill("#yicong_effect");
 
     addMetaObject<LuoyiCard>();
     addMetaObject<NeoFanjianCard>();

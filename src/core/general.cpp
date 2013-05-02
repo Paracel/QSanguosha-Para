@@ -72,6 +72,7 @@ void General::addSkill(Skill *skill) {
 }
 
 void General::addSkill(const QString &skill_name) {
+    if (extra_set.contains(skill_name)) return;
     extra_set << skill_name;
     if (!skillname_list.contains(skill_name))
         skillname_list << skill_name;

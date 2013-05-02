@@ -282,7 +282,7 @@ public:
 
 class YicongEffect: public TriggerSkill {
 public:
-    YicongEffect(): TriggerSkill("#yicong_effect") {
+    YicongEffect(): TriggerSkill("#yicong-effect") {
         events << PostHpReduced << HpRecover;
     }
 
@@ -1079,7 +1079,7 @@ SPPackage::SPPackage()
     General *gongsunzan = new General(this, "gongsunzan", "qun"); // SP 003
     gongsunzan->addSkill(new Yicong);
     gongsunzan->addSkill(new YicongEffect);
-    related_skills.insertMulti("yicong", "#yicong_effect");
+    related_skills.insertMulti("yicong", "#yicong-effect");
 
     General *yuanshu = new General(this, "yuanshu", "qun"); // SP 004
     yuanshu->addSkill(new Yongsi);
@@ -1121,10 +1121,8 @@ SPPackage::SPPackage()
 
     General *sp_jiaxu = new General(this, "sp_jiaxu", "wei", 3, true, true); // SP 012
     sp_jiaxu->addSkill("wansha");
-    sp_jiaxu->addSkill("#wansha-prevent");
     sp_jiaxu->addSkill("luanwu");
     sp_jiaxu->addSkill("weimu");
-    sp_jiaxu->addSkill("#@chaos-1");
 
     General *caohong = new General(this, "caohong", "wei"); // SP 013
     caohong->addSkill(new Yuanhu);
@@ -1187,7 +1185,6 @@ SPPackage::SPPackage()
     General *tw_zhugeliang = new General(this, "tw_zhugeliang", "shu", 3, true, true); // TW SP 012
     tw_zhugeliang->addSkill("guanxing");
     tw_zhugeliang->addSkill("kongcheng");
-    tw_zhugeliang->addSkill("#kongcheng-effect");
 
     General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true); // TW SP 013
     tw_zhangliao->addSkill("tuxi");
@@ -1209,7 +1206,6 @@ SPPackage::SPPackage()
 
     General *wz_xiaoqiao = new General(this, "wz_xiaoqiao", "wu", 3, false, true); // WZ 002
     wz_xiaoqiao->addSkill("tianxiang");
-    wz_xiaoqiao->addSkill("#tianxiang");
     wz_xiaoqiao->addSkill("hongyan");
 
     addMetaObject<WeidiCard>();

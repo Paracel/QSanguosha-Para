@@ -394,6 +394,8 @@ function sgs.ai_cardsview_valuable.nosjiefan(self, class_name, player)
 	end
 end
 
+sgs.ai_card_intention.NosJiefanCard = sgs.ai_card_intention.Peach
+
 sgs.ai_skill_cardask["nosjiefan-slash"] = function(self, data, pattern, target)
 	if self:isEnemy(target) and self:findLeijiTarget(target, 50, self.player) then return "." end
 	for _, slash in ipairs(self:getCards("Slash")) do

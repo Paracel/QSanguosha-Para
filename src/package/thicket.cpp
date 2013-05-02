@@ -621,16 +621,17 @@ public:
             else
                 room->broadcastSkillInvoke("jilve", 3);
 
+            room->notifySkillInvoked(jiaxu, objectName());
             QList<ServerPlayer *> savers;
             savers << jiaxu;
 
             LogMessage log;
             log.from = jiaxu;
             log.arg = objectName();
-            if (jiaxu != player) {
-                savers << player;
+            if (jiaxu != dying.who) {
+                savers << dying.who;
                 log.type = "#WanshaTwo";
-                log.to << player;
+                log.to = savers;
             } else {
                 log.type = "#WanshaOne";
             }

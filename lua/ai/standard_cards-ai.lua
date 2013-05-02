@@ -827,7 +827,12 @@ function SmartAI:useCardPeach(card, use)
 	use.card = card
 end
 
-sgs.ai_card_intention.Peach = -120
+sgs.ai_card_intention.Peach = function(self, card, from, tos)
+	for _, to in ipairs(tos) do
+		if to:hasSkill("wuhun") then continue end
+		sgs.updateIntention(from, to, -120)
+	end
+end
 
 sgs.ai_use_value.Peach = 6
 sgs.ai_keep_value.Peach = 5

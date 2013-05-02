@@ -715,6 +715,8 @@ function sgs.ai_cardsview_valuable.chunlao(self, class_name, player)
 	end
 end
 
+sgs.ai_card_intention.ChunlaoWineCard = sgs.ai_card_intention.Peach
+
 function sgs.ai_cardneed.chunlao(to, card)
 	return to:getPile("wine"):isEmpty() and card:isKindOf("Slash")
 end

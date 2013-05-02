@@ -82,7 +82,7 @@ function setInitialTables()
 	sgs.draw_pile = global_room:getDrawPile()
 	sgs.lose_equip_skill = "xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong"
+	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|lijian|" ..
@@ -3422,7 +3422,8 @@ local function cardsView(self, class_name, player)
 		if player:hasSkill(askill) then
 			local callback = sgs.ai_cardsview_valuable[askill]
 			if type(callback) == "function" then
-				return callback(self, class_name, player)
+				local ret = callback(self, class_name, player)
+				if ret then return ret end
 			end
 		end
 	end

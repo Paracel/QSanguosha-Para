@@ -186,6 +186,8 @@ function sgs.ai_cardsview.jiuzhu(self, class_name, player)
 	end
 end
 
+sgs.ai_card_intention.JiuzhuCard = sgs.ai_card_intention.Peach
+
 sgs.ai_skill_invoke.zhanshen = function(self, data)
 	local obj = data:toString():split(":")[2]
 	local lvbu = findPlayerByObjectName(self.room, obj)

@@ -2242,7 +2242,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 
 		if flags:match("e") then
-			if self:needToThrowArmor(who) then return who:getArmor():getId() end
+			if self:needToThrowArmor(who, reason == "moukui") then return who:getArmor():getId() end
 			if self:evaluateArmor(who:getArmor(), who) < -5 then return who:getArmor():getId() end
 			if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
 				if who:getWeapon() then return who:getWeapon():getId() end
@@ -2251,10 +2251,10 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 	else
 		if flags:match("e") and self:getDangerousCard(who) then return self:getDangerousCard(who) end
-		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return who:getArmor():getId() end
-		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e") then
+		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who, reason == "moukui") then return who:getArmor():getId() end
+		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e", false, 1, reason) then
 			if who:getDefensiveHorse() then return who:getDefensiveHorse():getId() end
-			if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end
+			if who:getArmor() and not self:needToThrowArmor(who, reason == "moukui") then return who:getArmor():getId() end
 			if who:getOffensiveHorse() and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) then
 				return who:getOffensiveHorse():getId()
 			end
@@ -2269,12 +2269,12 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		end
 		if flags:match("h") then
 			if self:hasSkills("jijiu|qingnang|qiaobian|jieyin|beige|buyi|manjuan", who)
-				and not who:isKongcheng() and who:getHandcardNum() <= 2 and not self:doNotDiscard(who, "h") then
+				and not who:isKongcheng() and who:getHandcardNum() <= 2 and not self:doNotDiscard(who, "h", false, 1, reason) then
 				return self:getCardRandomly(who, "h")
 			end
 			local cards = sgs.QList2Table(who:getHandcards())
 			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), who:objectName())
-			if #cards <= 2 and not self:doNotDiscard(who, "h") then
+			if #cards <= 2 and not self:doNotDiscard(who, "h", false, 1, reason) then
 				for _, cc in ipairs(cards) do
 					if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 						return self:getCardRandomly(who, "h")
@@ -2309,13 +2309,13 @@ function SmartAI:askForCardChosen(who, flags, reason)
 
 		if flags:match("e") and not self:doNotDiscard(who, "e") then
 			if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
-			if who:getArmor() and not self:needToThrowArmor(who) then return who:getArmor():getId() end
+			if who:getArmor() and not self:needToThrowArmor(who, reason == "moukui") then return who:getArmor():getId() end
 			if who:getOffensiveHorse() then return who:getOffensiveHorse():getId() end
 			if who:getWeapon() then return who:getWeapon():getId() end
 		end
 
 		if flags:match("h") then
-			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:doNotDiscard(who, "h") then
+			if (not who:isKongcheng() and who:getHandcardNum() <= 2) and not self:doNotDiscard(who, "h", false, 1, reason) then
 				return self:getCardRandomly(who, "h")
 			end
 		end
@@ -4709,7 +4709,7 @@ function SmartAI:needToThrowArmor(player, moukui) -- prevent an infinite loop ca
 	return false
 end
 
-function SmartAI:doNotDiscard(to, flags, conservative, n)
+function SmartAI:doNotDiscard(to, flags, conservative, n, reason)
 	if not to then global_room:writeToConsole(debug.traceback()) return end
 	flags = flags or "he"
 	n = n or 1
@@ -4731,7 +4731,7 @@ function SmartAI:doNotDiscard(to, flags, conservative, n)
 		if self:needKongcheng(to) and to:getHandcardNum() <= n then return true end
 		if self:getLeastHandcardNum(to) <= n then return true end
 		if self:hasSkills(sgs.lose_equip_skill, to) and to:hasEquip() then return true end
-		if self:needToThrowArmor(to) then return true end
+		if self:needToThrowArmor(to, reason == "moukui") then return true end
 	else
 		if flags:match("e") then
 			if to:hasSkills("jieyin+xiaoji") and to:getDefensiveHorse() then return false end
@@ -4744,7 +4744,7 @@ function SmartAI:doNotDiscard(to, flags, conservative, n)
 			if to:getHandcardNum() <= n and self:needKongcheng(to) then return true end
 		elseif flags:match("e") then
 			if self:hasSkills(sgs.lose_equip_skill, to) and to:getHandcardNum() < n then return true end
-			if to:getCardCount(true) <= n and to:getArmor() and self:needToThrowArmor(to) then return true end
+			if to:getCardCount(true) <= n and to:getArmor() and self:needToThrowArmor(to, reason == "moukui") then return true end
 		end
 	end
 	if flags == "he" and n > 2 then

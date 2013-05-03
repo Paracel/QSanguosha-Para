@@ -3401,7 +3401,7 @@ function SmartAI:damageIsEffective(player, nature, source)
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate_to") == 0 then
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
-			if p:getMark("hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then self:damageIsEffective(p, nature, source) end
+			if p:getMark("hate_" .. player:objectName()) > 0 and p:getMark("@hate_to") > 0 then return self:damageIsEffective(p, nature, source) end
 		end
 	end
 

@@ -1536,8 +1536,7 @@ void Client::askForPlayerChosen(const Json::Value &players) {
     QString prompt = toQString(players[2]);
     if (!prompt.isEmpty()) {
         QStringList texts = prompt.split(":");
-        QString text = setPromptList(texts);
-        text = Sanguosha->translate(texts.first());
+        text = setPromptList(texts);
         if (prompt.startsWith("@") && !description.isEmpty() && description != skill_name)
             text.append(tr("<br/> <b>Source</b>: %1<br/>").arg(description));
     } else {

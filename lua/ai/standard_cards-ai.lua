@@ -2215,7 +2215,10 @@ function SmartAI:useCardIndulgence(card, use)
 	local zhanghe_seat = zhanghe and zhanghe:faceUp() and not self:isFriend(zhanghe) and zhanghe:getSeat() or 0
 
 	local sb_daqiao = self.room:findPlayerBySkillName("yanxiao")
-	local yanxiao = sb_daqiao and not self:isFriend(sb_daqiao) and not self:willSkipPlayPhase(sb_daqiao) and (getKnownCard(sb_daqiao, "diamond", nil, "he") > 0 or sb_daqiao:getHandcardNum() > 3)
+	local yanxiao = sb_daqiao and not self:isFriend(sb_daqiao) and sb_daqiao:faceUp()
+					and (getKnownCard(sb_daqiao, "diamond", nil, "he") > 0
+						or sb_daqiao:getHandcardNum() > 2
+						or sb_daqiao:containsTrick("YanxiaoCard"))
 
 	local getvalue = function(enemy)
 		if enemy:containsTrick("indulgence") or enemy:containsTrick("YanxiaoCard")

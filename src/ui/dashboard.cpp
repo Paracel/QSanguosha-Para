@@ -938,7 +938,7 @@ void Dashboard::updatePending() {
         if (equip && !equip->isMarked())
             equip->setMarkable(view_as_skill->viewFilter(pended, equip->getCard()));
         if (equip) {
-            if (!equip->isMarkable())
+            if (!equip->isMarkable() && (!_m_equipSkillBtns[i] || !_m_equipSkillBtns[i]->isEnabled()))
                 _m_equipRegions[i]->setOpacity(0.7);
             else
                 _m_equipRegions[i]->setOpacity(1.0);

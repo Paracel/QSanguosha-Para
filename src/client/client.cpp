@@ -814,8 +814,8 @@ void Client::askForSkillInvoke(const Json::Value &arg) {
         prompt_doc->setHtml(text);
     } else {
         QStringList texts = data.split(":");
-        text = Sanguosha->translate(QString("%1:%2").arg(skill_name).arg(texts.first()));
-        texts.replace(1, text);
+        text = QString("%1:%2").arg(skill_name).arg(texts.first());
+        texts.replace(0, text);
         setPromptList(texts);
     }
 

@@ -862,7 +862,7 @@ void PlayerCardContainer::_createControls() {
 
     for (int i = 0; i < 4; i++) {
         _m_equipLabel[i] = new QLabel;
-        _m_equipLabel[i]->setStyleSheet("QLabel{ background-color: transparent;}");
+        _m_equipLabel[i]->setStyleSheet("QLabel { background-color: transparent; }");
         _m_equipLabel[i]->setPixmap(QPixmap(_m_layout->m_equipAreas[i].size()));
         _m_equipRegions[i] = new QGraphicsProxyWidget();
         _m_equipRegions[i]->setWidget(_m_equipLabel[i]);

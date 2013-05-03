@@ -311,7 +311,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 room->enterDying(player, NULL);
 
             break;
-    }
+        }
     case AskForPeaches: {
             DyingStruct dying = data.value<DyingStruct>();
             const Card *peach = NULL;

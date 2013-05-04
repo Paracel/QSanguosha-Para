@@ -4321,12 +4321,21 @@ function SmartAI:getAoeValue(card, player)
 		attacker = menghuo or attacker
 	end
 
+	local isEffective_F, isEffective_E
 	for _, friend in ipairs(self.friends_noself) do
 		good = good + self:getAoeValueTo(card, friend, attacker)
+		if self:aoeIsEffective(card, friend, attacker) then isEffective_F = true end
 	end
 
 	for _, enemy in ipairs(self.enemies) do
 		bad = bad + self:getAoeValueTo(card, enemy, attacker)
+		if self:aoeIsEffective(card, enemy, attacker) then isEffective_E = true end
+	end
+
+	if not isEffective_F and #self.friends_noself > 0 and not isEffective_E then
+		return self.player:hasSkill("jizhi") and 10 or -100
+	elseif not isEffective_E and isEffective_F then
+		return -100
 	end
 
 	local liuxie = self.room:findPlayerBySkillName("huangen")

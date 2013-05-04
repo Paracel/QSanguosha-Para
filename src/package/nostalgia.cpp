@@ -485,8 +485,7 @@ public:
                     log.from = target;
                     log.to << handang;
                     room->sendLog(log);
-                } else if (current && current->getPhase() != Player::NotActive && current->hasSkill("wansha")
-                           && current->isAlive() && target != handang) {
+                } else if (handang->hasFlag("Global_PreventPeach")) {
                     LogMessage log;
                     log.type = "#NosJiefanNull3";
                     log.from = current;

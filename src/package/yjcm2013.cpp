@@ -10,6 +10,7 @@
 class Chengxiang: public MasochismSkill {
 public:
     Chengxiang(): MasochismSkill("chengxiang") {
+        frequency = Frequent;
     }
 
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{

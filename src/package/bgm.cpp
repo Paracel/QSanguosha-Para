@@ -1940,8 +1940,9 @@ public:
                 int i = 0;
                 DummyCard *dummy = new DummyCard;
                 QList<int> ids = move.card_ids;
+                QList<Player::Place> places = move.from_places;
                 foreach (int card_id, ids) {
-                    if (move.from_places[i] == Player::PlaceHand) {
+                    if (places[i] == Player::PlaceHand) {
                         dummy->addSubcard(card_id);
                         move.card_ids.removeOne(card_id);
                         move.from_places.removeAt(i);

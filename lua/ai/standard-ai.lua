@@ -1625,15 +1625,27 @@ jieyin_skill.getTurnUseCard = function(self)
 	local first, second
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do
+		if card:isKindOf("TrickCard") then
+			local dummy_use = { isDummy = true }
+			self:useTrickCard(card, dummy_use)
+			if not dummy_use.card then
+				if not first then first = card:getEffectiveId()
+				elseif first and not second then second = card:getEffectiveId()
+				end
+			end
+			if first and second then break end
+		end
+	end
+	for _, card in ipairs(cards) do
 		if card:getTypeId() ~= sgs.Card_TypeEquip then
-			if not first then first = cards[1]:getEffectiveId()
-			else second = cards[2]:getEffectiveId()
+			if not first then first = card:getEffectiveId()
+			elseif first and not second then second = card:getEffectiveId()
 			end
 		end
-		if second then break end
+		if first and second then break end
 	end
 
-	if not second then return end
+	if not first or not second then return end
 	local card_str = ("@JieyinCard=%d+%d"):format(first, second)
 	assert(card_str)
 	return sgs.Card_Parse(card_str)

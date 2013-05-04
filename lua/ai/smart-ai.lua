@@ -210,17 +210,25 @@ function sgs.getValue(player)
 end
 
 function sgs.getDefense(player)
+	if not player then return 0 end
 	local defense = math.min(sgs.getValue(player), player:getHp() * 3)
-	if player:getArmor() then
-		defense = defense + 2
+	local attacker = global_room:getCurrent()
+	local hasEightDiagram = false
+	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
+		hasEightDiagram = true
 	end
-	if not player:getArmor() and player:hasSkill("bazhen") then
-		defense = defense + 2
+
+	if not player:getArmor() and player:hasSkill("yizhong") then defense = defense + 2 end
+
+	if hasEightDiagram then
+		defense = defense + 1.3
+		if player:hasSkill("tiandu") then defense = defense + 0.6 end
+		if player:hasSkill("leiji") then defense = defense + 0.4 end
+		if player:hasSkill("noszhenlie") then defense = defense + 0.2 end
+		if player:hasSkill("hongyan") then defense = defense + 0.2 end
 	end
-	if not player:getArmor() and player:hasSkill("yizhong") then
-		defense = defense + 2
-	end
-	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.5 end
+
+	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.4 end
 	if attacker and not attacker:hasSkill("jueqing") then
 		if sgs.isGoodHp(player) then
 			local m = sgs.masochism_skill:split("|")
@@ -234,35 +242,46 @@ function sgs.getDefense(player)
 			defense = defense + 4
 		end
 	end
-	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and player:hasSkills("tiandu|leiji|noszhenlie") then
-		defense = defense + 0.5
-	end
-	if player:hasSkill("qingguo") and player:getHandcardNum() > 1 then
-		defense = defense + 0.5
-	end
-	if player:hasSkill("longhun") and player:getHp() == 1 and player:getHandcardNum() > 1 then
-		defense = defense + 0.4
-	end
-	if player:hasSkill("longdan") and player:getHandcardNum() > 2 then
-		defense = defense + 0.3
-	end
-	if player:hasSkill("tianxiang") and player:getHandcardNum() > 2 then
-		defense = defense + 0.5
+
+	if not gameProcess and not sgs.isGoodTarget(player) then defense = defense + 10 end
+	if player:hasSkill("rende") and player:getHp() > 2 then defense = defense + 1 end
+	if player:hasSkill("kuanggu") and player:getHp() > 1 then defense = defense + 0.2 end
+	if player:hasSkill("zaiqi") and player:getHp() > 1 then defense = defense + 0.35 end
+	if player:hasSkill("tianming") then defense = defense + 0.1 end
+
+	if player:getHp() > getBestHp(player) then defense = defense + 0.8 end
+	if player:getHp() <= 2 then defense = defense - 0.4 end
+
+	if player:hasSkill("tianxiang") then defense = defense + player:getHandcardNum() * 0.5 end
+
+	if player:getHandcardNum() == 0 then
+		if player:getHp() <= 1 then defense = defense - 2.5 end
+		if player:getHp() == 2 then defense = defense - 1.5 end
+		if not hasEightDiagram then defense = defense - 2 end
 	end
 
-	if player:getHp() > getBestHp(player) then defense = defense + 0.3 end
+	if not gameProcess and player:isLord() then 
+		defense = defense - 0.4
+		if sgs.isLordInDanger() then defense = defense - 0.7 end
+	end
 
-	-- effected by chaofeng
-	if player:hasSkill("jijiu") then defense = defense - 3 end
-	if player:hasSkill("dimeng") then defense = defense - 2.5 end
-	if player:hasSkill("guzheng") and getKnownCard(player, "Jink", true) == 0 then defense = defense - 2.5 end
-	if player:hasSkill("qiaobian") then defense = defense - 2.4 end
-	if player:hasSkill("jieyin") then defense = defense - 2.3 end
-	if player:hasSkill("lijian") then defense = defense - 2.2 end
-	if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
+	if (sgs.ai_chaofeng[player:getGeneralName()] or 0) >= 3 then
+		defense = defense - math.max(6, (sgs.ai_chaofeng[player:getGeneralName()] or 0)) * 0.035
+	end
 
-	if player:isLord() then defense = defense - 2 end
+	if not player:faceUp() then defense = defense - 0.35 end
+	if player:containsTrick("indulgence") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
+	if player:containsTrick("supply_shortage") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
 
+	if not gameProcess and not hasEightDiagram then
+		if player:hasSkill("jijiu") then defense = defense - 3 end
+		if player:hasSkill("dimeng") then defense = defense - 2.5 end
+		if player:hasSkill("guzheng") and getKnownCard(player, "Jink", true) == 0 then defense = defense - 2.5 end
+		if player:hasSkill("qiaobian") then defense = defense - 2.4 end
+		if player:hasSkill("jieyin") then defense = defense - 2.3 end
+		if player:hasSkill("lijian") then defense = defense - 2.2 end
+		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
+	end
 	return defense
 end
 
@@ -873,7 +892,7 @@ function sgs.gameProcess(room, arg)
 			if aplayer:hasSkill("benghuai") and aplayer:getHp() > 4 then rebel_hp = 4
 			else rebel_hp = aplayer:getHp() end
 			if aplayer:getMaxHp() == 3 then rebel_value = rebel_value + 0.5 end
-			rebel_value = rebel_value + rebel_hp + math.max(sgs.getDefense(aplayer) - rebel_hp * 2, 0) * 0.7
+			rebel_value = rebel_value + rebel_hp + math.max(sgs.getDefense(aplayer, true) - rebel_hp * 2, 0) * 0.7
 			if aplayer:getDefensiveHorse() then
 				rebel_value = rebel_value + 0.5
 			end
@@ -883,7 +902,7 @@ function sgs.gameProcess(room, arg)
 			if aplayer:hasSkill("benghuai") and aplayer:getHp() > 4 then loyal_hp = 4
 			else loyal_hp = aplayer:getHp() end
 			if aplayer:getMaxHp() == 3 then loyal_value = loyal_value + 0.5 end
-			loyal_value = loyal_value + (loyal_hp + math.max(sgs.getDefense(aplayer) - loyal_hp * 2, 0) * 0.7)
+			loyal_value = loyal_value + (loyal_hp + math.max(sgs.getDefense(aplayer, true) - loyal_hp * 2, 0) * 0.7)
 			if aplayer:getArmor() or (not aplayer:getArmor() and (aplayer:hasSkill("bazhen") or aplayer:hasSkill("yizhong"))) then
 				loyal_value = loyal_value + 0.5
 			end

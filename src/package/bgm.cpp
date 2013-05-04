@@ -1941,7 +1941,7 @@ public:
                 DummyCard *dummy = new DummyCard;
                 QList<int> ids = move.card_ids;
                 foreach (int card_id, ids) {
-                    if (room->getCardPlace(card_id) == Player::DiscardPile && move.from_places[i] == Player::PlaceHand) {
+                    if (move.from_places[i] == Player::PlaceHand) {
                         dummy->addSubcard(card_id);
                         move.card_ids.removeOne(card_id);
                         move.from_places.removeAt(i);

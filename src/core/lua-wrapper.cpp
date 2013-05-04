@@ -167,7 +167,7 @@ LuaSkillCard *LuaSkillCard::Parse(const QString &str) {
     return new_card;
 }
 
-QString LuaSkillCard::toString() const{
+QString LuaSkillCard::toString(bool hidden) const{
     return QString("#%1[%2:%3]:%4:%5").arg(objectName())
            .arg(getSuitString()).arg(getNumberString())
            .arg(subcardString()).arg(user_string);

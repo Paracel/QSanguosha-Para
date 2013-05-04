@@ -123,7 +123,7 @@ public:
     static LuaSkillCard *Parse(const QString &str);
     void pushSelf(lua_State *L) const;
 
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
 
     // these functions are defined at swig/luaskills.i
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;

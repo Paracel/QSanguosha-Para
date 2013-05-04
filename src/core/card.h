@@ -137,7 +137,7 @@ public:
     static const int S_UNKNOWN_CARD_ID;
 
     static const Card *Parse(const QString &str);
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
     
 protected:
     QList<int> subcards;
@@ -166,7 +166,7 @@ public:
     virtual QString getSubtype() const;
     virtual QString getType() const;
     virtual CardType getTypeId() const;
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
 
 protected:
     QString user_string;
@@ -180,7 +180,7 @@ public:
 
     virtual QString getSubtype() const;
     virtual QString getType() const;
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
 };
 
 #endif

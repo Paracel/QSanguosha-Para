@@ -315,7 +315,8 @@ QString Card::getDescription() const{
     return tr("<b>[%1]</b> %2").arg(getName()).arg(desc);
 }
 
-QString Card::toString() const{
+QString Card::toString(bool hidden) const{
+    Q_UNUSED(hidden);
     if (!isVirtualCard())
         return QString::number(m_id);
     else
@@ -551,12 +552,13 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
         room->reverseFor3v3(this, player, targets);
     card_use.to = targets;
 
+    bool hidden = (card_use.card->getTypeId() == TypeSkill && !card_use.card->willThrow());
     LogMessage log;
     log.from = player;
     if (!card_use.card->targetFixed() || card_use.to.length() > 1 || !card_use.to.contains(card_use.from))
         log.to = card_use.to;
     log.type = "#UseCard";
-    log.card_str = card_use.card->toString();
+    log.card_str = card_use.card->toString(hidden);
     room->sendLog(log);
 
     if (card_use.card->isKindOf("Collateral")) { // put it here for I don't wanna repeat these codes in Card::onUse
@@ -727,10 +729,14 @@ Card::CardType SkillCard::getTypeId() const{
     return Card::TypeSkill;
 }
 
-QString SkillCard::toString() const{
-    QString str = QString("@%1[%2:%3]=%4")
-            .arg(metaObject()->className()).arg(getSuitString())
-            .arg(getNumberString()).arg(subcardString());
+QString SkillCard::toString(bool hidden) const{
+    QString str;
+    if (!hidden)
+        str = QString("@%1[%2:%3]=%4")
+                      .arg(metaObject()->className()).arg(getSuitString())
+                      .arg(getNumberString()).arg(subcardString());
+    else
+        str = QString("@%1[no_suit:-]=.").arg(metaObject()->className());
 
     if (!user_string.isEmpty())
         return QString("%1:%2").arg(str).arg(user_string);
@@ -753,7 +759,8 @@ QString DummyCard::getSubtype() const{
     return "dummy_card";
 }
 
-QString DummyCard::toString() const{
+QString DummyCard::toString(bool hidden) const{
+    Q_UNUSED(hidden)
     return "$" + subcardString();
 }
 

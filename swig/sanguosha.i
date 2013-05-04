@@ -712,7 +712,7 @@ public:
     virtual QString getType() const = 0;
     virtual QString getSubtype() const = 0;
     virtual CardType getTypeId() const = 0;
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
     bool isNDTrick() const;
 
     // card target selection
@@ -784,7 +784,7 @@ public:
     virtual QString getSubtype() const;
     virtual QString getType() const;
     virtual CardType getTypeId() const;
-    virtual QString toString() const;
+    virtual QString toString(bool hidden = false) const;
 
 protected:
     QString user_string;

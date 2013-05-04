@@ -126,7 +126,10 @@ public:
     inline virtual QString getType() const{ return m_card->getType(); }
     inline virtual QString getSubtype() const{ return m_card->getSubtype(); }
     inline virtual CardType getTypeId() const{ return m_card->getTypeId(); }
-    inline virtual QString toString() const{ return QString::number(m_id); }
+    inline virtual QString toString(bool hidden = false) const{
+        Q_UNUSED(hidden)
+        return QString::number(m_id);
+    }
     inline virtual bool isNDTrick() const{ return m_card->isNDTrick(); }
 
     // card target selection

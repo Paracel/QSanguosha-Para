@@ -546,8 +546,8 @@ public:
         if (!card->isRed())
             return false;
 
-        if (Self->getWeapon()
-            && card->getEffectiveId() == Self->getWeapon()->getId() && card->isKindOf("Crossbow"))
+        if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_PLAY
+            && Self->getWeapon() && card->getEffectiveId() == Self->getWeapon()->getId() && card->isKindOf("Crossbow"))
             return Self->canSlashWithoutCrossbow();
         else
             return true;

@@ -369,7 +369,8 @@ public:
         if (to_select->getTypeId() != Card::TypeEquip)
             return false;
 
-        if (Self->getWeapon() && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->isKindOf("Crossbow"))
+        if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_PLAY
+            && Self->getWeapon() && to_select->getEffectiveId() == Self->getWeapon()->getId() && to_select->isKindOf("Crossbow"))
             return Self->canSlashWithoutCrossbow();
         else
             return true;

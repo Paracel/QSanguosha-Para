@@ -632,47 +632,65 @@ public:
 };
 
 QingchengCard::QingchengCard() {
-    will_throw = false;
     handling_method = Card::MethodDiscard;
 }
 
-bool QingchengCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self;
-}
+void QingchengCard::onUse(Room *room, const CardUseStruct &use) const{
+    CardUseStruct card_use = use;
+    ServerPlayer *player = card_use.from, *to = card_use.to.first();
 
-void QingchengCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.from->getRoom();
+    LogMessage log;
+    log.from = player;
+    log.to = card_use.to;
+    log.type = "#UseCard";
+    log.card_str = card_use.card->toString();
+    room->sendLog(log);
+
     QStringList skill_list;
-    foreach (const Skill *skill, effect.to->getVisibleSkillList()) {
+    foreach (const Skill *skill, to->getVisibleSkillList()) {
         if (!skill_list.contains(skill->objectName()) && !skill->inherits("SPConvertSkill") && !skill->isAttachedLordSkill()) {
             skill_list << skill->objectName();
         }
     }
     QString skill_qc;
     if (!skill_list.isEmpty()) {
-        QVariant data_for_ai = QVariant::fromValue((PlayerStar)effect.to);
-        skill_qc = room->askForChoice(effect.from, "qingcheng", skill_list.join("+"), data_for_ai);
+        QVariant data_for_ai = QVariant::fromValue((PlayerStar)to);
+        skill_qc = room->askForChoice(player, "qingcheng", skill_list.join("+"), data_for_ai);
     }
-    room->throwCard(this, effect.from);
 
     if (!skill_qc.isEmpty()) {
         LogMessage log;
         log.type = "$QingchengNullify";
-        log.from = effect.from;
-        log.to << effect.to;
+        log.from = player;
+        log.to << to;
         log.arg = skill_qc;
         room->sendLog(log);
 
-        QStringList Qingchenglist = effect.to->tag["Qingcheng"].toStringList();
+        QStringList Qingchenglist = to->tag["Qingcheng"].toStringList();
         Qingchenglist << skill_qc;
-        effect.to->tag["Qingcheng"] = QVariant::fromValue(Qingchenglist);
-        room->setPlayerMark(effect.to, "Qingcheng" + skill_qc, 1);
-        room->filterCards(effect.to, effect.to->getCards("he"), true);
+        to->tag["Qingcheng"] = QVariant::fromValue(Qingchenglist);
+        room->setPlayerMark(to, "Qingcheng" + skill_qc, 1);
+        room->filterCards(to, to->getCards("he"), true);
 
         Json::Value args;
         args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
         room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
     }
+
+    QVariant data = QVariant::fromValue(card_use);
+    RoomThread *thread = room->getThread();
+    thread->trigger(PreCardUsed, room, player, data);
+    card_use = data.value<CardUseStruct>();
+
+    CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), card_use.card->getSkillName(), QString());
+    room->moveCardTo(this, player, NULL, Player::DiscardPile, reason, true);
+
+    thread->trigger(CardUsed, room, player, data);
+    thread->trigger(CardFinished, room, player, data);
+}
+
+bool QingchengCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && to_select != Self;
 }
 
 class QingchengViewAsSkill: public OneCardViewAsSkill {

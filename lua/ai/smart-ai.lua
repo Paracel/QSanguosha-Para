@@ -1775,7 +1775,8 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			end
 
 			if player:hasFlag("AIGlobal_PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
-				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD and not self:needBear(player)
+				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD
+				and (not self:needBear(player) or (player:hasSkills("renjie+baiyin") and not player:hasSkill("jilve")))
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluatePlayerRole(player) == "neutral")
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then

@@ -337,7 +337,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isNude()
 				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
-				and not enemy:needToThrowArmor(enemy)
+				and not self:needToThrowArmor(enemy)
 				and not (enemy:hasSkills("tuntian+zaoxian") and x < 3 and enemy:getCards("he"):length() < 2) then
 				self.yinghunchoice = "d1tx"
 				return enemy

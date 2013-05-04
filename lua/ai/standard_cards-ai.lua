@@ -424,7 +424,7 @@ function SmartAI:useCardSlash(card, use)
 			if not use.to or use.to:isEmpty() then
 				if self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0 then
 				elseif self.player:hasWeapon("crossbow") and self:getCardsNum("Slash") > 1 then
-				else
+				elseif not use.isDummy then
 					local Weapons = {}
 					for _, acard in sgs.qlist(self.player:getHandcards()) do
 						if acard:isKindOf("Weapon") then
@@ -461,13 +461,9 @@ function SmartAI:useCardSlash(card, use)
 					end
 				end
 				local godsalvation = self:getCard("GodSalvation")
-				if godsalvation and godsalvation:getId() ~= card:getId() and self:willUseGodSalvation(godsalvation) then
+				if not use.isDummy and godsalvation and godsalvation:getId() ~= card:getId() and self:willUseGodSalvation(godsalvation) then
 					use.card = godsalvation
 					return
-				end
-				local anal = self:searchForAnaleptic(use, target, card)
-				if anal and self:shouldUseAnaleptic(target, card) then
-					if anal:getEffectiveId() ~= card:getEffectiveId() then use.card = anal return end
 				end
 			end
 			use.card = use.card or usecard
@@ -485,6 +481,14 @@ function SmartAI:useCardSlash(card, use)
 					end
 				elseif use.to:length() < self.slash_targets then
 					use.to:append(target)
+				end
+			end
+			if not use.isDummy then
+				local anal = self:searchForAnaleptic(use, target, use.card)
+				if anal and self:shouldUseAnaleptic(target, use.card) and anal:getEffectiveId() ~= card:getEffectiveId() then
+					use.card = anal
+					if use.to then use.to = sgs.SPlayerList() end
+					return
 				end
 			end
 			if not use.to or self.slash_targets <= use.to:length() then return end
@@ -720,10 +724,11 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 and target:getCards("he"):length() > 2 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
 			elseif target:hasWeapon("blade") then
-				if ((effect.slash:isKindOf("FireSlash")
+				if (effect.slash:isKindOf("FireSlash")
 					and not target:hasSkill("jueqing")
 					and (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0))
-					or self:hasHeavySlashDamage(target, effect.slash)) then
+					or self:hasHeavySlashDamage(target, effect.slash)
+					or (self.player:getHp() == 1 and #self.friends_noself == 0) then
 				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) or self:hasSkills("jijiu|qingnang") or self:canUseJieyuanDecrease(target) then
 					return "."
 				end

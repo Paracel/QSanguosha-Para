@@ -111,7 +111,7 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if not self.toUse then return nil end
 
 	for _, card in ipairs(self.toUse) do
-		if card:getId() ~= slash:getId() then return nil end
+		if card:getEffectiveId() ~= slash:getEffectiveId() then return nil else break end
 	end
 
 	if not use.to or use.to:isEmpty() then return nil end

@@ -413,7 +413,7 @@ function SmartAI:useCardIronChain(card, use)
 				if use.to then use.to:append(yangxiu) end
 			end
 		elseif #friendtargets == 0 and #enemytargets == 0 then
-			if use.to and liuxie and self:isFriend(liuxie) and liuxie:getHp() > 0 and #otherfriends > 0 then
+			if use.to and liuxie and self:isFriend(liuxie) and liuxie:getHp() > 0 and #otherfriends > 1 then
 				for _, friend in ipairs(otherfriends) do
 					use.to:append(friend)
 					if use.to:length() == math.min(targets_num, liuxie:getHp()) then return end

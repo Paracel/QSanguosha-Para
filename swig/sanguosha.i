@@ -798,6 +798,7 @@ public:
 class Package: public QObject {
 public:
     Package(const char *name);
+    void insertRelatedSkills(const char *main_skill, const char *related_skill);
 };
 
 class Engine: public QObject {

@@ -60,6 +60,10 @@ public:
         metaobjects << &T::staticMetaObject;
     }
 
+    inline void insertRelatedSkills(const QString &main_skill, const QString &related_skill) {
+        related_skills.insertMulti(main_skill, related_skill);
+    }
+
 protected:
     QList<const QMetaObject *> metaobjects;
     QList<const Skill *> skills;

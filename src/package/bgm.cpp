@@ -1045,6 +1045,7 @@ YanxiaoCard::YanxiaoCard(Suit suit, int number)
     : DelayedTrick(suit, number)
 {
     mute = true;
+    handling_method = Card::MethodNone;
     setObjectName("YanxiaoCard");
 }
 

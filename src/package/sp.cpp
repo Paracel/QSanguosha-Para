@@ -864,7 +864,7 @@ public:
 
             QList<int> avail_list, other_list;
             foreach (const Card *jcard, target->getJudgingArea()) {
-                if (jcard->isKindOf("YanxiaoCard")) continue;
+                if (jcard->isKindOf("SkillCard")) continue;
                 if (jcard->getSuit() == card->getSuit())
                     avail_list << jcard->getEffectiveId();
                 else
@@ -882,7 +882,7 @@ public:
 private:
     static bool hasDelayedTrick(const ServerPlayer *target) {
         foreach (const Card *card, target->getJudgingArea())
-            if (!card->isKindOf("YanxiaoCard")) return true;
+            if (!card->isKindOf("SkillCard")) return true;
         return false;
     }
 };
@@ -949,7 +949,7 @@ public:
                 if (response.m_isUse)
                    card = response.m_card;
             }
-            if (card && card->getHandlingMethod() == Card::MethodUse) {
+            if (card && card->getTypeId() != Card::TypeSkill && card->getHandlingMethod() == Card::MethodUse) {
                 int n = player->getMark(objectName());
                 if (card->isBlack())
                     n |= 1;

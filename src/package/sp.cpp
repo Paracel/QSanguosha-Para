@@ -646,8 +646,10 @@ public:
                 baobian_skills << skill_name;
             }
         } else {
-            room->detachSkillFromPlayer(player, skill_name);
-            baobian_skills.removeOne(skill_name);
+            if (baobian_skills.contains(skill_name)) {
+                room->detachSkillFromPlayer(player, skill_name);
+                baobian_skills.removeOne(skill_name);
+            }
         }
         player->tag["BaobianSkills"] = QVariant::fromValue(baobian_skills);
     }
@@ -665,6 +667,8 @@ public:
                 player->tag["BaobianSkills"] = QVariant();
             }
             return false;
+        } else if (triggerEvent == EventAcquireSkill) {
+            if (data.toString() != objectName()) return false;
         }
 
         if (!TriggerSkill::triggerable(player)) return false;

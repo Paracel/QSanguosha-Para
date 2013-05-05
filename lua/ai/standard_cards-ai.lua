@@ -334,7 +334,8 @@ end
 
 function SmartAI:useCardSlash(card, use)
 	if not self:slashIsAvailable() then return end
-	if card:isVirtualCard() and card:subcardsLength() > 0
+	if sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_PLAY
+		and card:isVirtualCard() and card:subcardsLength() > 0
 		and self.player:getWeapon() and self.player:getWeapon():isKindOf("Crossbow")
 		and card:getSubcards():contains(self.player:getWeapon():getEffectiveId())
 		and not self.player:canSlashWithoutCrossbow() then

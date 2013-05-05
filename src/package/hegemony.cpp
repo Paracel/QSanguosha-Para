@@ -404,7 +404,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return  pattern == "@@shuangren";
+        return pattern == "@@shuangren";
     }
 
     virtual const Card *viewAs() const{

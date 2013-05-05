@@ -1169,9 +1169,7 @@ void RoomScene::updateTargetsEnablity(const Card *card) {
                 isCollateral = (qice_card->getUserString() == "collateral");
             }
         }
-        bool weimuFailure = player->hasSkill("weimu") && card
-                            && isCollateral
-                            && !selected_targets.isEmpty();
+        bool weimuFailure = isCollateral && selected_targets.length() == 1;
         //=====================================
 
         bool enabled = (card == NULL) || ((weimuFailure || !Sanguosha->isProhibited(Self, player, card)) && maxVotes > 0);

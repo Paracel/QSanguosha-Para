@@ -993,7 +993,7 @@ public:
                 }
                 if (males.isEmpty()) return false;
 
-                ServerPlayer *target = room->askForPlayerChosen(player, males, objectName());
+                ServerPlayer *target = room->askForPlayerChosen(player, males, objectName(), "@xingwu-choose");
                 room->damage(DamageStruct(objectName(), player, target, 2));
 
                 if (!player->isAlive()) return false;

@@ -721,8 +721,25 @@ jiuchi_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_choice.benghuai = function(self, choices)
-	if self.player:getMaxHp() == 1 or (self.player:getHp() > 1 and self:hasSkills("shangshi|longhun")) then return "hp" end
-	return self.player:getLostHp() < (2 + (self:hasSkills("yinghun|nosmiji|miji") and 2 or 0)) and "hp" or "maxhp"
+	for _, friend in ipairs(self.friends) do
+		if friend:hasSkill("tianxiang") and (self.player:getHp() >= 3 or (self:getCardsNum("Peach") + self:getCardsNum("Analeptic") > 0 and self.player:getHp() > 1)) then
+			return "hp"
+		end
+	end
+	if self.player:getMaxHp() >= self.player:getHp() + 2 then
+		local enemy_num = self:getEnemyNumBySeat(self.room:getCurrent(), self.player)
+		local least_hp = self.player:isLord() and (1 + enemy_num) or 1
+		if self.player:getMaxHp() > 4
+			and (self.player:hasSkill("nosmiji")
+				or (self.player:hasSkill("miji") and self:findPlayerToDraw(false))
+				or (self.player:hasSkill("yinghun") and (self:findPlayerToDraw(false) or self:findPlayerToDiscard("he", false))))
+			and (self:getCardsNum("Peach") + self:getCardsNum("Analeptic") + self.player:getHp() > least_hp) then
+			return "hp"
+		end
+		return "maxhp"
+	else
+		return "hp"
+	end
 end
 
 sgs.ai_view_as.jiuchi = function(card, player, card_place)

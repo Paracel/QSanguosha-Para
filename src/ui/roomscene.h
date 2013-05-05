@@ -126,6 +126,8 @@ public:
     void updateTable();
     inline QMainWindow *mainWindow() { return main_window; }
 
+    bool m_skillButtonSank;
+
 public slots:
     void addPlayer(ClientPlayer *player);
     void removePlayer(const QString &player_name);

@@ -91,6 +91,11 @@ public:
 
     static const int S_PENDING_OFFSET_Y = -25;
 
+    inline void updateSkillButton() {
+        if (_m_skillDock)
+            _m_skillDock->update();
+    }
+
 public slots:
     void sortCards();
     void beginSorting();

@@ -150,7 +150,7 @@ public:
         return button;
     }
     QSanInvokeSkillButton *getSkillButtonByName(const QString &skillName) const;
-    void update();    
+    void update();
     virtual QRectF boundingRect() const{ return QRectF(0, -height(), width(), height()); }
     inline QList<QSanInvokeSkillButton *> getAllSkillButtons() { return _m_buttons; }
 

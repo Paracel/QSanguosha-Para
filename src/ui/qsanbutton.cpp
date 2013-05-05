@@ -291,6 +291,7 @@ void QSanInvokeSkillDock::setWidth(int width) {
     _m_width = width;
 }
 
+#include "roomscene.h"
 void QSanInvokeSkillDock::update() {
     if (!_m_buttons.isEmpty()) {
         QList<QSanInvokeSkillButton *> regular_buttons, lordskill_buttons, all_buttons;
@@ -338,7 +339,7 @@ void QSanInvokeSkillDock::update() {
         if (lordskillNum > 0) x_ls++;
         if (lordskillNum > 3) x_ls++;
         for (int i = 0; i < rows + x_ls; i++) {
-            int rowTop = (-rows - x_ls + i) * rowH;
+            int rowTop = (RoomSceneInstance->m_skillButtonSank) ? (-rowH) : ((-rows - x_ls + i) * rowH);
             int btnWidth = _m_width / btnNum[i];
             for (int j = 0; j < btnNum[i]; j++) {
                 QSanInvokeSkillButton *button = all_buttons[m++];

@@ -74,6 +74,8 @@ RoomScene::RoomScene(QMainWindow *main_window)
     _m_photoLayout = &(G_ROOM_SKIN.getPhotoLayout());
     _m_commonLayout = &(G_ROOM_SKIN.getCommonLayout());
 
+    m_skillButtonSank = false;
+
     // create photos
     for (int i = 0; i < player_count - 1;i++) {
         Photo *photo = new Photo;
@@ -1331,6 +1333,13 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
             foreach (Photo *photo, photos) {
                 if (photo->getPlayer() && photo->getPlayer()->isAlive())
                     photo->showDistance();
+            }
+            break;
+        }
+    case Qt::Key_Z: {
+            if (dashboard) {
+                m_skillButtonSank = !m_skillButtonSank;
+                dashboard->updateSkillButton();
             }
             break;
         }

@@ -247,8 +247,8 @@ function SmartAI:slashProhibit(card, enemy, from)
 		if enemy:isLord() and self:isWeak(enemy) and self:slashIsEffective(card, enemy, from) then return true end
 		if from:hasWeapon("guding_blade") and enemy:isKongcheng() then return true end
 	else
-		if enemy:isChained() and not self:isGoodChainTarget(enemy) and not from:hasSkill("jueqing") and self:slashIsEffective(card, enemy, from)
-			and card:isKindOf("NatureSlash") then
+		if card:isKindOf("NatureSlash") and not from:hasSkill("jueqing") and enemy:isChained() and not self:isGoodChainTarget(enemy)
+			and self:slashIsEffective(card, enemy, nil, from) then
 			return true
 		end
 	end

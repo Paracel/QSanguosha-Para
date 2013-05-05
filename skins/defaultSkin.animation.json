@@ -6,7 +6,7 @@
    "duel", "equipborder", "fire_slash",
    "jink", "killer", "no-success", "peach",
    "slash_black", "slash_red", "success",
-   "thunder_slash",
+   "thunder_slash", "revive", "skill_nullify",
    // equip
    "armor/eight_diagram", "armor/renwang_shield",
    "armor/silver_lion", "armor/vine",

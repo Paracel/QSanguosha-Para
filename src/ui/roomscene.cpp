@@ -3871,7 +3871,14 @@ void RoomScene::bringToFront(QGraphicsItem *front_item) {
         _m_last_front_item->setZValue(_m_last_front_ZValue);
     _m_last_front_item = front_item;
     _m_last_front_ZValue = front_item->zValue();
-    front_item->setZValue(10000);
+    if (pindian_box && front_item != pindian_box && pindian_box->isVisible()) {
+        m_zValueMutex.unlock();
+        bringToFront(pindian_box);
+        m_zValueMutex.lock();
+        front_item->setZValue(9999);
+    } else {
+        front_item->setZValue(10000);
+    }
     m_zValueMutex.unlock();
 }
 

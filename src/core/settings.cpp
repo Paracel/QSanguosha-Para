@@ -112,8 +112,8 @@ void Settings::init() {
     EnableHotKey = value("EnableHotKey", true).toBool();
     NeverNullifyMyTrick = value("NeverNullifyMyTrick", true).toBool();
     EnableMinimizeDialog = value("EnableMinimizeDialog", false).toBool();
-    EnableAutoTarget = value("EnableAutoTarget", false).toBool();
-    EnableIntellectualSelection = value("EnableIntellectualSelection", false).toBool();
+    EnableAutoTarget = value("EnableAutoTarget", true).toBool();
+    EnableIntellectualSelection = value("EnableIntellectualSelection", true).toBool();
     NullificationCountDown = value("NullificationCountDown", 8).toInt();
     OperationTimeout = value("OperationTimeout", 15).toInt();
     OperationNoLimit = value("OperationNoLimit", false).toBool();

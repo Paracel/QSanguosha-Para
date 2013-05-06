@@ -1034,7 +1034,7 @@ public:
                 room->acquireSkill(player, "tianxiang");
                 room->acquireSkill(player, "liuli");
             }
-        }else if (triggerEvent == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
+        } else if (triggerEvent == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.to == player && move.to_place == Player::PlaceSpecial && move.to_pile_name == "xingwu") {
                 if (player->getPile("xingwu").length() == 1) {

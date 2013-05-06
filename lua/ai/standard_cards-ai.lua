@@ -2419,7 +2419,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	end
 
 	local friendNeedPeach, peach
-	local peachnum = 0
+	local peachnum, jinknum = 0, 0
 	if nextPlayerCanUse then
 		if (not self.player:isWounded() and nextAlive:isWounded())
 			or (self.player:getLostHp() < self:getCardsNum("Peach"))
@@ -2432,6 +2432,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			peach = card:getEffectiveId()
 			peachnum = peachnum + 1
 		end
+		if card:isKindOf("Jink") then jinknum = jinknum + 1 end
 	end
 	if (not friendNeedPeach and peach) or peachnum > 1 then return peach end
 
@@ -2491,23 +2492,27 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		return nullification
 	end
 
+	if jinknum == 1 and jink and self:isEnemy(nextAlive) and (nextAlive:isKongcheng() or sgs.card_lack[nextAlive:objectName()]["Jink"] == 1) then
+		return jink
+	end
+
 	local eightdiagram, silverlion, vine, renwang, armor, defHorse, offHorse
 	local weapon, crossbow, halberd, double, qinggang, axe, gudingblade
 	for _, card in ipairs(cards) do
-		if card:isKindOf("EightDiagram") then eightdiagram = card:getEffectiveId() end
-		if card:isKindOf("SilverLion") then silverlion = card:getEffectiveId() end
-		if card:isKindOf("Vine") then vine = card:getEffectiveId() end
-		if card:isKindOf("RenwangShield") then renwang = card:getEffectiveId() end
-		if card:isKindOf("Armor") then armor = card:getEffectiveId() end
-		if card:isKindOf("DefensiveHorse") and not self:getSameEquip(card) then defHorse = card:getEffectiveId() end
-		if card:isKindOf("OffensiveHorse") and not self:getSameEquip(card) then offHorse = card:getEffectiveId() end
-		if card:isKindOf("Crossbow") then crossbow = card:getEffectiveId() end
-		if card:isKindOf("DoubleSword") then double = card:getEffectiveId() end
-		if card:isKindOf("QinggangSword") then qinggang = card:getEffectiveId() end
-		if card:isKindOf("Axe") then axe = card:getEffectiveId() end
-		if card:isKindOf("GudingBlade") then gudingblade = card:getEffectiveId() end
-		if card:isKindOf("Halberd") then halberd = card:getEffectiveId() end
-		if card:isKindOf("Weapon") then weapon = card:getEffectiveId() end
+		if card:isKindOf("EightDiagram") then eightdiagram = card:getEffectiveId()
+		elseif card:isKindOf("SilverLion") then silverlion = card:getEffectiveId()
+		elseif card:isKindOf("Vine") then vine = card:getEffectiveId()
+		elseif card:isKindOf("RenwangShield") then renwang = card:getEffectiveId()
+		elseif card:isKindOf("DefensiveHorse") and not self:getSameEquip(card) then defHorse = card:getEffectiveId()
+		elseif card:isKindOf("OffensiveHorse") and not self:getSameEquip(card) then offHorse = card:getEffectiveId()
+		elseif card:isKindOf("Crossbow") then crossbow = card:getEffectiveId()
+		elseif card:isKindOf("DoubleSword") then double = card:getEffectiveId()
+		elseif card:isKindOf("QinggangSword") then qinggang = card:getEffectiveId()
+		elseif card:isKindOf("Axe") then axe = card:getEffectiveId()
+		elseif card:isKindOf("GudingBlade") then gudingblade = card:getEffectiveId()
+		elseif card:isKindOf("Halberd") then halberd = card:getEffectiveId() end
+		if card:isKindOf("Armor") then armor = card:getEffectiveId()
+		elseif card:isKindOf("Weapon") then weapon = card:getEffectiveId() end
 	end
 
 	if armor and not self:hasSkills("yizhong|bazhen") then

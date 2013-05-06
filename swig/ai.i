@@ -132,7 +132,7 @@ void LuaAI::activate(CardUseStruct &card_use) {
     SWIG_NewPointerObj(L, &card_use, SWIGTYPE_p_CardUseStruct, 0);
 
     int error = lua_pcall(L, 2, 0, 0);
-    if (error){
+    if (error) {
         const char *error_msg = lua_tostring(L, -1);
         lua_pop(L, 1);
         room->output(error_msg);

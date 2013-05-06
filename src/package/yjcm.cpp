@@ -403,7 +403,7 @@ public:
             killer->throwAllHandCardsAndEquips();
 
             QString killer_name = killer->getGeneralName();
-            if (killer_name.contains("zhugeliang") || killer_name == "wolong" || killer_name == "shenzhugeliang")
+            if (killer_name.contains("zhugeliang") || killer_name == "wolong")
                 room->broadcastSkillInvoke(objectName(), 1);
             else
                 room->broadcastSkillInvoke(objectName(), 2);

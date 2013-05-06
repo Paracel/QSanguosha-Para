@@ -27,7 +27,7 @@ public:
     void setParent(QObject *parent);
 };
 
-class General: public QObject{
+class General: public QObject {
 public:
     explicit General(Package *package, const char *name, const char *kingdom, int max_hp = 4, bool male = true, bool hidden = false, bool never_shown = false);
 
@@ -662,12 +662,7 @@ public:
     static const Suit AllSuits[4];
 
     // card types
-    enum CardType {
-        TypeSkill,
-        TypeBasic,
-        TypeTrick,
-        TypeEquip,
-    };
+    enum CardType { TypeSkill, TypeBasic, TypeTrick, TypeEquip };
 
     // constructor
     Card(Suit suit, int number, bool target_fixed = false);

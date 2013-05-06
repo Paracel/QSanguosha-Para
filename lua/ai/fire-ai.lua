@@ -449,6 +449,11 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 end
 
 function sgs.ai_skill_pindian.tianyi(minusecard, self, requestor)
+	if requestor:getHandcardNum() == 1 then
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		self:sortByKeepValue(cards)
+		return cards[1]
+	end
 	local maxcard = self:getMaxCard()
 	return self:isFriend(requestor) and self:getMinCard() or (maxcard:getNumber() < 6 and minusecard or maxcard)
 end

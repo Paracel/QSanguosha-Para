@@ -52,7 +52,7 @@ void CardContainer::fillCards(const QList<int> &card_ids, const QList<int> &disa
     QPointF pos1(30 + card_width / 2, 40 + G_COMMON_LAYOUT.m_cardNormalHeight / 2);
     QPointF pos2(30 + card_width / 2, 184 + G_COMMON_LAYOUT.m_cardNormalHeight / 2);
     int skip = 102;
-    qreal whole_width = skip * 4 + card_width;
+    qreal whole_width = skip * 4;
     items.append(card_items);
     int n = items.length();
 
@@ -67,8 +67,8 @@ void CardContainer::fillCards(const QList<int> &card_ids, const QList<int> &disa
                 pos.setX(pos.x() + (i - 5) * skip);
             }            
         } else {
-            int half = n / 2 + 1;
-            qreal real_skip = whole_width / half;
+            int half = (n + 1) / 2;
+            qreal real_skip = whole_width / (half - 1);
 
             if (i < half) {
                 pos = pos1;

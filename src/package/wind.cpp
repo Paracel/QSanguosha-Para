@@ -512,19 +512,15 @@ public:
     }
 };
 
-class BuquClear: public TriggerSkill {
+class BuquClear: public DetachEffectSkill {
 public:
-    BuquClear(): TriggerSkill("#buqu-clear") {
-        events << EventLoseSkill;
+    BuquClear(): DetachEffectSkill("buqu") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("buqu") && target->getPile("buqu").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         player->clearOnePrivatePile("buqu");
-        return false;
+        if (player->getHp() <= 0)
+            room->enterDying(player, NULL);
     }
 };
 

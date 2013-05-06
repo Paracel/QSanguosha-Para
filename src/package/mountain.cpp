@@ -254,15 +254,14 @@ public:
             room->notifySkillInvoked(player, objectName());
 
             QList<const Skill *> skills = death.damage->from->getVisibleSkillList();
+            QStringList detachList;
             foreach (const Skill *skill, skills) {
                 if (skill->getLocation() == Skill::Right && !skill->inherits("SPConvertSkill") && !skill->isAttachedLordSkill())
-                    room->detachSkillFromPlayer(death.damage->from, skill->objectName());
+                    detachList.append("-" + skill->objectName());
             }
-
-            if (death.damage->from->getHp() <= 0)
-                room->enterDying(death.damage->from, NULL);
-
-            death.damage->from->gainMark("@duanchang");
+            room->handleAcquireDetachSkills(death.damage->from, detachList);
+            if (death.damage->from->isAlive())
+                death.damage->from->gainMark("@duanchang");
         }
 
         return false;
@@ -315,22 +314,6 @@ public:
             return -from->getPile("field").length();
         else
             return 0;
-    }
-};
-
-class TuntianClear: public TriggerSkill {
-public:
-    TuntianClear(): TriggerSkill("#tuntian-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("tuntian") && target->getPile("field").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("field");
-        return false;
     }
 };
 
@@ -567,10 +550,8 @@ public:
         room->doLightbox("$HunziAnimate", 5000);
 
         room->addPlayerMark(sunce, "hunzi");
-        if (room->changeMaxHpForAwakenSkill(sunce)) {
-            room->acquireSkill(sunce, "yinghun");
-            room->acquireSkill(sunce, "yingzi");
-        }
+        if (room->changeMaxHpForAwakenSkill(sunce))
+            room->handleAcquireDetachSkills(sunce, "yingzi|yinghun");
         return false;
     }
 };
@@ -1181,10 +1162,11 @@ public:
     static QString SelectSkill(ServerPlayer *zuoci) {
         Room *room = zuoci->getRoom();
         playAudioEffect(zuoci, "huashen");
+        QStringList ac_dt_list;
 
         QString huashen_skill = zuoci->tag["HuashenSkill"].toString();
         if (!huashen_skill.isEmpty())
-            room->detachSkillFromPlayer(zuoci, huashen_skill);
+            ac_dt_list.append("-" + huashen_skill);
 
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         if (huashens.isEmpty())
@@ -1265,12 +1247,8 @@ public:
         room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
 
         zuoci->tag["HuashenSkill"] = skill_name;
-        
-        room->acquireSkill(zuoci, skill_name);
-
-        if (zuoci->getHp() <= 0)
-            room->enterDying(zuoci, NULL);
-
+        ac_dt_list.append(skill_name);
+        room->handleAcquireDetachSkills(zuoci, ac_dt_list);
         return skill_name;
     }
 
@@ -1340,17 +1318,12 @@ public:
     }
 };
 
-class HuashenClear: public TriggerSkill {
+class HuashenClear: public DetachEffectSkill {
 public:
-    HuashenClear(): TriggerSkill("#huashen-clear") {
-        events << EventLoseSkill;
+    HuashenClear(): DetachEffectSkill("huashen") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("huashen") && !target->tag["Huashens"].toList().isEmpty();
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &)const{
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         if (player->getKingdom() != player->getGeneral()->getKingdom() && player->getGeneral()->getKingdom() != "god")
             room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
         if (player->getGender() != player->getGeneral()->getGender())
@@ -1358,7 +1331,6 @@ public:
         room->detachSkillFromPlayer(player, player->tag["HuashenSkill"].toString());
         player->tag.remove("Huashens");
         room->setPlayerMark(player, "@huashen", 0);
-        return false;
     }
 };
 
@@ -1385,7 +1357,7 @@ MountainPackage::MountainPackage()
     General *dengai = new General(this, "dengai", "wei", 4); // WEI 015
     dengai->addSkill(new Tuntian);
     dengai->addSkill(new TuntianDistance);
-    dengai->addSkill(new TuntianClear);
+    dengai->addSkill(new DetachEffectSkill("tuntian", "field"));
     dengai->addSkill(new Zaoxian);
     dengai->addRelateSkill("jixi");
     related_skills.insertMulti("tuntian", "#tuntian-dist");

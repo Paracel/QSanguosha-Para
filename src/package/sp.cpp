@@ -545,19 +545,13 @@ public:
     }
 };
 
-class HuxiaoClear: public TriggerSkill {
+class HuxiaoClear: public DetachEffectSkill {
 public:
-    HuxiaoClear(): TriggerSkill("#huxiao-clear") {
-        events << EventLoseSkill;
+    HuxiaoClear(): DetachEffectSkill("huxiao") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("huxiao") && target->getMark("huxiao") > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         room->setPlayerMark(player, "huxiao", 0);
-        return false;
     }
 };
 
@@ -635,25 +629,6 @@ public:
         frequency = Compulsory;
     }
 
-    static void BaobianChange(Room *room, ServerPlayer *player, int hp, const QString &skill_name) {
-        QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
-        if (player->getHp() <= hp) {
-            if (!baobian_skills.contains(skill_name)) {
-                room->notifySkillInvoked(player, "baobian");
-                if (player->getHp() == hp)
-                    room->broadcastSkillInvoke("baobian", 4 - hp);
-                room->acquireSkill(player, skill_name);
-                baobian_skills << skill_name;
-            }
-        } else {
-            if (baobian_skills.contains(skill_name)) {
-                room->detachSkillFromPlayer(player, skill_name);
-                baobian_skills.removeOne(skill_name);
-            }
-        }
-        player->tag["BaobianSkills"] = QVariant::fromValue(baobian_skills);
-    }
-
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }
@@ -662,8 +637,10 @@ public:
         if (triggerEvent == EventLoseSkill) {
             if (data.toString() == objectName()) {
                 QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
+                QStringList detachList;
                 foreach (QString skill_name, baobian_skills)
-                    room->detachSkillFromPlayer(player, skill_name);
+                    detachList.append("-" + skill_name);
+                room->handleAcquireDetachSkills(player, detachList);
                 player->tag["BaobianSkills"] = QVariant();
             }
             return false;
@@ -673,11 +650,37 @@ public:
 
         if (!TriggerSkill::triggerable(player)) return false;
 
+        acquired_skills.clear();
+        detached_skills.clear();
         BaobianChange(room, player, 1, "shensu");
         BaobianChange(room, player, 2, "paoxiao");
         BaobianChange(room, player, 3, "tiaoxin");
+        if (!acquired_skills.isEmpty() || !detached_skills.isEmpty())
+            room->handleAcquireDetachSkills(player, acquired_skills + detached_skills);
         return false;
     }
+
+private:
+    void BaobianChange(Room *room, ServerPlayer *player, int hp, const QString &skill_name) const{
+        QStringList baobian_skills = player->tag["BaobianSkills"].toStringList();
+        if (player->getHp() <= hp) {
+            if (!baobian_skills.contains(skill_name)) {
+                room->notifySkillInvoked(player, "baobian");
+                if (player->getHp() == hp)
+                    room->broadcastSkillInvoke("baobian", 4 - hp);
+                acquired_skills.append(skill_name);
+                baobian_skills << skill_name;
+            }
+        } else {
+            if (baobian_skills.contains(skill_name)) {
+                detached_skills.append("-" + skill_name);
+                baobian_skills.removeOne(skill_name);
+            }
+        }
+        player->tag["BaobianSkills"] = QVariant::fromValue(baobian_skills);
+    }
+
+    mutable QStringList acquired_skills, detached_skills;
 };
 
 BifaCard::BifaCard() {
@@ -1024,31 +1027,35 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == EventLoseSkill && data.toString() == objectName()) {
+            QStringList detachList;
             if (player->getAcquiredSkills().contains("tianxiang"))
-                room->detachSkillFromPlayer(player, "tianxiang");
+                detachList.append("-tianxiang");
             if (player->getAcquiredSkills().contains("liuli"))
-                room->detachSkillFromPlayer(player, "liuli");
+                detachList.append("-liuli");
+            if (!detachList.isEmpty())
+                room->handleAcquireDetachSkills(player, detachList);
         } else if (triggerEvent == EventAcquireSkill && data.toString() == objectName()) {
             if (!player->getPile("xingwu").isEmpty()) {
                 room->notifySkillInvoked(player, objectName());
-                room->acquireSkill(player, "tianxiang");
-                room->acquireSkill(player, "liuli");
+                room->handleAcquireDetachSkills(player, "tianxiang|liuli");
             }
         } else if (triggerEvent == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.to == player && move.to_place == Player::PlaceSpecial && move.to_pile_name == "xingwu") {
                 if (player->getPile("xingwu").length() == 1) {
                     room->notifySkillInvoked(player, objectName());
-                    room->acquireSkill(player, "tianxiang");
-                    room->acquireSkill(player, "liuli");
+                    room->handleAcquireDetachSkills(player, "tianxiang|liuli");
                 }
             } else if (move.from == player && move.from_places.contains(Player::PlaceSpecial)
                        && move.from_pile_names.contains("xingwu")) {
                 if (player->getPile("xingwu").isEmpty()) {
+                    QStringList detachList;
                     if (player->getAcquiredSkills().contains("tianxiang"))
-                        room->detachSkillFromPlayer(player, "tianxiang");
+                        detachList.append("-tianxiang");
                     if (player->getAcquiredSkills().contains("liuli"))
-                        room->detachSkillFromPlayer(player, "liuli");
+                        detachList.append("-liuli");
+                    if (!detachList.isEmpty())
+                        room->handleAcquireDetachSkills(player, detachList);
                 }
             }
         }

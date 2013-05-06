@@ -583,6 +583,9 @@ public:
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
+        } else if (triggerEvent == EventLoseSkill) {
+            if (data.toString() != "xianzhen")
+                return false;
         }
         ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<PlayerStar>();
         if (triggerEvent == Death) {
@@ -995,22 +998,6 @@ public:
     }
 };
 
-class QuanjiClear: public TriggerSkill {
-public:
-    QuanjiClear(): TriggerSkill("#quanji-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("quanji") && target->getPile("power").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("power");
-        return false;
-    }
-};
-
 class Zili: public PhaseChangeSkill {
 public:
     Zili(): PhaseChangeSkill("zili") {
@@ -1252,7 +1239,7 @@ YJCMPackage::YJCMPackage()
     General *zhonghui = new General(this, "zhonghui", "wei"); // YJ 012
     zhonghui->addSkill(new QuanjiKeep);
     zhonghui->addSkill(new Quanji);
-    zhonghui->addSkill(new QuanjiClear);
+    zhonghui->addSkill(new DetachEffectSkill("quanji", "power"));
     zhonghui->addSkill(new Zili);
     zhonghui->addRelateSkill("paiyi");
     related_skills.insertMulti("quanji", "#quanji");

@@ -575,18 +575,14 @@ public:
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == objectName()
                 && player->getPhase() == Player::Play) {
-                room->acquireSkill(player, "wusheng");
-                room->acquireSkill(player, "paoxiao");
-
+                room->handleAcquireDetachSkills(player, "wusheng|paoxiao");
                 room->broadcastSkillInvoke(objectName(), 2);
                 player->setFlags(objectName());
             }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive && player->hasFlag(objectName())) {
-                room->detachSkillFromPlayer(player, "wusheng");
-                room->detachSkillFromPlayer(player, "paoxiao");
-            }
+            if (change.to == Player::NotActive && player->hasFlag(objectName()))
+                room->handleAcquireDetachSkills(player, "-wusheng|-paoxiao");
         }
 
         return false;
@@ -951,22 +947,6 @@ public:
     }
 };
 
-class ChunlaoClear: public TriggerSkill {
-public:
-    ChunlaoClear(): TriggerSkill("#chunlao-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("chunlao") && target->getPile("wine").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("wine");
-        return false;
-    }
-};
-
 YJCM2012Package::YJCM2012Package()
     : Package("YJCM2012")
 {
@@ -983,7 +963,7 @@ YJCM2012Package::YJCM2012Package()
     chengpu->addSkill(new Lihuo);
     chengpu->addSkill(new LihuoTargetMod);
     chengpu->addSkill(new Chunlao);
-    chengpu->addSkill(new ChunlaoClear);
+    chengpu->addSkill(new DetachEffectSkill("chunlao", "wine"));
     related_skills.insertMulti("lihuo", "#lihuo-target");
     related_skills.insertMulti("chunlao", "#chunlao-clear");
 

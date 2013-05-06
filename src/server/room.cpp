@@ -527,8 +527,7 @@ void Room::attachSkillToPlayer(ServerPlayer *player, const QString &skill_name) 
 }
 
 void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name, bool is_equip) {
-    if (!player->hasSkill(skill_name, true))
-        return;
+    if (!player->hasSkill(skill_name, true)) return;
 
     if (player->getAcquiredSkills().contains(skill_name))
         player->detachSkill(skill_name);
@@ -554,9 +553,85 @@ void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name
             thread->trigger(EventLoseSkill, this, player, data);
         }
 
-        foreach (const Skill *skill, Sanguosha->getRelatedSkills(skill_name))
-            detachSkillFromPlayer(player, skill->objectName());
+        foreach (const Skill *skill, Sanguosha->getRelatedSkills(skill_name)) {
+            if (skill->isVisible())
+                detachSkillFromPlayer(player, skill->objectName());
+        }
     }
+}
+
+void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &skill_names) {
+    if (skill_names.isEmpty()) return;
+    QList<bool> isLost;
+    QStringList triggerList;
+    foreach (QString skill_name, skill_names) {
+        if (skill_name.startsWith("-")) {
+            QString actual_skill = skill_name.mid(1);
+            if (!player->hasSkill(actual_skill, true)) continue;
+            if (player->getAcquiredSkills().contains(actual_skill))
+                player->detachSkill(actual_skill);
+            else
+                player->loseSkill(actual_skill);
+            const Skill *skill = Sanguosha->getSkill(actual_skill);
+            if (skill && skill->isVisible() && !skill->inherits("SPConvertSkill")) {
+                Json::Value args;
+                args[0] = QSanProtocol::S_GAME_EVENT_DETACH_SKILL;
+                args[1] = toJsonString(player->objectName());
+                args[2] = toJsonString(skill_name);
+                doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+
+                LogMessage log;
+                log.type = "#LoseSkill";
+                log.from = player;
+                log.arg = actual_skill;
+                sendLog(log);
+
+                triggerList << actual_skill;
+                isLost << true;
+
+                foreach (const Skill *skill, Sanguosha->getRelatedSkills(skill_name)) {
+                    if (!skill->isVisible())
+                        detachSkillFromPlayer(player, skill->objectName());
+                }
+            }
+        } else {
+            const Skill *skill = Sanguosha->getSkill(skill_name);
+            if (!skill) continue;
+            if (player->getAcquiredSkills().contains(skill_name)) continue;
+            player->acquireSkill(skill_name);
+
+            if (skill->inherits("TriggerSkill")) {
+                const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
+                thread->addTriggerSkill(trigger_skill);
+            }
+
+            if (skill->isVisible()) {
+                Json::Value args;
+                args[0] = QSanProtocol::S_GAME_EVENT_ACQUIRE_SKILL;
+                args[1] = toJsonString(player->objectName());
+                args[2] = toJsonString(skill_name);
+                doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+
+                foreach (const Skill *related_skill, Sanguosha->getRelatedSkills(skill_name)) {
+                    if (!related_skill->isVisible())
+                        acquireSkill(player, related_skill);
+                }
+
+                triggerList << skill_name;
+                isLost << false;
+            }
+        }
+    }
+    if (!triggerList.isEmpty()) {
+        for (int i = 0; i < triggerList.length(); i++) {
+            QVariant data = triggerList.at(i);
+            thread->trigger(isLost.at(i) ? EventLoseSkill : EventAcquireSkill, this, player, data);
+        }
+    }
+}
+
+void Room::handleAcquireDetachSkills(ServerPlayer *player, const QString &skill_names) {
+    handleAcquireDetachSkills(player, skill_names.split("|"));
 }
 
 bool Room::doRequest(ServerPlayer *player, QSanProtocol::CommandType command, const Json::Value &arg, bool wait) {

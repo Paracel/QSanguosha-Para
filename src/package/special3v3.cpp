@@ -402,8 +402,7 @@ public:
             if (room->changeMaxHpForAwakenSkill(player)) {
                 if (player->getWeapon())
                     room->throwCard(player->getWeapon(), player);
-                room->acquireSkill(player, "mashu");
-                room->acquireSkill(player, "shenji");
+                room->handleAcquireDetachSkills(player, "mashu|shenji");
             }
         }
         return false;

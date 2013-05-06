@@ -329,9 +329,7 @@ public:
                 room->moveCardsAtomic(move2, true);
 
                 if (diff) {
-                    room->acquireSkill(shuangying, "wusheng");
-                    room->acquireSkill(shuangying, "paoxiao");
-
+                    room->handleAcquireDetachSkills(shuangying, "wusheng|paoxiao");
                     room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
                     shuangying->setFlags(objectName());
                 } else {
@@ -342,10 +340,8 @@ public:
             }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive && shuangying->hasFlag(objectName())) {
-                room->detachSkillFromPlayer(shuangying, "wusheng");
-                room->detachSkillFromPlayer(shuangying, "paoxiao");
-            }
+            if (change.to == Player::NotActive && shuangying->hasFlag(objectName()))
+                room->handleAcquireDetachSkills(shuangying, "-wusheng|-paoxiao");
         }
 
         return false;
@@ -782,10 +778,7 @@ public:
             RecoverStruct recover;
             recover.who = zhonghui;
             room->recover(zhonghui, recover);
-
-            room->acquireSkill(zhonghui, "nosyexin");
-            room->detachSkillFromPlayer(zhonghui, "noszhenggong");
-            room->detachSkillFromPlayer(zhonghui, "nosquanji");
+            room->handleAcquireDetachSkills(zhonghui, "-noszhenggong|-nosquanji|nosyexin");
         }
 
         return false;
@@ -841,22 +834,6 @@ public:
 
     virtual int getEffectIndex(const ServerPlayer *, const Card *) const{
         return 2;
-    }
-};
-
-class NosYexinClear: public TriggerSkill {
-public:
-    NosYexinClear(): TriggerSkill("#nosyexin-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("nosyexin") && target->getPile("nospower").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("nospower");
-        return false;
     }
 };
 
@@ -1067,7 +1044,8 @@ NostalGeneralPackage::NostalGeneralPackage()
     addMetaObject<NosFanjianCard>();
     addMetaObject<NosYexinCard>();
 
-    skills << new NosYexin << new NosYexinClear << new FakeMoveSkill("nosyexin") << new NosPaiyi;
+    skills << new NosYexin << new DetachEffectSkill("nosyexin", "nospower")
+           << new FakeMoveSkill("nosyexin") << new NosPaiyi;
 }
 
 NostalYJCMPackage::NostalYJCMPackage()

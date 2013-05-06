@@ -181,10 +181,12 @@ public:
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
-        }
-        if (triggerEvent == Death) {
+        } else if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != dingfeng)
+                return false;
+        } else if (triggerEvent == EventLoseSkill) {
+            if (data.toString() != "fenxun")
                 return false;
         }
         ServerPlayer *target = dingfeng->tag["FenxunTarget"].value<PlayerStar>();

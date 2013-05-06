@@ -129,21 +129,14 @@ public:
     }
 };
 
-class WuhunClear: public TriggerSkill {
+class WuhunClear: public DetachEffectSkill {
 public:
-    WuhunClear(): TriggerSkill("#wuhun-clear") {
-        events << EventLoseSkill;
+    WuhunClear(): DetachEffectSkill("wuhun") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (data.toString() != "wuhun") return false;
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         foreach (ServerPlayer *p, room->getAllPlayers())
             p->loseAllMarks("@nightmare");
-        return false;
     }
 };
 
@@ -514,19 +507,13 @@ public:
     }
 };
 
-class KuangbaoClear: public TriggerSkill {
+class KuangbaoClear: public DetachEffectSkill {
 public:
-    KuangbaoClear(): TriggerSkill("#kuangbao-clear") {
-        events << EventLoseSkill;
+    KuangbaoClear(): DetachEffectSkill("kuangbao") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("kuangbao") && target->getMark("@wrath") > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         player->loseAllMarks("@wrath");
-        return false;
     }
 };
 
@@ -633,7 +620,7 @@ void WuqianCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
 
     effect.from->loseMark("@wrath", 2);
-    room->acquireSkill(effect.from, "wushuang", false);
+    room->acquireSkill(effect.from, "wushuang");
     effect.from->setFlags("WuqianSource");
     effect.to->setFlags("WuqianTarget");
     room->addPlayerMark(effect.to, "Armor_Nullified");
@@ -865,9 +852,8 @@ public:
                 player->loseAllMarks("@fog");
             }
             player->tag.remove("Qixing_user");
-        } else if (triggerEvent == EventLoseSkill) {
-            if (!player->hasSkill("qixing") && player->getPile("stars").length() > 0)
-                player->clearOnePrivatePile("stars");
+        } else if (triggerEvent == EventLoseSkill && data.toString() == "qixing") {
+            player->clearOnePrivatePile("stars");
         }
 
         return false;
@@ -971,19 +957,13 @@ public:
     }
 };
 
-class RenjieClear: public TriggerSkill {
+class RenjieClear: public DetachEffectSkill {
 public:
-    RenjieClear():TriggerSkill("#renjie-clear") {
-        events << EventLoseSkill;
+    RenjieClear(): DetachEffectSkill("renjie") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("renjie") && target->getMark("@bear") > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *, ServerPlayer *player) const{
         player->loseAllMarks("@bear");
-        return false;
     }
 };
 

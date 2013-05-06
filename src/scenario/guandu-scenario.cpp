@@ -181,8 +181,7 @@ public:
 
 
                 ServerPlayer *zhangliao = room->findPlayer("zhangliao");
-                room->detachSkillFromPlayer(zhangliao, "tuxi");
-                room->acquireSkill(zhangliao, "smalltuxi");
+                room->handleAcquireDetachSkills(zhangliao, "-tuxi|smalltuxi");
 
                 break;
             }

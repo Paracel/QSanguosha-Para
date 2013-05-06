@@ -339,7 +339,8 @@ void QSanInvokeSkillDock::update() {
         if (lordskillNum > 0) x_ls++;
         if (lordskillNum > 3) x_ls++;
         for (int i = 0; i < rows + x_ls; i++) {
-            int rowTop = (RoomSceneInstance->m_skillButtonSank) ? (-rowH) : ((-rows - x_ls + i) * rowH);
+            int rowTop = (RoomSceneInstance->m_skillButtonSank) ? (-rowH - 2 * (rows + x_ls - i - 1)) :
+                                                                  ((-rows - x_ls + i) * rowH);
             int btnWidth = _m_width / btnNum[i];
             for (int j = 0; j < btnNum[i]; j++) {
                 QSanInvokeSkillButton *button = all_buttons[m++];

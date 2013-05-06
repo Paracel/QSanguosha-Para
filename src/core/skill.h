@@ -272,6 +272,20 @@ private:
     QString name;
 };
 
+class DetachEffectSkill: public TriggerSkill {
+    Q_OBJECT
+
+public:
+    DetachEffectSkill(const QString &skillname, const QString &pilename = QString());
+
+    virtual bool triggerable(const ServerPlayer *target) const;
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const;
+
+private:
+    QString name, pile_name;
+};
+
 class WeaponSkill: public TriggerSkill {
     Q_OBJECT
 

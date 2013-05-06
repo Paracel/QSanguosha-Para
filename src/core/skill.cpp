@@ -429,6 +429,29 @@ bool FakeMoveSkill::trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &
     return false;
 }
 
+DetachEffectSkill::DetachEffectSkill(const QString &skillname, const QString &pilename)
+    : TriggerSkill(QString("#%1-clear").arg(skillname)), name(skillname), pile_name(pilename)
+{
+    events << EventLoseSkill;
+}
+
+bool DetachEffectSkill::triggerable(const ServerPlayer *target) const{
+    return target != NULL;
+}
+
+bool DetachEffectSkill::trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    if (data.toString() == name) {
+        if (!pile_name.isEmpty())
+            player->clearOnePrivatePile(pile_name);
+        else
+            onSkillDetached(room, player);
+    }
+    return false;
+}
+
+void DetachEffectSkill::onSkillDetached(Room *, ServerPlayer *) const{
+}
+
 WeaponSkill::WeaponSkill(const QString &name)
     : TriggerSkill(name)
 {

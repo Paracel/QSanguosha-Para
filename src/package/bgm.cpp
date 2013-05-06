@@ -450,23 +450,17 @@ private:
     QMap<Card::CardType, QString> type;
 };
 
-class ZuixiangClear: public TriggerSkill {
+class ZuixiangClear: public DetachEffectSkill {
 public:
-    ZuixiangClear(): TriggerSkill("#zuixiang-clear") {
-        events << EventLoseSkill;
+    ZuixiangClear(): DetachEffectSkill("zuixiang") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("zuixiang") && target->getPile("dream").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         player->clearOnePrivatePile("dream");
         room->setPlayerMark(player, "equip_null", 0);
         room->setPlayerCardLock(player, "-BasicCard");
         room->setPlayerCardLock(player, "-TrickCard");
         room->setPlayerCardLock(player, "-EquipCard");
-        return false;
     }
 };
 
@@ -666,10 +660,12 @@ public:
                 PhaseChangeStruct change = data.value<PhaseChangeStruct>();
                 if (change.to != Player::NotActive)
                     return false;
-            }
-            if (triggerEvent == Death) {
+            } else if (triggerEvent == Death) {
                 DeathStruct death = data.value<DeathStruct>();
                 if (death.who != player)
+                    return false;
+            } else if (triggerEvent == EventLoseSkill) {
+                if (data.toString() != "tanhu")
                     return false;
             }
 
@@ -728,10 +724,7 @@ public:
 
                 player->loseMark("@wu");
                 player->gainMark("@wen");
-                room->detachSkillFromPlayer(player, "jiang");
-                room->detachSkillFromPlayer(player, "qianxun");
-                room->acquireSkill(player, "yingzi");
-                room->acquireSkill(player, "keji");
+                room->handleAcquireDetachSkills(player, "-jiang|-qianxun|yingzi|keji");
             }
         } else if (player->getPhase() == Player::RoundStart && lvmeng && lvmeng->getMark("@wen") > 0
                    && !lvmeng->isNude() && room->askForCard(lvmeng, "..", "@mouduan", QVariant(), objectName())) {
@@ -739,39 +732,28 @@ public:
                 room->broadcastSkillInvoke(objectName());
                 lvmeng->loseMark("@wen");
                 lvmeng->gainMark("@wu");
-                room->detachSkillFromPlayer(lvmeng, "yingzi");
-                room->detachSkillFromPlayer(lvmeng, "keji");
-                room->acquireSkill(lvmeng, "jiang");
-                room->acquireSkill(lvmeng, "qianxun");
+                room->handleAcquireDetachSkills(player, "-yingzi|-keji|jiang|qianxun");
             }
         }
         return false;
     }
 };
 
-class MouduanClear: public TriggerSkill {
+class MouduanClear: public DetachEffectSkill {
 public:
-    MouduanClear(): TriggerSkill("#mouduan-clear") {
-        events << EventLoseSkill;
+    MouduanClear(): DetachEffectSkill("mouduan") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return !target->hasSkill("mouduan");
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (data.toString() == "mouduan") {
-            if (player->getMark("@wu") > 0) {
-                player->loseMark("@wu");
-                room->detachSkillFromPlayer(player, "jiang");
-                room->detachSkillFromPlayer(player, "qianxun");
-            } else if (player->getMark("@wen") > 0) {
-                player->loseMark("@wen");
-                room->detachSkillFromPlayer(player, "yingzi");
-                room->detachSkillFromPlayer(player, "keji");
-            }
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
+        if (player->getMark("@wu") > 0) {
+            player->loseMark("@wu");
+            room->detachSkillFromPlayer(player, "jiang");
+            room->detachSkillFromPlayer(player, "qianxun");
+        } else if (player->getMark("@wen") > 0) {
+            player->loseMark("@wen");
+            room->detachSkillFromPlayer(player, "yingzi");
+            room->detachSkillFromPlayer(player, "keji");
         }
-        return false;
     }
 };
 
@@ -1206,22 +1188,6 @@ public:
     }
 };
 
-class YinlingClear: public TriggerSkill {
-public:
-    YinlingClear(): TriggerSkill("#yinling-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("yinling") && target->getPile("brocade").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("brocade");
-        return false;
-    }
-};
-
 class Junwei: public TriggerSkill {
 public:
     Junwei(): TriggerSkill("junwei") {
@@ -1377,19 +1343,13 @@ public:
     }
 };
 
-class FenyongClear: public TriggerSkill {
+class FenyongClear: public DetachEffectSkill {
 public:
-    FenyongClear(): TriggerSkill("#fenyong-clear") {
-        events << EventLoseSkill;
+    FenyongClear(): DetachEffectSkill("fenyong") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("fenyong") && target->getMark("@fenyong") > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
+    virtual void onSkillDetached(Room *, ServerPlayer *player) const{
         player->loseAllMarks("@fenyong");
-        return false;
     }
 };
 
@@ -1513,7 +1473,7 @@ BGMPackage::BGMPackage(): Package("BGM") {
 
     General *bgm_ganning = new General(this, "bgm_ganning", "qun"); // *SP 009
     bgm_ganning->addSkill(new Yinling);
-    bgm_ganning->addSkill(new YinlingClear);
+    bgm_ganning->addSkill(new DetachEffectSkill("yinling", "brocade"));
     bgm_ganning->addSkill(new Junwei);
     bgm_ganning->addSkill(new JunweiGot);
     related_skills.insertMulti("yinling", "#yinling-clear");
@@ -2080,22 +2040,6 @@ public:
     }
 };
 
-class HantongClear: public TriggerSkill {
-public:
-    HantongClear(): TriggerSkill("#hantong-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("hantong") && target->getPile("edict").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("edict");
-        return false;
-    }
-};
-
 DIYYicongCard::DIYYicongCard() {
     will_throw = false;
     target_fixed = true;
@@ -2158,22 +2102,6 @@ public:
             return to->getPile("retinue").length();
         else
             return 0;
-    }
-};
-
-class DIYYicongClear: public TriggerSkill {
-public:
-    DIYYicongClear(): TriggerSkill("#diyyicong-clear") {
-        events << EventLoseSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && !target->hasSkill("diyyicong") && target->getPile("retinue").length() > 0;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &) const{
-        player->clearOnePrivatePile("retinue");
-        return false;
     }
 };
 
@@ -2245,7 +2173,7 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     diy_liuxie->addSkill(new Hantong);
     diy_liuxie->addSkill(new HantongAcquire);
     diy_liuxie->addSkill(new HantongDetach);
-    diy_liuxie->addSkill(new HantongClear);
+    diy_liuxie->addSkill(new DetachEffectSkill("hantong", "edict"));
     related_skills.insertMulti("hantong", "#hantong-acquire");
     related_skills.insertMulti("hantong", "#hantong-detach");
     related_skills.insertMulti("hantong", "#hantong-clear");
@@ -2253,7 +2181,7 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     General *diy_gongsunzan = new General(this, "diy_gongsunzan", "qun"); // DIY 004
     diy_gongsunzan->addSkill(new DIYYicong);
     diy_gongsunzan->addSkill(new DIYYicongDistance);
-    diy_gongsunzan->addSkill(new DIYYicongClear);
+    diy_gongsunzan->addSkill(new DetachEffectSkill("diyyicong", "retinue"));
     diy_gongsunzan->addSkill(new Tuqi);
     diy_gongsunzan->addSkill(new TuqiDistance);
     related_skills.insertMulti("diyyicong", "#diyyicong-clear");

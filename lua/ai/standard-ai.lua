@@ -1,5 +1,5 @@
 sgs.ai_skill_invoke.jianxiong = function(self, data)
-	return true
+	return not self:needKongcheng(self.player, true)
 end
 
 table.insert(sgs.ai_global_flags, "hujiasource")

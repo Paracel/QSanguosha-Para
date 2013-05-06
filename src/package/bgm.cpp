@@ -1586,33 +1586,36 @@ public:
                 judge.who = simazhao;
                 judge.reason = objectName();
 
-                if (damage.from && damage.from->hasSkill("hongyan"))
-                    simazhao->setFlags("LangguForHongyan"); // For AI
-                else if (simazhao->hasFlag("LangguForHongyan"))
-                    simazhao->setFlags("-LangguForHongyan");
                 room->judge(judge);
-                if (simazhao->hasFlag("LangguForHongyan"))
-                    simazhao->setFlags("-LangguForHongyan");
-
                 if (damage.from && damage.from->isAlive() && !damage.from->isKongcheng()) {
-                    room->showAllCards(damage.from, simazhao);
-
-                    QList<int> langgu_discard;
+                    QList<int> langgu_discard, other;
                     foreach (int card_id, damage.from->handCards()) {
-                        if (Sanguosha->getWrappedCard(card_id)->getSuit() == judge.card->getSuit())
+                        if (Sanguosha->getCard(card_id)->getSuit() == judge.card->getSuit())
                             langgu_discard << card_id;
+                        else
+                            other << card_id;
                     }
-                    if (langgu_discard.empty())
+                    if (langgu_discard.isEmpty()) {
+                        room->showAllCards(damage.from, simazhao);
                         return false;
+                    }
+
+                    LogMessage log;
+                    log.type = "$ViewAllCards";
+                    log.from = simazhao;
+                    log.to << damage.from;
+                    log.card_str = IntList2StringList(damage.from->handCards()).join("+");
+                    room->doNotify(simazhao, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
                     while (!langgu_discard.empty()) {
-                        room->fillAG(langgu_discard, simazhao);
+                        room->fillAG(langgu_discard + other, simazhao, other);
                         int id = room->askForAG(simazhao, langgu_discard, true, objectName());
                         if (id == -1) {
                             room->clearAG(simazhao);
                             break;
                         }
                         langgu_discard.removeOne(id);
+                        other.prepend(id);
                         room->clearAG(simazhao);
                     }
 

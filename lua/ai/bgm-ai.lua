@@ -982,8 +982,13 @@ end
 
 sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 	local judge = data:toJudge()
-
-	if self.player:hasFlag("LangguForHongyan") and judge.card:getSuit() ~= sgs.Card_Heart then
+	local retrialForHongyan
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.from:isAlive() and not damage.from:isKongcheng() and damage.from:hasSkill("hongyan")
+		and getKnownCard(damage.from, "diamond", false) + getKnownCard(damage.from, "club", false) < damage.from:getHandcardNum() then
+		retrialForHongyan = true
+	end
+	if retrialForHongyan then
 		local cards = sgs.QList2Table(self.player:getHandcards())
 		for _, card in ipairs(cards) do
 			if card:getSuit() == sgs.Card_Heart and not isCard("Peach", card, self.player) then

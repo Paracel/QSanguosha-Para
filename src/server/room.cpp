@@ -2790,7 +2790,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
                 return;
             }
             if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
-                card_use.from->setFlags("MoreSlashInOneTurn");
+                card_use.from->setFlags("Global_MoreSlashInOneTurn");
             if (!card_use.card->isVirtualCard()) {
                 WrappedCard *wrapped = Sanguosha->getWrappedCard(card_use.card->getEffectiveId());
                 if (wrapped->isModified())

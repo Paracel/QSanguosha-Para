@@ -116,12 +116,16 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     if (player->hasFlag("slashDisableExtraTarget"))
         room->setPlayerFlag(player, "-slashDisableExtraTarget");
 
-    if (player->getPhase() == Player::Play && player->hasFlag("MoreSlashInOneTurn")) {
-        player->setFlags("-MoreSlashInOneTurn");
+    if (player->getPhase() == Player::Play && player->hasFlag("Global_MoreSlashInOneTurn")) {
+        QString name;
         if (player->hasSkill("paoxiao"))
-            room->broadcastSkillInvoke("paoxiao");
+            name = "paoxiao";
         else if (player->hasSkill("huxiao"))
-            room->broadcastSkillInvoke("huxiao");
+            name = "huxiao";
+        if (!name.isEmpty()) {
+            player->setFlags("-Global_MoreSlashInOneTurn");
+            room->broadcastSkillInvoke(name);
+        }
     }
     if (use.to.size() > 1 && player->hasSkill("shenji"))
         room->broadcastSkillInvoke("shenji");
@@ -155,11 +159,11 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     else if (use.card->isVirtualCard() && use.card->getSkillName() == "fan")
         room->setEmotion(player, "weapon/fan");
     if (player->getPhase() == Player::Play
-        && player->hasFlag("MoreSlashInOneTurn")
+        && player->hasFlag("Global_MoreSlashInOneTurn")
         && (player->hasWeapon("crossbow") || player->hasWeapon("vscrossbow"))
         && !player->hasSkill("paoxiao")
         && !player->hasSkill("huxiao")) {
-        player->setFlags("-MoreSlashInOneTurn");
+        player->setFlags("-Global_MoreSlashInOneTurn");
         room->setEmotion(player, "weapon/crossbow");
     }
     if (use.card->isKindOf("ThunderSlash"))

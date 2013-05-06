@@ -259,10 +259,10 @@ public:
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
         if (!room->getMode().endsWith("p") && !room->getMode().endsWith("pd") && !room->getMode().endsWith("pz"))
             return false;
-        DamageStar damage = data.value<DamageStar>();
-        if (damage == NULL)
+        DeathStruct death = data.value<DeathStruct>();
+        if (death.damage == NULL)
             return false;
-        ServerPlayer *killer = damage->from;
+        ServerPlayer *killer = death.damage->from;
         if (killer == NULL || killer->isLord() || player->isLord() || player->getHp() > 0)
             return false;
         if (!TriggerSkill::triggerable(killer) || killer->getMark("@burnheart") == 0)

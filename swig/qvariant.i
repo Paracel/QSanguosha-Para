@@ -79,10 +79,6 @@ public:
         return $self->value<DeathStruct>();
     }
 
-    DamageStar toDamageStar() const{
-        return $self->value<DamageStar>();
-    }
-
     void setValue(RecoverStruct *recover) {
         $self->setValue(QVariant::fromValue(*recover));
     }

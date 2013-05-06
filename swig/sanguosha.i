@@ -1165,5 +1165,3 @@ public:
 %include "luaskills.i"
 %include "card.i"
 %include "ai.i"
-
-typedef DamageStruct *DamageStar;

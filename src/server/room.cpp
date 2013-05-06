@@ -307,7 +307,10 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
 
     m_alivePlayers.removeOne(victim);
 
-    QVariant data = QVariant::fromValue(reason);
+    DeathStruct death;
+    death.who = victim;
+    death.damage = reason;
+    QVariant data = QVariant::fromValue(death);
     thread->trigger(BeforeGameOverJudge, this, victim, data);
 
     updateStateItem();
@@ -326,17 +329,12 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
 
     thread->trigger(GameOverJudge, this, victim, data);
 
-    DeathStruct death;
-    death.who = victim;
-    death.damage = reason;
-
-    QVariant death_data = QVariant::fromValue(death);
     foreach (ServerPlayer *p, players_with_victim)
         if (p->isAlive() || p == victim)
-            thread->trigger(Death, this, p, death_data);
+            thread->trigger(Death, this, p, data);
 
     victim->detachAllSkills();
-    thread->trigger(BuryVictim, this, victim, death_data);
+    thread->trigger(BuryVictim, this, victim, data);
 
     if (!victim->isAlive() && Config.EnableAI) {
         bool expose_roles = true;

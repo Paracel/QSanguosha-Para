@@ -461,7 +461,6 @@ enum TriggerEvent {
 typedef const Card *CardStar;
 typedef ServerPlayer *PlayerStar;
 typedef JudgeStruct *JudgeStar;
-typedef DamageStruct *DamageStar;
 typedef PindianStruct *PindianStar;
 
 Q_DECLARE_METATYPE(DamageStruct)
@@ -476,7 +475,6 @@ Q_DECLARE_METATYPE(DyingStruct)
 Q_DECLARE_METATYPE(DeathStruct)
 Q_DECLARE_METATYPE(RecoverStruct)
 Q_DECLARE_METATYPE(JudgeStar)
-Q_DECLARE_METATYPE(DamageStar)
 Q_DECLARE_METATYPE(PindianStar)
 Q_DECLARE_METATYPE(PhaseChangeStruct)
 Q_DECLARE_METATYPE(CardResponseStruct)

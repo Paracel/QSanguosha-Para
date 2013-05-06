@@ -727,7 +727,7 @@ sgs.ai_skill_choice.benghuai = function(self, choices)
 		end
 	end
 	if self.player:getMaxHp() >= self.player:getHp() + 2 then
-		local enemy_num = self:getEnemyNumBySeat(self.room:getCurrent(), self.player)
+		local enemy_num = self:getEnemyNumBySeat(self.room:getCurrent(), self.player, self.player)
 		local least_hp = self.player:isLord() and (1 + enemy_num) or 1
 		if self.player:getMaxHp() > 4
 			and (self.player:hasSkill("nosmiji")

@@ -809,16 +809,11 @@ public:
         events << CardsMoveOneTime;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *erzhang, QVariant &data) const{
         ServerPlayer *current = room->getCurrent();
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
 
-        if (player != move.from || erzhang == NULL || erzhang == current)
+        if (erzhang == current)
             return false;
 
         if (current->getPhase() == Player::Discard) {
@@ -853,9 +848,6 @@ public:
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &) const{
-        if (player->isDead())
-            return false;
-
         ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
         if (erzhang == NULL)
             return false;
@@ -864,6 +856,9 @@ public:
         QVariantList guzheng_cardsOther = erzhang->tag["GuzhengOther"].toList();
         erzhang->tag.remove("GuzhengToGet");
         erzhang->tag.remove("GuzhengOther");
+
+        if (player->isDead())
+            return false;
 
         QList<int> cardsToGet;
         foreach (QVariant card_data, guzheng_cardsToGet) {

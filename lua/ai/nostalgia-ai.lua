@@ -428,8 +428,14 @@ end
 sgs.ai_skill_playerchosen.nosmiji = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
-	local to = self:findPlayerToDraw(true, self.player:getLostHp())
-	return to and self.player
+	local n = self.player:getLostHp()
+	if self.player:getPhase() == sgs.Player_Start then
+		if self.player:getHandcardNum() - n < 2 and not self:needKongcheng() and not self:willSkipPlayPhase() then return self.player end
+	elseif self.player:getPhase() == sgs.Player_Finish then
+		if self.player:getHandcardNum() - n < 2 and not self:needKongcheng() then return self.player end
+	end
+	local to = self:findPlayerToDraw(true, n)
+	return to or self.player
 end
 
 sgs.ai_skill_invoke.nosqianxi = function(self, data)

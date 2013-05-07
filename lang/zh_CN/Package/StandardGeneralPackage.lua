@@ -49,7 +49,7 @@ return {
 	["#zhenji"] = "薄幸的美人",
 	["zhenji"] = "甄姬",
 	["luoshen"] = "洛神",
-	[":luoshen"] = "回合开始阶段开始时，你可以进行一次判定：若判定结果为黑色，你获得判定牌，且你可以再次发动“洛神”。",
+	[":luoshen"] = "开始阶段开始时，你可以进行一次判定：若判定结果为黑色，你获得判定牌，且你可以再次发动“洛神”。",
 	["qingguo"] = "倾国",
 	[":qingguo"] = "你可以将一张黑色手牌当【闪】使用或打出。",
 
@@ -75,7 +75,7 @@ return {
 	["#zhugeliang"] = "迟暮的丞相",
 	["zhugeliang"] = "诸葛亮",
 	["guanxing"] = "观星",
-	[":guanxing"] = "回合开始阶段开始时，你可以观看牌堆顶的X张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。（X为存活角色数且至多为5）",
+	[":guanxing"] = "开始阶段开始时，你可以观看牌堆顶的X张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。（X为存活角色数且至多为5）",
 	["kongcheng"] = "空城",
 	[":kongcheng"] = "<font color=\"blue\"><b>锁定技。</b></font>若你没有手牌，你不能被选择为【杀】或【决斗】的目标。",
 	["#GuanxingResult"] = "%from 的“<font color=\"yellow\"><b>观星</b></font>”结果：%arg 上 %arg2 下",
@@ -103,7 +103,7 @@ return {
 	["#sunquan"] = "年轻的贤君",
 	["sunquan"] = "孙权",
 	["zhiheng"] = "制衡",
-	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置任意数量的牌，然后摸等数量的牌。",
+	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置任意数量的牌，然后摸等数量的牌。",
 	["jiuyuan"] = "救援",
 	[":jiuyuan"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>若你处于濒死状态，其他吴势力角色对你使用【桃】时，你回复的体力+1。",
 	["#JiuyuanExtraRecover"] = "%from 的“%arg”被触发，将额外回复 <font color=\"yellow\"><b>1</b></font> 点体力",
@@ -112,7 +112,7 @@ return {
 	["ganning"] = "甘宁",
 	["qixi"] = "奇袭",
 	[":qixi"] = "你可以将一张黑色牌当【过河拆桥】使用。",
-	[":fanjian"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以令一名其他角色选择一种花色，然后获得你的一张手牌并展示之。若此牌花色与该角色所选花色不同，你对其造成1点伤害。",
+	[":fanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后获得你的一张手牌并展示之。若此牌花色与该角色所选花色不同，你对其造成1点伤害。",
 
 	["#lvmeng"] = "白衣渡江",
 	["lvmeng"] = "吕蒙",
@@ -149,7 +149,7 @@ return {
 	["#sunshangxiang"] = "弓腰姬",
 	["sunshangxiang"] = "孙尚香",
 	["jieyin"] = "结姻",
-	[":jieyin"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置两张手牌并选择一名已受伤的男性角色：若如此做，你和该角色各回复1点体力。",
+	[":jieyin"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置两张手牌并选择一名已受伤的男性角色：若如此做，你和该角色各回复1点体力。",
 	["xiaoji"] = "枭姬",
 	[":xiaoji"] = "每当你失去一张装备区的装备牌后，你可以摸两张牌。",
 
@@ -164,16 +164,16 @@ return {
 	["#huatuo"] = "神医",
 	["huatuo"] = "华佗",
 	["qingnang"] = "青囊",
-	[":qingnang"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张手牌并选择一名已受伤的角色：若如此做，该角色回复1点体力。",
+	[":qingnang"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张手牌并选择一名已受伤的角色：若如此做，该角色回复1点体力。",
 	["jijiu"] = "急救",
 	[":jijiu"] = "你的回合外，你可以将一张红色牌当【桃】使用。",
 
 	["#diaochan"] = "乱世的舞姬",
 	["diaochan"] = "貂蝉",
 	["lijian"] = "离间",
-	[":lijian"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】，此【决斗】不能被【无懈可击】响应。",
+	[":lijian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】，此【决斗】不能被【无懈可击】响应。",
 	["biyue"] = "闭月",
-	[":biyue"] = "回合结束阶段开始时，你可以摸一张牌。",
+	[":biyue"] = "结束阶段开始时，你可以摸一张牌。",
 	
 	-- Test
 	["test"] = "测试",
@@ -188,7 +188,7 @@ return {
 	["wuxing_zhugeliang"] = "五星诸葛",
 	["&wuxing_zhugeliang"] = "诸葛亮", 
 	["super_guanxing"] = "观星",
-	[":super_guanxing"] = "回合开始阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
+	[":super_guanxing"] = "开始阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
 
 	["super_yuanshu"] = "袁术-测试",
 	["&super_yuanshu"] = "袁术",
@@ -199,7 +199,7 @@ return {
 	["super_caoren"] = "曹仁-测试",
 	["&super_caoren"] = "曹仁",
 	["super_jushou"] = "据守",
-	[":super_jushou"] = "回合结束阶段开始时，你可以摸X张牌，然后将武将牌翻面。",
+	[":super_jushou"] = "结束阶段开始时，你可以摸X张牌，然后将武将牌翻面。",
 
 	["super_max_cards"] = "手牌上限",
 	["super_offensive_distance"] = "距离-X",
@@ -212,7 +212,7 @@ return {
 	["nosjuejing"] = "绝境",
 	[":nosjuejing"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你不摸牌。每当你的手牌数变化后，若你的手牌数不为4，你须将手牌补至或弃置至四张。",
 	["noslonghun"] = "龙魂",
-	[":noslonghun"] = "你可以将一张牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。回合开始阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
+	[":noslonghun"] = "你可以将一张牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。开始阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
 	["#noslonghun_duojian"] = "龙魂",
 
 	["nobenghuai_dongzhuo"] = "董卓-无崩",

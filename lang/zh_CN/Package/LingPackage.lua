@@ -13,13 +13,13 @@ return {
 	["neo_xuchu"] = "许褚-新",
 	["&neo_xuchu"] = "许褚",
 	["neoluoyi"] = "裸衣",
-	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以弃置一张装备牌：若如此做，你使用且你为伤害来源的【杀】或【决斗】对目标角色造成伤害时，此伤害+1，直到回合结束。",
+	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张装备牌：若如此做，你使用且你为伤害来源的【杀】或【决斗】对目标角色造成伤害时，此伤害+1，直到回合结束。",
 	["#LuoyiBuff"] = "%from 的“<font color=\"yellow\"><b>裸衣</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 
 	["neo_caoren"] = "曹仁-新",
 	["&neo_caoren"] = "曹仁",
 	["neojushou"] = "据守",
-	[":neojushou"] = "回合结束阶段开始时，你可以摸X+2张牌：若如此做，将武将牌翻面。（X为你已损失的体力值）",
+	[":neojushou"] = "结束阶段开始时，你可以摸X+2张牌：若如此做，将武将牌翻面。（X为你已损失的体力值）",
 
 	["neo_guanyu"] = "关羽-新",
 	["&neo_guanyu"] = "关羽",
@@ -41,7 +41,7 @@ return {
 	["neo_zhouyu"] = "周瑜-新",
 	["&neo_zhouyu"] = "周瑜", 
 	["neofanjian"] = "反间",
-	[":neofanjian"] = "<font color=\"green\"><b>阶段技。</b></font>出牌阶段，你可以选择一张手牌并令一名其他角色选择一种花色，然后该角色获得该牌并展示之。若此牌花色与该角色所选花色不同，你对其造成1点伤害。",
+	[":neofanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以选择一张手牌并令一名其他角色选择一种花色，然后该角色获得该牌并展示之。若此牌花色与该角色所选花色不同，你对其造成1点伤害。",
 
 	["neo_zhoutai"] = "周泰-新",
 	["&neo_zhoutai"] = "周泰",
@@ -54,7 +54,7 @@ return {
 	["cv:neo_gongsunzan"] = "桃花僧",
 	["illustrator:neo_gongsunzan"] = "Vincent",
 	["zhulou"] = "筑楼",
-	[":zhulou"] = "回合结束阶段开始时，你可以摸两张牌，然后选择一项：失去1点体力，或弃置一张武器牌。",
+	[":zhulou"] = "结束阶段开始时，你可以摸两张牌，然后选择一项：失去1点体力，或弃置一张武器牌。",
 	["@zhulou-discard"] = "请弃置一张武器牌",
 	["zhulou:throw"] = "弃置一张武器牌",
 	["zhulou:losehp"] = "失去1点体力",

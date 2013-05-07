@@ -1063,31 +1063,38 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         player->setMark("JilveEvent", (int)triggerEvent);
-        if (triggerEvent == CardUsed) {
-            CardStar card = data.value<CardUseStruct>().card;
-
-            if (card && card->isNDTrick() && player->askForSkillInvoke("jilve_jizhi", data)) {
-                room->notifySkillInvoked(player, objectName());
-                player->loseMark("@bear");
-                room->broadcastSkillInvoke(objectName(), 5);
-                player->drawCards(1);
+        try {
+            if (triggerEvent == CardUsed) {
+                const TriggerSkill *jizhi = Sanguosha->getTriggerSkill("jizhi");
+                CardUseStruct use = data.value<CardUseStruct>();
+                if (jizhi && use.card && use.card->isNDTrick() && player->askForSkillInvoke("jilve_jizhi", data)) {
+                    room->notifySkillInvoked(player, objectName());
+                    player->loseMark("@bear");
+                    jizhi->trigger(triggerEvent, room, player, data);
+                }
+            } else if (triggerEvent == AskForRetrial) {
+                const TriggerSkill *guicai = Sanguosha->getTriggerSkill("guicai");
+                if (guicai && !player->isKongcheng() && player->askForSkillInvoke("jilve_guicai", data)) {
+                    room->notifySkillInvoked(player, objectName());
+                    player->loseMark("@bear");
+                    guicai->trigger(triggerEvent, room, player, data);
+                }
+            } else if (triggerEvent == Damaged) {
+                const TriggerSkill *fangzhu = Sanguosha->getTriggerSkill("fangzhu");
+                if (fangzhu && player->askForSkillInvoke("jilve_fangzhu", data)) {
+                    room->notifySkillInvoked(player, objectName());
+                    player->loseMark("@bear");
+                    fangzhu->trigger(triggerEvent, room, player, data);
+                }
             }
-        } else if (triggerEvent == AskForRetrial) {
-            const TriggerSkill *guicai = Sanguosha->getTriggerSkill("guicai");
-            if (guicai && !player->isKongcheng() && player->askForSkillInvoke("jilve_guicai", data)) {
-                room->notifySkillInvoked(player, objectName());
-                player->loseMark("@bear");
-                guicai->trigger(triggerEvent, room, player, data);
-            }
-        } else if (triggerEvent == Damaged) {
-            const TriggerSkill *fangzhu = Sanguosha->getTriggerSkill("fangzhu");
-            if (fangzhu && player->askForSkillInvoke("jilve_fangzhu", data)) {
-                room->notifySkillInvoked(player, objectName());
-                player->loseMark("@bear");
-                fangzhu->trigger(triggerEvent, room, player, data);
-            }
+            player->setMark("JilveEvent", 0);
         }
-        player->setMark("JilveEvent", 0);
+        catch (TriggerEvent triggerEvent) {
+            if (triggerEvent == StageChange || triggerEvent == TurnBroken)
+                player->setMark("JilveEvent", 0);
+            throw triggerEvent;
+        }
+
         return false;
     }
 

@@ -730,11 +730,15 @@ public:
         events << CardUsed;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *yueying, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *yueying, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
 
-        if (use.card->isNDTrick() && room->askForSkillInvoke(yueying, objectName())) {
-            room->broadcastSkillInvoke(objectName());
+        if (use.card->isNDTrick()
+            && (yueying->getMark("JilveEvent") > 0 || room->askForSkillInvoke(yueying, objectName()))) {
+            if (yueying->getMark("JilveEvent") > 0)
+                room->broadcastSkillInvoke("jilve", 5);
+            else
+                room->broadcastSkillInvoke(objectName());
             yueying->drawCards(1);
         }
 

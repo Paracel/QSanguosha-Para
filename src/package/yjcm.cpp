@@ -84,20 +84,17 @@ public:
                 Config.AIDelay = ai_delay;
 
                 if (!card_ids.empty()) {
-                    QList<int> ids = move.card_ids;
-                    int i = 0;
-                    foreach (int id, ids) {
-                        if (card_ids.contains(id)) {
-                            move.card_ids.removeOne(id);
-                            move.from_places.removeAt(i);
-                        }
-                        i++;
-                    }
-                    data = QVariant::fromValue(move);
-
                     room->broadcastSkillInvoke("luoying");
-                    foreach (int id, card_ids)
-                        room->obtainCard(caozhi, id);
+                    foreach (int id, card_ids) {
+                        if (move.card_ids.contains(id)) {
+                            move.from_places.removeAt(move.card_ids.indexOf(id));
+                            move.card_ids.removeOne(id);
+                            data = QVariant::fromValue(move);
+                        }
+                        room->moveCardTo(Sanguosha->getCard(id), caozhi, Player::PlaceHand, move.reason, true);
+                        if (!caozhi->isAlive())
+                            break;
+                    }
                 }
             }
         }

@@ -404,8 +404,7 @@ public:
 
         if (triggerEvent == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.from == shenzhouyu && move.to_place == Player::DiscardPile
-                && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+            if (move.from == shenzhouyu && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                 shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move.card_ids.size());
                 if (!shenzhouyu->hasFlag("QinyinUsed") && shenzhouyu->getMark("qinyin") >= 2) {
                     if (shenzhouyu->askForSkillInvoke(objectName())) {
@@ -936,8 +935,7 @@ public:
         if (triggerEvent == CardsMoveOneTime) {
             if (player->getPhase() == Player::Discard) {
                 CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-                if (move.from == player && move.to_place == Player::DiscardPile
-                    && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+                if (move.from == player && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                     int n = move.card_ids.length();
                     if (n > 0) {
                         room->broadcastSkillInvoke(objectName());

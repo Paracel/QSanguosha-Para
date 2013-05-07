@@ -675,15 +675,11 @@ ZongxuanCard::ZongxuanCard() {
     target_fixed = true;
 }
 
-void ZongxuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    CardMoveReason reason(CardMoveReason::S_REASON_PUT, source->objectName(),
-                          QString(), "zongxuan", QString());
-    foreach (int id, this->subcards)
-        room->moveCardTo(Sanguosha->getCard(id), source, NULL, Player::DrawPile, reason, true);
-    QStringList zongxuan = source->property("zongxuan").toString().split("+");
-    foreach (int id, this->subcards)
-        zongxuan.removeOne(QString::number(id));
-    room->setPlayerProperty(source, "zongxuan", zongxuan.join("+"));
+void ZongxuanCard::use(Room *, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    QVariantList subcardsList;
+    foreach (int id, subcards)
+        subcardsList << id;
+    source->tag["zongxuan"] = QVariant::fromValue(subcardsList);
 }
 
 class ZongxuanViewAsSkill: public ViewAsSkill {
@@ -744,27 +740,33 @@ public:
             if (zongxuan_card.isEmpty())
                 return false;
 
-            QList<int> original_zongxuan = zongxuan_card;
             room->setPlayerProperty(player, "zongxuan", IntList2StringList(zongxuan_card).join("+"));
             do {
                 if (!room->askForUseCard(player, "@@zongxuan", "@zongxuan-put")) break;
-                QStringList zongxuan = player->property("zongxuan").toString().split("+");
-                foreach (int id, zongxuan_card) {
-                    if (!zongxuan.contains(QString::number(id)))
-                        zongxuan_card.removeOne(id);
-                }
-            } while (!zongxuan_card.isEmpty());
 
-            QList<int> ids = move.card_ids;
-            i = 0;
-            foreach (int id, ids) {
-                if (original_zongxuan.contains(id) && !zongxuan_card.contains(id)) {
-                    move.card_ids.removeOne(id);
-                    move.from_places.removeAt(i);
+                QList<int> subcards;
+                QVariantList subcards_variant = player->tag["zongxuan"].toList();
+                if (!subcards_variant.isEmpty()) {
+                    foreach (QVariant id, subcards_variant)
+                        subcards << id.toInt();
+                    QStringList zongxuan = player->property("zongxuan").toString().split("+");
+                    foreach (int id, subcards) {
+                        zongxuan_card.removeOne(id);
+                        zongxuan.removeOne(QString::number(id));
+                        room->setPlayerProperty(player, "zongxuan", zongxuan.join("+"));
+                        if (move.card_ids.contains(id)) {
+                            move.from_places.removeAt(move.card_ids.indexOf(id));
+                            move.card_ids.removeOne(id);
+                            data = QVariant::fromValue(move);
+                        }
+                        room->setPlayerProperty(player, "zongxuan_move", QString::number(id)); // For UI to translate the move reason
+                        room->moveCardTo(Sanguosha->getCard(id), player, NULL, Player::DrawPile, move.reason, true);
+                        if (!player->isAlive())
+                            break;
+                    }
                 }
-                i++;
-            }
-            data = QVariant::fromValue(move);
+                player->tag.remove("zongxuan");
+            } while (!zongxuan_card.isEmpty());
         }
         return false;
     }

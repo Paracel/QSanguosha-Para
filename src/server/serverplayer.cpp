@@ -961,12 +961,17 @@ void ServerPlayer::addToPile(const QString &pile_name, int card_id, bool open) {
 }
 
 void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open) {
+    return addToPile(pile_name, card_ids, open, CardMoveReason());
+}
+
+void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open, CardMoveReason reason) {
     piles[pile_name].append(card_ids);
 
     CardsMoveStruct move;
     move.card_ids = card_ids;
     move.to = this;
     move.to_place = Player::PlaceSpecial;
+    move.reason = reason;
     room->moveCardsAtomic(move, open);
 }
 

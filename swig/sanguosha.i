@@ -317,6 +317,7 @@ public:
     void addToPile(const char *pile_name, const Card *card, bool open = true);
     void addToPile(const char *pile_name, int card_id, bool open = true);
     void addToPile(const QString &pile_name, QList<int> card_ids, bool open = true);
+    void addToPile(const QString &pile_name, QList<int> card_ids, bool open, CardMoveReason reason);
     void exchangeFreelyFromPrivatePile(const char *skill_name, const char *pile_name, int upperlimit = 1000, bool include_equip = false);
     void gainAnExtraTurn();
 };
@@ -1099,7 +1100,7 @@ public:
     const Card *askForCardShow(ServerPlayer *player, ServerPlayer *requestor, const char *reason);
     bool askForYiji(ServerPlayer *guojia, QList<int> &cards, const char *skill_name = NULL,
                     bool is_preview = true, bool visible = false, bool optional = false, int max_num = -1,
-                    QList<ServerPlayer *> players = QList<ServerPlayer *>());
+                    QList<ServerPlayer *> players = QList<ServerPlayer *>(), CardMoveReason reason = CardMoveReason());
     const Card *askForPindian(ServerPlayer *player, ServerPlayer *from, ServerPlayer *to, const char *reason);
     QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const char *reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const char *reason,

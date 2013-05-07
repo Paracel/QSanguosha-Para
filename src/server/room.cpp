@@ -3583,10 +3583,9 @@ void Room::moveCardsAtomic(QList<CardsMoveStruct> cards_moves, bool forceMoveVis
     foreach (CardsMoveOneTimeStruct moveOneTime, moveOneTimes) {
         if (moveOneTime.card_ids.size() == 0) continue;
         QVariant data = QVariant::fromValue(moveOneTime);
-        foreach (ServerPlayer *player, getAllPlayers()) {
+        foreach (ServerPlayer *player, getAllPlayers())
             thread->trigger(BeforeCardsMove, this, player, data);
-            moveOneTime = data.value<CardsMoveOneTimeStruct>();
-        }
+        moveOneTime = data.value<CardsMoveOneTimeStruct>();
         moveOneTimes[i] = moveOneTime;
         i++;
     }
@@ -3706,10 +3705,9 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
         moveOneTime.to = NULL;
         moveOneTime.to_place = Player::PlaceTable;
         QVariant data = QVariant::fromValue(moveOneTime);
-        foreach (ServerPlayer *player, getAllPlayers()) {
+        foreach (ServerPlayer *player, getAllPlayers())
             thread->trigger(BeforeCardsMove, this, player, data);
-            moveOneTime = data.value<CardsMoveOneTimeStruct>();
-        }
+        moveOneTime = data.value<CardsMoveOneTimeStruct>();
         moveOneTime.to = origin_to;
         moveOneTime.to_place = origin_place;
         moveOneTimes[i] = moveOneTime;
@@ -3770,7 +3768,6 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
     }
 
     if (enforceOrigin) {
-        // check again here as CardLostOneTime may also kill target, or remove cards from source
         for (int i = 0; i < cards_moves.size(); i++) {
             CardsMoveStruct &cards_move = cards_moves[i];
             if (cards_move.to && !cards_move.to->isAlive()) {
@@ -3790,10 +3787,9 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
     foreach (CardsMoveOneTimeStruct moveOneTime, moveOneTimes) {
         if (moveOneTime.card_ids.size() == 0) continue;
         QVariant data = QVariant::fromValue(moveOneTime);
-        foreach (ServerPlayer *player, getAllPlayers()) {
+        foreach (ServerPlayer *player, getAllPlayers())
             thread->trigger(BeforeCardsMove, this, player, data);
-            moveOneTime = data.value<CardsMoveOneTimeStruct>();
-        }
+        moveOneTime = data.value<CardsMoveOneTimeStruct>();
         moveOneTimes[i] = moveOneTime;
         i++;
     }
@@ -4884,10 +4880,9 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
         move.to_place = Player::PlaceHand;
         move.card_ids << card_id;
         QVariant data = QVariant::fromValue(move);
-        foreach (ServerPlayer *p, getAllPlayers()) {
+        foreach (ServerPlayer *p, getAllPlayers())
             thread->trigger(BeforeCardsMove, this, p, data);
-            move = data.value<CardsMoveOneTimeStruct>();
-        }
+        move = data.value<CardsMoveOneTimeStruct>();
 
         if (move.card_ids.length() > 0) {
             player->addCard(Sanguosha->getCard(card_id), Player::PlaceHand);
@@ -5082,19 +5077,21 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
 
 bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name,
                       bool is_preview, bool visible, int optional, int max_num,
-                      QList<ServerPlayer *> players) {
+                      QList<ServerPlayer *> players, CardMoveReason reason) {
     if (max_num == -1)
         max_num = cards.length();
     if (players.isEmpty())
         players = getOtherPlayers(guojia);
     if (cards.isEmpty() || max_num == 0)
         return false;
-    CardMoveReason reason(NULL, guojia->objectName());
-    // when we use ? : here, compiling error occurs under debug mode...
-    if (is_preview)
-        reason.m_reason = CardMoveReason::S_REASON_PREVIEWGIVE;
-    else
-        reason.m_reason = CardMoveReason::S_REASON_GIVE;
+    if (reason.m_reason == CardMoveReason::S_REASON_UNKNOWN) {
+        reason.m_playerId = guojia->objectName();
+        // when we use ? : here, compiling error occurs under debug mode...
+        if (is_preview)
+            reason.m_reason = CardMoveReason::S_REASON_PREVIEWGIVE;
+        else
+            reason.m_reason = CardMoveReason::S_REASON_GIVE;
+    }
     while (isPaused()) {}
     notifyMoveFocus(guojia, S_COMMAND_SKILL_YIJI);
 

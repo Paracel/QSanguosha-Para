@@ -259,7 +259,7 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             QList<int> original_lirang = lirang_card;
-            while (room->askForYiji(kongrong, lirang_card, objectName(), false, true)) {}
+            while (room->askForYiji(kongrong, lirang_card, objectName(), false, true, true, -1, QList<ServerPlayer *>(), move.reason)) {}
 
             QList<int> ids = move.card_ids;
             i = 0;

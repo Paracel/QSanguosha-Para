@@ -1902,21 +1902,19 @@ public:
             if (liuxie->askForSkillInvoke(objectName())) {
                 room->broadcastSkillInvoke(objectName(), 1);
                 int i = 0;
-                DummyCard *dummy = new DummyCard;
-                QList<int> ids = move.card_ids;
+                QList<int> ids = move.card_ids, to_add;
                 QList<Player::Place> places = move.from_places;
                 foreach (int card_id, ids) {
                     if (places[i] == Player::PlaceHand) {
-                        dummy->addSubcard(card_id);
+                        to_add.append(card_id);
                         move.card_ids.removeOne(card_id);
                         move.from_places.removeAt(i);
                     }
                     i++;
                 }
-                if (dummy->subcardsLength() > 0)
-                    liuxie->addToPile("edict", dummy);
-                dummy->deleteLater();
                 data = QVariant::fromValue(move);
+                if (!to_add.isEmpty())
+                    liuxie->addToPile("edict", to_add, true, move.reason);
             }
         }
         return false;

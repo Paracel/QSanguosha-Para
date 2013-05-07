@@ -4,6 +4,7 @@
 #include "package.h"
 #include "card.h"
 #include "standard.h"
+#include "standard-skillcards.h"
 
 class NostalgiaPackage: public Package {
     Q_OBJECT
@@ -82,6 +83,13 @@ public:
     Q_INVOKABLE NosYexinCard();
 
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
+};
+
+class NosLijianCard: public LijianCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE NosLijianCard();
 };
 
 #endif

@@ -127,7 +127,7 @@ void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) c
         room->drawCards(source, 2);
 }
 
-LijianCard::LijianCard() {
+LijianCard::LijianCard(bool cancelable): duel_cancelable(cancelable) {
 }
 
 bool LijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -176,8 +176,8 @@ void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
     ServerPlayer *from = targets.at(1);
 
     Duel *duel = new Duel(Card::NoSuit, 0);
-    duel->setCancelable(false);
-    duel->setSkillName("LIJIAN");
+    duel->setCancelable(duel_cancelable);
+    duel->setSkillName(getSkillName().toUpper());
     room->useCard(CardUseStruct(duel, from, to));
 }
 

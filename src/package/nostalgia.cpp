@@ -1018,6 +1018,35 @@ public:
     }
 };
 
+// old stantard generals
+
+NosLijianCard::NosLijianCard(): LijianCard(false) {
+}
+
+class NosLijian: public OneCardViewAsSkill {
+public:
+    NosLijian(): OneCardViewAsSkill("noslijian") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->isNude() && !player->hasUsed("NosLijianCard");
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return !Self->isJilei(to_select);
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        NosLijianCard *lijian_card = new NosLijianCard;
+        lijian_card->addSubcard(originalCard->getId());
+        return lijian_card;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
+        return card->isKindOf("Duel") ? 0 : -1;
+    }
+};
+
 NostalGeneralPackage::NostalGeneralPackage()
     : Package("nostal_general")
 {

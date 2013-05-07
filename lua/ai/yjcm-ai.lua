@@ -555,8 +555,8 @@ sgs.ai_skill_use_func.MingceCard = function(card, use, self)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 
 	local canMingceTo = function(player)
-		local canGive = not (player:hasSkill("kongcheng") and player:isKongcheng())
-		return canGive or (not canGive and self:getEnemyNumBySeat(self.player, player) == 0)
+		local canGive = not self:needKongcheng(player, true)
+		return canGive or self:getEnemyNumBySeat(self.player, player) == 0
 	end
 
 	self:sort(self.enemies, "defense")

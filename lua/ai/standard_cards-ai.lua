@@ -501,8 +501,8 @@ function SmartAI:useCardSlash(card, use)
 		if not self:hasHeavySlashDamage(self.player, card, friend) and card:getSkillName() ~= "lihuo"
 			and (not use.to or not use.to:contains(friend))
 			and (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend) == 0 and friend:getHandcardNum() < 3)
-			or self:getDamagedEffects(friend, self.player)
-			or self:needToLoseHp(friend, self.player, true, true) then
+			or (self:getDamagedEffects(friend, self.player) and not (friend:isLord() and #self.enemies < 1))
+			or (self:needToLoseHp(friend, self.player, true, true) and not (friend:isLord() and #self.enemies < 1)) then
 
 			if not slash_prohibit then
 				if ((self.player:canSlash(friend, card, not no_distance, rangefix))

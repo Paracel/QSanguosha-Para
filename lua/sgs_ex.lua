@@ -129,8 +129,9 @@ end
 
 function sgs.CreateSkillCard(spec)
 	assert(spec.name)
+	if spec.skill_name then assert(type(spec.skill_name) == "string") end
 
-	local card = sgs.LuaSkillCard(spec.name)
+	local card = sgs.LuaSkillCard(spec.name, spec.skill_name)
 
 	if type(spec.target_fixed) == "boolean" then
 		card:setTargetFixed(spec.target_fixed)

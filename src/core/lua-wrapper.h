@@ -112,7 +112,7 @@ class LuaSkillCard: public SkillCard {
     Q_OBJECT
 
 public:
-    LuaSkillCard(const char *name);
+    LuaSkillCard(const char *name, const char *skillName);
     LuaSkillCard *clone() const;
     void setTargetFixed(bool target_fixed);
     void setWillThrow(bool will_throw);

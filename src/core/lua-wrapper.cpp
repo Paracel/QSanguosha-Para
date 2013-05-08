@@ -54,20 +54,26 @@ QString LuaTargetModSkill::getPattern() const{
 }
 
 static QHash<QString, const LuaSkillCard *> LuaSkillCards;
+static QHash<QString, QString> LuaSkillCardsSkillName;
 
-LuaSkillCard::LuaSkillCard(const char *name)
+LuaSkillCard::LuaSkillCard(const char *name, const char *skillName)
     : SkillCard(), filter(0), feasible(0), on_use(0), on_effect(0)
 {
     if (name) {
         LuaSkillCards.insert(name, this);
+        if (skillName) {
+            m_skillName = skillName;
+            LuaSkillCardsSkillName.insert(name, skillName);
+        }
         setObjectName(name);
     }
 }
 
 LuaSkillCard *LuaSkillCard::clone() const{
-    LuaSkillCard *new_card = new LuaSkillCard(NULL);
+    LuaSkillCard *new_card = new LuaSkillCard(NULL, NULL);
 
     new_card->setObjectName(objectName());
+    new_card->setSkillName(m_skillName);
 
     new_card->target_fixed = target_fixed;
     new_card->will_throw = will_throw;
@@ -163,7 +169,10 @@ LuaSkillCard *LuaSkillCard::Parse(const QString &str) {
     }
 
     new_card->setUserString(user_string);
-    new_card->setSkillName(name.toLower().remove("card"));
+    QString skillName = LuaSkillCardsSkillName.value(name, QString());
+    if (skillName.isEmpty())
+        skillName = name.toLower().remove("card");
+    new_card->setSkillName(skillName);
     return new_card;
 }
 

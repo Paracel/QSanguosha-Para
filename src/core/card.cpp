@@ -440,7 +440,7 @@ const Card *Card::Parse(const QString &str) {
         dummy->deleteLater();
         return dummy;
     } else if (str.startsWith(QChar('#'))) {
-        LuaSkillCard *new_card =  LuaSkillCard::Parse(str);
+        LuaSkillCard *new_card = LuaSkillCard::Parse(str);
         new_card->deleteLater();
         return new_card;
     } else if (str.contains(QChar('='))) {

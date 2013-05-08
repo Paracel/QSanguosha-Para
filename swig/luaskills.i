@@ -154,7 +154,7 @@ public:
 
 class LuaSkillCard: public SkillCard {
 public:
-    LuaSkillCard(const char *name);
+    LuaSkillCard(const char *name, const char *skillName);
     void setTargetFixed(bool target_fixed);
     void setWillThrow(bool will_throw);
     void setCanRecast(bool can_recast);

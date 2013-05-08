@@ -1822,9 +1822,8 @@ void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPla
         if (success && clientReply.isString())
             isClockwise = (clientReply.asString() == "cw");
     } else {
-        //@todo: nice if this thing is encapsulated in AI
-        const TrickCard *trick = qobject_cast<const TrickCard *>(card);
-        isClockwise = (AI::GetRelation3v3(player, player->getNextAlive()) == (trick->isAggressive() ? AI::Friend : AI::Enemy));
+        QVariant data = QVariant::fromValue((CardStar)card);
+        isClockwise = (askForChoice(player, "3v3_direction", "cw+ccw", data) == "cw");
     }
 
     LogMessage log;

@@ -793,7 +793,7 @@ void SingleTargetTrick::use(Room *room, ServerPlayer *source, QList<ServerPlayer
 }
 
 Collateral::Collateral(Card::Suit suit, int number)
-    : SingleTargetTrick(suit, number, false)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("collateral");
 }
@@ -888,7 +888,7 @@ void Collateral::onEffect(const CardEffectStruct &effect) const{
 }
 
 Nullification::Nullification(Suit suit, int number)
-    : SingleTargetTrick(suit, number, false)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("nullification");
 }
@@ -904,7 +904,7 @@ bool Nullification::isAvailable(const Player *) const{
 }
 
 ExNihilo::ExNihilo(Suit suit, int number)
-    : SingleTargetTrick(suit, number, false)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("ex_nihilo");
     target_fixed = true;
@@ -940,7 +940,7 @@ void ExNihilo::onEffect(const CardEffectStruct &effect) const{
 }
 
 Duel::Duel(Suit suit, int number)
-    : SingleTargetTrick(suit, number, true)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("duel");
 }
@@ -1003,7 +1003,9 @@ void Duel::onEffect(const CardEffectStruct &effect) const{
     room->damage(DamageStruct(this, second->isAlive() ? second : NULL, first));
 }
 
-Snatch::Snatch(Suit suit, int number):SingleTargetTrick(suit, number, true) {
+Snatch::Snatch(Suit suit, int number)
+    : SingleTargetTrick(suit, number)
+{
     setObjectName("snatch");
 }
 
@@ -1045,7 +1047,7 @@ void Snatch::onEffect(const CardEffectStruct &effect) const{
 }
 
 Dismantlement::Dismantlement(Suit suit, int number)
-    : SingleTargetTrick(suit, number, false)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("dismantlement");
 }

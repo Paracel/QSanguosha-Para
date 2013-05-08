@@ -272,7 +272,7 @@ void SilverLion::onUninstall(ServerPlayer *player) const{
 }
 
 FireAttack::FireAttack(Card::Suit suit, int number)
-    : SingleTargetTrick(suit, number, true)
+    : SingleTargetTrick(suit, number)
 {
     setObjectName("fire_attack");
 }
@@ -315,7 +315,7 @@ void FireAttack::onEffect(const CardEffectStruct &effect) const{
 }
 
 IronChain::IronChain(Card::Suit suit, int number)
-    : TrickCard(suit, number, false)
+    : TrickCard(suit, number)
 {
     setObjectName("iron_chain");
     can_recast = true;

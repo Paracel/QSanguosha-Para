@@ -815,7 +815,7 @@ sgs.ai_skill_invoke.guzheng = function(self, data)
 	local player = self.room:getCurrent()
 	local invoke = (self:isFriend(player) and not self:needKongcheng(player, true))
 					or (not self.player:hasSkill("manjuan") and (data:toInt() >= 3 or (data:toInt() == 2 and not self:hasSkills(sgs.cardneed_skill, player))))
-					or (self:isEnemy(player) and player:hasSkill("kongcheng") and player:isKongcheng())
+					or (self:isEnemy(player) and self:needKongcheng(player, true))
 	return invoke
 end
 

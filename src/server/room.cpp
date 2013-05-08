@@ -575,7 +575,7 @@ void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &sk
                 Json::Value args;
                 args[0] = QSanProtocol::S_GAME_EVENT_DETACH_SKILL;
                 args[1] = toJsonString(player->objectName());
-                args[2] = toJsonString(skill_name);
+                args[2] = toJsonString(actual_skill);
                 doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
 
                 LogMessage log;

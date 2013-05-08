@@ -1939,6 +1939,43 @@ sgs.ai_use_priority.Dismantlement = 4.4
 
 sgs.dynamic_value.control_card.Dismantlement = true
 
+sgs.ai_choicemade_filter.cardChosen.snatch = function(self, player, promptlist)
+	local from = findPlayerByObjectName(self.room, promptlist[4])
+	local to = findPlayerByObjectName(self.room, promptlist[5])
+	if from and to then
+		local id = tonumber(promptlist[3])
+		local place = self.room:getCardPlace(id)
+		local card = sgs.Sanguosha:getCard(id)
+		local intention = 70
+		if place == sgs.Player_PlaceDelayedTrick then
+			if not card:isKindOf("Disaster") then intention = -intention else intention = 0 end
+			if card:isKindOf("YanxiaoCard") then intention = -intention end
+		elseif place == sgs.Player_PlaceEquip then
+			if to:getLostHp() > 1 and card:isKindOf("SilverLion") then
+				if to:hasSkills(sgs.use_lion_skill) then
+					intention = self:willSkipPlayPhase(to) and -intention / 2 or 0
+				else
+					intention = self:isWeak(to) and -intention / 2 or -intention / 10
+				end
+			end
+			if to:hasSkills(sgs.lose_equip_skill) then
+				if self:isWeak(to) and (card:isKindOf("DefensiveHorse") or card:isKindOf("Armor")) then
+					intention = math.abs(intention)
+				else
+					intention = 0
+				end
+			end
+		elseif place == sgs.Player_PlaceHand then
+			if self:needKongcheng(to, true) and to:getHandcardNum() == 1 then
+				intention = 0
+			end
+		end
+		sgs.updateIntention(from, to, intention)
+	end
+end
+
+sgs.ai_choicemade_filter.cardChosen.dismantlement = sgs.ai_choicemade_filter.cardChosen.snatch
+
 function SmartAI:useCardCollateral(card, use)
 	if self.player:hasSkill("noswuyan") then return end
 	local fromList = sgs.QList2Table(self.room:getOtherPlayers(self.player))

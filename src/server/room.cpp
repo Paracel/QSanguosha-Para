@@ -1099,7 +1099,8 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
         card_id = who->getRandomHandCardId();
     Q_ASSERT(card_id != Card::S_UNKNOWN_CARD_ID);
 
-    QVariant decisionData = QVariant::fromValue("cardChosen:" + reason + ":" + QString::number(card_id));
+    QVariant decisionData = QVariant::fromValue(QString("cardChosen:%1:%2:%3:%4").arg(reason).arg(card_id)
+                                                                                 .arg(player->objectName()).arg(who->objectName()));
     thread->trigger(ChoiceMade, this, player, decisionData);
     return card_id;
 }

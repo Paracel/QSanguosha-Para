@@ -177,7 +177,7 @@ end
 sgs.ai_choicemade_filter.cardChosen.fankui = function(self, player, promptlist)
 	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 	if damage.from and damage.to then
-		local id = tonumber(promptlist[#promptlist])
+		local id = tonumber(promptlist[3])
 		local place = self.room:getCardPlace(id)
 		if sgs.ai_need_damaged.fankui(self, damage.from, damage.to) then
 		elseif damage.from:getArmor() and self:needToThrowArmor(damage.from) and id == damage.from:getArmor():getEffectiveId() then

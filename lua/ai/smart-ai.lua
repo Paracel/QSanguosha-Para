@@ -1774,7 +1774,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 
 			if player:hasFlag("AIGlobal_PlayPhaseNotSkipped") and sgs.turncount <= 3 and player:getPhase() == sgs.Player_Discard
 				and reason.m_reason == sgs.CardMoveReason_S_REASON_RULEDISCARD
-				and (not self:needBear(player) or (player:hasSkills("renjie+baiyin") and not player:hasSkill("jilve")))
+				and (not self:needBear(player) or (player:hasSkills("renjie+baiyin") and player:getMark("jilve") == 0))
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluatePlayerRole(player) == "neutral")
 				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
@@ -1783,11 +1783,20 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 						if target:hasSkill("fangzhu") and target:getLostHp() <= 2 then
 							has_slash_prohibit_skill = true
 						end
-						for _, askill in sgs.qlist(target:getVisibleSkillList()) do
-							local filter = sgs.ai_slash_prohibit[askill:objectName()]
-							if filter and type(filter) == "function" and filter(self, player, target, card) then
-								has_slash_prohibit_skill = true
-								break
+						if not has_slash_prohibit_skill and target:hasSkill("xiangle") then
+							local basic_num = 0
+							for _, c_id in sgs.qlist(move.card_ids) do
+								local c = sgs.Sanguosha:getCard(c_id)
+								if c:isKindOf("BasicCard") then basic_num = basic_num + 1 end
+							end
+							if basic_num < 2 then has_slash_prohibit_skill = true break end
+						else
+							for _, askill in sgs.qlist(target:getVisibleSkillList()) do
+								local filter = sgs.ai_slash_prohibit[askill:objectName()]
+								if filter and type(filter) == "function" and filter(self, player, target, card) then
+									has_slash_prohibit_skill = true
+									break
+								end
 							end
 						end
 						if player:canSlash(target, card, true) and self:slashIsEffective(card, target)

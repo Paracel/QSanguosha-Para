@@ -2191,7 +2191,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		local flag = "AIGlobal_SDCardChosen_" .. reason
 		local to_choose
 		for _, card in sgs.qlist(who:getCards(flags)) do
-			if card:hasFlag(reason) then
+			if card:hasFlag(flag) then
 				card:setFlags("-" .. flag)
 				to_choose = card:getId()
 				break
@@ -2200,7 +2200,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 		if to_choose then
 			local is_handcard
 			if not who:isKongcheng() and who:handCards():contains(to_choose) then is_handcard = true end
-			if is_handcard and reason == "dismantlement" and self.room:getMode() == "02_1v1" and sgs.GetConfig("1v1/OfficialRule", "Classical") == "2013" then
+			if is_handcard and reason == "dismantlement" and self.room:getMode() == "02_1v1" and sgs.GetConfig("1v1/Rule", "Classical") == "2013" then
 				local cards = sgs.QList2Table(who:getHandcards())
 				local peach, jink
 				for _, card in ipairs(cards) do
@@ -2210,7 +2210,7 @@ function SmartAI:askForCardChosen(who, flags, reason)
 				end
 				if peach or jink then return peach or jink end
 				self:sortByKeepValue(cards)
-				return cards[1]
+				return cards[1]:getEffectiveId()
 			else
 				return to_choose
 			end

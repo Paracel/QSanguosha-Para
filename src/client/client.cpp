@@ -120,7 +120,6 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_RECOVER_GENERAL] = &Client::recoverGeneral;
     m_callbacks[S_COMMAND_REVEAL_GENERAL] = &Client::revealGeneral;
 
-    m_isUseCard = false;
     m_noNullificationThisTime = false;
     m_noNullificationTrickName = ".";
 
@@ -507,8 +506,10 @@ void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targ
         replyToServer(S_COMMAND_USE_CARD, Json::Value::null);
     } else {
         Json::Value targetNames(Json::arrayValue);
-        foreach (const Player *target, targets)
-            targetNames.append(toJsonString(target->objectName()));
+        if (!card->targetFixed()) {
+            foreach (const Player *target, targets)
+                targetNames.append(toJsonString(target->objectName()));
+        }
 
         replyToServer(S_COMMAND_USE_CARD, toJsonArray(card->toString(), targetNames));
 
@@ -804,12 +805,10 @@ void Client::_askForCardOrUseCard(const Json::Value &cardUsage) {
 
 void Client::askForCard(const Json::Value &req) {
     if (!req.isArray() || req.size() == 0) return;
-    m_isUseCard = toQString(req[0]).startsWith("@@");
     _askForCardOrUseCard(req);
 }
 
 void Client::askForUseCard(const Json::Value &req) {
-    m_isUseCard = true;
     _askForCardOrUseCard(req);
 }
 
@@ -897,7 +896,6 @@ void Client::askForNullification(const Json::Value &arg) {
 
     _m_roomState.setCurrentCardUsePattern("nullification");
     m_isDiscardActionRefusable = true;
-    m_isUseCard = false;
 
     setStatus(RespondingUse);
 }
@@ -977,11 +975,6 @@ void Client::onPlayerResponseCard(const Card *card) {
     }
     _m_roomState.setCurrentCardUsePattern(QString());
     setStatus(NotActive);
-}
-
-bool Client::hasNoTargetResponding() const{
-    return ((status & ClientStatusBasicMask) == Responding)
-            && !m_isUseCard;
 }
 
 ClientPlayer *Client::getPlayer(const QString &name) {
@@ -1385,7 +1378,6 @@ void Client::askForSinglePeach(const Json::Value &arg) {
     }
     _m_roomState.setCurrentCardUsePattern(pattern.join("+"));
     m_isDiscardActionRefusable = true;
-    m_isUseCard = false;
     setStatus(RespondingUse);
 }
 
@@ -1395,7 +1387,6 @@ void Client::askForCardShow(const Json::Value &requestor) {
     prompt_doc->setHtml(tr("%1 request you to show one hand card").arg(name));
 
     _m_roomState.setCurrentCardUsePattern(".");
-    m_isUseCard = false;
     setStatus(AskForShowOrPindian);
 }
 
@@ -1509,7 +1500,6 @@ void Client::askForPindian(const Json::Value &ask_str) {
         QString requestor = getPlayerName(from);
         prompt_doc->setHtml(tr("%1 ask for you to play a card to pindian").arg(requestor));
     }
-    m_isUseCard = false;
     _m_roomState.setCurrentCardUsePattern(".");
     setStatus(AskForShowOrPindian);
 }

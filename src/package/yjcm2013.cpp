@@ -586,7 +586,8 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return pattern == "slash" && !ClientInstance->hasNoTargetResponding()
+        return pattern == "slash"
+               && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
                && canSlashLiufeng(player);
     }
 

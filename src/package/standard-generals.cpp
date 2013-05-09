@@ -469,7 +469,8 @@ bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
 
 bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString &pattern) const{
     return hasShuGenerals(player)
-           && pattern == "slash" && !ClientInstance->hasNoTargetResponding()
+           && pattern == "slash"
+           && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
            && !player->hasFlag("JijiangFailed");
 }
 

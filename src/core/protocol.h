@@ -12,21 +12,21 @@ namespace QSanProtocol {
     }
 
     enum PacketDescription {
-      S_DESC_UNKNOWN,
-      S_TYPE_REQUEST = 0x1,
-      S_TYPE_REPLY = 0x2,
-      S_TYPE_NOTIFICATION = 0x4,
-      S_TYPE_MASK = 0xf,
-      S_SRC_ROOM = 0x10,
-      S_SRC_LOBBY = 0x20,
-      S_SRC_CLIENT = 0x40,
-      S_SRC_MASK = 0xf0,
-      S_DEST_ROOM = 0x100,
-      S_DEST_LOBBY = 0x200,
-      S_DEST_CLIENT = 0x400,
-      S_DEST_MASK = 0xf00,
+        S_DESC_UNKNOWN,
+        S_TYPE_REQUEST = 0x1,
+        S_TYPE_REPLY = 0x2,
+        S_TYPE_NOTIFICATION = 0x4,
+        S_TYPE_MASK = 0xf,
+        S_SRC_ROOM = 0x10,
+        S_SRC_LOBBY = 0x20,
+        S_SRC_CLIENT = 0x40,
+        S_SRC_MASK = 0xf0,
+        S_DEST_ROOM = 0x100,
+        S_DEST_LOBBY = 0x200,
+        S_DEST_CLIENT = 0x400,
+        S_DEST_MASK = 0xf00,
 
-      S_DESC_DUMMY
+        S_DESC_DUMMY
     };
 
     enum ProcessInstanceType {

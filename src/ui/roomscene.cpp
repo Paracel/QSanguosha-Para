@@ -1102,7 +1102,9 @@ void RoomScene::enableTargets(const Card *card) {
         return;
     }
 
-    if (card->targetFixed() || ClientInstance->hasNoTargetResponding()
+    if (card->targetFixed()
+        || ((ClientInstance->getStatus() & Client::ClientStatusBasicMask) == Client::Responding
+            && ClientInstance->getStatus() != Client::RespondingUse)
         || ClientInstance->getStatus() == Client::AskForShowOrPindian) {
         foreach (PlayerCardContainer *item, item2player.keys()) {
             QGraphicsItem *animationTarget = item->getMouseClickReceiver();
@@ -2022,7 +2024,7 @@ void RoomScene::useSelectedCard() {
     case Client::Responding: {
             const Card *card = dashboard->getSelected();
             if (card) {
-                if (ClientInstance->hasNoTargetResponding())
+                if (ClientInstance->getStatus() != Client::RespondingUse)
                     ClientInstance->onPlayerResponseCard(card);
                 else
                     ClientInstance->onPlayerUseCard(card, selected_targets);
@@ -2559,7 +2561,7 @@ void RoomScene::doCancelButton() {
                 }
             }
 
-            if (ClientInstance->hasNoTargetResponding())
+            if (ClientInstance->getStatus() != Client::RespondingUse)
                 ClientInstance->onPlayerResponseCard(NULL);
             else
                 ClientInstance->onPlayerUseCard(NULL);

@@ -884,12 +884,11 @@ bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player 
 
 bool GuhuoCard::targetFixed() const{
     if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
-        if (!ClientInstance->hasNoTargetResponding()) {
-            CardStar card = Sanguosha->cloneCard(user_string);
-            Self->tag["guhuo"] = QVariant::fromValue(card);
-            return card && card->targetFixed();
-        } else
-            return true;
+        CardStar card = Sanguosha->cloneCard(user_string);
+        Self->tag["guhuo"] = QVariant::fromValue(card);
+        return card && card->targetFixed();
+    } else if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+        return true;
     }
 
     CardStar card = Self->tag.value("guhuo").value<CardStar>();

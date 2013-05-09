@@ -66,7 +66,6 @@ public:
     void setStatus(Status status);
     Status getStatus() const;
     int alivePlayerCount() const;    
-    bool hasNoTargetResponding() const;
     void onPlayerResponseCard(const Card *card);
     void onPlayerInvokeSkill(bool invoke);
     void onPlayerDiscardCards(const Card *card);
@@ -234,7 +233,6 @@ private:
     QHash<QSanProtocol::CommandType, CallBack> m_interactions;
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks;
     QList<const ClientPlayer *> players;
-    bool m_isUseCard;
     QStringList ban_packages;
     Recorder *recorder;
     Replayer *replayer;

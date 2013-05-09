@@ -1077,7 +1077,7 @@ public:
     }
 
     static void playAudioEffect(ServerPlayer *zuoci, const QString &skill_name) {
-        zuoci->getRoom()->broadcastSkillInvoke(skill_name,  zuoci->isMale(), -1);
+        zuoci->getRoom()->broadcastSkillInvoke(skill_name, zuoci->isMale(), -1);
     }
 
     static void AcquireGenerals(ServerPlayer *zuoci, int n) {
@@ -1088,14 +1088,8 @@ public:
         n = qMin(n, list.length());
 
         QStringList acquired = list.mid(0, n);
-        foreach (QString huashen, acquired) {
-            huashens << huashen;
-            const General *general = Sanguosha->getGeneral(huashen);
-            foreach (const TriggerSkill *skill, general->getTriggerSkills()) {
-                zuoci->getRoom()->getThread()->addTriggerSkill(skill);
-            }
-        }
-
+        foreach (QString name, acquired)
+            huashens << name;
         zuoci->tag["Huashens"] = huashens;
 
         QStringList hidden;

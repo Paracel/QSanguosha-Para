@@ -1910,7 +1910,7 @@ end
 
 function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_equip)
 	min_num = min_num or discard_num
-	local exchange = { "lihun", "enyuan", "shichou", "quanji" }
+	local exchange = { "lihun", "enyuan", "shichou", "quanji", "qixing", "nosquanji" }
 	local callback = sgs.ai_skill_discard[reason]
 	self:assignKeep(self.player:getHp(), true)
 	if type(callback) == "function" then
@@ -2416,9 +2416,9 @@ function SmartAI:askForAG(card_ids, refusable, reason)
 		if card_id then return card_id end
 	end
 
-	if refusable and self.player:hasSkill("xinzhan") then
+	if refusable and reason == "xinzhan" then
 		local next_player = self.player:getNextAlive()
-		if self:isFriend(next_player) and next_player:containsTrick("indulgence") then
+		if self:isFriend(next_player) and next_player:containsTrick("indulgence") and not next_player:containsTrick("YanxiaoCard") then
 			if #card_ids == 1 then return -1 end
 		end
 		for _, card_id in ipairs(card_ids) do

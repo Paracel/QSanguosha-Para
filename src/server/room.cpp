@@ -1066,12 +1066,19 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     return result;
 }
 
-int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason) {
+int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason, bool handcard_visible) {
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_CHOOSE_CARD);
 
+    if (handcard_visible && !who->isKongcheng()) {
+        QList<int> handcards = who->handCards();
+        Json::Value arg(Json::arrayValue);
+        arg[0] = toJsonString(who->objectName());
+        arg[1] = toJsonArray(handcards);
+        doNotify(player, S_COMMAND_SET_KNOWN_CARDS, arg);
+    }
     int card_id = Card::S_UNKNOWN_CARD_ID;
-    if (who != player
+    if (who != player && !handcard_visible
         && (flags == "h"
             || (flags == "he" && !who->hasEquip())
             || (flags == "hej" && !who->hasEquip() && who->getJudgingArea().isEmpty())))
@@ -1082,7 +1089,12 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
             thread->delay();
             card_id = ai->askForCardChosen(who, flags, reason);
         } else {
-            bool success = doRequest(player, S_COMMAND_CHOOSE_CARD, toJsonArray(who->objectName(), flags, reason), true);
+            Json::Value arg(Json::arrayValue);
+            arg[0] = toJsonString(who->objectName());
+            arg[1] = toJsonString(flags);
+            arg[2] = toJsonString(reason);
+            arg[3] = handcard_visible;
+            bool success = doRequest(player, S_COMMAND_CHOOSE_CARD, arg, true);
             //@todo: check if the card returned is valid
             Json::Value clientReply = player->getClientReply();
             if (!success || !clientReply.isInt()) {

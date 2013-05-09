@@ -1071,11 +1071,19 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    int card_id = room->askForCardChosen(effect.from, effect.to, "hej", objectName());
+    bool handcard_visible = false;
+    if (!effect.to->isKongcheng()
+        && room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013") {
+        handcard_visible = true;
+        LogMessage log;
+        log.type = "$ViewAllCards";
+        log.from = effect.from;
+        log.to << effect.to;
+        log.card_str = IntList2StringList(effect.to->handCards()).join("+");
+        room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    }
+    int card_id = room->askForCardChosen(effect.from, effect.to, "hej", objectName(), handcard_visible);
     room->throwCard(card_id, room->getCardPlace(card_id) == Player::PlaceDelayedTrick ? NULL : effect.to, effect.from);
-    if (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013"
-        && !effect.to->isKongcheng())
-        room->showAllCards(effect.to, effect.from);
 }
 
 Indulgence::Indulgence(Suit suit, int number)

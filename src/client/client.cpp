@@ -68,6 +68,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
     m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
     m_callbacks[S_COMMAND_EXCHANGE_KNOWN_CARDS] = &Client::exchangeKnownCards;
+    m_callbacks[S_COMMAND_SET_KNOWN_CARDS] = &Client::setKnownCards;
 
     m_callbacks[S_COMMAND_UPDATE_STATE_ITEM] = &Client::updateStateItem;
     m_callbacks[S_COMMAND_AVAILABLE_CARDS] = &Client::setAvailableCards;
@@ -677,6 +678,17 @@ void Client::exchangeKnownCards(const Json::Value &players) {
     b->setCards(a_known);
 }
 
+void Client::setKnownCards(const Json::Value &set_str) {
+    if (!set_str.isArray() || set_str.size() != 2) return;
+    QString name = toQString(set_str[0]);
+    ClientPlayer *player = getPlayer(name);
+    if (player == NULL) return;
+    QList<int> ids;
+    tryParse(set_str[1], ids);
+    player->setCards(ids);
+
+}
+
 Replayer *Client::getReplayer() const{
     return replayer;
 }
@@ -1227,13 +1239,14 @@ void Client::askForChoice(const Json::Value &ask_str) {
 }
 
 void Client::askForCardChosen(const Json::Value &ask_str) {
-    if (!isStringArray(ask_str, 0, 2)) return;
+    if (!ask_str.isArray() || ask_str.size() != 4 || !isStringArray(ask_str, 0, 2) || !ask_str[3].isBool()) return;
     QString player_name = toQString(ask_str[0]);
     QString flags = toQString(ask_str[1]);
     QString reason = toQString(ask_str[2]);
+    bool handcard_visible = ask_str[3].asBool();
     ClientPlayer *player = getPlayer(player_name);
     if (player == NULL) return;
-    emit cards_got(player, flags, reason);
+    emit cards_got(player, flags, reason, handcard_visible);
     setStatus(ExecDialog);
 }
 

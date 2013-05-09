@@ -123,6 +123,7 @@ public:
     void setNullification(const Json::Value &str);
     void enableSurrender(const Json::Value &enabled);
     void exchangeKnownCards(const Json::Value &players);
+    void setKnownCards(const Json::Value &set_str);
     void setFixedDistance(const Json::Value &set_str);
     void updateStateItem(const Json::Value &state_str);
     void setAvailableCards(const Json::Value &pile);
@@ -276,7 +277,7 @@ signals:
     void kingdoms_got(const QStringList &kingdoms);
     void suits_got(const QStringList &suits);
     void options_got(const QString &skillName, const QStringList &options);
-    void cards_got(const ClientPlayer *player, const QString &flags, const QString &reason);
+    void cards_got(const ClientPlayer *player, const QString &flags, const QString &reason, bool handcard_visible);
     void roles_got(const QString &scheme, const QStringList &roles);
     void directions_got();    
     void orders_got(QSanProtocol::Game3v3ChooseOrderCommand reason);

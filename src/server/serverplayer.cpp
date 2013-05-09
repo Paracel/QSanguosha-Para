@@ -157,7 +157,7 @@ void ServerPlayer::throwAllCards() {
 
     QList<const Card *> tricks = getJudgingArea();
     foreach (const Card *trick, tricks) {
-        CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, this->objectName());
+        CardMoveReason reason(CardMoveReason::S_REASON_THROW, this->objectName());
         room->throwCard(trick, reason, NULL);
     }
 }

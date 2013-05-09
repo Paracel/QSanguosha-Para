@@ -2894,7 +2894,9 @@ function SmartAI:willUsePeachTo(dying)
 		if self:getCardId("Peach") then return self:getCardId("Peach") end
 	end
 	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
-		and (sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"] or self.room:getCurrent():objectName() == self.player:objectName()) then
+		and (sgs.current_mode_players["loyalist"] + 1 == sgs.current_mode_players["rebel"]
+				or sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"]
+				or self.room:getCurrent():objectName() == self.player:objectName()) then
 		return "."
 	end
 

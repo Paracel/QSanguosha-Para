@@ -128,6 +128,7 @@ void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) c
 }
 
 LijianCard::LijianCard(bool cancelable): duel_cancelable(cancelable) {
+    mute = true;
 }
 
 bool LijianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -163,6 +164,7 @@ void LijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
     RoomThread *thread = room->getThread();
 
     thread->trigger(PreCardUsed, room, diaochan, data);
+    room->broadcastSkillInvoke("lijian");
 
     CardMoveReason reason(CardMoveReason::S_REASON_THROW, diaochan->objectName(), QString(), "lijian", QString());
     room->moveCardTo(this, diaochan, NULL, Player::DiscardPile, reason, true);

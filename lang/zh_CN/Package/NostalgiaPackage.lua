@@ -7,14 +7,20 @@ return {
 	[":moon_spear"] = "装备牌·武器<br />攻击范围：３<br />武器特效：你的回合外，每当你使用或打出了一张黑色牌时，你可以使用一张【杀】",
 	["@moon-spear-slash"] = "【银月枪】效果被触发，你可以使用一张【杀】",
 
-	["nostal_general"] = "怀旧",
-	["nostal_yjcm"] = "怀旧一将",
-	["nostal_yjcm2012"] = "怀旧一将2",
+	["nostal_general"] = "怀旧-测试",
+	["nostal_standard"] = "怀旧-标准",
+	["nostal_yjcm"] = "怀旧-一将",
+	["nostal_yjcm2012"] = "怀旧-一将2",
 	
 	["nos_zhouyu"] = "周瑜-旧",
 	["&nos_zhouyu"] = "周瑜",
 	["nosfanjian"] = "反间",
 	[":nosfanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后展示你的一张手牌。若此牌花色与该角色所选花色不同，你对其造成1点伤害。伤害结算完毕后该角色获得此牌。",
+
+	["nos_diaochan"] = "貂蝉-旧",
+	["&nos_diaochan"] = "貂蝉",
+	["noslijian"] = "离间",
+	[":noslijian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】，此【决斗】不能被【无懈可击】响应。",
 
 	["nos_fazheng"] = "法正-旧",
 	["&nos_fazheng"] = "法正",

@@ -1011,8 +1011,11 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
                                                timeOut, &Room::verifyNullificationResponse);
     }
     const Card *card = NULL;
-    if (repliedPlayer != NULL && repliedPlayer->getClientReply().isString())
-        card = Card::Parse(toQString(repliedPlayer->getClientReply()));
+    if (repliedPlayer != NULL) {
+        Json::Value clientReply = repliedPlayer->getClientReply();
+        if (clientReply[1].isString())
+            card = Card::Parse(toQString(clientReply[1]));
+    }
     if (card == NULL) {
         foreach (ServerPlayer *player, validAiPlayers) {
             AI *ai = player->getAI();
@@ -1444,10 +1447,10 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
         arg[1] = peaches;
         bool success = doRequest(player, S_COMMAND_ASK_PEACH, arg, true);
         Json::Value clientReply = player->getClientReply();
-        if (!success || !clientReply.isString())
+        if (!success || !clientReply[1].isString())
             return NULL;
 
-        card = Card::Parse(toQString(clientReply));
+        card = Card::Parse(toQString(clientReply[1]));
     }
 
     if (card && player->isCardLimited(card, Card::MethodUse))

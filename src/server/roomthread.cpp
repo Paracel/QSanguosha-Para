@@ -9,6 +9,7 @@
 #include "standard.h"
 
 #include <QTime>
+#include <QMetaEnum>
 #include <json/json.h>
 
 #ifdef QSAN_UI_LIBRARY_AVAILABLE

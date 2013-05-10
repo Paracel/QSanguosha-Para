@@ -890,6 +890,7 @@ void Collateral::onEffect(const CardEffectStruct &effect) const{
 Nullification::Nullification(Suit suit, int number)
     : SingleTargetTrick(suit, number)
 {
+    target_fixed = true;
     setObjectName("nullification");
 }
 

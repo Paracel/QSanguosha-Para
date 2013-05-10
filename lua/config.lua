@@ -34,6 +34,7 @@ config = {
 		"Hegemony",
 		"HegemonySP",
 		"Ling",
+		"NostalStandard",
 		"NostalYJCM",
 		"NostalYJCM2012",
 		"NostalGeneral",

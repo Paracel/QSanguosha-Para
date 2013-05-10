@@ -1050,10 +1050,6 @@ public:
 NostalGeneralPackage::NostalGeneralPackage()
     : Package("nostal_general")
 {
-    General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
-    nos_zhouyu->addSkill("yingzi");
-    nos_zhouyu->addSkill(new NosFanjian);
-
     General *nos_zhonghui = new General(this, "nos_zhonghui", "wei", 3);
     nos_zhonghui->addSkill(new NosZhenggong);
     nos_zhonghui->addSkill(new NosQuanji);
@@ -1075,6 +1071,18 @@ NostalGeneralPackage::NostalGeneralPackage()
 
     skills << new NosYexin << new DetachEffectSkill("nosyexin", "nospower")
            << new FakeMoveSkill("nosyexin") << new NosPaiyi;
+}
+
+NostalStandardPackage::NostalStandardPackage()
+    : Package("nostal_standard")
+{
+    General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
+    nos_zhouyu->addSkill("yingzi");
+    nos_zhouyu->addSkill(new NosFanjian);
+
+    General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
+    nos_diaochan->addSkill(new NosLijian);
+    nos_diaochan->addSkill("biyue");
 }
 
 NostalYJCMPackage::NostalYJCMPackage()
@@ -1126,6 +1134,7 @@ NostalYJCM2012Package::NostalYJCM2012Package()
 
 ADD_PACKAGE(Nostalgia)
 ADD_PACKAGE(NostalGeneral)
+ADD_PACKAGE(NostalStandard)
 ADD_PACKAGE(NostalYJCM)
 ADD_PACKAGE(NostalYJCM2012)
 

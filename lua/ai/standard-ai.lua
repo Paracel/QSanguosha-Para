@@ -387,7 +387,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 
 	for i = 1, #self.enemies, 1 do
 		local p = self.enemies[i]
-		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|lijian", p) then
+		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian", p) then
 			if add_player(p) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 		end
 	end
@@ -1840,13 +1840,7 @@ sgs.ai_skill_cardask["@multi-jink"] = sgs.ai_skill_cardask["@multi-jink-start"]
 
 sgs.ai_chaofeng.lvbu = 1
 
-local lijian_skill = {}
-lijian_skill.name = "lijian"
-table.insert(sgs.ai_skills, lijian_skill)
-lijian_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("LijianCard") or self.player:isNude() then
-		return
-	end
+function SmartAI:getLijianCard()
 	local card_id
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
@@ -1888,15 +1882,10 @@ lijian_skill.getTurnUseCard = function(self)
 			end
 		end
 	end
-	if not card_id then
-		return nil
-	else
-		return sgs.Card_Parse("@LijianCard=" .. card_id)
-	end
-	return nil
+	return card_id
 end
 
-sgs.ai_skill_use_func.LijianCard = function(card, use, self)
+function SmartAI:findLijianTarget(card_name, use)
 	local lord = self.room:getLord()
 	local duel = sgs.Sanguosha:cloneCard("duel")
 
@@ -1939,14 +1928,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 				end
 			end
 
-			if loyalist and e_peaches < 1 then
-				use.card = card
-				if use.to then
-					use.to:append(loyalist)
-					use.to:append(lord)
-				end
-				return
-			end
+			if loyalist and e_peaches < 1 then return loyalist, lord end
 		end
 
 		if #self.friends_noself >= 2 and self:getAllPeachNum() < 1 then
@@ -1981,12 +1963,7 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 					end
 				end
 
-				if to_die and nextfriend then
-					use.card = card
-					if use.to then use.to:append(to_die) end
-					if use.to then use.to:append(nextfriend) end
-					return
-				end
+				if to_die and nextfriend then return to_die, nextfriend end
 			end
 		end
 	end
@@ -1999,13 +1976,8 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			for _, ap in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 				if ap:objectName() ~= lord:objectName() and ap:isMale() and self:hasTrickEffective(duel, lord, ap) then
 					if self:hasSkills("jiang|jizhi", ap) and self:isFriend(ap) and not ap:isCardLimited(duel, sgs.Card_MethodUse) then
-						use.card = card
-						if use.to then
-							use.to:append(lord)
-							use.to:append(ap)
-						end
-						lord:setFlags("AIGlobal_NeedToWake")
-						return
+						if not use.isDummy then lord:setFlags("AIGlobal_NeedToWake") end
+						return lord, ap
 					elseif self:isFriend(ap) then
 						f_target = ap
 					else
@@ -2021,13 +1993,8 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 					target = e_target
 				end
 				if target then
-					use.card = card
-					if use.to then
-						use.to:append(lord)
-						use.to:append(target)
-					end
-					lord:setFlags("AIGlobal_NeedToWake")
-					return
+					if not use.isDummy then lord:setFlags("AIGlobal_NeedToWake") end
+					return lord, target
 				end
 			end
 		end
@@ -2036,29 +2003,18 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 	local shenguanyu = self.room:findPlayerBySkillName("wuhun")
 	if shenguanyu and shenguanyu:isMale() and shenguanyu:objectName() ~= self.player:objectName() then
 		if self.role == "rebel" and lord and lord:isMale() and not lord:hasSkill("jueqing") and self:hasTrickEffective(duel, shenguanyu, lord) then
-			use.card = card
-			if use.to then
-				use.to:append(shenguanyu)
-				use.to:append(lord)
-			end
-			return
+			return shenguanyu, lord
 		elseif self:isEnemy(shenguanyu) and #self.enemies >= 2 then
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:objectName() ~= shenguanyu:objectName() and enemy:isMale() and not enemy:isCardLimited(duel, sgs.Card_MethodUse)
 					and self:hasTrickEffective(duel, shenguanyu, enemy) then
-
-					use.card = card
-					if use.to then
-						use.to:append(shenguanyu)
-						use.to:append(enemy)
-					end
-					return
+					return shenguanyu, enemy
 				end
 			end
 		end
 	end
 
-	if not self.player:hasUsed("LijianCard") then
+	if not self.player:hasUsed(card_name) then
 		self:sort(self.enemies, "defense")
 		local males, others = {}, {}
 		local first, second
@@ -2142,12 +2098,30 @@ sgs.ai_skill_use_func.LijianCard = function(card, use, self)
 			end
 
 			if first and second and first:objectName() ~= second:objectName() and not second:isCardLimited(duel, sgs.Card_MethodUse) then
-				use.card = card
-				if use.to then
-					use.to:append(first)
-					use.to:append(second)
-				end
+				return first, second
 			end
+		end
+	end
+end
+
+local lijian_skill = {}
+lijian_skill.name = "lijian"
+table.insert(sgs.ai_skills, lijian_skill)
+lijian_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("LijianCard") or self.player:isNude() then
+		return
+	end
+	local card_id = self:getLijianCard()
+	if card_id then return sgs.Card_Parse("@LijianCard=" .. card_id) end
+end
+
+sgs.ai_skill_use_func.LijianCard = function(card, use, self)
+	local first, second = self:findLijianTargt("LijianCard", use)
+	if first and second then
+		use.card = card
+		if use.to then
+			use.to:append(first)
+			use.to:append(second)
 		end
 	end
 end
@@ -2177,8 +2151,6 @@ end
 sgs.ai_skill_invoke.biyue = function(self, data)
 	return not (self.player:isKongcheng() and self:needKongcheng(self.player, true))
 end
-
-sgs.dynamic_value.damage_card.LijianCard = true
 
 sgs.ai_chaofeng.diaochan = 4
 

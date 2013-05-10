@@ -593,7 +593,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 
 		local enemies = self.enemies
 		for _, enemy in ipairs(enemies) do
-			if self:hasSkills("lijian|fanjian|nosfanjian|neofanjian", enemy) and not enemy:containsTrick("indulgence") and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if self:hasSkills("noslijian|lijian|fanjian|nosfanjian|neofanjian", enemy) and not enemy:containsTrick("indulgence") and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy
@@ -764,3 +764,38 @@ sgs.ai_skill_playerchosen.weiwudi_guixin = function(self, players)
 	local player = findPlayerForModifyKingdom(self, players)
 	return player or players:first()
 end
+
+local noslijian_skill = {}
+noslijian_skill.name = "noslijian"
+table.insert(sgs.ai_skills, noslijian_skill)
+noslijian_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("NosLijianCard") or self.player:isNude() then
+		return
+	end
+	local card_id = self:getLijianCard()
+	if card_id then return sgs.Card_Parse("@NosLijianCard=" .. card_id) end
+end
+
+sgs.ai_skill_use_func.NosLijianCard = function(card, use, self)
+	local first, second = self:findLijianTargt("NosLijianCard", use)
+	if first and second then
+		use.card = card
+		if use.to then
+			use.to:append(first)
+			use.to:append(second)
+		end
+	end
+end
+
+sgs.ai_use_value.NosLijianCard = sgs.ai_use_value.LijianCard
+sgs.ai_use_priority.NosLijianCard = sgs.ai_use_priority.LijianCard
+
+noslijian_filter = function(self, player, carduse)
+	if carduse.card:isKindOf("NosLijianCard") then
+		sgs.ai_lijian_effect = true
+	end
+end
+
+table.insert(sgs.ai_choicemade_filter.cardUsed, noslijian_filter)
+
+sgs.ai_card_intention.NosLijianCard = sgs.ai_card_intention.LijianCard

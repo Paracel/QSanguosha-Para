@@ -152,9 +152,9 @@ public:
 
     inline virtual bool isAvailable(const Player *player) const{ return m_card->isAvailable(player); }
 
-    inline virtual const Card *validate(const CardUseStruct *cardUse) const{
+    inline virtual const Card *validate(const CardUseStruct *cardUse, bool &isOwnerUse) const{
         Q_ASSERT(m_card != NULL);
-        return m_card->validate(cardUse);
+        return m_card->validate(cardUse, isOwnerUse);
     }
 
     inline virtual const Card *validateInResponse(ServerPlayer *user) const{

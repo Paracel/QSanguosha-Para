@@ -897,7 +897,7 @@ bool GuhuoCard::targetsFeasible(const QList<const Player *> &targets, const Play
     return card && card->targetsFeasible(targets, Self);
 }
 
-const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
+const Card *GuhuoCard::validate(const CardUseStruct *card_use, bool &) const{
     ServerPlayer *yuji = card_use->from;
     Room *room = yuji->getRoom();
 

@@ -653,7 +653,7 @@ bool Card::isAvailable(const Player *player) const{
            || (can_recast && !player->isCardLimited(this, Card::MethodRecast));
 }
 
-const Card *Card::validate(const CardUseStruct *) const{
+const Card *Card::validate(const CardUseStruct *, bool &) const{
     return this;
 }
 

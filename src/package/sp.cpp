@@ -1218,7 +1218,8 @@ const Card *AocaiCard::validateInResponse(ServerPlayer *user) const{
     return Sanguosha->getCard(id);
 }
 
-const Card *AocaiCard::validate(const CardUseStruct *cardUse) const{
+const Card *AocaiCard::validate(const CardUseStruct *cardUse, bool &isOwnerUse) const{
+    isOwnerUse = false;
     ServerPlayer *user = cardUse->from;
     Room *room = user->getRoom();
     QList<int> ids = room->getNCards(2, false);

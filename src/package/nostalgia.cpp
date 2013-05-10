@@ -411,7 +411,7 @@ void NosJiefanCard::use(Room *room, ServerPlayer *handang, QList<ServerPlayer *>
     if (!use_slash) {
         handang->setFlags("-NosJiefanUsed");
         room->removeTag("NosJiefanTarget");
-        room->setPlayerFlag(handang, "NosJiefanFailed");
+        room->setPlayerFlag(handang, "Global_NosJiefanFailed");
     }
 }
 
@@ -426,7 +426,7 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         if (!pattern.contains("peach")) return false;
-        if (player->hasFlag("NosJiefanFailed")) return false;
+        if (player->hasFlag("Global_NosJiefanFailed")) return false;
         foreach (const Player *p, player->getSiblings()) {
             if (p->isAlive() && p->getPhase() != Player::NotActive)
                 return true;
@@ -448,9 +448,6 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *handang, QVariant &data) const{
         if (triggerEvent == PreCardUsed) {
-            if (handang->hasFlag("NosJiefanFailed"))
-                room->setPlayerFlag(handang, "-NosJiefanFailed");
-
             if (!handang->hasFlag("NosJiefanUsed"))
                 return false;
 
@@ -506,7 +503,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash") && use.card->hasFlag("nosjiefan-slash")) {
                 if (!use.card->hasFlag("nosjiefan_success"))
-                    room->setPlayerFlag(handang, "NosJiefanFailed");
+                    room->setPlayerFlag(handang, "Global_NosJiefanFailed");
                 room->removeTag("NosJiefanTarget");
             }
         }

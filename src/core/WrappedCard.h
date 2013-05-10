@@ -157,9 +157,9 @@ public:
         return m_card->validate(cardUse);
     }
 
-    inline virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const{
+    inline virtual const Card *validateInResponse(ServerPlayer *user) const{
         Q_ASSERT(m_card != NULL);
-        return m_card->validateInResponse(user, continuable);
+        return m_card->validateInResponse(user);
     }
 
     inline virtual void doPreAction(Room *room, const CardUseStruct &cardUse) const{

@@ -81,6 +81,8 @@ return {
 	["kongcheng"] = "空城",
 	[":kongcheng"] = "<font color=\"blue\"><b>锁定技。</b></font>若你没有手牌，你不能被选择为【杀】或【决斗】的目标。",
 	["#GuanxingResult"] = "%from 的“<font color=\"yellow\"><b>观星</b></font>”结果：%arg 上 %arg2 下",
+	["$GuanxingTop"] = "置于牌堆顶的牌：%card",
+	["$GuanxingBottom"] = "置于牌堆底的牌：%card",
 
 	["#zhaoyun"] = "少年将军",
 	["zhaoyun"] = "赵云",

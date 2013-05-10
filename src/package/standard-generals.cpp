@@ -479,7 +479,7 @@ JijiangViewAsSkill::JijiangViewAsSkill(): ZeroCardViewAsSkill("jijiang$") {
 }
 
 bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
-    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("JijiangFailed")
+    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("Global_JijiangFailed")
            && Slash::IsAvailable(player);
 }
 
@@ -487,7 +487,7 @@ bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString
     return hasShuGenerals(player)
            && pattern == "slash"
            && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
-           && !player->hasFlag("JijiangFailed");
+           && !player->hasFlag("Global_JijiangFailed");
 }
 
 const Card *JijiangViewAsSkill::viewAs() const{
@@ -700,16 +700,25 @@ public:
         if (zhuge->getPhase() == Player::Start && zhuge->askForSkillInvoke(objectName())) {
             Room *room = zhuge->getRoom();
             int index = qrand() % 2 + 1;
-            if (!zhuge->hasInnateSkill(objectName()) && zhuge->hasSkill("zhiji"))
+            if (objectName() == "guanxing" && !zhuge->hasInnateSkill(objectName()) && zhuge->hasSkill("zhiji"))
                 index += 2;
             room->broadcastSkillInvoke(objectName(), index);
+            QList<int> guanxing = room->getNCards(getGuanxingNum(room));
 
-            int n = qMin(5, room->alivePlayerCount());
-            QList<int> guanxing = room->getNCards(n);
+            LogMessage log;
+            log.type = "$ViewDrawPile";
+            log.from = zhuge;
+            log.card_str = IntList2StringList(guanxing).join("+");
+            room->doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
             room->askForGuanxing(zhuge, guanxing, false);
         }
 
         return false;
+    }
+
+    virtual int getGuanxingNum(Room *room) const{
+        return qMin(5, room->alivePlayerCount());
     }
 };
 
@@ -1425,16 +1434,8 @@ public:
         setObjectName("super_guanxing");
     }
 
-    virtual bool onPhaseChange(ServerPlayer *zhuge) const{
-        if (zhuge->getPhase() == Player::Start
-            && zhuge->askForSkillInvoke(objectName())) {
-            Room *room = zhuge->getRoom();
-            room->broadcastSkillInvoke("guanxing", qrand() % 2 + 1);
-            QList<int> guanxing = room->getNCards(5);
-            room->askForGuanxing(zhuge, guanxing, false);
-        }
-
-        return false;
+    virtual int getGuanxingNum(Room *room) const{
+        return 5;
     }
 };
 

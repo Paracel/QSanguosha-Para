@@ -1463,7 +1463,7 @@ void Client::showAllCards(const Json::Value &arg) {
     QList<int> card_ids;
     if (!tryParse(arg[2], card_ids)) return;
 
-    who->setCards(card_ids);
+    if (who) who->setCards(card_ids);
 
     emit gongxin(card_ids, false);
 }

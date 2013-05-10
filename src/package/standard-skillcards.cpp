@@ -266,10 +266,14 @@ bool JijiangCard::targetFilter(const QList<const Player *> &targets, const Playe
     return slash->targetFilter(targets, to_select, Self);
 }
 
-void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &targets) const{
-    QList<ServerPlayer *> lieges = room->getLieges("shu", liubei);
+const Card *JijiangCard::validate(const CardUseStruct *cardUse) const{
+    ServerPlayer *liubei = cardUse->from;
+    QList<ServerPlayer *> targets = cardUse->to;
+    Room *room = liubei->getRoom();
+
     const Card *slash = NULL;
 
+    QList<ServerPlayer *> lieges = room->getLieges("shu", liubei);
     foreach (ServerPlayer *target, targets)
         target->setFlags("JijiangTarget");
     foreach (ServerPlayer *liege, lieges) {
@@ -288,12 +292,11 @@ void JijiangCard::use(Room *room, ServerPlayer *liubei, QList<ServerPlayer *> &t
             foreach (ServerPlayer *target, targets)
                 target->setFlags("-JijiangTarget");
 
-            room->useCard(CardUseStruct(slash, liubei, targets, false));
-            return;
+            return slash;
         }
     }
     foreach (ServerPlayer *target, targets)
         target->setFlags("-JijiangTarget");
-    room->setPlayerFlag(liubei, "JijiangFailed");
+    room->setPlayerFlag(liubei, "Global_JijiangFailed");
+    return NULL;
 }
-

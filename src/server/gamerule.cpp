@@ -26,7 +26,8 @@ GameRule::GameRule(QObject *)
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
            << SlashHit << SlashEffected << SlashProceed
            << ConfirmDamage << DamageDone << DamageComplete
-           << StartJudge << FinishRetrial << FinishJudge;
+           << StartJudge << FinishRetrial << FinishJudge
+           << ChoiceMade;
 
     skill_mark["niepan"] = "@nirvana";
     skill_mark["yeyan"] = "@flame";
@@ -211,8 +212,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     card_use.from->setFlags("-Global_ForbidSurrender");
                     room->doNotify(card_use.from, QSanProtocol::S_COMMAND_ENABLE_SURRENDER, Json::Value(true));
                 }
-                if (card_use.from->hasFlag("JijiangFailed"))
-                    room->setPlayerFlag(card_use.from, "-JijiangFailed");
                 if (card->isKindOf("Slash"))
                     card_use.from->setFlags("Global_SlashInPlayPhase");
 
@@ -602,6 +601,15 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
 
             break;
         }
+    case ChoiceMade: {
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                foreach (QString flag, p->getFlagList()) {
+                    if (flag.startsWith("Global_") && flag.endsWith("Failed"))
+                        room->setPlayerFlag(p, "-" + flag);
+                }
+            }
+            break;
+    }
     default:
             break;
     }

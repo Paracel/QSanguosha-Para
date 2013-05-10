@@ -1966,7 +1966,7 @@ public:
         switch (triggerEvent) {
         case CardAsked: {
                 QString pattern = data.toStringList().first();
-                if (pattern == "slash" && !liuxie->hasFlag("JijiangFailed")) {
+                if (pattern == "slash" && !liuxie->hasFlag("Global_JijiangFailed")) {
                     QVariant data_for_ai = "jijiang";
                     if (room->askForSkillInvoke(liuxie, "hantong_acquire", data_for_ai)) {
                         RemoveEdict(liuxie);

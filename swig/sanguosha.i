@@ -717,7 +717,7 @@ public:
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *self) const;
     virtual bool isAvailable(const Player *player) const;
     virtual const Card *validate(const CardUseStruct *card_use) const;
-    virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const;
+    virtual const Card *validateInResponse(ServerPlayer *user) const;
 
     bool isMute() const;
     bool willThrow() const;
@@ -1007,6 +1007,9 @@ public:
     void broadcastSkillInvoke(const char *skillName, const char *category);
     void broadcastSkillInvoke(const char *skillName, int type);
     void broadcastSkillInvoke(const char *skillName, bool isMale, int type);
+    void doLightbox(const char *lightboxName, int duration = 2000);
+    void doAnimate(int type, const char *arg1 = NULL, const char *arg2 = NULL, QList<ServerPlayer *> players = QList<ServerPlayer *>());
+
     bool notifyUpdateCard(ServerPlayer *player, int cardId, const Card *newCard);
     bool broadcastUpdateCard(const QList<ServerPlayer *> &players, int cardId, const Card *newCard);
     bool notifyResetCard(ServerPlayer *player, int cardId);

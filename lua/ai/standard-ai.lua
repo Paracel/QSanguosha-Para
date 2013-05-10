@@ -894,7 +894,7 @@ jijiang_skill.getTurnUseCard = function(self)
 		end
 	end
 	if not has_friend then return end
-	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("JijiangFailed") or not self:slashIsAvailable() then return end
+	if self.player:hasUsed("JijiangCard") or self.player:hasFlag("Global_JijiangFailed") or not self:slashIsAvailable() then return end
 	local card_str = "@JijiangCard=."
 	local slash = sgs.Card_Parse(card_str)
 	assert(slash)

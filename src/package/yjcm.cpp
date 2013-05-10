@@ -897,6 +897,13 @@ XinzhanCard::XinzhanCard() {
 
 void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     QList<int> cards = room->getNCards(3), left;
+
+    LogMessage log;
+    log.type = "$ViewDrawPile";
+    log.from = source;
+    log.card_str = IntList2StringList(cards).join("+");
+    room->doNotify(source, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
     left = cards;
 
     QList<int> hearts, non_hearts;

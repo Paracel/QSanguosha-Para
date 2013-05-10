@@ -114,7 +114,7 @@ public:
     
     inline virtual const Card *getRealCard() const{ return this; }
     virtual const Card *validate(const CardUseStruct *cardUse) const;
-    virtual const Card *validateInResponse(ServerPlayer *user, bool &continuable) const;
+    virtual const Card *validateInResponse(ServerPlayer *user) const;
 
     virtual void doPreAction(Room *room, const CardUseStruct &card_use) const;
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;

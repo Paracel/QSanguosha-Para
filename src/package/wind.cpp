@@ -871,9 +871,6 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
     yuji->tag.remove("GuhuoSlash");
     room->setTag("Guhuoing", false);
     room->removeTag("GuhuoType");
-    if (!success)
-        room->setPlayerFlag(yuji, "GuhuoFailed");
-
     return success;
 }
 
@@ -946,8 +943,7 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use) const{
         return NULL;
 }
 
-const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji, bool &continuable) const{
-    continuable = true;
+const Card *GuhuoCard::validateInResponse(ServerPlayer *yuji) const{
     Room *room = yuji->getRoom();
     room->broadcastSkillInvoke("guhuo");
 

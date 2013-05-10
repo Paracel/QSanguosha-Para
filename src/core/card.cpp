@@ -657,7 +657,7 @@ const Card *Card::validate(const CardUseStruct *) const{
     return this;
 }
 
-const Card *Card::validateInResponse(ServerPlayer *, bool &continuable) const{
+const Card *Card::validateInResponse(ServerPlayer *) const{
     return this;
 }
 

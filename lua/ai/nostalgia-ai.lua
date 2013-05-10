@@ -383,7 +383,7 @@ function sgs.ai_cardneed.nosgongqi(to, card)
 end
 
 function sgs.ai_cardsview_valuable.nosjiefan(self, class_name, player)
-	if class_name == "Peach" and not player:hasFlag("NosJiefanFailed") then
+	if class_name == "Peach" and not player:hasFlag("Global_NosJiefanFailed") then
 		local dying = player:getRoom():getCurrentDyingPlayer()
 		if not dying then return nil end
 		local current = player:getRoom():getCurrent()

@@ -215,21 +215,22 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
                 thread->trigger(AskForPeaches, this, saver, dying_data);
                 setPlayerProperty(saver, "currentdying", cd);
             }
+            thread->trigger(AskForPeachesDone, this, player, dying_data);
 
             setPlayerFlag(player, "-Global_Dying");
-            thread->trigger(AskForPeachesDone, this, player, dying_data);
-        }
-
-        if (player->isAlive()) {
-            Json::Value arg(Json::arrayValue);
-            arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_QUITDYING;
-            arg[1] = toJsonString(player->objectName());
-            doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
         }
     }
     currentdying = getTag("CurrentDying").toStringList();
     currentdying.removeOne(player->objectName());
     setTag("CurrentDying", QVariant::fromValue(currentdying));
+
+    if (player->isAlive()) {
+        Json::Value arg(Json::arrayValue);
+        arg[0] = (int)QSanProtocol::S_GAME_EVENT_PLAYER_QUITDYING;
+        arg[1] = toJsonString(player->objectName());
+        doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, arg);
+    }
+    thread->trigger(QuitDying, this, player, dying_data);
 }
 
 ServerPlayer *Room::getCurrentDyingPlayer() const{
@@ -1033,15 +1034,10 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
 
     if (card == NULL) return false;
 
-    bool continuable = false;
-    card = card->validateInResponse(repliedPlayer, continuable);
+    card = card->validateInResponse(repliedPlayer);
 
-    if (card == NULL) {
-        if (continuable)
-            return _askForNullification(trick, from, to, positive, aiHelper);
-        else
-            return false;
-    }
+    if (card == NULL)
+        return _askForNullification(trick, from, to, positive, aiHelper);
 
     doAnimate(S_ANIMATE_NULLIFICATION, repliedPlayer->objectName(), to->objectName());
     useCard(CardUseStruct(card, repliedPlayer, QList<ServerPlayer *>()));
@@ -1184,8 +1180,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         return NULL;
     }
 
-    bool continuable = false;
-    card = card->validateInResponse(player, continuable);
+    card = card->validateInResponse(player);
     const Card *result = NULL;
 
     if (card) {
@@ -1262,11 +1257,9 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             }
         }
         result = card;
-    } else if (continuable) {
+    } else  {
         setPlayerFlag(player, "continuing");
         result = askForCard(player, pattern, prompt, data, method, to, isRetrial);
-    } else {
-        result = NULL;
     }
     return result;
 }
@@ -1308,7 +1301,8 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
     if (isCardUsed && card_use.isValid(pattern)) {
         QVariant decisionData = QVariant::fromValue(card_use);
         thread->trigger(ChoiceMade, this, player, decisionData);
-        useCard(card_use, addHistory);
+        if (!useCard(card_use, addHistory))
+            return askForUseCard(player, pattern, prompt, notice_index, method, addHistory);
         return true;
     } else {
         QVariant decisionData = QVariant::fromValue("cardUsed:" + pattern + ":" + prompt + ":nil");
@@ -1333,23 +1327,7 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
     foreach (ServerPlayer *victim, victims)
         setPlayerFlag(victim, "SlashAssignee");
 
-    //the special case for jijiang and guhuo
-    setPlayerFlag(slasher, "-JijiangFailed");
-    bool use = false;
-
-    do {
-        setPlayerFlag(slasher, "-GuhuoFailed");
-        use = askForUseCard(slasher, pattern, prompt, -1, Card::MethodUse, addHistory);
-    } while (slasher->hasFlag("GuhuoFailed"));
-
-    if (slasher->hasFlag("JijiangFailed")) {
-        do {
-            setPlayerFlag(slasher, "-GuhuoFailed");
-            use = askForUseCard(slasher, pattern, prompt, -1, Card::MethodUse, addHistory);
-        } while(slasher->hasFlag("GuhuoFailed"));
-        setPlayerFlag(slasher, "-JijiangFailed");
-    }
-
+    bool use = askForUseCard(slasher, pattern, prompt, -1, Card::MethodUse, addHistory);
     if (!use) {
         setPlayerFlag(slasher, "-slashTargetFix");
         setPlayerFlag(slasher, "-slashTargetFixToOne");
@@ -1435,7 +1413,6 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
     _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
 
     const Card *card = NULL;
-    bool continuable = false;
 
     AI *ai = player->getAI();
     if (ai)
@@ -1456,7 +1433,9 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
     if (card && player->isCardLimited(card, Card::MethodUse))
         card = NULL;
     if (card != NULL)
-        card = card->validateInResponse(player, continuable);
+        card = card->validateInResponse(player);
+    else
+        return NULL;
 
     const Card *result = NULL;
     if (card) {
@@ -1466,7 +1445,7 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
                                                             .arg(card->toString()));
         thread->trigger(ChoiceMade, this, player, decisionData);
         result = card;
-    } else if (continuable)
+    } else
         result = askForSinglePeach(player, dying);
     return result;
 }
@@ -2839,14 +2818,14 @@ void Room::processResponse(ServerPlayer *player, const QSanGeneralPacket *packet
     }
 }
 
-void Room::useCard(const CardUseStruct &use, bool add_history) {
+bool Room::useCard(const CardUseStruct &use, bool add_history) {
     CardUseStruct card_use = use;
     card_use.m_addHistory = false;
     const Card *card = card_use.card;
 
     if (card_use.from->isCardLimited(card, card->getHandlingMethod())
         && (!card->canRecast() || card_use.from->isCardLimited(card, Card::MethodRecast)))
-        return;
+        return true;
 
     QString key;
     if (card->inherits("LuaSkillCard"))
@@ -2860,7 +2839,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
                                 || Sanguosha->correctCardTarget(TargetModSkill::Residue, card_use.from, card) > 500);
 
     card = card_use.card->validate(&card_use);
-    if (!card) return;
+    if (!card) return false;
 
     if (card_use.from->getPhase() == Player::Play && add_history) {
         if (!slash_not_record) {
@@ -2880,7 +2859,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
                 broadcastUpdateCard(getPlayers(), wrapped->getId(), wrapped);
                 card_use.card = wrapped;
                 wrapped->onUse(this, card_use);
-                return;
+                return true;
             }
             if (card_use.card->isKindOf("Slash") && add_history && slash_count > 0)
                 card_use.from->setFlags("Global_MoreSlashInOneTurn");
@@ -2928,6 +2907,7 @@ void Room::useCard(const CardUseStruct &use, bool add_history) {
         }
         throw triggerEvent;
     }
+    return true;
 }
 
 void Room::loseHp(ServerPlayer *victim, int lose) {
@@ -4516,6 +4496,21 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, bool up_
         log.arg = QString::number(top_cards.length());
         log.arg2 = QString::number(bottom_cards.length());
         sendLog(log);
+    }
+
+    if (!top_cards.isEmpty()) {
+        LogMessage log;
+        log.type = "$GuanxingTop";
+        log.from = zhuge;
+        log.card_str = IntList2StringList(top_cards).join("+");
+        doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    }
+    if (!bottom_cards.isEmpty()) {
+        LogMessage log;
+        log.type = "$GuanxingBottom";
+        log.from = zhuge;
+        log.card_str = IntList2StringList(bottom_cards).join("+");
+        doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
     }
 
     QListIterator<int> i(top_cards);

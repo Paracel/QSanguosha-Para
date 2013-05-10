@@ -79,7 +79,7 @@ public:
     void setCardFlag(int card_id, const QString &flag, ServerPlayer *who = NULL);
     void clearCardFlag(const Card *card, ServerPlayer *who = NULL);
     void clearCardFlag(int card_id, ServerPlayer *who = NULL);
-    void useCard(const CardUseStruct &card_use, bool add_history = true);
+    bool useCard(const CardUseStruct &card_use, bool add_history = true);
     void damage(DamageStruct &data);
     void sendDamageLog(const DamageStruct &data);
     void loseHp(ServerPlayer *victim, int lose = 1);
@@ -226,6 +226,11 @@ public:
     void doLightbox(const QString &lightboxName, int duration = 2000);
     void doAnimate(QSanProtocol::AnimateType type, const QString &arg1 = QString(), const QString &arg2 = QString(),
                    QList<ServerPlayer *> players = QList<ServerPlayer *>());
+
+    inline void doAnimate(int type, const QString &arg1 = QString(), const QString &arg2 = QString(),
+                          QList<ServerPlayer *> players = QList<ServerPlayer *>()) {
+        doAnimate((QSanProtocol::AnimateType)type, arg1, arg2, players);
+    }
 
     void preparePlayers();
     void changePlayerGeneral(ServerPlayer *player, const QString &new_general);

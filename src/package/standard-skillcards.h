@@ -100,7 +100,7 @@ public:
     Q_INVOKABLE JijiangCard();
 
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    virtual const Card *validate(const CardUseStruct *cardUse) const;
 };
 
 class JijiangViewAsSkill: public ZeroCardViewAsSkill {

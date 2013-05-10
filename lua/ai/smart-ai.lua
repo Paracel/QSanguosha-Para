@@ -86,14 +86,14 @@ function setInitialTables()
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|neofanjian|noslijian|lijian|" ..
-							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng|zhaoxin"
+							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|yiji|neoganglie|vsganglie|ganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|kanpo|" ..
-							"jieyin|renjie|zhiheng|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
+							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo|neoluoyi"
 	sgs.drawpeach_skill = "tuxi|qiaobian"
-	sgs.recover_skill = "rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
+	sgs.recover_skill = "nosrende|rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
 	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|noslijian|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
 							"yinling|jilve|qingcheng|neoluoyi|diyyicong"
 	sgs.need_equip_skill = "shensu|mingce|jujian|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi|longhun"
@@ -244,7 +244,7 @@ function sgs.getDefense(player)
 	end
 
 	if not gameProcess and not sgs.isGoodTarget(player) then defense = defense + 10 end
-	if player:hasSkill("rende") and player:getHp() > 2 then defense = defense + 1 end
+	if player:hasSkills("rende|nosrende") and player:getHp() > 2 then defense = defense + 1 end
 	if player:hasSkill("kuanggu") and player:getHp() > 1 then defense = defense + 0.2 end
 	if player:hasSkill("zaiqi") and player:getHp() > 1 then defense = defense + 0.35 end
 	if player:hasSkill("tianming") then defense = defense + 0.1 end
@@ -497,9 +497,13 @@ function SmartAI:getDynamicUsePriority(card)
 			return sgs.ai_use_priority.Slash - 0.1
 		end
 
-		if self.player:hasSkill("rende") and self.player:getPhase() == sgs.Player_Play
-			and (use_card:isKindOf("Indulgence") or use_card:isKindOf("SupplyShortage") or use_card:isKindOf("Slash") or use_card:isKindOf("Snatch") or use_card:isKindOf("Dismantlement"))
-			and not (self:isWeak() and self:needRende() and self.player:getHandcardNum() + self.player:usedTimes("RendeCard") == 2) then
+		if self.player:getPhase() == sgs.Player_Play
+			and (use_card:isKindOf("Indulgence") or use_card:isKindOf("SupplyShortage")
+				or use_card:isKindOf("Slash")
+				or use_card:isKindOf("Snatch") or use_card:isKindOf("Dismantlement"))
+			and ((self.player:hasSkill("nosrende") and not (self:isWeak() and self:needRende() and self.player:getHandcardNum() + self.player:getMark("nosrende") == 2))
+				or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard")
+					and not (self:isWeak() and self:needRende() and self.player:getHandcardNum() + self.player:getMark("rende") == 2))) then
 
 			local cards = sgs.QList2Table(self.player:getHandcards())
 			self:sortByUseValue(cards, true)
@@ -2008,7 +2012,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if self:isEnemy(from) then return null_card end
 			if self:isFriend(to) and to:isNude() then return nil end
 		end
-		if trick:isKindOf("Duel") and sgs.ai_lijian_effect and self:isFriend(to) or (self:isFriend(from) and to:hasSkill("wuhun")) then
+		if trick:isKindOf("Duel") and sgs.ai_lijian_effect and (self:isFriend(to) or (self:isFriend(from) and to:hasSkill("wuhun"))) then
 			return null_card
 		end
 		if from and self:isEnemy(from) and (sgs.evaluatePlayerRole(from) ~= "neutral" or sgs.isRolePredictable()) then
@@ -2119,7 +2123,9 @@ function SmartAI:askForNullification(trick, from, to, positive)
 						end
 						if peach_num == 0 and not self:willSkipPlayPhase(NP) then
 							if exnihilo_num > 0 then
-								if self:hasSkills("jizhi|rende|zhiheng", NP) or (NP:hasSkill("jilve") and NP:getMark("@bear") > 0) then return null_card end
+								if self:hasSkills("jizhi|nosrende|zhiheng", NP)
+									or (NP:hasSkill("rende") and not NP:hasUsed("RendeCard"))
+									or (NP:hasSkill("jilve") and NP:getMark("@bear") > 0) then return null_card end
 							else
 								for _, enemy in ipairs(self.enemies) do
 									if snatch_num > 0 and to:distanceTo(enemy) == 1
@@ -2576,13 +2582,13 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	-- special move between liubei and xunyu and huatuo
+	-- special move between nos_liubei and xunyu and huatuo
 	for _, player in ipairs(friends) do
 		if player:hasSkill("jieming") or player:hasSkill("jijiu") then
 			specialnum = specialnum + 1
 		end
 	end
-	if specialnum > 1 and #cardtogivespecial == 0 and self.player:hasSkill("rende") and self.player:getPhase() == sgs.Player_Play then
+	if specialnum > 1 and #cardtogivespecial == 0 and self.player:hasSkill("nosrende") and self.player:getPhase() == sgs.Player_Play then
 		local xunyu = self.room:findPlayerBySkillName("jieming")
 		local huatuo = self.room:findPlayerBySkillName("jijiu")
 		local no_distance = self.slash_distance_limit
@@ -2635,11 +2641,27 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	if (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2) then
-		if (self.player:getHandcardNum() < 2 and self.player:usedTimes("RendeCard") == 0) then return end
+	if (self.player:hasSkill("nosrende") and self.player:isWounded() and self.player:getMark("nosrende") < 2) then
+		if (self.player:getHandcardNum() < 2 and self.player:getMark("nosrende") == 0) then return end
 
-		if ((self.player:getHandcardNum() == 2 and self.player:usedTimes("RendeCard") == 0) or
-			(self.player:getHandcardNum() == 1 and self.player:usedTimes("RendeCard") == 1)) and self:getOverflow() <= 0 then
+		if ((self.player:getHandcardNum() == 2 and self.player:getMark("nosrende") == 0) or
+			(self.player:getHandcardNum() == 1 and self.player:getMark("nosrende") == 1)) and self:getOverflow() <= 0 then
+			for _, enemy in ipairs(self.enemies) do
+				if enemy:hasWeapon("guding_blade")
+					and (enemy:canSlash(self.player)
+					or self:hasSkills("shensu|jiangchi|tianyi|wushen|nosgongqi")) then
+					return
+				end
+				if enemy:canSlash(self.player) and enemy:hasSkill("nosqianxi") and enemy:distanceTo(self.player) == 1 then return end
+			end
+		end
+	end
+
+	if (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:isWounded() and self.player:getMark("rende") < 2) then
+		if (self.player:getHandcardNum() < 2 and self.player:getMark("rende") == 0) then return end
+
+		if ((self.player:getHandcardNum() == 2 and self.player:getMark("rende") == 0) or
+			(self.player:getHandcardNum() == 1 and self.player:getMark("rende") == 1)) and self:getOverflow() <= 0 then
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:hasWeapon("guding_blade")
 					and (enemy:canSlash(self.player)
@@ -2783,8 +2805,10 @@ function SmartAI:getCardNeedPlayer(cards)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(self.friends_noself) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
-					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
+				if friend:getHandcardNum() <= 3
+					and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
+						or (self.player:hasSkill("nosrende") and self.player:isWounded() and self.player:getMark("nosrende") < 2)
+						or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:isWounded() and self.player:getMark("rende") < 2)) then
 					return hcard, friend
 				end
 			end
@@ -2802,7 +2826,8 @@ function SmartAI:getCardNeedPlayer(cards)
 		end
 	end
 
-	if self.player:hasSkill("rende") and self.player:usedTimes("RendeCard") < 2 and #cards > 0 then
+	if #cards > 0 and ((self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:getMark("rende") < 2)
+						or (self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2)) then
 		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0 and self.player:isWounded())
 							or (sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0
 								and sgs.current_mode_players["loyalist"] == 0 and self:isWeak())
@@ -4587,12 +4612,13 @@ function SmartAI:useEquipCard(card, use)
 	end
 	local same = self:getSameEquip(card)
 	if same then
-		if (self:hasSkills("rende|qingnang|nosgongqi"))
-		or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
-		or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
-		or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
-		or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed()))
-		or (self.player:hasSkill("guidao") and same:isBlack() and card:isRed()) then return end
+		if (self:hasSkills("nosrende|qingnang|nosgongqi"))
+			or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard"))
+			or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
+			or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
+			or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
+			or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed()))
+			or (self.player:hasSkill("guidao") and same:isBlack() and card:isRed()) then return end
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)
 	self:useCardByClassName(card, use)
@@ -4605,7 +4631,7 @@ function SmartAI:useEquipCard(card, use)
 			self:useSkillCard(sgs.Card_Parse("@QiangxiCard=" .. same:getEffectiveId()), dummy_use)
 			if dummy_use.card and dummy_use.card:getSubcards():length() == 1 then return end
 		end
-		if self.player:hasSkill("rende") then
+		if self.player:hasSkill("nosrende") or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard")) then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getWeapon() then return end
 			end
@@ -4627,7 +4653,7 @@ function SmartAI:useEquipCard(card, use)
 			use.card = lion
 			return
 		end
-		if self.player:hasSkill("rende") and self:evaluateArmor(card) < 4 then
+		if (self.player:hasSkill("nosrende") or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard"))) and self:evaluateArmor(card) < 4 then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getArmor() then return end
 			end
@@ -4636,7 +4662,7 @@ function SmartAI:useEquipCard(card, use)
 		return
 	elseif self:needBear() then return
 	elseif card:isKindOf("OffensiveHorse") then
-		if self.player:hasSkill("rende") then
+		if (self.player:hasSkill("nosrende") or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard"))) then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:getOffensiveHorse() then return end
 			end
@@ -4701,8 +4727,9 @@ function SmartAI:damageMinusHp(self, enemy, type)
 end
 
 function SmartAI:needRende()
-	return self.player:hasSkill("rende") and self.player:getLostHp() > 1
-		and self.player:usedTimes("RendeCard") < 2 and self:findFriendsByType(sgs.Friend_Draw) > 1
+	return self.player:getLostHp() > 1 and self:findFriendsByType(sgs.Friend_Draw)
+			and ((self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2)
+				or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:getMark("rende") < 2))
 end
 
 function SmartAI:needToThrowArmor(player, moukui) -- prevent an infinite loop caused by MouKui
@@ -4979,7 +5006,8 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 	if not passive then
 		if to:getMaxHp() > 2 then
 			if self:hasSkills("miji|nosmiji", to) and self:findFriendsByType(sgs.Friend_Draw, to) then n = math.min(n, to:getMaxHp() - 1) end
-			if to:hasSkill("rende") and not self:willSkipPlayPhase(to) and self:findFriendsByType(sgs.Friend_Draw, to) then n = math.min(n, to:getMaxHp() - 1) end
+			if (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard")))
+				and not self:willSkipPlayPhase(to) and self:findFriendsByType(sgs.Friend_Draw, to) then n = math.min(n, to:getMaxHp() - 1) end
 		end
 	end
 

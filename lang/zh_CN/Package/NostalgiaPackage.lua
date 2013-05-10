@@ -11,7 +11,12 @@ return {
 	["nostal_standard"] = "怀旧-标准",
 	["nostal_yjcm"] = "怀旧-一将",
 	["nostal_yjcm2012"] = "怀旧-一将2",
-	
+
+	["nos_liubei"] = "刘备-旧",
+	["&nos_liubei"] = "刘备",
+	["nosrende"] = "仁德",
+	[":nosrende"] = "出牌阶段，你可以将任意数量的手牌以任意分配方式交给其他角色。当你于本阶段内以此法给出的手牌首次达到两张或更多后，你回复1点体力。",
+
 	["nos_zhouyu"] = "周瑜-旧",
 	["&nos_zhouyu"] = "周瑜",
 	["nosfanjian"] = "反间",

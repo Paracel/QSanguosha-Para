@@ -963,8 +963,8 @@ bool Room::isCanceled(const CardEffectStruct &effect) {
 
 bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value &response, void *) {
     const Card *card = NULL;
-    if (player != NULL && response.isString())
-        card = Card::Parse(toQString(response));
+    if (player != NULL && response.isArray() && response[0].isString())
+        card = Card::Parse(toQString(response[0]));
     return card != NULL;
 }
 
@@ -1013,8 +1013,8 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     const Card *card = NULL;
     if (repliedPlayer != NULL) {
         Json::Value clientReply = repliedPlayer->getClientReply();
-        if (clientReply[1].isString())
-            card = Card::Parse(toQString(clientReply[1]));
+        if (clientReply[0].isString())
+            card = Card::Parse(toQString(clientReply[0]));
     }
     if (card == NULL) {
         foreach (ServerPlayer *player, validAiPlayers) {
@@ -1447,10 +1447,10 @@ const Card *Room::askForSinglePeach(ServerPlayer *player, ServerPlayer *dying) {
         arg[1] = peaches;
         bool success = doRequest(player, S_COMMAND_ASK_PEACH, arg, true);
         Json::Value clientReply = player->getClientReply();
-        if (!success || !clientReply[1].isString())
+        if (!success || !clientReply[0].isString())
             return NULL;
 
-        card = Card::Parse(toQString(clientReply[1]));
+        card = Card::Parse(toQString(clientReply[0]));
     }
 
     if (card && player->isCardLimited(card, Card::MethodUse))

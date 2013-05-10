@@ -777,7 +777,7 @@ noslijian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.NosLijianCard = function(card, use, self)
-	local first, second = self:findLijianTargt("NosLijianCard", use)
+	local first, second = self:findLijianTarget("NosLijianCard", use)
 	if first and second then
 		use.card = card
 		if use.to then
@@ -799,3 +799,61 @@ end
 table.insert(sgs.ai_choicemade_filter.cardUsed, noslijian_filter)
 
 sgs.ai_card_intention.NosLijianCard = sgs.ai_card_intention.LijianCard
+
+local nosrende_skill = {}
+nosrende_skill.name = "nosrende"
+table.insert(sgs.ai_skills, nosrende_skill)
+nosrende_skill.getTurnUseCard = function(self)
+	if self.player:isKongcheng() then return end
+	local mode = string.lower(global_room:getMode())
+	if self.player:getMark("nosrende") > 1 and mode:find("04_1v3") then return end
+
+	if self:shouldUseRende() then
+		return sgs.Card_Parse("@NosRendeCard=.")
+	end
+end
+
+sgs.ai_skill_use_func.NosRendeCard = function(card, use, self)
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByUseValue(cards, true)
+	local name = self.player:objectName()
+	local card, friend = self:getCardNeedPlayer(cards)
+	if card and friend then
+		if friend:objectName() == self.player:objectName() or not self.player:getHandcards():contains(card) then return end
+		if friend:hasSkill("enyuan") and #cards >= 2 and not (self.room:getMode() == "04_1v3" and self.player:getMark("nosrende") == 1) then
+			self:sortByUseValue(cards, true)
+			for i = 1, #cards, 1 do
+				if cards[i]:getId() ~= card:getId() then
+					use.card = sgs.Card_Parse("@NosRendeCard=" .. card:getId() .. "+" .. cards[i]:getId())
+					break
+				end
+			end
+		else
+			use.card = sgs.Card_Parse("@NosRendeCard=" .. card:getId())
+		end
+		if use.to then use.to:append(friend) end
+		return
+	else
+		local pangtong = self.room:findPlayerBySkillName("manjuan")
+		if not pangtong then return end
+		if self.player:isWounded() and self.player:getHandcardNum() > 3 and self.player:getMark("rende") < 2 then
+			self:sortByUseValue(cards, true)
+			local to_give = {}
+			for _, card in ipairs(cards) do
+				if isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
+				if #to_give == 2 - self.player:getMark("nosrende") then break end
+			end
+			if #to_give > 0 then
+				use.card = sgs.Card_Parse("@NosRendeCard=" .. table.concat(to_give, "+"))
+				if use.to then use.to:append(pangtong) end
+			end
+		end
+	end
+end
+
+sgs.ai_use_value.NosRendeCard = sgs.ai_use_value.RendeCard
+sgs.ai_use_priority.NosRendeCard = sgs.ai_use_priority.RendeCard
+
+sgs.ai_card_intention.NosRendeCard = sgs.ai_card_intention.RendeCard
+
+sgs.dynamic_value.benefit.NosRendeCard = true

@@ -63,7 +63,7 @@ sgs.ai_skill_invoke.zishou = function(self, data)
 	local can_save_card_num = self.player:getMaxCards() - self.player:getHandcardNum()
 
 	if self.player:getHp() <= 2 and self.player:getHp() < getBestHp(self.player) then chance_value = chance_value + 1 end
-	if self.player:hasSkill("rende") and self:findFriendsByType(sgs.Friend_Draw) then chance_value = chance_value - 1 end
+	if self.player:hasSkills("nosrende|rende") and self:findFriendsByType(sgs.Friend_Draw) then chance_value = chance_value - 1 end
 	if self.player:hasSkill("qingnang") then
 		for _, friend in ipairs(self.friends) do
 			if friend:isWounded() then chance_value = chance_value - 1 break end

@@ -992,7 +992,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 				if str:matchOne(askill) then return askill end
 			end
 			if self:findFriendsByType(sgs.Friend_Draw) then
-				for _, askill in ipairs(("rende|lirang"):split("|")) do
+				for _, askill in ipairs(("nosrende|rende|lirang"):split("|")) do
 					if str:matchOne(askill) then return askill end
 				end
 			end
@@ -1002,6 +1002,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne("drqingnang") then return "drqingnang" end
 			if str:matchOne("qingnang") then return "qingnang" end
 			if str:matchOne("jieyin") and self:findFriendsByType(sgs.Friend_MaleWounded) then return "jieyin" end
+			if str:matchOne("nosrende") and self:findFriendsByType(sgs.Friend_Draw) then return "nosrende" end
 			if str:matchOne("rende") and self:findFriendsByType(sgs.Friend_Draw) then return "rende" end
 			for _, askill in ipairs(("juejing|nosmiji|nosshangshi|shangshi|kuiwei|neojushou|jushou|zaiqi|kuanggu"):split("|")) do
 				if str:matchOne(askill) then return askill end
@@ -1017,6 +1018,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne("drqingnang") then return "drqingnang" end
 			if str:matchOne("qingnang") then return "qingnang" end
 			if str:matchOne("jieyin") and self:findFriendsByType(sgs.Friend_MaleWounded) then return "jieyin" end
+			if str:matchOne("nosrende") and self:findFriendsByType(sgs.Friend_Draw) then return "nosrende" end
 			if str:matchOne("rende") and self:findFriendsByType(sgs.Friend_Draw) then return "rende" end
 			for _, askill in ipairs(("juejing|nosmiji"):split("|")) do
 				if str:matchOne(askill) then return askill end
@@ -1045,7 +1047,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		if self:findFriendsByType(sgs.Friend_Draw) then
-			for _, askill in ipairs(("rende|anxu|mingce"):split("|")) do
+			for _, askill in ipairs(("nosrende|rende|anxu|mingce"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 		end

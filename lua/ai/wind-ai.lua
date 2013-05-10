@@ -452,7 +452,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 					and (self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
 						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
 						or self:needToLoseHp(friend)
-						or (friend:getHandcardNum() < 3 and friend:hasSkill("rende"))) then
+						or (friend:getHandcardNum() < 3 and (friend:hasSkill("nosrende") or (friend:hasSkill("rende") and not friend:hasUsed("RendeCard"))))) then
 				return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
 			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
 		end
@@ -482,7 +482,7 @@ sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	if self:getDamagedEffects(to) or self:needToLoseHp(to) then return end
 	local intention = 10
 	if (to:getHp() >= 2 and self:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", to))
-		or (to:getHandcardNum() < 3 and to:hasSkill("rende"))
+		or (to:getHandcardNum() < 3 and (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard"))))
 		or to:hasSkill("buqu") then
 		intention = -10
 	end
@@ -533,7 +533,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local questioner
 	for _, friend in ipairs(self.friends) do
 		if friend:getHp() == self.friends[#self.friends]:getHp() then
-			if self:hasSkills("rende|kuanggu|zaiqi|buqu|yinghun|longhun|xueji|baobian") then
+			if self:hasSkills("nosrende|rende|kuanggu|zaiqi|buqu|yinghun|longhun|xueji|baobian") then
 				questioner = friend
 				break
 			end

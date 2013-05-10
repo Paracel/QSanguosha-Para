@@ -502,6 +502,8 @@ void Client::arrange(const QStringList &order) {
 }
 
 void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targets) {
+    if ((status & ClientStatusBasicMask) == Responding)
+        _m_roomState.setCurrentCardUsePattern(QString());
     if (card == NULL) {
         replyToServer(S_COMMAND_USE_CARD, Json::Value::null);
     } else {
@@ -515,8 +517,6 @@ void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targ
 
         if (card->isVirtualCard() && !card->parent())
             delete card;
-        if ((status & ClientStatusBasicMask) == Responding)
-            _m_roomState.setCurrentCardUsePattern(QString());
     }
 
     setStatus(NotActive);
@@ -872,13 +872,13 @@ void Client::askForNullification(const Json::Value &arg) {
     const Card *trick_card = Sanguosha->findChild<const Card *>(trick_name);
     if (Config.NeverNullifyMyTrick && source == Self) {
         if (trick_card->isKindOf("SingleTargetTrick") || trick_card->isKindOf("IronChain")) {
-            onPlayerResponseCard(NULL);
+            onPlayerUseCard(NULL);
             return;
         }
     }
     if (m_noNullificationThisTime && m_noNullificationTrickName == trick_name) {
         if (trick_card->isKindOf("AOE") || trick_card->isKindOf("GlobalEffect")) {
-            onPlayerResponseCard(NULL);
+            onPlayerUseCard(NULL);
             return;
         }
     }
@@ -1368,7 +1368,7 @@ void Client::askForSinglePeach(const Json::Value &arg) {
         if (!has_skill) {
             pattern.removeOne("peach");
             if (pattern.isEmpty()) {
-                onPlayerResponseCard(NULL);
+                onPlayerUseCard(NULL);
                 return;
             }
         } else {

@@ -701,14 +701,7 @@ sgs.qingguo_suit_value = {
 	club = 4.2
 }
 
-local rende_skill = {}
-rende_skill.name = "rende"
-table.insert(sgs.ai_skills, rende_skill)
-rende_skill.getTurnUseCard = function(self)
-	if self.player:isKongcheng() then return end
-	local mode = string.lower(global_room:getMode())
-	if self.player:usedTimes("RendeCard") > 1 and mode:find("04_1v3") then return end
-
+function SmartAI:shouldUseRende()
 	if (self:hasCrossbowEffect() or self:getCardsNum("Crossbow") > 0) and self:getCardsNum("Slash") > 0 then
 		self:sort(self.enemies, "defense")
 		for _, enemy in ipairs(self.enemies) do
@@ -736,13 +729,26 @@ rende_skill.getTurnUseCard = function(self)
 
 	for _, player in ipairs(self.friends_noself) do
 		if (player:hasSkill("haoshi") and not player:containsTrick("supply_shortage")) or player:hasSkill("jijiu") then
-			return sgs.Card_Parse("@RendeCard=.")
+			return true
 		end
 	end
-	if (self.player:usedTimes("RendeCard") < 2 or self:getOverflow() > 0) then
-		return sgs.Card_Parse("@RendeCard=.")
+	if (self.player:getMark("rende") < 2 or self:getOverflow() > 0) then
+		return true
 	end
 	if self.player:getLostHp() < 2 then
+		return true
+	end
+end
+
+local rende_skill = {}
+rende_skill.name = "rende"
+table.insert(sgs.ai_skills, rende_skill)
+rende_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("RendeCard") or self.player:isKongcheng() then return end
+	local mode = string.lower(global_room:getMode())
+	if self.player:getMark("rende") > 1 and mode:find("04_1v3") then return end
+
+	if self:shouldUseRende() then
 		return sgs.Card_Parse("@RendeCard=.")
 	end
 end
@@ -754,7 +760,7 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 	local card, friend = self:getCardNeedPlayer(cards)
 	if card and friend then
 		if friend:objectName() == self.player:objectName() or not self.player:getHandcards():contains(card) then return end
-		if friend:hasSkill("enyuan") and #cards >= 2 then
+		if friend:hasSkill("enyuan") and #cards >= 2 and not (self.room:getMode() == "04_1v3" and self.player:getMark("rende") == 1) then
 			self:sortByUseValue(cards, true)
 			for i = 1, #cards, 1 do
 				if cards[i]:getId() ~= card:getId() then
@@ -800,6 +806,36 @@ sgs.ai_card_intention.RendeCard = function(self, card, from, tos)
 end
 
 sgs.dynamic_value.benefit.RendeCard = true
+
+sgs.ai_skill_use["@@rende"] = function(self, prompt)
+	local cards = {}
+	local rende_list = self.player:property("rende"):toString():split("+")
+	for _, id in ipairs(rende_list) do
+		local num_id = tonumber(id)
+		local hcard = sgs.Sanguosha:getCard(num_id)
+		if hcard then table.insert(cards, hcard) end
+	end
+	if #cards == 0 then return "." end
+	self:sortByUseValue(cards, true)
+	local name = self.player:objectName()
+	local card, friend = self:getCardNeedPlayer(cards)
+	local usecard
+	if card and friend then
+		if friend:objectName() == self.player:objectName() or not self.player:getHandcards():contains(card) then return end
+		if friend:hasSkill("enyuan") and #cards >= 2 and not (self.room:getMode() == "04_1v3" and self.player:getMark("rende") == 1) then
+			self:sortByUseValue(cards, true)
+			for i = 1, #cards, 1 do
+				if cards[i]:getId() ~= card:getId() then
+					usecard = "@RendeCard=" .. card:getId() .. "+" .. cards[i]:getId()
+					break
+				end
+			end
+		else
+			usecard = "@RendeCard=" .. card:getId()
+		end
+		if usecard then return usecard .. "->" .. friend:objectName() end
+	end
+end
 
 table.insert(sgs.ai_global_flags, "jijiangsource")
 local jijiang_filter = function(self, player, carduse)
@@ -1666,7 +1702,7 @@ function SmartAI:getWoundedFriend(maleOnly)
 		if p:isLord() and self:isWeak(p) then hp = hp - 10 end
 		if p:objectName() == self.player:objectName() and self:isWeak(p) and p:hasSkill("qingnang") then hp = hp - 5 end
 		if p:hasSkill("buqu") and p:getPile("buqu"):length() <= 2 then hp = hp + 5 end
-		if self:hasSkills("rende|kuanggu|zaiqi", p) and p:getHp() >= 2 then hp = hp + 5 end
+		if self:hasSkills("nosrende|rende|kuanggu|zaiqi", p) and p:getHp() >= 2 then hp = hp + 5 end
 		return hp
 	end
 
@@ -2116,7 +2152,7 @@ lijian_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.LijianCard = function(card, use, self)
-	local first, second = self:findLijianTargt("LijianCard", use)
+	local first, second = self:findLijianTarget("LijianCard", use)
 	if first and second then
 		use.card = card
 		if use.to then

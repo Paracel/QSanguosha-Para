@@ -154,7 +154,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(emotion_set(QString, QString)), this, SLOT(setEmotion(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_invoked(QString, QString)), this, SLOT(showSkillInvocation(QString, QString)));
     connect(ClientInstance, SIGNAL(skill_acquired(const ClientPlayer *, QString)), this, SLOT(acquireSkill(const ClientPlayer *, QString)));
-    connect(ClientInstance, SIGNAL(animated(QString, QStringList)), this, SLOT(doAnimation(QString, QStringList)));
+    connect(ClientInstance, SIGNAL(animated(int, QStringList)), this, SLOT(doAnimation(int, QStringList)));
     connect(ClientInstance, SIGNAL(role_state_changed(QString)), this, SLOT(updateRoles(QString)));
     connect(ClientInstance, SIGNAL(event_received(const Json::Value)), this, SLOT(handleGameEvent(const Json::Value)));
 
@@ -2665,9 +2665,9 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
         }
 
         if (nature == DamageStruct::Fire)
-            doAnimation("fire", QStringList() << who);
+            doAnimation(S_ANIMATE_FIRE, QStringList() << who);
         else if (nature == DamageStruct::Thunder)
-            doAnimation("lightning", QStringList() << who);
+            doAnimation(S_ANIMATE_LIGHTNING, QStringList() << who);
     } else {
         QString type = "#Recover";
         QString from_general = ClientInstance->getPlayer(who)->objectName();
@@ -3571,35 +3571,6 @@ void RoomScene::doMovingAnimation(const QString &name, const QStringList &args) 
     connect(group, SIGNAL(finished()), item, SLOT(deleteLater()));
 }
 
-#include "playercarddialog.h"
-
-void RoomScene::animatePopup(const QString &name, const QStringList &args) {
-    QPointF pos = getAnimationObject(args.at(0))->scenePos();
-
-    QPixmap *item = new QPixmap(QString("image/system/animation/%1.png").arg(name));
-    pos.rx() += item->width() / 2;
-    pos.ry() += item->height() / 2;
-
-    Sprite *sprite = new Sprite();
-    sprite->setParent(this);
-    sprite->setPixmapAtMid(*item);
-    Sprite *glare = new Sprite();
-    glare->setPixmapAtMid(*item);
-
-    sprite->setResetTime(200);
-    sprite->addKeyFrame(0, "opacity", 0);
-    sprite->addKeyFrame(400, "opacity", 1);
-    sprite->addKeyFrame(600, "opacity", 1);
-    sprite->addKeyFrame(0, "scale", 0.2, QEasingCurve::OutQuad);
-    sprite->addKeyFrame(400, "scale", 1);
-    sprite->addKeyFrame(600, "scale", 1.2);
-
-    sprite->start();
-
-    addItem(sprite);
-    sprite->setPos(pos);
-}
-
 void RoomScene::doAppearingAnimation(const QString &name, const QStringList &args) {
     QSanSelectableItem *item = new QSanSelectableItem(QString("image/system/animation/%1.png").arg(name));
     addItem(item);
@@ -3739,22 +3710,33 @@ void RoomScene::doIndicate(const QString &, const QStringList &args) {
     showIndicator(args.first(), args.last());
 }
 
-void RoomScene::doAnimation(const QString &name, const QStringList &args) {
-    static QMap<QString, AnimationFunc> map;
+void RoomScene::doAnimation(int name, const QStringList &args) {
+    static QMap<AnimateType, AnimationFunc> map;
     if (map.isEmpty()) {
-        map["jink"] = &RoomScene::animatePopup;
-        map["nullification"] = &RoomScene::doMovingAnimation;
+        map[S_ANIMATE_NULLIFICATION] = &RoomScene::doMovingAnimation;
 
-        map["fire"] = &RoomScene::doAppearingAnimation;
-        map["lightning"] = &RoomScene::doAppearingAnimation;
+        map[S_ANIMATE_FIRE] = &RoomScene::doAppearingAnimation;
+        map[S_ANIMATE_LIGHTNING] = &RoomScene::doAppearingAnimation;
 
-        map["lightbox"] = &RoomScene::doLightboxAnimation;
-        map["huashen"] = &RoomScene::doHuashen;
-        map["indicate"] = &RoomScene::doIndicate;
+        map[S_ANIMATE_LIGHTBOX] = &RoomScene::doLightboxAnimation;
+        map[S_ANIMATE_HUASHEN] = &RoomScene::doHuashen;
+        map[S_ANIMATE_INDICATE] = &RoomScene::doIndicate;
     }
 
-    AnimationFunc func = map.value(name, NULL);
-    if (func) (this->*func)(name, args);
+    static QMap<AnimateType, QString> anim_name;
+    if (anim_name.isEmpty()) {
+        anim_name[S_ANIMATE_NULLIFICATION] = "nullification";
+
+        anim_name[S_ANIMATE_FIRE] = "fire";
+        anim_name[S_ANIMATE_LIGHTNING] = "lightning";
+
+        anim_name[S_ANIMATE_LIGHTBOX] = "lightbox";
+        anim_name[S_ANIMATE_HUASHEN] = "huashen";
+        anim_name[S_ANIMATE_INDICATE] = "indicate";
+    }
+
+    AnimationFunc func = map.value((AnimateType)name, NULL);
+    if (func) (this->*func)(anim_name.value((AnimateType)name, QString()), args);
 }
 
 void RoomScene::showServerInformation() {

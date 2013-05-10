@@ -1043,7 +1043,7 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
             return false;
     }
 
-    broadcastInvoke("animate", QString("nullification:%1:%2").arg(repliedPlayer->objectName()).arg(to->objectName()));
+    doAnimate(S_ANIMATE_NULLIFICATION, repliedPlayer->objectName(), to->objectName());
     useCard(CardUseStruct(card, repliedPlayer, QList<ServerPlayer *>()));
 
     LogMessage log;
@@ -4000,8 +4000,19 @@ void Room::broadcastSkillInvoke(const QString &skill_name, bool isMale, int type
 }
 
 void Room::doLightbox(const QString &lightboxName, int duration) {
-    broadcastInvoke("animate", QString("lightbox:%1:%2").arg(lightboxName).arg(duration));
+    doAnimate(S_ANIMATE_LIGHTBOX, lightboxName, QString::number(duration));
     thread->delay(duration / 1.2);
+}
+
+void Room::doAnimate(QSanProtocol::AnimateType type, const QString &arg1, const QString &arg2,
+                     QList<ServerPlayer *> players) {
+    if (players.isEmpty())
+        players = m_players;
+    Json::Value arg(Json::arrayValue);
+    arg[0] = (int)type;
+    arg[1] = toJsonString(arg1);
+    arg[2] = toJsonString(arg2);
+    doBroadcastNotify(players, S_COMMAND_ANIMATE, arg);
 }
 
 void Room::preparePlayers() {
@@ -4727,7 +4738,7 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
             QVariant decisionData = QVariant::fromValue("skillInvoke:" + skillName + ":yes");
             thread->trigger(ChoiceMade, this, player, decisionData);
 
-            broadcastInvoke("animate", QString("indicate:%1:%2").arg(player->objectName()).arg(choice->objectName()));
+            doAnimate(S_ANIMATE_INDICATE, player->objectName(), choice->objectName());
             LogMessage log;
             log.type = "#ChoosePlayerWithSkill";
             log.from = player;

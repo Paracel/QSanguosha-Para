@@ -121,7 +121,8 @@ namespace QSanProtocol {
         S_COMMAND_TAKE_GENERAL,
         S_COMMAND_RECOVER_GENERAL,
         S_COMMAND_REVEAL_GENERAL,
-        S_COMMAND_AVAILABLE_CARDS
+        S_COMMAND_AVAILABLE_CARDS,
+        S_COMMAND_ANIMATE
     };
 
     enum GameEventType {
@@ -141,6 +142,17 @@ namespace QSanProtocol {
         S_GAME_EVENT_SKILL_INVOKED,
         S_GAME_EVENT_PAUSE,
         S_GAME_EVENT_REVEAL_PINDIAN
+    };
+
+    enum AnimateType {
+        S_ANIMATE_NULL,
+
+        S_ANIMATE_INDICATE,
+        S_ANIMATE_LIGHTBOX,
+        S_ANIMATE_NULLIFICATION,
+        S_ANIMATE_HUASHEN,
+        S_ANIMATE_FIRE,
+        S_ANIMATE_LIGHTNING
     };
 
     enum Game3v3ChooseOrderCommand {

@@ -224,6 +224,8 @@ public:
     void broadcastSkillInvoke(const QString &skillName, int type);
     void broadcastSkillInvoke(const QString &skillName, bool isMale, int type);
     void doLightbox(const QString &lightboxName, int duration = 2000);
+    void doAnimate(QSanProtocol::AnimateType type, const QString &arg1 = QString(), const QString &arg2 = QString(),
+                   QList<ServerPlayer *> players = QList<ServerPlayer *>());
 
     void preparePlayers();
     void changePlayerGeneral(ServerPlayer *player, const QString &new_general);

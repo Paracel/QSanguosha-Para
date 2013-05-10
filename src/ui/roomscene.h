@@ -292,7 +292,6 @@ private:
     void doLightboxAnimation(const QString &name, const QStringList &args);
     void doHuashen(const QString &name, const QStringList &args);
     void doIndicate(const QString &name, const QStringList &args);
-    void animatePopup(const QString &name, const QStringList &args);
     EffectAnimation *animations;
     bool pindian_success;
 
@@ -324,7 +323,7 @@ private slots:
     void setEmotion(const QString &who, const QString &emotion);
     void setEmotion(const QString &who, const QString &emotion, bool permanent);
     void showSkillInvocation(const QString &who, const QString &skill_name);
-    void doAnimation(const QString &name, const QStringList &args);
+    void doAnimation(int name, const QStringList &args);
     void showOwnerButtons(bool owner);
     void showPlayerCards();
     void updateRolesBox();

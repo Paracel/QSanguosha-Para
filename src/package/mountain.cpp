@@ -1081,6 +1081,7 @@ public:
     }
 
     static void AcquireGenerals(ServerPlayer *zuoci, int n) {
+        Room *room = zuoci->getRoom();
         QVariantList huashens = zuoci->tag["Huashens"].toList();
         QStringList list = GetAvailableGenerals(zuoci);
         qShuffle(list);
@@ -1094,11 +1095,11 @@ public:
 
         QStringList hidden;
         for (int i = 0; i < n; i++) hidden << "unknown";
-        foreach (ServerPlayer *p, zuoci->getRoom()->getAllPlayers()) {
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
             if (p == zuoci)
-                p->invoke("animate", QString("huashen:%1:%2").arg(zuoci->objectName()).arg(acquired.join(":")));
+                room->doAnimate(QSanProtocol::S_ANIMATE_HUASHEN, zuoci->objectName(), acquired.join(":"), QList<ServerPlayer *>() << p);
             else
-                p->invoke("animate", QString("huashen:%1:%2").arg(zuoci->objectName()).arg(hidden.join(":")));
+                room->doAnimate(QSanProtocol::S_ANIMATE_HUASHEN, zuoci->objectName(), hidden.join(":"), QList<ServerPlayer *>() << p);
         }
 
         LogMessage log;
@@ -1106,9 +1107,9 @@ public:
         log.from = zuoci;
         log.arg = QString::number(n);
         log.arg2 = QString::number(huashens.length());
-        zuoci->getRoom()->sendLog(log);
+        room->sendLog(log);
 
-        zuoci->getRoom()->setPlayerMark(zuoci, "@huashen", huashens.length());
+        room->setPlayerMark(zuoci, "@huashen", huashens.length());
     }
 
     static QStringList GetAvailableGenerals(ServerPlayer *zuoci) {

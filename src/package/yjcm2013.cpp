@@ -388,7 +388,7 @@ public:
                 log.arg = use.card->objectName();
                 log.arg2 = objectName();
                 room->sendLog(log);
-                room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(jianyong->objectName()).arg(extra->objectName()));
+                room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, jianyong->objectName(), extra->objectName());
 
                 if (use.card->isKindOf("Collateral")) {
                     ServerPlayer *victim = extra->tag["collateralVictim"].value<PlayerStar>();
@@ -398,7 +398,7 @@ public:
                         log.from = jianyong;
                         log.to << victim;
                         room->sendLog(log);
-                        room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(extra->objectName()).arg(victim->objectName()));
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, extra->objectName(), victim->objectName());
                     }
                 }
             } else {
@@ -946,7 +946,7 @@ public:
             log.arg = use.card->objectName();
             log.arg2 = objectName();
             room->sendLog(log);
-            room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(player->objectName()).arg(extra->objectName()));
+            room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), extra->objectName());
 
             if (use.card->isKindOf("Collateral")) {
                 ServerPlayer *victim = extra->tag["collateralVictim"].value<PlayerStar>();
@@ -956,7 +956,7 @@ public:
                     log.from = player;
                     log.to << victim;
                     room->sendLog(log);
-                    room->broadcastInvoke("animate", QString("indicate:%1:%2").arg(extra->objectName()).arg(victim->objectName()));
+                    room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, extra->objectName(), victim->objectName());
                 }
             }
         }

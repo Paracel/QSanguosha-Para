@@ -117,7 +117,7 @@ public:
     void moveFocus(const Json::Value &focus);
     void setEmotion(const Json::Value &set_str);
     void skillInvoked(const Json::Value &invoke_str);
-    void animate(const QString &animate_str);
+    void animate(const Json::Value &animate_str);
     void cardLimitation(const Json::Value &limit);
     void setNullification(const Json::Value &str);
     void enableSurrender(const Json::Value &enabled);
@@ -296,7 +296,7 @@ signals:
     void emotion_set(const QString &target, const QString &emotion);
     void skill_invoked(const QString &who, const QString &skill_name);
     void skill_acquired(const ClientPlayer *player, const QString &skill_name);
-    void animated(const QString &name, const QStringList &args);
+    void animated(int name, const QStringList &args);
     void text_spoken(const QString &text);
     void line_spoken(const QString &line);
     void card_used();

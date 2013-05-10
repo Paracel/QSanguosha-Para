@@ -41,6 +41,7 @@ Client::Client(QObject *parent, const QString &filename)
     callbacks["startInXs"] = &Client::startInXs;
     callbacks["arrangeSeats"] = &Client::arrangeSeats;
     callbacks["warn"] = &Client::warn;
+    callbacks["speak"] = &Client::speak;
 
     m_callbacks[S_COMMAND_GAME_START] = &Client::startGame;
     m_callbacks[S_COMMAND_GAME_OVER] = &Client::gameOver;
@@ -53,7 +54,6 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_UPDATE_CARD] = &Client::updateCard;
     m_callbacks[S_COMMAND_SET_MARK] = &Client::setMark;
     m_callbacks[S_COMMAND_LOG_SKILL] = &Client::log;
-    callbacks["speak"] = &Client::speak;
     m_callbacks[S_COMMAND_ATTACH_SKILL] = &Client::attachSkill;
     m_callbacks[S_COMMAND_MOVE_FOCUS] = &Client::moveFocus; 
     m_callbacks[S_COMMAND_SET_EMOTION] = &Client::setEmotion;
@@ -62,7 +62,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_SKILL_GONGXIN] = &Client::askForGongxin;
     m_callbacks[S_COMMAND_LOG_EVENT] = &Client::handleGameEvent;
     m_callbacks[S_COMMAND_ADD_HISTORY] = &Client::addHistory;
-    callbacks["animate"] = &Client::animate;
+    m_callbacks[S_COMMAND_ANIMATE] = &Client::animate;
     m_callbacks[S_COMMAND_FIXED_DISTANCE] = &Client::setFixedDistance;
     m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
     m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
@@ -1646,10 +1646,13 @@ void Client::skillInvoked(const Json::Value &arg) {
     emit skill_invoked(QString(arg[1].asCString()), QString(arg[0].asCString()));
 }
 
-void Client::animate(const QString &animate_str) {
-    QStringList args = animate_str.split(":");
-    QString name = args.takeFirst();
-
+void Client::animate(const Json::Value &animate_str) {
+    if (!animate_str.isArray() || !animate_str[0].isInt()
+        || !animate_str[1].isString() ||  !animate_str[2].isString())
+        return;
+    QStringList args;
+    args << toQString(animate_str[1]) << toQString(animate_str[2]);
+    int name = animate_str[0].asInt();
     emit animated(name, args);
 }
 

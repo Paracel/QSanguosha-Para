@@ -31,7 +31,7 @@ function sgs.isGoodHp(player)
 	else
 		for _, p in sgs.qlist(global_room:getOtherPlayers(player)) do
 			if sgs.compareRoleEvaluation(p, "rebel", "loyalist") == sgs.compareRoleEvaluation(player, "rebel", "loyalist")
-					and getCardsNum("Peach", p) > 0 and not global_room:getCurrent():hasSkill("wansha") then
+				and getCardsNum("Peach", p) > 0 and not global_room:getCurrent():hasSkill("wansha") then
 				return true
 			end
 		end

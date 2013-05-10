@@ -230,12 +230,10 @@ function sgs.getDefense(player)
 
 	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.4 end
 	if attacker and not attacker:hasSkill("jueqing") then
-		if sgs.isGoodHp(player) then
-			local m = sgs.masochism_skill:split("|")
-			for _, masochism in ipairs(m) do
-				if player:hasSkill(masochism) then
-					defense = defense + 1
-				end
+		local m = sgs.masochism_skill:split("|")
+		for _, masochism in ipairs(m) do
+			if player:hasSkill(masochism) then
+				defense = defense + 1
 			end
 		end
 		if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then

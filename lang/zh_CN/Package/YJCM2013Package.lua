@@ -21,7 +21,7 @@ return {
 	["jingce:draw"] = "摸一张牌",
 	["jingce:recover"] = "回复1点体力",
 
-	["#manchong"] = "",
+	["#manchong"] = "政法兵谋",
 	["manchong"] = "满宠",
 	["designer:manchong"] = "samrosen",
 	["illustrator:manchong"] = "Aimer彩三",
@@ -57,7 +57,7 @@ return {
 	["#QiaoshuiAdd"] = "%from 发动了“%arg2”为【%arg】增加了额外目标 %to",
 	["#QiaoshuiRemove"] = "%from 发动了“%arg2”为【%arg】减少了目标 %to",
 
-	["#liufeng"] = "",
+	["#liufeng"] = "骑虎之殇",
 	["liufeng"] = "刘封",
 	["designer:liufeng"] = "香蒲神殇",
 	["illustrator:liufeng"] = "Thinking",
@@ -91,12 +91,12 @@ return {
 	[":zhiyan"] = "结束阶段开始时，你可以令一名角色摸一张牌并展示之：若此牌为装备牌，该角色回复1点体力，然后使用之。",
 	["zhiyan-invoke"] = "你可以发动“直言”<br/> <b>操作提示</b>: 选择一名角色→点击确定<br/>",
 
-	["#zhuran"] = "",
+	["#zhuran"] = "不动之督",
 	["zhuran"] = "朱然",
 	["designer:zhuran"] = "羊妞",
 	["illustrator:zhuran"] = "Ccat",
 	["danshou"] = "胆守",
-	[":danshou"] = "每当你造成一次伤害后，你可以摸一张牌，然后结束当前结算并结束当前回合。",
+	[":danshou"] = "每当你造成一次伤害后，你可以摸一张牌，然后结束一切结算并结束当前回合。",
 	["#TurnBroken"] = "%from 当前回合结束",
 
 	["#fuhuanghou"] = "孤注一掷",

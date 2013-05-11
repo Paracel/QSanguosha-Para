@@ -100,23 +100,14 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
             break;
         }
     case Player::Discard: {
-            int discard_num, keep_num;
-            QSet<const Card *> jilei_cards;
-            QList<const Card *> handcards;
+            int discard_num = 0;
             do {
-                handcards = player->getHandcards();
-                foreach (const Card *card, handcards) {
-                    if (player->isJilei(card))
-                        jilei_cards << card;
+                discard_num = player->getHandcardNum() - player->getMaxCards();
+                if (discard_num > 0) {
+                    if (!room->askForDiscard(player, "gamerule", discard_num, 1))
+                        break;
                 }
-                keep_num = qMax(player->getMaxCards(), jilei_cards.size());
-                discard_num = player->getHandcardNum() - keep_num;
-                jilei_cards.clear();
-                if (discard_num > 0)
-                    room->askForDiscard(player, "gamerule", discard_num, 1);
             } while (discard_num > 0);
-            if (player->getHandcardNum() > player->getMaxCards())
-                room->showAllCards(player);
             break;
         }
     case Player::Finish: {

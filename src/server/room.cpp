@@ -1391,8 +1391,8 @@ const Card *Room::askForCardShow(ServerPlayer *player, ServerPlayer *requestor, 
         else {
             bool success = doRequest(player, S_COMMAND_SHOW_CARD, toJsonString(requestor->getGeneralName()), true);
             Json::Value clientReply = player->getClientReply();
-            if (success && clientReply.isString())
-                card = Card::Parse(toQString(clientReply));
+            if (success && clientReply[0].isString())
+                card = Card::Parse(toQString(clientReply[0]));
             if (card == NULL)
                 card = player->getRandomHandCard();
         }
@@ -4271,12 +4271,13 @@ QString Room::askForKingdom(ServerPlayer *player) {
 bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discard_num, int min_num,
                          bool optional, bool include_equip, const QString &prompt) {
     if (!player->isAlive())
-        return true;
+        return false;
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_DISCARD_CARD);
 
     if (!optional) {
         DummyCard *dummy = new DummyCard;
+        dummy->deleteLater();
         QList<int> jilei_list;
         QList<const Card *> handcards = player->getHandcards();
         foreach (const Card *card, handcards) {
@@ -4335,12 +4336,10 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
                 sendLog(log);
 
                 doBroadcastNotify(S_COMMAND_SHOW_ALL_CARDS, gongxinArgs);
+                return false;
             }
-
-            dummy->deleteLater();
             return true;
         }
-        dummy->deleteLater();
     }
 
     AI *ai = player->getAI();
@@ -4620,11 +4619,11 @@ const Card *Room::askForPindian(ServerPlayer *player, ServerPlayer *from, Server
     bool success = doRequest(player, S_COMMAND_PINDIAN, toJsonArray(from->objectName(), to->objectName()), true);
 
     Json::Value clientReply = player->getClientReply();
-    if (!success || !clientReply.isString()) {
+    if (!success || !clientReply[0].isString()) {
         int card_id = player->getRandomHandCardId();
         return Sanguosha->getCard(card_id);
     } else {
-        const Card *card = Card::Parse(toQString(clientReply));
+        const Card *card = Card::Parse(toQString(clientReply[0]));
         if (card->isVirtualCard()) {
             const Card *real_card = Sanguosha->getCard(card->getEffectiveId());
             delete card;

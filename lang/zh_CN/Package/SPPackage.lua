@@ -93,7 +93,7 @@ return {
 	["@xingwu"] = "你可以发动“星舞”将一张手牌置于武将牌上",
 	["@xingwu-choose"] = "请选择一名男性角色",
 	["luoyan"] = "落雁",
-	[":luoyan"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的武将牌上有“星舞”牌，你拥有技能“天香”和“流离”。",
+	[":luoyan"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的武将牌上有“星舞牌”，你拥有技能“天香”和“流离”。",
 
 	["#zhugeke"] = "兴家赤族",
 	["zhugeke"] = "诸葛恪",

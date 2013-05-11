@@ -1103,7 +1103,9 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         QString pattern = data.toStringList().first();
-        if ((pattern == "slash" || pattern == "jink") && room->askForSkillInvoke(player, objectName())) {
+        if (player->getPhase() == Player::NotActive
+            && (pattern == "slash" || pattern == "jink")
+            && room->askForSkillInvoke(player, objectName())) {
             QList<int> ids = room->getNCards(2, false);
             QList<int> enabled, disabled;
             foreach (int id, ids) {

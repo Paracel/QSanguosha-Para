@@ -94,8 +94,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_interactions[S_COMMAND_DISCARD_CARD] = &Client::askForDiscard;
     m_interactions[S_COMMAND_CHOOSE_SUIT] = &Client::askForSuit;
     m_interactions[S_COMMAND_CHOOSE_KINGDOM] = &Client::askForKingdom;
-    m_interactions[S_COMMAND_RESPONSE_CARD] = &Client::askForCard;
-    m_interactions[S_COMMAND_USE_CARD] = &Client::askForUseCard;
+    m_interactions[S_COMMAND_RESPONSE_CARD] = &Client::askForCardOrUseCard;
     m_interactions[S_COMMAND_INVOKE_SKILL] = &Client::askForSkillInvoke;
     m_interactions[S_COMMAND_MULTIPLE_CHOICE] = &Client::askForChoice;
     m_interactions[S_COMMAND_NULLIFICATION] = &Client::askForNullification;
@@ -501,11 +500,11 @@ void Client::arrange(const QStringList &order) {
     request(QString("arrange %1").arg(order.join("+")));
 }
 
-void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targets) {
+void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> &targets) {
     if ((status & ClientStatusBasicMask) == Responding)
         _m_roomState.setCurrentCardUsePattern(QString());
     if (card == NULL) {
-        replyToServer(S_COMMAND_USE_CARD, Json::Value::null);
+        replyToServer(S_COMMAND_RESPONSE_CARD, Json::Value::null);
     } else {
         Json::Value targetNames(Json::arrayValue);
         if (!card->targetFixed()) {
@@ -513,12 +512,16 @@ void Client::onPlayerUseCard(const Card *card, const QList<const Player *> &targ
                 targetNames.append(toJsonString(target->objectName()));
         }
 
-        replyToServer(S_COMMAND_USE_CARD, toJsonArray(card->toString(), targetNames));
+        replyToServer(S_COMMAND_RESPONSE_CARD, toJsonArray(card->toString(), targetNames));
 
         if (card->isVirtualCard() && !card->parent())
             delete card;
     }
 
+    if (Self->hasFlag("Client_PreventPeach")) {
+        Self->setFlags("-Client_PreventPeach");
+        Self->removeCardLimitation("use", "Peach$0");
+    }
     setStatus(NotActive);
 }
 
@@ -758,7 +761,7 @@ QString Client::_processCardPattern(const QString &pattern) {
     return pattern;
 }
 
-void Client::_askForCardOrUseCard(const Json::Value &cardUsage) {
+void Client::askForCardOrUseCard(const Json::Value &cardUsage) {
     if (!cardUsage.isArray() || !cardUsage[0].isString() || !cardUsage[1].isString())
         return;
     QString card_pattern = toQString(cardUsage[0]);
@@ -801,15 +804,6 @@ void Client::_askForCardOrUseCard(const Json::Value &cardUsage) {
         }
     }
     setStatus(status);
-}
-
-void Client::askForCard(const Json::Value &req) {
-    if (!req.isArray() || req.size() == 0) return;
-    _askForCardOrUseCard(req);
-}
-
-void Client::askForUseCard(const Json::Value &req) {
-    _askForCardOrUseCard(req);
 }
 
 void Client::askForSkillInvoke(const Json::Value &arg) {
@@ -872,13 +866,13 @@ void Client::askForNullification(const Json::Value &arg) {
     const Card *trick_card = Sanguosha->findChild<const Card *>(trick_name);
     if (Config.NeverNullifyMyTrick && source == Self) {
         if (trick_card->isKindOf("SingleTargetTrick") || trick_card->isKindOf("IronChain")) {
-            onPlayerUseCard(NULL);
+            onPlayerResponseCard(NULL);
             return;
         }
     }
     if (m_noNullificationThisTime && m_noNullificationTrickName == trick_name) {
         if (trick_card->isKindOf("AOE") || trick_card->isKindOf("GlobalEffect")) {
-            onPlayerUseCard(NULL);
+            onPlayerResponseCard(NULL);
             return;
         }
     }
@@ -959,22 +953,6 @@ void Client::addHistory(const Json::Value &history) {
 
 int Client::alivePlayerCount() const{
     return alive_count;
-}
-
-void Client::onPlayerResponseCard(const Card *card) {
-    if (card) {
-        replyToServer(S_COMMAND_RESPONSE_CARD, toJsonString(card->toString()));
-        if (card->isVirtualCard() && !card->parent())
-            delete card;
-    } else
-        replyToServer(S_COMMAND_RESPONSE_CARD, Json::Value::null);
-
-    if (Self->hasFlag("Client_PreventPeach")) {
-        Self->setFlags("-Client_PreventPeach");
-        Self->removeCardLimitation("use", "Peach$0");
-    }
-    _m_roomState.setCurrentCardUsePattern(QString());
-    setStatus(NotActive);
 }
 
 ClientPlayer *Client::getPlayer(const QString &name) {
@@ -1368,7 +1346,7 @@ void Client::askForSinglePeach(const Json::Value &arg) {
         if (!has_skill) {
             pattern.removeOne("peach");
             if (pattern.isEmpty()) {
-                onPlayerUseCard(NULL);
+                onPlayerResponseCard(NULL);
                 return;
             }
         } else {

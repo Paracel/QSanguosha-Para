@@ -57,7 +57,6 @@ namespace QSanProtocol {
         S_COMMAND_UNKNOWN,
         S_COMMAND_CHOOSE_CARD,
         S_COMMAND_PLAY_CARD,
-        S_COMMAND_USE_CARD,        
         S_COMMAND_RESPONSE_CARD,
         S_COMMAND_SHOW_CARD,
         S_COMMAND_SHOW_ALL_CARDS,

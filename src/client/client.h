@@ -62,11 +62,10 @@ public:
     void replyToServer(QSanProtocol::CommandType command, const Json::Value &arg = Json::Value::null);
     void requestToServer(QSanProtocol::CommandType command, const Json::Value &arg = Json::Value::null);
     void request(const QString &message);
-    void onPlayerUseCard(const Card *card, const QList<const Player *> &targets = QList<const Player *>());
+    void onPlayerResponseCard(const Card *card, const QList<const Player *> &targets = QList<const Player *>());
     void setStatus(Status status);
     Status getStatus() const;
     int alivePlayerCount() const;    
-    void onPlayerResponseCard(const Card *card);
     void onPlayerInvokeSkill(bool invoke);
     void onPlayerDiscardCards(const Card *card);
     void onPlayerReplyYiji(const Card *card, const Player *to);
@@ -134,8 +133,7 @@ public:
     void clearAG(const Json::Value &);
 
     //interactive server callbacks
-    void askForCard(const Json::Value &);
-    void askForUseCard(const Json::Value &);
+    void askForCardOrUseCard(const Json::Value &);
     void askForAG(const Json::Value &);
     void askForSinglePeach(const Json::Value &);
     void askForCardShow(const Json::Value &);
@@ -248,7 +246,6 @@ private:
     QString _processCardPattern(const QString &pattern);
     void commandFormatWarning(const QString &str, const QRegExp &rx, const char *command);
 
-    void _askForCardOrUseCard(const Json::Value &);
     bool _loseSingleCard(int card_id, CardsMoveStruct move);
     bool _getSingleCard(int card_id, CardsMoveStruct move);
 

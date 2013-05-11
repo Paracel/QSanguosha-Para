@@ -56,10 +56,10 @@ Room::Room(QObject *parent, const QString &mode)
 
 void Room::initCallbacks() {
     // init request response pair
-    m_requestResponsePair[S_COMMAND_PLAY_CARD] = S_COMMAND_USE_CARD;
-    m_requestResponsePair[S_COMMAND_NULLIFICATION] = S_COMMAND_USE_CARD;
+    m_requestResponsePair[S_COMMAND_PLAY_CARD] = S_COMMAND_RESPONSE_CARD;
+    m_requestResponsePair[S_COMMAND_NULLIFICATION] = S_COMMAND_RESPONSE_CARD;
     m_requestResponsePair[S_COMMAND_SHOW_CARD] = S_COMMAND_RESPONSE_CARD;
-    m_requestResponsePair[S_COMMAND_ASK_PEACH] = S_COMMAND_USE_CARD;
+    m_requestResponsePair[S_COMMAND_ASK_PEACH] = S_COMMAND_RESPONSE_CARD;
     m_requestResponsePair[S_COMMAND_PINDIAN] = S_COMMAND_RESPONSE_CARD;
     m_requestResponsePair[S_COMMAND_EXCHANGE_CARD] = S_COMMAND_DISCARD_CARD;
     m_requestResponsePair[S_COMMAND_CHOOSE_DIRECTION] = S_COMMAND_MULTIPLE_CHOICE;
@@ -1162,15 +1162,10 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             arg[0] = toJsonString(pattern);
             arg[1] = toJsonString(prompt);
             arg[2] = int(method);
-            CommandType command = S_COMMAND_RESPONSE_CARD;
-            if (method == Card::MethodUse)
-                command = S_COMMAND_USE_CARD;
-            bool success = doRequest(player, command, arg, true);
+            bool success = doRequest(player, S_COMMAND_RESPONSE_CARD, arg, true);
             Json::Value clientReply = player->getClientReply();
-            if (command == S_COMMAND_USE_CARD)
-                clientReply = clientReply[0];
             if (success && !clientReply.isNull())
-                card = Card::Parse(toQString(clientReply));
+                card = Card::Parse(toQString(clientReply[0]));
         }
     }
 
@@ -1268,7 +1263,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
                          Card::HandlingMethod method, bool addHistory) {
     Q_ASSERT(method != Card::MethodResponse);
     while (isPaused()) {}
-    notifyMoveFocus(player, S_COMMAND_USE_CARD);
+    notifyMoveFocus(player, S_COMMAND_RESPONSE_CARD);
 
     _m_roomState.setCurrentCardUsePattern(pattern);
     _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
@@ -1290,7 +1285,7 @@ bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QSt
         ask_str[1] = toJsonString(prompt);
         ask_str[2] = int(method);
         ask_str[3] = notice_index;
-        bool success = doRequest(player, S_COMMAND_USE_CARD, ask_str, true);
+        bool success = doRequest(player, S_COMMAND_RESPONSE_CARD, ask_str, true);
         if (success) {
             Json::Value clientReply = player->getClientReply();
             isCardUsed = !clientReply.isNull();

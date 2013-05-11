@@ -2024,10 +2024,11 @@ void RoomScene::useSelectedCard() {
     case Client::Responding: {
             const Card *card = dashboard->getSelected();
             if (card) {
-                if (ClientInstance->getStatus() == Client::Responding)
-                    ClientInstance->onPlayerResponseCard(card);
-                else
-                    ClientInstance->onPlayerUseCard(card, selected_targets);
+                if (ClientInstance->getStatus() != Client::RespondingUse) {
+                    Q_ASSERT(selected_targets.isEmpty());
+                    selected_targets.clear();
+                }
+                ClientInstance->onPlayerResponseCard(card, selected_targets);
                 prompt_box->disappear();
             }
 
@@ -2117,7 +2118,7 @@ void RoomScene::onEnabledChange() {
 
 void RoomScene::useCard(const Card *card) {
     if (card->targetFixed() || card->targetsFeasible(selected_targets, Self))
-        ClientInstance->onPlayerUseCard(card, selected_targets);
+        ClientInstance->onPlayerResponseCard(card, selected_targets);
      enableTargets(NULL);
 }
 
@@ -2563,10 +2564,7 @@ void RoomScene::doCancelButton() {
                 }
             }
 
-            if (ClientInstance->getStatus() == Client::Responding)
-                ClientInstance->onPlayerResponseCard(NULL);
-            else
-                ClientInstance->onPlayerUseCard(NULL);
+            ClientInstance->onPlayerResponseCard(NULL);
             prompt_box->disappear();
             dashboard->stopPending();
             break;
@@ -2620,7 +2618,7 @@ void RoomScene::doDiscardButton() {
 
     if (card_container->retained()) card_container->clear();
     if (ClientInstance->getStatus() == Client::Playing)
-        ClientInstance->onPlayerUseCard(NULL);
+        ClientInstance->onPlayerResponseCard(NULL);
 }
 
 void RoomScene::hideAvatars() {

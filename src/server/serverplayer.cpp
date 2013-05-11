@@ -288,7 +288,7 @@ QString ServerPlayer::findReasonable(const QStringList &generals, bool no_unreas
     }
 
     if (no_unreasonable)
-        return NULL;
+        return QString();
 
     return generals.first();
 }

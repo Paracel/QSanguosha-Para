@@ -2296,6 +2296,14 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
         if (player->getGeneral2())
             existed << player->getGeneral2Name();
     }
+    if (Config.Enable2ndGeneral) {
+        foreach (QString name, BanPair::getAllBanSet())
+            existed << name;
+        if (to_assign.first()->getGeneral()) {
+            foreach (QString name, BanPair::getSecondBanSet())
+                existed << name;
+        }
+    }
 
     const int max_choice = (Config.EnableHegemony && Config.Enable2ndGeneral) ?
                                Config.value("HegemonyMaxChoice", 7).toInt() :
@@ -2338,7 +2346,8 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
         player->clearSelected();
 
         for (int i = 0; i < choice_count; i++) {
-            QString choice = player->findReasonable(choices);
+            QString choice = player->findReasonable(choices, true);
+            if (choice.isEmpty()) break;
             player->addToSelected(choice);
             choices.removeOne(choice);
         }

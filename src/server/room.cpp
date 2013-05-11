@@ -4920,8 +4920,8 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
             } else {
                 arg[2] = false;
             }
-            doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
         }
+        doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
     } else {
         doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
         if (!move_cards) return;

@@ -3,7 +3,7 @@
 return {
 	["YJCM2013"] = "一将成名2013",
 
-	["#caochong"] = "",
+	["#caochong"] = "仁爱的神童",
 	["caochong"] = "曹冲",
 	["designer:caochong"] = "红魔鬼",
 	["illustrator:caochong"] = "Amo",
@@ -33,7 +33,7 @@ return {
 	["@yuce-show"] = "你可以发动“御策”展示一张手牌",
 	["@yuce-discard"] = "%src 发动了“御策”，请弃置一张 %arg 或 %arg2",
 
-	["#guanping"] = "",
+	["#guanping"] = "忠臣孝子",
 	["guanping"] = "关平",
 	["designer:guanping"] = "昂翼天使",
 	["illustrator:guanping"] = "樱花闪乱",
@@ -79,7 +79,7 @@ return {
 	[":anjian"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你使用【杀】对目标角色造成伤害时，若你不在其攻击范围内，此伤害+1。",
 	["#AnjianBuff"] = "%from 的“<font color=\"yellow\"><b>暗箭</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 
-	["#yufan"] = "",
+	["#yufan"] = "狂直之士",
 	["yufan"] = "虞翻",
 	["designer:yufan"] = "幻岛",
 	["illustrator:yufan"] = "L",
@@ -110,7 +110,7 @@ return {
 	["qiuyuan-invoke"] = "你可以发动“求援”<br/> <b>操作提示</b>: 选择除此【杀】使用者外的一名有手牌的其他角色→点击确定<br/>",
 	["@qiuyuan-give"] = "请交给 %src 一张手牌",
 
-	["#liru"] = "",
+	["#liru"] = "魔仕",
 	["liru"] = "李儒",
 	["designer:liru"] = "进化论",
 	["illustrator:liru"] = "MSNZero",

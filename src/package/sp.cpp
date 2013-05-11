@@ -1277,7 +1277,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasFlag("DuwuEnterDying");
+        return !player->isNude() && !player->hasFlag("DuwuEnterDying");
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{

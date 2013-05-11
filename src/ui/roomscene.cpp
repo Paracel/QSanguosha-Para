@@ -2530,10 +2530,12 @@ void RoomScene::updateTrustButton() {
 
 void RoomScene::doOkButton() {
     if (!ok_button->isEnabled()) return;
+    if (card_container->retained()) card_container->clear();
     useSelectedCard();
 }
 
 void RoomScene::doCancelButton() {
+    if (card_container->retained()) card_container->clear();
     switch (ClientInstance->getStatus() & Client::ClientStatusBasicMask) {
     case Client::Playing: {
             dashboard->skillButtonDeactivated();
@@ -2616,6 +2618,7 @@ void RoomScene::doDiscardButton() {
     dashboard->stopPending();
     dashboard->unselectAll();
 
+    if (card_container->retained()) card_container->clear();
     if (ClientInstance->getStatus() == Client::Playing)
         ClientInstance->onPlayerUseCard(NULL);
 }

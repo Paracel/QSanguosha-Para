@@ -2024,7 +2024,7 @@ void RoomScene::useSelectedCard() {
     case Client::Responding: {
             const Card *card = dashboard->getSelected();
             if (card) {
-                if (ClientInstance->getStatus() != Client::RespondingUse)
+                if (ClientInstance->getStatus() == Client::Responding)
                     ClientInstance->onPlayerResponseCard(card);
                 else
                     ClientInstance->onPlayerUseCard(card, selected_targets);
@@ -2563,7 +2563,7 @@ void RoomScene::doCancelButton() {
                 }
             }
 
-            if (ClientInstance->getStatus() != Client::RespondingUse)
+            if (ClientInstance->getStatus() == Client::Responding)
                 ClientInstance->onPlayerResponseCard(NULL);
             else
                 ClientInstance->onPlayerUseCard(NULL);

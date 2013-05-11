@@ -1266,6 +1266,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 
 bool Room::askForUseCard(ServerPlayer *player, const QString &pattern, const QString &prompt, int notice_index,
                          Card::HandlingMethod method, bool addHistory) {
+    Q_ASSERT(method != Card::MethodResponse);
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_USE_CARD);
 

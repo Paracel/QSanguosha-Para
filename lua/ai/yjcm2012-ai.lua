@@ -355,7 +355,7 @@ sgs.ai_skill_use_func.GongqiCard = function(card, use, self)
 	use.card = card
 end
 
-sgs.ai_skill_playerchosen.gonqqi = function(self, targets)
+sgs.ai_skill_playerchosen.gongqi = function(self, targets)
 	local player = self:findPlayerToDiscard()
 	return player
 end

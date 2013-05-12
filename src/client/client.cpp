@@ -1046,12 +1046,16 @@ void Client::askForDiscard(const Json::Value &req) {
             prompt = tr("Please discard %1 card(s), include equip").arg(discard_num);
         else
             prompt = tr("Please discard %1 card(s), only hand cards is allowed").arg(discard_num);
+        prompt_doc->setHtml(prompt);
     } else {
-        prompt = Sanguosha->translate(prompt);
-        prompt = prompt.replace("%arg", QString::number(discard_num));
+        QStringList texts = prompt.split(":");
+        if (texts.length() < 4) {
+            while (texts.length() < 3)
+                texts.append(QString());
+            texts.append(QString::number(discard_num));
+        }
+        setPromptList(texts);
     }
-
-    prompt_doc->setHtml(prompt);
 
     setStatus(Discarding);
 }
@@ -1069,23 +1073,18 @@ void Client::askForExchange(const Json::Value &exchange_str) {
     min_num = discard_num;
     m_isDiscardActionRefusable = exchange_str[3].asBool();
 
-    if (prompt.isEmpty())
+    if (prompt.isEmpty()) {
         prompt = tr("Please give %1 cards to exchange").arg(discard_num);
-    else {
+        prompt_doc->setHtml(prompt);
+    } else {
         QStringList texts = prompt.split(":");
-        prompt = Sanguosha->translate(texts.first());
-
-        if (texts.length() >= 2)
-            prompt.replace("%src", getPlayerName(texts.at(1)));
-
-        if (texts.length() >= 3)
-            prompt.replace("%dest", getPlayerName(texts.at(2)));
-
-        prompt.replace("%arg", QString::number(discard_num));
+        if (texts.length() < 4) {
+            while (texts.length() < 3)
+                texts.append(QString());
+            texts.append(QString::number(discard_num));
+        }
+        setPromptList(texts);
     }
-
-    prompt_doc->setHtml(prompt);
-
     setStatus(Exchanging);
 }
 

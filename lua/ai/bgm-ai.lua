@@ -474,11 +474,23 @@ sgs.ai_skill_playerchosen.zhaolie = function(self, targets)
 	return nil
 end
 
-sgs.ai_skill_choice.zhaolie = function(self, choices, data)
-	local nobasic = data:toInt()
+local function will_discard_zhaolie(self, nobasic)
 	local spliubei = self.room:getCurrent()
-	if not spliubei or not spliubei:isAlive() then return "throw" end
-	if self.player:hasSkill("wuhun") and self.role == "rebel" then
+	if not spliubei or not spliubei:isAlive() then return true end
+	if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, spliubei) then return false end
+	local damage_num = nobasic
+	if nobasic > 0 and not spliubei:hasSkill("jueqing") then
+		if self.player:hasSkill("tianxiang") then
+			local dmgStr = { damage = 1, nature = sgs.DamageStruct_Normal }
+			local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr, sgs.Card_MethodDiscard)
+			if willTianxiang ~= "." then damage_num = 0 end
+		end
+		if self.player:hasSkill("mingshi") and spliubei:getEquips():length() <= self.player:getEquips():length() and damage_num > 0 then
+			damage_num = damage_num - 1
+		end
+		if self.player:hasArmorEffect("silver_lion") and damage_num > 1 then damage_num = 1 end
+	end
+	if not spliubei:hasSkill("jueqing") and self.player:hasSkill("wuhun") and self.role == "rebel" then
 		local mark = 0
 		local spmark = spliubei:isLord() and spliubei:getMark("@nightmare") or 0
 		for _, ap in sgs.qlist(self.room:getOtherPlayer(spliubei)) do
@@ -486,17 +498,22 @@ sgs.ai_skill_choice.zhaolie = function(self, choices, data)
 				mark = ap:getMark("@nightmare")
 			end
 		end
-		if mark == 0 and spliubei:isLord() then return "damage" end
-		if mark < nobasic + spmark then return "damage" end
+		if mark == 0 and spliubei:isLord() then return false end
+		if mark < damage_num + spmark then return false end
 	end
-	if not self:damageIsEffective() then return "damage" end
-	if self.player:hasSkill("manjuan") then return "throw" end
-	if nobasic == 0 then return "damage" end
-	if self.player:hasArmorEffect("silver_lion") and not (spliubei and spliubei:hasSkill("jueqing")) then return "damage" end
-	if nobasic < 2 and self.player:getHp() > 1 then return "damage" else return "throw" end
+	if self.player:hasSkill("manjuan") then
+		if self:isFriend(spliubei) then return true
+		else
+			return not (damage_num == 0 or self.player:getHp() - damage_num >= getBestHp(self.player))
+		end
+	end
+	if damage_num == 0 then return false end
+	if damage_num < 2 and self.player:getHp() > 1 then return false else return true end
 end
 
 sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, include_equip)
+	if not will_discard_zhaolie(self, discard_num) then return {} end
+
 	local to_discard = {}
 	local cards = sgs.QList2Table(self.player:getCards("he"))
 	local index = 0
@@ -514,6 +531,10 @@ sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, in
 		end
 	end
 	if #to_discard < min_num then return {} else return to_discard end
+end
+
+sgs.ai_skill_invoke.zhaolie_obtain = function(self, data)
+	return not will_discard_zhaolie(self, 0)
 end
 
 local function will_invoke_shichou(self)

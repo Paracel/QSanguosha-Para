@@ -818,6 +818,7 @@ public:
             room->getThread()->delay();
         }
         DummyCard *dummy = new DummyCard;
+        dummy->deleteLater();
         for (int i = 0; i < 3; i++) {
             int card_id = cardIds[i];
             const Card *card = Sanguosha->getCard(card_id);
@@ -829,45 +830,42 @@ public:
                 cards << card;
             }
         }
-        if (dummy->subcardsLength() > 0) {
-            CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "zhaolie", QString());
+        CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "zhaolie", QString());
+        if (dummy->subcardsLength() > 0)
             room->throwCard(dummy, reason, NULL);
-        }
-        dummy->deleteLater();
+        dummy->clearSubcards();
 
-        QStringList choicelist;
-        choicelist << "damage";
-        if (victim->getCards("he").length() >= no_basic)
-            choicelist << "throw";
+        if (no_basic == 0 && cards.isEmpty())
+            return false;
+        foreach (const Card *c, cards)
+            dummy->addSubcard(c);
 
-        QVariant data = QVariant::fromValue(no_basic);
-        QString choice = room->askForChoice(victim, "zhaolie", choicelist.join("+"), data);
-
-        if (choice == "damage") {
-            room->broadcastSkillInvoke("zhaolie", 1);
-            if (no_basic > 0)
-                room->damage(DamageStruct("zhaolie", liubei, victim, no_basic));
-            if (!cards.empty()) {
-                DummyCard *dummy_card = new DummyCard;
-                foreach (const Card *c, cards)
-                    dummy_card->addSubcard(c);
-                CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, victim->objectName());
-                if (victim->isAlive())
-                    room->obtainCard(victim, dummy_card, reason, true);
-                else {
-                    CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, victim->objectName(), "zhaolie", QString());
-                    room->throwCard(dummy_card, reason, NULL);
-                }
-                delete dummy_card;
+        if (no_basic == 0) {
+            if (room->askForSkillInvoke(victim, "zhaolie_obtain", "obtain:" + liubei->objectName())) {
+                room->broadcastSkillInvoke("zhaolie", 1);
+                victim->obtainCard(dummy);
+            } else {
+                room->broadcastSkillInvoke("zhaolie", 2);
+                liubei->obtainCard(dummy);
             }
         } else {
-            room->broadcastSkillInvoke("zhaolie", 2);
-            if (no_basic > 0)
-                room->askForDiscard(victim, "zhaolie", no_basic, no_basic, false, true);
-            if (!cards.empty()) {
-                foreach (const Card *c, cards) {
-                    CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, liubei->objectName());
-                    room->obtainCard(liubei, c, reason);
+            if (room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
+                room->broadcastSkillInvoke("zhaolie", 2);
+                if (dummy->subcardsLength() > 0) {
+                    if (liubei->isAlive())
+                        liubei->obtainCard(dummy);
+                    else
+                        room->throwCard(dummy, reason, NULL);
+                }
+            } else {
+                room->broadcastSkillInvoke("zhaolie", 1);
+                if (no_basic > 0)
+                    room->damage(DamageStruct("zhaolie", liubei, victim, no_basic));
+                if (dummy->subcardsLength() > 0) {
+                    if (victim->isAlive())
+                        victim->obtainCard(dummy);
+                    else
+                        room->throwCard(dummy, reason, NULL);
                 }
             }
         }

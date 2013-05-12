@@ -17,7 +17,7 @@ return {
 	["designer:guohuai"] = "曹涵雪",
 	["illustrator:guohuai"] = "DH",
 	["jingce"] = "精策",
-	[":jingce"] = "出牌阶段结束时，若你本回合已使用的牌数大于你当前的体力值，你可以选择一项：1.摸一张牌；2.回复1点体力。",
+	[":jingce"] = "出牌阶段结束时，若你本回合已使用的牌数大于或等于你当前的体力值，你可以摸两张牌。",
 	["jingce:draw"] = "摸一张牌",
 	["jingce:recover"] = "回复1点体力",
 

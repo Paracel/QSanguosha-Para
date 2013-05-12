@@ -54,3 +54,5 @@ function sgs.ai_cardsview.renxin(self, class_name, player)
 end
 
 sgs.ai_card_intention.RenxinCard = sgs.ai_card_intention.Peach
+
+sgs.ai_skill_invoke.jingce = true

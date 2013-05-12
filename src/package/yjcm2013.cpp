@@ -116,15 +116,9 @@ public:
         } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::RoundStart) {
                 player->setMark(objectName(), 0);
         } else if (triggerEvent == EventPhaseEnd) {
-            if (player->getPhase() == Player::Play && player->getMark(objectName()) > player->getHp()) {
+            if (player->getPhase() == Player::Play && player->getMark(objectName()) >= player->getHp()) {
                 if (room->askForSkillInvoke(player, objectName())) {
-                    if (player->isWounded() && room->askForChoice(player, objectName(), "draw+recover") == "recover") {
-                        RecoverStruct recover;
-                        recover.who = player;
-                        room->recover(player, recover);
-                    } else {
-                        player->drawCards(1);
-                    }
+                    player->drawCards(2);
                 }
             }
         }

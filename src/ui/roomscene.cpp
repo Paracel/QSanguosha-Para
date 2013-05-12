@@ -1104,7 +1104,7 @@ void RoomScene::enableTargets(const Card *card) {
 
     if (card->targetFixed()
         || ((ClientInstance->getStatus() & Client::ClientStatusBasicMask) == Client::Responding
-            && ClientInstance->getStatus() != Client::RespondingUse)
+            && ClientInstance->getStatus() == Client::Responding)
         || ClientInstance->getStatus() == Client::AskForShowOrPindian) {
         foreach (PlayerCardContainer *item, item2player.keys()) {
             QGraphicsItem *animationTarget = item->getMouseClickReceiver();
@@ -2024,7 +2024,7 @@ void RoomScene::useSelectedCard() {
     case Client::Responding: {
             const Card *card = dashboard->getSelected();
             if (card) {
-                if (ClientInstance->getStatus() != Client::RespondingUse) {
+                if (ClientInstance->getStatus() == Client::Responding) {
                     Q_ASSERT(selected_targets.isEmpty());
                     selected_targets.clear();
                 }

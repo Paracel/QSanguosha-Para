@@ -1832,32 +1832,6 @@ HantongCard::HantongCard() {
     mute = true;
 }
 
-void HantongCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    QList<int> edict = source->getPile("edict");
-
-    int ai_delay = Config.AIDelay;
-    Config.AIDelay = 0;
-
-    int card_id = 0;
-    room->fillAG(edict, source);
-    if (edict.length() == 1)
-        card_id = edict.first();
-    else
-        card_id = room->askForAG(source, edict, false, objectName());
-    room->clearAG(source);
-
-    edict.removeOne(card_id);
-
-    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "hantong", QString());
-    room->throwCard(Sanguosha->getCard(card_id), reason, NULL);
-
-    Config.AIDelay = ai_delay;
-
-    source->tag["Hantong_use"] = true;
-    room->acquireSkill(source, "jijiang");
-    room->askForUseCard(source, "@jijiang", "@hantong-jijiang");
-}
-
 class HantongViewAsSkill: public ZeroCardViewAsSkill {
 public:
     HantongViewAsSkill(): ZeroCardViewAsSkill("hantong") {
@@ -1927,10 +1901,17 @@ public:
                << EventPhaseStart; //For XueYi
     }
 
-    void RemoveEdict(ServerPlayer *liuxie) const{
+    static void RemoveEdict(ServerPlayer *liuxie) {
         Room *room = liuxie->getRoom();
         QList<int> edict = liuxie->getPile("edict");
-        room->broadcastSkillInvoke("hantong");
+        room->broadcastSkillInvoke("hantong", 2);
+        room->notifySkillInvoked(liuxie, "hantong");
+
+        LogMessage log;
+        log.type = "#InvokeSkill";
+        log.arg = "hantong";
+        log.from = liuxie;
+        room->sendLog(log);
 
         int ai_delay = Config.AIDelay;
         Config.AIDelay = 0;
@@ -1940,7 +1921,7 @@ public:
         if (edict.length() == 1)
             card_id = edict.first();
         else
-            card_id = room->askForAG(liuxie, edict, false, objectName());
+            card_id = room->askForAG(liuxie, edict, false, "hantong");
         room->clearAG(liuxie);
 
         edict.removeOne(card_id);
@@ -2038,6 +2019,25 @@ public:
         return false;
     }
 };
+
+
+const Card *HantongCard::validate(CardUseStruct &cardUse) const{
+    cardUse.m_isOwnerUse = false;
+    ServerPlayer *source = cardUse.from;
+    Room *room = source->getRoom();
+
+    HantongAcquire::RemoveEdict(source);
+    source->tag["Hantong_use"] = true;
+    room->acquireSkill(source, "jijiang");
+    if (!room->askForUseCard(source, "@jijiang", "@hantong-jijiang")) {
+        room->setPlayerFlag(source, "Global_JijiangFailed");
+        return NULL;
+    } else
+        return this;
+}
+
+void HantongCard::onUse(Room *, const CardUseStruct &) const{
+}
 
 DIYYicongCard::DIYYicongCard() {
     will_throw = false;

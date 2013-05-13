@@ -46,7 +46,7 @@ public:
         if (lieges.isEmpty())
             return false;
 
-        if (!room->askForSkillInvoke(caocao, objectName()))
+        if (!room->askForSkillInvoke(caocao, objectName(), data))
             return false;
 
         room->broadcastSkillInvoke(objectName());
@@ -485,7 +485,7 @@ bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
 
 bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString &pattern) const{
     return hasShuGenerals(player)
-           && pattern == "slash"
+           && (pattern == "slash" || pattern == "@jijiang")
            && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
            && !player->hasFlag("Global_JijiangFailed");
 }
@@ -522,7 +522,7 @@ public:
         if (lieges.isEmpty())
             return false;
 
-        if (!room->askForSkillInvoke(liubei, objectName()))
+        if (!room->askForSkillInvoke(liubei, objectName(), data))
             return false;
 
         room->broadcastSkillInvoke(objectName(), getEffectIndex(liubei, NULL));
@@ -807,6 +807,10 @@ public:
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->isNude() && !player->hasUsed("ZhihengCard");
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@zhiheng";
     }
 };
 

@@ -1105,7 +1105,7 @@ public:
         QString pattern = data.toStringList().first();
         if (player->getPhase() == Player::NotActive
             && (pattern == "slash" || pattern == "jink")
-            && room->askForSkillInvoke(player, objectName())) {
+            && room->askForSkillInvoke(player, objectName(), data)) {
             QList<int> ids = room->getNCards(2, false);
             QList<int> enabled, disabled;
             foreach (int id, ids) {

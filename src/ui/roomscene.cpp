@@ -2330,13 +2330,19 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                         reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
                     else if (newStatus == Client::RespondingUse)
                         reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
-                    foreach (QSanSkillButton *button, m_skillButtons) {
-                        Q_ASSERT(button != NULL);
-                        const ViewAsSkill *vsSkill = button->getViewAsSkill();
-                        if (vsSkill != NULL && vsSkill->objectName() == skill_name
-                            && vsSkill->isAvailable(Self, reason, pattern))
-                            button->click();
-                            break;
+                    if (!skill->isAvailable(Self, reason, pattern)) {
+                        ClientInstance->onPlayerResponseCard(NULL);
+                        return;
+                    }
+                    if (Self->hasSkill(skill_name, true)) {
+                        foreach (QSanSkillButton *button, m_skillButtons) {
+                            Q_ASSERT(button != NULL);
+                            const ViewAsSkill *vsSkill = button->getViewAsSkill();
+                            if (vsSkill != NULL && vsSkill->objectName() == skill_name
+                                && vsSkill->isAvailable(Self, reason, pattern))
+                                button->click();
+                                break;
+                        }
                     }
                     dashboard->startPending(skill);
                     if (skill->inherits("OneCardViewAsSkill") && Config.EnableIntellectualSelection)

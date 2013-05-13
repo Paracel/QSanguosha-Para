@@ -362,13 +362,13 @@ public:
             if (!available_targets.isEmpty()) choices.prepend("add");
             if (choices.length() == 1) return false;
 
-            QString choice = room->askForChoice(jianyong, objectName(), choices.join("+"), data);
+            QString choice = room->askForChoice(jianyong, "qiaoshui", choices.join("+"), data);
             if (choice == "cancel")
                 return false;
             else if (choice == "add") {
                 ServerPlayer *extra = NULL;
                 if (!use.card->isKindOf("Collateral"))
-                    extra = room->askForPlayerChosen(jianyong, available_targets, objectName(), "@qiaoshui-add:::" + use.card->objectName());
+                    extra = room->askForPlayerChosen(jianyong, available_targets, "qiaoshui", "@qiaoshui-add:::" + use.card->objectName());
                 else {
                     QStringList tos;
                     foreach (ServerPlayer *t, use.to)
@@ -422,7 +422,7 @@ public:
                     }
                 }
             } else {
-                ServerPlayer *removed = room->askForPlayerChosen(jianyong, use.to, objectName(), "@qiaoshui-remove:::" + use.card->objectName());
+                ServerPlayer *removed = room->askForPlayerChosen(jianyong, use.to, "qiaoshui", "@qiaoshui-remove:::" + use.card->objectName());
                 use.to.removeOne(removed);
 
                 LogMessage log;

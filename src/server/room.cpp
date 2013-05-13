@@ -2843,11 +2843,10 @@ bool Room::useCard(const CardUseStruct &use, bool add_history) {
                             && (card_use.from->hasWeapon("crossbow")
                                 || Sanguosha->correctCardTarget(TargetModSkill::Residue, card_use.from, card) > 500);
 
-    bool isOwnerUse = true;
-    card = card_use.card->validate(&card_use, isOwnerUse);
-    if (!card) return false;
+    card = card_use.card->validate(card_use);
+    if (card == NULL)
+        return false;
 
-    card_use.m_isOwnerUse = isOwnerUse;
     if (card_use.from->getPhase() == Player::Play && add_history) {
         if (!slash_not_record) {
             card_use.m_addHistory = true;

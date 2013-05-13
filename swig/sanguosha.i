@@ -716,7 +716,7 @@ public:
     virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *self) const;
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *self) const;
     virtual bool isAvailable(const Player *player) const;
-    virtual const Card *validate(const CardUseStruct *card_use, bool &isOwnerUse) const;
+    virtual const Card *validate(CardUseStruct &card_use) const;
     virtual const Card *validateInResponse(ServerPlayer *user) const;
 
     bool isMute() const;

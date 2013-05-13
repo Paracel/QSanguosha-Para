@@ -150,18 +150,18 @@ bool QiceCard::targetsFeasible(const QList<const Player *> &targets, const Playe
     return mutable_card && mutable_card->targetsFeasible(targets, Self);
 }
 
-const Card *QiceCard::validate(const CardUseStruct *card_use, bool &) const{
+const Card *QiceCard::validate(CardUseStruct &card_use) const{
     Card *use_card = Sanguosha->cloneCard(user_string);
     use_card->setSkillName("qice");
     foreach (int id, this->getSubcards())
         use_card->addSubcard(id);
     bool available = true;
-    foreach (ServerPlayer *to, card_use->to)
-        if (card_use->from->isProhibited(to, use_card)) {
+    foreach (ServerPlayer *to, card_use.to)
+        if (card_use.from->isProhibited(to, use_card)) {
             available = false;
             break;
         }
-    available = available && use_card->isAvailable(card_use->from);
+    available = available && use_card->isAvailable(card_use.from);
     use_card->deleteLater();
     if (!available) return NULL;
     return use_card;

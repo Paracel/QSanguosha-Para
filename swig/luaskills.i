@@ -472,7 +472,7 @@ bool LuaViewAsSkill::viewFilter(const QList<const Card *> &selected, const Card 
 }
 
 const Card *LuaViewAsSkill::viewAs(const QList<const Card *> &cards) const{
-    if(view_as == 0)
+    if (view_as == 0)
         return NULL;
 
     lua_State *L = Sanguosha->getLuaState();

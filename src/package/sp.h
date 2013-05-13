@@ -84,7 +84,7 @@ public:
     virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
 
     virtual const Card *validateInResponse(ServerPlayer *user) const;
-    virtual const Card *validate(const CardUseStruct *cardUse, bool &isOwnerUse) const;
+    virtual const Card *validate(CardUseStruct &cardUse) const;
 };
 
 class DuwuCard: public SkillCard {

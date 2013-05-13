@@ -897,8 +897,8 @@ bool GuhuoCard::targetsFeasible(const QList<const Player *> &targets, const Play
     return card && card->targetsFeasible(targets, Self);
 }
 
-const Card *GuhuoCard::validate(const CardUseStruct *card_use, bool &) const{
-    ServerPlayer *yuji = card_use->from;
+const Card *GuhuoCard::validate(CardUseStruct &card_use) const{
+    ServerPlayer *yuji = card_use.from;
     Room *room = yuji->getRoom();
 
     QString to_guhuo = user_string;
@@ -914,15 +914,15 @@ const Card *GuhuoCard::validate(const CardUseStruct *card_use, bool &) const{
     room->broadcastSkillInvoke("guhuo");
 
     LogMessage log;
-    log.type = card_use->to.isEmpty() ? "#GuhuoNoTarget" : "#Guhuo";
+    log.type = card_use.to.isEmpty() ? "#GuhuoNoTarget" : "#Guhuo";
     log.from = yuji;
-    log.to = card_use->to;
+    log.to = card_use.to;
     log.arg = to_guhuo;
     log.arg2 = "guhuo";
 
     room->sendLog(log);
 
-    if (guhuo(card_use->from)) {
+    if (guhuo(card_use.from)) {
         const Card *card = Sanguosha->getCard(subcards.first());
         QString user_str;
         if (to_guhuo == "slash") {

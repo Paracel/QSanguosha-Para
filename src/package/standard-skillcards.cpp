@@ -266,10 +266,10 @@ bool JijiangCard::targetFilter(const QList<const Player *> &targets, const Playe
     return slash->targetFilter(targets, to_select, Self);
 }
 
-const Card *JijiangCard::validate(const CardUseStruct *cardUse, bool &isOwnerUse) const{
-    isOwnerUse = false;
-    ServerPlayer *liubei = cardUse->from;
-    QList<ServerPlayer *> targets = cardUse->to;
+const Card *JijiangCard::validate(CardUseStruct &cardUse) const{
+    cardUse.m_isOwnerUse = false;
+    ServerPlayer *liubei = cardUse.from;
+    QList<ServerPlayer *> targets = cardUse.to;
     Room *room = liubei->getRoom();
     liubei->broadcastSkillInvoke(this);
 

@@ -282,26 +282,52 @@ public:
     QiaoshuiViewAsSkill(): ZeroCardViewAsSkill("qiaoshui") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("QiaoshuiCard") && !player->isKongcheng();
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@qiaoshui!";
+        return pattern.startsWith("@@qiaoshui");
     }
 
     virtual const Card *viewAs() const{
         QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-        if (pattern == "@@qiaoshui!")
+        if (pattern.endsWith("!"))
             return new ExtraCollateralCard;
         else
             return new QiaoshuiCard;
     }
 };
 
-class Qiaoshui: public TriggerSkill {
+class Qiaoshui: public PhaseChangeSkill {
 public:
-    Qiaoshui(): TriggerSkill("qiaoshui") {
+    Qiaoshui(): PhaseChangeSkill("qiaoshui") {
+        view_as_skill = new QiaoshuiViewAsSkill;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *jianyong) const{
+        if (jianyong->getPhase() == Player::Play && !jianyong->isKongcheng()) {
+            Room *room = jianyong->getRoom();
+            bool can_invoke = false;
+            QList<ServerPlayer *> other_players = room->getOtherPlayers(jianyong);
+            foreach (ServerPlayer *player, other_players) {
+                if (!player->isKongcheng()) {
+                    can_invoke = true;
+                    break;
+                }
+            }
+
+            if (can_invoke)
+                room->askForUseCard(jianyong, "@@qiaoshui", "@qiaoshui-card");
+        }
+
+        return false;
+    }
+};
+
+class QiaoshuiUse: public TriggerSkill {
+public:
+    QiaoshuiUse(): TriggerSkill("#qiaoshui-use") {
         events << PreCardUsed;
         view_as_skill = new QiaoshuiViewAsSkill;
     }
@@ -1111,8 +1137,10 @@ YJCM2013Package::YJCM2013Package()
 
     General *jianyong = new General(this, "jianyong", "shu", 3); // YJ 205
     jianyong->addSkill(new Qiaoshui);
+    jianyong->addSkill(new QiaoshuiUse);
     jianyong->addSkill(new QiaoshuiTargetMod);
     jianyong->addSkill(new Zongshih);
+    related_skills.insertMulti("qiaoshui", "#qiaoshui-use");
     related_skills.insertMulti("qiaoshui", "#qiaoshui-target");
 
     General *liru = new General(this, "liru", "qun", 3); // YJ 206

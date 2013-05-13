@@ -26,6 +26,7 @@ function sgs.ai_slash_prohibit.weidi(self, from, to, card)
 end
 
 sgs.ai_skill_use["@jijiang"] = function(self, prompt)
+	if self.player:hasFlag("Global_JijiangFailed") then return "." end
 	local card = sgs.Card_Parse("@JijiangCard=.")
 	local dummy_use = { isDummy = true }
 	self:useSkillCard(card, dummy_use)
@@ -622,6 +623,43 @@ sgs.ai_skill_playerchosen.xingwu = function(self, targets)
 end
 
 sgs.ai_playerchosen_intention.xingwu = 80
+
+function sgs.ai_cardsview_valuable.aocai(self, class_name, player)
+	if player:hasFlag("Global_AocaiFailed") or player:getPhase() ~= sgs.Player_NotActive then return end
+	if class_name == "Slash" and sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE then
+		return "@AocaiCard=.:slash"
+	elseif (class_name == "Peach" and not player:hasFlag("Global_PreventPeach")) or class_name == "Analeptic" then
+		local dying = self.room:getCurrentDyingPlayer()
+		if dying and dying:objectName() == player:objectName() then
+			local user_string = "peach+analeptic"
+			if player:hasFlag("Global_PreventPeach") then user_string = "analeptic" end
+			return "@AocaiCard=.:" .. user_string
+		else
+			local user_string
+			if class_name == "Analeptic" then user_string = "analeptic" else user_string = "peach" end
+			return "@AocaiCard=.:" .. user_string
+		end
+	end
+end
+
+sgs.ai_skill_invoke.aocai = function(self, data)
+	local asked = data:toStringList()
+	self.room:writeToConsole(type(asked) .. " " .. #asked)
+	local pattern = asked[1]
+	local prompt = asked[2]
+	return self:askForCard(pattern, prompt, 1) ~= "."
+end
+
+sgs.ai_skill_askforag.aocai = function(self, card_ids)
+	local card = sgs.Sanguosha:getCard(card_ids[1])
+	if card:isKindOf("Jink") and self.player:hasFlag("dahe") then
+		for _, id in ipairs(card_ids) do
+			if sgs.Sanguosha:getCard(id):getSuit() == sgs.Card_Heart then return id end
+		end
+		return -1
+	end
+	return card_ids[1]
+end
 
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()

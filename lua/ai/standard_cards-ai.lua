@@ -123,9 +123,8 @@ function sgs.getDefenseSlash(player)
 		if player:hasSkill("guicai") or player:hasSkill("huanshi") then defense = defense + 0.3 end
 	end
 
-	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 then
-		defense = defense + 1.5
-	end
+	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 then defense = defense + 1.5 end
+	if player:hasSkill("aocai") and player:getPhase() == sgs.Player_NotActive then defense = defense + 0.5 end
 
 	local hujiaJink = 0
 	if player:hasLordSkill("hujia") then
@@ -285,6 +284,11 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 			end
 		end
 	end
+	local cloned
+	if not slash:isKindOf("Slash") then
+		cloned = true
+		slash = sgs.Sanguosha:cloneCard("slash")
+	end
 	if to:getPile("dream"):length() > 0 and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
 		if slash:isBlack() then
@@ -310,7 +314,7 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	end
 
 	local skillname = slash:getSkillName()
-	local changed = slash:isVirtualCard() and slash:subcardsLength() > 0
+	local changed = not cloned and slash:isVirtualCard() and slash:subcardsLength() > 0
 					and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen" or skillname == "guhuo")
 	local armor = to:getArmor()
 	if armor and to:hasArmorEffect(armor:objectName()) and not from:hasWeapon("qinggang_sword") and not ignore_armor then
@@ -691,13 +695,19 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 end
 
 sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
-	local effect = data:toSlashEffect()
+	local slash
+	if type(data) == "userdata" then
+		local effect = data:toSlashEffect()
+		slash = effect.slash
+	else
+		slash = sgs.Sanguosha:cloneCard("slash")
+	end
 	local cards = sgs.QList2Table(self.player:getHandcards())
-	if (not target or self:isFriend(target)) and effect.slash:hasFlag("nosjiefan-slash") then return "." end
+	if (not target or self:isFriend(target)) and slash:hasFlag("nosjiefan-slash") then return "." end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	--if not target then self.room:writeToConsole(debug.traceback()) end
 	if not target then return end
-	if not self:hasHeavySlashDamage(target, effect.slash, self.player) and self:getDamagedEffects(self.player, target, effect.slash) then return "." end
+	if not self:hasHeavySlashDamage(target, slash, self.player) and self:getDamagedEffects(self.player, target, slash) then return "." end
 	if self:isFriend(target) then
 		if self:findLeijiTarget(self.player, 50, target) then return end
 		if not target:hasSkill("jueqing") then
@@ -707,7 +717,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if self.player:isChained() and self:isGoodChainTarget(self.player) then return "." end
 		end
 	else
-		if self:hasHeavySlashDamage(target, effect.slash) then return end
+		if self:hasHeavySlashDamage(target, slash) then return end
 		if self.player:getHandcardNum() == 1 and self:needKongcheng() then return end
 		if not self:hasLoseHandcardEffective() and not self.player:isKongcheng() then return end
 		if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
@@ -725,10 +735,10 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 and target:getCards("he"):length() > 2 then return "." end
 				if target:getHandcardNum() - target:getHp() > 2 then return "." end
 			elseif target:hasWeapon("blade") then
-				if (effect.slash:isKindOf("FireSlash")
+				if (slash:isKindOf("FireSlash")
 					and not target:hasSkill("jueqing")
 					and (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0))
-					or self:hasHeavySlashDamage(target, effect.slash)
+					or self:hasHeavySlashDamage(target, slash)
 					or (self.player:getHp() == 1 and #self.friends_noself == 0) then
 				elseif self:getCardsNum("Jink") <= getCardsNum("Slash", target) or self:hasSkills("jijiu|qingnang") or self:canUseJieyuanDecrease(target) then
 					return "."

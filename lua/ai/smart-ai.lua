@@ -229,6 +229,7 @@ function sgs.getDefense(player)
 	end
 
 	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.4 end
+	if player:hasSkill("aocai") and player:getPhase() == sgs.Player_NotActive then defense = defense + 0.3 end
 	if attacker and not attacker:hasSkill("jueqing") then
 		local m = sgs.masochism_skill:split("|")
 		for _, masochism in ipairs(m) do
@@ -2343,8 +2344,10 @@ end
 function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	local damage_nature = sgs.DamageStruct_Normal
 
-	local effect = data:toSlashEffect()
-	if effect and effect.slash then damage_nature = effect.nature end
+	if type(data) == "userdata" then
+		local effect = data:toSlashEffect()
+		if effect and effect.slash then damage_nature = effect.nature end
+	end
 
 	if self.player:isDead() then return "." end
 	if target and target:hasSkill("jueqing") and not self:needToLoseHp() then return end
@@ -2382,13 +2385,6 @@ function SmartAI:askForCard(pattern, prompt, data)
 			end
 		end
 	end
-	if self.player:hasSkill("hongyan") then
-		local card
-		if (pattern == ".S" or pattern == "..S") then return "."
-		elseif pattern == "..H" then card = self.lua_ai:askForCard(".|spade,heart", prompt, data)
-		elseif pattern == ".H" then card = self.lua_ai:askForCard(".|spade,heart|.|hand", prompt, data) end
-		if card then return card:toString() end
-	end
 	local arg, arg2 = parsedPrompt[4], parsedPrompt[5]
 	local callback = sgs.ai_skill_cardask[parsedPrompt[1]]
 	if type(callback) == "function" then
@@ -2396,6 +2392,7 @@ function SmartAI:askForCard(pattern, prompt, data)
 		if ret then return ret end
 	end
 
+	if data and type(data) == "number" then return end
 	local card
 	if pattern == "slash" then
 		card = sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) or self:getCardId("Slash") or "."
@@ -3483,7 +3480,8 @@ local function cardsViewValuable(self, class_name, player)
 		if player:hasSkill(askill) then
 			local callback = sgs.ai_cardsview_valuable[askill]
 			if type(callback) == "function" then
-				return callback(self, class_name, player)
+				local ret = callback(self, class_name, player)
+				if ret then return ret end
 			end
 		end
 	end
@@ -3505,7 +3503,8 @@ local function cardsView(self, class_name, player)
 		if player:hasSkill(askill) then
 			local callback = sgs.ai_cardsview[askill]
 			if type(callback) == "function" then
-				return callback(self, class_name, player)
+				local ret = callback(self, class_name, player)
+				if ret then return ret end
 			end
 		end
 	end
@@ -3701,6 +3700,12 @@ function SmartAI:getCards(class_name, flag)
 	local card_place, card_str
 	if not room then card_place = sgs.Player_PlaceHand end
 
+	card_str = cardsViewValuable(self, class_name, player)
+	if card_str then
+		card_str = sgs.Card_Parse(card_str)
+		table.insert(cards, card_str)
+	end
+
 	for _, card in sgs.qlist(all_cards) do
 		card_place = card_place or room:getCardPlace(card:getEffectiveId())
 
@@ -3714,7 +3719,7 @@ function SmartAI:getCards(class_name, flag)
 			end
 		end
 	end
-	
+
 	card_str = cardsView(self, class_name, player)
 	if card_str then
 		card_str = sgs.Card_Parse(card_str)

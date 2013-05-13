@@ -5,6 +5,10 @@ end
 table.insert(sgs.ai_global_flags, "hujiasource")
 
 sgs.ai_skill_invoke.hujia = function(self, data)
+	local asked = data:toStringList()
+	local prompt = asked[2]
+	if self:askForCard("slash", prompt, 1) == "." then return false end
+
 	local cards = self.player:getHandcards()
 	if sgs.hujiasource then return false end
 	for _, friend in ipairs(self.friends_noself) do
@@ -850,6 +854,10 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, jijiang_filter)
 
 sgs.ai_skill_invoke.jijiang = function(self, data)
 	if sgs.jijiangsource then return false end
+	local asked = data:toStringList()
+	local prompt = asked[2]
+	if self:askForCard("slash", prompt, 1) == "." then return false end
+	
 	local current = self.room:getCurrent()
 	if self:isFriend(current) and current:getKingdom() == "shu" and self:getOverflow(current) > 2 and not self:hasCrossbowEffect(current) then
 		return true
@@ -907,7 +915,15 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 	if not sgs.jijiangtarget then table.insert(sgs.ai_global_flags, "jijiangtarget") end
 	sgs.jijiangtarget = {}
 
-	local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
+	local dummy_use = { isDummy = true }
+	dummy_use.to = sgs.SPlayerList()
+	if self.player:hasFlag("slashTargetFix") then
+		for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+			if p:hasFlag("SlashAssignee") then
+				dummy_use.to:append(p)
+			end
+		end
+	end
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	self:useCardSlash(slash, dummy_use)
 	if dummy_use.card and dummy_use.to:length() > 0 then
@@ -965,6 +981,32 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 		end
 	end
 	return "."
+end
+
+function sgs.ai_cardsview_valuable.jijiang(self, class_name, player)
+	if class_name == "Slash" and sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE
+		and not player:hasFlag("Global_JijiangFailed") then
+		local current = self.room:getCurrent()
+		if self:isFriend(current, player) and current:getKingdom() == "shu" and self:getOverflow(current) > 2 and not self:hasCrossbowEffect(current) then
+			return "@JijiangCard=."
+		end
+
+		local cards = player:getHandcards()
+		for _, card in sgs.qlist(cards) do
+			if isCard("Slash", card, player) then return end
+		end
+
+		local lieges = self.room:getLieges("shu", player)
+		if lieges:isEmpty() then return end
+		local has_friend = false
+		for _, p in sgs.qlist(lieges) do
+			if self:isFriend(p, player) then
+				has_friend = true
+				break
+			end
+		end
+		if has_friend then return "@JijiangCard=." end
+	end
 end
 
 sgs.ai_chaofeng.liubei = -2

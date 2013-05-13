@@ -1270,6 +1270,13 @@ sgs.ai_use_value.HantongCard = sgs.ai_use_value.JijiangCard
 sgs.ai_use_priority.HantongCard = sgs.ai_use_priority.JijiangCard
 sgs.ai_card_intention.HantongCard = sgs.ai_card_intention.JijiangCard
 
+function sgs.ai_cardsview_valuable.hantong(self, class_name, player)
+	if class_name == "Slash" and player:getPile("edict"):length() > 0 and not player:hasSkill("jijiang") then
+		local ret = sgs.ai_cardsview_valuable.jijiang(self, class_name, player)
+		if ret then return "@HantongCard=." end
+	end
+end
+
 sgs.ai_skill_use["@@diyyicong"] = function(self, prompt)
 	local yicongcards = {}
 	local cards = self.player:getCards("he")

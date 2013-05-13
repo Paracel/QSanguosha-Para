@@ -1004,7 +1004,7 @@ void FenchengCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
 
     int length = qMax(1, effect.to->getEquips().length());
-    if (effect.to->getHandcardNum() < length || !room->askForDiscard(effect.to, "fencheng", length, length, true))
+    if (!room->askForDiscard(effect.to, "fencheng", length, length, true, true))
         room->damage(DamageStruct("fencheng", effect.from, effect.to, 1, DamageStruct::Fire));
 }
 

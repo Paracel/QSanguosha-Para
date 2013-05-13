@@ -1131,6 +1131,8 @@ public:
         log.from = player;
         log.card_str = IntList2StringList(ids).join("+");
         room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        room->broadcastSkillInvoke("aocai");
+        room->notifySkillInvoked(player, "aocai");
         if (enabled.isEmpty()) {
             Json::Value arg(Json::arrayValue);
             arg[0] = QSanProtocol::Utils::toJsonString(".");

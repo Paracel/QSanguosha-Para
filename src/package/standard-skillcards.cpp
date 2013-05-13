@@ -272,6 +272,7 @@ const Card *JijiangCard::validate(CardUseStruct &cardUse) const{
     QList<ServerPlayer *> targets = cardUse.to;
     Room *room = liubei->getRoom();
     liubei->broadcastSkillInvoke(this);
+    room->notifySkillInvoked(liubei, "jijiang");
 
     LogMessage log;
     log.from = liubei;

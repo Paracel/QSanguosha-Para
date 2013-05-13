@@ -130,12 +130,16 @@ public:
     virtual bool targetsFeasible(const QList<const Player *> &targets, const Player *Self) const;
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
+    virtual const Card *validate(CardUseStruct &cardUse) const;
+    virtual const Card *validateInResponse(ServerPlayer *user) const;
 
     // the lua callbacks
     LuaFunction filter;
     LuaFunction feasible;
     LuaFunction on_use;
     LuaFunction on_effect;
+    LuaFunction on_validate;
+    LuaFunction on_validate_in_response;
 };
 
 #endif

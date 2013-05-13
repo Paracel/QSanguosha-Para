@@ -606,34 +606,19 @@ private:
     }
 };
 
-DuodaoCard::DuodaoCard() {
-}
-
-bool DuodaoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && !to_select->isKongcheng() && to_select != Self && to_select->getWeapon() != NULL;
-}
-
-void DuodaoCard::use(Room *room, ServerPlayer *panma, QList<ServerPlayer *> &targets) const{
-    ServerPlayer *target = targets.first();
-    bool success = panma->pindian(target, "duodao", NULL);
-    if (success) {
-        if (target->getWeapon())
-            room->obtainCard(panma, target->getWeapon());
-    } else
-        room->setPlayerCardLimitation(panma, "use", "Slash", true);
-}
-
-class Duodao: public ZeroCardViewAsSkill {
+class Duodao: public MasochismSkill {
 public:
-    Duodao(): ZeroCardViewAsSkill("duodao") {
+    Duodao(): MasochismSkill("duodao") {
     }
 
-    virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("DuodaoCard") && !player->isKongcheng();
-    }
-
-    virtual const Card *viewAs() const{
-        return new DuodaoCard;
+    virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
+        if (!damage.card || !damage.card->isKindOf("Slash") || target->isNude())
+            return;
+        QVariant data = QVariant::fromValue(damage);
+        if (target->getRoom()->askForCard(target, "..", "@duodao-get", data, objectName())) {
+            if (damage.from && damage.from->getWeapon())
+                target->obtainCard(damage.from->getWeapon());
+        }
     }
 };
 
@@ -1164,7 +1149,6 @@ YJCM2013Package::YJCM2013Package()
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();
-    addMetaObject<DuodaoCard>();
     addMetaObject<ZongxuanCard>();
     addMetaObject<FenchengCard>();
     addMetaObject<ExtraCollateralCard>();

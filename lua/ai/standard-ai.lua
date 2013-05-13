@@ -157,7 +157,7 @@ sgs.ai_need_damaged.fankui = function(self, attacker, player)
 			if p:containsTrick("indulgence") and self:getFinalRetrial(p) == 1 and need_retrial(p) and p:getHandcardNum() >= p:getHp() then
 				if not retrial_card.heart and attacker_card.heart then return attacker_card.heart end
 			end
-			if p:containsTrick("supply_shortage") and self:getFinalRetrial(p) == 1 and need_retrial(p) and self:hasSkills("yongsi", p) then
+			if p:containsTrick("supply_shortage") and self:getFinalRetrial(p) == 1 and need_retrial(p) and p:hasSkill("yongsi") then
 				if not retrial_card.club and attacker_card.club then return attacker_card.club end
 			end
 		end

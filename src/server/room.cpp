@@ -4680,11 +4680,11 @@ QList<const Card *> Room::askForPindianRace(ServerPlayer *from, ServerPlayer *to
     foreach (ServerPlayer *player, players) {
         const Card *c = NULL;
         Json::Value clientReply = player->getClientReply();
-        if (!player->m_isClientResponseReady || !clientReply.isString()) {
+        if (!player->m_isClientResponseReady || !clientReply[0].isString()) {
             int card_id = player->getRandomHandCardId();
             c = Sanguosha->getCard(card_id);
         } else {
-            const Card *card = Card::Parse(toQString(clientReply));
+            const Card *card = Card::Parse(toQString(clientReply[0]));
             if (card->isVirtualCard()) {
                 const Card *real_card = Sanguosha->getCard(card->getEffectiveId());
                 delete card;

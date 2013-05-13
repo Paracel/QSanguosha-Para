@@ -370,24 +370,24 @@ function SmartAI:getUseValue(card)
 		end
 		if not self:getSameEquip(card) then v = 6.7 end
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
-		if self:hasSkills("qiangxi|zhulou") and card:isKindOf("Weapon") then v = 2 end
+		if self.player:hasSkills("qiangxi|zhulou") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
 		if (self.player:hasSkill("bazhen") or self.player:hasSkill("yizhong")) and card:isKindOf("Armor") then v = 2 end
-		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self:hasSkills("bazhen|yizhong")
+		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong")
 			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
 			v = 9
 		end
-		if self:hasSkills(sgs.lose_equip_skill) then return 10 end
+		if self.player:hasSkills(sgs.lose_equip_skill) then return 10 end
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("TianyiSuccess") or self.player:hasFlag("JiangchiInvoke")
 				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
 			if self.player:hasWeapon("Crossbow") or self.player:hasSkill("paoxiao") then v = v + 4 end
-			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
+			if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 1 end
 			if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 1 or -1) end
 		elseif card:isKindOf("Jink") then
 			if self:getCardsNum("Jink") > 1 then v = v - 6 end
-			if card:getSkillName() == "longdan" and self:hasSkills("chongzhen") then v = v + 1 end
+			if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 1 end
 		elseif card:isKindOf("Peach") then
 			if self.player:isWounded() then v = v + 6 end
 		end
@@ -646,7 +646,7 @@ sgs.ai_compare_funcs = {
 		return sgs.getDefense(a) < sgs.getDefense(b)
 	end,
 
-	threat = function (a, b)
+	threat = function(a, b)
 		local players = sgs.QList2Table(a:getRoom():getOtherPlayers(a))
 		local d1 = a:getHandcardNum()
 		for _, player in ipairs(players) do
@@ -3144,13 +3144,13 @@ function SmartAI:getOverflow(player)
 	player = player or self.player
 	local kingdom_num = 0
 	if player:hasSkill("yongsi") and player:getPhase() <= sgs.Player_Discard and not (player:hasSkill("keji") and not player:hasFlag("Global_SlashInPlayPhase")) then
-			local kingdoms = {}
-			for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
-				if not kingdoms[ap:getKingdom()] then
-					kingdoms[ap:getKingdom()] = true
-					kingdom_num = kingdom_num + 1
-				end
+		local kingdoms = {}
+		for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
+			if not kingdoms[ap:getKingdom()] then
+				kingdoms[ap:getKingdom()] = true
+				kingdom_num = kingdom_num + 1
 			end
+		end
 	end
 
 	if kingdom_num > 0 then

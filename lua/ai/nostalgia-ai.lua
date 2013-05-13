@@ -622,7 +622,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 			end
 		end
 		for _, enemy in ipairs(enemies) do
-			if ((#enemies == 1) or not self:hasSkills("tiandu|guidao", enemy)) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if (#enemies == 1 or not self:hasSkills("tiandu|guidao", enemy)) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy

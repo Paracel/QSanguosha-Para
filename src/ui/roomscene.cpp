@@ -543,9 +543,10 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             int from_id = arg[2].asInt(), to_id = arg[4].asInt();
             bool success = arg[5].asBool();
             pindian_success = success;
+            QString reason = arg[6].asCString();
 
             if (Config.value("EnablePindianBox", true).toBool())
-                showPindianBox(from_name, from_id, to_name, to_id);
+                showPindianBox(from_name, from_id, to_name, to_id, reason);
             else
                 setEmotion(from_name, success ? "success" : "no-success");
         }
@@ -4115,9 +4116,13 @@ void RoomScene::finishArrange() {
     ClientInstance->setStatus(Client::NotActive);
 }
 
-void RoomScene::showPindianBox(const QString &from_name, int from_id, const QString &to_name, int to_id) {
+void RoomScene::showPindianBox(const QString &from_name, int from_id, const QString &to_name, int to_id, const QString &reason) {
     pindian_box->setOpacity(0.0);
     pindian_box->setPos(m_tableCenterPos);
+    if (!reason.isEmpty())
+        pindian_box->setTitle(Sanguosha->translate(reason));
+    else
+        pindian_box->setTitle(tr("pindian"));
 
     if (pindian_from_card) {
         delete pindian_from_card;

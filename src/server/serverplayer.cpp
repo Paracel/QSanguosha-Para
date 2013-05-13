@@ -540,6 +540,7 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
     arg[3] = toJsonString(target->objectName());
     arg[4] = pindian_struct.to_card->getEffectiveId();
     arg[5] = pindian_struct.success;
+    arg[6] = toJsonString(reason);
     room->doBroadcastNotify(S_COMMAND_LOG_EVENT, arg);
 
     pindian_star = &pindian_struct;

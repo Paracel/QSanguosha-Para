@@ -2325,12 +2325,14 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                 QString skill_name = rx.capturedTexts().at(1);
                 const ViewAsSkill *skill = Sanguosha->getViewAsSkill(skill_name);
                 if (skill) {
-                    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
-                    if (newStatus == Client::Responding)
-                        reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
-                    else if (newStatus == Client::RespondingUse)
+                    CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_RESPONSE;
+                    if (newStatus == Client::RespondingUse)
                         reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
-                    if (!skill->isAvailable(Self, reason, pattern)) {
+                    if (!Self->hasFlag(skill_name))
+                        Self->setFlags(skill_name);
+                    bool available = skill->isAvailable(Self, reason, pattern);
+                    Self->setFlags("-" + skill_name);
+                    if (!available) {
                         ClientInstance->onPlayerResponseCard(NULL);
                         return;
                     }

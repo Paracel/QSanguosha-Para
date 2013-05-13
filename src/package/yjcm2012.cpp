@@ -539,8 +539,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
-               && player->getHandcardNum() >= 2 && pattern == "slash";
+        return player->getHandcardNum() >= 2 && pattern == "slash";
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{

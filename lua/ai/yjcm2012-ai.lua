@@ -81,9 +81,7 @@ end
 sgs.ai_skill_invoke.fuli = true
 
 function sgs.ai_cardsview.fuhun(self, class_name, player)
-	if class_name == "Slash"
-		and (sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE
-			or sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_PLAY) then
+	if class_name == "Slash" then
 		return cardsView_spear(self, player, "fuhun")
 	end
 end

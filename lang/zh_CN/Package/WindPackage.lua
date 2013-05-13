@@ -47,7 +47,7 @@ return {
 	["hongyan"] = "红颜",
 	[":hongyan"] = "<font color=\"blue\"><b>锁定技。</b></font>你的♠牌视为<font color=\"red\">♥</font>牌。",
 	["tianxiang"] = "天香",
-	[":tianxiang"] = "每当你受到一次伤害时，你可以弃置一张<font color=\"red\">♥</font>牌并选择一名其他角色：若如此做，你将此伤害转移给该角色，此伤害结算后该角色摸X张牌（X为该角色已损失的体力值）。",
+	[":tianxiang"] = "每当你受到伤害时，你可以弃置一张<font color=\"red\">♥</font>手牌并选择一名其他角色：若如此做，你将此伤害转移给该角色，此伤害结算后该角色摸X张牌（X为该角色已损失的体力值）。",
 	["@tianxiang-card"] = "请选择“天香”的目标",
 	["~tianxiang"] = "选择一张<font color=\"red\">♥</font>手牌→选择一名其他角色→点击确定",
 

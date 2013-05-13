@@ -3,12 +3,14 @@ caocao zhangfei							56
 caocao sunshangxiang					53
 caocao huatuo							54
 caocao yanliangwenchou					60
+caocao nos_liubei						53
 caocao neo_zhangfei						57
 simayi guojia							65
 simayi liubei							52
 simayi wolong							80
 simayi sunshangxiang					52
 simayi huatuo							53
+simayi nos_liubei						52
 xiahoudun guojia						65
 xiahoudun xiaoqiao						30
 zhangliao xuchu							15
@@ -22,6 +24,7 @@ zhangliao neo_zhouyu					40
 xuchu liubei							15
 xuchu machao							54
 xuchu huangzhong						55
+xuchu nos_liubei						15
 guojia zhanghe							76
 guojia liubei							58
 guojia machao							76
@@ -35,6 +38,7 @@ guojia wuguotai							87
 guojia madai							58
 guojia bgm_lvmeng						79
 guojia vs_xiahoudun						66
+guojia nos_liubei						58
 guojia nos_madai						65
 guojia nos_wangyi						73
 guojia neo_xiahoudun					67
@@ -66,6 +70,7 @@ xunyu sunshangxiang						52
 xunyu huatuo							53
 xunyu xunyou							70
 xunyu yuanshu							60
+xunyu nos_liubei						72
 dengai huangyueying						75
 dengai xiaoqiao							25
 dengai zhonghui							80
@@ -111,6 +116,7 @@ zhangfei bgm_lvmeng						63
 zhangfei diy_wangyuanji					26
 zhangfei vs_guanyu						80
 zhangfei vs_zhaoyun						70
+zhangfei nos_liubei						15
 zhangfei nos_guanxingzhangbao			11
 zhangfei neo_guanyu						79
 zhangfei neo_zhangfei					1
@@ -126,6 +132,7 @@ zhugeliang bgm_lvmeng					40
 zhugeliang bgm_liubei					55
 zhugeliang liuxie						80
 zhugeliang tianfeng						60
+zhugeliang nos_liubei					85
 zhugeliang nos_zhangchunhua				39
 zhugeliang nos_guanxingzhangbao			72
 zhaoyun sunce							74
@@ -195,6 +202,7 @@ jiangwei luxun							33
 jiangwei xunyou							56
 jiangwei xiahouba						32
 jiangwei bgm_lvmeng						36
+jiangwei nos_liubei						60
 zhurong lvbu							60
 zhurong zhangchunhua					3
 zhurong vs_lvbu							61
@@ -274,7 +282,9 @@ zhoutai shensimayi						52
 zhoutai bgm_lvmeng						59
 lusu lingtong							52
 lusu yuanshu							54
+lusu nos_liubei							75
 lusu nos_lingtong						53
+erzhang nos_liubei						63
 huatuo ganfuren							60
 huatuo bgm_lvmeng						65
 diaochan lingtong						52
@@ -282,11 +292,14 @@ diaochan masu							55
 diaochan nos_lingtong					52
 yuanshao xushu							3
 yuanshao yuanshu						65
+yuanshao nos_liubei						19
 yuanshao nos_xushu						2
 yanliangwenchou xushu					3
 yanliangwenchou yuanshu					8
+yanliangwenchou nos_liubei				17
 yanliangwenchou nos_xushu				2
 yanliangwenchou neo_zhangfei			36
+zhangjiao nos_liubei					22
 shenlvmeng yuanshu						40
 shenzhouyu yuanshu						55
 shenzhouyu lingtong						52
@@ -298,6 +311,7 @@ shensimayi bgm_lvmeng					49
 shensimayi nos_lingtong					52
 shensimayi neo_zhoutai					54
 gaoshun neo_zhangfei					33
+guanxingzhangbao nos_liubei				16
 lingtong handang						51
 lingtong yuanshu						60
 lingtong sp_guanyu						52
@@ -339,6 +353,7 @@ xunyou liuxie							58
 xunyou nos_xushu						35
 xunyou nos_zhangchunhua					56
 yuanshu liuxie							65
+yuanshu nos_liubei						68
 yuanshu nos_lingtong					53
 sp_guanyu nos_lingtong					52
 sp_guanyu diy_wangyuanji				33
@@ -355,6 +370,7 @@ bgm_zhaoyun bgm_zhangfei				74
 bgm_zhaoyun vs_zhaoyun					15
 bgm_zhaoyun neo_zhangfei				76
 bgm_zhaoyun neo_zhaoyun					11
+bgm_diaochan nos_liubei					54
 bgm_diaochan nos_lingtong				53
 bgm_zhangfei sp_guanyu					77
 bgm_zhangfei vs_guanyu					78
@@ -365,6 +381,7 @@ bgm_lvmeng neo_zhangfei					64
 bgm_lvmeng neo_zhoutai					59
 bgm_ganning nos_lingtong				54
 diy_wangyuanji vs_guanyu				34
+diy_wangyuanji nos_liubei				83
 diy_wangyuanji neo_guanyu				34
 diy_wangyuanji neo_zhangfei				27
 vs_guanyu nos_lingtong					53
@@ -373,6 +390,9 @@ vs_guanyu neo_guanyu					1
 vs_guanyu neo_zhangfei					80
 vs_zhaoyun neo_zhangfei					73
 vs_zhaoyun neo_zhaoyun					45
+nos_iubei nos_guanxingzhangbao			16
+nos_liubei neo_xuchu					15
+nos_liubei neo_zhangfei					15
 nos_lingtong nos_handang				55
 nos_lingtong neo_guanyu					53
 nos_zhangchunhua nos_madai				4

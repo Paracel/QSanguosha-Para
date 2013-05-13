@@ -71,11 +71,11 @@ lingtong				62
 masu					71 *				
 wuguotai				60					
 xusheng					72					
-xushu					1					
+xushu					2					
 yujin					78					
 zhangchunhua			65					
 zhonghui				77					
-bulianshi				0					
+bulianshi				1					
 caozhang				61					
 chengpu					54					
 guanxingzhangbao		59					
@@ -95,6 +95,7 @@ guanyinping				42
 xiahouba				40					
 chenlin					43					
 erqiao					60					
+zhugeke					78					
 fuwan					68					
 liuxie					37					
 lingju					66					
@@ -127,12 +128,15 @@ vs_xiahoudun			62
 vs_guanyu				58					
 vs_zhaoyun				68					
 vs_lvbu					76					
+wenpin					10					
+nos_liubei				19					
 nos_zhouyu				90					
+nos_diaochan			72					
 nos_zhonghui			78					
 nos_shencaocao			35					
 nos_fazheng				73					
 nos_lingtong			55					
-nos_xushu				2					
+nos_xushu				3					
 nos_zhangchunhua		65					
 nos_guanxingzhangbao	69					
 nos_handang				53					

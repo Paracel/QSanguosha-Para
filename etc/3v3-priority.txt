@@ -7,7 +7,7 @@ guojia					9
 zhenji					5
 xiahouyuan				4
 caoren					1
-liubei					9
+nos_liubei				9
 guanyu					3
 zhangfei				5
 zhugeliang				9
@@ -28,7 +28,7 @@ xiaoqiao				6
 zhoutai					2
 huatuo					8
 lvbu					5
-diaochan				8
+nos_diaochan			8
 zhangjiao				6
 xuhuang					6
 menghuo					3

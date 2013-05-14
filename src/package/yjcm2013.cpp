@@ -486,8 +486,8 @@ public:
 XiansiCard::XiansiCard() {
 }
 
-bool XiansiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.length() < 2 && !to_select->isNude() && to_select != Self;
+bool XiansiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *) const{
+    return targets.length() < 2 && !to_select->isNude();
 }
 
 void XiansiCard::onEffect(const CardEffectStruct &effect) const{

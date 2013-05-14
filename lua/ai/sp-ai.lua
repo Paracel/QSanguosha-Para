@@ -644,7 +644,6 @@ end
 
 sgs.ai_skill_invoke.aocai = function(self, data)
 	local asked = data:toStringList()
-	self.room:writeToConsole(type(asked) .. " " .. #asked)
 	local pattern = asked[1]
 	local prompt = asked[2]
 	return self:askForCard(pattern, prompt, 1) ~= "."

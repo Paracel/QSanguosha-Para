@@ -7,7 +7,7 @@ table.insert(sgs.ai_global_flags, "hujiasource")
 sgs.ai_skill_invoke.hujia = function(self, data)
 	local asked = data:toStringList()
 	local prompt = asked[2]
-	if self:askForCard("slash", prompt, 1) == "." then return false end
+	if self:askForCard("jink", prompt, 1) == "." then return false end
 
 	local cards = self.player:getHandcards()
 	if sgs.hujiasource then return false end

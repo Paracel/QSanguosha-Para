@@ -481,7 +481,7 @@ local function will_discard_zhaolie(self, nobasic)
 	local damage_num = nobasic
 	if nobasic > 0 and not spliubei:hasSkill("jueqing") then
 		if self.player:hasSkill("tianxiang") then
-			local dmgStr = { damage = 1, nature = sgs.DamageStruct_Normal }
+			local dmgStr = { damage = damage_num, nature = sgs.DamageStruct_Normal }
 			local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr, sgs.Card_MethodDiscard)
 			if willTianxiang ~= "." then damage_num = 0 end
 		end

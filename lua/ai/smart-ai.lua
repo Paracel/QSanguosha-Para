@@ -78,8 +78,6 @@ sgs.ai_chat_func = {}
 function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
-	sgs.discard_pile = global_room:getDiscardPile()
-	sgs.draw_pile = global_room:getDrawPile()
 	sgs.lose_equip_skill = "xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
 	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
@@ -1244,9 +1242,6 @@ function SmartAI:updatePlayers(clear_flags)
 		end
 	end
 
-	sgs.discard_pile = global_room:getDiscardPile()
-	sgs.draw_pile = global_room:getDrawPile()
-
 	if sgs.isRolePredictable(true) then
 		self.friends = {}
 		self.friends_noself = {}
@@ -1289,11 +1284,11 @@ function SmartAI:updatePlayers(clear_flags)
 	self.harsh_retain = true
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if self:objectiveLevel(player) < 0 and player:isAlive() then
+		local level = self:objectiveLevel(player)
+		if level < 0 then
 			table.insert(self.friends_noself, player)
 			table.insert(self.friends, player)
-		end
-		if self:objectiveLevel(player) > 0 and player:isAlive() then
+		elseif level > 0 then
 			table.insert(self.enemies, player)
 		end
 	end
@@ -3943,50 +3938,17 @@ function SmartAI:getAllPeachNum(player)
 	return n
 end
 
-function SmartAI:getCardsFromDiscardPile(class_name)
-	sgs.discard_pile = self.room:getDiscardPile()
-	local cards = {}
-	for _, card_id in sgs.qlist(sgs.discard_pile) do
-		local card = sgs.Sanguosha:getCard(card_id)
-		if card:isKindOf(class_name) then table.insert(cards, card) end
-	end
-
-	return cards
-end
-
-function SmartAI:getCardsFromDrawPile(class_name)
-	sgs.discard_pile = self.room:getDrawPile()
-	local cards = {}
-	for _, card_id in sgs.qlist(sgs.discard_pile) do
-		local card = sgs.Sanguosha:getCard(card_id)
-		if card:isKindOf(class_name) then table.insert(cards, card) end
-	end
-
-	return cards
-end
-
-function SmartAI:getCardsFromGame(class_name)
-	local ban = sgs.GetConfig("BanPackages", "")
-	local cards = {}
-	for i = 1, sgs.Sanguosha:getCardCount() do
-		local card = sgs.Sanguosha:getEngineCard(i - 1)
-		if card:isKindOf(class_name) and not ban:match(card:getPackage()) then table.insert(cards, card) end
-	end
-
-	return cards
-end
-
 function SmartAI:getRestCardsNum(class_name, player)
 	player = player or self.player
 	local ban = sgs.GetConfig("BanPackages", "")
-	sgs.discard_pile = self.room:getDiscardPile()
+	local discard_pile = self.room:getDiscardPile()
 	local totalnum, discardnum, knownnum = 0, 0, 0
 	local card
 	for i = 1, sgs.Sanguosha:getCardCount() do
 		card = sgs.Sanguosha:getEngineCard(i - 1)
 		if card:isKindOf(class_name) and not ban:match(card:getPackage()) then totalnum = totalnum + 1 end
 	end
-	for _, card_id in sgs.qlist(sgs.discard_pile) do
+	for _, card_id in sgs.qlist(discard_pile) do
 		card = sgs.Sanguosha:getCard(card_id)
 		if card:isKindOf(class_name) then discardnum = discardnum + 1 end
 	end
@@ -3994,24 +3956,6 @@ function SmartAI:getRestCardsNum(class_name, player)
 		knownnum = knownnum + getKnownCard(player, class_name)
 	end
 	return totalnum - discardnum - knownnum
-end
-
-function SmartAI:evaluatePlayerCardsNum(class_name, player)
-	player = player or self.player
-	local length = sgs.draw_pile:length()
-	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
-		length = length + p:getHandcardNum()
-	end
-
-	local percentage = (#(self:getCardsFromGame(class_name)) - #(self:getCardsFromDiscardPile(class_name))) / length
-	local modified = 1
-	if class_name == "Jink" then modified = 1.23
-	elseif class_name == "Analeptic" then modified = 1.17
-	elseif class_name == "Peach" then modified = 1.19
-	elseif class_name == "Slash" then modified = 1.09
-	end
-
-	return player:getHandcardNum() * percentage * modified
 end
 
 function SmartAI:hasSuit(suit_strings, include_equip, player)

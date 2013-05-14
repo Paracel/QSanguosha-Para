@@ -1225,7 +1225,7 @@ function SmartAI:sortEnemies(players)
 end
 
 function SmartAI:updateAlivePlayerRoles()
-	for _, arole in ipairs({"lord", "loyalist", "rebel", "renegade"}) do
+	for _, arole in ipairs({ "lord", "loyalist", "rebel", "renegade" }) do
 		sgs.current_mode_players[arole] = 0
 	end
 	for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.room:getLord())) do
@@ -1346,9 +1346,7 @@ function SmartAI:updatePlayers(clear_flags)
 end
 
 function findPlayerByObjectName(room, name, include_death, except)
-	if not room then
-		return
-	end
+	if not room then return end
 	local players = nil
 	if include_death then
 		players = room:getPlayers()

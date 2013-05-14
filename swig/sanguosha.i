@@ -25,6 +25,7 @@ public:
     bool setProperty(const char *name, const QVariant &value);
     QVariant property(const char *name) const;
     void setParent(QObject *parent);
+    void deleteLater();
 };
 
 class General: public QObject {

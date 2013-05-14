@@ -59,7 +59,6 @@ Window::Window(const QString &title, const QSizeF &size, const QString &path)
 
     titleItem = new QGraphicsTextItem(this);
     setTitle(title);
-    titleItem->moveBy(size.width() / 2 - titleItem->boundingRect().width() / 2, 10);
 }
 
 void Window::addContent(const QString &content) {
@@ -155,4 +154,5 @@ void Window::setTitle(const QString &title) {
     content.append(QString("<h style=\"%1\">%2</h>").arg(style).arg(title));
 
     titleItem->setHtml(content);
+    titleItem->moveBy(size.width() / 2 - titleItem->boundingRect().width() / 2, 10);
 }

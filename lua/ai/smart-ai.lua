@@ -518,11 +518,7 @@ function SmartAI:getDynamicUsePriority(card)
 				elseif use_card:isKindOf("Snatch") or use_card:isKindOf("Dismantlement") and dummy_use.to then
 					for _, p in sgs.qlist(dummy_use.to) do
 						if self:isFriend(p) and (p:containsTrick("indulgence") or p:containsTrick("supply_shortage")) then
-							for _, trick in sgs.qlist(p:getJudgingArea()) do
-								if trick:hasFlag("AIGlobal_SDCardChosen" .. use_card:objectName()) then
-									return sgs.ai_use_priority.RendeCard + sgs.ai_use_priority.Snatch
-								end
-							end
+							return sgs.ai_use_priority.RendeCard + sgs.ai_use_priority.Snatch
 						end
 					end
 				end

@@ -1173,18 +1173,12 @@ bool AocaiCard::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 bool AocaiCard::targetFixed() const{
-    QString name;
-    const Card *card = NULL;
-    if (!user_string.isEmpty()) {
-        name = user_string.split("+").first();
-        card = Sanguosha->cloneCard(name);
-    }
-    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE) {
-        return card && card->targetFixed();
-    } else if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE) {
+    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE)
         return true;
-    }
 
+    const Card *card = NULL;
+    if (!user_string.isEmpty())
+        card = Sanguosha->cloneCard(user_string.split("+").first());
     return card && card->targetFixed();
 }
 

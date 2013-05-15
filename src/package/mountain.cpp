@@ -447,7 +447,7 @@ bool JixiSnatchCard::targetFilter(const QList<const Player *> &targets, const Pl
         return false;
     else {
         const Snatch *snatch = qobject_cast<const Snatch *>(card);
-        return !Self->isProhibited(to_select, snatch) && snatch->targetFilter(targets, to_select, Self);
+        return !Self->isProhibited(to_select, snatch, targets) && snatch->targetFilter(targets, to_select, Self);
     }
 }
 
@@ -1115,9 +1115,7 @@ public:
     static QStringList GetAvailableGenerals(ServerPlayer *zuoci) {
         QSet<QString> all = Sanguosha->getLimitedGeneralNames().toSet();
         Room *room = zuoci->getRoom();
-        if (room->getMode().endsWith("p")
-            || room->getMode().endsWith("pd")
-            || room->getMode().endsWith("pz")
+        if (isNormalGameMode(room->getMode())
             || room->getMode().contains("_mini_")
             || room->getMode() == "custom_scenario")
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());

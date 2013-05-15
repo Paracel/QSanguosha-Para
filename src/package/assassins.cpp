@@ -257,7 +257,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
-        if (!room->getMode().endsWith("p") && !room->getMode().endsWith("pd") && !room->getMode().endsWith("pz"))
+        if (!isNormalGameMode(room->getMode()))
             return false;
         DeathStruct death = data.value<DeathStruct>();
         if (death.damage == NULL)

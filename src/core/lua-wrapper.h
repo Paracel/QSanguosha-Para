@@ -28,7 +28,7 @@ class LuaProhibitSkill: public ProhibitSkill {
 public:
     LuaProhibitSkill(const char *name);
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *card) const;
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
 
     LuaFunction is_prohibited;
 };

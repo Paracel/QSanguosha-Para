@@ -1177,7 +1177,7 @@ void RoomScene::updateTargetsEnablity(const Card *card) {
         bool weimuFailure = isCollateral && selected_targets.length() == 1;
         //=====================================
 
-        bool enabled = (card == NULL) || ((weimuFailure || !Sanguosha->isProhibited(Self, player, card)) && maxVotes > 0);
+        bool enabled = (card == NULL) || ((weimuFailure || !Sanguosha->isProhibited(Self, player, card, selected_targets)) && maxVotes > 0);
 
         QGraphicsItem *animationTarget = item->getMouseClickReceiver();
         if (enabled)
@@ -1205,7 +1205,7 @@ void RoomScene::updateSelectedTargets() {
             foreach (const Player *cp, selected_targets) {
                 QList<const Player *> tempPlayers = QList<const Player *>(selected_targets);
                 tempPlayers.removeAll(cp);
-                if (!card->targetFilter(tempPlayers, cp, Self) || Sanguosha->isProhibited(Self, cp, card)) {
+                if (!card->targetFilter(tempPlayers, cp, Self) || Sanguosha->isProhibited(Self, cp, card, selected_targets)) {
                     selected_targets.clear();
                     unselectAllTargets();
                     return;

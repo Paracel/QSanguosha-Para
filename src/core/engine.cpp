@@ -305,11 +305,9 @@ int Engine::getGeneralCount(bool include_banned) const{
         const General *general = itor.value();
         if (getBanPackages().contains(general->getPackage()))
             total--;
-        else if ((ServerInfo.GameMode.endsWith("p")
-                 || ServerInfo.GameMode.endsWith("pd")
-                 || ServerInfo.GameMode.endsWith("pz")
-                 || ServerInfo.GameMode.contains("_mini_")
-                 || ServerInfo.GameMode == "custom_scenario")
+        else if ((isNormalGameMode(ServerInfo.GameMode)
+                  || ServerInfo.GameMode.contains("_mini_")
+                  || ServerInfo.GameMode == "custom_scenario")
                  && Config.value("Banlist/Roles").toStringList().contains(general->objectName()))
             total--;
         else if (ServerInfo.GameMode == "04_1v3"
@@ -714,9 +712,7 @@ QStringList Engine::getRandomLords() const{
     if (Config.EnableBasara)
         banlist_ban = Config.value("Banlist/Basara").toStringList();
 
-    if (Config.GameMode.endsWith("p")
-        || Config.GameMode.endsWith("pz")
-        || Config.GameMode.endsWith("pd"))
+    if (isNormalGameMode(Config.GameMode))
         banlist_ban.append(Config.value("Banlist/Roles").toStringList());
 
     QStringList lords;
@@ -798,9 +794,7 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
     if (Config.EnableHegemony)
         general_set = general_set.subtract(Config.value("Banlist/Hegemony", "").toStringList().toSet());
 
-    if (ServerInfo.GameMode.endsWith("p")
-        || ServerInfo.GameMode.endsWith("pd")
-        || ServerInfo.GameMode.endsWith("pz")
+    if (isNormalGameMode(ServerInfo.GameMode)
         || ServerInfo.GameMode.contains("_mini_")
         || ServerInfo.GameMode == "custom_scenario")
         general_set.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
@@ -927,9 +921,9 @@ const ViewAsSkill *Engine::getViewAsSkill(const QString &skill_name) const{
         return NULL;
 }
 
-const ProhibitSkill *Engine::isProhibited(const Player *from, const Player *to, const Card *card) const{
+const ProhibitSkill *Engine::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const{
     foreach (const ProhibitSkill *skill, prohibit_skills) {
-        if (to->hasSkill(skill->objectName()) && skill->isProhibited(from, to, card))
+        if (skill->isProhibited(from, to, card, others))
             return skill;
     }
 

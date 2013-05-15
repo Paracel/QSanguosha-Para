@@ -727,8 +727,8 @@ public:
     Kongcheng(): ProhibitSkill("kongcheng") {
     }
 
-    virtual bool isProhibited(const Player *, const Player *to, const Card *card) const{
-        return (card->isKindOf("Slash") || card->isKindOf("Duel")) && to->isKongcheng();
+    virtual bool isProhibited(const Player *, const Player *to, const Card *card, const QList<const Player *> &) const{
+        return to->hasSkill(objectName()) && (card->isKindOf("Slash") || card->isKindOf("Duel")) && to->isKongcheng();
     }
 };
 
@@ -1276,8 +1276,8 @@ public:
     Qianxun(): ProhibitSkill("qianxun") {
     }
 
-    virtual bool isProhibited(const Player *, const Player *, const Card *card) const{
-        return card->isKindOf("Snatch") || card->isKindOf("Indulgence");
+    virtual bool isProhibited(const Player *, const Player *to, const Card *card, const QList<const Player *> &) const{
+        return to->hasSkill(objectName()) && (card->isKindOf("Snatch") || card->isKindOf("Indulgence"));
     }
 };
 
@@ -1291,6 +1291,82 @@ public:
             return -1;
         else
             return 0;
+    }
+};
+
+class Wangzun: public PhaseChangeSkill {
+public:
+    Wangzun(): PhaseChangeSkill("wangzun") {
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (!isNormalGameMode(room->getMode()))
+            return false;
+        if (target->isLord() && target->getPhase() == Player::Start) {
+            ServerPlayer *yuanshu = room->findPlayerBySkillName(objectName());
+            if (yuanshu && room->askForSkillInvoke(yuanshu, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                yuanshu->drawCards(1);
+                room->setPlayerFlag(target, "WangzunDecMaxCards");
+            }
+        }
+        return false;
+    }
+};
+
+class WangzunMaxCards: public MaxCardsSkill {
+public:
+    WangzunMaxCards(): MaxCardsSkill("#wangzun-maxcard") {
+    }
+
+    virtual int getExtra(const Player *target) const{
+        if (target->hasFlag("WangzunDecMaxCards"))
+            return -1;
+        else
+            return 0;
+    }
+};
+
+class Tongji: public ProhibitSkill {
+public:
+    Tongji(): ProhibitSkill("tongji") {
+    }
+
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const{
+        if (card->isKindOf("Slash")) {
+            if (to->hasSkill(objectName()))
+                return false;
+            // get rangefix
+            int rangefix = 0;
+            if (card->isVirtualCard()) {
+                QList<int> subcards = card->getSubcards();
+                if (from->getWeapon() && subcards.contains(from->getWeapon()->getId())) {
+                    const Weapon *weapon = qobject_cast<const Weapon *>(from->getWeapon()->getRealCard());
+                    rangefix += weapon->getRange() - 1;
+                }
+
+                if (from->getOffensiveHorse() && subcards.contains(from->getOffensiveHorse()->getId()))
+                    rangefix += 1;
+            }
+            // find yuanshu
+            const Player *yuanshu = NULL;
+            foreach (const Player *p, from->getSiblings()) {
+                if (p->hasSkill(objectName()) && from->distanceTo(p, rangefix) <= from->getAttackRange()
+                    && from->canSlash(p, card, false)) {
+                    yuanshu = p;
+                    break;
+                }
+            }
+            if (!yuanshu || others.contains(yuanshu))
+                return false;
+            return true;
+        }
+        return false;
     }
 };
 
@@ -1407,6 +1483,15 @@ void StandardPackage::addGenerals() {
     diaochan->addSkill(new Lijian);
     diaochan->addSkill(new Biyue);
     diaochan->addSkill(new SPConvertSkill("diaochan", "sp_diaochan+tw_diaochan+heg_diaochan"));
+
+    General *st_yuanshu = new General(this, "st_yuanshu", "qun", 4);
+    st_yuanshu->addSkill(new Wangzun);
+    st_yuanshu->addSkill(new WangzunMaxCards);
+    related_skills.insertMulti("wangzun", "#wangzun-maxcard");
+    st_yuanshu->addSkill(new Tongji);
+
+    /*General *st_huaxiong = new General(this, "st_huaxiong", "qun", 6);
+    st_huaxiong->addSkill(new Yaowu);*/
 
     // for skill cards
     addMetaObject<ZhihengCard>();

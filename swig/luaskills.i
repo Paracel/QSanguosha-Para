@@ -24,7 +24,7 @@ class ProhibitSkill: public Skill {
 public:
     ProhibitSkill(const QString &name);
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *card) const = 0;
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const = 0;
 };
 
 class DistanceSkill: public Skill {
@@ -64,7 +64,7 @@ class LuaProhibitSkill: public ProhibitSkill {
 public:
     LuaProhibitSkill(const char *name);
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *card) const;
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
 
     LuaFunction is_prohibited;
 };
@@ -243,7 +243,7 @@ static void Error(lua_State *L) {
     QMessageBox::warning(NULL, "Lua script error!", error_string);
 }
 
-bool LuaProhibitSkill::isProhibited(const Player *from, const Player *to, const Card *card) const{
+bool LuaProhibitSkill::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const{
     if (is_prohibited == 0)
         return false;
 
@@ -256,7 +256,14 @@ bool LuaProhibitSkill::isProhibited(const Player *from, const Player *to, const 
     SWIG_NewPointerObj(L, to, SWIGTYPE_p_Player, 0);
     SWIG_NewPointerObj(L, card, SWIGTYPE_p_Card, 0);
 
-    int error = lua_pcall(L, 4, 1, 0);
+    lua_createtable(L, others.length(), 0);
+    for(int i = 0; i < others.length(); i++){
+        const Player *player = others[i];
+        SWIG_NewPointerObj(L, player, SWIGTYPE_p_Player, 0);
+        lua_rawseti(L, -5, i + 1);
+    }
+
+    int error = lua_pcall(L, 5, 1, 0);
     if (error) {
         Error(L);
         return false;

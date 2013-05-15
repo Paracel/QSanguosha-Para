@@ -1312,7 +1312,7 @@ bool Room::askForUseSlashTo(ServerPlayer *slasher, QList<ServerPlayer *> victims
                             bool distance_limit, bool disable_extra, bool addHistory, const QString &pattern) {
     Q_ASSERT(!victims.isEmpty());
 
-    //The realization of this function in the Slash::onUse and Slash::targetFilter.
+    // The realization of this function in the Slash::onUse and Slash::targetFilter.
     setPlayerFlag(slasher, "slashTargetFix");
     if (!distance_limit)
         setPlayerFlag(slasher, "slashNoDistanceLimit");
@@ -1843,8 +1843,8 @@ void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPla
     }
 }
 
-const ProhibitSkill *Room::isProhibited(const Player *from, const Player *to, const Card *card) const{
-    return Sanguosha->isProhibited(from, to, card);
+const ProhibitSkill *Room::isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const{
+    return Sanguosha->isProhibited(from, to, card, others);
 }
 
 int Room::drawCard() {

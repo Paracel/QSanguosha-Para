@@ -718,8 +718,8 @@ public:
     Weimu(): ProhibitSkill("weimu") {
     }
 
-    virtual bool isProhibited(const Player *, const Player *, const Card *card) const{
-        return (card->isKindOf("TrickCard") || card->isKindOf("QiceCard"))
+    virtual bool isProhibited(const Player *, const Player *to, const Card *card, const QList<const Player *> &) const{
+        return to->hasSkill(objectName()) && (card->isKindOf("TrickCard") || card->isKindOf("QiceCard"))
                && card->isBlack() && card->getSkillName() != "guhuo"; // Be care!!!!!!
     }
 };

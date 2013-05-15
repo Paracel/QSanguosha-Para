@@ -876,7 +876,7 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
 
 bool GuhuoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     CardStar card = Self->tag.value("guhuo").value<CardStar>();
-    return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card);
+    return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card, targets);
 }
 
 bool GuhuoCard::targetFixed() const{

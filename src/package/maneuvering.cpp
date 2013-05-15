@@ -46,7 +46,7 @@ bool Analeptic::IsAvailable(const Player *player, const Card *analeptic) {
     newanal->deleteLater();
 #define THIS_ANAL (analeptic == NULL ? newanal : analeptic)
     if (player->isCardLimited(THIS_ANAL, Card::MethodUse) || player->isProhibited(player, THIS_ANAL))
-            return false;
+        return false;
 
     return player->usedTimes("Analeptic") <= Sanguosha->correctCardTarget(TargetModSkill::Residue, player, THIS_ANAL);
 #undef THIS_ANAL

@@ -1169,7 +1169,7 @@ bool AocaiCard::targetFilter(const QList<const Player *> &targets, const Player 
         name = user_string.split("+").first();
         card = Sanguosha->cloneCard(name);
     }
-    return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card);
+    return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card, targets);
 }
 
 bool AocaiCard::targetFixed() const{

@@ -1095,7 +1095,7 @@ bool BasaraMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *pl
                         playerShowed(player);
 
                 const ProhibitSkill *prohibit = room->isProhibited(ces.from, ces.to, ces.card);
-                if (prohibit) {
+                if (prohibit && ces.to->hasSkill(prohibit->objectName())) {
                     LogMessage log;
                     log.type = "#SkillAvoid";
                     log.from = ces.to;

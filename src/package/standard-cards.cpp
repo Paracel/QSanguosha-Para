@@ -125,14 +125,36 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         if (!name.isEmpty()) {
             player->setFlags("-Global_MoreSlashInOneTurn");
             room->broadcastSkillInvoke(name);
+            room->notifySkillInvoked(player, name);
         }
     }
-    if (use.to.size() > 1 && player->hasSkill("shenji"))
+    if (use.to.size() > 1 && player->hasSkill("shenji")) {
         room->broadcastSkillInvoke("shenji");
-    else if (use.to.size() > 1 && player->hasSkill("lihuo") && use.card->isKindOf("FireSlash") && use.card->getSkillName() != "lihuo")
+        room->notifySkillInvoked(player, "shenji");
+    } else if (use.to.size() > 1 && player->hasSkill("lihuo") && use.card->isKindOf("FireSlash") && use.card->getSkillName() != "lihuo") {
         room->broadcastSkillInvoke("lihuo", 1);
-    else if (use.to.size() > 1 && player->hasSkill("duanbing"))
+        room->notifySkillInvoked(player, "lihuo");
+    } else if (use.to.size() > 1 && player->hasSkill("duanbing")) {
         room->broadcastSkillInvoke("duanbing");
+        room->notifySkillInvoked(player, "duanbing");
+    }
+
+    int rangefix = 0;
+    if (use.card->isVirtualCard()) {
+        if (use.from->getWeapon() && use.card->getSubcards().contains(use.from->getWeapon()->getId())) {
+            const Weapon *weapon = qobject_cast<const Weapon *>(use.from->getWeapon()->getRealCard());
+            rangefix += weapon->getRange() - 1;
+        }
+        if (use.from->getOffensiveHorse() && use.card->getSubcards().contains(use.from->getOffensiveHorse()->getId()))
+            rangefix += 1;
+    }
+    foreach (ServerPlayer *p, use.to) {
+        if (p->hasSkill("tongji") && use.from->distanceTo(p, rangefix) <= use.from->getAttackRange()) {
+            room->broadcastSkillInvoke("tongji");
+            room->notifySkillInvoked(p, "tongji");
+            break;
+        }
+    }
 
     if (use.from->hasFlag("BladeUse")) {
         use.from->setFlags("-BladeUse");
@@ -250,14 +272,14 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
                     break;
                 }
             if (hasExtraTarget)
-                return Self->canSlash(to_select, this, distance_limit, rangefix);
+                return Self->canSlash(to_select, this, distance_limit, rangefix, targets);
             else
-                return Self->canSlash(to_select, this) && Self->distanceTo(to_select) == 1;
+                return Self->canSlash(to_select, this, true, 0, targets) && Self->distanceTo(to_select) == 1;
         } else
             return false;
     }
 
-    return Self->canSlash(to_select, this, distance_limit, rangefix);
+    return Self->canSlash(to_select, this, distance_limit, rangefix, targets);
 }
 
 Jink::Jink(Suit suit, int number): BasicCard(suit, number)

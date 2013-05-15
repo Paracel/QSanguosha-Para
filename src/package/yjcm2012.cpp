@@ -131,7 +131,7 @@ bool QiceCard::targetFilter(const QList<const Player *> &targets, const Player *
     Card *mutable_card = const_cast<Card *>(card);
     foreach (int id, subcards)
         mutable_card->addSubcard(id);
-    return mutable_card && mutable_card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, mutable_card);
+    return mutable_card && mutable_card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, mutable_card, targets);
 }
 
 bool QiceCard::targetFixed() const{

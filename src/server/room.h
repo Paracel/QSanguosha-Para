@@ -267,7 +267,7 @@ public:
 
     void sortByActionOrder(QList<ServerPlayer *> &players);
 
-    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
+    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
 
     void setTag(const QString &key, const QVariant &value);
     QVariant getTag(const QString &key) const;

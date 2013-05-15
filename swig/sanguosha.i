@@ -182,8 +182,10 @@ public:
     void setChained(bool chained);
     bool isChained() const;
 
-    bool canSlash(const Player *other, const Card *slash, bool distance_limit = true, int rangefix = 0) const;
-    bool canSlash(const Player *other, bool distance_limit = true, int rangefix = 0) const;
+    bool canSlash(const Player *other, const Card *slash, bool distance_limit = true,
+                  int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
+    bool canSlash(const Player *other, bool distance_limit = true,
+                  int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
     int getCardCount(bool include_equip) const;
 
     QList<int> getPile(const char *pile_name);
@@ -205,7 +207,7 @@ public:
     QSet<QString> getAcquiredSkills() const;
     QString getSkillDescription() const;
 
-    virtual bool isProhibited(const Player *to, const Card *card) const;
+    virtual bool isProhibited(const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     bool canSlashWithoutCrossbow() const;
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
@@ -858,7 +860,7 @@ public:
     void playAudioEffect(const char *filename) const;
     void playSkillAudioEffect(const char *skill_name, int index) const;
 
-    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
+    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     int correctDistance(const Player *from, const Player *to) const;
     int correctMaxCards(const Player *target) const;
     int correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const;
@@ -1044,7 +1046,7 @@ public:
 
     void sortByActionOrder(QList<ServerPlayer *> &players);
 
-    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card) const;
+    const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
 
     void setTag(const char *key, const QVariant &value);
     QVariant getTag(const char *key) const;

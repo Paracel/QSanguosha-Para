@@ -24,7 +24,8 @@ return {
 	[":yicong"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的体力值大于2，你与其他角色的距离-1；若你的体力值小于或等于2，其他角色与你的距离+1。",
 
 	["#yuanshu"] = "仲家帝",
-	["yuanshu"] = "袁术",
+	["yuanshu"] = "SP袁术",
+	["&yuanshu"] = "袁术",
 	["illustrator:yuanshu"] = "吴昊",
 	["yongsi"] = "庸肆",
 	[":yongsi"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。（X为现存势力数）",
@@ -41,7 +42,7 @@ return {
 	["&sp_guanyu"] = "关羽",
 	["illustrator:sp_guanyu"] = "LiuHeng",
 	["danji"] = "单骑",
-	[":danji"] = "<font color=\"purple\"><b>觉醒技。</b></font>开始阶段开始时，若你的手牌数大于体力值，且本局游戏主公为曹操，你失去1点体力上限，然后获得技能“马术”。",
+	[":danji"] = "<font color=\"purple\"><b>觉醒技。</b></font>准备阶段开始时，若你的手牌数大于体力值，且本局游戏主公为曹操，你失去1点体力上限，然后获得技能“马术”。",
 	["$DanjiAnimate"] = "image=image/animate/danji.png",
 	["#DanjiWake"] = "%from 的手牌数 %arg 大于体力值 %arg2 ，且本局游戏主公为曹操，触发“<font color=\"yellow\"><b>单骑</b></font>”觉醒",
 
@@ -116,7 +117,7 @@ return {
 	["&shenlvbu2"] = "暴怒战神",
 	["illustrator:shenlvbu2"] = "LiuHeng",
 	["xiuluo"] = "修罗",
-	[":xiuluo"] = "开始阶段开始时，你可以弃置一张与判定区内延时类锦囊牌花色相同的手牌：若如此做，你弃置该延时类锦囊牌。",
+	[":xiuluo"] = "准备阶段开始时，你可以弃置一张与判定区内延时类锦囊牌花色相同的手牌：若如此做，你弃置该延时类锦囊牌。",
 	["@xiuluo"] = "请弃置一张与判定区某一张牌花色相同的手牌",
 	["shenwei"] = "神威",
 	[":shenwei"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸两张牌。你的手牌上限+2。",

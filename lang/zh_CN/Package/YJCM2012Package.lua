@@ -38,7 +38,7 @@ return {
 	["designer:madai"] = "凌天翼",
 	["illustrator:madai"] = "大佬荣",
 	["qianxi"] = "潜袭",
-	[":qianxi"] = "开始阶段开始时，你可以进行一次判定：若如此做，你令一名距离1的角色不能使用或打出与判定牌颜色相同的手牌，直到回合结束。",
+	[":qianxi"] = "准备阶段开始时，你可以进行一次判定：若如此做，你令一名距离1的角色不能使用或打出与判定牌颜色相同的手牌，直到回合结束。",
 	["#Qianxi"] = "由于“<font color=\"yellow\"><b>潜袭</b></font>”效果，%from 本回合不能使用或打出 %arg 手牌",
 	["@qianxi_red"] = "潜袭（红色）",
 	["@qianxi_black"] = "潜袭（黑色）",
@@ -108,7 +108,8 @@ return {
 	[":zongshi"] = "<font color=\"blue\"><b>锁定技。</b></font>你的手牌上限+X。（X为现存势力数）",
 
 	["#huaxiong"] = "魔将",
-	["huaxiong"] = "华雄",
+	["huaxiong"] = "华雄-一将",
+	["&huaxiong"] = "华雄",
 	["designer:huaxiong"] = "小立",
 	["illustrator:huaxiong"] = "地狱许",
 	["shiyong"] = "恃勇",

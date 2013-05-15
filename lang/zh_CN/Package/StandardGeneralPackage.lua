@@ -49,7 +49,7 @@ return {
 	["#zhenji"] = "薄幸的美人",
 	["zhenji"] = "甄姬",
 	["luoshen"] = "洛神",
-	[":luoshen"] = "开始阶段开始时，你可以进行一次判定：若判定结果为黑色，你获得判定牌，且你可以再次发动“洛神”。",
+	[":luoshen"] = "准备阶段开始时，你可以进行一次判定：若判定结果为黑色，你获得判定牌，且你可以再次发动“洛神”。",
 	["qingguo"] = "倾国",
 	[":qingguo"] = "你可以将一张黑色手牌当【闪】使用或打出。",
 
@@ -77,7 +77,7 @@ return {
 	["#zhugeliang"] = "迟暮的丞相",
 	["zhugeliang"] = "诸葛亮",
 	["guanxing"] = "观星",
-	[":guanxing"] = "开始阶段开始时，你可以观看牌堆顶的X张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。（X为存活角色数且至多为5）",
+	[":guanxing"] = "准备阶段开始时，你可以观看牌堆顶的X张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。（X为存活角色数且至多为5）",
 	["kongcheng"] = "空城",
 	[":kongcheng"] = "<font color=\"blue\"><b>锁定技。</b></font>若你没有手牌，你不能被选择为【杀】或【决斗】的目标。",
 	["#GuanxingResult"] = "%from 的“<font color=\"yellow\"><b>观星</b></font>”结果：%arg 上 %arg2 下",
@@ -178,7 +178,21 @@ return {
 	[":lijian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】。",
 	["biyue"] = "闭月",
 	[":biyue"] = "结束阶段开始时，你可以摸一张牌。",
-	
+
+	["#st_yuanshu"] = "",
+	["st_yuanshu"] = "袁术",
+	["illustrator:st_yuanshu"] = "",
+	["wangzun"] = "妄尊",
+	[":wangzun"] = "主公的准备阶段开始时，你可以摸一张牌，然后主公本回合手牌上限-1。",
+	["tongji"] = "同疾",
+	[":tongji"] = "<font color=\"blue\"><b>锁定技。</b></font>你须被选择为攻击范围内包含你且可以对你使用【杀】的角色的【杀】的目标。",
+
+	["#st_huaxiong"] = "",
+	["st_huaxiong"] = "华雄",
+	["illustrator:st_huaxiong"] = "",
+	["yaowu"] = "耀武",
+	[":yaowu"] = "<font color=\"blue\"><b>锁定技。</b></font>一名角色使用红色【杀】对你造成伤害时，该角色选择一项：回复1点体力，或摸一张牌。",
+
 	-- Test
 	["test"] = "测试",
 
@@ -192,7 +206,7 @@ return {
 	["wuxing_zhugeliang"] = "五星诸葛",
 	["&wuxing_zhugeliang"] = "诸葛亮", 
 	["super_guanxing"] = "观星",
-	[":super_guanxing"] = "开始阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
+	[":super_guanxing"] = "准备阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
 
 	["super_yuanshu"] = "袁术-测试",
 	["&super_yuanshu"] = "袁术",
@@ -216,7 +230,7 @@ return {
 	["nosjuejing"] = "绝境",
 	[":nosjuejing"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你不摸牌。每当你的手牌数变化后，若你的手牌数不为4，你须将手牌补至或弃置至四张。",
 	["noslonghun"] = "龙魂",
-	[":noslonghun"] = "你可以将一张牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。开始阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
+	[":noslonghun"] = "你可以将一张牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。准备阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
 	["#noslonghun_duojian"] = "龙魂",
 
 	["nobenghuai_dongzhuo"] = "董卓-无崩",

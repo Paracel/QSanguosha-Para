@@ -667,8 +667,11 @@ sgs.ai_compare_funcs = {
 function SmartAI:sort(players, key)
 	if not players then self.room:writeToConsole(debug.traceback()) end
 	if #players == 0 then return end
-	local func = sgs.ai_compare_funcs[key or "defense"]
-	table.sort(players, func)
+	function _sort(players, key)
+		local func = sgs.ai_compare_funcs[key or "defense"]
+		table.sort(players, func)
+	end
+	if not pcall(_sort, players, key) then self.room:writeToConsole(debug.traceback()) end
 end
 
 function SmartAI:sortByKeepValue(cards, inverse, kept)

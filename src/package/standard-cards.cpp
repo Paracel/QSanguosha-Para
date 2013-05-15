@@ -149,7 +149,8 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
             rangefix += 1;
     }
     foreach (ServerPlayer *p, use.to) {
-        if (p->hasSkill("tongji") && use.from->distanceTo(p, rangefix) <= use.from->getAttackRange()) {
+        if (p->hasSkill("tongji") && p->getHandcardNum() > p->getHp()
+            && use.from->distanceTo(p, rangefix) <= use.from->getAttackRange()) {
             room->broadcastSkillInvoke("tongji");
             room->notifySkillInvoked(p, "tongji");
             break;

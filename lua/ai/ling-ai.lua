@@ -116,7 +116,7 @@ sgs.ai_skill_use_func.NeoFanjianCard = function(card, use, self)
 				if flag and care then
 					flag = cd:isKindOf("BasicCard")
 				end
-				if flag and target:hasSkill("longhun") or target:hasSkill("noslonghun") then
+				if flag and target:hasSkill("longhun") then
 					flag = (suit ~= sgs.Card_Heart)
 				end
 				if flag and target:hasSkill("jiuchi") then

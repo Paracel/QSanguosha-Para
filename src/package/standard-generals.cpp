@@ -1356,7 +1356,8 @@ public:
             // find yuanshu
             const Player *yuanshu = NULL;
             foreach (const Player *p, from->getSiblings()) {
-                if (p->hasSkill(objectName()) && from->distanceTo(p, rangefix) <= from->getAttackRange()
+                if (p->hasSkill(objectName()) && p->getHandcardNum() > p->getHp()
+                    && from->distanceTo(p, rangefix) <= from->getAttackRange()
                     && from->canSlash(p, card, false)) {
                     yuanshu = p;
                     break;

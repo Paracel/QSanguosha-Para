@@ -124,4 +124,5 @@ return {
 	["fencheng"] = "焚城",
 	[":fencheng"] = "<font color=\"red\"><b>限定技。</b></font>出牌阶段，你可以令所有其他角色弃置X张牌，否则你对该角色造成1点火焰伤害。（X为该角色装备区牌的数量且至少为1）",
 	["@burn"] = "焚城",
+	["$FenchengAnimate"] = "image=image/animate/fencheng.png",
 }

@@ -1370,6 +1370,44 @@ public:
     }
 };
 
+class Yaowu: public TriggerSkill {
+public:
+    Yaowu(): TriggerSkill("yaowu") {
+        events << DamageCaused;
+        frequency = Compulsory;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.card && damage.card->isKindOf("Slash") && damage.card->isRed()
+            && damage.to->hasSkill(objectName())
+            && damage.from && damage.from->isAlive()) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(damage.to, objectName());
+
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = damage.to;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            if (damage.from->isWounded() && room->askForChoice(damage.from, objectName(), "recover+draw", data) == "recover") {
+                RecoverStruct recover;
+                recover.who = damage.to;
+                room->recover(damage.from, recover);
+            } else {
+                damage.from->drawCards(1);
+            }
+            return false;
+
+        }
+    }
+};
+
 void StandardPackage::addGenerals() {
     // Wei
     General *caocao = new General(this, "caocao$", "wei"); // WEI 001
@@ -1490,8 +1528,8 @@ void StandardPackage::addGenerals() {
     related_skills.insertMulti("wangzun", "#wangzun-maxcard");
     st_yuanshu->addSkill(new Tongji);
 
-    /*General *st_huaxiong = new General(this, "st_huaxiong", "qun", 6);
-    st_huaxiong->addSkill(new Yaowu);*/
+    General *st_huaxiong = new General(this, "st_huaxiong", "qun", 6);
+    st_huaxiong->addSkill(new Yaowu);
 
     // for skill cards
     addMetaObject<ZhihengCard>();

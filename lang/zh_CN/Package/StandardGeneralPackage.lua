@@ -192,6 +192,8 @@ return {
 	["illustrator:st_huaxiong"] = "",
 	["yaowu"] = "耀武",
 	[":yaowu"] = "<font color=\"blue\"><b>锁定技。</b></font>一名角色使用红色【杀】对你造成伤害时，该角色选择一项：回复1点体力，或摸一张牌。",
+	["yaowu:recover"] = "回复1点体力",
+	["yaowu:draw"] = "摸一张牌",
 
 	-- Test
 	["test"] = "测试",

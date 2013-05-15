@@ -154,5 +154,5 @@ void Window::setTitle(const QString &title) {
     content.append(QString("<h style=\"%1\">%2</h>").arg(style).arg(title));
 
     titleItem->setHtml(content);
-    titleItem->moveBy(size.width() / 2 - titleItem->boundingRect().width() / 2, 10);
+    titleItem->setPos(size.width() / 2 - titleItem->boundingRect().width() / 2, 10);
 }

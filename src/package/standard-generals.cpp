@@ -1402,9 +1402,8 @@ public:
             } else {
                 damage.from->drawCards(1);
             }
-            return false;
-
         }
+        return false;
     }
 };
 

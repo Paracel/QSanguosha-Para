@@ -2245,3 +2245,10 @@ function SmartAI:canUseJieyuanDecrease(damage_from, player)
 	end
 	return false
 end
+
+sgs.ai_skill_choice.yaowu = function(self, choices)
+	if self.player:getHp() >= getBestHp(self.player) or (self:needKongcheng(self.player, true) and self.player:getPhase() == sgs.Player_NotActive) then
+		return "draw"
+	end
+	return "recover"
+end

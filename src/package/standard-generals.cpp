@@ -1361,7 +1361,7 @@ public:
     Tongji(): ProhibitSkill("tongji") {
     }
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others) const{
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &) const{
         if (card->isKindOf("Slash")) {
             if (to->hasSkill(objectName()))
                 return false;
@@ -1381,15 +1381,12 @@ public:
             const Player *yuanshu = NULL;
             foreach (const Player *p, from->getSiblings()) {
                 if (p->hasSkill(objectName()) && p->getHandcardNum() > p->getHp()
-                    && from->distanceTo(p, rangefix) <= from->getAttackRange()
-                    && from->canSlash(p, card, false)) {
+                    && from->distanceTo(p, rangefix) <= from->getAttackRange()) {
                     yuanshu = p;
                     break;
                 }
             }
-            if (!yuanshu || others.contains(yuanshu))
-                return false;
-            return true;
+            return yuanshu != NULL;
         }
         return false;
     }

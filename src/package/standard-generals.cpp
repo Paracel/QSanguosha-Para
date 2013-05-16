@@ -965,7 +965,7 @@ public:
         if (change.from == Player::Discard && player->hasFlag("LianyingZeroMaxCards")) {
             player->setFlags("-LianyingZeroMaxCards");
             if (player->isKongcheng() && room->askForSkillInvoke(player, "lianying")) {
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke("lianying");
                 player->drawCards(1);
             }
         }

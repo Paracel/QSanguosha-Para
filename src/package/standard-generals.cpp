@@ -933,6 +933,11 @@ public:
                     if (!move.card_ids.contains(id))
                         return false;
                 }
+                if (luxun->getMaxCards() == 0 && luxun->getPhase() == Player::Discard
+                    && move.reason.m_reason == CardMoveReason::S_REASON_RULEDISCARD) {
+                    luxun->setFlags("LianyingZeroMaxCards");
+                    return false;
+                }
                 luxun->addMark(objectName());
             } else {
                 if (luxun->getMark(objectName()) == 0)
@@ -945,6 +950,25 @@ public:
             }
         }
 
+        return false;
+    }
+};
+
+class LianyingForZeroMaxCards: public TriggerSkill {
+public:
+    LianyingForZeroMaxCards(): TriggerSkill("#lianying-for-zero-maxcards") {
+        events << EventPhaseChanging;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.from == Player::Discard && player->hasFlag("LianyingZeroMaxCards")) {
+            player->setFlags("-LianyingZeroMaxCards");
+            if (player->isKongcheng() && room->askForSkillInvoke(player, "lianying")) {
+                room->broadcastSkillInvoke(objectName());
+                player->drawCards(1);
+            }
+        }
         return false;
     }
 };
@@ -1501,6 +1525,8 @@ void StandardPackage::addGenerals() {
     General *luxun = new General(this, "luxun", "wu", 3); // WU 007
     luxun->addSkill(new Qianxun);
     luxun->addSkill(new Lianying);
+    luxun->addSkill(new LianyingForZeroMaxCards);
+    related_skills.insertMulti("lianying", "#lianying-for-zero-maxcards");
     luxun->addSkill(new SPConvertSkill("luxun", "tw_luxun"));
 
     General *sunshangxiang = new General(this, "sunshangxiang", "wu", 3, false); // WU 008

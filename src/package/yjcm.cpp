@@ -1155,28 +1155,28 @@ bool Shangshi::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhan
                 changed = true;
             if (changed)
                 zhangchunhua->addMark("shangshi");
-        }
-    }
-    if (triggerEvent == HpChanged || triggerEvent == MaxHpChanged) {
-        if (zhangchunhua->getPhase() == Player::Discard)
-            zhangchunhua->addMark("shangshi");
-    } else if (triggerEvent == CardsMoveOneTime) {
-        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        bool can_invoke = false;
-        if (move.from == zhangchunhua && move.from_places.contains(Player::PlaceHand))
-            can_invoke = true;
-        if (move.to == zhangchunhua && move.to_place == Player::PlaceHand)
-            can_invoke = true;
-        if (!can_invoke)
             return false;
+        } else {
+            bool can_invoke = false;
+            if (move.from == zhangchunhua && move.from_places.contains(Player::PlaceHand))
+                can_invoke = true;
+            if (move.to == zhangchunhua && move.to_place == Player::PlaceHand)
+                can_invoke = true;
+            if (!can_invoke)
+                return false;
+        }
+    } else if (triggerEvent == HpChanged || triggerEvent == MaxHpChanged) {
+        if (zhangchunhua->getPhase() == Player::Discard) {
+            zhangchunhua->addMark("shangshi");
+            return false;
+        }
     } else if (triggerEvent == EventPhaseChanging) {
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.to != Player::Finish)
+        if (change.from != Player::Discard)
             return false;
         if (zhangchunhua->getMark("shangshi") <= 0)
             return false;
-        else
-            zhangchunhua->setMark("shangshi", 0);
+        zhangchunhua->setMark("shangshi", 0);
     }
 
     if (zhangchunhua->getHandcardNum()<losthp && zhangchunhua->getPhase() != Player::Discard

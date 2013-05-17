@@ -598,7 +598,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     room->setPlayerFlag(player, "-" + flag);
             }
             break;
-    }
+        }
     default:
             break;
     }

@@ -1252,7 +1252,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             }
         }
         result = card;
-    } else  {
+    } else {
         setPlayerFlag(player, "continuing");
         result = askForCard(player, pattern, prompt, data, method, to, isRetrial);
     }

@@ -2020,7 +2020,6 @@ public:
     }
 };
 
-
 const Card *HantongCard::validate(CardUseStruct &cardUse) const{
     cardUse.m_isOwnerUse = false;
     ServerPlayer *source = cardUse.from;

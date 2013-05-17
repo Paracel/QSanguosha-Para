@@ -226,7 +226,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("Slash")) {
             ServerPlayer *guanping = room->findPlayerBySkillName(objectName());
-            if (guanping && !guanping->isKongcheng()
+            if (guanping && !guanping->isNude()
                 && room->askForCard(guanping, "..", "@longyin", data, objectName())) {
                 if (use.m_addHistory)
                     room->addPlayerHistory(player, use.card->getClassName(), -1);

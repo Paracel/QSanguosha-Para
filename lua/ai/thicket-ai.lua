@@ -22,6 +22,7 @@ function SmartAI:toTurnOver(player, n)
 end
 
 sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
+	self:updatePlayers()
 	self:sort(self.friends_noself, "handcard")
 	local target = nil
 	local n = self.player:getLostHp()

@@ -14,9 +14,9 @@
 "photoFocusFrame2": "image/compact/frame/sos.png",
 "photoFrameWhenSelected": "image/compact/frame/photoSelected.png",
 
-"playerGeneralIcon-default-1": ["image/generals/avatar/%1.png",[28, 58, 220, 111], [119, 60]],
-"playerGeneralIcon-default-4": ["image/generals/avatar/%1.png",[71, 28, 134, 134], [32, 32]], //small avatar for photo
-"playerGeneralIcon-default-6": ["image/generals/avatar/%1.png",[12, 58, 220, 111], [119, 60]],  //primary avatar for photo
+"playerGeneralIcon-default-1": ["image/generals/avatar/%1.png", [28, 58, 220, 111], [119, 60]],
+"playerGeneralIcon-default-4": ["image/generals/avatar/%1.png", [71, 28, 134, 134], [32, 32]], //small avatar for photo
+"playerGeneralIcon-default-6": ["image/generals/avatar/%1.png", [12, 58, 220, 111], [119, 60]],  //primary avatar for photo
 
 "generalCircleImage-0": "image/compact/generals/double-general/circle-compactphoto.png",
 "generalCircleMask-0": ["image/compact/generals/double-general/circle-compactphoto-mask.png", [18, 28, 32, 32]],

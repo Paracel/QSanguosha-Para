@@ -2252,3 +2252,17 @@ sgs.ai_skill_choice.yaowu = function(self, choices)
 	end
 	return "recover"
 end
+
+sgs.ai_skill_invoke.wangzun = function(self, data)
+	local lord = self.room:getCurrent()
+	if self.player:getPhase() == sgs.Player_NotActive and self:needKongcheng(self.player, true) then
+		return self.player:hasSkill("manjuan") and self:isEnemy(lord)
+	end
+	if self:isEnemy(lord) then return true
+	else
+		if not self:isWeak(lord) and (self:getOverflow(lord) < -2 or (self:willSkipDrawPhase(lord) and self:getOverflow(lord) < 0)) then
+			return true
+		end
+	end
+	return false
+end

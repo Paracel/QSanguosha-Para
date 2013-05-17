@@ -3641,7 +3641,7 @@ function SmartAI:getCardId(class_name, player, acard)
 	local card_str = cardsViewValuable(self, class_name, player)
 	if card_str then return card_str end
 
-	local guhuo_str = self:getGuhuoCard(class_name, player)
+	local guhuo_str = self:getGuhuoCard(class_name, false)
 	if guhuo_str then return guhuo_str end
 
 	local viewArr, cardArr = {}, {}

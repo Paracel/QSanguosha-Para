@@ -717,14 +717,25 @@ sgs.ai_use_priority.GuhuoCard = 10
 
 function SmartAI:getGuhuoViewCard(class_name)
 	local card_use = {}
-	card_use = self:getCards(class_name, "h")
+	local ghly = (self.room:getMode() == "_mini_48")
+	if ghly then
+		card_use = sgs.QList2Table(self.player:getHandcards())
+	else
+		card_use = self:getCards(class_name, "h")
+	end
 
-	if #card_use > 1 or (#card_use > 0 and card_use[1]:getSuit() == sgs.Card_Heart) then
+	local classname2objectname = {
+		["Slash"] = "slash", ["Jink"] = "jink",
+		["Peach"] = "peach", ["Analeptic"] = "analeptic",
+		["Nullification"] = "nullification",
+	}
+
+	if #card_use > 1 or (#card_use > 0 and (card_use[1]:getSuit() == sgs.Card_Heart or ghly)) then
 		local index = 1
 		if class_name == "Peach" or (class_name == "Analeptic" and not sgs.GetConfig("BanPackages", ""):match("maneuvering")) or class_name == "Jink" then
 			index = #card_use
 		end
-		return "@GuhuoCard=" .. card_use[index]:getEffectiveId() .. ":" .. card_use[index]:objectName()
+		return "@GuhuoCard=" .. card_use[index]:getEffectiveId() .. ":" .. classname2objectname[class_name]
 	end
 end
 

@@ -833,8 +833,8 @@ public:
                 log.type = "#TurnBroken";
                 log.from = current;
                 room->sendLog(log);
-                throw TurnBroken;
             }
+            throw TurnBroken;
         }
         return false;
     }

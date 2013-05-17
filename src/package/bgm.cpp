@@ -578,7 +578,8 @@ public:
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *, QVariant &data) const{
         PindianStar pindian = data.value<PindianStar>();
-        if (pindian->reason != "dahe" || !pindian->from->hasSkill(objectName()))
+        if (pindian->reason != "dahe" || !pindian->from->hasSkill(objectName())
+            || room->getCardPlace(pindian->to_card->getEffectiveId()) != Player::PlaceTable)
             return false;
 
         if (pindian->isSuccess()) {

@@ -467,17 +467,24 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         PindianStar pindian = data.value<PindianStar>();
-        if (TriggerSkill::triggerable(pindian->from) && room->askForSkillInvoke(pindian->from, objectName(), data)) {
+        const Card *to_obtain = NULL;
+        ServerPlayer *jianyong = NULL;
+        if (TriggerSkill::triggerable(pindian->from)) {
+            jianyong = pindian->from;
             if (pindian->from_number > pindian->to_number)
-                pindian->from->obtainCard(pindian->to_card);
+                to_obtain = pindian->to_card;
             else
-                pindian->from->obtainCard(pindian->from_card);
-        } else if (TriggerSkill::triggerable(pindian->to) && room->askForSkillInvoke(pindian->to, objectName(), data)) {
+                to_obtain = pindian->from_card;
+        } else if (TriggerSkill::triggerable(pindian->to)) {
+            jianyong = pindian->to;
             if (pindian->from_number < pindian->to_number)
-                pindian->to->obtainCard(pindian->from_card);
+                to_obtain = pindian->from_card;
             else
-                pindian->to->obtainCard(pindian->to_card);
+                to_obtain = pindian->to_card;
         }
+        if (jianyong && to_obtain && room->getCardPlace(to_obtain->getEffectiveId()) == Player::PlaceTable
+            && room->askForSkillInvoke(jianyong, objectName(), data))
+            jianyong->obtainCard(to_obtain);
 
         return false;
     }

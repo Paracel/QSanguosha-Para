@@ -664,8 +664,10 @@ public:
                     room->broadcastSkillInvoke(objectName(), 2);
                 else
                     room->broadcastSkillInvoke(objectName(), 3);
-                pindian->to->obtainCard(pindian->from_card);
-                pindian->to->obtainCard(pindian->to_card);
+                if (room->getCardPlace(pindian->from_card->getEffectiveId()) == Player::PlaceTable)
+                    pindian->to->obtainCard(pindian->from_card);
+                if (room->getCardPlace(pindian->to_card->getEffectiveId()) == Player::PlaceTable)
+                    pindian->to->obtainCard(pindian->to_card);
             } else
                 room->broadcastSkillInvoke(objectName(), 4);
         } else if (triggerEvent == EventPhaseChanging) {

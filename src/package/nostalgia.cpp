@@ -485,7 +485,7 @@ public:
                     room->sendLog(log);
                 } else {
                     Peach *peach = new Peach(Card::NoSuit, 0);
-                    peach->setSkillName("JIEFAN");
+                    peach->setSkillName("_jiefan");
 
                     room->setCardFlag(damage.card, "nosjiefan_success");
                     if ((target->getGeneralName().contains("sunquan")

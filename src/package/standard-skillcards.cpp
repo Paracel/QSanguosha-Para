@@ -186,7 +186,7 @@ void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
 
     Duel *duel = new Duel(Card::NoSuit, 0);
     duel->setCancelable(duel_cancelable);
-    duel->setSkillName(getSkillName().toUpper());
+    duel->setSkillName(QString("_%1").arg(getSkillName()));
     room->useCard(CardUseStruct(duel, from, to));
 }
 

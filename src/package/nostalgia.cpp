@@ -1091,7 +1091,6 @@ public:
     }
 };
 
-
 class NosJizhi: public TriggerSkill {
 public:
     NosJizhi(): TriggerSkill("nosjizhi") {

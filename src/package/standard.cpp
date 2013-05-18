@@ -226,14 +226,15 @@ void DelayedTrick::onUse(Room *room, const CardUseStruct &card_use) const{
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
     thread->trigger(PreCardUsed, room, card_use.from, data);
+
+    CardMoveReason reason(CardMoveReason::S_REASON_USE, card_use.from->objectName(), card_use.to.first()->objectName(), this->getSkillName(), QString());
+    room->moveCardTo(this, card_use.from, card_use.to.first(), Player::PlaceDelayedTrick, reason, true);
+
     thread->trigger(CardUsed, room, card_use.from, data);
     thread->trigger(CardFinished, room, card_use.from, data);
 }
 
 void DelayedTrick::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    ServerPlayer *target = targets.value(0, source);
-    CardMoveReason reason(CardMoveReason::S_REASON_USE, source->objectName(), target->objectName(), this->getSkillName(), QString());
-    room->moveCardTo(this, source, target, Player::PlaceDelayedTrick, reason, true);
 }
 
 QString DelayedTrick::getSubtype() const{

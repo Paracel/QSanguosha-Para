@@ -27,6 +27,13 @@ return {
 	["noslijian"] = "离间",
 	[":noslijian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】，此【决斗】不能被【无懈可击】响应。",
 
+	["nos_huangyueying"] = "黄月英-旧",
+	["&nos_huangyueying"] = "黄月英",
+	["nosjizhi"] = "集智",
+	[":nosjizhi"] = "每当你使用一张非延时类锦囊牌时，你可以摸一张牌。",
+	["nosqicai"] = "奇才",
+	[":nosqicai"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用锦囊牌无距离限制。",
+
 	["nos_fazheng"] = "法正-旧",
 	["&nos_fazheng"] = "法正",
 	["designer:nos_fazheng"] = "Michael_Lee",

@@ -814,8 +814,8 @@ HegemonyPackage::HegemonyPackage()
     heg_zhugeliang->addSkill("kongcheng");
 
     General *heg_huangyueying = new General(this, "heg_huangyueying", "shu", 3, false, true); // SHU 007 G
-    heg_huangyueying->addSkill("jizhi");
-    heg_huangyueying->addSkill("qicai");
+    heg_huangyueying->addSkill("nosjizhi");
+    heg_huangyueying->addSkill("nosqicai");
 
     General *heg_zhouyu = new General(this, "heg_zhouyu", "wu", 3, true, true); // WU 005 G
     heg_zhouyu->addSkill("yingzi");

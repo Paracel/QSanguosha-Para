@@ -139,7 +139,7 @@ return {
 	["heg_huangyueying"] = "国战黄月英",
 	["&heg_huangyueying"] = "黄月英", 
 	["illustrator:heg_huangyueying"] = "木美人",
-	["cv_huangyueying:convert"] = "你可以替换为国战黄月英或台版黄月英",
+	["cv_nos_huangyueying:convert"] = "你可以替换为国战黄月英或台版黄月英",
 
 	["heg_zhouyu"] = "国战周瑜",
 	["&heg_zhouyu"] = "周瑜", 

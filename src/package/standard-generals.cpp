@@ -1491,7 +1491,6 @@ void StandardPackage::addGenerals() {
     General *huangyueying = new General(this, "huangyueying", "shu", 3, false); // SHU 007
     huangyueying->addSkill(new Jizhi);
     huangyueying->addSkill(new Qicai);
-    huangyueying->addSkill(new SPConvertSkill("huangyueying", "heg_huangyueying+tw_huangyueying"));
 
     // Wu
     General *sunquan = new General(this, "sunquan$", "wu"); // WU 001

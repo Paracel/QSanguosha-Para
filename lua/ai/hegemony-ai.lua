@@ -636,8 +636,8 @@ sgs.ai_skill_invoke.cv_zhugeliang = function(self, data)
 	else sgs.ai_skill_choice.cv_zhugeliang = "heg_zhugeliang" return true end
 end
 
-sgs.ai_skill_invoke.cv_huangyueying = function(self, data)
+sgs.ai_skill_invoke.cv_nos_huangyueying = function(self, data)
 	if math.random(0, 2) > 0 then return false end
-	if math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_huangyueying = "tw_huangyueying" return true
-	else sgs.ai_skill_choice.cv_huangyueying = "heg_huangyueying" return true end
+	if math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_nos_huangyueying = "tw_huangyueying" return true
+	else sgs.ai_skill_choice.cv_nos_huangyueying = "heg_huangyueying" return true end
 end

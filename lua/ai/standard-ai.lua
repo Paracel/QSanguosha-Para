@@ -1175,7 +1175,7 @@ end
 
 sgs.ai_chaofeng.machao = 1
 
-sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
+sgs.ai_skill_cardask["@jizhi-exchange"] = function(self, data)
 	local function isValuableCard(card)
 		return isCard("Peach", card, self.player) or (self:isWeak() and isCard("Analeptic", card, self.player))
 				or (self.player:getPhase() ~= sgs.Player_Play

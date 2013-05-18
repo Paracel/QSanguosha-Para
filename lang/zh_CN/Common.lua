@@ -128,6 +128,7 @@ CommonTranslationTable = {
 	["$DiscardCardWithSkill"] = "%from 发动“%arg”弃置了 %card",
 	["$DiscardCardByOther"] = "%from 弃置了 %to 的卡牌 %card",
 	["$EnterDiscardPile"] = "%card 被置入弃牌堆",
+	["$MoveToDiscardPile"] = "%from 将 %card 置入弃牌堆",
 	["$GotCardBack"] = "%from 收回了 %card",
 	["$RecycleCard"] = "%from 从弃牌堆获得了 %card",
  	["$Dismantlement"] = "%from 的 %card 被弃置",

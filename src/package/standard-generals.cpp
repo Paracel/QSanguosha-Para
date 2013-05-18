@@ -759,7 +759,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *yueying, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
 
-        if (use.card->isNDTrick()
+        if (use.card->getTypeId() == Card::TypeTrick
             && (yueying->getMark("JilveEvent") > 0 || room->askForSkillInvoke(yueying, objectName()))) {
             if (yueying->getMark("JilveEvent") > 0)
                 room->broadcastSkillInvoke("jilve", 5);

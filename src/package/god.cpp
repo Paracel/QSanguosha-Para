@@ -1067,7 +1067,7 @@ public:
             if (triggerEvent == CardUsed) {
                 const TriggerSkill *jizhi = Sanguosha->getTriggerSkill("jizhi");
                 CardUseStruct use = data.value<CardUseStruct>();
-                if (jizhi && use.card && use.card->isNDTrick() && player->askForSkillInvoke("jilve_jizhi", data)) {
+                if (jizhi && use.card && use.card->getTypeId() == Card::TypeTrick && player->askForSkillInvoke("jilve_jizhi", data)) {
                     room->notifySkillInvoked(player, objectName());
                     player->loseMark("@bear");
                     jizhi->trigger(triggerEvent, room, player, data);

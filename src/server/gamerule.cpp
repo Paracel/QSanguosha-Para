@@ -422,7 +422,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
     case CardEffected: {
             if (data.canConvert<CardEffectStruct>()) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
-                if (room->isCanceled(effect)) {
+                if (effect.card->getTypeId() == Card::TypeTrick && room->isCanceled(effect)) {
                     effect.to->setFlags("Global_NonSkillNullify");
                     return true;
                 }

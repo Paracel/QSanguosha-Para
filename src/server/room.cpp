@@ -948,18 +948,14 @@ bool Room::isCanceled(const CardEffectStruct &effect) {
     if (!effect.card->isCancelable(effect))
         return false;
 
-    const TrickCard *trick = qobject_cast<const TrickCard *>(effect.card->getRealCard());
-    if (trick) {
-        QVariant decisionData = QVariant::fromValue(effect.to);
-        setTag("NullifyingTarget", decisionData);
-        decisionData = QVariant::fromValue(effect.from);
-        setTag("NullifyingSource", decisionData);
-        decisionData = QVariant::fromValue(effect.card);
-        setTag("NullifyingCard", decisionData);
-        setTag("NullifyingTimes", 0);
-        return askForNullification(trick, effect.from, effect.to, true);
-    } else
-        return false;
+    QVariant decisionData = QVariant::fromValue(effect.to);
+    setTag("NullifyingTarget", decisionData);
+    decisionData = QVariant::fromValue(effect.from);
+    setTag("NullifyingSource", decisionData);
+    decisionData = QVariant::fromValue(effect.card);
+    setTag("NullifyingCard", decisionData);
+    setTag("NullifyingTimes", 0);
+    return askForNullification(effect.card, effect.from, effect.to, true);
 }
 
 bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value &response, void *) {
@@ -969,7 +965,7 @@ bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value &
     return card != NULL;
 }
 
-bool Room::askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive) {
+bool Room::askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive) {
     _NullificationAiHelper aiHelper;
     aiHelper.m_from = from;
     aiHelper.m_to = to;
@@ -977,7 +973,7 @@ bool Room::askForNullification(const TrickCard *trick, ServerPlayer *from, Serve
     return _askForNullification(trick, from, to, positive, aiHelper);
 }
 
-bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to,
+bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to,
                                 bool positive, _NullificationAiHelper aiHelper) {
     while (isPaused()) {}
 
@@ -1048,20 +1044,19 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     log.to << to;
     log.arg = trick_name;
     sendLog(log);
-
     thread->delay(500);
 
     QVariant decisionData = QVariant::fromValue("Nullification:" + QString(trick->getClassName())
                                                 + ":" + to->objectName() + ":" + (positive ? "true" : "false"));
     thread->trigger(ChoiceMade, this, repliedPlayer, decisionData);
     setTag("NullifyingTimes", getTag("NullifyingTimes").toInt() + 1);
-    const TrickCard *card_null = qobject_cast<const TrickCard *>(card->getRealCard());
+
     bool result = true;
     CardEffectStruct effect;
     effect.card = card;
     effect.to = repliedPlayer;
-    if (card_null->isCancelable(effect))
-        result = !_askForNullification(card_null, repliedPlayer, to, !positive, aiHelper);
+    if (card->isCancelable(effect))
+        result = !_askForNullification(card, repliedPlayer, to, !positive, aiHelper);
     return result;
 }
 

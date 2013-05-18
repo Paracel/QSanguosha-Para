@@ -22,7 +22,7 @@ public:
     virtual bool askForSkillInvoke(const char *skill_name, const QVariant &data) = 0;
     virtual QString askForChoice(const char *skill_name, const char *choices, const QVariant &data) = 0;
     virtual QList<int> askForDiscard(const char *reason, int discard_num, int min_num, bool optional, bool include_equip) = 0;
-    virtual const Card *askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive) = 0;
+    virtual const Card *askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive) = 0;
     virtual int askForCardChosen(ServerPlayer *who, const char *flags, const char *reason, Card::HandlingMethod method) = 0;
     virtual const Card *askForCard(const char *pattern, const char *prompt, const QVariant &data) = 0;
     virtual QString askForUseCard(const char *pattern, const char *prompt, const Card::HandlingMethod method) = 0;
@@ -43,7 +43,7 @@ public:
     virtual bool askForSkillInvoke(const char *skill_name, const QVariant &data);
     virtual QString askForChoice(const char *skill_name, const char *choices, const QVariant &data);
     virtual QList<int> askForDiscard(const char *reason, int discard_num, int min_num, bool optional, bool include_equip);
-    virtual const Card *askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
+    virtual const Card *askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     virtual int askForCardChosen(ServerPlayer *who, const char *flags, const char *reason, Card::HandlingMethod method);
     virtual const Card *askForCard(const char *pattern, const char *prompt, const QVariant &data);
     virtual QString askForUseCard(const char *pattern, const char *prompt, const Card::HandlingMethod method);
@@ -302,11 +302,11 @@ ServerPlayer *LuaAI::askForPlayerChosen(const QList<ServerPlayer *> &targets, co
         return TrustAI::askForPlayerChosen(targets, reason);
 }
 
-const Card *LuaAI::askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive) {
+const Card *LuaAI::askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive) {
     lua_State *L = room->getLuaState();
 
     pushCallback(L, __FUNCTION__);
-    SWIG_NewPointerObj(L, trick, SWIGTYPE_p_TrickCard, 0);
+    SWIG_NewPointerObj(L, trick, SWIGTYPE_p_Card, 0);
     SWIG_NewPointerObj(L, from, SWIGTYPE_p_ServerPlayer, 0);
     SWIG_NewPointerObj(L, to, SWIGTYPE_p_ServerPlayer, 0);
     lua_pushboolean(L, positive);

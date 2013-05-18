@@ -1096,7 +1096,7 @@ public:
                        bool optional = false, bool include_equip = false, const char *prompt = NULL);
     const Card *askForExchange(ServerPlayer *player, const char *reason, int discard_num, bool include_equip = false,
                                const char *prompt = NULL, bool optional = false);
-    bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
+    bool askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason,
                          bool handcard_visible = false, Card::HandlingMethod method = Card::MethodNone);

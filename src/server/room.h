@@ -312,7 +312,7 @@ public:
                        bool optional = false, bool include_equip = false, const QString &prompt = QString());
     const Card *askForExchange(ServerPlayer *player, const QString &reason, int discard_num, bool include_equip = false,
                                const QString &prompt = QString(), bool optional = false);
-    bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
+    bool askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason,
                          bool handcard_visible = false, Card::HandlingMethod method = Card::MethodNone);
@@ -511,11 +511,11 @@ private:
 
     //helper functions and structs
     struct _NullificationAiHelper {
-        const TrickCard *m_trick;
+        const Card *m_trick;
         ServerPlayer *m_from;
         ServerPlayer *m_to;
     };
-    bool _askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive, _NullificationAiHelper helper);
+    bool _askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive, _NullificationAiHelper helper);
     void _setupChooseGeneralRequestArgs(ServerPlayer *player);    
 
 private slots:

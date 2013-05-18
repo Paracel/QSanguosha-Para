@@ -1088,6 +1088,17 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
         if (ai) {
             thread->delay();
             card_id = ai->askForCardChosen(who, flags, reason, method);
+            if (card_id == -1) {
+                QList<const Card *> cards = who->getCards(flags);
+                if (method == Card::MethodDiscard) {
+                    foreach (const Card *card, cards) {
+                        if (!player->canDiscard(who, card->getEffectiveId()))
+                            cards.removeOne(card);
+                    }
+                }
+                Q_ASSERT(!cards.isEmpty());
+                card_id = cards.at(qrand() % cards.length())->getId();
+            }
         } else {
             Json::Value arg(Json::arrayValue);
             arg[0] = toJsonString(who->objectName());
@@ -1106,15 +1117,12 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
                 } while (method == Card::MethodDiscard && !player->canDiscard(who, card_id));
             } else
                 card_id = clientReply.asInt();
+
+            if (card_id == Card::S_UNKNOWN_CARD_ID)
+                card_id = who->getRandomHandCardId();
         }
     }
 
-    if (card_id == Card::S_UNKNOWN_CARD_ID) {
-        QList<const Card *> cards = who->getCards(flags);
-        do {
-            card_id = cards.at(qrand() % cards.length())->getId();
-        } while (method == Card::MethodDiscard && !player->canDiscard(who, card_id));
-    }
     Q_ASSERT(card_id != Card::S_UNKNOWN_CARD_ID);
 
     QVariant decisionData = QVariant::fromValue(QString("cardChosen:%1:%2:%3:%4").arg(reason).arg(card_id)

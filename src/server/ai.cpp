@@ -270,13 +270,8 @@ const Card *TrustAI::askForNullification(const TrickCard *trick, ServerPlayer *,
     return NULL;
 }
 
-int TrustAI::askForCardChosen(ServerPlayer *who, const QString &flags, const QString &, Card::HandlingMethod method) {
-    QList<const Card *> cards = who->getCards(flags);
-    int id = -1;
-    do {
-        id = cards.at(qrand() % cards.length())->getId();
-    } while (method == Card::MethodDiscard && !self->canDiscard(who, id));
-    return id;
+int TrustAI::askForCardChosen(ServerPlayer *, const QString &, const QString &, Card::HandlingMethod) {
+    return -1;
 }
 
 const Card *TrustAI::askForCard(const QString &pattern, const QString &prompt, const QVariant &data) {

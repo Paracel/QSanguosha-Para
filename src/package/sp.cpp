@@ -399,12 +399,12 @@ void YuanhuCard::onEffect(const CardEffectStruct &effect) const{
     if (card->isKindOf("Weapon")) {
       QList<ServerPlayer *> targets;
       foreach (ServerPlayer *p, room->getAllPlayers()) {
-          if (effect.to->distanceTo(p) == 1 && !p->isAllNude())
+          if (effect.to->distanceTo(p) == 1 && caohong->canDiscard(p, "hej"))
               targets << p;
       }
       if (!targets.isEmpty()) {
           ServerPlayer *to_dismantle = room->askForPlayerChosen(caohong, targets, "yuanhu", "@yuanhu-discard:" + effect.to->objectName());
-          int card_id = room->askForCardChosen(caohong, to_dismantle, "hej", "yuanhu");
+          int card_id = room->askForCardChosen(caohong, to_dismantle, "hej", "yuanhu", false, Card::MethodDiscard);
           room->throwCard(Sanguosha->getCard(card_id), to_dismantle, caohong);
       }
     } else if (card->isKindOf("Armor")) {
@@ -496,7 +496,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getLostHp() > 0 && !player->isNude() && !player->hasUsed("XuejiCard");
+        return player->getLostHp() > 0 && player->canDiscard(player, "he") && !player->hasUsed("XuejiCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -847,13 +847,13 @@ public:
     virtual bool triggerable(const ServerPlayer *target) const{
         return PhaseChangeSkill::triggerable(target)
                && target->getPhase() == Player::Start
-               && !target->isKongcheng()
+               && target->canDiscard(target, "h")
                && hasDelayedTrick(target);
     }
 
     virtual bool onPhaseChange(ServerPlayer *target) const{
         Room *room = target->getRoom();
-        while (hasDelayedTrick(target) && !target->isKongcheng()) {
+        while (hasDelayedTrick(target) && target->canDiscard(target, "h")) {
             QStringList suits;
             foreach (const Card *jcard, target->getJudgingArea()) {
                 if (!suits.contains(jcard->getSuitString()))
@@ -1003,9 +1003,12 @@ public:
                 QList<const Card *> equips = target->getEquips();
                 if (!equips.isEmpty()) {
                     DummyCard *dummy = new DummyCard;
-                    foreach (const Card *equip, equips)
-                        dummy->addSubcard(equip);
-                    room->throwCard(dummy, target, player);
+                    foreach (const Card *equip, equips) {
+                        if (player->canDiscard(target, equip->getEffectiveId()))
+                            dummy->addSubcard(equip);
+                    }
+                    if (dummy->subcardsLength() > 0)
+                        room->throwCard(dummy, target, player);
                     delete dummy;
                 }
             }
@@ -1273,7 +1276,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasFlag("DuwuEnterDying");
+        return player->canDiscard(player, "he") && !player->hasFlag("DuwuEnterDying");
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{

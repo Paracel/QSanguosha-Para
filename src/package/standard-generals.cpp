@@ -765,7 +765,39 @@ public:
                 room->broadcastSkillInvoke("jilve", 5);
             else
                 room->broadcastSkillInvoke(objectName());
-            yueying->drawCards(1);
+
+            QList<int> ids = room->getNCards(1, false);
+            CardsMoveStruct move;
+            move.card_ids = ids;
+            move.to = yueying;
+            move.to_place = Player::PlaceTable;
+            move.reason = CardMoveReason(CardMoveReason::S_REASON_TURNOVER, yueying->objectName(), "jizhi", QString());
+            room->moveCardsAtomic(move, true);
+
+            int id = ids.first();
+            const Card *card = Sanguosha->getCard(id);
+            if (!card->isKindOf("BasicCard")) {
+                yueying->obtainCard(card);
+            } else {
+                const Card *card_ex = NULL;
+                if (!yueying->isKongcheng())
+                    card_ex = room->askForCard(yueying, ".", "@jizhi-exchange:::" + card->objectName(),
+                                               QVariant::fromValue((CardStar)card), Card::MethodNone);
+                if (card_ex) {
+                    CardMoveReason reason1(CardMoveReason::S_REASON_NATURAL_ENTER, yueying->objectName(), "jizhi", QString());
+                    CardMoveReason reason2(CardMoveReason::S_REASON_OVERRIDE, yueying->objectName(), "jizhi", QString());
+                    CardsMoveStruct move1(QList<int>() << card_ex->getEffectiveId(), yueying, Player::DiscardPile, reason1);
+                    CardsMoveStruct move2(ids, yueying, yueying, Player::PlaceHand, reason2);
+
+                    QList<CardsMoveStruct> moves;
+                    moves.append(move1);
+                    moves.append(move2);
+                    room->moveCardsAtomic(moves, true);
+                } else {
+                    CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, yueying->objectName(), "jizhi", QString());
+                    room->throwCard(card, reason, NULL);
+                }
+            }
         }
 
         return false;
@@ -806,7 +838,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasUsed("ZhihengCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("ZhihengCard");
     }
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
@@ -1052,7 +1084,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
 
         if (use.card && use.card->isKindOf("Slash")
-            && use.to.contains(daqiao) && !daqiao->isNude() && room->alivePlayerCount() > 2) {
+            && use.to.contains(daqiao) && daqiao->canDiscard(daqiao, "he") && room->alivePlayerCount() > 2) {
             QList<ServerPlayer *> players = room->getOtherPlayers(daqiao);
             players.removeOne(use.from);
 
@@ -1212,7 +1244,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasUsed("LijianCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("LijianCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1255,7 +1287,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isKongcheng() && !player->hasUsed("QingnangCard");
+        return player->canDiscard(player, "h") && !player->hasUsed("QingnangCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1280,7 +1312,7 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         return pattern.contains("peach") && !player->hasFlag("Global_PreventPeach")
-               && player->getPhase() == Player::NotActive && !player->isNude();
+                && player->getPhase() == Player::NotActive && player->canDiscard(player, "he");
     }
 
     virtual bool viewFilter(const Card *to_select) const{
@@ -1573,7 +1605,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && player->usedTimes("ZhihengCard") < (player->getLostHp() + 1);
+        return player->canDiscard(player, "he") && player->usedTimes("ZhihengCard") < (player->getLostHp() + 1);
     }
 };
 

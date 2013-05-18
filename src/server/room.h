@@ -314,7 +314,8 @@ public:
                                const QString &prompt = QString(), bool optional = false);
     bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
-    int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason, bool handcard_visible = false);
+    int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason,
+                         bool handcard_visible = false, Card::HandlingMethod method = Card::MethodNone);
     const Card *askForCard(ServerPlayer *player, const QString &pattern, const QString &prompt, const QVariant &data, const QString &skill_name);
     const Card *askForCard(ServerPlayer *player, const QString &pattern, const QString &prompt, const QVariant &data = QVariant(),
                            Card::HandlingMethod method = Card::MethodDiscard, ServerPlayer *to = NULL, bool isRetrial = false,

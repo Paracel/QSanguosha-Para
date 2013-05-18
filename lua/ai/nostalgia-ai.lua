@@ -857,3 +857,9 @@ sgs.ai_use_priority.NosRendeCard = sgs.ai_use_priority.RendeCard
 sgs.ai_card_intention.NosRendeCard = sgs.ai_card_intention.RendeCard
 
 sgs.dynamic_value.benefit.NosRendeCard = true
+
+sgs.ai_cardneed.nosjizhi = sgs.ai_cardneed.jizhi
+
+sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
+
+sgs.ai_chaofeng.nos_huangyueying = sgs.ai_chaofeng.huangyueying

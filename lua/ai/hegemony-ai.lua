@@ -497,6 +497,50 @@ sgs.ai_skill_invoke.kuangfu = function(self, data)
 	return not benefit
 end
 
+sgs.ai_skill_choice.kuangfu_equip = function(self, choices, data)
+	local who = data:toPlayer()
+	if self:isFriend(who) then
+		if choices:match("1") and self:needToThrowArmor(who) then return "1" end
+		if choices:match("1") and self:evaluateArmor(who:getArmor(), who) < -5 then return "1" end
+		if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
+			if choices:match("0") then return "0" end
+			if choices:match("3") then return "3" end
+		end
+	else
+		local dangerous = self:getDangerousCard(who)
+		if dangerous then
+			local card = sgs.Sanguosha:getCard(dangerous)
+			if card:isKindOf("Weapon") and choices:match("0") then return "0"
+			elseif card:isKindOf("Armor") and choices:match("1") then return "1"
+			elseif card:isKindOf("DefensiveHorse") and choices:match("2") then return "2"
+			elseif card:isKindOf("OffensiveHorse") and choices:match("3") then return "3"
+			end
+		end
+		if choices:match("1") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return "1" end
+		if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e", false, 1, reason) then
+			if choices:match("2") then return "2" end
+			if choices:match("1") and who:getArmor() and not self:needToThrowArmor(who) then return "1" end
+			if choices:match("3") and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) then return "3" end
+			if choices:match("0") and (not who:hasSkill("jijiu") or who:getWeapon():isRed()) then return "0" end
+		end
+		local valuable = self:getValuableCard(who)
+		if valuable then
+			local card = sgs.Sanguosha:getCard(valuable)
+			if card:isKindOf("Weapon") and choices:match("0") then return "0"
+			elseif card:isKindOf("Armor") and choices:match("1") then return "1"
+			elseif card:isKindOf("DefensiveHorse") and choices:match("2") then return "2"
+			elseif card:isKindOf("OffensiveHorse") and choices:match("3") then return "3"
+			end
+		end
+		if not self:doNotDiscard(who, "e") then
+			if choices:match("3") then return "3" end
+			if choices:match("1") then return "1" end
+			if choices:match("2") then return "2" end
+			if choices:match("0") then return "0" end
+		end
+	end
+end
+
 sgs.ai_skill_choice.kuangfu = function(self, choices)
 	return "move"
 end

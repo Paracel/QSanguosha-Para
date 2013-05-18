@@ -588,6 +588,32 @@ bool Player::isAllNude() const{
     return isNude() && judging_area.isEmpty();
 }
 
+bool Player::canDiscard(const Player *to, const QString &flags) const{
+    static QChar handcard_flag('h');
+    static QChar equip_flag('e');
+    static QChar judging_flag('j');
+
+    if (flags.contains(handcard_flag) && !to->isKongcheng()) return true;
+    if (flags.contains(judging_flag) && !to->getJudgingArea().isEmpty()) return true;
+    if (flags.contains(equip_flag)) {
+        if (to->getDefensiveHorse() || to->getOffensiveHorse()) return true;
+        if ((to->getWeapon() || to->getArmor()) && (!to->hasSkill("qicai") && this != to)) return true;
+    }
+    return false;
+}
+
+bool Player::canDiscard(const Player *to, int card_id) const{
+    if (to->hasSkill("qicai") && this != to) {
+        if ((to->getWeapon() && card_id == to->getWeapon()->getEffectiveId())
+            || (to->getArmor() && card_id == to->getArmor()->getEffectiveId()))
+            return false;
+    } else if (this == to) {
+        if (isJilei(Sanguosha->getCard(card_id)))
+            return false;
+    }
+    return true;
+}
+
 void Player::addDelayedTrick(const Card *trick) {
     judging_area << trick->getId();
 }

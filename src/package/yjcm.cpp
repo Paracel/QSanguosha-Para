@@ -258,7 +258,7 @@ public:
 
     virtual bool onPhaseChange(ServerPlayer *xushu) const{
         Room *room = xushu->getRoom();
-        if (xushu->getPhase() == Player::Finish && !xushu->isNude())
+        if (xushu->getPhase() == Player::Finish && xushu->canDiscard(xushu, "he"))
             room->askForUseCard(xushu, "@@jujian", "@jujian-card", -1, Card::MethodDiscard);
         return false;
     }
@@ -430,49 +430,36 @@ public:
 
             if ((lingtong->getMark("xuanfeng") >= 2 && !lingtong->hasFlag("XuanfengUsed"))
                 || move.from_places.contains(Player::PlaceEquip)) {
-                bool can_invoke = false;
-                QList<ServerPlayer *> other_players = room->getOtherPlayers(lingtong);
-                foreach (ServerPlayer *player, other_players) {
-                    if (!player->isNude()) {
-                        can_invoke = true;
-                        break;
-                    }
+                QList<ServerPlayer *> targets;
+                foreach (ServerPlayer *target, room->getOtherPlayers(lingtong)) {
+                    if (lingtong->canDiscard(target, "he"))
+                        targets << target;
                 }
-                if (!can_invoke)
+                if (targets.isEmpty())
                     return false;
 
                 if (lingtong->askForSkillInvoke(objectName())) {
                     if (lingtong->getMark("xuanfeng") >= 2)
                         lingtong->setFlags("XuanfengUsed");
                     room->broadcastSkillInvoke(objectName());
-                    QList<ServerPlayer *> targets;
-                    foreach (ServerPlayer *target, room->getOtherPlayers(lingtong)) {
-                        if (!target->isNude())
-                            targets << target;
-                    }
 
                     ServerPlayer *first = room->askForPlayerChosen(lingtong, targets, "xuanfeng");
                     ServerPlayer *second = NULL;
                     int first_id = -1;
                     int second_id = -1;
                     if (first != NULL) {
-                        first_id = room->askForCardChosen(lingtong, first, "he", "xuanfeng");
+                        first_id = room->askForCardChosen(lingtong, first, "he", "xuanfeng", false, Card::MethodDiscard);
                         room->throwCard(first_id, first, lingtong);
-                        if (first->isNude())
-                            targets.removeOne(first);
                     }
-                    can_invoke = false;
-                    QList<ServerPlayer *> other_players = room->getOtherPlayers(lingtong);
-                    foreach (ServerPlayer *player, other_players) {
-                        if (!player->isNude()) {
-                            can_invoke = true;
-                            break;
-                        }
+                    targets.clear();
+                    foreach (ServerPlayer *target, room->getOtherPlayers(lingtong)) {
+                        if (lingtong->canDiscard(target, "he"))
+                            targets << target;
                     }
-                    if (can_invoke)
+                    if (!targets.isEmpty())
                         second = room->askForPlayerChosen(lingtong, targets, "xuanfeng");
                     if (second != NULL) {
-                        second_id = room->askForCardChosen(lingtong, second, "he", "xuanfeng");
+                        second_id = room->askForCardChosen(lingtong, second, "he", "xuanfeng", false, Card::MethodDiscard);
                         room->throwCard(second_id, second, lingtong);
                     }
                 }

@@ -174,6 +174,9 @@ public:
     bool isNude() const;
     bool isAllNude() const;
 
+    bool canDiscard(const Player *to, const char *flags) const;
+    bool canDiscard(const Player *to, int card_id) const;
+
     void addMark(const char *mark);
     void removeMark(const char *mark);
     virtual void setMark(const char *mark, int value);
@@ -1095,7 +1098,8 @@ public:
                                const char *prompt = NULL, bool optional = false);
     bool askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
-    int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason, bool handcard_visible = false);
+    int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason,
+                         bool handcard_visible = false, Card::HandlingMethod method = Card::MethodNone);
     const Card *askForCard(ServerPlayer *player, const char *pattern,
                            const char *prompt, const QVariant &data, const char *skill_name);
     const Card *askForCard(ServerPlayer *player, const char *pattern,

@@ -1065,7 +1065,8 @@ bool Room::_askForNullification(const TrickCard *trick, ServerPlayer *from, Serv
     return result;
 }
 
-int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason, bool handcard_visible) {
+int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QString &flags, const QString &reason,
+                           bool handcard_visible, Card::HandlingMethod method) {
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_CHOOSE_CARD);
 
@@ -1086,28 +1087,34 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
         AI *ai = player->getAI();
         if (ai) {
             thread->delay();
-            card_id = ai->askForCardChosen(who, flags, reason);
+            card_id = ai->askForCardChosen(who, flags, reason, method);
         } else {
             Json::Value arg(Json::arrayValue);
             arg[0] = toJsonString(who->objectName());
             arg[1] = toJsonString(flags);
             arg[2] = toJsonString(reason);
             arg[3] = handcard_visible;
+            arg[4] = (int)method;
             bool success = doRequest(player, S_COMMAND_CHOOSE_CARD, arg, true);
             //@todo: check if the card returned is valid
             Json::Value clientReply = player->getClientReply();
             if (!success || !clientReply.isInt()) {
                 // randomly choose a card
                 QList<const Card *> cards = who->getCards(flags);
-                int r = qrand() % cards.length();
-                card_id = cards.at(r)->getId();
+                do {
+                    card_id = cards.at(qrand() % cards.length())->getId();
+                } while (method == Card::MethodDiscard && !player->canDiscard(who, card_id));
             } else
                 card_id = clientReply.asInt();
         }
     }
 
-    if (card_id == Card::S_UNKNOWN_CARD_ID)
-        card_id = who->getRandomHandCardId();
+    if (card_id == Card::S_UNKNOWN_CARD_ID) {
+        QList<const Card *> cards = who->getCards(flags);
+        do {
+            card_id = cards.at(qrand() % cards.length())->getId();
+        } while (method == Card::MethodDiscard && !player->canDiscard(who, card_id));
+    }
     Q_ASSERT(card_id != Card::S_UNKNOWN_CARD_ID);
 
     QVariant decisionData = QVariant::fromValue(QString("cardChosen:%1:%2:%3:%4").arg(reason).arg(card_id)

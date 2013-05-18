@@ -356,7 +356,7 @@ public:
                     to->getRoom()->setEmotion(use.from, "weapon/double_sword");
 
                     bool draw_card = false;
-                    if (to->isKongcheng())
+                    if (!to->canDiscard(to, "h"))
                         draw_card = true;
                     else {
                         QString prompt = "double-sword-card:" + use.from->objectName();
@@ -1081,7 +1081,7 @@ bool Dismantlement::targetFilter(const QList<const Player *> &targets, const Pla
     if (targets.length() >= total_num)
         return false;
 
-    if (to_select->isAllNude())
+    if (!Self->canDiscard(to_select, "hej"))
         return false;
 
     if (to_select == Self)
@@ -1091,7 +1091,7 @@ bool Dismantlement::targetFilter(const QList<const Player *> &targets, const Pla
 }
 
 void Dismantlement::onEffect(const CardEffectStruct &effect) const{
-    if (effect.from->isDead() || effect.to->isAllNude())
+    if (effect.from->isDead() || !effect.from->canDiscard(effect.to, "hej"))
         return;
 
     Room *room = effect.to->getRoom();
@@ -1106,7 +1106,7 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         log.card_str = IntList2StringList(effect.to->handCards()).join("+");
         room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
     }
-    int card_id = room->askForCardChosen(effect.from, effect.to, "hej", objectName(), handcard_visible);
+    int card_id = room->askForCardChosen(effect.from, effect.to, "hej", objectName(), handcard_visible, Card::MethodDiscard);
     room->throwCard(card_id, room->getCardPlace(card_id) == Player::PlaceDelayedTrick ? NULL : effect.to, effect.from);
 }
 
@@ -1183,14 +1183,14 @@ public:
 
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
-            && !damage.to->isNude()
+            && damage.from->canDiscard(damage.to, "he")
             && !damage.chain && !damage.transfer && player->askForSkillInvoke("ice_sword", data)) {
                 room->setEmotion(player, "weapon/ice_sword");
-                int card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword");
+                int card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
                 room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);
 
-                if (!damage.to->isNude()) {
-                    card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword");
+                if (damage.from->canDiscard(damage.to, "he")) {
+                    card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
                     room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);
                 }
                 return true;

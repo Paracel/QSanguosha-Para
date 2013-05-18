@@ -81,7 +81,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasUsed("LihunCard");
+        return !player->canDiscard(player, "he") && !player->hasUsed("LihunCard");
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -728,7 +728,7 @@ public:
                 room->handleAcquireDetachSkills(player, "-jiang|-qianxun|yingzi|keji");
             }
         } else if (player->getPhase() == Player::RoundStart && lvmeng && lvmeng->getMark("@wen") > 0
-                   && !lvmeng->isNude() && room->askForCard(lvmeng, "..", "@mouduan", QVariant(), objectName())) {
+                   && lvmeng->canDiscard(lvmeng, "he") && room->askForCard(lvmeng, "..", "@mouduan", QVariant(), objectName())) {
             if (lvmeng->getHandcardNum() > 2) {
                 room->broadcastSkillInvoke(objectName());
                 lvmeng->loseMark("@wen");
@@ -1110,7 +1110,7 @@ public:
         if (triggerEvent == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash")
-                && !damage.chain && !damage.transfer && !damage.to->isKongcheng()
+                && !damage.chain && !damage.transfer
                 && daqiao->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName(), 1);
                 LogMessage log;
@@ -1118,14 +1118,14 @@ public:
                 log.from = daqiao;
                 log.arg = objectName();
                 room->sendLog(log);
-                if (!damage.to->isKongcheng())
+                if (damage.to->canDiscard(damage.to, "h"))
                     room->askForDiscard(damage.to, "anxian", 1, 1);
                 daqiao->drawCards(1);
                 return true;
             }
         } else if (triggerEvent == TargetConfirming) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (!use.to.contains(daqiao) || daqiao->isKongcheng())
+            if (!use.to.contains(daqiao) || !daqiao->canDiscard(daqiao, "h"))
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
                 daqiao->setMark("anxian", 0);
@@ -1161,9 +1161,9 @@ bool YinlingCard::targetFilter(const QList<const Player *> &targets, const Playe
 
 void YinlingCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
-    if (effect.to->isNude() || effect.from->getPile("brocade").length() >= 4)
+    if (!effect.from->canDiscard(effect.to, "he") || effect.from->getPile("brocade").length() >= 4)
         return;
-    int card_id = room->askForCardChosen(effect.from, effect.to, "he", "yinling");
+    int card_id = room->askForCardChosen(effect.from, effect.to, "he", "yinling", false, Card::MethodDiscard);
     effect.from->addToPile("brocade", card_id);
 }
 
@@ -1400,9 +1400,9 @@ public:
                 QList<int> card_ids;
                 QList<Player::Place> original_places;
                 for (int i = 0; i < xiahou->getLostHp(); i++) {
-                    if (player->isNude())
+                    if (!xiahou->canDiscard(player, "he"))
                         break;
-                    card_ids << room->askForCardChosen(xiahou, player, "he", objectName());
+                    card_ids << room->askForCardChosen(xiahou, player, "he", objectName(), false, Card::MethodDiscard);
                     original_places << room->getCardPlace(card_ids[i]);
                     dummy->addSubcard(card_ids[i]);
                     player->addToPile("#xuehen", card_ids[i], false);
@@ -1589,7 +1589,8 @@ public:
                 if (damage.from && damage.from->isAlive() && !damage.from->isKongcheng()) {
                     QList<int> langgu_discard, other;
                     foreach (int card_id, damage.from->handCards()) {
-                        if (Sanguosha->getCard(card_id)->getSuit() == judge.card->getSuit())
+                        if (simazhao->canDiscard(damage.from, card_id)
+                            && Sanguosha->getCard(card_id)->getSuit() == judge.card->getSuit())
                             langgu_discard << card_id;
                         else
                             other << card_id;
@@ -2084,7 +2085,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *gongsunzan, QVariant &) const{
-        if (gongsunzan->getPhase() == Player::Discard && !gongsunzan->isNude()) {
+        if (gongsunzan->getPhase() == Player::Discard && gongsunzan->canDiscard(gongsunzan, "he")) {
             room->askForUseCard(gongsunzan, "@@diyyicong", "@diyyicong", -1, Card::MethodNone);
         }
         return false;

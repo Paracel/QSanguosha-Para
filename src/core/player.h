@@ -169,6 +169,9 @@ public:
     bool isNude() const;
     bool isAllNude() const;
 
+    bool canDiscard(const Player *to, const QString &flags) const;
+    bool canDiscard(const Player *to, int card_id) const;
+
     void addMark(const QString &mark);
     void removeMark(const QString &mark);
     virtual void setMark(const QString &mark, int value);

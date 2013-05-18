@@ -142,7 +142,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasUsed("NosJujianCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("NosJujianCard");
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
@@ -1134,7 +1134,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isNude() && !player->hasUsed("NosLijianCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("NosLijianCard");
     }
 
     virtual bool viewFilter(const Card *to_select) const{

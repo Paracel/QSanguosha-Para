@@ -141,7 +141,7 @@ void JunxingCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets
         types.removeOne(type_name[c->getTypeId()]);
         if (types.isEmpty()) break;
     }
-    if (target->isKongcheng() || types.isEmpty()
+    if (target->canDiscard(target, "h") || types.isEmpty()
         || !room->askForCard(target, types.join(",") + "|.|.|hand", "@junxing-discard")) {
         target->turnOver();
         target->drawCards(subcards.length(), "junxing");
@@ -168,7 +168,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isKongcheng() && !player->hasUsed("JunxingCard");
+        return player->canDiscard(player, "h") && !player->hasUsed("JunxingCard");
     }
 };
 
@@ -198,7 +198,7 @@ public:
             QStringList types;
             types << "BasicCard" << "TrickCard" << "EquipCard";
             types.removeOne(type_name[card->getTypeId()]);
-            if (damage.from->isKongcheng()
+            if (!damage.from->canDiscard(damage.from, "h")
                 || !room->askForCard(damage.from, types.join(",") + "|.|.|hand",
                                      QString("@yuce-discard:%1::%2:%3")
                                              .arg(target->objectName())
@@ -226,7 +226,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("Slash")) {
             ServerPlayer *guanping = room->findPlayerBySkillName(objectName());
-            if (guanping && !guanping->isNude()
+            if (guanping && guanping->canDiscard(guanping, "he")
                 && room->askForCard(guanping, "..", "@longyin", data, objectName())) {
                 if (use.m_addHistory)
                     room->addPlayerHistory(player, use.card->getClassName(), -1);
@@ -645,7 +645,7 @@ public:
     }
 
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
-        if (!damage.card || !damage.card->isKindOf("Slash") || target->isNude())
+        if (!damage.card || !damage.card->isKindOf("Slash") || !target->canDiscard(target, "he"))
             return;
         QVariant data = QVariant::fromValue(damage);
         if (target->getRoom()->askForCard(target, "..", "@duodao-get", data, objectName())) {
@@ -1022,7 +1022,7 @@ void FenchengCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
 
     int length = qMax(1, effect.to->getEquips().length());
-    if (effect.to->isNude() || !room->askForDiscard(effect.to, "fencheng", length, length, true, true))
+    if (!effect.to->canDiscard(effect.to, "he") || !room->askForDiscard(effect.to, "fencheng", length, length, true, true))
         room->damage(DamageStruct("fencheng", effect.from, effect.to, 1, DamageStruct::Fire));
 }
 

@@ -354,7 +354,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         ServerPlayer *huatuo = room->findPlayerBySkillName(objectName());
-        if (!huatuo || huatuo->isNude()) return false;
+        if (!huatuo || !huatuo->canDiscard(huatuo, "he")) return false;
 
         bool has_red = false;
         if (huatuo->isKongcheng()) {
@@ -406,7 +406,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->isWounded() && !player->isNude();
+        return player->isWounded() && player->canDiscard(player, "he");
     }
 
     virtual bool viewFilter(const Card *to_select) const{

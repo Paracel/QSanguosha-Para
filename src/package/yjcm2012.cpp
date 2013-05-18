@@ -27,8 +27,8 @@ public:
                             room->setCardFlag(use.card, "ZhenlieNullify");
                             player->setFlags("ZhenlieTarget");
                             room->loseHp(player);
-                            if (player->isAlive() && player->hasFlag("ZhenlieTarget") && !use.from->isNude()) {
-                                int id = room->askForCardChosen(player, use.from, "he", objectName());
+                            if (player->isAlive() && player->hasFlag("ZhenlieTarget") && !player->canDiscard(use.from, "he")) {
+                                int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
                                 room->throwCard(id, use.from, player);
                             }
                         }
@@ -228,7 +228,7 @@ public:
                 }
             }
 
-            if (same_color && damage.from && !damage.from->isKongcheng())
+            if (same_color && damage.from && !damage.from->canDiscard(damage.from, "h"))
                 room->askForDiscard(damage.from, objectName(), 1, 1);
         }
     }
@@ -520,11 +520,11 @@ void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) 
     if (cd->isKindOf("EquipCard")) {
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(source))
-            if (!p->isNude()) targets << p;
+            if (source->canDiscard(p, "he")) targets << p;
         if (!targets.isEmpty()) {
             ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi", "@gongqi-discard", true);
             if (to_discard)
-                room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi"), to_discard, source);
+                room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi", false, Card::MethodDiscard), to_discard, source);
         }
     }
 }

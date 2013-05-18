@@ -19,7 +19,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("LuoyiCard") && !player->isNude();
+        return !player->hasUsed("LuoyiCard") && player->canDiscard(player, "he");
     }
 
     virtual bool viewFilter(const Card *card) const{

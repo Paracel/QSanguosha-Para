@@ -261,7 +261,7 @@ public:
                 xiahouyuan->skip(Player::Draw);
             }
         } else if (Slash::IsAvailable(xiahouyuan) && change.to == Player::Play && !xiahouyuan->isSkipped(Player::Play)) {
-            if (!xiahouyuan->isNude() && room->askForUseCard(xiahouyuan, "@@shensu2", "@shensu2", 2, Card::MethodDiscard))
+            if (xiahouyuan->canDiscard(xiahouyuan, "he") && room->askForUseCard(xiahouyuan, "@@shensu2", "@shensu2", 2, Card::MethodDiscard))
                 xiahouyuan->skip(Player::Play);
         }
         return false;
@@ -610,7 +610,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xiaoqiao, QVariant &data) const{
-        if (!xiaoqiao->isKongcheng()) {
+        if (!xiaoqiao->canDiscard(xiaoqiao, "h")) {
             DamageStruct damage = data.value<DamageStruct>();
             xiaoqiao->tag["TianxiangDamage"] = QVariant::fromValue(damage);
             return room->askForUseCard(xiaoqiao, "@@tianxiang", "@tianxiang-card", -1, Card::MethodDiscard);

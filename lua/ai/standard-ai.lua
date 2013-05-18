@@ -1175,6 +1175,35 @@ end
 
 sgs.ai_chaofeng.machao = 1
 
+sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
+	local function isValuableCard(card)
+		return isCard("Peach", card, self.player) or (self:isWeak() and isCard("Analeptic", card, self.player))
+				or (self.player:getPhase() ~= sgs.Player_Play
+					and (isCard("Nullification", card, self.player)
+						or (isCard("Jink", card, self.player) and self:getCardsNum("Jink") < 2)))
+	end
+	local card = data:toCard()
+	local handcards = sgs.QList2Table(self.player:getHandcards())
+	if self.player:getPhase() ~= sgs.Player_Play then
+		if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return "." end
+		self:sortByKeepValue(handcards, false, true)
+		for _, card_ex in ipairs(handcards) do
+			if self:getKeepValue(card_ex, true) < self:getKeepValue(card, true) and not isValuableCard(card_ex) then
+				return "$" .. card_ex:getEffectiveId()
+			end
+		end
+	else
+		if card:isKindOf("Slash") and not self:slashIsAvailable() then return "." end
+		self:sortByUseValue(handcards)
+		for _, card_ex in ipairs(handcards) do
+			if self:getUseValue(card_ex) < self:getUseValue(card) and not isValuableCard(card_ex) then
+				return "$" .. card_ex:getEffectiveId()
+			end
+		end
+	end
+	return "."
+end
+
 function sgs.ai_cardneed.jizhi(to, card)
 	return card:isNDTrick()
 end
@@ -2053,7 +2082,7 @@ function SmartAI:findLijianTarget(card_name, use)
 			local f_target, e_target
 			for _, ap in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 				if ap:objectName() ~= lord:objectName() and ap:isMale() and self:hasTrickEffective(duel, lord, ap) then
-					if self:hasSkills("jiang|jizhi", ap) and self:isFriend(ap) and not ap:isCardLimited(duel, sgs.Card_MethodUse) then
+					if self:hasSkills("jiang|nosjizhi|jizhi", ap) and self:isFriend(ap) and not ap:isCardLimited(duel, sgs.Card_MethodUse) then
 						if not use.isDummy then lord:setFlags("AIGlobal_NeedToWake") end
 						return lord, ap
 					elseif self:isFriend(ap) then
@@ -2113,7 +2142,7 @@ function SmartAI:findLijianTarget(card_name, use)
 								end
 							end
 							if #males == 1 and self:hasTrickEffective(duel, males[1], anotherenemy) and not anotherenemy:isCardLimited(duel, sgs.Card_MethodUse) then
-								if not self:hasSkills("jizhi|jiang", anotherenemy) then
+								if not self:hasSkills("nosjizhi|jizhi|jiang", anotherenemy) then
 									table.insert(males, anotherenemy)
 								else
 									table.insert(others, anotherenemy)

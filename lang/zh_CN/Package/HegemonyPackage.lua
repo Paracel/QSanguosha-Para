@@ -80,6 +80,11 @@ return {
 	[":kuangfu"] = "每当你使用的【杀】对一名角色造成伤害后，你可以将其装备区里的一张牌弃置或置入你的装备区。",
 	["kuangfu:throw"] = "弃置该装备",
 	["kuangfu:move"] = "将该装备移动到自己的装备区",
+	["kuangfu_equip"] = "狂斧",
+	["kuangfu_equip:0"] = "武器牌",
+	["kuangfu_equip:1"] = "防具牌",
+	["kuangfu_equip:2"] = "+1坐骑",
+	["kuangfu_equip:3"] = "-1坐骑",
 
 	["#zoushi"] = "惑心之魅",
 	["zoushi"] = "邹氏",

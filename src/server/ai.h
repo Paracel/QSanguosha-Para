@@ -41,7 +41,7 @@ public:
     virtual QString askForChoice(const QString &skill_name, const QString &choices, const QVariant &data) = 0;
     virtual QList<int> askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip) = 0;
     virtual const Card *askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive) = 0;
-    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason) = 0;
+    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason, Card::HandlingMethod method) = 0;
     virtual const Card *askForCard(const QString &pattern, const QString &prompt, const QVariant &data) = 0;
     virtual QString askForUseCard(const QString &pattern, const QString &prompt, const Card::HandlingMethod method) = 0;
     virtual int askForAG(const QList<int> &card_ids, bool refusable, const QString &reason) = 0;
@@ -71,7 +71,7 @@ public:
     virtual QString askForChoice(const QString &skill_name, const QString &choices, const QVariant &data);
     virtual QList<int> askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip);
     virtual const Card *askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
-    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason);
+    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason, Card::HandlingMethod method);
     virtual const Card *askForCard(const QString &pattern, const QString &prompt, const QVariant &data);
     virtual QString askForUseCard(const QString &pattern, const QString &prompt, const Card::HandlingMethod method);
     virtual int askForAG(const QList<int> &card_ids, bool refusable, const QString &reason);
@@ -101,7 +101,7 @@ public:
     virtual QList<int> askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip);
     virtual const Card *askForNullification(const TrickCard *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     virtual QString askForChoice(const QString &skill_name, const QString &choices, const QVariant &data);
-    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason);
+    virtual int askForCardChosen(ServerPlayer *who, const QString &flags, const QString &reason, Card::HandlingMethod method);
     virtual const Card *askForCard(const QString &pattern, const QString &prompt, const QVariant &data);
     virtual ServerPlayer *askForPlayerChosen(const QList<ServerPlayer *> &targets, const QString &reason);
     virtual int askForAG(const QList<int> &card_ids, bool refusable, const QString &reason);

@@ -325,7 +325,7 @@ public:
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
-        if (pattern != "peach" || player->isNude() || player->getHp() <= 1) return false;
+        if (pattern != "peach" || !player->canDiscard(player, "he") || player->getHp() <= 1) return false;
         QString dyingobj = player->property("currentdying").toString();
         const Player *who = NULL;
         foreach (const Player *p, player->getSiblings()) {

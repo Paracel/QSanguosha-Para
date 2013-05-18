@@ -120,7 +120,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return TriggerSkill::triggerable(target) && !target->isKongcheng();
+        return TriggerSkill::triggerable(target) && target->canDiscard(target, "h");
     }
 
     virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *zhanghe, QVariant &data) const{
@@ -170,7 +170,7 @@ public:
 
             QList<ServerPlayer *> cais = room->findPlayersBySkillName(objectName());
             foreach (ServerPlayer *caiwenji, cais) {
-                if (!caiwenji->isNude() && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
+                if (caiwenji->canDiscard(caiwenji, "he") && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
                     JudgeStruct judge;
                     judge.pattern = QRegExp("(.*):(.*):(.*)");
                     judge.good = true;
@@ -699,8 +699,8 @@ void TiaoxinCard::onEffect(const CardEffectStruct &effect) const{
     bool use_slash = false;
     if (effect.to->canSlash(effect.from, NULL, false))
         use_slash = room->askForUseSlashTo(effect.to, effect.from, "@tiaoxin-slash:" + effect.from->objectName());
-    if (!use_slash && !effect.to->isNude())
-        room->throwCard(room->askForCardChosen(effect.from, effect.to, "he", "tiaoxin"), effect.to, effect.from);
+    if (!use_slash && effect.from->canDiscard(effect.to, "he"))
+        room->throwCard(room->askForCardChosen(effect.from, effect.to, "he", "tiaoxin", false, Card::MethodDiscard), effect.to, effect.from);
 }
 
 class Tiaoxin: public ZeroCardViewAsSkill {
@@ -971,7 +971,7 @@ public:
             }
         case Player::NotActive: {
                 if (liushan->hasFlag("fangquan")) {
-                    if (liushan->isKongcheng() || !room->askForDiscard(liushan, "fangquan", 1, 1, true))
+                    if (!liushan->canDiscard(liushan, "h") || !room->askForDiscard(liushan, "fangquan", 1, 1, true))
                         return false;
 
                     ServerPlayer *player = room->askForPlayerChosen(liushan, room->getOtherPlayers(liushan), objectName());

@@ -5,7 +5,7 @@ return {
 
 	["#caochong"] = "仁爱的神童",
 	["caochong"] = "曹冲",
-	["designer:caochong"] = "红魔鬼",
+	["designer:caochong"] = "红魔7号",
 	["illustrator:caochong"] = "Amo",
 	["chengxiang"] = "称象",
 	[":chengxiang"] = "每当你受到伤害后，你可以展示牌堆顶的四张牌，然后获得其中任意数量点数之和小于13的牌，并将其余的牌置入弃牌堆。",
@@ -14,7 +14,7 @@ return {
 
 	["#guohuai"] = "垂问秦雍",
 	["guohuai"] = "郭淮",
-	["designer:guohuai"] = "曹涵雪",
+	["designer:guohuai"] = "雪•五月",
 	["illustrator:guohuai"] = "DH",
 	["jingce"] = "精策",
 	[":jingce"] = "出牌阶段结束时，若你本回合已使用的牌数大于或等于你当前的体力值，你可以摸两张牌。",
@@ -23,7 +23,7 @@ return {
 
 	["#manchong"] = "政法兵谋",
 	["manchong"] = "满宠",
-	["designer:manchong"] = "samrosen",
+	["designer:manchong"] = "SamRosen",
 	["illustrator:manchong"] = "Aimer彩三",
 	["junxing"] = "峻刑",
 	[":junxing"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置至少一张手牌并选择一名其他角色：若如此做，该角色须弃置一张与你弃置的牌类型均不同的手牌，否则将武将牌翻面并摸X张牌。（X为你弃置的牌的数量）",
@@ -95,7 +95,7 @@ return {
 
 	["#zhuran"] = "不动之督",
 	["zhuran"] = "朱然",
-	["designer:zhuran"] = "羊妞",
+	["designer:zhuran"] = "迁迁婷婷",
 	["illustrator:zhuran"] = "Ccat",
 	["danshou"] = "胆守",
 	[":danshou"] = "每当你造成伤害后，你可以摸一张牌，然后结束当前回合并结束一切结算。",
@@ -103,7 +103,7 @@ return {
 
 	["#fuhuanghou"] = "孤注一掷",
 	["fuhuanghou"] = "伏皇后",
-	["designer:fuhuanghou"] = "HIEI",
+	["designer:fuhuanghou"] = "萌D",
 	["illustrator:fuhuanghou"] = "小莘",
 	["zhuikong"] = "惴恐",
 	[":zhuikong"] = "一名其他角色的回合开始时，若你已受伤，你可以与其拼点：若你赢，其跳过出牌阶段；若你没赢，该角色无视与你的距离，直到回合结束。",

@@ -576,9 +576,9 @@ public:
         QStringList horses;
         if (damage.card && damage.card->isKindOf("Slash") && !damage.chain && !damage.transfer
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0) {
-            if (damage.to->getDefensiveHorse())
+            if (damage.to->getDefensiveHorse() && damage.from->canDiscard(damage.to, damage.to->getDefensiveHorse()->getEffectiveId()))
                 horses << "dhorse";
-            if (damage.to->getOffensiveHorse())
+            if (damage.to->getOffensiveHorse() && damage.from->canDiscard(damage.to, damage.to->getOffensiveHorse()->getEffectiveId()))
                 horses << "ohorse";
 
             if (horses.isEmpty())

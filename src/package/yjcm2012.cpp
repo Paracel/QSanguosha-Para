@@ -27,7 +27,7 @@ public:
                             room->setCardFlag(use.card, "ZhenlieNullify");
                             player->setFlags("ZhenlieTarget");
                             room->loseHp(player);
-                            if (player->isAlive() && player->hasFlag("ZhenlieTarget") && !player->canDiscard(use.from, "he")) {
+                            if (player->isAlive() && player->hasFlag("ZhenlieTarget") && player->canDiscard(use.from, "he")) {
                                 int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
                                 room->throwCard(id, use.from, player);
                             }

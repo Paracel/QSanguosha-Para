@@ -108,7 +108,7 @@ return {
 	[":zongshi"] = "<font color=\"blue\"><b>锁定技。</b></font>你的手牌上限+X。（X为现存势力数）",
 
 	["#huaxiong"] = "魔将",
-	["huaxiong"] = "华雄-一将",
+	["huaxiong"] = "华雄-将",
 	["&huaxiong"] = "华雄",
 	["designer:huaxiong"] = "小立",
 	["illustrator:huaxiong"] = "地狱许",

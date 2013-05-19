@@ -1716,7 +1716,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 				and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
 				tricks = player:getCards("j")
 				for _, trick in sgs.qlist(tricks) do
-					if trick:isKindOf("Lightning") and (not isDiscard or self.player:canDiscard(who, trick:getId())) then
+					if trick:isKindOf("Lightning") and (not isDiscard or self.player:canDiscard(player, trick:getId())) then
 						if addTarget(player, trick:getEffectiveId()) then return end
 					end
 				end
@@ -1754,7 +1754,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			local dangerous = self:getDangerousCard(enemy)
-			if dangerous and (not isDiscard or self.player:canDiscard(who, dangerous)) then
+			if dangerous and (not isDiscard or self.player:canDiscard(enemy, dangerous)) then
 				if addTarget(enemy, dangerous) then return end
 			end
 		end

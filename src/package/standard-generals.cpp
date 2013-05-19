@@ -784,15 +784,9 @@ public:
                     card_ex = room->askForCard(yueying, ".", "@jizhi-exchange:::" + card->objectName(),
                                                QVariant::fromValue((CardStar)card), Card::MethodNone);
                 if (card_ex) {
-                    LogMessage log;
-                    log.type = "$MoveToDiscardPile";
-                    log.from = yueying;
-                    log.card_str = QString::number(card_ex->getEffectiveId());
-                    room->sendLog(log);
-
-                    CardMoveReason reason1(CardMoveReason::S_REASON_NATURAL_ENTER, yueying->objectName(), "jizhi", QString());
+                    CardMoveReason reason1(CardMoveReason::S_REASON_PUT, yueying->objectName(), "jizhi", QString());
                     CardMoveReason reason2(CardMoveReason::S_REASON_OVERRIDE, yueying->objectName(), "jizhi", QString());
-                    CardsMoveStruct move1(QList<int>() << card_ex->getEffectiveId(), yueying, Player::DiscardPile, reason1);
+                    CardsMoveStruct move1(QList<int>() << card_ex->getEffectiveId(), yueying, NULL, Player::DrawPile, reason1);
                     CardsMoveStruct move2(ids, yueying, yueying, Player::PlaceHand, reason2);
 
                     QList<CardsMoveStruct> moves;

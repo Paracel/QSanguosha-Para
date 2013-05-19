@@ -19,7 +19,7 @@ zhangfei				23
 zhugeliang				64					
 zhaoyun					68					
 machao					65					
-huangyueying			61					
+huangyueying			65					
 huangzhong				75					
 weiyan					54					
 pangtong				51					
@@ -55,6 +55,8 @@ zuoci					85
 zhangjiao				55					
 yuji					50					
 caiwenji				52 *				
+st_yuanshu				10					
+st_huaxiong				36					
 shenguanyu				28 *				
 shenlvmeng				100					
 shenzhouyu				64					
@@ -130,6 +132,7 @@ vs_zhaoyun				68
 vs_lvbu					76					
 wenpin					10					
 nos_liubei				19					
+nos_huangyueying		61					
 nos_zhouyu				90					
 nos_diaochan			72					
 nos_zhonghui			78					

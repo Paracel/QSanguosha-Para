@@ -2266,7 +2266,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
         const ViewAsSkill *vsSkill = button->getViewAsSkill();
         if (vsSkill != NULL) {
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-            QRegExp rx("@@?([A-Za-z]+)(\\d+)?!?");
+            QRegExp rx("@@?([_A-Za-z]+)(\\d+)?!?");
             CardUseStruct::CardUseReason reason = CardUseStruct::CARD_USE_REASON_UNKNOWN;
             if ((newStatus & Client::ClientStatusBasicMask) == Client::Responding) {
                 if (newStatus == Client::RespondingUse)
@@ -2321,7 +2321,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             discard_button->setEnabled(false);
 
             QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-            QRegExp rx("@@?([A-Za-z]+)(\\d+)?!?");
+            QRegExp rx("@@?([_A-Za-z]+)(\\d+)?!?");
             if (rx.exactMatch(pattern)) {
                 QString skill_name = rx.capturedTexts().at(1);
                 const ViewAsSkill *skill = Sanguosha->getViewAsSkill(skill_name);

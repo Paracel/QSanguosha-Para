@@ -843,11 +843,11 @@ public:
 
         if (no_basic == 0) {
             if (room->askForSkillInvoke(victim, "zhaolie_obtain", "obtain:" + liubei->objectName())) {
-                room->broadcastSkillInvoke("zhaolie", 1);
-                victim->obtainCard(dummy);
-            } else {
                 room->broadcastSkillInvoke("zhaolie", 2);
                 liubei->obtainCard(dummy);
+            } else {
+                room->broadcastSkillInvoke("zhaolie", 1);
+                victim->obtainCard(dummy);
             }
         } else {
             if (room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {

@@ -534,7 +534,7 @@ sgs.ai_skill_discard.zhaolie = function(self, discard_num, min_num, optional, in
 end
 
 sgs.ai_skill_invoke.zhaolie_obtain = function(self, data)
-	return not will_discard_zhaolie(self, 0)
+	return will_discard_zhaolie(self, 0)
 end
 
 local function will_invoke_shichou(self)

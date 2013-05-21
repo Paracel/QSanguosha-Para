@@ -1579,7 +1579,6 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(.*):(.*)");
                 judge.good = true;
                 judge.play_animation = false;
                 judge.who = simazhao;

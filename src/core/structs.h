@@ -283,18 +283,6 @@ struct PindianStruct {
     bool success;
 };
 
-class JudgeStructPattern {
-public:
-    JudgeStructPattern();
-    JudgeStructPattern &operator = (const QRegExp &rx);
-    JudgeStructPattern &operator = (const QString &str);
-    bool match(const Player *player, const Card *card) const;
-
-private:
-    QString pattern;
-    bool isRegex;
-};
-
 struct JudgeStruct {
     JudgeStruct();
     bool isGood() const;
@@ -304,7 +292,7 @@ struct JudgeStruct {
     bool isBad() const;
     ServerPlayer *who;
     const Card *card;
-    JudgeStructPattern pattern;
+    QString pattern;
     bool good;
     QString reason;
     bool time_consuming;

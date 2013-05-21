@@ -228,7 +228,6 @@ public:
 
                     room->broadcastSkillInvoke("shuangxiong", 1);
                     JudgeStruct judge;
-                    judge.pattern = QRegExp("(.*)");
                     judge.good = true;
                     judge.play_animation = false;
                     judge.reason = objectName();
@@ -369,7 +368,7 @@ public:
 
         if (wolong->askForSkillInvoke(objectName())) {
             JudgeStruct judge;
-            judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
+            judge.pattern = ".|red";
             judge.good = true;
             judge.reason = objectName();
             judge.who = wolong;

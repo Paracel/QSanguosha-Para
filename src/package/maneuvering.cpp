@@ -383,7 +383,7 @@ SupplyShortage::SupplyShortage(Card::Suit suit, int number)
 {
     setObjectName("supply_shortage");
 
-    judge.pattern = QRegExp("(.*):(club):(.*)");
+    judge.pattern = ".|club";
     judge.good = true;
     judge.reason = objectName();
 }

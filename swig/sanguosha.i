@@ -540,7 +540,7 @@ struct JudgeStruct {
     bool play_animation;
     ServerPlayer *who;
     const Card *card;
-    QRegExp pattern;
+    QString pattern;
     bool good;
     QString reason;
     bool time_consuming;
@@ -1165,12 +1165,6 @@ void Room::doScript(const QString &script) {
 }
 
 %}
-
-class QRegExp {
-public:
-    QRegExp(const char *);
-    bool exactMatch(const char *);
-};
 
 %include "luaskills.i"
 %include "card.i"

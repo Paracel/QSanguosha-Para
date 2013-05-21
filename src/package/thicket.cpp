@@ -894,7 +894,7 @@ public:
                     room->notifySkillInvoked(dongzhuo, objectName());
 
                     JudgeStruct judge;
-                    judge.pattern = QRegExp("(.*):(spade):(.*)");
+                    judge.pattern = ".|spade";
                     judge.good = true;
                     judge.reason = objectName();
                     judge.who = player;

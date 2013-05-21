@@ -38,7 +38,7 @@ public:
         prompt_list << "@guidao-card" << judge->who->objectName()
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
-        const Card *card = room->askForCard(player, ".|.|.|.|black", prompt, data, Card::MethodResponse, judge->who, true);
+        const Card *card = room->askForCard(player, ".|black", prompt, data, Card::MethodResponse, judge->who, true);
 
         if (card != NULL) {
             room->broadcastSkillInvoke(objectName());
@@ -62,7 +62,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(spade):(.*)");
+                judge.pattern = ".|spade";
                 judge.good = false;
                 judge.negative = true;
                 judge.reason = objectName();

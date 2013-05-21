@@ -112,44 +112,8 @@ bool PindianStruct::isSuccess() const{
     return success;
 }
 
-JudgeStructPattern::JudgeStructPattern() {
-}
-
-bool JudgeStructPattern::match(const Player *player, const Card *card) const{
-    if (pattern.isEmpty())
-        return false;
-
-    if (isRegex) {
-        QString class_name = card->getClassName();
-        Card::Suit suit = card->getSuit();
-
-        QString number = card->getNumberString();
-        QString card_str = QString("%1:%2:%3").arg(class_name).arg(Card::Suit2String(suit)).arg(number);
-
-        return QRegExp(pattern).exactMatch(card_str);
-    } else {
-        const CardPattern *card_pattern = Sanguosha->getPattern(pattern);
-        return card_pattern && card_pattern->match(player, card);
-    }
-}
-
-JudgeStructPattern &JudgeStructPattern::operator =(const QRegExp &rx) {
-    pattern = rx.pattern();
-    isRegex = true;
-
-    return *this;
-}
-
-JudgeStructPattern &JudgeStructPattern::operator =(const QString &str) {
-    pattern = str;
-    isRegex = false;
-
-    return *this;
-}
-
-// members should be initilized the same order as defined
 JudgeStruct::JudgeStruct()
-    : who(NULL), card(NULL), good(true), time_consuming(false),
+    : who(NULL), card(NULL), pattern("."), good(true), time_consuming(false),
       negative(false), play_animation(true), _m_result(TRIAL_RESULT_UNKNOWN)
 {
 }
@@ -159,7 +123,7 @@ bool JudgeStruct::isEffected() {
 }
 
 void JudgeStruct::updateResult() {
-    bool effected = (good == pattern.match(who, card));
+    bool effected = (good == ExpPattern(pattern).match(who, card));
     if (effected)
         _m_result = TRIAL_RESULT_GOOD;
     else
@@ -173,7 +137,7 @@ bool JudgeStruct::isGood() const{
 
 bool JudgeStruct::isGood(const Card *card) const{
     Q_ASSERT(card);
-    return good == pattern.match(who, card);
+    return (good == ExpPattern(pattern).match(who, card));
 }
 
 bool JudgeStruct::isBad() const{

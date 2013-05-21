@@ -98,7 +98,7 @@ public:
         room->notifySkillInvoked(shenguanyu, "wuhun");
 
         JudgeStruct judge;
-        judge.pattern = QRegExp("(Peach|GodSalvation):(.*):(.*)");
+        judge.pattern = "Peach,GodSalvation";
         judge.good = true;
         judge.negative = true;
         judge.reason = "wuhun";

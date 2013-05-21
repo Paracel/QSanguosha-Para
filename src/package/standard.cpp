@@ -426,8 +426,8 @@ StandardPackage::StandardPackage()
     patterns[".H"] = new ExpPattern(".|heart|.|hand");
     patterns[".D"] = new ExpPattern(".|diamond|.|hand");
 
-    patterns[".black"] = new ExpPattern(".|.|.|hand|black");
-    patterns[".red"] = new ExpPattern(".|.|.|hand|red");
+    patterns[".black"] = new ExpPattern(".|black|.|hand");
+    patterns[".red"] = new ExpPattern(".|red|.|hand");
 
     patterns[".."] = new ExpPattern(".");
     patterns["..S"] = new ExpPattern(".|spade");

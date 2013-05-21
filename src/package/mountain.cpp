@@ -172,7 +172,6 @@ public:
             foreach (ServerPlayer *caiwenji, cais) {
                 if (caiwenji->canDiscard(caiwenji, "he") && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
                     JudgeStruct judge;
-                    judge.pattern = QRegExp("(.*):(.*):(.*)");
                     judge.good = true;
                     judge.play_animation = false;
                     judge.who = player;
@@ -287,7 +286,7 @@ public:
                 && player->askForSkillInvoke("tuntian", data)) {
                 room->broadcastSkillInvoke("tuntian");
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(heart):(.*)");
+                judge.pattern = ".|heart";
                 judge.good = false;
                 judge.reason = "tuntian";
                 judge.who = player;

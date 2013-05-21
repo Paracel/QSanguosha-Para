@@ -201,7 +201,7 @@ public:
             room->broadcastSkillInvoke("ganglie");
 
             JudgeStruct judge;
-            judge.pattern = QRegExp("(.*):(heart):(.*)");
+            judge.pattern = ".|heart";
             judge.good = false;
             judge.reason = objectName();
             judge.who = xiahou;

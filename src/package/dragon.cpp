@@ -370,7 +370,7 @@ public:
         if (!has_red) return false;
 
         DamageStruct damage = data.value<DamageStruct>();
-        if (room->askForCard(huatuo, ".|.|.|.|red", "@DrJijiuDecrease", data, objectName())) {
+        if (room->askForCard(huatuo, ".|red", "@DrJijiuDecrease", data, objectName())) {
             room->broadcastSkillInvoke("jijiu");
             LogMessage log;
             log.type = "#DrJijiuDecrease";

@@ -221,7 +221,7 @@ public:
             room->broadcastSkillInvoke(objectName());
 
             JudgeStruct judge;
-            judge.pattern = QRegExp("(.*):(heart):(.*)");
+            judge.pattern = ".|heart";
             judge.good = false;
             judge.reason = objectName();
             judge.who = xiahou;
@@ -348,7 +348,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(spade|club):(.*)");
+                judge.pattern = ".|black";
                 judge.good = true;
                 judge.reason = objectName();
                 judge.play_animation = false;
@@ -659,7 +659,7 @@ public:
                 p->setFlags("TiejiTarget"); // For AI
 
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
+                judge.pattern = ".|red";
                 judge.good = true;
                 judge.reason = objectName();
                 judge.who = player;

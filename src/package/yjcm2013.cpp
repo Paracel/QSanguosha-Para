@@ -873,7 +873,7 @@ public:
 class Mieji: public TargetModSkill {
 public:
     Mieji(): TargetModSkill("#mieji") {
-        pattern = "SingleTargetTrick|.|.|.|black"; // deal with these two later
+        pattern = "SingleTargetTrick|black|.|."; // deal with these two later
     }
 
     virtual int getExtraTargetNum(const Player *from, const Card *) const{

@@ -620,7 +620,7 @@ public:
             if (room->askForSkillInvoke(player, "eight_diagram")) {
                 room->setCardFlag(player->getArmor()->getId(), "using");
                 JudgeStruct judge;
-                judge.pattern = QRegExp("(.*):(heart|diamond):(.*)");
+                judge.pattern = ".|red";
                 judge.good = true;
                 judge.reason = objectName();
                 judge.who = player;
@@ -1115,7 +1115,7 @@ Indulgence::Indulgence(Suit suit, int number)
 {
     setObjectName("indulgence");
 
-    judge.pattern = QRegExp("(.*):(heart):(.*)");
+    judge.pattern = ".|heart";
     judge.good = true;
     judge.reason = objectName();
 }
@@ -1161,7 +1161,7 @@ bool Disaster::isAvailable(const Player *player) const{
 Lightning::Lightning(Suit suit, int number):Disaster(suit, number) {
     setObjectName("lightning");
 
-    judge.pattern = QRegExp("(.*):(spade):([2-9])");
+    judge.pattern = ".|spade|2~9";
     judge.good = false;
     judge.reason = objectName();
 }

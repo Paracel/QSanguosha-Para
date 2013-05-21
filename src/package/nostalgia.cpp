@@ -532,7 +532,7 @@ public:
             && !damage.chain && !damage.transfer && player->askForSkillInvoke(objectName(), data)) {
             room->broadcastSkillInvoke(objectName(), 1);
             JudgeStruct judge;
-            judge.pattern = QRegExp("(.*):(heart):(.*)");
+            judge.pattern = ".|heart";
             judge.good = false;
             judge.who = player;
             judge.reason = objectName();
@@ -587,7 +587,7 @@ public:
             Room *room = wangyi->getRoom();
             room->broadcastSkillInvoke(objectName(), 1);
             JudgeStruct judge;
-            judge.pattern = QRegExp("(.*):(club|spade):(.*)");
+            judge.pattern = ".|black";
             judge.good = true;
             judge.reason = objectName();
             judge.who = wangyi;

@@ -1410,15 +1410,12 @@ public:
                     rangefix += 1;
             }
             // find yuanshu
-            const Player *yuanshu = NULL;
             foreach (const Player *p, from->getSiblings()) {
                 if (p->hasSkill(objectName()) && p->getHandcardNum() > p->getHp()
                     && from->distanceTo(p, rangefix) <= from->getAttackRange()) {
-                    yuanshu = p;
-                    break;
+                    return true;
                 }
             }
-            return yuanshu != NULL;
         }
         return false;
     }

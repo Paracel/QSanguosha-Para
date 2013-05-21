@@ -1141,8 +1141,9 @@ public:
             if (death.who != player)
                 return false;
             ServerPlayer *killer = death.damage ? death.damage->from : NULL;
+            ServerPlayer *current = room->getCurrent();
 
-            if (killer && room->getCurrent()->isAlive()) {
+            if (killer && current && current->isAlive() && current->getPhase() != Player::NotActive) {
                 killer->addMark("lianpo");
 
                 if (killer->hasSkill("lianpo")) {

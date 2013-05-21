@@ -631,8 +631,7 @@ void ServerPlayer::play(QList<Player::Phase> set_phases) {
 
     for (int i = 0; i < _m_phases_state.size(); i++) {
         if (isDead()) {
-            setPhase(NotActive);
-            room->broadcastProperty(this, "phase");
+            changePhase(getPhase(), NotActive);
             break;
         }
 

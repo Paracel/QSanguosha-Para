@@ -1081,7 +1081,7 @@ bool Dismantlement::targetFilter(const QList<const Player *> &targets, const Pla
     if (targets.length() >= total_num)
         return false;
 
-    if (!Self->canDiscard(to_select, "hej"))
+    if (to_select->isAllNude())
         return false;
 
     if (to_select == Self)
@@ -1183,15 +1183,17 @@ public:
 
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
-            && damage.from->canDiscard(damage.to, "he")
+            && !damage.to->isNude()
             && !damage.chain && !damage.transfer && player->askForSkillInvoke("ice_sword", data)) {
                 room->setEmotion(player, "weapon/ice_sword");
-                int card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
-                room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);
-
                 if (damage.from->canDiscard(damage.to, "he")) {
-                    card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
+                    int card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
                     room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);
+
+                    if (damage.from->canDiscard(damage.to, "he")) {
+                        card_id = room->askForCardChosen(player, damage.to, "he", "ice_sword", false, Card::MethodDiscard);
+                        room->throwCard(Sanguosha->getCard(card_id), damage.to, damage.from);
+                    }
                 }
                 return true;
         }

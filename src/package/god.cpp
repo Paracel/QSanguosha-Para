@@ -574,7 +574,10 @@ ShenfenCard::ShenfenCard() {
 void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> &) const{
     shenlvbu->setFlags("ShenfenUsing");
     room->broadcastSkillInvoke("shenfen");
-    room->doLightbox("$ShenfenAnimate", 5000);
+    QString lightbox = "$ShenfenAnimate";
+    if (shenlvbu->getGeneralName() != "shenlvbu" && (shenlvbu->getGeneralName() == "sp_shenlvbu" || shenlvbu->getGeneral2Name() == "sp_shenlvbu"))
+        lightbox = lightbox + "SP";
+    room->doLightbox(lightbox, 5000);
     shenlvbu->loseMark("@wrath", 6);
 
     try {
@@ -1419,6 +1422,7 @@ GodPackage::GodPackage()
     shenlvbu->addSkill(new Wuqian);
     shenlvbu->addSkill(new Shenfen);
     related_skills.insertMulti("kuangbao", "#@wrath-2");
+    shenlvbu->addSkill(new SPConvertSkill("shenlvbu", "sp_shenlvbu"));
 
     General *shenzhaoyun = new General(this, "shenzhaoyun", "god", 2); // LE 007
     shenzhaoyun->addSkill(new JuejingKeep);

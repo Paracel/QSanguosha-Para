@@ -1412,6 +1412,12 @@ SPPackage::SPPackage()
     erqiao->addSkill(new Xingwu);
     erqiao->addSkill(new Luoyan);
 
+    General *sp_shenlvbu = new General(this, "sp_shenlvbu", "god", 5, true, true);
+    sp_shenlvbu->addSkill("kuangbao");
+    sp_shenlvbu->addSkill("wumou");
+    sp_shenlvbu->addSkill("wuqian");
+    sp_shenlvbu->addSkill("shenfen");
+
     General *zhugeke = new General(this, "zhugeke", "wu", 3);
     zhugeke->addSkill(new Aocai);
     zhugeke->addSkill(new Duwu);

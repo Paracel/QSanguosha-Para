@@ -720,6 +720,7 @@ end
 
 sgs.ai_skill_invoke.cv_zhaoyun = sgs.ai_skill_invoke.cv_yuanshu
 sgs.ai_skill_invoke.cv_ganning = sgs.ai_skill_invoke.cv_yuanshu
+sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_yuanshu
 
 sgs.ai_skill_invoke.cv_daqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false

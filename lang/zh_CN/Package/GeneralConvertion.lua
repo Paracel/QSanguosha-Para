@@ -39,6 +39,12 @@ return {
 	["cv_jiaxu:convert"] = "你可以替换为魏势力SP贾诩",
 	["$LuanwuAnimateSP"] = "image=image/animate/luanwuSP.png",
 
+	["sp_shenlvbu"] = "SP神吕布",
+	["&sp_shenlvbu"] = "神吕布",
+	["illustrator:sp_shenlvbu"] = "干橘子李凯",
+	["cv_shenlvbu:convert"] = "你可以替换为SP神吕布",
+	["$ShenfenAnimateSP"] = "image=image/animate/shenfenSP.png",
+
 	["tw_diaochan"] = "台版貂蝉",
 	["&tw_diaochan"] = "貂蝉",
 	["illustrator:tw_diaochan"] = "陳俊佐",

@@ -1424,18 +1424,13 @@ public:
 class Yaowu: public TriggerSkill {
 public:
     Yaowu(): TriggerSkill("yaowu") {
-        events << DamageCaused;
+        events << DamageInflicted;
         frequency = Compulsory;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.card && damage.card->isKindOf("Slash") && damage.card->isRed()
-            && damage.to->hasSkill(objectName())
             && damage.from && damage.from->isAlive()) {
             room->broadcastSkillInvoke(objectName());
             room->notifySkillInvoked(damage.to, objectName());

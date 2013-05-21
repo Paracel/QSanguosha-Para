@@ -612,9 +612,9 @@ sgs.ai_skill_choice.mingce = function(self, choices)
 end
 
 sgs.ai_skill_playerchosen.mingce = function(self, targets)
-	targets = sgs.QList2Table(targets)
+	local t_targets = sgs.QList2Table(targets)
 	local slash = sgs.Sanguosha:cloneCard("slash")
-	for _, target in ipairs(targets) do
+	for _, target in ipairs(t_targets) do
 		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.getDefenseSlash(target) <= 2
 			and self:slashIsEffective(slash, target) and sgs.isGoodTarget(target, self.enemies, self)
 			and target:objectName() ~= self.player:objectName() then

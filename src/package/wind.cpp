@@ -423,9 +423,9 @@ public:
         events << PostHpReduced << AskForPeachesDone;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &data) const{
         if (triggerEvent == PostHpReduced && zhoutai->getHp() < 1) {
-            if (room->askForSkillInvoke(zhoutai, objectName())) {
+            if (room->askForSkillInvoke(zhoutai, objectName(), data)) {
                 room->setTag("Buqu", zhoutai->objectName());
                 room->broadcastSkillInvoke(objectName());
                 const QList<int> &buqu = zhoutai->getPile("buqu");

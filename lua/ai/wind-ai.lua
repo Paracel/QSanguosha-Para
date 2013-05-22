@@ -402,6 +402,8 @@ function sgs.ai_skill_invoke.buqu(self, data)
 	if #self.enemies == 1 and self.enemies[1]:hasSkill("guhuo") then
 		return false
 	else
+		local damage = data:toDamage()
+		if self.player:getHp() == 1 and damage.to and damage:getReason() == "duwu" and self:getSaveNum(true) >= 1 then return false end
 		return true
 	end
 end

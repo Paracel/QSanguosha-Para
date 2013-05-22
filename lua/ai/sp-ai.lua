@@ -660,6 +660,119 @@ sgs.ai_skill_askforag.aocai = function(self, card_ids)
 	return card_ids[1]
 end
 
+local duwu_skill = {}
+duwu_skill.name = "duwu"
+table.insert(sgs.ai_skills, duwu_skill)
+duwu_skill.getTurnUseCard = function(self, inclusive)
+	if self.player:hasFlag("DuwuEnterDying") or #self.enemies == 0 then return end
+	return sgs.Card_Parse("@DuwuCard=.")
+end
+
+sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
+	local cmp = function(a, b)
+		if a:getHp() < b:getHp() then
+			if a:getHp() == 1 and b:getHp() == 2 then return false else return true end
+		end
+		return false
+	end
+	local enemies = {}
+	for _, enemy in ipairs(self.enemies) do
+		if self:canAttack(enemy, self.player) and self.player:inMyAttackRange(enemy) then table.insert(enemies, enemy) end
+	end
+	if #enemies == 0 then return end
+	table.sort(enemies, cmp)
+	if enemies[1]:getHp() <= 0 then
+		use.card = sgs.Card_Parse("@DuwuCard=.")
+		if use.to then use.to:append(enemies[1]) end
+		return
+	end
+
+	-- find cards
+	local card_ids = {}
+	if self:needToThrowArmor() then table.insert(card_ids, self.player:getArmor():getEffectiveId()) end
+
+	local zcards = self.player:getHandcards()
+	local use_slash, keep_jink, keep_anal = false, false, false
+	for _, zcard in sgs.qlist(zcards) do
+		if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
+			local shouldUse = true
+			if zcard:getTypeId() == sgs.Card_TypeTrick then
+				local dummy_use = { isDummy = true }
+				self:useTrickCard(zcard, dummy_use)
+				if dummy_use.card then shouldUse = false end
+			end
+			if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(card) then
+				local dummy_use = { isDummy = true }
+				self:useEquipCard(zcard, dummy_use)
+				if dummy_use.card then shouldUse = false end
+			end
+			if isCard("Jink", zcard, self.player) and not keep_jink then
+				keep_jink = true
+				shouldUse = false
+			end
+			if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_anal then
+				keep_anal = true
+				shouldUse = false
+			end
+			if shouldUse then table.insert(card_ids, zcard:getId()) end
+		end
+	end
+	local hc_num = #card_ids
+	local eq_num = 0
+	if self.player:getOffensiveHorse() then
+		table.insert(card_ids, self.player:getOffensiveHorse():getEffectiveId())
+		eq_num = eq_num + 1
+	end
+	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5 then
+		table.insert(card_ids, self.player:getWeapon():getEffectiveId())
+		eq_num = eq_num + 2
+	end
+
+	local function getRangefix(index)
+		if index <= hc_num then return 0
+		elseif index == hc_num + 1 then
+			if eq_num == 2 then
+				return sgs.weapon_range[self.player:getWeapon():getClassName()] - 1
+			else
+				return 1
+			end
+		elseif index == hc_num + 2 then
+			return sgs.weapon_range[self.player:getWeapon():getClassName()]
+		end
+	end
+
+	for _, enemy in ipairs(enemies) do
+		if enemy:getHp() > #card_ids then continue end
+		if enemy:getHp() <= 0 then
+			use.card = sgs.Card_Parse("@DuwuCard=.")
+			if use.to then use.to:append(enemy) end
+			return
+		elseif enemy:getHp() > 1 then
+			local hp_ids = {}
+			if self.player:distanceTo(enemy, getRangefix(enemy:getHp())) <= self.player:getAttackRange() then
+				for _, id in ipairs(card_ids) do
+					table.insert(hp_ids, id)
+					if #hp_ids == enemy:getHp() then break end
+				end
+				use.card = sgs.Card_Parse("@DuwuCard=" .. table.concat(hp_ids, "+"))
+				if use.to then use.to:append(enemy) end
+			end
+		else
+			if not self:isWeak() or self:getSaveNum(true) >= 1 then
+				if self.player:distanceTo(enemy, getRangefix(1)) <= self.player:getAttackRange() then
+					use.card = sgs.Card_Parse("@DuwuCard=" .. card_ids[1])
+					if use.to then use.to:append(enemy) end
+				end
+			end
+		end
+	end
+end
+
+sgs.ai_use_priority.DuwuCard = 0.6
+sgs.ai_use_value.DuwuCard = 2.45
+sgs.dynamic_value.damage_card.DuwuCard = true
+sgs.ai_card_intention.DuwuCard = 80
+
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
 	if lord and lord:hasLordSkill("shichou") then

@@ -538,7 +538,6 @@ sgs.ai_skill_invoke.zhaolie_obtain = function(self, data)
 end
 
 local function will_invoke_shichou(self)
-	local enemynum = 0
 	local shu = 0
 	local first = self.player:hasFlag("Global_FirstRound")
 	local players = self.room:getOtherPlayers(self.player)
@@ -547,10 +546,7 @@ local function will_invoke_shichou(self)
 		if shenguanyu:getKingdom() == "shu" then return true end
 	end
 	for _, player in sgs.qlist(players) do
-		if player:getKingdom() == "shu" then
-			shu = shu + 1
-			if self:isEnemy(player) then enemynum = enemynum + 1 end
-		end
+		if player:getKingdom() == "shu" then shu = shu + 1 end
 	end
 	if first and shu > 1 then return false end
 	return true
@@ -590,6 +586,7 @@ sgs.ai_skill_use["@@shichou"] = function(self, prompt)
 			for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 				if p:getKingdom() == "shu" then shu_generals:append(p) end
 			end
+			if shu_generals:length() == 0 then return "." end
 			local target = player_chosen_shichou(self, shu_generals)
 			if target then
 				return ("@ShichouCard=%d+%d->%s"):format(to_discard[1], to_discard[2], target:objectName())

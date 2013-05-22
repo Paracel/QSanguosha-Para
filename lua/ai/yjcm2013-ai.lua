@@ -55,4 +55,6 @@ end
 
 sgs.ai_card_intention.RenxinCard = sgs.ai_card_intention.Peach
 
-sgs.ai_skill_invoke.jingce = true
+sgs.ai_skill_invoke.jingce = function(self, data)
+	return not self:needKongcheng(self.player, true)
+end

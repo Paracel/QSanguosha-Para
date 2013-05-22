@@ -564,6 +564,10 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		local use = { to = sgs.SPlayerList() }
 		if self.player:canSlash(target, slash, not no_distance) then use.to:append(target) else return "." end
 
+		if target:hasSkill("xiansi") and target:getPile("counter"):length() > 1 and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
+			return "@XiansiSlashCard=.->" .. target:objectName()
+		end
+
 		self:useCardSlash(slash, use)
 		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end
 		if table.contains(targets, target:objectName()) then return ret .. "->" .. table.concat(targets, "+") end
@@ -598,8 +602,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, slash, not no_distance) and not self:slashProhibit(slash, enemy)
 					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
-					and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee"))
-					and not (slash:isKindOf("XiansiSlashCard") and enemy:getPile("counter"):length() < 2) then
+					and not (self.player:hasFlag("slashTargetFix") and not enemy:hasFlag("SlashAssignee")) then
 
 					useslash = slash
 					target = enemy
@@ -612,6 +615,10 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		local targets = {}
 		local use = { to = sgs.SPlayerList() }
 		use.to:append(target)
+
+		if target:hasSkill("xiansi") and target:getPile("counter"):length() > 1 and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
+			return "@XiansiSlashCard=.->" .. target:objectName()
+		end
 
 		self:useCardSlash(useslash, use)
 		for _, p in sgs.qlist(use.to) do table.insert(targets, p:objectName()) end

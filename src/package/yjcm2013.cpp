@@ -1132,7 +1132,7 @@ YJCM2013Package::YJCM2013Package()
     caochong->addSkill(new Chengxiang);
     caochong->addSkill(new Renxin);
 
-    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3); // YJ 202
+    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3, false); // YJ 202
     fuhuanghou->addSkill(new Zhuikong);
     fuhuanghou->addSkill(new ZhuikongClear);
     fuhuanghou->addSkill(new Qiuyuan);

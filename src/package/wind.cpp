@@ -205,9 +205,16 @@ bool ShensuCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void ShensuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    Slash *slash = new Slash(Card::NoSuit, 0);
-    slash->setSkillName("_shensu");
-    room->useCard(CardUseStruct(slash, source, targets));
+    foreach (ServerPlayer *target, targets) {
+        if (!source->canSlash(target, NULL, false))
+            targets.removeOne(target);
+    }
+
+    if (targets.length() > 0) {
+        Slash *slash = new Slash(Card::NoSuit, 0);
+        slash->setSkillName("_shensu");
+        room->useCard(CardUseStruct(slash, source, targets));
+    }
 }
 
 class ShensuViewAsSkill: public ViewAsSkill {

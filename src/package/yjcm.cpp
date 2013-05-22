@@ -654,9 +654,11 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     if (target && target->hasFlag("MingceTarget")) target->setFlags("-MingceTarget");
 
     if (choice == "use") {
-        Slash *slash = new Slash(Card::NoSuit, 0);
-        slash->setSkillName("_mingce");
-        room->useCard(CardUseStruct(slash, effect.to, target), false);
+        if (effect.to->canSlash(target, NULL, false)) {
+            Slash *slash = new Slash(Card::NoSuit, 0);
+            slash->setSkillName("_mingce");
+            room->useCard(CardUseStruct(slash, effect.to, target), false);
+        }
     } else if (choice == "draw") {
         effect.to->drawCards(1);
     }

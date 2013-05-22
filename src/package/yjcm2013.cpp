@@ -1108,7 +1108,7 @@ public:
             if (target) {
                 const Card *card = room->askForCard(target, ".!", "@qiuyuan-give:" + player->objectName(), data, Card::MethodNone);
                 if (!card)
-                    card = target->getHandcards().at(qrand() % target->getHandcardNum() - 1);
+                    card = target->getHandcards().at(qrand() % target->getHandcardNum());
                 player->obtainCard(card);
                 room->showCard(player, card->getEffectiveId());
                 if (!card->isKindOf("Jink")) {

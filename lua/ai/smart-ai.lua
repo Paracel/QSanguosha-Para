@@ -2067,7 +2067,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					if self:hasSkills("jieming|yiji|guixin", self.player)
 						and (self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
 						return nil
-					elseif not self:canAvoidAOE(trick) then
+					elseif not self:canAvoidAOE(trick) and not (self.player:hasSkill("wumou") and sgs.ai_skill_choice.wumou(self) == "losehp") then
 						return null_card
 					end
 				end

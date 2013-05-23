@@ -332,7 +332,7 @@ public:
         view_as_skill = new QiaoshuiViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *jianyong, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *jianyong, QVariant &data) const{
         if (!jianyong->hasFlag("QiaoshuiSuccess")) return false;
 
         CardUseStruct use = data.value<CardUseStruct>();

@@ -130,7 +130,7 @@ QList<ServerPlayer *> Room::getPlayers() const{
 }
 
 QList<ServerPlayer *> Room::getAllPlayers(bool include_dead) const{
-    QList <ServerPlayer *> count_players = include_dead ? m_players : m_alivePlayers;
+    QList<ServerPlayer *> count_players = m_players;
     if (current == NULL)
         return count_players;
 
@@ -142,11 +142,15 @@ QList<ServerPlayer *> Room::getAllPlayers(bool include_dead) const{
         return count_players;
 
     QList<ServerPlayer *> all_players;
-    for (int i = index; i < count_players.length(); i++)
-        all_players << count_players[i];
+    for (int i = index; i < count_players.length(); i++) {
+        if (include_dead || count_players[i]->isAlive())
+            all_players << count_players[i];
+    }
 
-    for (int i = 0; i < index; i++)
-        all_players << count_players[i];
+    for (int i = 0; i < index; i++) {
+        if (include_dead || count_players[i]->isAlive())
+            all_players << count_players[i];
+    }
 
     return all_players;
 }

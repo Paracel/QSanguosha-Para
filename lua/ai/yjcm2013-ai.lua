@@ -165,3 +165,23 @@ sgs.ai_skill_invoke.juece = function(self, data)
 	local from = findPlayerByObjectName(self.room, move.from:objectName())
 	return from and self:isEnemy(from) and self:canAttack(from)
 end
+
+sgs.ai_skill_playerchosen.mieji = function(self, targets) -- extra target for Ex Nihilo
+	return self:findPlayerToDraw(false, 2)
+end
+
+sgs.ai_playerchosen_intention.mieji = -50
+
+sgs.ai_skill_use["@@mieji"] = function(self, prompt) -- extra target for Collateral
+	local collateral = sgs.Sanguosha:getCard(96)
+	local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
+	dummy_use.current_targets = self.player:property("extra_collateral_current_targets"):toString():split("+")
+	self:useCardCollateral(collateral, dummy_use)
+	if dummy_use.card and dummy_use.to:length() == 2 then
+		local first = dummy_use.to:at(0):objectName()
+		local second = dummy_use.to:at(1):objectName()
+		return "@ExtraCollateralCard=.->" .. first .. "+" .. second
+	end
+end
+
+sgs.ai_card_intention.ExtraCollateralCard = 0

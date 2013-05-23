@@ -158,3 +158,10 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 	end
 	return "."
 end
+
+sgs.ai_skill_invoke.juece = function(self, data)
+	local move = data:toMoveOneTime()
+	if not move.from then return false end
+	local from = findPlayerByObjectName(self.room, move.from:objectName())
+	return from and self:isEnemy(from) and self:canAttack(from)
+end

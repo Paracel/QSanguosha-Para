@@ -733,7 +733,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
                 lvmeng->loseMark("@wen");
                 lvmeng->gainMark("@wu");
-                room->handleAcquireDetachSkills(player, "-yingzi|-keji|jiang|qianxun");
+                room->handleAcquireDetachSkills(lvmeng, "-yingzi|-keji|jiang|qianxun");
             }
         }
         return false;

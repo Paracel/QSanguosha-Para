@@ -17,7 +17,7 @@ return {
 	["illustrator:bgm_diaochan"] = "木美人",
 	["designer:bgm_diaochan"] = "Danny",
 	["lihun"] = "离魂",
-	[":lihun"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌并选择一名男性角色：若如此做，你获得该角色的所有手牌，且出牌阶段结束时，你交给该角色X张牌。（X为该角色的体力值）",
+	[":lihun"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌将武将牌翻面，并选择一名男性角色：若如此做，你获得该角色的所有手牌，且出牌阶段结束时，你交给该角色X张牌。（X为该角色的体力值）",
 	["LihunGoBack"] = "请交给目标角色 %arg 张牌",
 
 	["#bgm_caoren"] = "险不辞难",

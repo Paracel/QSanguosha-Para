@@ -855,6 +855,7 @@ end
 
 sgs.ai_skill_invoke.cv_zhenji = function(self, data)
 	if math.random(0, 3) >= 2 then return false
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhenji = "sp_zhenji" return true
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhenji = "tw_zhenji" return true
 	else sgs.ai_skill_choice.cv_zhenji = "heg_zhenji" return true end
 end

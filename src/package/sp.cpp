@@ -1401,6 +1401,10 @@ SPPackage::SPPackage()
     related_skills.insertMulti("huxiao", "#huxiao-count");
     related_skills.insertMulti("huxiao", "#huxiao-clear");
 
+    General *sp_zhenji = new General(this, "sp_zhenji", "wei", 3, false, true); // SP 015
+    sp_zhenji->addSkill("qingguo");
+    sp_zhenji->addSkill("luoshen");
+
     General *xiahouba = new General(this, "xiahouba", "shu"); // SP 019
     xiahouba->addSkill(new Baobian);
 

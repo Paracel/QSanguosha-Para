@@ -6,7 +6,7 @@ return {
 	["sp_diaochan"] = "SP貂蝉",
 	["&sp_diaochan"] = "貂蝉",
 	["illustrator:sp_diaochan"] = "巴萨小马",
-	["cv_diaochan:convert"] = "你可以替换为SP貂蝉或台版貂蝉或国战貂蝉",
+	["cv_diaochan:convert"] = "你可以替换为SP貂蝉或国战貂蝉或台版貂蝉",
 
 	["#sp_sunshangxiang"] = "梦醉良缘",
 	["sp_sunshangxiang"] = "SP孙尚香",
@@ -39,6 +39,10 @@ return {
 	["cv_jiaxu:convert"] = "你可以替换为魏势力SP贾诩",
 	["$LuanwuAnimateSP"] = "image=image/animate/luanwuSP.png",
 
+	["sp_zhenji"] = "SP甄姬",
+	["&sp_zhenji"] = "甄姬",
+	["illustrator:sp_zhenji"] = "白姥姥",
+
 	["sp_shenlvbu"] = "SP神吕布",
 	["&sp_shenlvbu"] = "神吕布",
 	["illustrator:sp_shenlvbu"] = "干橘子李凯",
@@ -67,7 +71,7 @@ return {
 	["tw_zhenji"] = "台版甄姬",
 	["&tw_zhenji"] = "甄姬", 
 	["illustrator:tw_zhenji"] = "DM添",
-	["cv_zhenji:convert"] = "你可以替换为国战甄姬或台版甄姬",
+	["cv_zhenji:convert"] = "你可以替换为SP甄姬或国战甄姬或台版甄姬",
 
 	["tw_machao"] = "台版马超",
 	["&tw_machao"] = "马超", 

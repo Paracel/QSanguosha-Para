@@ -57,7 +57,7 @@ return {
 	["jie"] = "嫉恶",
 	[":jie"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用红色【杀】对目标角色造成伤害时，此伤害+1。",
 	["dahe"] = "大喝",
-	[":dahe"] = "<font color=\"green\"><b>阶段技。</b></font>你可以与一名其他角色拼点：若你赢，你可以将该角色的拼点牌交给一名体力值不多于你的角色，该角色使用的非<font color=\"red\">♥</font>【闪】无效，直到回合结束；若你没赢，你展示所有手牌，然后弃置一张手牌。",
+	[":dahe"] = "<font color=\"green\"><b>阶段技。</b></font>你可以与一名其他角色拼点：若你赢，你可以将该角色的拼点牌交给一名体力值不多于你的角色，本回合该角色使用的非<font color=\"red\">♥</font>【闪】无效；若你没赢，你展示所有手牌，然后弃置一张手牌。",
 	["@dahe-give"] = "你可以将拼点牌交给一名体力值不多于你的角色",
 	["#Jie"] = "%from 的“<font color=\"yellow\"><b>嫉恶</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 	["#DaheEffect"] = "%from 的“%arg2”效果被触发，%to 使用的 %arg 【<font color=\"yellow\"><b>闪</b></font>】无效",

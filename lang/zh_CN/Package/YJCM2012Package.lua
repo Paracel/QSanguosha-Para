@@ -90,7 +90,7 @@ return {
 	["designer:handang"] = "ByArt",
 	["illustrator:handang"] = "DH",
 	["gongqi"] = "弓骑",
-	[":gongqi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌：若如此做，你的攻击范围无限直到回合结束；若此牌为装备牌，你可以弃置一名其他角色的一张牌。",
+	[":gongqi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张牌：若如此做，本回合你的攻击范围无限；若此牌为装备牌，你可以弃置一名其他角色的一张牌。",
 	["@gongqi-discard"] = "你可以弃置一名其他角色的一张牌",
 	["jiefan"] = "解烦",
 	[":jiefan"] = "<font color=\"green\"><b>限定技。</b></font>出牌阶段，你可以选择一名角色，然后攻击范围内包含该角色的所有角色须弃置一张武器牌，否则令该角色摸一张牌。",

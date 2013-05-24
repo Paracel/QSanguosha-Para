@@ -274,6 +274,12 @@ public:
                     room->useCard(CardUseStruct(slash, lingtong, target), false);
                 } else if (choice == "damage") {
                     room->broadcastSkillInvoke(objectName(), 2);
+
+                    LogMessage log;
+                    log.type = "#InvokeSkill";
+                    log.from = lingtong;
+                    log.arg = objectName();
+                    room->sendLog(log);
                     room->notifySkillInvoked(lingtong, objectName());
 
                     ServerPlayer *target = room->askForPlayerChosen(lingtong, targets2, "nosxuanfeng_damage", "@nosxuanfeng-damage");

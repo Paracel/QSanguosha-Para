@@ -1106,9 +1106,15 @@ public:
             if (targets.isEmpty()) return false;
             ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "qiuyuan-invoke", true, true);
             if (target) {
-                const Card *card = room->askForCard(target, ".!", "@qiuyuan-give:" + player->objectName(), data, Card::MethodNone);
-                if (!card)
-                    card = target->getHandcards().at(qrand() % target->getHandcardNum());
+                const Card *card = NULL;
+                if (target->getHandcardNum() > 1) {
+                    card = room->askForCard(target, ".!", "@qiuyuan-give:" + player->objectName(), data, Card::MethodNone);
+                    if (!card)
+                        card = target->getHandcards().at(qrand() % target->getHandcardNum());
+                } else {
+                    Q_ASSERT(target->getHandcardNum() == 1);
+                    card = target->getHandcards().first();
+                }
                 player->obtainCard(card);
                 room->showCard(player, card->getEffectiveId());
                 if (!card->isKindOf("Jink")) {

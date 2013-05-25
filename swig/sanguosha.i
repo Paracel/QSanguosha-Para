@@ -932,7 +932,6 @@ struct LogMessage {
 class RoomThread: public QThread {
 public:
     explicit RoomThread(Room *room);
-    void resetRoomState();
     void constructTriggerTable();
     bool trigger(TriggerEvent event, Room *room, ServerPlayer *target, QVariant &data);
     bool trigger(TriggerEvent event, Room *room, ServerPlayer *target);

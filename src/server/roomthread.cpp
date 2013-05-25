@@ -262,10 +262,6 @@ RoomThread::RoomThread(Room *room)
 {
 }
 
-void RoomThread::resetRoomState() {
-    room->getRoomState()->reset();
-}
-
 void RoomThread::addPlayerSkills(ServerPlayer *player, bool invoke_game_start) {
     QVariant void_data;
     bool invoke_verify = false;

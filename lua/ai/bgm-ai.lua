@@ -1091,7 +1091,7 @@ sgs.ai_skill_use_func.FuluanCard = function(card, use, self)
 	local subcards = card:getSubcards()
 	self:sort(self.friends_noself)
 	for _, friend in ipairs(self.friends_noself) do
-		if not friend:faceUp() then
+		if not self:toTurnOver(friend, 0) then
 			if can_be_selected_as_target_fuluan(self, card, friend) then
 				use.card = card
 				if use.to then use.to:append(friend) end
@@ -1101,7 +1101,7 @@ sgs.ai_skill_use_func.FuluanCard = function(card, use, self)
 	end
 	self:sort(self.enemies, "defense")
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:faceUp() then
+		if self:toTurnOver(enemy, 0) then
 			if can_be_selected_as_target_fuluan(self, card, enemy) then
 				use.card = card
 				if use.to then use.to:append(enemy) end

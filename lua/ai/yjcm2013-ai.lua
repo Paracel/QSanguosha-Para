@@ -240,6 +240,71 @@ sgs.ai_skill_cardask["@duodao-get"] = function(self, data)
 	return "."
 end
 
+sgs.ai_skill_invoke.danshou = function(self, data)
+	local damage = data:toDamage()
+	local phase = self.player:getPhase()
+	if phase < sgs.Player_Play then
+		return self:willSkipPlayPhase()
+	elseif phase == sgs.Player_Play then
+		if self:getOverflow() >= 2 then
+			return true
+		else
+			if damage.chain or self.room:getTag("is_chained"):toInt() > 0 then
+				local nextp
+				for _, p in sgs.qlist(self.room:getAllPlayers()) do
+					if p:isChained() and self:damageIsEffective(p, damage.nature, self.player) then
+						nextp = p
+						break
+					end
+				end
+				if not nextp or self:isFriend(nextp) then return true else return false end
+			end
+			if damage.card and damage.card:isKindOf("Slash") and self:getCardsNum("Slash") >= 1 and self:slashIsAvailable() then
+				return false
+			end
+			if (damage.card and damage.card:isKindOf("AOE")) or (self.player:hasFlag("ShenfenUsing") and self.player:faceUp()) then
+				if damage.to:getNextAlive():objectName() == self.player:objectName() then return true
+				else
+					local dmg_val = 0
+					local p = damage.to
+					repeat
+						if self:damageIsEffective(p, damage.nature, self.player) then
+							if self:isFriend(p) then
+								dmg_val = dmg_val + 1
+							else
+								if self:cantbeHurt(p, self.player, damage.damage) then dmg_val = dmg_val + 1 end
+								if self:getDamagedEffects(p, self.player) then dmg_val = dmg_val + 0.5 end
+								if self:isEnemy(p) then dmg_val = dmg_val - 1 end
+							end
+						end
+						p = p:getNextAlive()
+					until p:objectName() == self.player:objectName()
+					return dmg_val >= 1.5
+				end
+			end
+			if damage.to:hasSkills(sgs.masochism_skill .. "|zhichi|zhiyu|fenyong") then return self:isEnemy(damage.to) end
+			return true
+		end
+	elseif phase > sgs.Player_Play and phase ~= sgs.Player_NotActive then
+		return true
+	elseif phase == sgs.Player_NotActive then
+		local current = self.room:getCurrent()
+		if not current or not current:isAlive() or current:getPhase() == sgs.Player_NotActive() then return true end
+		if self:isFriend(current) then
+			return self:getOverflow(current) >= 2
+		else
+			if self:getOverflow(current) <= 2 then
+				return true
+			else
+				local threat = getCardsNum("Duel", current) + getCardsNum("AOE", current)
+				if self:slashIsAvailable(current) and getCardsNum("Slash", current) > 0 then threat = threat + math.min(1, getCardsNum("Slash", current)) end
+				return threat >= 1
+			end
+		end
+	end
+	return false
+end
+
 sgs.ai_skill_invoke.juece = function(self, data)
 	local move = data:toMoveOneTime()
 	if not move.from then return false end

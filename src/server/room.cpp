@@ -475,6 +475,12 @@ void Room::gameOver(const QString &winner) {
         Config.setValue("GameMode", name);
         removeTag("NextGameMode");
     }
+    if (!getTag("NextGameSecondGeneral").isNull()) {
+        bool enable = getTag("NextGameSecondGeneral").toBool();
+        Config.Enable2ndGeneral = enable;
+        Config.setValue("Enable2ndGeneral", enable);
+        removeTag("NextGameSecondGeneral");
+    }
 
     Json::Value arg(Json::arrayValue);
     arg[0] = toJsonString(winner);
@@ -2769,6 +2775,7 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 player->invoke("speak", QString("%1:%2").arg(zuoci->objectName()).arg(huashen));
             }
         } else if (sentence.startsWith(".SetAIDelay=")) {
+            _NO_BROADCAST_SPEAKING
             bool ok = false;
             int delay = sentence.mid(12).toInt(&ok);
             if (ok) {
@@ -2776,8 +2783,13 @@ void Room::speakCommand(ServerPlayer *player, const QString &arg) {
                 Config.setValue("OriginAIDelay", delay);
             }
         } else if (sentence.startsWith(".SetGameMode=")) {
+            _NO_BROADCAST_SPEAKING
             QString name = sentence.mid(13);
             setTag("NextGameMode", name);
+        } else if (sentence.startsWith(".SecondGeneral=")) {
+            _NO_BROADCAST_SPEAKING
+            QString prop = sentence.mid(15);
+            setTag("NextGameSecondGeneral", !prop.isEmpty() && prop != "0" && prop != "false");
         } else if (sentence == ".Pause") {
             _NO_BROADCAST_SPEAKING
             pauseCommand(player, "true");

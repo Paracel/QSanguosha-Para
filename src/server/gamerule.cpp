@@ -198,29 +198,27 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
     case PreCardUsed: {
             if (data.canConvert<CardUseStruct>()) {
                 CardUseStruct card_use = data.value<CardUseStruct>();
-                const Card *card = card_use.card;
                 if (card_use.from->hasFlag("Global_ForbidSurrender")) {
                     card_use.from->setFlags("-Global_ForbidSurrender");
                     room->doNotify(card_use.from, QSanProtocol::S_COMMAND_ENABLE_SURRENDER, Json::Value(true));
                 }
-                if (card->isKindOf("Slash"))
+                if (card_use.card->isKindOf("Slash"))
                     card_use.from->setFlags("Global_SlashInPlayPhase");
 
-                card_use.from->broadcastSkillInvoke(card);
-                if (!card->getSkillName().isNull() && card->getSkillName(true) == card->getSkillName(false)
-                    && card_use.m_isOwnerUse && card_use.from->hasSkill(card->getSkillName()))
-                    room->notifySkillInvoked(card_use.from, card->getSkillName());
+                card_use.from->broadcastSkillInvoke(card_use.card);
+                if (!card_use.card->getSkillName().isNull() && card_use.card->getSkillName(true) == card_use.card->getSkillName(false)
+                    && card_use.m_isOwnerUse && card_use.from->hasSkill(card_use.card->getSkillName()))
+                    room->notifySkillInvoked(card_use.from, card_use.card->getSkillName());
             }
             break;
         }
     case CardUsed: {
             if (data.canConvert<CardUseStruct>()) {
                 CardUseStruct card_use = data.value<CardUseStruct>();
-                const Card *card = card_use.card;
                 RoomThread *thread = room->getThread();
 
-                if (card->hasPreAction())
-                    card->doPreAction(room, card_use);
+                if (card_use.card->hasPreAction())
+                    card_use.card->doPreAction(room, card_use);
 
                 QList<ServerPlayer *> targets = card_use.to;
                 if (card_use.from && !card_use.to.empty()) {
@@ -231,33 +229,32 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                             targets = new_use.to;
                         }
                     }
-                    card_use.to = targets;
                 }
+                card_use = data.value<CardUseStruct>();
 
-                if (card->isKindOf("Slash") || card->isNDTrick()) {
+                if (card_use.card->isKindOf("Slash") || card_use.card->isNDTrick()) {
                     foreach (ServerPlayer *p, card_use.to) {
                         QStringList card_list = p->tag["CurrentCardUse"].toStringList();
-                        card_list << card->toString();
+                        card_list << card_use.card->toString();
                         p->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
                     }
                 }
 
                 QVariantList jink_list_backup;
-                if (card->isKindOf("Slash")) {
-                    jink_list_backup = card_use.from->tag["Jink_" + card->toString()].toList();
+                if (card_use.card->isKindOf("Slash")) {
+                    jink_list_backup = card_use.from->tag["Jink_" + card_use.card->toString()].toList();
                     QVariantList jink_list;
                     for (int i = 0; i < card_use.to.length(); i++)
                         jink_list.append(QVariant(1));
-                    card_use.from->tag["Jink_" + card->toString()] = QVariant::fromValue(jink_list);
+                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list);
                 }
-                card_use = data.value<CardUseStruct>();
                 if (card_use.from && !card_use.to.isEmpty()) {
                     foreach (ServerPlayer *p, room->getAllPlayers())
                         thread->trigger(TargetConfirmed, room, p, data);
                 }
-                card->use(room, card_use.from, card_use.to);
+                card_use.card->use(room, card_use.from, card_use.to);
                 if (!jink_list_backup.isEmpty())
-                    card_use.from->tag["Jink_" + card->toString()] = QVariant::fromValue(jink_list_backup);
+                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list_backup);
             }
 
             break;

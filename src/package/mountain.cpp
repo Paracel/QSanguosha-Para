@@ -1149,7 +1149,7 @@ public:
         return (all - banned - huashen_set - room_set).toList();
     }
 
-    static QString SelectSkill(ServerPlayer *zuoci) {
+    static void SelectSkill(ServerPlayer *zuoci) {
         Room *room = zuoci->getRoom();
         playAudioEffect(zuoci, "huashen");
         QStringList ac_dt_list;
@@ -1159,8 +1159,7 @@ public:
             ac_dt_list.append("-" + huashen_skill);
 
         QVariantList huashens = zuoci->tag["Huashens"].toList();
-        if (huashens.isEmpty())
-            return QString();
+        if (huashens.isEmpty()) return;
 
         QStringList huashen_generals;
         foreach (QVariant huashen, huashens)
@@ -1186,7 +1185,7 @@ public:
                     }
                 }
             }
-            Q_ASSERT(skill_names.length() > 0);
+            if (skill_names.isEmpty()) return;
             skill_name = ai->askForChoice("huashen", skill_names.join("+"), QVariant());
             general = hash[skill_name];
             Q_ASSERT(general != NULL);
@@ -1203,14 +1202,13 @@ public:
                 skill_names << skill->objectName();
             }
 
-            if (skill_names.isEmpty())
-                return QString();
+            if (skill_names.isEmpty()) return;
 
             skill_name = room->askForChoice(zuoci, "huashen", skill_names.join("+"));
         }
+        Q_ASSERT(!skill_name.isNull() && !skill_name.isEmpty());
 
         QString kingdom = general->getKingdom();
-        
         if (zuoci->getKingdom() != kingdom) {
             if (kingdom == "god") {
                 kingdom = room->askForKingdom(zuoci);
@@ -1227,8 +1225,6 @@ public:
         if (zuoci->getGender() != general->getGender())
             zuoci->setGender(general->getGender());
 
-        Q_ASSERT(!skill_name.isNull() && !skill_name.isEmpty());
-
         Json::Value arg(Json::arrayValue);
         arg[0] = (int)QSanProtocol::S_GAME_EVENT_HUASHEN;
         arg[1] = QSanProtocol::Utils::toJsonString(zuoci->objectName());
@@ -1239,7 +1235,6 @@ public:
         zuoci->tag["HuashenSkill"] = skill_name;
         ac_dt_list.append(skill_name);
         room->handleAcquireDetachSkills(zuoci, ac_dt_list);
-        return skill_name;
     }
 
     virtual void onGameStart(ServerPlayer *zuoci) const{

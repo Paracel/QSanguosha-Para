@@ -465,6 +465,7 @@ public:
             return false;
         foreach (int id, player->getPile("field")) {
             Snatch *snatch = new Snatch(Card::SuitToBeDecided, -1);
+            snatch->setSkillName("jixi");
             snatch->addSubcard(id);
             snatch->deleteLater();
             if (!snatch->isAvailable(player))

@@ -149,6 +149,7 @@ function sgs.getDefenseSlash(player)
 			defense = defense + 1.3
 		end
 	end
+	if attacker:getWeapon() and player:hasSkill("duodao") and player:canDiscard(player, "he") then defense = defense + 1 end
 
 	if not sgs.isGoodTarget(player) then defense = defense + 10 end
 

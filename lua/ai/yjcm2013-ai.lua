@@ -159,6 +159,87 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 	return "."
 end
 
+sgs.ai_skill_invoke.zongshih = function(self, data)
+	return not self:needKongcheng(self.player, true)
+end
+
+sgs.ai_skill_cardask["@duodao-get"] = function(self, data)
+	local function getLeastValueCard(from)
+		if self:needToThrowArmor() then return "$" .. self.player:getArmor():getEffectiveId() end
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		self:sortByKeepValue(cards)
+		for _, c in ipairs(cards) do
+			if self:getKeepValue(c) < 8 and not self:isValuableCard(c) then return "$" .. c:getEffectiveId() end
+		end
+		local offhorse_avail, weapon_avail
+		for _, enemy in ipairs(self.enemies) do
+			if self:canAttack(enemy, self.player) then
+				if not offhorse_avail and self.player:getOffensiveHorse() and self.player:distanceTo(enemy, 1) <= self.player:getAttackRange() then
+					offhorse_avail = true
+				end
+				if not weapon_avail and self.player:getWeapon() and self.player:distanceTo(enemy) == 1 then
+					weapon_avail = true
+				end
+			end
+			if offhorse_avail and weapon_avail then break end
+		end
+		if offhorse_avail then return "$" .. self.player:getOffensiveHorse():getEffectiveId() end
+		if weapon_avail and self:evaluateWeapon(self.player:getWeapon()) < self:evaluateWeapon(from:getWeapon()) then
+			return "$" .. self.player:getWeapon():getEffectiveId()
+		end
+	end
+	local damage = data:toDamage()
+	if not damage.from or not damage.from:getWeapon() then
+		if self:needToThrowArmor() then
+			return "$" .. self.player:getArmor():getEffectiveId()
+		elseif self.player:getHandcardNum() == 1 and (self.player:hasSkill("kongcheng") or (self.player:hasSkill("zhiji") and self.player:getMark("zhiji") == 0)) then
+			return "$" .. self.player:handCards():first()
+		end
+	else
+		if self:isFriend(damage.from) then
+			if damage.from:hasSkill("xiaoji") and self:isWeak(damage.from) then
+				local str = getLeastValueCard(damage.from)
+				if str then return str end
+			else
+				if self:getCardsNum("Slash") == 0 or self:willSkipPlayPhase() then return "." end
+				local invoke = false
+				local range = sgs.weapon_range[damage.from:getWeapon():getClassName()] or 0
+				if self.player:hasSkill("anjian") then
+					for _, enemy in ipairs(self.enemies) do
+						if not enemy:inMyAttackRange(self.player) and not self.player:inMyAttackRange(enemy) and self.player:distanceTo(enemy) <= range then
+							invoke = true
+							break
+						end
+					end
+				end
+				if not invoke and self:evaluateWeapon(damage.from:getWeapon()) > 8 then invoke = true end
+				if invoke then
+					local str = getLeastValueCard(damage.from)
+					if str then return str end
+				end
+			end
+		else
+			if damage.from:hasSkill("nosxuanfeng") then
+				for _, friend in ipairs(self.friends) do
+					if self:isWeak(friend) then return "." end
+				end
+			else
+				if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
+					if self:needToThrowArmor() then
+						return "$" .. self.player:getArmor():getEffectiveId()
+					elseif self.player:getHandcardNum() == 1 and (self.player:hasSkill("kongcheng") or (self.player:hasSkill("zhiji") and self.player:getMark("zhiji") == 0)) then
+						return "$" .. self.player:handCards():first()
+					end
+				else
+					local str = getLeastValueCard(damage.from)
+					if str then return str end
+				end
+			end
+		end
+	end
+	return "."
+end
+
 sgs.ai_skill_invoke.juece = function(self, data)
 	local move = data:toMoveOneTime()
 	if not move.from then return false end

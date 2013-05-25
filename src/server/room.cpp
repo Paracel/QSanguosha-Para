@@ -4784,6 +4784,9 @@ QString Room::askForGeneral(ServerPlayer *player, const QStringList &generals, Q
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_CHOOSE_GENERAL);
 
+    if (generals.length() == 1)
+        return generals.first();
+
     if (default_choice.isEmpty())
         default_choice = generals.at(qrand() % generals.length());
 

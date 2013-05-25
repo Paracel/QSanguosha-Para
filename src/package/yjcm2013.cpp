@@ -99,6 +99,7 @@ class Jingce: public TriggerSkill {
 public:
     Jingce(): TriggerSkill("jingce") {
         events << PreCardUsed << CardResponded << EventPhaseStart << EventPhaseEnd;
+        frequency = Frequent;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -459,6 +460,7 @@ class Zongshih: public TriggerSkill {
 public:
     Zongshih(): TriggerSkill("zongshih") {
         events << Pindian;
+        frequency = Frequent;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{

@@ -319,7 +319,7 @@ public:
                     return false;
 
                 ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
-                QString pattern = QString(".|.|.|hand|%1$0").arg(color);
+                QString pattern = QString(".|%1|.|hand$0").arg(color);
 
                 room->broadcastSkillInvoke(objectName());
                 room->setPlayerFlag(victim, "QianxiTarget");

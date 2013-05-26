@@ -57,8 +57,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
         }
         if (card->getSuitString() == suit
             || (card->isBlack() && suit == "black")
-            || (card->isRed() && suit == "red")
-            || (card->getSuit() == Card::NoSuit && suit == "colorless"))
+            || (card->isRed() && suit == "red"))
             checkpoint = positive;
         else
             checkpoint = !positive;

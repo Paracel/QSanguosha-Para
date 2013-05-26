@@ -34,7 +34,9 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
                     positive = false;
                     name = name.mid(1);
                 }
-                if (card->isKindOf(name.toLocal8Bit().data()) || (card->getEffectiveId() == name.toInt(&isInt) && isInt))
+                if (card->isKindOf(name.toLocal8Bit().data())
+                    || ("%" + card->objectName() == name)
+                    || (card->getEffectiveId() == name.toInt(&isInt) && isInt))
                     checkpoint = positive;
                 else
                     checkpoint = !positive;
@@ -72,6 +74,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
 
     foreach (QString number, card_numbers) {
         if (number == ".") { checkpoint = true; break; }
+        bool isInt = false;
         if (number.contains('~')) {
             QStringList params = number.split('~');
             int from, to;
@@ -82,11 +85,17 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
             if (!params.at(1).size())
                 to = 13;
             else
-                to =params.at(1).toInt();
+                to = params.at(1).toInt();
 
             if (from <= cdn && cdn <= to) checkpoint = true;
-        } else if (number.toInt() == cdn)
+        } else if (number.toInt(&isInt) == cdn && isInt) {
             checkpoint = true;
+        } else if ((number == "A" && cdn == 1)
+                   || (number == "J" && cdn == 11)
+                   || (number == "Q" && cdn == 12)
+                   || (number == "K" && cdn == 13)) {
+            checkpoint = true;
+        }
         if (checkpoint) break;
     }
     if (!checkpoint) return false;
@@ -97,8 +106,6 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
     if (place == ".") checkpoint = true;
     else if (place == "equipped" && player->hasEquip(card)) checkpoint = true;
     else if (place == "hand" && card->getEffectiveId() >= 0 && !player->hasEquip(card)) checkpoint = true;
-    if (!checkpoint) return false;
-
-    return true;
+    return checkpoint;
 }
 

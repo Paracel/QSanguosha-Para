@@ -286,10 +286,10 @@ struct PindianStruct {
 struct JudgeStruct {
     JudgeStruct();
     bool isGood() const;
-    bool isGood(const Card *card) const;
-    void updateResult();
-    bool isEffected();
     bool isBad() const;
+    bool isEffected() const;
+    void updateResult();
+
     ServerPlayer *who;
     const Card *card;
     QString pattern;

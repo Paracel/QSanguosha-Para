@@ -118,7 +118,7 @@ JudgeStruct::JudgeStruct()
 {
 }
 
-bool JudgeStruct::isEffected() {
+bool JudgeStruct::isEffected() const{
     return negative ? isBad() : isGood();
 }
 
@@ -133,11 +133,6 @@ void JudgeStruct::updateResult() {
 bool JudgeStruct::isGood() const{
     Q_ASSERT(_m_result != TRIAL_RESULT_UNKNOWN);
     return _m_result == TRIAL_RESULT_GOOD;
-}
-
-bool JudgeStruct::isGood(const Card *card) const{
-    Q_ASSERT(card);
-    return (good == ExpPattern(pattern).match(who, card));
 }
 
 bool JudgeStruct::isBad() const{

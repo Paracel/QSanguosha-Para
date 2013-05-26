@@ -179,9 +179,7 @@ public:
 
                     room->judge(judge);
 
-                    QVariantList judgelist = player->tag[objectName()].toList();
-                    Card::Suit suit = (Card::Suit)(judgelist.takeLast().toInt());
-                    player->tag[objectName()] = QVariant::fromValue(judgelist);
+                    Card::Suit suit = (Card::Suit)(judge.pattern.toInt());
                     switch (suit) {
                     case Card::Heart: {
                             room->broadcastSkillInvoke(objectName(), 4);
@@ -218,9 +216,7 @@ public:
         } else {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason != objectName()) return false;
-            QVariantList judgelist = player->tag[objectName()].toList();
-            judgelist.append(QVariant::fromValue(int(judge->card->getSuit())));
-            player->tag[objectName()] = QVariant::fromValue(judgelist);
+            judge->pattern = QString::number(int(judge->card->getSuit()));
         }
         return false;
     }

@@ -532,9 +532,9 @@ struct RecoverStruct {
 
 struct JudgeStruct {
     JudgeStruct();
-    bool isGood(const Card *card = NULL) const;
-    bool isEffected();
+    bool isGood() const;
     bool isBad() const;
+    bool isEffected() const;
 
     bool negative;
     bool play_animation;

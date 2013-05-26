@@ -3108,19 +3108,20 @@ bool Room::isJinkEffected(ServerPlayer *user, const Card *jink) {
     return !thread->trigger(JinkEffect, this, user, jink_data);
 }
 
-void Room::damage(DamageStruct &damage_data) {
+void Room::damage(const DamageStruct &data) {
+    DamageStruct damage_data = data;
     if (damage_data.to == NULL || damage_data.to->isDead())
         return;
 
-    QVariant data = QVariant::fromValue(damage_data);
+    QVariant qdata = QVariant::fromValue(damage_data);
 
     if (!damage_data.chain && !damage_data.transfer) {
-        thread->trigger(ConfirmDamage, this, damage_data.from, data);
-        damage_data = data.value<DamageStruct>();
+        thread->trigger(ConfirmDamage, this, damage_data.from, qdata);
+        damage_data = qdata.value<DamageStruct>();
     }
 
     // Predamage
-    if (thread->trigger(Predamage, this, damage_data.from, data)) {
+    if (thread->trigger(Predamage, this, damage_data.from, qdata)) {
         if (damage_data.card && damage_data.card->isKindOf("Slash")) {
             QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
             if (!qinggang.isEmpty()) {
@@ -3133,26 +3134,26 @@ void Room::damage(DamageStruct &damage_data) {
 
     bool enter_stack = false;
     do {
-        bool prevent = thread->trigger(DamageForseen, this, damage_data.to, data);
+        bool prevent = thread->trigger(DamageForseen, this, damage_data.to, qdata);
         if (prevent)
             break;
 
         if (damage_data.from) {
-            if (thread->trigger(DamageCaused, this, damage_data.from, data))
+            if (thread->trigger(DamageCaused, this, damage_data.from, qdata))
                 break;
         }
 
-        damage_data = data.value<DamageStruct>();
+        damage_data = qdata.value<DamageStruct>();
 
-        bool broken = thread->trigger(DamageInflicted, this, damage_data.to, data);
+        bool broken = thread->trigger(DamageInflicted, this, damage_data.to, qdata);
         if (broken)
             break;
 
         enter_stack = true;
         m_damageStack.push_back(damage_data);
-        setTag("CurrentDamageStruct", data);
+        setTag("CurrentDamageStruct", qdata);
 
-        thread->trigger(PreDamageDone, this, damage_data.to, data);
+        thread->trigger(PreDamageDone, this, damage_data.to, qdata);
 
         if (damage_data.card && damage_data.card->isKindOf("Slash")) {
             QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
@@ -3161,16 +3162,16 @@ void Room::damage(DamageStruct &damage_data) {
                 damage_data.to->tag["Qinggang"] = qinggang;
             }
         }
-        thread->trigger(DamageDone, this, damage_data.to, data);
+        thread->trigger(DamageDone, this, damage_data.to, qdata);
 
         if (damage_data.from)
-            thread->trigger(Damage, this, damage_data.from, data);
+            thread->trigger(Damage, this, damage_data.from, qdata);
 
-        thread->trigger(Damaged, this, damage_data.to, data);
+        thread->trigger(Damaged, this, damage_data.to, qdata);
     } while (false);
 
-    damage_data = data.value<DamageStruct>();
-    thread->trigger(DamageComplete, this, damage_data.to, data);
+    damage_data = qdata.value<DamageStruct>();
+    thread->trigger(DamageComplete, this, damage_data.to, qdata);
 
     if (enter_stack) {
         m_damageStack.pop();

@@ -997,13 +997,20 @@ bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPla
     arg[1] = from ? toJsonString(from->objectName()) : Json::Value::null;
     arg[2] = to ? toJsonString(to->objectName()) : Json::Value::null;
 
+    CardEffectStruct trickEffect;
+    trickEffect.card = trick;
+    trickEffect.from = from;
+    trickEffect.to = to;
+    QVariant data = QVariant::fromValue(trickEffect);
     foreach (ServerPlayer *player, m_alivePlayers) {
         if (player->hasNullification()) {
-            if (player->isOnline()) {
-                player->m_commandArgs = arg;
-                validHumanPlayers << player;
-            } else
-                validAiPlayers << player;
+            if (!thread->trigger(TrickCardCanceling, this, player, data)) {
+                if (player->isOnline()) {
+                    player->m_commandArgs = arg;
+                    validHumanPlayers << player;
+                } else
+                    validAiPlayers << player;
+            }
         }
     }
 

@@ -654,7 +654,7 @@ public:
         if (triggerEvent == TrickCardCanceling) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (effect.from && effect.from->hasSkill(objectName()) && effect.from->isAlive()
-                && player->hasFlag("TanhuTarget"))
+                && effect.to && effect.to->hasFlag("TanhuTarget"))
                 return true;
         } else if (player->tag["TanhuInvoke"].value<PlayerStar>() != NULL) {
             if (triggerEvent == EventPhaseChanging) {

@@ -35,11 +35,7 @@ Card::CardType TrickCard::getTypeId() const{
 }
 
 bool TrickCard::isCancelable(const CardEffectStruct &effect) const{
-    if (!cancelable) return false;
-    if (!effect.to) return true;
-    Room *room = effect.to->getRoom();
-    QVariant data = QVariant::fromValue(effect);
-    return !room->getThread()->trigger(TrickCardCanceling, room, effect.to, data);
+    return cancelable;
 }
 
 QString EquipCard::getType() const{

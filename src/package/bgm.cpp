@@ -1566,11 +1566,15 @@ public:
 class Langgu: public TriggerSkill {
 public:
     Langgu(): TriggerSkill("langgu") {
-        events << Damaged << AskForRetrial;
+        events << Damaged << AskForRetrial << FinishJudge;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *simazhao, QVariant &data) const{
-        if (triggerEvent == Damaged) {
+        if (TriggerSkill::triggerable(simazhao) && triggerEvent == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
 
             for (int i = 0; i < damage.damage; i++) {
@@ -1587,9 +1591,9 @@ public:
                 room->judge(judge);
                 if (damage.from && damage.from->isAlive() && !damage.from->isKongcheng()) {
                     QList<int> langgu_discard, other;
+                    Card::Suit suit = (Card::Suit)(judge.pattern.toInt());
                     foreach (int card_id, damage.from->handCards()) {
-                        if (simazhao->canDiscard(damage.from, card_id)
-                            && Sanguosha->getCard(card_id)->getSuit() == judge.card->getSuit())
+                        if (simazhao->canDiscard(damage.from, card_id) && Sanguosha->getCard(card_id)->getSuit() == suit)
                             langgu_discard << card_id;
                         else
                             other << card_id;
@@ -1627,7 +1631,7 @@ public:
                     }
                 }
             }
-        } else {
+        } else if (TriggerSkill::triggerable(simazhao) && triggerEvent == AskForRetrial) {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason != objectName() || simazhao->isKongcheng())
                 return false;
@@ -1640,6 +1644,10 @@ public:
 
             if (card)
                 room->retrial(card, simazhao, judge, objectName());
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason != objectName()) return false;
+            judge->pattern = QString::number(int(judge->card->getSuit()));
         }
 
         return false;

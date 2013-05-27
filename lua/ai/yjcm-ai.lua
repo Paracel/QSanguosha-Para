@@ -21,11 +21,11 @@ sgs.ai_skill_invoke.luoying = function(self)
 		end
 		if not another or not self:isFriend(another) then return false end
 	end
-	return true
+	return not self:needKongcheng(self.player, true)
 end
 
 sgs.ai_skill_askforag.luoying = function(self, card_ids)
-	return -1
+	if self:needKongcheng(self.player, true) then return card_ids[1] else return -1 end
 end
 
 sgs.ai_skill_use["@@jujian"] = function(self, prompt, method)

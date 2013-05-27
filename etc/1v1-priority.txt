@@ -130,6 +130,7 @@ vs_xiahoudun			62
 vs_guanyu				58					
 vs_zhaoyun				68					
 vs_lvbu					76					
+kof_zhangliao			77					
 wenpin					10					
 nos_liubei				19					
 nos_huangyueying		61					
@@ -154,4 +155,3 @@ neo_zhaoyun				70
 neo_zhouyu				85					
 neo_zhoutai				54					
 neo_gongsunzan			48					
-gh_zhangliao			77					

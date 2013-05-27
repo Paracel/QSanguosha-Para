@@ -361,7 +361,7 @@ public:
         QString color = player->tag["qianxi"].toString();
         foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
             if (p->hasFlag("QianxiTarget")) {
-                room->removePlayerCardLimitation(p, "use,response", QString(".|.|.|hand|%1$0").arg(color));
+                room->removePlayerCardLimitation(p, "use,response", QString(".|%1|.|hand$0").arg(color));
                 room->setPlayerMark(p, QString("@qianxi_%1").arg(color), 0);
             }
         }

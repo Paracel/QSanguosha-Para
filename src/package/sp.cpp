@@ -746,6 +746,14 @@ public:
                 ServerPlayer *chenlin = player->tag["BifaSource" + QString::number(card_id)].value<PlayerStar>();
                 QList<int> ids;
                 ids << card_id;
+
+                LogMessage log;
+                log.type = "$BifaView";
+                log.from = player;
+                log.card_str = QString::number(card_id);
+                log.arg = "bifa";
+                room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
                 room->fillAG(ids, player);
                 const Card *cd = Sanguosha->getCard(card_id);
                 QString pattern;

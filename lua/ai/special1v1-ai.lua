@@ -1,4 +1,4 @@
-sgs.ai_skill_playerchosen.gh_tuxi = function(self, targets)
+sgs.ai_skill_playerchosen.koftuxi = function(self, targets)
 	local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
 	if cardstr:match("->") then
 		local targetstr = cardstr:split("->")[2]:split("+")
@@ -10,7 +10,7 @@ sgs.ai_skill_playerchosen.gh_tuxi = function(self, targets)
 	return nil
 end
 
-sgs.ai_playerchosen_intention.gh_tuxi = function(self, from, to)
+sgs.ai_playerchosen_intention.koftuxi = function(self, from, to)
 	local lord = self.room:getLord()
 	if sgs.evaluatePlayerRole(from) == "neutral" and sgs.evaluatePlayerRole(to) == "neutral"
 		and lord and not lord:isKongcheng()
@@ -29,4 +29,4 @@ sgs.ai_playerchosen_intention.gh_tuxi = function(self, from, to)
 	end
 end
 
-sgs.ai_chaofeng.gh_zhangliao = 4
+sgs.ai_chaofeng.kof_zhangliao = 4

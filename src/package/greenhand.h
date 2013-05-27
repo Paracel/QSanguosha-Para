@@ -6,13 +6,6 @@
 #include "skill.h"
 #include "standard.h"
 
-class GreenHandPackage: public Package {
-    Q_OBJECT
-
-public:
-    GreenHandPackage();
-};
-
 class GreenHandCardPackage: public Package {
     Q_OBJECT
 

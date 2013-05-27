@@ -72,9 +72,4 @@ return {
 
 	["vscrossbow"] = "连弩",
 	[":vscrossbow"] = "装备牌·武器<br />攻击范围：１<br />武器特效：<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你可以额外使用三张【杀】。",
-
-	["drowning"] = "水淹七军",
-	[":drowning"] = "锦囊牌<br />出牌时机：出牌阶段<br />使用目标：对方角色。<br />作用效果：令目标角色选择一项：1.弃置所有装备区的装备牌。 2.受到1点伤害",
-	["drowning:damage"] = "受到1点伤害",
-	["drowning:throw"] = "弃置所有装备",
 }

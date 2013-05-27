@@ -28,6 +28,7 @@ config = {
 		"Assassins", 
 		"Special3v3",
 		"Special3v3_2013",
+		"Special1v1",
 		"SP",
 		"BGM",
 		"BGMDIY",
@@ -38,7 +39,6 @@ config = {
 		"NostalYJCM",
 		"NostalYJCM2012",
 		"NostalGeneral",
-		"GreenHand",
 		"Dragon",
 		"Test"
 	},

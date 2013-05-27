@@ -536,6 +536,8 @@ struct JudgeStruct {
     bool isBad() const;
     bool isEffected() const;
 
+    bool isGood(const Card *card) const; // For AI
+
     bool negative;
     bool play_animation;
     ServerPlayer *who;

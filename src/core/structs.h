@@ -290,6 +290,8 @@ struct JudgeStruct {
     bool isEffected() const;
     void updateResult();
 
+    bool isGood(const Card *card) const; // For AI
+
     ServerPlayer *who;
     const Card *card;
     QString pattern;

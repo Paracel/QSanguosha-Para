@@ -139,6 +139,11 @@ bool JudgeStruct::isBad() const{
     return !isGood();
 }
 
+bool JudgeStruct::isGood(const Card *card) const{
+    Q_ASSERT(card);
+    return (good == ExpPattern(pattern).match(who, card));
+}
+
 PhaseChangeStruct::PhaseChangeStruct()
     : from(Player::NotActive), to(Player::NotActive)
 {

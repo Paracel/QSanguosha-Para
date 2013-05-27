@@ -671,6 +671,9 @@ public:
         if (damage.chain || damage.transfer) return false;
         if (damage.from && !damage.to->inMyAttackRange(damage.from)
             && damage.card && damage.card->isKindOf("Slash")) {
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(damage.from, objectName());
+
             LogMessage log;
             log.type = "#AnjianBuff";
             log.from = damage.from;

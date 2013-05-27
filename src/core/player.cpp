@@ -829,21 +829,6 @@ bool Player::canSlashWithoutCrossbow() const{
     return slash_count < valid_slash_count;
 }
 
-void Player::setCardLocked(const QString &name) {
-    static QChar unset_symbol('-');
-    if (name.isEmpty())
-        return;
-    else if (name.startsWith(unset_symbol)) {
-        QString copy = name.mid(1);
-        removeCardLimitation("use,response", copy + "$0");
-    } else
-        setCardLimitation("use,response", name + "$0");
-}
-
-bool Player::isLocked(const Card *card) const{
-    return isCardLimited(card, Card::MethodUse);
-}
-
 void Player::setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn) {
     QStringList limit_type = limit_list.split(",");
     QString _pattern = pattern;

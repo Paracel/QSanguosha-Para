@@ -210,9 +210,7 @@ public:
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
     inline bool isJilei(const Card *card) const{ return isCardLimited(card, Card::MethodDiscard); }
-
-    void setCardLocked(const QString &name);
-    bool isLocked(const Card *card) const;
+    inline bool isLocked(const Card *card) const{ return isCardLimited(card, Card::MethodUse); }
 
     void setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false);
     void removeCardLimitation(const QString &limit_list, const QString &pattern);

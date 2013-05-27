@@ -1573,24 +1573,6 @@ void Room::clearPlayerCardLimitation(ServerPlayer *player, bool single_turn) {
     doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
 }
 
-void Room::setPlayerCardLock(ServerPlayer *player, const QString &name) {
-    player->setCardLocked(name);
-
-    static QChar unset_symbol('-');
-    bool set = true;
-    QString copy = name;
-    if (name.startsWith(unset_symbol)) {
-        set = false;
-        copy = name.mid(1);
-    }
-    Json::Value arg(Json::arrayValue);
-    arg[0] = set;
-    arg[1] = toJsonString("use,response");
-    arg[2] = toJsonString(copy);
-    arg[3] = false;
-    doNotify(player, S_COMMAND_CARD_LIMITATION, arg);
-}
-
 void Room::setCardFlag(const Card *card, const QString &flag, ServerPlayer *who) {
     if (flag.isEmpty()) return;
 

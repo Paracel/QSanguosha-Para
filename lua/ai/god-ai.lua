@@ -328,7 +328,7 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 	if card:isKindOf("Slash") or card:isKindOf("Jink")
 		or card:isKindOf("EquipCard")
 		or card:isKindOf("Disaster") or card:isKindOf("GlobalEffect") or card:isKindOf("Nullification")
-		or target:isCardLimited(card, sgs.Card_MethodUse) then
+		or target:isLocked(card) then
 		keep = true
 	end
 	self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"

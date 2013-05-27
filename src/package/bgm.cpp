@@ -336,7 +336,7 @@ public:
             }
             if (!type_list.contains(cd->getTypeId())) {
                 type_list << cd->getTypeId();
-                room->setPlayerCardLock(player, type[cd->getTypeId()]);
+                room->setPlayerCardLimitation(player, "use,response", type[cd->getTypeId()], false);
             }
         }
 
@@ -355,9 +355,9 @@ public:
             player->addMark("zuixiangHasTrigger");
             room->setPlayerMark(player, "Equips_Nullified_to_Yourself", 0);
             room->setPlayerMark(player, "Equips_of_Others_Nullified_to_You", 0);
-            room->setPlayerCardLock(player, "-BasicCard");
-            room->setPlayerCardLock(player, "-TrickCard");
-            room->setPlayerCardLock(player, "-EquipCard");
+            room->removePlayerCardLimitation(player, "use,response", "BasicCard$0");
+            room->removePlayerCardLimitation(player, "use,response", "TrickCard$0");
+            room->removePlayerCardLimitation(player, "use,response", "EquipCard$0");
 
             LogMessage log;
             log.type = "$ZuixiangGot";
@@ -457,10 +457,11 @@ public:
 
     virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         player->clearOnePrivatePile("dream");
-        room->setPlayerMark(player, "equip_null", 0);
-        room->setPlayerCardLock(player, "-BasicCard");
-        room->setPlayerCardLock(player, "-TrickCard");
-        room->setPlayerCardLock(player, "-EquipCard");
+        room->setPlayerMark(player, "Equips_Nullified_to_Yourself", 0);
+        room->setPlayerMark(player, "Equips_of_Others_Nullified_to_You", 0);
+        room->removePlayerCardLimitation(player, "use,response", "BasicCard$0");
+        room->removePlayerCardLimitation(player, "use,response", "TrickCard$0");
+        room->removePlayerCardLimitation(player, "use,response", "EquipCard$0");
     }
 };
 

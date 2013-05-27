@@ -2084,7 +2084,7 @@ function SmartAI:findLijianTarget(card_name, use)
 			local f_target, e_target
 			for _, ap in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 				if ap:objectName() ~= lord:objectName() and ap:isMale() and self:hasTrickEffective(duel, lord, ap) then
-					if self:hasSkills("jiang|nosjizhi|jizhi", ap) and self:isFriend(ap) and not ap:isCardLimited(duel, sgs.Card_MethodUse) then
+					if self:hasSkills("jiang|nosjizhi|jizhi", ap) and self:isFriend(ap) and not ap:isLocked(duel) then
 						if not use.isDummy then lord:setFlags("AIGlobal_NeedToWake") end
 						return lord, ap
 					elseif self:isFriend(ap) then
@@ -2096,9 +2096,9 @@ function SmartAI:findLijianTarget(card_name, use)
 			end
 			if f_target or e_target then
 				local target
-				if f_target and not f_target:isCardLimited(duel, sgs.Card_MethodUse) then
+				if f_target and not f_target:isLocked(duel) then
 					target = f_target
-				elseif e_target and not e_target:isCardLimited(duel, sgs.Card_MethodUse) then
+				elseif e_target and not e_target:isLocked(duel) then
 					target = e_target
 				end
 				if target then
@@ -2115,7 +2115,7 @@ function SmartAI:findLijianTarget(card_name, use)
 			return shenguanyu, lord
 		elseif self:isEnemy(shenguanyu) and #self.enemies >= 2 then
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:objectName() ~= shenguanyu:objectName() and enemy:isMale() and not enemy:isCardLimited(duel, sgs.Card_MethodUse)
+				if enemy:objectName() ~= shenguanyu:objectName() and enemy:isMale() and not enemy:isLocked(duel)
 					and self:hasTrickEffective(duel, shenguanyu, enemy) then
 					return shenguanyu, enemy
 				end
@@ -2143,7 +2143,7 @@ function SmartAI:findLijianTarget(card_name, use)
 									table.insert(others, enemy)
 								end
 							end
-							if #males == 1 and self:hasTrickEffective(duel, males[1], anotherenemy) and not anotherenemy:isCardLimited(duel, sgs.Card_MethodUse) then
+							if #males == 1 and self:hasTrickEffective(duel, males[1], anotherenemy) and not anotherenemy:isLocked(duel) then
 								if not self:hasSkills("nosjizhi|jizhi|jiang", anotherenemy) then
 									table.insert(males, anotherenemy)
 								else
@@ -2158,9 +2158,9 @@ function SmartAI:findLijianTarget(card_name, use)
 		end
 
 		if #males == 1 then
-			if #others >= 1 and not others[1]:isCardLimited(duel, sgs.Card_MethodUse) then
+			if #others >= 1 and not others[1]:isLocked(duel) then
 				table.insert(males, others[1])
-			elseif xunyu and not xunyu:isCardLimited(duel, sgs.Card_MethodUse) then
+			elseif xunyu and not xunyu:isLocked(duel) then
 				if getCardsNum("Slash", males[1]) < 1 then
 					table.insert(males, xunyu)
 				else
@@ -2178,11 +2178,11 @@ function SmartAI:findLijianTarget(card_name, use)
 
 		if #males == 1 and #self.friends_noself > 0 then
 			first = males[1]
-			if zhugeliang_kongcheng and hasTrickEffective(duel, first, zhugeliang_kongcheng) and not zhugeliang_kongcheng:isCardLimited(duel, sgs.Card_MethodUse) then
+			if zhugeliang_kongcheng and hasTrickEffective(duel, first, zhugeliang_kongcheng) and not zhugeliang_kongcheng:isLocked(duel) then
 				table.insert(males, zhugeliang_kongcheng)
 			else
 				local friend_maxSlash = findFriend_maxSlash(self, first)
-				if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then table.insert(males, friend_maxSlash) end
+				if friend_maxSlash and not friend_maxSlash:isLocked(duel) then table.insert(males, friend_maxSlash) end
 			end
 		end
 
@@ -2195,18 +2195,18 @@ function SmartAI:findLijianTarget(card_name, use)
 					local friend_maxSlash = findFriend_maxSlash(self, first)
 					if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then second = friend_maxSlash end
 				elseif lord and lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
-					if self.role == "rebel" and not lord:isCardLimited(duel, sgs.Card_MethodUse) and not first:isLord() and self:hasTrickEffective(duel, first, lord) then
+					if self.role == "rebel" and not lord:isLocked(duel) and not first:isLord() and self:hasTrickEffective(duel, first, lord) then
 						second = lord
 					else
 						if (self.role == "loyalist" or self.role == "renegade") and not self:hasSkills("neoganglie|enyuan|vsganglie|ganglie|nosenyuan", first)
-							and getCardsNum("Slash", first) <= getCardsNum("Slash", second) and not lord:isCardLimited(duel, sgs.Card_MethodUse) then
+							and getCardsNum("Slash", first) <= getCardsNum("Slash", second) and not lord:isLocked(duel) then
 							second = lord
 						end
 					end
 				end
 			end
 
-			if first and second and first:objectName() ~= second:objectName() and not second:isCardLimited(duel, sgs.Card_MethodUse) then
+			if first and second and first:objectName() ~= second:objectName() and not second:isLocked(duel) then
 				return first, second
 			end
 		end

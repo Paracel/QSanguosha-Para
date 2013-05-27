@@ -1984,7 +1984,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 		end
 	end
 	if null_card then null_card = sgs.Card_Parse(null_card) else return nil end
-	if self.player:isCardLimited(null_card, sgs.Card_MethodUse) then return nil end
+	if self.player:isLocked(null_card) then return nil end
 	if (from and from:isDead()) or (to and to:isDead()) then return nil end
 	if self:needBear() then return nil end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") == 0 and (self:isWeak() or self.player:isLord()) then return nil end
@@ -2937,7 +2937,7 @@ function SmartAI:willUsePeachTo(dying)
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
 	if self.player:objectName() == dying:objectName() and not self:needDeath(dying) then
 		local anal = sgs.Sanguosha:cloneCard("analeptic")
-		if not self.player:isCardLimited(anal, sgs.Card_MethodUse) and self:getCardId("Analeptic") then return self:getCardId("Analeptic") end
+		if not self.player:isLcoked(anal) and self:getCardId("Analeptic") then return self:getCardId("Analeptic") end
 		if self:getCardId("Peach") then return self:getCardId("Peach") end
 	end
 	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())

@@ -74,7 +74,6 @@ public:
     void removePlayerCardLimitation(ServerPlayer *player, const QString &limit_list,
                                     const QString &pattern);
     void clearPlayerCardLimitation(ServerPlayer *player, bool single_turn);
-    void setPlayerCardLock(ServerPlayer *player, const QString &name);
     void setCardFlag(const Card *card, const QString &flag, ServerPlayer *who = NULL);
     void setCardFlag(int card_id, const QString &flag, ServerPlayer *who = NULL);
     void clearCardFlag(const Card *card, ServerPlayer *who = NULL);

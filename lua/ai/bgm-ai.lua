@@ -224,6 +224,10 @@ function sgs.ai_skill_invoke.kuiwei(self, data)
 	if not self.player:faceUp() then return true end
 	for _, friend in ipairs(self.friends) do
 		if self:hasSkills("fangzhu|jilve", friend) then return true end
+		if friend:hasSkill("junxing") and friend:faceUp() and not self:willSkipPlayPhase(friend)
+			and not (friend:isKongcheng() and self:willSkipDrawPhase(friend)) then
+			return true
+		end
 	end
 	for _, aplayer in sgs.qlist(self.room:getAlivePlayers()) do
 		if aplayer:getWeapon() then weapon = weapon + 1 end

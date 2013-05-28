@@ -142,7 +142,7 @@ void JunxingCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets
         types.removeOne(type_name[c->getTypeId()]);
         if (types.isEmpty()) break;
     }
-    if (target->canDiscard(target, "h") || types.isEmpty()
+    if (!target->canDiscard(target, "h") || types.isEmpty()
         || !room->askForCard(target, types.join(",") + "|.|.|hand", "@junxing-discard")) {
         target->turnOver();
         target->drawCards(subcards.length(), "junxing");

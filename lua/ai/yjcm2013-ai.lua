@@ -193,6 +193,42 @@ sgs.ai_skill_cardask["@junxing-discard"] = function(self, data, pattern)
 	return "."
 end
 
+sgs.ai_skill_cardask["@yuce-show"] = function(self, data)
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if not damage.from or damage.from:isDead() then return "." end
+	if self:isFriend(damage.from) then return "$" .. self.player:handCards():first() end
+	local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), damage.from:objectName())
+	local types = { sgs.Card_TypeBasic, sgs.Card_TypeEquip, sgs.Card_TypeTrick }
+	for _, card in sgs.qlist(damage.from:getHandcards()) do
+		if card:hasFlag("visible") or card:hasFlag(flag) then
+			table.removeOne(types, card:getTypeId())
+		end
+		if #types == 0 then break end
+	end
+	if #types == 0 then types = { sgs.Card_TypeBasic } end
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		for _, cardtype in ipairs(types) do
+			if card:getTypeId() == cardtype then return "$" .. card:getEffectiveId() end
+		end
+	end
+	return "$" .. self.player:handCards():first()
+end
+
+sgs.ai_skill_cardask["@yuce-discard"] = function(self, data, pattern, target)
+	if target and self:isFriend(target) then return "." end
+	local types = pattern:split("|")[1]:split(",")
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByUseValue(cards)
+	for _, card in ipairs(cards) do
+		if not self:isValuableCard(card) then
+			for _, classname in ipairs(types) do
+				if card:isKindOf(classname) then return "$" .. card:getEffectiveId() end
+			end
+		end
+	end
+	return "."
+end
+
 local xiansi_slash_skill = {}
 xiansi_slash_skill.name = "xiansi_slash"
 table.insert(sgs.ai_skills, xiansi_slash_skill)

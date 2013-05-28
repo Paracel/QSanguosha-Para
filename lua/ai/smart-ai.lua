@@ -3435,6 +3435,15 @@ function SmartAI:damageIsEffective(player, nature, source)
 	if player:getMark("@fenyong") > 0 then return false end
 	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
 	if player:hasSkill("mingshi") and source:getEquips():length() - (self.equipsToDec or 0) <= player:getEquips():length() then return false end
+	if player:hasSkill("yuce") and not player:isKongcheng() and player:getHp() > 1 then
+		if self:isFriend(player) then return false
+		else
+			if (getKnownCard(player, "BasicCard") > 0 and self:getCardsNum("TrickCard", self.player, "h") + self:getCardsNum("EquipCard", self.player, "h") < 1)
+				or self:getCardsNum("BasicCard", self.player, "h") < 2 then
+				return false
+			end
+		end
+	end
 
 	if player:hasLordSkill("shichou") and player:getMark("@hate_to") == 0 then
 		for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do

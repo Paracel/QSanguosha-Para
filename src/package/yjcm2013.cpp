@@ -134,7 +134,7 @@ void JunxingCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets
     ServerPlayer *target = targets.first();
     if (!target->isAlive()) return;
 
-    static QString type_name[4] = { QString(), "BasicCard", "TrickCard", "EquipCard" };
+    QString type_name[4] = { QString(), "BasicCard", "TrickCard", "EquipCard" };
     QStringList types;
     types << "BasicCard" << "TrickCard" << "EquipCard";
     foreach (int id, subcards) {
@@ -195,7 +195,7 @@ public:
             room->showCard(target, card->getEffectiveId());
             if (!damage.from || damage.from->isDead()) return;
 
-            static QString type_name[4] = { QString(), "BasicCard", "TrickCard", "EquipCard" };
+            QString type_name[4] = { QString(), "BasicCard", "TrickCard", "EquipCard" };
             QStringList types;
             types << "BasicCard" << "TrickCard" << "EquipCard";
             types.removeOne(type_name[card->getTypeId()]);

@@ -751,6 +751,7 @@ QString SkillCard::toString(bool hidden) const{
 
 DummyCard::DummyCard(): SkillCard() {
     target_fixed = true;
+    handling_method = Card::MethodNone;
     setObjectName("dummy");
 }
 

@@ -1182,6 +1182,8 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         AI *ai = player->getAI();
         if (ai) {
             card = ai->askForCard(pattern, prompt, data);
+            if (card && card->isKindOf("DummyCard") && card->subcardsLength() == 1)
+                card = Sanguosha->getCard(card->getEffectiveId());
             if (card && player->isCardLimited(card, method)) card = NULL;
             if (card) thread->delay();
         } else {

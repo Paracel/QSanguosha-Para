@@ -2937,7 +2937,7 @@ function SmartAI:willUsePeachTo(dying)
 	if self.player:isLocked(forbid) or dying:isLocked(forbid) then return "." end
 	if self.player:objectName() == dying:objectName() and not self:needDeath(dying) then
 		local anal = sgs.Sanguosha:cloneCard("analeptic")
-		if not self.player:isLcoked(anal) and self:getCardId("Analeptic") then return self:getCardId("Analeptic") end
+		if not self.player:isLocked(anal) and self:getCardId("Analeptic") then return self:getCardId("Analeptic") end
 		if self:getCardId("Peach") then return self:getCardId("Peach") end
 	end
 	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())

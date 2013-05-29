@@ -30,3 +30,15 @@ sgs.ai_playerchosen_intention.koftuxi = function(self, from, to)
 end
 
 sgs.ai_chaofeng.kof_zhangliao = 4
+
+sgs.ai_skill_invoke.yinli = function(self)
+	return not self:needKongcheng(self.player, true)
+end
+
+sgs.ai_skill_askforag.yinli = function(self, card_ids)
+	if self:needKongcheng(self.player, true) then return card_ids[1] else return -1 end
+end
+
+sgs.ai_skill_choice.kofxiaoji = function(self, choices)
+	if choices:match("recover") then return "recover" else return "draw" end
+end

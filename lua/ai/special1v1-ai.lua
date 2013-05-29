@@ -42,3 +42,5 @@ end
 sgs.ai_skill_choice.kofxiaoji = function(self, choices)
 	if choices:match("recover") then return "recover" else return "draw" end
 end
+
+sgs.kofxiaoji_keep_value = sgs.xiaoji_keep_value

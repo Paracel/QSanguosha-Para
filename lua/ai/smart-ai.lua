@@ -78,7 +78,7 @@ sgs.ai_chat_func = {}
 function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
-	sgs.lose_equip_skill = "xiaoji|xuanfeng|nosxuanfeng"
+	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
 	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|neoganglie|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
@@ -4562,7 +4562,7 @@ end
 
 function SmartAI:useEquipCard(card, use)
 	if not card then global_room:writeToConsole(debug.traceback()) return end
-	if self:hasSkills("xiaoji") and self:evaluateArmor(card) > -5 then
+	if self:hasSkills("kofxiaoji|xiaoji") and self:evaluateArmor(card) > -5 then
 		use.card = card
 		return
 	end

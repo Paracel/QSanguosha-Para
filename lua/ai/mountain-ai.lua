@@ -1029,7 +1029,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		if self.player:getCards("e"):length() > 1 then
-			for _, askill in ipairs(("xiaoji|xuanfeng|nosxuanfeng|shensu|neoluoyi|gongqi"):split("|")) do
+			for _, askill in ipairs(("kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|shensu|neoluoyi|gongqi"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 			if self:findFriendsByType(sgs.Friend_All) and str:matchOne("yuanhu") then return "yuanhu" end
@@ -1061,7 +1061,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|drluoyi|huoshui|bifa" ..
 								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|noszhenlie|kurou|wansha|lianpo|" ..
 								"yicong|nosshangshi|shangshi|lianying|tianyi|xianzhen|sijian|zongshi|keji|paoxiao|" ..
-								"kuiwei|yuanhu|neojushou|jushou|huoji|roulin|lihuo|xiaoji|xuanfeng|nosxuanfeng|" ..
+								"kuiwei|yuanhu|neojushou|jushou|huoji|roulin|lihuo|kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|" ..
 								"jiushi|shushen|qicai|dangxian|tannang|mashu|nosqicai|hongyan|" ..
 								"suishi|qinyin|jinjiu|nosguixin|shenfen"):split("|")) do
 			if str:matchOne(askill) then return askill end
@@ -1133,7 +1133,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne(askill) then return askill end
 		end
 
-		for _, askill in ipairs(("xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|kuanggu|lianpo|suishi"):split("|")) do
+		for _, askill in ipairs(("kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|kuanggu|lianpo|suishi"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 	end

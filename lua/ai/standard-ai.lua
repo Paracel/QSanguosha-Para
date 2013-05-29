@@ -79,7 +79,7 @@ sgs.ai_skill_invoke.fankui = function(self, data)
 
 	if self:isFriend(target) then
 		if self:getOverflow(target) > 2 then return true end
-		return (target:hasSkill("xiaoji") and not target:getEquips():isEmpty()) or self:needToThrowArmor(target)
+		return (target:hasSkills("kofxiaoji|xiaoji") and not target:getEquips():isEmpty()) or self:needToThrowArmor(target)
 	end
 	if self:isEnemy(target) then				---fankui without zhugeliang and luxun
 		if target:hasSkills("tuntian+zaoxian") and target:getPhase() == sgs.Player_NotActive then return false end

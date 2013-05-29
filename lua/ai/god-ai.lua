@@ -910,7 +910,7 @@ local function getShenfenUseValueOf_HE_Cards(self, to)
 	local equip_num = to:getEquips():length()
 	if to:hasArmorEffect("silver_lion") and to:isWounded() then equip_num = equip_num - 1.1 end
 	value_e = equip_num * 1.1
-	if to:hasSkill("xiaoji") then value_e = value_e * 0.7 end
+	if to:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
 	if to:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
 	if self:hasSkills("bazhen|yizhong", to) and to:getArmor() then value_e = value_e - 1 end
 	value = value + value_e

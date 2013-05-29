@@ -375,7 +375,7 @@ sgs.ai_skill_cardask["@duodao-get"] = function(self, data)
 		end
 	else
 		if self:isFriend(damage.from) then
-			if damage.from:hasSkill("xiaoji") and self:isWeak(damage.from) then
+			if damage.from:hasSkills("kofxiaoji|xiaoji") and self:isWeak(damage.from) then
 				local str = getLeastValueCard(damage.from)
 				if str then return str end
 			else

@@ -124,7 +124,7 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == sunshangxiang || move.from == NULL)
             return false;
-        if (move.to_place == Player::DiscardPile
+        if (move.from->getPhase() != Player::NotActive && move.to_place == Player::DiscardPile
             && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
                 || move.reason.m_reason == CardMoveReason::S_REASON_CHANGE_EQUIP)) {
             QList<int> card_ids;
@@ -170,6 +170,119 @@ public:
     }
 };
 
+MouzhuCard::MouzhuCard() {
+}
+
+bool MouzhuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && to_select != Self && !to_select->isKongcheng();
+}
+
+void MouzhuCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    ServerPlayer *hejin = effect.from, *target = effect.to;
+    if (target->isKongcheng()) return;
+
+    const Card *card = NULL;
+    if (target->getHandcardNum() > 1) {
+        card = room->askForCard(target, ".!", "@mouzhu-give:" + hejin->objectName(), QVariant(), Card::MethodNone);
+        if (!card)
+            card = target->getHandcards().at(qrand() % target->getHandcardNum());
+    } else {
+        card = target->getHandcards().first();
+    }
+    Q_ASSERT(card != NULL);
+    hejin->obtainCard(card, false);
+    if (!hejin->isAlive() || !target->isAlive()) return;
+    if (hejin->getHandcardNum() > target->getHandcardNum()) {
+        QStringList choicelist;
+        Slash *slash = new Slash(Card::NoSuit, 0);
+        slash->setSkillName("_mouzhu");
+        Duel *duel = new Duel(Card::NoSuit, 0);
+        duel->setSkillName("_mouzhu");
+        if (!target->isLocked(slash) && target->canSlash(hejin, slash, false))
+            choicelist.append("slash");
+        if (!target->isLocked(duel) && !target->isProhibited(hejin, duel))
+            choicelist.append("duel");
+        if (choicelist.isEmpty()) {
+            delete slash;
+            delete duel;
+            return;
+        }
+        QString choice = room->askForChoice(target, "mouzhu", choicelist.join("+"));
+        CardUseStruct use;
+        use.from = target;
+        use.to << hejin;
+        if (choice == "slash") {
+            delete duel;
+            use.card = slash;
+        } else {
+            delete slash;
+            use.card = duel;
+        }
+        room->useCard(use);
+    }
+}
+
+class Mouzhu: public ZeroCardViewAsSkill {
+public:
+    Mouzhu(): ZeroCardViewAsSkill("mouzhu") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("MouzhuCard");
+    }
+
+    virtual const Card *viewAs() const{
+        return new MouzhuCard;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
+        if (card->isKindOf("MouzhuCard"))
+            return -1;
+        else
+            return -2;
+    }
+};
+
+class Yanhuo: public TriggerSkill {
+public:
+    Yanhuo(): TriggerSkill("yanhuo") {
+        events << BeforeGameOverJudge << Death;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target && !target->isAlive() && target->hasSkill(objectName());
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == BeforeGameOverJudge) {
+            player->setMark(objectName(), player->getCardCount(true));
+        } else {
+            int n = player->getMark(objectName());
+            DeathStruct death = data.value<DeathStruct>();
+            ServerPlayer *killer = NULL;
+            if (room->getMode() == "02_1v1")
+                killer = room->getOtherPlayers(player).first();
+            else {
+                if (death.damage)
+                    killer = death.damage->from;
+            }
+            if (killer && killer->isAlive() && player->canDiscard(killer, "he")
+                && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)killer))) {
+                for (int i = 0; i < n; i++) {
+                    if (player->canDiscard(killer, "he")) {
+                        int card_id = room->askForCardChosen(player, killer, "he", objectName(), false, Card::MethodDiscard);
+                        room->throwCard(Sanguosha->getCard(card_id), killer, player);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+};
+
 Drowning::Drowning(Suit suit, int number)
     : SingleTargetTrick(suit, number)
 {
@@ -207,6 +320,12 @@ Special1v1Package::Special1v1Package()
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);
     kof_sunshangxiang->addSkill(new KOFXiaoji);
+
+    General *hejin = new General(this, "hejin", "qun", 4);
+    hejin->addSkill(new Mouzhu);
+    hejin->addSkill(new Yanhuo);
+
+    addMetaObject<MouzhuCard>();
 }
 
 ADD_PACKAGE(Special1v1)

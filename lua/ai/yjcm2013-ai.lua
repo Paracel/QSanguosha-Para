@@ -511,3 +511,70 @@ sgs.ai_skill_use["@@mieji"] = function(self, prompt) -- extra target for Collate
 end
 
 sgs.ai_card_intention.ExtraCollateralCard = 0
+
+sgs.ai_skill_invoke.zhuikong = function(self, data)
+	if self.player:getHandcardNum() <= (self:isWeak() and 3 or 1) then return false end
+	local current = self.room:getCurrent()
+	if not current or self:isFriend(current) then return false end
+
+	local max_card = self:getMaxCard()
+	local max_point = max_card:getNumber()
+	if not (current:hasSkill("zhiji") and current:getMark("zhiji") == 0 and current:getHandcardNum() == 1) then
+		local enemy_max_card = self:getMaxCard(current)
+		local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+		if max_point > enemy_max_point or max_point > 10 then
+			self.zhuikong_card = max_card:getEffectiveId()
+			return true
+		end
+	end
+	if current:distanceTo(self.player) == 1 and not self:isValuableCard(max_card) then
+		self.zhuikong_card = max_card:getEffectiveId()
+		return true
+	end
+	return false
+end
+
+sgs.ai_skill_playerchosen.qiuyuan = function(self, targets)
+	local targetlist = sgs.QList2Table(targets)
+	self:sort(targetlist, "handcard")
+	local enemy
+	for _, p in ipairs(targetlist) do
+		if self:isEnemy(p) and not (p:getHandcardNum() == 1 and (p:hasSkill("kongcheng") or (p:hasSkill("zhiji") and p:getMark("zhiji") == 0))) then
+			if p:hasSkills(sgs.cardneed_skill) then return p
+			elseif not enemy and not enemy:canLiuli(enemy, self.friends_noself) then enemy = p end
+		end
+	end
+	targetlist = sgs.reverse(targetlist)
+	local friend
+	for _, p in ipairs(targetlist) do
+		if self:isFriend(p) then
+			if (p:hasSkill("kongcheng") and p:getHandcardNum() == 1) or (p:getCardCount(true) >= 2 and self:canLiuli(p, self.enemies)) then return p
+			elseif not friend and getCardsNum("Jink", friend) >= 1 then friend = p end
+		end
+	end
+	return friend
+end
+
+sgs.ai_skill_cardask["@qiuyuan-give"] = function(self, data, pattern, target)
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByKeepValue(cards)
+	for _, card in ipairs(cards) do
+		local e_card = sgs.Sanguosha:getEngineCard(card:getEffectiveId())
+		if e_card:isKindOf("Jink")
+			and not (target and target:isAlive() and target:hasSkill("wushen") and (e_card:getSuit() == sgs.Card_Heart or (target:hasSkill("hongyan") and e_card:getSuit() == sgs.Card_Spade))) then
+			return "$" .. card:getEffectiveId()
+		end
+	end
+	for _, card in ipairs(cards) do
+		if not self:isValuableCard(card) and self:getKeepValue(card) < 5 then return "$" .. card:getEffectiveId() end
+	end
+	return "$" .. cards[1]:getEffectiveId()
+end
+
+function sgs.ai_slash_prohibit.qiuyuan(self, from, to)
+	if self:isFriend(to, from) then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
+	for _, friend in ipairs(self:getFriendsNoself(from)) do
+		if not to:isKongcheng() and not (to:getHandcardNum() == 1 and (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getMark("zhiji") == 0))) then return true end
+	end
+end

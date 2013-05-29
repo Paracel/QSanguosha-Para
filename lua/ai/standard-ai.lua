@@ -641,6 +641,15 @@ end
 function SmartAI:willSkipPlayPhase(player, no_null)
 	local player = player or self.player
 	if player:isSkipped(sgs.Player_Play) then return false end
+
+	local fuhuanghou = self.room:findPlayerBySkillName("zhuikong")
+	if fuhuanghou and fuhuanghou:objectName() ~= player:objectName() and self:isEnemy(player, fuhuanghou)
+		and fuhuanghou:isWounded() and fuhuanghou:getHandcardNum() > 1 and not player:isKongcheng() and not self:isWeak(fuhuanghou) then
+		local max_card = self:getMaxCard(fuhuanghou)
+		local player_max_card = self:getMaxCard(player)
+		if (max_card and player_max_card and max_card:getNumber() > player_max_card) or (max_card and max_card:getNumber() >= 12) then return true end
+	end
+
 	if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji") or (self.player:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end
 	local friend_null, friend_snatch_dismantlement = 0, 0
 	if self.player:getPhase() == sgs.Player_Play and self.player:objectName() ~= player:objectName() and self:isFriend(player) then
@@ -1177,10 +1186,14 @@ sgs.ai_chaofeng.machao = 1
 
 function SmartAI:isValuableCard(card, player)
 	player = player or self.player
-	return isCard("Peach", card, player) or (self:isWeak(player) and isCard("Analeptic", card, player))
-				or (player:getPhase() ~= sgs.Player_Play
-					and (isCard("Nullification", card, player)
-						or (isCard("Jink", card, player) and self:getCardsNum("Jink") < 2)))
+	if (isCard("Peach", card, player) and getCardsNum("Peach", player) <= 2)
+		or (self:isWeak(player) and isCard("Analeptic", card, player))
+		or (player:getPhase() ~= sgs.Player_Play
+			and ((isCard("Nullification", card, player) and getCardsNum("Nullification", player) < 2 and player:hasSkills("jizhi|nosjizhi|jilve"))
+				or (isCard("Jink", card, player) and getCardsNum("Jink", player) < 2)))
+		or (player:getPhase() == sgs.Player_Play and isCard("ExNihilo", card, player) and not player:isLocked(card)) then
+		return true
+	end
 end
 
 sgs.ai_skill_cardask["@jizhi-exchange"] = function(self, data)

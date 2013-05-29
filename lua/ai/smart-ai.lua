@@ -1726,7 +1726,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 
 			if move.to_place == sgs.Player_PlaceHand then
 				if (not from or sgs.card_lack[from:objectName()]["Peach"] == 0) and to and not card:hasFlag("visible") and sgs.card_lack[to:objectName()]["Peach"] == 1 then
-					sgs.card_lack[toobjectName()]["Peach"] = 0
+					sgs.card_lack[to:objectName()]["Peach"] = 0
 				end
 			end
 
@@ -3547,7 +3547,16 @@ function SmartAI:getMaxCard(player)
 	local max_card, max_point = nil, 0
 	for _, card in sgs.qlist(cards) do
 		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
-		if player:objectName() == self.player:objectName() or card:hasFlag("visible") or card:hasFlag(flag) then
+		if (player:objectName() == self.player:objectName() and not self:isValuableCard(card)) or card:hasFlag("visible") or card:hasFlag(flag) then
+			local point = card:getNumber()
+			if point > max_point then
+				max_point = point
+				max_card = card
+			end
+		end
+	end
+	if player:objectName() == self.player:objectName() and not max_card then
+		for _, card in sgs.qlist(cards) do
 			local point = card:getNumber()
 			if point > max_point then
 				max_point = point
@@ -3556,9 +3565,18 @@ function SmartAI:getMaxCard(player)
 		end
 	end
 
-	if self:hasSkills("tianyi|dahe|xianzhen") and max_point > 0 then
+	if player:objectName() ~= self.player:objectName() then return max_card end
+
+	if self.player:hasSkills("tianyi|dahe|xianzhen") and max_point > 0 then
 		for _, card in sgs.qlist(cards) do
 			if card:getNumber() == max_point and not isCard("Slash", card, self.player) then
+				return card
+			end
+		end
+	end
+	if self.player:hasSkill("qiaoshui") and max_point > 0 then
+		for _, card in sgs.qlist(cards) do
+			if card:getNumber() == max_point and not card:isNDTrick() then
 				return card
 			end
 		end

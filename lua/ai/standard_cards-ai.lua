@@ -1694,6 +1694,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	local isJixi = card:getSkillName() == "jixi"
 	local isDiscard = (not card:isKindOf("Snatch"))
 	local name = isYinling and "yinling" or card:objectName()
+	local using_2013 = (name == "dismantlement") and self.room:getMode() == "02_1v1" and sgs.GetConfig("1v1/Rule", "Classical") == "2013"
 	if not isYinling and self.player:hasSkill("noswuyan") then return end
 	local players = self.room:getOtherPlayers(self.player)
 	local tricks
@@ -1721,7 +1722,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	players = self:exclude(players, card)
-	if not isYinling then
+	if not isYinling and not using_2013 then
 		for _, player in ipairs(players) do
 			if not player:getJudgingArea():isEmpty() and self:hasTrickEffective(card, player)
 				and ((player:containsTrick("lightning") and self:getFinalRetrial(player) == 2) or #self.enemies == 0) then
@@ -1771,7 +1772,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
-	if not isYinling then
+	if not isYinling and not using_2013 then
 		for _, friend in ipairs(friends) do
 			if (friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")) and not friend:containsTrick("YanxiaoCard")
 				and self:hasTrickEffective(card, friend) then
@@ -1822,7 +1823,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 	table.sort(new_enemies, compare_JudgingArea)
 	local yanxiao_card, yanxiao_target, yanxiao_prior
-	if not isYinling then
+	if not isYinling and not using_2013 then
 		for _, enemy in ipairs(new_enemies) do
 			for _, acard in sgs.qlist(enemy:getJudgingArea()) do
 				if acard:isKindOf("YanxiaoCard") and self:hasTrickEffective(card, enemy) and (not isDiscard or self.player:canDiscard(enemy, acard:getId())) then
@@ -1921,7 +1922,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		if addTarget(target, target:getArmor():getEffectiveId()) then return end
 	end
 
-	if not isYinling and yanxiao_card and yanxiao_target and (not isDiscard or self.player:canDiscard(yanxiao_target, yaoxiao_card:getId())) then
+	if not isYinling and not using_2013
+		and yanxiao_card and yanxiao_target and (not isDiscard or self.player:canDiscard(yanxiao_target, yaoxiao_card:getId())) then
 		if addTarget(yanxiao_target, yanxiao_card:getEffectiveId()) then return end
 	end
 

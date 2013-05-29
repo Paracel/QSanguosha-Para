@@ -1095,18 +1095,27 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool handcard_visible = false;
-    if (!effect.to->isKongcheng()
-        && room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013") {
-        handcard_visible = true;
-        LogMessage log;
-        log.type = "$ViewAllCards";
-        log.from = effect.from;
-        log.to << effect.to;
-        log.card_str = IntList2StringList(effect.to->handCards()).join("+");
-        room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    bool using_2013 = room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013";
+    QString flag = using_2013 ? "he" : "hej";
+
+    int card_id = -1;
+    AI *ai = effect.from->getAI();
+    if (!using_2013 || ai)
+        card_id = room->askForCardChosen(effect.from, effect.to, flag, objectName(), false, Card::MethodDiscard);
+    else {
+        if (!effect.to->getEquips().isEmpty())
+            card_id = room->askForCardChosen(effect.from, effect.to, "he", objectName(), false, Card::MethodDiscard);
+        if (card_id == -1 || (!effect.to->isKongcheng() && effect.to->handCards().contains(card_id))) {
+            LogMessage log;
+            log.type = "$ViewAllCards";
+            log.from = effect.from;
+            log.to << effect.to;
+            log.card_str = IntList2StringList(effect.to->handCards()).join("+");
+            room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+
+            card_id = room->askForCardChosen(effect.from, effect.to, "h", objectName(), true, Card::MethodDiscard);
+        }
     }
-    int card_id = room->askForCardChosen(effect.from, effect.to, "hej", objectName(), handcard_visible, Card::MethodDiscard);
     room->throwCard(card_id, room->getCardPlace(card_id) == Player::PlaceDelayedTrick ? NULL : effect.to, effect.from);
 }
 

@@ -235,9 +235,8 @@ function sgs.getDefense(player)
 				defense = defense + 1
 			end
 		end
-		if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then
-			defense = defense + 4
-		end
+		if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then defense = defense + 4 end
+		if player:hasSkill("yuce") then defense = defense + 2 end
 	end
 
 	if not gameProcess and not sgs.isGoodTarget(player) then defense = defense + 10 end

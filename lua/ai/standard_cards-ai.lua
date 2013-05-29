@@ -143,13 +143,16 @@ function sgs.getDefenseSlash(player)
 		defense = 0
 	end
 
-	local m = sgs.masochism_skill:split("|")
-	for _, masochism in ipairs(m) do
-		if player:hasSkill(masochism) and sgs.isGoodHp(player) then
-			defense = defense + 1.3
+	if not attacker:hasSkill("jueqing") then
+		local m = sgs.masochism_skill:split("|")
+		for _, masochism in ipairs(m) do
+			if player:hasSkill(masochism) and sgs.isGoodHp(player) then
+				defense = defense + 1.3
+			end
 		end
+		if attacker:getWeapon() and player:hasSkill("duodao") and player:canDiscard(player, "he") then defense = defense + 1 end
+		if player:hasSkill("yuce") then defense = defense + 1 end
 	end
-	if attacker:getWeapon() and player:hasSkill("duodao") and player:canDiscard(player, "he") then defense = defense + 1 end
 
 	if not sgs.isGoodTarget(player) then defense = defense + 10 end
 

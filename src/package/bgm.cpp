@@ -242,6 +242,7 @@ public:
             if (cd->getNumber() == card->getNumber())
                 toGainList << id;
         }
+        if (toGainList.isEmpty()) return;
 
         room->fillAG(toGainList, sp_pangtong);
         int id = room->askForAG(sp_pangtong, toGainList, false, objectName());

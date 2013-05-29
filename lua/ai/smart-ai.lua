@@ -1695,8 +1695,9 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		end
 	elseif triggerEvent == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
-		local from = nil -- convert move.from from const Player * to ServerPlayer *
+		local from, to -- convert move.from and move.to from const Player * to ServerPlayer *
 		if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
+		if move.to then to = findPlayerByObjectName(self.room, move.to:objectName()) end
 		local reason = move.reason
 		local from_places = sgs.QList2Table(move.from_places)
 
@@ -1705,10 +1706,10 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			local card_id = move.card_ids:at(i - 1)
 			local card = sgs.Sanguosha:getCard(card_id)
 
-			if move.to_place == sgs.Player_PlaceHand and move.to and player:objectName() == move.to:objectName() then
+			if move.to_place == sgs.Player_PlaceHand and to and player:objectName() == to:objectName() then
 				if card:hasFlag("visible") then
-					if is_a_slash(move.to, card) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
-					if is_a_jink(move.to, card) then sgs.card_lack[move.to:objectName()]["Jink"] = 0 end
+					if isCard("Slash", card, to) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
+					if isCard("Jink", card, to) then sgs.card_lack[move.to:objectName()]["Jink"] = 0 end
 				else
 					sgs.card_lack[move.to:objectName()]["Slash"] = 0
 					sgs.card_lack[move.to:objectName()]["Jink"] = 0
@@ -1845,24 +1846,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			logmsg("ai.html", "<meta charset='utf-8'/>")
 		end
 	end
-end
-
-function is_a_jink(player, card)
-	if card:isKindOf("Jink") then return true end
-	if player:hasSkill("qingguo") and card:isBlack() then return true end
-	if player:hasSkill("longdan") and card:isKindOf("Slash") then return true end
-	if player:hasSkill("longhun") and player:getHp() == 1 and card:getSuit() == sgs.Card_Club then return true end
-	return false
-end
-
-function is_a_slash(player, card)
-	if card:isKindOf("Slash") then return true end
-	if player:hasSkill("wusheng") and card:isRed() then return true end
-	if player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then return true end
-	if player:hasSkill("longdan") and card:isKindOf("Jink") then return true end
-	if player:hasSkill("nosgongqi") and card:isKindOf("EquipCard") then return true end
-	if player:hasSkill("longhun") and player:getHp() == 1 and card:getSuit() == sgs.Card_Diamond then return true end
-	return false
 end
 
 function SmartAI:askForSuit(reason)

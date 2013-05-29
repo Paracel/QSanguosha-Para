@@ -7,6 +7,7 @@
 #include "room.h"
 #include "standard-skillcards.h"
 #include "ai.h"
+#include "settings.h"
 
 class Jianxiong: public MasochismSkill {
 public:
@@ -823,7 +824,8 @@ public:
     Zhiheng(): ViewAsSkill("zhiheng") {
     }
 
-    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+        if (Self->getMark("ZhihengInLatestKOF") > 0 && selected.length() >= 2) return false;
         return !Self->isJilei(to_select);
     }
 
@@ -843,6 +845,18 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@zhiheng";
+    }
+};
+
+class ZhihengForKOF: public GameStartSkill {
+public:
+    ZhihengForKOF(): GameStartSkill("#zhiheng-for-kof") {
+    }
+
+    virtual void onGameStart(ServerPlayer *player) const{
+        Room *room = player->getRoom();
+        if (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013")
+            room->setPlayerMark(player, "ZhihengInLatestKOF", 1);
     }
 };
 
@@ -1518,7 +1532,9 @@ void StandardPackage::addGenerals() {
     // Wu
     General *sunquan = new General(this, "sunquan$", "wu"); // WU 001
     sunquan->addSkill(new Zhiheng);
+    sunquan->addSkill(new ZhihengForKOF);
     sunquan->addSkill(new Jiuyuan);
+    related_skills.insertMulti("zhiheng", "#zhiheng-for-kof");
 
     General *ganning = new General(this, "ganning", "wu"); // WU 002
     ganning->addSkill(new Qixi);

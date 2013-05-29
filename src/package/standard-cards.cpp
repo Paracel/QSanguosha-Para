@@ -1095,7 +1095,7 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool using_2013 = room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013";
+    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013");
     QString flag = using_2013 ? "he" : "hej";
 
     int card_id = -1;

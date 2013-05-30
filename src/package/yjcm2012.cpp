@@ -286,14 +286,19 @@ public:
     }
 };
 
-class Qianxi: public PhaseChangeSkill {
+class Qianxi: public TriggerSkill {
 public:
-    Qianxi(): PhaseChangeSkill("qianxi") {
+    Qianxi(): TriggerSkill("qianxi") {
+        events << EventPhaseStart << FinishJudge;
     }
 
-    virtual bool onPhaseChange(ServerPlayer *target) const{
-        Room *room = target->getRoom();
-        if (target->getPhase() == Player::Start) {
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *target, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging && TriggerSkill::triggerable(target)
+            && target->getPhase() == Player::Start) {
             if (room->askForSkillInvoke(target, objectName())) {
                 room->broadcastSkillInvoke(objectName());
 
@@ -303,35 +308,35 @@ public:
                 judge.who = target;
 
                 room->judge(judge);
-
-                if (!target->isAlive())
-                    return false;
-
-                QString color = judge.card->isRed() ? "red" : "black";
-                target->tag[objectName()] = QVariant::fromValue(color);
-
-                QList<ServerPlayer *> to_choose;
-                foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
-                    if (target->distanceTo(p) == 1)
-                        to_choose << p;
-                }
-                if (to_choose.isEmpty())
-                    return false;
-
-                ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
-                QString pattern = QString(".|%1|.|hand$0").arg(color);
-
-                room->broadcastSkillInvoke(objectName());
-                room->setPlayerFlag(victim, "QianxiTarget");
-                room->addPlayerMark(victim, QString("@qianxi_%1").arg(color));
-                room->setPlayerCardLimitation(victim, "use,response", pattern, false);
-
-                LogMessage log;
-                log.type = "#Qianxi";
-                log.from = victim;
-                log.arg = QString("no_suit_%1").arg(color);
-                room->sendLog(log);
             }
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason != objectName() || !target->isAlive()) return false;
+
+            QString color = judge->card->isRed() ? "red" : "black";
+            target->tag[objectName()] = QVariant::fromValue(color);
+
+            QList<ServerPlayer *> to_choose;
+            foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
+                if (target->distanceTo(p) == 1)
+                    to_choose << p;
+            }
+            if (to_choose.isEmpty())
+                return false;
+
+            ServerPlayer *victim = room->askForPlayerChosen(target, to_choose, objectName());
+            QString pattern = QString(".|%1|.|hand$0").arg(color);
+
+            room->broadcastSkillInvoke(objectName());
+            room->setPlayerFlag(victim, "QianxiTarget");
+            room->addPlayerMark(victim, QString("@qianxi_%1").arg(color));
+            room->setPlayerCardLimitation(victim, "use,response", pattern, false);
+
+            LogMessage log;
+            log.type = "#Qianxi";
+            log.from = victim;
+            log.arg = QString("no_suit_%1").arg(color);
+            room->sendLog(log);
         }
         return false;
     }

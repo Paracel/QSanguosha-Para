@@ -1897,8 +1897,14 @@ void Room::prepareForStart() {
         if (qrand() % 2 == 0)
             m_players.swap(0, 1);
 
-        m_players.at(0)->setRole("lord");
-        m_players.at(1)->setRole("renegade");
+        QString order = askForOrder(m_players.at(0));
+        if (order == "warm") {
+            m_players.at(0)->setRole("lord");
+            m_players.at(1)->setRole("renegade");
+        } else {
+            m_players.at(0)->setRole("renegade");
+            m_players.at(1)->setRole("lord");
+        }
 
         for (int i = 0; i < 2; i++)
             broadcastProperty(m_players.at(i), "role");

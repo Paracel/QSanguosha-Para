@@ -11,6 +11,14 @@ return {
 					-- [[身份局：摸牌阶段，你可以少摸一张牌并选择一名手牌数大于你的手牌数的其他角色：若如此做，你获得该角色一张手牌。]]
 	["koftuxi-invoke"] = "你可以发动“突袭”<br/> <b>操作提示</b>: 选择一名其他角色→点击确定<br/>",
 
+	["kof_huangzhong"] = "黄忠1v1",
+	["&kof_huangzhong"] = "黄忠",
+	["kofliegong"] = "烈弓",
+	[":kofliegong"] = "每当你于出牌阶段内指定【杀】的目标后，若目标角色的手牌数大于或等于你的体力值，你可以令此【杀】不能被【闪】响应。",
+
+	["kof_jiangwei"] = "姜维1v1",
+	["&kof_jiangwei"] = "姜维",
+
 	["kof_sunshangxiang"] = "孙尚香1v1",
 	["&kof_sunshangxiang"] = "孙尚香",
 	["yinli"] = "姻礼",

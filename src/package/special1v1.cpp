@@ -72,6 +72,37 @@ public:
     }
 };
 
+
+class KOFLiegong: public TriggerSkill {
+public:
+    KOFLiegong(): TriggerSkill("kofliegong") {
+        events << TargetConfirmed;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
+            return false;
+        QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+        int index = 0;
+        foreach (ServerPlayer *p, use.to) {
+            int handcardnum = p->getHandcardNum();
+            if (player->getHp() <= handcardnum && player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
+                room->broadcastSkillInvoke("liegong");
+
+                LogMessage log;
+                log.type = "#NoJink";
+                log.from = p;
+                room->sendLog(log);
+                jink_list.replace(index, QVariant(0));
+            }
+            index++;
+        }
+        player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+        return false;
+    }
+};
+
 class KOFXiaoji: public TriggerSkill {
 public:
     KOFXiaoji(): TriggerSkill("kofxiaoji") {
@@ -316,6 +347,12 @@ Special1v1Package::Special1v1Package()
     kof_zhangliao->addSkill(new KOFTuxi);
     kof_zhangliao->addSkill(new KOFTuxiAct);
     related_skills.insertMulti("koftuxi", "#koftuxi");
+
+    General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
+    kof_huangzhong->addSkill(new KOFLiegong);
+
+    General *kof_jiangwei = new General(this, "kof_jiangwei", "shu");
+    kof_jiangwei->addSkill("tiaoxin");
 
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);

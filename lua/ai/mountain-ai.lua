@@ -323,7 +323,8 @@ sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
 	end
 	if not good_enemy then return false end
 	if from:hasSkill("tieji")
-		or (from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play and (to:getHandcardNum() <= from:getAttackRange() or to:getHandcardNum() >= from:getHp())) then
+		or (from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play and (to:getHandcardNum() <= from:getAttackRange() or to:getHandcardNum() >= from:getHp()))
+		or (from:hasSkill("kofliegong") and from:getPhase() == sgs.Player_Play and to:getHandcardNum() >= from:getHp()) then
 		return false
 	end
 	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
@@ -1053,7 +1054,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		for _, askill in ipairs(("hongyuan|drzhiheng|fangquan|mizhao|quhu|fanjian|nosfanjian|gongxin|duanliang|guose|" ..
-								"baobian|ganlu|tiaoxin|zhaolie|moukui|liegong|mengjin|tieji|wushuang|drwushuang|" ..
+								"baobian|ganlu|tiaoxin|zhaolie|moukui|liegong|mengjin|tieji|kofliegong|wushuang|drwushuang|" ..
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|xuanhuo|nosxuanhuo|qiangxi|huangen" ..
 								"nosjujian|lieren|pojun|qixi|yinling|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao" ..
 								"neoluoyi|luoyi|wenjiu|jie|jiangchi|wusheng|longdan|jueqing|xueji|yinghun|" ..

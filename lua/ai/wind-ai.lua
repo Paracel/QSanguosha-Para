@@ -213,6 +213,10 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 			and (player:getHandcardNum() >= slasher:getHp() or player:getHandcardNum() <= slasher:getAttackRange()) then
 			return nil
 		end
+		if slasher:hasSkill("kofliegong") and slasher:getPhase() == sgs.Player_Play
+			and self:isEnemy(player, slasher) and player:getHandcardNum() >= slasher:getHp() then
+			return nil
+		end
 		if not self:hasSuit("spade", true, player) and player:getHandcardNum() < 3 then return nil end
 		if not (getKnownCard(player, "Jink", true) > 0 or getCardsNum("Jink", player) >= 1
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
@@ -268,6 +272,7 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 	if to:hasFlag("QianxiTarget") and (not self:hasEightDiagramEffect(to) or self.player:hasWeapon("qinggang_sword")) then return false end
 	local hcard = to:getHandcardNum()
 	if from:hasSkill("liegong") and (hcard >= from:getHp() or hcard <= from:getAttackRange()) then return false end
+	if from:hasSkill("kofliegong") and hcard >= from:getHp() then return false end
 	if from:getRole() == "rebel" and to:isLord() then
 		local other_rebel
 		for _, player in sgs.qlist(self.room:getOtherPlayers(from)) do

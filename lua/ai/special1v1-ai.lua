@@ -31,6 +31,12 @@ end
 
 sgs.ai_chaofeng.kof_zhangliao = 4
 
+sgs.ai_skill_invoke.kofliegong = sgs.ai_skill_invoke.liegong
+
+function sgs.ai_cardneed.kofliegong(to, card)
+	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
+end
+
 sgs.ai_skill_invoke.yinli = function(self)
 	return not self:needKongcheng(self.player, true)
 end

@@ -139,7 +139,8 @@ function sgs.getDefenseSlash(player)
 	end
 
 	local hcard = player:getHandcardNum()
-	if attacker:hasSkill("liegong") and attacker:canSlashWithoutCrossbow() and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange()) then
+	if attacker:canSlashWithoutCrossbow() and (attacker:hasSkill("liegong") and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange())
+												or (attacker:hasSkill("kofliegong") and hcard >= attacker:getHp())) then
 		defense = 0
 	end
 
@@ -980,8 +981,9 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		if self:isWeak(target) or damage.damage > 1 or self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
 		if target:getArmor() and self:evaluateArmor(target:getArmor(), target) > 3 then return true end
 		local num = target:getHandcardNum()
-		if self.player:hasSkill("tieji") or (self.player:hasSkill("liegong")
-			and (num >= self.player:getHp() or num <= self.player:getAttackRange())) then return false end
+		if self.player:hasSkill("tieji")
+			or (self.player:hasSkill("liegong") and (num >= self.player:getHp() or num <= self.player:getAttackRange()))
+			or (self.player:hasSkill("kofliegong") and num >= self.player:getHp()) then return false end
 		if target:hasSkills("tuntian+zaoxian") then return false end
 		if self:hasSkills(sgs.need_kongcheng, target) then return false end
 		if target:getCards("he"):length() < 4 and target:getCards("he"):length() > 1 then return true end
@@ -2696,7 +2698,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 					hit_num = hit_num + 1
 					if self:getCardsNum("Jink", enemy) < 1
 						or enemy:isKongcheng() 
-						or self.player:hasSkills("tieji|liegong|wushuang|dahe|qianxi")
+						or self.player:hasSkills("tieji|liegong|kofliegong|wushuang|dahe|qianxi")
 						or self.player:hasSkill("roulin") and enemy:isFemale()
 						or (self.player:hasWeapon("axe") or self:getCardsNum("Axe") > 0) and self.player:getCards("he"):length() > 4 then
 						return analeptic

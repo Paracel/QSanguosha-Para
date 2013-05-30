@@ -37,7 +37,7 @@ void RoomThread1v1::run() {
                        << /*kof*/"xuchu" << "guojia" << /*kof*/"zhenji" << /*kof*/"xiahouyuan"
                        << "caoren" << "dianwei" << /*kof*/"guanyu" << "zhangfei"
                        << "zhugeliang" << "zhaoyun" << /*kof*/"machao" << /*kof*/"huangyueying"
-                       << /*kof*/"huangzhong" << /*kof*/"jiangwei" << /*kof*/"menghuo" << /*kof*/"zhurong"
+                       << "kof_huangzhong" << "kof_jiangwei" << /*kof*/"menghuo" << /*kof*/"zhurong"
                        << "sunquan" << "ganning" << "huanggai" << "zhouyu"
                        << "luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
                        << "lvbu" << /*kof*/"diaochan" << "yanliangwenchou" << "hejin";

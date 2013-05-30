@@ -27,13 +27,21 @@ void RoomThread1v1::run() {
         const Package *windpack = Sanguosha->findChild<const Package *>("wind");
 
         QStringList candidates;
-        foreach (const General *general, stdpack->findChildren<const General *>())
-            candidates << general->objectName();
-        foreach (const General *general, windpack->findChildren<const General *>())
-            candidates << general->objectName();
-        if (new_rule)
-            candidates << "dianwei" << "xuhuang" << "menghuo" << "zhurong"
-                       << "jiangwei" << "sunjian" << "pangde" << "yanliangwenchou";
+        if (!new_rule) {
+            foreach (const General *general, stdpack->findChildren<const General *>())
+                candidates << general->objectName();
+            foreach (const General *general, windpack->findChildren<const General *>())
+                candidates << general->objectName();
+        } else {
+            candidates << "caocao" << "simayi" << "xiahoudun" << "kof_zhangliao"
+                       << /*kof*/"xuchu" << "guojia" << /*kof*/"zhenji" << /*kof*/"xiahouyuan"
+                       << "caoren" << "dianwei" << /*kof*/"guanyu" << "zhangfei"
+                       << "zhugeliang" << "zhaoyun" << /*kof*/"machao" << /*kof*/"huangyueying"
+                       << /*kof*/"huangzhong" << /*kof*/"jiangwei" << /*kof*/"menghuo" << /*kof*/"zhurong"
+                       << "sunquan" << "ganning" << "huanggai" << "zhouyu"
+                       << "luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
+                       << "lvbu" << /*kof*/"diaochan" << "yanliangwenchou" << "hejin";
+        }
         qShuffle(candidates);
         general_names = candidates.mid(0, total_num);
     } else {

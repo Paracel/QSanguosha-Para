@@ -27,7 +27,7 @@ GameRule::GameRule(QObject *)
            << SlashHit << SlashEffected << SlashProceed
            << ConfirmDamage << DamageDone << DamageComplete
            << StartJudge << FinishRetrial << FinishJudge
-           << ChoiceMade;
+           << TurnBroken << ChoiceMade;
 
     skill_mark["niepan"] = "@nirvana";
     skill_mark["yeyan"] = "@flame";
@@ -232,29 +232,39 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 }
                 card_use = data.value<CardUseStruct>();
 
-                if (card_use.card->isKindOf("Slash") || card_use.card->isNDTrick()) {
-                    foreach (ServerPlayer *p, card_use.to) {
-                        QStringList card_list = p->tag["CurrentCardUse"].toStringList();
-                        card_list << card_use.card->toString();
-                        p->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
+                try {
+                    if (card_use.card->isKindOf("Slash") || card_use.card->isNDTrick()) {
+                        foreach (ServerPlayer *p, card_use.to) {
+                            QStringList card_list = p->tag["CurrentCardUse"].toStringList();
+                            card_list << card_use.card->toString();
+                            p->tag["CurrentCardUse"] = QVariant::fromValue(card_list);
+                        }
                     }
-                }
 
-                QVariantList jink_list_backup;
-                if (card_use.card->isKindOf("Slash")) {
-                    jink_list_backup = card_use.from->tag["Jink_" + card_use.card->toString()].toList();
-                    QVariantList jink_list;
-                    for (int i = 0; i < card_use.to.length(); i++)
-                        jink_list.append(QVariant(1));
-                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list);
+                    QVariantList jink_list_backup;
+                    if (card_use.card->isKindOf("Slash")) {
+                        jink_list_backup = card_use.from->tag["Jink_" + card_use.card->toString()].toList();
+                        QVariantList jink_list;
+                        for (int i = 0; i < card_use.to.length(); i++)
+                            jink_list.append(QVariant(1));
+                        card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list);
+                    }
+                    if (card_use.from && !card_use.to.isEmpty()) {
+                        foreach (ServerPlayer *p, room->getAllPlayers())
+                            thread->trigger(TargetConfirmed, room, p, data);
+                    }
+                    card_use.card->use(room, card_use.from, card_use.to);
+                    if (!jink_list_backup.isEmpty())
+                        card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list_backup);
                 }
-                if (card_use.from && !card_use.to.isEmpty()) {
-                    foreach (ServerPlayer *p, room->getAllPlayers())
-                        thread->trigger(TargetConfirmed, room, p, data);
+                catch (TriggerEvent triggerEvent) {
+                    if (triggerEvent == TurnBroken || triggerEvent == StageChange) {
+                        foreach (ServerPlayer *p, card_use.to)
+                            p->tag.remove("CurrentCardUse");
+                        card_use.from->tag.remove("Jink_" + card_use.card->toString());
+                    }
+                    throw triggerEvent;
                 }
-                card_use.card->use(room, card_use.from, card_use.to);
-                if (!jink_list_backup.isEmpty())
-                    card_use.from->tag["Jink_" + card_use.card->toString()] = QVariant::fromValue(jink_list_backup);
             }
 
             break;
@@ -589,6 +599,13 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             }
 
             break;
+        }
+    case TurnBroken: {
+            if (room->getMode() == "02_1v1") {
+                ServerPlayer *next = player->getNext();
+                if (next->isDead())
+                    changeGeneral1v1(next);
+            }
         }
     case ChoiceMade: {
             foreach (QString flag, player->getFlagList()) {

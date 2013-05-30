@@ -819,9 +819,7 @@ ServerPlayer *ServerPlayer::getNextAlive(int n) const{
     ServerPlayer *next = const_cast<ServerPlayer *>(this);
     if (!hasAlive) return next;
     for (int i = 0; i < n; i++) {
-        next = next->next;
-        while (next->isDead())
-            next = next->next;
+        do next = next->next; while (next->isDead());
     }
     return next;
 }

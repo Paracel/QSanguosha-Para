@@ -318,6 +318,7 @@ void RoomThread::run3v3(QList<ServerPlayer *> &first, QList<ServerPlayer *> &sec
     catch (TriggerEvent triggerEvent) {
         if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
+            trigger(TurnBroken, room, player);
             if (player->getPhase() != Player::NotActive) {
                 game_rule->trigger(EventPhaseEnd, room, player, QVariant());
                 player->changePhase(player->getPhase(), Player::NotActive);
@@ -462,6 +463,7 @@ void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> l
             actionHulaoPass(shenlvbu, league, game_rule, 2);
         } else if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
+            trigger(TurnBroken, room, player);
             ServerPlayer *next = findHulaoPassNext(shenlvbu, league, stage);
             if (player->getPhase() != Player::NotActive) {
                 game_rule->trigger(EventPhaseEnd, room, player, QVariant());
@@ -489,6 +491,7 @@ void RoomThread::actionNormal(GameRule *game_rule) {
     catch (TriggerEvent triggerEvent) {
         if (triggerEvent == TurnBroken) {
             ServerPlayer *player = room->getCurrent();
+            trigger(TurnBroken, room, player);
             ServerPlayer *next = player->getNextAlive();
             if (player->getPhase() != Player::NotActive) {
                 game_rule->trigger(EventPhaseEnd, room, player, QVariant());

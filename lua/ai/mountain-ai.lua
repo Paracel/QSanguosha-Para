@@ -1112,6 +1112,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		for _, askill in ipairs(("noswuyan|wuyan|weimu|guzheng|luoying|xiliang|kanpo|liuli|beige|qingguo|mingzhe|xiangle|feiying|longdan"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
+		if str:matchOne("kofqingguo") and not self.player:getEquips():isEmpty() then return "kofqingguo" end
 
 		for _, askill in ipairs(("yiji|fankui|jieming|chengxiang|neoganglie|vsganglie|ganglie|enyuan|fangzhu|nosenyuan|langgu"):split("|")) do
 			if str:matchOne(askill) then return askill end

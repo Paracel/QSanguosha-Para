@@ -72,6 +72,30 @@ public:
     }
 };
 
+class KOFQingguo: public OneCardViewAsSkill {
+public:
+    KOFQingguo(): OneCardViewAsSkill("kofqingguo") {
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        Jink *jink = new Jink(originalCard->getSuit(), originalCard->getNumber());
+        jink->setSkillName(objectName());
+        jink->addSubcard(originalCard->getId());
+        return jink;
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
+        return pattern == "jink" && !player->getEquips().isEmpty();
+    }
+};
 
 class KOFLiegong: public TriggerSkill {
 public:
@@ -353,6 +377,10 @@ Special1v1Package::Special1v1Package()
     kof_zhangliao->addSkill(new KOFTuxi);
     kof_zhangliao->addSkill(new KOFTuxiAct);
     related_skills.insertMulti("koftuxi", "#koftuxi");
+
+    General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3);
+    kof_zhenji->addSkill(new KOFQingguo);
+    kof_zhenji->addSkill("luoshen");
 
     General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
     kof_huangzhong->addSkill(new KOFLiegong);

@@ -3860,6 +3860,8 @@ function getCardsNum(class_name, player)
 			return slashjink+(player:getHandcardNum() - shownum) * 0.72
 		elseif player:hasSkill("longhun") then
 			return clubcard + num + (player:getHandcardNum() - shownum) * 0.65
+		elseif player:hasSkill("kofqingguo") then
+			return num + (player:getHandcardNum() - shownum) * 0.6 + player:getEquips():length()
 		else
 			return num + (player:getHandcardNum() - shownum) * 0.6
 		end

@@ -31,6 +31,25 @@ end
 
 sgs.ai_chaofeng.kof_zhangliao = 4
 
+sgs.ai_view_as.kofqingguo = function(card, player, card_place)
+	local suit = card:getSuitString()
+	local number = card:getNumberString()
+	local card_id = card:getEffectiveId()
+	if card_place == sgs.Player_PlaceEquip then
+		return ("jink:kofqingguo[%s:%s]=%d"):format(suit, number, card_id)
+	end
+end
+
+function sgs.ai_cardneed.kofqingguo(to, card)
+	if card:isKindOf("Weapon") then return not to:getWeapon()
+	elseif card:isKindOf("Armor") then return not to:getArmor()
+	elseif card:isKindOf("OffensiveHorse") then return not to:getOffensiveHorse()
+	elseif card:isKindOf("DefensiveHorse") then return not to:getDefensiveHorse()
+	end
+	return false
+end
+
+
 sgs.ai_skill_invoke.kofliegong = sgs.ai_skill_invoke.liegong
 
 function sgs.ai_cardneed.kofliegong(to, card)

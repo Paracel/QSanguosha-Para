@@ -875,7 +875,9 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
     AI *ai = player->getAI();
     if (ai) {
         invoked = ai->askForSkillInvoke(skill_name, data);
-        if (invoked) thread->delay();
+        const Skill *skill = Sanguosha->getSkill(skill_name);
+        if (invoked && !(skill && skill->getFrequency() == Skill::Frequent))
+            thread->delay();
     } else {
         Json::Value skillCommand;
         if (data.type() == QVariant::String)

@@ -66,7 +66,7 @@ void Settings::init() {
                        << "nostal_standard" << "nostal_general" << "nostal_yjcm" << "nostal_yjcm2012"
                        << "test" << "GreenHand" << "dragon"
                        << "sp_cards" << "ling" << "GreenHandCard"
-                       << "New3v3Card" << "New3v3_2013Card";
+                       << "New3v3Card" << "New3v3_2013Card" << "New1v1Card";
     }
     setValue("BanPackages", banpackagelist);
 
@@ -199,7 +199,7 @@ void Settings::init() {
 
     QStringList forbid_packages = value("ForbidPackages").toStringList();
     if (forbid_packages.isEmpty()) {
-        forbid_packages << "New3v3Card" << "New3v3_2013Card" << "test";
+        forbid_packages << "New3v3Card" << "New3v3_2013Card" << "New1v1Card" << "test";
 
         setValue("ForbidPackages", forbid_packages);
     }

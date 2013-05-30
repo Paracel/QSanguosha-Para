@@ -840,6 +840,12 @@ QList<int> Engine::getRandomCards() const{
         else if (card->getPackage() == "New3v3_2013Card" && using_2013_3v3)
             list << card->getId();
 
+        if (Config.GameMode == "02_1v1" && !Config.value("1v1/UsingCardExtension", false).toBool()) {
+            if (card->getPackage() == "New1v1Card")
+                list << card->getId();
+            continue;
+        }
+
         if (Config.GameMode == "06_3v3" && !Config.value("3v3/UsingExtension", false).toBool()
             && card->getPackage() != "standard_cards" && card->getPackage() != "standard_ex_cards")
             continue;

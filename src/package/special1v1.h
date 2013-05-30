@@ -32,11 +32,11 @@ public:
     Special1v1Package();
 };
 
-/*class New1v1CardPackage: public Package {
+class New1v1CardPackage: public Package {
     Q_OBJECT
 
 public:
-    New3v3CardPackage();
-};*/
+    New1v1CardPackage();
+};
 
 #endif

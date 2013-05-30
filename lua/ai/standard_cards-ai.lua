@@ -729,6 +729,18 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 		end
 	else
 		if self:hasHeavySlashDamage(target, slash) then return end
+
+		local current = self.room:getCurrent()
+		if current and current:hasSkill("juece") and self.player:getHp() > 0 then
+			local use = false
+			for _, card in ipairs(self:getCards("Jink")) do
+				if not self.player:isLastHandCard(card, true) then
+					use = true
+					break
+				end
+			end
+			if not use then return "." end
+		end
 		if self.player:getHandcardNum() == 1 and self:needKongcheng() then return end
 		if not self:hasLoseHandcardEffective() and not self.player:isKongcheng() then return end
 		if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
@@ -1334,6 +1346,19 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 
 	if not attacker:hasSkill("jueqing") and self.player:hasSkill("jianxiong") and self:getAoeValue(aoe) > -10
 		and (self.player:getHp() > 1 or self:getAllPeachNum() > 0) and not self.player:containsTrick("indulgence") then return "." end
+
+	local current = self.room:getCurrent()
+	if current and current:hasSkill("juece") and self.player:getHp() > 0 then
+		local classname = (name == "savage_assault" and "Slash" or "Jink")
+		local use = false
+		for _, card in ipairs(self:getCards(classname)) do
+			if not self.player:isLastHandCard(card, true) then
+				use = true
+				break
+			end
+		end
+		if not use then return "." end
+	end
 end
 
 sgs.ai_skill_cardask["savage-assault-slash"] = function(self, data, pattern, target)

@@ -512,13 +512,75 @@ end
 
 sgs.ai_card_intention.ExtraCollateralCard = 0
 
+local function getFenchengValue(self, player)
+	if not self:damageIsEffective(player, sgs.DamageStruct_Fire, self.player) then return 0 end
+	if not player:canDiscard(player, "he") then return self:isWeak(player) and 1.5 or 1 end
+	if self.player:hasSkill("juece") and self:isEnemy(player)
+		and player:getEquips():isEmpty() and player:getHandcardNum() == 1 and not self:needKongcheng(player)
+		and not (player:isChained() or not self:isGoodChainTarget(player, player)) then return self:isWeak(player) and 1.5 or 1 end
+	if self:isGoodChainTarget(player, player) or self:getDamagedEffects(player, self.player) or self:needToLoseHp(player, self.player) then return -0.1 end
+
+	local num = player:getEquips():length() - player:getHandcardNum()
+	if num < 0 then
+		if self:needToThrowArmor(player) then num = 1 else num = 0 end
+	elseif num == 0 then
+		num = 1
+	end
+	local equip_table = {}
+	local needToTA = self:needToThrowArmor(player)
+	if needToTA then table.insert(equip_table, 1) end
+	if player:getOffensiveHorse() then table.insert(equip_table, 3) end
+	if player:getWeapon() then table.insert(equip_table, 0) end
+	if player:getDefensiveHorse() then table.insert(equip_table, 2) end
+	if player:getArmor() and not needToTA then table.insert(equip_table, 1) end
+
+	local value = 0
+	for i = 1, num, 1 do
+		local index = equip_table[i]
+		if index == 0 then value = value + 0.4
+		elseif index == 1 then
+			value = value + (needToTA and -0.5 or 0.8)
+		elseif index == 2 then value = value + 0.7
+		elseif index == 3 then value = value + 0.3 end
+	end
+	if player:hasSkills("kofxiaoji|xiaoji") then value = value - 0.8 * num end
+	if player:hasSkills("xuanfeng|nosxuanfeng") and num > 0 then value = value - 0.8 end
+
+	local handcard = player:getHandcardNum() - num
+	value = value + 0.1 * handcard
+	if self:needKongcheng(player) or self:getLeastHandcardNum(player) > num then value = value - 0.15
+	elseif num == 0 then value = value + 0.1 end
+	return value
+end
+
+fencheng_skill = {}
+fencheng_skill.name = "fencheng"
+table.insert(sgs.ai_skills, fencheng_skill)
+fencheng_skill.getTurnUseCard = function(self)
+	if self.player:getMark("@burn") <= 0 or sgs.turncount <= 1 then return end
+	local lord = self.room:getLord()
+	if (self.role == "loyalist" or self.role == "renegade") and (sgs.isLordInDanger() or (lord and self:isWeak(lord))) then return end
+	local value = 0
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if self:isFriend(player) then value = value - getFenchengValue(self, player)
+		elseif self:isEnemy(player) then value = value + getFenchengValue(self, player) end
+	end
+	if #self.friends_noself >= #self.enemies and value > 0 then return sgs.Card_Parse("@FenchengCard=.") end
+	local ratio = value / (#self.enemies - #self.friends_noself)
+	if ratio >= 0.4 then return sgs.Card_Parse("@FenchengCard=.") end
+end
+
+sgs.ai_skill_use_func.FenchengCard = function(card, use, self)
+	use.card = card
+end
+
 sgs.ai_skill_discard.fencheng = function(self, discard_num, min_num, optional, include_equip)
 	if discard_num == 1 and self:needToThrowArmor() then return { self.player:getArmor():getEffectiveId() } end
 	local liru = self.room:getCurrent()
 	local juece_effect
 	if liru and liru:isAlive() and liru:hasSkill("juece") then juece_effect = true end
 	if not self:damageIsEffective(self.player, sgs.DamageStruct_Fire, liru) then return {} end
-	if juece_effect and self.player:getEquips():isEmpty() and self.player:getHandcardNum() == 1 and not self:needKongcheng()
+	if juece_effect and self:isEnemy(liru) and self.player:getEquips():isEmpty() and self.player:getHandcardNum() == 1 and not self:needKongcheng()
 		and not (self.player:isChained() or not self:isGoodChainTarget(self.player)) then return {} end
 	if self:isGoodChainTarget(self.player) or self:getDamagedEffects(self.player, liru) or self:needToLoseHp(self.player, liru) then return {} end
 	local to_discard = self:askForDiscard("dummyreason", discard_num, min_num, false, include_equip)

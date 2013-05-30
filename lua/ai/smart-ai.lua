@@ -1556,7 +1556,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				local xunyu = self.room:findPlayerBySkillName("quhu")
 				intention = 80
 				from = xunyu
-			elseif from and from:hasFlag("ShenfenUsing") then
+			elseif from and (from:hasFlag("ShenfenUsing") or from:hasFlag("FenchengUsing")) then
 				intention = 0
 			else
 				intention = 100

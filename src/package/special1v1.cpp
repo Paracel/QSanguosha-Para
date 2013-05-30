@@ -290,16 +290,22 @@ public:
             player->setMark(objectName(), player->getCardCount(true));
         } else {
             int n = player->getMark(objectName());
-            DeathStruct death = data.value<DeathStruct>();
+            bool normal = false;
             ServerPlayer *killer = NULL;
             if (room->getMode() == "02_1v1")
                 killer = room->getOtherPlayers(player).first();
             else {
-                if (death.damage)
-                    killer = death.damage->from;
+                normal = true;
+                QList<ServerPlayer *> targets;
+                foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                    if (player->canDiscard(p, "he"))
+                        targets << p;
+                }
+                if (!targets.isEmpty())
+                    killer = room->askForPlayerChosen(player, targets, objectName(), "yanhuo-invoke", true, true);
             }
             if (killer && killer->isAlive() && player->canDiscard(killer, "he")
-                && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)killer))) {
+                && (normal || room->askForSkillInvoke(player, objectName()))) {
                 for (int i = 0; i < n; i++) {
                     if (player->canDiscard(killer, "he")) {
                         int card_id = room->askForCardChosen(player, killer, "he", objectName(), false, Card::MethodDiscard);

@@ -179,13 +179,18 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == sunshangxiang || move.from == NULL)
             return false;
-        if (move.from->getPhase() != Player::NotActive && move.to_place == Player::DiscardPile
-            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD
-                || move.reason.m_reason == CardMoveReason::S_REASON_CHANGE_EQUIP)) {
+        if (move.from->getPhase() != Player::NotActive && move.to_place == Player::DiscardPile) {
+            CardMoveReason reason = move.reason;
+            int basic_reason = (reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON);
+            if (basic_reason == CardMoveReason::S_REASON_USE || basic_reason == CardMoveReason::S_REASON_RESPONSE
+                || (basic_reason == CardMoveReason::S_REASON_RECAST && reason.m_skillName != "weapon_recast"))
+                return false;
             QList<int> card_ids;
             int i = 0;
             foreach (int card_id, move.card_ids) {
-                if (Sanguosha->getCard(card_id)->getTypeId() == Card::TypeEquip)
+                if (Sanguosha->getCard(card_id)->getTypeId() == Card::TypeEquip
+                    && room->getCardOwner(card_id) == move.from
+                    && (room->getCardPlace(card_id) == Player::PlaceHand || room->getCardPlace(card_id) == Player::PlaceEquip))
                     card_ids << card_id;
                 i++;
             }

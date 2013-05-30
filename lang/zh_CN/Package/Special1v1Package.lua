@@ -27,6 +27,7 @@ return {
 	["kof_sunshangxiang"] = "孙尚香1v1",
 	["&kof_sunshangxiang"] = "孙尚香",
 	["yinli"] = "姻礼",
+	[":yinli"] = "其他角色的回合内，该角色拥有的装备牌以未经转化的方式置入弃牌堆时，你可以获得之。",
 	["kofxiaoji"] = "枭姬",
 	[":kofxiaoji"] = "每当你失去一张装备区的装备牌后，你可以选择一项：摸两张牌，或回复1点体力。",
 	["kofxiaoji:draw"] = "摸两张牌",

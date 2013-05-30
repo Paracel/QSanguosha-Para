@@ -1348,7 +1348,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 		and (self.player:getHp() > 1 or self:getAllPeachNum() > 0) and not self.player:containsTrick("indulgence") then return "." end
 
 	local current = self.room:getCurrent()
-	if current and current:hasSkill("juece") and self.player:getHp() > 0 then
+	if current and current:hasSkill("juece") and self:isEnemy(current) and self.player:getHp() > 0 then
 		local classname = (name == "savage_assault" and "Slash" or "Jink")
 		local use = false
 		for _, card in ipairs(self:getCards(classname)) do

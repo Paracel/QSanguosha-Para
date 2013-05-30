@@ -3941,18 +3941,20 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
         Json::Value arg(Json::arrayValue);
         arg[0] = moveId;
         for (int i = 0; i < cards_moves.size(); i++) {
-            cards_moves[i].open = (forceVisible || cards_moves[i].isRelevant(player)
-                                   // forceVisible will override cards to be visible
-                                   || cards_moves[i].to_place == Player::PlaceEquip
-                                   || cards_moves[i].from_place == Player::PlaceEquip
-                                   || cards_moves[i].to_place == Player::PlaceDelayedTrick
-                                   || cards_moves[i].from_place == Player::PlaceDelayedTrick
-                                   // only cards moved to hand/special can be invisible
-                                   || cards_moves[i].from_place == Player::DiscardPile
-                                   || cards_moves[i].to_place == Player::DiscardPile)
-                                   // any card from/to discard pile should be visible
-                                   || player->hasFlag("Global_GongxinOperator");
-                                   // the player put someone's cards to the drawpile
+            cards_moves[i].open = forceVisible || cards_moves[i].isRelevant(player)
+                                  // forceVisible will override cards to be visible
+                                  || cards_moves[i].to_place == Player::PlaceEquip
+                                  || cards_moves[i].from_place == Player::PlaceEquip
+                                  || cards_moves[i].to_place == Player::PlaceDelayedTrick
+                                  || cards_moves[i].from_place == Player::PlaceDelayedTrick
+                                  // only cards moved to hand/special can be invisible
+                                  || cards_moves[i].from_place == Player::DiscardPile
+                                  || cards_moves[i].to_place == Player::DiscardPile
+                                  // any card from/to discard pile should be visible
+                                  || cards_moves[i].from_place == Player::PlaceTable
+                                  // any card from/to place table should be visible
+                                  || player->hasFlag("Global_GongxinOperator");
+                                  // the player put someone's cards to the drawpile
             arg[i + 1] = cards_moves[i].toJsonValue();
         }
         doNotify(player, isLostPhase ? S_COMMAND_LOSE_CARD : S_COMMAND_GET_CARD, arg);

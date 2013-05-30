@@ -793,7 +793,7 @@ public:
                     QList<CardsMoveStruct> moves;
                     moves.append(move1);
                     moves.append(move2);
-                    room->moveCardsAtomic(moves, true);
+                    room->moveCardsAtomic(moves, false);
                 } else {
                     CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, yueying->objectName(), "jizhi", QString());
                     room->throwCard(card, reason, NULL);

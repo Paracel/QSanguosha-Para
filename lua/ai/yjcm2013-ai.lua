@@ -512,6 +512,42 @@ end
 
 sgs.ai_card_intention.ExtraCollateralCard = 0
 
+sgs.ai_skill_discard.fencheng = function(self, discard_num, min_num, optional, include_equip)
+	if discard_num == 1 and self:needToThrowArmor() then return { self.player:getArmor():getEffectiveId() } end
+	local liru = self.room:getCurrent()
+	local juece_effect
+	if liru and liru:isAlive() and liru:hasSkill("juece") then juece_effect = true end
+	if not self:damageIsEffective(self.player, sgs.DamageStruct_Fire, liru) then return {} end
+	if juece_effect and self.player:getEquips():isEmpty() and self.player:getHandcardNum() == 1 and not self:needKongcheng()
+		and not (self.player:isChained() or not self:isGoodChainTarget(self.player)) then return {} end
+	if self:isGoodChainTarget(self.player) or self:getDamagedEffects(self.player, liru) or self:needToLoseHp(self.player, liru) then return {} end
+	local to_discard = self:askForDiscard("dummyreason", discard_num, min_num, false, include_equip)
+	if #to_discard < discard_num then return {} end
+	if not juece_effect then return to_discard
+	else
+		if self.player:isKongcheng() then return to_discard end
+		for _, id in sgs.qlist(self.player:handCards()) do
+			if not table.contains(to_discard, id) then return to_discard end
+		end
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		self:sortByKeepValue(cards, true)
+		if self:needToThrowArmor() then table.insert(to_discard, self.player:getArmor():getEffectiveId())
+		else
+			if self.player:getOffensiveHorse() then table.insert(to_discard, self.player:getOffensiveHorse():getEffectiveId())
+			elseif self.player:getWeapon() then table.insert(to_discard, self.player:getWeapon():getEffectiveId())
+			elseif self.player:getDefensiveHorse() then
+				if self:isWeak() then table.insert(to_discard, self.player:getDefensiveHorse():getEffectiveId())
+				else return {} end
+			elseif self.player:getArmor() then
+				if self:isWeak() then table.insert(to_discard, self.player:getArmor():getEffectiveId())
+				else return {} end
+			end
+			if #to_discard == discard_num + 1 then table.removeOne(to_discard, cards[1]:getEffectiveId()) end
+			return to_discard
+		end
+	end
+end
+
 sgs.ai_skill_invoke.zhuikong = function(self, data)
 	if self.player:getHandcardNum() <= (self:isWeak() and 3 or 1) then return false end
 	local current = self.room:getCurrent()

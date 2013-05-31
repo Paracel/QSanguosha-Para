@@ -649,7 +649,7 @@ Special1v1Package::Special1v1Package()
     kof_nos_diaochan->addSkill(new Pianyi);
     kof_nos_diaochan->addSkill("biyue");
 
-    General *hejin = new General(this, "hejin", "qun", 4);
+    General *hejin = new General(this, "hejin", "qun", 4); // QUN 025
     hejin->addSkill(new Mouzhu);
     hejin->addSkill(new Yanhuo);
 

@@ -394,6 +394,7 @@ public:
             player->setMark(objectName(), player->getCardCount(true));
         } else {
             int n = player->getMark(objectName());
+            if (n == 0) return false;
             bool normal = false;
             ServerPlayer *killer = NULL;
             if (room->getMode() == "02_1v1")

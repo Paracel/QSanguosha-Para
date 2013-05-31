@@ -475,6 +475,187 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 	return "."
 end
 
+sgs.ai_skill_use["@@qiaoshui"] = function(self, prompt)
+	local trick_num = 0
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if card:isNDTrick() and not card:isKindOf("Nullification") then trick_num = trick_num + 1 end
+	end
+	self:sort(self.enemies, "handcard")
+	local max_card = self:getMaxCard()
+	local max_point = max_card:getNumber()
+
+	for _, enemy in ipairs(self.enemies) do
+		if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
+			local enemy_max_card = self:getMaxCard(enemy)
+			local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+			if max_point > enemy_max_point then
+				self.qiaoshui_card = max_card:getEffectiveId()
+				return "@QiaoshuiCard=.->" .. enemy:objectName()
+			end
+		end
+	end
+	for _, enemy in ipairs(self.enemies) do
+		if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
+			if max_point >= 10 then
+				self.qiaoshui_card = max_card:getEffectiveId()
+				return "@QiaoshuiCard=.->" .. enemy:objectName()
+			end
+		end
+	end
+
+	self:sort(self.friends_noself, "handcard")
+	for index = #self.friends_noself, 1, -1 do
+		local friend = self.friends_noself[index]
+		if not friend:isKongcheng() then
+			local friend_min_card = self:getMinCard(friend)
+			local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+			if max_point > friend_min_point then
+				self.qiaoshui_card = max_card:getEffectiveId()
+				return "@QiaoshuiCard=.->" .. friend:objectName()
+			end
+		end
+	end
+
+	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and zhugeliang:objectName() ~= self.player:objectName() then
+		if max_point >= 7 then
+			self.qiaoshui_card = max_card:getEffectiveId()
+			return "@QiaoshuiCard=.->" .. zhugeliang:objectName()
+		end
+	end
+
+	for index = #self.friends_noself, 1, -1 do
+		local friend = self.friends_noself[index]
+		if not friend:isKongcheng() then
+			if max_point >= 7 then
+				self.qiaoshui_card = max_card:getEffectiveId()
+				return "@QiaoshuiCard=.->" .. friend:objectName()
+			end
+		end
+	end
+
+	if trick_num == 0 or (trick_num <= 2 and self.player:hasSkill("zongshih")) and not self:isValuableCard(max_card) then
+		for _, enemy in ipairs(self.enemies) do
+			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() and self:hasLoseHandcardEffective(enemy) then
+				self.qiaoshui_card = max_card:getEffectiveId()
+				return "@QiaoshuiCard=.->" .. enemy:objectName()
+			end
+		end
+	end
+	return "."
+end
+
+sgs.ai_skill_choice.qiaoshui = function(self, choices, data)
+	local use = data:toCardUse()
+	if use.card:isKindOf("Collateral") then
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
+		for _, p in sgs.qlist(use.to) do
+			table.insert(dummy_use.current_targets, p:objectName())
+		end
+		self:useCardCollateral(use.card, dummy_use)
+		if dummy_use.card and dummy_use.to:length() == 2 then
+			local first = dummy_use.to:at(0):objectName()
+			local second = dummy_use.to:at(1):objectName()
+			self.qiaoshui_collateral = { first, second }
+			return "add"
+		else
+			self.qiaoshui_collateral = nil
+		end
+	elseif use.card:isKindOf("Analeptic") then
+	elseif use.card:isKindOf("Peach") then
+		self:sort(self.friends_noself, "hp")
+		for _, friend in ipairs(self.friends_noself) do
+			if friend:isWounded() and friend:getHp() < getBestHp(friend) then
+				self.qiaoshui_extra_target = friend
+				return "add"
+			end
+		end
+	elseif use.card:isKindOf("ExNihilo") then
+		local friend = self:findPlayerToDraw(false, 2)
+		if friend then
+			self.qiaoshui_extra_target = friend
+			return "add"
+		end
+	elseif use.card:isKindOf("GodSalvation") then
+		self:sort(self.enemies, "hp")
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:isWounded() and self:hasTrickEffective(use.card, enemy, self.player) then
+				self.qiaoshui_remove_target = enemy
+				return "remove"
+			end
+		end
+	elseif use.card:isKindOf("AmazingGrace") then
+		self:sort(self.enemies)
+		for _, enemy in ipairs(self.enemies) do
+			if self:hasTrickEffective(use.card, enemy, self.player) and not (enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive)
+				and not self:needKongcheng(enemy, true) then
+				self.qiaoshui_remove_target = enemy
+				return "remove"
+			end
+		end
+	elseif use.card:isKindOf("AOE") then
+		self:sort(self.friends_noself)
+		local lord = self.room:getLord()
+		if lord and lord:objectName() ~= self.player:objectName() and self:isFriend(lord) and self:isWeak(lord) then
+			self.qiaoshui_remove_target = lord
+			return "remove"
+		end
+		for _, friend in ipairs(self.friends_noself) do
+			if self:hasTrickEffective(use.card, friend, self.player) then
+				self.qiaoshui_remove_target = friend
+				return "remove"
+			end
+		end
+	elseif use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement") then
+		local trick = sgs.Sanguosha:cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
+		trick:setSkillName("qiaoshui")
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
+		for _, p in sgs.qlist(use.to) do
+			table.insert(dummy_use.current_targets, p:objectName())
+		end
+		self:useCardSnatchOrDismantlement(trick, dummy_use)
+		if dummy_use.card and dummy_use.to:length() > 0 then
+			self.qiaoshui_extra_target = dummy_use.to:first()
+			return "add"
+		end
+	elseif use.card:isKindOf("Slash") then
+		local slash = sgs.Sanguosha:cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
+		slash:setSkillName("qiaoshui")
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
+		for _, p in sgs.qlist(use.to) do
+			table.insert(dummy_use.current_targets, p:objectName())
+		end
+		self:useCardSlash(slash, dummy_use)
+		if dummy_use.card and dummy_use.to:length() > 0 then
+			self.qiaoshui_extra_target = dummy_use.to:first()
+			return "add"
+		end
+	else
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
+		for _, p in sgs.qlist(use.to) do
+			table.insert(dummy_use.current_targets, p:objectName())
+		end
+		self:useCardByClassName(use.card, dummy_use)
+		if dummy_use.card and dummy_use.to:length() > 0 then
+			self.qiaoshui_extra_target = dummy_use.to:first()
+			return "add"
+		end
+	end
+	self.qiaoshui_extra_target = nil
+	self.qiaoshui_remove_target = nil
+	return "cancel"
+end
+
+sgs.ai_skill_playerchosen.qiaoshui = function(self, targets)
+	if not self.qiaoshui_extra_target and not self.qiaoshui_remove_target then self.room:writeToConsole("Qiaoshui player chosen error!!") end
+	return self.qiaoshui_extra_target or self.qiaoshui_remove_target
+end
+
+sgs.ai_skill_use["@@qiaoshui!"] = function(self, prompt) -- extra target for Collateral
+	if not self.qiaoshui_collateral then self.room:writeToConsole("Qiaoshui player chosen error!!") end
+	return "@ExtraCollateralCard=.->" .. self.qiaoshui_collateral[1] .. "+" .. self.qiaoshui_collateral[2]
+end
+
 sgs.ai_skill_invoke.zongshih = function(self, data)
 	return not self:needKongcheng(self.player, true)
 end

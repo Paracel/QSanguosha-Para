@@ -407,7 +407,7 @@ public:
                 log.from = jianyong;
                 log.to << extra;
                 log.arg = use.card->objectName();
-                log.arg2 = objectName();
+                log.arg2 = "qiaoshui";
                 room->sendLog(log);
                 room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, jianyong->objectName(), extra->objectName());
 
@@ -431,7 +431,7 @@ public:
                 log.from = jianyong;
                 log.to << removed;
                 log.arg = use.card->objectName();
-                log.arg2 = objectName();
+                log.arg2 = "qiaoshui";
                 room->sendLog(log);
             }
         }

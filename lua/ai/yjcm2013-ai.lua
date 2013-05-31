@@ -545,6 +545,8 @@ sgs.ai_skill_use["@@qiaoshui"] = function(self, prompt)
 	return "."
 end
 
+sgs.ai_card_intention.QiaoshuiCard = 0
+
 sgs.ai_skill_choice.qiaoshui = function(self, choices, data)
 	local use = data:toCardUse()
 	if use.card:isKindOf("Collateral") then

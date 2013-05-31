@@ -145,6 +145,166 @@ public:
     }
 };
 
+CangjiCard::CangjiCard() {
+    will_throw = false;
+}
+
+bool CangjiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (!targets.isEmpty() || to_select == Self)
+        return false;
+    QList<int> equip_loc;
+    foreach (int id, subcards) {
+        const Card *card = Sanguosha->getCard(id);
+        const EquipCard *equip = qobject_cast<const EquipCard *>(card->getRealCard());
+        if (equip)
+            equip_loc << equip->location();
+    }
+    foreach (int loc, equip_loc) {
+        if (to_select->getEquip(loc))
+            return false;
+    }
+    return true;
+}
+
+void CangjiCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+
+    LogMessage log;
+    log.type = "#InvokeSkill";
+    log.from = effect.from;
+    log.arg = "cangji";
+    room->sendLog(log);
+
+    CardsMoveStruct move;
+    move.from = effect.from;
+    move.to = effect.to;
+    move.to_place = Player::PlaceEquip;
+    move.card_ids = subcards;
+    room->moveCardsAtomic(move, true);
+
+    if (effect.from->getEquips().isEmpty())
+        return;
+    bool loop = false;
+    for (int i = 0; i < 3; i++) {
+        if (effect.from->getEquip(i)) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(effect.from)) {
+                if (!p->getEquip(i)) {
+                    loop = true;
+                    break;
+                }
+            }
+            if (loop) break;
+        }
+    }
+    if (loop)
+        room->askForUseCard(effect.from, "@@cangji", "@cangji-install", -1, Card::MethodNone);
+}
+
+class CangjiViewAsSkill: public ViewAsSkill {
+public:
+    CangjiViewAsSkill(): ViewAsSkill("cangji") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@cangji";
+    }
+
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
+        return to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        if (cards.isEmpty())
+            return NULL;
+
+        CangjiCard *card = new CangjiCard;
+        card->addSubcards(cards);
+        return card;
+    }
+};
+
+class Cangji: public TriggerSkill {
+public:
+    Cangji(): TriggerSkill("cangji") {
+        events << Death;
+        view_as_skill = new CangjiViewAsSkill;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DeathStruct death = data.value<DeathStruct>();
+        if (death.who != player || !player->hasSkill(objectName()) || player->getEquips().isEmpty())
+            return false;
+        if (room->getMode() == "02_1v1") {
+            if (room->askForSkillInvoke(player, objectName())) {
+                QVariantList equip_list;
+                CardsMoveStruct move;
+                move.from = player;
+                move.to = NULL;
+                move.to_place = Player::PlaceTable;
+
+                foreach (const Card *equip, player->getEquips()) {
+                    equip_list.append(QVariant(equip->getEffectiveId()));
+                    move.card_ids.append(equip->getEffectiveId());
+                }
+                player->tag[objectName()] = QVariant::fromValue(equip_list);
+                room->moveCardsAtomic(move, true);
+            }
+        } else {
+            room->askForUseCard(player, "@@cangji", "@cangji-install", -1, Card::MethodNone);
+        }
+        return false;
+    }
+};
+
+class CangjiInstall: public TriggerSkill {
+public:
+    CangjiInstall(): TriggerSkill("#cangji-install") {
+        events << Debut;
+    }
+
+    virtual int getPriority() const{
+        return 5;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return !target->tag["cangji"].isNull();
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        QList<int> equip_list;
+        foreach (QVariant id, player->tag["cangji"].toList()) {
+            int card_id = id.toInt();
+            if (Sanguosha->getCard(card_id)->getTypeId() == Card::TypeEquip)
+                equip_list << card_id;
+        }
+        player->tag.remove("cangji");
+        if (equip_list.isEmpty())
+            return false;
+
+        CardsMoveStruct move;
+        move.card_ids = equip_list;
+        move.to = player;
+        move.to_place = Player::PlaceEquip;
+
+        LogMessage log;
+        log.from = player;
+        log.type = "$Install";
+        log.card_str = IntList2StringList(equip_list).join("+");
+        room->sendLog(log);
+
+        room->moveCardsAtomic(move, true);
+        return false;
+    }
+};
+
 class KOFLiegong: public TriggerSkill {
 public:
     KOFLiegong(): TriggerSkill("kofliegong") {
@@ -469,6 +629,12 @@ Special1v1Package::Special1v1Package()
     kof_zhenji->addSkill(new KOFQingguo);
     kof_zhenji->addSkill("luoshen");
 
+    General *kof_nos_huangyueying = new General(this, "kof_nos_huangyueying", "shu", 3, false);
+    kof_nos_huangyueying->addSkill("nosjizhi");
+    kof_nos_huangyueying->addSkill(new Cangji);
+    kof_nos_huangyueying->addSkill(new CangjiInstall);
+    related_skills.insertMulti("cangji", "#cangji-install");
+
     General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
     kof_huangzhong->addSkill(new KOFLiegong);
 
@@ -488,6 +654,7 @@ Special1v1Package::Special1v1Package()
     hejin->addSkill(new Yanhuo);
 
     addMetaObject<XiechanCard>();
+    addMetaObject<CangjiCard>();
     addMetaObject<MouzhuCard>();
 }
 

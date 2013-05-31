@@ -40,7 +40,7 @@ void RoomThread1v1::run() {
                        << "kof_huangzhong" << "kof_jiangwei" << /*kof*/"menghuo" << /*kof*/"zhurong"
                        << "sunquan" << "ganning" << "huanggai" << "zhouyu"
                        << "luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
-                       << "lvbu" << /*kof*/"diaochan" << "yanliangwenchou" << "hejin";
+                       << "lvbu" << "kof_nos_diaochan" << "yanliangwenchou" << "hejin";
         }
         qShuffle(candidates);
         general_names = candidates.mid(0, total_num);

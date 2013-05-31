@@ -641,6 +641,7 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     int draw_num = classical ? 4 : player->getMaxHp();
     player->drawCards(draw_num);
     room->setTag("FirstRound", false);
+    room->getThread()->trigger(Debut, room, player);
 }
 
 void GameRule::changeGeneralXMode(ServerPlayer *player) const{

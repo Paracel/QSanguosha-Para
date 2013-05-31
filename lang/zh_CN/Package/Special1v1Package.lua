@@ -35,6 +35,11 @@ return {
 	["kofxiaoji:recover"] = "回复1点体力",
 	["kofxiaoji:cancel"] = "不发动",
 
+	["kof_nos_diaochan"] = "貂蝉1v1",
+	["&kof_nos_diaochan"] = "貂蝉",
+	["pianyi"] = "翩仪",
+	[":pianyi"] = "<font color=\"blue\"><b>锁定技。</b></font>你登场时，若处于对手的回合，则结束当前回合并结束一切结算。",
+
 	["#hejin"] = "色厉内荏",
 	["hejin"] = "何进",
 	["illustrator:hejin"] = "G.G.G.",

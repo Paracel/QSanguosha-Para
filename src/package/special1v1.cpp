@@ -230,6 +230,33 @@ public:
     }
 };
 
+class Pianyi: public TriggerSkill {
+public:
+    Pianyi(): TriggerSkill("pianyi") {
+        events << Debut;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        ServerPlayer *opponent = room->getOtherPlayers(player).first();
+        if (opponent->getPhase() != Player::NotActive) {
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            LogMessage log2;
+            log2.type = "#TurnBroken";
+            log2.from = opponent;
+            room->sendLog(log2);
+
+            throw TurnBroken;
+        }
+        return false;
+    }
+};
+
 MouzhuCard::MouzhuCard() {
 }
 
@@ -396,6 +423,10 @@ Special1v1Package::Special1v1Package()
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);
     kof_sunshangxiang->addSkill(new KOFXiaoji);
+
+    General *kof_nos_diaochan = new General(this, "kof_nos_diaochan", "qun", 3, false);
+    kof_nos_diaochan->addSkill(new Pianyi);
+    kof_nos_diaochan->addSkill("biyue");
 
     General *hejin = new General(this, "hejin", "qun", 4);
     hejin->addSkill(new Mouzhu);

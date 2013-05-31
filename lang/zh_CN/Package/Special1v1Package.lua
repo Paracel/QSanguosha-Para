@@ -11,6 +11,13 @@ return {
 					-- [[身份局：摸牌阶段，你可以少摸一张牌并选择一名手牌数大于你的手牌数的其他角色：若如此做，你获得该角色一张手牌。]]
 	["koftuxi-invoke"] = "你可以发动“突袭”<br/> <b>操作提示</b>: 选择一名其他角色→点击确定<br/>",
 
+	["kof_xuchu"] = "许褚1v1",
+	["&kof_xuchu"] = "许褚",
+	["xiechan"] = "挟缠",
+	[":xiechan"] = "<font color=\"red\"><b>限定技。</b></font>出牌阶段，你可以与对手拼点：若你赢，视为你对对手使用一张【决斗】；若你没赢，视为对手对你使用一张【决斗】。",
+	["@twine"] = "挟缠",
+	["$XiechanAnimate"] = "image=image/animate/xiechan.png",
+
 	["kof_zhenji"] = "甄姬1v1",
 	["&kof_zhenji"] = "甄姬",
 	["kofqingguo"] = "倾国",

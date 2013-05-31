@@ -72,6 +72,54 @@ public:
     }
 };
 
+XiechanCard::XiechanCard() {
+}
+
+bool XiechanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isKongcheng() && to_select != Self;
+}
+
+void XiechanCard::use(Room *room, ServerPlayer *xuchu, QList<ServerPlayer *> &targets) const{
+    room->removePlayerMark(xuchu, "@twine");
+    room->doLightbox("$XiechanAnimate");
+
+    bool success = xuchu->pindian(targets.first(), "xiechan", NULL);
+    Duel *duel = new Duel(Card::NoSuit, 0);
+    duel->setSkillName("_xiechan");
+    ServerPlayer *from = NULL, *to = NULL;
+    if (success) {
+        from = xuchu;
+        to = targets.first();
+    } else {
+        from = targets.first();
+        to = xuchu;
+    }
+    if (!from->isLocked(duel) && !from->isProhibited(to, duel))
+        room->useCard(CardUseStruct(duel, from, to));
+}
+
+class Xiechan: public ZeroCardViewAsSkill {
+public:
+    Xiechan(): ZeroCardViewAsSkill("xiechan") {
+        frequency = Limited;
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return player->getMark("@twine") > 0;
+    }
+
+    virtual const Card *viewAs() const{
+        return new XiechanCard;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
+        if (card->isKindOf("Duel"))
+            return -2;
+        else
+            return -1;
+    }
+};
+
 class KOFQingguo: public OneCardViewAsSkill {
 public:
     KOFQingguo(): OneCardViewAsSkill("kofqingguo") {
@@ -410,6 +458,12 @@ Special1v1Package::Special1v1Package()
     kof_zhangliao->addSkill(new KOFTuxiAct);
     related_skills.insertMulti("koftuxi", "#koftuxi");
 
+    General *kof_xuchu = new General(this, "kof_xuchu", "wei");
+    kof_xuchu->addSkill("luoyi");
+    kof_xuchu->addSkill(new Xiechan);
+    kof_xuchu->addSkill(new MarkAssignSkill("@twine", 1));
+    related_skills.insertMulti("xiechan", "#@twine-1");
+
     General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3);
     kof_zhenji->addSkill(new KOFQingguo);
     kof_zhenji->addSkill("luoshen");
@@ -432,6 +486,7 @@ Special1v1Package::Special1v1Package()
     hejin->addSkill(new Mouzhu);
     hejin->addSkill(new Yanhuo);
 
+    addMetaObject<XiechanCard>();
     addMetaObject<MouzhuCard>();
 }
 

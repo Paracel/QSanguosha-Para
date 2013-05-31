@@ -6,6 +6,16 @@
 #include "skill.h"
 #include "standard.h"
 
+class XiechanCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE XiechanCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
 class MouzhuCard: public SkillCard {
     Q_OBJECT
 

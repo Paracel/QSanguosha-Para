@@ -617,7 +617,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xiaoqiao, QVariant &data) const{
-        if (!xiaoqiao->canDiscard(xiaoqiao, "h")) {
+        if (xiaoqiao->canDiscard(xiaoqiao, "h")) {
             DamageStruct damage = data.value<DamageStruct>();
             xiaoqiao->tag["TianxiangDamage"] = QVariant::fromValue(damage);
             return room->askForUseCard(xiaoqiao, "@@tianxiang", "@tianxiang-card", -1, Card::MethodDiscard);

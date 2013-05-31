@@ -1103,8 +1103,10 @@ void RoomScene::enableTargets(const Card *card) {
         return;
     }
 
+    Client::Status status = ClientInstance->getStatus();
     if (card->targetFixed()
-        || ClientInstance->getStatus() == Client::Responding
+        || ((status & Client::ClientStatusBasicMask) == Client::Responding
+            && (status == Client::Responding || (card->getTypeId() != Card::TypeSkill && status != Client::RespondingUse)))
         || ClientInstance->getStatus() == Client::AskForShowOrPindian) {
         foreach (PlayerCardContainer *item, item2player.keys()) {
             QGraphicsItem *animationTarget = item->getMouseClickReceiver();

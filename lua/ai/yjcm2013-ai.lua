@@ -229,6 +229,140 @@ sgs.ai_skill_cardask["@yuce-discard"] = function(self, data, pattern, target)
 	return "."
 end
 
+sgs.ai_skill_use["@@xiansi"] = function(self, prompt)
+	local crossbow_effect
+	if not self.player:getTag("HuashenSkill"):toString() == "xiansi" then
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:inMyAttackRange(self.player) and (self:hasCrossbowEffect(enemy) or getKnownCard(enemy, "Crossbow") > 0) then
+				crossbow_effect = true
+				break
+			end
+		end
+	end
+	local max_num = 999
+	if crossbow_effect then max_num = 3
+	elseif self:getCardsNum("Jink") < 1 or self:isWeak() then max_num = 5 end
+	if self.player:getPile("counter"):length() >= max_num then return "." end
+	local rest_num = math.min(2, max_num - self.player:getPile("counter"):length())
+	local targets = {}
+
+	local add_player = function(player, isfriend)
+		if player:getHandcardNum() == 0 or player:objectName() == self.player:objectName() then return #targets end
+		if self:objectiveLevel(player) == 0 and player:isLord() and sgs.current_mode_players["rebel"] > 1 then return #targets end
+		if #targets == 0 then
+			table.insert(targets, player:objectName())
+		elseif #targets == 1 then
+			if player:objectName() ~= targets[1] then
+				table.insert(targets, player:objectName())
+			end
+		end
+		if isfriend and isfriend == 1 then
+			self.player:setFlags("AI_XiansiToFriend_" .. player:objectName())
+		end
+		return #targets
+	end
+
+	local player = self:findPlayerToDiscard("he", true, false)
+	if player then
+		if rest_num == 1 then return "@XiansiCard=.->" .. player:objectName() end
+		add_player(player, self:isFriend(player) and 1 or nil)
+		local another = self:findPlayerToDiscard("he", true, false, self.room:getOtherPlayers(player))
+		if another then
+			add_player(another, self:isFriend(another) and 1 or nil)
+			return "@XiansiCard=.->" .. table.concat(targets, "+")
+		end
+	end
+
+	local lord = self.room:getLord()
+	if lord and self:isEnemy(lord) and sgs.turncount <= 1 and not lord:isNude() then
+		if add_player(lord) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+	end
+
+	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
+	local luxun = self.room:findPlayerBySkillName("lianying")
+	local dengai = self.room:findPlayerBySkillName("tuntian")
+	local jiangwei = self.room:findPlayerBySkillName("zhiji")
+
+	if jiangwei and self:isFriend(jiangwei) and jiangwei:getMark("zhiji") == 0 and jiangwei:getHandcardNum()== 1
+		and self:getEnemyNumBySeat(self.player, jiangwei) <= (jiangwei:getHp() >= 3 and 1 or 0) then
+		if add_player(jiangwei, 1) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+	end
+	if dengai and dengai:hasSkill("zaoxian") and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player, dengai) == 0)
+		and dengai:getMark("zaoxian") == 0 and dengai:getPile("field"):length() == 2 and add_player(dengai, 1) == rest_num then
+		return "@XiansiCard=.->" .. table.concat(targets, "+")
+	end
+
+	if zhugeliang and self:isFriend(zhugeliang) and zhugeliang:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, zhugeliang) > 0 then
+		if zhugeliang:getHp() <= 2 then
+			if add_player(zhugeliang, 1) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+		else
+			local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), zhugeliang:objectName())
+			local cards = sgs.QList2Table(zhugeliang:getHandcards())
+			if #cards == 1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
+				if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
+					if add_player(zhugeliang, 1) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+				end
+			end
+		end
+	end
+
+	if luxun and self:isFriend(luxun) and luxun:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, luxun) > 0 then
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), luxun:objectName())
+		local cards = sgs.QList2Table(luxun:getHandcards())
+		if #cards == 1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
+			if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
+				if add_player(luxun, 1) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+			end
+		end
+	end
+
+	if luxun and add_player(luxun, (self:isFriend(luxun) and 1 or nil)) == rest_num then
+		return "@XiansiCard=.->" .. table.concat(targets, "+")
+	end
+
+	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player, dengai) == 0) and add_player(dengai, 1) == rest_num then
+		return "@XiansiCard=.->" .. table.concat(targets, "+")
+	end
+
+	if #targets == 1 then
+		local target = findPlayerByObjectName(self.room, targets[1])
+		if target then
+			local another
+			if rest_num > 1 then another = self:findPlayerToDiscard("he", true, false, self.room:getOtherPlayers(target)) end
+			if another then
+				add_player(another, self:isFriend(another) and 1 or nil)
+				return "@XiansiCard=.->" .. table.concat(targets, "+")
+			else
+				return "@XiansiCard=.->" .. targets[1]
+			end
+		end
+	end
+	return "."
+end
+
+sgs.ai_card_intention.XiansiCard = function(self, card, from, tos)
+	local lord = self.room:getLord()
+	if sgs.evaluatePlayerRole(from) == "neutral" and sgs.evaluatePlayerRole(tos[1]) == "neutral"
+		and (not tos[2] or sgs.evaluatePlayerRole(tos[2]) == "neutral") and lord and not lord:isNude()
+		and self:doNotDiscard(lord, "he", true) and from:aliveCount() >= 4 then
+		sgs.updateIntention(from, lord, -35)
+		return
+	end
+	if from:getState() == "online" then
+		for _, to in ipairs(tos) do
+			if (self:hasSkills("kongcheng|zhiji|lianying", to) and to:getHandcardNum() == 1) or to:hasSkills("tuntian+zaoxian") then
+			else
+				sgs.updateIntention(from, to, 80)
+			end
+		end
+	else
+		for _, to in ipairs(tos) do
+			local intention = from:hasFlag("AI_XiansiToFriend_" .. to:objectName()) and -5 or 80
+			sgs.updateIntention(from, to, intention)
+		end
+	end
+end
+
 local xiansi_slash_skill = {}
 xiansi_slash_skill.name = "xiansi_slash"
 table.insert(sgs.ai_skills, xiansi_slash_skill)
@@ -247,7 +381,6 @@ sgs.ai_skill_use_func.XiansiSlashCard = function(card, use, self)
 	if self:slashIsAvailable() and not self:slashIsEffective(slash, liufeng, self.player) and self:isFriend(liufeng) then
 		sgs.ai_use_priority.XiansiSlashCard = 0.1
 		use.card = card
-		if use.to then use.to:append(liufeng) end
 	else
 		sgs.ai_use_priority.XiansiSlashCard = 2.6
 		local dummy_use = { to = sgs.SPlayerList() }
@@ -266,11 +399,16 @@ sgs.ai_skill_use_func.XiansiSlashCard = function(card, use, self)
 							break
 						end
 					end
-					if not lf then return end
-					use.card = card
-					if use.to then use.to:append(liufeng) end
+					if lf then use.card = card end
 				end
 			end
+		end
+	end
+	if not use.card then
+		sgs.ai_use_priority.XiansiSlashCard = 2.0
+		if self:slashIsAvailable() and self:isEnemy(liufeng)
+			and not self:slashProhibit(slash, liufeng) and self:slashIsEffective(slash, liufeng) and sgs.isGoodTarget(liufeng, self.enemies, self) then
+			use.card = card
 		end
 	end
 end

@@ -324,7 +324,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	local dengai = self.room:findPlayerBySkillName("tuntian")
 	local jiangwei = self.room:findPlayerBySkillName("zhiji")
 
-	local add_player = function (player, isfriend)
+	local add_player = function(player, isfriend)
 		if player:getHandcardNum() == 0 or player:objectName() == self.player:objectName() then return #targets end
 		if self:objectiveLevel(player) == 0 and player:isLord() and sgs.current_mode_players["rebel"] > 1 then return #targets end
 		if #targets == 0 then
@@ -391,7 +391,7 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 
 	for i = 1, #self.enemies, 1 do
 		local p = self.enemies[i]
-		if self:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian", p) then
+		if p:hasSkills("jijiu|qingnang|xinzhan|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian") then
 			if add_player(p) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 		end
 	end

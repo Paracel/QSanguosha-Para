@@ -126,7 +126,7 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
-            && damage.to->isKongcheng() && !damage.chain && !damage.transfer) {
+            && damage.to->isKongcheng() && damage.by_user && !damage.chain && !damage.transfer) {
             room->setEmotion(player, "weapon/guding_blade");
 
             LogMessage log;

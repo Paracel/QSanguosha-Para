@@ -475,7 +475,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (damage.chain || damage.transfer
+        if (damage.chain || damage.transfer || !damage.by_user
             || !damage.card || !damage.card->isKindOf("Slash") || !damage.card->isRed())
             return false;
 
@@ -1112,7 +1112,7 @@ public:
         if (triggerEvent == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && damage.card->isKindOf("Slash")
-                && !damage.chain && !damage.transfer
+                && damage.by_user && !damage.chain && !damage.transfer
                 && daqiao->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName(), 1);
                 LogMessage log;

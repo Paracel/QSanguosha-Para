@@ -433,6 +433,7 @@ struct DamageStruct {
     Nature nature;
     bool chain;
     bool transfer;
+    bool by_user;
     QString reason;
 
     QString getReason() const;

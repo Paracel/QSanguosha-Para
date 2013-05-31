@@ -270,7 +270,7 @@ public:
         QString mode = room->getMode();
         if (triggerEvent == DamageCaused) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.chain || damage.transfer) return false;
+            if (damage.chain || damage.transfer || !damage.by_user) return false;
             if (damage.card && damage.card->isKindOf("Slash")) {
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
                     if (p->getPile("loyal").isEmpty()) continue;

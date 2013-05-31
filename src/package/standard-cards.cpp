@@ -574,7 +574,7 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
 
         QStringList horses;
-        if (damage.card && damage.card->isKindOf("Slash") && !damage.chain && !damage.transfer
+        if (damage.card && damage.card->isKindOf("Slash") && damage.by_user && !damage.chain && !damage.transfer
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0) {
             if (damage.to->getDefensiveHorse() && damage.from->canDiscard(damage.to, damage.to->getDefensiveHorse()->getEffectiveId()))
                 horses << "dhorse";
@@ -1024,7 +1024,10 @@ void Duel::onEffect(const CardEffectStruct &effect) const{
     room->setPlayerMark(first, "WushuangTarget", 0);
     room->setPlayerMark(second, "WushuangTarget", 0);
 
-    room->damage(DamageStruct(this, second->isAlive() ? second : NULL, first));
+    DamageStruct damage(this, second->isAlive() ? second : NULL, first);
+    if (second != effect.from)
+        damage.by_user = false;
+    room->damage(damage);
 }
 
 Snatch::Snatch(Suit suit, int number)
@@ -1192,7 +1195,7 @@ public:
 
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
-            && !damage.to->isNude()
+            && !damage.to->isNude() && damage.by_user
             && !damage.chain && !damage.transfer && player->askForSkillInvoke("ice_sword", data)) {
                 room->setEmotion(player, "weapon/ice_sword");
                 if (damage.from->canDiscard(damage.to, "he")) {

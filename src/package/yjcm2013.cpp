@@ -668,7 +668,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (damage.chain || damage.transfer) return false;
+        if (damage.chain || damage.transfer || !damage.by_user) return false;
         if (damage.from && !damage.to->inMyAttackRange(damage.from)
             && damage.card && damage.card->isKindOf("Slash")) {
             room->broadcastSkillInvoke(objectName());

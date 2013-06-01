@@ -169,6 +169,65 @@ function sgs.ai_slash_prohibit.vsganglie(self, from, to)
 	return false
 end
 
+local zhongyi_skill = {}
+zhongyi_skill.name = "zhongyi"
+table.insert(sgs.ai_skills, zhongyi_skill)
+zhongyi_skill.getTurnUseCard = function(self)
+	if self.player:getMark("@loyal") <= 0 or self.player:isKongcheng() or sgs.turncount <= 1 then return end
+
+	cards = sgs.QList2Table(self.player:getHandcards())
+	local red_card
+	self:sortByUseValue(cards, true)
+	for _, card in ipairs(cards) do
+		if card:isRed() and not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then
+			red_card = card
+			break
+		end
+	end
+
+	if not red_card then return end
+
+	local value = 0
+	local friends = {}
+	if self.room:getMode() == "06_3v3" then
+		for _, friend in ipairs(self.friends) do
+			if not friend:hasFlag("actioned") then table.insert(friends, friend) end
+		end
+	else
+		friends = self.friends
+	end
+	self:sort(self.enemies)
+	local slash = sgs.Sanguosha:cloneCard("slash")
+	for _, friend in ipairs(friends) do
+		local local_value = 0
+		for _, enemy in ipairs(self.enemies) do
+			if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
+				local_value = local_value + 0.8
+				if getCardsNum("Jink", enemy) < 1 then local_value = local_value + 0.5 end
+				if friend:hasSkill("tieji")
+					or (friend:hasSkill("liegong") and (enemy:getHandcardNum() <= friend:getAttackRange() or enemy:getHandcardNum() >= friend:getHp()))
+					or (friend:hasSkill("kofliegong") and enemy:getHandcardNum() >= friend:getHp()) then
+					local_value = local_value + 0.5
+				end
+				break
+			end
+		end
+		if getCardsNum("Slash", friend) < 1 then local_value = local_value * 0.3
+		elseif self:hasCrossbowEffect(friend) then local_value = local_value * getCardsNum("Slash", friend) end
+		if friend:hasSkill("shensu") and not self:isWeak(friend) then local_value = local_value * 1.2
+		elseif self:willSkipPlayPhase(friend) then local_value = local_value * 0.2 end
+		value = value + local_value
+	end
+	local ratio = value / #self.enemies
+	if ratio > 0.85 then return sgs.Card_Parse("@ZhongyiCard=" .. red_card:getEffectiveId()) end
+end
+
+sgs.ai_skill_use_func.ZhongyiCard = function(card, use, self)
+	use.card = card
+end
+
+sgs.ai_use_priority.ZhongyiCard = 10
+
 sgs.ai_skill_invoke.zhongyi = function(self, data)
 	local damage = data:toDamage()
 	return self:isEnemy(damage.to)

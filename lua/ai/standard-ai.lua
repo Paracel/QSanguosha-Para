@@ -1049,9 +1049,7 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	cards = sgs.QList2Table(cards)
 
 	local red_card
-
 	self:sortByUseValue(cards, true)
-
 	for _, card in ipairs(cards) do
 		if card:isRed() and not card:isKindOf("Slash")
 			and not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player)

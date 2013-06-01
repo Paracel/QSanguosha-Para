@@ -2502,12 +2502,16 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 	elseif from:getMark("drank") > 0 then
 		dmg = dmg + from:getMark("drank")
 	end
-	if from:hasFlag("luoyi") then dmg = dmg + 1 end
-	if from:hasFlag("neoluoyi") then dmg = dmg + 1 end
-	if from:hasSkill("drluoyi") and not from:getWeapon() then dmg = dmg + 1 end
-	if slash and from:hasSkill("jie") and slash:isRed() then dmg = dmg + 1 end
-	if from:hasSkill("anjian") and not to:inMyAttackRange(from) then dmg = dmg + 1 end
 	if not from:hasSkill("jueqing") then
+		if from:hasFlag("luoyi") then dmg = dmg + 1 end
+		if from:hasFlag("neoluoyi") then dmg = dmg + 1 end
+		if from:hasSkill("drluoyi") and not from:getWeapon() then dmg = dmg + 1 end
+		if slash and from:hasSkill("jie") and slash:isRed() then dmg = dmg + 1 end
+		if from:hasSkill("anjian") and not to:inMyAttackRange(from) then dmg = dmg + 1 end
+
+		local guanyu = self.room:findPlayerBySkillName("zhongyi")
+		if guanyu and guanyu:getPile("loyal"):length() > 0 and self:isFriend(guanyu, from) then dmg = dmg + 1 end
+
 		if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and fireSlash then dmg = dmg + 1 end
 		if from:hasWeapon("guding_blade") and slash and to:isKongcheng() then dmg = dmg + 1 end
 		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 then dmg = dmg + 1 end

@@ -43,7 +43,6 @@ return {
 	["nosxuanhuo"] = "眩惑",
 	[":nosxuanhuo"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将一张<font color=\"red\">♥</font>手牌交给一名其他角色：若如此做，你获得该角色的一张牌，然后将该牌交给除该角色外的另一名角色。",
 	["@nosxuanhuo-give"] = "你可以将该牌交给除 %src 外的一名角色",
-	["#EnyuanRecover"] = "%from 的“%arg2”被触发，令其回复体力的角色 %to 将摸 %arg 张牌",
 	["@enyuanheart"] = "请给出一张<font color=\"red\">♥</font>手牌",
 
 	["nos_xushu"] = "徐庶-旧",

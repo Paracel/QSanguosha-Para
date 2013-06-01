@@ -166,25 +166,34 @@ public:
         if (triggerEvent == HpRecover) {
             RecoverStruct recover = data.value<RecoverStruct>();
             if (recover.who && recover.who != player) {
-                recover.who->drawCards(recover.recover);
-
                 LogMessage log;
-                log.type = "#EnyuanRecover";
+                log.type = "#TriggerSkill";
                 log.from = player;
-                log.to << recover.who;
-                log.arg = QString::number(recover.recover);
-                log.arg2 = objectName();
+                log.arg = objectName();
                 room->sendLog(log);
+
                 room->broadcastSkillInvoke("enyuan", qrand() % 2 + 1);
+                room->notifySkillInvoked(player, objectName());
+                recover.who->drawCards(recover.recover);
             }
         } else if (triggerEvent == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
             ServerPlayer *source = damage.from;
             if (source && source != player) {
+                LogMessage log;
+                log.type = "#TriggerSkill";
+                log.from = player;
+                log.arg = objectName();
+                room->sendLog(log);
+
                 room->broadcastSkillInvoke("enyuan", qrand() % 2 + 3);
+                room->notifySkillInvoked(player, objectName());
 
                 const Card *card = room->askForCard(source, ".|heart|.|hand", "@enyuanheart", data, Card::MethodNone);
-                if (card) player->obtainCard(card); else room->loseHp(source);
+                if (card)
+                    player->obtainCard(card);
+                else
+                    room->loseHp(source);
             }
         }
 

@@ -3124,53 +3124,62 @@ void Room::damage(const DamageStruct &data) {
         return;
     }
 
-    bool enter_stack = false;
-    do {
-        bool prevent = thread->trigger(DamageForseen, this, damage_data.to, qdata);
-        if (prevent)
-            break;
-
-        if (damage_data.from) {
-            if (thread->trigger(DamageCaused, this, damage_data.from, qdata))
+    try {
+        bool enter_stack = false;
+        do {
+            bool prevent = thread->trigger(DamageForseen, this, damage_data.to, qdata);
+            if (prevent)
                 break;
-        }
+
+            if (damage_data.from) {
+                if (thread->trigger(DamageCaused, this, damage_data.from, qdata))
+                    break;
+            }
+
+            damage_data = qdata.value<DamageStruct>();
+
+            bool broken = thread->trigger(DamageInflicted, this, damage_data.to, qdata);
+            if (broken)
+                break;
+
+            enter_stack = true;
+            m_damageStack.push_back(damage_data);
+            setTag("CurrentDamageStruct", qdata);
+
+            thread->trigger(PreDamageDone, this, damage_data.to, qdata);
+
+            if (damage_data.card && damage_data.card->isKindOf("Slash")) {
+                QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
+                if (!qinggang.isEmpty()) {
+                    qinggang.removeOne(damage_data.card->toString());
+                    damage_data.to->tag["Qinggang"] = qinggang;
+                }
+            }
+            thread->trigger(DamageDone, this, damage_data.to, qdata);
+
+            if (damage_data.from)
+                thread->trigger(Damage, this, damage_data.from, qdata);
+
+            thread->trigger(Damaged, this, damage_data.to, qdata);
+        } while (false);
 
         damage_data = qdata.value<DamageStruct>();
+        thread->trigger(DamageComplete, this, damage_data.to, qdata);
 
-        bool broken = thread->trigger(DamageInflicted, this, damage_data.to, qdata);
-        if (broken)
-            break;
-
-        enter_stack = true;
-        m_damageStack.push_back(damage_data);
-        setTag("CurrentDamageStruct", qdata);
-
-        thread->trigger(PreDamageDone, this, damage_data.to, qdata);
-
-        if (damage_data.card && damage_data.card->isKindOf("Slash")) {
-            QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
-            if (!qinggang.isEmpty()) {
-                qinggang.removeOne(damage_data.card->toString());
-                damage_data.to->tag["Qinggang"] = qinggang;
-            }
+        if (enter_stack) {
+            m_damageStack.pop();
+            if (m_damageStack.isEmpty())
+                removeTag("CurrentDamageStruct");
+            else
+                setTag("CurrentDamageStruct", QVariant::fromValue(m_damageStack.first()));
         }
-        thread->trigger(DamageDone, this, damage_data.to, qdata);
-
-        if (damage_data.from)
-            thread->trigger(Damage, this, damage_data.from, qdata);
-
-        thread->trigger(Damaged, this, damage_data.to, qdata);
-    } while (false);
-
-    damage_data = qdata.value<DamageStruct>();
-    thread->trigger(DamageComplete, this, damage_data.to, qdata);
-
-    if (enter_stack) {
-        m_damageStack.pop();
-        if (m_damageStack.isEmpty())
+    }
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == StageChange || triggerEvent == TurnBroken) {
             removeTag("CurrentDamageStruct");
-        else
-            setTag("CurrentDamageStruct", QVariant::fromValue(m_damageStack.first()));
+            m_damageStack.clear();
+        }
+        throw triggerEvent;
     }
 }
 

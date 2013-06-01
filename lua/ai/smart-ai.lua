@@ -1706,6 +1706,11 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			local card_id = move.card_ids:at(i - 1)
 			local card = sgs.Sanguosha:getCard(card_id)
 
+			if place == sgs.Player_DrawPile
+				or (move.to_place == sgs.Player_DrawPile and not (from and tonumber(from:property("zongxuan_move"):toString()) == card_id)) then
+				self.top_draw_pile_id = nil
+			end
+
 			if move.to_place == sgs.Player_PlaceHand and to and player:objectName() == to:objectName() then
 				if card:hasFlag("visible") then
 					if isCard("Slash", card, to) then sgs.card_lack[move.to:objectName()]["Slash"] = 0 end
@@ -4540,8 +4545,8 @@ function SmartAI:evaluateArmor(card, player)
 	if not ecard then return 0 end
 
 	local value = 0
-	if self.player:hasSkill("jijiu") and ecard:isRed() then value = value + 0.5 end
-	if self.player:hasSkills("qixi|guidao") and ecard:isBlack() then value = value + 0.5 end
+	if player:hasSkill("jijiu") and ecard:isRed() then value = value + 0.5 end
+	if player:hasSkills("qixi|guidao") and ecard:isBlack() then value = value + 0.5 end
 	for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 		local callback = sgs.ai_armor_value[askill:objectName()]
 		if type(callback) == "function" then

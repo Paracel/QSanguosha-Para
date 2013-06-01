@@ -806,6 +806,71 @@ sgs.ai_skill_invoke.danshou = function(self, data)
 	return false
 end
 
+sgs.ai_skill_use["@@zongxuan"] = function(self, prompt)
+	if self.top_draw_pile_id or self.player:getPhase() >= sgs.Player_Finish then return "." end
+	local list = self.player:property("zongxuan"):toString():split("+")
+	local valuable
+	for _, id in ipairs(list) do
+		local card_id = tonumber(id)
+		local card = sgs.Sanguosha:getCard(card_id)
+		if card:isKindOf("EquipCard") then
+			for _, friend in ipairs(self.friends) do
+				if not (card:isKindOf("Armor") and not friend:getArmor() and friend:hasSkills("bazhen|yizhong"))
+					and (not self:getSameEquip(card, friend) or card:isKindOf("DefensiveHorse") or card:isKindOf("OffensiveHorse")
+						or (card:isKindOf("Weapon") and self:evaluateWeapon(card) > self:evaluateWeapon(friend:getWeapon()) - 1)) then
+					self.top_draw_pile_id = card_id
+					return "@ZongxuanCard=" .. card_id
+				end
+			end
+		elseif self:isValuableCard(card) and not valuable then
+			valuable = card_id
+		end
+	end
+	if valuable then
+		self.top_draw_pile_id = valuable
+		return "@ZongxuanCard=" .. valuable
+	end
+	return "."
+end
+
+sgs.ai_skill_playerchosen.zhiyan = function(self, targets)
+	if self.top_draw_pile_id then
+		local card = sgs.Sanguosha:getCard(self.top_draw_pile_id)
+		if card:isKindOf("EquipCard") then
+			self:sort(self.friends, "hp")
+			for _, friend in ipairs(self.friends) do
+				if (not self:getSameEquip(card, friend) or card:isKindOf("DefensiveHorse") or card:isKindOf("OffensiveHorse"))
+					and not (card:isKindOf("Armor") and (friend:hasSkills("bazhen|yizhong") or self:evaluateArmor(card, friend) < 0)) then
+					return friend
+				end
+			end
+			if not (card:isKindOf("Armor") and (self.player:hasSkills("bazhen|yizhong") or self:evaluateArmor(card) < 0))
+				and not (card:isKindOf("Weapon") and self.player:getWeapon() and self:evaluateWeapon(card) < self:evaluateWeapon(self.player:getWeapon()) - 1) then
+				return self.player
+			end
+		else
+			local cards = { card }
+			local player = self:getCardNeedPlayer(cards)
+			if player then
+				return player
+			else
+				self:sort(self.friends)
+				for _, friend in ipairs(self.friends) do
+					if not self:needKongcheng(friend, true) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return friend end
+				end
+			end
+		end
+	else
+		self:sort(self.friends)
+		for _, friend in ipairs(self.friends) do
+			if not self:needKongcheng(friend, true) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return friend end
+		end
+	end
+	return nil
+end
+
+sgs.ai_playerchosen_intention.zhiyan = -60
+
 sgs.ai_skill_invoke.juece = function(self, data)
 	local move = data:toMoveOneTime()
 	if not move.from then return false end

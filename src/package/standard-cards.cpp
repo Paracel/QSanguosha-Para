@@ -68,22 +68,39 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         }
         if (!has_changed || subcardsLength() == 0) {
             QVariant data = QVariant::fromValue(use);
-            if (player->hasSkill("lihuo"))
-                if (room->askForSkillInvoke(player, "lihuo", data)) {
-                    FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    if (!isVirtualCard() || subcardsLength() > 0)
-                        fire_slash->addSubcard(this);
-                    fire_slash->setSkillName("lihuo");
-                    use.card = fire_slash;
+            if (player->hasSkill("lihuo")) {
+                FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
+                if (!isVirtualCard() || subcardsLength() > 0)
+                    fire_slash->addSubcard(this);
+                fire_slash->setSkillName("lihuo");
+                bool can_use = true;
+                foreach (ServerPlayer *p, use.to) {
+                    if (!player->canSlash(p, fire_slash, false)) {
+                        can_use = false;
+                        break;
+                    }
                 }
-            if (player->hasWeapon("fan")) {
-                if (room->askForSkillInvoke(player, "fan", data)) {
-                    FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
-                    if (!isVirtualCard() || subcardsLength() > 0)
-                        fire_slash->addSubcard(this);
-                    fire_slash->setSkillName("fan");
+                if (can_use && room->askForSkillInvoke(player, "lihuo", data))
                     use.card = fire_slash;
+                else
+                    delete fire_slash;
+            }
+            if (use.card->objectName() == "slash" && player->hasWeapon("fan")) {
+                FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
+                if (!isVirtualCard() || subcardsLength() > 0)
+                    fire_slash->addSubcard(this);
+                fire_slash->setSkillName("fan");
+                bool can_use = true;
+                foreach (ServerPlayer *p, use.to) {
+                    if (!player->canSlash(p, fire_slash, false)) {
+                        can_use = false;
+                        break;
+                    }
                 }
+                if (can_use && room->askForSkillInvoke(player, "fan", data))
+                    use.card = fire_slash;
+                else
+                    delete fire_slash;
             }
         }
     }

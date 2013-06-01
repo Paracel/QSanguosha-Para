@@ -4120,7 +4120,7 @@ function SmartAI:aoeIsEffective(card, to, source)
 	end
 
 	if card:isKindOf("SavageAssault") then
-		if to:hasSkill("huoshou") or to:hasSkill("juxiang") then
+		if to:hasSkills("huoshou|juxiang|manyi") then
 			return false
 		end
 	end

@@ -145,6 +145,50 @@ public:
     }
 };
 
+class Huwei: public TriggerSkill {
+public:
+    Huwei(): TriggerSkill("huwei") {
+        events << Debut;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        ServerPlayer *opponent = player->getNext();
+        if (!opponent->isAlive())
+            return false;
+        Drowning *drowning = new Drowning(Card::NoSuit, 0);
+        drowning->setSkillName("_huwei");
+        if (!drowning->isAvailable(player) || player->isProhibited(opponent, drowning)) {
+            delete drowning;
+            return false;
+        }
+        if (room->askForSkillInvoke(player, objectName()))
+            room->useCard(CardUseStruct(drowning, player, opponent), false);
+        return false;
+    }
+};
+
+class Xiaoxi: public TriggerSkill {
+public:
+    Xiaoxi(): TriggerSkill("xiaoxi") {
+        events << Debut;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        ServerPlayer *opponent = player->getNext();
+        if (!opponent->isAlive())
+            return false;
+        Slash *slash = new Slash(Card::NoSuit, 0);
+        slash->setSkillName("_huwei");
+        if (player->isLocked(slash) || !player->canSlash(opponent, slash, false)) {
+            delete slash;
+            return false;
+        }
+        if (room->askForSkillInvoke(player, objectName()))
+            room->useCard(CardUseStruct(slash, player, opponent), false);
+        return false;
+    }
+};
+
 CangjiCard::CangjiCard() {
     will_throw = false;
 }
@@ -332,6 +376,52 @@ public:
         }
         player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
         return false;
+    }
+};
+
+class Manyi: public TriggerSkill {
+public:
+    Manyi(): TriggerSkill("manyi") {
+        events << Debut;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        ServerPlayer *opponent = player->getNext();
+        if (!opponent->isAlive())
+            return false;
+        SavageAssault *savage_assault = new SavageAssault(Card::NoSuit, 0);
+        savage_assault->setSkillName("_manyi");
+        if (!savage_assault->isAvailable(player)) {
+            delete savage_assault;
+            return false;
+        }
+        if (room->askForSkillInvoke(player, objectName()))
+            room->useCard(CardUseStruct(savage_assault, player, NULL));
+        return false;
+    }
+};
+
+class ManyiAvoid: public TriggerSkill {
+public:
+    ManyiAvoid(): TriggerSkill("#manyi-avoid") {
+        events << CardEffected;
+    }
+
+    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+        CardEffectStruct effect = data.value<CardEffectStruct>();
+        if (effect.card->isKindOf("SavageAssault")) {
+            room->broadcastSkillInvoke(player->isFemale() ? "juxiang" : "huoshou");
+
+            LogMessage log;
+            log.type = "#SkillNullify";
+            log.from = player;
+            log.arg = "manyi";
+            log.arg2 = "savage_assault";
+            room->sendLog(log);
+
+            return true;
+        } else
+            return false;
     }
 };
 
@@ -629,6 +719,14 @@ Special1v1Package::Special1v1Package()
     kof_zhenji->addSkill(new KOFQingguo);
     kof_zhenji->addSkill("luoshen");
 
+    General *kof_guanyu = new General(this, "kof_guanyu", "shu");
+    kof_guanyu->addSkill("wusheng");
+    kof_guanyu->addSkill(new Huwei);
+
+    General *kof_machao = new General(this, "kof_machao", "shu");
+    kof_machao->addSkill("tieji");
+    kof_machao->addSkill(new Xiaoxi);
+
     General *kof_nos_huangyueying = new General(this, "kof_nos_huangyueying", "shu", 3, false);
     kof_nos_huangyueying->addSkill("nosjizhi");
     kof_nos_huangyueying->addSkill(new Cangji);
@@ -640,6 +738,16 @@ Special1v1Package::Special1v1Package()
 
     General *kof_jiangwei = new General(this, "kof_jiangwei", "shu");
     kof_jiangwei->addSkill("tiaoxin");
+
+    General *kof_menghuo = new General(this, "kof_menghuo", "shu");
+    kof_menghuo->addSkill(new Manyi);
+    kof_menghuo->addSkill(new ManyiAvoid);
+    kof_menghuo->addSkill("zaiqi");
+    related_skills.insertMulti("manyi", "#manyi-avoid");
+
+    General *kof_zhurong = new General(this, "kof_zhurong", "shu", 4, false);
+    kof_zhurong->addSkill("manyi");
+    kof_zhurong->addSkill("juxiang");
 
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);

@@ -23,6 +23,16 @@ return {
 	["kofqingguo"] = "倾国",
 	[":kofqingguo"] = "你可以将一张装备区的装备牌当【闪】使用或打出。",
 
+	["kof_guanyu"] = "关羽1v1",
+	["&kof_guanyu"] = "关羽",
+	["huwei"] = "虎威",
+	[":huwei"] = "你登场时，你可以视为使用一张【水淹七军】。",
+
+	["kof_machao"] = "马超1v1",
+	["&kof_machao"] = "马超",
+	["xiaoxi"] = "骁袭",
+	[":xiaoxi"] = "你登场时，你可以视为使用一张【杀】。",
+
 	["kof_nos_huangyueying"] = "黄月英1v1",
 	["&kof_nos_huangyueying"] = "黄月英",
 	["cangji"] = "藏机",
@@ -38,6 +48,14 @@ return {
 
 	["kof_jiangwei"] = "姜维1v1",
 	["&kof_jiangwei"] = "姜维",
+
+	["kof_menghuo"] = "孟获1v1",
+	["&kof_menghuo"] = "孟获",
+	["manyi"] = "蛮裔",
+	[":manyi"] = "你登场时，你可以视为使用一张【南蛮入侵】。【南蛮入侵】对你无效。",
+
+	["kof_zhurong"] = "祝融1v1",
+	["&kof_zhurong"] = "祝融",
 
 	["kof_sunshangxiang"] = "孙尚香1v1",
 	["&kof_sunshangxiang"] = "孙尚香",

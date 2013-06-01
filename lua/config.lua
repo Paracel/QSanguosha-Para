@@ -78,7 +78,20 @@ config = {
 		"vs_xiahoudun",
 		"vs_guanyu",
 		"vs_zhaoyun",
-		"vs_lvbu"
+		"vs_lvbu",
+		"kof_zhangliao",
+		"kof_xuchu",
+		"kof_zhenji",
+		"kof_xiahouyuan",
+		"kof_guanyu",
+		"kof_machao",
+		"kof_nos_huangyueying",
+		"kof_huangzhong",
+		"kof_jiangwei",
+		"kof_menghuo",
+		"kof_zhurong",
+		"kof_sunshangxiang",
+		"kof_nos_diaochan"
 	},
 
 	kof_ban = {

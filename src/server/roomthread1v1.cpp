@@ -34,7 +34,7 @@ void RoomThread1v1::run() {
                 candidates << general->objectName();
         } else {
             candidates << "caocao" << "simayi" << "xiahoudun" << "kof_zhangliao"
-                       << "kof_xuchu" << "guojia" << "kof_zhenji" << /*kof*/"xiahouyuan"
+                       << "kof_xuchu" << "guojia" << "kof_zhenji" << "kof_xiahouyuan"
                        << "caoren" << "dianwei" << "kof_guanyu" << "zhangfei"
                        << "zhugeliang" << "zhaoyun" << "kof_machao" << "kof_nos_huangyueying"
                        << "kof_huangzhong" << "kof_jiangwei" << "kof_menghuo" << "kof_zhurong"

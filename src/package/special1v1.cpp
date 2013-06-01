@@ -145,6 +145,44 @@ public:
     }
 };
 
+class Suzi: public TriggerSkill {
+public:
+    Suzi(): TriggerSkill("suzi") {
+        events << BuryVictim;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (player->isNude())
+            return false;
+        ServerPlayer *xiahouyuan = room->findPlayerBySkillName(objectName());
+        if (!xiahouyuan)
+            return false;
+        if (room->askForSkillInvoke(xiahouyuan, objectName(), data)) {
+            room->broadcastSkillInvoke(objectName());
+
+            DummyCard *dummy = new DummyCard;
+            QList <const Card *> handcards = player->getHandcards();
+            foreach (const Card *card, handcards)
+                dummy->addSubcard(card);
+
+            QList <const Card *> equips = player->getEquips();
+            foreach (const Card *card, equips)
+                dummy->addSubcard(card);
+
+            if (dummy->subcardsLength() > 0) {
+                CardMoveReason reason(CardMoveReason::S_REASON_RECYCLE, xiahouyuan->objectName());
+                room->obtainCard(xiahouyuan, dummy, reason, false);
+            }
+            delete dummy;
+        }
+        return false;
+    }
+};
+
 class Huwei: public TriggerSkill {
 public:
     Huwei(): TriggerSkill("huwei") {
@@ -718,6 +756,10 @@ Special1v1Package::Special1v1Package()
     General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3);
     kof_zhenji->addSkill(new KOFQingguo);
     kof_zhenji->addSkill("luoshen");
+
+    General *kof_xiahouyuan = new General(this, "kof_xiahouyuan", "wei");
+    kof_xiahouyuan->addSkill("shensu");
+    kof_xiahouyuan->addSkill(new Suzi);
 
     General *kof_guanyu = new General(this, "kof_guanyu", "shu");
     kof_guanyu->addSkill("wusheng");

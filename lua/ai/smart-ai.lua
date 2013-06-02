@@ -163,8 +163,8 @@ function SmartAI:initialize(player)
 
 		setInitialTables()
 		if sgs.isRolePredictable() then
-			for _, aplayer in sgs.qlist(global_room:getOtherPlayers(global_room:getLord())) do
-				sgs.role_evaluation[aplayer:objectName()][aplayer:getRole()] = 65535
+			for _, aplayer in sgs.qlist(global_room:getAllPlayers()) do
+				if aplayer:getRole() ~= "lord" then sgs.role_evaluation[aplayer:objectName()][aplayer:getRole()] = 65535 end
 			end
 		end
 	end
@@ -207,7 +207,7 @@ function sgs.getValue(player)
 	return player:getHp() * 2 + player:getHandcardNum()
 end
 
-function sgs.getDefense(player)
+function sgs.getDefense(player, gameProcess)
 	if not player then return 0 end
 	local defense = math.min(sgs.getValue(player), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
@@ -758,7 +758,6 @@ function SmartAI:sortByCardNeed(cards, inverse)
 	end
 
 	table.sort(cards, compare_func)
-	if inverse then cards = sgs.reverse(cards) end
 end
 
 function SmartAI:getPriorTarget()
@@ -1567,6 +1566,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				intention = -30
 			end
 
+			if damage.transfer or damage.chain then intention = 0 end
 			if from then sgs.updateIntention(from, to, intention) end
 		end
 	elseif triggerEvent == sgs.PreCardUsed then

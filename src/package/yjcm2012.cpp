@@ -228,7 +228,7 @@ public:
                 }
             }
 
-            if (same_color && damage.from && !damage.from->canDiscard(damage.from, "h"))
+            if (same_color && damage.from && damage.from->canDiscard(damage.from, "h"))
                 room->askForDiscard(damage.from, objectName(), 1, 1);
         }
     }

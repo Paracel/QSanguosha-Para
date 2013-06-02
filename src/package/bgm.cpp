@@ -81,7 +81,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->canDiscard(player, "he") && !player->hasUsed("LihunCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("LihunCard");
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -2094,7 +2094,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *gongsunzan, QVariant &) const{
-        if (gongsunzan->getPhase() == Player::Discard && gongsunzan->canDiscard(gongsunzan, "he")) {
+        if (gongsunzan->getPhase() == Player::Discard && !gongsunzan->isNude()) {
             room->askForUseCard(gongsunzan, "@@diyyicong", "@diyyicong", -1, Card::MethodNone);
         }
         return false;

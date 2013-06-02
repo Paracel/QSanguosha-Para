@@ -964,11 +964,11 @@ bool QSanSkinScheme::load(Json::Value configs) {
     return _m_roomSkin.load(layoutFile, imageFile, audioFile, animFile);
 }
 
-const QSanRoomSkin& QSanSkinScheme::getRoomSkin() const{
+const QSanRoomSkin &QSanSkinScheme::getRoomSkin() const{
     return _m_roomSkin;
 }
 
-QSanSkinFactory& QSanSkinFactory::getInstance() {
+QSanSkinFactory &QSanSkinFactory::getInstance() {
     if (_sm_singleton == NULL)
         _sm_singleton = new QSanSkinFactory("skins/skinList.json");
     return *_sm_singleton;

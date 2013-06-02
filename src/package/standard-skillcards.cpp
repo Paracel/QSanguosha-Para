@@ -190,7 +190,7 @@ void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
     if (!from->isCardLimited(duel, Card::MethodUse) && !from->isProhibited(to, duel))
         room->useCard(CardUseStruct(duel, from, to));
     else
-        duel->deleteLater();
+        delete duel;
 }
 
 QingnangCard::QingnangCard() {

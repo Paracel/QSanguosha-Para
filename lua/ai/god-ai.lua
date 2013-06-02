@@ -616,8 +616,9 @@ end
 
 sgs.ai_skill_use["@@kuangfeng"] = function(self, prompt)
 	local friendly_fire
-	for _, friend in ipairs(self.friends) do
-		if friend:hasSkill("huoji") or friend:hasWeapon("fan") or (friend:hasSkill("yeyan") and friend:getMark("@flame") > 0) then
+	for _, friend in ipairs(self.friends_noself) do
+		if friend:faceUp() and not self:willSkipPlayPhase(friend)
+			and (friend:hasSkill("huoji") or friend:hasWeapon("fan") or (friend:hasSkill("yeyan") and friend:getMark("@flame") > 0)) then
 			friendly_fire = true
 			break
 		end
@@ -630,7 +631,7 @@ sgs.ai_skill_use["@@kuangfeng"] = function(self, prompt)
 			is_chained = is_chained + 1
 			table.insert(target, enemy)
 		end
-		if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
+		if enemy:hasArmorEffect("vine") then
 			table.insert(target, 1, enemy)
 			break
 		end

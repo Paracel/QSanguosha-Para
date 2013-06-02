@@ -173,6 +173,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             LogMessage log;
             log.type = "$AppendSeparator";
             room->sendLog(log);
+            room->addPlayerMark(player, "Global_TurnCount");
 
             if (!player->faceUp()) {
                 room->setPlayerFlag(player, "-Global_FirstRound");
@@ -885,6 +886,7 @@ bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                 LogMessage log;
                 log.type = "$AppendSeparator";
                 room->sendLog(log);
+                room->addPlayerMark(player, "Global_TurnCount");
 
                 if (!player->faceUp())
                     player->turnOver();
@@ -929,6 +931,7 @@ bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                     LogMessage log;
                     log.type = "$AppendSeparator";
                     room->sendLog(log);
+                    room->addPlayerMark(player, "Global_TurnCount");
 
                     if (!player->faceUp())
                         player->turnOver();

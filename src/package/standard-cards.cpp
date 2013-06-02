@@ -1111,12 +1111,14 @@ bool Dismantlement::targetFilter(const QList<const Player *> &targets, const Pla
 }
 
 void Dismantlement::onEffect(const CardEffectStruct &effect) const{
-    if (effect.from->isDead() || !effect.from->canDiscard(effect.to, "hej"))
+    if (effect.from->isDead())
         return;
 
     Room *room = effect.to->getRoom();
     bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013");
     QString flag = using_2013 ? "he" : "hej";
+    if (!effect.from->canDiscard(effect.to, flag))
+        return;
 
     int card_id = -1;
     AI *ai = effect.from->getAI();

@@ -87,7 +87,7 @@ return {
 	["juejing"] = "绝境",
 	[":juejing"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸X张牌。你的手牌上限+2。（X为你已损失的体力值）",
 	["longhun"] = "龙魂",
-	[":longhun"] = "你可以将X张同花色的牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。（X为你的当前体力值且至少为1）",
+	[":longhun"] = "你可以将X张同花色的牌按以下规则使用或打出：<font color=\"red\">♥</font>当【桃】；<font color=\"red\">♦</font>当火【杀】；♠当【无懈可击】；♣当【闪】。（X为你当前的体力值且至少为1）",
 
 	["#shensimayi"] = "晋国之祖",
 	["shensimayi"] = "神司马懿",

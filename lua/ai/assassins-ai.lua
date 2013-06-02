@@ -7,7 +7,6 @@ end
 sgs.ai_skill_choice.moukui = function(self, choices, data)
 	local target = self.moukuitarget
 	if not target then return "draw" end
-	local dnd = self:doNotDiscard(target, "he", false, 1, "moukui")
 	if self:isEnemy(target) and self:doNotDiscard(target, "he", false, 1, "moukui") then return "draw" end
 	return "discard"
 end

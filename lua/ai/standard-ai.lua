@@ -640,7 +640,7 @@ end
 
 function SmartAI:willSkipPlayPhase(player, no_null)
 	local player = player or self.player
-	if player:isSkipped(sgs.Player_Play) then return false end
+	if player:isSkipped(sgs.Player_Play) then return true end
 
 	local fuhuanghou = self.room:findPlayerBySkillName("zhuikong")
 	if fuhuanghou and fuhuanghou:objectName() ~= player:objectName() and self:isEnemy(player, fuhuanghou)
@@ -1946,7 +1946,7 @@ sgs.ai_chaofeng.huatuo = 6
 sgs.ai_skill_cardask["@wushuang-slash-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
-	if self.player:hasSkill("wuyan") or target:hasSkill("wuyan") then return "." end
+	if not target:hasSkill("jueqing") and (self.player:hasSkill("wuyan") or target:hasSkill("wuyan")) then return "." end
 	if self:getCardsNum("Slash") < 2 and not (self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng)) then return "." end
 end
 
@@ -2267,6 +2267,7 @@ table.insert(sgs.ai_choicemade_filter.cardUsed, lijian_filter)
 sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 	if sgs.evaluatePlayerRole(to[1]) == sgs.evaluatePlayerRole(to[2]) then
 		if sgs.evaluatePlayerRole(from) == "rebel" and sgs.evaluatePlayerRole(to[1]) == sgs.evaluatePlayerRole(from) and to[1]:getHp() == 1 then
+		elseif to[1]:hasSkill("hunzi") and to[1]:getHp() == 2 and to[1]:getMark("hunzi") == 0 then
 		else
 			sgs.updateIntentions(from, to, 40)
 		end
@@ -2276,7 +2277,7 @@ sgs.ai_card_intention.LijianCard = function(self, card, from, to)
 end
 
 sgs.ai_skill_invoke.biyue = function(self, data)
-	return not (self.player:isKongcheng() and self:needKongcheng(self.player, true))
+	return not self:needKongcheng(self.player, true)
 end
 
 sgs.ai_chaofeng.diaochan = 4

@@ -403,9 +403,9 @@ sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
 
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local dummy_use = { isDummy = true }
-	self.room:setPlayerFlag(self.player, "slashNoDistanceLimit")
+	self.player:setFlags("slashNoDistanceLimit")
 	self:useBasicCard(slash, dummy_use)
-	self.room:setPlayerFlag(self.player, "-slashNoDistanceLimit")
+	self.player:setFlags("-slashNoDistanceLimit")
 
 	if dummy_use.card then
 		for _, enemy in ipairs(self.enemies) do
@@ -468,6 +468,7 @@ end
 
 sgs.ai_skill_playerchosen.shuangren = sgs.ai_skill_playerchosen.zero_card_as_slash
 sgs.ai_card_intention.ShuangrenCard = sgs.ai_card_intention.TianyiCard
+sgs.ai_cardneed.shuangren = sgs.ai_cardneed.bignumber
 
 xiongyi_skill = {}
 xiongyi_skill.name = "xiongyi"

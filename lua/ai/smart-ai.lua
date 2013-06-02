@@ -2159,7 +2159,7 @@ function SmartAI:getCardRandomly(who, flags)
 		if self:isEnemy(who) and who:isWounded() and card == who:getArmor() then
 			if r ~= (cards:length() - 1) then
 				card = cards:at(r + 1)
-			else
+			elseif r > 0 then
 				card = cards:at(r - 1)
 			end
 		end
@@ -2334,8 +2334,9 @@ end
 function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	local damage_nature = sgs.DamageStruct_Normal
 
+	local effect
 	if type(data) == "userdata" then
-		local effect = data:toSlashEffect()
+		effect = data:toSlashEffect()
 		if effect and effect.slash then damage_nature = effect.nature end
 	end
 
@@ -3427,11 +3428,11 @@ function SmartAI:damageIsEffective(player, nature, source)
 	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
 	if player:hasSkill("mingshi") and source:getEquips():length() - (self.equipsToDec or 0) <= player:getEquips():length() then return false end
 	if player:hasSkill("yuce") and not player:isKongcheng() and player:getHp() > 1 then
-		if self:isFriend(player) then return false
+		if self:isFriend(player, source) then return false
 		else
 			if (getKnownCard("TrickCard", player, "h") + getKnownCard("EquipCard", player, "h") < player:getHandcardNum()
-				and self:getCardsNum("TrickCard", self.player, "h") + self:getCardsNum("EquipCard", self.player, "h") < 1)
-				or self:getCardsNum("BasicCard", self.player, "h") < 2 then
+				and self:getCardsNum("TrickCard", source, "h") + self:getCardsNum("EquipCard", source, "h") < 1)
+				or self:getCardsNum("BasicCard", source, "h") < 2 then
 				return false
 			end
 		end
@@ -4074,7 +4075,7 @@ function SmartAI:useSkillCard(card, use)
 	else
 		name = card:getClassName()
 	end
-	if not sgs.ai_skill_use_func[name](card, use, self) then return end
+	if not sgs.ai_skill_use_func[name] then return end
 	sgs.ai_skill_use_func[name](card, use, self)
 	if use.to then
 		if not use.to:isEmpty() and sgs.dynamic_value.damage_card[name] then
@@ -4440,7 +4441,7 @@ function SmartAI:useTrickCard(card, use)
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then
 		if not (card:isKindOf("AOE") or card:isKindOf("DelayedTrick") or card:isKindOf("IronChain")) and not (card:isKindOf("Duel") and self.player:getMark("@wrath") > 0) then return end
 	end
-	if self:needRende() then return end
+	if self:needRende() and not card:isKindOf("ExNihilo") then return end
 	if card:isKindOf("AOE") then
 		local others = self.room:getOtherPlayers(self.player)
 		others = sgs.QList2Table(others)
@@ -4480,8 +4481,8 @@ function SmartAI:useTrickCard(card, use)
 	end
 	if use.to then
 		if not use.to:isEmpty() and sgs.dynamic_value.damage_card[card:getClassName()] then
+			local nature = card:isKindOf("FireAttack") and sgs.DamageStruct_Fire or sgs.DamageStruct_Normal
 			for _, target in sgs.qlist(use.to) do
-				local nature = card:isKindOf("FireAttack") and sgs.DamageStruct_Fire or sgs.DamageStruct_Normal
 				if self:damageIsEffective(target, nature) then return end
 			end
 			use.card = nil
@@ -4567,6 +4568,7 @@ end
 
 function SmartAI:getSameEquip(card, player)
 	player = player or self.player
+	if not card then return end
 	if card:isKindOf("Weapon") then return player:getWeapon()
 	elseif card:isKindOf("Armor") then return player:getArmor()
 	elseif card:isKindOf("DefensiveHorse") then return player:getDefensiveHorse()

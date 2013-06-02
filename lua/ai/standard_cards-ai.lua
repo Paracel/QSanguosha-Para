@@ -387,7 +387,7 @@ function SmartAI:useCardSlash(card, use)
 
 			if not slash_prohibit then
 				if (not use.current_targets or not table.contains(use.current_targets, friend:objectName()))
-					and ((self.player:canSlash(friend, card, not no_distance, rangefix))
+					and (self.player:canSlash(friend, card, not no_distance, rangefix)
 						or (use.isDummy and (self.player:distanceTo(friend, rangefix) <= self.predictedRange)))
 					and self:slashIsEffective(card, friend) then
 					use.card = card
@@ -727,10 +727,10 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	if not self:hasHeavySlashDamage(target, slash, self.player) and self:getDamagedEffects(self.player, target, slash) then return "." end
 	if self:isFriend(target) then
 		if self:findLeijiTarget(self.player, 50, target) then return end
+		if target:hasSkill("jieyin") and not self.player:isWounded() and self.player:isMale() and not self.player:hasSkill("leiji") then return "." end
 		if not target:hasSkill("jueqing") then
 			if (target:hasSkill("nosrende") or (target:hasSkill("rende") and not target:hasUsed("RendeCard"))) and self.player:hasSkill("jieming") then return "." end
 			if target:hasSkill("pojun") and not self.player:faceUp() then return "." end
-			if (target:hasSkill("jieyin") and (not self.player:isWounded()) and self.player:isMale()) and not self.player:hasSkill("leiji") then return "." end
 			if self.player:isChained() and self:isGoodChainTarget(self.player) then return "." end
 		end
 	else
@@ -1380,7 +1380,7 @@ sgs.ai_keep_value.Nullification = 3
 sgs.ai_use_value.Nullification = 8
 
 function SmartAI:useCardAmazingGrace(card, use)
-	if self.player:hasSkill("noswuyan") then use.card = card end
+	if self.player:hasSkill("noswuyan") then use.card = card return end
 	if (self.role == "lord" or self.role == "loyalist") and sgs.turncount <= 2 and self.player:getSeat() <= 3 and self.player:aliveCount() > 5 then return end
 	local value = 1
 	local suf, coeff = 0.8, 0.8

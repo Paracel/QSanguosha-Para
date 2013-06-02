@@ -358,9 +358,9 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 
 	local slash = self:getCard("Slash")
 	local dummy_use = { isDummy = true }
-	self.room:setPlayerFlag(self.player, "slashNoDistanceLimit")
+	self.player:setFlags("slashNoDistanceLimit")
 	if slash then self:useBasicCard(slash, dummy_use) end
-	self.room:setPlayerFlag(self.player, "-slashNoDistanceLimit")
+	self.player:setFlags("-slashNoDistanceLimit")
 
 	sgs.ai_use_priority.TianyiCard = (slashcount >= 1 and dummy_use.card) and 7.2 or 1.2
 	if slashcount >= 1 and dummy_use.card then

@@ -482,7 +482,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 			break
 		end
 	end
-	return #to_discard > 1
+	return #to_discard > 0
 end
 
 sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, include_equip)

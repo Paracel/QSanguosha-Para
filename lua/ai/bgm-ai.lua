@@ -399,7 +399,7 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 				and (self:getDangerousCard(enemy) or self:getValuableCard(enemy)) then
 					self.tanhu_card = max_card:getEffectiveId()
 					use.card = sgs.Card_Parse("@TanhuCard=.")
-					if use.to then use.to:append(enemy)	end
+					if use.to then use.to:append(enemy) end
 					return
 			end
 		end

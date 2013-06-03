@@ -859,7 +859,9 @@ sgs.ai_card_intention.NosRendeCard = sgs.ai_card_intention.RendeCard
 
 sgs.dynamic_value.benefit.NosRendeCard = true
 
-sgs.ai_cardneed.nosjizhi = sgs.ai_cardneed.jizhi
+function sgs.ai_cardneed.nosjizhi(to, card)
+	return card:isNDTrick()
+end
 
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
 

@@ -1218,7 +1218,7 @@ sgs.ai_skill_cardask["@jizhi-exchange"] = function(self, data)
 end
 
 function sgs.ai_cardneed.jizhi(to, card)
-	return card:isNDTrick()
+	return card:getTypeId() == sgs.Card_TypeTrick
 end
 
 sgs.jizhi_keep_value = {

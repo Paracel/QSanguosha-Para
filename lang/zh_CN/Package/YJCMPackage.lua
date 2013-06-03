@@ -8,7 +8,7 @@ return {
 	["designer:caozhi"] = "Foxear",
 	["illustrator:caozhi"] = "木美人",
 	["luoying"] = "落英",
-	[":luoying"] = "其他角色的牌因判定或弃置而置入弃牌堆时，你可以依次获得其中的♣牌。";
+	[":luoying"] = "其他角色的牌因判定或弃置而置入弃牌堆时，你可以依次获得其中的♣牌。",
 	["jiushi"] = "酒诗",
 	[":jiushi"] = "若你的武将牌正面朝上，你可以将武将牌翻面，视为你使用了一张【酒】。每当你受到伤害扣减体力前，若武将牌背面朝上，你可以在伤害结算后将武将牌翻至正面朝上。",
 
@@ -37,7 +37,7 @@ return {
 	["designer:masu"] = "点点",
 	["illustrator:masu"] = "张帅",
 	["xinzhan"] = "心战",
-	[":xinzhan"] = "<font color=\"green\"><b>阶段技。</b></font>若你的手牌数大于你的体力上限，你可以观看牌堆顶的3张牌，展示并获得其中任意数量的<font color=\"red\">♥</font>牌，然后将其余的牌以任意顺序置于牌堆顶。",
+	[":xinzhan"] = "<font color=\"green\"><b>阶段技。</b></font>若你的手牌数大于你的体力上限，你可以观看牌堆顶的三张牌，展示并获得其中任意数量的<font color=\"red\">♥</font>牌，然后将其余的牌以任意顺序置于牌堆顶。",
 	["huilei"] = "挥泪",
 	[":huilei"] = "<font color=\"blue\"><b>锁定技。</b></font>杀死你的角色弃置其所有牌。",
 	["#HuileiThrow"] = "%from 的“%arg”被触发，伤害来源 %to 弃置所有牌",
@@ -63,9 +63,8 @@ return {
 	["lingtong"] = "凌统",
 	["designer:lingtong"] = "ShadowLee",
 	["illustrator:lingtong"] = "绵Myan",
-
 	["xuanfeng"] = "旋风",
-	[":xuanfeng"] = "每当你失去一次装备区的装备牌后，或弃牌阶段弃置的牌数首次达到两张或更多后，你可以弃置一名其他角色的一张牌，然后弃置一名其他角色的一张牌。",
+	[":xuanfeng"] = "每当你失去一次装备区的装备牌后，或于弃牌阶段内因你的弃置而失去两张或更多的手牌后（弃牌阶段限一次），你可以弃置一名其他角色的一张牌，然后弃置一名其他角色的一张牌。",
 
 	["#wuguotai"] = "武烈皇后",
 	["wuguotai"] = "吴国太",
@@ -113,7 +112,7 @@ return {
 	["designer:zhangchunhua"] = "JZHIEI",
 	["illustrator:zhangchunhua"] = "樱花闪乱",
 	["jueqing"] = "绝情",
-	[":jueqing"] = "<font color=\"blue\"><b>锁定技。</b></font>伤害结算开始前，你将要造成的伤害视为体力流失。",
+	[":jueqing"] = "<font color=\"blue\"><b>锁定技。</b></font>伤害结算开始前，你将要造成的伤害视为失去体力。",
 	["shangshi"] = "伤逝",
 	[":shangshi"] = "每当你于弃牌阶段外手牌数改变后，或已损失体力值改变后，或弃牌阶段结束后，你可以将手牌补至X张。（X为你已损失的体力值且至多为2）",
 
@@ -131,5 +130,5 @@ return {
 	["power"] = "权",
 	["$ZiliAnimate"] = "image=image/animate/zili.png",
 	["paiyi"] = "排异",
-	[":paiyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将一张“权”置入弃牌堆并选择一名角色：若如此做，该角色摸两张牌。若该角色手牌数大于你的手牌数，你对其造成1点伤害",
+	[":paiyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将一张“权”置入弃牌堆并选择一名角色：若如此做，该角色摸两张牌。若该角色手牌数大于你的手牌数，你对其造成1点伤害。",
 }

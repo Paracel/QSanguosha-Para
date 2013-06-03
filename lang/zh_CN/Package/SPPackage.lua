@@ -61,7 +61,7 @@ return {
 	["xueji"] = "血祭",
 	[":xueji"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张红色牌并选择你攻击范围内的至多X名其他角色：若如此做，你对这些角色各造成1点伤害，然后这些角色各摸一张牌。（X为你已损失的体力值）",
 	["huxiao"] = "虎啸",
-	[":huxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>若你于出牌阶段使用【杀】被【闪】抵消，本阶段你可以额外使用一张【杀】。",
+	[":huxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你于出牌阶段使用【杀】被【闪】抵消后，本阶段你可以额外使用一张【杀】。",
 	["wuji"] = "武继",
 	[":wuji"] = "<font color=\"purple\"><b>觉醒技。</b></font>结束阶段开始时，若你于本回合造成了至少3点伤害，你增加1点体力上限，回复1点体力，然后失去技能“虎啸”。",
 	["$WujiAnimate"] = "image=image/animate/wuji.png",
@@ -123,7 +123,7 @@ return {
 	["shenwei"] = "神威",
 	[":shenwei"] = "<font color=\"blue\"><b>锁定技。</b></font>摸牌阶段，你额外摸两张牌。你的手牌上限+2。",
 	["shenji"] = "神戟",
-	[":shenji"] = "若你的装备区没有武器牌，每当你使用【杀】时，你可以额外选择至多两个目标。",
+	[":shenji"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的装备区没有武器牌，你使用【杀】可以额外选择至多两个目标。",
 
 	["#HulaoTransfigure"] = "%arg 变身为 %arg2, 第二阶段开始！",
 	["#Reforming"] = "%from 进入重整状态",

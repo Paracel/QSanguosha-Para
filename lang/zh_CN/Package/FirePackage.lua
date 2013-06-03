@@ -36,7 +36,7 @@ return {
 	["lianhuan"] = "连环",
 	[":lianhuan"] = "你可以将一张♣手牌当【铁索连环】使用或重铸。",
 	["niepan"] = "涅槃",
-	[":niepan"] = "<font color=\"red\"><b>限定技。</b></font>当你处于濒死状态时，你可以弃置你区域里的牌，将武将牌翻至正面朝上并重置之，然后回复至3点体力。",
+	[":niepan"] = "<font color=\"red\"><b>限定技。</b></font>当你处于濒死状态时，你可以弃置你区域里的牌，将武将牌翻至正面朝上并重置之，然后摸三张牌并回复至3点体力。",
 	["$NiepanAnimate"] = "image=image/animate/niepan.png",
 	["@nirvana"] = "涅槃",
 
@@ -52,7 +52,7 @@ return {
 	["luanji"] = "乱击",
 	[":luanji"] = "你可以将两张相同花色的手牌当【万箭齐发】使用。",
 	["xueyi"] = "血裔",
-	[":xueyi"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>场上每有一名存活的其他群雄角色，你的手牌上限+2。",
+	[":xueyi"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>你的手牌上限+2X。（X为其他群雄角色的数量）",
 
 	["#yanliangwenchou"] = "虎狼兄弟",
 	["yanliangwenchou"] = "颜良＆文丑",

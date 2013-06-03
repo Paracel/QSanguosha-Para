@@ -13,13 +13,13 @@ return {
 	["neo_xuchu"] = "许褚-新",
 	["&neo_xuchu"] = "许褚",
 	["neoluoyi"] = "裸衣",
-	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张装备牌：若如此做，你使用且你为伤害来源的【杀】或【决斗】对目标角色造成伤害时，此伤害+1，直到回合结束。",
+	[":neoluoyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置一张装备牌：若如此做，本回合你使用【杀】或【决斗】对目标角色造成伤害时，此伤害+1。",
 	["#LuoyiBuff"] = "%from 的“<font color=\"yellow\"><b>裸衣</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
 
 	["neo_caoren"] = "曹仁-新",
 	["&neo_caoren"] = "曹仁",
 	["neojushou"] = "据守",
-	[":neojushou"] = "结束阶段开始时，你可以摸X+2张牌：若如此做，将武将牌翻面。（X为你已损失的体力值）",
+	[":neojushou"] = "结束阶段开始时，你可以摸X+2张牌，然后将武将牌翻面。（X为你已损失的体力值）",
 
 	["neo_guanyu"] = "关羽-新",
 	["&neo_guanyu"] = "关羽",
@@ -56,6 +56,4 @@ return {
 	["zhulou"] = "筑楼",
 	[":zhulou"] = "结束阶段开始时，你可以摸两张牌，然后选择一项：失去1点体力，或弃置一张武器牌。",
 	["@zhulou-discard"] = "请弃置一张武器牌",
-	["zhulou:throw"] = "弃置一张武器牌",
-	["zhulou:losehp"] = "失去1点体力",
 }

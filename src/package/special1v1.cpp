@@ -475,6 +475,8 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == sunshangxiang && move.from_places.contains(Player::PlaceEquip)) {
             for (int i = 0; i < move.card_ids.size(); i++) {
+                if (!sunshangxiang->isAlive())
+                    return false;
                 if (move.from_places[i] == Player::PlaceEquip) {
                     QStringList choicelist;
                     choicelist << "draw" << "cancel";

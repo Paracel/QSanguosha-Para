@@ -290,7 +290,7 @@ public:
             if (!source || source == player) return false;
             int x = damage.damage;
             for (int i = 0; i < x; i++) {
-                if (room->askForSkillInvoke(player, objectName(), data)) {
+                if (source->isAlive() && player->isAlive() && room->askForSkillInvoke(player, objectName(), data)) {
                     room->broadcastSkillInvoke(objectName(), qrand() % 2 + 3);
                     const Card *card = NULL;
                     if (!source->isKongcheng())
@@ -397,13 +397,13 @@ public:
             room->sendLog(log);
             room->notifySkillInvoked(player, objectName());
 
-            killer->throwAllHandCardsAndEquips();
-
             QString killer_name = killer->getGeneralName();
             if (killer_name.contains("zhugeliang") || killer_name == "wolong")
                 room->broadcastSkillInvoke(objectName(), 1);
             else
                 room->broadcastSkillInvoke(objectName(), 2);
+
+            killer->throwAllHandCardsAndEquips();
         }
 
         return false;
@@ -451,6 +451,8 @@ public:
                         first_id = room->askForCardChosen(lingtong, first, "he", "xuanfeng", false, Card::MethodDiscard);
                         room->throwCard(first_id, first, lingtong);
                     }
+                    if (!lingtong->isAlive())
+                        return false;
                     targets.clear();
                     foreach (ServerPlayer *target, room->getOtherPlayers(lingtong)) {
                         if (lingtong->canDiscard(target, "he"))

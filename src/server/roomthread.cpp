@@ -656,7 +656,20 @@ void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
     foreach (TriggerEvent triggerEvent, events) {
         QList<const TriggerSkill *> &table = skill_table[triggerEvent];
         table << skill;
-        //qStableSort(table.begin(), table.end(), CompareByPriority);
+        foreach (const TriggerSkill *askill, table) {
+            double priority = askill->getPriority();
+            int len = room->getPlayers().length();
+            foreach (ServerPlayer *p, room->getAllPlayers(true)) {
+                if (p->hasSkill(askill->objectName())) {
+                    priority += (double)len / 100;
+                    break;
+                }
+                len--;
+            }
+            TriggerSkill *mutable_skill = const_cast<TriggerSkill *>(askill);
+            mutable_skill->setDynamicPriority(priority);
+        }
+        qStableSort(table.begin(), table.end(), CompareByPriority);
     }
 
     if (skill->isVisible()) {

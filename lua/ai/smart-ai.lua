@@ -3638,6 +3638,7 @@ end
 
 function getKnownCard(player, class_name, viewas, flags)
 	flags = flags or "h"
+	player = findPlayerByObjectName(global_room, player:objectName())
 	local cards = player:getCards(flags)
 	local known = 0
 	local suits = { ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }

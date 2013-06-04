@@ -220,7 +220,8 @@ void JujianCard::onEffect(const CardEffectStruct &effect) const{
         room->recover(effect.to, recover);
     }
     else if (choice == "reset") {
-        room->setPlayerProperty(effect.to, "chained", false);
+        if (effect.to->isChained())
+            room->setPlayerProperty(effect.to, "chained", false);
         if (!effect.to->faceUp())
             effect.to->turnOver();
     }

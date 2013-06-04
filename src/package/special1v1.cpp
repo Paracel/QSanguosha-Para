@@ -159,7 +159,8 @@ public:
         if (player->isNude())
             return false;
         ServerPlayer *xiahouyuan = room->findPlayerBySkillName(objectName());
-        if (!xiahouyuan)
+        DeathStruct death = data.value<DeathStruct>();
+        if (!xiahouyuan || xiahouyuan == death.who)
             return false;
         if (room->askForSkillInvoke(xiahouyuan, objectName(), data)) {
             room->broadcastSkillInvoke(objectName());

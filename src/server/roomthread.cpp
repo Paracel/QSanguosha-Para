@@ -446,7 +446,7 @@ void RoomThread::actionHulaoPass(ServerPlayer *shenlvbu, QList<ServerPlayer *> l
     catch (TriggerEvent triggerEvent) {
         if (triggerEvent == StageChange) {
             stage = 2;
-            trigger(triggerEvent, (Room *)room, NULL);
+            trigger(triggerEvent, room, NULL);
             foreach (ServerPlayer *player, room->getPlayers()) {
                 if (player != shenlvbu) {
                     if (player->hasFlag("actioned"))

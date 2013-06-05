@@ -973,7 +973,7 @@ public:
                     return false;
                 QString pattern = ".|.|.|hand";
                 if (red_avail != black_avail)
-                    pattern = QString("%1|%2").arg(pattern).arg(red_avail ? "red" : "black");
+                    pattern = QString(".|%1|.|hand").arg(red_avail ? "red" : "black");
                 const Card *card = room->askForCard(player, pattern, "@xingwu", QVariant(), Card::MethodNone);
                 if (card) {
                     room->notifySkillInvoked(player, objectName());

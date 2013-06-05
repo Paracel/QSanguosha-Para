@@ -59,11 +59,8 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *yangxiu, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         ServerPlayer *current = room->getCurrent();
-        if (!current || current->isDead())
+        if (!current || current->getPhase() == Player::NotActive || current->isDead() || !damage.from)
             return false;
-
-        if (damage.from == NULL)
-           return false;
 
         if (room->askForSkillInvoke(yangxiu, objectName(), data)) {
             QString choice = room->askForChoice(yangxiu, objectName(), "BasicCard+EquipCard+TrickCard");

@@ -3723,7 +3723,6 @@ function SmartAI:getCards(class_name, flag)
 
 	local cards = {}
 	local card_place, card_str
-	if not room then card_place = sgs.Player_PlaceHand end
 
 	card_str = cardsViewValuable(self, class_name, player)
 	if card_str then
@@ -3732,7 +3731,7 @@ function SmartAI:getCards(class_name, flag)
 	end
 
 	for _, card in sgs.qlist(all_cards) do
-		card_place = card_place or room:getCardPlace(card:getEffectiveId())
+		card_place = room:getCardPlace(card:getEffectiveId())
 
 		if class_name == "." and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
 		elseif card:isKindOf(class_name) and not prohibitUseDirectly(card, player) and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)

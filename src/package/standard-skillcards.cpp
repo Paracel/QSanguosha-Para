@@ -55,7 +55,7 @@ void RendeCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
     if (room->getMode() == "04_1v3" && source->getMark("rende") >= 2) return;
     if (source->isKongcheng() || source->isDead()) return;
     room->addPlayerHistory(source, "RendeCard", -1);
-    if (!room->askForUseCard(source, "@@rende", "@rende-give", -1, Card::MethodUse))
+    if (!room->askForUseCard(source, "@@rende", "@rende-give", -1, Card::MethodNone))
         room->addPlayerHistory(source, "RendeCard");
 }
 

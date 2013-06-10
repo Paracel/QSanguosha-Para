@@ -81,6 +81,7 @@ void RoomThreadXMode::run() {
 void RoomThreadXMode::startArrange(QList<ServerPlayer *> &players, QList<QStringList> &to_arrange) {
     while (room->isPaused()) {}
     QList<ServerPlayer *> online;
+    QList<int> online_index;
     for (int i = 0; i < players.length(); i++) {
         ServerPlayer *player = players.at(i);
         if (!player->isOnline()) {
@@ -91,13 +92,14 @@ void RoomThreadXMode::startArrange(QList<ServerPlayer *> &players, QList<QString
             arrange(player, arranged);
         } else {
             online << player;
+            online_index << i;
         }
     }
     if (online.isEmpty()) return;
 
     for (int i = 0; i < online.length(); i++) {
         ServerPlayer *player = online.at(i);
-        player->m_commandArgs = toJsonArray(to_arrange.at(i));
+        player->m_commandArgs = toJsonArray(to_arrange.at(online_index.at(i)));
     }
 
     room->doBroadcastRequest(online, S_COMMAND_ARRANGE_GENERAL);
@@ -110,7 +112,7 @@ void RoomThreadXMode::startArrange(QList<ServerPlayer *> &players, QList<QString
             tryParse(clientReply, arranged);
             arrange(player, arranged);
         } else {
-            QStringList mutable_to_arrange = to_arrange.at(i);
+            QStringList mutable_to_arrange = to_arrange.at(online_index.at(i));
             qShuffle(mutable_to_arrange);
             QStringList arranged = mutable_to_arrange.mid(0, 3);
             arrange(player, arranged);

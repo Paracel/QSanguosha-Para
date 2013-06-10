@@ -111,6 +111,8 @@ config = {
 		"liubei",
 		"diaochan",
 		"huangyueying",
+		"st_yuanshu",
+		"st_huaxiong",
 		"nos_zhouyu"
 	},
 

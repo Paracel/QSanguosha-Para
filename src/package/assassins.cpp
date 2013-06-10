@@ -41,7 +41,7 @@ public:
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             if (effect.to->isDead() || effect.to->getMark(objectName() + effect.slash->toString()) <= 0)
                 return false;
-            if (!effect.from->isAlive() || !effect.to->isAlive() || effect.to->canDiscard(effect.from, "he"))
+            if (!effect.from->isAlive() || !effect.to->isAlive() || !effect.to->canDiscard(effect.from, "he"))
                 return false;
             int disc = room->askForCardChosen(effect.to, effect.from, "he", objectName(), false, Card::MethodDiscard);
             room->broadcastSkillInvoke(objectName(), 3);

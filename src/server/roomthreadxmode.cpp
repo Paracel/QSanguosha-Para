@@ -11,7 +11,7 @@ using namespace QSanProtocol;
 using namespace QSanProtocol::Utils;
 
 RoomThreadXMode::RoomThreadXMode(Room *room)
-    :room(room)
+    : room(room)
 {
     room->getRoomState()->reset();
 }
@@ -39,13 +39,6 @@ void RoomThreadXMode::run() {
          if (pack) generals << pack->findChildren<const General *>();
 	}
 
-    QStringList list_nostal, list_neo;
-    list_nostal << "nos_liubei" << "nos_diaochan" << "nos_huangyueying";
-    list_neo << "liubei" << "diaochan" << "huangyueying" << "st_yuanshu" << "st_huaxiong";
-    foreach (QString general_name, list_neo)
-        generals.removeOne(Sanguosha->getGeneral(general_name));
-    foreach (QString general_name, list_nostal)
-        generals << Sanguosha->getGeneral(general_name);
     foreach (const General *general, generals) {
         if (general->isTotallyHidden())
             continue;

@@ -620,7 +620,7 @@ MingceCard::MingceCard() {
 
 void MingceCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
-    QList <ServerPlayer *> targets;
+    QList<ServerPlayer *> targets;
     if (Slash::IsAvailable(effect.to)) {
         foreach (ServerPlayer *p, room->getOtherPlayers(effect.to)) {
             if (effect.to->canSlash(p))
@@ -628,7 +628,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
         }
     }
 
-    ServerPlayer *target;
+    ServerPlayer *target = NULL;
     QStringList choicelist;
     choicelist << "draw";
     if (!targets.isEmpty() && effect.from->isAlive()) {

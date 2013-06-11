@@ -440,7 +440,7 @@ public:
                     return false;
 
                 if (lingtong->askForSkillInvoke(objectName())) {
-                    if (lingtong->getMark("xuanfeng") >= 2)
+                    if (!move.from_places.contains(Player::PlaceEquip))
                         lingtong->setFlags("XuanfengUsed");
                     room->broadcastSkillInvoke(objectName());
 

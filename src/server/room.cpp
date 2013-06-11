@@ -496,13 +496,8 @@ void Room::slashEffect(const SlashEffectStruct &effect) {
             setEmotion(effect.to, "skill_nullify");
         else
             effect.to->setFlags("-Global_NonSkillNullify");
-        if (effect.slash) {
-            QStringList qinggang = effect.to->tag["Qinggang"].toStringList();
-            if (!qinggang.isEmpty()) {
-                qinggang.removeOne(effect.slash->toString());
-                effect.to->tag["Qinggang"] = qinggang;
-            }
-        }
+        if (effect.slash)
+            effect.to->removeQinggangTag(effect.slash);
     }
 }
 
@@ -519,13 +514,8 @@ void Room::slashResult(const SlashEffectStruct &effect, const Card *jink) {
             if (jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
                 setEmotion(effect.to, "jink");
         }
-        if (effect.slash) {
-            QStringList qinggang = effect.to->tag["Qinggang"].toStringList();
-            if (!qinggang.isEmpty()) {
-                qinggang.removeOne(effect.slash->toString());
-                effect.to->tag["Qinggang"] = qinggang;
-            }
-        }
+        if (effect.slash)
+            effect.to->removeQinggangTag(effect.slash);
         thread->trigger(SlashMissed, this, effect.from, data);
     }
 }
@@ -3114,13 +3104,8 @@ void Room::damage(const DamageStruct &data) {
 
     // Predamage
     if (thread->trigger(Predamage, this, damage_data.from, qdata)) {
-        if (damage_data.card && damage_data.card->isKindOf("Slash")) {
-            QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
-            if (!qinggang.isEmpty()) {
-                qinggang.removeOne(damage_data.card->toString());
-                damage_data.to->tag["Qinggang"] = qinggang;
-            }
-        }
+        if (damage_data.card && damage_data.card->isKindOf("Slash"))
+            damage_data.to->removeQinggangTag(damage_data.card);
         return;
     }
 
@@ -3148,13 +3133,8 @@ void Room::damage(const DamageStruct &data) {
 
             thread->trigger(PreDamageDone, this, damage_data.to, qdata);
 
-            if (damage_data.card && damage_data.card->isKindOf("Slash")) {
-                QStringList qinggang = damage_data.to->tag["Qinggang"].toStringList();
-                if (!qinggang.isEmpty()) {
-                    qinggang.removeOne(damage_data.card->toString());
-                    damage_data.to->tag["Qinggang"] = qinggang;
-                }
-            }
+            if (damage_data.card && damage_data.card->isKindOf("Slash"))
+                damage_data.to->removeQinggangTag(damage_data.card);
             thread->trigger(DamageDone, this, damage_data.to, qdata);
 
             if (damage_data.from)

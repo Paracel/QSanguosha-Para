@@ -893,6 +893,20 @@ bool Player::isCardLimited(const Card *card, Card::HandlingMethod method, bool i
     return false;
 }
 
+void Player::addQinggangTag(const Card *card) {
+    QStringList qinggang = this->tag["Qinggang"].toStringList();
+    qinggang.append(card->toString());
+    this->tag["Qinggang"] = QVariant::fromValue(qinggang);
+}
+
+void Player::removeQinggangTag(const Card *card) {
+    QStringList qinggang = this->tag["Qinggang"].toStringList();
+    if (!qinggang.isEmpty()) {
+        qinggang.removeOne(card->toString());
+        this->tag["Qinggang"] = qinggang;
+    }
+}
+
 void Player::copyFrom(Player *p) {
     Player *b = this;
     Player *a = p;

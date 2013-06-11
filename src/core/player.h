@@ -217,6 +217,10 @@ public:
     void clearCardLimitation(bool single_turn = false);
     bool isCardLimited(const Card *card, Card::HandlingMethod method, bool isHandcard = false) const;
 
+    // just for convenience
+    void addQinggangTag(const Card *card);
+    void removeQinggangTag(const Card *card);
+
     void copyFrom(Player *p);
 
     QList<const Player *> getSiblings() const;

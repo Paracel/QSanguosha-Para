@@ -970,13 +970,8 @@ public:
             room->sendLog(log);
             DamageStruct damage = data.value<DamageStruct>();
 
-            if (damage.card && damage.card->isKindOf("Slash")) {
-                QStringList qinggang = player->tag["Qinggang"].toStringList();
-                if (!qinggang.isEmpty()) {
-                    qinggang.removeOne(damage.card->toString());
-                    player->tag["Qinggang"] = qinggang;
-                }
-            }
+            if (damage.card && damage.card->isKindOf("Slash"))
+                player->removeQinggangTag(damage.card);
 
             DamageStruct newdamage = damage;
             newdamage.to = target;

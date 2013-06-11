@@ -1855,7 +1855,7 @@ public:
     virtual bool isEnabledAtPlay(const Player *player) const{
         JijiangViewAsSkill *jijiang = new JijiangViewAsSkill;
         jijiang->deleteLater();
-        return player->getPile("edict").length() > 0 && jijiang->isEnabledAtPlay(player);
+        return player->getPile("edict").length() > 0 && jijiang->_isEnabledAtPlay(player);
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{

@@ -482,8 +482,7 @@ JijiangViewAsSkill::JijiangViewAsSkill(): ZeroCardViewAsSkill("jijiang$") {
 }
 
 bool JijiangViewAsSkill::isEnabledAtPlay(const Player *player) const{
-    return hasShuGenerals(player) && player->hasLordSkill("jijiang") && !player->hasFlag("Global_JijiangFailed")
-           && Slash::IsAvailable(player);
+    return hasShuGenerals(player) && !player->hasFlag("Global_JijiangFailed") && Slash::IsAvailable(player);
 }
 
 bool JijiangViewAsSkill::isEnabledAtResponse(const Player *player, const QString &pattern) const{

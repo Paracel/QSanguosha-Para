@@ -2091,9 +2091,9 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				if trick:isKindOf("AmazingGrace") then
 					local NP = to:getNextAlive()
 					if self:isFriend(NP) then
-						local ag_ids = self.room:getTag("AmazingGrace"):toStringList()
+						local ag_ids = self.room:getTag("AmazingGrace"):toIntList()
 						local peach_num, exnihilo_num, snatch_num, analeptic_num, crossbow_num = 0, 0, 0, 0, 0
-						for _, ag_id in ipairs(ag_ids) do
+						for _, ag_id in sgs.qlist(ag_ids) do
 							local ag_card = sgs.Sanguosha:getCard(ag_id)
 							if ag_card:isKindOf("Peach") then peach_num = peach_num + 1 end
 							if ag_card:isKindOf("ExNihilo") then exnihilo_num = exnihilo_num + 1 end

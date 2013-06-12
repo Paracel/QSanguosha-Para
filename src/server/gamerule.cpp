@@ -868,7 +868,7 @@ bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                     p->drawCards(1);
             }
 
-            break;
+            return false;
         }
     case TurnStart: {
             if (player->isLord()) {

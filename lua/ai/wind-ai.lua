@@ -739,6 +739,7 @@ function SmartAI:getGuhuoViewCard(class_name)
 		["Slash"] = "slash", ["Jink"] = "jink",
 		["Peach"] = "peach", ["Analeptic"] = "analeptic",
 		["Nullification"] = "nullification",
+		["FireSlash"] = "fire_slash", ["ThunderSlash"] = "thunder_slash"
 	}
 
 	if #card_use > 1 or (#card_use > 0 and (card_use[1]:getSuit() == sgs.Card_Heart or ghly)) then

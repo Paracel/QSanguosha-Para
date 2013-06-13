@@ -105,6 +105,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_interactions[S_COMMAND_CHOOSE_ORDER] = &Client::askForOrder;
     m_interactions[S_COMMAND_CHOOSE_ROLE_3V3] = &Client::askForRole3v3;
     m_interactions[S_COMMAND_SURRENDER] = &Client::askForSurrender;
+    m_interactions[S_COMMAND_LUCK_CARD] = &Client::askForLuckCard;
 
     m_callbacks[S_COMMAND_FILL_AMAZING_GRACE] = &Client::fillAG;
     m_callbacks[S_COMMAND_TAKE_AMAZING_GRACE] = &Client::takeAG;
@@ -847,6 +848,12 @@ void Client::askForSurrender(const Json::Value &initiator) {
     setStatus(AskForSkillInvoke);
 }
 
+void Client::askForLuckCard(const Json::Value &) {
+    skill_to_invoke = "luck_card";
+    prompt_doc->setHtml(tr("Do you want to use the luck card?"));
+    setStatus(AskForSkillInvoke);
+}
+
 void Client::askForNullification(const Json::Value &arg) {
     if (!arg.isArray() || arg.size() != 3 || !arg[0].isString()
         || !(arg[1].isNull() || arg[1].isString())
@@ -1563,6 +1570,11 @@ void Client::log(const Json::Value &log_str) {
         tryParse(log_str, log);
         if (log.first() == "#BasaraReveal")
             Sanguosha->playSystemAudioEffect("choose-item");
+        else if (log.first() == "#UseLuckCard") {
+            ClientPlayer *from = getPlayer(log.at(1));
+            if (from && from != Self)
+                from->setHandcardNum(0);
+        }
         emit log_received(log);
     }
 }

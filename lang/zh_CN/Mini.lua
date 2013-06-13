@@ -1,5 +1,4 @@
-return
-{
+return {
 	["MiniScene"]= "小型场景",
 	["_mini_1"] = "狭路相逢",
 	["_mini_2"] = "谁与争锋",

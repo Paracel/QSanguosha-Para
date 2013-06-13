@@ -91,6 +91,7 @@ void Settings::init() {
     AlterAIDelayAD = value("AlterAIDelayAD", false).toBool();
     AIDelayAD = value("AIDelayAD", 0).toInt();
     SurrenderAtDeath = value("SurrenderAtDeath", false).toBool();
+    EnableLuckCard = value("EnableLuckCard", false).toBool();
     ServerPort = value("ServerPort", 9527u).toUInt();
     DisableLua = value("DisableLua", false).toBool();
 

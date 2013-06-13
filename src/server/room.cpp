@@ -3476,16 +3476,10 @@ void Room::_fillMoveInfo(CardsMoveStruct &moves, int card_index) const{
         moves.from_player_name = moves.from->objectName();
     }
     if (moves.to) {
-        if (moves.to->isAlive()) {
-            moves.to_player_name = moves.to->objectName();
-            int card_id = moves.card_ids[card_index];
-            if (moves.to_place == Player::PlaceSpecial || moves.to_place == Player::PlaceTable)
-                moves.to_pile_name = moves.to->getPileName(card_id);
-        } else {
-            moves.to = NULL;
-            moves.to_place = Player::DiscardPile;
-            return;
-        }
+        moves.to_player_name = moves.to->objectName();
+        int card_id = moves.card_ids[card_index];
+        if (moves.to_place == Player::PlaceSpecial || moves.to_place == Player::PlaceTable)
+            moves.to_pile_name = moves.to->getPileName(card_id);
     }
 }
 

@@ -1071,6 +1071,7 @@ public:
 
     void drawCards(ServerPlayer *player, int n, const char *reason = NULL);
     void drawCards(QList<ServerPlayer *> players, int n, const char *reason = NULL);
+    void drawCards(QList<ServerPlayer *> players, QList<int> n_list, const char *reason = NULL);
     void obtainCard(ServerPlayer *target, const Card *card, bool unhide = true);
     void obtainCard(ServerPlayer *target, int card_id, bool unhide = true);
 

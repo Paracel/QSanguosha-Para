@@ -130,18 +130,10 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             }
             room->setTag("FirstRound", true);
             if (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013") {
-                QList<CardsMoveStruct> moves;
-                foreach (ServerPlayer *player, room->getPlayers()) {
-                    QList<int> card_ids = room->getNCards(player->getMaxHp(), false);
-
-                    CardsMoveStruct move;
-                    move.card_ids = card_ids;
-                    move.from = NULL;
-                    move.to = player;
-                    move.to_place = Player::PlaceHand;
-                    moves.append(move);
-                }
-                room->moveCardsAtomic(moves, false);
+                QList<int> n_list;
+                foreach (ServerPlayer *player, room->getPlayers())
+                    n_list << player->getMaxHp();
+                room->drawCards(room->getPlayers(), n_list, QString());
             } else {
                 room->drawCards(room->getPlayers(), 4, QString());
             }

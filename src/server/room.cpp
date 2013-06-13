@@ -3350,10 +3350,20 @@ void Room::drawCards(ServerPlayer *player, int n, const QString &reason) {
 }
 
 void Room::drawCards(QList<ServerPlayer *> players, int n, const QString &reason) {
-    if (n <= 0) return;
+    QList<int> n_list;
+    n_list.append(n);
+    drawCards(players, n_list, reason);
+}
+
+void Room::drawCards(QList<ServerPlayer *> players, QList<int> n_list, const QString &reason) {
     QList<CardsMoveStruct> moves;
+    int index = -1, len = n_list.length();
+    Q_ASSERT(len >= 1);
     foreach (ServerPlayer *player, players) {
+        index++;
         if (!player->isAlive() && reason != "reform") continue;
+        int n = n_list.at(qMin(index, len - 1));
+        if (n <= 0) continue;
         QList<int> card_ids = getNCards(n, false);
 
         CardsMoveStruct move;

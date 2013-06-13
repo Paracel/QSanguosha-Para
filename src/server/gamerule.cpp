@@ -1102,6 +1102,7 @@ bool BasaraMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *pl
             if (Config.Enable2ndGeneral && player->getGeneral2Name() == "anjiang") {
                 QStringList generals = room->getTag(player->objectName()).toStringList();
                 room->changePlayerGeneral2(player, generals.at(0));
+                room->removeTag(player->objectName());
             }
             break;
         }

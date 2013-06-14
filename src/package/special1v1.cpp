@@ -716,6 +716,22 @@ public:
     }
 };
 
+class Wanrong: public TriggerSkill {
+public:
+    Wanrong(): TriggerSkill("wanrong") {
+        events << TargetConfirmed;
+        frequency = Frequent;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash") && use.to.contains(player)
+            && room->askForSkillInvoke(player, objectName(), data))
+            player->drawCards(1);
+        return false;
+    }
+};
+
 Drowning::Drowning(Suit suit, int number)
     : SingleTargetTrick(suit, number)
 {
@@ -813,6 +829,20 @@ Special1v1Package::Special1v1Package()
 }
 
 ADD_PACKAGE(Special1v1)
+
+Special1v1OLPackage::Special1v1OLPackage()
+    : Package("Special1v1OL")
+{
+    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3);
+    kof_daqiao->addSkill("guose");
+    kof_daqiao->addSkill(new Wanrong);
+
+    General *kof_pangde = new General(this, "kof_pangde", "qun", 4);
+    kof_pangde->addSkill("mengjin");
+    kof_pangde->addSkill("xiaoxi");
+}
+
+ADD_PACKAGE(Special1v1OL)
 
 #include "maneuvering.h"
 New1v1CardPackage::New1v1CardPackage()

@@ -30,6 +30,7 @@ config = {
 		"Special3v3",
 		"Special3v3_2013",
 		"Special1v1",
+		"Special1v1OL",
 		"SP",
 		"BGM",
 		"BGMDIY",

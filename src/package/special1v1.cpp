@@ -833,7 +833,7 @@ ADD_PACKAGE(Special1v1)
 Special1v1OLPackage::Special1v1OLPackage()
     : Package("Special1v1OL")
 {
-    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3);
+    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3, false);
     kof_daqiao->addSkill("guose");
     kof_daqiao->addSkill(new Wanrong);
 

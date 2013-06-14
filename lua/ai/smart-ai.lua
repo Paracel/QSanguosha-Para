@@ -3637,6 +3637,7 @@ function SmartAI:getKnownNum(player)
 end
 
 function getKnownCard(player, class_name, viewas, flags)
+	if not player then global_room:writeToConsole(debug.traceback()) return 0 end
 	flags = flags or "h"
 	player = findPlayerByObjectName(global_room, player:objectName())
 	local cards = player:getCards(flags)

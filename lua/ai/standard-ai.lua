@@ -1645,7 +1645,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 		self:sortByKeepValue(cards)
 		for _, card in ipairs(cards) do
 			local range_fix = 0
-			if card:isKindOf("Weapon") then range_fix = range_fix + sgs.weapon_range[card:getClassName()] - 1 end
+			if card:isKindOf("Weapon") then range_fix = range_fix + sgs.weapon_range[card:getClassName()] - self.player:getAttackRange(false) end
 			if card:isKindOf("OffensiveHorse") then range_fix = range_fix + 1 end
 			if not self.player:isCardLimited(card, method) and self.player:canSlash(who, nil, true, range_fix) then
 				return "@LiuliCard=" .. card:getEffectiveId() .. "->" .. who:objectName()

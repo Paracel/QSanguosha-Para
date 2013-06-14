@@ -367,7 +367,7 @@ function SmartAI:useCardSlash(card, use)
 	if card:isVirtualCard() then
 		if self.player:getWeapon() and card:getSubcards():contains(self.player:getWeapon():getEffectiveId()) then
 			if self.player:getWeapon():getClassName() ~= "Weapon" then
-				rangefix = sgs.weapon_range[self.player:getWeapon():getClassName()] - 1
+				rangefix = sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)
 			end
 		end
 		if self.player:getOffensiveHorse() and card:getSubcards():contains(self.player:getOffensiveHorse():getEffectiveId()) then

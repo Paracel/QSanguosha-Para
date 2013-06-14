@@ -327,7 +327,7 @@ end
 local function can_be_selected_as_target_xueji(self, card, who)
 	-- validation of rule
 	if self.player:getWeapon() and self.player:getWeapon():getEffectiveId() == card:getEffectiveId() then
-		if self.player:distanceTo(who, sgs.weapon_range[self.player:getWeapon():getClassName()] - 1) > self.player:getAttackRange() then return false end
+		if self.player:distanceTo(who, sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)) > self.player:getAttackRange() then return false end
 	elseif self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == card:getEffectiveId() then
 		if self.player:distanceTo(who, 1) > self.player:getAttackRange() then return false end
 	elseif self.player:distanceTo(who) > self.player:getAttackRange() then
@@ -732,7 +732,7 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 		if index <= hc_num then return 0
 		elseif index == hc_num + 1 then
 			if eq_num == 2 then
-				return sgs.weapon_range[self.player:getWeapon():getClassName()] - 1
+				return sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)
 			else
 				return 1
 			end

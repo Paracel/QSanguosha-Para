@@ -1663,7 +1663,7 @@ bool FuluanCard::targetFilter(const QList<const Player *> &targets, const Player
 
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        int distance_fix = weapon->getRange() - 1;
+        int distance_fix = weapon->getRange() - Self->getAttackRange(false);
         if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
             distance_fix += 1;
         return Self->distanceTo(to_select, distance_fix) <= Self->getAttackRange();

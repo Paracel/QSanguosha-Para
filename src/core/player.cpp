@@ -154,11 +154,11 @@ void Player::clearFlags() {
     flags.clear();
 }
 
-int Player::getAttackRange() const{
+int Player::getAttackRange(bool include_weapon) const{
     int original_range = 1;
     if (hasFlag("InfinityAttackRange") || getMark("InfinityAttackRange") > 0) original_range = 10000; // Actually infinity
     int weapon_range = 0;
-    if (weapon != NULL) {
+    if (include_weapon && weapon != NULL) {
         const Weapon *card = qobject_cast<const Weapon *>(weapon->getRealCard());
         Q_ASSERT(card);
         weapon_range = card->getRange();

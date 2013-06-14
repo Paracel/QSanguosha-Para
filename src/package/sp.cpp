@@ -465,7 +465,7 @@ bool XuejiCard::targetFilter(const QList<const Player *> &targets, const Player 
     int range_fix = 0;
     if (Self->getWeapon() && Self->getWeapon()->getEffectiveId() == getEffectiveId()) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        range_fix += weapon->getRange() - 1;
+        range_fix += weapon->getRange() - Self->getAttackRange(false);
     } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getEffectiveId() == getEffectiveId())
         range_fix += 1;
 
@@ -1261,7 +1261,7 @@ bool DuwuCard::targetFilter(const QList<const Player *> &targets, const Player *
 
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        int distance_fix = weapon->getRange() - 1;
+        int distance_fix = weapon->getRange() - Self->getAttackRange(false);
         if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
             distance_fix += 1;
         return Self->distanceTo(to_select, distance_fix) <= Self->getAttackRange();

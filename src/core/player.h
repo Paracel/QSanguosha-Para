@@ -36,7 +36,6 @@ class Player: public QObject {
     Q_PROPERTY(bool chained READ isChained WRITE setChained)
     Q_PROPERTY(bool owner READ isOwner WRITE setOwner)
     Q_PROPERTY(bool ready READ isReady WRITE setReady)
-    Q_PROPERTY(int atk READ getAttackRange)
 
     Q_PROPERTY(bool kongcheng READ isKongcheng)
     Q_PROPERTY(bool nude READ isNude)
@@ -105,7 +104,7 @@ public:
     Phase getPhase() const;
     void setPhase(Phase phase);
 
-    int getAttackRange() const;
+    int getAttackRange(bool include_weapon = true) const;
     bool inMyAttackRange(const Player *other) const;
 
     bool isAlive() const;

@@ -160,7 +160,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
     if (use.card->isVirtualCard()) {
         if (use.from->getWeapon() && use.card->getSubcards().contains(use.from->getWeapon()->getId())) {
             const Weapon *weapon = qobject_cast<const Weapon *>(use.from->getWeapon()->getRealCard());
-            rangefix += weapon->getRange() - 1;
+            rangefix += weapon->getRange() - Self->getAttackRange(false);
         }
         if (use.from->getOffensiveHorse() && use.card->getSubcards().contains(use.from->getOffensiveHorse()->getId()))
             rangefix += 1;
@@ -259,7 +259,7 @@ bool Slash::targetFilter(const QList<const Player *> &targets, const Player *to_
     int rangefix = 0;
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        rangefix += weapon->getRange() - 1;
+        rangefix += weapon->getRange() - Self->getAttackRange(false);
     }
 
     if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))

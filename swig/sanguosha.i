@@ -112,7 +112,7 @@ public:
     Phase getPhase() const;
     void setPhase(Phase phase);
 
-    int getAttackRange() const;
+    int getAttackRange(bool include_weapon = true) const;
     bool inMyAttackRange(const Player *other) const;
 
     bool isAlive() const;

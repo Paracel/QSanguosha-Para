@@ -4269,7 +4269,7 @@ void Room::askForLuckCard() {
     QList<ServerPlayer *> used;
     foreach (ServerPlayer *player, players) {
         Json::Value clientReply = player->getClientReply();
-        if (!player->m_isClientResponseReady || !clientReply.isBool())
+        if (!player->m_isClientResponseReady || !clientReply.isBool() || !clientReply.asBool())
             continue;
         used << player;
     }

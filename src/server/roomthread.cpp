@@ -524,11 +524,12 @@ void RoomThread::run() {
     }
 
     // start game
-    try {        
-        trigger(GameStart, (Room *)room, NULL);
-        constructTriggerTable();
-        if (room->mode == "06_3v3") {
-            QList<ServerPlayer *> warm, cool;
+    try {
+        QString order;
+        QList<ServerPlayer *> warm, cool;
+        QList<ServerPlayer *> first, second;
+        if (room->getMode() == "06_3v3") {
+            order = room->askForOrder(cool.first());
             foreach (ServerPlayer *player, room->m_players) {
                 switch (player->getRoleEnum()) {
                 case Player::Lord: warm.prepend(player); break;
@@ -537,10 +538,6 @@ void RoomThread::run() {
                 case Player::Rebel: cool.append(player); break;
                 }
             }
-
-            QString order = room->askForOrder(cool.first());
-            QList<ServerPlayer *> first, second;
-
             if (order == "warm") {
                 first = warm;
                 second = cool;
@@ -548,6 +545,10 @@ void RoomThread::run() {
                 first = cool;
                 second = warm;
             }
+        }
+        trigger(GameStart, (Room *)room, NULL);
+        constructTriggerTable();
+        if (room->getMode() == "06_3v3") {
             run3v3(first, second, game_rule, first.first());
         } else if (room->getMode() == "04_1v3") {
             ServerPlayer *shenlvbu = room->getLord();

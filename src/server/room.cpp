@@ -1880,25 +1880,8 @@ void Room::prepareForStart() {
             else
                 notifyProperty(player, player, "role");
         }
-    } else if (mode == "06_3v3") {
+    } else if (mode == "06_3v3" || mode == "06_XMode" || mode == "02_1v1") {
         return;
-    } else if (mode == "06_XMode") {
-        return;
-    } else if (mode == "02_1v1") {
-        if (qrand() % 2 == 0)
-            m_players.swap(0, 1);
-
-        QString order = askForOrder(m_players.at(0));
-        if (order == "warm") {
-            m_players.at(0)->setRole("lord");
-            m_players.at(1)->setRole("renegade");
-        } else {
-            m_players.at(0)->setRole("renegade");
-            m_players.at(1)->setRole("lord");
-        }
-
-        for (int i = 0; i < 2; i++)
-            broadcastProperty(m_players.at(i), "role");
     } else if (!Config.EnableHegemony && Config.EnableCheat && Config.value("FreeAssign", false).toBool()) {
         ServerPlayer *owner = getOwner();
         notifyMoveFocus(owner, S_COMMAND_CHOOSE_ROLE);

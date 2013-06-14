@@ -17,6 +17,7 @@ return {
 	["$nosgongqi"] = "弓马齐备，远射近突！",
 	["$nosjiefan1"] = "解烦军至，此危自解！",
 	["$nosjiefan2"] = "吾主莫慌，韩义公在此！",
+	["~nos_handang"] = "我主堪忧，我主堪忧啊……",
 
 	-- 旧 马岱
 	["cv:nos_madai"] = "风叹息",

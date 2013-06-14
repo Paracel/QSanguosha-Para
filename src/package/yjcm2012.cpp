@@ -514,25 +514,6 @@ public:
     }
 };
 
-GongqiCard::GongqiCard() {
-    target_fixed = true;
-}
-
-void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    room->setPlayerFlag(source, "InfinityAttackRange");
-    const Card *cd = Sanguosha->getCard(subcards.first());
-    if (cd->isKindOf("EquipCard")) {
-        QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *p, room->getOtherPlayers(source))
-            if (source->canDiscard(p, "he")) targets << p;
-        if (!targets.isEmpty()) {
-            ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi", "@gongqi-discard", true);
-            if (to_discard)
-                room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi", false, Card::MethodDiscard), to_discard, source);
-        }
-    }
-}
-
 class FuhunViewAsSkill: public ViewAsSkill {
 public:
     FuhunViewAsSkill(): ViewAsSkill("fuhun") {
@@ -596,6 +577,29 @@ public:
     }
 };
 
+GongqiCard::GongqiCard() {
+    mute = true;
+    target_fixed = true;
+}
+
+void GongqiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    room->setPlayerFlag(source, "InfinityAttackRange");
+    const Card *cd = Sanguosha->getCard(subcards.first());
+    if (cd->isKindOf("EquipCard")) {
+        room->broadcastSkillInvoke("gongqi", 2);
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(source))
+            if (source->canDiscard(p, "he")) targets << p;
+        if (!targets.isEmpty()) {
+            ServerPlayer *to_discard = room->askForPlayerChosen(source, targets, "gongqi", "@gongqi-discard", true);
+            if (to_discard)
+                room->throwCard(room->askForCardChosen(source, to_discard, "he", "gongqi", false, Card::MethodDiscard), to_discard, source);
+        }
+    } else {
+        room->broadcastSkillInvoke("gongqi", 1);
+    }
+}
+
 class Gongqi: public OneCardViewAsSkill {
 public:
     Gongqi(): OneCardViewAsSkill("gongqi") {
@@ -629,13 +633,7 @@ void JiefanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     room->removePlayerMark(source, "@rescue");
     ServerPlayer *target = targets.first();
     source->tag["JiefanTarget"] = QVariant::fromValue((PlayerStar)target);
-    int index = 1;
-    if (target->isLord()
-        && (target->getGeneralName().contains("sunquan")
-            || target->getGeneralName().contains("sunjian")
-            || target->getGeneralName().contains("sunce")))
-        index = 2;
-    room->broadcastSkillInvoke("jiefan", index);
+    room->broadcastSkillInvoke("jiefan");
     room->doLightbox("$JiefanAnimate", 2500);
 
     foreach (ServerPlayer *player, room->getAllPlayers()) {

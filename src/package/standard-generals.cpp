@@ -971,32 +971,14 @@ public:
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *luxun, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *luxun, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (move.from == luxun && move.from_places.contains(Player::PlaceHand)) {
-            if (triggerEvent == BeforeCardsMove) {
-                if (luxun->isKongcheng()) return false;
-                foreach (int id, luxun->handCards()) {
-                    if (!move.card_ids.contains(id))
-                        return false;
-                }
-                if (luxun->getMaxCards() == 0 && luxun->getPhase() == Player::Discard
-                    && move.reason.m_reason == CardMoveReason::S_REASON_RULEDISCARD) {
-                    luxun->setFlags("LianyingZeroMaxCards");
-                    return false;
-                }
-                luxun->addMark(objectName());
-            } else {
-                if (luxun->getMark(objectName()) == 0)
-                    return false;
-                luxun->removeMark(objectName());
-                if (room->askForSkillInvoke(luxun, objectName(), data)) {
-                    room->broadcastSkillInvoke(objectName());
-                    luxun->drawCards(1);
-                }
+        if (move.from == luxun && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
+            if (room->askForSkillInvoke(luxun, objectName(), data)) {
+                room->broadcastSkillInvoke(objectName());
+                luxun->drawCards(1);
             }
         }
-
         return false;
     }
 };

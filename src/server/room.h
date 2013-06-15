@@ -412,19 +412,20 @@ private:
             m_from_pile_name = moveOneTime.from_pile_names[index]; m_to_pile_name = moveOneTime.to_pile_name;
             m_open = moveOneTime.open[index];
             m_reason = moveOneTime.reason;
+            m_is_last_handcard = moveOneTime.is_last_handcard;
         }
 
         inline bool operator ==(const _MoveSeparateClassifier &other) const{
             return m_from == other.m_from && m_to == other.m_to
                    && m_from_place == other.m_from_place && m_to_place == other.m_to_place
                    && m_from_pile_name == other.m_from_pile_name && m_to_pile_name == other.m_to_pile_name
-                   && m_open == other.m_open && m_reason == other.m_reason;
+                   && m_open == other.m_open && m_reason == other.m_reason && m_is_last_handcard == other.m_is_last_handcard;
         }
         inline bool operator < (const _MoveSeparateClassifier &other) const{
             return m_from < other.m_from && m_to < other.m_to
                     && m_from_place < other.m_from_place && m_to_place < other.m_to_place
                     && m_from_pile_name < other.m_from_pile_name && m_to_pile_name < other.m_to_pile_name
-                    && m_open < other.m_open;
+                    && m_open < other.m_open && m_is_last_handcard < other.m_is_last_handcard;
         }
         Player *m_from;
         Player *m_to;
@@ -432,6 +433,7 @@ private:
         QString m_from_pile_name, m_to_pile_name;
         bool m_open;
         CardMoveReason m_reason;
+        bool m_is_last_handcard;
     };
 
     int _m_lastMovementId;

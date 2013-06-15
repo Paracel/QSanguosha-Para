@@ -497,6 +497,7 @@ struct CardsMoveStruct {
     Player *from, *to;
     CardMoveReason reason;
     bool open;
+    bool is_last_handcard;
 };
 
 struct CardsMoveOneTimeStruct {
@@ -509,6 +510,7 @@ struct CardsMoveOneTimeStruct {
     QString to_pile_name;
     
     QList<bool> open; // helper to prevent sending card_id to unrelevant clients
+    bool is_last_handcard;
 };
 
 struct DyingStruct {

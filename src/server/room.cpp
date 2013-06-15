@@ -3526,6 +3526,8 @@ QList<CardsMoveOneTimeStruct> Room::_mergeMoves(QList<CardsMoveStruct> cards_mov
                 moveOneTime.from_pile_names.append(move.from_pile_name);
                 moveOneTime.open.append(move.open);
             }
+            if (move.is_last_handcard)
+                moveOneTime.is_last_handcard = true;
         }
         result.append(moveOneTime);
     }
@@ -3571,6 +3573,19 @@ QList<CardsMoveStruct> Room::_separateMoves(QList<CardsMoveOneTimeStruct> moveOn
         card_move.open = cls.m_open;
         card_move.card_ids = ids.at(i);
         card_move.reason = cls.m_reason;
+
+        bool last_handcard = true;
+        if (card_move.from && !card_move.from->isKongcheng() && card_move.from_place == Player::PlaceHand) {
+            foreach (const Card *card, card_move.from->getHandcards()) {
+                if (!card_move.card_ids.contains(card->getEffectiveId())) {
+                    last_handcard = false;
+                    break;
+                }
+            }
+        } else {
+            last_handcard = false;
+        }
+        card_move.is_last_handcard = last_handcard;
 
         card_moves.append(card_move);
         i++;

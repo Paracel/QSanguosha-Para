@@ -850,29 +850,17 @@ public:
 class Juece: public TriggerSkill {
 public:
     Juece(): TriggerSkill("juece") {
-        events << BeforeCardsMove << CardsMoveOneTime;
+        events << CardsMoveOneTime;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (player->getPhase() != Player::NotActive && move.from && move.from_places.contains(Player::PlaceHand)) {
+        if (player->getPhase() != Player::NotActive && move.from && move.from_places.contains(Player::PlaceHand)
+            && move.is_last_handcard) {
             ServerPlayer *from = (ServerPlayer *)move.from;
-            if (triggerEvent == BeforeCardsMove) {
-                if (from->isKongcheng() || from->getHp() < 1) return false;
-                foreach (int id, from->handCards()) {
-                    if (!move.card_ids.contains(id))
-                        return false;
-                }
-                player->addMark(objectName());
-            } else {
-                if (player->getMark(objectName()) == 0)
-                    return false;
-                player->removeMark(objectName());
-                if (room->askForSkillInvoke(player, objectName(), data))
-                    room->damage(DamageStruct(objectName(), player, from));
-            }
+            if (room->askForSkillInvoke(player, objectName(), data))
+                room->damage(DamageStruct(objectName(), player, from));
         }
-
         return false;
     }
 };

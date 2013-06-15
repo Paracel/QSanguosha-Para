@@ -1053,6 +1053,10 @@ void Client::askForDiscard(const Json::Value &req) {
             prompt = tr("Please discard %1 card(s), include equip").arg(discard_num);
         else
             prompt = tr("Please discard %1 card(s), only hand cards is allowed").arg(discard_num);
+        if (min_num < discard_num) {
+            prompt.append("<br/>");
+            prompt.append(tr("%1 %2 cards(s) are required at least").arg(min_num).arg(m_canDiscardEquip ? "" : tr("hand")));
+        }
         prompt_doc->setHtml(prompt);
     } else {
         QStringList texts = prompt.split(":");

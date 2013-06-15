@@ -756,12 +756,14 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 				end
 				use.card = sgs.Card_Parse("@DuwuCard=" .. table.concat(hp_ids, "+"))
 				if use.to then use.to:append(enemy) end
+				return
 			end
 		else
 			if not self:isWeak() or self:getSaveNum(true) >= 1 then
 				if self.player:distanceTo(enemy, getRangefix(1)) <= self.player:getAttackRange() then
 					use.card = sgs.Card_Parse("@DuwuCard=" .. card_ids[1])
 					if use.to then use.to:append(enemy) end
+					return
 				end
 			end
 		end

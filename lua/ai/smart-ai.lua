@@ -3430,10 +3430,13 @@ function SmartAI:damageIsEffective(player, nature, source)
 	if player:hasSkill("yuce") and not player:isKongcheng() and player:getHp() > 1 then
 		if self:isFriend(player, source) then return false
 		else
-			if (getKnownCard(to, "TrickCard", false, "h") + getKnownCard(to, "EquipCard", false, "h") < to:getHandcardNum()
-				and self:getCardsNum(from, "TrickCard", false, "h") + self:getCardsNum(from, "EquipCard", false, "h") < 1)
-				or self:getCardsNum(from, "BasicCard", false, "h") < 2 then
-				return false
+			if source:objectName() ~= self.player:objectName() then
+				if source:getHandcardNum() <= 2 then return false end
+			else
+				if (getKnownCard(player, "TrickCard", false, "h") + getKnownCard(player, "EquipCard", false, "h") < player:getHandcardNum()
+					and self:getCardsNum("TrickCard", "h") + self:getCardsNum("EquipCard", "h") < 1) or self:getCardsNum("BasicCard", "h") < 2 then
+					return false
+				end
 			end
 		end
 	end
@@ -3910,12 +3913,12 @@ function getCardsNum(class_name, player)
 	end
 end
 
-function SmartAI:getCardsNum(class_name, player, flag, selfonly)
-	player = player or self.player
+function SmartAI:getCardsNum(class_name, flag, selfonly)
+	local player = self.player
 	local n = 0
 	if type(class_name) == "table" then
 		for _, each_class in ipairs(class_name) do
-			n = n + self:getCardsNum(each_class, player, flag, selfonly)
+			n = n + self:getCardsNum(each_class, flag, selfonly)
 		end
 		return n
 	end

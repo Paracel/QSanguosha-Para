@@ -2260,7 +2260,7 @@ function SmartAI:askForCardChosen(who, flags, reason, method)
 		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who, reason == "moukui")
 			and (not isDiscard or self.player:canDiscard(who, who:getArmor():getId())) then return who:getArmor():getId() end
 		if flags:match("e") and self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e", false, 1, reason) then
-			if who:getDefensiveHorse() and (not isDiscard or self.player:canDiscard(who, who:getDefensive():getEffectiveId())) then return who:getDefensiveHorse():getEffectiveId() end
+			if who:getDefensiveHorse() and (not isDiscard or self.player:canDiscard(who, who:getDefensiveHorse():getEffectiveId())) then return who:getDefensiveHorse():getEffectiveId() end
 			if who:getArmor() and not self:needToThrowArmor(who, reason == "moukui") and (not isDiscard or self.player:canDiscard(who, who:getArmor():getEffectiveId())) then return who:getArmor():getEffectiveId() end
 			if who:getOffensiveHorse() and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) and (not isDiscard or self.player:canDiscard(who, who:getOffensiveHorse():getEffectiveId())) then
 				return who:getOffensiveHorse():getEffectiveId()

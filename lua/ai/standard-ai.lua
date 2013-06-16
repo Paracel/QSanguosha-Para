@@ -2175,6 +2175,38 @@ function SmartAI:findLijianTarget(card_name, use)
 			end
 		end
 
+		if #males >= 1 and sgs.ai_role[males[1]:objectName()] == "rebel" and males[1]:getHp() == 1 then
+			if lord and self:isFriend(lord) and lord:isMale() and lord:objectName() ~= males[1]:objectName() and self:hasTrickEffective(duel, males[1], lord)
+				and not lord:isLocked(duel) and (getCardsNum("Slash", males[1]) < 1
+												or getCardsNum("Slash", males[1]) < getCardsNum("Slash", lord)
+												or (self:getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], "Slash", true, "he") == 0)) then
+				return males[1], lord
+			end
+			local afriend = findFriend_maxSlash(self, males[1])
+			if afriend and afriend:objectName() ~= males[1]:objectName() and not afriend:isLocked(duel) then
+				return males[1], afriend
+			end
+		end
+
+		if #males == 1 then
+			if males[1]:isLord() and sgs.turncount <= 1 and self.role == "rebel" and self.player:aliveCount() >= 3 then
+				local p_slash, max_p, max_pp = 0
+				for _, p in sgs.qlist(getOtherPlayers(self.player)) do
+					if p:isMale() and not self:isFriend(p) and p:objectName() ~= males[1]:objectName() and self:hasTrickEffective(duel, males[1], p)
+						and not p:isLocked(duel) and p_slash < getCardsNum("Slash", p) then
+						if p:getKingdom() == males[1]:getKingdom() then
+							max_p = p
+							break
+						elseif not max_pp then
+							max_pp = p
+						end
+					end
+				end
+				if max_p then table.insert(males, max_p) end
+				if max_pp and #males == 1 then table.insert(males, max_pp) end
+			end
+		end
+
 		if #males == 1 then
 			if #others >= 1 and not others[1]:isLocked(duel) then
 				table.insert(males, others[1])

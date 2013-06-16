@@ -1547,7 +1547,7 @@ sgs.ai_chaofeng.zhouyu = 3
 
 sgs.ai_skill_invoke.lianying = function(self, data)
 	if self:needKongcheng(self.player, true) then
-		return player:getPhase() == sgs.Player_Play
+		return self.player:getPhase() == sgs.Player_Play
 	end
 	return true
 end

@@ -105,9 +105,7 @@ public:
                         rest_num -= give;
                         QList<int> to_give = handcard_list.length() < give ? handcard_list : handcard_list.mid(0, give);
                         ServerPlayer *receiver = room->getOtherPlayers(target).at(qrand() % (target->aliveCount() - 1));
-                        DummyCard *dummy = new DummyCard;
-                        foreach (int id, to_give)
-                            dummy->addSubcard(id);
+                        DummyCard *dummy = new DummyCard(to_give);
                         room->obtainCard(receiver, dummy, false);
                         delete dummy;
                         if (rest_num == 0 || target->isKongcheng())
@@ -129,32 +127,31 @@ QiceCard::QiceCard() {
 bool QiceCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
     Card *mutable_card = const_cast<Card *>(card);
-    foreach (int id, subcards)
-        mutable_card->addSubcard(id);
+    if (mutable_card)
+        mutable_card->addSubcards(this->subcards);
     return mutable_card && mutable_card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, mutable_card, targets);
 }
 
 bool QiceCard::targetFixed() const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
     Card *mutable_card = const_cast<Card *>(card);
-    foreach (int id, subcards)
-        mutable_card->addSubcard(id);
+    if (mutable_card)
+        mutable_card->addSubcards(this->subcards);
     return mutable_card && mutable_card->targetFixed();
 }
 
 bool QiceCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
     CardStar card = Self->tag.value("qice").value<CardStar>();
     Card *mutable_card = const_cast<Card *>(card);
-    foreach (int id, subcards)
-        mutable_card->addSubcard(id);
+    if (mutable_card)
+        mutable_card->addSubcards(this->subcards);
     return mutable_card && mutable_card->targetsFeasible(targets, Self);
 }
 
 const Card *QiceCard::validate(CardUseStruct &card_use) const{
     Card *use_card = Sanguosha->cloneCard(user_string);
     use_card->setSkillName("qice");
-    foreach (int id, this->getSubcards())
-        use_card->addSubcard(id);
+    use_card->addSubcards(this->subcards);
     bool available = true;
     foreach (ServerPlayer *to, card_use.to)
         if (card_use.from->isProhibited(to, use_card)) {

@@ -59,9 +59,7 @@ void LihunCard::onEffect(const CardEffectStruct &effect) const{
     effect.from->turnOver();
     room->broadcastSkillInvoke("lihun", 1);
 
-    DummyCard *dummy_card = new DummyCard;
-    foreach (const Card *cd, effect.to->getHandcards())
-        dummy_card->addSubcard(cd);
+    DummyCard *dummy_card = new DummyCard(effect.to->handCards());
     if (!effect.to->isKongcheng()) {
         CardMoveReason reason(CardMoveReason::S_REASON_TRANSFER, effect.from->objectName(),
                               effect.to->objectName(), "lihun", QString());
@@ -840,8 +838,7 @@ public:
 
         if (no_basic == 0 && cards.isEmpty())
             return false;
-        foreach (const Card *c, cards)
-            dummy->addSubcard(c);
+        dummy->addSubcards(cards);
 
         if (no_basic == 0) {
             if (room->askForSkillInvoke(victim, "zhaolie_obtain", "obtain:" + liubei->objectName())) {
@@ -1620,9 +1617,7 @@ public:
                     }
 
                     if (!langgu_discard.empty()) {
-                        DummyCard *dummy = new DummyCard;
-                        foreach (int card_id, langgu_discard)
-                            dummy->addSubcard(card_id);
+                        DummyCard *dummy = new DummyCard(langgu_discard);
                         room->throwCard(dummy, damage.from, simazhao);
                         dummy->deleteLater();
                     }

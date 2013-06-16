@@ -679,11 +679,7 @@ AmazingGrace::AmazingGrace(Suit suit, int number)
 void AmazingGrace::doPreAction(Room *room, const CardUseStruct &) const{
     QList<int> card_ids = room->getNCards(room->getAllPlayers().length());
     room->fillAG(card_ids);
-
-    QVariantList ag_list;
-    foreach (int card_id, card_ids)
-        ag_list << card_id;
-    room->setTag("AmazingGrace", ag_list);
+    room->setTag("AmazingGrace", IntList2VariantList(card_ids));
 }
 
 void AmazingGrace::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -693,9 +689,7 @@ void AmazingGrace::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     // throw the rest cards
     QVariantList ag_list = room->getTag("AmazingGrace").toList();
     if (ag_list.isEmpty()) return;
-    DummyCard *dummy = new DummyCard;
-    foreach (QVariant card_id, ag_list)
-        dummy->addSubcard(card_id.toInt());
+    DummyCard *dummy = new DummyCard(VariantList2IntList(ag_list));
     CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, QString(), "amazing_grace", QString());
     room->throwCard(dummy, reason, NULL);
     delete dummy;

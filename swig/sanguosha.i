@@ -807,6 +807,7 @@ protected:
 class DummyCard: public Card {
 public:
     DummyCard();
+    DummyCard(const QList<int> &subcards);
 };
 
 class Package: public QObject {

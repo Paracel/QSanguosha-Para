@@ -44,14 +44,12 @@ public:
         }
         DummyCard *dummy = new DummyCard;
         if (!to_get.isEmpty()) {
-            foreach (int id, to_get)
-                dummy->addSubcard(id);
+            dummy->addSubcards(to_get);
             target->obtainCard(dummy);
         }
         dummy->clearSubcards();
         if (!to_throw.isEmpty() || !card_ids.isEmpty()) {
-            foreach (int id, to_throw + card_ids)
-                dummy->addSubcard(id);
+            dummy->addSubcards(to_throw + card_ids);
             CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, target->objectName(), objectName(), QString());
             room->throwCard(dummy, reason, NULL);
         }
@@ -767,8 +765,7 @@ public:
                 QList<int> subcards;
                 QVariantList subcards_variant = player->tag["zongxuan"].toList();
                 if (!subcards_variant.isEmpty()) {
-                    foreach (QVariant id, subcards_variant)
-                        subcards << id.toInt();
+                    subcards = VariantList2IntList(subcards_variant);
                     QStringList zongxuan = player->property("zongxuan").toString().split("+");
                     foreach (int id, subcards) {
                         zongxuan_card.removeOne(id);

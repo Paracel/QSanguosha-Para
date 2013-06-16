@@ -165,11 +165,7 @@ public:
         if (room->askForSkillInvoke(xiahouyuan, objectName(), data)) {
             room->broadcastSkillInvoke(objectName());
 
-            DummyCard *dummy = new DummyCard;
-            QList <const Card *> handcards = player->getHandcards();
-            foreach (const Card *card, handcards)
-                dummy->addSubcard(card);
-
+            DummyCard *dummy = new DummyCard(player->handCards());
             QList <const Card *> equips = player->getEquips();
             foreach (const Card *card, equips)
                 dummy->addSubcard(card);

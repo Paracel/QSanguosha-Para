@@ -4495,9 +4495,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
 
     if (to_discard.isEmpty()) return false;
 
-    DummyCard *dummy_card = new DummyCard;
-    foreach (int card_id, to_discard)
-        dummy_card->addSubcard(card_id);
+    DummyCard *dummy_card = new DummyCard(to_discard);
     if (reason == "gamerule") {
         CardMoveReason reason(CardMoveReason::S_REASON_RULEDISCARD, player->objectName(), QString(), dummy_card->getSkillName(), QString());
         throwCard(dummy_card, reason, player);
@@ -4555,10 +4553,7 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
 
     if (to_exchange.isEmpty()) return NULL;
 
-    DummyCard *card = new DummyCard;
-    foreach (int card_id, to_exchange)
-        card->addSubcard(card_id);
-
+    DummyCard *card = new DummyCard(to_exchange);
     return card;
 }
 

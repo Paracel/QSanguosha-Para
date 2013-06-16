@@ -199,9 +199,7 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
             room->notifyMoveCards(true, moves, false, _guojia);
             room->notifyMoveCards(false, moves, false, _guojia);
 
-            DummyCard *dummy = new DummyCard;
-            foreach (int id, yiji_cards)
-                dummy->addSubcard(id);
+            DummyCard *dummy = new DummyCard(yiji_cards);
             guojia->obtainCard(dummy, false);
             delete dummy;
         } else {
@@ -379,9 +377,7 @@ public:
                     }
                 } else {
                     if (isHegVer && zhenji->hasSkills("guicai|guidao|huanshi")) {
-                        DummyCard *dummy = new DummyCard;
-                        foreach (QVariant id, zhenji->tag[objectName()].toList())
-                            dummy->addSubcard(id.toInt());
+                        DummyCard *dummy = new DummyCard(VariantList2IntList(zhenji->tag[objectName()].toList()));
                         zhenji->obtainCard(dummy);
                         zhenji->tag.remove(objectName());
                         delete dummy;

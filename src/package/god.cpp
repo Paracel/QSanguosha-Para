@@ -192,14 +192,12 @@ public:
         }
         DummyCard *dummy = new DummyCard;
         if (!to_get.isEmpty()) {
-            foreach (int id, to_get)
-                dummy->addSubcard(id);
+            dummy->addSubcards(to_get);
             shenlvmeng->obtainCard(dummy);
         }
         dummy->clearSubcards();
         if (!to_throw.isEmpty()) {
-            foreach (int id, to_throw)
-                dummy->addSubcard(id);
+            dummy->addSubcards(to_throw);
             CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, shenlvmeng->objectName(), objectName(), QString());
             room->throwCard(dummy, reason, NULL);
         }

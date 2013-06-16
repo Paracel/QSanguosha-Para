@@ -248,12 +248,6 @@ bool CangjiCard::targetFilter(const QList<const Player *> &targets, const Player
 void CangjiCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
 
-    LogMessage log;
-    log.type = "#InvokeSkill";
-    log.from = effect.from;
-    log.arg = "cangji";
-    room->sendLog(log);
-
     CardsMoveStruct move;
     move.from = effect.from;
     move.to = effect.to;
@@ -264,7 +258,7 @@ void CangjiCard::onEffect(const CardEffectStruct &effect) const{
     if (effect.from->getEquips().isEmpty())
         return;
     bool loop = false;
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i <= 3; i++) {
         if (effect.from->getEquip(i)) {
             foreach (ServerPlayer *p, room->getOtherPlayers(effect.from)) {
                 if (!p->getEquip(i)) {

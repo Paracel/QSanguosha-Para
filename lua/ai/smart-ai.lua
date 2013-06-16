@@ -2115,7 +2115,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 									if snatch_num > 0 and to:distanceTo(enemy) == 1
 										and (self:willSkipPlayPhase(enemy, true) or self:willSkipDrawPhase(enemy, true)) then
 										return null_card
-									elseif analeptic_num > 0 and (enemy:hasWeapon("axe") or self:getCardsNum("Axe", enemy) > 0) then
+									elseif analeptic_num > 0 and (enemy:hasWeapon("axe") or getCardsNum("Axe", enemy) > 0) then
 										return null_card
 									elseif crossbow_num > 0 and getCardsNum("Slash", enemy) >= 3 then
 										local slash = sgs.Sanguosha:cloneCard("slash")
@@ -3944,7 +3944,7 @@ function SmartAI:getCardsNum(class_name, flag, selfonly)
 			local lieges = self.room:getLieges("wei", player)
 			for _, liege in sgs.qlist(lieges) do
 				if self:isFriend(liege, player) then
-					n = n + self:getCardsNum("Jink", liege, nil, liege:hasLordSkill("hujia"))
+					n = n + getCardsNum("Jink", liege)
 				end
 			end
 		end
@@ -3956,7 +3956,7 @@ function SmartAI:getCardsNum(class_name, flag, selfonly)
 			local lieges = self.room:getLieges("shu", player)
 			for _, liege in sgs.qlist(lieges) do
 				if self:isFriend(liege, player) then
-				n = n + self:getCardsNum("Slash", liege, nil, liege:hasLordSkill("jijiang"))
+				n = n + getCardsNum("Slash", liege)
 				end
 			end
 		end

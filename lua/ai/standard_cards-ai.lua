@@ -1309,7 +1309,7 @@ function sgs.ai_armor_value.silver_lion(player, self)
 		end
 	end
 	if self.player:isWounded() and not self.player:getArmor() then return 9 end
-	if self.player:isWounded() and self:getCardsNum("Armor", self.player, "h") >= 2 and not self.player:hasArmorEffect("silver_lion") then return 8 end
+	if self.player:isWounded() and self:getCardsNum("Armor", "h") >= 2 and not self.player:hasArmorEffect("silver_lion") then return 8 end
 	return 1
 end
 

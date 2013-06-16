@@ -381,9 +381,6 @@ QWidget *ServerDialog::createMiscTab() {
     ai_enable_checkbox->setChecked(Config.EnableAI);
     ai_enable_checkbox->setEnabled(false); // Force to enable AI for disabling it causes crashes!!
 
-    role_predictable_checkbox = new QCheckBox(tr("Role predictable"));
-    role_predictable_checkbox->setChecked(Config.value("RolePredictable", false).toBool());
-
     ai_chat_checkbox = new QCheckBox(tr("AI Chat"));
     ai_chat_checkbox->setChecked(Config.value("AIChat", true).toBool());
 
@@ -405,7 +402,6 @@ QWidget *ServerDialog::createMiscTab() {
     connect(ai_delay_altered_checkbox, SIGNAL(toggled(bool)), ai_delay_ad_spinbox, SLOT(setEnabled(bool)));
 
     layout->addWidget(ai_enable_checkbox);
-    layout->addWidget(role_predictable_checkbox);
     layout->addWidget(ai_chat_checkbox);
     layout->addLayout(HLay(new QLabel(tr("AI delay")), ai_delay_spinbox));
     layout->addWidget(ai_delay_altered_checkbox);
@@ -1099,7 +1095,6 @@ bool ServerDialog::config() {
     Config.setValue("NullificationCountDown", nullification_spinbox->value());
     Config.setValue("EnableMinimizeDialog", Config.EnableMinimizeDialog);
     Config.setValue("EnableAI", Config.EnableAI);
-    Config.setValue("RolePredictable", role_predictable_checkbox->isChecked());
     Config.setValue("AIChat", ai_chat_checkbox->isChecked());
     Config.setValue("OriginAIDelay", Config.OriginAIDelay);
     Config.setValue("AlterAIDelayAD", ai_delay_altered_checkbox->isChecked());

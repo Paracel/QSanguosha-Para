@@ -658,6 +658,15 @@
     <ClCompile Include="Release\moc_special1v1.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\package\wandianba.cpp">
+      <Filter>package</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_wandianba.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_wandianba.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\server\ai.h">
@@ -919,6 +928,9 @@
       <Filter>server</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\package\yjcm2013.h">
+      <Filter>package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\package\wandianba.h">
       <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -39,6 +39,9 @@
 "playerGeneralIcon-erqiao-4": ["image/fullskin/generals/fulldual/erqiao.png", [0, 0, 124, 291], [64, 150]],
 "playerGeneralIcon-erqiao-6": ["image/fullskin/generals/fulldual/erqiao.png", [0, 0, 250, 291], [129, 150]],
 
+"playerGeneralIcon-zaozhirenjun-4": ["image/fullskin/generals/fulldual/zaozhirenjun.png", [0, 0, 124, 291], [64, 150]],
+"playerGeneralIcon-zaozhirenjun-6": ["image/fullskin/generals/fulldual/zaozhirenjun.png", [0, 0, 250, 291], [129, 150]],
+
 "playerGeneralIcon-nos_guanxingzhangbao-4": ["image/fullskin/generals/fulldual/nos_guanxingzhangbao.png", [0, 0, 124, 291], [64, 150]],
 "playerGeneralIcon-nos_guanxingzhangbao-6": ["image/fullskin/generals/fulldual/nos_guanxingzhangbao.png", [0, 0, 250, 291], [129, 150]],
 

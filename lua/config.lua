@@ -34,6 +34,7 @@ config = {
 		"SP",
 		"BGM",
 		"BGMDIY",
+		"Wandianba",
 		"Hegemony",
 		"HegemonySP",
 		"Ling",

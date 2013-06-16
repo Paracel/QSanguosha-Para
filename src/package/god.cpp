@@ -180,13 +180,13 @@ public:
 
             room->takeAG(shenlvmeng, card_id, false);
 
-            QMutableListIterator<int> itor(card_ids);
-            while (itor.hasNext()) {
-                const Card *c = Sanguosha->getCard(itor.next());
+            QList<int> _card_ids = card_ids;
+            foreach (int id, _card_ids) {
+                const Card *c = Sanguosha->getCard(id);
                 if (c->getSuit() == suit) {
-                    itor.remove();
-                    room->takeAG(NULL, c->getId(), false);
-                    to_throw << c->getId();
+                    card_ids.removeOne(id);
+                    room->takeAG(NULL, id, false);
+                    to_throw.append(id);
                 }
             }
         }

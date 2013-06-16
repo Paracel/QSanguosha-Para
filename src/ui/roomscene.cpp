@@ -3671,6 +3671,7 @@ void RoomScene::doHuashen(const QString &, const QStringList &args) {
     QStringList hargs = args;
     QString name = hargs.first();
     hargs.removeOne(name);
+    hargs = hargs.first().split(":");
     ClientPlayer *player = ClientInstance->getPlayer(name);
     bool owner = (hargs.first() != "unknown");
 

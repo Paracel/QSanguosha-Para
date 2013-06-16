@@ -589,7 +589,7 @@ void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &sk
                 triggerList << actual_skill;
                 isLost << true;
 
-                foreach (const Skill *skill, Sanguosha->getRelatedSkills(skill_name)) {
+                foreach (const Skill *skill, Sanguosha->getRelatedSkills(actual_skill)) {
                     if (!skill->isVisible())
                         detachSkillFromPlayer(player, skill->objectName());
                 }

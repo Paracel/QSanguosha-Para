@@ -832,8 +832,10 @@ function SmartAI:useCardPeach(card, use)
 			(self:hasSkills(sgs.drawpeach_skill, enemy) or getCardsNum("Dismantlement", enemy) >= 1
 			or (not self.player:hasSkill("qianxun") and enemy:hasSkill("jixi") and enemy:getPile("field"):length() > 0 and (enemy:distanceTo(self.player, 1) == 1 or enemy:hasSkills("qicai|nosqicai")))
 			or (((enemy:hasSkill("qixi") and not self.player:hasSkill("weimu")) or enemy:hasSkill("yinling")) and getKnownCard(enemy, "black", nil, "he") >= 1)
-			or (not self.player:hasSkill("qianxun") and getCardsNum("Snatch", enemy) >= 1 and (enemy:distanceTo(self.player) == 1 or enemy:hasSkills("qicai|nosqicai")))) then
+			or (not self.player:hasSkill("qianxun") and getCardsNum("Snatch", enemy) >= 1 and (enemy:distanceTo(self.player) == 1 or enemy:hasSkills("qicai|nosqicai")))
+			or (enemy:hasSkill("tiaoxin") and self.player:inMyAttackRange(enemy) and (self:getCardsNum("Slash") < 1) or not self.player:canSlash(enemy))) then
 			mustusepeach = true
+			break
 		end
 	end
 

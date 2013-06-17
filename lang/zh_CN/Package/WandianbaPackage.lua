@@ -14,7 +14,7 @@ return {
 
 	["#feishi"] = "凛忠的谏士",
 	["feishi"] = "费诗",
-	["illustrator:feishi"] = "",
+	["illustrator:feishi"] = "天空之城",
 	["designer:feishi"] = "我从三国来",
 
 	["#liuzan"] = "战歌啸敌魂",

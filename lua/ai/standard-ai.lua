@@ -647,7 +647,7 @@ function SmartAI:willSkipPlayPhase(player, no_null)
 		and fuhuanghou:isWounded() and fuhuanghou:getHandcardNum() > 1 and not player:isKongcheng() and not self:isWeak(fuhuanghou) then
 		local max_card = self:getMaxCard(fuhuanghou)
 		local player_max_card = self:getMaxCard(player)
-		if (max_card and player_max_card and max_card:getNumber() > player_max_card) or (max_card and max_card:getNumber() >= 12) then return true end
+		if (max_card and player_max_card and max_card:getNumber() > player_max_card:getNumber()) or (max_card and max_card:getNumber() >= 12) then return true end
 	end
 
 	if self.player:containsTrick("YanxiaoCard") or self:hasSkills("keji") or (self.player:hasSkill("qiaobian") and not self.player:isKongcheng()) then return false end

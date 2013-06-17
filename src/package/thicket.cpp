@@ -392,6 +392,7 @@ HaoshiCard::HaoshiCard() {
     will_throw = false;
     mute = true;
     handling_method = Card::MethodNone;
+    m_skillName = "_haoshi";
 }
 
 bool HaoshiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{

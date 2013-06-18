@@ -963,7 +963,7 @@ public:
 class Lianying: public TriggerSkill {
 public:
     Lianying(): TriggerSkill("lianying") {
-        events << BeforeCardsMove << CardsMoveOneTime;
+        events << CardsMoveOneTime;
         frequency = Frequent;
     }
 

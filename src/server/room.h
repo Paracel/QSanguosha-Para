@@ -513,12 +513,6 @@ private:
     void doScript(const QString &script);
 
     //helper functions and structs
-    struct _NullificationAiHelper {
-        const Card *m_trick;
-        ServerPlayer *m_from;
-        ServerPlayer *m_to;
-    };
-    bool _askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive, _NullificationAiHelper helper);
     void _setupChooseGeneralRequestArgs(ServerPlayer *player);    
 
 private slots:

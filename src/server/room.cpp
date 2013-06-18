@@ -969,15 +969,6 @@ bool Room::verifyNullificationResponse(ServerPlayer *player, const Json::Value &
 }
 
 bool Room::askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive) {
-    _NullificationAiHelper aiHelper;
-    aiHelper.m_from = from;
-    aiHelper.m_to = to;
-    aiHelper.m_trick = trick;
-    return _askForNullification(trick, from, to, positive, aiHelper);
-}
-
-bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to,
-                                bool positive, _NullificationAiHelper aiHelper) {
     while (isPaused()) {}
 
     _m_roomState.setCurrentCardUseReason(CardUseStruct::CARD_USE_REASON_RESPONSE_USE);
@@ -1027,7 +1018,7 @@ bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPla
         foreach (ServerPlayer *player, validAiPlayers) {
             AI *ai = player->getAI();
             if (ai == NULL) continue;
-            card = ai->askForNullification(aiHelper.m_trick, aiHelper.m_from, aiHelper.m_to, positive);
+            card = ai->askForNullification(trick, from, to, positive);
             if (card && player->isCardLimited(card, Card::MethodUse))
                 card = NULL;
             if (card != NULL) {
@@ -1043,7 +1034,7 @@ bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPla
     card = card->validateInResponse(repliedPlayer);
 
     if (card == NULL)
-        return _askForNullification(trick, from, to, positive, aiHelper);
+        return askForNullification(trick, from, to, positive);
 
     doAnimate(S_ANIMATE_NULLIFICATION, repliedPlayer->objectName(), to->objectName());
     useCard(CardUseStruct(card, repliedPlayer, QList<ServerPlayer *>()));
@@ -1066,7 +1057,7 @@ bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPla
     effect.card = card;
     effect.to = repliedPlayer;
     if (card->isCancelable(effect))
-        result = !_askForNullification(card, repliedPlayer, to, !positive, aiHelper);
+        result = !askForNullification(card, repliedPlayer, to, !positive);
     return result;
 }
 

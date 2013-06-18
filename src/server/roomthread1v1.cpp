@@ -71,6 +71,7 @@ void RoomThread1v1::run() {
 
     room->broadcastProperty(first, "role");
     room->broadcastProperty(next, "role");
+    room->adjustSeats();
 
     askForTakeGeneral(first);
 

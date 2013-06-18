@@ -154,7 +154,7 @@ function sgs.CreateSkillCard(spec)
 	card.on_use = spec.on_use
 	card.on_effect = spec.on_effect
 	card.on_validate = spec.on_validate
-	card_on_validate_in_response = spec.on_validate_in_response
+	card.on_validate_in_response = spec.on_validate_in_response
 
 	return card
 end

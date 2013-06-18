@@ -425,7 +425,7 @@ public:
             if (move.from != lingtong)
                 return false;
 
-            if (move.to_place == Player::DiscardPile && lingtong->getPhase() == Player::Discard
+            if (lingtong->getPhase() == Player::Discard
                 && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)
                 lingtong->setMark("xuanfeng", lingtong->getMark("xuanfeng") + move.card_ids.length());
 

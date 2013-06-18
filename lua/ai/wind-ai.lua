@@ -747,6 +747,8 @@ function SmartAI:getGuhuoViewCard(class_name)
 		if class_name == "Peach" or (class_name == "Analeptic" and not sgs.GetConfig("BanPackages", ""):match("maneuvering")) or class_name == "Jink" then
 			index = #card_use
 		end
+		local card = sgs.Sanguosha:cloneCard(classname2objectname[class_name])
+		if self.player:isCardLimited(card, sgs.Card_MethodUse, true) then return end
 		return "@GuhuoCard=" .. card_use[index]:getEffectiveId() .. ":" .. classname2objectname[class_name]
 	end
 end

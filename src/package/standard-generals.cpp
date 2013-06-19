@@ -1083,7 +1083,7 @@ public:
 
             bool can_invoke = false;
             foreach (ServerPlayer *p, players) {
-                if (use.from->canSlash(p, use.card) && daqiao->inMyAttackRange(p)) {
+                if (use.from->canSlash(p, use.card, false) && daqiao->inMyAttackRange(p)) {
                     can_invoke = true;
                     break;
                 }

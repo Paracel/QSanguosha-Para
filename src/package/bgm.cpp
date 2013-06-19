@@ -1122,7 +1122,6 @@ public:
             if (!use.to.contains(daqiao) || !daqiao->canDiscard(daqiao, "h"))
                 return false;
             if (use.card && use.card->isKindOf("Slash")) {
-                daqiao->setMark("anxian", 0);
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");
@@ -1141,6 +1140,26 @@ public:
                 daqiao->removeMark("anxian");
                 return true;
             }
+        }
+        return false;
+    }
+};
+
+class AnxianRemoveMark: public TriggerSkill {
+public:
+    AnxianRemoveMark(): TriggerSkill("#anxian") {
+        events << CardFinished;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash")) {
+            foreach (ServerPlayer *to, use.to)
+                to->setMark("anxian", 0);
         }
         return false;
     }
@@ -1463,6 +1482,8 @@ BGMPackage::BGMPackage(): Package("BGM") {
     General *bgm_daqiao = new General(this, "bgm_daqiao", "wu", 3, false); // *SP 008
     bgm_daqiao->addSkill(new Yanxiao);
     bgm_daqiao->addSkill(new Anxian);
+    bgm_daqiao->addSkill(new AnxianRemoveMark);
+    related_skills.insertMulti("anxian", "#anxian");
 
     General *bgm_ganning = new General(this, "bgm_ganning", "qun"); // *SP 009
     bgm_ganning->addSkill(new Yinling);

@@ -912,14 +912,12 @@ public:
         if (triggerEvent == TargetConfirming) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card && use.card->isKindOf("Slash")) {
-                liushan->setMark("xiangle", 0);
                 room->broadcastSkillInvoke(objectName());
                 room->notifySkillInvoked(liushan, objectName());
 
                 LogMessage log;
                 log.type = "#TriggerSkill";
-                log.from = use.from;
-                log.to << liushan;
+                log.from = liushan;
                 log.arg = objectName();
                 room->sendLog(log);
 
@@ -941,6 +939,26 @@ public:
             }
         }
 
+        return false;
+    }
+};
+
+class XiangleRemoveMark: public TriggerSkill {
+public:
+    XiangleRemoveMark(): TriggerSkill("#xiangle") {
+        events << CardFinished;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash")) {
+            foreach (ServerPlayer *to, use.to)
+                to->setMark("xiangle", 0);
+        }
         return false;
     }
 };
@@ -1351,9 +1369,11 @@ MountainPackage::MountainPackage()
 
     General *liushan = new General(this, "liushan$", "shu", 3); // SHU 013
     liushan->addSkill(new Xiangle);
+    liushan->addSkill(new XiangleRemoveMark);
     liushan->addSkill(new Fangquan);
     liushan->addSkill(new FangquanGive);
     liushan->addSkill(new Ruoyu);
+    related_skills.insertMulti("xiangle", "#xiangle");
     related_skills.insertMulti("fangquan", "#fangquan-give");
 
     General *sunce = new General(this, "sunce$", "wu"); // WU 010

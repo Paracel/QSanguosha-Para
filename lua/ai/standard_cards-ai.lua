@@ -2087,7 +2087,7 @@ function SmartAI:useCardCollateral(card, use)
 		end
 	end
 
-	needCrossbow = needCrossbow and self:getCardsNum("Slash", friend) > 2 and not self.player:hasSkill("paoxiao")
+	needCrossbow = needCrossbow and getCardsNum("Slash", friend) > 2 and not self.player:hasSkill("paoxiao")
 
 	if needCrossbow then
 		for i = #fromList, 1, -1 do

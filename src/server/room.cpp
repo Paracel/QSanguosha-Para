@@ -4276,6 +4276,7 @@ void Room::askForLuckCard() {
     foreach (ServerPlayer *player, used) {
         draw_list << player->getHandcardNum();
 
+        CardMoveReason reason(CardMoveReason::S_REASON_PUT, player->objectName(), "luck_card", QString());
         QList<CardsMoveStruct> moves;
         CardsMoveStruct move;
         move.from = player;
@@ -4283,6 +4284,7 @@ void Room::askForLuckCard() {
         move.to = NULL;
         move.to_place = Player::DrawPile;
         move.card_ids = player->handCards();
+        move.reason = reason;
         moves.append(move);
         moves = _breakDownCardMoves(moves);
 

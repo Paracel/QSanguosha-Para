@@ -291,36 +291,6 @@ sgs.ai_use_value.FenxunCard = 5.5
 sgs.ai_use_priority.FenxunCard = 8
 sgs.ai_card_intention.FenxunCard = 50
 
-sgs.ai_skill_invoke.lirang = function(self, data)
-	if #self.friends_noself == 0 then return false end
-	local Shenfen_user
-	for _, player in sgs.qlist(self.room:getAllPlayers()) do
-		if player:hasFlag("ShenfenUsing") then
-			Shenfen_user = player
-			break
-		end
-	end
-
-	for _, friend in ipairs(self.friends_noself) do
-		local insert = true
-		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
-		if insert and friend:hasFlag("DimengTarget") then
-			local another
-			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if p:hasFlag("DimengTarget") then
-					another = p
-					break
-				end
-			end
-			if not another or not self:isFriend(another) then insert = false end
-		end
-		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
-		if insert and self:isLihunTarget(friend) then insert = false end
-		if insert then return true end
-	end
-	return false
-end
-
 sgs.ai_skill_askforyiji.lirang = function(self, card_ids)
 	local Shenfen_user
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do

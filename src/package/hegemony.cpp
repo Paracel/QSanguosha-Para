@@ -253,13 +253,10 @@ public:
             }
             if (lirang_card.isEmpty())
                 return false;
-            if (!kongrong->askForSkillInvoke(objectName(), data))
-                return false;
-
-            room->broadcastSkillInvoke(objectName());
 
             QList<int> original_lirang = lirang_card;
-            while (room->askForYiji(kongrong, lirang_card, objectName(), false, true, true, -1, QList<ServerPlayer *>(), move.reason)) {
+            while (room->askForYiji(kongrong, lirang_card, objectName(), false, true, true, -1,
+                                    QList<ServerPlayer *>(), move.reason, "@lirang-distribute", true)) {
                 if (kongrong->isDead()) return false;
             }
 

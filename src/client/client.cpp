@@ -1495,14 +1495,27 @@ void Client::askForPindian(const Json::Value &ask_str) {
 }
 
 void Client::askForYiji(const Json::Value &ask_str) {
-    if (!ask_str.isArray() || ask_str.size() != 4) return;
+    if (!ask_str.isArray() || (ask_str.size() != 4 && ask_str.size() != 5)) return;
     //if (!ask_str[0].isArray() || !ask_str[1].isBool() || !ask_str[2].isInt()) return;
     Json::Value card_list = ask_str[0];
     int count = ask_str[2].asInt();
     m_isDiscardActionRefusable = ask_str[1].asBool();
-    prompt_doc->setHtml(tr("Please distribute %1 cards %2 as you wish")
-                           .arg(count)
-                           .arg(m_isDiscardActionRefusable ? QString() : tr("to another player")));
+
+    if (ask_str.size() == 5) {
+        QString prompt = toQString(ask_str[4]);
+        QStringList texts = prompt.split(":");
+        if (texts.length() < 4) {
+            while (texts.length() < 3)
+                texts.append(QString());
+            texts.append(QString::number(count));
+        }
+        setPromptList(texts);
+    } else {
+        prompt_doc->setHtml(tr("Please distribute %1 cards %2 as you wish")
+                               .arg(count)
+                               .arg(m_isDiscardActionRefusable ? QString() : tr("to another player")));
+    }
+
     //@todo: use cards directly rather than the QString
     QStringList card_str;
     for (unsigned int i = 0; i < card_list.size(); i++)

@@ -5243,7 +5243,8 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
 
 bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name,
                       bool is_preview, bool visible, int optional, int max_num,
-                      QList<ServerPlayer *> players, CardMoveReason reason) {
+                      QList<ServerPlayer *> players, CardMoveReason reason, const QString &prompt,
+                      bool notify_skill) {
     if (max_num == -1)
         max_num = cards.length();
     if (players.isEmpty())
@@ -5283,6 +5284,8 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
         foreach (ServerPlayer *player, players)
             player_names << player->objectName();
         arg[3] = toJsonArray(player_names);
+        if (!prompt.isEmpty())
+            arg[4] = toJsonString(prompt);
         bool success = doRequest(guojia, S_COMMAND_SKILL_YIJI, arg, true);
 
         //Validate client response
@@ -5314,6 +5317,19 @@ bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &sk
                                                 .arg(skill_name).arg(guojia->objectName()).arg(target->objectName())
                                                 .arg(IntList2StringList(ids).join("+")));
     thread->trigger(ChoiceMade, this, guojia, decisionData);
+
+    if (notify_skill) {
+        LogMessage log;
+        log.type = "#InvokeSkill";
+        log.from = guojia;
+        log.arg = skill_name;
+        sendLog(log);
+
+        const Skill *skill = Sanguosha->getSkill(skill_name);
+        if (skill)
+            broadcastSkillInvoke(skill_name, skill->getEffectIndex(target, dummy_card));
+        notifySkillInvoked(guojia, skill_name);
+    }
 
     guojia->setFlags("Global_GongxinOperator");
     moveCardTo(dummy_card, target, Player::PlaceHand, reason, visible);

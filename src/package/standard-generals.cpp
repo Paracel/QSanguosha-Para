@@ -962,7 +962,7 @@ public:
             }
             if (lvmeng->hasFlag("KejiSlashInPlayPhase"))
                 lvmeng->setFlags("-KejiSlashInPlayPhase");
-        } else {
+        } else if (lvmeng->getPhase() == Player::Play) {
             CardStar card = NULL;
             if (triggerEvent == PreCardUsed)
                 card = data.value<CardUseStruct>().card;

@@ -5242,7 +5242,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
 }
 
 bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name,
-                      bool is_preview, bool visible, int optional, int max_num,
+                      bool is_preview, bool visible, bool optional, int max_num,
                       QList<ServerPlayer *> players, CardMoveReason reason, const QString &prompt,
                       bool notify_skill) {
     if (max_num == -1)

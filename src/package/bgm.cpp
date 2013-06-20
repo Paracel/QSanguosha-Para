@@ -726,7 +726,7 @@ public:
 
                 player->loseMark("@wu");
                 player->gainMark("@wen");
-                room->handleAcquireDetachSkills(player, "-jiang|-qianxun|yingzi|keji");
+                room->handleAcquireDetachSkills(player, "-jiang|-qianxun|yingzi|keji", true);
             }
         } else if (player->getPhase() == Player::RoundStart && lvmeng && lvmeng->getMark("@wen") > 0
                    && lvmeng->canDiscard(lvmeng, "he") && room->askForCard(lvmeng, "..", "@mouduan", QVariant(), objectName())) {
@@ -734,7 +734,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
                 lvmeng->loseMark("@wen");
                 lvmeng->gainMark("@wu");
-                room->handleAcquireDetachSkills(lvmeng, "-yingzi|-keji|jiang|qianxun");
+                room->handleAcquireDetachSkills(lvmeng, "-yingzi|-keji|jiang|qianxun", true);
             }
         }
         return false;
@@ -749,12 +749,10 @@ public:
     virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
         if (player->getMark("@wu") > 0) {
             player->loseMark("@wu");
-            room->detachSkillFromPlayer(player, "jiang");
-            room->detachSkillFromPlayer(player, "qianxun");
+            room->handleAcquireDetachSkills(player, "-jiang|-qianxun", true);
         } else if (player->getMark("@wen") > 0) {
             player->loseMark("@wen");
-            room->detachSkillFromPlayer(player, "yingzi");
-            room->detachSkillFromPlayer(player, "keji");
+            room->handleAcquireDetachSkills(player, "-yingzi|-keji", true);
         }
     }
 };
@@ -2033,10 +2031,7 @@ public:
         foreach (ServerPlayer *p, room->getAllPlayers()) {
             if (!p->tag.value("Hantong_use", false).toBool())
                 continue;
-            room->detachSkillFromPlayer(p, "hujia");
-            room->detachSkillFromPlayer(p, "jijiang");
-            room->detachSkillFromPlayer(p, "jiuyuan");
-            room->detachSkillFromPlayer(p, "xueyi");
+            room->handleAcquireDetachSkills(p, "-hujia|-jijiang|-jiuyuan|-xueyi", true);
             p->tag.remove("Hantong_use");
         }
         return false;

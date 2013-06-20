@@ -526,13 +526,15 @@ void Room::attachSkillToPlayer(ServerPlayer *player, const QString &skill_name) 
     doNotify(player, S_COMMAND_ATTACH_SKILL, toJsonString(skill_name));
 }
 
-void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name, bool is_equip) {
+void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name, bool is_equip, bool acquire_only) {
     if (!player->hasSkill(skill_name, true)) return;
 
     if (player->getAcquiredSkills().contains(skill_name))
         player->detachSkill(skill_name);
-    else
+    else if (!acquire_only)
         player->loseSkill(skill_name);
+    else
+        return;
 
     const Skill *skill = Sanguosha->getSkill(skill_name);
     if (skill && skill->isVisible() && !skill->inherits("SPConvertSkill")) {
@@ -560,7 +562,7 @@ void Room::detachSkillFromPlayer(ServerPlayer *player, const QString &skill_name
     }
 }
 
-void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &skill_names) {
+void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &skill_names, bool acquire_only) {
     if (skill_names.isEmpty()) return;
     QList<bool> isLost;
     QStringList triggerList;
@@ -570,8 +572,10 @@ void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &sk
             if (!player->hasSkill(actual_skill, true)) continue;
             if (player->getAcquiredSkills().contains(actual_skill))
                 player->detachSkill(actual_skill);
-            else
+            else if (!acquire_only)
                 player->loseSkill(actual_skill);
+            else
+                continue;
             const Skill *skill = Sanguosha->getSkill(actual_skill);
             if (skill && skill->isVisible() && !skill->inherits("SPConvertSkill")) {
                 Json::Value args;
@@ -630,8 +634,8 @@ void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &sk
     }
 }
 
-void Room::handleAcquireDetachSkills(ServerPlayer *player, const QString &skill_names) {
-    handleAcquireDetachSkills(player, skill_names.split("|"));
+void Room::handleAcquireDetachSkills(ServerPlayer *player, const QString &skill_names, bool acquire_only) {
+    handleAcquireDetachSkills(player, skill_names.split("|"), acquire_only);
 }
 
 bool Room::doRequest(ServerPlayer *player, QSanProtocol::CommandType command, const Json::Value &arg, bool wait) {

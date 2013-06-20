@@ -670,7 +670,7 @@ public:
                     room->removePlayerMark(p, "Armor_Nullified");
             }
         }
-        room->detachSkillFromPlayer(player, "wushuang");
+        room->detachSkillFromPlayer(player, "wushuang", false, true);
 
         return false;
     }
@@ -1118,7 +1118,7 @@ public:
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();
         if (change.to != Player::NotActive)
             return false;
-        room->detachSkillFromPlayer(target, "wansha");
+        room->detachSkillFromPlayer(target, "wansha", false, true);
         return false;
     }
 };

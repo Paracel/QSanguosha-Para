@@ -563,7 +563,7 @@ public:
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive && player->hasFlag(objectName()))
-                room->handleAcquireDetachSkills(player, "-wusheng|-paoxiao");
+                room->handleAcquireDetachSkills(player, "-wusheng|-paoxiao", true);
         }
 
         return false;

@@ -1256,7 +1256,7 @@ public:
 
         zuoci->tag["HuashenSkill"] = skill_name;
         ac_dt_list.append(skill_name);
-        room->handleAcquireDetachSkills(zuoci, ac_dt_list);
+        room->handleAcquireDetachSkills(zuoci, ac_dt_list, true);
     }
 
     virtual void onGameStart(ServerPlayer *zuoci) const{
@@ -1335,7 +1335,7 @@ public:
             room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
         if (player->getGender() != player->getGeneral()->getGender())
             player->setGender(player->getGeneral()->getGender());
-        room->detachSkillFromPlayer(player, player->tag["HuashenSkill"].toString());
+        room->detachSkillFromPlayer(player, player->tag["HuashenSkill"].toString(), false, true);
         player->tag.remove("Huashens");
         room->setPlayerMark(player, "@huashen", 0);
     }

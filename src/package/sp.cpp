@@ -1035,13 +1035,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == EventLoseSkill && data.toString() == objectName()) {
-            QStringList detachList;
-            if (player->getAcquiredSkills().contains("tianxiang"))
-                detachList.append("-tianxiang");
-            if (player->getAcquiredSkills().contains("liuli"))
-                detachList.append("-liuli");
-            if (!detachList.isEmpty())
-                room->handleAcquireDetachSkills(player, detachList);
+            room->handleAcquireDetachSkills(player, "-tianxiang|-liuli", true);
         } else if (triggerEvent == EventAcquireSkill && data.toString() == objectName()) {
             if (!player->getPile("xingwu").isEmpty()) {
                 room->notifySkillInvoked(player, objectName());
@@ -1056,15 +1050,8 @@ public:
                 }
             } else if (move.from == player && move.from_places.contains(Player::PlaceSpecial)
                        && move.from_pile_names.contains("xingwu")) {
-                if (player->getPile("xingwu").isEmpty()) {
-                    QStringList detachList;
-                    if (player->getAcquiredSkills().contains("tianxiang"))
-                        detachList.append("-tianxiang");
-                    if (player->getAcquiredSkills().contains("liuli"))
-                        detachList.append("-liuli");
-                    if (!detachList.isEmpty())
-                        room->handleAcquireDetachSkills(player, detachList);
-                }
+                if (player->getPile("xingwu").isEmpty())
+                    room->handleAcquireDetachSkills(player, "-tianxiang|-liuli", true);
             }
         }
         return false;

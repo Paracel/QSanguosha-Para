@@ -1105,8 +1105,16 @@ public:
         n = qMin(n, list.length());
 
         QStringList acquired = list.mid(0, n);
-        foreach (QString name, acquired)
+        foreach (QString name, acquired) {
             huashens << name;
+            const General *general = Sanguosha->getGeneral(name);
+            if (general) {
+                foreach (const TriggerSkill *skill, general->getTriggerSkills()) {
+                    if (skill->isVisible())
+                        room->getThread()->addTriggerSkill(skill);
+                }
+            }
+        }
         zuoci->tag["Huashens"] = huashens;
 
         QStringList hidden;
@@ -1397,7 +1405,6 @@ MountainPackage::MountainPackage()
     related_skills.insertMulti("huashen", "#huashen-begin");
     related_skills.insertMulti("huashen", "#huashen-end");
     related_skills.insertMulti("huashen", "#huashen-clear");
-    zuoci->addSkill("#lianpo-count"); // For LianPo we need a nasty trick
 
     General *caiwenji = new General(this, "caiwenji", "qun", 3, false); // QUN 012
     caiwenji->addSkill(new Beige);

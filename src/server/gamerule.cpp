@@ -20,7 +20,6 @@ GameRule::GameRule(QObject *)
     events << GameStart << TurnStart
            << EventPhaseProceeding << EventPhaseEnd << EventPhaseChanging
            << PreCardUsed << CardUsed << CardFinished << CardEffected
-           << CardResponded
            << PostHpReduced
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
@@ -189,8 +188,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 room->setPlayerFlag(player, ".");
                 room->clearPlayerCardLimitation(player, true);
             }
-            if (player->hasFlag("Global_SlashInPlayPhase"))
-                player->setFlags("-Global_SlashInPlayPhase");
             break;
         }
     case PreCardUsed: {
@@ -200,8 +197,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     card_use.from->setFlags("-Global_ForbidSurrender");
                     room->doNotify(card_use.from, QSanProtocol::S_COMMAND_ENABLE_SURRENDER, Json::Value(true));
                 }
-                if (card_use.card->isKindOf("Slash"))
-                    card_use.from->setFlags("Global_SlashInPlayPhase");
 
                 card_use.from->broadcastSkillInvoke(card_use.card);
                 if (!card_use.card->getSkillName().isNull() && card_use.card->getSkillName(true) == card_use.card->getSkillName(false)
@@ -267,12 +262,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             if (use.card->isKindOf("Slash"))
                 use.from->tag.remove("Jink_" + use.card->toString());
 
-            break;
-        }
-    case CardResponded: {
-            const Card *card = data.value<CardResponseStruct>().m_card;
-            if (card->isKindOf("Slash"))
-                player->setFlags("Global_SlashInPlayPhase");
             break;
         }
     case EventAcquireSkill:

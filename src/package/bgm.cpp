@@ -694,6 +694,7 @@ public:
         lvmeng->gainMark("@wu");
         room->acquireSkill(lvmeng, "jiang");
         room->acquireSkill(lvmeng, "qianxun");
+        room->getThread()->addTriggerSkill(Sanguosha->getTriggerSkill("keji"));
     }
 };
 

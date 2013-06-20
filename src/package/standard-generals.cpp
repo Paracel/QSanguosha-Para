@@ -938,22 +938,38 @@ public:
 class Keji: public TriggerSkill {
 public:
     Keji(): TriggerSkill("keji") {
-        events << EventPhaseChanging;
+        events << PreCardUsed << CardResponded << EventPhaseChanging;
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
-        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.to == Player::Discard) {
-            if (!lvmeng->hasFlag("Global_SlashInPlayPhase") && lvmeng->askForSkillInvoke(objectName())) {
-                if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
-                    int index = qrand() % 2 + 1;
-                    if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
-                        index += 2;
-                    room->broadcastSkillInvoke(objectName(), index);
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::Discard && TriggerSkill::triggerable(lvmeng)) {
+                if (!lvmeng->hasFlag("KejiSlashInPlayPhase") && lvmeng->askForSkillInvoke(objectName())) {
+                    if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
+                        int index = qrand() % 2 + 1;
+                        if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
+                            index += 2;
+                        room->broadcastSkillInvoke(objectName(), index);
+                    }
+                    lvmeng->skip(Player::Discard);
                 }
-                lvmeng->skip(Player::Discard);
             }
+            if (lvmeng->hasFlag("KejiSlashInPlayPhase"))
+                lvmeng->setFlags("-KejiSlashInPlayPhase");
+        } else {
+            CardStar card = NULL;
+            if (triggerEvent == PreCardUsed)
+                card = data.value<CardUseStruct>().card;
+            else
+                card = data.value<CardResponseStruct>().m_card;
+            if (card->isKindOf("Slash"))
+                lvmeng->setFlags("KejiSlashInPlayPhase");
         }
 
         return false;

@@ -1646,6 +1646,13 @@ function SmartAI:getDangerousCard(who)
 			if who:canSlash(friend) then return weapon:getEffectiveId() end
 		end
 	end
+	if weapon and weapon:isKindOf("GudingBlade") and not who:hasSkill("jueqing") and getCardsNum("Slash", who) > 0 then
+		for _, friend in ipairs(self.friends) do
+			if who:canSlash(friend) and friend:isKongcheng() and not friend:hasSkills("kongcheng|tianming") then
+				return weapon:getEffectiveId()
+			end
+		end
+	end
 end
 
 function SmartAI:getValuableCard(who)

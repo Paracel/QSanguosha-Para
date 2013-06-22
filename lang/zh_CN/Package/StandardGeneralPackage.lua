@@ -195,7 +195,7 @@ return {
 	["st_huaxiong"] = "华雄",
 	["illustrator:st_huaxiong"] = "地狱许",
 	["yaowu"] = "耀武",
-	[":yaowu"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到红色【杀】的伤害时，伤害来源选择一项：回复1点体力，或摸一张牌。",
+	[":yaowu"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到红色【杀】造成的伤害时，伤害来源选择一项：回复1点体力，或摸一张牌。",
 	["yaowu:recover"] = "回复1点体力",
 	["yaowu:draw"] = "摸一张牌",
 

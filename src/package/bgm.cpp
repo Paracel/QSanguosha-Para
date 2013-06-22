@@ -1968,12 +1968,14 @@ public:
                 QString pattern = data.toStringList().first();
                 if (pattern == "slash" && !liuxie->hasFlag("Global_JijiangFailed")) {
                     QVariant data_for_ai = "jijiang";
+                    liuxie->tag["HantongOriginData"] = data; // For AI
                     if (room->askForSkillInvoke(liuxie, "hantong_acquire", data_for_ai)) {
                         RemoveEdict(liuxie);
                         room->acquireSkill(liuxie, "jijiang");
                     }
                 } else if (pattern == "jink") {
                     QVariant data_for_ai = "hujia";
+                    liuxie->tag["HantongOriginData"] = data; // For AI
                     if (room->askForSkillInvoke(liuxie, "hantong_acquire", data_for_ai)) {
                         RemoveEdict(liuxie);
                         room->acquireSkill(liuxie, "hujia");

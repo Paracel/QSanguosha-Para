@@ -19,7 +19,7 @@ JuntunCard::JuntunCard() {
 void JuntunCard::onUse(Room *room, const CardUseStruct &card_use) const{
     room->notifySkillInvoked(card_use.from, "juntun");
     CardMoveReason reason(CardMoveReason::S_REASON_RECAST, card_use.from->objectName());
-    reason.m_skillName = "juntun";
+    reason.m_eventName = "juntun";
     room->moveCardTo(this, card_use.from, NULL, Player::DiscardPile, reason);
     card_use.from->broadcastSkillInvoke("@recast");
 

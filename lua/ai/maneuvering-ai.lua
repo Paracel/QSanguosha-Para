@@ -83,6 +83,7 @@ function sgs.ai_armor_value.vine(player, self)
 	if not self:damageIsEffective(nil, sgs.DamageStruct_Fire) then return 6 end
 	if player:hasSkill("jujian") and not player:getArmor() and #(self:getFriendsNoself(player)) > 0 and player:getPhase() == sgs.Player_Play then return 3 end
 	if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
+	if player:isChained() and not self:isGoodChainTarget(player) then return -2 end
 	for _, enemy in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if not self:isFriend(enemy, player) then
 			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -2 end

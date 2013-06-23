@@ -3411,6 +3411,11 @@ function SmartAI:getRetrialCardId(cards, judge)
 	if not hasSpade and #other_suit > 0 then table.insertTable(can_use, other_suit) end
 
 	if next(can_use) then
+		if self:needToThrowArmor() then
+			for _, c in ipairs(can_use) do
+				if c:getEffectiveId() == self.player:getArmor():getEffectiveId() then return c:getEffectiveId() end
+			end
+		end
 		self:sortByKeepValue(can_use)
 		return can_use[1]:getEffectiveId()
 	else

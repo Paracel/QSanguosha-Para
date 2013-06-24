@@ -59,7 +59,7 @@ WandianbaPackage::WandianbaPackage()
     General *zaozhirenjun = new General(this, "zaozhirenjun", "wei", 3);
     zaozhirenjun->addSkill(new Juntun);
     /*
-    zaozhirenjun->addSkill(new Shuliang);
+    zaozhirenjun->addSkill(new Liangce);
     zaozhirenjun->addSkill(new Jianbi);
 
     General *feishi = new General(this, "feishi", "shu", 3);
@@ -67,12 +67,12 @@ WandianbaPackage::WandianbaPackage()
     feishi->addSkill(new Moshou);
 
     General *liuzan = new General(this, "liuzan", "wu", 4);
-    liuzan->addSkill(new Zhange);
+    liuzan->addSkill(new Kangyin);
 
     General *liuyan = new General(this, "liuyan", "qun", 4);
     liuyan->addSkill(new Juedao);
     liuyan->addSkill(new Geju);
-     */
+    */
 
     addMetaObject<JuntunCard>();
 }

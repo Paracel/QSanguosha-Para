@@ -4007,11 +4007,9 @@ end
 function SmartAI:getSuitNum(suit_strings, include_equip, player)
 	player = player or self.player
 	local n = 0
-	local flag = "h"
-	if include_equip then flag = "he" end
+	local flag = include_equip and "he" or "h"
 	local allcards
-	local current = self.room:getCurrent()
-	if player:objectName() == current:objectName() then
+	if player:objectName() == self.player:objectName() then
 		allcards = sgs.QList2Table(player:getCards(flag))
 	else
 		allcards = include_equip and sgs.QList2Table(player:getEquips()) or {}

@@ -302,16 +302,7 @@ end
 sgs.ai_skill_invoke.niepan = function(self, data)
 	local dying = data:toDying()
 	local peaches = 1 - dying.who:getHp()
-
-	local cards = self.player:getHandcards()
-	local n = 0
-	for _, card in sgs.qlist(cards) do
-		if isCard("Peach", card, self.player) or isCard("Analeptic", card, self.player) then
-			n = n + 1
-		end
-	end
-
-	return n < peaches
+	return self:getCardsNum("Peach") + self:getCardsNum("Analeptic") < peaches
 end
 
 sgs.ai_chaofeng.pangtong = -1

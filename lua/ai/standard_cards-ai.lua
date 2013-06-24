@@ -1343,7 +1343,8 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if target:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 and self:hasLoseHandcardEffective() then return "." end
 
-	local aoe = sgs.Sanguosha:cloneCard(name)
+	local aoe = data:toCardEffect().card
+	assert(aoe ~= nil)
 	local menghuo = self.room:findPlayerBySkillName("huoshou")
 	local attacker = target
 	if menghuo and aoe:isKindOf("SavageAssault") then attacker = menghuo end
@@ -1355,8 +1356,17 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if attacker:hasSkill("wuyan") and not attacker:hasSkill("jueqing") then return "." end
 	if self.player:getMark("@fenyong") > 0 and not attacker:hasSkill("jueqing") then return "." end
 
-	if not attacker:hasSkill("jueqing") and self.player:hasSkill("jianxiong") and self:getAoeValue(aoe) > -10
-		and (self.player:getHp() > 1 or self:getAllPeachNum() > 0) and not self.player:containsTrick("indulgence") then return "." end
+	if not attacker:hasSkill("jueqing") and self.player:hasSkill("jianxiong") and (self.player:getHp() > 1 or self:getAllPeachNum() > 0)
+		and not self:willSkipPlayPhase() then
+		if not self:needKongcheng(self.player, true) and self:getAoeValue(aoe) > -10 then return "." end
+		if aoe:isVirtualCard() then
+			if aoe:subcardsLength() > 2 and not self:isWeak() then return "." end
+			for _, id in sgs.qlist(damagecard:getSubcards()) do
+				local card = sgs.Sanguosha:getCard(id)
+				if (not self:needKongcheng(self.player, true) or aoe:subcardsLength() > 2) and isCard("Peach", card, self.player) then return "." end
+			end
+		end
+	end
 
 	local current = self.room:getCurrent()
 	if current and current:hasSkill("juece") and self:isEnemy(current) and self.player:getHp() > 0 then

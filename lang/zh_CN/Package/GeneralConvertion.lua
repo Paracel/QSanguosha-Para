@@ -124,6 +124,11 @@ return {
 	["illustrator:wz_xiaoqiao"] = "Natsu",
 	["cv_xiaoqiao:convert"] = "你可以替换为王战小乔或国战小乔",
 
+	["diy_zhugeke"] = "诸葛恪-DIY",
+	["&diy_zhugeke"] = "诸葛恪",
+	["illustrator:diy_zhugeke"] = "",
+	["cv_zhugeke:convert"] = "你可以替换为贴纸诸葛恪",
+
 	-- Hegemony SP
 	["hegemony_sp"] = "国战SP",
 

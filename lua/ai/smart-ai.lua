@@ -1372,11 +1372,9 @@ function getTrickIntention(trick_class, target)
 		return intention
 	elseif type(intention == "function") then
 		if trick_class == "IronChain" then
-			if target and target:isChained() then
-				return -60
-			else
-				return 60
-			end
+			if target and target:isChained() then return -60 else return 60 end
+		elseif trick_class == "Drowning" then
+			if target and target:getArmor() and target:hasSkills("yizhong|bazhen") then return 0 else return 60 end
 		end
 	end
 	if trick_class == "Collateral" then return 0 end
@@ -1981,16 +1979,17 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if ("snatch|dismantlement"):match(trick:objectName()) and to:isAllNude() then return nil end
 
 	if from and not from:hasSkill("jueqing") then
-		if (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("AOE"))
+		if (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("Drowning") or trick:isKindOf("AOE"))
 			and (to:hasSkill("wuyan") or (self:getDamagedEffects(to, from) and self:isFriend(to))) then
 			return nil
 		end
-		if (trick:isKindOf("Duel") or trick:isKindOf("AOE")) and not self:damageIsEffective(to, sgs.DamageStruct_Normal) then return nil end
+		if (trick:isKindOf("Duel") or trick:isKindOf("Drowning") or trick:isKindOf("AOE")) and not self:damageIsEffective(to, sgs.DamageStruct_Normal) then return nil end
 		if trick:isKindOf("FireAttack") and not self:damageIsEffective(to, sgs.DamageStruct_Fire) then return nil end
 	end
-	if (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("AOE")) and self:needToLoseHp(to, from) and self:isFriend(to) then
+	if (trick:isKindOf("Duel") or trick:isKindOf("FireAttack") or trick:isKindOf("Drowning") or trick:isKindOf("AOE")) and self:needToLoseHp(to, from) and self:isFriend(to) then
 		return nil
 	end
+	if trick:isKindOf("Drowning") and self:needToThrowArmor(to) and self:isFriend(to) then return nil end
 
 	if positive then
 		if ("snatch|dismantlement"):match(trick:objectName()) and not to:containsTrick("YanxiaoCard") and (to:containsTrick("indulgence") or to:containsTrick("supply_shortage")) then
@@ -2027,6 +2026,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				end
 			elseif self:isEnemy(to) then
 				if (trick:isKindOf("Snatch") or trick:isKindOf("Dismantlement")) and to:getCards("j"):length() > 0 then
+					return null_card
+				elseif trick:isKindOf("Drowning") and to:getEquips():length() <= 2 and self:needToThrowArmor(to) then
 					return null_card
 				end
 			end
@@ -4427,14 +4428,16 @@ function SmartAI:hasTrickEffective(card, to, from)
 
 	if (from:hasSkill("wuyan") or to:hasSkill("wuyan")) and not from:hasSkill("jueqing") then
 		if card:isKindOf("TrickCard") and
-			(card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+			(card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("Drowning")
+			or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
 			return false
 		end
 	end
 
 	local nature = sgs.DamageStruct_Normal
 	if card:isKindOf("FireAttack") then nature = sgs.DamageStruct_Fire end
-	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
+	if (card:isKindOf("Duel") or card:isKindOf("FireAttack") or card:isKindOf("Drowning")
+		or card:isKindOf("ArcheryAttack") or card:isKindOf("SavageAssault")) then
 		self.equipsToDec = sgs.getCardNumAtCertainPlace(card, from, sgs.Player_PlaceEquip)
 		local eff = self:damageIsEffective(to, nature, from)
 		self.equipsToDec = 0
@@ -4448,7 +4451,8 @@ function SmartAI:useTrickCard(card, use)
 	if not card then global_room:writeToConsole(debug.traceback()) return end
 	if self:needBear() and not ("amazing_grace|ex_nihilo|snatch|iron_chain|collateral"):match(card:objectName()) then return end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then
-		if not (card:isKindOf("AOE") or card:isKindOf("DelayedTrick") or card:isKindOf("IronChain")) and not (card:isKindOf("Duel") and self.player:getMark("@wrath") > 0) then return end
+		if not (card:isKindOf("AOE") or card:isKindOf("DelayedTrick") or card:isKindOf("IronChain") or card:isKindOf("Drowning"))
+			and not (card:isKindOf("Duel") and self.player:getMark("@wrath") > 0) then return end
 	end
 	if self:needRende() and not card:isKindOf("ExNihilo") then return end
 	if card:isKindOf("AOE") then

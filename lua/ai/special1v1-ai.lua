@@ -195,23 +195,34 @@ sgs.ai_card_intention.CangjiCard = function(self, card, from, tos)
 	end
 end
 
-sgs.ai_skill_invoke.huwei = function(self)
+sgs.ai_skill_invoke.huwei = function(self, data)
 	local drowning = sgs.Sanguosha:cloneCard("drowning")
 	local dummy_use = { isDummy = true }
 	self:useTrickCard(drowning, dummy_use)
 	return (dummy_use.card ~= nil)
 end
 
-sgs.ai_skill_invoke.xiaoxi = function(self)
+sgs.ai_skill_invoke.xiaoxi = function(self, data)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local dummy_use = { isDummy = true }
 	self:useBasicCard(slash, dummy_use)
 	return (dummy_use.card ~= nil)
 end
 
-sgs.ai_skill_invoke.manyi = function(self)
+sgs.ai_skill_invoke.manyi = function(self, data)
 	local sa = sgs.Sanguosha:cloneCard("savage_assault")
 	local dummy_use = { isDummy = true }
 	self:useTrickCard(sa, dummy_use)
 	return (dummy_use.card ~= nil)
+end
+
+-- @@todo: Mouzhu AI
+
+sgs.ai_skill_invoke.yanhuo = function(self, data)
+	local opponent = self.player:getOtherPlayers(true):first()
+	return opponent:isAlive() and not self:doNotDiscard(opponent)
+end
+
+sgs.ai_skill_playerchosen.yanhuo = function(self, targets)
+	return self:findPlayerToDiscard()
 end

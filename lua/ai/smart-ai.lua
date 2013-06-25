@@ -1088,14 +1088,13 @@ function SmartAI:objectiveLevel(player)
 				end
 			end
 			if self.room:getLord() and (has_renegade or self.room:getLord():hasSkill("benghuai")) then
-				 if self.player:isLord() then
-					if target_role == "renegade" and player:getHp() > 1 then
-						return 5
+				if self.player:isLord() then
+					if sgs.ai_role[player:objectName()] == "loyalist" then return -2
 					else
-						return player:getHp() > 1 and 1 or 0
+						return player:getHp() > 1 and 4 or 0
 					end
 				else
-					return target_role == "renegade" and 5 or 0
+					return sgs.ai_role[player:objectName()] == "loyalist" and -2 or 4
 				end
 			end
 

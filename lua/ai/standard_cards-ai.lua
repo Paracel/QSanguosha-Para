@@ -476,7 +476,8 @@ function SmartAI:useCardSlash(card, use)
 					end
 				end
 				local godsalvation = self:getCard("GodSalvation")
-				if not use.isDummy and godsalvation and godsalvation:getId() ~= card:getId() and self:willUseGodSalvation(godsalvation) then
+				if not use.isDummy and godsalvation and godsalvation:getId() ~= card:getId() and self:willUseGodSalvation(godsalvation)
+					and (not target:isWounded() or not self:hasTrickEffective(godsalvation, target, self.player)) then
 					use.card = godsalvation
 					return
 				end
@@ -1569,8 +1570,15 @@ function SmartAI:useCardDuel(duel, use)
 	if #targets > 0 then
 		local godsalvation = self:getCard("GodSalvation")
 		if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
-			use.card = godsalvation
-			return
+			local use_gs = true
+			for _, p in ipairs(targets) do
+				if not p:isWounded() or not self:hasTrickEffective(fire_attack, p, self.player) then break end
+				use_gs = false
+			end
+			if use_gs then
+				use.card = godsalvation
+				return
+			end
 		end
 
 		local targets_num = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, duel)

@@ -614,8 +614,15 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	if #targets > 0 then
 		local godsalvation = self:getCard("GodSalvation")
 		if godsalvation and godsalvation:getId() ~= fire_attack:getId() and self:willUseGodSalvation(godsalvation) then
-			use.card = godsalvation
-			return
+			local use_gs = true
+			for _, p in ipairs(targets) do
+				if not p:isWounded() or not self:hasTrickEffective(fire_attack, p, self.player) then break end
+				use_gs = false
+			end
+			if use_gs then
+				use.card = godsalvation
+				return
+			end
 		end
 
 		local targets_num = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, fire_attack)

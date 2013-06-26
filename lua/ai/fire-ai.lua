@@ -266,6 +266,13 @@ lianhuan_skill.getTurnUseCard = function(self)
 	local card
 	self:sortByUseValue(cards, true)
 
+	local slash = self:getCard("FireSlash") or self:getCard("ThunderSlash") or self:getCard("Slash")
+	if slash then
+		local dummy_use = { isDummy = true }
+		self:useBasicCard(slash, dummy_use)
+		if not dummy_use.card then slash = nil end
+	end
+
 	for _, acard in ipairs(cards) do
 		if acard:getSuit() == sgs.Card_Club then
 			local shouldUse = true
@@ -279,7 +286,7 @@ lianhuan_skill.getTurnUseCard = function(self)
 				self:useEquipCard(acard, dummy_use)
 				if dummy_use.card then shouldUse = false end
 			end
-			if shouldUse then
+			if shouldUse and (not slash or slash:getEffectiveId() ~= acard:getEffectiveId()) then
 				card = acard
 				break
 			end

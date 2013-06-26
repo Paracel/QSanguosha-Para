@@ -2339,7 +2339,7 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 
 	if self.player:isDead() then return "." end
 	if target and target:hasSkill("jueqing") and not self:needToLoseHp() then return end
-	if effect and target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1 then return end
+	if effect and target and target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1 then return end
 	if not self:damageIsEffective(nil, damage_nature, target) then return "." end
 	if target and target:hasSkill("guagu") and self.player:isLord() then return "." end
 
@@ -4407,6 +4407,10 @@ end
 function SmartAI:hasTrickEffective(card, to, from)
 	to = to or self.player
 	from = from or self.player
+	if not card then
+		self.room:writeToConsole(debug.traceback())
+		return false
+	end
 	if self.room:isProhibited(from, to, card) then return false end
 	if to:getMark("@late") > 0 and not card:isKindOf("DelayedTrick") then return false end
 	if to:getPile("dream"):length() > 0 and to:isLocked(card) then return false end

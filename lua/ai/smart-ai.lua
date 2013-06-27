@@ -281,6 +281,13 @@ function sgs.getDefense(player, gameProcess)
 	return defense
 end
 
+function SmartAI:assignKeepNum()
+	local num = self.player:getMaxCards()
+	if self.player:hasSkill("keji") then num = math.max(self.player:getHandcardNum(), num) end
+	if self.player:hasSkill("qiaobian") then num = math.max(self.player:getHandcardNum() - 1, num) end
+	return num
+end
+
 function SmartAI:assignKeep(num, start)
 	if num <= 0 then return end
 	if start then
@@ -1898,7 +1905,7 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	min_num = min_num or discard_num
 	local exchange = self.player:hasFlag("Global_AIDiscardExchanging")
 	local callback = sgs.ai_skill_discard[reason]
-	self:assignKeep(self.player:getHp(), true)
+	self:assignKeep(self:assignKeepNum(), true)
 	if type(callback) == "function" then
 		local cb = callback(self, discard_num, min_num, optional, include_equip)
 		if cb then
@@ -3112,7 +3119,7 @@ end
 
 function SmartAI:activate(use)
 	self:updatePlayers()
-	self:assignKeep(self.player:getHp(), true)
+	self:assignKeep(self:assignKeepNum(), true)
 	self.toUse = self:getTurnUse()
 	self:sortByDynamicUsePriority(self.toUse)
 	for _, card in ipairs(self.toUse) do

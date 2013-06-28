@@ -1574,7 +1574,7 @@ function SmartAI:useCardDuel(duel, use)
 		if godsalvation and godsalvation:getId() ~= duel:getId() and self:willUseGodSalvation(godsalvation) then
 			local use_gs = true
 			for _, p in ipairs(targets) do
-				if not p:isWounded() or not self:hasTrickEffective(fire_attack, p, self.player) then break end
+				if not p:isWounded() or not self:hasTrickEffective(godsalvation, p, self.player) then break end
 				use_gs = false
 			end
 			if use_gs then

@@ -456,6 +456,7 @@ yeyan_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
+	if self.role == "lord" and self:getAllPeachNum() < 3 - self.player:getHp() then return end
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
 	self:sortByUseValue(cards, true)

@@ -53,6 +53,35 @@ public:
     }
 };
 
+class Moshou: public TriggerSkill {
+public:
+    Moshou(): TriggerSkill("moshou") {
+        events << EventPhaseSkipping;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to == Player::NotActive)
+            return false;
+        room->notifySkillInvoked(player, objectName());
+
+        static QStringList phase_strings;
+        if (phase_strings.isEmpty())
+            phase_strings << "round_start" << "start" << "judge" << "draw"
+                          << "play" << "discard" << "finish" << "not_active";
+        int index = static_cast<int>(change.to);
+
+        LogMessage log;
+        log.type = "#Moshou";
+        log.from = player;
+        log.arg = objectName();
+        log.arg2 = phase_strings.at(index);
+        room->sendLog(log);
+        return true;
+    }
+};
+
 WandianbaPackage::WandianbaPackage()
     : Package("wandianba")
 {
@@ -60,13 +89,13 @@ WandianbaPackage::WandianbaPackage()
     zaozhirenjun->addSkill(new Juntun);
     /*
     zaozhirenjun->addSkill(new Liangce);
-    zaozhirenjun->addSkill(new Jianbi);
+    zaozhirenjun->addSkill(new Jianbi);*/
 
     General *feishi = new General(this, "feishi", "shu", 3);
-    feishi->addSkill(new Shuaiyan);
+    //feishi->addSkill(new Shuaiyan);
     feishi->addSkill(new Moshou);
 
-    General *liuzan = new General(this, "liuzan", "wu", 4);
+    /*General *liuzan = new General(this, "liuzan", "wu", 4);
     liuzan->addSkill(new Kangyin);
 
     General *liuyan = new General(this, "liuyan", "qun", 4);

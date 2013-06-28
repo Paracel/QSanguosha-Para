@@ -16,6 +16,9 @@ return {
 	["feishi"] = "费诗",
 	["illustrator:feishi"] = "天空之城",
 	["designer:feishi"] = "我从三国来",
+	["moshou"] = "墨守",
+	[":moshou"] = "",
+	["$Moshou"] = "%from 的“%arg”被触发, %arg2 阶段正常执行",
 
 	["#liuzan"] = "战歌啸敌魂",
 	["liuzan"] = "留赞",

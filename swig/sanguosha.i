@@ -594,6 +594,7 @@ enum TriggerEvent {
     EventPhaseProceeding,
     EventPhaseEnd,
     EventPhaseChanging,
+    EventPhaseSkipping,
 
     DrawNCards,
     AfterDrawNCards,

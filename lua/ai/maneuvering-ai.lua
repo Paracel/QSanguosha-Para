@@ -308,7 +308,8 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	end
 	if slash then damagecount = self:hasHeavySlashDamage(source, slash, who, true) end
 	if not self:damageIsEffective(who, nature, source) then return end
-	if nature == sgs.DamageStruct_Normal then return true end
+	if who:hasArmorEffect("silver_lion") then damagecount = 1 end
+	if nature == sgs.DamageStruct_Normal then return not self:cantbeHurt(target, damagecount, source) end
 	local kills, killlord = 0
 
 	local function getChainedPlayerValue(target, dmg)
@@ -336,6 +337,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 				if can then newvalue = newvalue - 2 end
 			end
 		end
+		if target:hasArmorEffect("silver_lion") then return newvalue - 1 end
 		return newvalue - damagecount - (dmg or 0)
 	end
 

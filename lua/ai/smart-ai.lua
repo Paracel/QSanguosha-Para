@@ -477,6 +477,7 @@ function SmartAI:getDynamicUsePriority(card)
 
 	local value = self:getUsePriority(card)
 	if dummy_use.card then
+		if dummy_use.card:hasFlag("AIGlobal_KillOff") then return 15 end
 		local use_card = dummy_use.card
 		local class_name = use_card:getClassName()
 		local dynamic_value
@@ -3245,17 +3246,17 @@ function SmartAI:needRetrial(judge)
 	local who = judge.who
 	local good = judge:isGood()
 	if reason == "lightning" then
-		if self:hasSkills("wuyan|hongyan", who) then return false end
+		if who:hasSkills("wuyan|hongyan") then return false end
 
 		if lord and (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
-			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord) then return false end
+			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord, self.player, sgs.DamageStruct_Thunder) then return false end
 			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not good
 		end
 
 		if self:isFriend(who) then
-			if who:isChained() and self:isGoodChainTarget(who) then return false end
+			if who:isChained() and self:isGoodChainTarget(who, self.player, sgs.DamageStruct_Thunder, 3) then return false end
 		else
-			if who:isChained() and not self:isGoodChainTarget(who) then return good end
+			if who:isChained() and not self:isGoodChainTarget(who, self.player, sgs.DamageStruct_Thunder, 3) then return good end
 		end
 	end
 

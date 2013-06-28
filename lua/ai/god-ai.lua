@@ -417,7 +417,7 @@ yeyan_skill.getTurnUseCard = function(self)
 			self:sort(self.enemies, "hp")
 			local target_num = 0
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:hasArmorEffect("vine") or (enemy:isChained() and self:isGoodChainTarget(enemy)) then
+				if enemy:hasArmorEffect("vine") or (enemy:isChained() and self:isGoodChainTarget(enemy, nil, nil, 3)) then
 					target_num = target_num + 1
 				elseif enemy:getHp() <= 3 then
 					target_num = target_num + 1
@@ -443,7 +443,7 @@ yeyan_skill.getTurnUseCard = function(self)
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:isChained() and self:isGoodChainTarget(enemy) then
+		if enemy:isChained() and self:isGoodChainTarget(enemy, nil, nil, 3) then
 			if chained == 0 then target_num = target_num + 1 end
 			chained = chained + 1
 		end
@@ -478,7 +478,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 		if not enemy:hasArmorEffect("silver_lion")
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
-				if enemy:isChained() and self:isGoodChainTarget(enemy) then
+				if enemy:isChained() and self:isGoodChainTarget(enemy, nil, nil, 3) then
 					if enemy:getArmor() and enemy:getArmor():objectName() == "vine" then
 						use.card = greatyeyan
 						if use.to then
@@ -495,7 +495,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 		if not enemy:hasArmorEffect("silver_lion")
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
 			and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire) then
-				if enemy:isChained() and self:isGoodChainTarget(enemy) then
+				if enemy:isChained() and self:isGoodChainTarget(enemy, nil, nil, 3) then
 					use.card = greatyeyan
 					if use.to then
 						use.to:append(enemy)

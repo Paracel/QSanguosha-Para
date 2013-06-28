@@ -27,9 +27,9 @@ sgs.ai_skill_invoke.fan = function(self, data)
 	local use = data:toCardUse()
 	for _, target in sgs.qlist(use.to) do
 		if self:isFriend(target) then
-			if not (target:isChained() and self:isGoodChainTarget(target)) then return false end
+			if not (target:isChained() and self:isGoodChainTarget(target, nil, sgs.DamageStruct_Fire, nil, use.card)) then return false end
 		else
-			if target:isChained() and not self:isGoodChainTarget(target) then return false end
+			if target:isChained() and not self:isGoodChainTarget(target, nil, sgs.DamageStruct_Fire, nil, use.card) then return false end
 		end
 	end
 	for _, target in sgs.qlist(use.to) do
@@ -84,7 +84,7 @@ function sgs.ai_armor_value.vine(player, self)
 	if not self:damageIsEffective(nil, sgs.DamageStruct_Fire) then return 6 end
 	if player:hasSkill("jujian") and not player:getArmor() and #(self:getFriendsNoself(player)) > 0 and player:getPhase() == sgs.Player_Play then return 3 end
 	if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
-	if player:isChained() and not self:isGoodChainTarget(player) then return -2 end
+	if (player:isChained() and not self:isGoodChainTarget(player)) or not self:isGoodChainTarget(player, self.player, sgs.DamageStruct_Thunder) then return -2 end
 	for _, enemy in sgs.qlist(self.room:getOtherPlayers(player)) do
 		if not self:isFriend(enemy, player) then
 			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -2 end
@@ -290,41 +290,76 @@ function SmartAI:isGoodChainPartner(player)
 	return false
 end
 
-function SmartAI:isGoodChainTarget(who, source)
+function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	if not who:isChained() then return false end
 	source = source or self.player
-	local good = #(self:getChainedEnemies(source))
-	local bad = #(self:getChainedFriends(source))
+	if source:hasSkill("jueqing") then return true end
+	damagecount = damagecount or 1
 
-	if not sgs.GetConfig("EnableHegemony", false) then
+	--[[ if not sgs.GetConfig("EnableHegemony", false) then
 		local lord = self.room:getLord()
-		if lord and self:isWeak(lord) and lord:isChained() and not self:isEnemy(lord, source) then
-			return false
+		if lord and self:isWeak(lord) and lord:isChained() and not self:isEnemy(lord, source) then return false end
+	end ]]
+
+	if not nature and slash then
+		if slash:isKindOf("FireSlash") then nature = sgs.DamageStruct_Fire
+		elseif slash:isKindOf("ThunderSlash") then nature = sgs.DamageStruct_Thunder
+		else nature = sgs.DamageStruct_Normal end
+	end
+	if slash then damagecount = self:hasHeavySlashDamage(source, slash, who, true) end
+	if not self:damageIsEffective(who, nature, source) then return end
+	if nature == sgs.DamageStruct_Normal then return true end
+	local kills, killlord = 0
+
+	local function getChainedPlayerValue(target, dmg)
+		local newvalue = 0
+		if self:isGoodChainPartner(target) then newvalue = newvalue + 1 end
+		if self:isWeak(target) then newvalue = newvalue - 1 end
+		if dmg and nature == sgs.DamageStruct_Fire and target:hasArmorEffect("vine") then dmg = dmg + 1 end
+		if dmg and target:getMark("@gale") > 0 then dmg = dmg + 1 end
+		if self:cantbeHurt(target, damagecount, source) then newvalue = newvalue - 100 end
+		if damagecount + (dmg or 0) >= target:getHp() then
+			newvalue = newvalue - 2
+			if target:isLord() then kill_lord = true end
+			if self:isEnemy(target, source) then kills = kills + 1 end
+		else
+			if self:isEnemy(target, source) and source:getHandcardNum() < 2 and target:hasSkills("ganglie|neoganglie") and source:getHp() == 1
+				and self:damageIsEffective(source, nil, target) and peach_num < 1 then newvalue = newvalue - 100 end
+			if target:hasSkill("vsganglie") then
+				local can
+				for _, target in ipairs(self:getFriends(source)) do
+					if target:getHp() == 1 and target:getHandcardNum() < 2 and self:damageIsEffective(target, nil, target) and peach_num < 1 then
+						if target:isLord() then newvalue = newvalue - 100 end
+						can = true
+					end
+				end
+				if can then newvalue = newvalue - 2 end
+			end
+		end
+		return newvalue - damagecount - (dmg or 0)
+	end
+
+	local good, bad = 0, 0
+	local value = getChainedPlayerValue(who)
+	if self:isFriend(who) then good = value
+	elseif self:isEnemy(who) then bad = value end
+
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:objectName() ~= who:objectName() and player:isChained() and self:damageIsEffective(player, nature, source) then
+			local getvalue = getChainedPlayerValue(player, 0)
+			if kills == #self:getEnemies(source) and not killlord then
+				if slash then slash:setFlags("AIGlobal_KillOff") end 
+				return true
+			end
+			if self:isFriend(player) then good = good + getvalue
+			elseif self:isEnemy(player) then bad = bad + getvalue end
 		end
 	end
 
-	for _, friend in ipairs(self:getChainedFriends(source)) do
-		if self:cantbeHurt(friend, source) then
-			return false
-		end
-		if self:isGoodChainPartner(friend) then
-			good = good + 1
-		elseif self:isWeak(friend) then
-			good = good - 1
-		end
-	end
-	for _, enemy in ipairs(self:getChainedEnemies(source)) do
-		if self:cantbeHurt(enemy, source) then
-			return false
-		end
-		if self:isGoodChainPartner(enemy) then
-			bad = bad + 1
-		elseif self:isWeak(enemy) then
-			bad = bad - 1
-		end
-	end
+	if killlord and sgs.evaluatePlayerRole(source) == "rebel" then return true end
 	return good >= bad
 end
+
 
 function SmartAI:useCardIronChain(card, use)
 	local needTarget = (card:getSkillName() == "guhuo" or card:getSkillName() == "qice")

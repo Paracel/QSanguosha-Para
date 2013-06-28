@@ -230,12 +230,12 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 		local value = 0
 		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder, player) then return 99 end
 		if enemy:hasSkill("hongyan") then return 99 end
-		if self:cantbeHurt(enemy, player, 2) or self:objectiveLevel(enemy) < 3 or (enemy:isChained() and not self:isGoodChainTarget(enemy, player)) then return 100 end
+		if self:cantbeHurt(enemy, player, 2) or self:objectiveLevel(enemy) < 3 or (enemy:isChained() and not self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, 2)) then return 100 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value + 50 end
 		if enemy:hasArmorEffect("silver_lion") then value = value + 20 end
 		if self:hasSkills(sgs.exclusive_skill, enemy) then value = value + 10 end
 		if self:hasSkills(sgs.masochism_skill, enemy) then value = value + 5 end
-		if enemy:isChained() and self:isGoodChainTarget(enemy, player) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
+		if enemy:isChained() and self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, 2) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
 		if enemy:isLord() then value = value - 5 end
 		value = value + enemy:getHp() + sgs.getDefenseSlash(enemy) * 0.01
 		return value

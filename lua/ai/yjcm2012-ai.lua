@@ -117,7 +117,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				or self:getCardsNum("Jink") < jink_num
 				or (use.from:hasSkill("dahe") and self.player:hasFlag("dahe") and not hasHeart) then
 
-				if self.player:isChained() and not self:isGoodChainTarget(self.player) and use.card:isKindOf("NatureSlash") then return true end
+				if use.card:isKindOf("NatureSlash") and self.player:isChained() and not self:isGoodChainTarget(self.player, nil, nil, nil, use.card) then return true end
 				if use.from:hasSkill("nosqianxi") and use.from:distanceTo(self.player) == 1 then return true end
 				if self:isFriend(use.from) and self.role == "loyalist" and not use.from:hasSkill("jueqing") and use.from:isLord() and self.player:getHp() == 1 then return true end
 				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and getKnownCard(self.player, "heart") > 0)) or use.from:hasSkill("jueqing"))

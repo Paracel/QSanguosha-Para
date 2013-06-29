@@ -775,6 +775,11 @@ sgs.ai_use_value.DuwuCard = 2.45
 sgs.dynamic_value.damage_card.DuwuCard = true
 sgs.ai_card_intention.DuwuCard = 80
 
+sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
+	local card_str = sgs.ai_skill_use["@@shensu1"](self, "@shensu1")
+	return string.gsub(str, "ShensuCard", "QingyiCard")
+end
+
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
 	if lord and lord:hasLordSkill("shichou") then

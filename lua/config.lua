@@ -187,6 +187,7 @@ config = {
 		"sunjian+wuguotai",
 		"sunce+daqiao|bgm_daqiao",
 		"sunquan+bulianshi",
-		"liuxie|diy_liuxie+fuhuanghou"
+		"liuxie|diy_liuxie+fuhuanghou",
+		"luxun|heg_luxun+sunru"
 	}
 }

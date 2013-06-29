@@ -226,6 +226,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 		if enemy:hasSkills(sgs.cardneed_skill .. "|zhaolie|tianxiang|qinyin|yanxiao|zhaoxin|renjie+baiyin") then
 			value = value + 5
 		end
+		if enemy:hasSkill("dujin") then value = value + math.floor(enemy:getEquips():length() / 2 + 1) end
 		if enemy:hasSkills("yingzi|shelie|xuanhuo|buyi|jujian|jiangchi|mizhao|hongyuan|chongzhen+longdan|duoshi") then value = value + 1 end
 		if enemy:hasSkill("zishou") then value = value + enemy:getLostHp() end
 		if self:isWeak(enemy) then value = value + 5 end
@@ -233,7 +234,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 		if self:objectiveLevel(enemy) < 3 then value = value - 10 end
 		if not enemy:faceUp() then value = value - 10 end
-		if enemy:hasSkills("keji|shensu") then value = value - enemy:getHandcardNum() end
+		if enemy:hasSkills("keji|shensu|qingyi") then value = value - enemy:getHandcardNum() end
 		if enemy:hasSkills("guanxing|xiuluo|tiandu|guidao|noszhenlie") then value = value - 5 end
 		if self:needKongcheng(enemy) then value = value - 1 end
 		if enemy:getMark("@kuiwei") > 0 then value = value - 2 end

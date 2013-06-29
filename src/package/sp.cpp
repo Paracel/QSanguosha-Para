@@ -1307,6 +1307,108 @@ public:
     }
 };
 
+class Dujin: public DrawCardsSkill {
+public:
+    Dujin(): DrawCardsSkill("dujin") {
+        frequency = Frequent;
+    }
+
+    virtual int getDrawNum(ServerPlayer *player, int n) const{
+        if (player->askForSkillInvoke(objectName())) {
+            player->getRoom()->broadcastSkillInvoke(objectName());
+            return n + player->getEquips().length() / 2 + 1;
+        } else
+            return n;
+    }
+};
+
+QingyiCard::QingyiCard() {
+    mute = true;
+}
+
+bool QingyiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    Slash *slash = new Slash(NoSuit, 0);
+    slash->setSkillName("qingyi");
+    slash->deleteLater();
+    return slash->targetFilter(targets, to_select, Self);
+}
+
+void QingyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    foreach (ServerPlayer *target, targets) {
+        if (!source->canSlash(target, NULL, false))
+            targets.removeOne(target);
+    }
+
+    if (targets.length() > 0) {
+        Slash *slash = new Slash(Card::NoSuit, 0);
+        slash->setSkillName("_qingyi");
+        room->useCard(CardUseStruct(slash, source, targets));
+    }
+}
+
+class QingyiViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    QingyiViewAsSkill(): ZeroCardViewAsSkill("qingyi") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *) const{
+        return false;
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return pattern == "@@qingyi";
+    }
+
+    virtual const Card *viewAs() const{
+        return new QingyiCard;
+    }
+};
+
+class Qingyi: public TriggerSkill {
+public:
+    Qingyi(): TriggerSkill("qingyi") {
+        events << EventPhaseChanging;
+        view_as_skill = new QingyiViewAsSkill;
+    }
+
+    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to == Player::Judge && !player->isSkipped(Player::Judge)
+            && !player->isSkipped(Player::Draw)) {
+            if (Slash::IsAvailable(player) && room->askForUseCard(player, "@@qingyi", "@qingyi-slash")) {
+                player->skip(Player::Judge);
+                player->skip(Player::Draw);
+            }
+        }
+        return false;
+    }
+};
+
+class Shixin: public TriggerSkill {
+public:
+    Shixin(): TriggerSkill("shixin") {
+        events << DamageInflicted;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.nature == DamageStruct::Fire) {
+            room->notifySkillInvoked(player, objectName());
+            room->broadcastSkillInvoke(objectName());
+
+            LogMessage log;
+            log.type = "#ShixinProtect";
+            log.from = player;
+            log.arg = QString::number(damage.damage);
+            log.arg2 = "fire_nature";
+            room->sendLog(log);
+            return true;
+        }
+        return false;
+    }
+};
+
 SPCardPackage::SPCardPackage()
     : Package("sp_cards")
 {
@@ -1419,6 +1521,15 @@ SPPackage::SPPackage()
     zhugeke->addSkill(new Duwu);
     //zhugeke->addSkill(new SPConvertSkill("zhugeke", "diy_zhugeke"));
 
+    General *lingcao = new General(this, "lingcao", "wu", 4);
+    lingcao->addSkill(new Dujin);
+
+    General *sunru = new General(this, "sunru", "wu", 3, false);
+    sunru->addSkill(new Qingyi);
+    sunru->addSkill(new SlashNoDistanceLimitSkill("qingyi"));
+    sunru->addSkill(new Shixin);
+    related_skills.insertMulti("qingyi", "#qingyi-slash-ndl");
+
     General *tw_diaochan = new General(this, "tw_diaochan", "qun", 3, false, true); // TW SP 002
     tw_diaochan->addSkill("lijian");
     tw_diaochan->addSkill("biyue");
@@ -1485,6 +1596,7 @@ SPPackage::SPPackage()
     addMetaObject<SongciCard>();
     addMetaObject<AocaiCard>();
     addMetaObject<DuwuCard>();
+    addMetaObject<QingyiCard>();
 }
 
 ADD_PACKAGE(SP)

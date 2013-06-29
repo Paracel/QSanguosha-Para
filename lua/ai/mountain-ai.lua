@@ -694,10 +694,11 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		end
 	end
 end
-
 sgs.ai_need_damaged.hunzi = function(self, attacker, player)
-	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0
-		and (player:getHp() > 2 or (player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin")))) then return true end
+	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and self:getEnemyNumBySeat(self.room:getCurrent(), player, player) < player:getHp()
+		and (player:getHp() > 2 or (player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin")))) then
+		return true
+	end
 	return false
 end
 
@@ -741,14 +742,6 @@ sgs.ai_choicemade_filter.pindian.zhiba_pindian = function(self, from, promptlist
 	if not lord then return end
 	if number < 6 then sgs.updateIntention(from, lord, -60)
 	elseif number > 8 then sgs.updateIntention(from, lord, 60) end
-end
-
-sgs.ai_need_damaged.hunzi = function(self, attacker, player)
-	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and self:getEnemyNumBySeat(self.room:getCurrent(), player, player) < player:getHp()
-		and (player:getHp() > 2 or player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin") and not player:isKongcheng())) then
-		return true
-	end
-	return false
 end
 
 local zhijian_skill = {}

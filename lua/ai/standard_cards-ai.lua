@@ -728,6 +728,17 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 end
 
 sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
+	local function getJink()
+		if target and target:hasSkill("dahe") and self.player:hasFlag("dahe") then
+			for _, card in ipairs(self:getCards("Jink")) do
+				if card:getSuit() == sgs.Card_Heart then
+					return card:getId()
+				end
+			end
+		end
+		return nil
+	end
+
 	local slash
 	if type(data) == "userdata" then
 		local effect = data:toSlashEffect()
@@ -739,10 +750,10 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	if (not target or self:isFriend(target)) and slash:hasFlag("nosjiefan-slash") then return "." end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	--if not target then self.room:writeToConsole(debug.traceback()) end
-	if not target then return end
+	if not target then return getJink() end
 	if not self:hasHeavySlashDamage(target, slash, self.player) and self:getDamagedEffects(self.player, target, slash) then return "." end
 	if self:isFriend(target) then
-		if self:findLeijiTarget(self.player, 50, target) then return end
+		if self:findLeijiTarget(self.player, 50, target) then return getJink() end
 		if target:hasSkill("jieyin") and not self.player:isWounded() and self.player:isMale() and not self.player:hasSkill("leiji") then return "." end
 		if not target:hasSkill("jueqing") then
 			if (target:hasSkill("nosrende") or (target:hasSkill("rende") and not target:hasUsed("RendeCard"))) and self.player:hasSkill("jieming") then return "." end
@@ -750,7 +761,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			if self.player:isChained() and self:isGoodChainTarget(self.player, nil, nil, nil, slash) then return "." end
 		end
 	else
-		if self:hasHeavySlashDamage(target, slash) then return end
+		if self:hasHeavySlashDamage(target, slash) then return getJink() end
 
 		local current = self.room:getCurrent()
 		if current and current:hasSkill("juece") and self.player:getHp() > 0 then
@@ -763,11 +774,11 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			end
 			if not use then return "." end
 		end
-		if self.player:getHandcardNum() == 1 and self:needKongcheng() then return end
-		if not self:hasLoseHandcardEffective() and not self.player:isKongcheng() then return end
+		if self.player:getHandcardNum() == 1 and self:needKongcheng() then return getJink() end
+		if not self:hasLoseHandcardEffective() and not self.player:isKongcheng() then return getJink() end
 		if target:hasSkill("mengjin") and not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
-			if self:doNotDiscard(self.player, "he", true) then return end
-			if self.player:getCards("he"):length() == 1 and not self.player:getArmor() then return end
+			if self:doNotDiscard(self.player, "he", true) then return getJink() end
+			if self.player:getCards("he"):length() == 1 and not self.player:getArmor() then return getJink() end
 			if self:hasSkills("jijiu|qingnang") and self.player:getCards("he"):length() > 1 then return "." end
 			if self:canUseJieyuanDecrease(target) then return "." end
 			if (self:getCardsNum("Peach") > 0 or (self:getCardsNum("Analeptic") > 0 and self:isWeak()))
@@ -790,14 +801,6 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 				end
 			end
 		end
-	end
-	if target:hasSkill("dahe") and self.player:hasFlag("dahe") then
-		for _, card in ipairs(self:getCards("Jink")) do
-			if card:getSuit() == sgs.Card_Heart then
-				return card:getId()
-			end
-		end
-		return "."
 	end
 end
 

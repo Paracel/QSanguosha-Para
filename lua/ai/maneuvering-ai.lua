@@ -318,7 +318,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 		if self:isWeak(target) then newvalue = newvalue - 1 end
 		if dmg and nature == sgs.DamageStruct_Fire and target:hasArmorEffect("vine") then dmg = dmg + 1 end
 		if dmg and target:getMark("@gale") > 0 then dmg = dmg + 1 end
-		if self:cantbeHurt(target, damagecount, source) then newvalue = newvalue - 100 end
+		if self:cantbeHurt(target, source, damagecount) then newvalue = newvalue - 100 end
 		if damagecount + (dmg or 0) >= target:getHp() then
 			newvalue = newvalue - 2
 			if target:isLord() then kill_lord = true end

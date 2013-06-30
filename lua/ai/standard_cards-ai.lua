@@ -2878,7 +2878,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	local ag_snatch, ag_dismantlement, ag_indulgence, ag_supplyshortage, ag_collateral, ag_duel, ag_aoe, ag_fireattack, ag_godsalvation
+	local ag_snatch, ag_dismantlement, ag_indulgence, ag_supplyshortage, ag_collateral, ag_duel, ag_aoe, ag_fireattack, ag_godsalvation, ag_lightning
 	local new_enemies = {}
 	if #self.enemies > 0 then
 		new_enemies = self.enemies
@@ -2948,6 +2948,9 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			elseif isCard("GodSalvation", card, self.player) and self:willUseGodSalvation(sgs.Sanguosha:cloneCard("god_salvation", card:getSuit(), card:getNumber())) then
 				ag_godsalvation = card:getEffectiveId()
 				hasTrick = true
+			elseif card:isKindOf("Lightning") and self:willUseLightning(card) then
+				ag_lightning = card:getEffectiveId()
+				hasTrick = true
 			end
 		end
 	end
@@ -2969,10 +2972,10 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	if hasTrick then
 		if not self:willSkipPlayPhase() or not nextPlayerCanUse then
-			return ag_snatch or ag_dismantlement or ag_indulgence or ag_supplyshortage or ag_collateral or ag_duel or ag_aoe or ag_godsalvation or ag_fireattack
+			return ag_snatch or ag_dismantlement or ag_indulgence or ag_supplyshortage or ag_collateral or ag_duel or ag_aoe or ag_godsalvation or ag_fireattack or ag_lightning
 		end
 		if #trickCards > nextFriendNum + 1 and nextPlayerCanUse then
-			return ag_fireattack or ag_godsalvation or ag_aoe or ag_duel or ag_collateral or ag_supplyshortage or ag_indulgence or ag_dismantlement or ag_snatch
+			return ag_lightning or ag_fireattack or ag_godsalvation or ag_aoe or ag_duel or ag_collateral or ag_supplyshortage or ag_indulgence or ag_dismantlement or ag_snatch
 		end
 	end
 

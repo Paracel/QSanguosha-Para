@@ -1519,7 +1519,7 @@ SPPackage::SPPackage()
     General *zhugeke = new General(this, "zhugeke", "wu", 3); // OL 002
     zhugeke->addSkill(new Aocai);
     zhugeke->addSkill(new Duwu);
-    //zhugeke->addSkill(new SPConvertSkill("zhugeke", "diy_zhugeke"));
+    zhugeke->addSkill(new SPConvertSkill("zhugeke", "diy_zhugeke"));
 
     General *lingcao = new General(this, "lingcao", "wu", 4);
     lingcao->addSkill(new Dujin);

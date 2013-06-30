@@ -456,7 +456,7 @@ function SmartAI:getDynamicUsePriority(card)
 
 	local type = card:getTypeId()
 	local dummy_use = { isDummy = true }
-	if card:isKindOf("Snatch") or card:isKindOf("Dismantlement") then dummy_use.to = sgs.SPlayerList() end
+	if card:isKindOf("Snatch") or card:isKindOf("Dismantlement") or card:isKindOf("Duel") then dummy_use.to = sgs.SPlayerList() end
 	if type == sgs.Card_TypeTrick then
 		self:useTrickCard(card, dummy_use)
 	elseif type == sgs.Card_TypeBasic then
@@ -499,12 +499,20 @@ function SmartAI:getDynamicUsePriority(card)
 				or sgs.dynamic_value.damage_card[use_card:getClassName()]) then
 			return 0
 		end
-		if use_card:isKindOf("Duel")
-			and (self:hasCrossbowEffect(self.player)
+		if use_card:isKindOf("Duel") then
+			if self:getCardsNum("FireAttack") > 0 and dummy_use.to and not dummy_use.to:isEmpty() then
+				for _, p in sgs.qlist(dummy_use.to) do
+					if p:getHp() == 1 then return sgs.ai_use_priority.FireAttack + 0.1 end
+				end
+			end
+			if self:hasCrossbowEffect()
 				or self.player:hasFlag("XianzhenSuccess")
 				or self.player:canSlashWithoutCrossbow()
-				or self.player:hasUsed("FenxunCard")) then
-			return sgs.ai_use_priority.Slash - 0.1
+				or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash")) > 0
+				or self.player:hasUsed("FenxunCard")
+				or self.player:hasSkill("shenli") and self.player:getMark("@struggle") > 0 then
+				return sgs.ai_use_priority.Slash - 0.1
+			end
 		end
 
 		if self.player:getPhase() == sgs.Player_Play

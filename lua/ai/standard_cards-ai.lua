@@ -273,6 +273,7 @@ function SmartAI:canLiuli(other, another)
 		end
 		return false
 	end
+	if not self:needToLoseHp(another, self.player, true) or not self:getDamagedEffects(another, self.player, true) then return false end
 	local n = other:getHandcardNum()
 	if n > 0 and other:distanceTo(another) <= other:getAttackRange() then return true
 	elseif other:getWeapon() and other:getOffensiveHorse() and (other:distanceTo(another) <= other:getAttackRange()) then return true

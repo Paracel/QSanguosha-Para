@@ -307,8 +307,13 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 		elseif slash:isKindOf("ThunderSlash") then nature = sgs.DamageStruct_Thunder
 		else nature = sgs.DamageStruct_Normal end
 	end
-	if slash then damagecount = self:hasHeavySlashDamage(source, slash, who, true) end
 	if not self:damageIsEffective(who, nature, source) then return end
+	if slash then
+		damagecount = self:hasHeavySlashDamage(source, slash, who, true)
+	elseif nature == sgs.DamageStruct_Fire then
+		if who:hasArmorEffect("vine") then damagecount = damagecount + 1 end
+		if who:getMark("@gale") > 0 then damagecount = damagecount + 1 end
+	end
 	if who:hasArmorEffect("silver_lion") then damagecount = 1 end
 	if nature == sgs.DamageStruct_Normal then return not self:cantbeHurt(who, source, damagecount) end
 	local kills, killlord = 0

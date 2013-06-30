@@ -1076,9 +1076,9 @@ function SmartAI:objectiveLevel(player)
 					current_enemy_num = current_enemy_num + 1
 				end
 			end
-			if current_friend_num == loyal_num + renegade_num + 1 then
+			if current_friend_num >= loyal_num + renegade_num + 1 then
 				return 2
-			elseif current_enemy_num == rebel_num then
+			elseif current_enemy_num >= rebel_num then
 				return -1
 			else
 				return 0
@@ -1137,18 +1137,18 @@ function SmartAI:objectiveLevel(player)
 		if target_role == "neutral" then
 			local current_friend_num = 1
 			local current_enemy_num = 0
+			local current_renegade_num = 0
 			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-				if sgs.ai_role[aplayer:objectName()] == "rebel" then
-					current_friend_num = current_friend_num + 1
-				end
-				if target_role == "renegade" or target_role == "loyalist" then
-					current_enemy_num = current_enemy_num + 1
+				if sgs.ai_role[aplayer:objectName()] == "rebel" then current_friend_num = current_friend_num + 1
+				elseif sgs.ai_role[aplayer:objectName()] == "renegade" then current_renegade_num = current_renegade_num + 1
+				elseif sgs.ai_role[aplayer:objectName()] == "loyalist" then current_enemy_num = current_enemy_num + 1
 				end
 			end
-			if current_friend_num == rebel_num then
+			local disadvantage = sgs.gameProcess(self.room):match("loyal")
+			if current_friend_num + (disadvantage and current_renegade_num or 0) >= rebel_num + (disadvantage and renegade_num or 0) then
 				return 2
-			elseif current_enemy_num == loyal_num + renegade_num + 1 then
-				return -1
+			elseif current_enemy_num + (disadvantage and 0 or current_renegade_num) >= loyal_num + (disadvantage and 0 or renegade_num) + 1 then
+				return -2
 			else
 				return 0
 			end

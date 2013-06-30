@@ -1843,9 +1843,18 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		enemies = self:exclude(self.enemies, card)
 		self:sort(enemies, "defense")
 	end
-	self:sort(self.friends_noself, "defense")
-	local friends = self:exclude(self.friends_noself, card)
-	local hasLion, target
+	for _, enemy in ipairs(enemies) do
+		if self:slashIsAvailable() then
+			for _, slash in ipairs(self:getCards("Slash")) do
+				if not self:slashProhibit(slash, enemy) and enemy:getHandcardNum() == 1 and enemy:getHp() == 1 and self:hasLoseHandcardEffective(enemy)
+					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not enemy:hasSkills("kongcheng|tianming") and self.player:canSlash(enemy, slash)
+					and (not enemy:isChained() or self:isGoodChainTarget(enemy, nil, nil, nil, slash))
+					and (not enemy:hasArmorEffect("eight_diagram") or self.player:hasWeapon("qinggang_sword")) then
+					if addTarget(enemy, enemy:getHandcards():first():getEffectiveId()) then return end
+				end
+			end
+		end
+	end
 	for _, enemy in ipairs(enemies) do
 		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
 			local dangerous = self:getDangerousCard(enemy)
@@ -1855,6 +1864,8 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
+	self:sort(self.friends_noself, "defense")
+	local friends = self:exclude(self.friends_noself, card)
 	if not isYinling and not using_2013 then
 		for _, friend in ipairs(friends) do
 			if (friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")) and not friend:containsTrick("YanxiaoCard")
@@ -1884,6 +1895,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 
+	local hasLion, target
 	for _, friend in ipairs(friends) do
 		if (self:hasTrickEffective(card, friend) or isYinling) and self:needToThrowArmor(friend) and (not isDiscard or self.player:canDiscard(friend, friend:getArmor():getEffectiveId())) then
 			hasLion = true

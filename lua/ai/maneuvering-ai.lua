@@ -112,11 +112,19 @@ end
 function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if not self.toUse then return nil end
 
+	local anal = self:getCard("Analeptic")
+	if not anal then return nil end
+
+	local analAvail = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, anal)
+	local slashAvail = 0
+
 	for _, card in ipairs(self.toUse) do
-		if card:getEffectiveId() ~= slash:getEffectiveId() then return nil else break end
+		if analAvail == 1 and card:getEffectiveId() ~= slash:getEffectiveId() and card:isKindOf("Slash") then return nil end
+		if card:isKindOf("Slash") then slashAvail = slashAvail + 1 end
 	end
 
 	if not use.to or use.to:isEmpty() then return nil end
+	if analAvail > 1 and analAvail < slashAvail then return nil end
 	if not sgs.Analeptic_IsAvailable(self.player) then return nil end
 	local shouldUse = false
 	for _, p in sgs.qlist(use.to) do

@@ -731,7 +731,7 @@ function SmartAI:shouldUseRende()
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:canSlash(self.player) and not self:slashProhibit(nil, self.player, enemy) and self:playerGetRound(enemy) <= 3 then
+		if enemy:canSlash(self.player) and not self:slashProhibit(nil, self.player, enemy) then
 			if enemy:hasWeapon("guding_blade") and self.player:getHandcardNum() == 1 and getCardsNum("Slash", enemy) >= 1 then
 				return
 			elseif self:hasCrossbowEffect(enemy) and getCardsNum("Slash", enemy) > 1 and self:getOverflow() <= 0 then

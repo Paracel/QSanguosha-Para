@@ -2044,7 +2044,7 @@ function SmartAI:findLijianTarget(card_name, use)
 
 		if friend_maxSlash then
 			local safe = false
-			if self:hasSkills("neoganglie|vsganglie|fankui|enyuan|ganglie|nosenyuan", first) and not self:hasSkills("wuyan|noswuyan", first) then
+			if first:hasSkills("neoganglie|vsganglie|fankui|enyuan|ganglie|nosenyuan") and not first:hasSkills("wuyan|noswuyan") then
 				if (first:getHp() <= 1 and first:getHandcardNum() == 0) then safe = true end
 			elseif (getCardsNum("Slash", friend_maxSlash) >= getCardsNum("Slash", first)) then safe = true end
 			if safe then return friend_maxSlash end
@@ -2055,7 +2055,7 @@ function SmartAI:findLijianTarget(card_name, use)
 
 	if not sgs.GetConfig("EnableHegemony", false)
 		and (self.role == "rebel" or (self.role == "renegade" and sgs.current_mode_players["loyalist"] + 1 > sgs.current_mode_players["rebel"])) then
-		if lord and lord:isMale() and not lord:isNude()then
+		if lord and lord:objectName() ~= self.player:objectName() and lord:isMale() and not lord:isNude() then
 			self:sort(self.enemies, "handcard")
 			local e_peaches = 0
 			local loyalist
@@ -2066,7 +2066,6 @@ function SmartAI:findLijianTarget(card_name, use)
 					break
 				end
 			end
-
 			if loyalist and e_peaches < 1 then return loyalist, lord end
 		end
 
@@ -2097,17 +2096,16 @@ function SmartAI:findLijianTarget(card_name, use)
 								nextfriend = b_friend
 							end
 						end
-
 						if to_die and nextfriend then break end
 					end
 				end
-
 				if to_die and nextfriend then return to_die, nextfriend end
 			end
 		end
 	end
 
-	if lord and self:isFriend(lord) and lord:hasSkill("hunzi") and lord:getHp() == 2 and lord:getMark("hunzi") == 0 then
+	if lord and lord:objectName() ~= self.player:objectName() and self:isFriend(lord)
+		and lord:hasSkill("hunzi") and lord:getHp() == 2 and lord:getMark("hunzi") == 0 then
 		local enemycount = self:getEnemyNumBySeat(self.player, lord) 
 		local peaches = self:getAllPeachNum()
 		if peaches >= enemycount then
@@ -2188,7 +2186,9 @@ function SmartAI:findLijianTarget(card_name, use)
 		end
 
 		if #males >= 1 and sgs.ai_role[males[1]:objectName()] == "rebel" and males[1]:getHp() == 1 then
-			if lord and self:isFriend(lord) and lord:isMale() and lord:objectName() ~= males[1]:objectName() and self:hasTrickEffective(duel, males[1], lord)
+			if lord and self:isFriend(lord) and lord:isMale()
+				and lord:objectName() ~= males[1]:objectName() and lord:objectName() ~= self.player:objectName()
+				and self:hasTrickEffective(duel, males[1], lord)
 				and not lord:isLocked(duel) and (getCardsNum("Slash", males[1]) < 1
 												or getCardsNum("Slash", males[1]) < getCardsNum("Slash", lord)
 												or (self:getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], "Slash", true, "he") == 0)) then
@@ -2251,16 +2251,15 @@ function SmartAI:findLijianTarget(card_name, use)
 		if #males >= 2 then
 			first = males[1]
 			second = males[2]
-			local lord = self.room:getLord()
 			if first:getHp() <= 1 then
 				if self.player:isLord() or sgs.isRolePredictable() then
 					local friend_maxSlash = findFriend_maxSlash(self, first)
 					if friend_maxSlash and not friend_maxSlash:isCardLimited(duel, sgs.Card_MethodUse) then second = friend_maxSlash end
-				elseif lord and lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
+				elseif lord and lord:objectName() ~= self.player:objectName() and lord:isMale() and not self:hasSkills("wuyan|noswuyan", lord) then
 					if self.role == "rebel" and not lord:isLocked(duel) and not first:isLord() and self:hasTrickEffective(duel, first, lord) then
 						second = lord
 					else
-						if (self.role == "loyalist" or self.role == "renegade") and not self:hasSkills("neoganglie|enyuan|vsganglie|ganglie|nosenyuan", first)
+						if (self.role == "loyalist" or self.role == "renegade") and not first:hasSkills("neoganglie|enyuan|vsganglie|ganglie|nosenyuan")
 							and getCardsNum("Slash", first) <= getCardsNum("Slash", second) and not lord:isLocked(duel) then
 							second = lord
 						end

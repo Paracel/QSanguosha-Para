@@ -1254,16 +1254,27 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 
 	if self.player:getHp() < 3 then
 		local zcards = self.player:getCards("he")
-		local use_slash, keep_jink, keep_anal = false, false, false
+		local use_slash, keep_jink, keep_anal, keep_weapon = false, false, false
 		for _, zcard in sgs.qlist(zcards) do
 			if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
 				local shouldUse = true
-				if not self:isWeak() and isCard("Slash", zcard, self.player) and not use_slash then
-					local dummy_use = { isDummy = true }
+				if isCard("Slash", zcard, self.player) and not use_slash then
+					local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
 					self:useBasicCard(zcard, dummy_use)
 					if dummy_use.card then
-						use_slash = true
-						shouldUse = false
+						if keep_slash then shouldUse = false end
+						if dummy_use.to then
+							for _, p in sgs.qlist(dummy_use.to) do
+								if p:getHp() <= 1 then
+									shouldUse = false
+									if self.player:distanceTo(p) > 1 then keep_weapon = self.player:getWeapon() end
+									break
+								end
+							end
+							if dummy_use.to:length() > 1 then shouldUse = false end
+						end
+						if not self:isWeak() then shouldUse = false end
+						if not shouldUse then use_slash = true end
 					end
 				end
 				if zcard:getTypeId() == sgs.Card_TypeTrick then
@@ -1275,6 +1286,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 					local dummy_use = { isDummy = true }
 					self:useEquipCard(zcard, dummy_use)
 					if dummy_use.card then shouldUse = false end
+					if keep_weapon and zcard:getEffectiveId() == keep_weapon:getEffectiveId() then shouldUse = false end
 				end
 				if self.player:hasEquip(zcard) and zcard:isKindOf("Armor") and not self:needToThrowArmor() then shouldUse = false end
 				if isCard("Jink", zcard, self.player) and not keep_jink then

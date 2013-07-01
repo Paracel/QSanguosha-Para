@@ -148,10 +148,9 @@ public:
 
     static int getWeaponCount(ServerPlayer *caoren) {
         int n = 0;
-        foreach (ServerPlayer *p, caoren->getRoom()->getAlivePlayers())
-            if (p->getWeapon())
-                n++;
-
+        foreach (ServerPlayer *p, caoren->getRoom()->getAlivePlayers()) {
+            if (p->getWeapon()) n++;
+        }
         return n;
     }
 
@@ -261,10 +260,6 @@ public:
         CardMoveReason reason(CardMoveReason::S_REASON_PUT, sp_pangtong->objectName(), "manjuan", QString());
         if (room->getTag("FirstRound").toBool())
             return false;
-        if (sp_pangtong->hasFlag("ManjuanNullified")) {
-            sp_pangtong->setFlags("-ManjuanNullified");
-            return false;
-        }
         if (move.to != sp_pangtong || move.to_place != Player::PlaceHand)
             return false;
         room->broadcastSkillInvoke(objectName());
@@ -285,8 +280,10 @@ public:
         if (sp_pangtong->getPhase() == Player::NotActive || !sp_pangtong->askForSkillInvoke(objectName(), data))
             return false;
 
-        foreach (int _card_id, ids)
+        foreach (int _card_id, ids) {
             doManjuan(sp_pangtong, _card_id);
+            if (!sp_pangtong->isAlive()) break;
+        }
 
         return false;
     }
@@ -367,7 +364,7 @@ public:
             log.card_str = IntList2StringList(zuixiang).join("+");
             room->sendLog(log);
 
-            player->setFlags("ManjuanNullified");
+            player->setFlags("ManjuanInvoke");
             CardMoveReason reason(CardMoveReason::S_REASON_PUT, player->objectName(), QString(), "zuixiang", "");
             CardsMoveStruct move(zuixiang, player, Player::PlaceHand, reason);
             room->moveCardsAtomic(move, true);

@@ -1284,10 +1284,8 @@ public:
 };
 
 StandardCardPackage::StandardCardPackage()
-    : Package("standard_cards")
+    : Package("standard_cards", Package::CardPack)
 {
-    type = Package::CardPack;
-
     QList<Card *> cards;
 
     cards << new Slash(Card::Spade, 7)
@@ -1428,7 +1426,7 @@ StandardCardPackage::StandardCardPackage()
 }
 
 StandardExCardPackage::StandardExCardPackage()
-    : Package("standard_ex_cards")
+    : Package("standard_ex_cards", Package::CardPack)
 {
     QList<Card *> cards;
     cards << new IceSword(Card::Spade, 2)
@@ -1440,8 +1438,6 @@ StandardExCardPackage::StandardExCardPackage()
 
     foreach (Card *card, cards)
         card->setParent(this);
-
-    type = CardPack;
 }
 
 ADD_PACKAGE(StandardCard)

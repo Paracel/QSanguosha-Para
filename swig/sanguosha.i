@@ -772,14 +772,21 @@ public:
     EquipCard *toEquipCard() {
         return qobject_cast<EquipCard *>($self);
     }
+
     Weapon *toWeapon() {
         return qobject_cast<Weapon *>($self);
     }
+
     WrappedCard *toWrapped() {
         return qobject_cast<WrappedCard *>($self);
     }
+
     TrickCard *toTrick() {
         return qobject_cast<TrickCard *>($self);
+    }
+
+    void cardOnUse(Room *room, const CardUseStruct &card_use) const{
+        $self->Card::onUse(room, card_use);
     }
 };
 

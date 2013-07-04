@@ -5042,6 +5042,7 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
     arg[2] = move_cards;
 
     if (player) {
+        CardsMoveOneTimeStruct moveOneTime;
         if (move_cards) {
             CardsMoveOneTimeStruct move;
             move.from = NULL;
@@ -5053,6 +5054,7 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
             foreach (ServerPlayer *p, getAllPlayers())
                 thread->trigger(BeforeCardsMove, this, p, data);
             move = data.value<CardsMoveOneTimeStruct>();
+            moveOneTime = move;
 
             if (move.card_ids.length() > 0) {
                 player->addCard(Sanguosha->getCard(card_id), Player::PlaceHand);
@@ -5061,15 +5063,16 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards) {
                 QList<const Card *> cards;
                 cards << Sanguosha->getCard(card_id);
                 filterCards(player, cards, false);
-
-                data = QVariant::fromValue(move);
-                foreach (ServerPlayer *p, getAllPlayers())
-                    thread->trigger(CardsMoveOneTime, this, p, data);
             } else {
                 arg[2] = false;
             }
         }
         doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
+        if (move_cards && moveOneTime.card_ids.length() > 0) {
+            QVariant data = QVariant::fromValue(moveOneTime);
+            foreach (ServerPlayer *p, getAllPlayers())
+                thread->trigger(CardsMoveOneTime, this, p, data);
+        }
     } else {
         doBroadcastNotify(S_COMMAND_TAKE_AMAZING_GRACE, arg);
         if (!move_cards) return;

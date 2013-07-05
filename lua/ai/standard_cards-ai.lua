@@ -393,6 +393,27 @@ function SmartAI:useCardSlash(card, use)
 		end
 	end
 
+	local function canAppendTarget(target)
+		if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
+			local duanbing_targets = {}
+			for _, tg in sgs.qlist(use.to) do
+				
+			end
+			local no_other_assignee = true
+			for _, tg in sgs.qlist(use.to) do
+				if self.player:distanceTo(p, rangefix) == 1 then
+					table.insert(duanbing_targets, p)
+				elseif no_other_assignee and p:hasFlag("SlashAssignee") then
+					no_other_assignee = false;
+				end
+			end
+			if no_other_assignee and #duanbing_targets == 1 and duanbing_targets[1]:hasFlag("SlashAssignee") then return false end
+			return #duanbing_targets > 0 or self.player:distanceTo(target, rangefix) == 1
+		elseif use.to:length() < self.slash_targets then
+			return true
+		end
+	end
+
 	if not use.isDummy and self.player:hasSkill("qingnang") and self:isWeak() and self:getOverflow() == 0 then return end
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = false
@@ -404,22 +425,9 @@ function SmartAI:useCardSlash(card, use)
 						or (use.isDummy and (self.player:distanceTo(friend, rangefix) <= self.predictedRange)))
 					and self:slashIsEffective(card, friend) then
 					use.card = card
-					if use.to then
-						if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
-							local has_extra = false
-							for _, tg in sgs.qlist(use.to) do
-								if self.player:distanceTo(tg, rangefix) == 1 then
-									has_extra = true
-									break
-								end
-							end
-							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
-								use.to:append(friend)
-							end
-						elseif use.to:length() < self.slash_targets then
-							use.to:append(friend)
-						end
-						self:speak("hostile", self.player:isFemale())
+					if use.to and canAppendTarget(friend) then
+						use.to:append(friend)
+						if not use.isDummy and use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
 					end
 					if not use.to or self.slash_targets <= use.to:length() then return end
 				end
@@ -499,21 +507,9 @@ function SmartAI:useCardSlash(card, use)
 				end
 			end
 			use.card = use.card or usecard
-			if use.to and not use.to:contains(target) then
-				if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
-					local has_extra = false
-					for _, tg in sgs.qlist(use.to) do
-						if self.player:distanceTo(tg, rangefix) == 1 then
-							has_extra = true
-							break
-						end
-					end
-					if has_extra or self.player:distanceTo(target, rangefix) == 1 then
-						use.to:append(target)
-					end
-				elseif use.to:length() < self.slash_targets then
-					use.to:append(target)
-				end
+			if use.to and not use.to:contains(target) and canAppendTarget(target) then
+				use.to:append(target)
+				if not use.isDummy and use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
 			end
 			if not use.isDummy then
 				local anal = self:searchForAnaleptic(use, target, use.card)
@@ -541,22 +537,9 @@ function SmartAI:useCardSlash(card, use)
 					or (use.isDummy and self.predictedRange and self.player:distanceTo(friend, rangefix) <= self.predictedRange))
 					and self:slashIsEffective(card, friend) then
 					use.card = card
-					if use.to then
-						if use.to:length() == self.slash_targets - 1 and self.player:hasSkill("duanbing") then
-							local has_extra = false
-							for _, tg in sgs.qlist(use.to) do
-								if self.player:distanceTo(tg, rangefix) == 1 then
-									has_extra = true
-									break
-								end
-							end
-							if has_extra or self.player:distanceTo(friend, rangefix) == 1 then
-								use.to:append(friend)
-							end
-						elseif use.to:length() < self.slash_targets then
-							use.to:append(friend)
-						end
-						self:speak("hostile", self.player:isFemale())
+					if use.to and canAppendTarget(friend) then
+						use.to:append(friend)
+						if not use.isDummy and use.to:length() == 1 then self:speak("hostile", self.player:isFemale()) end
 					end
 					if not use.to or self.slash_targets <= use.to:length() then return end
 				end
@@ -1735,7 +1718,7 @@ function SmartAI:getValuableCard(who)
 	end
 
 	if offhorse then
-		if self:hasSkills("nosqianxi|kuanggu|duanbing", who) then
+		if who:hasSkills("nosqianxi|kuanggu|duanbing") then
 			return offhorse:getEffectiveId()
 		end
 	end

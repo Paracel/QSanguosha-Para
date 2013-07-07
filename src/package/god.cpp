@@ -1173,6 +1173,7 @@ class Lianpo: public TriggerSkill {
 public:
     Lianpo(): TriggerSkill("lianpo") {
         events << EventPhaseChanging;
+        frequency = Frequent;
     }
 
     virtual int getPriority() const{

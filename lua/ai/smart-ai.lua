@@ -1611,6 +1611,8 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			end
 		end
 
+		if card:isKindOf("AOE") and self.player:objectName() == player:objectName() then sgs.ai_AOE_data = data end
+
 		local callback = sgs.ai_card_intention[card:getClassName()]
 		if #to > 0 and callback then
 			if type(callback) == "function" then
@@ -1672,6 +1674,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				end
 			end
 		end
+		if card:isKindOf("AOE") and sgs.ai_AOE_data then sgs.ai_AOE_data = nil end
 	elseif triggerEvent == sgs.CardFinished then
 		local struct = data:toCardUse()
 		local card = struct.card

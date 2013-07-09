@@ -1,6 +1,6 @@
 sgs.ai_skill_invoke.xingshang = true
 
-function SmartAI:toTurnOver(player, n)
+function SmartAI:toTurnOver(player, n, reason)
 	if not player then global_room:writeToConsole(debug.traceback()) return end
 	n = n or 0
 	if self:isEnemy(player) then
@@ -9,6 +9,13 @@ function SmartAI:toTurnOver(player, n)
 			and manchong:faceUp() and not self:willSkipPlayPhase(manchong)
 			and not (manchong:isKongcheng() and self:willSkipDrawPhase(manchong)) then
 			return false
+		end
+	end
+	if reason and reason == "fangzhu" and player:getHp() == 1 and sgs.ai_AOE_data then
+		local use = sgs.ai_AOE_data:toCardUse()
+		if use.to:contains(player) and self:aoeIsEffective(use.card, player)
+			and self:playerGetRound(player) > self:playerGetRound(self.player)
+			and player:isKongcheng() then return false end
 		end
 	end
 	if player:hasUsed("ShenfenCard") and player:faceUp() and player:getPhase() == sgs.Player_Play
@@ -35,7 +42,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 	local target = nil
 	local n = self.player:getLostHp()
 	for _, friend in ipairs(self.friends_noself) do
-		if not self:toTurnOver(friend, n) then
+		if not self:toTurnOver(friend, n, "fangzhu") then
 			target = friend
 			break
 		end
@@ -46,7 +53,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 			target = self:findPlayerToDraw(false, n)
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if self:toTurnOver(enemy, n) and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
+					if self:toTurnOver(enemy, n, "fangzhu") and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
 						target = enemy
 						break
 					end
@@ -55,14 +62,14 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 		else
 			self:sort(self.enemies)
 			for _, enemy in ipairs(self.enemies) do
-				if self:toTurnOver(enemy, n) and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
+				if self:toTurnOver(enemy, n, "fangzhu") and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
 					target = enemy
 					break
 				end
 			end
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if self:toTurnOver(enemy, n) and self:hasSkills(sgs.priority_skill, enemy) then
+					if self:toTurnOver(enemy, n, "fangzhu") and self:hasSkills(sgs.priority_skill, enemy) then
 						target = enemy
 						break
 					end
@@ -70,7 +77,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 			end
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if self:toTurnOver(enemy, n) then
+					if self:toTurnOver(enemy, n, "fangzhu") then
 						target = enemy
 						break
 					end
@@ -78,7 +85,6 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 			end
 		end
 	end
-
 	return target
 end
 

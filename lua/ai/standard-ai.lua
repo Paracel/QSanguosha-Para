@@ -718,7 +718,9 @@ function SmartAI:shouldUseRende()
 	if (self:hasCrossbowEffect() or self:getCardsNum("Crossbow") > 0) and self:getCardsNum("Slash") > 0 then
 		self:sort(self.enemies, "defense")
 		for _, enemy in ipairs(self.enemies) do
-			if self.player:distanceTo(enemy) == 1 and sgs.isGoodTarget(enemy, self.enemies, self) then
+			local inAttackRange = self.player:distanceTo(enemy) == 1 or self.player:distanceTo(enemy) == 2
+									and self:getCardsNum("OffensiveHorse") > 0 and not self.player:getOffensiveHorse()
+			if inAttackRange and sgs.isGoodTarget(enemy, self.enemies, self) then
 				local slashs = self:getCards("Slash")
 				local slash_count = 0
 				for _, slash in ipairs(slashs) do

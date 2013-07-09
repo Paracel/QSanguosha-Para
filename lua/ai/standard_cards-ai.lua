@@ -2004,7 +2004,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	if not isYinling and not using_2013
-		and yanxiao_card and yanxiao_target and (not isDiscard or self.player:canDiscard(yanxiao_target, yaoxiao_card:getId())) then
+		and yanxiao_card and yanxiao_target and (not isDiscard or self.player:canDiscard(yanxiao_target, yanxiao_card:getId())) then
 		if addTarget(yanxiao_target, yanxiao_card:getEffectiveId()) then return end
 	end
 

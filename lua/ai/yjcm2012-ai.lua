@@ -438,10 +438,10 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 	local friends = {}
 	for _, friend in ipairs(self.friends_noself) do
 		if friend:hasSkill("manjuan") then
-			if friend:hasSkill("kongcheng") and friend:isKongcheng() then
+			if self:needKongcheng(friend, true) then
 				table.insert(friends, friend)
 			end
-		elseif not (friend:hasSkill("kongcheng") and friend:isKongcheng()) then
+		elseif not self:needKongcheng(friend, true) then
 			table.insert(friends, friend)
 		end
 	end

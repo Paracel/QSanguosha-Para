@@ -528,7 +528,11 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname)
 	local guhuotype = guhuocard:getClassName()
 	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
-	if guhuotype and (guhuotype == "AmazingGrace" or (guhuotype:match("Slash") and not self:hasCrossbowEffect(yuji))) then return "noquestion" end
+	if guhuotype and guhuotype == "AmazingGrace" then return "noquestion" end
+	if guhuotype:match("Slash") then
+		if yuji:getState() ~= "robot" and math.random(1, 4) == 1 and not sgs.questioner then return "question" end
+		if not self:hasCrossbowEffect(yuji) then return "noquestion" end
+	end
 	if yuji:hasFlag("GuhuoFailed") and math.random(1, 6) == 1 and self:isEnemy(yuji) and self.player:getHp() >= 3
 		and self.player:getHp() > self.player:getLostHp() then return "question" end
 	local players = self.room:getOtherPlayers(self.player)

@@ -2080,6 +2080,7 @@ sgs.ai_choicemade_filter.cardChosen.snatch = function(self, player, promptlist)
 			if not card:isKindOf("Disaster") then intention = -intention else intention = 0 end
 			if card:isKindOf("YanxiaoCard") then intention = -intention end
 		elseif place == sgs.Player_PlaceEquip then
+			if card:isKindOf("Armor") and self:evaluateArmor(card, to) <= -2 then intention = 0 end
 			if card:isKindOf("SilverLion") then
 				if to:getLostHp() > 1 then
 					if to:hasSkills(sgs.use_lion_skill) then

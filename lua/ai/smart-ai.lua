@@ -235,7 +235,9 @@ function sgs.getDefense(player, gameProcess)
 				defense = defense + 1
 			end
 		end
-		if player:hasSkill("jieming") or player:hasSkill("yiji") or player:hasSkill("guixin") then defense = defense + 4 end
+		if player:hasSkill("jieming") then defense = defense + 3 end
+		if player:hasSkill("yiji") then defense = defense + 3 end
+		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 2 end
 	end
 
@@ -256,7 +258,7 @@ function sgs.getDefense(player, gameProcess)
 		if not hasEightDiagram then defense = defense - 2 end
 	end
 
-	if not gameProcess and player:isLord() then 
+	if player:isLord() then 
 		defense = defense - 0.4
 		if sgs.isLordInDanger() then defense = defense - 0.7 end
 	end

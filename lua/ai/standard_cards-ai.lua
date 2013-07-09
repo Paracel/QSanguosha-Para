@@ -139,20 +139,21 @@ function sgs.getDefenseSlash(player)
 		defense = defense + hujiaJink
 	end
 
-	local hcard = player:getHandcardNum()
-	if attacker:canSlashWithoutCrossbow() and (attacker:hasSkill("liegong") and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange())
-												or (attacker:hasSkill("kofliegong") and hcard >= attacker:getHp())) then
-		defense = 0
+	if attacker:canSlashWithoutCrossbow() and attacker:getPhase() == sgs.Player_Play then
+		local hcard = player:getHandcardNum()
+		if attacker:hasSkill("liegong") and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange()) then defense = 0 end
+		if attacker:hasSkill("kofliegong") and hcard >= attacker:getHp() then defense = 0 end
 	end
 
-	if not attacker:hasSkill("jueqing") then
+	if attacker and not attacker:hasSkill("jueqing") then
 		local m = sgs.masochism_skill:split("|")
 		for _, masochism in ipairs(m) do
-			if player:hasSkill(masochism) and sgs.isGoodHp(player) then
-				defense = defense + 1.3
-			end
+			if player:hasSkill(masochism) and sgs.isGoodHp(player) then defense = defense + 1 end
 		end
 		if attacker:getWeapon() and player:hasSkill("duodao") and player:canDiscard(player, "he") then defense = defense + 1 end
+		if player:hasSkill("jieming") then defense = defense + 3 end
+		if player:hasSkill("yiji") then defense = defense + 3 end
+		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 1 end
 	end
 

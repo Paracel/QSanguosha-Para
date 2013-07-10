@@ -383,10 +383,11 @@ sgs.ai_card_intention.MouzhuCard = function(self, card, from, tos)
 end
 
 sgs.ai_skill_invoke.yanhuo = function(self, data)
-	local opponent = self.player:getOtherPlayers(true):first()
+	local opponent = self.player:getOtherPlayers(self.player, true):first()
 	return opponent:isAlive() and not self:doNotDiscard(opponent)
 end
 
 sgs.ai_skill_playerchosen.yanhuo = function(self, targets)
-	return self:findPlayerToDiscard()
+	local target = self:findPlayerToDiscard(nil, nil, true, targets)
+	if target and target:objectName() ~= self.player:objectName() then return target end
 end

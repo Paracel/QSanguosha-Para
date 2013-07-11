@@ -537,7 +537,20 @@ mingce_skill.getTurnUseCard = function(self)
 		self:sortByUseValue(hcards, true)
 
 		for _, hcard in ipairs(hcards) do
-			if hcard:isKindOf("Slash") or hcard:isKindOf("EquipCard") then
+			if hcard:isKindOf("Slash") then
+				if self:getCardsNum("Slash") > 1 then
+					card = hcard
+					break
+				else
+					local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
+					self:useBasicCard(hcard, use)
+					if not dummy_use.card or dummy_use.to:length() == 0
+						or (dummy_use.to:length() == 1 and not self:hasHeavySlashDamage(self.player, hcard, dummy_use.to:first())) then
+						card = hcard
+						break
+					end
+				end
+			elseif hcard:isKindOf("EquipCard") then
 				card = hcard
 				break
 			end

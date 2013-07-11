@@ -34,6 +34,13 @@ public:
     NostalStandardPackage();
 };
 
+class NostalWindPackage: public Package {
+    Q_OBJECT
+
+public:
+    NostalWindPackage();
+};
+
 class NostalYJCMPackage: public Package {
     Q_OBJECT
 

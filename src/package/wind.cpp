@@ -62,7 +62,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
 
                 JudgeStruct judge;
-                judge.pattern = ".|spade";
+                judge.pattern = ".|black";
                 judge.good = false;
                 judge.negative = true;
                 judge.reason = objectName();
@@ -70,8 +70,15 @@ public:
 
                 room->judge(judge);
 
-                if (judge.isBad())
-                    room->damage(DamageStruct(objectName(), zhangjiao, target, 2, DamageStruct::Thunder));
+                if (judge.isBad()) {
+                    room->damage(DamageStruct(objectName(), zhangjiao, target, 1, DamageStruct::Thunder));
+                    if (zhangjiao->isAlive()) {
+                        RecoverStruct recover;
+                        recover.who = zhangjiao;
+                        room->recover(player, recover);
+                    
+                    }
+                }
             }
         }
         return false;
@@ -1090,8 +1097,8 @@ WindPackage::WindPackage()
     related_skills.insertMulti("buqu", "#buqu-clear");
 
     General *zhangjiao = new General(this, "zhangjiao$", "qun", 3); // QUN 010
-    zhangjiao->addSkill(new Guidao);
     zhangjiao->addSkill(new Leiji);
+    zhangjiao->addSkill(new Guidao);
     zhangjiao->addSkill(new Huangtian);
 
     General *yuji = new General(this, "yuji", "qun", 3); // QUN 011

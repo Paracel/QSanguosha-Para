@@ -708,7 +708,7 @@ function getGuixinValue(self, player)
 		if self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0 end
 		if not self:hasLoseHandcardEffective() then return 0.1
 		else
-			local index = self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian", player) and 0.7 or 0.6
+			local index = player:hasSkills("jijiu|qingnang|leiji|nosleiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian") and 0.7 or 0.6
 			local value = 0.2 + index / (player:getHandcardNum() + 1)
 			if self:doNotDiscard(player, "h", true) then value = value - 0.1 end
 			return value
@@ -745,7 +745,7 @@ function getGuixinValue(self, player)
 		elseif self:needKongcheng(player) and player:getHandcardNum() == 1 then return 0.3 end
 		if not self:hasLoseHandcardEffective() then return 0.2
 		else
-			local index = self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian", player) and 0.5 or 0.4
+			local index = player:hasSkills("jijiu|qingnang|leiji|nosleiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian") and 0.5 or 0.4
 			local value = 0.2 - index / (player:getHandcardNum() + 1)
 			if player:hasSkills("tuntian+zaoxian") then value = value + 0.1 end
 			return value
@@ -905,7 +905,7 @@ local function getShenfenUseValueOf_HE_Cards(self, to)
 	value_h = (hcard > 4) and 16 / hcard or hcard
 	if to:hasSkills("tuntian+zaoxian") then value = value * 0.95 end
 	if (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getHp() > 2 and to:getMark("zhiji") == 0)) and not to:isKongcheng() then value_h = value_h * 0.7 end
-	if self:hasSkills("jijiu|qingnang|leiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian", to) then value_h = value_h * 0.95 end
+	if to:hasSkills("jijiu|qingnang|leiji|nosleiji|jieyin|beige|kanpo|liuli|qiaobian|zhiheng|guidao|longhun|xuanfeng|tianxiang|noslijian|lijian") then value_h = value_h * 0.95 end
 	value = value + value_h
 
 	-- value of equips
@@ -915,7 +915,7 @@ local function getShenfenUseValueOf_HE_Cards(self, to)
 	value_e = equip_num * 1.1
 	if to:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
 	if to:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
-	if self:hasSkills("bazhen|yizhong", to) and to:getArmor() then value_e = value_e - 1 end
+	if to:hasSkills("bazhen|yizhong") and to:getArmor() then value_e = value_e - 1 end
 	value = value + value_e
 
 	return value

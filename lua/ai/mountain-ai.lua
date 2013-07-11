@@ -379,9 +379,7 @@ end
 
 sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	local target = data:toPlayer()
-	if self:isFriend(target) and not
-		(target:hasSkill("leiji") and (getCardsNum("Jink", target) > 0 or (not self:isWeak(target) and self:hasEightDiagramEffect(target))))
-		then return "." end
+	if self:isFriend(target) and not self:findLeijiTarget(target, 50, self.player) then return "." end
 	local has_peach, has_anal, has_slash, has_jink
 	for _, card in sgs.qlist(self.player:getHandcards()) do
 		if card:isKindOf("Peach") then has_peach = card
@@ -581,7 +579,7 @@ end
 sgs.ai_skill_cardask["@tiaoxin-slash"] = function(self, data, pattern, target)
 	if target then
 		for _, slash in ipairs(self:getCards("Slash")) do
-			if self:slashIsEffective(slash, target) and self:isFriend(target) and target:hasSkill("leiji") then
+			if self:slashIsEffective(slash, target) and self:isFriend(target) and target:hasSkills("leiji|nosleiji") then
 				return slash:toString()
 			end
 			if (self:slashIsEffective(slash, target) and not (self:getDamagedEffects(target, self.player, true) or self:needToLoseHp(target, self.player, true, true)))
@@ -1130,7 +1128,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 		end
 
 		for _, askill in ipairs(("huangen|jianxiong|jiang|qianxun|danlao|juxiang|huoshou|zhichi|" ..
-								"lirang|yicong|wusheng|wushuang|tianxiang|leiji|guhuo|nosshangshi|shangshi|" ..
+								"lirang|yicong|wusheng|wushuang|tianxiang|leiji|nosleiji|guhuo|nosshangshi|shangshi|" ..
 								"zhiyu|guidao|guicai|jijiu|buyi|renxin|lianying|sijian|tianming|drjijiu|jieyuan|" ..
 								"xiaoguo|shushen|zhenlie|tiandu|noszhenlie"):split("|")) do
 			if str:matchOne(askill) then return askill end

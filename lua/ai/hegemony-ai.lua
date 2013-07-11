@@ -575,7 +575,7 @@ sgs.ai_skill_use_func.QingchengCard = function(card, use, self)
 									"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
 									"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
 									"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|kofxiaoji|xiaoji|kofqingguo|mingshi|" ..
-									"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji"):split("|")) do
+									"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji|nosleiji"):split("|")) do
 				if enemy:hasSkill(askill, true) and enemy:getMark("Qingcheng" .. askill) == 0 then
 					target = enemy
 					break
@@ -617,7 +617,7 @@ sgs.ai_skill_choice.qingcheng = function(self, choices, data)
 							"qingguo|longdan|xiangle|jiang|yanzheng|tianming|yizhong|bazhen|jijiu|beige|longhun|buyi|gushou|mingzhe|" ..
 							"huangen|danlao|qianxun|juxiang|huoshou|anxian|fenyong|zhichi|jilei|feiying|yicong|wusheng|wushuang|" ..
 							"xuanfeng|nosxuanfeng|luoying|xiaoguo|guhuo|guidao|guicai|shangshi|lianying|sijian|kofxiaoji|xiaoji|kofqingguo|mingshi|" ..
-							"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji"):split("|")) do
+							"zhiyu|hongyan|tiandu|lirang|guzheng|xingshang|shushen|langgu|guixin|nosshangshi|tianxiang|leiji|nosleiji"):split("|")) do
 		if target:hasSkill(askill, true) and target:getMark("Qingcheng" .. askill) == 0 then
 			return askill
 		end

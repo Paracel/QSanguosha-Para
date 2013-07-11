@@ -203,13 +203,21 @@ function sgs.ai_cardneed.guidao(to, card, self)
 			end
 		end
 	end
-	if to:hasSkill("leiji") and self:getFinalRetrial(to) == 1 then
-		return card:getSuit() == sgs.Card_Spade
+	if self:getFinalRetrial(to) == 1 then
+		if to:hasSkill("nosleiji") then
+			return card:getSuit() == sgs.Card_Spade
+		end
+		if to:hasSkill("leiji") then
+			return card:isBlack()
+		end
 	end
 end
 
-function SmartAI:findLeijiTarget(player, leiji_value, slasher)
-	if not player:hasSkill("leiji") then return nil end
+function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
+	if lastest_version == nil then
+		return self:findLeijiTarget(player, leiji_value, slasher, true) or self:findLeijiTarget(player, leiji_value, slasher, false)
+	end
+	if not player:hasSkill(lastest_version and "leiji" or "nosleiji") then return nil end
 	if slasher then
 		if not self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), player, slasher, slasher:hasWeapon("qinggang_sword")) then return nil end
 		if slasher:hasSkill("liegong") and slasher:getPhase() == sgs.Player_Play and self:isEnemy(player, slasher)
@@ -220,7 +228,11 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 			and self:isEnemy(player, slasher) and player:getHandcardNum() >= slasher:getHp() then
 			return nil
 		end
-		if not self:hasSuit("spade", true, player) and player:getHandcardNum() < 3 then return nil end
+		if not latest_version then
+			if not self:hasSuit("spade", true, player) and player:getHandcardNum() < 3 then return nil end
+		else
+			if not self:hasSuit("black", true, player) and player:getHandcardNum() < 2 then return nil end
+		end
 		if not (getKnownCard(player, "Jink", true) > 0 or getCardsNum("Jink", player) >= 1
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
 			return nil
@@ -229,15 +241,21 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 	local getCmpValue = function(enemy)
 		local value = 0
 		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder, player) then return 99 end
-		if enemy:hasSkill("hongyan") then return 99 end
-		if self:cantbeHurt(enemy, player, 2) or self:objectiveLevel(enemy) < 3 or (enemy:isChained() and not self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, 2)) then return 100 end
+		if enemy:hasSkill("hongyan") then
+			if not lastest_version then return 99
+			elseif not self:hasSuit("club", true, player) and player:getHandcardNum() < 3 then value = value + 80
+			else value = value + 70 end
+		end
+		if self:cantbeHurt(enemy, player, lastest_version and 1 or 2) or self:objectiveLevel(enemy) < 3
+			or (enemy:isChained() and not self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, lastest_version and 1 or 2)) then return 100 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value + 50 end
-		if enemy:hasArmorEffect("silver_lion") then value = value + 20 end
+		if not latest_version and enemy:hasArmorEffect("silver_lion") then value = value + 20 end
 		if self:hasSkills(sgs.exclusive_skill, enemy) then value = value + 10 end
 		if self:hasSkills(sgs.masochism_skill, enemy) then value = value + 5 end
-		if enemy:isChained() and self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, 2) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
+		if enemy:isChained() and self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, lastest_version and 1 or 2) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
 		if enemy:isLord() then value = value - 5 end
 		value = value + enemy:getHp() + sgs.getDefenseSlash(enemy) * 0.01
+		if latest_version and player:isWounded() and not self:needToLoseHp(player) then value = value + 15 end
 		return value
 	end
 
@@ -254,18 +272,8 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher)
 end
 
 sgs.ai_skill_playerchosen.leiji = function(self, targets)
-	local mode = self.room:getMode()
-	if mode:find("_mini_17") or mode:find("_mini_19") or mode:find("_mini_20") or mode:find("_mini_26") then
-		local players = self.room:getAllPlayers();
-		for _, aplayer in sgs.qlist(players) do
-			if aplayer:getState() ~= "robot" then
-				return aplayer
-			end
-		end
-	end
-
 	self:updatePlayers()
-	return self:findLeijiTarget(self.player, 100)
+	return self:findLeijiTarget(self.player, 100, nil, true)
 end
 
 sgs.ai_playerchosen_intention.leiji = 80
@@ -289,7 +297,7 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 		end
 	end
 
-	if getKnownCard(to, "Jink", true) >= 1 or (self:hasSuit("spade", true, to) and hcard >= 2) then return true end
+	if (getKnownCard(to, "Jink", true) >= 1 or (self:hasSuit("black", true, to) and hcard >= 2)) and to:isWounded() then return true end
 	if self:hasEightDiagramEffect(to) then return true end
 end
 

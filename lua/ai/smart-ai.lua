@@ -222,6 +222,7 @@ function sgs.getDefense(player, gameProcess)
 		defense = defense + 1.3
 		if player:hasSkill("tiandu") then defense = defense + 0.6 end
 		if player:hasSkill("leiji") then defense = defense + 0.4 end
+		if player:hasSkill("nosleiji") then defense = defense + 0.4 end
 		if player:hasSkill("noszhenlie") then defense = defense + 0.2 end
 		if player:hasSkill("hongyan") then defense = defense + 0.2 end
 	end
@@ -4030,7 +4031,8 @@ function SmartAI:getSuitNum(suit_strings, include_equip, player)
 	end
 	for _, card in ipairs(allcards) do
 		for _, suit_string in ipairs(suit_strings:split("|")) do
-			if card:getSuitString() == suit_string then
+			if card:getSuitString() == suit_string
+				or (suit_string == "black" and card:isBlack()) or (suit_string == "red" and card:isRed()) then
 				n = n + 1
 			end
 		end
@@ -4246,7 +4248,7 @@ function SmartAI:getAoeValueTo(card, to , from)
 		if self:needToLoseHp(to, from, nil, true) then value = value + 10 end
 
 		if card:isKindOf("ArcheryAttack") then
-			if to:hasSkill("leiji") and (sj_num >= 1 or self:isEquip("EightDiagram", to)) and self:findLeijiTarget(to, 50, from) then
+			if to:hasSkills("leiji|nosleiji") and (sj_num >= 1 or to:hasArmorEffect("eight_diagram")) and self:findLeijiTarget(to, 50, from) then
 				value = value + 100
 				if self:hasSuit("spade", true, to) then value = value + 150
 				else value = value + to:getHandcardNum() * 35

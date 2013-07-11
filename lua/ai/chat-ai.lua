@@ -104,7 +104,7 @@ sgs.ai_chat_func[sgs.EventPhaseStart] = function(self, player, data)
 				"速度，一人一下，弄死",
 				"主公，你投降吧，免受皮肉之苦啊，投降给全尸",
 			}
-	if player:getPhase() == sgs.Player_Finish and not player:isKongcheng() and player:hasSkill("leiji") and os.time() % 10 < 4 then
+	if player:getPhase() == sgs.Player_Finish and not player:isKongcheng() and player:hasSkills("leiji|nosleiji") and os.time() % 10 < 4 then
 		local index = 1 + (os.time() % #chat_jink)
 		player:speak(chat_jink[index])
 	end

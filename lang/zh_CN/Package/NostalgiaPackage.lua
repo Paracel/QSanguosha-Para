@@ -9,6 +9,7 @@ return {
 
 	["nostal_general"] = "怀旧-测试",
 	["nostal_standard"] = "怀旧-标准",
+	["nostal_wind"] = "怀旧-风",
 	["nostal_yjcm"] = "怀旧-一将",
 	["nostal_yjcm2012"] = "怀旧-一将2",
 
@@ -33,6 +34,12 @@ return {
 	[":nosjizhi"] = "每当你使用一张非延时类锦囊牌时，你可以摸一张牌。",
 	["nosqicai"] = "奇才",
 	[":nosqicai"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用锦囊牌无距离限制。",
+
+	["nos_zhangjiao"] = "张角-旧",
+	["&nos_zhangjiao"] = "张角",
+	["illustrator:nos_zhangjiao"] = "LiuHeng",
+	["nosleiji"] = "雷击",
+	[":nosleiji"] = "每当你使用或打出一张【闪】时，你可以令一名角色进行一次判定：若判定结果为♠，你对该角色造成2点雷电伤害。",
 
 	["nos_fazheng"] = "法正-旧",
 	["&nos_fazheng"] = "法正",

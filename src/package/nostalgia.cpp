@@ -1164,6 +1164,38 @@ public:
     }
 };
 
+// old wind generals
+
+class NosLeiji: public TriggerSkill {
+public:
+    NosLeiji(): TriggerSkill("nosleiji") {
+        events << CardResponded;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhangjiao, QVariant &data) const{
+        CardStar card_star = data.value<CardResponseStruct>().m_card;
+        if (card_star->isKindOf("Jink")) {
+            ServerPlayer *target = room->askForPlayerChosen(zhangjiao, room->getAlivePlayers(), objectName(), "leiji-invoke", true, true);
+            if (target) {
+                room->broadcastSkillInvoke("leiji");
+
+                JudgeStruct judge;
+                judge.pattern = ".|spade";
+                judge.good = false;
+                judge.negative = true;
+                judge.reason = objectName();
+                judge.who = target;
+
+                room->judge(judge);
+
+                if (judge.isBad())
+                    room->damage(DamageStruct(objectName(), zhangjiao, target, 2, DamageStruct::Thunder));
+            }
+        }
+        return false;
+    }
+};
+
 NostalGeneralPackage::NostalGeneralPackage()
     : Package("nostal_general")
 {
@@ -1212,6 +1244,15 @@ NostalStandardPackage::NostalStandardPackage()
     addMetaObject<NosRendeCard>();
     addMetaObject<NosFanjianCard>();
     addMetaObject<NosLijianCard>();
+}
+
+NostalWindPackage::NostalWindPackage()
+    : Package("nostal_wind")
+{
+    General *nos_zhangjiao = new General(this, "nos_zhangjiao$", "qun", 3);
+    nos_zhangjiao->addSkill(new NosLeiji)
+    nos_zhangjiao->addSkill("guidao")
+    nos_zhangjiao->addSkill("huangtian")
 }
 
 NostalYJCMPackage::NostalYJCMPackage()
@@ -1263,6 +1304,7 @@ NostalYJCM2012Package::NostalYJCM2012Package()
 
 ADD_PACKAGE(Nostalgia)
 ADD_PACKAGE(NostalGeneral)
+ADD_PACKAGE(NostalWind)
 ADD_PACKAGE(NostalStandard)
 ADD_PACKAGE(NostalYJCM)
 ADD_PACKAGE(NostalYJCM2012)

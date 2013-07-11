@@ -265,7 +265,9 @@ end
 
 sgs.ai_skill_use_func.MouzhuCard = function(card, use, self)
 	local canleiji
-	if self.player:hasSkill("leiji") and self:findLeijiTarget(self.player, 50) and self:hasSuit("spade", true) then
+	if self:findLeijiTarget(self.player, 50)
+		and ((self.player:hasSkill("leiji") and self:hasSuit("spade", true))
+			(self.player:hasSkill("nosleiji") and self:hasSuit("black", true))) then
 		canleiji = true
 		self:sort(self.friends_noself, "handcard")
 		sgs.reverse(self.friends_noself)
@@ -329,7 +331,7 @@ sgs.ai_skill_cardask["@mouzhu-give"] = function(self, data)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
 	if self:isFriend(target) then
-		if target:hasSkill("leiji") then
+		if target:hasSkill("nosleiji") then
 			local jink, spade
 			for _, c in ipairs(cards) do
 				if isCard("Jink", c, target) then jink = c:getEffectiveId() end
@@ -339,11 +341,27 @@ sgs.ai_skill_cardask["@mouzhu-give"] = function(self, data)
 			elseif not self:hasEightDiagramEffect(target) and jink then return jink
 			elseif spade or jink then return spade or jink
 			end
+		elseif target:hasSkill("leiji") then
+			local jink, black
+			for _, c in ipairs(cards) do
+				if isCard("Jink", c, target) then jink = c:getEffectiveId() end
+				if c:isBlack() then black = c:getEffectiveId() end
+			end
+			if self:hasSuit("black", true, target) and jink then return jink
+			elseif not self:hasEightDiagramEffect(target) and jink then return jink
+			elseif black or jink then return black or jink
+			end
 		end
 	else
-		if target:hasSkill("leiji") then
+		if target:hasSkill("nosleiji") then
 			for _, c in ipairs(cards) do
 				if not c:isKindOf("Peach") and not c:isKindOf("Jink") and c:getSuit() ~= sgs.Card_Spade then
+					return c:getEffectiveId()
+				end
+			end
+		elseif target:hasSkill("leiji") then
+			for _, c in ipairs(cards) do
+				if not c:isKindOf("Peach") and not c:isKindOf("Jink") and not c:isBlack() then
 					return c:getEffectiveId()
 				end
 			end
@@ -358,7 +376,7 @@ end
 sgs.ai_skill_choice.mouzhu = function(self, choices)
 	local target = self.room:getCurrent()
 	local slash = sgs.Sanguosha:cloneCard("slash")
-	if target:hasSkill("leiji") then
+	if target:hasSkills("leiji|nosleiji") then
 		if self:isFriend(target) then
 			if choices:match("slash") then return "slash" end
 		else
@@ -367,10 +385,10 @@ sgs.ai_skill_choice.mouzhu = function(self, choices)
 	end
 
 	if self:isFriend(target) then
-		if (target:hasSkill("leiji") or not self:slashIsEffective(slash, target)) and choices:match("slash") then return "slash" end
+		if (target:hasSkills("leiji|nosleiji") or not self:slashIsEffective(slash, target)) and choices:match("slash") then return "slash" end
 		if self:getDamagedEffects(self.player, target) and getCardsNum("Slash", target) >= 1 and choices:match("duel") then return "duel" end
 	else
-		if target:hasSkill("leiji") and choices:match("duel") then return "duel" end
+		if target:hasSkills("leiji|nosleiji") and choices:match("duel") then return "duel" end
 		if self:getCardsNum("Slash") > getCardsNum("Slash", target) and choices:match("duel") then return "duel" end
 	end
 
@@ -379,7 +397,7 @@ end
 
 sgs.ai_use_priority.MouzhuCard = 5.5
 sgs.ai_card_intention.MouzhuCard = function(self, card, from, tos)
-	if not self.player:hasSkill("leiji") then sgs.updateIntention(from, tos[1], 30) end
+	if not self.player:hasSkills("leiji|nosleiji") then sgs.updateIntention(from, tos[1], 30) end
 end
 
 sgs.ai_skill_invoke.yanhuo = function(self, data)

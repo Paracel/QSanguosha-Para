@@ -741,7 +741,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	if self.player:isChained() and self:isGoodChainTarget(self.player, nil, nil, nil, slash) then return "." end
 	if self:isFriend(target) then
 		if self:findLeijiTarget(self.player, 50, target) then return getJink() end
-		if target:hasSkill("jieyin") and not self.player:isWounded() and self.player:isMale() and not self.player:hasSkill("leiji") then return "." end
+		if target:hasSkill("jieyin") and not self.player:isWounded() and self.player:isMale() and not self.player:hasSkills("leiji|nosleiji") then return "." end
 		if not target:hasSkill("jueqing") then
 			if (target:hasSkill("nosrende") or (target:hasSkill("rende") and not target:hasUsed("RendeCard"))) and self.player:hasSkill("jieming") then return "." end
 			if target:hasSkill("pojun") and not self.player:faceUp() then return "." end
@@ -1113,7 +1113,7 @@ function sgs.ai_weapon_value.axe(self, enemy)
 end
 
 sgs.ai_skill_cardask["blade-slash"] = function(self, data, pattern, target)
-	if target and self:isFriend(target) and not (target:hasSkill("leiji") and getCardsNum("Jink", target) > 0) then
+	if target and self:isFriend(target) and not self:findLeijiTarget(target, 50, self.player) then
 		return "."
 	end
 	for _, slash in ipairs(self:getCards("Slash")) do
@@ -1276,7 +1276,7 @@ sgs.ai_skill_invoke.eight_diagram = function(self, data)
 		end
 	end
 	if self.player:hasFlag("dahe") then
-		if self.player:hasSkills("tiandu|leiji") and not heart_jink then return true else return false end
+		if self.player:hasSkills("tiandu|leiji|nosleiji") and not heart_jink then return true else return false end
 	end
 	if sgs.hujiasource and (not self:isFriend(sgs.hujiasource) or sgs.hujiasource:hasFlag("dahe")) then return false end
 	if self:needKongcheng(self.player, true) and self.player:getHandcardNum() == 1 then
@@ -1298,7 +1298,7 @@ function sgs.ai_armor_value.eight_diagram(player, self)
 	if haszj then
 		return 2
 	end
-	if player:hasSkills("tiandu|leiji|noszhenlie") then
+	if player:hasSkills("tiandu|leiji|nosleiji|noszhenlie") then
 		return 6
 	end
 
@@ -1666,7 +1666,7 @@ function SmartAI:getDangerousCard(who)
 	local armor = who:getArmor()
 	if weapon and weapon:isKindOf("Spear") and who:getHandcardNum() >= 3 and who:hasSkill("paoxiao") then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Axe") and self:hasSkills("luoyi|pojun|jiushi|jiuchi|jie||jieyuan", who) then return weapon:getEffectiveId() end
-	if armor and armor:isKindOf("EightDiagram") and who:hasSkill("leiji") then return armor:getEffectiveId() end
+	if armor and armor:isKindOf("EightDiagram") and who:hasSkills("leiji|nosleiji") then return armor:getEffectiveId() end
 	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and self:hasSkills("guidao|longdan|guicai|jilve|huanshi|qingguo|kanpo", who) then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Crossbow") and getCardsNum("Slash", who) > 1 then
@@ -2695,10 +2695,10 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	if armor and not self:hasSkills("yizhong|bazhen") then
 		if eightdiagram then
 			local lord = self.room:getLord()
-			if self:hasSkills("tiandu|leiji|noszhenlie|gushou|hongyan") and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram)) then
+			if self:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram)) then
 				return eightdiagram
 			end
-			if nextPlayerIsEnemy and self:hasSkills("tiandu|leiji|noszhenlie|gushou|hongyan", nextAlive) and not self:hasSkills("bazhen|yizhong", nextAlive)
+			if nextPlayerIsEnemy and self:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan", nextAlive) and not self:hasSkills("bazhen|yizhong", nextAlive)
 				and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram), nextAlive) then
 				return eightdiagram
 			end
@@ -2712,7 +2712,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		if silverlion then
 			local lightning
 			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-				if aplayer:hasSkill("leiji") and self:isEnemy(aplayer) then
+				if aplayer:hasSkill("nosleiji") and self:isEnemy(aplayer) then
 					return silverlion
 				end
 				if aplayer:containsTrick("lightning") then
@@ -2741,7 +2741,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	if defHorse and (not self.player:hasSkill("leiji") or self:getCardsNum("Jink") == 0) then
+	if defHorse and (not self.player:hasSkills("leiji|nosleiji") or self:getCardsNum("Jink") == 0) then
 		local before_num, after_num = 0, 0
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:canSlash(self.player, nil, true) then

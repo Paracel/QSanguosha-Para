@@ -214,10 +214,10 @@ function sgs.ai_cardneed.guidao(to, card, self)
 end
 
 function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
-	if lastest_version == nil then
-		return self:findLeijiTarget(player, leiji_value, slasher, true) or self:findLeijiTarget(player, leiji_value, slasher, false)
+	if not latest_version then
+		return self:findLeijiTarget(player, leiji_value, slasher, 1) or self:findLeijiTarget(player, leiji_value, slasher, -1)
 	end
-	if not player:hasSkill(lastest_version and "leiji" or "nosleiji") then return nil end
+	if not player:hasSkill(latest_version == 1 and "leiji" or "nosleiji") then return nil end
 	if slasher then
 		if not self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), player, slasher, slasher:hasWeapon("qinggang_sword")) then return nil end
 		if slasher:hasSkill("liegong") and slasher:getPhase() == sgs.Player_Play and self:isEnemy(player, slasher)
@@ -242,17 +242,17 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 		local value = 0
 		if not self:damageIsEffective(enemy, sgs.DamageStruct_Thunder, player) then return 99 end
 		if enemy:hasSkill("hongyan") then
-			if not lastest_version then return 99
+			if latest_version == -1 then return 99
 			elseif not self:hasSuit("club", true, player) and player:getHandcardNum() < 3 then value = value + 80
 			else value = value + 70 end
 		end
-		if self:cantbeHurt(enemy, player, lastest_version and 1 or 2) or self:objectiveLevel(enemy) < 3
-			or (enemy:isChained() and not self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, lastest_version and 1 or 2)) then return 100 end
+		if self:cantbeHurt(enemy, player, latest_version == 1 and 1 or 2) or self:objectiveLevel(enemy) < 3
+			or (enemy:isChained() and not self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, latest_version == 1 and 1 or 2)) then return 100 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value + 50 end
 		if not latest_version and enemy:hasArmorEffect("silver_lion") then value = value + 20 end
 		if self:hasSkills(sgs.exclusive_skill, enemy) then value = value + 10 end
 		if self:hasSkills(sgs.masochism_skill, enemy) then value = value + 5 end
-		if enemy:isChained() and self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, lastest_version and 1 or 2) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
+		if enemy:isChained() and self:isGoodChainTarget(enemy, player, sgs.DamageStruct_Thunder, latest_version == 1 and 1 or 2) and #(self:getChainedEnemies(player)) > 1 then value = value - 25 end
 		if enemy:isLord() then value = value - 5 end
 		value = value + enemy:getHp() + sgs.getDefenseSlash(enemy) * 0.01
 		if latest_version and player:isWounded() and not self:needToLoseHp(player) then value = value + 15 end

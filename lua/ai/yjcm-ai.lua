@@ -543,7 +543,7 @@ mingce_skill.getTurnUseCard = function(self)
 					break
 				else
 					local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
-					self:useBasicCard(hcard, use)
+					self:useBasicCard(hcard, dummy_use)
 					if not dummy_use.card or dummy_use.to:length() == 0
 						or (dummy_use.to:length() == 1 and not self:hasHeavySlashDamage(self.player, hcard, dummy_use.to:first())) then
 						card = hcard
@@ -637,7 +637,7 @@ sgs.ai_skill_playerchosen.mingce = function(self, targets)
 	return sgs.ai_skill_playerchosen.zero_card_as_slash(self, targets)
 end
 
-sgs.ai_playerchosen_intention.mingce = 80
+--sgs.ai_playerchosen_intention.mingce = 80
 
 sgs.ai_use_value.MingceCard = 5.9
 sgs.ai_use_priority.MingceCard = 4

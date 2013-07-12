@@ -325,6 +325,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	if who:hasArmorEffect("silver_lion") then damagecount = 1 end
 	if nature == sgs.DamageStruct_Normal then return not self:cantbeHurt(who, source, damagecount) end
 	local kills, killlord = 0
+	local peach_num = self.player:objectName() == source:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", source)
 
 	local function getChainedPlayerValue(target, dmg)
 		local newvalue = 0

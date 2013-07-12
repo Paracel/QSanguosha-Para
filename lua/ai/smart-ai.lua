@@ -3042,6 +3042,9 @@ function SmartAI:willUsePeachTo(dying)
 		if dying:hasSkill("wuhun") then
 			local lord = self.room:getLord()
 			if not lord or self:isEnemy(lord) then return "." end
+			local should = (self.role == "renegade" and self.room:alivePlayerCount() > 2)
+							or ((self.role == "lord" or self.role == "loyalist") and sgs.current_mode_players["rebel"] + sgs.current_mode_players["renegade"] > 1)
+			if not should then return nil end
 			local revengeTargets = self:getWuhunRevengeTargets()
 			if table.contains(revengeTargets, lord) then
 				local finalRetrial, wizard = self:getFinalRetrial(self.room:getCurrent(), "wuhun")

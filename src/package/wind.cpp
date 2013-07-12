@@ -75,8 +75,7 @@ public:
                     if (zhangjiao->isAlive()) {
                         RecoverStruct recover;
                         recover.who = zhangjiao;
-                        room->recover(player, recover);
-                    
+                        room->recover(zhangjiao, recover);
                     }
                 }
             }

@@ -1250,9 +1250,9 @@ NostalWindPackage::NostalWindPackage()
     : Package("nostal_wind")
 {
     General *nos_zhangjiao = new General(this, "nos_zhangjiao$", "qun", 3);
-    nos_zhangjiao->addSkill(new NosLeiji)
-    nos_zhangjiao->addSkill("guidao")
-    nos_zhangjiao->addSkill("huangtian")
+    nos_zhangjiao->addSkill(new NosLeiji);
+    nos_zhangjiao->addSkill("guidao");
+    nos_zhangjiao->addSkill("huangtian");
 }
 
 NostalYJCMPackage::NostalYJCMPackage()

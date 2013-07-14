@@ -632,49 +632,6 @@ public:
     }
 };
 
-NosFanjianCard::NosFanjianCard() {
-    mute = true;
-}
-
-void NosFanjianCard::onEffect(const CardEffectStruct &effect) const{
-    ServerPlayer *zhouyu = effect.from;
-    ServerPlayer *target = effect.to;
-    Room *room = zhouyu->getRoom();
-
-    int card_id = zhouyu->getRandomHandCardId();
-    const Card *card = Sanguosha->getCard(card_id);
-    room->broadcastSkillInvoke("fanjian");
-    Card::Suit suit = room->askForSuit(target, "nosfanjian");
-
-    LogMessage log;
-    log.type = "#ChooseSuit";
-    log.from = target;
-    log.arg = Card::Suit2String(suit);
-    room->sendLog(log);
-    room->showCard(zhouyu, card_id);
-
-    if (card->getSuit() != suit)
-        room->damage(DamageStruct("nosfanjian", zhouyu, target));
-
-    room->getThread()->delay();
-    if (target->isAlive())
-        target->obtainCard(card);
-}
-
-class NosFanjian: public ZeroCardViewAsSkill {
-public:
-    NosFanjian(): ZeroCardViewAsSkill("nosfanjian") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->isKongcheng() && !player->hasUsed("NosFanjianCard");
-    }
-
-    virtual const Card *viewAs() const{
-        return new NosFanjianCard;
-    }
-};
-
 class NosZhenggong: public MasochismSkill {
 public:
     NosZhenggong(): MasochismSkill("noszhenggong") {
@@ -1233,16 +1190,11 @@ NostalStandardPackage::NostalStandardPackage()
     huangyueying->addSkill(new NosQicai);
     huangyueying->addSkill(new SPConvertSkill("nos_huangyueying", "heg_huangyueying+tw_huangyueying"));
 
-    General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
-    nos_zhouyu->addSkill("yingzi");
-    nos_zhouyu->addSkill(new NosFanjian);
-
     General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
     nos_diaochan->addSkill(new NosLijian);
     nos_diaochan->addSkill("biyue");
 
     addMetaObject<NosRendeCard>();
-    addMetaObject<NosFanjianCard>();
     addMetaObject<NosLijianCard>();
 }
 

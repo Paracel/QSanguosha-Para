@@ -68,12 +68,13 @@ function sgs.isGoodTarget(player, targets, self)
 		end
 	end
 
-	if not attacker:hasSkill("jueqing") and player:hasSkill("huilei") and not player:isLord() and player:getHp() == 1 then
-		if attacker:getHandcardNum() >= 4 then return false end
+	if not (attacker and attacker:hasSkill("jueqing")) and player:hasSkill("huilei") and not player:isLord() and player:getHp() == 1 then
+		if attacker and attacker:getHandcardNum() >= 4 then return false end
 		return sgs.compareRoleEvaluation(player, "rebel", "loyalist") == "rebel"
 	end
 
-	if not attacker:hasSkill("jueqing") and player:hasSkill("wuhun") and not player:isLord() and (attacker:isLord() or player:getHp() <= 2) then
+	if not (attacker and attacker:hasSkill("jueqing")) and player:hasSkill("wuhun") and not player:isLord()
+		and ((attacker and attacker:isLord()) or player:getHp() <= 2) then
 		return false
 	end
 
@@ -139,7 +140,7 @@ function sgs.getDefenseSlash(player)
 		defense = defense + hujiaJink
 	end
 
-	if attacker:canSlashWithoutCrossbow() and attacker:getPhase() == sgs.Player_Play then
+	if attacker and attacker:canSlashWithoutCrossbow() and attacker:getPhase() == sgs.Player_Play then
 		local hcard = player:getHandcardNum()
 		if attacker:hasSkill("liegong") and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange()) then defense = 0 end
 		if attacker:hasSkill("kofliegong") and hcard >= attacker:getHp() then defense = 0 end

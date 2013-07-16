@@ -223,9 +223,9 @@ public:
     }
 };
 
-class Fenji: public MaxCardsSkill {
+class NeoFenji: public MaxCardsSkill {
 public:
-    Fenji(): MaxCardsSkill("fenji") {
+    NeoFenji(): MaxCardsSkill("neofenji") {
     }
 
     virtual int getExtra(const Player *target) const{
@@ -268,7 +268,7 @@ LingPackage::LingPackage()
 
     General *neo_zhoutai = new General(this, "neo_zhoutai", "wu", 4);
     neo_zhoutai->addSkill("buqu");
-    neo_zhoutai->addSkill(new Fenji);
+    neo_zhoutai->addSkill(new NeoFenji);
 
     General *neo_gongsunzan = new General(this, "neo_gongsunzan", "qun");
     neo_gongsunzan->addSkill(new Zhulou);

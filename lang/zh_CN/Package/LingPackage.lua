@@ -46,8 +46,8 @@ return {
 	["neo_zhoutai"] = "周泰-新",
 	["&neo_zhoutai"] = "周泰",
 	["designer:neo_zhoutai"] = "佚名", 
-	["fenji"] = "奋激",
-	[":fenji"] = "<font color=\"blue\"><b>锁定技。</b></font>你的手牌上限+X。（X为“不屈牌”的数量）",
+	["neofenji"] = "奋激",
+	[":neofenji"] = "<font color=\"blue\"><b>锁定技。</b></font>你的手牌上限+X。（X为“不屈牌”的数量）",
 
 	["neo_gongsunzan"] = "公孙瓒-新",
 	["&neo_gongsunzan"] = "公孙瓒",

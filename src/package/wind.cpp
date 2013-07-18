@@ -531,7 +531,6 @@ public:
     }
 
     virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
-        player->clearOnePrivatePile("buqu");
         if (player->getHp() <= 0)
             room->enterDying(player, NULL);
     }

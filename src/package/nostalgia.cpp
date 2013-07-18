@@ -1174,8 +1174,7 @@ NostalGeneralPackage::NostalGeneralPackage()
 
     addMetaObject<NosYexinCard>();
 
-    skills << new NosYexin << new DetachEffectSkill("nosyexin", "nospower")
-           << new FakeMoveSkill("nosyexin") << new NosPaiyi;
+    skills << new NosYexin << new FakeMoveSkill("nosyexin") << new NosPaiyi;
 }
 
 NostalStandardPackage::NostalStandardPackage()

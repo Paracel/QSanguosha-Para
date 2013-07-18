@@ -978,7 +978,7 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 			if self:isEnemy(player) then benefit = benefit + value_d end
 		end
 	end
-	if not self.player:faceUp() or self:hasSkills("jushou|neojushou|kuiwei", self.player) then
+	if not self.player:faceUp() or self.player:hasSkills("jushou|nosjushou|neojushou|kuiwei") then
 		benefit = benefit + 1
 	else
 		local help_friend = false

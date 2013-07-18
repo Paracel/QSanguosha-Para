@@ -414,7 +414,7 @@ sgs.ai_skill_invoke.nosqianxi = function(self, data)
 	local target = damage.to
 	if self:isFriend(target) then return false end
 	if target:getLostHp() >= 2 and target:getHp() <= 1 then return false end
-	if self:hasSkills(sgs.masochism_skill, target) or self:hasSkills(sgs.recover_skill, target) or self:hasSkills("longhun|buqu", target) then return true end
+	if target:hasSkills(sgs.masochism_skill .. "|" .. sgs.recover_skill .. "|longhun|buqu|nosbuqu") then return true end
 	if self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
 	return (target:getMaxHp() - target:getHp()) < 2
 end
@@ -827,6 +827,30 @@ end
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
 
 sgs.ai_chaofeng.nos_huangyueying = sgs.ai_chaofeng.huangyueying
+
+sgs.ai_skill_askforag.nosbuqu = function(self, card_ids)
+	for i, card_id in ipairs(card_ids) do
+		for j, card_id2 in ipairs(card_ids) do
+			if i ~= j and sgs.Sanguosha:getCard(card_id):getNumber() == sgs.Sanguosha:getCard(card_id2):getNumber() then
+				return card_id
+			end
+		end
+	end
+
+	return card_ids[1]
+end
+
+function sgs.ai_skill_invoke.nosbuqu(self, data)
+	if #self.enemies == 1 and self.enemies[1]:hasSkill("nosguhuo") then
+		return false
+	else
+		local damage = data:toDamage()
+		if self.player:getHp() == 1 and damage.to and damage:getReason() == "duwu" and self:getSaveNum(true) >= 1 then return false end
+		return true
+	end
+end
+
+sgs.ai_chaofeng.nos_zhoutai = -4
 
 sgs.ai_skill_playerchosen.nosleiji = function(self, targets)
 	local mode = self.room:getMode()

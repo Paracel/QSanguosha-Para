@@ -985,9 +985,9 @@ end
 function sgs.ai_skill_choice.huashen(self, choices)
 	local str = choices
 	choices = str:split("+")
-	if self.player:getHp() < 1 and str:matchOne("buqu") then return "buqu" end
+	if self.player:getHp() < 1 and str:matchOne("nosbuqu") then return "nosbuqu" end
 	if self.player:getPhase() == sgs.Player_RoundStart then
-		if self.player:getHp() < 1 and str:matchOne("buqu") then return "buqu" end
+		if self.player:getHp() < 1 and str:matchOne("nosbuqu") then return "nosbuqu" end
 		if (self.player:getHandcardNum() >= self.player:getHp() and self.player:getHandcardNum() < 10 and not self:isWeak()) or self.player:isSkipped(sgs.Player_Play) then
 			if str:matchOne("keji") then return "keji" end
 		end
@@ -1076,7 +1076,8 @@ function sgs.ai_skill_choice.huashen(self, choices)
 	else
 		if self.player:getHp() == 1 then
 			if str:matchOne("wuhun") then return "wuhun" end
-			for _, askill in ipairs(("wuhun|duanchang|jijiu|longhun|jiushi|jiuchi|buyi|huilei|juejing|buqu|zhuiyi"):split("|")) do
+			if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
+			for _, askill in ipairs(("wuhun|duanchang|jijiu|longhun|jiushi|jiuchi|buyi|huilei|juejing|nosbuqu|zhuiyi"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 		end
@@ -1141,7 +1142,8 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne("qicai") then return "qicai" end
 		end
 
-		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|wuhun|hongyan|buqu|zhuiyi|huilei|yanzheng|" ..
+		if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
+		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|" ..
 								"zhuikong|lianpo|suishi"):split("|")) do
 			if str:matchOne(askill) then return askill end

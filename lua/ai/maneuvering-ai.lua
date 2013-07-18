@@ -165,7 +165,7 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 		if basicnum < 3 then return false end
 	end
 
-	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|" .. sgs.recover_skill, target)
+	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|nosbuqu|" .. sgs.recover_skill, target)
 		and self.player:hasSkill("nosqianxi") and self.player:distanceTo(target) == 1 then
 		return
 	end
@@ -292,7 +292,7 @@ end
 
 function SmartAI:isGoodChainPartner(player)
 	player = player or self.player
-	if player:hasSkill("buqu") or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0) or self:needToLoseHp(player)
+	if hasBuquEffect(player) or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0) or self:needToLoseHp(player)
 		or self:getDamagedEffects(player) or (player:hasSkill("fuli") and player:getMark("@laoji") > 0) then
 		return true
 	end
@@ -625,7 +625,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		and not self.room:isProhibited(self.player, self.player, fire_attack)
 		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
 		and self:hasTrickEffective(fire_attack, self.player)
-		and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or self.player:hasSkill("buqu")
+		and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or hasBuquEffect(self.player)
 			or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
 
 		table.insert(targets, self.player)

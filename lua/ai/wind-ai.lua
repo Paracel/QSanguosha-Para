@@ -406,29 +406,7 @@ sgs.guidao_suit_value = {
 
 sgs.ai_chaofeng.zhangjiao = 4
 
-sgs.ai_skill_askforag.buqu = function(self, card_ids)
-	for i, card_id in ipairs(card_ids) do
-		for j, card_id2 in ipairs(card_ids) do
-			if i ~= j and sgs.Sanguosha:getCard(card_id):getNumber() == sgs.Sanguosha:getCard(card_id2):getNumber() then
-				return card_id
-			end
-		end
-	end
-
-	return card_ids[1]
-end
-
-function sgs.ai_skill_invoke.buqu(self, data)
-	if #self.enemies == 1 and self.enemies[1]:hasSkill("guhuo") then
-		return false
-	else
-		local damage = data:toDamage()
-		if self.player:getHp() == 1 and damage.to and damage:getReason() == "duwu" and self:getSaveNum(true) >= 1 then return false end
-		return true
-	end
-end
-
-sgs.ai_chaofeng.zhoutai = -4
+-- @todo: Fenji AI
 
 sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	local friend_lost_hp = 10
@@ -471,12 +449,12 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 		if (friend:getLostHp() + dmg.damage > 1 and friend:isAlive()) then
 			if friend:isChained() and #self:getChainedFriends() > 1 and dmg.nature ~= sgs.DamageStruct_Normal then
 			elseif friend:getHp() >= 2 and dmg.damage < 2
-					and (self:hasSkills("yiji|buqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", friend)
+					and (friend:hasSkills("yiji|buqu|nosbuqu|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu")
 						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
 						or self:needToLoseHp(friend)
 						or (friend:getHandcardNum() < 3 and (friend:hasSkill("nosrende") or (friend:hasSkill("rende") and not friend:hasUsed("RendeCard"))))) then
 				return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName()
-			elseif friend:hasSkill("buqu") then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
+			elseif hasBuquEffect(friend) then return "@TianxiangCard=" .. card_id .. "->" .. friend:objectName() end
 		end
 	end
 
@@ -503,9 +481,9 @@ sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	local to = tos[1]
 	if self:getDamagedEffects(to) or self:needToLoseHp(to) then return end
 	local intention = 10
-	if (to:getHp() >= 2 and self:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", to))
-		or (to:getHandcardNum() < 3 and (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard"))))
-		or to:hasSkill("buqu") then
+	if hasBuquEffect(to) then intention = 0
+	elseif (to:getHp() >= 2 and self:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu", to))
+		or (to:getHandcardNum() < 3 and (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard")))) then
 		intention = -10
 	end
 	sgs.updateIntention(from, to, intention)
@@ -559,7 +537,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local questioner
 	for _, friend in ipairs(self.friends) do
 		if friend:getHp() == self.friends[#self.friends]:getHp() then
-			if self:hasSkills("nosrende|rende|kuanggu|zaiqi|buqu|yinghun|longhun|xueji|baobian") then
+			if friend:hasSkills("nosrende|rende|kuanggu|zaiqi|buqu|nosbuqu|yinghun|longhun|xueji|baobian") then
 				questioner = friend
 				break
 			end

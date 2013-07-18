@@ -363,7 +363,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 		if self:isWeak(friend) then
 			if friend:isWounded() then up = up + 10 + (friend:isLord() and 20 or 0) end
 			down = down - 10 - (friend:isLord() and 40 or 0)
-			if friend:getHp() <= 1 and not friend:hasSkill("buqu") or friend:getPile("buqu"):length() > 4 then
+			if friend:getHp() <= 1 and not hasBuquEffect(friend) then
 				down = down - 20 - (friend:isLord() and 40 or 0)
 			end
 		end
@@ -382,7 +382,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 		if self:isWeak(enemy) then
 			up = up - 10
 			down = down + 10
-			if enemy:getHp() <= 1 and not enemy:hasSkill("buqu") then
+			if enemy:getHp() <= 1 and not enemy:hasSkills("buqu|nosbuqu") then
 				down = down + 10 + ((enemy:isLord() and #self.enemies > 1) and 20 or 0)
 			end
 		end
@@ -659,7 +659,7 @@ sgs.ai_skill_use["@@dawu"] = function(self, prompt)
 	local targets = {}
 	local lord = self.room:getLord()
 	self:sort(self.friends_noself, "defense")
-	if lord and lord:getMark("@fog") == 0 and self:isFriend(lord) and not sgs.isLordHealthy() and not self.player:isLord() and not lord:hasSkill("buqu") then
+	if lord and lord:getMark("@fog") == 0 and self:isFriend(lord) and not sgs.isLordHealthy() and not self.player:isLord() and not hasBuquEffect(lord) then
 		table.insert(targets, lord:objectName())
 	else
 		for _, friend in ipairs(self.friends_noself) do
@@ -881,7 +881,7 @@ function SmartAI:getSaveNum(isFriend)
 end
 
 function SmartAI:canSaveSelf(player)
-	if player:hasSkill("buqu") and player:getPile("buqu"):length() < 5 then return true end
+	if hasBuquEffect(player) then return true end
 	if getCardsNum("Analeptic", player) > 0 then return true end
 	if player:hasSkill("jiushi") and player:faceUp() then return true end
 	if player:hasSkill("jiuchi") then

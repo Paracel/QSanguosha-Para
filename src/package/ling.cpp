@@ -230,7 +230,7 @@ public:
 
     virtual int getExtra(const Player *target) const{
         if (target->hasSkill(objectName()))
-            return target->getPile("buqu").length();
+            return target->getPile("nosbuqu").length();
         else
             return 0;
     }
@@ -267,7 +267,7 @@ LingPackage::LingPackage()
     neo_zhouyu->addSkill(new NeoFanjian);
 
     General *neo_zhoutai = new General(this, "neo_zhoutai", "wu", 4);
-    neo_zhoutai->addSkill("buqu");
+    neo_zhoutai->addSkill("nosbuqu");
     neo_zhoutai->addSkill(new NeoFenji);
 
     General *neo_gongsunzan = new General(this, "neo_gongsunzan", "qun");

@@ -1153,6 +1153,18 @@ public:
     }
 };
 
+#include "wind.h"
+class NosJushou: public Jushou {
+public:
+    NosJushou(): Jushou() {
+        setObjectName("nosjushou");
+    }
+
+    virtual int getJushouDrawNum(ServerPlayer *) const{
+        return 3;
+    }
+};
+
 NostalGeneralPackage::NostalGeneralPackage()
     : Package("nostal_general")
 {
@@ -1200,6 +1212,9 @@ NostalStandardPackage::NostalStandardPackage()
 NostalWindPackage::NostalWindPackage()
     : Package("nostal_wind")
 {
+    General *nos_caoren = new General(this, "nos_caoren", "wei");
+    nos_caoren->addSkill(new NosJushou);
+
     General *nos_zhangjiao = new General(this, "nos_zhangjiao$", "qun", 3);
     nos_zhangjiao->addSkill(new NosLeiji);
     nos_zhangjiao->addSkill("guidao");

@@ -285,7 +285,7 @@ Jushou::Jushou(): PhaseChangeSkill("jushou") {
 }
 
 int Jushou::getJushouDrawNum(ServerPlayer *) const{
-    return 3;
+    return 1;
 }
 
 bool Jushou::onPhaseChange(ServerPlayer *target) const{

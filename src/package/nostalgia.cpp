@@ -1226,7 +1226,7 @@ public:
         if (triggerEvent == PostHpReduced && zhoutai->getHp() < 1) {
             if (room->askForSkillInvoke(zhoutai, objectName(), data)) {
                 room->setTag("NosBuqu", zhoutai->objectName());
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke("buqu");
                 const QList<int> &nosbuqu = zhoutai->getPile("nosbuqu");
 
                 int need = 1 - zhoutai->getHp(); // the buqu cards that should be turned over
@@ -1276,7 +1276,7 @@ public:
             }
 
             if (duplicate_numbers.isEmpty()) {
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke("buqu");
                 room->setPlayerFlag(zhoutai, "-Global_Dying");
                 return true;
             } else {

@@ -291,16 +291,81 @@ int Jushou::getJushouDrawNum(ServerPlayer *) const{
 bool Jushou::onPhaseChange(ServerPlayer *target) const{
     if (target->getPhase() == Player::Finish) {
         Room *room = target->getRoom();
-        if (room->askForSkillInvoke(target, objectName())) {
+        if (room->askForSkillInvoke(target, objectName())) {          
+            room->broadcastSkillInvoke(objectName() == "neojushou" ? "neojushou" : "jushou");
             target->drawCards(getJushouDrawNum(target));
             target->turnOver();
-
-            room->broadcastSkillInvoke(objectName() == "neojushou" ? "neojushou" : "jushou");
         }
     }
 
     return false;
 }
+
+class Jiewei: public TriggerSkill {
+public:
+    Jiewei(): TriggerSkill("jiewei") {
+        events << TurnedOver;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (!room->askForSkillInvoke(player, objectName())) return false;
+        player->drawCards(1);
+
+        const Card *card = room->askForUseCard(player, "TrickCard,EquipCard", "@jiewei");
+        if (!card) return false;
+
+        QList<ServerPlayer *> targets;
+        if (card->getTypeId() == Card::TypeTrick) {
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                bool can_discard = false;
+                foreach (const Card *judge, p->getJudgingArea()) {
+                    if (judge->getTypeId() == Card::TypeTrick && player->canDiscard(p, judge->getEffectiveId())) {
+                        can_discard = true;
+                        break;
+                    } else if (judge->getTypeId() == Card::TypeSkill) {
+                        const Card *real_card = Sanguosha->getEngineCard(judge->getEffectiveId());
+                        if (real_card->getTypeId() == Card::TypeTrick && player->canDiscard(p, real_card->getEffectiveId())) {
+                            can_discard = true;
+                            break;
+                        }
+                    }
+                 }
+                 if (can_discard) targets << p;
+            }
+        } else if (card->getTypeId() == Card::TypeEquip) {
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (!p->getEquips().isEmpty() && player->canDiscard(p, "e"))
+                    targets << p;
+                else {
+                    foreach (const Card *judge, p->getJudgingArea()) {
+                        if (judge->getTypeId() == Card::TypeSkill) {
+                            const Card *real_card = Sanguosha->getEngineCard(judge->getEffectiveId());
+                            if (real_card->getTypeId() == Card::TypeEquip && player->canDiscard(p, real_card->getEffectiveId())) {
+                                targets << p;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (targets.isEmpty()) return false;
+        ServerPlayer *to_discard = room->askForPlayerChosen(player, targets, objectName(), "@jiewei-discard", true);
+        if (to_discard) {
+            QList<int> disabled_ids;
+            foreach (const Card *c, to_discard->getCards("ej")) {
+                const Card *pcard = c;
+                if (pcard->getTypeId() == Card::TypeSkill)
+                    pcard = Sanguosha->getEngineCard(c->getEffectiveId());
+                if (pcard->getTypeId() != card->getTypeId())
+                    disabled_ids << pcard->getEffectiveId();
+            }
+            int id = room->askForCardChosen(player, to_discard, "ej", objectName(), false, Card::MethodDiscard, disabled_ids);
+            room->throwCard(id, to_discard, player);
+        }
+        return false;
+    }
+};
 
 class Liegong: public TriggerSkill {
 public:
@@ -1073,6 +1138,7 @@ WindPackage::WindPackage()
 
     General *caoren = new General(this, "caoren", "wei"); // WEI 011
     caoren->addSkill(new Jushou);
+    caoren->addSkill(new Jiewei);
 
     General *huangzhong = new General(this, "huangzhong", "shu"); // SHU 008
     huangzhong->addSkill(new Liegong);

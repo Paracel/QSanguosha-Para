@@ -1980,7 +1980,10 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if self:needBear() then return nil end
 	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") == 0 and (self:isWeak() or self.player:isLord()) then return nil end
 
-	if trick:isKindOf("FireAttack") and (to:isKongcheng() or from:isKongcheng()) then return nil end
+	if trick:isKindOf("FireAttack") then
+		if to:isKongcheng() or from:isKongcheng() then return nil end
+		if self.player:objectName() == from:objectName() and self.player:getHandcardNum() == 1 and self.player:handCards():first() == null_card:getId() then return nil end
+	end
 	if ("snatch|dismantlement"):match(trick:objectName()) and to:isAllNude() then return nil end
 
 	if from and not from:hasSkill("jueqing") then
@@ -2019,15 +2022,17 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					end
 				else
 					if trick:isKindOf("Snatch") then return null_card end
-					if trick:isKindOf("FireAttack") and (to:hasArmorEffect("vine") or to:getMark("@gale") > 0 or (to:isChained() and not self:isGoodChainTarget(to)))
-						and from:objectName() ~= to:objectName() and not from:hasSkill("wuyan") then return null_card end
-					if self:isWeak(to) then
-						if trick:isKindOf("Duel") and not from:hasSkill("wuyan") then
+					if trick:isKindOf("Duel") and self:damageIsEffective(to, sgs.DamageStruct_Normal, from) and self:isWeak(to) then return null_card end
+					if trick:isKindOf("FireAttack") and from:objectName() ~= to:objectName() and self:damageIsEffective(to, sgs.DamageStruct_Fire, player) then
+						if from:getHandcardNum() > 2
+							or self:isWeak(to)
+							or to:hasArmorEffect("vine")
+							or to:getMark("@gale") > 0
+							or to:isChained() and not self:isGoodChainTarget(to) then
 							return null_card
-						elseif trick:isKindOf("FireAttack") and not from:hasSkill("wuyan") then
-							if from:getHandcardNum() > 2 and from:objectName() ~= to:objectName() then return null_card end
 						end
 					end
+           end
 				end
 			elseif self:isEnemy(to) then
 				if (trick:isKindOf("Snatch") or trick:isKindOf("Dismantlement")) and to:getCards("j"):length() > 0 then

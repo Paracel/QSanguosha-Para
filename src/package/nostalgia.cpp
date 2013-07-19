@@ -1165,7 +1165,6 @@ public:
     }
 };
 
-
 class NosBuquRemove: public TriggerSkill {
 public:
     NosBuquRemove(): TriggerSkill("#nosbuqu-remove") {

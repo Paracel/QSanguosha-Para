@@ -4588,8 +4588,16 @@ function SmartAI:evaluateWeapon(card)
 	end
 
 	if card:isKindOf("Crossbow") and not self.player:hasSkill("paoxiao") and deltaSelfThreat ~= 0 then
+		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 3 - 2
 		if self.player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Peach") + self:getCardsNum("Analeptic") + self.player:getHp() end
-		deltaSelfThreat = deltaSelfThreat + self:getCardsNum("Slash") * 2 - 2
+		if self.player:getWeapon() and not self:hasCrossbowEffect() and not self.player:canSlashWithoutCrossbow() and self:getCardsNum("Slash") > 0 then
+			for _, enemy in ipairs(self.enemies) do
+				if self.player:distanceTo(enemy) <= currentRange
+					and (sgs.card_lack[enemy:objectName()]["Jink"] == 1 or self:getCardsNum("Slash") >= enemy:getHp()) then
+					deltaSelfThreat = deltaSelfThreat + 10
+				end
+			end
+		end
 	end
 	local callback = sgs.ai_weapon_value[card:objectName()]
 	if type(callback) == "function" then
@@ -4599,10 +4607,6 @@ function SmartAI:evaluateWeapon(card)
 				local added = sgs.ai_slash_weaponfilter[card:objectName()]
 				if added and type(added) == "function" and added(enemy, self) then deltaSelfThreat = deltaSelfThreat + 1 end
 				deltaSelfThreat = deltaSelfThreat + (callback(self, enemy) or 0)
-				if self.player:getWeapon() and not self:hasCrossbowEffect() and card:isKindOf("Crossbow") and self:getCardsNum("Slash") > 0
-					and sgs.card_lack[enemy:objectName()]["Jink"] == 1 and not self.player:canSlashWithoutCrossbow() then
-					deltaSelfThreat = deltaSelfThreat + 5
-				end
 			end
 		end
 	end

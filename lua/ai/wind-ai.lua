@@ -642,9 +642,12 @@ guhuo_skill.getTurnUseCard = function(self)
 		local str = guhuo_str:split("=")
 		str = str[2]:split(":")
 		local cardid, cardname = str[1], str[2]
-		if sgs.Sanguosha:getCard(cardid):objectName() == cardname and cardname == "ex_nihilo" and math.random(1,3) == 1 then
-			local fake_exnihilo = fake_guhuo(cardname)
-			if fake_exnihilo then return fake_exnihilo end
+		if sgs.Sanguosha:getCard(cardid):objectName() == cardname and cardname == "ex_nihilo" then
+			if math.random(1, 3) == 1 then
+				local fake_exnihilo = fake_guhuo(cardname)
+				if fake_exnihilo then return fake_exnihilo end
+			end
+			return sgs.Card_Parse(guhuo_str)
 		elseif math.random(1, 5) == 1 then
 			local fake_GuhuoCard = fake_guhuo()
 			if fake_GuhuoCard then return fake_GuhuoCard end

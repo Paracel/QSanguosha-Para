@@ -1033,6 +1033,7 @@ sgs.ai_skill_playerchosen.qiuyuan = function(self, targets)
 			elseif not enemy and not self:canLiuli(p, self.friends_noself) then enemy = p end
 		end
 	end
+	if enemy then return enemy end
 	targetlist = sgs.reverse(targetlist)
 	local friend
 	for _, p in ipairs(targetlist) do

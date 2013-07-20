@@ -1606,6 +1606,10 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		end
 
 		if card:isKindOf("AOE") and self.player:objectName() == player:objectName() then sgs.ai_AOE_data = data end
+		if card:isKindOf("Slash") and struct.from:getPhase() < sgs.Player_Play and struct.m_reason == sgs.CardUseStruct_CARD_USE_REASON_PLAY
+			and struct.m_addHistory then
+			struct.from:setFlags("AI_SlashInPlayPhase")
+		end
 
 		local callback = sgs.ai_card_intention[card:getClassName()]
 		if #to > 0 and callback then
@@ -1751,7 +1755,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				and not player:hasFlag("ShuangrenSkipPlay")
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluatePlayerRole(player) == "neutral")
-				if isCard("Slash", card, player) and player:canSlashWithoutCrossbow() then
+				if isCard("Slash", card, player) and not player:hasFlag("AI_SlashInPlayPhase") then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						local has_slash_prohibit_skill = false
 						if target:hasSkill("fangzhu") and target:getLostHp() <= 2 then

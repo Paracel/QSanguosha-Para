@@ -58,7 +58,7 @@ return {
 	["liubei"] = "刘备",
 	["illustrator:liubei"] = "木美人",
 	["rende"] = "仁德",
-	[":rende"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将任意数量的手牌任意分配给其他角色。当你于本阶段内以此法给出的手牌首次达到两张或更多后，你回复1点体力。",
+	[":rende"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将任意数量的手牌任意分配给其他角色。每当你于本阶段内以此法给出的手牌首次达到两张或更多后，你回复1点体力。",
 	["@rende-give"] = "你可以发动“仁德”",
 	["~rende"] = "选择任意数量的手牌→选择一名其他角色→点击确定",
 	["jijiang"] = "激将",
@@ -73,7 +73,7 @@ return {
 	["#zhangfei"] = "万夫不当",
 	["zhangfei"] = "张飞",
 	["paoxiao"] = "咆哮",
-	[":paoxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>你于出牌阶段内使用【杀】无数量限制。",
+	[":paoxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你使用【杀】无数量限制。",
 
 	["#zhugeliang"] = "迟暮的丞相",
 	["zhugeliang"] = "诸葛亮",
@@ -130,7 +130,7 @@ return {
 	["yingzi"] = "英姿",
 	[":yingzi"] = "摸牌阶段，你可以额外摸一张牌。",
 	["fanjian"] = "反间",
-	[":fanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后获得你的一张手牌并展示之。若此牌花色与该角色所选花色不同，你对其造成1点伤害。",
+	[":fanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后获得你的一张手牌并展示之。若该牌花色与该角色所选花色不同，你对其造成1点伤害。",
 
 	["#huanggai"] = "轻身为国",
 	["huanggai"] = "黄盖",

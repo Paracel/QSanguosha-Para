@@ -859,6 +859,7 @@ sgs.ai_card_intention.general = function(from, to, level)
 		end
 		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
 	end
+	sgs.evaluateAlivePlayersRole()
 	sgs.outputRoleValues(from, level)
 end
 
@@ -1306,6 +1307,10 @@ function SmartAI:updatePlayers(clear_flags)
 
 	if sgs.isRolePredictable() then return end
 	self:updateAlivePlayerRoles()
+	sgs.evaluateAlivePlayersRole()
+end
+
+function sgs.evaluateAlivePlayersRole()
 	local players = sgs.QList2Table(self.room:getAlivePlayers())
 	local cmp = function(a, b)
 		local ar_value, br_value = sgs.role_evaluation[a:objectName()]["renegade"], sgs.role_evaluation[b:objectName()]["renegade"]

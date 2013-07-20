@@ -1491,7 +1491,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
-				and sgs.isGoodTarget(enemy, self.enemies, self) and not self:slashProhibit(slash, enemy) and can_kurou_with_cb(self) then
+				and sgs.isGoodTarget(enemy, self.enemies, self, true) and not self:slashProhibit(slash, enemy) and can_kurou_with_cb(self) then
 				return sgs.Card_Parse("@KurouCard=.")
 			end
 		end

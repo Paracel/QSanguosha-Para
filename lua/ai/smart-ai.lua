@@ -2007,6 +2007,11 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if trick:isKindOf("Drowning") and self:needToThrowArmor(to) and self:isFriend(to) then return nil end
 
 	if positive then
+		if from and (trick:isKindOf("FireAttack") or trick:isKindOf("Duel") or trick:isKindOf("AOE"))
+			and (self:needDeath(to) or self:cantbeHurt(to, from, 1)) then
+			if self:isFriend(from) then return null_card end
+			return
+		end
 		if ("snatch|dismantlement"):match(trick:objectName()) and not to:containsTrick("YanxiaoCard") and (to:containsTrick("indulgence") or to:containsTrick("supply_shortage")) then
 			if self:isEnemy(from) then return null_card end
 			if self:isFriend(to) and to:isNude() then return nil end
@@ -2152,6 +2157,15 @@ function SmartAI:askForNullification(trick, from, to, positive)
 		end
 	else
 		if from then
+			if (trick:isKindOf("FireAttack") or trick:isKindOf("Duel") or trick:isKindOf("AOE"))
+				and (self:needDeath(to) or self:cantbeHurt(to, from, 1)) then
+				if self:isEnemy(from) then return null_card end
+				return
+			end
+			if trick:getSkillName() == "lijian" and trick:isKindOf("Duel") then
+				if self:isEnemy(to) and (self:isWeak(to) or null_num > 1 or self:getOverflow() > 0 or not self:isWeak()) then return null_card end
+				return
+			end
 			if from:objectName() == to:objectName() then
 				if self:isFriend(from) then return null_card else return end
 			end

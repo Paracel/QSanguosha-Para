@@ -2185,7 +2185,7 @@ function SmartAI:useCardCollateral(card, use)
 
 			if not n then
 				for _, enemy2 in ipairs(toList) do
-					if enemy:canSlash(enemy2) and self:objectiveLevel(enemy2) <=3 and self:objectiveLevel(enemy2) >=0 and enemy:objectName() ~= enemy2:objectName() then
+					if enemy:canSlash(enemy2) and self:objectiveLevel(enemy2) <= 3 and self:objectiveLevel(enemy2) >= 0 and enemy:objectName() ~= enemy2:objectName() then
 						n = 1
 						final_enemy = enemy2
 						break
@@ -2227,7 +2227,7 @@ function SmartAI:useCardCollateral(card, use)
 
 	for _, friend in ipairs(fromList) do
 		if (not use.current_targets or not table.contains(use.current_targets, friend:objectName()))
-			and friend:getWeapon() and getCardsNum("Slash", friend) >= 1
+			and friend:getWeapon() and (getKnownCard(friend, "Slash", true, "he") > 0 or (getCardsNum("Slash", friend) > 1 and friend:getHandcardNum() >= 4))
 			and self:hasTrickEffective(card, friend)
 			and self:objectiveLevel(friend) < 0 then
 
@@ -2247,7 +2247,7 @@ function SmartAI:useCardCollateral(card, use)
 
 	for _, friend in ipairs(fromList) do
 		if (not use.current_targets or not table.contains(use.current_targets, friend:objectName()))
-			and friend:getWeapon() and self:hasSkills(sgs.lose_equip_skill, friend)
+			and friend:getWeapon() and friend:hasSkills(sgs.lose_equip_skill)
 			and self:hasTrickEffective(card, friend)
 			and self:objectiveLevel(friend) < 0
 			and not (friend:getWeapon():isKindOf("Crossbow") and getCardsNum("Slash", friend) > 1) then

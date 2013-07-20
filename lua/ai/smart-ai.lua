@@ -2034,7 +2034,6 @@ function SmartAI:askForNullification(trick, from, to, positive)
 							return null_card
 						end
 					end
-           end
 				end
 			elseif self:isEnemy(to) then
 				if (trick:isKindOf("Snatch") or trick:isKindOf("Dismantlement")) and to:getCards("j"):length() > 0 then

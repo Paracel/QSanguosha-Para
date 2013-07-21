@@ -1758,7 +1758,8 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				and not player:hasFlag("ShuangrenSkipPlay")
 				and move.from and move.from:objectName() == player:objectName() then
 				local is_neutral = (sgs.evaluatePlayerRole(player) == "neutral")
-				if isCard("Slash", card, player) and not player:hasFlag("AI_SlashInPlayPhase") then
+				if isCard("Slash", card, player) and not player:hasFlag("AI_SlashInPlayPhase")
+					and not player:isLocked(sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())) then
 					for _, target in sgs.qlist(self.room:getOtherPlayers(player)) do
 						local has_slash_prohibit_skill = false
 						if target:hasSkill("fangzhu") and target:getLostHp() <= 2 then

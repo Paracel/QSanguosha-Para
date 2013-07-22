@@ -1536,7 +1536,7 @@ const Card *NosGuhuoCard::validateInResponse(ServerPlayer *yuji) const{
         to_nosguhuo = user_string;
 
     LogMessage log;
-    log.type = "#NosGuhuoNoTarget";
+    log.type = "#GuhuoNoTarget";
     log.from = yuji;
     log.arg = to_nosguhuo;
     log.arg2 = "nosguhuo";
@@ -1688,6 +1688,8 @@ NostalWindPackage::NostalWindPackage()
 
     General *nos_yuji = new General(this, "nos_yuji", "qun", 3);
     nos_yuji->addSkill(new NosGuhuo);
+
+    addMetaObject<NosGuhuoCard>();
 }
 
 NostalYJCMPackage::NostalYJCMPackage()

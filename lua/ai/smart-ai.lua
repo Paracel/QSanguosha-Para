@@ -1311,7 +1311,7 @@ function SmartAI:updatePlayers(clear_flags)
 end
 
 function sgs.evaluateAlivePlayersRole()
-	local players = sgs.QList2Table(self.room:getAlivePlayers())
+	local players = sgs.QList2Table(global_room:getAlivePlayers())
 	local cmp = function(a, b)
 		local ar_value, br_value = sgs.role_evaluation[a:objectName()]["renegade"], sgs.role_evaluation[b:objectName()]["renegade"]
 		local al_value, bl_value = sgs.role_evaluation[a:objectName()]["loyalist"], sgs.role_evaluation[b:objectName()]["loyalist"]

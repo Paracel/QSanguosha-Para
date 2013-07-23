@@ -566,8 +566,10 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	}
 
 	local cards = self.player:getHandcards()
+	local canDis = {}
 	for _, card in sgs.qlist(cards) do
 		if card:getEffectiveId() ~= fire_attack:getEffectiveId() then
+			table.insert(canDis, card)
 			lack[card:getSuitString()] = false
 		end
 	end
@@ -613,7 +615,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 	end
 
 	local can_FireAttack_self
-	for _, card in sgs.qlist(self.player:getHandcards()) do
+	for _, card in ipairs(canDis) do
 		if (not isCard("Peach", card, self.player) or self:getCardsNum("Peach") >= 3)
 			and (not isCard("Analeptic", card, self.player) or self:getCardsNum("Analeptic") >= 2) then
 			can_FireAttack_self = true

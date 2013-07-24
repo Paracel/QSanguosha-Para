@@ -505,6 +505,7 @@ void XianzhenCard::onEffect(const CardEffectStruct &effect) const{
         PlayerStar target = effect.to;
         effect.from->tag["XianzhenTarget"] = QVariant::fromValue(target);
         room->setPlayerFlag(effect.from, "XianzhenSuccess");
+        room->setPlayerFlag(effect.from, "xianzhen");
         room->setFixedDistance(effect.from, effect.to, 1);
         room->addPlayerMark(effect.to, "Armor_Nullified");
     } else {
@@ -557,7 +558,7 @@ public:
 class Xianzhen: public TriggerSkill {
 public:
     Xianzhen(): TriggerSkill("xianzhen") {
-        events << EventPhaseChanging << Death << EventLoseSkill;
+        events << EventPhaseChanging << Death;
         view_as_skill = new XianzhenViewAsSkill;
     }
 
@@ -569,9 +570,6 @@ public:
         if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
-                return false;
-        } else if (triggerEvent == EventLoseSkill) {
-            if (data.toString() != "xianzhen")
                 return false;
         }
         ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<PlayerStar>();
@@ -587,6 +585,8 @@ public:
             }
         }
         if (target) {
+            if (target->hasFlag("xianzhen"))
+                room->setPlayerFlag(gaoshun, "-xianzhen");
             room->setFixedDistance(gaoshun, target, -1);
             gaoshun->tag.remove("XianzhenTarget");
             room->removePlayerMark(target, "Armor_Nullified");

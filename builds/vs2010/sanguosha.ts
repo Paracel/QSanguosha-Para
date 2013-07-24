@@ -2622,7 +2622,7 @@
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="346"/>
-        <location filename="../../src/ui/roomscene.cpp" line="4144"/>
+        <location filename="../../src/ui/roomscene.cpp" line="4148"/>
         <source>pindian</source>
         <translation>拼点</translation>
     </message>
@@ -2977,7 +2977,7 @@
         <translation>你真的要投降吗？</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="4060"/>
+        <location filename="../../src/ui/roomscene.cpp" line="4064"/>
         <source>Complete</source>
         <translation>完成</translation>
     </message>

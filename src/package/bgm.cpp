@@ -639,7 +639,7 @@ public:
 class Tanhu: public TriggerSkill {
 public:
     Tanhu(): TriggerSkill("tanhu") {
-        events << EventPhaseChanging << Death << EventLoseSkill << TrickCardCanceling;
+        events << EventPhaseChanging << Death << TrickCardCanceling;
         view_as_skill = new TanhuViewAsSkill;
     }
 
@@ -650,7 +650,7 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == TrickCardCanceling) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (effect.from && effect.from->hasSkill(objectName()) && effect.from->isAlive()
+            if (effect.from && effect.from->tag["TanhuInvoke"].value<PlayerStar>() != NULL
                 && effect.to && effect.to->hasFlag("TanhuTarget"))
                 return true;
         } else if (player->tag["TanhuInvoke"].value<PlayerStar>() != NULL) {
@@ -661,9 +661,6 @@ public:
             } else if (triggerEvent == Death) {
                 DeathStruct death = data.value<DeathStruct>();
                 if (death.who != player)
-                    return false;
-            } else if (triggerEvent == EventLoseSkill) {
-                if (data.toString() != "tanhu")
                     return false;
             }
 

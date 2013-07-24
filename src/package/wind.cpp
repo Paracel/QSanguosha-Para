@@ -445,7 +445,11 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &data) const{
+        DyingStruct dying_data = data.value<DyingStruct>();
+        if (dying_data.who != zhoutai)
+            return false;
+
         if (zhoutai->getHp() > 0) return false;
         room->broadcastSkillInvoke(objectName());
         int id = room->drawCard();

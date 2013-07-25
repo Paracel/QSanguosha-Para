@@ -250,6 +250,7 @@ public:
     Fenxin(): TriggerSkill("fenxin") {
         events << BeforeGameOverJudge;
         frequency = Limited;
+        limit_mark = "@burnheart";
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -296,8 +297,6 @@ AssassinsPackage::AssassinsPackage(): Package("assassins") {
     General *lingju = new General(this, "lingju", "qun", 3, false); // SP 017
     lingju->addSkill(new Jieyuan);
     lingju->addSkill(new Fenxin);
-    lingju->addSkill(new MarkAssignSkill("@burnheart", 1));
-    related_skills.insertMulti("fenxin", "#@burnheart-1");
 
     addMetaObject<MizhaoCard>();
 }

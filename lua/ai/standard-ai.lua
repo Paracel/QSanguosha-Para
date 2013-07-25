@@ -967,7 +967,7 @@ sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(self, player
 end
 
 sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
-	if not self:isFriend(sgs.jijiangsource) then return "." end
+	if sgs.jijiangsource and not self:isFriend(sgs.jijiangsource) then return "." end
 	if self:needBear() then return "." end
 
 	local jijiangtargets = {}

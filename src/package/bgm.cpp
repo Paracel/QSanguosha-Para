@@ -1338,9 +1338,9 @@ public:
     }
 };
 
-class FenyongForHuashen: public TriggerSkill {
+class FenyongWithoutXuehen: public TriggerSkill {
 public:
-    FenyongForHuashen():TriggerSkill("#fenyong-for-huashen") {
+    FenyongWithoutXuehen():TriggerSkill("#fenyong-without-xuehen") {
         events << EventPhaseStart;
     }
 
@@ -1349,12 +1349,13 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        ServerPlayer *zuoci = room->findPlayerBySkillName("fenyong");
+        ServerPlayer *xiahou = room->findPlayerBySkillName("fenyong");
         if (zuoci == NULL)
             return false;
-        if (player->getPhase() == Player::Finish && zuoci->getMark("@fenyong") > 0) {
-            if (zuoci->tag["HuashenSkill"].toString() == "fenyong")
-                room->setPlayerMark(zuoci, "@fenyong", 0);
+        if (xiahou->getPhase() == Player::Finish && xiahou->getMark("@fenyong") > 0) {
+            if (xiahou->tag["HuashenSkill"].toString() == "fenyong"
+                || xiahou->tag["XiaodeSkill"].toString() == "fenyong")
+                room->setPlayerMark(xiahou, "@fenyong", 0);
         }
         return false;
     }
@@ -1499,12 +1500,12 @@ BGMPackage::BGMPackage(): Package("BGM") {
     General *bgm_xiahoudun = new General(this, "bgm_xiahoudun", "wei"); // *SP 010
     bgm_xiahoudun->addSkill(new Fenyong);
     bgm_xiahoudun->addSkill(new FenyongClear);
-    bgm_xiahoudun->addSkill(new FenyongForHuashen);
+    bgm_xiahoudun->addSkill(new FenyongWithoutXuehen);
     bgm_xiahoudun->addSkill(new Xuehen);
     bgm_xiahoudun->addSkill(new SlashNoDistanceLimitSkill("xuehen"));
     bgm_xiahoudun->addSkill(new FakeMoveSkill("xuehen"));
     related_skills.insertMulti("fenyong", "#fenyong-clear");
-    related_skills.insertMulti("fenyong", "#fenyong-for-huashen");
+    related_skills.insertMulti("fenyong", "#fenyong-without-xuehen");
     related_skills.insertMulti("xuehen", "#xuehen-slash-ndl");
     related_skills.insertMulti("xuehen", "#xuehen-fake-move");
 

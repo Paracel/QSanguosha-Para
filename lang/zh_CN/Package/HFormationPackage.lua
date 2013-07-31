@@ -3,7 +3,7 @@
 return {
 	["h_formation"] = "国战-阵包",
 
-	["#heg_yuji"] = "",
+	["#heg_yuji"] = "魂绕左右",
 	["heg_yuji"] = "于吉-国",
 	["&heg_yuji"] = "于吉",
 	["illustrator:heg_yuji"] = "G.G.G.",

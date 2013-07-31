@@ -1126,7 +1126,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (!use.to.contains(daqiao) || !daqiao->canDiscard(daqiao, "h"))
                 return false;
-            if (use.card && use.card->isKindOf("Slash")) {
+            if (use.card->isKindOf("Slash")) {
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");

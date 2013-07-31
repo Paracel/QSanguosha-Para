@@ -2,7 +2,7 @@
 -- and it is a little different from config.ini
 
 config = {
-	version = "20130701",
+	version = "20130801",
 	version_name = "V2",
 	mod_name = "Para",
 	kingdoms = { "wei", "shu", "wu", "qun", "god" },

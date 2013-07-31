@@ -39,6 +39,7 @@ config = {
 		"BGMDIY",
 		"Wandianba",
 		"Hegemony",
+		"HFormation",
 		"HegemonySP",
 		"Ling",
 		"NostalStandard",

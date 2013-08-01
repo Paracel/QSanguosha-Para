@@ -1060,7 +1060,7 @@ void Snatch::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013");
+    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical");
     QString flag = using_2013 ? "he" : "hej";
     int card_id = room->askForCardChosen(effect.from, effect.to, flag, objectName());
     CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, effect.from->objectName());
@@ -1092,7 +1092,7 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() == "2013");
+    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical");
     QString flag = using_2013 ? "he" : "hej";
     if (!effect.from->canDiscard(effect.to, flag))
         return;

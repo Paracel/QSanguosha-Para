@@ -579,7 +579,7 @@ local function player_chosen_shichou(self, targets)
 		if self:isEnemy(target) then return target end
 	end
 	for _, target in ipairs(targets) do
-		if self:hasSkills("zaiqi|nosenyuan|kuanggu|enyuan|shushen", target) and target:getHp() >= 2 then
+		if target:hasSkills("zaiqi|nosenyuan|kuanggu|kofkuanggu|enyuan|shushen") and target:getHp() >= 2 then
 			return target
 		end
 	end

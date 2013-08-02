@@ -1010,7 +1010,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 			if str:matchOne("jieyin") and self:findFriendsByType(sgs.Friend_MaleWounded) then return "jieyin" end
 			if str:matchOne("nosrende") and self:findFriendsByType(sgs.Friend_Draw) then return "nosrende" end
 			if str:matchOne("rende") and self:findFriendsByType(sgs.Friend_Draw) then return "rende" end
-			for _, askill in ipairs(("juejing|nosmiji|nosshangshi|shangshi|kuiwei|neojushou|nosjushou|zaiqi|kuanggu"):split("|")) do
+			for _, askill in ipairs(("juejing|nosmiji|nosshangshi|shangshi|kuiwei|neojushou|nosjushou|zaiqi|kuanggu|kofkuanggu"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 			if str:matchOne("miji") and self:findFriendsByType(sgs.Friend_Draw) then return "miji" end
@@ -1144,7 +1144,7 @@ function sgs.ai_skill_choice.huashen(self, choices)
 
 		if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
 		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
-								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|" ..
+								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|kofkuanggu|" ..
 								"zhuikong|lianpo|suishi"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end

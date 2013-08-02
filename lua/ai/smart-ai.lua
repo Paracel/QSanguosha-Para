@@ -91,7 +91,7 @@ function setInitialTables()
 							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo|neoluoyi"
 	sgs.drawpeach_skill = "tuxi|qiaobian"
-	sgs.recover_skill = "nosrende|rende|kuanggu|zaiqi|jieyin|qingnang|shenzhi"
+	sgs.recover_skill = "nosrende|rende|kuanggu|kofkuanggu|zaiqi|jieyin|qingnang|shenzhi"
 	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|noslijian|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
 							"yinling|jilve|qingcheng|neoluoyi|diyyicong"
 	sgs.need_equip_skill = "shensu|mingce|jujian|beige|yuanhu|gongqi|nosgongqi|yanzheng|qingcheng|neoluoyi|longhun"
@@ -245,6 +245,7 @@ function sgs.getDefense(player, gameProcess)
 	if not gameProcess and not sgs.isGoodTarget(player) then defense = defense + 10 end
 	if player:hasSkills("rende|nosrende") and player:getHp() > 2 then defense = defense + 1 end
 	if player:hasSkill("kuanggu") and player:getHp() > 1 then defense = defense + 0.2 end
+	if player:hasSkill("kofkuanggu") and player:getHp() > 1 then defense = defense + 0.25 end
 	if player:hasSkill("zaiqi") and player:getHp() > 1 then defense = defense + 0.35 end
 	if player:hasSkill("tianming") then defense = defense + 0.1 end
 
@@ -493,7 +494,7 @@ function SmartAI:getDynamicUsePriority(card)
 				return math.max(sgs.ai_use_priority.Slash, sgs.ai_use_priority.Duel) + 0.1
 			end
 		end
-		if use_card:isKindOf("Peach") and self.player:hasSkill("kuanggu") then return 1.01 end
+		if use_card:isKindOf("Peach") and self.player:hasSkills("kuanggu|kofkuanggu") then return 1.01 end
 		if use_card:isKindOf("YanxiaoCard") and self.player:containsTrick("YanxiaoCard") then return 0.1 end
 		if use_card:isKindOf("DelayedTrick") and not use_card:isKindOf("YanxiaoCard") and #use_card:getSkillName() > 0 then
 			return (sgs.ai_use_priority[use_card:getClassName()] or 0.01) - 0.01

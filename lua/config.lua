@@ -60,7 +60,8 @@ config = {
 		"standard",
 		"wind",
 		"fire",
-		"nostal_standard"
+		"nostal_standard",
+		"nostal_wind",
 	},
 
 	color_wei = "#547998",
@@ -99,7 +100,8 @@ config = {
 		"kof_menghuo",
 		"kof_zhurong",
 		"kof_sunshangxiang",
-		"kof_nos_diaochan"
+		"kof_nos_diaochan",
+		"kof_pangde"
 	},
 
 	kof_ban = {
@@ -114,13 +116,16 @@ config = {
 	xmode_ban = {
 		"huatuo",
 		"zhangjiao",
+		"caoren",
+		"zhoutai",
 		"yuji",
 		"liubei",
 		"diaochan",
 		"huangyueying",
 		"st_yuanshu",
 		"st_huaxiong",
-		"nos_zhouyu"
+		"nos_zhangjiao",
+		"nos_yuji",
 	},
 
 	basara_ban = {
@@ -132,14 +137,14 @@ config = {
 	},
 
 	pairs_ban = {
-		"huatuo", "zhoutai", "zuoci", "bgm_pangtong", "neo_zhoutai",
+		"huatuo", "zhoutai", "zuoci", "bgm_pangtong", "neo_zhoutai", "nos_zhoutai",
 		"simayi+zhenji", "simayi+dengai",
 		"caoren+shenlvbu", "caoren+caozhi", "caoren+bgm_diaochan", "caoren+bgm_caoren", "caoren+neo_caoren",
 		"guojia+dengai",
-		"zhenji+zhangjiao", "zhenji+shensimayi", "zhenji+zhugejin", "zhenji+nos_wangyi",
+		"zhenji+zhangjiao", "zhenji+shensimayi", "zhenji+zhugejin", "zhenji+nos_zhangjiao", "zhenji+nos_wangyi",
 		"zhanghe+yuanshu",
 		"dianwei+weiyan",
-		"dengai+zhangjiao", "dengai+shensimayi", "dengai+zhugejin",
+		"dengai+zhangjiao", "dengai+shensimayi", "dengai+zhugejin", "dengai+nos_zhangjiao",
 		"zhangfei+huanggai", "zhangfei+zhangchunhua", "zhangfei+nos_zhangchunhua",
 		"zhugeliang+xushu", "zhugeliang+nos_xushu",
 		"huangyueying+wolong", "huangyueying+ganning", "huangyueying+huanggai", "huangyueying+yuanshao", "huangyueying+yanliangwenchou",
@@ -151,14 +156,13 @@ config = {
 		"huanggai+sunshangxiang", "huanggai+yuanshao", "huanggai+yanliangwenchou", "huanggai+dongzhuo",
 		    "huanggai+wuguotai", "huanggai+guanxingzhangbao", "huanggai+huaxiong", "huanggai+xiahouba",
 		    "huanggai+nos_huangyueying", "huanggai+nos_guanxingzhangbao", "huanggai+neo_zhangfei",
-		"luxun+yuji", "luxun+yanliangwenchou", "luxun+guanxingzhangbao", "luxun+guanping", "luxun+heg_luxun",
-		    "luxun+nos_liubei", "luxun+nos_guanxingzhangbao",
+		"luxun+yanliangwenchou", "luxun+guanxingzhangbao", "luxun+guanping", "luxun+heg_luxun",
+		    "luxun+nos_liubei", "luxun+nos_yuji", "luxun+nos_guanxingzhangbao",
 		"sunshangxiang+shensimayi", "sunshangxiang+heg_luxun",
 		"sunce+guanxingzhangbao", "sunce+nos_guanxingzhangbao",
 		"yuanshao+nos_huangyueying",
 		"yanliangwenchou+zhangchunhua", "yanliangwenchou+nos_huangyueying", "yanliangwenchou+nos_zhangchunhua",
 		"dongzhuo+shenzhaoyun", "dongzhuo+wangyi", "dongzhuo+diy_wangyuanji", "dongzhuo+nos_zhangchunhua", "dongzhuo+nos_wangyi",
-		"yuji+zhangchunhua", "yuji+nos_zhangchunhua",
 		"shencaocao+caozhi",
 		"shenlvbu+caozhi", "shenlvbu+liaohua", "shenlvbu+bgm_diaochan", "shenlvbu+bgm_caoren", "shenlvbu+neo_caoren",
 		"shenzhaoyun+huaxiong",
@@ -166,7 +170,7 @@ config = {
 		"gaoshun+zhangchunhua", "gaoshun+nos_zhangchunhua",
 		"wuguotai+caochong",
 		"zhangchunhua+guanxingzhangbao", "zhangchunhua+guanping", "zhangchunhua+xiahouba", "zhangchunhua+zhugeke",
-		    "zhangchunhua+heg_luxun", "zhangchunhua+nos_liubei", "zhangchunhua+nos_guanxingzhangbao", "zhangchunhua+neo_zhangfei",
+		    "zhangchunhua+heg_luxun", "zhangchunhua+nos_liubei", "zhangchunhua+nos_yuji", "zhangchunhua+nos_guanxingzhangbao", "zhangchunhua+neo_zhangfei",
 		"guanxingzhangbao+bgm_zhangfei", "guanxingzhangbao+nos_zhangchunhua",
 		"liaohua+bgm_diaochan",
 		"guanping+nos_zhangchunhua",
@@ -176,6 +180,7 @@ config = {
 		"bgm_caoren+neo_caoren",
 		"bgm_zhangfei+nos_guanxingzhangbao",
 		"nos_liubei+nos_zhangchunhua",
+		"nos_yuji+nos_zhangchunhua",
 		"nos_zhangchunhua+heg_luxun", "nos_zhangchunhua+nos_guanxingzhangbao", "nos_zhangchunhua+neo_zhangfei",
 	},
 	

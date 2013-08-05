@@ -119,7 +119,7 @@ return {
 
 	["#zhangbao"] = "地公将军",
 	["zhangbao"] = "张宝",
-	["illustrator:zhangbao"] = "",
+	["illustrator:zhangbao"] = "大佬荣",
 	["zhoufu"] = "咒缚",
 	[":zhoufu"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将一张手牌移出游戏并选择一名无“咒缚牌”的其他角色：若如此做，该角色进行判定时，以“咒缚牌”作为判定牌。一名角色的回合结束后，若该角色有“咒缚牌”，你获得该牌。",
 	["incantation"] = "咒缚",
@@ -127,13 +127,13 @@ return {
 	[":yingbing"] = "每当一张“咒缚牌”成为判定牌后，你可以摸两张牌。",
 	["$ZhoufuJudge"] = "%from 的判定牌为 %arg 牌 %card",
 
-	["#lingcao"] = "",
+	["#lingcao"] = "侠义先锋", -- unofficial
 	["lingcao"] = "凌操",
 	["illustrator:lingcao"] = "",
 	["dujin"] = "独进",
 	[":dujin"] = "摸牌阶段，你可以额外摸X+1张牌。（X为你装备区的牌数的一半，向下取整）",
 
-	["#sunru"] = "",
+	["#sunru"] = "温善贤惠", -- unofficial
 	["sunru"] = "孙茹",
 	["illustrator:sunru"] = "",
 	["qingyi"] = "轻逸",

@@ -464,7 +464,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 	if self.player:isKongcheng() then return false end
 	if self:getCardsNum("Peach") >= limit - 2 and self.player:isWounded() then return false end
 
-	local to_discard = {}
+	local to_discard = nil
 
 	local index = 0
 	local all_peaches = 0
@@ -473,23 +473,22 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 			all_peaches = all_peaches + 1
 		end
 	end
-	if all_peaches >= 2 and self:getOverflow() <= 0 then return {} end
+	if all_peaches >= 2 and self:getOverflow() <= 0 then return false end
 	self:sortByKeepValue(cards)
 	cards = sgs.reverse(cards)
 
 	for i = #cards, 1, -1 do
 		local card = cards[i]
 		if not isCard("Peach", card, self.player) and not self.player:isJilei(card) then
-			table.insert(to_discard, card:getEffectiveId())
-			table.remove(cards, i)
+			to_discard = card:getEffectiveId()
 			break
 		end
 	end
-	return #to_discard > 0
+	return to_discard ~= nil
 end
 
-sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, include_equip)
-	local to_discard = {}
+sgs.ai_skill_use["@@fangquan"] = function(self, prompt)
+	local to_discard = nil
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	local index = 0
 	local all_peaches = 0
@@ -498,42 +497,41 @@ sgs.ai_skill_discard.fangquan = function(self, discard_num, min_num, optional, i
 			all_peaches = all_peaches + 1
 		end
 	end
-	if all_peaches >= 2 and self:getOverflow() <= 0 then return {} end
+	if all_peaches >= 2 and self:getOverflow() <= 0 then return "." end
 	self:sortByKeepValue(cards)
 	cards = sgs.reverse(cards)
 
 	for i = #cards, 1, -1 do
 		local card = cards[i]
 		if not card:isKindOf("Peach") and not self.player:isJilei(card) then
-			table.insert(to_discard, card:getEffectiveId())
-			table.remove(cards, i)
+			to_discard = card:getEffectiveId()
 			break
 		end
 	end
-	if #to_discard < 1 then return {}
-	else
-		return to_discard
-	end
-end
+	if not to_discard then return "." end
 
-sgs.ai_skill_playerchosen.fangquan = function(self, targets)
 	self:sort(self.friends_noself, "handcard")
 	self.friends_noself = sgs.reverse(self.friends_noself)
 	for _, target in ipairs(self.friends_noself) do
 		if not target:hasSkill("dawu") and self:hasSkills("yongsi|zhiheng|" .. sgs.priority_skill .. "|shensu", target)
 			and (not self:willSkipPlayPhase(target) or target:hasSkill("shensu")) then
-			return target
+			return "@FangquanCard=" .. to_discard .. "->" .. target:objectName()
 		end
 	end
 	for _, target in ipairs(self.friends_noself) do
-		if not target:hasSkill("dawu") then
-			return target
+		if target:hasSkill("dawu") then
+			local use = true
+			for _, p in ipairs(self.friends_noself) do
+				if p:getMark("@fog") > 0 then use = false break end
+			end
+			if use then return "@FangquanCard=" .. to_discard .. "->" .. target:objectName() end
 		end
 	end
-	return #self.friends_noself > 0 and self.friends_noself[1]
+	if #self.friends_noself > 0 then return "@FangquanCard=" .. to_discard .. "->" .. self.friends_noself[1]:objectName() end
+	return "."
 end
 
-sgs.ai_playerchosen_intention.fangquan = -120
+sgs.ai_card_intention.FangquanCard = -120
 
 local tiaoxin_skill = {}
 tiaoxin_skill.name = "tiaoxin"

@@ -28,7 +28,7 @@ bool Slash::IsAvailable(const Player *player, const Card *slash) {
     if (player->isCardLimited(THIS_SLASH, Card::MethodUse))
        return false;
 
-    if (player->hasWeapon("crossbow") || player->canSlashWithoutCrossbow())
+    if (player->hasWeapon("crossbow") || player->canSlashWithoutCrossbow(THIS_SLASH))
         return true;
     int used = player->getSlashCount();
     int valid = 1 + Sanguosha->correctCardTarget(TargetModSkill::Residue, player, newslash);

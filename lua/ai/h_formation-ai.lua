@@ -279,5 +279,26 @@ sgs.ai_skill_discard.yicheng = function(self, discard_num, min_num, optional, in
 	return self:askForDiscard("dummyreason", 1, 1, false, true)
 end
 
--- @todo: Qianhuan AI
+sgs.ai_skill_invoke.qianhuan = function(self, data)
+	local use = data:toCardUse()
+	if not use.card then
+		local yuji = room:findPlayerBySkillName("qianhuan")
+		return yuji and self:isFriend(yuji) and yuji:getPile("sorcery"):length() < 4
+	else
+		local to = use.to:first()
+		if to:objectName() == self.player:objectName() then
+			return not (use.from and (use.from:objectName() == to:objectName()
+										or (use.card:isKindOf("Slash") and self:isPriorFriendOfSlash(self.player, use.card, use.from))))
+		else
+			return self:isFriend(to) and not (use.from and use.from:objectName() == to:objectName())
+		end
+	end
+end
+
+sgs.ai_skill_choice.qianhuan = function(self, choices, data)
+	local use = data:toCardUse()
+	if use.from and use.card:isKindOf("Slash") and self:isPriorFriendOfSlash(self.player, use.card, use.from) then return "reject" end
+	return "accept"
+end
+
 -- @todo: Zhendu AI

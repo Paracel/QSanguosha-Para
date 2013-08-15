@@ -354,16 +354,17 @@ function SmartAI:slashIsAvailable(player)
 	return slash:isAvailable(player)
 end
 
-function SmartAI:isPriorFriendOfSlash(friend, card)
+function SmartAI:isPriorFriendOfSlash(friend, card, source)
+	source = source or self.player
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
-	if not self:hasHeavySlashDamage(self.player, card, friend) and card:getSkillName() ~= "lihuo"
-			and (self:findLeijiTarget(friend, 50, self.player)
-				or (friend:isLord() and self.player:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
-				or (friend:hasSkill("jieming") and self.player:hasSkill("nosrende") and (huatuo and self:isFriend(huatuo)))
-				or (friend:hasSkill("hunzi") and friend:getHp() == 2 and self:getDamagedEffects(friend, self.player))) then
+	if not self:hasHeavySlashDamage(source, card, friend) and card:getSkillName() ~= "lihuo"
+			and (self:findLeijiTarget(friend, 50, source)
+				or (friend:isLord() and source:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend) == 0)
+				or (friend:hasSkill("jieming") and source:hasSkill("nosrende") and (huatuo and self:isFriend(huatuo, source)))
+				or (friend:hasSkill("hunzi") and friend:getHp() == 2 and self:getDamagedEffects(friend, source))) then
 		return true
 	end
-	if not self.player:hasSkill("jueqing") and card:isKindOf("NatureSlash") and friend:isChained() and self:isGoodChainTarget(friend, nil, nil, nil, card) then return true end
+	if not source:hasSkill("jueqing") and card:isKindOf("NatureSlash") and friend:isChained() and self:isGoodChainTarget(friend, source, nil, nil, card) then return true end
 	return
 end
 

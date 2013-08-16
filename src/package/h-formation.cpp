@@ -10,6 +10,28 @@
 #include "ai.h"
 #include "settings.h"
 
+class Ziliang: public TriggerSkill {
+public:
+    Ziliang(): TriggerSkill("ziliang") {
+        events << Damaged;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        QList<ServerPlayer *> dengais = room->findPlayersBySkillName(objectName());
+        foreach (ServerPlayer *dengai, dengais) {
+            if (!player->isAlive()) break;
+            if (dengai->getPile("field").isEmpty()) continue;
+            if (!room->askForSkillInvoke(dengai, objectName(), data)) continue;
+            room->obtainCard(player, room->askForAG(dengai, dengai->getPile("field"), false, objectName()));
+        }
+        return false;
+    }
+};
+
 class Shengxi: public TriggerSkill {
 public:
     Shengxi(): TriggerSkill("shengxi") {
@@ -159,6 +181,10 @@ public:
 HFormationPackage::HFormationPackage()
     : Package("h_formation")
 {
+    General *heg_dengai = new General(this, "heg_dengai", "wei"); // WEI 015 G
+    heg_dengai->addSkill("tuntian");
+    heg_dengai->addSkill(new Ziliang);
+
     General *jiangwanfeiyi = new General(this, "jiangwanfeiyi", "shu", 3); // SHU 018
     jiangwanfeiyi->addSkill(new Shengxi);
     jiangwanfeiyi->addSkill(new Shoucheng);

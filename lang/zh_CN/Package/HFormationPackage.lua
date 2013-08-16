@@ -3,6 +3,12 @@
 return {
 	["h_formation"] = "国战-阵包",
 
+	["heg_dengai"] = "邓艾-国",
+	["&heg_dengai"] = "邓艾",
+	["illustrator:heg_dengai"] = "Amo",
+	["ziliang"] = "资粮",
+	[":ziliang"] = "每当一名角色受到伤害后，你可以将一张“田”交给该角色。",
+
 	["#jiangwanfeiyi"] = "社稷股肱",
 	["jiangwanfeiyi"] = "蒋琬＆费祎",
 	["&jiangwanfeiyi"] = "蒋琬费祎",

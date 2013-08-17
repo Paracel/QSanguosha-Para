@@ -801,8 +801,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (room->askForSkillInvoke(player, objectName(), data)) {
             JudgeStruct judge;
-            judge.pattern = ".|heart";
-            judge.good = false;
+            judge.pattern = ".|black";
             judge.who = player;
             judge.reason = objectName();
 

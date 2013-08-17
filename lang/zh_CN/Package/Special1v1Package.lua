@@ -109,7 +109,7 @@ return {
 	["kof_weiyan"] = "魏延1v1",
 	["&kof_weiyan"] = "魏延",
 	["kofkuanggu"] = "狂骨",
-	[":kofkuanggu"] = "每当你造成伤害后，你可以进行判定：若结果不为<font color=\"red\">♥</font>，你回复1点体力。",
+	[":kofkuanggu"] = "每当你造成伤害后，你可以进行判定：若结果为黑色，你回复1点体力。",
 
 	["kof_lvmeng"] = "吕蒙1v1",
 	["&kof_lvmeng"] = "吕蒙",

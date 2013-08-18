@@ -45,7 +45,7 @@ void HuyuanCard::onEffect(const CardEffectStruct &effect) const{
             targets << p;
     }
     if (!targets.isEmpty()) {
-        ServerPlayer *to_dismantle = room->askForPlayerChosen(caohong, targets, "huyuan", "@yuanhu-discard:" + effect.to->objectName());
+        ServerPlayer *to_dismantle = room->askForPlayerChosen(caohong, targets, "huyuan", "@huyuan-discard:" + effect.to->objectName());
         int card_id = room->askForCardChosen(caohong, to_dismantle, "hej", "huyuan", false, Card::MethodDiscard);
         room->throwCard(Sanguosha->getCard(card_id), to_dismantle, caohong);
     }

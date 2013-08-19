@@ -245,7 +245,7 @@ bool GreatYeyanCard::targetsFeasible(const QList<const Player *> &targets, const
         if (allsuits.contains(card->getSuit())) return false;
         allsuits.append(card->getSuit());
     }
-    
+
     //We can only assign 2 damage to one player
     //If we select only one target only once, we assign 3 damage to the target
     if (targets.toSet().size() == 1)
@@ -347,7 +347,7 @@ public:
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (cards.length()  == 0) 
+        if (cards.length()  == 0)
             return new SmallYeyanCard;
         if (cards.length() != 4)
             return NULL;
@@ -362,7 +362,7 @@ public:
 class Qinyin: public TriggerSkill {
 public:
     Qinyin(): TriggerSkill("qinyin") {
-        events << CardsMoveOneTime << EventPhaseStart;
+        events << CardsMoveOneTime << EventPhaseChanging;
         default_choice = "down";
     }
 
@@ -387,10 +387,12 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *shenzhouyu, QVariant &data) const{
-        if (shenzhouyu->getPhase() != Player::Discard)
-            return false;
+        /*if (shenzhouyu->getPhase() != Player::Discard)
+            return false;*/
 
         if (triggerEvent == CardsMoveOneTime) {
+            if (shenzhouyu->getPhase() != Player::Discard)
+                return false;
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from == shenzhouyu && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                 shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move.card_ids.size());
@@ -401,9 +403,12 @@ public:
                     }
                 }
             }
-        } else if (triggerEvent == EventPhaseStart) {
-            shenzhouyu->setMark("qinyin", 0);
-            shenzhouyu->setFlags("-QinyinUsed");
+        } else {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::Discard){
+                shenzhouyu->setMark("qinyin", 0);
+                shenzhouyu->setFlags("-QinyinUsed");
+            }
         }
 
         return false;
@@ -587,7 +592,7 @@ WuqianCard::WuqianCard() {
 }
 
 bool WuqianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self; 
+    return targets.isEmpty() && to_select != Self;
 }
 
 void WuqianCard::onEffect(const CardEffectStruct &effect) const{
@@ -961,7 +966,7 @@ public:
         log.from = shensimayi;
         log.arg = QString::number(shensimayi->getMark("@bear"));
         room->sendLog(log);
-        
+
         room->setPlayerMark(shensimayi, "baiyin", 1);
         if (room->changeMaxHpForAwakenSkill(shensimayi))
             room->acquireSkill(shensimayi, "jilve");

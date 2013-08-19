@@ -26,6 +26,11 @@ return {
 	["shoucheng:accept"] = "摸一张牌",
 	["shoucheng:reject"] = "不摸牌",
 
+	["heg_xusheng"] = "徐盛-国",
+	["&heg_xusheng"] = "徐盛",
+	["yicheng"] = "疑城",
+	[":yicheng"] = "每当一名角色被指定为【杀】的目标后，你可以令该角色摸一张牌，然后弃置一张牌。",
+
 	["#heg_yuji"] = "魂绕左右",
 	["heg_yuji"] = "于吉-国",
 	["&heg_yuji"] = "于吉",

@@ -414,11 +414,15 @@ public:
 class Xuanfeng: public TriggerSkill {
 public:
     Xuanfeng(): TriggerSkill("xuanfeng") {
-        events << CardsMoveOneTime << EventPhaseStart;
+        events << CardsMoveOneTime << EventPhaseChanging;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lingtong, QVariant &data) const{
-        if (triggerEvent == EventPhaseStart) {
+        if (triggerEvent == EventPhaseChanging) {
             lingtong->setMark("xuanfeng", 0);
         } else if (triggerEvent == CardsMoveOneTime) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
@@ -439,7 +443,7 @@ public:
                 if (targets.isEmpty())
                     return false;
 
-                if (lingtong->askForSkillInvoke(objectName())) {
+                if (TriggerSkill::triggerable(lingtong) && lingtong->askForSkillInvoke(objectName())) {
                     if (!move.from_places.contains(Player::PlaceEquip))
                         lingtong->setFlags("XuanfengUsed");
                     room->broadcastSkillInvoke(objectName());

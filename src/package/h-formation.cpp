@@ -216,6 +216,53 @@ public:
     }
 };
 
+class Tianfu: public TriggerSkill {
+public:
+    Tianfu(): TriggerSkill("tianfu") {
+        events << EventPhaseStart << EventPhaseChanging;
+    }
+
+    virtual int getPriority() const{
+        return 4;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && player->getPhase() == Player::RoundStart) {
+            QList<ServerPlayer *> jiangweis = room->findPlayersBySkillName(objectName());
+            foreach (ServerPlayer *jiangwei, jiangweis) {
+                if (jiangwei->isAlive() && (player == jiangwei || player->isAdjacentTo(jiangwei))
+                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)jiangwei))) {
+                    if (player != jiangwei) {
+                        room->notifySkillInvoked(jiangwei, objectName());
+                        LogMessage log;
+                        log.type = "#InvokeOthersSkill";
+                        log.from = player;
+                        log.to << jiangwei;
+                        log.arg = objectName();
+                        room->sendLog(log);
+                    }
+                    jiangwei->addMark(objectName());
+                    room->acquireSkill(jiangwei, "kanpo");
+                }
+            }
+        } else if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to != Player::NotActive) return false;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (p->getMark(objectName()) > 0) {
+                    p->setMark(objectName(), 0);
+                    room->detachSkillFromPlayer(p, "kanpo", false, true);
+                }
+            }
+        }
+        return false;
+    }
+};
+
 class Ziliang: public TriggerSkill {
 public:
     Ziliang(): TriggerSkill("ziliang") {
@@ -484,6 +531,10 @@ HFormationPackage::HFormationPackage()
     General *heg_caohong = new General(this, "heg_caohong", "wei"); // WEI 018
     heg_caohong->addSkill(new Huyuan);
     heg_caohong->addSkill(new Heyi);
+
+    General *heg_jiangwei = new General(this, "heg_jiangwei", "shu"); // SHU 012 G
+    heg_jiangwei->addSkill("tiaoxin");
+    heg_jiangwei->addSkill(new Tianfu);
 
     General *jiangwanfeiyi = new General(this, "jiangwanfeiyi", "shu", 3); // SHU 018
     jiangwanfeiyi->addSkill(new Shengxi);

@@ -465,7 +465,7 @@ public:
             snatch->deleteLater();
             if (!snatch->isAvailable(player))
                 continue;
-            foreach (const Player *p, player->getSiblings()) {
+            foreach (const Player *p, player->getAliveSiblings()) {
                 if (!snatch->targetFilter(QList<const Player *>(), p, player))
                     continue;
                 if (player->isProhibited(p, snatch))

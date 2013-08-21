@@ -5171,6 +5171,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
     gongxinArgs[0] = toJsonString(player->objectName());
     gongxinArgs[1] = false;
     gongxinArgs[2] = toJsonArray(player->handCards());
+    gongxinArgs[3] = toJsonArray(QList<int>());
 
     bool isUnicast = (to != NULL);
 

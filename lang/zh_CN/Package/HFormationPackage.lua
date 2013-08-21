@@ -40,6 +40,16 @@ return {
 	["shoucheng:accept"] = "摸一张牌",
 	["shoucheng:reject"] = "不摸牌",
 
+	["#jiangqin"] = "祁奚之器",
+	["jiangqin"] = "蒋钦",
+	["illustrator:jiangqin"] = "天空之城",
+	["shangyi"] = "尚义",
+	[":shangyi"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色观看你的手牌，然后你选择一项：1.观看其手牌，然后你可以弃置其中一张黑色牌。2.观看其身份牌。",
+	["niaoxiang"] = "鸟翔",
+	[":niaoxiang"] = "每当一名角色被指定为【杀】的目标后，若你与此【杀】使用者均与该角色相邻，你可以令该角色须使用两张【闪】抵消此【杀】",
+	["$ShangyiViewRemained"] = "%from 观看了 %to 的备选武将 %arg",
+	["$ShangyiViewUnknown"] = "%from 观看了 %to 的暗将 %arg",
+
 	["heg_xusheng"] = "徐盛-国",
 	["&heg_xusheng"] = "徐盛",
 	["illustrator:heg_xusheng"] = "XXX",

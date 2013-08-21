@@ -129,6 +129,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     connect(ClientInstance, SIGNAL(player_added(ClientPlayer *)), SLOT(addPlayer(ClientPlayer *)));
     connect(ClientInstance, SIGNAL(player_removed(QString)), SLOT(removePlayer(QString)));
     connect(ClientInstance, SIGNAL(generals_got(QStringList)), this, SLOT(chooseGeneral(QStringList)));
+    connect(ClientInstance, SIGNAL(generals_viewed(QString, QStringList)), this, SLOT(viewGenerals(QString, QStringList)));
     connect(ClientInstance, SIGNAL(suits_got(QStringList)), this, SLOT(chooseSuit(QStringList)));
     connect(ClientInstance, SIGNAL(options_got(QString, QStringList)), this, SLOT(chooseOption(QString, QStringList)));
     connect(ClientInstance, SIGNAL(cards_got(const ClientPlayer *, QString, QString, bool, Card::HandlingMethod, QList<int>)),
@@ -3012,6 +3013,13 @@ void RoomScene::doScript() {
     dialog->exec();
 }
 
+void RoomScene::viewGenerals(const QString &reason, const QStringList &names) {
+    QDialog *dialog = new ChooseGeneralDialog(names, main_window, true, Sanguosha->translate(reason));
+    connect(dialog, SIGNAL(rejected()), dialog, SLOT(deleteLater()));
+    dialog->setParent(main_window, Qt::Dialog);
+    dialog->show();
+}
+
 void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *> &players) {
     table->setColumnCount(11);
     table->setRowCount(players.length());
@@ -3332,8 +3340,6 @@ void RoomScene::doGongxin(const QList<int> &card_ids, bool enable_heart, QList<i
     fillCards(card_ids);
     if (enable_heart)
         card_container->startGongxin(enabled_ids);
-    else
-        card_container->addCloseButton();
 }
 
 void RoomScene::showOwnerButtons(bool owner) {

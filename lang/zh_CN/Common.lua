@@ -178,6 +178,7 @@ CommonTranslationTable = {
 	["#FilterJudge"] = "%from 的“%arg”效果被触发，判定牌被改变",
 	["$CancelTarget"] = "%from 使用【%arg】的目标 %to 被取消",
 	["$CancelTargetNoUser"] = "【%arg】的目标 %to 被取消",
+	["$ViewRole"] = "%from 观看了 %to 的身份 %arg",
 	["#UseLuckCard"] = "%from 使用了 <font color=\"yellow\"><b>手气卡</b></font>",
 
 	["cw"] = "顺时针",

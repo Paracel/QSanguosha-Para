@@ -453,7 +453,14 @@ sgs.guidao_suit_value = {
 
 sgs.ai_chaofeng.zhangjiao = 4
 
--- @todo: Fenji AI
+sgs.ai_skill_invoke.fenji = function(self, data)
+	local move = data:toMoveOneTime()
+	if self:isWeak() or not move.from or not self:isFriend(move.from)
+		or (move.from:hasSkill("manjuan") and move.from:getPhase() == sgs.Player_NotActive) then return false end
+	local skill_name = move.reason.m_skillName
+	if skill_name == "rende" or skill_name == "nosrende" then return true end
+	return move.from:getHandcardNum() < (self.player:getHp() <= 1 and 3 or 5)
+end
 
 sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	local friend_lost_hp = 10

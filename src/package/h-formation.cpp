@@ -422,10 +422,9 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
         room->doNotify(effect.from, QSanProtocol::S_COMMAND_VIEW_GENERALS, arg);
     } else if (choice == "role") {
         Json::Value arg(Json::arrayValue);
-        arg[0] = QSanProtocol::S_ANIMATE_LIGHTBOX;
+        arg[0] = QSanProtocol::Utils::toJsonString(player->objectName());
         arg[1] = QSanProtocol::Utils::toJsonString(player->getRole());
-        arg[2] = QSanProtocol::Utils::toJsonString("1000");
-        room->doNotify(effect.from, QSanProtocol::S_COMMAND_ANIMATE, arg);
+        room->doNotify(effect.from, QSanProtocol::S_COMMAND_SET_EMOTION, arg);
 
         LogMessage log;
         log.type = "$ViewRole";

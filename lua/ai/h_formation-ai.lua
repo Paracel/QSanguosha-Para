@@ -198,6 +198,11 @@ sgs.ai_card_intention.HeyiCard = function(self, card, from, tos)
 	end
 end
 
+sgs.ai_skill_invoke.tianfu = function(self, data)
+	local jiangwei = data:toPlayer()
+	return jiangwei and self:isFriend(jiangwei)
+end
+
 sgs.ai_skill_invoke.shoucheng = function(self, data)
 	local move = data:toMoveOneTime()
 	return move.from and self:isFriend(move.from)

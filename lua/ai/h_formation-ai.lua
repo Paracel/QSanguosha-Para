@@ -1,4 +1,4 @@
-function sgs.ai_skill_invoke.ziliang = function(self, data)
+function sgs.ai_skill_invoke.ziliang(self, data)
 	self.ziliang_id = nil
 	local damage = data:toDamage()
 	if damage.to:hasSkill("manjuan") and damage.to:getPhase() == sgs.Player_NotActive then return false end
@@ -11,6 +11,7 @@ function sgs.ai_skill_invoke.ziliang = function(self, data)
 					self.ziliang_id = id
 					return true
 				end
+			end
 		else
 			return false
 		end
@@ -46,3 +47,111 @@ sgs.ai_choicemade_filter.skillInvoke.ziliang = function(self, player, promptlist
 		sgs.updateIntention(player, damage.to, intention)
 	end
 end
+
+local function huyuan_validate(self, equip_type, is_handcard)
+	local targets
+	if is_handcard then targets = self.friends else targets = self.friends_noself end
+	if equip_type == "SilverLion" then
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:hasSkills("yizhong|bazhen") then table.insert(targets, enemy) end
+		end
+	end
+	for _, friend in ipairs(targets) do
+		local has_equip = false
+		for _, equip in sgs.qlist(friend:getEquips()) do
+			if equip:isKindOf(equip_type) then
+				has_equip = true
+				break
+			end
+		end
+		if not has_equip and not ((equip_type == "Armor" or equip_type == "SilverLion") and friend:hasSkills("yizhong|bazhen")) then
+			self:sort(self.enemies, "defense")
+			for _, enemy in ipairs(self.enemies) do
+				if friend:distanceTo(enemy) == 1 and self.player:canDiscard(enemy, "he") then
+					enemy:setFlags("AI_HuyuanToChoose")
+					return friend
+				end
+			end
+		end
+	end
+	return nil
+end
+
+sgs.ai_skill_use["@@huyuan"] = function(self, prompt)
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
+	self:sortByKeepValue(cards)
+	if self.player:hasArmorEffect("silver_lion") then
+		local player = huyuan_validate(self, "SilverLion", false)
+		if player then return "@HuyuanCard=" .. self.player:getArmor():getEffectiveId() .. "->" .. player:objectName() end
+	end
+	if self.player:getOffensiveHorse() then
+		local player = huyuan_validate(self, "OffensiveHorse", false)
+		if player then return "@HuyuanCard=" .. self.player:getOffensiveHorse():getEffectiveId() .. "->" .. player:objectName() end
+	end
+	if self.player:getWeapon() then
+		local player = huyuan_validate(self, "Weapon", false)
+		if player then return "@HuyuanCard=" .. self.player:getWeapon():getEffectiveId() .. "->" .. player:objectName() end
+	end
+	if self.player:getArmor() and self.player:getLostHp() <= 1 and self.player:getHandcardNum() >= 3 then
+		local player = huyuan_validate(self, "Armor", false)
+		if player then return "@HuyuanCard=" .. self.player:getArmor():getEffectiveId() .. "->" .. player:objectName() end
+	end
+	for _, card in ipairs(cards) do
+		if card:isKindOf("DefensiveHorse") then
+			local player = huyuan_validate(self, "DefensiveHorse", true)
+			if player then return "@HuyuanCard=" .. card:getEffectiveId() .. "->" .. player:objectName() end
+		end
+	end
+	for _, card in ipairs(cards) do
+		if card:isKindOf("OffensiveHorse") then
+			local player = huyuan_validate(self, "OffensiveHorse", true)
+			if player then return "@HuyuanCard=" .. card:getEffectiveId() .. "->" .. player:objectName() end
+		end
+	end
+	for _, card in ipairs(cards) do
+		if card:isKindOf("Weapon") then
+			local player = huyuan_validate(self, "Weapon", true)
+			if player then return "@HuyuanCard=" .. card:getEffectiveId() .. "->" .. player:objectName() end
+		end
+	end
+	for _, card in ipairs(cards) do
+		if card:isKindOf("SilverLion") then
+			local player = huyuan_validate(self, "SilverLion", true)
+			if player then return "@HuyuanCard=" .. card:getEffectiveId() .. "->" .. player:objectName() end
+		end
+		if card:isKindOf("Armor") and huyuan_validate(self, "Armor", true) then
+			local player = huyuan_validate(self, "Armor", true)
+			if player then return "@HuyuanCard=" .. card:getEffectiveId() .. "->" .. player:objectName() end
+		end
+	end
+end
+
+sgs.ai_skill_playerchosen.huyuan = function(self, targets)
+	targets = sgs.QList2Table(targets)
+	for _, p in ipairs(targets) do
+		if p:hasFlag("AI_HuyuanToChoose") then
+			p:setFlags("-AI_HuyuanToChoose")
+			return p
+		end
+	end
+	return targets[1]
+end
+
+sgs.ai_card_intention.HuyuanCard = function(self, card, from, to)
+	if to[1]:hasSkills("bazhen|yizhong") then
+		if sgs.Sanguosha:getCard(card:getEffectiveId()):isKindOf("SilverLion") then
+			sgs.updateIntention(from, to[1], 10)
+			return
+		end
+	end
+	sgs.updateIntention(from, to[1], -50)
+end
+
+sgs.ai_cardneed.huyuan = sgs.ai_cardneed.equip
+
+sgs.huyuan_keep_value = {
+	Peach = 6,
+	Jink = 5.1,
+	EquipCard = 4.8
+}

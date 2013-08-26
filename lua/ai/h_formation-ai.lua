@@ -197,3 +197,13 @@ sgs.ai_card_intention.HeyiCard = function(self, card, from, tos)
 		sgs.updateIntention(from, first, -60)
 	end
 end
+
+sgs.ai_skill_invoke.shoucheng = function(self, data)
+	local move = data:toMoveOneTime()
+	return move.from and self:isFriend(move.from)
+			and not (move.from:getPhase() == sgs.Player_NotActive and (move.from:hasSkill("manjuan") or self:needKongcheng(move.from, true)))
+end
+
+sgs.ai_skill_choice.shoucheng = function(self, choices)
+	return (self.player:getPhase() == sgs.Player_NotActive and self:needKongcheng(move.from, true)) and "reject" or "accept"
+end

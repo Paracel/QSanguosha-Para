@@ -155,3 +155,45 @@ sgs.huyuan_keep_value = {
 	Jink = 5.1,
 	EquipCard = 4.8
 }
+
+sgs.ai_skill_use["@@heyi"] = function(self, prompt)
+	local players = sgs.QList2Table(self.room:getOtherPlayers(self.player))
+	local first, last = self.player, self.player
+	for i = 1, #players do
+		if self:isFriend(players[i]) then last = players[i] else break end
+	end
+	for i = #players, 1, -1 do
+		if self:isFriend(players[i]) then first = players[i] else break end
+	end
+	if first:objectName() == self.player:objectName() and last:objectName() == self.player:objectName() then return "." end
+	return ("@HeyiCard=.->%s+%s"):format(first:objectName(), last:objectName())
+end
+
+sgs.ai_card_intention.HeyiCard = function(self, card, from, tos)
+	local players = sgs.QList2Table(self.room:getOtherPlayers(from))
+	local first, last = tos[1], tos[2]
+	if first:objectName() == from:objectName() then
+		for i = 1, #players do
+			if players[i]:objectName() ~= last:objectName() then sgs.updateIntention(from, players[i], -60) else break end
+		end
+		sgs.updateIntention(from, last, -60)
+	elseif last:objectName() == from:objectName() then
+		for i = #players, 1, -1 do
+			if players[i]:objectName() ~= first:objectName() then sgs.updateIntention(from, players[i], -60) else break end
+		end
+		sgs.updateIntention(from, first, -60)
+	else
+		if table.indexOf(players, first) < table.index(player, last) then
+			first = tos[2]
+			last = tos[1]
+		end
+		for i = 1, #players do
+			if players[i]:objectName() ~= last:objectName() then sgs.updateIntention(from, players[i], -60) else break end
+		end
+		for i = #players, 1, -1 do
+			if players[i]:objectName() ~= first:objectName() then sgs.updateIntention(from, players[i], -60) else break end
+		end
+		sgs.updateIntention(from, last, -60)
+		sgs.updateIntention(from, first, -60)
+	end
+end

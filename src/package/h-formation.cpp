@@ -465,8 +465,7 @@ public:
                 if (to->isAlive() && to->isAdjacentTo(player) && to->isAdjacentTo(use.from)
                     && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to))) {
                     room->broadcastSkillInvoke(objectName());
-                    int n = jink_list.at(i).toInt();
-                    if (n > 0 && n < 2)
+                    if (jink_list.at(i).toInt() == 1)
                         jink_list.replace(i, QVariant(2));
                 }
             }

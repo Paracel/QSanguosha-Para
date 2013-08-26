@@ -323,8 +323,7 @@ public:
             QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
             int index = 0;
             for (int i = 0; i < use.to.length(); i++) {
-                int n = jink_list.at(index).toInt();
-                if (n > 0 && n < 2)
+                if (jink_list.at(index).toInt() == 1)
                     jink_list.replace(index, QVariant(2));
                 index++;
             }

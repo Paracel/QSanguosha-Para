@@ -215,6 +215,63 @@ end
 
 -- @todo: Shangyi AI
 -- @todo: Niaoxiang AI
--- @todo: Yicheng AI
+
+sgs.ai_skill_invoke.yicheng = function(self, data)
+	local player = data:toPlayer()
+	if player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive then
+		if player:canDiscard(player, "he") then return self:isEnemy(player) else return false end
+	else
+		return self:isFriend(player)
+	end
+end
+
+sgs.ai_skill_discard.yicheng = function(self, discard_num, min_num, optional, include_equip)
+	local unpreferedCards = {}
+	local cards = sgs.QList2Table(self.player:getHandcards())
+
+	if self:getCardsNum("Slash") > 1 then
+		self:sortByKeepValue(cards)
+		for _, card in ipairs(cards) do
+			if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
+		end
+		table.remove(unpreferedCards, 1)
+	end
+
+	local num = self:getCardsNum("Jink") - 1
+	if self.player:getArmor() then num = num + 1 end
+	if num > 0 then
+		for _, card in ipairs(cards) do
+			if card:isKindOf("Jink") and num > 0 then
+				table.insert(unpreferedCards, card:getId())
+				num = num - 1
+			end
+		end
+	end
+	for _, card in ipairs(cards) do
+		if (card:isKindOf("Weapon") and self.player:getHandcardNum() < 3) or card:isKindOf("OffensiveHorse")
+			or self:getSameEquip(card, self.player) or card:isKindOf("AmazingGrace") or card:isKindOf("Lightning") then
+			table.insert(unpreferedCards, card:getId())
+		end
+	end
+
+	if self.player:getWeapon() and self.player:getHandcardNum() < 3 then
+		table.insert(unpreferedCards, self.player:getWeapon():getId())
+	end
+
+	if self:needToThrowArmor() then
+		table.insert(unpreferedCards, self.player:getArmor():getId())
+	end
+
+	if self.player:getOffensiveHorse() and self.player:getWeapon() then
+		table.insert(unpreferedCards, self.player:getOffensiveHorse():getId())
+	end
+
+	for index = #unpreferedCards, 1, -1 do
+		if not self.player:isJilei(sgs.Sanguosha:getCard(unpreferedCards[index])) then return { unpreferedCards[index] } end
+	end
+
+	return self:askForDiscard("dummyreason", 1, 1, false, true)
+end
+
 -- @todo: Qianhuan AI
 -- @todo: Zhendu AI

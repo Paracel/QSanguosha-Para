@@ -5171,7 +5171,6 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
     gongxinArgs[0] = toJsonString(player->objectName());
     gongxinArgs[1] = false;
     gongxinArgs[2] = toJsonArray(player->handCards());
-    gongxinArgs[3] = toJsonArray(QList<int>());
 
     bool isUnicast = (to != NULL);
 
@@ -5201,8 +5200,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
         QVariant decisionData = QVariant::fromValue("viewCards:" + to->objectName() + ":" + player->objectName());
         thread->trigger(ChoiceMade, this, to, decisionData);
 
-        notifyMoveFocus(to, S_COMMAND_SKILL_GONGXIN);
-        doRequest(to, S_COMMAND_SKILL_GONGXIN, gongxinArgs, true);
+        doNotify(to, S_COMMAND_SHOW_ALL_CARDS, gongxinArgs);
     } else {
         LogMessage log;
         log.type = "$ShowAllCards";

@@ -614,6 +614,9 @@ end
 
 sgs.ai_playerchosen_intention.xingwu = 80
 
+-- @todo: Yanyu AI
+-- @todo: Xiaode AI
+
 function sgs.ai_cardsview_valuable.aocai(self, class_name, player)
 	if player:hasFlag("Global_AocaiFailed") or player:getPhase() ~= sgs.Player_NotActive then return end
 	if class_name == "Slash" and sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_RESPONSE_USE then
@@ -765,6 +768,8 @@ sgs.ai_use_value.DuwuCard = 2.45
 sgs.dynamic_value.damage_card.DuwuCard = true
 sgs.ai_card_intention.DuwuCard = 80
 
+-- @todo: Zhoufu AI
+
 sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
 	local card_str = sgs.ai_skill_use["@@shensu1"](self, "@shensu1")
 	return string.gsub(str, "ShensuCard", "QingyiCard")
@@ -872,3 +877,4 @@ end
 
 sgs.ai_skill_invoke.cv_guojia = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_zhugeke = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_huanggai

@@ -212,3 +212,9 @@ end
 sgs.ai_skill_choice.shoucheng = function(self, choices)
 	return (self.player:getPhase() == sgs.Player_NotActive and self:needKongcheng(move.from, true)) and "reject" or "accept"
 end
+
+-- @todo: Shangyi AI
+-- @todo: Niaoxiang AI
+-- @todo: Yicheng AI
+-- @todo: Qianhuan AI
+-- @todo: Zhendu AI

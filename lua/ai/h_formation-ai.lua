@@ -214,7 +214,13 @@ sgs.ai_skill_choice.shoucheng = function(self, choices)
 end
 
 -- @todo: Shangyi AI
--- @todo: Niaoxiang AI
+
+sgs.ai_skill_invoke.niaoxiang = function(self, data)
+	local p = data:toPlayer()
+	if not self:isEnemy(p) then return false end
+	if p:hasSkills("leiji|nosleiji") and getCardsNum("Jink", p) >= 1 then return false end
+	return true
+end
 
 sgs.ai_skill_invoke.yicheng = function(self, data)
 	local player = data:toPlayer()

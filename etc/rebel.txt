@@ -1,3 +1,13 @@
+_						guojia					0.2
+_						liubei					0.2
+_						lusu					0.1
+_						zuoci					1.0
+_						st_yuanshu				-1.0
+_						huaxiong				-1.0
+_						yuanshu					0.2
+_						bgm_pangtong			0.5
+_						kongrong				0.1
+_						nos_liubei				0.3
 bgm_liubei				yuanshu					1.0
 caocao					zhangchunhua			0.5
 caocao					zhuran					0.2
@@ -41,6 +51,7 @@ yuanshao				wolong					0.3
 yuanshao				jiangwei				0.4
 yuanshao				ganning					0.2
 yuanshao				jiaxu					0.3
+yuanshao				zhangjiao				0.3
 yuanshao				fazheng					0.9
 yuanshao				xushu					1.0
 yuanshao				yangxiu					1.5
@@ -51,6 +62,7 @@ yuanshao				bgm_ganning				0.2
 yuanshao				diy_liuxie				2.0
 yuanshao				vs_xiahoudun			0.7
 yuanshao				neo_xiahoudun			1.0
+yuanshao				nos_zhangjiao			0.3
 yuanshao				nos_fazheng				1.2
 yuanshao				nos_xushu				1.0
 zhangjiao				zhangliao				0.8

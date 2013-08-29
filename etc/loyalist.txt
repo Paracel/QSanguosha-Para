@@ -2,6 +2,7 @@ _						guojia					0.2
 _						liubei					0.2
 _						lusu					0.1
 _						zuoci					1.0
+_						huaxiong				-1.0
 _						bgm_pangtong			0.5
 _						kongrong				0.1
 _						nos_liubei				0.3
@@ -110,12 +111,14 @@ yuanshao				liubei					1.0
 yuanshao				wolong					0.2
 yuanshao				lusu					0.7
 yuanshao				jiaxu					0.3
+yuanshao				zhangjiao				0.7
 yuanshao				caiwenji				-0.5
 yuanshao				xushu					1.3
 yuanshao				yangxiu					1.5
 yuanshao				bgm_pangtong			0.8
 yuanshao				diy_liuxie				2.5
 yuanshao				nos_liubei				1.0
+yuanshao				nos_zhangjiao			0.6
 yuanshao				nos_fazheng				-2.0
 yuanshao				nos_xushu				1.3
 zhangjiao				zhenji					0.7

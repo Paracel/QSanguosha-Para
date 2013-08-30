@@ -175,6 +175,7 @@ config = {
 		"guanxingzhangbao+bgm_zhangfei", "guanxingzhangbao+nos_zhangchunhua",
 		"liaohua+bgm_diaochan",
 		"guanping+nos_zhangchunhua",
+		"zhuran+hetaihou",
 		"xiahouba+nos_zhangchunhua",
 		"zhugeke+nos_zhangchunhua",
 		"bgm_diaochan+bgm_caoren",

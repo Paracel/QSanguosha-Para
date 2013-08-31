@@ -51,6 +51,7 @@ return {
 	["shangyi:generals"] = "观看暗将",
 	["niaoxiang"] = "鸟翔",
 	[":niaoxiang"] = "每当一名角色被指定为【杀】的目标后，若你与此【杀】使用者均与该角色相邻，你可以令该角色须使用两张【闪】抵消此【杀】",
+	["$ShangyiView"] = "%from 观看了 %to 的 %arg",
 	["$ShangyiViewRemained"] = "%from 观看了 %to 的备选武将 %arg",
 	["$ShangyiViewUnknown"] = "%from 观看了 %to 的暗将 %arg",
 

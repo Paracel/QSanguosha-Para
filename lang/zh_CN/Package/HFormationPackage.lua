@@ -3,6 +3,17 @@
 return {
 	["h_formation"] = "国战-阵包",
 
+	["#jiangwanfeiyi"] = "社稷股肱",
+	["jiangwanfeiyi"] = "蒋琬＆费祎",
+	["&jiangwanfeiyi"] = "蒋琬费祎",
+	["illustrator:jiangwanfeiyi"] = "cometrue",
+	["shengxi"] = "生息",
+	[":shengxi"] = "每当你的出牌阶段结束时，若你于此阶段未造成伤害，你可以摸两张牌。",
+	["shoucheng"] = "守成",
+	[":shoucheng"] = "每当一名角色于其回合外失去最后的手牌后，你可以令该角色选择是否摸一张牌。",
+	["shoucheng:accept"] = "摸一张牌",
+	["shoucheng:reject"] = "不摸牌",
+
 	["#heg_yuji"] = "魂绕左右",
 	["heg_yuji"] = "于吉-国",
 	["&heg_yuji"] = "于吉",

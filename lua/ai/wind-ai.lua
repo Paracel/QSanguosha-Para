@@ -630,9 +630,12 @@ guhuo_skill.getTurnUseCard = function(self)
 		if not sgs.GetConfig("BanPackages", ""):match("maneuvering") then guhuo = guhuo .. "|fire_attack" end
 		local guhuos = guhuo:split("|")
 		for i = 1, #guhuos do
-			local forbiden = guhuos[i]
-			forbid = sgs.Sanguosha:cloneCard(forbiden)
-			if self.player:isLocked(forbid) then table.remove(forbiden, #guhuos) end
+			local forbidden = guhuos[i]
+			local forbid = sgs.Sanguosha:cloneCard(forbidden)
+			if self.player:isLocked(forbid) then
+				table.remove(guhuos, i)
+				i = i - 1
+			end
 		end
 		for i = 1, 10 do
 			local card = fakeCards[math.random(1, #fakeCards)]
@@ -650,26 +653,33 @@ guhuo_skill.getTurnUseCard = function(self)
 		return fakeCard
 	end
 
+	local enemy_num = #self.enemies
+	local can_question = enemy_num
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:hasSkill("chanyuan") or (enemy:hasSkill("hunzi") and enemy:getMark("hunzi") == 0) then can_question = can_question - 1 end
+	end
+	local ratio = can_question == 0 and 100 or (enemy_num / can_question)
 	if #GuhuoCard_str > 0 then
 		local guhuo_str = GuhuoCard_str[math.random(1, #GuhuoCard_str)]
 
 		local str = guhuo_str:split("=")
 		str = str[2]:split(":")
 		local cardid, cardname = str[1], str[2]
+
 		if sgs.Sanguosha:getCard(cardid):objectName() == cardname and cardname == "ex_nihilo" then
-			if math.random(1, 3) == 1 then
+			if math.random(1, 3) <= ratio then
 				local fake_exnihilo = fake_guhuo(cardname)
 				if fake_exnihilo then return fake_exnihilo end
 			end
 			return sgs.Card_Parse(guhuo_str)
-		elseif math.random(1, 5) == 1 then
+		elseif math.random(1, 5) <= ratio then
 			local fake_GuhuoCard = fake_guhuo()
 			if fake_GuhuoCard then return fake_GuhuoCard end
 		else
 			return sgs.Card_Parse(guhuo_str)
 		end
-	elseif math.random(1, 4) ~= 1 then
-		local fake_GuhuoCard = fake_guhuo(nil)
+	elseif math.random(1, 5) <= 3 * ratio then
+		local fake_GuhuoCard = fake_guhuo()
 		if fake_GuhuoCard then return fake_GuhuoCard end
 	end
 
@@ -711,7 +721,7 @@ function SmartAI:getGuhuoViewCard(class_name, latest_version)
 		["FireSlash"] = "fire_slash", ["ThunderSlash"] = "thunder_slash"
 	}
 
-	if #card_use > 1 or (#card_use > 0 and (latest_version == 1 or card_use[1]:getSuit() == sgs.Card_Heart or ghly)) then
+	if classname2objectname[class_name] and #card_use > 1 or (#card_use > 0 and (latest_version == 1 or card_use[1]:getSuit() == sgs.Card_Heart or ghly)) then
 		local index = 1
 		if class_name == "Peach" or (class_name == "Analeptic" and not sgs.GetConfig("BanPackages", ""):match("maneuvering")) or class_name == "Jink" then
 			index = #card_use

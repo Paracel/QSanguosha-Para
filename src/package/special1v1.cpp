@@ -838,7 +838,7 @@ public:
         events << EventPhaseStart;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (player->getPhase() == Player::Discard) {
             int max_hp = -1000;
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
@@ -846,7 +846,7 @@ public:
                 if (hp > max_hp)
                     max_hp = hp;
             }
-            player->setMark("shenju", max_hp);
+            player->setMark("shenju", qMax(max_hp, 0));
         }
         return false;
     }

@@ -242,6 +242,10 @@ sgs.ai_skill_choice.shangyi = function(self, choices)
 	return "handcards"
 end
 
+sgs.ai_use_value.ShangyiCard = 4
+sgs.ai_use_priority.ShangyiCard = 9
+sgs.ai_card_intention.ShangyiCard = 50
+
 sgs.ai_skill_invoke.niaoxiang = function(self, data)
 	local p = data:toPlayer()
 	if not self:isEnemy(p) then return false end

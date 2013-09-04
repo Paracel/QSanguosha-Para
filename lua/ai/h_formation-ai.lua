@@ -213,7 +213,34 @@ sgs.ai_skill_choice.shoucheng = function(self, choices)
 	return (self.player:getPhase() == sgs.Player_NotActive and self:needKongcheng(move.from, true)) and "reject" or "accept"
 end
 
--- @todo: Shangyi AI
+local shangyi_skill = {}
+shangyi_skill.name = "shangyi"
+table.insert(sgs.ai_skills, shangyi_skill)
+gongxin_skill.getTurnUseCard = function(self)
+	local card_str = ("@ShangyiCard=.")
+	local shangyi_card = sgs.Card_Parse(card_str)
+	assert(shangyi_card)
+	return shangyi_card
+end
+
+sgs.ai_skill_use_func.ShangyiCard = function(card, use, self)
+	if self.player:hasUsed("ShangyiCard") then return end
+	self:sort(self.enemies, "handcard")
+
+	for index = #self.enemies, 1, -1 do
+		if not self.enemies[index]:isKongcheng() and self:objectiveLevel(self.enemies[index]) > 0 then
+			use.card = card
+			if use.to then
+				use.to:append(self.enemies[index])
+			end
+			return
+		end
+	end
+end
+
+sgs.ai_skill_choice.shangyi = function(self, choices)
+	return "handcards"
+end
 
 sgs.ai_skill_invoke.niaoxiang = function(self, data)
 	local p = data:toPlayer()

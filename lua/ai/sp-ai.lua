@@ -960,7 +960,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 	self:sort(self.friends_noself)
 	local zhenji
 	for _, friend in ipairs(self.friends_noself) do
-		local reason = getNextJudgeReason(friend)
+		local reason = getNextJudgeReason(self, friend)
 		if reason then
 			if reason == "luoshen" then
 				zhenji = friend
@@ -969,7 +969,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 					if card:getSuit() == sgs.Card_Heart or (friend:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade)
 						and (friend:hasSkill("tiandu") or not self:isValuableCard(card)) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(friend)
+						if use.to then use.to:append(friend) end
 						return
 					end
 				end
@@ -977,7 +977,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 				for _, card in ipairs(cards) do
 					if card:getSuit() == sgs.Card_Club and (friend:hasSkill("tiandu") or not self:isValuableCard(card)) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(friend)
+						if use.to then use.to:append(friend) end
 						return
 					end
 				end
@@ -986,7 +986,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 					if (card:getSuit() ~= sgs.Card_Spade or card:getNumber() == 1 or card:getNumber() > 9)
 						and (friend:hasSkill("tiandu") or not self:isValuableCard(card)) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(friend)
+						if use.to then use.to:append(friend) end
 						return
 					end
 				end
@@ -997,21 +997,21 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 		for _, card in ipairs(cards) do
 			if card:isBlack() and not (zhenji:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade) then
 				use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-				use.to:append(zhenji)
+				if use.to then use.to:append(zhenji) end
 				return
 			end
 		end
 	end
 	self:sort(self.enemies)
 	for _, enemy in ipairs(self.enemies) do
-		local reason = getNextJudgeReason(enemy)
+		local reason = getNextJudgeReason(self, enemy)
 		if not enemy:hasSkill("tiandu") and reason then
 			if reason == "indulgence" then
 				for _, card in ipairs(cards) do
 					if not (card:getSuit() == sgs.Card_Heart or (enemy:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade))
 						and not self:isValuableCard(card) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(enemy)
+						if use.to then use.to:append(enemy) end
 						return
 					end
 				end
@@ -1019,7 +1019,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 				for _, card in ipairs(cards) do
 					if not card:getSuit() == sgs.Card_Club and not self:isValuableCard(card) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(enemy)
+						if use.to then use.to:append(enemy) end
 						return
 					end
 				end
@@ -1027,7 +1027,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 				for _, card in ipairs(cards) do
 					if card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9 then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
-						use.to:append(enemy)
+						if use.to then use.to:append(enemy) end
 						return
 					end
 				end

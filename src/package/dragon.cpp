@@ -232,18 +232,12 @@ void DrJiedaoCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->setFlags("DrJiedaoTarget");
 
     QList<CardsMoveStruct> exchangeMove;
-    CardsMoveStruct move1;
-    move1.card_ids << effect.to->getWeapon()->getEffectiveId();
-    move1.to = effect.from;
-    move1.to_place = Player::PlaceEquip;
-    move1.reason = CardMoveReason(CardMoveReason::S_REASON_ROB, effect.from->objectName());
+    CardsMoveStruct move1(effect.to->getWeapon()->getEffectiveId(), effect.from, Player::PlaceEquip,
+                          CardMoveReason(CardMoveReason::S_REASON_ROB, effect.from->objectName()));
     exchangeMove.push_back(move1);
     if (effect.from->getWeapon() != NULL) {
-        CardsMoveStruct move2;
-        move2.card_ids << effect.from->getWeapon()->getEffectiveId();
-        move2.to = NULL;
-        move2.to_place = Player::DiscardPile;
-        move2.reason = CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, effect.from->objectName());
+        CardsMoveStruct move2(effect.from->getWeapon()->getEffectiveId(), NULL, Player::DiscardPile,
+                              CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, effect.from->objectName()));
         exchangeMove.push_back(move2);
     }
     effect.to->getRoom()->moveCardsAtomic(exchangeMove, true);
@@ -289,18 +283,12 @@ public:
             room->throwCard(player->getWeapon(), NULL);
         } else {
             QList<CardsMoveStruct> exchangeMove;
-            CardsMoveStruct move1;
-            move1.card_ids << player->getWeapon()->getEffectiveId();
-            move1.to = target;
-            move1.to_place = Player::PlaceEquip;
-            move1.reason = CardMoveReason(CardMoveReason::S_REASON_GOTCARD, player->objectName());
+            CardsMoveStruct move1(player->getWeapon()->getEffectiveId(), target, Player::PlaceEquip,
+                                  CardMoveReason(CardMoveReason::S_REASON_GOTCARD, player->objectName()));
             exchangeMove.push_back(move1);
             if (target->getWeapon() != NULL) {
-                CardsMoveStruct move2;
-                move2.card_ids << target->getWeapon()->getEffectiveId();
-                move2.to = NULL;
-                move2.to_place = Player::DiscardPile;
-                move2.reason = CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName());
+                CardsMoveStruct move2(target->getWeapon()->getEffectiveId(), NULL, Player::DiscardPile,
+                                      CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, target->objectName()));
                 exchangeMove.push_back(move2);
             }
             room->moveCardsAtomic(exchangeMove, true);

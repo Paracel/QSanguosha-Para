@@ -887,13 +887,9 @@ public:
 
             room->clearAG(erzhang);
 
-            CardsMoveStruct move;
-            move.card_ids = cards;
-            move.to = erzhang;
-            move.to_place = Player::PlaceHand;
-            QList<CardsMoveStruct> moves;
-            moves.append(move);
-            room->moveCardsAtomic(moves, true);
+            DummyCard *dummy = new DummyCard(cards);
+            room->obtainCard(erzhang, dummy);
+            delete dummy;
         }
 
         return false;

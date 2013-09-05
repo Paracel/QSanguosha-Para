@@ -660,18 +660,11 @@ public:
             equip_index = static_cast<int>(equipcard->location());
 
             QList<CardsMoveStruct> exchangeMove;
-            CardsMoveStruct move1;
-            move1.card_ids << equip;
-            move1.to = zhonghui;
-            move1.to_place = Player::PlaceEquip;
-            move1.reason = CardMoveReason(CardMoveReason::S_REASON_ROB, zhonghui->objectName());
+            CardsMoveStruct move1(equip, zhonghui, Player::PlaceEquip, CardMoveReason(CardMoveReason::S_REASON_ROB, zhonghui->objectName()));
             exchangeMove.push_back(move1);
             if (zhonghui->getEquip(equip_index) != NULL) {
-                CardsMoveStruct move2;
-                move2.card_ids << zhonghui->getEquip(equip_index)->getId();
-                move2.to = NULL;
-                move2.to_place = Player::DiscardPile;
-                move2.reason = CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, zhonghui->objectName());
+                CardsMoveStruct move2(zhonghui->getEquip(equip_index)->getId(), NULL, Player::DiscardPile,
+                                      CardMoveReason(CardMoveReason::S_REASON_CHANGE_EQUIP, zhonghui->objectName()));
                 exchangeMove.push_back(move2);
             }
             room->moveCardsAtomic(exchangeMove, true);
@@ -1387,7 +1380,7 @@ bool NosGuhuoCard::nosguhuo(ServerPlayer *yuji) const{
             room->setEmotion(player, ".");
 
         CardMoveReason reason(CardMoveReason::S_REASON_USE, yuji->objectName(), QString(), "nosguhuo");
-        CardsMoveStruct move(used_cards, yuji, NULL, Player::PlaceTable, reason);
+        CardsMoveStruct move(used_cards, yuji, NULL, Player::PlaceUnknown, Player::PlaceTable, reason);
         moves.append(move);
         room->moveCardsAtomic(moves, true);
     } else {
@@ -1405,7 +1398,7 @@ bool NosGuhuoCard::nosguhuo(ServerPlayer *yuji) const{
         success = real && card->getSuit() == Card::Heart;
         if (success) {
             CardMoveReason reason(CardMoveReason::S_REASON_USE, yuji->objectName(), QString(), "nosguhuo");
-            CardsMoveStruct move(used_cards, yuji, NULL, Player::PlaceTable, reason);
+            CardsMoveStruct move(used_cards, yuji, NULL, Player::PlaceUnknown, Player::PlaceTable, reason);
             moves.append(move);
             room->moveCardsAtomic(moves, true);
         } else {

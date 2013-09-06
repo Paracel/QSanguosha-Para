@@ -192,6 +192,7 @@ config = {
 		"simayi|shensimayi+zhangchunhua",
 		"diy_simazhao+diy_wangyuanji",
 		"liubei|bgm_liubei+ganfuren|sp_sunshangxiang",
+		"zhangfei|bgm_zhangfei+xiahoushi",
 		"zhugeliang|wolong|shenzhugeliang+huangyueying",
 		"menghuo+zhurong",
 		"zhouyu|shenzhouyu+xiaoqiao",

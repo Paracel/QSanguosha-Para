@@ -1629,9 +1629,7 @@ NostalGeneralPackage::NostalGeneralPackage()
     nos_zhonghui->addSkill(new NosBaijiang);
     nos_zhonghui->addSkill(new NosZili);
     nos_zhonghui->addRelateSkill("nosyexin");
-    nos_zhonghui->addRelateSkill("#nosyexin-clear");
     nos_zhonghui->addRelateSkill("#nosyexin-fake-move");
-    related_skills.insertMulti("nosyexin", "#nosyexin-clear");
     related_skills.insertMulti("nosyexin", "#nosyexin-fake-move");
     nos_zhonghui->addRelateSkill("nospaiyi");
 

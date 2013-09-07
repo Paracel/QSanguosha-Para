@@ -1220,7 +1220,8 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->canDiscard(player, "he") && !player->hasUsed("LijianCard");
+        return player->getAliveSiblings().length() > 1
+               && player->canDiscard(player, "he") && !player->hasUsed("LijianCard");
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

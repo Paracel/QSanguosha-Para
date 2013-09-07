@@ -137,14 +137,11 @@ class DrJiuyuanViewAsSkill: public OneCardViewAsSkill {
 public:
     DrJiuyuanViewAsSkill(): OneCardViewAsSkill("drjiuyuanv") {
         attached_lord_skill = true;
+        filter_pattern = ".|.|.|hand";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return player->getKingdom() == "wu" && !player->hasFlag("ForbidDrJiuyuan") && !player->isKongcheng();
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -390,14 +387,11 @@ void DrQingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *>
 class DrQingnang: public OneCardViewAsSkill {
 public:
     DrQingnang(): OneCardViewAsSkill("drqingnang") {
+        filter_pattern = ".!";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return player->isWounded() && player->canDiscard(player, "he");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

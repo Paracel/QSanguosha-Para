@@ -416,6 +416,7 @@ void YuanhuCard::onEffect(const CardEffectStruct &effect) const{
 class YuanhuViewAsSkill: public OneCardViewAsSkill {
 public:
     YuanhuViewAsSkill(): OneCardViewAsSkill("yuanhu") {
+        filter_pattern = "EquipCard";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -424,10 +425,6 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@yuanhu";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isKindOf("EquipCard");
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{
@@ -490,14 +487,11 @@ void XuejiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
 class Xueji: public OneCardViewAsSkill {
 public:
     Xueji(): OneCardViewAsSkill("xueji") {
+        filter_pattern = ".|red!";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return player->getLostHp() > 0 && player->canDiscard(player, "he") && !player->hasUsed("XuejiCard");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isRed() && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{
@@ -700,6 +694,7 @@ void BifaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
 class BifaViewAsSkill: public OneCardViewAsSkill {
 public:
     BifaViewAsSkill(): OneCardViewAsSkill("bifa") {
+        filter_pattern = ".|.|.|hand";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -708,10 +703,6 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@bifa";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{
@@ -1482,14 +1473,11 @@ void ZhoufuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
 class ZhoufuViewAsSkill: public OneCardViewAsSkill {
 public:
     ZhoufuViewAsSkill(): OneCardViewAsSkill("zhoufu") {
+        filter_pattern = ".|.|.|hand";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("ZhoufuCard");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped();
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{

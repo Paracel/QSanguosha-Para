@@ -276,10 +276,7 @@ public:
 class Lianhuan: public OneCardViewAsSkill {
 public:
     Lianhuan(): OneCardViewAsSkill("lianhuan") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && to_select->getSuit() == Card::Club;
+        filter_pattern = ".|club|.|hand";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -340,10 +337,7 @@ public:
 class Huoji: public OneCardViewAsSkill {
 public:
     Huoji(): OneCardViewAsSkill("huoji") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && to_select->isRed();
+        filter_pattern = ".|red|.|hand";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -396,10 +390,7 @@ public:
 class Kanpo: public OneCardViewAsSkill {
 public:
     Kanpo(): OneCardViewAsSkill("kanpo") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack() && !to_select->isEquipped();
+        filter_pattern = ".|black|.|hand";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{

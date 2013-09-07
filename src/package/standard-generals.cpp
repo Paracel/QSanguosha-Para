@@ -374,10 +374,7 @@ public:
 class Qingguo: public OneCardViewAsSkill {
 public:
     Qingguo(): OneCardViewAsSkill("qingguo") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack() && !to_select->isEquipped();
+        filter_pattern = ".|black|.|hand";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -998,10 +995,7 @@ public:
 class Qixi: public OneCardViewAsSkill {
 public:
     Qixi(): OneCardViewAsSkill("qixi") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isBlack();
+        filter_pattern = ".|black";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1025,10 +1019,7 @@ public:
 class Guose: public OneCardViewAsSkill {
 public:
     Guose(): OneCardViewAsSkill("guose") {
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->getSuit() == Card::Diamond;
+        filter_pattern = ".|diamond";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1042,6 +1033,7 @@ public:
 class LiuliViewAsSkill: public OneCardViewAsSkill {
 public:
     LiuliViewAsSkill(): OneCardViewAsSkill("liuli") {
+        filter_pattern = ".!";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -1050,10 +1042,6 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@liuli";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1228,14 +1216,11 @@ public:
 class Lijian: public OneCardViewAsSkill {
 public:
     Lijian(): OneCardViewAsSkill("lijian") {
+        filter_pattern = ".!";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return player->canDiscard(player, "he") && !player->hasUsed("LijianCard");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1271,14 +1256,11 @@ public:
 class Qingnang: public OneCardViewAsSkill {
 public:
     Qingnang(): OneCardViewAsSkill("qingnang") {
+        filter_pattern = ".|.|.|hand!";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return player->canDiscard(player, "h") && !player->hasUsed("QingnangCard");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return !to_select->isEquipped() && !Self->isJilei(to_select);
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -1291,6 +1273,7 @@ public:
 class Jijiu: public OneCardViewAsSkill {
 public:
     Jijiu(): OneCardViewAsSkill("jijiu") {
+        filter_pattern = ".|red";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -1300,10 +1283,6 @@ public:
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{
         return pattern.contains("peach") && !player->hasFlag("Global_PreventPeach")
                 && player->getPhase() == Player::NotActive && player->canDiscard(player, "he");
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isRed();
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

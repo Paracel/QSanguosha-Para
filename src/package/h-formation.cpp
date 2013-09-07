@@ -78,6 +78,7 @@ void HuyuanCard::onEffect(const CardEffectStruct &effect) const{
 class HuyuanViewAsSkill: public OneCardViewAsSkill {
 public:
     HuyuanViewAsSkill(): OneCardViewAsSkill("huyuan") {
+        filter_pattern = "EquipCard";
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -86,10 +87,6 @@ public:
 
     virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
         return pattern == "@@huyuan";
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return to_select->isKindOf("EquipCard");
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{

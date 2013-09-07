@@ -497,14 +497,7 @@ Spear::Spear(Suit suit, int number)
 class AxeViewAsSkill: public ViewAsSkill {
 public:
     AxeViewAsSkill(): ViewAsSkill("axe") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@axe";
+        response_pattern = "@axe";
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{

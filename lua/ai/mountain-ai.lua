@@ -248,7 +248,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	return {}
 end
 
-sgs.ai_skill_use["@qiaobian"] = function(self, prompt)
+sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 	self:updatePlayers()
 
 	if prompt == "@qiaobian-2" then

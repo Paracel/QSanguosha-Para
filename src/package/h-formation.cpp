@@ -79,14 +79,7 @@ class HuyuanViewAsSkill: public OneCardViewAsSkill {
 public:
     HuyuanViewAsSkill(): OneCardViewAsSkill("huyuan") {
         filter_pattern = "EquipCard";
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@huyuan";
+        response_pattern = "@@huyuan";
     }
 
     virtual const Card *viewAs(const Card *originalcard) const{
@@ -183,14 +176,7 @@ void HeyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
 class HeyiViewAsSkill: public ZeroCardViewAsSkill {
 public:
     HeyiViewAsSkill(): ZeroCardViewAsSkill("heyi") {
-    }
-
-    virtual bool isEnabledAtPlay(const Player *) const{
-        return false;
-    }
-
-    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
-        return pattern == "@@heyi";
+        response_pattern = "@@heyi";
     }
 
     virtual const Card *viewAs() const{

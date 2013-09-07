@@ -70,6 +70,7 @@ void DrZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
 class DrZhihengViewAsSkill: public ViewAsSkill {
 public:
     DrZhihengViewAsSkill(): ViewAsSkill("drzhiheng") {
+        response_pattern = "@@drzhiheng";
     }
 
     virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{

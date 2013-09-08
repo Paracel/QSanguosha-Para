@@ -1756,8 +1756,7 @@ public:
     }
 
     virtual const Card *viewAs() const{
-        HuangenCard *card = new HuangenCard;
-        return card;
+        return new HuangenCard;
     }
 };
 

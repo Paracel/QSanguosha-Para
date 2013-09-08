@@ -359,11 +359,6 @@ void IronChain::onUse(Room *room, const CardUseStruct &card_use) const{
         TrickCard::onUse(room, card_use);
 }
 
-void IronChain::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    source->broadcastSkillInvoke("@tiesuo");
-    TrickCard::use(room, source, targets);
-}
-
 void IronChain::onEffect(const CardEffectStruct &effect) const{
     effect.to->setChained(!effect.to->isChained());
 

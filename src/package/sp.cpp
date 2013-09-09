@@ -1678,7 +1678,6 @@ SPPackage::SPPackage()
     General *yuanshu = new General(this, "yuanshu", "qun"); // SP 004
     yuanshu->addSkill(new Yongsi);
     yuanshu->addSkill(new Weidi);
-    yuanshu->addSkill(new SPConvertSkill("yuanshu", "tw_yuanshu"));
 
     General *sp_sunshangxiang = new General(this, "sp_sunshangxiang", "shu", 3, false, true); // SP 005
     sp_sunshangxiang->addSkill("jieyin");
@@ -1775,7 +1774,6 @@ OLPackage::OLPackage()
     General *zhugeke = new General(this, "zhugeke", "wu", 3); // OL 002
     zhugeke->addSkill(new Aocai);
     zhugeke->addSkill(new Duwu);
-    zhugeke->addSkill(new SPConvertSkill("zhugeke", "diy_zhugeke"));
 
     General *zhangbao = new General(this, "zhangbao", "qun", 3);
     zhangbao->addSkill(new Zhoufu);

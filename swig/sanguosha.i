@@ -913,6 +913,8 @@ public:
 
     QString getCurrentCardUsePattern();
     CardUseStruct::CardUseReason getCurrentCardUseReason();
+
+    QString findConvertFrom(const char *general_name) const;
 };
 
 extern Engine *Sanguosha;

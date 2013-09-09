@@ -937,22 +937,18 @@ public:
             QStringList lords = Sanguosha->getLords();
             foreach (ServerPlayer *player, room->getAlivePlayers()) {
                 QString name = player->getGeneralName();
-                const Skill *convert_skill_1 = Sanguosha->getSkill(QString("cv_%1").arg(name.split("_").last()));
-                if (convert_skill_1) {
-                    const SPConvertSkill *skill = qobject_cast<const SPConvertSkill *>(convert_skill_1);
-                    if (skill && skill->getToName().contains(name))
-                        name = skill->getFromName();
+                if (player->getGeneral()->isHidden()) {
+                    QString fname = Sanguosha->findConvertFrom(name);
+                    if (!fname.isEmpty()) name = fname;
                 }
                 lords.removeOne(name);
 
                 if (!player->getGeneral2()) continue;
 
-                name = player->getGeneralName();
-                const Skill *convert_skill_2 = Sanguosha->getSkill(QString("cv_%1").arg(name.split("_").last()));
-                if (convert_skill_2) {
-                    const SPConvertSkill *skill = qobject_cast<const SPConvertSkill *>(convert_skill_2);
-                    if (skill && skill->getToName().contains(name))
-                        name = skill->getFromName();
+                name = player->getGeneral2Name();
+                if (player->getGeneral()->isHidden()) {
+                    QString fname = Sanguosha->findConvertFrom(name);
+                    if (!fname.isEmpty()) name = fname;
                 }
                 lords.removeOne(name);
             }
@@ -1644,7 +1640,6 @@ NostalStandardPackage::NostalStandardPackage()
     General *huangyueying = new General(this, "nos_huangyueying", "shu", 3, false);
     huangyueying->addSkill(new NosJizhi);
     huangyueying->addSkill(new NosQicai);
-    huangyueying->addSkill(new SPConvertSkill("nos_huangyueying", "heg_huangyueying+tw_huangyueying"));
 
     General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
     nos_diaochan->addSkill(new NosLijian);

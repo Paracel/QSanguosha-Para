@@ -937,7 +937,7 @@ public:
             QStringList lords = Sanguosha->getLords();
             foreach (ServerPlayer *player, room->getAlivePlayers()) {
                 QString name = player->getGeneralName();
-                if (player->getGeneral()->isHidden()) {
+                if (Sanguosha->isGeneralHidden(name)) {
                     QString fname = Sanguosha->findConvertFrom(name);
                     if (!fname.isEmpty()) name = fname;
                 }
@@ -946,7 +946,7 @@ public:
                 if (!player->getGeneral2()) continue;
 
                 name = player->getGeneral2Name();
-                if (player->getGeneral()->isHidden()) {
+                if (Sanguosha->isGeneralHidden(name)) {
                     QString fname = Sanguosha->findConvertFrom(name);
                     if (!fname.isEmpty()) name = fname;
                 }

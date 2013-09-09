@@ -205,4 +205,7 @@ void Settings::init() {
 
         setValue("ForbidPackages", forbid_packages);
     }
+
+    Config.ExtraHiddenGenerals = GetConfigFromLuaState(lua, "extra_hidden_generals").toStringList();
+    Config.RemovedHiddenGenerals = GetConfigFromLuaState(lua, "removed_hidden_generals").toStringList();
 }

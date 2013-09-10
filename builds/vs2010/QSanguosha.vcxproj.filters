@@ -942,6 +942,9 @@
     <CustomBuild Include="..\..\src\package\wandianba.h">
       <Filter>package</Filter>
     </CustomBuild>
+    <CustomBuild Include="..\..\src\package\h-formation.h">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\swig\sanguosha.i">
@@ -1034,9 +1037,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ui\uiUtils.h">
       <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\package\h-formation.h">
-      <Filter>package</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

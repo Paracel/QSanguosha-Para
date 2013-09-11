@@ -514,8 +514,7 @@ function SmartAI:getDynamicUsePriority(card)
 				or self.player:hasFlag("XianzhenSuccess")
 				or self.player:canSlashWithoutCrossbow()
 				or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash")) > 0
-				or self.player:hasUsed("FenxunCard")
-				or self.player:hasSkill("shenli") and self.player:getMark("@struggle") > 0 then
+				or self.player:hasUsed("FenxunCard") then
 				return sgs.ai_use_priority.Slash - 0.1
 			end
 		end

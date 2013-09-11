@@ -249,7 +249,7 @@ void Engine::addPackage(Package *package) {
             QStringList to_list(sp_convert_pairs.values(general->objectName()));
             const Skill *skill = new SPConvertSkill(general->objectName(), to_list.join("+"));
             addSkills(QList<const Skill *>() << skill);
-			general->addSkill(skill->objectName());
+            general->addSkill(skill->objectName());
         }
         generals.insert(general->objectName(), general);
         if (isGeneralHidden(general->objectName())) continue;

@@ -645,34 +645,6 @@ sgs.ai_card_intention.MingceCard = -70
 
 sgs.ai_cardneed.mingce = sgs.ai_cardneed.equip
 
-local jinjiu_skill = {}
-jinjiu_skill.name = "jinjiu"
-table.insert(sgs.ai_skills, jinjiu_skill)
-jinjiu_skill.getTurnUseCard = function(self)
-	local cards = self.player:getCards("h")
-	cards = sgs.QList2Table(cards)
-	local anal_card
-
-	self:sortByUseValue(cards, true)
-
-	for _, card in ipairs(cards) do
-		if card:isKindOf("Analeptic") then
-			anal_card = card
-			break
-		end
-	end
-
-	if anal_card then
-		local suit = anal_card:getSuitString()
-		local number = anal_card:getNumberString()
-		local card_id = anal_card:getEffectiveId()
-		local card_str = ("slash:jinjiu[%s:%s]=%d"):format(suit, number, card_id)
-		local slash = sgs.Card_Parse(card_str)
-
-		return slash
-	end
-end
-
 local xianzhen_skill = {}
 xianzhen_skill.name = "xianzhen"
 table.insert(sgs.ai_skills, xianzhen_skill)

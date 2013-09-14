@@ -49,7 +49,6 @@ config = {
 		"Hegemony",
 		"HFormation",
 		"HegemonySP",
-		"Ling",
 		"NostalStandard",
 		"NostalWind",
 		"NostalYJCM",

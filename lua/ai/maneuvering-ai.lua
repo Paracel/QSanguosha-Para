@@ -228,7 +228,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 		local value = 0 - enemy:getHandcardNum()
 
-		if enemy:hasSkills("yongsi|haoshi|tuxi|noslijian|lijian|fanjian|neofanjian|dimeng|jijiu|jieyin|beige") or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1) then
+		if enemy:hasSkills("yongsi|haoshi|tuxi|noslijian|lijian|fanjian|dimeng|jijiu|jieyin|beige") or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1) then
 			value = value + 10
 		end
 		if enemy:hasSkills(sgs.cardneed_skill .. "|zhaolie|tianxiang|qinyin|yanxiao|zhaoxin|renjie+baiyin") then
@@ -338,7 +338,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 			if target:isLord() and not self:isEnemy(target, source) then kill_lord = true end
 			if self:isEnemy(target, source) then kills = kills + 1 end
 		else
-			if self:isEnemy(target, source) and source:getHandcardNum() < 2 and target:hasSkills("ganglie|neoganglie") and source:getHp() == 1
+			if self:isEnemy(target, source) and source:getHandcardNum() < 2 and target:hasSkill("ganglie") and source:getHp() == 1
 				and self:damageIsEffective(source, nil, target) and peach_num < 1 then newvalue = newvalue - 100 end
 			if target:hasSkill("vsganglie") then
 				local can

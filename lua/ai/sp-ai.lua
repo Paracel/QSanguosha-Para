@@ -328,7 +328,7 @@ local function can_be_selected_as_target_xueji(self, card, who)
 	if self:isEnemy(who) then
 		if not self.player:hasSkill("jueqing") then
 			if who:hasSkill("guixin") and (self.room:getAliveCount() >= 4 or not who:faceUp()) and not who:hasSkill("manjuan") then return false end
-			if who:hasSkills("neoganglie|vsganglie|ganglie") and (self.player:getHp() == 1 and self.player:getHandcardNum() <= 2) then return false end
+			if who:hasSkills("vsganglie|ganglie") and (self.player:getHp() == 1 and self.player:getHandcardNum() <= 2) then return false end
 			if who:hasSkill("jieming") then
 				for _, enemy in ipairs(self.enemies) do
 					if enemy:getHandcardNum() <= enemy:getMaxHp() - 2 and not enemy:hasSkill("manjuan") then return false end
@@ -928,7 +928,7 @@ sgs.ai_card_intention.DuwuCard = 80
 
 function getNextJudgeReason(self, player)
 	if self:playerGetRound(player) > 2 then
-		if player:hasSkills("ganglie|neoganglie|vsganglie") then return end
+		if player:hasSkills("ganglie|vsganglie") then return end
 		local caiwenji = self.room:findPlayerBySkillName("beige")
 		if caiwenji and caiwenji:canDiscard(caiwenji, "he") and self:isFriend(caiwenji, player) then return end
 		if player:hasArmorEffect("eight_diagram") or player:hasSkill("bazhen") then

@@ -106,117 +106,6 @@ public:
     }
 };
 
-DrJiuyuanCard::DrJiuyuanCard() {
-    will_throw = false;
-    handling_method = Card::MethodNone;
-    m_skillName = "drjiuyuanv";
-    mute = true;
-}
-
-void DrJiuyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    ServerPlayer *sunquan = targets.first();
-    if (sunquan->hasLordSkill("drjiuyuan")) {
-        room->setPlayerFlag(sunquan, "DrJiuyuanInvoked");
-        room->notifySkillInvoked(sunquan, "drjiuyuan");
-        sunquan->obtainCard(this, false);
-        QList<ServerPlayer *> sunquans;
-        QList<ServerPlayer *> players = room->getOtherPlayers(source);
-        foreach (ServerPlayer *p, players) {
-            if (p->hasLordSkill("drjiuyuan") && !p->hasFlag("DrJiuyuanInvoked"))
-                sunquans << p;
-        }
-        if (sunquans.empty())
-            room->setPlayerFlag(source, "ForbidDrJiuyuan");
-    }
-}
-
-bool DrJiuyuanCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select->hasLordSkill("drjiuyuan") && !to_select->hasFlag("DrJiuyuanInvoked");
-}
-
-class DrJiuyuanViewAsSkill: public OneCardViewAsSkill {
-public:
-    DrJiuyuanViewAsSkill(): OneCardViewAsSkill("drjiuyuanv") {
-        attached_lord_skill = true;
-        filter_pattern = ".|.|.|hand";
-    }
-
-    virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getKingdom() == "wu" && !player->hasFlag("ForbidDrJiuyuan") && !player->isKongcheng();
-    }
-
-    virtual const Card *viewAs(const Card *originalCard) const{
-        DrJiuyuanCard *card = new DrJiuyuanCard;
-        card->addSubcard(originalCard);
-
-        return card;
-    }
-};
-
-class DrJiuyuan: public TriggerSkill {
-public:
-    DrJiuyuan():TriggerSkill("drjiuyuan$") {
-        events << GameStart << EventAcquireSkill << EventLoseSkill << EventPhaseChanging;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if ((triggerEvent == GameStart && player->isLord())
-            || (triggerEvent == EventAcquireSkill && data.toString() == "drjiuyuan")) {
-            QList<ServerPlayer *> lords;
-            foreach (ServerPlayer *p, room->getAlivePlayers()) {
-                if (p->hasLordSkill(objectName()))
-                    lords << p;
-            }
-            if (lords.isEmpty()) return false;
-
-            QList<ServerPlayer *> players;
-            if (lords.length() > 1)
-                players = room->getAlivePlayers();
-            else
-                players = room->getOtherPlayers(lords.first());
-            foreach (ServerPlayer *p, players) {
-                if (!p->hasSkill("drjiuyuanv"))
-                    room->attachSkillToPlayer(p, "drjiuyuanv");
-            }
-        } else if (triggerEvent == EventLoseSkill && data.toString() == "drjiuyuan") {
-            QList<ServerPlayer *> lords;
-            foreach (ServerPlayer *p, room->getAlivePlayers()) {
-                if (p->hasLordSkill(objectName()))
-                    lords << p;
-            }
-            if (lords.length() > 2) return false;
-
-            QList<ServerPlayer *> players;
-            if (lords.isEmpty())
-                players = room->getAlivePlayers();
-            else
-                players << lords.first();
-            foreach (ServerPlayer *p, players) {
-                if (p->hasSkill("drjiuyuanv"))
-                    room->detachSkillFromPlayer(p, "drjiuyuanv", true);
-            }
-        } else if (triggerEvent == EventPhaseChanging) {
-            PhaseChangeStruct phase_change = data.value<PhaseChangeStruct>();
-            if (phase_change.from != Player::Play)
-                  return false;
-            if (player->hasFlag("ForbidDrJiuyuan")) {
-                room->setPlayerFlag(player, "-ForbidDrJiuyuan");
-            }
-            QList<ServerPlayer *> players = room->getOtherPlayers(player);
-            foreach (ServerPlayer *p, players) {
-                if (p->hasFlag("DrJiuyuanInvoked")) {
-                    room->setPlayerFlag(p, "-DrJiuyuanInvoked");
-                }
-            }
-        }
-        return false;
-    }
-};
-
 DrJiedaoCard::DrJiedaoCard() {
 }
 
@@ -412,7 +301,7 @@ DragonPackage::DragonPackage():Package("dragon")
 
     General *dr_sunquan = new General(this, "dr_sunquan$", "wu");
     dr_sunquan->addSkill(new DrZhiheng);
-    dr_sunquan->addSkill(new DrJiuyuan);
+    dr_sunquan->addSkill("jiuyuan");
 
     General *dr_zhouyu = new General(this, "dr_zhouyu", "wu", 3);
     dr_zhouyu->addSkill("yingzi");
@@ -425,10 +314,7 @@ DragonPackage::DragonPackage():Package("dragon")
     General *dr_lvbu = new General(this, "dr_lvbu", "qun");
     dr_lvbu->addSkill(new DrWushuang);
 
-    skills << new DrJiuyuanViewAsSkill;
-
     addMetaObject<DrZhihengCard>();
-    addMetaObject<DrJiuyuanCard>();
     addMetaObject<DrJiedaoCard>();
     addMetaObject<DrQingnangCard>();
 }

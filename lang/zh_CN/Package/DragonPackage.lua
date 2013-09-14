@@ -18,12 +18,9 @@ return {
 	["dr_sunquan"] = "龙版孙权",
 	["&dr_sunquan"] = "孙权",
 	["drzhiheng"] = "制衡",
-	[":drzhiheng"] = "结束阶段，你可以弃置任意数量的手牌，然后将手牌数补至等于体力值的张数。",
+	[":drzhiheng"] = "结束阶段开始时，你可以弃置任意数量的手牌，然后将手牌数补至等于体力值的张数。",
 	["@drzhiheng-card"] = "你可以发动“制衡”",
 	["~drzhiheng"] = "选择需要弃置的牌→点击确定",
-	["drjiuyuan"] = "救援",
-	[":drjiuyuan"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"green\"><b>阶段技。</b></font>其他吴势力角色的出牌阶段，该角色可以交给你一张手牌。",
-	["drjiuyuanv"] = "救援送牌",
 
 	["#dr_zhouyu"] = "大都督",
 	["dr_zhouyu"] = "龙版周瑜",

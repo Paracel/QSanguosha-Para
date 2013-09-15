@@ -313,7 +313,7 @@ end
 sgs.ai_skill_invoke.qianhuan = function(self, data)
 	local use = data:toCardUse()
 	if not use.card then
-		local yuji = room:findPlayerBySkillName("qianhuan")
+		local yuji = self.room:findPlayerBySkillName("qianhuan")
 		return yuji and self:isFriend(yuji) and yuji:getPile("sorcery"):length() < 4
 	else
 		local to = use.to:first()

@@ -141,32 +141,37 @@
         <translation>包</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.ui" line="173"/>
+        <location filename="../../src/dialog/cardoverview.ui" line="149"/>
+        <source>Play audio effect</source>
+        <translation>音效</translation>
+    </message>
+    <message>
+        <location filename="../../src/dialog/cardoverview.ui" line="162"/>
         <source>Get this card</source>
         <translation>获得卡牌</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.ui" line="133"/>
+        <location filename="../../src/dialog/cardoverview.ui" line="127"/>
         <source>Play (male)</source>
         <translation>男性配音</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.ui" line="152"/>
+        <location filename="../../src/dialog/cardoverview.ui" line="140"/>
         <source>Play (female)</source>
         <translation>女性配音</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="82"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="96"/>
         <source>This is an Lua extension</source>
         <translation>该包为Lua扩展包</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="109"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="133"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="109"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="133"/>
         <source>These packages don&apos;t contain this card</source>
         <translation>此牌所在卡牌包已禁用</translation>
     </message>
@@ -2711,7 +2716,7 @@
         <location filename="../../src/ui/roomscene.cpp" line="2973"/>
         <location filename="../../src/ui/roomscene.cpp" line="2983"/>
         <location filename="../../src/ui/roomscene.cpp" line="2998"/>
-        <location filename="../../src/ui/roomscene.cpp" line="3782"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3785"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -2752,7 +2757,7 @@
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="343"/>
-        <location filename="../../src/ui/roomscene.cpp" line="4153"/>
+        <location filename="../../src/ui/roomscene.cpp" line="4156"/>
         <source>pindian</source>
         <translation>拼点</translation>
     </message>
@@ -3087,27 +3092,27 @@
         <translation>&lt;font color=&apos;%1&apos;&gt;────────游戏开始────────&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3769"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3772"/>
         <source>Server information</source>
         <translation>服务器信息</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3782"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3785"/>
         <source>You can only initiate a surrender poll at your play phase!</source>
         <translation>只有在你的出牌阶段才能请求投降！</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3787"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3790"/>
         <source>Surrender</source>
         <translation>投降</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="3787"/>
+        <location filename="../../src/ui/roomscene.cpp" line="3790"/>
         <source>Are you sure to surrender ?</source>
         <translation>你真的要投降吗？</translation>
     </message>
     <message>
-        <location filename="../../src/ui/roomscene.cpp" line="4069"/>
+        <location filename="../../src/ui/roomscene.cpp" line="4072"/>
         <source>Complete</source>
         <translation>完成</translation>
     </message>

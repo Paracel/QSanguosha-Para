@@ -2663,8 +2663,8 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
         log_box->appendLog("#GetHp", from_general, QStringList(), QString(),
                            QString::number(ClientInstance->getPlayer(who)->getHp()), QString::number(ClientInstance->getPlayer(who)->getMaxHp()));
         switch (delta) {
-        case -1:
-        case -2: damage_effect = "injure1"; break;
+        case -1: damage_effect = "injure1"; break;
+        case -2: damage_effect = "injure2"; break;
         case -3:
         default: damage_effect = "injure3"; break;
         }
@@ -3514,8 +3514,11 @@ void RoomScene::setEmotion(const QString &who, const QString &emotion) {
 }
 
 void RoomScene::setEmotion(const QString &who, const QString &emotion, bool permanent) {
-    if (Config.value("NoEquipAnim", false).toBool() && (emotion.startsWith("weapon/") || emotion.startsWith("armor/")))
-        return;
+    if (emotion.startsWith("weapon/") || emotion.startsWith("armor/")) {
+        if (Config.value("NoEquipAnim", false).toBool()) return;
+        QString name = emotion.split("/").last();
+        Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(name, QString("equip"), -1));
+    }
     Photo *photo = name2photo[who];
     if (photo) {
         photo->setEmotion(emotion, permanent);

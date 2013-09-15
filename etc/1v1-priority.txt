@@ -190,12 +190,3 @@ nos_guanxingzhangbao	69
 nos_handang				53					
 nos_madai				68					
 nos_wangyi				77					
-neo_xiahoudun			84					
-neo_xuchu				28					
-neo_caoren				62					
-neo_guanyu				58					
-neo_zhangfei			24					
-neo_zhaoyun				70					
-neo_zhouyu				85					
-neo_zhoutai				54					
-neo_gongsunzan			48					

@@ -24,10 +24,9 @@ caopi					dengai					1.1
 caopi					caozhi					0.9
 caopi					caochong				0.9
 caopi					bgm_diaochan			0.9
+caopi					bgm_caoren				1.5
 caopi					heg_dengai				1.1
 caopi					vs_xiahoudun			1.1
-caopi					neo_xiahoudun			1.2
-caopi					neo_caoren				1.5
 caopi					nos_caoren				1.5
 caopi					nos_wangyi				2.5
 dongzhuo				zhoutai					-2.0
@@ -63,7 +62,6 @@ liubei					bgm_pangtong			-1.5
 liubei					bgm_ganning				0.8
 liubei					kongrong				1.1
 liubei					tianfeng				-0.5
-liubei					neo_zhangfei			0.6
 liubei					nos_huangyueying		1.0
 liubei					nos_zhangjiao			0.9
 liubei					nos_guanxingzhangbao	0.9
@@ -92,7 +90,6 @@ nos_liubei				bgm_pangtong			-1.5
 nos_liubei				bgm_ganning				0.8
 nos_liubei				kongrong				1.1
 nos_liubei				tianfeng				-0.5
-nos_liubei				neo_zhangfei			0.6
 nos_liubei				nos_huangyueying		1.0
 nos_liubei				nos_zhangjiao			0.9
 nos_liubei				nos_guanxingzhangbao	0.9

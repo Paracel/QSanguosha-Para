@@ -4240,6 +4240,13 @@ void Room::setEmotion(ServerPlayer *target, const QString &emotion) {
 
 void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
     while (isPaused()) {}
+
+    if (player->hasFlag("Global_PlayPhaseTerminated")) {
+        setPlayerFlag(player, "-Global_PlayPhaseTerminated");
+        card_use.card = NULL;
+        return;
+    }
+
     notifyMoveFocus(player, S_COMMAND_PLAY_CARD);
 
     _m_roomState.setCurrentCardUsePattern(QString());
@@ -4266,12 +4273,9 @@ void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
             if (!game_finished)
                 return activate(player, card_use);
         } else {
-            if (Config.EnableCheat) {
-                if (makeCheat(player)) {
-                    if (player->isAlive())
-                        return activate(player, card_use);
-                    return;
-                }
+            if (Config.EnableCheat && makeCheat(player)) {
+                if (player->isAlive()) return activate(player, card_use);
+                return;
             }
         }
 

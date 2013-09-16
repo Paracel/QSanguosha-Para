@@ -1042,7 +1042,7 @@ sgs.ai_use_priority.ZhoufuCard = 1.0
 
 sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
 	local card_str = sgs.ai_skill_use["@@shensu1"](self, "@shensu1")
-	return string.gsub(str, "ShensuCard", "QingyiCard")
+	return string.gsub(card_str, "ShensuCard", "QingyiCard")
 end
 
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)

@@ -161,17 +161,17 @@
         <translation>女性配音</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="96"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="110"/>
         <source>This is an Lua extension</source>
         <translation>该包为Lua扩展包</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="133"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="147"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/cardoverview.cpp" line="133"/>
+        <location filename="../../src/dialog/cardoverview.cpp" line="147"/>
         <source>These packages don&apos;t contain this card</source>
         <translation>此牌所在卡牌包已禁用</translation>
     </message>

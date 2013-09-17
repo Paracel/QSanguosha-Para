@@ -459,7 +459,7 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 				end
 			end
 			if offhorse_avail and not self.player:isJilei(self.player:getOffensiveHorse()) then return "$" .. self.player:getOffensiveHorse():getEffectiveId() end
-			if isRed and slashc then return "$" .. slash:getEffectiveId() end
+			if isRed and slashc then return "$" .. slashc:getEffectiveId() end
 		end
 	end
 	local use = data:toCardUse()

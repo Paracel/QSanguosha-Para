@@ -842,15 +842,18 @@ function SmartAI:canSaveSelf(player)
 	return false
 end
 
-local function getShenfenUseValueOf_HE_Cards(self, to)
+local function getShenfenUseValueOfHECards(self, to)
 	local value = 0
 	-- value of handcards
 	local value_h = 0
 	local hcard = to:getHandcardNum()
 	if to:hasSkill("lianying") then
 		hcard = hcard - 0.9
-	elseif self:hasSkills("shangshi|nosshangshi", to) then
+	elseif to:hasSkills("shangshi|nosshangshi") then
 		hcard = hcard - 0.9 * to:getLostHp()
+	else
+		local jwfy = self.room:findPlayerBySkillName("shoucheng")
+		if jwfy and self:isFriend(jwfy, to) and (not self:isWeak(jwfy) or jwfy:getHp() > 1) then hcard = hcard - 0.9 end
 	end
 	value_h = (hcard > 4) and 16 / hcard or hcard
 	if to:hasSkills("tuntian+zaoxian") then value = value * 0.95 end
@@ -890,8 +893,8 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 	if (self.role == "loyalist" or self.role == "renegade") and self.room:getLord() and self:isWeak(self.room:getLord()) and not self.player:isLord() then return end
 	local benefit = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-		if self:isFriend(player) then benefit = benefit - getShenfenUseValueOf_HE_Cards(self, player) end
-		if self:isFriend(player) then benefit = benefit + getShenfenUseValueOf_HE_Cards(self, player) end
+		if self:isFriend(player) then benefit = benefit - getShenfenUseValueOfHECards(self, player) end
+		if self:isFriend(player) then benefit = benefit + getShenfenUseValueOfHECards(self, player) end
 	end
 	local friend_save_num = self:getSaveNum(true)
 	local enemy_save_num = self:getSaveNum(false)

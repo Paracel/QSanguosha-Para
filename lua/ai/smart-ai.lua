@@ -4132,6 +4132,7 @@ function SmartAI:useSkillCard(card, use)
 	else
 		name = card:getClassName()
 	end
+	if not use.isDummy and not self.player:hasSkill(card:getSkillName()) then return end
 	if not sgs.ai_skill_use_func[name] then return end
 	sgs.ai_skill_use_func[name](card, use, self)
 	if use.to then

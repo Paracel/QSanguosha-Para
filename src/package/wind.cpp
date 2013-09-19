@@ -275,6 +275,13 @@ public:
         }
         return false;
     }
+
+    virtual int getEffectIndex(const ServerPlayer *player, const Card *) const{
+        int index = qrand() % 2 + 1;
+        if (!player->hasInnateSkill(objectName()) && player->hasSkill("baobian"))
+            index += 2;
+        return index;
+    }
 };
 
 Jushou::Jushou(): PhaseChangeSkill("jushou") {

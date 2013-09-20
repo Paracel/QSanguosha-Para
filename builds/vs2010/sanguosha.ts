@@ -1440,7 +1440,7 @@
     </message>
     <message>
         <location filename="../../src/dialog/generaloverview.ui" line="257"/>
-        <location filename="../../src/dialog/generaloverview.cpp" line="632"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="655"/>
         <source>Search...</source>
         <translation>搜索...</translation>
     </message>
@@ -1450,79 +1450,79 @@
         <translation>配音</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="512"/>
-        <location filename="../../src/dialog/generaloverview.cpp" line="520"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="535"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="543"/>
         <source>Official</source>
         <translation>官方</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="237"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="260"/>
         <source>Effects</source>
         <translation>配音</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="282"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="305"/>
         <source>Male</source>
         <translation>男性</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="282"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="305"/>
         <source>Female</source>
         <translation>女性</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="282"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="305"/>
         <source>NoGender</source>
         <translation>无性别</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="299"/>
-        <location filename="../../src/dialog/generaloverview.cpp" line="312"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="322"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="335"/>
         <source>This general is hidden</source>
         <translation>该武将被隐藏， 不会出现在选将列表中</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="328"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="351"/>
         <source>This is an Lua extension</source>
         <translation>该包为Lua扩展包</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="432"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="455"/>
         <source>Copy lines</source>
         <translation>复制台词</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="475"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="498"/>
         <source>Death</source>
         <translation>阵亡</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="484"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="507"/>
         <source>Victory</source>
         <translation>胜利</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="485"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="508"/>
         <source>Six dragons lead my chariot, I will ride the wind with the greatest speed.With all of the feudal lords under my command,to rule the world with one name!</source>
         <translation>驾六龙，乘风而行，九合诸侯，一匡天下!</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="498"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="521"/>
         <source>Stage Change</source>
         <translation>变身</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="499"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="522"/>
         <source>Trashes, the real fun is just beginning!</source>
         <translation>杂鱼们，好戏才刚刚开始！</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="628"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="651"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="628"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="651"/>
         <source>No generals are found</source>
         <translation>未找到符合要求的武将</translation>
     </message>
@@ -1626,12 +1626,22 @@
         <translation>选择武将包，若未选择任何包则所有包均符合条件</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="169"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="142"/>
+        <source>Select All</source>
+        <translation>全选</translation>
+    </message>
+    <message>
+        <location filename="../../src/dialog/generaloverview.cpp" line="144"/>
+        <source>Unselect All</source>
+        <translation>全不选</translation>
+    </message>
+    <message>
+        <location filename="../../src/dialog/generaloverview.cpp" line="182"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/generaloverview.cpp" line="170"/>
+        <location filename="../../src/dialog/generaloverview.cpp" line="183"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>

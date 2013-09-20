@@ -1780,6 +1780,10 @@ SPPackage::SPPackage()
     General *sp_yuejin = new General(this, "sp_yuejin", "wei", 4, true, true); // SP 024
     sp_yuejin->addSkill("xiaoguo");
 
+    General *zhangbao = new General(this, "zhangbao", "qun", 3); // SP 025
+    zhangbao->addSkill(new Zhoufu);
+    zhangbao->addSkill(new Yingbing);
+
     addMetaObject<WeidiCard>();
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
@@ -1795,10 +1799,6 @@ OLPackage::OLPackage()
     General *zhugeke = new General(this, "zhugeke", "wu", 3); // OL 002
     zhugeke->addSkill(new Aocai);
     zhugeke->addSkill(new Duwu);
-
-    General *zhangbao = new General(this, "zhangbao", "qun", 3);
-    zhangbao->addSkill(new Zhoufu);
-    zhangbao->addSkill(new Yingbing);
 
     General *lingcao = new General(this, "lingcao", "wu", 4);
     lingcao->addSkill(new Dujin);

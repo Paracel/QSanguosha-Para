@@ -2,6 +2,7 @@
 
 package.path = package.path .. ";./lua/lib/?.lua"
 
+dofile "lua/utilities.lua"
 dofile "lua/sgs_ex.lua"
 
 function load_translation(file)

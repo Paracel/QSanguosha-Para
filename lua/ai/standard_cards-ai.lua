@@ -346,9 +346,9 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	return true
 end
 
-function SmartAI:slashIsAvailable(player)
+function SmartAI:slashIsAvailable(player, slash)
 	player = player or self.player
-	local slash = self:getCard("Slash", player)
+	slash = slash or self:getCard("Slash", player)
 	if not slash or not slash:isKindOf("Slash") then slash = sgs.Sanguosha:cloneCard("slash") end
 	assert(slash)
 	return slash:isAvailable(player)
@@ -369,14 +369,7 @@ function SmartAI:isPriorFriendOfSlash(friend, card, source)
 end
 
 function SmartAI:useCardSlash(card, use)
-	if not use.isDummy and not self:slashIsAvailable() then return end
-	if not use.isDummy and sgs.Sanguosha:getCurrentCardUseReason() == sgs.CardUseStruct_CARD_USE_REASON_PLAY
-		and card:isVirtualCard() and card:subcardsLength() > 0
-		and self.player:getWeapon() and self.player:getWeapon():isKindOf("Crossbow")
-		and card:getSubcards():contains(self.player:getWeapon():getEffectiveId())
-		and not self.player:canSlashWithoutCrossbow() then
-		return
-	end
+	if not use.isDummy and not self:slashIsAvailable(self.player, card) then return end
 
 	local basicnum = 0
 	local cards = self.player:getCards("he")

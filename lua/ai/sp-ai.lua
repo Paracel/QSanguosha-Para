@@ -1045,6 +1045,8 @@ sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
 	return string.gsub(card_str, "ShensuCard", "QingyiCard")
 end
 
+sgs.ai_card_intention.QingyiCard = sgs.ai_card_intention.Slash
+
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
 	if lord and lord:hasLordSkill("shichou") then

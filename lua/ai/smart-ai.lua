@@ -3122,7 +3122,7 @@ function SmartAI:getTurnUse()
 	self:fillSkillCards(cards)
 	self:sortByUseValue(cards)
 
-	if self.player:hasWeapon("crossbow") then
+	if self.player:hasWeapon("crossbow") or #self.player:property("extra_slash_specific_assignee"):toString():split("+") > 0 then
 		slashAvail = 100
 	elseif self.player:hasWeapon("vscrossbow") then
 		slashAvail = slashAvail + 3
@@ -3130,8 +3130,6 @@ function SmartAI:getTurnUse()
 
 	for _, card in ipairs(cards) do
 		local dummy_use = { isDummy = true }
-		local hp = self.player:getHp()
-		if self.player:hasSkill("benghuai") and hp > 4 then hp = 4 end
 
 		local type = card:getTypeId()
 		self["use" .. sgs.ai_type_name[type + 1] .. "Card"](self, card, dummy_use)

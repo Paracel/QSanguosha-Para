@@ -4104,8 +4104,10 @@ void Room::changePlayerGeneral2(ServerPlayer *player, const QString &new_general
             player->loseSkill(skill->objectName());
     }
     setPlayerProperty(player, "general2", new_general);
-    foreach (const Skill *skill, player->getGeneral2()->getSkillList())
-        player->addSkill(skill->objectName());
+    if (player->getGeneral2()) {
+        foreach (const Skill *skill, player->getGeneral2()->getSkillList())
+            player->addSkill(skill->objectName());
+    }
     filterCards(player, player->getCards("he"), true);
 }
 

@@ -402,7 +402,6 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 end
 
 function sgs.ai_slash_prohibit.xiangle(self, from, to)
-	if self:isFriend(to, from) then return false end
 	local slash_num, anal_num, jink_num
 	if from:objectName() == self.player:objectName() then
 		slash_num = self:getCardsNum("Slash")
@@ -1118,7 +1117,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		end
 
 		for _, askill in ipairs(("noswuyan|wuyan|weimu|mingshi|qianhuan|guzheng|luoying|aocai|kanpo|liuli|beige|qingguo|mingzhe|" ..
-								"yicheng|xiangle|feiying|longdan"):split("|")) do
+								"yicheng|xiangle|renwang|feiying|longdan"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 		if str:matchOne("kofqingguo") and not self.player:getEquips():isEmpty() then return "kofqingguo" end

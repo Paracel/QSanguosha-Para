@@ -580,7 +580,7 @@ sgs.ai_skill_use_func.MingceCard = function(card, use, self)
 	for _, friend in ipairs(friends) do
 		if canMingceTo(friend) then
 			for _, enemy in ipairs(self.enemies) do
-				if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and sgs.getDefenseSlash(enemy) <= 2
+				if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and sgs.getDefenseSlash(enemy, self) <= 2
 					and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 					and enemy:objectName() ~= self.player:objectName() then
 					target = friend
@@ -615,7 +615,7 @@ sgs.ai_skill_choice.mingce = function(self, choices)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	for _, player in sgs.qlist(self.room:getAlivePlayers()) do
 		if player:hasFlag("MingceTarget") then
-			if self:isEnemy(player) and not self:slashProhibit(slash, player) and sgs.getDefenseSlash(player) <= 2
+			if self:isEnemy(player) and not self:slashProhibit(slash, player) and sgs.getDefenseSlash(player, self) <= 2
 				and self:slashIsEffective(slash, player) and sgs.isGoodTarget(player, self.enemies, self) then
 				return "use"
 			else
@@ -630,7 +630,7 @@ sgs.ai_skill_playerchosen.mingce = function(self, targets)
 	local t_targets = sgs.QList2Table(targets)
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	for _, target in ipairs(t_targets) do
-		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.getDefenseSlash(target) <= 2
+		if self:isEnemy(target) and not self:slashProhibit(slash, target) and sgs.getDefenseSlash(target, self) <= 2
 			and self:slashIsEffective(slash, target) and sgs.isGoodTarget(target, self.enemies, self)
 			and target:objectName() ~= self.player:objectName() then
 			return target

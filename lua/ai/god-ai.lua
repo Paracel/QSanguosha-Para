@@ -426,7 +426,7 @@ end
 
 sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	if self.player:getMark("@flame") == 0 then return end
-	if self.role == "lord" and (sgs.turncount <= 1 or sgs.current_mode_players["rebel"] > #self:getChainedEnemies() or self:getAllPeachNum() < 3 - self.player:getHp()) then
+	if self.role == "lord" and (sgs.turncount <= 1 or sgs.current_mode_players["rebel"] > #self:getChainedEnemies() or self:getAllPeachNum() < 4 - self.player:getHp()) then
 		return
 	end
 	if self.role == "renegade" and self.player:aliveCount() > 2 and self:getCardsNum("Peach") < 3 - self.player:getHp() then return end
@@ -516,7 +516,8 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	end
 	if targets:length() < 3 then
 		for _, enemy in ipairs(self.enemies) do
-			if not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
+			if not targets:contains(enemy)
+				and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
 				and enemy:isChained() and self:isGoodChainTarget(enemy) then
 				targets:append(enemy)
 				if targets:length() >= 3 then break end
@@ -525,7 +526,8 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	end	
 	if targets:length() < 3 then
 		for _, enemy in ipairs(self.enemies) do
-			if not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
+			if not targets:contains(enemy)
+				and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
 				and not enemy:isChained() and (enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then
 				targets:append(enemy)
 				if targets:length() >= 3 then break end
@@ -534,7 +536,8 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	end
 	if targets:length() < 3 then
 		for _, enemy in ipairs(self.enemies) do
-			if not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
+			if not targets:contains(enemy)
+				and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
 				and not enemy:isChained() then
 				targets:append(enemy)
 				if targets:length() >= 3 then break end

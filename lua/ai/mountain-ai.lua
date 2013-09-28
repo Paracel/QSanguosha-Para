@@ -541,9 +541,10 @@ tiaoxin_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.TiaoxinCard = function(card, use, self)
+	local distance = use.defHorse and 1 or 0
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:distanceTo(self.player) <= enemy:getAttackRange()
+		if enemy:distanceTo(self.player, distance) <= enemy:getAttackRange()
 			and ((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1)
 					or getCardsNum("Slash", enemy) == 0
 					or self:getCardsNum("Jink") > 0

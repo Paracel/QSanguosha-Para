@@ -1614,6 +1614,18 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			struct.from:setFlags("AI_SlashInPlayPhase")
 		end
 
+		sgs.do_not_save_targets = {}
+		if from and sgs.ai_role[from:objectName()] == "rebel" and not self:isFriend(from, from:getNextAlive())
+			and (card:isKindOf("SavageAssault") or card:isKindOf("ArcheryAttack") or card:isKindOf("Duel") or card:isKindOf("Slash")) then
+			for _, target in ipairs(to) do
+				if self:isFriend(target, from) and sgs.ai_role[target:objectName()] == "rebel" and target:getHp() == 1 and target:isKongcheng()
+				and sgs.isGoodTarget(target, nil, self) and getCardsNum("Analeptic", target) + getCardsNum("Peach", target) == 0
+				and self:getEnemyNumBySeat(from, target) > 0 then
+					table.insert(sgs.do_not_save_targets, target)
+				end
+			end
+		end
+
 		local callback = sgs.ai_card_intention[card:getClassName()]
 		if #to > 0 and callback then
 			if type(callback) == "function" then
@@ -2384,8 +2396,11 @@ function sgs.ai_skill_cardask.nullfilter(self, data, pattern, target)
 	end
 
 	if self.player:isDead() then return "." end
+	if target and self:needDeath() then return "." end
 	if target and target:hasSkill("jueqing") and not self:needToLoseHp() then return end
 	if effect and target and target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1 then return end
+	if target and sgs.ai_role[target:objectName()] == "rebel"
+		and self.role == "rebel" and sgs.do_not_save_targets and table.contains(sgs.do_not_save_targets, player) then return "." end
 	if not self:damageIsEffective(nil, damage_nature, target) then return "." end
 	if target and target:hasSkill("guagu") and self.player:isLord() then return "." end
 

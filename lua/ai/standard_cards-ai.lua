@@ -796,15 +796,16 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 		if not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then
 			if target:hasWeapon("axe") then
 				if self:hasSkills(sgs.lose_equip_skill, target) and target:getEquips():length() > 1 and target:getCards("he"):length() > 2 then return "." end
-				if target:getHandcardNum() - target:getHp() > 2 then return "." end
+				if target:getHandcardNum() - target:getHp() > 2 and not self:isWeak() and self:getOverflow() <= 0 then return "." end
 			elseif target:hasWeapon("blade") then
 				if (slash:isKindOf("FireSlash")
 					and not target:hasSkill("jueqing")
 					and (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0))
 					or self:hasHeavySlashDamage(target, slash)
 					or (self.player:getHp() == 1 and #self.friends_noself == 0) then
-				elseif (self:getCardsNum("Jink") <= getCardsNum("Slash", target) and self.player:getHp() > 1)
-					or self.player:hasSkills("jijiu|qingnang") or self:canUseJieyuanDecrease(target) then
+				elseif ((self:getCardsNum("Jink") <= getCardsNum("Slash", target) or self.player:hasSkill("qingnang")) and self.player:getHp() > 1)
+					or (self.player:hasSkill("jijiu") and self:getSuitNum("red", true) > 0)
+					or self:canUseJieyuanDecrease(target) then
 					return "."
 				end
 			end
@@ -1670,6 +1671,7 @@ sgs.ai_skill_cardask["duel-slash"] = function(self, data, pattern, target)
 	if self.player:hasFlag("AIGlobal_NeedToWake") then return "." end
 	if self.player:hasSkill("wuyan") and not target:hasSkill("jueqing") then return "." end
 	if target:hasSkill("wuyan") and not self.player:hasSkill("jueqing") then return "." end
+	if self.player:hasSkill("wuhun") and self:isEnemy(target) and target:isLord() and #self.friends_noself > 0 then return "." end
 	if self:cantbeHurt(target) then return "." end
 	if self:getDamagedEffects(self.player, target) or self:needToLoseHp(self.player, target) then return "." end
 	if self:isFriend(target) and (target:hasSkill("nosrende") or (target:hasSkill("rende") and not target:hasUsed("RendeCard"))) and self.player:hasSkill("jieming") then return "." end

@@ -125,6 +125,7 @@ function SmartAI:doNotSave(player)
 		or (player:hasSkill("fuli") and player:getMark("@laoji") > 0 and player:getCards("e"):length() < 2) then
 		return true
 	end
+	if sgs.do_not_save_targets and table.contains(sgs.do_not_save_targets, player) then return true end
 	return false
 end
 

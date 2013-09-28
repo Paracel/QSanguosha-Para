@@ -4028,7 +4028,7 @@ end
 
 function SmartAI:getRestCardsNum(class_name, player)
 	player = player or self.player
-	local ban = sgs.GetConfig("BanPackages", "")
+	local ban = table.concat(sgs.Sanguosha:getBanPackages(), "|")
 	local discard_pile = self.room:getDiscardPile()
 	local totalnum, discardnum, knownnum = 0, 0, 0
 	local card

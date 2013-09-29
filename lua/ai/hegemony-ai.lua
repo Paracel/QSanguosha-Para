@@ -300,6 +300,7 @@ sgs.ai_skill_askforyiji.lirang = function(self, card_ids)
 		end
 	end
 
+	self:updatePlayers()
 	local available_friends = {}
 	for _, friend in ipairs(self.friends_noself) do
 		local insert = true

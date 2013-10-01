@@ -1283,6 +1283,7 @@ class Fenyong: public TriggerSkill {
 public:
     Fenyong(): TriggerSkill("fenyong") {
         events << Damaged << DamageInflicted;
+        frequency = Frequent;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{

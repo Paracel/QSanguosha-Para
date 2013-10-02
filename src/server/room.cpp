@@ -217,7 +217,6 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
                 QString cd = saver->property("currentdying").toString();
                 setPlayerProperty(saver, "currentdying", player->objectName());
                 thread->trigger(AskForPeaches, this, saver, dying_data);
-                thread->delay();
                 setPlayerProperty(saver, "currentdying", cd);
             }
             thread->trigger(AskForPeachesDone, this, player, dying_data);

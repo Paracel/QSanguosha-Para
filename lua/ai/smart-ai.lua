@@ -1574,7 +1574,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		local toname = {}
 		for _, ato in ipairs(to) do
 			table.insert(toname, ato:getGeneralName())
-			speakTrigger(card, from, ato)
 		end
 		if from then str = str .. from:getGeneralName() .. "->" .. table.concat(toname, "+") end
 		if source then str = str .. "#" .. source:getGeneralName() end
@@ -5170,7 +5169,6 @@ dofile "lua/ai/debug-ai.lua"
 dofile "lua/ai/standard_cards-ai.lua"
 dofile "lua/ai/maneuvering-ai.lua"
 dofile "lua/ai/standard-ai.lua"
-dofile "lua/ai/chat-ai.lua"
 dofile "lua/ai/basara-ai.lua"
 dofile "lua/ai/hulaoguan-ai.lua"
 

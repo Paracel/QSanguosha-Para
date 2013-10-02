@@ -806,8 +806,10 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
         drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
     }
     // ================================
-    if (!slash || !drwushuang_effect)
+    if (!slash || !drwushuang_effect) {
         room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
+        room->getThread()->delay();
+    }
 }
 
 ArcheryAttack::ArcheryAttack(Card::Suit suit, int number)
@@ -841,8 +843,10 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
         drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
     }
     // ================================
-    if (!jink || !drwushuang_effect)
+    if (!jink || !drwushuang_effect) {
         room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
+        room->getThread()->delay();
+    }
 }
 
 Collateral::Collateral(Card::Suit suit, int number)

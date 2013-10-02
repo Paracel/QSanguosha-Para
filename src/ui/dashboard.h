@@ -190,6 +190,7 @@ protected slots:
     
 private slots:
     void onCardItemClicked();
+    void onCardItemDoubleClicked();
     void onCardItemThrown();
     void onCardItemHover();
     void onCardItemLeaveHover();

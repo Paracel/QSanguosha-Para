@@ -2240,27 +2240,9 @@ ServerPlayer *Room::getOwner() const{
     return NULL;
 }
 
-void Room::toggleReadyCommand(ServerPlayer *player, const QString &) {
-    if (game_started)
-        return;
-
-    setPlayerProperty(player, "ready", !player->isReady());
-
-    if (player->isReady() && isFull()) {
-        bool allReady = true;
-        foreach (ServerPlayer *player, m_players) {
-            if (!player->isReady()) {
-                allReady = false;
-                break;
-            }
-        }
-
-        if (allReady) {
-            foreach (ServerPlayer *player, m_players)
-                setPlayerProperty(player, "ready", false);
-            start();
-        }
-    }
+void Room::toggleReadyCommand(ServerPlayer *, const QString &) {
+    if (!game_started && isFull())
+        start();
 }
 
 void Room::signup(ServerPlayer *player, const QString &screen_name, const QString &avatar, bool is_robot) {

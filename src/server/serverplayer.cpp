@@ -877,9 +877,6 @@ void ServerPlayer::introduceTo(ServerPlayer *player) {
         player->invoke("addPlayer", introduce_str);
     else
         room->broadcastInvoke("addPlayer", introduce_str, this);
-
-    if (isReady())
-        room->broadcastProperty(this, "ready");
 }
 
 void ServerPlayer::marshal(ServerPlayer *player) const{

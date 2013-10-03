@@ -35,6 +35,7 @@ class Player: public QObject {
     Q_PROPERTY(QString flags READ getFlags WRITE setFlags)
     Q_PROPERTY(bool chained READ isChained WRITE setChained)
     Q_PROPERTY(bool owner READ isOwner WRITE setOwner)
+    Q_PROPERTY(bool role_shown READ hasShownRole WRITE setShownRole)
 
     Q_PROPERTY(bool kongcheng READ isKongcheng)
     Q_PROPERTY(bool nude READ isNude)
@@ -71,6 +72,9 @@ public:
 
     bool isOwner() const;
     void setOwner(bool owner);
+
+    bool hasShownRole() const;
+    void setShownRole(bool shown);
 
     int getMaxCards() const;
 
@@ -141,6 +145,7 @@ public:
     bool hasEquip() const;
 
     QList<const Card *> getJudgingArea() const;
+    QList<int> getJudgingAreaID() const;
     void addDelayedTrick(const Card *trick);
     void removeDelayedTrick(const Card *trick);
     bool containsTrick(const QString &trick_name) const;
@@ -184,6 +189,8 @@ public:
     QList<int> getPile(const QString &pile_name) const;
     QStringList getPileNames() const;
     QString getPileName(int card_id) const;
+    bool pileOpen(const QString &pile_name, const QString &player) const;
+    void setPileOpen(const QString &pile_name, const QString &player);
 
     void addHistory(const QString &name, int times = 1);
     void clearHistory();
@@ -226,6 +233,7 @@ public:
 protected:
     QMap<QString, int> marks;
     QMap<QString, QList<int> > piles;
+    QMap<QString, QStringList> pile_open;
     QSet<QString> acquired_skills;
     QStringList skills;
     QSet<QString> flags;
@@ -239,6 +247,7 @@ private:
     int hp, max_hp;
     QString kingdom;
     QString role;
+    bool role_shown;
     QString state;
     int seat;
     bool alive;

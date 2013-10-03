@@ -96,7 +96,7 @@ int Room::alivePlayerCount() const{
 bool Room::notifyUpdateCard(ServerPlayer *player, int cardId, const Card *newCard) {
     Json::Value val(Json::arrayValue);
     Q_ASSERT(newCard);
-    QString className = Sanguosha->getWrappedCard(newCard->getId())->getClassName();
+    QString className = newCard->getClassName();
     val[0] = cardId;
     val[1] = (int)newCard->getSuit();
     val[2] = newCard->getNumber();
@@ -2020,6 +2020,7 @@ void Room::reportDisconnection() {
 
         if (!someone_is_online) {
             game_finished = true;
+            emit game_over(QString());
             return;
         }
     }
@@ -3210,19 +3211,18 @@ ServerPlayer *Room::getFront(ServerPlayer *a, ServerPlayer *b) const{
 }
 
 void Room::reconnect(ServerPlayer *player, ClientSocket *socket) {
-    /*
     player->setSocket(socket);
     player->setState("online");
 
     marshal(player);
 
-    broadcastProperty(player, "state"); */
+    broadcastProperty(player, "state");
 }
 
 void Room::marshal(ServerPlayer *player) {
     notifyProperty(player, player, "objectName");
     notifyProperty(player, player, "role");
-    player->unicast(".flags marshalling");
+    notifyProperty(player, player, "flags", "marshalling");
 
     foreach (ServerPlayer *p, m_players) {
         if (p != player)
@@ -3243,13 +3243,16 @@ void Room::marshal(ServerPlayer *player) {
             notifyProperty(player, p, "general2");
     }
 
-    player->invoke("startGame");
+    doNotify(player, S_COMMAND_GAME_START, Json::Value::null);
+
+    QList<int> drawPile = Sanguosha->getRandomCards();
+    doNotify(player, S_COMMAND_AVAILABLE_CARDS, toJsonArray(drawPile));
 
     foreach (ServerPlayer *p, m_players)
         p->marshal(player);
 
-    player->unicast(".flags -marshalling");
-    player->invoke("setPileNumber", QString::number(m_drawPile->length()));
+    notifyProperty(player, player, "flags", "-marshalling");
+    doNotify(player, S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 }
 
 void Room::startGame() {
@@ -3336,6 +3339,10 @@ bool Room::broadcastProperty(ServerPlayer *player, const char *property_name, co
     if (player == NULL) return false;
     QString real_value = value;
     if (real_value.isNull()) real_value = player->property(property_name).toString();
+
+    if (property_name == "role")
+        player->setShownRole(true);
+
     Json::Value arg(Json::arrayValue);
     arg[0] = toJsonString(player->objectName());
     arg[1] = property_name;
@@ -3776,7 +3783,7 @@ void Room::_moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible,
     }
 
     for (int i = 0; i < cards_moves.size(); i++) {
-		CardsMoveStruct &cards_move = cards_moves[i];
+        CardsMoveStruct &cards_move = cards_moves[i];
         for (int j = 0; j < cards_move.card_ids.size(); j++) {
             int card_id = cards_move.card_ids[j];
             const Card *card = Sanguosha->getCard(card_id);

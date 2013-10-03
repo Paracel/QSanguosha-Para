@@ -87,6 +87,9 @@ public:
     bool isFemale() const;
     bool isNeuter() const;
 
+    bool hasShownRole() const;
+    void setShownRole(bool shown);
+
     int getMaxCards() const;
 
     QString getKingdom() const;
@@ -154,6 +157,7 @@ public:
     bool hasEquip() const;
 
     QList<const Card *> getJudgingArea() const;
+    QList<int> getJudgingAreaID() const;
     void addDelayedTrick(const Card *trick);
     void removeDelayedTrick(const Card *trick);
     bool containsTrick(const char *trick_name) const;
@@ -197,6 +201,8 @@ public:
     QList<int> getPile(const char *pile_name);
     QStringList getPileNames() const;
     QString getPileName(int card_id) const;
+    bool pileOpen(const char *pile_name, const char *player) const;
+    void setPileOpen(const char *pile_name, const char *player);
 
     void addHistory(const char *name, int times = 1);
     void clearHistory();
@@ -328,8 +334,8 @@ public:
 
     void addToPile(const char *pile_name, const Card *card, bool open = true);
     void addToPile(const char *pile_name, int card_id, bool open = true);
-    void addToPile(const QString &pile_name, QList<int> card_ids, bool open = true);
-    void addToPile(const QString &pile_name, QList<int> card_ids, bool open, CardMoveReason reason);
+    void addToPile(const char *pile_name, QList<int> card_ids, bool open = true);
+    void addToPile(const char *pile_name, QList<int> card_ids, bool open, CardMoveReason reason);
     void exchangeFreelyFromPrivatePile(const char *skill_name, const char *pile_name, int upperlimit = 1000, bool include_equip = false);
     void gainAnExtraTurn();
 };

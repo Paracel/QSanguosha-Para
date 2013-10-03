@@ -1144,12 +1144,12 @@ Server::Server(QObject *parent)
 
     //synchronize ServerInfo on the server side to avoid ambiguous usage of Config and ServerInfo
     ServerInfo.parse(Sanguosha->getSetupString());
+
+    current = NULL;
     createNewRoom();
 
     connect(server, SIGNAL(new_connection(ClientSocket *)), this, SLOT(processNewConnection(ClientSocket *)));
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
-
-    current = NULL;
 }
 
 void Server::broadcast(const QString &msg) {
@@ -1222,14 +1222,14 @@ void Server::processRequest(const char *request) {
     if (command == "signupr") {
         foreach (QString objname, name2objname.values(screen_name)) {
             ServerPlayer *player = players.value(objname);
-            if (player && player->getState() == "offline") {
+            if (player && player->getState() == "offline" && !player->getRoom()->isFinished()) {
                 player->getRoom()->reconnect(player, socket);
                 return;
             }
         }
     }
 
-    if (current == NULL || current->isFull())
+    if (current == NULL || current->isFull() || current->isFinished())
         createNewRoom();
 
     ServerPlayer *player = current->addSocket(socket);
@@ -1256,10 +1256,3 @@ void Server::gameOver() {
         players.remove(player->objectName());
     }
 }
-
-void Server::gamesOver() {
-    name2objname.clear();
-    players.clear();
-    rooms.clear();
-}
-

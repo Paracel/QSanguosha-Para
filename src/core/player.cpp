@@ -10,7 +10,8 @@ Player::Player(QObject *parent)
       m_gender(General::Sexless), hp(-1), max_hp(-1), state("online"), seat(0), alive(true),
       phase(NotActive),
       weapon(NULL), armor(NULL), defensive_horse(NULL), offensive_horse(NULL),
-      face_up(true), chained(false)
+      face_up(true), chained(false),
+      role_shown(false), pile_open(QMap<QString, QStringList>())
 {
 }
 
@@ -31,6 +32,14 @@ void Player::setOwner(bool owner) {
         this->owner = owner;
         emit owner_changed(owner);
     }
+}
+
+bool Player::hasShownRole() const {
+    return role_shown;
+}
+
+void Player::setShownRole(bool shown) {
+    this->role_shown = shown;
 }
 
 void Player::setHp(int hp) {
@@ -543,6 +552,10 @@ QList<const Card *> Player::getJudgingArea() const{
     return cards;
 }
 
+QList<int> Player::getJudgingAreaID() const{
+    return judging_area;
+}
+
 Player::Phase Player::getPhase() const{
     return phase;
 }
@@ -734,6 +747,15 @@ QString Player::getPileName(int card_id) const{
     }
 
     return QString();
+}
+
+bool Player::pileOpen(const QString &pile_name, const QString &player) const {
+    return pile_open[pile_name].contains(player);
+}
+
+void Player::setPileOpen(const QString &pile_name, const QString &player) {
+    if (pile_open[pile_name].contains(player)) return;
+    pile_open[pile_name].append(player);
 }
 
 void Player::addHistory(const QString &name, int times) {

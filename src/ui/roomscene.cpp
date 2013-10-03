@@ -663,30 +663,36 @@ void RoomScene::adjustItems() {
 
     // switch between default & compact skin depending on scene size
     QSanSkinFactory &factory = QSanSkinFactory::getInstance();
+
+    bool use_full = Config.value("UseFullSkin", false).toBool();
+    QString suf = use_full ? "full" : QString();
+    factory.S_DEFAULT_SKIN_NAME = suf + "default";
+    factory.S_COMPACT_SKIN_NAME = suf + "compact";
+
     QString skinName = factory.getCurrentSkinName();
 
     QSize minSize, maxSize;
     _getSceneSizes(minSize, maxSize);
-    if (skinName == factory.S_DEFAULT_SKIN_NAME) {
-        if (displayRegion.width() < minSize.width() || displayRegion.height() < minSize.height()) {
-            QThread *thread = QCoreApplication::instance()->thread();
-            thread->blockSignals(true);
-            factory.switchSkin(factory.S_COMPACT_SKIN_NAME);
-            thread->blockSignals(false);
-            foreach (Photo *photo, photos)
-                photo->repaintAll();
-            dashboard->repaintAll();
-        }
+    QString to_switch;
+    if (skinName.contains("default")) {
+        if (displayRegion.width() < minSize.width() || displayRegion.height() < minSize.height())
+            to_switch = factory.S_COMPACT_SKIN_NAME;
+        else if (skinName != factory.S_DEFAULT_SKIN_NAME)
+            to_switch = factory.S_DEFAULT_SKIN_NAME;
     } else if (skinName == factory.S_COMPACT_SKIN_NAME) {
-        if (displayRegion.width() > maxSize.width() && displayRegion.height() > maxSize.height()) {
-            QThread *thread = QCoreApplication::instance()->thread();
-            thread->blockSignals(true);
-            factory.switchSkin(factory.S_DEFAULT_SKIN_NAME);
-            thread->blockSignals(false);
-            foreach (Photo *photo, photos)
-                photo->repaintAll();
-            dashboard->repaintAll();
-        }
+        if (displayRegion.width() > maxSize.width() && displayRegion.height() > maxSize.height())
+            to_switch = factory.S_DEFAULT_SKIN_NAME;
+        else if (skinName != factory.S_COMPACT_SKIN_NAME)
+            to_switch = factory.S_COMPACT_SKIN_NAME;
+    }
+    if (!to_switch.isEmpty()) {
+        QThread *thread = QCoreApplication::instance()->thread();
+        thread->blockSignals(true);
+        factory.switchSkin(to_switch);
+        thread->blockSignals(false);
+        foreach (Photo *photo, photos)
+            photo->repaintAll();
+        dashboard->repaintAll();
     }
 
     // update the sizes since we have reloaded the skin.
@@ -743,6 +749,7 @@ void RoomScene::adjustItems() {
 
     updateTable();
     updateRolesBox();
+    setChatBoxVisible(chat_box_widget->isVisible());
 }
 
 void RoomScene::_dispersePhotos(QList<Photo *> &photos, QRectF fillRegion,
@@ -1239,9 +1246,7 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
     case Qt::Key_F3: dashboard->beginSorting(); break;
     case Qt::Key_F4: dashboard->reverseSelection(); break;
     case Qt::Key_F5: {
-            foreach (Photo *photo, photos)
-                photo->repaintAll();
-            dashboard->repaintAll();
+            adjustItems();
             break;
         }
     case Qt::Key_F6: {
@@ -4263,7 +4268,7 @@ void RoomScene::appendChatBox(QString txt) {
 }
 
 void RoomScene::setChatBoxVisible(bool show) {
-    if (!show && chat_box_widget->isVisible()) {
+    if (!show) {
         chat_box_widget->hide();
         chat_edit->hide();
         chat_widget->hide();
@@ -4271,10 +4276,10 @@ void RoomScene::setChatBoxVisible(bool show) {
                         _m_infoPlane.height() * (_m_roomLayout->m_logBoxHeightPercentage
                                                  + _m_roomLayout->m_chatBoxHeightPercentage)
                         + _m_roomLayout->m_chatTextBoxHeight);
-    } else if (show && !chat_box_widget->isVisible()) {
+    } else {
         chat_box_widget->show();
         chat_edit->show();
-        chat_widget->hide();
+        chat_widget->show();
         log_box->resize(_m_infoPlane.width(),
                         _m_infoPlane.height() * _m_roomLayout->m_logBoxHeightPercentage);
     }

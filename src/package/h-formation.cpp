@@ -314,7 +314,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (move.from && move.from->getPhase() == Player::NotActive
+        if (move.from && move.from->isAlive() && move.from->getPhase() == Player::NotActive
             && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
             if (room->askForSkillInvoke(player, objectName(), data)) {
                 if (move.from == player || room->askForChoice(player, objectName(), "accept+reject") == "accept") {

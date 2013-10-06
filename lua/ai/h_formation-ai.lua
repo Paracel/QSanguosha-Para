@@ -328,6 +328,8 @@ end
 
 sgs.ai_skill_choice.qianhuan = function(self, choices, data)
 	local use = data:toCardUse()
+	if use.card:isKindOf("Peach") or use.card:isKindOf("Analeptic") or use.card:isKindOf("ExNihilo") then return "reject" end
+	if use.from and use.from:objectName() == self.player:objectName() then return "reject" end
 	if use.from and use.card:isKindOf("Slash") and self:isPriorFriendOfSlash(self.player, use.card, use.from) then return "reject" end
 	return "accept"
 end

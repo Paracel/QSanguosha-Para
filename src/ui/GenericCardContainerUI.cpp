@@ -973,7 +973,8 @@ void PlayerCardContainer::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void PlayerCardContainer::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-    RoomSceneInstance->doOkButton();
+    if (Config.EnableDoubleClick)
+        RoomSceneInstance->doOkButton();
 }
 
 QVariant PlayerCardContainer::itemChange(GraphicsItemChange change, const QVariant &value) {

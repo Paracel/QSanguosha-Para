@@ -241,7 +241,7 @@ function sgs.ai_cardsview.jiuzhu(self, class_name, player)
 		local must_save = false
 		if self.room:getMode() == "06_3v3" then
 			if dying:getRole() == "renegade" or dying:getRole() == "lord" then must_save = true end
-		elseif dying:isLord() and (player:getRole() == "loyalist" or (player:getRole() == "renegade" and room:alivePlayerCount() > 2)) then
+		elseif dying:isLord() and (player:getRole() == "loyalist" or (player:getRole() == "renegade" and self.room:alivePlayerCount() > 2)) then
 			must_save = true
 		end
 		if not must_save and self:isWeak(player) and not player:hasArmorEffect("silver_lion") then return nil end

@@ -952,6 +952,98 @@ public:
     }
 };
 
+class NiluanViewAsSkill: public OneCardViewAsSkill {
+public:
+    NiluanViewAsSkill(): OneCardViewAsSkill("niluan") {
+        filter_pattern = ".|black";
+        response_pattern = "@@niluan";
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        Slash *slash = new Slash(Card::SuitToBeDecided, -1);
+        slash->addSubcard(originalCard);
+        slash->setSkillName("niluan");
+        return slash;
+    }
+};
+
+class Niluan: public TriggerSkill {
+public:
+    Niluan(): TriggerSkill("niluan") {
+        events << EventPhaseStart;
+        view_as_skill = new NiluanViewAsSkill;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (player->getPhase() == Player::Finish) {
+            ServerPlayer *hansui = room->findPlayerBySkillName(objectName());
+            if (hansui && hansui != player && hansui->canSlash(player, false)
+                && (player->getHp() > hansui->getHp() || hansui->hasFlag("NiluanSlashTarget"))) {
+                if (hansui->isKongcheng()) {
+                    bool has_black = false;
+                    for (int i = 0; i < 4; i++) {
+                        const EquipCard *equip = hansui->getEquip(i);
+                        if (equip && equip->isBlack()) {
+                            has_black = true;
+                            break;
+                        }
+                    }
+                    if (!has_black) return false;
+                }
+
+                room->setPlayerFlag(hansui, "slashTargetFix");
+                room->setPlayerFlag(hansui, "slashNoDistanceLimit");
+                room->setPlayerFlag(hansui, "slashTargetFixToOne");
+                room->setPlayerFlag(player, "SlashAssignee");
+
+                const Card *slash = room->askForUseCard(hansui, "@@niluan", "@niluan-slash");
+                if (slash == NULL) {
+                    room->setPlayerFlag(hansui, "-slashTargetFix");
+                    room->setPlayerFlag(hansui, "-slashNoDistanceLimit");
+                    room->setPlayerFlag(hansui, "-slashTargetFixToOne");
+                    room->setPlayerFlag(player, "-SlashAssignee");
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class NiluanRecord: public TriggerSkill {
+public:
+    NiluanRecord(): TriggerSkill("#niluan-record") {
+        events << TargetConfirmed << EventPhaseStart;
+    }
+
+    virtual int getPriority() const{
+        return 4;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.from && use.from == player && use.card->isKindOf("Slash")) {
+                foreach (ServerPlayer *to, use.to) {
+                    if (!to->hasFlag("NiluanSlashTarget"))
+                        to->setFlags("NiluanSlashTarget");
+                }
+            }
+        } else if (player->getPhase() == Player::RoundStart) {
+            foreach (ServerPlayer *p, room->getAlivePlayers())
+                p->setFlags("-NiluanSlashTarget");
+        }
+        return false;
+    }
+};
+
 Drowning::Drowning(Suit suit, int number)
     : SingleTargetTrick(suit, number)
 {
@@ -1089,6 +1181,12 @@ Special1v1ExtPackage::Special1v1ExtPackage()
     General *niujin = new General(this, "niujin", "wei"); // WEI 025
     niujin->addSkill(new Cuorui);
     niujin->addSkill(new Liewei);
+
+    General *hansui = new General(this, "hansui", "qun"); // QUN 027
+    hansui->addSkill(new Niluan);
+    hansui->addSkill(new NiluanRecord);
+    hansui->addSkill("xiaoxi");
+    related_skills.insertMulti("niluan", "#niluan-record");
 }
 
 ADD_PACKAGE(Special1v1Ext)

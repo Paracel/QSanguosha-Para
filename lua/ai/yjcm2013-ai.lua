@@ -792,7 +792,7 @@ sgs.ai_skill_invoke.danshou = function(self, data)
 		return true
 	elseif phase == sgs.Player_NotActive then
 		local current = self.room:getCurrent()
-		if not current or not current:isAlive() or current:getPhase() == sgs.Player_NotActive() then return true end
+		if not current or not current:isAlive() or current:getPhase() == sgs.Player_NotActive then return true end
 		if self:isFriend(current) then
 			return self:getOverflow(current) >= 2
 		else

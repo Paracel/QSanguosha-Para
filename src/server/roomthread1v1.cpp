@@ -44,7 +44,7 @@ void RoomThread1v1::run() {
             if (rule == "OL") {
                 candidates << "kof_liubei" << "kof_weiyan" << "kof_lvmeng" << "kof_daqiao"
                            << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "kof_pangde"
-                           << "niujin" /*<< "hansui" */;
+                           << "niujin" << "hansui";
             }
         }
         qShuffle(candidates);

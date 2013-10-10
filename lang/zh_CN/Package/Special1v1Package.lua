@@ -131,7 +131,7 @@ return {
 	["kof_pangde"] = "庞德1v1",
 	["&kof_pangde"] = "庞德",
 
-	["1v1_ext"] = "1v1扩展",
+	["Special1v1Ext"] = "1v1扩展",
 
 	["#niujin"] = "独进的兵胆",
 	["niujin"] = "牛金",

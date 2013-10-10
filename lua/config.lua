@@ -38,6 +38,7 @@ config = {
 		"Special3v3",
 		"Special1v1",
 		"Special1v1OL",
+		"Special1v1Ext",
 		"SP",
 		"OL",
 		"TaiwanSP",

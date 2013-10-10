@@ -885,8 +885,72 @@ public:
     }
 };
 
-/*class Cuorui: public TriggerSkill {
-};*/
+class Cuorui: public TriggerSkill {
+public:
+    Cuorui(): TriggerSkill("cuorui") {
+        events << DrawInitialCards << EventPhaseChanging;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == DrawInitialCards) {
+            int n = 3;
+            if (room->getMode() == "02_1v1") {
+                n = player->tag["1v1Arrange"].toStringList().length();
+                if (Config.value("1v1/Rule", "Classical").toString() != "OL")
+                    n += 3;
+            }
+
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = player;
+            log.arg = "cuorui";
+            room->sendLog(log);
+            room->broadcastSkillInvoke("cuorui");
+            room->notifySkillInvoked(player, "cuorui");
+
+            data = data.toInt() + n;
+        } else if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::Judge && player->getMark("CuoruiSkipJudge") == 0) {
+                LogMessage log;
+                log.type = "#TriggerSkill";
+                log.from = player;
+                log.arg = "cuorui";
+                room->sendLog(log);
+                room->broadcastSkillInvoke("cuorui");
+                room->notifySkillInvoked(player, "cuorui");
+
+                player->skip(Player::Judge);
+                player->addMark("CuoruiSkipJudge");
+            }
+        }
+        return false;
+    }
+};
+
+class Liewei: public TriggerSkill {
+public:
+    Liewei(): TriggerSkill("liewei") {
+        events << BuryVictim;
+    }
+
+    virtual int getPriority() const{
+        return -2;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        DeathStruct death = data.value<DeathStruct>();
+        if (death.damage && death.damage->from && TriggerSkill::triggerable(death.damage->from)
+            && room->askForSkillInvoke(death.damage->from, objectName(), data))
+            death.damage->from->drawCards(3, objectName());
+        return false;
+    }
+};
 
 Drowning::Drowning(Suit suit, int number)
     : SingleTargetTrick(suit, number)
@@ -1018,6 +1082,16 @@ Special1v1OLPackage::Special1v1OLPackage()
 }
 
 ADD_PACKAGE(Special1v1OL)
+
+Special1v1ExtPackage::Special1v1ExtPackage()
+    : Package("Special1v1Ext")
+{
+    General *niujin = new General(this, "niujin", "wei"); // WEI 025
+    niujin->addSkill(new Cuorui);
+    niujin->addSkill(new Liewei);
+}
+
+ADD_PACKAGE(Special1v1Ext)
 
 #include "maneuvering.h"
 New1v1CardPackage::New1v1CardPackage()

@@ -1000,7 +1000,7 @@ public:
                 room->setPlayerFlag(hansui, "slashTargetFixToOne");
                 room->setPlayerFlag(player, "SlashAssignee");
 
-                const Card *slash = room->askForUseCard(hansui, "@@niluan", "@niluan-slash");
+                const Card *slash = room->askForUseCard(hansui, "@@niluan", "@niluan-slash:" + player->objectName());
                 if (slash == NULL) {
                     room->setPlayerFlag(hansui, "-slashTargetFix");
                     room->setPlayerFlag(hansui, "-slashNoDistanceLimit");

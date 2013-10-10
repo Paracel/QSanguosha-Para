@@ -842,7 +842,8 @@ public:
                 victim->obtainCard(dummy);
             }
         } else {
-            if (room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
+            if (victim->getCardCount(true) >= no_basic
+                && room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
                 if (dummy->subcardsLength() > 0) {
                     if (liubei->isAlive())

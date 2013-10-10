@@ -132,16 +132,22 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 }
             }
             room->setTag("FirstRound", true);
-            if (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical") {
-                QList<int> n_list;
-                foreach (ServerPlayer *player, room->getPlayers())
-                    n_list << player->getMaxHp();
-                room->drawCards(room->getPlayers(), n_list, QString());
-            } else {
-                room->drawCards(room->getPlayers(), 4, QString());
+            bool kof_mode = room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical";
+            QList<int> n_list;
+            foreach (ServerPlayer *p, room->getPlayers()) {
+                int n = kof_mode ? p->getMaxHp() : 4;
+                QVariant data = n;
+                room->getThread()->trigger(DrawInitialCards, room, p, data);
+                n_list << data.toInt();
             }
+            room->drawCards(room->getPlayers(), n_list, QString());
             if (Config.EnableLuckCard)
                 room->askForLuckCard();
+            int i = 0;
+            foreach (ServerPlayer *p, room->getPlayers()) {
+                room->getThread()->trigger(AfterDrawInitialCards, room, p, QVariant::fromValue(n_list.at(i)));
+                i++;
+            }
         }
         return false;
     }
@@ -632,6 +638,9 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
 
     room->setTag("FirstRound", true); //For Manjuan
     int draw_num = classical ? 4 : player->getMaxHp();
+    QVariant data = draw_num;
+    room->getThread()->trigger(DrawInitialCards, room, player, data);
+    draw_num = data.toInt();
     try {
         player->drawCards(draw_num);
         room->setTag("FirstRound", false);
@@ -641,6 +650,7 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
             room->setTag("FirstRound", false);
         throw triggerEvent;
     }
+    room->getThread()->trigger(AfterDrawInitialCards, room, player, QVariant::fromValue(draw_num));
 }
 
 void GameRule::changeGeneralXMode(ServerPlayer *player) const{
@@ -680,8 +690,11 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
         room->setPlayerProperty(player, "chained", false);
 
     room->setTag("FirstRound", true); //For Manjuan
+    QVariant data(4);
+    room->getThread()->trigger(DrawInitialCards, room, player, data);
+    int num = data.toInt();
     try {
-        player->drawCards(4);
+        player->drawCards(num);
         room->setTag("FirstRound", false);
     }
     catch (TriggerEvent triggerEvent) {
@@ -689,6 +702,7 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
             room->setTag("FirstRound", false);
         throw triggerEvent;
     }
+    room->getThread()->trigger(AfterDrawInitialCards, room, player, QVariant::fromValue(num));
 }
 
 void GameRule::rewardAndPunish(ServerPlayer *killer, ServerPlayer *victim) const{

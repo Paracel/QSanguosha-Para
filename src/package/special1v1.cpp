@@ -885,6 +885,9 @@ public:
     }
 };
 
+/*class Cuorui: public TriggerSkill {
+};*/
+
 Drowning::Drowning(Suit suit, int number)
     : SingleTargetTrick(suit, number)
 {

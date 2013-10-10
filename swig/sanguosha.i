@@ -616,6 +616,8 @@ enum TriggerEvent {
 
     DrawNCards,
     AfterDrawNCards,
+    DrawInitialCards,
+    AfterDrawInitialCards,
 
     PreHpRecover,
     HpRecover,

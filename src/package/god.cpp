@@ -714,36 +714,29 @@ public:
     }
 };
 
-class QixingStart: public GameStartSkill {
+class QixingStart: public TriggerSkill {
 public:
-    QixingStart(): GameStartSkill("#qixing") {
+    QixingStart(): TriggerSkill("#qixing") {
+        events << DrawInitialCards << AfterDrawInitialCards;
     }
 
-    virtual void onGameStart(ServerPlayer *shenzhuge) const{
-        Room *room = shenzhuge->getRoom();
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *shenzhuge, QVariant &data) const{
+        if (triggerEvent == DrawInitialCards) {
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = shenzhuge;
+            log.arg = "qixing";
+            room->sendLog(log);
+            room->notifySkillInvoked(shenzhuge, "qixing");
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = shenzhuge;
-        log.arg = "qixing";
-        room->sendLog(log);
-        room->notifySkillInvoked(shenzhuge, "qixing");
-
-        room->setTag("FirstRound", true); //For Manjuan
-        try {
-            shenzhuge->drawCards(7);
-            room->setTag("FirstRound", false);
+            data = data.toInt() + 7;
+        } else if (triggerEvent == AfterDrawInitialCards) {
+            room->broadcastSkillInvoke("qixing");
+            const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", 7);
+            shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
+            delete exchange_card;
         }
-        catch (TriggerEvent triggerEvent) {
-            if (triggerEvent == TurnBroken || triggerEvent == StageChange)
-                room->setTag("FirstRound", false);
-            throw triggerEvent;
-        }
-
-        room->broadcastSkillInvoke("qixing");
-        const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", 7);
-        shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
-        delete exchange_card;
+        return false;
     }
 };
 

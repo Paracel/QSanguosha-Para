@@ -277,10 +277,13 @@ bool PhaseChangeSkill::trigger(TriggerEvent, Room *, ServerPlayer *player, QVari
     return onPhaseChange(player);
 }
 
-DrawCardsSkill::DrawCardsSkill(const QString &name)
-    : TriggerSkill(name)
+DrawCardsSkill::DrawCardsSkill(const QString &name, bool is_initial)
+    : TriggerSkill(name), is_initial(is_initial)
 {
-    events << DrawNCards;
+    if (is_initial)
+        events << DrawInitialCards;
+    else
+        events << DrawNCards;
 }
 
 bool DrawCardsSkill::trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{

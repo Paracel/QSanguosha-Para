@@ -568,8 +568,8 @@ void RoomThread::run() {
                 second = warm;
             }
         }
-        trigger(GameStart, (Room *)room, NULL);
         constructTriggerTable();
+        trigger(GameStart, (Room *)room, NULL);
         if (room->getMode() == "06_3v3") {
             run3v3(first, second, game_rule, first.first());
         } else if (room->getMode() == "04_1v3") {

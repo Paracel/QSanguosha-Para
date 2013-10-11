@@ -26,7 +26,7 @@ function load_translations()
 	end
 end
 
-function load_extensions(just_require)
+function load_extensions()
 	local scripts = sgs.GetFileNames("extensions")
 	local package_names = {}
 	for _, script in ipairs(scripts) do

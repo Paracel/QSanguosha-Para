@@ -717,7 +717,7 @@ bool Player::canSlash(const Player *other, bool distance_limit, int rangefix, co
     return canSlash(other, NULL, distance_limit, rangefix, others);
 }
 
-int Player::getCardCount(bool include_equip) const{
+int Player::getCardCount(bool include_equip, bool include_judging) const{
     int count = getHandcardNum();
     if (include_equip) {
         if (weapon != NULL) count++;
@@ -725,6 +725,8 @@ int Player::getCardCount(bool include_equip) const{
         if (defensive_horse != NULL) count++;
         if (offensive_horse != NULL) count++;
     }
+    if (include_judging)
+        count += judging_area.length();
     return count;
 }
 

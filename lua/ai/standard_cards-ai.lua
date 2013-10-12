@@ -475,7 +475,7 @@ function SmartAI:useCardSlash(card, use)
 			and self:objectiveLevel(target) > 3
 			and self:slashIsEffective(card, target)
 			and not (target:hasSkill("xiangle") and basicnum < 2)
-			and not (target:hasSkill("renwang") and target:hasFlag("RenwangEffect") and self.player:getCardCount(true) < 3)
+			and not (target:hasSkill("renwang") and target:hasFlag("RenwangEffect") and self.player:getCardCount() < 3)
 			and not canliuli
 			and not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
 			and self:getOverflow() > 0 and not self:hasCrossbowEffect()) then
@@ -1382,7 +1382,7 @@ sgs.ai_use_priority.SavageAssault = 3.5
 sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if self.room:getMode():find("_mini_34") and self.player:getLostHp() == 1 and name == "archery_attack" then return "." end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
-	if target:hasSkill("drwushuang") and self.player:getCardCount(true) == 1 and self:hasLoseHandcardEffective() then return "." end
+	if target:hasSkill("drwushuang") and self.player:getCardCount() == 1 and self:hasLoseHandcardEffective() then return "." end
 
 	local aoe
 	if type(data) == "userdata" then aoe = data:toCardEffect().card else aoe = sgs.Sanguosha:cloneCard(name) end
@@ -2862,9 +2862,9 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			local FFFslash = self:getCard("FireSlash")
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:hasArmorEffect("vine") and FFFslash and self:slashIsEffective(FFFslash, enemy) and 
-					self.player:getCardCount(true) >= 3 and self.player:canSlash(enemy, FFFslash, true, range_fix) then
+					self.player:getCardCount() >= 3 and self.player:canSlash(enemy, FFFslash, true, range_fix) then
 					return axe
-				elseif self:getCardsNum("Analeptic") > 0 and self.player:getCardCount(true) >= 4 and
+				elseif self:getCardsNum("Analeptic") > 0 and self.player:getCardCount() >= 4 and
 					self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash, true, range_fix) then
 					return axe
 				end

@@ -113,7 +113,7 @@ public:
 
             room->broadcastSkillInvoke(objectName(), 2);
             DummyCard *to_goback;
-            if (diaochan->getCardCount(true) <= target->getHp()) {
+            if (diaochan->getCardCount() <= target->getHp()) {
                 to_goback = diaochan->isKongcheng() ? new DummyCard : diaochan->wholeHandCards();
                 for (int i = 0; i < 4; i++)
                     if (diaochan->getEquip(i))
@@ -842,7 +842,7 @@ public:
                 victim->obtainCard(dummy);
             }
         } else {
-            if (victim->getCardCount(true) >= no_basic
+            if (victim->getCardCount() >= no_basic
                 && room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
                 if (dummy->subcardsLength() > 0) {
@@ -1675,7 +1675,7 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getCardCount(true) >= 3 && !player->hasUsed("FuluanCard") && !player->hasFlag("ForbidFuluan");
+        return player->getCardCount() >= 3 && !player->hasUsed("FuluanCard") && !player->hasFlag("ForbidFuluan");
     }
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *card) const{

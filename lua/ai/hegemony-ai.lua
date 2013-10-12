@@ -130,7 +130,7 @@ duoshi_skill.getTurnUseCard = function(self, inclusive)
 	cards = sgs.QList2Table(cards)
 
 	local red_card
-	if self.player:getCardCount(false) <= 2 then return end
+	if self.player:getHandcardNum() <= 2 then return end
 	self:sortByUseValue(cards, true)
 
 	for _, card in ipairs(cards) do

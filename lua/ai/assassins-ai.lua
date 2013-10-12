@@ -14,7 +14,7 @@ end
 sgs.ai_skill_invoke.tianming = function(self, data)
 	self.tianming_discard = nil
 	if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
-	if self.player:hasArmorEffect("eight_diagram") and self.player:getCardCount(true) == 2 then return false end
+	if self.player:hasArmorEffect("eight_diagram") and self.player:getCardCount() == 2 then return false end
 	if self:getCardsNum("Jink") == 0 or self.player:isNude() then return true end
 	local unpreferedCards = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())

@@ -204,9 +204,9 @@ bool Yongsi::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *yuansh
     } else if (triggerEvent == EventPhaseStart && yuanshu->getPhase() == Player::Discard) {
         int x = getKingdoms(yuanshu);
         LogMessage log;
-        log.type = yuanshu->getCardCount(true) > x ? "#YongsiBad" : "#YongsiWorst";
+        log.type = yuanshu->getCardCount() > x ? "#YongsiBad" : "#YongsiWorst";
         log.from = yuanshu;
-        log.arg = QString::number(log.type == "#YongsiBad" ? x : yuanshu->getCardCount(true));
+        log.arg = QString::number(log.type == "#YongsiBad" ? x : yuanshu->getCardCount());
         log.arg2 = objectName();
         room->sendLog(log);
         room->notifySkillInvoked(yuanshu, objectName());

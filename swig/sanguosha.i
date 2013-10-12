@@ -196,7 +196,7 @@ public:
                   int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
     bool canSlash(const Player *other, bool distance_limit = true,
                   int rangefix = 0, const QList<const Player *> &others = QList<const Player *>()) const;
-    int getCardCount(bool include_equip) const;
+    int getCardCount(bool include_equip = true, bool include_judging = false) const;
 
     QList<int> getPile(const char *pile_name);
     QStringList getPileNames() const;

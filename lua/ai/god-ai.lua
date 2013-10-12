@@ -826,7 +826,7 @@ function SmartAI:getSaveNum(isFriend)
 			if player:hasSkill("buyi") and not player:isKongcheng() then num = num + 0.3 end
 			if player:hasSkill("chunlao") and not player:getPile("wine"):isEmpty() then num = num + player:getPile("wine"):length() end
 			if player:hasSkill("jiuzhu") and player:getHp() > 1 and not player:isNude() then
-				num = num + 0.9 * math.max(0, math.min(player:getHp() - 1, player:getCardCount(true)))
+				num = num + 0.9 * math.max(0, math.min(player:getHp() - 1, player:getCardCount()))
 			end
 			if player:hasSkill("renxin") and player:objectName() ~= self.player:objectName() and not player:isKongcheng() then num = num + 1 end
 		end
@@ -1006,7 +1006,7 @@ sgs.longhun_suit_value = {
 }
 
 function sgs.ai_cardneed.longhun(to, card, self)
-	if to:getCardCount(true) > 3 then return false end
+	if to:getCardCount() > 3 then return false end
 	if to:isNude() then return true end
 	return card:getSuit() == sgs.Card_Heart or card:getSuit() == sgs.Card_Spade
 end

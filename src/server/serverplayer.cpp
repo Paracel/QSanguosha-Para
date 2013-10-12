@@ -98,7 +98,7 @@ void ServerPlayer::throwAllHandCards() {
 }
 
 void ServerPlayer::throwAllHandCardsAndEquips() {
-    int card_length = getCardCount(true);
+    int card_length = getCardCount();
     room->askForDiscard(this, QString(), card_length, card_length, false, true);
 }
 

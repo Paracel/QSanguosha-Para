@@ -303,7 +303,7 @@ sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
 end
 
 function sgs.ai_cardneed.qiaobian(to, card)
-	return to:getCardCount(true) <= 2
+	return to:getCardCount() <= 2
 end
 
 sgs.ai_skill_invoke.tuntian = function(self, data)
@@ -961,7 +961,7 @@ sgs.ai_skill_cardask["@beige"] = function(self, data)
 end
 
 function sgs.ai_cardneed.beige(to, card)
-	return to:getCardCount(true) <= 2
+	return to:getCardCount() <= 2
 end
 
 function sgs.ai_slash_prohibit.duanchang(self, from, to)

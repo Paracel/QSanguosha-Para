@@ -58,7 +58,7 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 			elseif self.player:distanceTo(enemy) <= 4 and enemy:hasArmorEffect("vine") then equip_need = "Fan"
 			elseif self.player:distanceTo(enemy) <= 5 and (enemy:getOffensiveHorse() or enemy:getDefensiveHorse()) then equip_need = "KylinBow"
 			elseif self.player:getHandcardNum() == 1 and isCard("Slash", self.player:getHandcards():first(), self.player) then equip_need = "Halberd"
-			elseif self.player:distanceTo(enemy) <= 3 and self.player:getCardCount(true) >= 5 then equip_need = "Axe"
+			elseif self.player:distanceTo(enemy) <= 3 and self.player:getCardCount() >= 5 then equip_need = "Axe"
 			end
 		end
 		if equip_need then break end

@@ -201,8 +201,8 @@ sgs.ai_skill_use["@@cangji"] = function(self, prompt)
 			elseif equip:isKindOf("Axe") then
 				for _, friend in ipairs(self.friends_noself) do
 					if not self:getSameEquip(equip)
-						and (friend:getCardCount(true) >= 4
-							or (friend:getCardCount(true) >= 2 and self:hasHeavySlashDamage(friend))) then
+						and (friend:getCardCount() >= 4
+							or (friend:getCardCount() >= 2 and self:hasHeavySlashDamage(friend))) then
 						return "@CangjiCard=" .. equip:getEffectiveId() .. "->" .. friend:objectName()
 					end
 				end

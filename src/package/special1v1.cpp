@@ -649,7 +649,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == BeforeGameOverJudge) {
-            player->setMark(objectName(), player->getCardCount(true));
+            player->setMark(objectName(), player->getCardCount());
         } else {
             int n = player->getMark(objectName());
             if (n == 0) return false;
@@ -897,7 +897,7 @@ public:
             int n = 3;
             if (room->getMode() == "02_1v1") {
                 n = player->tag["1v1Arrange"].toStringList().length();
-                if (Config.value("1v1/Rule", "Classical").toString() != "OL")
+                if (Config.value("1v1/Rule", "2013").toString() != "OL")
                     n += 3;
             }
 

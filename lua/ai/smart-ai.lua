@@ -3198,8 +3198,8 @@ function SmartAI:getOverflow(player)
 	end
 
 	if kingdom_num > 0 then
-		if player:getCardCount(true) <= kingdom_num then return player:getHandcardNum() end
-		local MaxHandCards = math.min(player:getHp(), player:getCardCount(true) - kingdom_num)
+		if player:getCardCount() <= kingdom_num then return player:getHandcardNum() end
+		local MaxHandCards = math.min(player:getHp(), player:getCardCount() - kingdom_num)
 		return player:getHandcardNum() - MaxHandCards
 	end
 	return player:getHandcardNum() - player:getHp()
@@ -3945,7 +3945,7 @@ function getCardsNum(class_name, player)
 		elseif player:hasSkill("chunlao") then
 			return num + player:getPile("wine"):length()
 		elseif player:hasSkill("jiuzhu") then
-			return math.max(num, math.max(0, math.min(player:getCardCount(true), player:getHp() - 1)))
+			return math.max(num, math.max(0, math.min(player:getCardCount(), player:getHp() - 1)))
 		else
 			return num
 		end
@@ -3987,7 +3987,7 @@ function SmartAI:getCardsNum(class_name, flag, selfonly)
 		if card_str:getSkillName() == "spear" or card_str:getSkillName() == "fuhun" then
 			n = n + math.floor(player:getHandcardNum() / 2) - 1
 		elseif card_str:getSkillName() == "jiuzhu" then
-			n = math.max(n, math.max(0, math.min(player:getCardCount(true), player:getHp() - 1)))
+			n = math.max(n, math.max(0, math.min(player:getCardCount(), player:getHp() - 1)))
 		elseif card_str:getSkillName() == "chunlao" then
 			n = n + player:getPile("wine"):length() - 1
 		elseif card_str:getSkillName() == "renxin" then
@@ -4332,7 +4332,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 		if not from:hasSkill("jueqing") then
 			if self.room:getMode() ~= "06_3v3" and self.room:getMode() ~= "06_XMode" then
 				if to:getHp() == 1 and from:isLord() and sgs.evaluatePlayerRole(to) == "loyalist" and self:getCardsNum("Peach") == 0 then
-					value = value - from:getCardCount(true) * 20
+					value = value - from:getCardCount() * 20
 				end
 			end
 
@@ -4821,7 +4821,7 @@ function SmartAI:damageMinusHp(self, enemy, type)
 			elseif acard:isKindOf("Slash") and self:slashIsEffective(acard, enemy) and (slash_damagenum == 0 or self:hasCrossbowEffect())
 				and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
 				if not (enemy:hasSkill("xiangle") and basicnum < 2)
-					and not (enemy:hasSkill("renwang") and enemy:hasFlag("RenwangEffect") and self.player:getCardCount(true) < 3) then
+					and not (enemy:hasSkill("renwang") and enemy:hasFlag("RenwangEffect") and self.player:getCardCount() < 3) then
 					slash_damagenum = slash_damagenum + 1
 				end
 				if self:getCardsNum("Analeptic") > 0 and analepticpowerup == 0
@@ -4913,12 +4913,12 @@ function SmartAI:doNotDiscard(to, flags, conservative, n, reason)
 		elseif flags:match("e") then
 			if not self.player:canDiscard(to, "e") then return true end
 			if self:hasSkills(sgs.lose_equip_skill, to) and to:getHandcardNum() < n then return true end
-			if to:getCardCount(true) <= n and to:getArmor() and self:needToThrowArmor(to, reason == "moukui") then return true end
+			if to:getCardCount() <= n and to:getArmor() and self:needToThrowArmor(to, reason == "moukui") then return true end
 		end
 	end
 	if flags == "he" and n > 2 then
 		if not self.player:canDiscard(to, "e") then return true end
-		if to:getCardCount(true) < n then return true end
+		if to:getCardCount() < n then return true end
 	end
 	return false
 end

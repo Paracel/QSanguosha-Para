@@ -575,7 +575,7 @@ public:
             return false;
 
         const Card *card = NULL;
-        if (player->getCardCount(true) >= 3) // Need 2 more cards except from the weapon itself
+        if (player->getCardCount() >= 3) // Need 2 more cards except from the weapon itself
             card = room->askForCard(player, "@axe", "@axe:" + effect.to->objectName(), data, objectName());
         if (card) {
             room->setEmotion(player, "weapon/axe");
@@ -1069,14 +1069,14 @@ Snatch::Snatch(Suit suit, int number)
 
 bool Snatch::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     int total_num = 1 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
-    if (targets.length() >= total_num || to_select->isAllNude() || to_select == Self)
+    bool include_judging = !(ServerInfo.GameMode == "02_1v1" && ServerInfo.GameRuleMode != "Classical");
+    if (targets.length() >= total_num || to_select->getCardCount(true, include_judging) || to_select == Self)
         return false;
 
     int distance_limit = 1 + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, Self, this);
     int rangefix = 0;
     if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
         rangefix += 1;
-
     if (getSkillName() == "jixi")
         rangefix += 1;
 
@@ -1093,7 +1093,7 @@ void Snatch::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical");
+    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "2013").toString() != "Classical");
     QString flag = using_2013 ? "he" : "hej";
     int card_id = room->askForCardChosen(effect.from, effect.to, flag, objectName());
     CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, effect.from->objectName());
@@ -1108,7 +1108,8 @@ Dismantlement::Dismantlement(Suit suit, int number)
 
 bool Dismantlement::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     int total_num = 1 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
-    return targets.length() < total_num && !to_select->isAllNude() && to_select != Self;
+    bool include_judging = !(ServerInfo.GameMode == "02_1v1" && ServerInfo.GameRuleMode != "Classical");
+    return targets.length() < total_num && to_select->getCardCount(true, include_judging) > 0 && to_select != Self;
 }
 
 void Dismantlement::onEffect(const CardEffectStruct &effect) const{
@@ -1116,7 +1117,7 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
         return;
 
     Room *room = effect.to->getRoom();
-    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "Classical").toString() != "Classical");
+    bool using_2013 = (room->getMode() == "02_1v1" && Config.value("1v1/Rule", "2013").toString() != "Classical");
     QString flag = using_2013 ? "he" : "hej";
     if (!effect.from->canDiscard(effect.to, flag))
         return;

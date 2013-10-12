@@ -1052,13 +1052,7 @@ Drowning::Drowning(Suit suit, int number)
 
 bool Drowning::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     int total_num = 1 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
-    if (targets.length() >= total_num)
-        return false;
-
-    if (to_select == Self)
-        return false;
-
-    return true;
+    return targets.length() < total_num && to_select != Self;
 }
 
 void Drowning::onEffect(const CardEffectStruct &effect) const{

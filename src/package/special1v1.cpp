@@ -1125,6 +1125,7 @@ Special1v1ExtPackage::Special1v1ExtPackage()
     hansui->addSkill(new Niluan);
     hansui->addSkill(new NiluanRecord);
     hansui->addSkill("xiaoxi");
+    hansui->addSkill("mashu");
     related_skills.insertMulti("niluan", "#niluan-record");
 }
 

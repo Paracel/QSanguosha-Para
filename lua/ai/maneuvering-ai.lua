@@ -163,10 +163,6 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 			if acard:getTypeId() == sgs.Card_TypeBasic and not acard:isKindOf("Peach") then basicnum = basicnum + 1 end
 		end
 		if basicnum < 3 then return false end
-	elseif target:hasSkill("renwang") and target:hasFlag("RenwangEffect") then
-		if not self.player:canDiscard(self.player, "he") then return false end
-		local to_discard = self:askForDiscard("dummyreason", 1, 1, false, true)
-		if #to_discard == 0 or self:isValuableCard(sgs.Sanguosha:getCard(to_discard[1])) then return false end
 	end
 
 	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|nosbuqu|" .. sgs.recover_skill, target)

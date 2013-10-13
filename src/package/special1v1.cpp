@@ -686,7 +686,7 @@ public:
 class Renwang: public TriggerSkill {
 public:
     Renwang(): TriggerSkill("renwang") {
-        events << CardUsed << CardEffected << SlashEffected << EventPhaseChanging;
+        events << CardUsed << EventPhaseChanging;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -697,49 +697,16 @@ public:
         if (triggerEvent == CardUsed && player->getPhase() == Player::Play) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (!use.card->isKindOf("Slash") && !use.card->isNDTrick()) return false;
-            QList<ServerPlayer *> liubeis;
-            foreach (ServerPlayer *to, use.to.toSet()) {
-                if (to != use.from && TriggerSkill::triggerable(to)) {
-                    if (to->hasFlag("RenwangEffect"))
-                        liubeis << to;
-                    else
-                        to->setFlags("RenwangEffect");
-                }
-            }
-            if (liubeis.isEmpty()) return false;
             foreach (ServerPlayer *to, use.to) {
-                if (room->askForSkillInvoke(to, objectName(), data)
-                    && (!use.from->canDiscard(use.from, "he")
-                        || !room->askForDiscard(use.from, objectName(), 1, 1, true, true)))
-                    to->addMark(objectName());
+                if (to != player && !to->hasFlag("RenwangEffect"))
+                    to->setFlags("RenwangEffect");
             }
-        } else if (triggerEvent == CardEffected) {
-            CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (effect.card->isNDTrick() && player->getMark(objectName()) > 0) {
-                player->removeMark(objectName());
-
-                LogMessage log;
-                log.type = "#DanlaoAvoid";
-                log.from = player;
-                log.arg = effect.card->objectName();
-                log.arg2 = objectName();
-                room->sendLog(log);
-
-                return true;
-            }
-        } else if (triggerEvent == SlashEffected) {
-            SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (player->getMark(objectName()) > 0) {
-                player->removeMark(objectName());
-
-                LogMessage log;
-                log.type = "#DanlaoAvoid";
-                log.from = player;
-                log.arg = effect.slash->objectName();
-                log.arg2 = objectName();
-                room->sendLog(log);
-
-                return true;
+            foreach (ServerPlayer *p, room->getOtherPlayers(use.from)) {
+                if (use.to.contains(p) && p->canDiscard(use.from, "he")
+                    && p->hasFlag("RenwangEffect") && TriggerSkill::triggerable(p)
+                    && room->askForSkillInvoke(p, objectName(), data)) {
+                    room->throwCard(room->askForCardChosen(p, use.from, "he", objectName(), false, Card::MethodDiscard), use.from, p);
+                }
             }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
@@ -749,26 +716,6 @@ public:
                         to->setFlags("-RenwangEffect");
                 }
             }
-        }
-        return false;
-    }
-};
-
-class RenwangRemoveMark: public TriggerSkill {
-public:
-    RenwangRemoveMark(): TriggerSkill("#renwang") {
-        events << CardFinished;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
-        CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
-            foreach (ServerPlayer *to, use.to)
-                to->setMark("renwang", 0);
         }
         return false;
     }
@@ -1140,9 +1087,7 @@ Special1v1OLPackage::Special1v1OLPackage()
 {
     General *kof_liubei = new General(this, "kof_liubei$", "shu");
     kof_liubei->addSkill(new Renwang);
-    kof_liubei->addSkill(new RenwangRemoveMark);
     kof_liubei->addSkill("jijiang");
-    related_skills.insertMulti("renwang", "#renwang");
 
     General *kof_weiyan = new General(this, "kof_weiyan", "shu");
     kof_weiyan->addSkill(new KOFKuanggu);

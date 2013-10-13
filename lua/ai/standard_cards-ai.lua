@@ -475,7 +475,6 @@ function SmartAI:useCardSlash(card, use)
 			and self:objectiveLevel(target) > 3
 			and self:slashIsEffective(card, target)
 			and not (target:hasSkill("xiangle") and basicnum < 2)
-			and not (target:hasSkill("renwang") and target:hasFlag("RenwangEffect") and self.player:getCardCount() < 3)
 			and not canliuli
 			and not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
 			and self:getOverflow() > 0 and not self:hasCrossbowEffect()) then

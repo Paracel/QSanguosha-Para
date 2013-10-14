@@ -152,7 +152,6 @@ function SmartAI:isLihunTarget(player, drawCardNum)
 	drawCardNum = drawCardNum or 1
 	if type(player) == "table" then
 		if #player == 0 then return false end
-		local found
 		for _, ap in ipairs(player) do
 			if self:isLihunTarget(ap, drawCardNum) then return true end
 		end

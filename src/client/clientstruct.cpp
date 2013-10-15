@@ -48,8 +48,8 @@ bool ServerInfoStruct::parse(const QString &str) {
 
         GameMode = texts.at(2);
         if (GameMode.startsWith("02_1v1") || GameMode.startsWith("06_3v3")) {
-            GameMode = GameMode.mid(0, 6);
             GameRuleMode = GameMode.mid(6);
+            GameMode = GameMode.mid(0, 6);
         }
         OperationTimeout = texts.at(3).toInt();
         NullificationCountDown = texts.at(4).toInt();

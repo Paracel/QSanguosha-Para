@@ -668,7 +668,7 @@ QString Engine::getSetupString() const{
     else if (mode == "06_3v3")
         mode = mode + Config.value("3v3/OfficialRule", "2013").toString();
     setup_items << server_name
-                << Config.GameMode
+                << mode
                 << QString::number(timeout)
                 << QString::number(Config.NullificationCountDown)
                 << Sanguosha->getBanPackages().join("+")

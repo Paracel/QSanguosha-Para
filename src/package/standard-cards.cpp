@@ -1070,7 +1070,7 @@ Snatch::Snatch(Suit suit, int number)
 bool Snatch::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     int total_num = 1 + Sanguosha->correctCardTarget(TargetModSkill::ExtraTarget, Self, this);
     bool include_judging = !(ServerInfo.GameMode == "02_1v1" && ServerInfo.GameRuleMode != "Classical");
-    if (targets.length() >= total_num || to_select->getCardCount(true, include_judging) || to_select == Self)
+    if (targets.length() >= total_num || to_select->getCardCount(true, include_judging) == 0 || to_select == Self)
         return false;
 
     int distance_limit = 1 + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, Self, this);

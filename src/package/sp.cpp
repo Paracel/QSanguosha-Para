@@ -1083,6 +1083,7 @@ public:
                         card_id = ids.first();
                     else
                         card_id = room->askForAG(player, ids, true, objectName());
+                    room->clearAG(player);
                     if (card_id == -1) break;
                     if (only)
                         player->setMark("YanyuOnlyId", card_id + 1); // For AI
@@ -1092,7 +1093,6 @@ public:
                                                                                                       .arg(card->getSuitString() + "_char")
                                                                                                       .arg(card->getNumberString()),
                                                                     only, true);
-                    room->clearAG(player);
                     player->setMark("YanyuOnlyId", 0);
                     if (target) {
                         player->removeMark("YanyuDiscard" + QString::number(card->getTypeId()));

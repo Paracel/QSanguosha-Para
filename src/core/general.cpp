@@ -85,6 +85,9 @@ bool General::hasSkill(const QString &skill_name) const{
 QList<const Skill *> General::getSkillList() const{
     QList<const Skill *> skills;
     foreach (QString skill_name, skillname_list) {
+        if (skill_name == "xiaoxi" && ServerInfo.DuringGame
+            && (ServerInfo.GameMode != "02_1v1" || ServerInfo.GameRuleMode == "Classical"))
+            skill_name = "mashu";
         const Skill *skill = Sanguosha->getSkill(skill_name);
         skills << skill;
     }

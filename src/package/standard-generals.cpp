@@ -532,7 +532,7 @@ public:
             slash->deleteLater();
             return slash->isAvailable(Self);
         }
-        return false;
+        return true;
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

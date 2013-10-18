@@ -880,6 +880,7 @@ class Liewei: public TriggerSkill {
 public:
     Liewei(): TriggerSkill("liewei") {
         events << BuryVictim;
+        frequency = Frequent;
     }
 
     virtual int getPriority() const{

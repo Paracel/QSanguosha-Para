@@ -102,6 +102,7 @@ class Xiechan: public ZeroCardViewAsSkill {
 public:
     Xiechan(): ZeroCardViewAsSkill("xiechan") {
         frequency = Limited;
+        limit_mark = "@twine";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -1023,8 +1024,6 @@ Special1v1Package::Special1v1Package()
     General *kof_xuchu = new General(this, "kof_xuchu", "wei");
     kof_xuchu->addSkill("luoyi");
     kof_xuchu->addSkill(new Xiechan);
-    kof_xuchu->addSkill(new MarkAssignSkill("@twine", 1));
-    related_skills.insertMulti("xiechan", "#@twine-1");
 
     General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3, false);
     kof_zhenji->addSkill(new KOFQingguo);

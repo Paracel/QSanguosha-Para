@@ -676,12 +676,15 @@ public:
         if (triggerEvent == CardUsed && player->getPhase() == Player::Play) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (!use.card->isKindOf("Slash") && !use.card->isNDTrick()) return false;
+            QList<ServerPlayer *> first;
             foreach (ServerPlayer *to, use.to) {
-                if (to != player && !to->hasFlag("RenwangEffect"))
+                if (to != player && !to->hasFlag("RenwangEffect")) {
+                    first << to;
                     to->setFlags("RenwangEffect");
+                }
             }
             foreach (ServerPlayer *p, room->getOtherPlayers(use.from)) {
-                if (use.to.contains(p) && p->canDiscard(use.from, "he")
+                if (use.to.contains(p) && !first.contains(to) && p->canDiscard(use.from, "he")
                     && p->hasFlag("RenwangEffect") && TriggerSkill::triggerable(p)
                     && room->askForSkillInvoke(p, objectName(), data)) {
                     room->throwCard(room->askForCardChosen(p, use.from, "he", objectName(), false, Card::MethodDiscard), use.from, p);

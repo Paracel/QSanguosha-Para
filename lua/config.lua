@@ -2,7 +2,7 @@
 -- and it is a little different from config.ini
 
 config = {
-	version = "20131001",
+	version = "20131101",
 	version_name = "V2",
 	mod_name = "Para",
 	kingdoms = { "wei", "shu", "wu", "qun", "god" },
@@ -45,7 +45,7 @@ config = {
 		"WangZheZhiZhan",
 		"BGM",
 		"BGMDIY",
-		"Wandianba",
+		--"Wandianba",
 		"Hegemony",
 		"HFormation",
 		"HegemonySP",

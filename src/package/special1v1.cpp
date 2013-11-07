@@ -684,7 +684,7 @@ public:
                 }
             }
             foreach (ServerPlayer *p, room->getOtherPlayers(use.from)) {
-                if (use.to.contains(p) && !first.contains(to) && p->canDiscard(use.from, "he")
+                if (use.to.contains(p) && !first.contains(p) && p->canDiscard(use.from, "he")
                     && p->hasFlag("RenwangEffect") && TriggerSkill::triggerable(p)
                     && room->askForSkillInvoke(p, objectName(), data)) {
                     room->throwCard(room->askForCardChosen(p, use.from, "he", objectName(), false, Card::MethodDiscard), use.from, p);

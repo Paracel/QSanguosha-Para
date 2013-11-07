@@ -1385,6 +1385,28 @@ public:
     }
 };
 
+class Xiaoxi: public TriggerSkill {
+public:
+    Xiaoxi(): TriggerSkill("xiaoxi") {
+        events << Debut;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        ServerPlayer *opponent = player->getNext();
+        if (!opponent->isAlive())
+            return false;
+        Slash *slash = new Slash(Card::NoSuit, 0);
+        slash->setSkillName("_xiaoxi");
+        if (player->isLocked(slash) || !player->canSlash(opponent, slash, false)) {
+            delete slash;
+            return false;
+        }
+        if (room->askForSkillInvoke(player, objectName()))
+            room->useCard(CardUseStruct(slash, player, opponent), false);
+        return false;
+    }
+};
+
 void StandardPackage::addGenerals() {
     // Wei
     General *caocao = new General(this, "caocao$", "wei"); // WEI 001
@@ -1506,6 +1528,8 @@ void StandardPackage::addGenerals() {
     addMetaObject<QingnangCard>();
     addMetaObject<LiuliCard>();
     addMetaObject<JijiangCard>();
+
+    skills << new Xiaoxi;
 }
 
 class SuperZhiheng: public Zhiheng {

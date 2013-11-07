@@ -200,28 +200,6 @@ public:
     }
 };
 
-class Xiaoxi: public TriggerSkill {
-public:
-    Xiaoxi(): TriggerSkill("xiaoxi") {
-        events << Debut;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        ServerPlayer *opponent = player->getNext();
-        if (!opponent->isAlive())
-            return false;
-        Slash *slash = new Slash(Card::NoSuit, 0);
-        slash->setSkillName("_huwei");
-        if (player->isLocked(slash) || !player->canSlash(opponent, slash, false)) {
-            delete slash;
-            return false;
-        }
-        if (room->askForSkillInvoke(player, objectName()))
-            room->useCard(CardUseStruct(slash, player, opponent), false);
-        return false;
-    }
-};
-
 CangjiCard::CangjiCard() {
     will_throw = false;
 }
@@ -1037,10 +1015,6 @@ Special1v1Package::Special1v1Package()
     kof_guanyu->addSkill("wusheng");
     kof_guanyu->addSkill(new Huwei);
 
-    General *kof_machao = new General(this, "kof_machao", "shu");
-    kof_machao->addSkill("tieji");
-    kof_machao->addSkill(new Xiaoxi);
-
     General *kof_nos_huangyueying = new General(this, "kof_nos_huangyueying", "shu", 3, false);
     kof_nos_huangyueying->addSkill("nosjizhi");
     kof_nos_huangyueying->addSkill(new Cangji);
@@ -1105,10 +1079,6 @@ Special1v1OLPackage::Special1v1OLPackage()
     kof_huatuo->addSkill("jijiu");
     kof_huatuo->addSkill(new Puji);
 
-    General *kof_pangde = new General(this, "kof_pangde", "qun", 4);
-    kof_pangde->addSkill("mengjin");
-    kof_pangde->addSkill("xiaoxi");
-
     addMetaObject<PujiCard>();
 }
 
@@ -1122,9 +1092,9 @@ Special1v1ExtPackage::Special1v1ExtPackage()
     niujin->addSkill(new Liewei);
 
     General *hansui = new General(this, "hansui", "qun"); // QUN 027
+    hansui->addSkill("mashu");
     hansui->addSkill(new Niluan);
     hansui->addSkill(new NiluanRecord);
-    hansui->addSkill("xiaoxi");
     related_skills.insertMulti("niluan", "#niluan-record");
 }
 

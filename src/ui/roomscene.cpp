@@ -3450,7 +3450,6 @@ void RoomScene::onGameStart() {
         id.replace("_mini_", "");
         _m_currentStage = id.toInt();
     } else if (ServerInfo.GameMode == "06_3v3" || ServerInfo.GameMode == "06_XMode" || ServerInfo.GameMode == "02_1v1") {
-        chat_widget->show();
         log_box->show();
 
         if (self_box && enemy_box) {

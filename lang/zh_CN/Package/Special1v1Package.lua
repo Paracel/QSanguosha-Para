@@ -34,8 +34,6 @@ return {
 	["huwei"] = "虎威",
 	[":huwei"] = "你登场时，你可以视为使用一张【水淹七军】。",
 
-	["kof_machao"] = "马超1v1",
-	["&kof_machao"] = "马超",
 	["xiaoxi"] = "骁袭",
 	[":xiaoxi"] = "你登场时，你可以视为使用一张【杀】。",
 
@@ -127,9 +125,6 @@ return {
 	["&kof_daqiao"] = "大乔",
 	["wanrong"] = "婉容",
 	[":wanrong"] = "每当你被指定为【杀】的目标后，你可以摸一张牌。",
-
-	["kof_pangde"] = "庞德1v1",
-	["&kof_pangde"] = "庞德",
 
 	["Special1v1Ext"] = "1v1扩展",
 

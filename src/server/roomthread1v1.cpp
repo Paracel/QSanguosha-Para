@@ -36,14 +36,14 @@ void RoomThread1v1::run() {
             candidates << "caocao" << "simayi" << "xiahoudun" << "kof_zhangliao"
                        << "kof_xuchu" << "guojia" << "kof_zhenji" << "kof_xiahouyuan"
                        << "nos_caoren" << "dianwei" << "kof_guanyu" << "zhangfei"
-                       << "zhugeliang" << "zhaoyun" << "kof_machao" << "kof_nos_huangyueying"
+                       << "zhugeliang" << "zhaoyun" << "machao" << "kof_nos_huangyueying"
                        << "kof_huangzhong" << "kof_jiangwei" << "kof_menghuo" << "kof_zhurong"
                        << "sunquan" << "ganning" << "huanggai" << "zhouyu"
                        << "luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
                        << "lvbu" << "kof_nos_diaochan" << "yanliangwenchou" << "hejin";
             if (rule == "OL") {
                 candidates << "kof_liubei" << "kof_weiyan" << "kof_lvmeng" << "kof_daqiao"
-                           << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "kof_pangde"
+                           << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "pangde"
                            << "niujin" << "hansui";
             }
         }

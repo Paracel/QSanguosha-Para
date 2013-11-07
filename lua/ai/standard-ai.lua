@@ -983,7 +983,7 @@ sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
 	local jijiangtargets = {}
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:hasFlag("JijiangTarget") then
-			if self:isFriend(player) and not (self:needToLoseHp(target, sgs.jijiangsource, true) or self:getDamagedEffects(target, sgs.jijiangsource, true)) then return "." end
+			if self:isFriend(player) and not (self:needToLoseHp(player, sgs.jijiangsource, true) or self:getDamagedEffects(player, sgs.jijiangsource, true)) then return "." end
 			table.insert(jijiangtargets, player)
 		end
 	end
@@ -1298,7 +1298,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 					self:useTrickCard(zcard, dummy_use)
 					if dummy_use.card then shouldUse = false end
 				end
-				if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(card) then
+				if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(zcard) then
 					local dummy_use = { isDummy = true }
 					self:useEquipCard(zcard, dummy_use)
 					if dummy_use.card then shouldUse = false end

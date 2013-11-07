@@ -415,7 +415,7 @@ sgs.ai_card_intention.XuejiCard = function(self, card, from, tos)
 			end
 		end
 		if to:hasSkill("hunzi") and to:getMark("hunzi") == 0
-			and to:objectName() == to:getNextAlive():objectName() and to:getHp() == 2 then intention = -20 end
+			and to:objectName() == from:getNextAlive():objectName() and to:getHp() == 2 then intention = -20 end
 		sgs.updateIntention(from, to, intention)
 	end
 end
@@ -520,7 +520,7 @@ sgs.ai_skill_cardask["@xingwu"] = function(self, data)
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:isMale() and ((self:damageIsEffective(enemy) and not self:cantbeHurt(enemy, self.player, 2))
 								or (not self:damageIsEffective(enemy) and not enemy:getEquips():isEmpty()
-									and not (enemy:getEquips():length() == 1 and enemy:getArmor() and self:needToThrowArmor()))) then
+									and not (enemy:getEquips():length() == 1 and enemy:getArmor() and self:needToThrowArmor(enemy)))) then
 			table.insert(good_enemies, enemy)
 		end
 	end
@@ -852,7 +852,7 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 				self:useTrickCard(zcard, dummy_use)
 				if dummy_use.card then shouldUse = false end
 			end
-			if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(card) then
+			if zcard:getTypeId() == sgs.Card_TypeEquip and not self.player:hasEquip(zcard) then
 				local dummy_use = { isDummy = true }
 				self:useEquipCard(zcard, dummy_use)
 				if dummy_use.card then shouldUse = false end

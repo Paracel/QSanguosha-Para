@@ -754,7 +754,7 @@ sgs.ai_skill_choice.benghuai = function(self, choices)
 		local enemy_num = self:getEnemyNumBySeat(self.room:getCurrent(), self.player, self.player)
 		local least_hp = self.player:isLord() and (1 + enemy_num) or 1
 		if self.player:getMaxHp() > 4
-			and (self.player:hasSkills("nosmiji|fuluan")
+			and (self.player:hasSkills("nosmiji|fuluan|juejing|zaiqi|nosshangshi")
 				or (self.player:hasSkill("miji") and self:findPlayerToDraw(false))
 				or (self.player:hasSkill("yinghun") and (self:findPlayerToDraw(false) or self:findPlayerToDiscard("he", false))))
 			and (self:getCardsNum("Peach") + self:getCardsNum("Analeptic") + self.player:getHp() > least_hp) then

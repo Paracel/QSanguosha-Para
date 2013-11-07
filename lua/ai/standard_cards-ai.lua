@@ -285,16 +285,16 @@ function SmartAI:slashProhibit(card, enemy, from)
 
 	if self:isFriend(enemy, from) then
 		if card:isKindOf("FireSlash") or from:hasSkill("lihuo") or from:hasWeapon("fan") then
-			if enemy:hasArmorEffect("vine") and not (enemy:isChained() and self:isGoodChainTarget(enemy, self.player, nature, nil, card)) then return true end
+			if enemy:hasArmorEffect("vine") and not (enemy:isChained() and self:isGoodChainTarget(enemy, from, nature, nil, card)) then return true end
 		end
-		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy, self.player, nature, nil, card) and not from:hasSkill("jueqing"))
+		if enemy:isChained() and card:isKindOf("NatureSlash") and (not self:isGoodChainTarget(enemy, from, nature, nil, card) and not from:hasSkill("jueqing"))
 			and self:slashIsEffective(card, enemy, from) then return true end
 		if getCardsNum("Jink", enemy) == 0 and enemy:getHp() < 2 and self:slashIsEffective(card, enemy, from) then return true end
 		if enemy:isLord() and self:isWeak(enemy) and self:slashIsEffective(card, enemy, from) then return true end
 		if from:hasWeapon("guding_blade") and enemy:isKongcheng() then return true end
 	else
-		if (card:isKindOf("NatureSlash") or from:hasSkill("zonghuo")) and not from:hasSkill("jueqing") and enemy:isChained()
-			and not self:isGoodChainTarget(enemy, self.player, nature, nil, card) and self:slashIsEffective(card, enemy, nil, from) then
+		if card:isKindOf("NatureSlash") and not from:hasSkill("jueqing") and enemy:isChained()
+			and not self:isGoodChainTarget(enemy, from, nature, nil, card) and self:slashIsEffective(card, enemy, nil, from) then
 			return true
 		end
 	end

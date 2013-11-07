@@ -979,7 +979,7 @@ sgs.ai_skill_playerchosen.xuehen = function(self, targets)
 		self.xuehentarget = nil
 		return to
 	end
-	to = sgs.ai_skill_playerchosen.zero_card_as_slash
+	to = sgs.ai_skill_playerchosen.zero_card_as_slash(self, targets)
 	return to or targets[1]
 end
 

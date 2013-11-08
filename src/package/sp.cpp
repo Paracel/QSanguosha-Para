@@ -1593,7 +1593,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         DyingStruct dying = data.value<DyingStruct>();
-        if (dying.damage && dying.damage->getReason() == "duwu") {
+        if (dying.damage && dying.damage->getReason() == "duwu" && !dying.damage->chain && !dying.damage->transfer) {
             ServerPlayer *from = dying.damage->from;
             if (from && from->isAlive()) {
                 room->setPlayerFlag(from, "DuwuEnterDying");

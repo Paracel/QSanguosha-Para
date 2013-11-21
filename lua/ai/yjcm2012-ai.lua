@@ -168,7 +168,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 		elseif self:isEnemy(use.from) then
 			if use.card:isKindOf("FireAttack") then
 				if not self:hasTrickEffective(use.card, self.player) then return false end
-				if not self:damageIsEffective(self.player, sgs,DamageStruct_Fire, use.from) then return false end
+				if not self:damageIsEffective(self.player, sgs.DamageStruct_Fire, use.from) then return false end
 				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
 					and not (use.from:hasSkill("hongyan") and getKnownCard(self.player, "spade") > 0) then
 					return not self:doNotDiscard(use.from)
@@ -182,7 +182,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			elseif use.card:isKindOf("Duel") then
 				if self:getCardsNum("Slash") == 0 or self:getCardsNum("Slash") < getCardsNum("Slash", use.from) then
 					if not self:hasTrickEffective(use.card, self.player) then return false end
-					if not self:damageIsEffective(self.player, sgs,DamageStruct_Normal, use.from) then return false end
+					if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, use.from) then return false end
 					return not self:doNotDiscard(use.from)
 				end
 			elseif use.card:isKindOf("TrickCard") and not use.card:isKindOf("AmazingGrace") then

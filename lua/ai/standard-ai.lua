@@ -2217,7 +2217,7 @@ function SmartAI:findLijianTarget(card_name, use)
 		if #males == 1 then
 			if males[1]:isLord() and sgs.turncount <= 1 and self.role == "rebel" and self.player:aliveCount() >= 3 then
 				local p_slash, max_p, max_pp = 0
-				for _, p in sgs.qlist(getOtherPlayers(self.player)) do
+				for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 					if p:isMale() and not self:isFriend(p) and p:objectName() ~= males[1]:objectName() and self:hasTrickEffective(duel, males[1], p)
 						and not p:isLocked(duel) and p_slash < getCardsNum("Slash", p) then
 						if p:getKingdom() == males[1]:getKingdom() then

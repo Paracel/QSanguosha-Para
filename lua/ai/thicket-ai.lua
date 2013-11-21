@@ -579,7 +579,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 			if not keepaslash and isCard("Slash", c, self.player) then
 				local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
 				self:useBasicCard(c, dummy_use)
-				if dummy_use.card and (dummy_use.to:length() > 1 or dummy_use.to:first():getHp() <= 1) then
+				if dummy_use.card and (dummy_use.to:length() > 1 or (not dummy_use.to:isEmpty() and dummy_use.to:first():getHp() <= 1)) then
 					shouldUse = true
 					keepaslash = true
 				end

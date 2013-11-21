@@ -173,10 +173,11 @@ sgs.ai_skill_discard.enyuan = function(self, discard_num, min_num, optional, inc
 end
 
 function sgs.ai_slash_prohibit.enyuan(self, from, to)
+	if self:isFriend(from, to) then return false end
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("NosJiefanUsed") then return false end
 	local num = from:getHandcardNum()
-	if num >= 3 or from:hasSkill("lianying") or (from:hasSkill("kongcheng") and num == 2) then return false end
+	if num >= 3 or self:getLeastHandcardNum(from) > 1 or (from:hasSkill("kongcheng") and num == 2) then return false end
 	return true
 end
 

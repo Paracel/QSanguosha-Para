@@ -108,7 +108,10 @@ function sgs.getDefenseSlash(player, self)
 
 	local knownJink = getKnownCard(player, "Jink", true)
 	if sgs.card_lack[player:objectName()]["Jink"] == 1 and knownJink == 0 then defense = 0 end
- 	defense = defense + knownJink * 1.2
+	defense = defense + knownJink * 1.2
+	
+	local jink = sgs.Sanguosha:cloneCard("jink")
+	if player:isCardLimited(jink, sgs.Card_MethodUse) then defense = 0 end
 
 	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and not attacker:hasWeapon("qinggang_sword") then
 		hasEightDiagram = true

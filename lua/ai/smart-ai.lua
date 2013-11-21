@@ -4319,9 +4319,13 @@ function SmartAI:getAoeValueTo(card, to, from)
 	if card:isKindOf("SavageAssault") then sj_num = getCardsNum("Slash", to) end
 
 	if self:aoeIsEffective(card, to, from) then
+		local jink = sgs.Sanguosha:cloneCard("jink")
+		local slash = sgs.Sanguosha:cloneCard("slash")
+		local isLimited = (card:isKindOf("ArcheryAttack") and to:isCardLimited(jink, sgs.Card_MethodResponse))
+							or (card:isKindOf("ArcheryAttack") and to:isCardLimited(jink, sgs.Card_MethodResponse))
 		if (card:isKindOf("SavageAssault") and sgs.card_lack[to:objectName()]["Slash"] == 1)
 			or (card:isKindOf("ArcheryAttack") and sgs.card_lack[to:objectName()]["Jink"] == 1)
-			or sj_num < 1 then
+			or sj_num < 1 or isLimited then
 			value = -70
 		else
 			value = -50

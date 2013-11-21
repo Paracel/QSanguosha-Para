@@ -1098,6 +1098,17 @@ function SmartAI:objectiveLevel(player)
 						return player:getHp() > 1 and 4 or 0
 					end
 				else
+					if self.role == "loyalist" and sgs.ai_role[self.player:objectName()] == "renegade" then
+						if #players == 2 then return 5 end
+						local renegade_player = {}
+						for _, p in ipairs(players) do
+							if sgs.role_evaluation[p:objectName()]["renegade"] > 0 then
+								table.insert(renegade_player, p:objectName())
+							end
+						end
+						if #renegade_player > 0 then return table.contains(renegade_player, player:objectName()) and 5 or -1
+						else return 1 end
+					end
 					return sgs.ai_role[player:objectName()] == "loyalist" and -2 or 4
 				end
 			end

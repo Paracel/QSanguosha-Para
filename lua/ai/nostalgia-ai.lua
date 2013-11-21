@@ -805,11 +805,11 @@ sgs.ai_skill_use_func.NosRendeCard = function(card, use, self)
 	else
 		local pangtong = self.room:findPlayerBySkillName("manjuan")
 		if not pangtong then return end
-		if self.player:isWounded() and self.player:getHandcardNum() > 3 and self.player:getMark("rende") < 2 then
+		if self.player:isWounded() and self.player:getHandcardNum() > 3 and self.player:getMark("nosrende") < 2 then
 			self:sortByUseValue(cards, true)
 			local to_give = {}
 			for _, card in ipairs(cards) do
-				if isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
+				if not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
 				if #to_give == 2 - self.player:getMark("nosrende") then break end
 			end
 			if #to_give > 0 then

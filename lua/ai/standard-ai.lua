@@ -805,7 +805,7 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 			self:sortByUseValue(cards, true)
 			local to_give = {}
 			for _, card in ipairs(cards) do
-				if isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
+				if not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player) then table.insert(to_give, card:getId()) end
 				if #to_give == 2 - self.player:getMark("rende") then break end
 			end
 			if #to_give > 0 then

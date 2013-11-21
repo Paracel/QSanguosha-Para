@@ -2627,17 +2627,23 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 		end
 	end
 	if self.role ~= "renegade" then
-		local renegade_num = sgs.current_mode_players["renegade"]
-		if renegade_num > 0 and #friends > renegade_num then
+		local R_num = sgs.current_mode_players["renegade"]
+		if R_num > 0 and #friends > R_num then
 			local k = 0
-			for i, p in ipairs(friends) do
-				if sgs.ai_role[p:objectName()] == "renegade"
-					or ((sgs.ai_role[p:objectName()] == "neutral" or sgs.ai_role[p:objectName()] == "loyalist")
-						and sgs.role_evaluation[p:objectName()]["renegade"] >= 50) then
-					table.remove(friends, i)
+			local temp_friends, new_friends = {}, {}
+			for _, p in ipairs(friends) do
+				if k < R_num and sgs.explicit_renegade and sgs.ai_role[p:objectName()] == "renegade" then
 					k = k + 1
-					if k == renegade_num then break end
+				else table.insert(temp_friends, p) end
+			end
+			if k == R_num then friends = temp_friends
+			else
+				for _, p in ipairs(temp_friends) do
+					if sgs.role_evaluation[p:objectName()]["renegade"] > 0 then
+						k = k + 1
+					else table.insert(new_friends, p) end
 				end
+				friends = new_friends
 			end
 		end
 	end
@@ -2851,7 +2857,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 
 	self:sort(friends, "defense")
 	for _, hcard in ipairs(cardtogive) do
-		for _, friend in ipairs(self.friends_noself) do
+		for _, friend in ipairs(friends) do
 			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
 					and (self:hasSkills(sgs.priority_skill, friend) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
 				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() <= 3 then
@@ -2861,14 +2867,15 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 		end
 	end
 
+	local shoulduse = self.player:isWounded()
+						and ((self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:getMark("rende") < 2)
+							or (self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2))
+
 	self:sort(friends, "handcard")
 	for _, hcard in ipairs(cardtogive) do
-		for _, friend in ipairs(self.friends_noself) do
-			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if friend:getHandcardNum() <= 3
-					and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
-						or (self.player:hasSkill("nosrende") and self.player:isWounded() and self.player:getMark("nosrende") < 2)
-						or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:isWounded() and self.player:getMark("rende") < 2)) then
+		for _, friend in ipairs(friends) do
+			if not self:needKongcheng(friend, true) and not friend:hasSkill("manjuan") then
+				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shoulduse) then
 					return hcard, friend
 				end
 			end
@@ -2876,18 +2883,27 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 	end
 
 	for _, hcard in ipairs(cardtogive) do
-		for _, friend in ipairs(self.friends_noself) do
+		for _, friend in ipairs(friends) do
 			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
-				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3
-					or (self.player:hasSkill("rende") and self.player:isWounded() and self.player:usedTimes("RendeCard") < 2)) then
+				if friend:getHandcardNum() <= 3
+					and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse) then
 					return hcard, friend
 				end
 			end
 		end
 	end
 
-	if #cards > 0 and ((self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:getMark("rende") < 2)
-						or (self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2)) then
+	for _, hcard in ipairs(cardtogive) do
+		for _, friend in ipairs(friends) do
+			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
+				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse then
+					return hcard, friend
+				end
+			end
+		end
+	end
+
+	if #cards > 0 and shouldUse then
 		local need_rende = (sgs.current_mode_players["rebel"] == 0 and sgs.current_mode_players["loyalist"] > 0 and self.player:isWounded())
 							or (sgs.current_mode_players["rebel"] > 0 and sgs.current_mode_players["renegade"] > 0
 								and sgs.current_mode_players["loyalist"] == 0 and self:isWeak())

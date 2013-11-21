@@ -2897,10 +2897,8 @@ end
 
 sgs.ai_choicemade_filter.Yiji.general = function(self, from, promptlist)
 	if from:objectName() == promptlist[4] then return end
-	local to
-	for _, p in sgs.qlist(from:getRoom():getAlivePlayers()) do
-		if p:objectName() == promptlist[4] then to = p break end
-	end
+	local to = findPlayerByObjectName(from:getRoom(), promptlist[4])
+	if not to then return end
 	local intention = -70
 	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then
 		intention = 0

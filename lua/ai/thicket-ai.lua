@@ -566,7 +566,6 @@ function DimengIsWorth(self, friend, enemy, mycards, myequips)
 	end
 	return true
 end
-end
 
 sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 	local cardNum = 0

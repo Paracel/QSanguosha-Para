@@ -2625,6 +2625,21 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 			table.insert(friends, player)
 		end
 	end
+	if self.role ~= "renegade" then
+		local renegade_num = sgs.current_mode_players["renegade"]
+		if renegade_num > 0 and #friends > renegade_num then
+			local k = 0
+			for i, p in ipairs(friends) do
+				if sgs.ai_role[p:objectName()] == "renegade"
+					or ((sgs.ai_role[p:objectName()] == "neutral" or sgs.ai_role[p:objectName()] == "loyalist")
+						and sgs.role_evaluation[p:objectName()]["renegade"] >= 50) then
+					table.remove(friends, i)
+					k = k + 1
+					if k == renegade_num then break end
+				end
+			end
+		end
+	end
 
 	-- special move between nos_liubei and xunyu and huatuo
 	for _, player in ipairs(friends) do

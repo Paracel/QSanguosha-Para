@@ -714,12 +714,9 @@ sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
 end
 
 sgs.ai_card_intention.Slash = function(self, card, from, tos)
+	if sgs.ai_collateral then sgs.ai_collateral = false return end
 	for _, to in ipairs(tos) do
 		local value = 80
-		if sgs.ai_collateral then
-			sgs.ai_collateral = false
-			continue
-		end
 		if table.contains(sgs.ai_leiji_effect, to) then
 			table.removeOne(sgs.ai_leiji_effect, to)
 			continue
@@ -2297,7 +2294,7 @@ sgs.ai_card_intention.Collateral = function(self, card, from, tos)
 	--[[if sgs.compareRoleEvaluation(tos[1], "rebel", "loyalist") ~= sgs.compareRoleEvaluation(from, "rebel", "loyalist") then
 		sgs.updateIntention(from, tos[1], 80)
 	end]]
-	sgs.ai_collateral = false
+	sgs.ai_collateral = true
 end
 
 sgs.dynamic_value.control_card.Collateral = true

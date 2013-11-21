@@ -1688,6 +1688,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		if card and lord and card:isKindOf("Duel") and lord:hasFlag("AIGlobal_NeedToWake") then
 			lord:setFlags("-AIGlobal_NeedToWake")
 		end
+		if card:isKindOf("Collateral") then sgs.ai_collateral = false end
 	elseif triggerEvent == sgs.BeforeCardsMove then
 		local move = data:toMoveOneTime()
 		local from = nil -- convert move.from from const Player * to ServerPlayer *

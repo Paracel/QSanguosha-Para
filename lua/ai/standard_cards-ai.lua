@@ -537,6 +537,13 @@ function SmartAI:useCardSlash(card, use)
 					if use.to then use.to = sgs.SPlayerList() end
 					return
 				end
+				if self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0 and not self.player:hasFlag("JilveWansha") and target:getHp() == 1
+					and (target:isKongcheng() or getCardsNum("Jink", target) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1) then
+					use.card = sgs.Card_Parse("@JilveCard=.")
+					sgs.ai_skill_choice.jilve = "wansha"
+					if use.to then use.to = sgs.SPlayerList() end
+					return
+				end
 			end
 			if not use.to or self.slash_targets <= use.to:length() then return end
 		end

@@ -1313,7 +1313,7 @@ function sgs.evaluateAlivePlayersRole()
 	end
 	table.sort(players, cmp)
 
-	local loyal_num = sgs.current_mode_players["loyalist"] + 1
+	local loyal_num = sgs.current_mode_players["loyalist"]
 	local rebel_num = sgs.current_mode_players["rebel"]
 	local renegade_num = sgs.current_mode_players["renegade"]
 	for i = 1, #players, 1 do

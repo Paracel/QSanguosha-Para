@@ -409,6 +409,13 @@ sgs.ai_skill_playerchosen.nosmiji = function(self, targets)
 	return to or self.player
 end
 
+sgs.ai_playerchosen_intention.nosmiji = function(self, from, to)
+	if not (self:needKongcheng(to, true) and from:getLostHp() == 1)
+		and not (to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive) then
+		sgs.updateIntention(from, to, -80)
+	end
+end
+
 sgs.ai_skill_invoke.nosqianxi = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to

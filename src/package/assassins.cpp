@@ -161,6 +161,10 @@ public:
         view_as_skill = new MizhaoViewAsSkill;
     }
 
+    virtual int getPriority() const{
+        return -1;
+    }
+
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }

@@ -1106,8 +1106,8 @@ function SmartAI:objectiveLevel(player)
 								table.insert(renegade_player, p:objectName())
 							end
 						end
-						if #renegade_player > 0 then return table.contains(renegade_player, player:objectName()) and 5 or -1
-						else return 1 end
+						if #renegade_player > 0 then return table.contains(renegade_player, player:objectName()) and 5 or -2
+						else return 4 end
 					end
 					return sgs.ai_role[player:objectName()] == "loyalist" and -2 or 4
 				end

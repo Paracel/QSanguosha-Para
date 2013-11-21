@@ -302,7 +302,7 @@ end
 function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	if not who:isChained() then return false end
 	source = source or self.player
-	if source:hasSkill("jueqing") then return true end
+	if source:hasSkill("jueqing") then return false end
 	damagecount = damagecount or 1
 
 	--[[ if not sgs.GetConfig("EnableHegemony", false) then
@@ -392,12 +392,11 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 
 	if slash and F_count == 1 and E_count == 1 and the_enemy and the_enemy:isKongcheng() and the_enemy:getHp() == 1 then
 		for _, c in ipairs(self:getCards("Slash")) do
-			if not c:isKindOf("NatureSlash") and self:slashProhibit(slash, the_enenmy, source) then return end
+			if not c:isKindOf("NatureSlash") and self:slashProhibit(slash, the_enemy, source) then return end
 		end
 	end
 
 	if F_count > 0 and E_count <= 0 then return end
-
 	return good >= bad
 end
 

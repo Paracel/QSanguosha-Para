@@ -276,7 +276,7 @@ sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	end
 end
 
-sgs.nosenyuan_suit_value = {
+sgs.nosxuanhuo_suit_value = {
 	heart = 3.9
 }
 

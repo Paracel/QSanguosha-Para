@@ -3026,7 +3026,8 @@ function SmartAI:willUsePeachTo(dying)
 		if not self.player:isLocked(anal) and self:getCardId("Analeptic") then return self:getCardId("Analeptic") end
 		if self:getCardId("Peach") then return self:getCardId("Peach") end
 	end
-	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and not (dying:isLord() or dying:objectName() == self.player:objectName())
+	if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and self.room:getMode() ~= "couple"
+		and not (dying:isLord() or dying:objectName() == self.player:objectName())
 		and (sgs.current_mode_players["loyalist"] + 1 == sgs.current_mode_players["rebel"]
 				or sgs.current_mode_players["loyalist"] == sgs.current_mode_players["rebel"]
 				or self.room:getCurrent():objectName() == self.player:objectName()) then
@@ -3126,6 +3127,10 @@ function SmartAI:willUsePeachTo(dying)
 			end
 		end
 	else
+		if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and self.room:getMode() ~= "couple"
+			and dying:isLord() and sgs.current_mode_players["loyalist"] < 2 then
+			card_str = self:getCardId("Peach")
+		end
 		if dying:hasSkill("wuhun") then
 			local lord = self.room:getLord()
 			if not lord or self:isEnemy(lord) then return "." end

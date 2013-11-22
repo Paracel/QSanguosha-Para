@@ -313,6 +313,7 @@ end
 sgs.ai_skill_invoke.qianhuan = function(self, data)
 	local use = data:toCardUse()
 	local to = use.to:first()
+	if not to then return false end
 	if to:objectName() == self.player:objectName() then
 		return not (use.from and (use.from:objectName() == to:objectName()
 									or (use.card:isKindOf("Slash") and self:isPriorFriendOfSlash(self.player, use.card, use.from))))

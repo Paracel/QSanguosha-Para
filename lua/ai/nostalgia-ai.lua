@@ -440,13 +440,13 @@ sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	if not benefit then return false end
 
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
+		if not self.player:getEquip(i) and target:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
 			return true
 		end
 	end
-	if who:getArmor() and self:evaluateArmor(who:getArmor()) >= self:evaluateArmor(self.player:getArmor()) then return true end
-	if who:getDefensiveHorse() or who:getOffensiveHorse() then return true end
-	if who:getWeapon() and self:evaluateWeapon(who:getWeapon()) >= self:evaluateWeapon(self.player:getWeapon()) then return true end
+	if target:getArmor() and self:evaluateArmor(target:getArmor()) >= self:evaluateArmor(self.player:getArmor()) then return true end
+	if target:getDefensiveHorse() or target:getOffensiveHorse() then return true end
+	if target:getWeapon() and self:evaluateWeapon(target:getWeapon()) >= self:evaluateWeapon(self.player:getWeapon()) then return true end
 
 	return false
 end

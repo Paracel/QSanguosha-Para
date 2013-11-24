@@ -466,3 +466,52 @@ sgs.ai_card_intention.PujiCard = function(self, card, from, tos)
 	local em_prompt = { "cardChosen", "puji", tostring(self.puji_id_choice), from:objectName(), to:objectName() }
 	sgs.ai_choicemade_filter.cardChosen.snatch(self, nil, em_prompt)
 end
+
+sgs.ai_skill_use["@@niluan"] = function(self, prompt)
+	return sgs.ai_skill_use.slash(self, prompt)
+end
+
+sgs.ai_skill_cardask["@niluan-slash"] = function(self, data, pattern, target, target2)
+	if target and self:isFriend(target) and not self:findLeijiTarget(target, 50, self.player) then
+		return "."
+	end
+	if not self.player:canSlash(target, false) then return "." end
+
+	local black_card
+	if not target:hasSkill("yizhong") and not target:hasArmorEffect("renwang_shield") and not target:hasArmorEffect("vine") then
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		self:sortByKeepValue(cards)
+		local slash = sgs.Sanguosha:cloneCard("slash")
+		for _, card in ipairs(cards) do
+			if card:isBlack() and self:getKeepValue(card, cards) <= self:getKeepValue(slash, cards) then
+				local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_SuitToBeDecided, -1)
+				black_slash:addSubcard(card)
+				if self:slashIsEffective(black_slash, target) then
+					black_card = card
+					break
+				end
+			end
+		end
+		if not black_card then
+			local offensive_horse = self.player:getOffensiveHorse()
+			if offensive_horse and offensive_horse:isBlack() then
+				local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_SuitToBeDecided, -1)
+				black_slash:addSubcard(offensive_horse)
+				if self:slashIsEffective(black_slash, target) then
+					black_card = offensive_horse
+				end
+			end
+		end
+	end
+	if self:needToThrowArmor() and self.player:getArmor():isBlack() then black_card = self.player:getArmor()
+	elseif self:needKongcheng(self.player, true) and self.player:getHandcardNum() == 1 and self.player:getHandcards():first():isBlack() then
+		black_card = self.player:getHandcards():first()
+	end
+	if black_card then
+		local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_SuitToBeDecided, -1)
+		black_slash:setSkillName("niluan")
+		black_slash:addSubcard(black_card)
+		return black_slash:toString()
+	end
+	return "."
+end

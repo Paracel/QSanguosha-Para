@@ -586,14 +586,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 			if player:hasFlag("SlashAssignee") then target = player break end
 		end
 		local target2 = nil
-		if #parsedPrompt >= 3 then
-			for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-				if p:objectName() == parsedPrompt[3] then
-					target2 = p
-					break
-				end
-			end
-		end
+		if #parsedPrompt >= 3 then target2 = findPlayerByObjectName(self.room, parsedPrompt[3]) end
 		if not target then return "." end
 		local ret = callback(self, nil, nil, target, target2)
 		if ret == nil or ret == "." then return "." end
@@ -603,7 +596,8 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		local use = { to = sgs.SPlayerList() }
 		if self.player:canSlash(target, slash, not no_distance) then use.to:append(target) else return "." end
 
-		if target:hasSkill("xiansi") and target:getPile("counter"):length() > 1 and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
+		if parsedPrompt[1] ~= "@niluan-slash" and target:hasSkill("xiansi") and target:getPile("counter"):length() > 1
+			and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
 			return "@XiansiSlashCard=.->" .. target:objectName()
 		end
 

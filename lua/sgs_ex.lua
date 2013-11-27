@@ -216,14 +216,14 @@ function sgs.CreateBasicCard(spec)
 end
 
 function isAvailable_AOE(self, player)
-	local canUse = false;
+	local canUse = false
 	local players = player:getSiblings()
 	for _, p in sgs.qlist(players) do
 		if p:isDead() or player:isProhibited(p, self) then continue end
 		canUse = true
 		break
 	end
-	return canUse and self:cardIsAvailable(player);
+	return canUse and self:cardIsAvailable(player)
 end
 
 function onUse_AOE(self, room, card_use)
@@ -250,7 +250,7 @@ function onUse_AOE(self, room, card_use)
 end
 
 function isAvailable_GlobalEffect(self, player)
-	local canUse = false;
+	local canUse = false
 	local players = player:getSiblings()
 	players:append(player)
 	for _, p in sgs.qlist(players) do
@@ -258,7 +258,7 @@ function isAvailable_GlobalEffect(self, player)
 		canUse = true
 		break
 	end
-	return canUse and self:cardIsAvailable(player);
+	return canUse and self:cardIsAvailable(player)
 end
 
 function onUse_GlobalEffect(self, room, card_use)

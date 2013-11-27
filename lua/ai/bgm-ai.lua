@@ -553,7 +553,7 @@ local function will_invoke_shichou(self)
 	local shu = 0
 	local first = self.player:hasFlag("Global_FirstRound")
 	local players = self.room:getOtherPlayers(self.player)
-	local shenguanyu = self.room:findPlayerBySkillName("wuhun");
+	local shenguanyu = self.room:findPlayerBySkillName("wuhun")
 	if shenguanyu ~= nil then
 		if shenguanyu:getKingdom() == "shu" then return true end
 	end

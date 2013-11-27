@@ -1325,8 +1325,12 @@ public:
         if (use.card->isKindOf("Slash")) {
             foreach (ServerPlayer *to, use.to) {
                 if (!player->isAlive()) break;
-                if (player->distanceTo(to) <= 1 && TriggerSkill::triggerable(player)
-                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to))) {
+                if (player->distanceTo(to) <= 1 && TriggerSkill::triggerable(player)) {
+                    player->tag["KangkaiSlash"] = data;
+                    bool will_use = room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to));
+                    player->tag.remove("KangkaiSlash");
+                    if (!will_use) continue;
+
                     player->drawCards(1);
                     if (!player->isNude() && player != to) {
                         const Card *card = NULL;
@@ -1342,8 +1346,10 @@ public:
                         if (card->getTypeId() == Card::TypeEquip && room->getCardOwner(card->getEffectiveId()) == to
                             && !to->isLocked(card)) {
                             to->tag["KangkaiSlash"] = data;
+                            to->tag["KangkaiGivenCard"] = QVariant::fromValue((CardStar)card);
                             bool will_use = room->askForSkillInvoke(to, "kangkai_use", "use");
                             to->tag.remove("KangkaiSlash");
+                            to->tag.remove("KangkaiGivenCard");
                             if (will_use)
                                 room->useCard(CardUseStruct(card, to, to));
                         }

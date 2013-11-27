@@ -36,7 +36,7 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 	self:sort(self.enemies, "defense")
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:getWeapon() and not self:hasSkills(sgs.lose_equip_skill, enemy) and not enemy:hasSkills("tuntian+zaoxian") then
+		if enemy:getWeapon() and not enemy:hasSkills(sgs.lose_equip_skill) and not enemy:hasSkills("tuntian+zaoxian") then
 			table.insert(targets, enemy)
 		end
 	end

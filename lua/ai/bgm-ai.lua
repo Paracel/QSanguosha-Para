@@ -743,7 +743,7 @@ sgs.ai_skill_cardask["@anxian-discard"] = function(self, data)
 	if self:needToLoseHp(self.player, use.from, true) then
 		return "."
 	end
-	if from:hasWeapon("axe") and self:hasSkills(sgs.lose_equip_skill, from) and from:getEquips():length() > 1 then
+	if from:hasWeapon("axe") and from:hasSkills(sgs.lose_equip_skill) and from:getEquips():length() > 1 then
 		for _, card in ipairs(cards) do
 			if not isCard("Peach", card, self.player) then
 				return "$" .. card:getEffectiveId()
@@ -933,7 +933,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	local current = self.room:getCurrent()
 	if self:isEnemy(current) then
 		if n >= 3 and current:getCardCount() >= 3 and not (self:needKongcheng(current) and current:getCards("e"):length() < 3)
-			and not (self:hasSkills(sgs.lose_equip_skill, current) and current:getHandcardNum() < n) then
+			and not (current:hasSkills(sgs.lose_equip_skill) and current:getHandcardNum() < n) then
 			return "discard"
 		end
 		if self:hasSkills("jijiu|tuntian+zaoxian|beige", current) and n >= 2 and current:getCardCount() >= 2 then return "discard" end

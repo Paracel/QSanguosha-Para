@@ -491,7 +491,7 @@ function SmartAI:useCardSlash(card, use)
 					for _, acard in sgs.qlist(self.player:getHandcards()) do
 						if acard:isKindOf("Weapon") then
 							local callback = sgs.ai_slash_weaponfilter[acard:objectName()]
-							if callback and type(callback) == "function" and callback(target, self)
+							if callback and type(callback) == "function" and callback(self, target, self.player)
 								and self.player:distanceTo(target) <= (sgs.weapon_range[acard:getClassName()] or 1) then
 								self:useEquipCard(acard, use)
 								if use.card then table.insert(Weapons, acard) end
@@ -944,12 +944,12 @@ sgs.ai_skill_invoke.double_sword = function(self, data)
 	return not self:needKongcheng(self.player, true)
 end
 
-function sgs.ai_slash_weaponfilter.double_sword(to, self)
-	return self.player:getGender() ~= to:getGender()
+function sgs.ai_slash_weaponfilter.double_sword(self, to, player)
+	return player:getGender() ~= to:getGender()
 end
 
-function sgs.ai_weapon_value.double_sword(self, enemy)
-	if enemy and enemy:isMale() ~= self.player:isMale() then return 4 end
+function sgs.ai_weapon_value.double_sword(self, enemy, player)
+	if enemy and enemy:isMale() ~= player:isMale() then return 4 end
 end
 
 function SmartAI:getExpectedJinkNum(use)
@@ -1032,7 +1032,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 	end
 end
 
-function sgs.ai_slash_weaponfilter.guding_blade(to)
+function sgs.ai_slash_weaponfilter.guding_blade(self, to)
 	return to:isKongcheng()
 end
 
@@ -1131,12 +1131,12 @@ sgs.ai_skill_cardask["@axe"] = function(self, data, pattern, target)
 	end
 end
 
-function sgs.ai_slash_weaponfilter.axe(to, self)
-	return self:getOverflow() > 0
+function sgs.ai_slash_weaponfilter.axe(self, to, player)
+	return self:getOverflow(player) > 1
 end
 
-function sgs.ai_weapon_value.axe(self, enemy)
-	if self:hasSkills("jiushi|jiuchi|luoyi|pojun", self.player) then return 6 end
+function sgs.ai_weapon_value.axe(self, enemy, player)
+	if player:hasSkills("jiushi|jiuchi|luoyi|pojun") then return 6 end
 	if enemy and enemy:getHp() < 3 then return 5 - enemy:getHp() end
 end
 
@@ -1252,16 +1252,16 @@ spear_skill.getTurnUseCard = function(self, inclusive)
 	return turnUse_spear(self, inclusive, "spear")
 end
 
-function sgs.ai_weapon_value.spear(self, enemy)
-	if enemy and self:getCardsNum("Slash") == 0 then
-		if self:getOverflow() > 0 then return 2
-		elseif self.player:getHandcardNum() > 2 then return 1
+function sgs.ai_weapon_value.spear(self, enemy, player)
+	if enemy and getCardsNum("Slash", player) == 0 then
+		if self:getOverflow(player) > 0 then return 2
+		elseif player:getHandcardNum() > 2 then return 1
 		end
 	end
 	return 0
 end
 
-function sgs.ai_slash_weaponfilter.fan(to)
+function sgs.ai_slash_weaponfilter.fan(self, to)
 	return to:hasArmorEffect("vine")
 end
 
@@ -1276,16 +1276,12 @@ sgs.ai_skill_invoke.kylin_bow = function(self, data)
 	return self:isEnemy(damage.to)
 end
 
-function sgs.ai_slash_weaponfilter.kylin_bow(to)
-	if to:getDefensiveHorse() then return true else return false end
+function sgs.ai_slash_weaponfilter.kylin_bow(self, to)
+	return to:getDefensiveHorse() or to:getOffensiveHorse()
 end
 
-function sgs.ai_weapon_value.kylin_bow(self, target)
-	if not target then
-		for _, enemy in ipairs(self.enemies) do
-			if enemy:getOffensiveHorse() or enemy:getDefensiveHorse() then return 1 end
-		end
-	end
+function sgs.ai_weapon_value.kylin_bow(self, enemy)
+	if enemy:getOffensiveHorse() or enemy:getDefensiveHorse() then return 1 end
 end
 
 sgs.ai_skill_invoke.eight_diagram = function(self, data)

@@ -852,7 +852,7 @@ sgs.ai_skill_playerchosen.zhiyan = function(self, targets)
 			end
 		else
 			local cards = { card }
-			local player = self:getCardNeedPlayer(cards)
+			local card, player = self:getCardNeedPlayer(cards)
 			if player then
 				return player
 			else

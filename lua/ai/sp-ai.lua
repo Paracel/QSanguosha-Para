@@ -1040,6 +1040,102 @@ sgs.ai_card_intention.ZhoufuCard = 0
 sgs.ai_use_value.ZhoufuCard = 2
 sgs.ai_use_priority.ZhoufuCard = 1.0
 
+local function getKangkaiCard(self, target, data)
+	local use = data:toCardUse()
+	local weapon, armor, def_horse, off_horse = {}, {}, {}, {}
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if card:isKindOf("Weapon") then table.insert(weapon, card)
+		elseif card:isKindOf("Armor") then table.insert(armor, card)
+		elseif card:isKindOf("DefensiveHorse") then table.insert(def_horse, card)
+		elseif card:isKindOf("OffensiveHorse") then table.insert(off_horse, card)
+		end
+	end
+	if #armor > 0 then
+		for _, card in ipairs(armor) do
+			if ((not target:getArmor() and not target:hasSkills("bazhen|yizhong"))
+				or (target:getArmor() and self:evaluateArmor(card, target) >= self:evaluateArmor(target:getArmor(), target)))
+				and not (card:isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, target, use.from)) then
+				return card:getEffectiveId()
+			end
+		end
+	end
+	if self:needToThrowArmor()
+		and ((not target:getArmor() and not target:hasSkills("bazhen|yizhong"))
+			or (target:getArmor() and self:evaluateArmor(self.player:getArmor(), target) >= self:evaluateArmor(target:getArmor(), target)))
+		and not (self.player:getArmor():isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, target, use.from)) then
+		return self.player:getArmor():getEffectiveId()
+	end
+	if #def_horse > 0 then return def_horse[1]:getEffectiveId() end
+	if #weapon > 0 then
+		for _, card in ipairs(weapon) do
+			if not target:getWeapon()
+				or (self:evaluateArmor(card, target) >= self:evaluateArmor(target:getWeapon(), target)) then
+				return card:getEffectiveId()
+			end
+		end
+	end
+	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5
+		and (not target:getArmor()
+			or (self:evaluateArmor(self.player:getWeapon(), target) >= self:evaluateArmor(target:getWeapon(), target))) then
+		return self.player:getWeapon():getEffectiveId()
+	end
+	if #off_horse > 0 then return off_horse[1]:getEffectiveId() end
+	if self.player:getOffensiveHorse()
+		and ((self.player:getWeapon() and not self.player:getWeapon():isKindOf("Crossbow")) or self.player:hasSkills("mashu|tuntian")) then
+		return self.player:getOffensiveHorse():getEffectiveId()
+	end
+end
+
+sgs.ai_skill_invoke.kangkai = function(self, data)
+	self.kangkai_give_id = nil
+	if hasManjuanEffect(self.player) then return false end
+	local target = data:toPlayer()
+	if not target then return false end
+	if target:objectName() == self.player:objectName() then
+		return true
+	elseif not self:isFriend(target) then
+		return hasManjuanEffect(target)
+	else
+		local id = getKangkaiCard(self, target, self.player:getTag("KangkaiSlash"))
+		if id then return true else return not self:needKongcheng(target, true) end
+	end
+end
+
+sgs.ai_skill_cardask["@kangkai_give"] = function(self, data, pattern, target)
+	if self:isFriend(target) then
+		local id = getKangkaiCard(self, target, data)
+		if id then return "$" .. id end
+		if self:getCardsNum("Jink") > 1 then
+			for _, card in sgs.qlist(self.player:getHandcards()) do
+				if isCard("Jink", card, target) then return "$" .. card:getEffectiveId() end
+			end
+		end
+		for _, card in sgs.qlist(self.player:getHandcards()) do
+			if not self:isValuableCard(card) then return "$" .. card:getEffectiveId() end
+		end
+	else
+		local to_discard = self:askForDiscard("dummyreason", 1, 1, false, true)
+		if #to_discard > 0 then return "$" .. to_discard[1] end
+	end
+end
+
+sgs.ai_skill_invoke.kangkai_use = function(self, data)
+	local use = self.player:getTag("KangkaiSlash"):toCardUse()
+	local card = self.player:getTag("KangkaiCard"):toCard()
+	if not use.card or not card then return false end
+	if card:isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, self.player, use.from) then return false end
+	if ((card:isKindOf("DefensiveHorse") and self.player:getDefensiveHorse())
+		or (card:isKindOf("OffensiveHorse") and (self.player:getOffensiveHorse() or (self.player:hasSkill("drmashu") and self.player:getDefensiveHorse()))))
+		and not self.player:hasSkills(sgs.lose_equip_skill) then
+		return false
+	end
+	if card:isKindOf("Armor")
+		and ((self.player:hasSkills("bazhen|yizhong") and not self.player:getArmor())
+			or (self.player:getArmor() and self:evaluateArmor(card) < self:evaluateArmor(self.player:getArmor()))) then return false end
+	if card:isKindOf("Weanpon") and (self.player:getWeapon() and self:evaluateArmor(card) < self:evaluateArmor(self.player:getWeapon())) then return false end
+	return true
+end
+
 sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
 	local card_str = sgs.ai_skill_use["@@shensu1"](self, "@shensu1")
 	return string.gsub(card_str, "ShensuCard", "QingyiCard")

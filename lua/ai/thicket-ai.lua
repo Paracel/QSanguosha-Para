@@ -23,8 +23,7 @@ function SmartAI:toTurnOver(player, n, reason)
 		and (not player:hasUsed("ShenfenCard") and player:getMark("@wrath") >= 6 or player:hasFlag("ShenfenUsing")) then
 		return false
 	end
-	if n > 1 and player:hasSkill("jijiu")
-		and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then
+	if n > 1 and player:hasSkill("jijiu") and not hasManjuanEffect(player) then
 		return false
 	end
 	if not player:faceUp() and not player:hasFlag("ShenfenUsing") and not player:hasFlag("GuixinUsing") then
@@ -54,7 +53,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 			target = self:findPlayerToDraw(false, n)
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if self:toTurnOver(enemy, n, "fangzhu") and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
+					if self:toTurnOver(enemy, n, "fangzhu") and hasManjuanEffect(enemy) then
 						target = enemy
 						break
 					end
@@ -63,7 +62,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 		else
 			self:sort(self.enemies)
 			for _, enemy in ipairs(self.enemies) do
-				if self:toTurnOver(enemy, n, "fangzhu") and enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive then
+				if self:toTurnOver(enemy, n, "fangzhu") and hasManjuanEffect(enemy) then
 					target = enemy
 					break
 				end
@@ -102,7 +101,7 @@ end
 sgs.ai_playerchosen_intention.songwei = -50
 
 sgs.ai_playerchosen_intention.fangzhu = function(self, from, to)
-	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then sgs.updateIntention(from, to, 80) end
+	if hasManjuanEffect(to) then sgs.updateIntention(from, to, 80) end
 	local intention = 80 / math.max(from:getLostHp(), 1)
 	if not self:toTurnOver(to, from:getLostHp()) then intention = -intention end
 	if from:getLostHp() < 3 then

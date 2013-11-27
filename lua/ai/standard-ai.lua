@@ -575,7 +575,7 @@ sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
 	local available_friends = {}
 	for _, friend in ipairs(self.friends) do
 		local insert = true
-		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
+		if insert and hasManjuanEffect(friend) then insert = false end
 		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
 		if insert and self:isLihunTarget(friend) then insert = false end
 		if insert then table.insert(available_friends, friend) end
@@ -822,7 +822,7 @@ sgs.ai_use_priority.RendeCard = 8.8
 sgs.ai_card_intention.RendeCard = function(self, card, from, tos)
 	local to = tos[1]
 	local intention = -70
-	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then
+	if hasManjuanEffect(to) then
 		intention = 0
 	elseif to:hasSkill("kongcheng") and to:isKongcheng() then
 		intention = 30
@@ -1214,7 +1214,7 @@ sgs.ai_skill_cardask["@jizhi-exchange"] = function(self, data)
 	local card = data:toCard()
 	local handcards = sgs.QList2Table(self.player:getHandcards())
 	if self.player:getPhase() ~= sgs.Player_Play then
-		if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return "." end
+		if hasManjuanEffect(self.player) then return "." end
 		self:sortByKeepValue(handcards)
 		for _, card_ex in ipairs(handcards) do
 			if self:getKeepValue(card_ex) < self:getKeepValue(card) and not self:isValuableCard(card_ex) then

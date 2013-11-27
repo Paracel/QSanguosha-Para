@@ -712,7 +712,7 @@ sgs.ai_skill_invoke.guixin = function(self, data)
 	local damage = data:toDamage()
 	local diaochan = self.room:findPlayerBySkillName("lihun")
 	local lihun_eff = (diaochan and self:isEnemy(diaochan))
-	local manjuan_eff = (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive)
+	local manjuan_eff = hasManjuanEffect(self.player)
 	if lihun_eff and not manjuan_eff then return false end
 	if not self.player:faceUp() then return true
 	else

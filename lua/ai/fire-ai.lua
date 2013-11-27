@@ -76,7 +76,7 @@ sgs.dynamic_value.control_card.QuhuCard = true
 sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	local friends = {}
 	for _, player in ipairs(self.friends) do
-		if player:isAlive() and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then
+		if player:isAlive() and not hasManjuanEffect(player) then
 			table.insert(friends, player)
 		end
 	end

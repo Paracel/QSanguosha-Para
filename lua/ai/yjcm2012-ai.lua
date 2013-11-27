@@ -634,7 +634,7 @@ sgs.ai_skill_playerchosen.zhuiyi = function(self, targets)
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defense")
 	for _, friend in ipairs(targets) do
-		if self:isFriend(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive and friend:getLostHp() == 0) then return friend end
+		if self:isFriend(friend) and not (hasManjuanEffect(friend) and friend:getLostHp() == 0) then return friend end
 	end
 	return nil
 end
@@ -741,7 +741,7 @@ sgs.chunlao_keep_value = {
 }
 
 sgs.ai_skill_invoke.zhiyu = function(self, data)
-	local manjuan = (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive)
+	local manjuan = hasManjuanEffect(self.player)
 	local damage = data:toDamage()
 	local cards = self.player:getCards("h")
 	cards = sgs.QList2Table(cards)

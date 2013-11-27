@@ -1,7 +1,7 @@
 sgs.ai_skill_invoke.chongzhen = function(self, data)
 	local target = data:toPlayer()
 	if self:isFriend(target) then
-		if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then return false end
+		if hasManjuanEffect(self.player) then return false end
 		if self:needKongcheng(target) and target:getHandcardNum() == 1 then return true end
 		if self:getOverflow(target) > 2 then return true end
 		return false
@@ -283,6 +283,10 @@ sgs.ai_skill_askforag.manjuan = function(self, card_ids)
 	end
 	self:sortByCardNeed(cards)
 	return cards[#cards]:getEffectiveId()
+end
+
+function hasManjuanEffect(player)
+	return player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive
 end
 
 sgs.ai_cardneed.jie = function(to, card)
@@ -1130,7 +1134,7 @@ local function need_huangen(self, who)
 	local from = self.room:getCurrent()
 	if self:isEnemy(who) then
 		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who, from) then
-			if who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then return true end
+			if hasManjuanEffect(who) then return true end
 			if self:isWeak(who) then return true end
 			if self:hasSkills(sgs.masochism_skill, who) then return true end
 		end
@@ -1138,7 +1142,7 @@ local function need_huangen(self, who)
 	elseif self:isFriend(who) then
 		if self:hasSkills("noswuyan", who) and from:objectName() ~= who:objectName() then return true end
 		if card:isKindOf("GodSalvation") and not who:isWounded() then
-			if who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive then return false end
+			if hasManjuanEffect(who) then return false end
 			if self:needKongcheng(who, true) then return false end
 			return true
 		end
@@ -1215,7 +1219,7 @@ sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)
 	if not cardx then return end
 	for _, to in ipairs(tos) do
 		local intention = -80
-		if cardx:isKindOf("GodSalvation") and to:isWounded() and ((to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive) or self:isWeak(to)) then intention = 50 end
+		if cardx:isKindOf("GodSalvation") and to:isWounded() and (hasManjuanEffect(to) or self:isWeak(to)) then intention = 50 end
 		if self:needKongcheng(to, true) then intention = 0 end
 		if cardx:isKindOf("AmazingGrace") and self:hasTrickEffective(cardx, to) then intention = 0 end
 		sgs.updateIntention(from, to, intention)

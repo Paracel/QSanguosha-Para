@@ -753,7 +753,7 @@ sgs.ai_skill_playerchosen.yanyu = function(self, targets)
 end
 
 sgs.ai_playerchosen_intention.yanyu = function(self, from, to)
-	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then return end
+	if hasManjuanEffect(to) then return end
 	local intention = -60
 	if self:needKongcheng(to, true) then intention = 10 end
 	sgs.updateIntention(from, to, intention)

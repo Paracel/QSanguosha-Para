@@ -134,7 +134,7 @@ function sgs.getDefenseSlash(player, self)
 
 	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 then defense = defense + 1.5 end
 	if player:hasSkill("aocai") and player:getPhase() == sgs.Player_NotActive then defense = defense + 0.5 end
-	if player:hasSkill("wanrong") and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive) then defense = defense + 0.5 end
+	if player:hasSkill("wanrong") and not hasManjuanEffect(player) then defense = defense + 0.5 end
 
 	local hujiaJink = 0
 	if player:hasLordSkill("hujia") then

@@ -304,7 +304,7 @@ sgs.ai_skill_askforyiji.lirang = function(self, card_ids)
 	local available_friends = {}
 	for _, friend in ipairs(self.friends_noself) do
 		local insert = true
-		if insert and friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive then insert = false end
+		if insert and hasManjuanEffect(friend) then insert = false end
 		if insert and friend:hasFlag("DimengTarget") then
 			local another
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do

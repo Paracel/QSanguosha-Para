@@ -2623,7 +2623,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 			or (player:isLord() and self:isWeak(player) and self:getEnemyNumBySeat(self.player, player) >= 1) then
 			exclude = false
 		end
-		if self:objectiveLevel(player) <= -2 and not (player:hasSkill("manjuan") and self.room:getCurrent() ~= player) and not exclude then
+		if self:objectiveLevel(player) <= -2 and not hasManjuanEffect(player) and not exclude then
 			table.insert(friends, player)
 		end
 	end
@@ -2885,7 +2885,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
+			if not self:needKongcheng(friend) and not hasManjuanEffect(friend) then
 				if friend:getHandcardNum() <= 3
 					and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse) then
 					return hcard, friend
@@ -2896,7 +2896,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then
+			if not self:needKongcheng(friend) and not hasManjuanEffect(friend) then
 				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse then
 					return hcard, friend
 				end
@@ -2933,7 +2933,7 @@ sgs.ai_choicemade_filter.Yiji.general = function(self, from, promptlist)
 	local to = findPlayerByObjectName(from:getRoom(), promptlist[4])
 	if not to then return end
 	local intention = -70
-	if to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive then
+	if hasManjuanEffect(to) then
 		intention = 0
 	elseif to:hasSkill("kongcheng") and to:isKongcheng() then
 		intention = 30
@@ -3480,14 +3480,14 @@ function SmartAI:getRetrialCardId(cards, judge)
 					elseif self:getOverflow() > 0 and judge.card:getSuit() ~= card_x:getSuit() then
 						local retr = true
 						if (judge.card:getSuit() == sgs.Card_Heart and who:isWounded() and self:isFriend(who))
-							or (judge.card:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive)
+							or (judge.card:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and hasManjuanEffect(who))
 							or (judge.card:getSuit() == sgs.Card_Club and self:needToThrowArmor(damage.from)) then
 							retr = false
 						end
 						if retr
 							and ((self:isFriend(who) and card_x:getSuit() == sgs.Card_Heart and who:isWounded())
-								or (card_x:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive)
-								or (card_x:getSuit() == sgs.Card_Diamond and self:isFriend(who) and not (who:hasSkill("manjuan") and who:getPhase() == sgs.Player_NotActive))
+								or (card_x:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and hasManjuanEffect(who))
+								or (card_x:getSuit() == sgs.Card_Diamond and self:isFriend(who) and not hasManjuanEffect(who))
 								or (card_x:getSuit() == sgs.Card_Club and (self:needToThrowArmor(damage.from) or damage.from:isNude())))
 								or (judge.card:getSuit() == sgs.Card_Spade and self:toTurnOver(damage.from, 0)) then
 							table.insert(other_suit, card)
@@ -5090,7 +5090,7 @@ function SmartAI:findPlayerToDraw(include_self, drawnum)
 	local players = sgs.QList2Table(include_self and self.room:getAllPlayers() or self.room:getOtherPlayers(self.player))
 	local friends = {}
 	for _, player in ipairs(players) do
-		if self:isFriend(player) and not (player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive)
+		if self:isFriend(player) and not hasManjuanEffect(player)
 			and not (player:hasSkill("kongcheng") and player:isKongcheng() and drawnum <= 2) then
 			table.insert(friends, player)
 		end

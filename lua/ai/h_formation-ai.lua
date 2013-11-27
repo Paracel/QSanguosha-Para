@@ -1,7 +1,7 @@
 function sgs.ai_skill_invoke.ziliang(self, data)
 	self.ziliang_id = nil
 	local damage = data:toDamage()
-	if damage.to:hasSkill("manjuan") and damage.to:getPhase() == sgs.Player_NotActive then return false end
+	if hasManjuanEffect(damage.to) then return false end
 	if not self:isFriend(damage.to) then
 		if damage.to:getPhase() == sgs.Player_NotActive and self:needKongcheng(damage.to, true) then
 			local ids = sgs.QList2Table(self.player:getPile("field"))
@@ -255,7 +255,7 @@ end
 
 sgs.ai_skill_invoke.yicheng = function(self, data)
 	local player = data:toPlayer()
-	if player:hasSkill("manjuan") and player:getPhase() == sgs.Player_NotActive then
+	if hasManjuanEffect(player) then
 		if player:canDiscard(player, "he") then return self:isEnemy(player) else return false end
 	else
 		return self:isFriend(player)

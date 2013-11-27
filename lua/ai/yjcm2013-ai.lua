@@ -1,5 +1,5 @@
 sgs.ai_skill_invoke.chengxiang = function(self, data)
-	return not (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive)
+	return not hasManjuanEffect(self.player)
 end
 
 sgs.ai_skill_askforag.chengxiang = function(self, card_ids)
@@ -10,7 +10,7 @@ function sgs.ai_cardsview_valuable.renxin(self, class_name, player)
 	if class_name == "Peach" and not player:isKongcheng() then
 		local dying = player:getRoom():getCurrentDyingPlayer()
 		if not dying or self:isEnemy(dying, player) or dying:objectName() == player:objectName() then return nil end
-		if dying:hasSkill("manjuan") and dying:getPhase() == sgs.Player_NotActive then
+		if hasManjuanEffect(dying) then
 			local peach_num = 0
 			if not player:hasFlag("Global_PreventPeach") then
 				for _, c in sgs.qlist(player:getCards("he")) do
@@ -467,7 +467,7 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 	local slash_num = 0
 	if use.from:objectName() == self.player:objectName() then slash_num = self:getCardsNum("Slash") else slash_num = getCardsNum("Slash", use.from) end
 	if self:isEnemy(use.from) and use.m_addHistory and not self:hasCrossbowEffect(use.from) and slash_num > 0 then return "." end
-	if (slash:isRed() and not (self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive))
+	if (slash:isRed() and not hasManjuanEffect(self.player))
 		or (use.m_reason == sgs.CardUseStruct_CARD_USE_REASON_PLAY and use.m_addHistory and self:isFriend(use.from) and slash_num >= 1) then
 		local str = getLeastValueCard(slash:isRed())
 		if str then return str end
@@ -589,7 +589,7 @@ sgs.ai_skill_choice.qiaoshui = function(self, choices, data)
 	elseif use.card:isKindOf("AmazingGrace") then
 		self:sort(self.enemies)
 		for _, enemy in ipairs(self.enemies) do
-			if self:hasTrickEffective(use.card, enemy, self.player) and not (enemy:hasSkill("manjuan") and enemy:getPhase() == sgs.Player_NotActive)
+			if self:hasTrickEffective(use.card, enemy, self.player) and not hasManjuanEffect(enemy)
 				and not self:needKongcheng(enemy, true) then
 				self.qiaoshui_remove_target = enemy
 				return "remove"
@@ -723,7 +723,7 @@ sgs.ai_skill_cardask["@duodao-get"] = function(self, data)
 					if self:isWeak(friend) then return "." end
 				end
 			else
-				if self.player:hasSkill("manjuan") and self.player:getPhase() == sgs.Player_NotActive then
+				if hasManjuanEffect(self.player) then
 					if self:needToThrowArmor() and not self.player:isJilei(self.player:getArmor()) then
 						return "$" .. self.player:getArmor():getEffectiveId()
 					elseif self.player:getHandcardNum() == 1
@@ -858,14 +858,14 @@ sgs.ai_skill_playerchosen.zhiyan = function(self, targets)
 			else
 				self:sort(self.friends)
 				for _, friend in ipairs(self.friends) do
-					if not self:needKongcheng(friend, true) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return friend end
+					if not self:needKongcheng(friend, true) and not hasManjuanEffect(friend) then return friend end
 				end
 			end
 		end
 	else
 		self:sort(self.friends)
 		for _, friend in ipairs(self.friends) do
-			if not self:needKongcheng(friend, true) and not (friend:hasSkill("manjuan") and friend:getPhase() == sgs.Player_NotActive) then return friend end
+			if not self:needKongcheng(friend, true) and not hasManjuanEffect(friend) then return friend end
 		end
 	end
 	return nil

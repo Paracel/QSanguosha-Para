@@ -411,7 +411,7 @@ end
 
 sgs.ai_playerchosen_intention.nosmiji = function(self, from, to)
 	if not (self:needKongcheng(to, true) and from:getLostHp() == 1)
-		and not (to:hasSkill("manjuan") and to:getPhase() == sgs.Player_NotActive) then
+		and not hasManjuanEffect(to) then
 		sgs.updateIntention(from, to, -80)
 	end
 end

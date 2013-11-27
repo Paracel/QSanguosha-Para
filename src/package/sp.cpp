@@ -1455,12 +1455,9 @@ AocaiCard::AocaiCard() {
 }
 
 bool AocaiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    QString name;
     const Card *card = NULL;
-    if (!user_string.isEmpty()) {
-        name = user_string.split("+").first();
-        card = Sanguosha->cloneCard(name);
-    }
+    if (!user_string.isEmpty())
+        card = Sanguosha->cloneCard(user_string.split("+").first());
     return card && card->targetFilter(targets, to_select, Self) && !Self->isProhibited(to_select, card, targets);
 }
 
@@ -1475,12 +1472,9 @@ bool AocaiCard::targetFixed() const{
 }
 
 bool AocaiCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
-    QString name;
     const Card *card = NULL;
-    if (!user_string.isEmpty()) {
-        name = user_string.split("+").first();
-        card = Sanguosha->cloneCard(name);
-    }
+    if (!user_string.isEmpty())
+        card = Sanguosha->cloneCard(user_string.split("+").first());
     return card && card->targetsFeasible(targets, Self);
 }
 

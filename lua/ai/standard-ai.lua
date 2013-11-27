@@ -1270,7 +1270,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 
 	if self.player:getHp() < 3 then
 		local zcards = self.player:getCards("he")
-		local use_slash, keep_jink, keep_anal, keep_weapon = false, false, false
+		local use_slash, keep_jink, keep_analeptic, keep_weapon = false, false, false
 		for _, zcard in sgs.qlist(zcards) do
 			if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
 				local shouldUse = true
@@ -1309,8 +1309,8 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 					keep_jink = true
 					shouldUse = false
 				end
-				if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_anal then
-					keep_anal = true
+				if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_analeptic then
+					keep_analeptic = true
 					shouldUse = false
 				end
 				if shouldUse then table.insert(unpreferedCards, zcard:getId()) end

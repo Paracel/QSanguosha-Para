@@ -382,10 +382,10 @@ end
 sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	local target = data:toPlayer()
 	if self:isFriend(target) and not self:findLeijiTarget(target, 50, self.player) then return "." end
-	local has_peach, has_anal, has_slash, has_jink
+	local has_peach, has_analeptic, has_slash, has_jink
 	for _, card in sgs.qlist(self.player:getHandcards()) do
 		if card:isKindOf("Peach") then has_peach = card
-		elseif card:isKindOf("Analeptic") then has_anal = card
+		elseif card:isKindOf("Analeptic") then has_analeptic = card
 		elseif card:isKindOf("Slash") then has_slash = card
 		elseif card:isKindOf("Jink") then has_jink = card
 		end
@@ -393,9 +393,9 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 
 	if has_slash then return "$" .. has_slash:getEffectiveId()
 	elseif has_jink then return "$" .. has_jink:getEffectiveId()
-	elseif has_anal or has_peach then
+	elseif has_analeptic or has_peach then
 		if getCardsNum("Jink", target) == 0 and self.player:getMark("drank") > 0 and self:getAllPeachNum(target) == 0 then
-			if has_anal then return "$" .. has_anal:getEffectiveId()
+			if has_analeptic then return "$" .. has_analeptic:getEffectiveId()
 			else return "$" .. has_peach:getEffectiveId()
 			end
 		end
@@ -404,18 +404,18 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 end
 
 function sgs.ai_slash_prohibit.xiangle(self, from, to)
-	local slash_num, anal_num, jink_num
+	local slash_num, analeptic_num, jink_num
 	if from:objectName() == self.player:objectName() then
 		slash_num = self:getCardsNum("Slash")
-		anal_num = self:getCardsNum("Analeptic")
+		analeptic_num = self:getCardsNum("Analeptic")
 		jink_num = self:getCardsNum("Jink")
 	else
 		slash_num = getCardsNum("Slash", from)
-		anal_num = getCardsNum("Analpetic", from)
+		analeptic_num = getCardsNum("Analpetic", from)
 		jink_num = getCardsNum("Jink", from)
 	end
-	if self:needKongcheng() and self.player:getHandcardNum() == 2 then return slash_num + anal_num + jink_num < 2 end
-	return slash_num + anal_num + math.max(jink_num - 1, 0) < 2
+	if self:needKongcheng() and self.player:getHandcardNum() == 2 then return slash_num + analeptic_num + jink_num < 2 end
+	return slash_num + analeptic_num + math.max(jink_num - 1, 0) < 2
 end
 
 sgs.ai_skill_invoke.fangquan = function(self, data)
@@ -861,11 +861,11 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 			end
 		end
 
-		local peach_num, peach, jink, anal, slash = 0
+		local peach_num, peach, jink, analeptic, slash = 0
 		for _, card in ipairs(cards) do
 			if card:isKindOf("Peach") then peach = card:getEffectiveId() peach_num = peach_num + 1 end
 			if card:isKindOf("Jink") then jink = card:getEffectiveId() end
-			if card:isKindOf("Analeptic") then anal = card:getEffectiveId() end
+			if card:isKindOf("Analeptic") then analeptic = card:getEffectiveId() end
 			if card:isKindOf("Slash") then slash = card:getEffectiveId() end
 		end
 		if peach then
@@ -875,8 +875,8 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 					return peach
 			end
 		end
-		if self:isWeak(who) and (jink or anal) then
-			return jink or anal
+		if self:isWeak(who) and (jink or analeptic) then
+			return jink or analeptic
 		end
 
 		for _, card in ipairs(cards) do
@@ -890,8 +890,8 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 			end
 		end
 
-		if jink or anal or slash then
-			return jink or anal or slash
+		if jink or analeptic or slash then
+			return jink or analeptic or slash
 		end
 
 		for _, card in ipairs(cards) do

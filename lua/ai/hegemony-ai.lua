@@ -1,9 +1,9 @@
 sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 	local currentplayer = self.room:getCurrent()
 
-	local has_anal, has_slash, has_jink
+	local has_analeptic, has_slash, has_jink
 	for _, acard in sgs.qlist(self.player:getHandcards()) do
-		if acard:isKindOf("Analeptic") then has_anal = acard
+		if acard:isKindOf("Analeptic") then has_analeptic = acard
 		elseif acard:isKindOf("Slash") then has_slash = acard
 		elseif acard:isKindOf("Jink") then has_jink = acard
 		end
@@ -13,9 +13,9 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 
 	if has_slash then card = has_slash
 	elseif has_jink then card = has_jink
-	elseif has_anal then
+	elseif has_analeptic then
 		if (getCardsNum("EquipCard", currentplayer) == 0 and not self:isWeak()) or self:getCardsNum("Analeptic") > 1 then
-			card = has_anal
+			card = has_analeptic
 		end
 	end
 

@@ -843,7 +843,7 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 	if self:needToThrowArmor() then table.insert(card_ids, self.player:getArmor():getEffectiveId()) end
 
 	local zcards = self.player:getHandcards()
-	local use_slash, keep_jink, keep_anal = false, false, false
+	local use_slash, keep_jink, keep_analeptic = false, false, false
 	for _, zcard in sgs.qlist(zcards) do
 		if not isCard("Peach", zcard, self.player) and not isCard("ExNihilo", zcard, self.player) then
 			local shouldUse = true
@@ -861,8 +861,8 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 				keep_jink = true
 				shouldUse = false
 			end
-			if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_anal then
-				keep_anal = true
+			if self.player:getHp() == 1 and isCard("Analeptic", zcard, self.player) and not keep_analeptic then
+				keep_analeptic = true
 				shouldUse = false
 			end
 			if shouldUse then table.insert(card_ids, zcard:getId()) end

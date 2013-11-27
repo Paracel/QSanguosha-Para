@@ -719,6 +719,7 @@ end
 
 sgs.ai_card_intention.Slash = function(self, card, from, tos)
 	if sgs.ai_collateral then sgs.ai_collateral = false return end
+	if card:hasFlag("nosjiefan-slash") then return end
 	for _, to in ipairs(tos) do
 		local value = 80
 		if table.contains(sgs.ai_leiji_effect, to) then

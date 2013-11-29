@@ -647,8 +647,10 @@ GuhuoDialog::GuhuoDialog(const QString &object, bool left, bool right): object_n
 }
 
 void GuhuoDialog::popup() {
-    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY)
+    if (Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY) {
+        emit onButtonClick();
         return;
+    }
 
     foreach (QAbstractButton *button, group->buttons()) {
         const Card *card = map[button->objectName()];

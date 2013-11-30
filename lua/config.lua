@@ -229,6 +229,7 @@ config = {
 		"zhenji->sp_zhenji|heg_zhenji|tw_zhenji",
 		"zhouyu->heg_zhouyu|sp_heg_zhouyu",
 		"zhugeke->diy_zhugeke",
-		"zhugeliang->heg_zhugeliang|tw_zhugeliang"
+		"zhugeliang->heg_zhugeliang|tw_zhugeliang",
+		"zhugejin->sp_zhugejin"
 	}
 }

@@ -1945,6 +1945,11 @@ SPPackage::SPPackage()
     General *caoang = new General(this, "caoang", "wei"); // SP 026
     caoang->addSkill(new Kangkai);
 
+    General *sp_zhugejin = new General(this, "sp_zhugejin", "wu", 3, true, true); // SP 027
+    sp_zhugejin->addSkill("hongyuan");
+    sp_zhugejin->addSkill("huanshi");
+    sp_zhugejin->addSkill("mingzhe");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();

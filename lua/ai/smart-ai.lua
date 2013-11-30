@@ -3144,8 +3144,7 @@ function SmartAI:willUsePeachTo(dying)
 				if finalRetrial == 0 or finalRetrial == 2 then
 					card_str = self:getCardId("Peach")
 				elseif finalRetrial == 1 then
-					local flag = wizard:hasSkill("huanshi") and "he" or "h"
-					if getKnownCard(wizard, "Peach", false, flag) > 0 or getKnownCard(wizard, "GodSalvation", false, flag) > 0 then return "." end
+					if getKnownCard(wizard, "Peach", false, "h") > 0 or getKnownCard(wizard, "GodSalvation", false, "h") > 0 then return "." end
 					card_str = self:getCardId("Peach")
 				end
 			end
@@ -3291,12 +3290,10 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
 		end
 		return (blackequipnum + player:getHandcardNum()) > 0
-	elseif player:hasSkill("guicai") then
+	elseif player:hasSkills("guicai|huanshi") then
 		return player:getHandcardNum() > 0
 	elseif player:hasSkill("jilve") then
 		return player:getHandcardNum() > 0 and player:getMark("@bear") > 0
-	elseif player:hasSkill("huanshi") then
-		return not player:isNude() and self:isFriend(player, to_retrial)
 	end
 end
 
@@ -3455,11 +3452,8 @@ function SmartAI:dontRespondPeachInJudge(judge)
 	return false
 end
 
---- Get the retrial cards with the lowest keep value
--- @param cards the table that contains all cards can use in retrial skill
--- @param judge the JudgeStruct that contains the judge information
--- @return the retrial card id or -1 if not found
-function SmartAI:getRetrialCardId(cards, judge)
+function SmartAI:getRetrialCardId(cards, judge, self_card)
+	if self_card == nil then self_card = true end
 	local can_use = {}
 	local reason = judge.reason
 	local who = judge.who
@@ -3477,7 +3471,7 @@ function SmartAI:getRetrialCardId(cards, judge)
 					if not self:toTurnOver(damage.from, 0) and judge.card:getSuit() ~= sgs.Card_Spade and card_x:getSuit() == sgs.Card_Spade then
 						table.insert(can_use, card)
 						hasSpade = true
-					elseif self:getOverflow() > 0 and judge.card:getSuit() ~= card_x:getSuit() then
+					elseif (not self_card or self:getOverflow() > 0) and judge.card:getSuit() ~= card_x:getSuit() then
 						local retr = true
 						if (judge.card:getSuit() == sgs.Card_Heart and who:isWounded() and self:isFriend(who))
 							or (judge.card:getSuit() == sgs.Card_Diamond and self:isEnemy(who) and hasManjuanEffect(who))
@@ -3499,9 +3493,11 @@ function SmartAI:getRetrialCardId(cards, judge)
 					end
 				end
 			end
-		elseif self:isFriend(who) and judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
+		elseif self:isFriend(who) and judge:isGood(card_x)
+				and not (self_card and (self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
 			table.insert(can_use, card)
-		elseif self:isEnemy(who) and not judge:isGood(card_x) and not ((self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
+		elseif self:isEnemy(who) and not judge:isGood(card_x)
+				and not (self_card and (self:getFinalRetrial() == 2 or self:dontRespondPeachInJudge(judge)) and isCard("Peach", card_x, self.player)) then
 			table.insert(can_use, card)
 		end
 	end

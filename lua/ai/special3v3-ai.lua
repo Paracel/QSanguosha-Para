@@ -18,12 +18,66 @@ sgs.ai_skill_cardask["@huanshi-card"] = function(self, data)
 	return "."
 end
 
-sgs.ai_skill_invoke.huanshi = true
+sgs.ai_skill_invoke.huanshi = function(self, data)
+	local judge = data:toJudge()
 
-sgs.ai_skill_choice.huanshi = function(self, choices)
+	if self:needRetrial(judge) then
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		if self:isFriend(judge.who) then
+			local card_id = self:getRetrialCardId(cards, judge)
+			if card_id ~= -1 then return true end
+		elseif self:isEnemy(judge.who) then
+			for _, card in ipairs(cards) do
+				if judge:isGood(card) or self:isValuableCard(card) then return false end
+			end
+			return true
+		end
+	end
+	return false
+end
+
+sgs.ai_skill_askforag.huanshi = function(self, card_ids)
+	local cards = {}
+	for _, id in ipairs(card_ids)
+		table.insert(cards, sgs.Sanguosha:getCard(id))
+	end
+	local judge = self.player:getTag("HuanshiJudge"):toJudge()
 	local zhugejin = self.room:findPlayerBySkillName("huanshi")
-	if zhugejin and self:isEnemy(zhugejin) then return "reject" end
-	return "accept"
+
+	local cmp = function(a, b)
+		local a_keep_value, b_keep_value = sgs.ai_keep_value[a:getClassName()], sgs.ai_keep_value[b:getClassName()]
+		a_keep_value = a_keep_value + a:getNumber() / 100
+		b_keep_value = b_keep_value + b:getNumber() / 100
+		if zhugejin and zhugejin:hasSkill("mingzhe") then
+			if a:isRed() then a_keep_value = a_keep_value - 0.3 end
+			if b:isRed() then b_keep_value = b_keep_value - 0.3 end
+		end
+		return a_keep_value < b_keep_value
+	end
+
+	local card_id = self:getRetrialCardId(cards, judge, false)
+	if card_id ~= -1 then return card_id end
+	if zhugejin and not self:isEnemy(zhugejin) then
+		local valueless = {}
+		for _, card in ipairs(cards) do
+			if not self:isValuableCard(card, zhugejin) then table.insert(valueless, card) end
+		end
+		if #valueless == 0 then valueless = cards end
+		table.sort(valueless, cmp)
+		return valueless[1]:getEffectiveId()
+	else
+		for _, card in ipairs(cards) do
+			if judge:isGood(card) then return card:getEffectiveId() end
+		end
+		local valuable = {}
+		for _, card in ipairs(cards) do
+			if self:isValuableCard(card, zhugejin) then table.insert(valuable, card) end
+		end
+		if #valuable == 0 then valuable = cards end
+		table.sort(valuable, cmp)
+		return valuable[#valuable]:getEffectiveId()
+	end
+	return -1
 end
 
 function sgs.ai_cardneed.huanshi(to, card, self)
@@ -36,13 +90,6 @@ function sgs.ai_cardneed.huanshi(to, card, self)
 				return card:getSuit() == sgs.Card_Heart and not self:hasSuit("heart", true, to)
 			end
 		end
-	end
-end
-
-sgs.ai_choicemade_filter.skillChoice.huanshi = function(self, player, promptlist)
-	if promptlist[#promptlist] == "reject" then
-		local zhugejin = self.room:findPlayerBySkillName("huanshi")
-		if zhugejin then sgs.updateIntention(player, zhugejin, 60) end
 	end
 end
 

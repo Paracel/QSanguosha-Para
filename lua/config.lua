@@ -94,14 +94,13 @@ config = {
 		"kof_zhenji",
 		"kof_xiahouyuan",
 		"kof_guanyu",
-		"kof_machao",
-		"kof_nos_huangyueying",
+		"kof_huangyueying",
 		"kof_huangzhong",
 		"kof_jiangwei",
 		"kof_menghuo",
 		"kof_zhurong",
 		"kof_sunshangxiang",
-		"kof_nos_diaochan",
+		"kof_diaochan",
 	},
 
 	kof_ban = {

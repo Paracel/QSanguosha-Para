@@ -1325,7 +1325,6 @@ public:
     }
 };
 
-
 ZhoufuCard::ZhoufuCard() {
     mute = true;
     will_throw = false;

@@ -37,8 +37,8 @@ return {
 	["xiaoxi"] = "骁袭",
 	[":xiaoxi"] = "你登场时，你可以视为使用一张【杀】。",
 
-	["kof_nos_huangyueying"] = "黄月英1v1",
-	["&kof_nos_huangyueying"] = "黄月英",
+	["kof_huangyueying"] = "黄月英1v1",
+	["&kof_huangyueying"] = "黄月英",
 	["cangji"] = "藏机",
 	[":cangji"] = "你死亡时，你可以将装备区的所有装备牌移出游戏：若如此做，你的下个武将登场时，将这些牌置于装备区。",
 	[":cangji_p"] = "你死亡时，你可以将你装备区的任意数量的装备牌以任意分配方式置于其他角色的装备区。",
@@ -72,8 +72,8 @@ return {
 	["kofxiaoji:recover"] = "回复1点体力",
 	["kofxiaoji:cancel"] = "不发动",
 
-	["kof_nos_diaochan"] = "貂蝉1v1",
-	["&kof_nos_diaochan"] = "貂蝉",
+	["kof_diaochan"] = "貂蝉1v1",
+	["&kof_diaochan"] = "貂蝉",
 	["pianyi"] = "翩仪",
 	[":pianyi"] = "<font color=\"blue\"><b>锁定技。</b></font>你登场时，若处于对手的回合，则结束当前回合并结束一切结算。",
 

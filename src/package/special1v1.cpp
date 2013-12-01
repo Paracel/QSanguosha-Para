@@ -1018,10 +1018,10 @@ Special1v1Package::Special1v1Package()
     kof_guanyu->addSkill("wusheng");
     kof_guanyu->addSkill(new Huwei);
 
-    General *kof_nos_huangyueying = new General(this, "kof_nos_huangyueying", "shu", 3, false);
-    kof_nos_huangyueying->addSkill("nosjizhi");
-    kof_nos_huangyueying->addSkill(new Cangji);
-    kof_nos_huangyueying->addSkill(new CangjiInstall);
+    General *kof_huangyueying = new General(this, "kof_huangyueying", "shu", 3, false);
+    kof_huangyueying->addSkill("nosjizhi");
+    kof_huangyueying->addSkill(new Cangji);
+    kof_huangyueying->addSkill(new CangjiInstall);
     related_skills.insertMulti("cangji", "#cangji-install");
 
     General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
@@ -1044,9 +1044,9 @@ Special1v1Package::Special1v1Package()
     kof_sunshangxiang->addSkill(new Yinli);
     kof_sunshangxiang->addSkill(new KOFXiaoji);
 
-    General *kof_nos_diaochan = new General(this, "kof_nos_diaochan", "qun", 3, false);
-    kof_nos_diaochan->addSkill(new Pianyi);
-    kof_nos_diaochan->addSkill("biyue");
+    General *kof_diaochan = new General(this, "kof_diaochan", "qun", 3, false);
+    kof_diaochan->addSkill(new Pianyi);
+    kof_diaochan->addSkill("biyue");
 
     General *hejin = new General(this, "hejin", "qun", 4); // QUN 025
     hejin->addSkill(new Mouzhu);

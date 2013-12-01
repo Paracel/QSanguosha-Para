@@ -382,7 +382,7 @@ function SmartAI:getUseValue(card)
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("qiangxi") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
-		if (self.player:hasSkill("bazhen") or self.player:hasSkill("yizhong")) and card:isKindOf("Armor") then v = 2 end
+		if self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then v = 2 end
 		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong")
 			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
 			v = 9
@@ -391,7 +391,7 @@ function SmartAI:getUseValue(card)
 	elseif card:getTypeId() == sgs.Card_TypeBasic then
 		if card:isKindOf("Slash") then
 			if self.player:hasFlag("TianyiSuccess") or self.player:hasFlag("JiangchiInvoke")
-				or self:hasHeavySlashDamage(self.player) then v = 8.7 end
+				or self:hasHeavySlashDamage(self.player, card) then v = 8.7 end
 			if self.player:hasWeapon("Crossbow") or self.player:hasSkill("paoxiao") then v = v + 4 end
 			if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 1 end
 			if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 1 or -1) end

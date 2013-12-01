@@ -38,7 +38,7 @@ end
 
 sgs.ai_skill_askforag.huanshi = function(self, card_ids)
 	local cards = {}
-	for _, id in ipairs(card_ids)
+	for _, id in ipairs(card_ids) do
 		table.insert(cards, sgs.Sanguosha:getCard(id))
 	end
 	local judge = self.player:getTag("HuanshiJudge"):toJudge()

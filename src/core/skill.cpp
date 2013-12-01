@@ -34,8 +34,12 @@ bool Skill::isAttachedLordSkill() const{
 }
 
 QString Skill::getDescription() const{
-    QString des_src = Sanguosha->translate(":" + objectName());
-    if (des_src == ":" + objectName())
+    bool normal_game = ServerInfo.DuringGame && isNormalGameMode(ServerInfo.GameMode);
+    QString name = QString("%1%2").arg(objectName()).arg(normal_game ? "_p" : "");
+    QString des_src = Sanguosha->translate(":" + name);
+    if (normal_game && des_src.startsWith(":"))
+        des_src = Sanguosha->translate(":" + objectName());
+    if (des_src.startsWith(":"))
         return QString();
     return des_src;
 }

@@ -302,7 +302,7 @@ end
 function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	if not who:isChained() then return false end
 	source = source or self.player
-	if source:hasSkill("jueqing") then return false end
+	if source:hasSkill("jueqing") then return not self:isFriend(who, source) end
 	damagecount = damagecount or 1
 
 	--[[ if not sgs.GetConfig("EnableHegemony", false) then

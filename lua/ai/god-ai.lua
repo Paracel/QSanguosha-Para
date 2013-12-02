@@ -23,7 +23,7 @@ function SmartAI:getWuhunRevengeTargets()
 		if count > maxcount then
 			targets = { p }
 			maxcount = count
-		elseif count == maxcount then
+		elseif count == maxcount and maxcount > 0 then
 			table.insert(targets, p)
 		end
 	end

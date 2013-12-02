@@ -105,6 +105,7 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 		for _, enemy in ipairs(self.enemies) do
 			if not (enemy:hasSkill("manjuan") and enemy:isKongcheng()) and not enemy:hasSkills("tuntian+zaoxian") then
 				target = enemy
+				break
 			end
 		end
 	end
@@ -115,12 +116,14 @@ sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)
 		for _, friend in ipairs(self.friends_noself) do
 			if not friend:hasSkill("manjuan") and friend:hasSkills("tuntian+zaoxian") and not self:isWeak(friend) then
 				target = friend
+				break
 			end
 		end
 		if not target then
 			for _, friend in ipairs(self.friends_noself) do
 				if not friend:hasSkill("manjuan") then
 					target = friend
+					break
 				end
 			end
 		end

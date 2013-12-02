@@ -3770,8 +3770,7 @@ function getKnownCard(player, class_name, viewas, flags)
 		end
 	end
 	return known
-
-	end
+end
 
 function SmartAI:getCardId(class_name, player, acard)
 	player = player or self.player
@@ -4192,7 +4191,8 @@ function SmartAI:useSkillCard(card, use)
 	else
 		name = card:getClassName()
 	end
-	if not use.isDummy and not self.player:hasSkill(card:getSkillName()) then return end
+	if not use.isDummy
+		and not self.player:hasSkill(card:getSkillName()) and not self.player:hasLordSkill(card:getSkillName()) then return end
 	if not sgs.ai_skill_use_func[name] then return end
 	sgs.ai_skill_use_func[name](card, use, self)
 	if use.to then
@@ -4759,7 +4759,7 @@ function SmartAI:useEquipCard(card, use)
 		use.card = card
 		return
 	end
-	if self.player:getHandcardNum() == 1 and self:hasSkills(sgs.need_kongcheng) and self:evaluateArmor(card) > -5 then
+	if self.player:getHandcardNum() == 1 and self:needKongcheng() and self:evaluateArmor(card) > -5 then
 		use.card = card
 		return
 	end

@@ -331,15 +331,17 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 		local newvalue = 0
 		if self:isGoodChainPartner(target) then newvalue = newvalue + 1 end
 		if self:isWeak(target) then newvalue = newvalue - 1 end
-		if dmg and nature == sgs.DamageStruct_Fire and target:hasArmorEffect("vine") then dmg = dmg + 1 end
-		if dmg and target:getMark("@gale") > 0 then dmg = dmg + 1 end
+		if dmg and nature == sgs.DamageStruct_Fire then
+			if target:hasArmorEffect("vine") then dmg = dmg + 1 end
+			if target:getMark("@gale") > 0 then dmg = dmg + 1 end
+		end
 		if self:cantbeHurt(target, source, damagecount) then newvalue = newvalue - 100 end
 		if damagecount + (dmg or 0) >= target:getHp() then
 			newvalue = newvalue - 2
 			if target:isLord() and not self:isEnemy(target, source) then kill_lord = true end
 			if self:isEnemy(target, source) then kills = kills + 1 end
 		else
-			if self:isEnemy(target, source) and source:getHandcardNum() < 2 and target:hasSkill("ganglie") and source:getHp() == 1
+			if self:isEnemy(target, source) and source:getHandcardNum() < 2 and target:hasSkills("ganglie|vsganglie") and source:getHp() == 1
 				and self:damageIsEffective(source, nil, target) and peach_num < 1 then newvalue = newvalue - 100 end
 			if target:hasSkill("vsganglie") then
 				local can

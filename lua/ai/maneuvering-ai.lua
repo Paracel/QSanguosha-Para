@@ -77,7 +77,7 @@ fan_skill.getTurnUseCard = function(self)
 end
 
 function sgs.ai_weapon_value.fan(self, enemy)
-	if enemy and enemy:hasArmorEffect("vine") then return 6 end
+	if enemy and (enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then return 6 end
 end
 
 function sgs.ai_armor_value.vine(player, self)

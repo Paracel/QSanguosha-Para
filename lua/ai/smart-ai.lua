@@ -912,7 +912,7 @@ function sgs.gameProcess(room, arg)
 			else loyal_hp = aplayer:getHp() end
 			if aplayer:getMaxHp() == 3 then loyal_value = loyal_value + 0.5 end
 			loyal_value = loyal_value + (loyal_hp + math.max(sgs.getDefense(aplayer, true) - loyal_hp * 2, 0) * 0.7)
-			if aplayer:getArmor() or (not aplayer:getArmor() and (aplayer:hasSkill("bazhen") or aplayer:hasSkill("yizhong"))) then
+			if aplayer:getArmor() or (not aplayer:getArmor() and aplayer:hasSkills("bazhen|yizhong")) then
 				loyal_value = loyal_value + 0.5
 			end
 			if aplayer:getDefensiveHorse() then
@@ -1252,7 +1252,7 @@ function SmartAI:updatePlayers(clear_flags)
 		self.friends_noself = {}
 		local friends = sgs.QList2Table(self.lua_ai:getFriends())
 		for i = 1, #friends, 1 do
-			if friends[i]:isAlive() then
+			if friends[i]:isAlive() and friends[i]:objectName() ~= self.player:objectName() then
 				table.insert(self.friends, friends[i])
 				table.insert(self.friends_noself, friends[i])
 			end
@@ -2027,6 +2027,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if self:isFriend(to) and to:isNude() then return nil end
 		end
 		if trick:isKindOf("Duel") and trick:getSkillName() == "lijian" and (self:isFriend(to) or (self:isFriend(from) and to:hasSkill("wuhun"))) then
+			if to:getHp() == 1 and sgs.ai_role[to:objectName()] == "rebel" and from and sgs.ai_role[from:objectName()] == "rebel" then return end
 			return null_card
 		end
 		if from and self:isEnemy(from) and (sgs.evaluatePlayerRole(from) ~= "neutral" or sgs.isRolePredictable()) then
@@ -2180,7 +2181,6 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				return
 			end
 			if trick:getSkillName() == "lijian" and trick:isKindOf("Duel") then
-				if to:getHp() == 1 and sgs.ai_role[to:objectName()] == "rebel" and from and sgs.ai_role[from:objectName()] == "rebel" then return end
 				if self:isEnemy(to) and (self:isWeak(to) or null_num > 1 or self:getOverflow() > 0 or not self:isWeak()) then return null_card end
 				return
 			end
@@ -2847,7 +2847,8 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 
 	-- kongcheng
 	self:sort(self.enemies, "defense")
-	if #self.enemies > 0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng") then
+	if #self.enemies > 0 and self.enemies[1]:isKongcheng() and self.enemies[1]:hasSkill("kongcheng")
+		and not hasManjuanEffect(self.enemies[1]) then
 		for _, acard in ipairs(cardtogive) do
 			if acard:isKindOf("Lightning") or acard:isKindOf("Collateral") or (acard:isKindOf("Slash") and self.player:getPhase() == sgs.Player_Play)
 				or acard:isKindOf("OffensiveHorse") or acard:isKindOf("Weapon") then
@@ -3583,10 +3584,23 @@ local function prohibitUseDirectly(card, player)
 	return false
 end
 
+local function getPlayerSkillList(player)
+	local skills = sgs.QList2Table(player:getVisibleSkillList())
+	if player:hasSkill("weidi") and not player:isLord() then
+		local lord = player:getRoom():getLord()
+		if lord then
+			for _, skill in sgs.qlist(lord:getVisibleSkillList()) do
+				if skill:isLordSkill() then table.insert(skills, skill) end
+			end
+		end
+	end
+	return skills
+end
+
 local function cardsViewValuable(self, class_name, player)
-	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+	for _, skill in ipairs(getPlayerSkillList(player)) do
 		local askill = skill:objectName()
-		if player:hasSkill(askill) then
+		if player:hasSkill(askill) or player:hasLordSkill(askill) then
 			local callback = sgs.ai_cardsview_valuable[askill]
 			if type(callback) == "function" then
 				local ret = callback(self, class_name, player)
@@ -3597,9 +3611,9 @@ local function cardsViewValuable(self, class_name, player)
 end
 
 local function cardsView(self, class_name, player)
-	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+	for _, skill in ipairs(getPlayerSkillList(player)) do
 		local askill = skill:objectName()
-		if player:hasSkill(askill) then
+		if player:hasSkill(askill) or player:hasLordSkill(askill) then
 			local callback = sgs.ai_cardsview_valuable[askill]
 			if type(callback) == "function" then
 				local ret = callback(self, class_name, player)
@@ -3607,9 +3621,9 @@ local function cardsView(self, class_name, player)
 			end
 		end
 	end
-	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+	for _, skill in ipairs(getPlayerSkillList(player)) do
 		local askill = skill:objectName()
-		if player:hasSkill(askill) then
+		if player:hasSkill(askill) or player:hasLordSkill(askill) then
 			local callback = sgs.ai_cardsview[askill]
 			if type(callback) == "function" then
 				local ret = callback(self, class_name, player)
@@ -3620,9 +3634,9 @@ local function cardsView(self, class_name, player)
 end
 
 local function getSkillViewCard(card, class_name, player, card_place)
-	for _, skill in ipairs(sgs.QList2Table(player:getVisibleSkillList())) do
+	for _, skill in ipairs(getPlayerSkillList(player)) do
 		local askill = skill:objectName()
-		if player:hasSkill(askill) then
+		if player:hasSkill(askill) or player:hasLordSkill(askill) then
 			local callback = sgs.ai_view_as[askill]
 			if type(callback) == "function" then
 				local skill_card_str = callback(card, player, card_place, class_name)

@@ -3145,7 +3145,8 @@ function SmartAI:willUsePeachTo(dying)
 				if finalRetrial == 0 or finalRetrial == 2 then
 					card_str = self:getCardId("Peach")
 				elseif finalRetrial == 1 then
-					if getKnownCard(wizard, "Peach", false, "h") > 0 or getKnownCard(wizard, "GodSalvation", false, "h") > 0 then return "." end
+					local flag = wizard:hasSkill("huanshi") and "he" or "h"
+					if getKnownCard(wizard, "Peach", false, flag) > 0 or getKnownCard(wizard, "GodSalvation", false, flag) > 0 then return "." end
 					card_str = self:getCardId("Peach")
 				end
 			end
@@ -3291,8 +3292,10 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
 		end
 		return (blackequipnum + player:getHandcardNum()) > 0
-	elseif player:hasSkills("guicai|huanshi") then
+	elseif player:hasSkill("guicai") then
 		return player:getHandcardNum() > 0
+	elseif player:hasSkill("huanshi") then
+		return not player:isNude()
 	elseif player:hasSkill("jilve") then
 		return player:getHandcardNum() > 0 and player:getMark("@bear") > 0
 	end

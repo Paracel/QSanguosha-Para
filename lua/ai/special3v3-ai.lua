@@ -22,7 +22,7 @@ sgs.ai_skill_invoke.huanshi = function(self, data)
 	local judge = data:toJudge()
 
 	if self:needRetrial(judge) then
-		local cards = sgs.QList2Table(self.player:getHandcards())
+		local cards = sgs.QList2Table(self.player:getCards("he"))
 		if self:isFriend(judge.who) then
 			local card_id = self:getRetrialCardId(cards, judge)
 			if card_id ~= -1 then return true end

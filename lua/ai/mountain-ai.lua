@@ -27,7 +27,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				elseif equip:isKindOf("DefensiveHorse") and not self:isWeak(who) then
 					card = equip
 					break
-				elseif equip:isKindOf("Armor") and not self:isWeak(who) then
+				elseif equip:isKindOf("Armor") and (not self:isWeak(who) or self:needToThrowArmor(who)) then
 					card = equip
 					break
 				end
@@ -43,12 +43,6 @@ local function card_for_qiaobian(self, who, return_prompt)
 				for _, friend in ipairs(self.friends) do
 					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName()
 						and self:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill, friend) then
-						target = friend
-						break
-					end
-				end
-				for _, friend in ipairs(self.friends) do
-					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
 						target = friend
 						break
 					end
@@ -301,7 +295,7 @@ sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
-	if from:getPhase() == sgs.Player_Draw then return sgs.ai_card_intention.TuxiCard(self, card, from, tos) end
+	if from:getMark("qiaobianPhase") == 3 then return sgs.ai_card_intention.TuxiCard(self, card, from, tos) end
 end
 
 function sgs.ai_cardneed.qiaobian(to, card)
@@ -404,6 +398,7 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 end
 
 function sgs.ai_slash_prohibit.xiangle(self, from, to)
+	if self:isFriend(to, from) then return false end
 	local slash_num, analeptic_num, jink_num
 	if from:objectName() == self.player:objectName() then
 		slash_num = self:getCardsNum("Slash")
@@ -692,6 +687,7 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		end
 	end
 end
+
 sgs.ai_need_damaged.hunzi = function(self, attacker, player)
 	if player:hasSkill("hunzi") and player:getMark("hunzi") == 0 and self:getEnemyNumBySeat(self.room:getCurrent(), player, player, true) < player:getHp()
 		and (player:getHp() > 2 or (player:getHp() == 2 and (player:faceUp() or player:hasSkill("guixin")))) then

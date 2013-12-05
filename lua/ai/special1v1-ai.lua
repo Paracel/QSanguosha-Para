@@ -303,7 +303,7 @@ sgs.ai_skill_use_func.MouzhuCard = function(card, use, self)
 				and not ((enemy:hasSkill("roulin") or enemy:hasWeapon("double_sword")) and enemy:getGender() ~= self.player:getGender()) then
 
 				if enemy:getHandcardNum() == 1 and slash and not third and self.player:inMyAttackRange(enemy)
-					and (self:hasHeavySlashDamage(self.player, slash, enemy) or self:hasWeapon("guding_blade") and not self:needKongcheng(enemy))
+					and (self:hasHeavySlashDamage(self.player, slash, enemy) or self.player:hasWeapon("guding_blade") and not self:needKongcheng(enemy))
 					and (not self:isWeak() or self:getCardsNum("Peach") + self:getCardsNum("Analeptic") > 0) then
 					third = enemy
 				elseif self:getCardsNum("Jink") > 0 and self:getCardsNum("Slash") > getCardsNum("Slash", enemy) and not fourth then

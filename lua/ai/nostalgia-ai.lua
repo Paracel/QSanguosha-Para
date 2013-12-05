@@ -32,7 +32,7 @@ sgs.ai_skill_use_func.NosJujianCard = function(card, use, self)
 		end
 
 		for _, fcard in ipairs(cards) do
-			if fcard:isKindOf(result_class) and not fcard:isKindOf("ExNihilo") then
+			if fcard:isKindOf(result_class) and not isCard("ExNihilo", fcard, self.player) then
 				table.insert(abandon_card, fcard:getId())
 				index = index + 1
 				if index == 3 then break end

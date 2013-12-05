@@ -96,8 +96,7 @@ end
 sgs.ai_skill_invoke.hongyuan = function(self, data)
 	local count = 0
 	for i = 1, #self.friends_noself do
-		if self:needKongcheng(self.friends_noself[i]) and self.friends_noself[i]:getHandcardNum() == 0
-			or self.friends_noself[i]:hasSkill("manjuan") then
+		if self:needKongcheng(self.friends_noself[i], true) or self.friends_noself[i]:hasSkill("manjuan") then
 		else
 			count = count + 1
 		end

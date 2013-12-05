@@ -979,7 +979,7 @@ sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(self, player
 end
 
 sgs.ai_skill_cardask["@jijiang-slash"] = function(self, data)
-	if sgs.jijiangsource and not self:isFriend(sgs.jijiangsource) then return "." end
+	if not sgs.jijiangsource or not self:isFriend(sgs.jijiangsource) then return "." end
 	if self:needBear() then return "." end
 
 	local jijiangtargets = {}
@@ -1382,7 +1382,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 	end
 
 	if #use_cards > 0 then
-		if self.player:getMark("ZhihengInLatestKOF") > 0 then
+		if self.room:getMode() == "02_1v1" and sgs.GetConfig("1v1/Rule", "Classical") ~= "Classical" then
 			local use_cards_kof = { use_cards[1] }
 			if #use_cards > 1 then table.insert(use_cards_kof, use_cards[2]) end
 			use.card = sgs.Card_Parse("@ZhihengCard=" .. table.concat(use_cards_kof, "+"))

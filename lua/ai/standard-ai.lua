@@ -400,8 +400,8 @@ sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 		local p = self.enemies[i]
 		local x = p:getHandcardNum()
 		local good_target = true
-		if x == 1 and self:hasSkills(sgs.need_kongcheng, p) then good_target = false end
-		if x >= 2 and self:hasSkills("tuntian+zaoxian", p) then good_target = false end
+		if x == 1 and p:hasSkills(sgs.need_kongcheng) then good_target = false end
+		if x >= 2 and p:hasSkills("tuntian+zaoxian") then good_target = false end
 		if good_target and add_player(p) == 2 then return ("@TuxiCard=.->%s+%s"):format(targets[1], targets[2]) end
 	end
 
@@ -738,7 +738,7 @@ function SmartAI:shouldUseRende()
 						slash_count = slash_count + 1
 					end
 				end
-				if slash_count >= enemy:getHp() then return end
+				if slash_count >= enemy:getHp() then return false end
 			end
 		end
 	end
@@ -757,7 +757,9 @@ function SmartAI:shouldUseRende()
 			return true
 		end
 	end
-	if (self.player:getMark("rende") < 2 or self:getOverflow() > 0) then
+	if ((self.player:hasSkill("rende") and self.player:getMark("rende") < 2)
+		or (self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2)
+		or self:getOverflow() > 0) then
 		return true
 	end
 	if self.player:getLostHp() < 2 then

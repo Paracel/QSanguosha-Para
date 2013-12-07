@@ -531,7 +531,7 @@ mingce_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("MingceCard") then return end
 
 	local card
-	if self.player:getArmor() and (self.player:getArmor():objectName() == "silver_lion" and self.player:isWounded()) then
+	if self:needToThrowArmor() then
 		card = self.player:getArmor()
 	end
 	if not card then

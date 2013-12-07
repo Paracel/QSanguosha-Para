@@ -1755,7 +1755,7 @@ function sgs.ai_slash_prohibit.liuli(self, from, to, card)
 end
 
 function sgs.ai_cardneed.liuli(to, card)
-	return to:getCards("he"):length() <= 2 and isCard("Jink", card, to)
+	return to:getCards("he"):length() <= 2
 end
 
 sgs.guose_suit_value = {
@@ -1784,7 +1784,7 @@ jieyin_skill.getTurnUseCard = function(self)
 			self:useTrickCard(card, dummy_use)
 			if not dummy_use.card then
 				if not first then first = card:getEffectiveId()
-				elseif first and first ~= card:getEffectiveId() and not second then second = card:getEffectiveId()
+				elseif first and not second then second = card:getEffectiveId()
 				end
 			end
 			if first and second then break end

@@ -3538,7 +3538,8 @@ function SmartAI:damageIsEffective(player, nature, source)
 				if source:getHandcardNum() <= 2 then return false end
 			else
 				if (getKnownCard(player, "TrickCard", false, "h") + getKnownCard(player, "EquipCard", false, "h") < player:getHandcardNum()
-					and self:getCardsNum("TrickCard", "h") + self:getCardsNum("EquipCard", "h") < 1) or self:getCardsNum("BasicCard", "h") < 2 then
+					and getCardsNum("TrickCard", source) + getCardsNum("EquipCard", source) - source:getEquips():length() < 1)
+					or getCardsNum("BasicCard", source) < 2 then
 					return false
 				end
 			end

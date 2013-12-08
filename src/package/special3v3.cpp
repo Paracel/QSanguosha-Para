@@ -105,7 +105,7 @@ public:
             QString prompt = prompt_list.join(":");
 
             card = room->askForCard(player, "..", prompt, data, Card::MethodResponse, judge->who, true);
-        } else if (!player->isKongcheng()) {
+        } else if (!player->isNude()) {
             QList<int> ids, disabled_ids;
             foreach (const Card *card, player->getCards("he")) {
                 if (player->isCardLimited(card, Card::MethodResponse))

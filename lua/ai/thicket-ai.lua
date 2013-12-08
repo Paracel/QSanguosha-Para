@@ -625,7 +625,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 						use.card = card
 					else
 						local discard_num = e_hand - f_hand
-						local discards = dimeng_discard(self, discard_num, mycards)
+						local discards = DimengDiscard(self, discard_num, mycards)
 						if #discards > 0 then use.card = sgs.Card_Parse("@DimengCard=" .. table.concat(discards, "+")) end
 					end
 					if use.card and use.to then
@@ -647,7 +647,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 					use.card = card
 				else
 					local discard_num = math.abs(e_hand - f_hand)
-					local discards = dimeng_discard(self, discard_num, mycards)
+					local discards = DimengDiscard(self, discard_num, mycards)
 					if #discards > 0 then use.card = sgs.Card_Parse("@DimengCard=" .. table.concat(discards, "+")) end
 				end
 				if use.to then

@@ -45,7 +45,6 @@ config = {
 		"WangZheZhiZhan",
 		"BGM",
 		"BGMDIY",
-		--"Wandianba",
 		"Hegemony",
 		"HFormation",
 		"HegemonySP",

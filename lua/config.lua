@@ -47,6 +47,7 @@ config = {
 		"BGMDIY",
 		"Hegemony",
 		"HFormation",
+		"HMomentum",
 		"HegemonySP",
 		"NostalStandard",
 		"NostalWind",

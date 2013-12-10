@@ -658,6 +658,15 @@
     <ClCompile Include="Release\moc_h-formation.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\package\h-momentum.cpp">
+      <Filter>package</Filter>
+    </ClCompile>
+        <ClCompile Include="Debug\moc_h-momentum.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_h-momentum.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\server\ai.h">
@@ -919,7 +928,7 @@
       <Filter>package</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\package\h-formation.h">
-      <Filter>Generated Files</Filter>
+      <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -1013,6 +1022,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\ui\uiUtils.h">
       <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\package\h-momentum.h">
+      <Filter>package</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

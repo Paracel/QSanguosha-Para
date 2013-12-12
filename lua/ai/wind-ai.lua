@@ -134,7 +134,7 @@ sgs.shensu_keep_value = sgs.xiaoji_keep_value
 function sgs.ai_skill_invoke.jushou(self, data)
 	if not self.player:faceUp() then return true end
 	for _, friend in ipairs(self.friends) do
-		if self:hasSkills("fangzhu|jilve", friend) and not friend:isWeak() then return true end
+		if friend:hasSkills("fangzhu|jilve") and not friend:isWeak() then return true end
 		if friend:hasSkill("junxing") and friend:faceUp() and not self:willSkipPlayPhase(friend)
 			and not (friend:isKongcheng() and self:willSkipDrawPhase(friend)) then
 			return true
@@ -160,7 +160,7 @@ sgs.ai_skill_invoke.jiewei = true
 sgs.ai_skill_use["TrickCard+^Nullification,EquipCard|.|.|hand"] = function(self, prompt, method)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByUseValue(cards)
-	for _, cards in ipairs(cards) do
+	for _, card in ipairs(cards) do
 		if card:getTypeId() == sgs.Card_TypeTrick and not card:isKindOf("Nullification") then
 			local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
 			self:useTrickCard(card, dummy_use)

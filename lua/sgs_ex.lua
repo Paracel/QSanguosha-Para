@@ -215,6 +215,9 @@ function sgs.CreateBasicCard(spec)
 	return card
 end
 
+-- ============================================
+-- default functions for Trick cards
+
 function isAvailable_AOE(self, player)
 	local canUse = false
 	local players = player:getSiblings()
@@ -315,6 +318,60 @@ function use_DelayedTrick(self, room, source, targets)
 	end
 end
 
+function onNullified_DelayedTrick_movable(self, target)
+	local room = target:getRoom()
+	local thread = room:getThread()
+	local players = room:getOtherPlayers(target)
+	players:append(target)
+	local p = nil
+
+	for _, player in sgs.qlist(players) do
+		if player:containsTrick(self:objectName()) then continue end
+
+		local skill = room:isProhibited(target, player, self)
+		if skill then
+			local logm = sgs.LogMessage()
+			logm.type = "#SkillAvoid"
+			logm.from = player
+			logm.arg = skill:objectName()
+			logm.arg2 = self:objectName()
+			room:sendLog(logm)
+
+			room:broadcastSkillInvoke(skill:objectName())
+			continue
+		end
+
+		local reason = sgs.CardMoveReason(sgs.CardMoveReason_S_REASON_TRANSFER, target:objectName(), "", self:getSkillName(), "")
+		room:moveCardTo(self, target, player, sgs.Player_PlaceDelayedTrick, reason, true)
+		if target:objectName() == player:objectName() then break end
+
+		local use = sgs.CardUseStruct()
+		use.from = nil
+		use.to:append(player)
+		use.card = self
+		local data = sgs.QVariant()
+		data:setValue(use)
+		thread:trigger(sgs.TargetConfirming, room, player, data)
+		local new_use = data:toCardUse()
+		if new_use.to:isEmpty() then
+			p = player
+			break
+		end
+		for _, ps in sgs.qlist(room:getAllPlayers()) do
+			thread:trigger(sgs.TargetConfirmed, room, ps, data)
+		end
+		break
+	end
+	if p then self:on_nullified(p) end
+end
+
+function onNullified_DelayedTrick_unmovable(self, target)
+	local reason = sgs.CardMoveReason(sgs.CardMoveReason_S_REASON_NATURAL_ENTER, target:objectName())
+	target:getRoom():throwCard(self, reason, nil)
+end
+
+-- ============================================
+
 function sgs.CreateTrickCard(spec)
 	assert(type(spec.name) == "string" or type(spec.class_name) == "string")
 	if not spec.name then spec.name = spec.class_name
@@ -349,6 +406,11 @@ function sgs.CreateTrickCard(spec)
 		if spec.subclass == sgs.LuaTrickCard_TypeDelayedTrick then
 			if not spec.about_to_use then spec.about_to_use = onUse_DelayedTrick end
 			if not spec.on_use then spec.on_use = use_DelayedTrick end
+			if not spec.on_nullified then
+				if spec.movable then spec.on_nullified = onNullified_DelayedTrick_movable
+				else spec.on_nullified = onNullified_DelayedTrick_unmovable
+				end
+			end
 		elseif spec.subclass == sgs.LuaTrickCard_TypeAOE then
 			if not spec.available then spec.available = isAvailable_AOE end
 			if not spec.about_to_use then spec.about_to_use = onUse_AOE end

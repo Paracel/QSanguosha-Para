@@ -297,62 +297,142 @@ function SmartAI:assignKeep(num, start)
 	if start then
 		self.keepValue = {}
 		self.kept = {}
+
+		self.keepdata = {}
+		for k, v in pairs(sgs.ai_keep_value) do
+			self.keepdata[k] = v
+		end
+		
+		if not self:isWeak() or num >= 4 then
+			for _, friend in ipairs(self.friends_noself) do
+				if self:willSkipDrawPhase(friend) or self:willSkipPlayPhase(friend) then
+					self.keepdata.Nullification = 5.5
+					break
+				end
+			end
+		end
+		
+		if not self:isWeak() and (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player) or not sgs.isGoodTarget(self.player, self.friends, self)) then
+			self.keepdata.ThunderSlash = 5.2
+			self.keepdata.FireSlash = 5.3
+			self.keepdata.Slash = 5.1
+			self.keepdata.Jink = 4.2
+		end
+
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:hasSkill("nosqianxi") and enemy:distanceTo(self.player) == 1 then
+				self.keepdata.Jink = 6
+			end
+		end
+		
+		if self:isWeak() then
+			for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
+				if ap:hasSkill("buyi") and self:isFriend(ap) then
+					self.keepdata = { TrickCard = 8, EquipCard = 7.9 }
+					break
+				end
+			end
+			self.keepdata.Peach = self.keepdata.Peach + (4 - math.max(self.player:getHp(), 0))
+			self.keepdata.Analeptic = self.keepdata.Analeptic + (4 - math.max(self.player:getHp(), 0))
+		end
+		
+		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+			if sgs[askill:objectName() .. "_keep_value"] then
+				for k, v in pairs(self.keepdata) do
+					local value = sgs[askill:objectName() .. "_keep_value"][k]
+					if value then self.keepdata[k] = value end
+				end
+			end
+		end
 	end
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)
-	self:sortByKeepValue(cards, true, self.kept)
-	for _, card in ipairs(cards) do
-		if not self.keepValue[card:getId()] then
+	self:sortByKeepValue(cards, true, self.kept, true)
+	
+	local resetCards = function(allcards)
+		local result = {}
+		for _, a in ipairs(allcards) do
+			local found
+			for _, b in ipairs(self.kept) do
+				if a:getEffectiveId() == b:getEffectiveId() then
+					found = true
+					break
+				end
+			end
+			if not found then table.insert(result, a) end
+		end
+		return result
+	end
+	
+	for i = 1, num do
+		local card
+		if #cards > 0 then
+			card = cards[1]
 			self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
 			table.insert(self.kept, card)
-			self:assignKeep(num - 1)
-			break
 		end
+		cards = resetCards(cards)
 	end
 end
 
-function SmartAI:getKeepValue(card, kept)
+function SmartAI:getKeepValue(card, kept, wrt)
 	if not kept then return self.keepValue[card:getId()] or 0 end
 
-	local class_name = card:getClassName()
-	local suit_string = card:getSuitString()
-	local value, newvalue
-
-	local i = 0
-	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
-		if sgs[askill:objectName() .. "_keep_value"] then
-			local v = sgs[askill:objectName() .. "_keep_value"][class_name]
-			if v then
-				i = i + 1
-				if value then value = value + v else value = v end
+	local value_suit, value_number, newvalue = 0, 0, 0
+	if wrt then
+		local class_name = card:getClassName()
+		local suit_string = card:getSuitString()
+		local number = card:getNumber()
+		local i = 0
+		
+		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+			if sgs[askill:objectName() .. "_suit_value"] then
+				local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
+				if v then
+					i = i + 1
+					value_suit = value_suit + v
+				end
 			end
 		end
-	end
-	if value then return value / i end
-	i = 0
-	for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
-		if sgs[askill:objectName() .. "_suit_value"] then
-			local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
-			if v then
-				i = i + 1
-				if value then value = value + v else value = v end
+		if i > 0 then value_suit = value_suit / i end
+		
+		i = 0
+		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+			if sgs[askill:objectName() .. "_number_value"] then
+				local v = sgs[askill:objectName() .. "_number_value"][tostring(number)]
+				if v then
+					i = i + 1
+					value_number = value_number + v
+				end
 			end
 		end
+		if i > 0 then value_number = value_number / i end
 	end
-	if value then value = value / i end
-
-	newvalue = sgs.ai_keep_value[class_name] or 0
+	
+	local maxvalue, mostvaluable_class = -10, card:getClassName()
+	for k, v in pairs(self.keepdata) do
+		if isCard(k, card, self.player) and v > maxvalue then
+			maxvalue = v
+			mostvaluable_class = k
+		end
+	end
+	
+	newvalue = maxvalue + value_suit + value_number
+	
+	if wrt then return newvalue end
+	
+	newvalue = self.keepValue[card:getId()] or 0
+	local dec = 0
 	for _, acard in ipairs(kept) do
-		if acard:getClassName() == card:getClassName() then newvalue = newvalue - 1.2
-		elseif acard:isKindOf("Slash") and card:isKindOf("Slash") then newvalue = newvalue - 1
-		end
-		local madai = self.room:findPlayerBySkillName("nosqianxi")
-		if madai and madai:distanceTo(self.player) == 1 and not self:isFriend(madai) then
-			if acard:isKindOf("Jink") and card:isKindOf("Jink") then newvalue = newvalue + 2 end
+		if isCard(mostvaluable_class, acard, self.player) and isCard(mostvaluable_class, card, self.player) then
+			newvalue = newvalue - 1.2 - dec
+			dec = dec + 0.1
+		elseif acard:isKindOf("Slash") and card:isKindOf("Slash") then
+			newvalue = newvalue - 1.2 - dec
+			dec = dec + 0.1
 		end
 	end
-	if not value or newvalue > value then value = newvalue end
-	return value
+	return newvalue
 end
 
 function SmartAI:getUseValue(card)
@@ -682,13 +762,36 @@ function SmartAI:sort(players, key)
 	if not pcall(_sort, players, key) then self.room:writeToConsole(debug.traceback()) end
 end
 
-function SmartAI:sortByKeepValue(cards, inverse, kept)
+function SmartAI:sortByKeepValue(cards, inverse, kept, wrt)
+	local compare_func = function(a,b)
+		local value1 = self:getKeepValue(a, kept, wrt)
+		local value2 = self:getKeepValue(b, kept, wrt)
+
+		local v1, v2 = value1, value2
+		if wrt then
+			self.keepValue[a:getId()] = v1
+			self.keepValue[b:getId()] = v2
+		end
+		
+		if v1 ~= v2 then
+			if inverse then return v1 > v2 end
+			return v1 < v2
+		else
+			if not inverse then return a:getNumber() > b:getNumber() end
+			return a:getNumber() < b:getNumber()
+		end
+	end
+
+	table.sort(cards, compare_func)
+end
+
+function SmartAI:sortByUseValue(cards, inverse)
 	local compare_func = function(a, b)
-		local value1 = self:getKeepValue(a, kept)
-		local value2 = self:getKeepValue(b, kept)
+		local value1 = self:getUseValue(a)
+		local value2 = self:getUseValue(b)
 
 		if value1 ~= value2 then
-			if inverse then return value1 > value2 end
+			if not inverse then return value1 > value2 end
 			return value1 < value2
 		else
 			if not inverse then return a:getNumber() > b:getNumber() end

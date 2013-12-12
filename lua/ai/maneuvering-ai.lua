@@ -5,7 +5,7 @@ end
 sgs.ai_card_intention.ThunderSlash = sgs.ai_card_intention.Slash
 
 sgs.ai_use_value.ThunderSlash = 4.55
-sgs.ai_keep_value.ThunderSlash = 2.5
+sgs.ai_keep_value.ThunderSlash = 3.63
 sgs.ai_use_priority.ThunderSlash = 2.3
 
 function SmartAI:useCardFireSlash(...)
@@ -15,7 +15,7 @@ end
 sgs.ai_card_intention.FireSlash = sgs.ai_card_intention.Slash
 
 sgs.ai_use_value.FireSlash = 4.6
-sgs.ai_keep_value.FireSlash = 2.6
+sgs.ai_keep_value.FireSlash = 3.66
 sgs.ai_use_priority.FireSlash = 2.3
 
 sgs.weapon_range.Fan = 4
@@ -190,7 +190,7 @@ end
 sgs.dynamic_value.benefit.Analeptic = true
 
 sgs.ai_use_value.Analeptic = 5.98
-sgs.ai_keep_value.Analeptic = 4.5
+sgs.ai_keep_value.Analeptic = 4.1
 sgs.ai_use_priority.Analeptic = 2.5
 
 local function handcard_subtract_hp(a, b)
@@ -265,6 +265,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 end
 
 sgs.ai_use_value.SupplyShortage = 7
+sgs.ai_keep_value.SupplyShortage = 3.48
 sgs.ai_use_priority.SupplyShortage = 0.5
 sgs.ai_card_intention.SupplyShortage = 120
 
@@ -542,6 +543,7 @@ sgs.ai_card_intention.IronChain = function(self, card, from, tos)
 end
 
 sgs.ai_use_value.IronChain = 5.4
+sgs.ai_keep_value.IronChain = 3.34
 sgs.ai_use_priority.IronChain = 9.1
 
 sgs.ai_skill_cardask["@fire-attack"] = function(self, data, pattern, target)
@@ -740,7 +742,7 @@ end
 
 sgs.ai_use_value.FireAttack = 4.8
 sgs.ai_use_priority.FireAttack = 2
-
+sgs.ai_keep_value.FireAttack = 3.3
 sgs.ai_card_intention.FireAttack = 80
 
 sgs.dynamic_value.damage_card.FireAttack = true

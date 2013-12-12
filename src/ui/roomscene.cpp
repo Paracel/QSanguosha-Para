@@ -1939,8 +1939,9 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         QString card_str = IntList2StringList(move.card_ids).join("+");
         log_box->appendLog("$RecycleCard", to_general, QStringList(), card_str);
     }
-    if (move.from && move.from_place != Player::PlaceHand && move.to_place != Player::PlaceDelayedTrick
-        && move.from_place != Player::PlaceJudge && move.to && move.from != move.to) {
+    if (move.from && move.from_place != Player::PlaceHand
+        && move.to_place != Player::PlaceDelayedTrick && move.to_place != Player::PlaceJudge
+        && move.to && move.from != move.to) {
         QString from_general = move.from->objectName();
         QStringList tos;
         tos << move.to->objectName();

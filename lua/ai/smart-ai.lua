@@ -533,7 +533,7 @@ function SmartAI:getDynamicUsePriority(card)
 		end
 	end
 
-	local value = 0
+	local value = self:getUsePriority(card) or 0
 	if card:getTypeId() == sgs.Card_TypeEquip then
 		if self:hasSkills(sgs.lose_equip_skill) then value = value + 12 end
 	end

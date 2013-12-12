@@ -1283,7 +1283,7 @@ function sgs.ai_slash_weaponfilter.kylin_bow(self, to)
 end
 
 function sgs.ai_weapon_value.kylin_bow(self, enemy)
-	if enemy:getOffensiveHorse() or enemy:getDefensiveHorse() then return 1 end
+	if enemy and (enemy:getOffensiveHorse() or enemy:getDefensiveHorse()) then return 1 end
 end
 
 sgs.ai_skill_invoke.eight_diagram = function(self, data)

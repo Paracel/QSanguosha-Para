@@ -1043,7 +1043,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		if self.player:getWeapon() and str:matchOne("qiangxi") then return "qiangxi" end
 
-		for _, askill in ipairs(("manjuan|xiansi|tuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|luoshen|" ..
+		for _, askill in ipairs(("manjuan|xiansi|tuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|xunxun|luoshen|" ..
 								"yongsi|dujin|shude|zhiyan|biyue|yingzi|qingnang"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
@@ -1058,7 +1058,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"baobian|ganlu|tiaoxin|zhaolie|moukui|liegong|mengjin|tieji|kofliegong|wushuang|drwushuang|niaoxiang|" ..
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|nosguhuo|xuanhuo|nosxuanhuo|qiangxi|huangen" ..
 								"nosjujian|lieren|pojun|danshou|qixi|yinling|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|" ..
-								"jingce|shengxi|luoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|" ..
+								"jingce|shengxi|wangxi|luoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|" ..
 								"longhun|jiuchi|qingcheng|shuangren|kuangfu|nosgongqi|wushen|lianhuan|" ..
 								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|" ..
 								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|noszhenlie|kurou|wansha|lianpo|qiluan|xiaode|" ..
@@ -1121,7 +1121,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		end
 		if str:matchOne("kofqingguo") and not self.player:getEquips():isEmpty() then return "kofqingguo" end
 
-		for _, askill in ipairs(("yiji|yuce|fankui|jieming|chengxiang|vsganglie|ganglie|enyuan|fangzhu|nosenyuan|duodao|langgu"):split("|")) do
+		for _, askill in ipairs(("yiji|yuce|fankui|jieming|chengxiang|vsganglie|ganglie|enyuan|fangzhu|nosenyuan|wangxi|duodao|langgu"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 

@@ -147,6 +147,9 @@ jiangqin				83
 heg_xusheng				56					
 heg_yuji				61					
 hetaihou				45					
+lidian					68					
+zangba					58					
+mifuren					10					
 zhugejin				60					
 vs_xiahoudun			62					
 vs_guanyu				58					

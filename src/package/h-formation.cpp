@@ -113,6 +113,13 @@ public:
             room->askForUseCard(target, "@@huyuan", "@huyuan-equip", -1, Card::MethodNone);
         return false;
     }
+
+    virtual int getEffectIndex(const ServerPlayer *, const Card *card) const{
+        const Card *rcard = Sanguosha->getCard(card->getEffectiveId());
+        if (rcard->isKindOf("Weapon")) return 1;
+        else if (rcard->isKindOf("Armor")) return 2;
+        else return 3;
+    }
 };
 
 HeyiCard::HeyiCard() {

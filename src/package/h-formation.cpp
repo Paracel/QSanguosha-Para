@@ -28,7 +28,9 @@ public:
             if (!player->isAlive()) break;
             if (dengai->getPile("field").isEmpty()) continue;
             if (!room->askForSkillInvoke(dengai, objectName(), data)) continue;
+            room->fillAG(dengai->getPile("field"), dengai);
             int id = room->askForAG(dengai, dengai->getPile("field"), false, objectName());
+            room->clearAG(dengai);
             if (player == dengai) {
                 LogMessage log;
                 log.type = "$MoveCard";

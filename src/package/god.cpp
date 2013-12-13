@@ -708,7 +708,7 @@ public:
         }
     }
 
-    virtual bool trigger(TriggerEvent , Room *, ServerPlayer *shenzhuge, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *shenzhuge, QVariant &) const{
         Exchange(shenzhuge);
         return false;
     }

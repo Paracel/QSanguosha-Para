@@ -129,6 +129,15 @@
 "playerGeneralIcon-jiangwanfeiyi-7": "image/generals/big/jiangwanfeiyi.png",
 "playerGeneralIcon-jiangwanfeiyi-8": "image/generals/kof/jiangwanfeiyi.png",
 
+"playerGeneralIcon-chenwudongxi-0": ["image/generals/big/chenwudongxi.png", [0, 0, 134, 134], [40, 40]],
+"playerGeneralIcon-chenwudongxi-1": "image/generals/small/chenwudongxi.png",
+"playerGeneralIcon-chenwudongxi-2": "image/generals/big/chenwudongxi.png",
+"playerGeneralIcon-chenwudongxi-4": ["image/generals/big/chenwudongxi.png", [0, 0, 134, 134], [51, 51]],
+"playerGeneralIcon-chenwudongxi-5": ["image/generals/big/chenwudongxi.png", [0, 0, 134, 134], [70, 70]],
+"playerGeneralIcon-chenwudongxi-6": "image/generals/small/chenwudongxi.png",
+"playerGeneralIcon-chenwudongxi-7": "image/generals/big/chenwudongxi.png",
+"playerGeneralIcon-chenwudongxi-8": "image/generals/kof/chenwudongxi.png",
+
 "playerGeneralIcon-nos_guanxingzhangbao-0": ["image/generals/big/nos_guanxingzhangbao.png", [0, 0, 134, 134], [40, 40]],
 "playerGeneralIcon-nos_guanxingzhangbao-1": "image/generals/small/nos_guanxingzhangbao.png",
 "playerGeneralIcon-nos_guanxingzhangbao-2": "image/generals/big/nos_guanxingzhangbao.png",

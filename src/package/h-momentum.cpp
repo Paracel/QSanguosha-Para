@@ -334,6 +334,64 @@ public:
     }
 };
 
+DuanxieCard::DuanxieCard() {
+}
+
+bool DuanxieCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isChained() && to_select != Self;
+}
+
+void DuanxieCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    if (!effect.to->isChained()) {
+        effect.to->setChained(true);
+        room->broadcastProperty(effect.to, "chained");
+        room->setEmotion(effect.to, "chain");
+        room->getThread()->trigger(ChainStateChanged, room, effect.to);
+    }
+    if (!effect.from->isChained()) {
+        effect.from->setChained(true);
+        room->broadcastProperty(effect.from, "chained");
+        room->setEmotion(effect.from, "chain");
+        room->getThread()->trigger(ChainStateChanged, room, effect.from);
+    }
+}
+
+class Duanxie: public ZeroCardViewAsSkill {
+public:
+    Duanxie(): ZeroCardViewAsSkill("duanxie") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("DuanxieCard");
+    }
+
+    virtual const Card *viewAs() const{
+        return new DuanxieCard;
+    }
+};
+
+class Fenming: public PhaseChangeSkill {
+public:
+    Fenming(): PhaseChangeSkill("fenming") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (target->getPhase() == Player::Finish && target->isChained()
+            && room->askForSkillInvoke(target, objectName())) {
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (!target->isAlive())
+                    break;
+                if (!p->isAlive() || !target->canDiscard(p, "he"))
+                    continue;
+                room->throwCard(room->askForCardChosen(target, p, "he", objectName(), false, Card::MethodDiscard), p, target);
+            }
+        }
+        return false;
+    }
+};
+
 HMomentumPackage::HMomentumPackage()
     : Package("h_momentum")
 {
@@ -361,9 +419,11 @@ HMomentumPackage::HMomentumPackage()
     related_skills.insertMulti("cunsi", "#cunsi-start");
     mifuren->addRelateSkill("yongjue");
 
-    /*General *chenwudongxi = new General(this, "chenwudongxi", "wu", 4);
+    General *chenwudongxi = new General(this, "chenwudongxi", "wu", 4); // WU 023
+    chenwudongxi->addSkill(new Duanxie);
+    chenwudongxi->addSkill(new Fenming);
 
-    General *heg_sunce = new General(this, "heg_sunce", "wu", 4); // WU 010 G
+    /*General *heg_sunce = new General(this, "heg_sunce", "wu", 4); // WU 010 G
 
     General *heg_dongzhuo = new General(this, "heg_dongzhuo", "qun", 4); // QUN 006 G
 
@@ -374,6 +434,7 @@ HMomentumPackage::HMomentumPackage()
 
     addMetaObject<GuixiuCard>();
     addMetaObject<CunsiCard>();
+    addMetaObject<DuanxieCard>();
 }
 
 ADD_PACKAGE(HMomentum)

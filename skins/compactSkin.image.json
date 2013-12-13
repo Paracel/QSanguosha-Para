@@ -1,7 +1,7 @@
 {
 "photoMainFrame": "image/compact/photo-back.png",
-"photoFaceTurnedMask": ["image/generals/small/faceturned.png",[15, 10, 119, 60]],
-"photoChain": ["image/system/chain.png",[0, 0, 131, 19]],
+"photoFaceTurnedMask": ["image/generals/small/faceturned.png", [15, 10, 119, 60]],
+"photoChain": ["image/system/chain.png", [0, 0, 131, 19]],
 "photoPhase0": "image/system/phase/round_start.png",
 "photoPhase1": "image/system/phase/start.png",
 "photoPhase2": "image/system/phase/judge.png",
@@ -41,6 +41,9 @@
 
 "playerGeneralIcon-jiangwanfeiyi-1": "image/compact/generals/small/jiangwanfeiyi.png",
 "playerGeneralIcon-jiangwanfeiyi-6": "image/compact/generals/small/jiangwanfeiyi.png",
+
+"playerGeneralIcon-chenwudongxi-1": "image/compact/generals/small/chenwudongxi.png",
+"playerGeneralIcon-chenwudongxi-6": "image/compact/generals/small/chenwudongxi.png",
 
 "playerGeneralIcon-nos_guanxingzhangbao-1": "image/compact/generals/small/nos_guanxingzhangbao.png",
 "playerGeneralIcon-nos_guanxingzhangbao-6": "image/compact/generals/small/nos_guanxingzhangbao.png"

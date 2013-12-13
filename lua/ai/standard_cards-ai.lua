@@ -62,7 +62,7 @@ function sgs.isGoodTarget(player, targets, self, isSlash)
 			if masochism == "nosmiji" and player:isWounded() then m_skill = false
 			elseif attacker and attacker:hasSkill("jueqing") then m_skill = false
 			elseif masochism == "jieming" and self and self:getJiemingChaofeng(player) > -4 then m_skill = false
-			elseif masochism == "yiji" and self and not self:findFriendsByType(sgs.Friend_Draw) then m_skill = false
+			elseif masochism == "yiji" and self and not self:findFriendsByType(sgs.Friend_Draw, player) then m_skill = false
 			else
 				m_skill = true
 				break

@@ -991,25 +991,28 @@ end
 function sgs.gameProcess(room, arg)
 	local rebel_num = sgs.current_mode_players["rebel"]
 	local loyal_num = sgs.current_mode_players["loyalist"]
-	if rebel_num == 0 and loyal_num> 0 then return "loyalist"
+	if rebel_num == 0 and loyal_num > 0 then return "loyalist"
 	elseif loyal_num == 0 and rebel_num > 1 then return "rebel" end
 	local loyal_value, rebel_value = 0, 0, 0
 	local health = sgs.isLordHealthy()
 	local danger = sgs.isLordInDanger()
 	local currentplayer = room:getCurrent()
+	local lord = room:getLord()
 	for _, aplayer in sgs.qlist(room:getAlivePlayers()) do
-		--if not (aplayer:objectName() == currentplayer:objectName() and aplayer:getRole() == "renegade") then
-		if not sgs.isRolePredictable() and sgs.evaluatePlayerRole(aplayer) == "rebel" then
+		if (sgs.isRolePredictable() and aplayer:getRole() == "rebel") or sgs.evaluatePlayerRole(aplayer) == "rebel" then
 			local rebel_hp
 			if aplayer:hasSkill("benghuai") and aplayer:getHp() > 4 then rebel_hp = 4
 			else rebel_hp = aplayer:getHp() end
 			if aplayer:getMaxHp() == 3 then rebel_value = rebel_value + 0.5 end
 			rebel_value = rebel_value + rebel_hp + math.max(sgs.getDefense(aplayer, true) - rebel_hp * 2, 0) * 0.7
+			if lord and aplayer:inMyAttackRange(lord) then
+				rebel_value = rebel_value + 0.2
+			end
 			if aplayer:getDefensiveHorse() then
 				rebel_value = rebel_value + 0.5
 			end
 			if aplayer:getMark("@duanchang") > 0 and aplayer:getMaxHp() <= 3 then rebel_value = rebel_value - 1 end
-		elseif not sgs.isRolePredictable() and sgs.evaluatePlayerRole(aplayer) == "loyalist" then
+		elseif (sgs.isRolePredictable() and aplayer:getRole() == "loyalist") or sgs.evaluatePlayerRole(aplayer) == "loyalist" then
 			local loyal_hp
 			if aplayer:hasSkill("benghuai") and aplayer:getHp() > 4 then loyal_hp = 4
 			else loyal_hp = aplayer:getHp() end
@@ -1023,7 +1026,6 @@ function sgs.gameProcess(room, arg)
 			end
 			if aplayer:getMark("@duanchang") == 1 and aplayer:getMaxHp() <= 3 then loyal_value = loyal_value - 1 end
 		end
-		--end
 	end
 	local diff = loyal_value - rebel_value + (loyal_num + 1 - rebel_num) * 2
 	if arg and arg == 1 then return diff end
@@ -1149,10 +1151,16 @@ function SmartAI:objectiveLevel(player)
 				return target_role == "rebel" and 5 or -1
 			elseif process:match("dilemma") then
 				if target_role == "rebel" then return 5
-				elseif target_role == "rebel" then return 3
+				elseif target_role == "loyalist" or target_role == "renegade" then return 0
 				elseif player:isLord() then return -2
-				elseif target_role == "renegade" then return 0
 				else return 5 end
+			elseif process == "loyalish" then
+				if player:isLord() or target_role == "renegade" then return 0 end
+				local rebelish = (sgs.current_mode_players["loyalist"] + 1 < sgs.current_mode_players["rebel"])
+				if target_role == "loyalist" then return rebelish and 0 or 3.5
+				elseif target_role == "rebel" then return rebelish and 3.5 or 0
+				else return 0
+				end
 			else
 				if player:isLord() or target_role == "renegade" then return 0 end
 				return target_role == "rebel" and -2 or 5

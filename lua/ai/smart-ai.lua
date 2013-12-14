@@ -1659,7 +1659,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 
 	if self.player:objectName() == player:objectName() and player:getPhase() == sgs.Player_NotActive and event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
-		if move.to and move.to:objectName() == player:objectName() and move.to_place == sgs.Player_PlaceHand and player:getHandcardNum() > 1 then
+		if move.to and move.to:objectName() == player:objectName() and move.to_place == sgs.Player_PlaceHand and player:getHandcardNum() >= 1 then
 			self:assignKeep(player:getHandcardNum(), true)
 		end
 	end

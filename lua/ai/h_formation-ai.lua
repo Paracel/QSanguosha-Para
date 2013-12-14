@@ -205,8 +205,10 @@ end
 
 sgs.ai_skill_invoke.shoucheng = function(self, data)
 	local move = data:toMoveOneTime()
-	return move.from and self:isFriend(move.from)
-			and not (move.from:getPhase() == sgs.Player_NotActive and (move.from:hasSkill("manjuan") or self:needKongcheng(move.from, true)))
+	local from
+	if move.from then from = findPlayerByObjectName(self.room, move.from:objectName()) end
+	return from and self:isFriend(from)
+			and not (from:getPhase() == sgs.Player_NotActive and (from:hasSkill("manjuan") or self:needKongcheng(from, true)))
 end
 
 sgs.ai_skill_choice.shoucheng = function(self, choices)

@@ -90,6 +90,7 @@ guanyu lingtong							52
 guanyu guanxingzhangbao					15
 guanyu bgm_zhangfei						77
 guanyu diy_wangyuanji					33
+guanyu heg_sunce						79
 guanyu vs_guanyu						1
 guanyu nos_lingtong						52
 guanyu nos_guanxingzhangbao				15
@@ -126,6 +127,7 @@ zhugeliang nos_guanxingzhangbao			72
 zhaoyun sunce							74
 zhaoyun bgm_zhaoyun						5
 zhaoyun bgm_zhangfei					72
+zhaoyun heg_sunce						74
 machao huangzhong						37
 machao weiyan							69
 machao zhurong							52
@@ -251,6 +253,7 @@ xiaoqiao guanxingzhangbao				58
 xiaoqiao madai							52
 xiaoqiao guanyinping					55
 xiaoqiao bgm_ganning					24
+xiaoqiao heg_sunce						56
 xiaoqiao vs_xiahoudun					34
 xiaoqiao vs_guanyu						54
 xiaoqiao nos_zhangjiao					20
@@ -310,6 +313,7 @@ wuguotai nos_zhangchunhua				81
 xusheng zhangchunhua					3
 xusheng nos_zhangchunhua				3
 xushu xunyou							46
+yujin heg_sunce							75
 zhangchunhua guanxingzhangbao			10
 zhangchunhua xunyou						56
 zhangchunhua liuxie						56
@@ -328,12 +332,14 @@ yuanshu nos_liubei						68
 yuanshu nos_lingtong					53
 sp_guanyu nos_lingtong					52
 sp_guanyu diy_wangyuanji				33
+sp_guanyu heg_sunce						77
 caohong nos_lingtong					54
 guanyinping nos_lingtong				52
 liuxie tianfeng							55
 liuxie nos_zhangchunhua					56
 lingju nos_zhangchunhua					35
 bgm_zhaoyun bgm_zhangfei				74
+bgm_zhaoyun heg_sunce					79
 bgm_zhaoyun vs_zhaoyun					15
 bgm_diaochan nos_liubei					54
 bgm_diaochan nos_lingtong				53
@@ -344,6 +350,8 @@ bgm_lvmeng nos_zhoutai					59
 bgm_ganning nos_lingtong				54
 diy_wangyuanji vs_guanyu				34
 diy_wangyuanji nos_liubei				83
+heg_sunce vs_guanyu						80
+heg_sunce vs_zhaoyun					78
 vs_guanyu nos_lingtong					53
 vs_guanyu nos_guanxingzhangbao			16
 nos_liubei nos_zhangjiao				22

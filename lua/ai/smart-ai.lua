@@ -1006,7 +1006,7 @@ function sgs.gameProcess(room, arg)
 			if aplayer:getMaxHp() == 3 then rebel_value = rebel_value + 0.5 end
 			rebel_value = rebel_value + rebel_hp + math.max(sgs.getDefense(aplayer, true) - rebel_hp * 2, 0) * 0.7
 			if lord and aplayer:inMyAttackRange(lord) then
-				rebel_value = rebel_value + 0.2
+				rebel_value = rebel_value + 0.3
 			end
 			if aplayer:getDefensiveHorse() then
 				rebel_value = rebel_value + 0.5

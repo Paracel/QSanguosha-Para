@@ -150,6 +150,8 @@ hetaihou				45
 lidian					68					
 zangba					58					
 mifuren					10					
+chenwudongxi			45					
+heg_sunce				50					
 zhugejin				60					
 vs_xiahoudun			62					
 vs_guanyu				58					

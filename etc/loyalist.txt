@@ -123,3 +123,5 @@ zhangjiao				liubei					0.9
 zhangjiao				bgm_ganning				0.4
 zhangjiao				kongrong				0.5
 zhangjiao				nos_liubei				0.9
+heg_sunce				diaochan				0.8
+heg_sunce				nos_diaochan			0.8

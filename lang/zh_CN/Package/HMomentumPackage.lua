@@ -43,4 +43,12 @@ return {
 	[":duanxie"] = "<font color=\"green\"><b>阶段技。</b></font>你可以选择一名不处于连环状态的其他角色：若如此做，你横置该角色的武将牌，然后横置你的武将牌。",
 	["fenming"] = "奋命",
 	[":fenming"] = "结束阶段开始时，若你处于连环状态，你可以弃置所有处于连环状态的角色的各一张牌。",
+
+	["heg_sunce"] = "孙策-国",
+	["&heg_sunce"] = "孙策",
+	["illustrator:heg_sunce"] = "木美人",
+	["yingyang"] = "鹰扬",
+	[":yingyang"] = "你的拼点牌亮出后，你可以该牌点数+3或-3（最小为A，最大为K）。",
+	["#YingyangUp"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数增加为 %arg",
+	["#YingyangDown"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数减小为 %arg",
 }

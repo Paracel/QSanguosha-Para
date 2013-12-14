@@ -282,6 +282,7 @@ function sgs.getDefense(player, gameProcess)
 		if player:hasSkills("noslijian|lijian") then defense = defense - 2.2 end
 		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
 	end
+	defense = defense + player:getHandcardNum() * 0.25
 	return defense
 end
 
@@ -3402,14 +3403,11 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 		for _, equip in sgs.qlist(player:getEquips()) do
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
 		end
-		return (blackequipnum + player:getHandcardNum()) > 0
-	elseif player:hasSkill("guicai") then
-		return player:getHandcardNum() > 0
-	elseif player:hasSkill("huanshi") then
-		return not player:isNude()
-	elseif player:hasSkill("jilve") then
-		return player:getHandcardNum() > 0 and player:getMark("@bear") > 0
+		if blackequipnum + player:getHandcardNum() > 0 then return true
 	end
+	if player:hasSkill("guicai") and player:getHandcardNum() > 0 then return true end
+	if player:hasSkill("huanshi") and not player:isNude() then return true end
+	if player:hasSkill("jilve") and (player:getHandcardNum() > 0 and player:getMark("@bear") > 0) then return true end
 end
 
 function SmartAI:getFinalRetrial(player, reason)
@@ -3682,7 +3680,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 		return sgs.ai_need_damaged.shichou(self, attacker, player) == 1
 	end
 
-	if self:hasHeavySlashDamage(attacker) then return false end
+	if attacker:objectName() ~= player:objectName() and self:hasHeavySlashDamage(attacker, nil, player) then return false end
 
 	if sgs.isGoodHp(player) then
 		for _, askill in sgs.qlist(player:getVisibleSkillList()) do
@@ -5157,7 +5155,7 @@ function SmartAI:findPlayerToDiscard(flags, include_self, isDiscard, players, re
 				if enemy:getOffensiveHorse() and (not enemy:hasSkill("jijiu") or enemy:getOffensiveHorse():isRed()) and (not isDiscard or self.player:canDiscard(enemy, enemy:getOffensiveHorse():getEffectiveId())) then
 					table.insert(player_table, enemy)
 				end
-				if who:getWeapon() and (not enemy:hasSkill("jijiu") or enemy:getWeapon():isRed()) and (not isDiscard or self.player:canDiscard(enemy, enemy:getWeapon():getEffectiveId())) then
+				if enemy:getWeapon() and (not enemy:hasSkill("jijiu") or enemy:getWeapon():isRed()) and (not isDiscard or self.player:canDiscard(enemy, enemy:getWeapon():getEffectiveId())) then
 					table.insert(player_table, enemy)
 				end
 			end

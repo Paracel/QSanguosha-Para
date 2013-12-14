@@ -378,6 +378,7 @@ function SmartAI:getKeepValue(card, kept, wrt)
 		if cardPlace == sgs.Player_PlaceHand then
 			local v = self.keepValue[card:getId()]
 			if not v then
+				self.room:writeToConsole(card:getId() .. " " .. card:objectName())
 				self.room:writeToConsole(debug.traceback())
 				v = 0
 			end
@@ -1657,7 +1658,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		end
 	end
 
-	if self.player:objectName() == player:objectName() and player:getPhase() == sgs.Player_NotActive and event == sgs.CardsMoveOneTime then
+	if self.player:objectName() == player:objectName() and event == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		if move.to and move.to:objectName() == player:objectName() and move.to_place == sgs.Player_PlaceHand and player:getHandcardNum() >= 1 then
 			self:assignKeep(player:getHandcardNum(), true)

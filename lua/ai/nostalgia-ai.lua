@@ -1116,6 +1116,16 @@ nosguhuo_skill.getTurnUseCard = function(self)
 		end
 	end
 
+	if self:isWeak() then
+		local peach_str = self:getGuhuoCard("Peach", true, -1)
+		if peach_str then
+			local card = sgs.Card_Parse(peach_str)
+			local peach = sgs.Sanguosha:cloneCard("peach", card:getSuit(), card:getNumber())
+			local dummy_use = { isDummy = true }
+			self:useBasicCard(peach, dummy_use)
+			if dummy_use.card then return card end
+		end
+	end
 	local slash_str = self:getGuhuoCard("Slash", true, -1)
 	if slash_str and self:slashIsAvailable() then
 		local card = sgs.Card_Parse(slash_str)

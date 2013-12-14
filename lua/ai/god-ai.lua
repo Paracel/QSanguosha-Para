@@ -303,7 +303,11 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 		or target:isLocked(card) then
 		keep = true
 	end
-	self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
+	if self:isEnemy(target) and target:hasSkill("tuntian") then
+		self.gongxinchoice = "put"
+	else
+		self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
+	end
 	return valuable
 end
 

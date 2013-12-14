@@ -49,6 +49,8 @@ return {
 	["illustrator:heg_sunce"] = "木美人",
 	["yingyang"] = "鹰扬",
 	[":yingyang"] = "你的拼点牌亮出后，你可以该牌点数+3或-3（最小为A，最大为K）。",
+	["yingyang:up"] = "点数+3（最大为K）",
+	["yingyang:down"] = "点数-3（最小为A）",
 	["#YingyangUp"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数增加为 %arg",
 	["#YingyangDown"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数减小为 %arg",
 }

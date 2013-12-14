@@ -154,6 +154,7 @@ function SmartAI:initialize(player)
 	self.retain = 2
 	self.keepValue = {}
 	self.kept = {}
+	self.keepdata = {}
 	if not sgs.initialized then
 		sgs.initialized = true
 		sgs.ais = {}
@@ -303,7 +304,13 @@ function SmartAI:assignKeep(num, start)
 		for k, v in pairs(sgs.ai_keep_value) do
 			self.keepdata[k] = v
 		end
-		
+		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
+			local skilltable = sgs[askill:objectName() .. "_keep_value"]
+			if skilltable then
+			for k, v in pairs(skilltable) do
+				self.keepdata[k] = v
+			end
+		end
 		if not self:isWeak() or num >= 4 then
 			for _, friend in ipairs(self.friends_noself) do
 				if self:willSkipDrawPhase(friend) or self:willSkipPlayPhase(friend) then
@@ -312,20 +319,17 @@ function SmartAI:assignKeep(num, start)
 				end
 			end
 		end
-		
 		if not self:isWeak() and (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player) or not sgs.isGoodTarget(self.player, self.friends, self)) then
 			self.keepdata.ThunderSlash = 5.2
 			self.keepdata.FireSlash = 5.3
 			self.keepdata.Slash = 5.1
 			self.keepdata.Jink = 4.2
 		end
-
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:hasSkill("nosqianxi") and enemy:distanceTo(self.player) == 1 then
 				self.keepdata.Jink = 6
 			end
 		end
-		
 		if self:isWeak() then
 			for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
 				if ap:hasSkill("buyi") and self:isFriend(ap) then
@@ -335,15 +339,6 @@ function SmartAI:assignKeep(num, start)
 			end
 			self.keepdata.Peach = self.keepdata.Peach + (4 - math.max(self.player:getHp(), 0))
 			self.keepdata.Analeptic = self.keepdata.Analeptic + (4 - math.max(self.player:getHp(), 0))
-		end
-		
-		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
-			if sgs[askill:objectName() .. "_keep_value"] then
-				for k, v in pairs(self.keepdata) do
-					local value = sgs[askill:objectName() .. "_keep_value"][k]
-					if value then self.keepdata[k] = value end
-				end
-			end
 		end
 	end
 	local cards = self.player:getHandcards()
@@ -377,7 +372,34 @@ function SmartAI:assignKeep(num, start)
 end
 
 function SmartAI:getKeepValue(card, kept, wrt)
-	if not kept then return self.keepValue[card:getId()] or 0 end
+	if not kept then
+		local cardPlace = self.room:getCardPlace(card:getEffectiveId())
+		if cardPlace == sgs.Player_PlaceHand then
+			local v = self.keepValue[card:getId()]
+			if not v then
+				self.room:writeToConsole(debug.traceback())
+				v = 0
+			end
+			return v
+		else
+			local at_play = self.player:getPhase() == sgs.Player_Play
+			if card:isKindOf("SilverLion") and self.player:isWounded() then return -10 end
+			if self:hasSkills(sgs.lose_equip_skill) then
+				if card:isKindOf("OffensiveHorse") then return -10
+				elseif card:isKindOf("Weapon") then return -9.9
+				elseif card:isKindOf("OffensiveHorse") then return -9.8
+				else return -9.7
+				end
+			end
+			if self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return -10 end
+			if self:needKongcheng() then return 5.0 end
+			if card:isKindOf("Armor") then return self:isWeak() and 5.2 or 3.2
+			elseif card:isKindOf("DefensiveHorse") then return self:isWeak() and 4.3 or 3.19
+			elseif card:isKindOf("Weapon") then return (at_play and self:slashIsAvailable() and self:getCardsNum("Slash") > 0) and 3.39 or 3.2
+			else return 3.19
+			end
+		end
+	end
 
 	local value_suit, value_number, newvalue = 0, 0, 0
 	if wrt then

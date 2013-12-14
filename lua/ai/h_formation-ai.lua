@@ -183,7 +183,7 @@ sgs.ai_card_intention.HeyiCard = function(self, card, from, tos)
 		end
 		sgs.updateIntention(from, first, -60)
 	else
-		if table.indexOf(players, first) < table.index(player, last) then
+		if table.indexOf(players, first) < table.index(players, last) then
 			first = tos[2]
 			last = tos[1]
 		end

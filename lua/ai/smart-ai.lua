@@ -307,8 +307,9 @@ function SmartAI:assignKeep(num, start)
 		for _, askill in sgs.qlist(self.player:getVisibleSkillList()) do
 			local skilltable = sgs[askill:objectName() .. "_keep_value"]
 			if skilltable then
-			for k, v in pairs(skilltable) do
-				self.keepdata[k] = v
+				for k, v in pairs(skilltable) do
+					self.keepdata[k] = v
+				end
 			end
 		end
 		if not self:isWeak() or num >= 4 then
@@ -1653,6 +1654,13 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 			if self:isFriend(dying.who) and dying.who:getHp() < 1 then
 				sgs.card_lack[player:objectName()]["Peach"] = 1
 			end
+		end
+	end
+
+	if self.player:objectName() == player:objectName() and player:getPhase() == sgs.Player_NotActive and event == sgs.CardsMoveOneTime then
+		local move = data:toMoveOneTime()
+		if move.to and move.to:objectName() == player:objectName() and move.to_place == sgs.Player_PlaceHand and player:getHandcardNum() > 1 then
+			self:assignKeep(player:getHandcardNum(), true)
 		end
 	end
 
@@ -3425,7 +3433,7 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 		for _, equip in sgs.qlist(player:getEquips()) do
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
 		end
-		if blackequipnum + player:getHandcardNum() > 0 then return true
+		if blackequipnum + player:getHandcardNum() > 0 then return true end
 	end
 	if player:hasSkill("guicai") and player:getHandcardNum() > 0 then return true end
 	if player:hasSkill("huanshi") and not player:isNude() then return true end

@@ -43,7 +43,7 @@ sgs.ai_skill_use["@jijiang"] = function(self, prompt)
 end
 
 sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, include_equip)
-	self:assignKeep(self:assignKeepNum(), true)
+	self:assignKeep(true)
 	if optional then return {} end
 	local flag = "h"
 	local equips = self.player:getEquips()

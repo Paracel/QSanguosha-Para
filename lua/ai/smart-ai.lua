@@ -287,15 +287,7 @@ function sgs.getDefense(player, gameProcess)
 	return defense
 end
 
-function SmartAI:assignKeepNum()
-	local num = self.player:getMaxCards()
-	if self.player:hasSkill("keji") then num = math.max(self.player:getHandcardNum(), num) end
-	if self.player:hasSkill("qiaobian") then num = math.max(self.player:getHandcardNum() - 1, num) end
-	return num
-end
-
-function SmartAI:assignKeep(num, start)
-	if num <= 0 then return end
+function SmartAI:assignKeep(start)
 	if start then
 		self.keepValue = {}
 		self.kept = {}
@@ -312,6 +304,9 @@ function SmartAI:assignKeep(num, start)
 				end
 			end
 		end
+		local num = self.player:getMaxCards()
+		if self.player:hasSkill("keji") then num = math.max(self.player:getHandcardNum(), num) end
+		if self.player:hasSkill("qiaobian") then num = math.max(self.player:getHandcardNum() - 1, num) end
 		if not self:isWeak() or num >= 4 then
 			for _, friend in ipairs(self.friends_noself) do
 				if self:willSkipDrawPhase(friend) or self:willSkipPlayPhase(friend) then
@@ -361,14 +356,13 @@ function SmartAI:assignKeep(num, start)
 		return result
 	end
 	
-	for i = 1, num do
-		local card
-		if #cards > 0 then
-			card = cards[1]
-			self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
-			table.insert(self.kept, card)
-		end
+	local cards_num = #cards
+	for i = 1, cards_num do
+		local card = cards[1]
+		self.keepValue[card:getId()] = self:getKeepValue(card, self.kept)
+		table.insert(self.kept, card)
 		cards = resetCards(cards)
+		if #cards == 0 then break end
 	end
 end
 
@@ -1658,10 +1652,10 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		end
 	end
 
-	if self.player:objectName() == player:objectName() and event == sgs.CardsMoveOneTime then
+	if self.player:objectName() == player:objectName() and triggerEvent == sgs.CardsMoveOneTime then
 		local move = data:toMoveOneTime()
 		if move.to and move.to:objectName() == player:objectName() and move.to_place == sgs.Player_PlaceHand and player:getHandcardNum() >= 1 then
-			self:assignKeep(player:getHandcardNum(), true)
+			self:assignKeep(true)
 		end
 	end
 
@@ -2068,7 +2062,7 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	min_num = min_num or discard_num
 	local exchange = self.player:hasFlag("Global_AIDiscardExchanging")
 	local callback = sgs.ai_skill_discard[reason]
-	self:assignKeep(self:assignKeepNum(), true)
+	self:assignKeep(true)
 	if type(callback) == "function" then
 		local cb = callback(self, discard_num, min_num, optional, include_equip)
 		if cb then
@@ -3357,7 +3351,7 @@ end
 
 function SmartAI:activate(use)
 	self:updatePlayers()
-	self:assignKeep(self:assignKeepNum(), true)
+	self:assignKeep(true)
 	self.toUse = self:getTurnUse()
 	self:sortByDynamicUsePriority(self.toUse)
 	for _, card in ipairs(self.toUse) do

@@ -159,6 +159,7 @@ sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 end
 
 sgs.ai_skill_askforag.gongxin = function(self, card_ids)
+	self.gongxinchoice = nil
 	local target = self.player:getTag("gongxin"):toPlayer()
 	if not target or self:isFriend(target) then return -1 end
 	local nextAlive = self.player
@@ -274,7 +275,7 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 		end
 	end
 
-	if self:isFriend(nextAlive) and not self:willSkipDrawPhase() and not self:willSkipPlayPhase()
+	if self:isFriend(nextAlive) and not self:willSkipDrawPhase(nextAlive) and not self:willSkipPlayPhase(nextAlive)
 		and not nextAlive:hasSkill("luoshen")
 		and not nextAlive:hasSkill("tuxi") and not (nextAlive:hasSkill("qiaobian") and nextAlive:getHandcardNum() > 0) then
 		if (peach and valuable == peach) or (ex_nihilo and valuable == ex_nihilo) then
@@ -304,7 +305,12 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 		keep = true
 	end
 	if self:isEnemy(target) and target:hasSkill("tuntian") then
-		self.gongxinchoice = "put"
+		local zhangjiao = self.room:findPlayerBySkillName("guidao")
+		if zhangjiao and self:isFriend(zhangjiao, target) and self:canRetrial(zhangjiao, target) and self:isValuableCard(card, zhangjiao) then
+			self.gongxinchoice = "discard"
+		else
+			self.gongxinchoice = "put"
+		end
 	else
 		self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
 	end

@@ -179,6 +179,16 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 	end
 	valuable = peach or ex_nihilo or jink or nullification or slash or card_ids[1]
 
+	if self:isEnemy(target) and target:hasSkill("tuntian") then
+		local zhangjiao = self.room:findPlayerBySkillName("guidao")
+		if zhangjiao and self:isFriend(zhangjiao, target) and self:canRetrial(zhangjiao, target) and self:isValuableCard(card, zhangjiao) then
+			self.gongxinchoice = "discard"
+		else
+			self.gongxinchoice = "put"
+		end
+		return valuable
+	end
+
 	local willUseExNihilo, willRecast
 	if self:getCardsNum("ExNihilo") > 0 then
 		local ex_nihilo = self:getCard("ExNihilo")
@@ -304,16 +314,7 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 		or target:isLocked(card) then
 		keep = true
 	end
-	if self:isEnemy(target) and target:hasSkill("tuntian") then
-		local zhangjiao = self.room:findPlayerBySkillName("guidao")
-		if zhangjiao and self:isFriend(zhangjiao, target) and self:canRetrial(zhangjiao, target) and self:isValuableCard(card, zhangjiao) then
-			self.gongxinchoice = "discard"
-		else
-			self.gongxinchoice = "put"
-		end
-	else
-		self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
-	end
+	self.gongxinchoice = (target:objectName() == nextAlive:objectName() and keep) and "put" or "discard"
 	return valuable
 end
 

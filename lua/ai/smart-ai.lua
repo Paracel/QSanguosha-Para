@@ -5337,7 +5337,7 @@ function SmartAI:needToLoseHp(to, from, isSlash, passive)
 		if from:hasWeapon("ice_sword") and to:getCards("he"):length() > 1 and not self:isFriend(from, to) then
 			return false
 		end
-		if self:hasHeavySlashDamage(from) then return false end
+		if self:hasHeavySlashDamage(from, nil, to) then return false end
 	end
 	if from:hasSkill("jueqing") and self:hasSkills(sgs.masochism_skill, to) then return false end
 

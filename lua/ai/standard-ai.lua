@@ -110,7 +110,7 @@ sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
 end
 
 sgs.ai_need_damaged.fankui = function(self, attacker, player)
-	if not player:hasSkill("guicai") then return false end
+	if not attacker or not player:hasSkill("guicai") then return false end
 	local need_retrial = function(splayer)
 		local alive_num = self.room:alivePlayerCount()
 		return alive_num + splayer:getSeat() % alive_num > self.room:getCurrent():getSeat()
@@ -250,6 +250,7 @@ sgs.ai_skill_invoke.ganglie = function(self, data)
 end
 
 sgs.ai_need_damaged.ganglie = function(self, attacker, player)
+	if not attacker then return false end
 	if not attacker:hasSkill("ganglie") and self:getDamagedEffects(attacker, player) then return self:isFriend(attacker, player) end
 	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
 		and not (self:hasSkills(sgs.need_kongcheng .. "|buqu", attacker) and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self:getEnemies(attacker), self) then

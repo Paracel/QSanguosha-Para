@@ -1539,25 +1539,38 @@ end
 sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByUseValue(cards, true)
+	if #cards == 1 and cards[1]:getSuit() == sgs.Card_Diamond then return end
+	if #cards <= 4 and (self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then return end
 	self:sort(self.enemies, "defense")
+
+	local suits = {}
+	local suits_num = 0
+	for _, c in ipairs(cards) do
+		if not suits[c:getSuitString()] then
+			suits[c:getSuitString()] = true
+			suits_num = suits_num + 1
+		end
+	end
 
 	local wgt = self.room:findPlayerBySkillName("buyi")
 	if wgt and self:isFriend(wgt) then wgt = nil end
 	local basic_num = 0
-	for _, card in ipairs(cards) do
-		if card:getTypeId() == sgs.Card_TypeBasic then basic_num = basic_num + 1 end
+	for _, c in ipairs(cards) do
+		if c:getTypeId() == sgs.Card_TypeBasic then basic_num = basic_num + 1 end
 	end
-	for _, card in ipairs(cards) do
-		if not (card:getSuit() == sgs.Card_Diamond and self.player:getHandcardNum() == 1)
-			and not (#cards <= 4 and (card:isKindOf("Peach") or card:isKindOf("Analeptic"))) then
-			for _, enemy in ipairs(self.enemies) do
-				if self:canAttack(enemy) and not enemy:hasSkills("qingnang|jijiu|tianxiang")
-					and not (wgt and basic_num / enemy:getHandcardNum() <= 0.3 and (enemy:getHandcardNum() <= 1 or enemy:objectName() == wgt:objectName())) then
-					use.card = card
-					if use.to then use.to:append(enemy) end
-					return
-				end
-			end
+	local visible = 0
+	for _, enemy in ipairs(self.enemies) do
+		local visible = 0
+		for _, c in ipairs(cards) do
+			local flag = string.format("%s_%s_%s", "visible", enemy:objectName(), self.player:objectName())
+			if c:hasFlag("visible") or c:hasFlag(flag) then visible = visible + 1 end
+		end
+		if visible > 0 and (#cards <= 2 or suits_num <= 2) then continue end
+		if self:canAttack(enemy) and not enemy:hasSkills("qingnang|jijiu|tianxiang")
+			and not (wgt and basic_num / enemy:getHandcardNum() <= 0.3 and (enemy:getHandcardNum() <= 1 or enemy:objectName() == wgt:objectName())) then
+			use.card = card
+			if use.to then use.to:append(enemy) end
+			return
 		end
 	end
 end
@@ -1567,7 +1580,22 @@ sgs.ai_card_intention.FanjianCard = 70
 function sgs.ai_skill_suit.fanjian(self)
 	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
 	local suit = map[math.random(1, 8)]
-	if self.player:hasSkill("hongyan") and suit == sgs.Card_Spade then return sgs.Card_Heart else return suit end
+	local tg = self.room:getCurrent()
+	local suits = {}
+	local maxnum, maxsuit = 0
+	for _, c in sgs.qlist(tg:getHandcards()) do
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), tg:objectName())
+		if c:hasFlag(flag) or c:hasFlag("visible") then
+			if not suits[c:getSuitString()] then suits[c:getSuitString()] = 1 else suits[c:getSuitString()] = suits[c:getSuitString()] + 1 end
+			if suits[c:getSuitString()] > maxnum then
+				maxnum = suits[c:getSuitString()]
+				maxsuit = c:getSuit()
+			end
+		end
+	end
+	local return_suit = maxsuit or suit
+	if self.player:hasSkill("hongyan") and return_suit == sgs.Card_Spade then return sgs.Card_Heart end
+	return return_suit
 end
 
 sgs.dynamic_value.damage_card.FanjianCard = true

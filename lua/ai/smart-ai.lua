@@ -315,11 +315,25 @@ function SmartAI:assignKeep(start)
 				end
 			end
 		end
-		if not self:isWeak() and (self.player:getHp() > getBestHp(self.player) or self:getDamagedEffects(self.player) or not sgs.isGoodTarget(self.player, self.friends, self)) then
-			self.keepdata.ThunderSlash = 5.2
-			self.keepdata.FireSlash = 5.3
-			self.keepdata.Slash = 5.1
-			self.keepdata.Jink = 4.2
+		if not self:isWeak() then
+			local needDamaged = false
+			if self.player:getHp() > getBestHp(self.player) then needDamaged = true end
+			if not needDamaged and not sgs.isGoodTarget(self.player, self.friends, self) then needDamaged = true end
+			if not needDamaged then
+				for _, skill in sgs.qlist(self.player:getVisibleSkillList()) do
+					local callback = sgs.ai_need_damaged[skill:objectName()]
+					if type(callback) == "function" and callback(self, nil, self.player) then
+						needDamaged = true
+						break
+					end
+				end
+			end
+			if needDamaged then
+				self.keepdata.ThunderSlash = 5.2
+				self.keepdata.FireSlash = 5.1
+				self.keepdata.Slash = 5
+				self.keepdata.Jink = 4.5
+			end
 		end
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:hasSkill("nosqianxi") and enemy:distanceTo(self.player) == 1 then

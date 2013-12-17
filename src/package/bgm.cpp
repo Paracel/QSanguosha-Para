@@ -680,7 +680,6 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
-        room->getThread()->addTriggerSkill(Sanguosha->getTriggerSkill("keji"));
         if (triggerEvent == GameStart) {
             lvmeng->gainMark("@wu");
             room->handleAcquireDetachSkills(lvmeng, "jiang|qianxun");

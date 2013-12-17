@@ -291,6 +291,7 @@ public:
     Shengxi(): TriggerSkill("shengxi") {
         events << DamageDone << EventPhaseEnd;
         frequency = Frequent;
+        global = true;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{

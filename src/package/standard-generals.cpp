@@ -893,6 +893,7 @@ public:
     Keji(): TriggerSkill("keji") {
         events << PreCardUsed << CardResponded << EventPhaseChanging;
         frequency = Frequent;
+        global = true;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{

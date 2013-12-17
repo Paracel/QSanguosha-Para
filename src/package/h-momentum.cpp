@@ -242,22 +242,11 @@ public:
     }
 };
 
-class CunsiStart: public TriggerSkill {
-public:
-    CunsiStart(): TriggerSkill("#cunsi-start") {
-        events << GameStart << EventAcquireSkill;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &) const{
-        room->getThread()->addTriggerSkill(Sanguosha->getTriggerSkill("yongjue"));
-        return false;
-    }
-};
-
 class Yongjue: public TriggerSkill {
 public:
     Yongjue(): TriggerSkill("yongjue") {
-        events << CardUsed << BeforeCardsMove;
+        events << PreCardUsed << CardResponded << BeforeCardsMove;
+        global = true;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -265,20 +254,28 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == CardUsed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.from->getPhase() == Player::Play && use.from->getMark(objectName()) == 0) {
-                use.from->addMark(objectName());
-                if (use.card->isKindOf("Slash")) {
+        if ((triggerEvent == PreCardUsed || triggerEvent == CardResponded) && player->getPhase() == Player::Play) {
+            CardStar card = NULL;
+            if (triggerEvent == PreCardUsed)
+                card = data.value<CardUseStruct>().card;
+            else {
+                CardResponseStruct response = data.value<CardResponseStruct>();
+                if (response.m_isUse)
+                   card = response.m_card;
+            }
+            if (card->getHandlingMethod() == Card::MethodUse
+                && player->getPhase() == Player::Play && player->getMark(objectName()) == 0) {
+                player->addMark(objectName());
+                if (card->isKindOf("Slash")) {
                     QList<int> ids;
-                    if (!use.card->isVirtualCard())
-                        ids << use.card->getEffectiveId();
-                    else if (use.card->subcardsLength() > 0)
-                        ids = use.card->getSubcards();
+                    if (!card->isVirtualCard())
+                        ids << card->getEffectiveId();
+                    else if (card->subcardsLength() > 0)
+                        ids = card->getSubcards();
                     if (!ids.isEmpty()) {
-                        room->setCardFlag(use.card, "yongjue");
-                        room->setTag("yongjue_user", QVariant::fromValue((PlayerStar)use.from));
-                        room->setTag("yongjue_card", QVariant::fromValue((CardStar)use.card));
+                        room->setCardFlag(card, "yongjue");
+                        room->setTag("yongjue_user", QVariant::fromValue((PlayerStar)player));
+                        room->setTag("yongjue_card", QVariant::fromValue((CardStar)card));
                     }
                 }
             }
@@ -325,6 +322,10 @@ public:
 
     virtual int getPriority() const{
         return 10;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
     }
 
     virtual bool onPhaseChange(ServerPlayer *target) const{
@@ -632,9 +633,7 @@ HMomentumPackage::HMomentumPackage()
     mifuren->addSkill(new Guixiu);
     mifuren->addSkill(new GuixiuDetach);
     mifuren->addSkill(new Cunsi);
-    mifuren->addSkill(new CunsiStart);
     related_skills.insertMulti("guixiu", "#guixiu-clear");
-    related_skills.insertMulti("cunsi", "#cunsi-start");
     mifuren->addRelateSkill("yongjue");
 
     General *heg_sunce = new General(this, "heg_sunce$", "wu", 4); // WU 010 G

@@ -101,6 +101,11 @@ public:
     Jingce(): TriggerSkill("jingce") {
         events << PreCardUsed << CardResponded << EventPhaseStart << EventPhaseEnd;
         frequency = Frequent;
+        global = true;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -117,7 +122,7 @@ public:
                 player->addMark(objectName());
         } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::RoundStart) {
                 player->setMark(objectName(), 0);
-        } else if (triggerEvent == EventPhaseEnd) {
+        } else if (triggerEvent == EventPhaseEnd && TriggerSkill::triggerable(player)) {
             if (player->getPhase() == Player::Play && player->getMark(objectName()) >= player->getHp()) {
                 if (room->askForSkillInvoke(player, objectName())) {
                     room->broadcastSkillInvoke(objectName());

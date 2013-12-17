@@ -166,7 +166,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				end
 			end
 		elseif self:isEnemy(use.from) then
-			if use.card:isKindOf("FireAttack") then
+			if use.card:isKindOf("FireAttack") and not use.from:isKongcheng() then
 				if not self:hasTrickEffective(use.card, self.player) then return false end
 				if not self:damageIsEffective(self.player, sgs.DamageStruct_Fire, use.from) then return false end
 				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3

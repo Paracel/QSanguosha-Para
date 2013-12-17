@@ -155,6 +155,7 @@ function SmartAI:initialize(player)
 	self.keepValue = {}
 	self.kept = {}
 	self.keepdata = {}
+	self.predictedRange = 1
 	if not sgs.initialized then
 		sgs.initialized = true
 		sgs.ais = {}

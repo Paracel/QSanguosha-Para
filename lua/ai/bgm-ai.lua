@@ -1005,7 +1005,7 @@ sgs.ai_card_intention.ZhaoxinCard = 80
 
 sgs.ai_skill_invoke.langgu = function(self, data)
 	local damage = data:toDamage()
-	return not self:isFriend(damage.from)
+	return damage.from and not self:isFriend(damage.from)
 end
 
 sgs.ai_skill_askforag.langgu = function(self, card_ids)

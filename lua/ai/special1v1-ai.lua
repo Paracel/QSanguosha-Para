@@ -194,7 +194,7 @@ sgs.ai_skill_use["@@cangji"] = function(self, prompt)
 		if i == 0 then
 			if equip:isKindOf("Crossbow") or equip:isKindOf("Blade") then
 				for _, friend in ipairs(self.friends_noself) do
-					if not self:getSameEquip(equip) and not self:hasCrossbowEffect(friend) and getCardsNum("Slash", friend) > 1 then
+					if not self:getSameEquip(equip) and not self:hasCrossbowEffect(friend) and getCardsNum("Slash", friend, self.player) > 1 then
 						return "@CangjiCard=" .. equip:getEffectiveId() .. "->" .. friend:objectName()
 					end
 				end
@@ -297,7 +297,7 @@ sgs.ai_skill_use_func.MouzhuCard = function(card, use, self)
 			first = enemy
 			break
 		elseif enemy:getHandcardNum() > 0 then
-			if not self:slashIsEffective(slash_nosuit, self.player, nil, enemy) and self:getCardsNum("Slash") > getCardsNum("Slash", enemy) and not second then
+			if not self:slashIsEffective(slash_nosuit, self.player, nil, enemy) and self:getCardsNum("Slash") > getCardsNum("Slash", enemy, self.player) and not second then
 				second = enemy
 			elseif not enemy:hasSkills("wushuang|mengjin|tieji")
 				and not ((enemy:hasSkill("roulin") or enemy:hasWeapon("double_sword")) and enemy:getGender() ~= self.player:getGender()) then
@@ -306,7 +306,7 @@ sgs.ai_skill_use_func.MouzhuCard = function(card, use, self)
 					and (self:hasHeavySlashDamage(self.player, slash, enemy) or self.player:hasWeapon("guding_blade") and not self:needKongcheng(enemy))
 					and (not self:isWeak() or self:getCardsNum("Peach") + self:getCardsNum("Analeptic") > 0) then
 					third = enemy
-				elseif self:getCardsNum("Jink") > 0 and self:getCardsNum("Slash") > getCardsNum("Slash", enemy) and not fourth then
+				elseif self:getCardsNum("Jink") > 0 and self:getCardsNum("Slash") > getCardsNum("Slash", enemy, self.player) and not fourth then
 					fourth = enemy
 				end
 			end
@@ -386,10 +386,10 @@ sgs.ai_skill_choice.mouzhu = function(self, choices)
 
 	if self:isFriend(target) then
 		if (target:hasSkills("leiji|nosleiji") or not self:slashIsEffective(slash, target)) and choices:match("slash") then return "slash" end
-		if self:getDamagedEffects(self.player, target) and getCardsNum("Slash", target) >= 1 and choices:match("duel") then return "duel" end
+		if self:getDamagedEffects(self.player, target) and getCardsNum("Slash", target, self.player) >= 1 and choices:match("duel") then return "duel" end
 	else
 		if target:hasSkills("leiji|nosleiji") and choices:match("duel") then return "duel" end
-		if self:getCardsNum("Slash") > getCardsNum("Slash", target) and choices:match("duel") then return "duel" end
+		if self:getCardsNum("Slash") > getCardsNum("Slash", target, self.player) and choices:match("duel") then return "duel" end
 	end
 
 	if choices:match("slash") then return "slash" else return "duel" end

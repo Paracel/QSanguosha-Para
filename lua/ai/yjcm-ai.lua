@@ -241,7 +241,7 @@ sgs.ai_skill_playerchosen.xuanhuo = function(self, targets)
 				and not self:hasSkills(sgs.lose_equip_skill, enemy) and not enemy:hasSkill("tuntian+zaoxian")
 				and not self:findLeijiTarget(enemy2, 50, enemy)
 				and not self:getDamagedEffects(enemy2, enemy, true) and not self:needToLoseHp(enemy2, enemy, true)
-				or (enemy:hasSkill("manjuan") and enemy:getCards("he"):length() > 1 and getCardsNum("Slash", enemy) == 0) then
+				or (enemy:hasSkill("manjuan") and enemy:getCards("he"):length() > 1 and getCardsNum("Slash", enemy, self.player) == 0) then
 
 				return enemy
 			end
@@ -302,7 +302,7 @@ sgs.ai_skill_cardask["xuanhuo-slash"] = function(self, data, pattern, target, ta
 		if self:hasSkills(sgs.lose_equip_skill) and not self.player:getEquips():isEmpty() and self.player:getHandcardNum() < 2 and not self.player:hasSkill("manjuan") then return "." end
 		for _, slash in ipairs(self:getCards("Slash")) do
 			if self:isFriend(target2) and not self:isFriend(fazheng) then
-				if (target2:getHp() > 2 or getCardsNum("Jink", target2) > 1) and not target2:isLord() then return slash:toString() end
+				if (target2:getHp() > 2 or getCardsNum("Jink", target2, self.player) > 1) and not target2:isLord() then return slash:toString() end
 				if self:needToLoseHp(target2, self.player, true) then return slash:toString() end
 			end
 		end

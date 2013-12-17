@@ -328,7 +328,7 @@ sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
 		or (from:hasSkill("kofliegong") and from:getPhase() == sgs.Player_Play and to:getHandcardNum() >= from:getHp()) then
 		return false
 	end
-	if getCardsNum("Jink", to) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
+	if getCardsNum("Jink", to, from) < 1 or sgs.card_lack[to:objectName()]["Jink"] == 1 or self:isWeak(to) then return false end
 	if to:getHandcardNum() >= 3 then return true end
 	return false
 end
@@ -388,7 +388,7 @@ sgs.ai_skill_cardask["@xiangle-discard"] = function(self, data)
 	if has_slash then return "$" .. has_slash:getEffectiveId()
 	elseif has_jink then return "$" .. has_jink:getEffectiveId()
 	elseif has_analeptic or has_peach then
-		if getCardsNum("Jink", target) == 0 and self.player:getMark("drank") > 0 and self:getAllPeachNum(target) == 0 then
+		if getCardsNum("Jink", target, self.player) == 0 and self.player:getMark("drank") > 0 and self:getAllPeachNum(target) == 0 then
 			if has_analeptic then return "$" .. has_analeptic:getEffectiveId()
 			else return "$" .. has_peach:getEffectiveId()
 			end
@@ -405,9 +405,9 @@ function sgs.ai_slash_prohibit.xiangle(self, from, to)
 		analeptic_num = self:getCardsNum("Analeptic")
 		jink_num = self:getCardsNum("Jink")
 	else
-		slash_num = getCardsNum("Slash", from)
-		analeptic_num = getCardsNum("Analpetic", from)
-		jink_num = getCardsNum("Jink", from)
+		slash_num = getCardsNum("Slash", from, to)
+		analeptic_num = getCardsNum("Analpetic", from, to)
+		jink_num = getCardsNum("Jink", from, to)
 	end
 	if self:needKongcheng() and self.player:getHandcardNum() == 2 then return slash_num + analeptic_num + jink_num < 2 end
 	return slash_num + analeptic_num + math.max(jink_num - 1, 0) < 2
@@ -447,7 +447,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 				hasCrossbow = false
 				break
 			elseif not slashTo and self:slashIsAvailable() and self:slashIsEffective(slash, enemy)
-				and self.player:canSlash(enemy, slash, true, range_fix) and getCardsNum("Jink", enemy) < 1 then
+				and self.player:canSlash(enemy, slash, true, range_fix) and getCardsNum("Jink", enemy, self.player) < 1 then
 				shouldUse = shouldUse + 1
 				slashTo = true
 			end
@@ -542,8 +542,8 @@ sgs.ai_skill_use_func.TiaoxinCard = function(card, use, self)
 	local targets = {}
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:distanceTo(self.player, distance) <= enemy:getAttackRange()
-			and ((getCardsNum("Slash", enemy) < 1 and self.player:getHp() > 1)
-					or getCardsNum("Slash", enemy) == 0
+			and ((getCardsNum("Slash", enemy, self.player) < 1 and self.player:getHp() > 1)
+					or getCardsNum("Slash", enemy, self.player) == 0
 					or self:getCardsNum("Jink") > 0
 					or self:findLeijiTarget(self.player, 50, enemy)
 					or not enemy:canSlash(self.player))

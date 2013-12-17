@@ -249,7 +249,7 @@ zhongyi_skill.getTurnUseCard = function(self)
 		for _, enemy in ipairs(self.enemies) do
 			if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 				local_value = local_value + 0.8
-				if getCardsNum("Jink", enemy) < 1 then local_value = local_value + 0.5 end
+				if getCardsNum("Jink", enemy, self.player) < 1 then local_value = local_value + 0.5 end
 				if friend:hasSkill("tieji")
 					or (friend:hasSkill("liegong") and (enemy:getHandcardNum() <= friend:getAttackRange() or enemy:getHandcardNum() >= friend:getHp()))
 					or (friend:hasSkill("kofliegong") and enemy:getHandcardNum() >= friend:getHp()) then
@@ -258,8 +258,8 @@ zhongyi_skill.getTurnUseCard = function(self)
 				break
 			end
 		end
-		if getCardsNum("Slash", friend) < 1 then local_value = local_value * 0.3
-		elseif self:hasCrossbowEffect(friend) then local_value = local_value * getCardsNum("Slash", friend) end
+		if getCardsNum("Slash", friend, self.player) < 1 then local_value = local_value * 0.3
+		elseif self:hasCrossbowEffect(friend) then local_value = local_value * getCardsNum("Slash", friend, self.player) end
 		if friend:hasSkill("shensu") and not self:isWeak(friend) then local_value = local_value * 1.2
 		elseif self:willSkipPlayPhase(friend) then local_value = local_value * 0.2 end
 		value = value + local_value

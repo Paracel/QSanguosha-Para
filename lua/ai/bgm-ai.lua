@@ -1233,7 +1233,7 @@ sgs.ai_skill_invoke.hantong_acquire = function(self, data)
 	if skill == "hujia" and not self.player:hasSkill("hujia") then
 		local can_invoke = false
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:getKingdom() == "wei" and getCardsNum("Jink", friend) > 0 then can_invoke = true end
+			if friend:getKingdom() == "wei" and getCardsNum("Jink", friend, self.player) > 0 then can_invoke = true end
 		end
 		if can_invoke then
 			local origin_data = self.player:getTag("HantongOriginData")
@@ -1242,7 +1242,7 @@ sgs.ai_skill_invoke.hantong_acquire = function(self, data)
 	elseif skill == "jijiang" and not self.player:hasSkill("jijiang") then
 		local can_invoke = false
 		for _, friend in ipairs(self.friends_noself) do
-			if friend:getKingdom() == "shu" and getCardsNum("Slash", friend) > 0 then can_invoke = true end
+			if friend:getKingdom() == "shu" and getCardsNum("Slash", friend, self.player) > 0 then can_invoke = true end
 		end
 		if can_invoke then
 			local origin_data = self.player:getTag("HantongOriginData")
@@ -1268,7 +1268,7 @@ hantong_skill.getTurnUseCard = function(self)
 	if self.player:hasLordSkill("jijiang") or self.player:getPile("edict"):isEmpty() or not self:slashIsAvailable() then return end
 	local can_invoke = false
 	for _, friend in ipairs(self.friends_noself) do
-		if friend:getKingdom() == "shu" and getCardsNum("Slash", friend) > 0 then can_invoke = true end
+		if friend:getKingdom() == "shu" and getCardsNum("Slash", friend, self.player) > 0 then can_invoke = true end
 	end
 	if not can_invoke then return end
 	return sgs.Card_Parse("@HantongCard=.")

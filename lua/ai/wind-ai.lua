@@ -104,7 +104,7 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt, method)
 		elseif throw_weapon and enemy:hasArmorEffect("vine") then
 		elseif self:slashProhibit(nil, enemy) then
 		elseif eff then
-			if enemy:getHp() == 1 and getCardsNum("Jink", enemy) == 0 then
+			if enemy:getHp() == 1 and getCardsNum("Jink", enemy, self.player) == 0 then
 				best_target = enemy
 				break
 			end
@@ -279,7 +279,7 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 		else
 			if not self:hasSuit("black", true, player) and player:getHandcardNum() < 2 then return nil end
 		end
-		if not (getKnownCard(player, "Jink", true) > 0 or (getCardsNum("Jink", player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1)
+		if not (getKnownCard(player, "Jink", true) > 0 or (getCardsNum("Jink", player, self.player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1)
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
 			return nil
 		end
@@ -338,7 +338,7 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 				break
 			end
 		end
-		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from) > 0 or from:hasSkills("ganglie|vsganglie"))) or from:hasSkill("hongyan")) then
+		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from, self.player) > 0 or from:hasSkills("ganglie|vsganglie"))) or from:hasSkill("hongyan")) then
 			return false
 		end
 	end

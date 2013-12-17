@@ -521,7 +521,7 @@ end
 function DimengIsWorth(self, friend, enemy, mycards, myequips)
 	local e_hand1, e_hand2 = enemy:getHandcardNum(), enemy:getHandcardNum() - self:getLeastHandcardNum(enemy)
 	local f_hand1, f_hand2 = friend:getHandcardNum(), friend:getHandcardNum() - self:getLeastHandcardNum(friend)
-	local e_peach, f_peach = getCardsNum("Peach", enemy), getCardsNum("Peach", friend)
+	local e_peach, f_peach = getCardsNum("Peach", enemy, self.player), getCardsNum("Peach", friend, self.player)
 	if e_hand1 < f_hand1 then
 		return false
 	elseif e_hand2 <= f_hand2 and e_peach <= f_peach then
@@ -619,7 +619,7 @@ sgs.ai_skill_use_func.DimengCard = function(card, use, self)
 		if enemy:hasSkill("manjuan") then
 			local e_hand = enemy:getHandcardNum()
 			for _, friend in ipairs(friends) do
-				local f_peach, f_hand = getCardsNum("Peach", friend), friend:getHandcardNum()
+				local f_peach, f_hand = getCardsNum("Peach", friend, self.player), friend:getHandcardNum()
 				if (e_hand > f_hand - 1) and (e_hand - f_hand) <= #mycards and (f_hand > 0 or e_hand > 0) and f_peach <= 2 then
 					if e_hand == f_hand then
 						use.card = card
@@ -696,13 +696,13 @@ luanwu_skill.getTurnUseCard = function(self)
 
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		local hp = math.max(player:getHp(), 1)
-		if getCardsNum("Analeptic", player) > 0 then
+		if getCardsNum("Analeptic", player, self.player) > 0 then
 			if self:isFriend(player) then good = good + 1.0 / hp
 			else bad = bad + 1.0 / hp
 			end
 		end
 
-		local has_slash = (getCardsNum("Slash", player) > 0)
+		local has_slash = (getCardsNum("Slash", player, self.player) > 0)
 		local can_slash = false
 		if not can_slash then
 			for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
@@ -710,8 +710,8 @@ luanwu_skill.getTurnUseCard = function(self)
 			end
 		end
 		if not has_slash or not can_slash then
-			if self:isFriend(player) then good = good + math.max(getCardsNum("Peach", player), 1)
-			else bad = bad + math.max(getCardsNum("Peach", player), 1)
+			if self:isFriend(player) then good = good + math.max(getCardsNum("Peach", player, self.player), 1)
+			else bad = bad + math.max(getCardsNum("Peach", player, self.player), 1)
 			end
 		end
 

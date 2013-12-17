@@ -676,13 +676,13 @@ sgs.ai_skill_cardask["@yanyu-discard"] = function(self, data)
 	else
 		local throw_trick
 		local aoe_type
-		if getCardsNum("ArcheryAttack", current) >= 1 then aoe_type = "archery_attack" end
-		if getCardsNum("SavageAssault", current) >= 1 then aoe_type = "savage_assault" end
+		if getCardsNum("ArcheryAttack", current, self.player) >= 1 then aoe_type = "archery_attack" end
+		if getCardsNum("SavageAssault", current, self.player) >= 1 then aoe_type = "savage_assault" end
 		if aoe_type then
 			local aoe = sgs.Sanguosha:cloneCard(aoe_type)
 			if self:getAoeValue(aoe, current) > 0 then throw_trick = true end
 		end
-		if getCardsNum("ExNihilo", current) > 0 then throw_trick = true end
+		if getCardsNum("ExNihilo", current, self.player) > 0 then throw_trick = true end
 		if throw_trick then
 			for _, card in ipairs(cards) do
 				if card:getTypeId() == sgs.Card_TypeTrick and not isCard("ExNihilo", card, self.player) then
@@ -711,7 +711,7 @@ sgs.ai_skill_cardask["@yanyu-discard"] = function(self, data)
 				end
 			end
 		end
-		if getCardsNum("TrickCard", current) - getCardsNum("Nullification", current) > 0 then
+		if getCardsNum("TrickCard", current, self.player) - getCardsNum("Nullification", current, self.player) > 0 then
 			for _, card in ipairs(cards) do
 				if card:getTypeId() == sgs.Card_TypeTrick and not isCard("ExNihilo", card, self.player) then
 					return "$" .. card:getEffectiveId()

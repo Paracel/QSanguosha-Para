@@ -180,11 +180,11 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 
 	if ((self.player:hasSkill("roulin") and target:isFemale()) or (self.player:isFemale() and target:hasSkill("roulin"))) or self.player:hasSkill("wushuang") then
 		if getKnownCard(target, "Jink", true, "he") >= 2 then return false end
-		return getCardsNum("Jink", target) < 2
+		return getCardsNum("Jink", target, self.player) < 2
 	end
 
 	if getKnownCard(target, "Jink", true, "he") >= 1 and not (self:getOverflow() > 0 and self:getCardsNum("Analeptic") > 1) then return false end
-	return self:getCardsNum("Analeptic") > 1 or getCardsNum("Jink", target) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1
+	return self:getCardsNum("Analeptic") > 1 or getCardsNum("Jink", target, self.player) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1
 end
 
 sgs.dynamic_value.benefit.Analeptic = true
@@ -326,7 +326,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, slash)
 	if who:hasArmorEffect("silver_lion") then damagecount = 1 end
 	local kills, killlord, the_enemy = 0
 	local good, bad, F_count, E_count = 0, 0, 0, 0
-	local peach_num = self.player:objectName() == source:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", source)
+	local peach_num = self.player:objectName() == source:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", source, self.player)
 
 	local function getChainedPlayerValue(target, dmg)
 		local newvalue = 0

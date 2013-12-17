@@ -59,7 +59,7 @@ sgs.ai_skill_use_func.TaichenFightCard = function(card, use, self)
 	if self.player:usedTimes("TaichenFightCard") > 0 then return end
 	local lord = self.room:getLord()
 	if lord and self.player:getHp() >= lord:getHp() then
-		if (self:getCardsNum("Slash") + 1) * 2 > getCardsNum("Slash", lord) then
+		if (self:getCardsNum("Slash") + 1) * 2 > getCardsNum("Slash", lord, self.player) then
 			use.card = card
 		end
 	end

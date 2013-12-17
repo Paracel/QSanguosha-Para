@@ -217,6 +217,7 @@ config = {
 		"luxun->tw_luxun",
 		"lvbu->heg_lvbu|tw_lvbu",
 		"machao->sp_machao|tw_machao",
+		"madai->heg_madai",
 		"nos_huangyueying->heg_huangyueying|tw_huangyueying",
 		"pangde->sp_pangde",
 		"shenlvbu->sp_shenlvbu",

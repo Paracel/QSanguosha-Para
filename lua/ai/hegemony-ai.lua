@@ -97,8 +97,8 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	if not card_id then return "." else return "$" .. card_id end
 end
 
-sgs.ai_cardneed.xiaoguo = function(to, card)
-	return getKnownCard(to, "BasicCard", true) == 0 and card:getTypeId() == sgs.Card_TypeBasic
+sgs.ai_cardneed.xiaoguo = function(to, card, self)
+	return getKnownCard(to, self.player, "BasicCard", true) == 0 and card:getTypeId() == sgs.Card_TypeBasic
 end
 
 sgs.ai_skill_playerchosen.shushen = function(self, targets)

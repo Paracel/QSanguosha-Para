@@ -1095,12 +1095,12 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 	local has_indulgence, has_supplyshortage
 	local friend
 	for _, p in ipairs(self.friends) do
-		if getKnownCard(p, "Indulgence", true, "he") > 0 then
+		if getKnownCard(p, self.player, "Indulgence", true, "he") > 0 then
 			has_indulgence = true
 			friend = p
 			break
 		end
-		if getKnownCard(p, "SupplySortage", true, "he") > 0 then
+		if getKnownCard(p, self.player, "SupplySortage", true, "he") > 0 then
 			has_supplyshortage = true
 			friend = p
 			break

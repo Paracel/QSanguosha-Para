@@ -89,7 +89,7 @@ function sgs.ai_armor_value.vine(player, self)
 		if not self:isFriend(enemy, player) then
 			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -2 end
 			if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -2 end
-			if getKnownCard(enemy, "FireSlash", true) >= 1 or getKnownCard(enemy, "FireAttack", true) >= 1 or getKnownCard(enemy, "Fan") >= 1 then return -2 end
+			if getKnownCard(enemy, self.player, "FireSlash|FireAttack|Fan") >= 1 then return -2 end
 		end
 	end
 
@@ -179,11 +179,11 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 	if target:hasFlag("dahe") then return true end
 
 	if ((self.player:hasSkill("roulin") and target:isFemale()) or (self.player:isFemale() and target:hasSkill("roulin"))) or self.player:hasSkill("wushuang") then
-		if getKnownCard(target, "Jink", true, "he") >= 2 then return false end
+		if getKnownCard(target, self.player, "Jink", true, "he") >= 2 then return false end
 		return getCardsNum("Jink", target, self.player) < 2
 	end
 
-	if getKnownCard(target, "Jink", true, "he") >= 1 and not (self:getOverflow() > 0 and self:getCardsNum("Analeptic") > 1) then return false end
+	if getKnownCard(target, self.player, "Jink", true, "he") >= 1 and not (self:getOverflow() > 0 and self:getCardsNum("Analeptic") > 1) then return false end
 	return self:getCardsNum("Analeptic") > 1 or getCardsNum("Jink", target, self.player) < 1 or sgs.card_lack[target:objectName()]["Jink"] == 1
 end
 
@@ -209,7 +209,7 @@ function SmartAI:useCardSupplyShortage(card, use)
 
 	local sb_daqiao = self.room:findPlayerBySkillName("yanxiao")
 	local yanxiao = sb_daqiao and not self:isFriend(sb_daqiao) and sb_daqiao:faceUp()
-					and (getKnownCard(sb_daqiao, "diamond", nil, "he") > 0
+					and (self:hasSuit("diamond", true, sb_daqiao)
 						or sb_daqiao:getHandcardNum() > 2
 						or sb_daqiao:containsTrick("YanxiaoCard"))
 

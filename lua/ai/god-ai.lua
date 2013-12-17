@@ -85,7 +85,7 @@ function SmartAI:cantbeHurt(player, from, damageNum)
 			if from:getMaxHp() <= 3 or (self.room:getLord() and from:getRole() == "renegade") then return true end
 		end
 	end
-	if player:hasSkill("tianxiang") and getKnownCard(player, "diamond", false) + getKnownCard(player, "club", false) < player:getHandcardNum() then
+	if player:hasSkill("tianxiang") and getKnownCard(player, self.player, "diamond|club", false) < player:getHandcardNum() then
 		local peach_num = self.player:objectName() == from:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", from, self.player)
 		for _, friend in ipairs(self:getFriends(from)) do
 			if friend:getHp() < 2 and peach_num then

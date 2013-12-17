@@ -143,9 +143,9 @@ sgs.ai_skill_use_func.JunxingCard = function(card, use, self)
 	for _, enemy in ipairs(self.enemies) do
 		local id = nil
 		if self:toTurnOver(enemy, 1) then
-			if getKnownCard(enemy, "BasicCard") == 0 then id = equip or trick end
-			if not id and getKnownCard(enemy, "TrickCard") == 0 then id = equip or basic end
-			if not id and getKnownCard(enemy, "EquipCard") == 0 then id = trick or basic end
+			if getKnownCard(enemy, self.player, "BasicCard") == 0 then id = equip or trick end
+			if not id and getKnownCard(enemy, self.player, "TrickCard") == 0 then id = equip or basic end
+			if not id and getKnownCard(enemy, self.player, "EquipCard") == 0 then id = trick or basic end
 			if id then
 				use.card = sgs.Card_Parse("@JunxingCard=" .. id)
 				if use.to then use.to:append(enemy) end
@@ -233,7 +233,7 @@ sgs.ai_skill_use["@@xiansi"] = function(self, prompt)
 	local crossbow_effect
 	if not self.player:getTag("HuashenSkill"):toString() == "xiansi" then
 		for _, enemy in ipairs(self.enemies) do
-			if enemy:inMyAttackRange(self.player) and (self:hasCrossbowEffect(enemy) or getKnownCard(enemy, "Crossbow") > 0) then
+			if enemy:inMyAttackRange(self.player) and (self:hasCrossbowEffect(enemy) or getKnownCard(enemy, self.player, "Crossbow") > 0) then
 				crossbow_effect = true
 				break
 			end

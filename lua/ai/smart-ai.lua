@@ -278,7 +278,7 @@ function sgs.getDefense(player, gameProcess)
 	if not gameProcess and not hasEightDiagram then
 		if player:hasSkill("jijiu") then defense = defense - 3 end
 		if player:hasSkill("dimeng") then defense = defense - 2.5 end
-		if player:hasSkill("guzheng") and getKnownCard(player, "Jink", true) == 0 then defense = defense - 2.5 end
+		if player:hasSkill("guzheng") and getKnownCard(player, nil, "Jink", true) == 0 then defense = defense - 2.5 end
 		if player:hasSkill("qiaobian") then defense = defense - 2.4 end
 		if player:hasSkill("jieyin") then defense = defense - 2.3 end
 		if player:hasSkills("noslijian|lijian") then defense = defense - 2.2 end
@@ -2183,7 +2183,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				if trick:isKindOf("Dismantlement") then
 					if self:getDangerousCard(to) or self:getValuableCard(to) then return null_card end
 					if to:getHandcardNum() == 1 and not self:needKongcheng(to) then
-						if (getKnownCard(to, "TrickCard", false) == 1 or getKnownCard(to, "EquipCard", false) == 1 or getKnownCard(to, "Slash", false) == 1) then
+						if (getKnownCard(to, self.player, "TrickCard|EquipCard|Slash", false) == 1) then
 							return nil
 						end
 						return null_card
@@ -2714,7 +2714,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 		if from:hasWeapon("guding_blade") and slash and to:isKongcheng() then dmg = dmg + 1 end
 		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 then dmg = dmg + 1 end
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()
-			and (to:getHandcardNum() > 3 or getKnownCard(to, "red") > 0) then dmg = dmg - 1 end
+			and (to:getHandcardNum() > 3 or getKnownCard(to, self.player, "red") > 0) then dmg = dmg - 1 end
 	end
 	if return_value then return dmg end
 	return dmg > 1
@@ -2926,7 +2926,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 		end
 	end
 	for _, friend in ipairs(friends) do
-		if getKnownCard(friend, "Crossbow") > 0 then
+		if getKnownCard(friend, self.player, "Crossbow") > 0 then
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
 				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) <= 1 then
 					for _, hcard in ipairs(cards) do
@@ -3299,7 +3299,7 @@ function SmartAI:willUsePeachTo(dying)
 					card_str = self:getCardId("Peach")
 				elseif finalRetrial == 1 then
 					local flag = wizard:hasSkill("huanshi") and "he" or "h"
-					if getKnownCard(wizard, "Peach", false, flag) > 0 or getKnownCard(wizard, "GodSalvation", false, flag) > 0 then return "." end
+					if getKnownCard(wizard, self.player, "Peach|GodSalvation", false, flag) > 0 then return "." end
 					card_str = self:getCardId("Peach")
 				end
 			end
@@ -3529,7 +3529,7 @@ function SmartAI:needRetrial(judge)
 
 	if reason == "supply_shortage" then
 		if self:isFriend(who) then
-			if who:hasSkill("tiandu") or (who:hasSkill("guidao") and getKnownCard(who, "club") > 0) then return false end
+			if who:hasSkill("tiandu") or (who:hasSkill("guidao") and self:hasSuit("club", true, who)) then return false end
 			return not good
 		else
 			return good
@@ -3539,7 +3539,7 @@ function SmartAI:needRetrial(judge)
 	if reason == "luoshen" then
 		if self:isFriend(who) then
 			if who:getHandcardNum() > 30 then return false end
-			if self:hasCrossbowEffect(who) or getKnownCard(who, "Crossbow", false) > 0 then return not judge:isGood() end
+			if self:hasCrossbowEffect(who) or getKnownCard(who, self.player, "Crossbow", false) > 0 then return not judge:isGood() end
 			if self:getOverflow(who) > 1 and self.player:getHandcardNum() < 3 then return false end
 			return not good
 		else
@@ -3687,7 +3687,7 @@ function SmartAI:damageIsEffective(player, nature, source)
 			if source:objectName() ~= self.player:objectName() then
 				if source:getHandcardNum() <= 2 then return false end
 			else
-				if (getKnownCard(player, "TrickCard", false, "h") + getKnownCard(player, "EquipCard", false, "h") < player:getHandcardNum()
+				if (getKnownCard(player, self.player, "TrickCard|EquipCard", false, "h") < player:getHandcardNum()
 					and self:getCardsNum("TrickCard") + self:getCardsNum("EquipCard", "h") < 1)
 					or self:getCardsNum("BasicCard") < 2 then
 					return false
@@ -3906,20 +3906,23 @@ function SmartAI:getKnownNum(player)
 	end
 end
 
-function getKnownCard(player, class_name, viewas, flags)
+function getKnownCard(player, from, class_name, viewas, flags)
 	if not player or (flags and type(flags) ~= "string") then global_room:writeToConsole(debug.traceback()) return 0 end
+	from = from or global_room:getCurrent()
 	flags = flags or "h"
 	player = findPlayerByObjectName(global_room, player:objectName())
 	local cards = player:getCards(flags)
 	local known = 0
 	local suits = { ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }
 	for _, card in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
-		if card:hasFlag("visible") or card:hasFlag(flag) or player:objectName() == global_room:getCurrent():objectName() then
-			if (viewas and isCard(class_name, card, player)) or card:isKindOf(class_name)
-				or (suits[class_name] and card:getSuitString() == class_name)
-				or (class_name == "red" and card:isRed()) or (class_name == "black" and card:isBlack()) then
-				known = known + 1
+		local flag = string.format("%s_%s_%s", "visible", from:objectName(), player:objectName())
+		if card:hasFlag("visible") or card:hasFlag(flag) or player:objectName() == from:objectName() then
+			for _, name in ipairs(class_name:split("|")) do
+				if (suits[name] and card:getSuitString() == name)
+					or (name == "red" and card:isRed()) or (name == "black" and card:isBlack())
+					or (viewas and isCard(name, card, player)) or card:isKindOf(name) then
+					known = known + 1
+				end
 			end
 		end
 	end
@@ -4258,7 +4261,7 @@ function SmartAI:getRestCardsNum(class_name, player)
 		if card:isKindOf(class_name) then discardnum = discardnum + 1 end
 	end
 	for _, player in sgs.qlist(self.room:getOtherPlayers(player)) do
-		knownnum = knownnum + getKnownCard(player, class_name)
+		knownnum = knownnum + getKnownCard(player, self.player, class_name, false)
 	end
 	return totalnum - discardnum - knownnum
 end
@@ -4922,7 +4925,6 @@ function SmartAI:useEquipCard(card, use)
 	local same = self:getSameEquip(card)
 	local zzzh, isfriend_zzzh = self.room:findPlayerBySkillName("guzheng")
 	if zzzh and zzzh:hasSkill("zhijian") then isfriend_zzzh = self:isFriend(zzzh) end
-	end
 	if same then
 		if (self.player:hasSkill("nosgongqi") and self:slashIsAvailable())
 			or (self.player:hasSkill("nosrende") and self:findFriendsByType(sgs.Friend_Draw))

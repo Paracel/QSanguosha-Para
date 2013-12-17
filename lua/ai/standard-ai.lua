@@ -1192,7 +1192,7 @@ sgs.ai_skill_invoke.tieji = function(self, data)
 		end
 	end
 	if target:hasSkill("longhun") and target:getHp() == 1 and self:hasSuit("club", true, target) then return true end
-	if target:isKongcheng() or (self:getKnownNum(target) == target:getHandcardNum() and getKnownCard(target, "Jink", true) == 0) then return false end
+	if target:isKongcheng() or (self:getKnownNum(target) == target:getHandcardNum() and getKnownCard(target, self.player, "Jink", true) == 0) then return false end
 	return true
 end
 
@@ -1680,7 +1680,7 @@ sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	local doLiuli = function(who)
 		if not self:isFriend(who) and who:hasSkill("leiji")
 			and (self:hasSuit("spade", true, who) or who:getHandcardNum() >= 3)
-			and (getKnownCard(who, "Jink", true) >= 1 or self:hasEightDiagramEffect(who)) then
+			and (getKnownCard(who, self.player, "Jink", true) >= 1 or self:hasEightDiagramEffect(who)) then
 			return "."
 		end
 
@@ -2237,7 +2237,7 @@ function SmartAI:findLijianTarget(card_name, use)
 				and self:hasTrickEffective(duel, males[1], lord)
 				and not lord:isLocked(duel) and (getCardsNum("Slash", males[1], self.player) < 1
 												or getCardsNum("Slash", males[1], self.player) < getCardsNum("Slash", lord, self.player)
-												or (self:getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], "Slash", true, "he") == 0)) then
+												or (self:getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], self.player, "Slash", true, "he") == 0)) then
 				return males[1], lord
 			end
 			local afriend = findFriend_maxSlash(self, males[1])

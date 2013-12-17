@@ -106,7 +106,7 @@ sgs.ai_skill_invoke.hongyuan = function(self, data)
 end
 
 function sgs.ai_cardneed.mingzhe(to, card, self)
-	return card:isRed() and getKnownCard(to, "red", false) < 2
+	return card:isRed() and getKnownCard(to, self.player, "red", false) < 2
 end
 
 sgs.ai_skill_use["@@hongyuan"] = function(self, prompt)

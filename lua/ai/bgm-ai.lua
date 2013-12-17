@@ -133,7 +133,7 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:isMale() and self:slashIsEffective(slash, enemy) and self.player:distanceTo(enemy) == 1
 					and not enemy:hasSkills("fenyong|zhichi|fankui|vsganglie|ganglie|enyuan|nosenyuan|langgu|guixin|kongcheng")
-					and self:getCardsNum("Slash") + getKnownCard(enemy, "Slash") >= 3 then
+					and self:getCardsNum("Slash") + getKnownCard(enemy, self.player, "Slash") >= 3 then
 					target = enemy
 					break
 				end
@@ -1017,7 +1017,7 @@ sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 	local retrialForHongyan
 	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 	if damage.from and damage.from:isAlive() and not damage.from:isKongcheng() and damage.from:hasSkill("hongyan")
-		and getKnownCard(damage.from, "diamond", false) + getKnownCard(damage.from, "club", false) < damage.from:getHandcardNum() then
+		and getKnownCard(damage.from, self.player, "diamond|club", false) < damage.from:getHandcardNum() then
 		retrialForHongyan = true
 	end
 	if retrialForHongyan then

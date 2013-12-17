@@ -216,8 +216,8 @@ sgs.ai_choicemade_filter.skillInvoke.enyuan = function(self, player, promptlist)
 	end
 end
 
-function sgs.ai_cardneed.enyuan(to, card)
-	return getKnownCard(to, "Card", false) < 2
+function sgs.ai_cardneed.enyuan(to, card, self)
+	return getKnownCard(to, self.player, "Card", false) < 2
 end
 
 sgs.ai_skill_playerchosen.xuanhuo = function(self, targets)

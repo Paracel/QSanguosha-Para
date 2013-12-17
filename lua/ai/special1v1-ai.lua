@@ -165,8 +165,8 @@ end
 
 sgs.ai_skill_invoke.kofliegong = sgs.ai_skill_invoke.liegong
 
-function sgs.ai_cardneed.kofliegong(to, card)
-	return isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0
+function sgs.ai_cardneed.kofliegong(to, card, self)
+	return isCard("Slash", card, to) and getKnownCard(to, self.player, "Slash", true) == 0
 end
 
 sgs.ai_skill_invoke.yinli = function(self)

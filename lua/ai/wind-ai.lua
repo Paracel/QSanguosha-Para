@@ -123,8 +123,8 @@ sgs.ai_skill_use["@@shensu2"] = function(self, prompt, method)
 	return "."
 end
 
-sgs.ai_cardneed.shensu = function(to, card)
-	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, "EquipCard", false) < 2
+sgs.ai_cardneed.shensu = function(to, card, self)
+	return card:getTypeId() == sgs.Card_TypeEquip and getKnownCard(to, self.player, "EquipCard", false) < 2
 end
 
 sgs.ai_card_intention.ShensuCard = sgs.ai_card_intention.Slash
@@ -198,14 +198,15 @@ sgs.ai_skill_invoke.liegong = function(self, data)
 	return not self:isFriend(target)
 end
 
-function sgs.ai_cardneed.liegong(to, card)
-	return (isCard("Slash", card, to) and getKnownCard(to, "Slash", true) == 0) or (card:isKindOf("Weapon") and not (to:getWeapon() or getKnownCard(to, "Weapon") > 0))
+function sgs.ai_cardneed.liegong(to, card, self)
+	return (isCard("Slash", card, to) and getKnownCard(to, self.player, "Slash", true) == 0)
+			or (card:isKindOf("Weapon") and not (to:getWeapon() or getKnownCard(to, self, "Weapon") > 0))
 end
 
 sgs.ai_chaofeng.huangzhong = 1
 
-function sgs.ai_cardneed.kuanggu(to, card)
-	return card:isKindOf("OffensiveHorse") and not (to:getOffensiveHorse() or getKnownCard(to, "OffensiveHorse", false) > 0)
+function sgs.ai_cardneed.kuanggu(to, card, self)
+	return card:isKindOf("OffensiveHorse") and not (to:getOffensiveHorse() or getKnownCard(to, self, "OffensiveHorse", false) > 0)
 end
 
 sgs.ai_chaofeng.weiyan = -2
@@ -279,7 +280,7 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 		else
 			if not self:hasSuit("black", true, player) and player:getHandcardNum() < 2 then return nil end
 		end
-		if not (getKnownCard(player, "Jink", true) > 0 or (getCardsNum("Jink", player, self.player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1)
+		if not (getKnownCard(player, self.player, "Jink", true) > 0 or (getCardsNum("Jink", player, self.player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1)
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
 			return nil
 		end
@@ -343,13 +344,13 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 		end
 	end
 
-	if (getKnownCard(to, "Jink", true) >= 1 or (self:hasSuit("black", true, to) and hcard >= 2)) and to:isWounded() then return true end
+	if (getKnownCard(to, self.player, "Jink", true) >= 1 or (self:hasSuit("black", true, to) and hcard >= 2)) and to:isWounded() then return true end
 	if self:hasEightDiagramEffect(to) then return true end
 end
 
 function sgs.ai_cardneed.leiji(to, card, self)
-	return ((isCard("Jink", card, to) and getKnownCard(to, "Jink", true) == 0)
-			or (card:isKindOf("EightDiagram") and not (self:hasEightDiagramEffect(to) or getKnownCard(to, "EightDiagram", false) > 0)))
+	return ((isCard("Jink", card, to) and getKnownCard(to, self, "Jink", true) == 0)
+			or (card:isKindOf("EightDiagram") and not (self:hasEightDiagramEffect(to) or getKnownCard(to, self, "EightDiagram", false) > 0)))
 end
 
 local huangtianv_skill = {}
@@ -584,7 +585,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	local x = 5
 	if guhuoname == "peach" or guhuoname == "ex_nihilo" then
 		x = 2
-		if getKnownCard(yuji, guhuotype, false) > 0 then x = x * 3 end
+		if getKnownCard(yuji, self.player, guhuotype, false) > 0 then x = x * 3 end
 	end
 	return math.random(1, x) == 1 and "question" or "noquestion"
 end

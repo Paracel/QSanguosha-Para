@@ -1821,7 +1821,7 @@ jieyin_skill.getTurnUseCard = function(self)
 		end
 	end
 	for _, card in ipairs(cards) do
-		if card:getTypeId() ~= sgs.Card_TypeEquip then
+		if card:getTypeId() ~= sgs.Card_TypeEquip and (not self:isValuableCard(card) or self.player:isWounded()) then
 			if not first then first = card:getEffectiveId()
 			elseif first and first ~= card:getEffectiveId() and not second then second = card:getEffectiveId()
 			end

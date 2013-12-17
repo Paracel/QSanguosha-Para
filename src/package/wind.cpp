@@ -684,12 +684,12 @@ QGroupBox *GuhuoDialog::createLeft() {
     QList<const Card *> cards = Sanguosha->findChildren<const Card *>();
     foreach (const Card *card, cards) {
         if (card->getTypeId() == Card::TypeBasic && !map.contains(card->objectName())
-            && !Config.BanPackages.contains(card->getPackage())) {
+            && !ServerInfo.Extensions.contains("!" + card->getPackage())) {
             Card *c = Sanguosha->cloneCard(card->objectName());
             c->setParent(this);
             layout->addWidget(createButton(c));
 
-            if (card->objectName() == "slash" && !Config.BanPackages.contains("maneuvering")) {
+            if (card->objectName() == "slash" && !ServerInfo.Extensions.contains("!maneuvering")) {
                 Card *c2 = Sanguosha->cloneCard(card->objectName());
                 c2->setParent(this);
                 layout->addWidget(createButton(c2));
@@ -716,7 +716,7 @@ QGroupBox *GuhuoDialog::createRight() {
     QList<const Card *> cards = Sanguosha->findChildren<const Card *>();
     foreach (const Card *card, cards) {
         if (card->isNDTrick() && !map.contains(card->objectName())
-            && !Config.BanPackages.contains(card->getPackage())) {
+            && !ServerInfo.Extensions.contains("!" + card->getPackage())) {
             Card *c = Sanguosha->cloneCard(card->objectName());
             c->setSkillName(object_name);
             c->setParent(this);

@@ -53,4 +53,21 @@ return {
 	["yingyang:down"] = "点数-3（最小为A）",
 	["#YingyangUp"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数增加为 %arg",
 	["#YingyangDown"] = "%from 发动了“<font color=\"yellow\"><b>鹰扬</b></font>”，拼点牌点数减小为 %arg",
+
+	["#zhangren"] = "索命神射",
+	["zhangren"] = "张任",
+	["illustrator:zhangren"] = "DH",
+	["chuanxin"] = "穿心",
+	[":chuanxin"] = "每当你使用【杀】或【决斗】对一名其他角色造成伤害时，你可以防止此伤害，令其选择一项：1.若其有多于一个技能，其选择失去一项技能（对每名角色限一次）；2.弃置装备区的所有牌（至少一张）：若如此做，其失去1点体力。",
+	["@chuanxin"] = "穿心",
+	["fengshi"] = "锋矢",
+	[":fengshi"] = "每当一名角色被指定为【杀】的目标后，若你与此【杀】使用者均与该角色相邻，你可以令该角色弃置一张装备区的牌。",
+
+	["heg_dongzhuo"] = "董卓-国",
+	["&heg_dongzhuo"] = "董卓",
+	["illustrator:heg_dongzhuo"] = "巴萨小马",
+	["hengzheng"] = "横征",
+	[":hengzheng"] = "摸牌阶段开始时，若你体力为1或没有手牌，你可以放弃摸牌：若如此做，你依次获得所有其他角色区域里的一张牌。",
+	["baoling"] = "暴凌",
+	[":baoling"] = "<font color=\"purple\"><b>觉醒技。</b></font>出牌阶段结束时，若你本局游戏发动过“横征”，你增加3点体力上限，回复3点体力，然后获得“崩坏”。",
 }

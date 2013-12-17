@@ -3283,7 +3283,7 @@ function SmartAI:willUsePeachTo(dying)
 		end
 	else
 		if not sgs.GetConfig("EnableHegemony", false) and self.role == "renegade" and self.room:getMode() ~= "couple"
-			and dying:isLord() and sgs.current_mode_players["loyalist"] < 2 then
+			and dying:isLord() and self.room:alivePlayerCount() > 2 then
 			card_str = self:getCardId("Peach")
 		end
 		if dying:hasSkill("wuhun") then
@@ -4920,15 +4920,19 @@ function SmartAI:useEquipCard(card, use)
 		return
 	end
 	local same = self:getSameEquip(card)
+	local zzzh, isfriend_zzzh = self.room:findPlayerBySkillName("guzheng")
+	if zzzh and zzzh:hasSkill("zhijian") then isfriend_zzzh = self:isFriend(zzzh) end
+	end
 	if same then
-		if (self:hasSkill("nosgongqi") and self:slashIsAvailable())
-			or (self.player:hasSkills("nosrende") and self:findFriendsByType(sgs.Friend_Draw))
+		if (self.player:hasSkill("nosgongqi") and self:slashIsAvailable())
+			or (self.player:hasSkill("nosrende") and self:findFriendsByType(sgs.Friend_Draw))
 			or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self:findFriendsByType(sgs.Friend_Draw))
-			or (self:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
-			or (self:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
-			or (self:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
+			or (self.player:hasSkills("yongsi|renjie") and self:getOverflow() < 2)
+			or (self.player:hasSkills("qixi|duanliang|yinling") and (card:isBlack() or same:isBlack()))
+			or (self.player:hasSkills("guose|longhun") and (card:getSuit() == sgs.Card_Diamond or same:getSuit() == sgs.Card_Diamond))
 			or (self.player:hasSkill("jijiu") and (card:isRed() or same:isRed()))
-			or (self.player:hasSkill("guidao") and same:isBlack() and card:isRed()) then return end
+			or (self.player:hasSkill("guidao") and same:isBlack() and card:isRed())
+			or isfriend_zzzh then return end
 	end
 	local canUseSlash = self:getCardId("Slash") and self:slashIsAvailable(self.player)
 	self:useCardByClassName(card, use)
@@ -4967,7 +4971,7 @@ function SmartAI:useEquipCard(card, use)
 				if not friend:getArmor() then return end
 			end
 		end
-		if self:evaluateArmor(card) > self:evaluateArmor() then use.card = card end
+		if self:evaluateArmor(card) > self:evaluateArmor() or (isfriend_zzzh == false and self:getOverflow() > 0) then use.card = card end
 		return
 	elseif self:needBear() then return
 	elseif card:isKindOf("OffensiveHorse") then

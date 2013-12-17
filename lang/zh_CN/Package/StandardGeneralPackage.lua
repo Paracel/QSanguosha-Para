@@ -245,10 +245,10 @@ return {
 	
 	["#sujiang"] = "金童",
 	["sujiang"] = "素将",
-	["illustrator:sujiang"] = "火凤燎原",
+	["illustrator:sujiang"] = "木美人",
 	["#sujiangf"] = "玉女",
 	["sujiangf"] = "素将(女)",
 	["&sujiangf"] = "素将",
-	["illustrator:sujiangf"] = "轩辕剑",
+	["illustrator:sujiangf"] = "木美人",
 }
 

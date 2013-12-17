@@ -2790,8 +2790,14 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 			end
 			if k == R_num then friends = temp_friends
 			else
+				local cmp = function(a, b)
+					local ar_value, br_value = sgs.role_evaluation[a:objectName()]["renegade"], sgs.role_evaluation[b:objectName()]["renegade"]
+					local al_value, bl_value = sgs.role_evaluation[a:objectName()]["loyalist"], sgs.role_evaluation[b:objectName()]["loyalist"]
+					return (ar_value > br_value) or (ar_value == br_value and al_value > bl_value)
+				end
+				table.sort(temp_friends, cmp)
 				for _, p in ipairs(temp_friends) do
-					if sgs.role_evaluation[p:objectName()]["renegade"] > 0 then
+					if k < R_num and sgs.role_evaluation[p:objectName()]["renegade"] > 0 then
 						k = k + 1
 					else table.insert(new_friends, p) end
 				end
@@ -3024,11 +3030,13 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 						and ((self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard") and self.player:getMark("rende") < 2)
 							or (self.player:hasSkill("nosrende") and self.player:getMark("nosrende") < 2))
 
+	if #cardtogive == 0 and shoulduse then cardtogive = cards end
+
 	self:sort(friends, "handcard")
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend, true) and not friend:hasSkill("manjuan") then
-				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shoulduse) then
+			if not self:needKongcheng(friend, true) and not hasManjuanEffect(friend) then
+				if friend:getHandcardNum() <= 3 and (self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse) then
 					return hcard, friend
 				end
 			end
@@ -3048,7 +3056,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
-			if not self:needKongcheng(friend) and not hasManjuanEffect(friend) then
+			if (not self:needKongcheng(friend) or #friends == 1) and not hasManjuanEffect(friend) then
 				if self:getOverflow() > 0 or self.player:getHandcardNum() > 3 or shouldUse then
 					return hcard, friend
 				end

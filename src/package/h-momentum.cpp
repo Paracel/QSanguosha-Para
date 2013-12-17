@@ -463,6 +463,84 @@ private:
     }
 };
 
+class Hengzheng: public PhaseChangeSkill {
+public:
+    Hengzheng(): PhaseChangeSkill("hengzheng") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *dongzhuo) const{
+        if (dongzhuo->getPhase() == Player::Draw && (dongzhuo->isKongcheng() || dongzhuo->getHp() <= 1)) {
+            Room *room = dongzhuo->getRoom();
+            if (room->askForSkillInvoke(dongzhuo, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+
+                dongzhuo->setFlags("HengzhengUsing");
+                if (dongzhuo->getMark("HengzhengUsed") == 0)
+                    dongzhuo->setMark("HengzhengUsed", 1);
+                QList<ServerPlayer *> players = room->getOtherPlayers(shencc);
+                if (players.length() >= 4)
+                    ;//room->doLightbox("$HengzhengAnimate");
+
+                foreach (ServerPlayer *player, players) {
+                    if (player->isAlive() && !player->isAllNude()) {
+                        CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, dongzhuo->objectName());
+                        int card_id = room->askForCardChosen(dongzhuo, player, "hej", objectName());
+                        room->obtainCard(dongzhuo, Sanguosha->getCard(card_id),
+                                         reason, room->getCardPlace(card_id) != Player::PlaceHand);
+                    }
+                }
+
+                dongzhuo->setFlags("-HengzhengUsing");
+                return true;
+            }
+        }
+
+        return false;
+    }
+};
+
+class Baoling: public TriggerSkill {
+public:
+    Baoling(): TriggerSkill("baoling") {
+        events << EventPhaseEnd;
+        frequency = Wake;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return TriggerSkill::triggerable(target)
+               && target->getPhase() == Player::Play
+               && target->getMark("baoling") == 0
+               && target->getMark("HengzhengUsed") >= 1;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        room->notifySkillInvoked(player, objectName());
+
+        LogMessage log;
+        log.type = "#BaolingWake";
+        log.from = player;
+        log.arg = objectName();
+        log.arg2 = "hengzheng";
+        room->sendLog(log);
+
+        room->broadcastSkillInvoke(objectName());
+        //room->doLightbox("$HengzhengAnimate", 4000);
+
+        room->addPlayerMark(player, "baoling");
+
+        if (room->changeMaxHpForAwakenSkill(player, 3)) {
+            RecoverStruct recover;
+            recover.who = player;
+            recover.recover = 3;
+            room->recover(player, recover);
+
+            room->acquireSkill(player, "benghuai");
+        }
+
+        return false;
+    }
+};
+
 HMomentumPackage::HMomentumPackage()
     : Package("h_momentum")
 {
@@ -499,9 +577,12 @@ HMomentumPackage::HMomentumPackage()
     heg_sunce->addSkill(new Yingyang);
     heg_sunce->addSkill("zhiba");
 
-    /*General *heg_dongzhuo = new General(this, "heg_dongzhuo", "qun", 4); // QUN 006 G
+    General *heg_dongzhuo = new General(this, "heg_dongzhuo$", "qun", 4); // QUN 006 G
+    heg_dongzhuo->addSkill(new Hengzheng);
+    heg_dongzhuo->addSkill(new Baoling);
+    heg_dongzhuo->addSkill("baonue");
 
-    General *zhangren = new General(this, "zhangren", "qun", 3);*/
+    /*General *zhangren = new General(this, "zhangren", "qun", 3);*/
 
     skills << new Yongjue << new YongjueStart;
     related_skills.insertMulti("yongjue", "#yongjue-start");

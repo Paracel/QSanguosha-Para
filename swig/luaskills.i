@@ -162,6 +162,7 @@ public:
     void setWillThrow(bool will_throw);
     void setCanRecast(bool can_recast);
     void setHandlingMethod(Card::HandlingMethod handling_method);
+    void setMute(bool mute);
     LuaSkillCard *clone() const;
 
     LuaFunction filter;    

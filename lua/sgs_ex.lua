@@ -177,6 +177,10 @@ function sgs.CreateSkillCard(spec)
 		card:setHandlingMethod(spec.handling_method)
 	end
 
+	if type(spec.mute) == "boolean" then
+		card:setMute(spec.mute)
+	end
+
 	card.filter = spec.filter
 	card.feasible = spec.feasible
 	card.about_to_use = spec.about_to_use

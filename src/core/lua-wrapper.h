@@ -120,6 +120,7 @@ public:
     inline void setWillThrow(bool will_throw) { this->will_throw = will_throw; }
     inline void setCanRecast(bool can_recast) { this->can_recast = can_recast; }
     inline void setHandlingMethod(Card::HandlingMethod handling_method) { this->handling_method = handling_method; }
+    inline void setMute(bool mute) { this->mute = mute; }
 
     // member functions that do not expose to Lua interpreter
     static LuaSkillCard *Parse(const QString &str);

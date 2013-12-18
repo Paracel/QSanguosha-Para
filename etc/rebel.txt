@@ -82,3 +82,5 @@ zhangjiao				bgm_ganning				1.0
 zhangjiao				yuejin					0.3
 zhangjiao				jiangqin				0.6
 zhangjiao				hetaihou				0.3
+heg_dongzhuo			zhoutai					2.0
+heg_dongzhuo			nos_zhoutai				1.8

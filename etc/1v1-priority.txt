@@ -152,6 +152,8 @@ zangba					58
 mifuren					10					
 chenwudongxi			45					
 heg_sunce				50					
+zhangren				72					
+heg_dongzhuo			33					
 zhugejin				60					
 vs_xiahoudun			62					
 vs_guanyu				58					

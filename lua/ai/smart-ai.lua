@@ -1314,19 +1314,29 @@ end
 
 function SmartAI:isFriend(other, another)
 	if not other then self.room:writeToConsole(debug.traceback()) return end
-	if another then return self:isFriend(other) == self:isFriend(another) end
+	if another then
+		local of, af = self:isFriend(other), self:isFriend(another)
+		return of ~= nil and af ~= nil and of == af
+	end
 	if sgs.isRolePredictable(true) and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isFriend(other) end
 	if self.player:objectName() == other:objectName() then return true end
-	if self:objectiveLevel(other) < 0 then return true end
+	local obj_level = self:objectiveLevel(other)
+	if obj_level < 0 then return true
+	elseif obj_level == 0 then return nil end
 	return false
 end
 
 function SmartAI:isEnemy(other, another)
 	if not other then self.room:writeToConsole(debug.traceback()) return end
-	if another then return self:isFriend(other) ~= self:isFriend(another) end
+	if another then
+		local of, af = self:isFriend(other), self:isFriend(another)
+		return of ~= nil and af ~= nil and of ~= af
+	end
 	if sgs.isRolePredictable(true) and self.lua_ai:relationTo(other) ~= sgs.AI_Neutrality then return self.lua_ai:isEnemy(other) end
 	if self.player:objectName() == other:objectName() then return false end
-	if self:objectiveLevel(other) > 0 then return true end
+	local obj_level = self:objectiveLevel(other)
+	if obj_level > 0 then return true
+	elseif obj_level == 0 then return nil end
 	return false
 end
 

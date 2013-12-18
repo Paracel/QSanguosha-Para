@@ -66,11 +66,11 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3
-			elseif self:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return 0
+			elseif self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return 0
 			elseif card:isKindOf("Armor") then
 				return 4
 			end
-		elseif self:hasSkills(sgs.lose_equip_skill) then
+		elseif self.player:hasSkills(sgs.lose_equip_skill) then
 			return 5
 		else
 			return 0
@@ -151,7 +151,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 				end
 			end
 			for _, enemy in ipairs(self.enemies) do
-				if self:hasSkills("bazhen|yizhong", enemy) then
+				if enemy:hasSkills("bazhen|yizhong") then
 					return enemy
 				end
 			end
@@ -166,7 +166,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 			end
 			if not has_equip then
 				if equip_type == "Armor" then
-					if not self:needKongcheng(friend) and not self:hasSkills("bazhen|yizhong", friend) then return friend end
+					if not self:needKongcheng(friend) and not friend:hasSkills("bazhen|yizhong") then return friend end
 				else
 					if friend:isWounded() and not (friend:hasSkill("longhun") and friend:getCardCount() >= 3) then return friend end
 				end
@@ -586,8 +586,8 @@ sgs.ai_skill_playerchosen.xingwu = function(self, targets)
 			if self:cantbeHurt(enemy, self.player, dmg) then value = value - 5 end
 			if enemy:isLord() then value = value + 2 end
 			if enemy:hasArmorEffect("silver_lion") then value = value - 1.5 end
-			if self:hasSkills(sgs.exclusive_skill, enemy) then value = value - 1 end
-			if self:hasSkills(sgs.masochism_skill, enemy) then value = value - 0.5 end
+			if enemy:hasSkills(sgs.exclusive_skill) then value = value - 1 end
+			if enemy:hasSkills(sgs.masochism_skill) then value = value - 0.5 end
 		end
 		if not enemy:getEquips():isEmpty() then
 			local len = enemy:getEquips():length()

@@ -76,7 +76,7 @@ local function getOwnCards(self, up, bottom, next_judge)
 					table.remove(bottom, index)
 					shuangxiong = true
 				end
-			elseif self:hasSkills("xianzhen|tianyi|dahe") then
+			elseif self.player:hasSkills("xianzhen|tianyi|dahe") then
 				local maxcard = self:getMaxCard(self.player)
 				has_big = maxcard and maxcard:getNumber() > 10
 				if not has_big and gcard:getNumber() > 10 then

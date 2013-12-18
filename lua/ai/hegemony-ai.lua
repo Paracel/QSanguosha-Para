@@ -31,7 +31,7 @@ sgs.ai_skill_cardask["@xiaoguo"] = function(self, data)
 		if not self:damageIsEffective(currentplayer) then return "." end
 		if self:getDamagedEffects(currentplayer) or self:needToLoseHp(currentplayer, self.player) then return "." end
 		if self:needToThrowArmor() then return "." end
-		if self:hasSkills(sgs.lose_equip_skill, currentplayer) and currentplayer:getCards("e"):length() > 0 then return "." end
+		if currentplayer:hasSkills(sgs.lose_equip_skill) and currentplayer:getCards("e"):length() > 0 then return "." end
 		return "$" .. card:getEffectiveId()
 	end
 	return "."
@@ -42,7 +42,7 @@ sgs.ai_choicemade_filter.cardResponded["@xiaoguo"] = function(self, player, prom
 		local current = self.room:getCurrent()
 		if not current then return end
 		local intention = 50
-		if self:hasSkills(sgs.lose_equip_skill, current) and current:getCards("e"):length() > 0 then return end
+		if current:hasSkills(sgs.lose_equip_skill) and current:getCards("e"):length() > 0 then return end
 		if self:needToThrowArmor(current) then return end
 		sgs.updateIntention(player, current, intention)
 	end
@@ -69,7 +69,7 @@ sgs.ai_skill_cardask["@xiaoguo-discard"] = function(self, data)
 	end
 
 	local card_id
-	if self:hasSkills(sgs.lose_equip_skill, player) then
+	if player:hasSkills(sgs.lose_equip_skill) then
 		if player:getWeapon() then card_id = player:getWeapon():getId()
 		elseif player:getOffensiveHorse() then card_id = player:getOffensiveHorse():getId()
 		elseif player:getDefensiveHorse() then card_id = player:getDefensiveHorse():getId()
@@ -462,7 +462,7 @@ sgs.ai_use_priority.XiongyiCard = 9.31
 
 sgs.ai_skill_invoke.kuangfu = function(self, data)
 	local damage = data:toDamage()
-	if self:hasSkills(sgs.lose_equip_skill, damage.to) then
+	if damage.to:hasSkills(sgs.lose_equip_skill) then
 		return self:isFriend(damage.to) and not self:isWeak(damage.to)
 	end
 	local benefit = (damage.to:getCards("e"):length() == 1 and damage.to:getArmor() and self:needToThrowArmor(damage.to))
@@ -475,7 +475,7 @@ sgs.ai_skill_choice.kuangfu_equip = function(self, choices, data)
 	if self:isFriend(who) then
 		if choices:match("1") and self:needToThrowArmor(who) then return "1" end
 		if choices:match("1") and self:evaluateArmor(who:getArmor(), who) < -5 then return "1" end
-		if self:hasSkills(sgs.lose_equip_skill, who) and self:isWeak(who) then
+		if who:hasSkills(sgs.lose_equip_skill) and self:isWeak(who) then
 			if choices:match("0") then return "0" end
 			if choices:match("3") then return "3" end
 		end
@@ -490,7 +490,7 @@ sgs.ai_skill_choice.kuangfu_equip = function(self, choices, data)
 			end
 		end
 		if choices:match("1") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return "1" end
-		if self:hasSkills("jijiu|beige|mingce|weimu|qingcheng", who) and not self:doNotDiscard(who, "e", false, 1, reason) then
+		if who:hasSkills("jijiu|beige|mingce|weimu|qingcheng") and not self:doNotDiscard(who, "e", false, 1, reason) then
 			if choices:match("2") then return "2" end
 			if choices:match("1") and who:getArmor() and not self:needToThrowArmor(who) then return "1" end
 			if choices:match("3") and (not who:hasSkill("jijiu") or who:getOffensiveHorse():isRed()) then return "3" end

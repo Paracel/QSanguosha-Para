@@ -141,7 +141,7 @@ sgs.ai_skill_use["@@smalltuxi"] = function(self, prompt)
 
 	local first_index
 	for i = 1, #self.enemies do
-		if self:hasSkills(sgs.need_kongcheng, self.enemies[i]) and self.enemies[i]:getHandcardNum() == 1 then
+		if self.enemies[i]:hasSkills(sgs.need_kongcheng) and self.enemies[i]:getHandcardNum() == 1 then
 		elseif not self.enemies[i]:isKongcheng() then
 			first_index = i
 			break

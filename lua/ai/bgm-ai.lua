@@ -719,9 +719,9 @@ end
 sgs.ai_skill_invoke.anxian = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
-	if self:isFriend(target) and not self:hasSkills(sgs.masochism_skill, target) then return true end
+	if self:isFriend(target) and not target:hasSkills(sgs.masochism_skill) then return true end
 	if self:hasHeavySlashDamage(self.player, damage.card, damage.to) and damage.to:getHp() <= 1 then return false end
-	if self:isEnemy(target) and self:hasSkills(sgs.masochism_skill, target) then return true end
+	if self:isEnemy(target) and target:hasSkills(sgs.masochism_skill) then return true end
 	if self:hasHeavySlashDamage(self.player, damage.card, damage.to) then return false end
 	return false
 end
@@ -936,7 +936,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 			and not (current:hasSkills(sgs.lose_equip_skill) and current:getHandcardNum() < n) then
 			return "discard"
 		end
-		if self:hasSkills("jijiu|tuntian+zaoxian|beige", current) and n >= 2 and current:getCardCount() >= 2 then return "discard" end
+		if current:hasSkills("jijiu|tuntian+zaoxian|beige") and n >= 2 and current:getCardCount() >= 2 then return "discard" end
 	end
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
@@ -1136,11 +1136,11 @@ local function need_huangen(self, who)
 		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who, from) then
 			if hasManjuanEffect(who) then return true end
 			if self:isWeak(who) then return true end
-			if self:hasSkills(sgs.masochism_skill, who) then return true end
+			if who:hasSkills(sgs.masochism_skill) then return true end
 		end
 		return false
 	elseif self:isFriend(who) then
-		if self:hasSkills("noswuyan", who) and from:objectName() ~= who:objectName() then return true end
+		if who:hasSkill("noswuyan") and from:objectName() ~= who:objectName() then return true end
 		if card:isKindOf("GodSalvation") and not who:isWounded() then
 			if hasManjuanEffect(who) then return false end
 			if self:needKongcheng(who, true) then return false end

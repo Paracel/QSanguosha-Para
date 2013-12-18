@@ -29,7 +29,7 @@ function SmartAI:toTurnOver(player, n, reason)
 	if not player:faceUp() and not player:hasFlag("ShenfenUsing") and not player:hasFlag("GuixinUsing") then
 		return false
 	end
-	if (self:hasSkills("jushou|nosjushou|kuiwei", player) and player:getPhase() <= sgs.Player_Finish)
+	if (player:hasSkills("jushou|nosjushou|kuiwei") and player:getPhase() <= sgs.Player_Finish)
 		or (player:hasSkill("lihun") and not player:hasUsed("LihunCard") and player:faceUp() and player:getPhase() == sgs.Player_Play) then
 		return false
 	end
@@ -69,7 +69,7 @@ sgs.ai_skill_playerchosen.fangzhu = function(self, targets)
 			end
 			if not target then
 				for _, enemy in ipairs(self.enemies) do
-					if self:toTurnOver(enemy, n, "fangzhu") and self:hasSkills(sgs.priority_skill, enemy) then
+					if self:toTurnOver(enemy, n, "fangzhu") and enemy:hasSkills(sgs.priority_skill) then
 						target = enemy
 						break
 					end
@@ -213,7 +213,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		self:sort(self.friends_noself, "handcard")
 		self.friends_noself = sgs.reverse(self.friends_noself)
 		for _, friend in ipairs(self.friends_noself) do
-			if self:hasSkills(sgs.lose_equip_skill, friend) and friend:getCards("e"):length() > 0
+			if friend:hasSkills(sgs.lose_equip_skill) and friend:getCards("e"):length() > 0
 				and not friend:hasSkill("manjuan") then
 				self.yinghun = friend
 				break
@@ -261,7 +261,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 	elseif #self.friends > 1 then
 		self:sort(self.friends_noself)
 		for _, friend in ipairs(self.friends_noself) do
-			if self:hasSkills(sgs.lose_equip_skill, friend) and friend:getCards("e"):length() > 0
+			if friend:hasSkills(sgs.lose_equip_skill) and friend:getCards("e"):length() > 0
 				and not friend:hasSkill("manjuan") then
 				self.yinghun = friend
 				break
@@ -310,7 +310,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 				for _, enemy in ipairs(self.enemies) do
 					if enemy:getCards("he"):length() >= n
 						and not self:doNotDiscard(enemy, "nil", true, n)
-						and self:hasSkills(sgs.cardneed_skill, enemy) then
+						and enemy:hasSkills(sgs.cardneed_skill) then
 						self.yinghunchoice = "d1tx"
 						return enemy
 					end
@@ -342,7 +342,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		self.enemies = sgs.reverse(self.enemies)
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isNude()
-				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
+				and not (enemy:hasSkills(sgs.lose_equip_skill) and enemy:getCards("e"):length() > 0)
 				and not self:needToThrowArmor(enemy)
 				and not enemy:hasSkills("tuntian+zaoxian") then
 				self.yinghunchoice = "d1tx"
@@ -351,7 +351,7 @@ sgs.ai_skill_playerchosen.yinghun = function(self, targets)
 		end
 		for _, enemy in ipairs(self.enemies) do
 			if not enemy:isNude()
-				and not (self:hasSkills(sgs.lose_equip_skill, enemy) and enemy:getCards("e"):length() > 0)
+				and not (enemy:hasSkills(sgs.lose_equip_skill) and enemy:getCards("e"):length() > 0)
 				and not self:needToThrowArmor(enemy)
 				and not (enemy:hasSkills("tuntian+zaoxian") and x < 3 and enemy:getCards("he"):length() < 2) then
 				self.yinghunchoice = "d1tx"
@@ -487,7 +487,7 @@ local function DimengDiscard(self, discard_num, cards)
 			elseif card:isKindOf("Armor") then return 4
 			end
 		elseif self:getUseValue(card) >= 6 then return 3
-		elseif self:hasSkills(sgs.lose_equip_skill) then return 5
+		elseif self.player:hasSkills(sgs.lose_equip_skill) then return 5
 		else return 0
 		end
 		return 0
@@ -717,7 +717,7 @@ luanwu_skill.getTurnUseCard = function(self)
 
 		if getCardsNum("Jink", player) == 0 then
 			local lost_value = 0
-			if self:hasSkills(sgs.masochism_skill, player) then lost_value = player:getHp() / 2 end
+			if player:hasSkills(sgs.masochism_skill) then lost_value = player:getHp() / 2 end
 			local hp = math.max(player:getHp(), 1)
 			if self:isFriend(player) then bad = bad + (lost_value + 1) / hp
 			else good = good + (lost_value + 1) / hp

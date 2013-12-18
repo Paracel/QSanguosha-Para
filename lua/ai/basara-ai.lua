@@ -12,7 +12,7 @@ function askForShowGeneral(self, choices)
 	if triggerEvent == sgs.DamageInflicted then
 		local damage = data:toDamage()
 		for _, player in ipairs(players) do
-			if damage and self:hasSkills(sgs.masochism_skill .. "|zhichi|zhiyu|fenyong", player) and not self:isFriend(damage.from, damage.to) then return "yes" end
+			if damage and player:hasSkills(sgs.masochism_skill .. "|zhichi|zhiyu|fenyong") and not self:isFriend(damage.from, damage.to) then return "yes" end
 			if damage and damage.damage > self.player:getHp() + self:getAllPeachNum() then return "yes" end
 		end
 	elseif triggerEvent == sgs.CardEffected then
@@ -29,7 +29,7 @@ function askForShowGeneral(self, choices)
 	if sgs.getValue(self.player) < 6 then return "no" end
 	local skills_to_show = "bazhen|yizhong|zaiqi|feiying|buqu|kuanggu|kofkuanggu|guanxing|luoshen|tuxi|zhiheng|qiaobian|longdan|liuli|longhun|shelie|luoying|anxian|yicong|wushuang|jueqing|niepan"
 	for _, player in ipairs(players) do
-		if self:hasSkills(skills_to_show, player) then return "yes" end
+		if player:hasSkills(skills_to_show) then return "yes" end
 	end
 	if self.player:getDefensiveHorse() and self.player:getArmor() and not self:isWeak() then return "yes" end
 end
@@ -97,7 +97,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 
 	SmartAI.hasHegSkills = function(self, skills, players)
 		for _, player in ipairs(players) do
-			if self:hasSkills(skills, player) then return true end
+			if player:hasSkills(skills) then return true end
 		end
 		return false
 	end

@@ -134,7 +134,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				if use.card:isKindOf("NatureSlash") and self.player:isChained() and not self:isGoodChainTarget(self.player, nil, nil, nil, use.card) then return true end
 				if use.from:hasSkill("nosqianxi") and use.from:distanceTo(self.player) == 1 then return true end
 				if self:isFriend(use.from) and self.role == "loyalist" and not use.from:hasSkill("jueqing") and use.from:isLord() and self.player:getHp() == 1 then return true end
-				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and self:hasSuit("heart"))) or use.from:hasSkill("jueqing"))
+				if (not (self.player:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and self:hasSuit("heart"))) or use.from:hasSkill("jueqing"))
 					and not self:doNotDiscard(use.from) then
 					return true
 				end
@@ -160,7 +160,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			if sj_num == 0 and friend_null <= 0 then
 				if self:isEnemy(from) and from:hasSkill("jueqing") then return not self:doNotDiscard(from) end
 				if self:isFriend(from) and self.role == "loyalist" and from:isLord() and self.player:getHp() == 1 and not from:hasSkill("jueqing") then return true end
-				if (not (self:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and self:hasSuit("heart"))) or use.from:hasSkill("jueqing"))
+				if (not (self.player:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and self:hasSuit("heart"))) or use.from:hasSkill("jueqing"))
 					and not self:doNotDiscard(use.from) then
 					return true
 				end
@@ -485,7 +485,7 @@ sgs.ai_skill_use_func.AnxuCard = function(card, use, self)
 	if #enemies > 0 then most_enemy = enemies[1] end
 	local prior_enemy, kongcheng_enemy, manjuan_enemy
 	for _, enemy in ipairs(enemies) do
-		if enemy:getHandcardNum() >= 2 and self:hasSkills(sgs.cardneed_skill, enemy) then
+		if enemy:getHandcardNum() >= 2 and enemy:hasSkills(sgs.cardneed_skill) then
 			if not prior_enemy then prior_enemy = enemy end
 		end
 		if enemy:hasSkill("kongcheng") and enemy:isKongcheng() then

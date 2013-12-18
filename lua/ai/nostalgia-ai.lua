@@ -164,7 +164,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 
 	local target
 	for _, friend in ipairs(self.friends_noself) do
-		if self:hasSkills(sgs.lose_equip_skill, friend) and not friend:getEquips():isEmpty() and not friend:hasSkill("manjuan") then
+		if friend:hasSkills(sgs.lose_equip_skill) and not friend:getEquips():isEmpty() and not friend:hasSkill("manjuan") then
 			target = friend
 			break
 		end
@@ -433,14 +433,14 @@ end
 sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
-	if target:getCards("e"):length() == 1 and target:getArmor() and self:hasSkills("bazhen|yizhong") then return false end
-	if self:hasSkills(sgs.lose_equip_skill, target) and not (self:isFriend(target) and not self:isWeak(target)) then return false end
+	if target:getCards("e"):length() == 1 and target:getArmor() and self.player:hasSkills("bazhen|yizhong") then return false end
+	if target:hasSkills(sgs.lose_equip_skill) and not (self:isFriend(target) and not self:isWeak(target)) then return false end
 	local benefit = (target:getCards("e"):length() == 1 and target:getArmor() and self:needToThrowArmor(target))
 	if not self:isFriend(target) then benefit = not benefit end
 	if not benefit then return false end
 
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and target:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
+		if not self.player:getEquip(i) and target:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong")) then
 			return true
 		end
 	end
@@ -459,7 +459,7 @@ end
 
 sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self:hasSkills("bazhen|yizhong")) then
+		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong")) then
 			return who:getEquip(i)
 		end
 	end
@@ -592,7 +592,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 
 		local enemies = self.enemies
 		for _, enemy in ipairs(enemies) do
-			if (self:hasSkills("yongsi|haoshi|tuxi", enemy) or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1))
+			if (enemy:hasSkills("yongsi|haoshi|tuxi") or (enemy:hasSkill("zaiqi") and enemy:getLostHp() > 1))
 				and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
@@ -600,7 +600,7 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 			end
 		end
 		for _, enemy in ipairs(enemies) do
-			if (#enemies == 1 or not self:hasSkills("tiandu|guidao", enemy)) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if (#enemies == 1 or not enemy:hasSkills("tiandu|guidao")) and not enemy:containsTrick("supply_shortage") and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy
@@ -841,7 +841,7 @@ function sgs.ai_skill_invoke.nosjushou(self, data)
 		and (self:isEnemy(sbdiaochan) or (sgs.turncount <= 1 and sgs.evaluatePlayerRole(sbdiaochan) == "neutral")) then return false end
 	if not self.player:faceUp() then return true end
 	for _, friend in ipairs(self.friends) do
-		if self:hasSkills("fangzhu|jilve", friend) then return true end
+		if friend:hasSkills("fangzhu|jilve") then return true end
 		if friend:hasSkill("junxing") and friend:faceUp() and not self:willSkipPlayPhase(friend)
 			and not (friend:isKongcheng() and self:willSkipDrawPhase(friend)) then
 			return true
@@ -944,7 +944,7 @@ sgs.ai_skill_choice.nosguhuo = function(self, choices)
 	else
 		if self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
 	end
-	if self:needToLoseHp(self.player) and not self:hasSkills(sgs.masochism_skill, self.player) and x ~= 1 then return "question" end
+	if self:needToLoseHp(self.player) and not self.player:hasSkills(sgs.masochism_skill) and x ~= 1 then return "question" end
 
 	local questioner
 	for _, friend in ipairs(self.friends) do

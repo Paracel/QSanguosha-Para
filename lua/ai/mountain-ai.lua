@@ -20,7 +20,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 
 		local equips = who:getCards("e")
 		local weak = false
-		if not target and not equips:isEmpty() and self:hasSkills(sgs.lose_equip_skill, who) then
+		if not target and not equips:isEmpty() and who:hasSkills(sgs.lose_equip_skill) then
 			for _, equip in sgs.qlist(equips) do
 				if equip:isKindOf("OffensiveHorse") then card = equip break
 				elseif equip:isKindOf("Weapon") then card = equip break
@@ -42,7 +42,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 				end
 				for _, friend in ipairs(self.friends) do
 					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName()
-						and self:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill, friend) then
+						and friend:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill) then
 						target = friend
 						break
 					end
@@ -81,7 +81,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 		end
 
 		if card == nil or target == nil then
-			if not who:hasEquip() or self:hasSkills(sgs.lose_equip_skill, who) then return nil end
+			if not who:hasEquip() or who:hasSkills(sgs.lose_equip_skill) then return nil end
 			local card_id = self:askForCardChosen(who, "e", "dummy")
 			if who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
 			if card then
@@ -92,7 +92,7 @@ local function card_for_qiaobian(self, who, return_prompt)
 					self.friends = sgs.reverse(self.friends)
 				end
 				for _, friend in ipairs(self.friends) do
-					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() and self:hasSkills(sgs.lose_equip_skill .. "|shensu", friend) then
+					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() and friend:hasSkills(sgs.lose_equip_skill .. "|shensu") then
 						target = friend
 						break
 					end
@@ -210,7 +210,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 		end
 
 		for _, friend in ipairs(self.friends_noself) do
-			if not friend:getCards("e"):isEmpty() and self:hasSkills(sgs.lose_equip_skill, friend) and card_for_qiaobian(self, friend, ".") then
+			if not friend:getCards("e"):isEmpty() and friend:hasSkills(sgs.lose_equip_skill) and card_for_qiaobian(self, friend, ".") then
 				return to_discard
 			end
 		end
@@ -225,7 +225,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 
 		local targets = {}
 		for _, enemy in ipairs(self.enemies) do
-			if not self:hasSkills(sgs.lose_equip_skill, enemy) and card_for_qiaobian(self, enemy, ".") then
+			if not enemy:hasSkills(sgs.lose_equip_skill) and card_for_qiaobian(self, enemy, ".") then
 				table.insert(targets, enemy)
 			end
 		end
@@ -272,7 +272,7 @@ sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 		end
 
 		for _, friend in ipairs(self.friends_noself) do
-			if not friend:getCards("e"):isEmpty() and self:hasSkills(sgs.lose_equip_skill, friend) and card_for_qiaobian(self, friend, ".") then
+			if not friend:getCards("e"):isEmpty() and friend:hasSkills(sgs.lose_equip_skill) and card_for_qiaobian(self, friend, ".") then
 				return "@QiaobianCard=.->" .. friend:objectName()
 			end
 			if not friend:getArmor() then has_armor = false end
@@ -509,7 +509,7 @@ sgs.ai_skill_use["@@fangquan"] = function(self, prompt)
 	self:sort(self.friends_noself, "handcard")
 	self.friends_noself = sgs.reverse(self.friends_noself)
 	for _, target in ipairs(self.friends_noself) do
-		if not target:hasSkill("dawu") and self:hasSkills("yongsi|zhiheng|" .. sgs.priority_skill .. "|shensu", target)
+		if not target:hasSkill("dawu") and target:hasSkills("yongsi|zhiheng|" .. sgs.priority_skill .. "|shensu")
 			and (not self:willSkipPlayPhase(target) or target:hasSkill("shensu")) then
 			return "@FangquanCard=" .. to_discard .. "->" .. target:objectName()
 		end
@@ -782,7 +782,7 @@ sgs.ai_skill_use_func.ZhijianCard = function(card, use, self)
 	local select_equip, target
 	for _, friend in ipairs(self.friends_noself) do
 		for _, equip in ipairs(equips) do
-			if not self:getSameEquip(equip, friend) and self:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill, friend) then
+			if not self:getSameEquip(equip, friend) and friend:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill) then
 				target = friend
 				select_equip = equip
 				break
@@ -815,7 +815,7 @@ sgs.ai_skill_invoke.guzheng = function(self, data)
 	if self:isLihunTarget(self.player, data:toInt() - 1) then return false end
 	local player = self.room:getCurrent()
 	local invoke = (self:isFriend(player) and not self:needKongcheng(player, true))
-					or (not self.player:hasSkill("manjuan") and (data:toInt() >= 3 or (data:toInt() == 2 and not self:hasSkills(sgs.cardneed_skill, player))))
+					or (not self.player:hasSkill("manjuan") and (data:toInt() >= 3 or (data:toInt() == 2 and not player:hasSkills(sgs.cardneed_skill))))
 					or (self:isEnemy(player) and self:needKongcheng(player, true))
 	return invoke
 end
@@ -922,7 +922,7 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 		self:sortByKeepValue(new_cards)
 		local valueless, slash
 		for _, card in ipairs(new_cards) do
-			if card:isKindOf("Lightning") and not self:hasSkills(sgs.wizard_harm_skill, who) then
+			if card:isKindOf("Lightning") and not who:hasSkills(sgs.wizard_harm_skill) then
 				return card:getEffectiveId()
 			end
 

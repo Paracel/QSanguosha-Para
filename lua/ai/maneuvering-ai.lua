@@ -98,7 +98,7 @@ function sgs.ai_armor_value.vine(player, self)
 	if (self:needKongcheng(player) and player:getHandcardNum() == 1) or not self:hasLoseHandcardEffective(player) then
 		return player:hasSkill("kongcheng") and 5 or 3.8
 	end
-	if self:hasSkills(sgs.lose_equip_skill, player) then return 3.8 end
+	if player:hasSkills(sgs.lose_equip_skill) then return 3.8 end
 	return 3.5
 end
 
@@ -165,7 +165,7 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 		if basicnum < 3 then return false end
 	end
 
-	if self:hasSkills(sgs.masochism_skill .. "|longhun|buqu|nosbuqu|" .. sgs.recover_skill, target)
+	if target:hasSkills(sgs.masochism_skill .. "|longhun|buqu|nosbuqu|" .. sgs.recover_skill)
 		and self.player:hasSkill("nosqianxi") and self.player:distanceTo(target) == 1 then
 		return
 	end

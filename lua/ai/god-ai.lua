@@ -335,7 +335,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 	for _, friend in ipairs(self.friends) do
 		down = down - 10
 		up = up + (friend:isWounded() and 10 or 0)
-		if self:hasSkills(sgs.masochism_skill, friend) then
+		if friend:hasSkills(sgs.masochism_skill) then
 			down = down - 5
 			up = up + 5
 		end
@@ -355,7 +355,7 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 	for _, enemy in ipairs(self.enemies) do
 		down = down + 10
 		up = up - (enemy:isWounded() and 10 or 0)
-		if self:hasSkills(sgs.masochism_skill, enemy) then
+		if enemy:hasSkills(sgs.masochism_skill) then
 			down = down + 10
 			up = up - 15
 		end
@@ -951,7 +951,7 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 	else
 		local help_friend = false
 		for _, friend in ipairs(self.friends_noself) do
-			if self:hasSkills("fangzhu|jilve", friend) then
+			if friend:hasSkills("fangzhu|jilve") then
 				help_friend = true
 				benefit = benefit + 1
 				break

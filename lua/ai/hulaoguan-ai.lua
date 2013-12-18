@@ -1,5 +1,5 @@
 sgs.ai_skill_invoke["weapon_recast"] = function(self, data)
-	if self:hasSkills(sgs.lose_equip_skill, self.player) then return false end
+	if self.player:hasSkills(sgs.lose_equip_skill) then return false end
 	if self.player:isLord() then
 		local card_use = data:toCardUse()
 		if card_use.card:objectName() ~= "crossbow" then return true else return false end

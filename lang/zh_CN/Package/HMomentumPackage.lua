@@ -74,4 +74,6 @@ return {
 	["baoling"] = "暴凌",
 	[":baoling"] = "<font color=\"purple\"><b>觉醒技。</b></font>出牌阶段结束时，若你本局游戏发动过“横征”，你增加3点体力上限，回复3点体力，然后获得“崩坏”。",
 	["#BaolingWake"] = "%from 已发动过“%arg2”，触发“%arg”觉醒",
+	["$HengzhengAnimate"] = "image=image/animate/hengzheng.png",
+	["$BaolingAnimate"] = "image=image/animate/baoling.png",
 }

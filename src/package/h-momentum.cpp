@@ -480,7 +480,7 @@ public:
                     dongzhuo->setMark("HengzhengUsed", 1);
                 QList<ServerPlayer *> players = room->getOtherPlayers(dongzhuo);
                 if (players.length() >= 4)
-                    ;//room->doLightbox("$HengzhengAnimate");
+                    room->doLightbox("$HengzhengAnimate");
 
                 foreach (ServerPlayer *player, players) {
                     if (player->isAlive() && !player->isAllNude()) {
@@ -525,7 +525,7 @@ public:
         room->sendLog(log);
 
         room->broadcastSkillInvoke(objectName());
-        //room->doLightbox("$HengzhengAnimate", 4000);
+        room->doLightbox("$BaolingAnimate");
 
         room->addPlayerMark(player, "baoling");
 

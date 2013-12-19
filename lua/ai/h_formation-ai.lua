@@ -339,8 +339,12 @@ end
 local function will_discard_zhendu(self)
 	local current = self.room:getCurrent()
 	local need_damage = self:getDamagedEffects(current, self.player) or self:needToLoseHp(current, self.player)
+	local analeptic = sgs.Sanguosha:cloneCard("analeptic")
 	if self:isFriend(current) then
-		if current:getMark("drank") > 0 and not need_damage then return -1 end
+		if (current:getMark("drank") > 0 or getCardsNum("Analeptic", current, self.player) >= 1 or current:isLocked(analeptic))
+			and not need_damage then
+			return -1
+		end
 		if (getKnownCard(current, self.player, "Slash") > 0 or (getCardsNum("Slash", current, self.player) >= 1 and current:getHandcardNum() >= 2))
 			and (not self:damageIsEffective(current, nil, self.player) or current:getHp() > 2 or (getCardsNum("Peach", current, self.player) > 1 and not self:isWeak(current))) then
 			local slash = sgs.Sanguosha:cloneCard("slash")
@@ -354,9 +358,14 @@ local function will_discard_zhendu(self)
 				end
 			end
 		end
-		if need_damage then return 3 end
+		if need_damage then return 3.3 end
 	elseif self:isEnemy(current) then
-		if need_damage or current:getHandcardNum() >= 2 then return -1 end
+		if need_damage then return -1 end
+		if (getKnownCard(current, self.player, "Analeptic") > 0 and not self:isWeak(current))
+			or current:getMark("drank") > 0 or current:isLocked(analeptic) then
+			return 2.5
+		end
+		if current:getHandcardNum() >= 2 then return -1 end
 		if getKnownCard(current, self.player, "Slash") == 0 and getCardsNum("Slash", current, self.player) < 0.5 then return 3.5 end
 	end
 	return -1

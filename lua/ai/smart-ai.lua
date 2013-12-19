@@ -1200,22 +1200,34 @@ function SmartAI:objectiveLevel(player)
 		if self.role == "loyalist" and loyal_num == 1 and renegade_num == 0 then return 5 end
 		if sgs.gameProcess(self.room):match("rebel") and rebel_num > 1 and target_role == "renegade" then return -1 end
 		if target_role == "neutral" then
-			local current_friend_num = 1
-			local current_enemy_num = 0
-			for _, aplayer in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-				if target_role == "loyalist" or target_role == "renegade" then
-					current_friend_num = current_friend_num + 1
+			if rebel_num > 0 then
+				local current_friend_num = 0
+				local current_enemy_num = 0
+				local current_renegade_num = 0
+				local rebelish = sgs.gameProcess(self.room):match("rebel")
+				for _, aplayer in sgs.qlist(self.room:getAlivePlayers()) do
+					if sgs.ai_role[aplayer:objectName()] == "loyalist" or aplayer:objectName() == self.player:objectName() then
+						current_friend_num = current_friend_num + 1
+					elseif sgs.ai_role[aplayer:objectName()] == "renegade" then
+						current_renegade_num = current_renegade_num + 1
+					elseif sgs.ai_role[aplayer:objectName()] == "rebel" then
+						current_enemy_num = current_enemy_num + 1
+					end
 				end
-				if sgs.ai_role[player:objectName()] == "rebel" then
-					current_enemy_num = current_enemy_num + 1
+				if current_friend_num >= loyal_num + (rebelish and renegade_num or 0) + 1 then
+					return 5
+				elseif current_enemy_num + (rebelish and 0 or current_renegade_num) >= rebel_num + (rebelish and 0 or renegade_num) then
+					return -1
 				end
-			end
-			if current_friend_num >= loyal_num + renegade_num + 1 then
-				return 2
-			elseif current_enemy_num >= rebel_num then
-				return -1
 			else
-				return 0
+				local explicit_renegade
+				for _, aplayer in sgs.qlist(self.room:getOtherPlayers(player)) do
+					if sgs.ai_role[aplayer:objectName()] == "renegade" then
+						explicit_renegade = explicit_renegade + 1
+						break
+					end
+				end
+				if explicit_renegade == renegade_num then return -1 end
 			end
 		end
 

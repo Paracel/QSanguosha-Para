@@ -518,7 +518,10 @@ public:
             && ((move.reason.m_reason == CardMoveReason::S_REASON_DISMANTLE
                  && move.reason.m_playerId != move.reason.m_targetId)
                 || (move.to && move.to != move.from && move.to_place == Player::PlaceHand))) {
-            if (room->askForSkillInvoke(player, objectName(), data)) {
+            move.from->setFlags("FenjiMoveFrom"); // For AI
+            bool invoke = room->askForSkillInvoke(player, objectName(), data);
+            move.from->setFlags("-FenjiMoveFrom");
+            if (invoke) {
                 room->loseHp(player);
                 if (move.from->isAlive())
                     room->drawCards((ServerPlayer *)move.from, 2);

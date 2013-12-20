@@ -464,6 +464,19 @@ sgs.ai_skill_invoke.fenji = function(self, data)
 	return from:getHandcardNum() < (self.player:getHp() <= 1 and 3 or 5)
 end
 
+sgs.ai_choicemade_filter.skillInvoke.fenji = function(self, player, promptlist)
+	if promptlist[3] == "yes" then
+		local fenji_target
+		for _, p in sgs.qlist(self.room:getAllPlayers()) do
+			if p:hasFlag("FenjiMoveFrom") then
+				fenji_target = p
+				break
+			end
+		end
+		sgs.updateIntention(player, fenji_target, -60)
+	end
+end
+
 sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	local friend_lost_hp = 10
 	local friend_hp = 0

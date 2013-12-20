@@ -2132,7 +2132,12 @@ function SmartAI:askForNullification(trick, from, to, positive)
 	if self.player:isLocked(null_card) then return nil end
 	if (from and from:isDead()) or (to and to:isDead()) then return nil end
 	if self:needBear() then return nil end
-	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") == 0 and (self:isWeak() or self.player:isLord()) then return nil end
+	if self.player:hasSkill("wumou") then
+		if self.player:getMark("@wrath") == 0 and (self:isWeak() or self.player:isLord()) then return nil end
+		if to:objectName() == self.player:objectName() and not self:isWeak() and (trick:isKindOf("AOE") or trick:isKindOf("Duel") or trick:isKindOf("FireAttack")) then
+			return
+		end
+	end
 
 	if trick:isKindOf("FireAttack") then
 		if to:isKongcheng() or from:isKongcheng() then return nil end

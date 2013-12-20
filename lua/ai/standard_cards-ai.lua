@@ -735,12 +735,13 @@ end
 
 sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	local function getJink()
-		if target then
+		if target and target:hasSkill("dahe") and self.player:hasFlag("dahe") then
 			for _, card in ipairs(self:getCards("Jink")) do
-				if self.room:isJinkEffected(self.player, card) then
-					return card:getId()
+				if card:getSuit() == sgs.Card_Heart then
+					return card:toString()
 				end
 			end
+			return "."
 		end
 		return nil
 	end
@@ -810,7 +811,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			end
 		end
 	end
-	return getJink() or "."
+	return getJink()
 end
 
 sgs.dynamic_value.damage_card.Slash = true

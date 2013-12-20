@@ -609,36 +609,6 @@ function SmartAI:getDynamicUsePriority(card)
 		end
 	end
 
-	if self.player:getPhase() == sgs.Player_Play
-		and (card:isKindOf("Indulgence") or card:isKindOf("SupplyShortage")
-			or card:isKindOf("Slash")
-			or card:isKindOf("Snatch") or card:isKindOf("Dismantlement"))
-		and ((self.player:hasSkill("nosrende") and not (self:isWeak() and self:needRende() and self.player:getHandcardNum() + self.player:getMark("nosrende") == 2))
-			or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard")
-			and not (self:isWeak() and self:needRende() and self.player:getHandcardNum() + self.player:getMark("rende") == 2))) then
-		local cards = sgs.QList2Table(self.player:getHandcards())
-		self:sortByUseValue(cards, true)
-		local acard, friend = self:getCardNeedPlayer(cards)
-		if acard and acard:getClassName() == class_name and self:getEnemyNumBySeat(self.player, friend) > 0 then
-			if card:isKindOf("Indulgence") or card:isKindOf("SupplyShortage") then
-				return sgs.ai_use_priority.RendeCard + sgs.ai_use_priority.Indulgence
-			elseif card:isKindOf("Slash") then
-				for _, enemy in ipairs(self.enemies) do
-					if self.player:canSlash(enemy, card) and not self:slashProhibit(card, enemy) and self:slashIsAvailable(player)
-						and enemy:getHp() <= self:hasHeavySlashDamage(self.player, card, enemy, true) then
-						return sgs.ai_use_priority.RendeCard + sgs.ai_use_priority.Slash
-					end
-				end
-			--[[elseif card:isKindOf("Snatch") or card:isKindOf("Dismantlement") and dummy_use.to then
-				for _, p in sgs.qlist(dummy_use.to) do
-					if self:isFriend(p) and (p:containsTrick("indulgence") or p:containsTrick("supply_shortage")) then
-						return sgs.ai_use_priority.RendeCard + sgs.ai_use_priority.Snatch
-					end
-				end]]
-			end
-		end
-	end
-
 	local value = self:getUsePriority(card) or 0
 	if card:getTypeId() == sgs.Card_TypeEquip then
 		if self.player:hasSkills(sgs.lose_equip_skill) then value = value + 12 end

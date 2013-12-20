@@ -478,7 +478,6 @@ sgs.ai_skill_invoke.nosquanji = function(self, data)
 			self.nosquanji_card = self:getMinCard(self.player):getId()
 			return true
 		end
-
 	elseif self:isEnemy(current) then
 		if self.player:getHandcardNum() <= 1 and not self:needKongcheng(self.player) then return "." end
 		local invoke = false
@@ -491,9 +490,23 @@ sgs.ai_skill_invoke.nosquanji = function(self, data)
 		if current:hasSkill("zuixiang") and current:getMark("@dream") > 0 then invoke = true end
 		if self:isWeak(current) and self.player:getHandcardNum() > 1 and current:getCards("j"):isEmpty() then invoke = true end
 
-		if invoke and self:getMaxCard(self.player):getNumber() > 7 then
-			self.nosquanji_card = self:getMaxCard(self.player):getId()
-			return true
+		if invoke then
+			local max_card = self:getMaxCard()
+			local max_point = max_card:getNumber()
+			if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
+			local enemy_max_card = self:getMaxCard(current)
+			local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
+			if enemy_max_card and current:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
+			local allknown = 0
+			if self:getKnownNum(current) == current:getHandcardNum() then
+				allknown = allknown + 1
+			end
+			if (enemy_max_card and max_point > enemy_number and allknown > 0)
+				or (enemy_max_card and max_point > enemy_number and allknown < 1 and max_point > 10)
+				or (not enemy_max_card and max_point > 10) then
+				self.nosquanji_card = max_card:getId()
+				return true
+			end
 		end
 	end
 

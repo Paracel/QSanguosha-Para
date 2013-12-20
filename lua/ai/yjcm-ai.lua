@@ -660,6 +660,7 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.max(max_point + 3, 13) end
 	local slashcount = self:getCardsNum("Slash")
 	if max_card:isKindOf("Slash") then slashcount = slashcount - 1 end
 
@@ -685,6 +686,7 @@ sgs.ai_skill_use_func.XianzhenCard = function(card, use, self)
 				and not self:canLiuli(enemy, self.friends_noself) and not self:findLeijiTarget(enemy, 50, self.player) then
 				local enemy_max_card = self:getMaxCard(enemy)
 				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+				if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.min(enemy_max_point + 3, 13) end
 				if max_point > enemy_max_point then
 					self.xianzhen_card = max_card:getId()
 					use.card = sgs.Card_Parse("@XianzhenCard=.")

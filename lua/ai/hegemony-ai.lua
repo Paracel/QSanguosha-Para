@@ -372,6 +372,7 @@ sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 
 	local slash = sgs.Sanguosha:cloneCard("slash")
 	local dummy_use = { isDummy = true }
@@ -384,6 +385,7 @@ sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
 				local enemy_max_card = self:getMaxCard(enemy)
 				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+				if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.min(enemy_max_point + 3, 13) end
 				if max_point > enemy_max_point then
 					self.shuangren_card = max_card:getEffectiveId()
 					return "@ShuangrenCard=.->" .. enemy:objectName()
@@ -405,6 +407,7 @@ sgs.ai_skill_use["@@shuangren"] = function(self, prompt)
 			if not friend:isKongcheng() then
 				local friend_min_card = self:getMinCard(friend)
 				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+				if friend:hasSkill("yingyang") then friend_min_point = math.max(1, friend_min_point - 3) end
 				if max_point > friend_min_point then
 					self.shuangren_card = max_card:getEffectiveId()
 					return "@ShuangrenCard=.->" .. friend:objectName()

@@ -95,3 +95,51 @@ end
 sgs.ai_use_value.CunsiCard = 10
 sgs.ai_use_priority.CunsiCard = 10.1
 sgs.ai_use_priority.GuixiuCard = sgs.ai_use_priority.CunsiCard
+
+sgs.ai_skill_choice.yingyang = function(self, choices, data)
+	local pindian = data:toPindian()
+	local reason = pindian.reason
+	local from, to = pindian.from, pindian.to
+	local f_num, t_num = pindian.from_number, pindian.to_number
+	local amFrom = self.player:objectName() == from:objectName()
+
+	if math.abs(f_num - t_num) > 3 then return "cancel" end
+
+	local table_pindian_friends = { "tianyi", "shuangren", "qiaoshui" }
+	if reason == "mizhao" then
+		if amFrom then
+			if self:isFriend(to) then
+				if self:getCardsNum("Jink") > 0 then return "down"
+				elseif getCardsNum("Jink", to, self.player) >= 1 then return "up"
+				else return self.player:getHp() >= to:getHp() and "down" or "up"
+				end
+			else
+				return "up"
+			end
+		else
+			if self:isFriend(from) then
+				if self:getCardsNum("Jink") > 0 then return "down"
+				elseif getCardsNum("Jink", from, self.player) >= 1 then return "up"
+				else return self.player:getHp() >= to:getHp() and "down" or "up"
+				end
+			else
+				return "up"
+			end
+		end
+	elseif reason == "quhu" then
+		if amFrom and self.player:hasSkill("jieming") then
+			if f_num > 8 then return "up"
+			elseif self:getJiemingChaofeng(player) <= -6 then return "down"
+			end
+		end
+		return "up"
+	elseif reason == "xiechan" then
+		return (not amFrom and self:getCardsNum("Slash") > getCardsNum("Slash", from, self.player)) and "down" or "up"
+	elseif reason == "zhiba_pindian" or reason == "nosquanji" then
+		return (amFrom and self:isFriend(to)) and "down" or "up"
+	elseif table.contains(table_pindian_friends, reason) then
+		return (not amFrom and self:isFriend(from)) and "down" or "up"
+	else
+		return "up"
+	end
+end

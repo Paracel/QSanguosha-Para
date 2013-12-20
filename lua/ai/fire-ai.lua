@@ -9,11 +9,14 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 	if #self.enemies == 0 then return end
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 	self:sort(self.enemies, "handcard")
 
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHp() > self.player:getHp() and not enemy:isKongcheng() then
 			local enemy_max_card = self:getMaxCard(enemy)
+			local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
+			if enemy_max_card and enemy:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
 			local allknown = 0
 			if self:getKnownNum(enemy) == enemy:getHandcardNum() then
 				allknown = allknown + 1
@@ -343,6 +346,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	local max_card = self:getMaxCard()
 	if not max_card then return end
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 	local slashcount = self:getCardsNum("Slash")
 	if isCard("Slash", max_card, self.player) then slashcount = slashcount - 1 end
 	if self.player:hasSkill("kongcheng") and self.player:getHandcardNum() == 1 then
@@ -383,6 +387,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
 				local enemy_max_card = self:getMaxCard(enemy)
 				local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+				if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.min(enemy_max_point + 3, 13) end
 				if max_point > enemy_max_point then
 					self.tianyi_card = max_card:getId()
 					use.card = sgs.Card_Parse("@TianyiCard=.")
@@ -408,6 +413,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 			if not friend:isKongcheng() then
 				local friend_min_card = self:getMinCard(friend)
 				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+				if friend:hasSkill("yingyang") then friend_min_point = math.max(1, friend_min_point - 3) end
 				if max_point > friend_min_point then
 					self.tianyi_card = max_card:getId()
 					use.card = sgs.Card_Parse("@TianyiCard=.")

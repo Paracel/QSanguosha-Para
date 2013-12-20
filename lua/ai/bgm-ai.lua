@@ -317,6 +317,7 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 		end
 	end
 	if slashcount > 0 then
+		if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 		local slash = self:getCard("Slash")
 		assert(slash)
 		local dummy_use = { isDummy = true }
@@ -325,12 +326,14 @@ sgs.ai_skill_use_func.DaheCard = function(card, use, self)
 			if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1 and enemy:getHp() > self.player:getHp())
 				and not enemy:isKongcheng() and self.player:canSlash(enemy) then
 				local enemy_max_card = self:getMaxCard(enemy)
+				local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
+				if enemy_max_card and enemy:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
 				local allknown = 0
 				if self:getKnownNum(enemy) == enemy:getHandcardNum() then
 					allknown = allknown + 1
 				end
-				if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
-					or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
+				if (enemy_max_card and max_point > enemy_number and allknown > 0)
+					or (enemy_max_card and max_point > enemy_number and allknown < 1 and max_point > 10)
 					or (not enemy_max_card and max_point > 10) then
 					self.dahe_card = max_card:getId()
 					use.card = sgs.Card_Parse("@DaheCard=.")
@@ -380,6 +383,7 @@ end
 sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 	local ptarget = self:getPriorTarget()
 	if not ptarget then return end
 	local slashcount = self:getCardsNum("Slash")
@@ -396,12 +400,14 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	for _, enemy in ipairs(self.enemies) do
 		if self:getCardsNum("Snatch") > 0 and not enemy:isKongcheng() then
 			local enemy_max_card = self:getMaxCard(enemy)
+			local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
+			if enemy_max_card and enemy:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
 			local allknown = 0
 			if self:getKnownNum(enemy) == enemy:getHandcardNum() then
 				allknown = allknown + 1
 			end
-			if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)
-				or (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown < 1 and max_point > 10)
+			if (enemy_max_card and max_point > enemy_number and allknown > 0)
+				or (enemy_max_card and max_point > enemy_number and allknown < 1 and max_point > 10)
 				or (not enemy_max_card and max_point > 10)
 				and (self:getDangerousCard(enemy) or self:getValuableCard(enemy)) then
 					self.tanhu_card = max_card:getEffectiveId()

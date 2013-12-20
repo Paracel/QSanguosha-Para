@@ -483,11 +483,13 @@ sgs.ai_skill_use["@@qiaoshui"] = function(self, prompt)
 	self:sort(self.enemies, "handcard")
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 
 	for _, enemy in ipairs(self.enemies) do
 		if not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) and not enemy:isKongcheng() then
 			local enemy_max_card = self:getMaxCard(enemy)
 			local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+			if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.min(enemy_max_point + 3, 13) end
 			if max_point > enemy_max_point then
 				self.qiaoshui_card = max_card:getEffectiveId()
 				return "@QiaoshuiCard=.->" .. enemy:objectName()
@@ -509,6 +511,7 @@ sgs.ai_skill_use["@@qiaoshui"] = function(self, prompt)
 		if not friend:isKongcheng() then
 			local friend_min_card = self:getMinCard(friend)
 			local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+			if friend_min_card and friend:hasSkill("yingyang") then friend_min_point = math.max(1, friend_min_point - 3) end
 			if max_point > friend_min_point then
 				self.qiaoshui_card = max_card:getEffectiveId()
 				return "@QiaoshuiCard=.->" .. friend:objectName()
@@ -1010,9 +1013,11 @@ sgs.ai_skill_invoke.zhuikong = function(self, data)
 
 	local max_card = self:getMaxCard()
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 	if not (current:hasSkill("zhiji") and current:getMark("zhiji") == 0 and current:getHandcardNum() == 1) then
 		local enemy_max_card = self:getMaxCard(current)
 		local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+		if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.min(enemy_max_point + 3, 13) end
 		if max_point > enemy_max_point or max_point > 10 then
 			self.zhuikong_card = max_card:getEffectiveId()
 			return true

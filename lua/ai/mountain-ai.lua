@@ -627,46 +627,16 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 		end
 	end
 	if #lords == 0 then return end
+	local max_card, min_card = self:getMaxCard(), self:getMinCard()
+	local max_num = self.player:hasSkill("yingyang") and math.min(max_card:getNumber() + 3, 13) or max_card:getNumber()
+	local min_num = self.player:hasSkill("yingyang") and math.max(1, min_card:getNumber() - 3) or min_card:getNumber()
 	self:sort(lords, "defense")
 	for _, lord in ipairs(lords) do
 		local zhiba_str
-		local cards = self.player:getHandcards()
-
-		local max_num = 0, max_card
-		local min_num = 14, min_card
-		for _, hcard in sgs.qlist(cards) do
-			if hcard:getNumber() > max_num then
-				max_num = hcard:getNumber()
-				max_card = hcard
-			end
-
-			if hcard:getNumber() <= min_num then
-				if hcard:getNumber() == min_num then
-					if min_card and self:getKeepValue(hcard) > self:getKeepValue(min_card) then
-						min_num = hcard:getNumber()
-						min_card = hcard
-					end
-				else
-					min_num = hcard:getNumber()
-					min_card = hcard
-				end
-			end
-		end
-
-		local lord_max_num = 0, lord_max_card
-		local lord_min_num = 14, lord_min_card
-		local lord_cards = lord:getHandcards()
-		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), lord:objectName())
-		for _, lcard in sgs.qlist(lord_cards) do
-			if (lcard:hasFlag("visible") or lcard:hasFlag(flag)) and lcard:getNumber() > lord_max_num then
-				lord_max_card = lcard
-				lord_max_num = lcard:getNumber()
-			end
-			if lcard:getNumber() < lord_min_num then
-				lord_min_num = lcard:getNumber()
-				lord_min_card = lcard
-			end
-		end
+		local lord_max_card, lord_min_card = self:getMaxCard(lord), self:getMinCard(lord)
+		local lord_max_num, lord_min_num = 0, 14
+		lord_max_num = (lord_max_card and lord:hasSkill("yingyang")) and math.min(lord_max_card:getNumber() + 3, 13) or lord_max_card:getNumber()
+		lord_min_num = (lord_min_card and lord:hasSkill("yingyang")) and math.max(1, lord_min_card:getNumber() - 3) or lord_min_card:getNumber()
 
 		if self:isEnemy(lord) and max_num > 10 and max_num > lord_max_num then
 			if isCard("Jink", max_card, self.player) and self:getCardsNum("Jink") == 1 then return end

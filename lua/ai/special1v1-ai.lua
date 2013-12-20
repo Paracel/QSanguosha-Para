@@ -125,6 +125,7 @@ sgs.ai_skill_use_func.XiechanCard = function(card, use, self)
 	self.player:setFlags("-AI_XiechanUsing")
 	if max_card:isKindOf("Slash") and self:getCardsNum("Slash") <= 2 then return end
 	local max_point = max_card:getNumber()
+	if self.player:hasSkill("yingyang") then max_point = math.min(max_point + 3, 13) end
 
 	local dummy_use = { isDummy = true, xiechan = true, to = sgs.SPlayerList() }
 	local duel = sgs.Sanguosha:cloneCard("Duel")
@@ -134,6 +135,7 @@ sgs.ai_skill_use_func.XiechanCard = function(card, use, self)
 		if not enemy:isKongcheng() and not (enemy:hasSkill("kongcheng") and enemy:getHandcardNum() == 1) then
 			local enemy_max_card = self:getMaxCard(enemy)
 			local enemy_max_point = enemy_max_card and enemy_max_card:getNumber() or 100
+			if enemy_max_card and enemy:hasSkill("yingyang") then enemy_max_point = math.max(enemy_max_point + 3, 13) end
 			if max_point > enemy_max_point then
 				self.xiechan_card = max_card:getId()
 				use.card = card

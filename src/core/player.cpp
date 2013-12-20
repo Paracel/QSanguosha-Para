@@ -344,12 +344,20 @@ bool Player::hasInnateSkill(const QString &skill_name) const{
     return false;
 }
 
-bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const{
-    if (!include_lose) {
-        if (!hasEquipSkill(skill_name) && ((hasFlag("huoshui") && getHp() >= (getMaxHp() + 1) / 2)
-                                           || getMark("Qingcheng" + skill_name) > 0))
-            return false;
+bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const{ 
+    if (!isLord() && hasSkill("weidi")) {
+        foreach (const Player *player, getAliveSiblings()) {
+            if (player->isLord()) {
+                if (player->hasLordSkill(skill_name, true))
+                    return true;
+                break;
+            }
+        }
     }
+
+    if (!hasSkill(skill_name, include_lose))
+        return false;
+
     if (acquired_skills.contains(skill_name))
         return true;
 
@@ -362,13 +370,6 @@ bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const{
 
     if (isLord())
         return skills.contains(skill_name);
-
-    if (hasSkill("weidi")) {
-        foreach (const Player *player, getAliveSiblings()) {
-            if (player->isLord())
-                return player->hasLordSkill(skill_name, true);
-        }
-    }
 
     return false;
 }

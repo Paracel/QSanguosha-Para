@@ -23,13 +23,15 @@ public:
             Room *room = lidian->getRoom();
             if (room->askForSkillInvoke(lidian, objectName())) {
                 room->broadcastSkillInvoke(objectName());
+                QList<ServerPlayer *> p_list;
+                p_list << lidian;
                 QList<int> card_ids = room->getNCards(4);
                 QList<int> obtained;
                 room->fillAG(card_ids, lidian);
                 int id1 = room->askForAG(lidian, card_ids, false, objectName());
                 card_ids.removeOne(id1);
                 obtained << id1;
-                room->takeAG(lidian, id1, false);
+                room->takeAG(lidian, id1, false, p_list);
                 int id2 = room->askForAG(lidian, card_ids, false, objectName());
                 card_ids.removeOne(id2);
                 obtained << id2;

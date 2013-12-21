@@ -644,20 +644,3 @@ sgs.ai_choicemade_filter.skillChoice.qingcheng = function(self, player, promptli
 	if not target then return end
 	if choice == "shiyong" then sgs.updateIntention(player, target, -30) else sgs.updateIntention(player, target, 30) end
 end
-
-sgs.ai_skill_invoke.cv_caopi = function(self, data)
-	if math.random(0, 2) == 0 then return true end
-	return false
-end
-
-sgs.ai_skill_invoke.cv_zhugeliang = function(self, data)
-	if math.random(0, 2) > 0 then return false end
-	if math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhugeliang = "tw_zhugeliang" return true
-	else sgs.ai_skill_choice.cv_zhugeliang = "heg_zhugeliang" return true end
-end
-
-sgs.ai_skill_invoke.cv_nos_huangyueying = function(self, data)
-	if math.random(0, 2) > 0 then return false end
-	if math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_nos_huangyueying = "tw_huangyueying" return true
-	else sgs.ai_skill_choice.cv_nos_huangyueying = "heg_huangyueying" return true end
-end

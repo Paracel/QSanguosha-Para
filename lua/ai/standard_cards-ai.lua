@@ -1022,6 +1022,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		return true
 	else
 		if self:isWeak(target) or damage.damage > 1 or self:hasHeavySlashDamage(self.player, damage.card, target) then return false end
+		if target:hasSkill("lirang") and #self:getFriendsNoSelf(target) > 0 then return false end
 		if target:getArmor() and self:evaluateArmor(target:getArmor(), target) > 3 and not (target:hasArmorEffect("silver_lion") and target:isWounded()) then
 			return true
 		end

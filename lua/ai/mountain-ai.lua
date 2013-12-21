@@ -414,6 +414,7 @@ function sgs.ai_slash_prohibit.xiangle(self, from, to)
 end
 
 sgs.ai_skill_invoke.fangquan = function(self, data)
+	self.fangquan_card_str = nil
 	if #self.friends == 1 then
 		return false
 	end
@@ -480,38 +481,16 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 			break
 		end
 	end
-	return to_discard ~= nil
-end
+	if to_discard == nil then return false end
 
-sgs.ai_skill_use["@@fangquan"] = function(self, prompt)
-	local to_discard = nil
-	local cards = sgs.QList2Table(self.player:getHandcards())
-	local index = 0
-	local all_peaches = 0
-	for _, card in ipairs(cards) do
-		if card:isKindOf("Peach") then
-			all_peaches = all_peaches + 1
-		end
-	end
-	if all_peaches >= 2 and self:getOverflow() <= 0 then return "." end
-	self:sortByKeepValue(cards)
-	cards = sgs.reverse(cards)
-
-	for i = #cards, 1, -1 do
-		local card = cards[i]
-		if not card:isKindOf("Peach") and not self.player:isJilei(card) then
-			to_discard = card:getEffectiveId()
-			break
-		end
-	end
-	if not to_discard then return "." end
-
+	-- At last we try to find the target
 	self:sort(self.friends_noself, "handcard")
 	self.friends_noself = sgs.reverse(self.friends_noself)
 	for _, target in ipairs(self.friends_noself) do
 		if not target:hasSkill("dawu") and target:hasSkills("yongsi|zhiheng|" .. sgs.priority_skill .. "|shensu")
 			and (not self:willSkipPlayPhase(target) or target:hasSkill("shensu")) then
-			return "@FangquanCard=" .. to_discard .. "->" .. target:objectName()
+			self.fangquan_card_str = "@FangquanCard=" .. to_discard .. "->" .. target:objectName()
+			return true
 		end
 	end
 	for _, target in ipairs(self.friends_noself) do
@@ -520,11 +499,17 @@ sgs.ai_skill_use["@@fangquan"] = function(self, prompt)
 			for _, p in ipairs(self.friends_noself) do
 				if p:getMark("@fog") > 0 then use = false break end
 			end
-			if use then return "@FangquanCard=" .. to_discard .. "->" .. target:objectName() end
+			if use then
+				self.fangquan_card_str = "@FangquanCard=" .. to_discard .. "->" .. target:objectName()
+				return true
+			end
 		end
 	end
-	if #self.friends_noself > 0 then return "@FangquanCard=" .. to_discard .. "->" .. self.friends_noself[1]:objectName() end
-	return "."
+	return false
+end
+
+sgs.ai_skill_use["@@fangquan"] = function(self, prompt)
+	return self.fangquan_card_str or "."
 end
 
 sgs.ai_card_intention.FangquanCard = -120

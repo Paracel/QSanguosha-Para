@@ -156,6 +156,7 @@ function SmartAI:initialize(player)
 	self.kept = {}
 	self.keepdata = {}
 	self.predictedRange = 1
+	self.slashAvail = 1
 	if not sgs.initialized then
 		sgs.initialized = true
 		sgs.ais = {}
@@ -557,7 +558,11 @@ end
 function SmartAI:adjustUsePriority(card, v)
 	if v <= 0 then return 0 end
 	if card:isKindOf("Slash") then
-		if card:isRed() then v = v - 0.05 end
+		if card:getSkillName() == "Spear" then v = v - 0.1 end
+		if card:isRed() then
+			if self.slashAvail == 1 and self.player:hasSkill("jie") then v = v + 0.21
+			else v = v - 0.05 end
+		end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
 		if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 0.21 end
 		if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 0.21 or -0.1) end
@@ -3358,6 +3363,7 @@ function SmartAI:getTurnUse()
 			end
 		end
 	end
+	self.slashAvail = slashAvail
 
 	return turnUse
 end

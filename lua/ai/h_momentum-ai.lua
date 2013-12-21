@@ -157,15 +157,21 @@ sgs.ai_skill_invoke.chuanxin = function(self, data)
 	local invoke
 	local to = damage.to
 	if to:getMark("chuanxin_" .. self.player:objectName()) == 0 and to:getVisibleSkillList():length() > 1 then
-		for _, skill in ipairs(("benghuai|shiyong|yaowu|wumou|chanyuan|jinjiu|tongji"):split("|")) do
-			if to:hasSkill(skill) then
-				if self:isFriend(to) then return true
-				elseif (skill == "benghuai" or skill == "shiyong") and to:getMaxHp() <= 3 then return true
-				end
-				return false
-			end
+		local count = 0
+		for _, skill in sgs.qlist(to:getVisibleSkillList()) do
+			if not skill:isAttachedLordSkill() then count = count + 1 end
 		end
-		invoke = true
+		if count > 1 then
+			for _, skill in ipairs(("benghuai|shiyong|yaowu|wumou|chanyuan|jinjiu|tongji"):split("|")) do
+				if to:hasSkill(skill) then
+					if self:isFriend(to) then return true
+					elseif (skill == "benghuai" or skill == "shiyong") and to:getMaxHp() <= 3 then return true
+					end
+					return false
+				end
+			end
+			invoke = true
+		end
 	end
 	if to:getEquips():length() > 0 then
 		if self:isFriend(to) then

@@ -360,6 +360,17 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	local eff = self:damageIsEffective(to, nature, from)
 	self.equipsToDec = 0
 	if not eff then return false end
+	if self:isFriend(from, to) and from:hasSkill("chuanxin")
+		and to:getEquips():isEmpty() then
+		if to:getMark("chuanxin_" .. from:objectName()) > 0 then return false
+		else
+			local count = 0
+			for _, skill in sgs.qlist(to:getVisibleSkillList()) do
+				if not skill:isAttachedLordSkill() then count = count + 1 end
+			end
+			if count <= 1 then return false end
+		end
+	end
 
 	if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and self:getCardId("FireSlash") and slash:isKindOf("ThunderSlash") and self:objectiveLevel(to) >= 3 then
 		return false

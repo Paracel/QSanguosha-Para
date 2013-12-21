@@ -950,7 +950,7 @@ local zhoufu_skill = {}
 zhoufu_skill.name = "zhoufu"
 table.insert(sgs.ai_skills, zhoufu_skill)
 zhoufu_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("ZhoufuCard") or self.player:isKongcheng() or self:getOverflow() <= 0 then return end
+	if self.player:hasUsed("ZhoufuCard") or self.player:isKongcheng() then return end
 	return sgs.Card_Parse("@ZhoufuCard=.")
 end
 

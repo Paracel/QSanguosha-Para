@@ -597,6 +597,7 @@ sgs.ai_skill_cardask["@tiaoxin-slash"] = function(self, data, pattern, target)
 end
 
 sgs.ai_card_intention.TiaoxinCard = 80
+sgs.ai_use_priority.TiaoxinCard = 4
 
 sgs.ai_skill_choice.zhiji = function(self, choice)
 	if self.player:getHp() < self.player:getMaxHp() - 1 then return "recover" end

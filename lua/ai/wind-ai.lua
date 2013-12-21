@@ -280,7 +280,8 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 		else
 			if not self:hasSuit("black", true, player) and player:getHandcardNum() < 2 then return nil end
 		end
-		if not (getKnownCard(player, self.player, "Jink", true) > 0 or (getCardsNum("Jink", player, self.player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1)
+		if not (getKnownCard(player, self.player, "Jink", true) > 0
+				or (getCardsNum("Jink", player, self.player) >= 1 and sgs.card_lack[player:objectName()]["Jink"] ~= 1 and player:getHandcardNum() >= 3)
 				or (not self:isWeak(player) and self:hasEightDiagramEffect(player) and not slasher:hasWeapon("qinggang_sword"))) then
 			return nil
 		end
@@ -312,7 +313,7 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 
 	local enemies = self:getEnemies(player)
 	table.sort(enemies, cmp)
-	for _,enemy in ipairs(enemies) do
+	for _, enemy in ipairs(enemies) do
 		if getCmpValue(enemy) < leiji_value then return enemy end
 	end
 	return nil

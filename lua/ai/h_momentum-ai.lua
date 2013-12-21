@@ -177,7 +177,8 @@ sgs.ai_skill_invoke.chuanxin = function(self, data)
 		end
 		invoke = true
 	end
-	return invoke and self:isEnemy(to) and not self:hasHeavySlashDamage(self.player, damage.card, to)
+	return (invoke and self:isEnemy(to) and not self:hasHeavySlashDamage(self.player, damage.card, to))
+			or (not invoke and self:isFriend(to))
 end
 
 sgs.ai_skill_choice.chuanxin = function(self, choices, data)

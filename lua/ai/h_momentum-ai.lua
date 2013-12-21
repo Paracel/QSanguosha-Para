@@ -143,3 +143,11 @@ sgs.ai_skill_choice.yingyang = function(self, choices, data)
 		return "up"
 	end
 end
+
+sgs.ai_skill_invoke.hengzheng = function(self, data)
+	local value = 0
+	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		value = value + self:getGuixinValue(player)
+	end
+	return value >= 1.3
+end

@@ -638,7 +638,7 @@ end
 
 sgs.ai_card_intention.DawuCard = -70
 
-function getGuixinValue(self, player)
+function SmartAI:getGuixinValue(player)
 	if player:isAllNude() then return 0 end
 	local card_id = self:askForCardChosen(player, "hej", "dummy")
 	if self:isEnemy(player) then
@@ -730,7 +730,7 @@ sgs.ai_skill_invoke.guixin = function(self, data)
 		if manjuan_eff then return false end
 		local value = 0
 		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
-			value = value + getGuixinValue(self, player)
+			value = value + self:getGuixinValue(player)
 		end
 		local left_num = damage.damage - self.player:getMark("GuixinTimes")
 		return value >= 1.3 or left_num > 0

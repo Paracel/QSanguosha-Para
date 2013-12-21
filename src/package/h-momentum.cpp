@@ -596,8 +596,11 @@ public:
             for (int i = 0; i < use.to.length(); i++) {
                 ServerPlayer *to = use.to.at(i);
                 if (to->isAlive() && to->isAdjacentTo(player) && to->isAdjacentTo(use.from)
-                    && !to->getEquips().isEmpty()
-                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to))) {
+                    && !to->getEquips().isEmpty()) {
+                    to->setFlags("FengshiTarget"); // For AI
+                    bool invoke = room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to));
+                    to->setFlags("-FengshiTarget");
+                    if (!invoke) continue;
                     room->broadcastSkillInvoke(objectName());
                     int id = -1;
                     if (to->getEquips().length() == 1)

@@ -177,7 +177,7 @@ sgs.ai_skill_invoke.chuanxin = function(self, data)
 		end
 		invoke = true
 	end
-	return invoke and self:isEnemy(to)
+	return invoke and self:isEnemy(to) and not self:hasHeavySlashDamage(self.player, damage.card, to)
 end
 
 sgs.ai_skill_choice.chuanxin = function(self, choices, data)
@@ -225,3 +225,28 @@ sgs.ai_skill_choice.chuanxin_lose = function(self, choices, data)
 		if self.player:hasSkill(skill) then return skill end
 	end
  end
+ 
+ sgs.ai_skill_invoke.fengshi = function(self, data)
+	local target = data:toPlayer()
+	if not target then return false end
+	if self:needToThrowArmor(target) then return self:isFriend(target) end
+	if target:hasSkills(sgs.lose_equip_skill) then
+		return self:isFriend(target) and (target:getOffensiveHorse() or (target:getWeapon() and self:evaluateWeapon(target:getWeapon(), target) < 4))
+	end
+	return self:isEnemy(target)
+end
+
+sgs.ai_choicemade_filter.skillInvoke.fengshi = function(self, player, promptlist)
+	if promptlist[3] == "yes" then
+		local fengshi_target
+		for _, p in sgs.qlist(self.room:getAllPlayers()) do
+			if p:hasFlag("FengshiTarget") then
+				fengshi_target = p
+				break
+			end
+		end
+		if fengshi_target and not fengshi_target:hasSkills(sgs.lose_equip_skill) and not self:needToThrowArmor(fengshi_target) then
+			sgs.updateIntention(player, fengshi_target, 60)
+		end
+	end
+end

@@ -342,11 +342,11 @@ struct PhaseChangeStruct {
 struct PhaseStruct {
     inline PhaseStruct() {
         phase = Player::PhaseNone;
-        finished = false;
+        skipped = 0;
     }
 
     Player::Phase phase;
-    bool finished;
+    int skipped; // 0 - not skipped; 1 - skipped by effect; -1 - skipped by cost
 };
 
 struct CardResponseStruct {

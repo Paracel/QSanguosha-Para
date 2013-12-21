@@ -273,12 +273,12 @@ public:
         if (change.to == Player::Judge && !xiahouyuan->isSkipped(Player::Judge)
             && !xiahouyuan->isSkipped(Player::Draw)) {
             if (Slash::IsAvailable(xiahouyuan) && room->askForUseCard(xiahouyuan, "@@shensu1", "@shensu1", 1)) {
-                xiahouyuan->skip(Player::Judge);
-                xiahouyuan->skip(Player::Draw);
+                xiahouyuan->skip(Player::Judge, true);
+                xiahouyuan->skip(Player::Draw, true);
             }
         } else if (Slash::IsAvailable(xiahouyuan) && change.to == Player::Play && !xiahouyuan->isSkipped(Player::Play)) {
             if (xiahouyuan->canDiscard(xiahouyuan, "he") && room->askForUseCard(xiahouyuan, "@@shensu2", "@shensu2", 2, Card::MethodDiscard))
-                xiahouyuan->skip(Player::Play);
+                xiahouyuan->skip(Player::Play, true);
         }
         return false;
     }

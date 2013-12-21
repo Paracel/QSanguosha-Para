@@ -649,10 +649,12 @@ void ServerPlayer::play(QList<Player::Phase> set_phases) {
         setPhase(phases[i]);
         room->broadcastProperty(this, "phase");
         
-        if ((skip || _m_phases_state[i].finished)
-            && !thread->trigger(EventPhaseSkipping, room, this, data)
-            && phases[i] != NotActive)
-            continue;
+        if (phases[i] != NotActive && (skip || _m_phases_state[i].skipped != 0)) {
+            QVariant isCost = QVariant::fromValue(_m_phases_state[i].skipped < 0);
+            bool cancel_skip = thread->trigger(EventPhaseSkipping, room, this, isCost);
+            if (!cancel_skip)
+                continue;
+        }
 
         if (!thread->trigger(EventPhaseStart, room, this)) {
             if (getPhase() != NotActive)
@@ -669,21 +671,15 @@ QList<Player::Phase> &ServerPlayer::getPhases() {
     return phases;
 }
 
-void ServerPlayer::skip() {
-    for (int i = 0; i < _m_phases_state.size(); i++)
-        _m_phases_state[i].finished = true;
-
-    LogMessage log;
-    log.type = "#SkipAllPhase";
-    log.from = this;
-    room->sendLog(log);
-}
-
-void ServerPlayer::skip(Player::Phase phase) {
+void ServerPlayer::skip(Player::Phase phase, bool isCost) {
     for (int i = _m_phases_index; i < _m_phases_state.size(); i++) {
         if (_m_phases_state[i].phase == phase) {
-            if (_m_phases_state[i].finished) return;
-            _m_phases_state[i].finished = true;
+            if (_m_phases_state[i].skipped != 0) {
+                if (isCost && _m_phases_state[i].skipped == 1)
+                    _m_phases_state[i].skipped = -1;
+                return;
+            }
+            _m_phases_state[i].skipped = (isCost ? -1 : 1);
             break;
         }
     }
@@ -711,7 +707,7 @@ void ServerPlayer::insertPhase(Player::Phase phase) {
 bool ServerPlayer::isSkipped(Player::Phase phase) {
     for (int i = _m_phases_index; i < _m_phases_state.size(); i++) {
         if (_m_phases_state[i].phase == phase)
-            return _m_phases_state[i].finished;
+            return (_m_phases_state[i].skipped != 0);
     }
     return false;
 }

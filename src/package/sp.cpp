@@ -1793,8 +1793,8 @@ public:
         if (change.to == Player::Judge && !player->isSkipped(Player::Judge)
             && !player->isSkipped(Player::Draw)) {
             if (Slash::IsAvailable(player) && room->askForUseCard(player, "@@qingyi", "@qingyi-slash")) {
-                player->skip(Player::Judge);
-                player->skip(Player::Draw);
+                player->skip(Player::Judge, true);
+                player->skip(Player::Draw, true);
             }
         }
         return false;

@@ -265,7 +265,7 @@ public:
                 if (response.m_isUse)
                    card = response.m_card;
             }
-            if (card->getHandlingMethod() == Card::MethodUse
+            if (card && card->getHandlingMethod() == Card::MethodUse
                 && player->getPhase() == Player::Play && player->getMark(objectName()) == 0) {
                 player->addMark(objectName());
                 if (card->isKindOf("Slash")) {

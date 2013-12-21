@@ -127,6 +127,10 @@ return {
 	["&sp_heg_zhouyu"] = "周瑜",
 	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
 
+	["sp_heg_xiaoqiao"] = "SP小乔-国",
+	["&sp_heg_xiaoqiao"] = "小乔",
+	["illustrator:sp_heg_zhouyu"] = "牧童的短笛",
+
 	["heg_caopi"] = "曹丕-国",
 	["&heg_caopi"] = "曹丕", 
 	["illustrator:heg_caopi"] = "DH",

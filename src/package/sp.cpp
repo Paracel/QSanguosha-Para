@@ -2062,6 +2062,10 @@ HegemonySPPackage::HegemonySPPackage()
     General *sp_heg_zhouyu = new General(this, "sp_heg_zhouyu", "wu", 3, true, true); // GSP 001
     sp_heg_zhouyu->addSkill("yingzi");
     sp_heg_zhouyu->addSkill("fanjian");
+
+    General *sp_heg_xiaoqiao = new General(this, "sp_heg_xiaoqiao", "wu", 3, false, true); // GSP 002
+    sp_heg_xiaoqiao->addSkill("tianxiang");
+    sp_heg_xiaoqiao->addSkill("hongyan");
 }
 
 ADD_PACKAGE(HegemonySP)

@@ -3255,6 +3255,9 @@ void Room::marshal(ServerPlayer *player) {
 
     notifyProperty(player, player, "flags", "-marshalling");
     doNotify(player, S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
+
+    Json::Value discard = toJsonArray(*m_discardPile);
+    doNotify(player, S_COMMAND_SYNCHRONIZE_DISCARD_PILE, discard);
 }
 
 void Room::startGame() {

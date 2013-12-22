@@ -100,6 +100,7 @@ public:
     void maxhpChange(const Json::Value &change_str);
     void resetPiles(const Json::Value &);
     void setPileNumber(const Json::Value &pile_str);
+    void synchronizeDiscardPile(const Json::Value &discard_pile);
     void gameOver(const Json::Value &);
     void loseCards(const Json::Value &);
     void getCards(const Json::Value &);

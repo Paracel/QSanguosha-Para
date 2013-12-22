@@ -438,7 +438,7 @@ function SmartAI:useCardIronChain(card, use)
 		for _, enemy in ipairs(self.enemies) do
 			if (not use.current_targets or not table.contains(use.current_targets, enemy:objectName()))
 				and not enemy:isChained() and not self.room:isProhibited(self.player, enemy, card) and not enemy:hasSkill("danlao")
-				and self:hasTrickEffective(card, enemy) and not (self:objectiveLevel(enemy) <= 3)
+				and self:hasTrickEffective(card, enemy) and self:objectiveLevel(enemy) > 3
 				and not self:getDamagedEffects(enemy) and not self:needToLoseHp(enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 				table.insert(enemytargets, enemy)
 			end

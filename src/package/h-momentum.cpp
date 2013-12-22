@@ -388,7 +388,13 @@ public:
                     break;
                 if (!p->isAlive() || !target->canDiscard(p, "he"))
                     continue;
-                room->throwCard(room->askForCardChosen(target, p, "he", objectName(), false, Card::MethodDiscard), p, target);
+                if (p == target) {
+                    if (!target->isNude())
+                        room->askForDiscard(target, objectName(), 1, 1, false, true);
+                } else {
+                    int id = room->askForCardChosen(target, p, "he", objectName(), false, Card::MethodDiscard);
+                    room->throwCard(id, p, target);
+                }
             }
         }
         return false;

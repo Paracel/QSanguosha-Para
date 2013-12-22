@@ -144,6 +144,66 @@ sgs.ai_skill_choice.yingyang = function(self, choices, data)
 	end
 end
 
+local duanxie_skill = {}
+duanxie_skill.name = "duanxie"
+table.insert(sgs.ai_skills, duanxie_skill)
+duanxie_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("DuanxieCard") then return end
+	return sgs.Card_Parse("@DuanxieCard=.")
+end
+
+sgs.ai_skill_use_func.DuanxieCard = function(card, use, self)
+	self:sort(self.enemies, "defense")
+	local target
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:isChained() and not self:getDamagedEffects(enemy) and not self:needToLoseHp(enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
+			target = enemy
+			break
+		end
+	end
+	if not target then return end
+	if not self:isWeak() or self.player:isChained() then
+		use.card = card
+		if use.to then use.to:append(target) end
+	end
+end
+
+sgs.ai_card_intention.DuanxieCard = 60
+sgs.ai_use_priority.DuanxieCard = 0
+
+sgs.ai_skill_invoke.fenming = function(self)
+	local value, count = 0, 0
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:isChained() then
+			count = count + 1
+			if self:isFriend(player) then
+				if self:needToThrowArmor(player) then
+					value = value + 1
+				elseif player:getHandcardNum() == 1 and self:needKongcheng(player) then
+					value = value + 0.2
+				elseif self.player:canDiscard(player, "he") then
+					local dec = self:isWeak(player) and 1.2 or 0.8
+					if player:objectName() == self.player:objectName() then dec = dec / 1.5 end
+					if self:getOverflow(player) >= 0 then dec = dec / 1.5 end
+					value = value - dec
+				end
+			elseif self:isEnemy(player) then
+				if self.player:canDiscard(player, "he") then
+					if self:doNotDiscard(player) then
+						value = value - 0.8
+					else
+						local dec = self:isWeak(player) and 1.2 or 0.8
+						if self:getValuableCard(player) or self:getDangerousCard(player) then dec = dec * 1.5 end
+						value = value + dec
+					end
+				end
+			end
+		end
+	end
+	--self.room:writeToConsole(value / count)
+	return value / count >= 0.2
+end
+
 sgs.ai_skill_invoke.hengzheng = function(self, data)
 	local value = 0
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do

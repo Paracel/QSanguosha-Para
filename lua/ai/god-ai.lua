@@ -137,21 +137,20 @@ local gongxin_skill = {}
 gongxin_skill.name = "gongxin"
 table.insert(sgs.ai_skills, gongxin_skill)
 gongxin_skill.getTurnUseCard = function(self)
-	local card_str = ("@GongxinCard=.")
-	local gongxin_card = sgs.Card_Parse(card_str)
-	assert(gongxin_card)
-	return gongxin_card
+	if self.player:hasUsed("GongxinCard") then return end
+	return sgs.Card_Parse("@GongxinCard=.")
 end
 
 sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
-	if self.player:hasUsed("GongxinCard") then return end
 	self:sort(self.enemies, "handcard")
+	sgs.reverse(self.enemies)
 
-	for index = #self.enemies, 1, -1 do
-		if not self.enemies[index]:isKongcheng() and self:objectiveLevel(self.enemies[index]) > 0 then
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:isKongcheng() and self:objectiveLevel(enemy) > 0 
+			and (self:hasSuit("heart", false, enemy) or self:getKnownNum(eneny) ~= enemy:getHandcardNum()) then
 			use.card = card
 			if use.to then
-				use.to:append(self.enemies[index])
+				use.to:append(enemy)
 			end
 			return
 		end

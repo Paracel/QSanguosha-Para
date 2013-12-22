@@ -796,6 +796,7 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
             room->sendLog(log);
 
             room->notifySkillInvoked(player, "chanyuan");
+            room->broadcastSkillInvoke(player, objectName());
             room->setEmotion(player, "no-question");
             continue;
         }
@@ -1202,6 +1203,7 @@ WindPackage::WindPackage()
     yuji->addSkill(new Guhuo);
     yuji->addSkill(new GuhuoClear);
     related_skills.insertMulti("guhuo", "#guhuo-clear");
+    yuji->addRelateSkill("chanyuan");
 
     addMetaObject<ShensuCard>();
     addMetaObject<TianxiangCard>();

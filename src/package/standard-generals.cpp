@@ -940,7 +940,9 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *luxun, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
-            if (room->askForSkillInvoke(luxun, objectName(), data)) {
+            if (luxun->getPhase() == Player::Discard && luxun->getMaxCards() == 0 && !luxun->hasFlag("LianyingZeroMaxCards")) {
+                luxun->setFlags("LianyingZeroMaxCards");
+            } else if (room->askForSkillInvoke(luxun, objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
                 luxun->drawCards(1);
             }

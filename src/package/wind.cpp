@@ -796,7 +796,7 @@ bool GuhuoCard::guhuo(ServerPlayer *yuji) const{
             room->sendLog(log);
 
             room->notifySkillInvoked(player, "chanyuan");
-            room->broadcastSkillInvoke(player, objectName());
+            room->broadcastSkillInvoke("chanyuan");
             room->setEmotion(player, "no-question");
             continue;
         }

@@ -163,7 +163,9 @@ sgs.duanliang_suit_value = {
 sgs.ai_chaofeng.xuhuang = 4
 
 sgs.ai_skill_invoke.zaiqi = function(self, data)
-	return self.player:getLostHp() >= 2
+	local lostHp = 2
+	if self.player:hasSkills("rende|nosrende") and #self.friends_noself > 0 and not self:willSkipPlayPhase() then lostHp = 3 end
+	return self.player:getLostHp() >= lostHp
 end
 
 sgs.ai_skill_invoke.lieren = function(self, data)

@@ -131,7 +131,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				or self:getCardsNum("Jink") < jink_num
 				or (use.from:hasSkill("dahe") and self.player:hasFlag("dahe") and not hasHeart) then
 
-				if use.card:isKindOf("NatureSlash") and self.player:isChained() and not self:isGoodChainTarget(self.player, nil, nil, nil, use.card) then return true end
+				if use.card:isKindOf("NatureSlash") and self.player:isChained() and not self:isGoodChainTarget(self.player, use.from, nil, nil, use.card) then return true end
 				if use.from:hasSkill("nosqianxi") and use.from:distanceTo(self.player) == 1 then return true end
 				if self:isFriend(use.from) and self.role == "loyalist" and not use.from:hasSkill("jueqing") and use.from:isLord() and self.player:getHp() == 1 then return true end
 				if (not (self.player:hasSkills(sgs.masochism_skill) or (self.player:hasSkill("tianxiang") and self:hasSuit("heart"))) or use.from:hasSkill("jueqing"))
@@ -172,7 +172,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
 					and not (use.from:hasSkill("hongyan") and self:hasSuit("spade")) then
 					return not self:doNotDiscard(use.from)
-				elseif self.player:isChained() and not self:isGoodChainTarget(self.player) then
+				elseif self.player:isChained() and not self:isGoodChainTarget(self.player, use.from) then
 					return not self:doNotDiscard(use.from)
 				end
 			elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))

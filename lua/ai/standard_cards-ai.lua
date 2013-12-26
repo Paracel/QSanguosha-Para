@@ -770,7 +770,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 	--if not target then self.room:writeToConsole(debug.traceback()) end
 	if not target then return getJink() end
 	if not self:hasHeavySlashDamage(target, slash, self.player) and self:getDamagedEffects(self.player, target, slash) then return "." end
-	if slash:isKindOf("NatureSlash") and self.player:isChained() and self:isGoodChainTarget(self.player, nil, nil, nil, slash) then return "." end
+	if slash:isKindOf("NatureSlash") and self.player:isChained() and self:isGoodChainTarget(self.player, target, nil, nil, slash) then return "." end
 	if self:isFriend(target) then
 		if self:findLeijiTarget(self.player, 50, target) then return getJink() end
 		if target:hasSkill("jieyin") and not self.player:isWounded() and self.player:isMale() and not self.player:hasSkills("leiji|nosleiji") then return "." end

@@ -479,12 +479,12 @@ public:
                     card_ids << card_id;
                 i++;
             }
-            if (card_ids.empty())
+            if (card_ids.isEmpty())
                 return false;
             else if (sunshangxiang->askForSkillInvoke(objectName(), data)) {
                 int ai_delay = Config.AIDelay;
                 Config.AIDelay = 0;
-                while (!card_ids.empty()) {
+                while (!card_ids.isEmpty()) {
                     room->fillAG(card_ids, sunshangxiang);
                     int id = room->askForAG(sunshangxiang, card_ids, true, objectName());
                     if (id == -1) {
@@ -496,7 +496,7 @@ public:
                 }
                 Config.AIDelay = ai_delay;
 
-                if (!card_ids.empty()) {
+                if (!card_ids.isEmpty()) {
                     room->broadcastSkillInvoke("yinli");
                     foreach (int id, card_ids) {
                         if (move.card_ids.contains(id)) {

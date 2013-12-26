@@ -111,7 +111,7 @@ void HuangtianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
             if (p->hasLordSkill("huangtian") && !p->hasFlag("HuangtianInvoked"))
                 zhangjiaos << p;
         }
-        if (zhangjiaos.empty())
+        if (zhangjiaos.isEmpty())
             room->setPlayerFlag(source, "ForbidHuangtian");
     }
 }

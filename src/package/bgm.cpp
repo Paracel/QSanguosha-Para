@@ -765,7 +765,7 @@ public:
             if (liubei->inMyAttackRange(p))
                 victims << p;
         }
-        if (victims.empty())
+        if (victims.isEmpty())
             return n;
         ServerPlayer *victim = room->askForPlayerChosen(liubei, victims, "zhaolie", "zhaolie-invoke", true, true);
         if (victim) {
@@ -1597,7 +1597,7 @@ public:
                     log.card_str = IntList2StringList(damage.from->handCards()).join("+");
                     room->doNotify(simazhao, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
-                    while (!langgu_discard.empty()) {
+                    while (!langgu_discard.isEmpty()) {
                         room->fillAG(langgu_discard + other, simazhao, other);
                         int id = room->askForAG(simazhao, langgu_discard, true, objectName());
                         if (id == -1) {
@@ -1609,7 +1609,7 @@ public:
                         room->clearAG(simazhao);
                     }
 
-                    if (!langgu_discard.empty()) {
+                    if (!langgu_discard.isEmpty()) {
                         DummyCard *dummy = new DummyCard(langgu_discard);
                         room->throwCard(dummy, damage.from, simazhao);
                         dummy->deleteLater();

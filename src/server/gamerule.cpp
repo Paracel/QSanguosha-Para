@@ -226,7 +226,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     card_use.card->doPreAction(room, card_use);
 
                 QList<ServerPlayer *> targets = card_use.to;
-                if (card_use.from && !card_use.to.empty()) {
+                if (card_use.from && !card_use.to.isEmpty()) {
                     foreach (ServerPlayer *to, card_use.to) {
                         if (targets.contains(to)) {
                             thread->trigger(TargetConfirming, room, to, data);

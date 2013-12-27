@@ -308,7 +308,7 @@ public:
         events << Debut;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 5;
     }
 
@@ -867,7 +867,7 @@ public:
         frequency = Frequent;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return -2;
     }
 
@@ -951,7 +951,7 @@ public:
         events << TargetConfirmed << EventPhaseStart;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 4;
     }
 

@@ -161,7 +161,7 @@ public:
         view_as_skill = new MizhaoViewAsSkill;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return -1;
     }
 

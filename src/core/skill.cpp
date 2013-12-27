@@ -237,7 +237,7 @@ QList<TriggerEvent> TriggerSkill::getTriggerEvents() const{
     return events;
 }
 
-int TriggerSkill::getPriority() const{
+int TriggerSkill::getPriority(TriggerEvent) const{
     return (frequency == Wake) ? 3 : 2;
 }
 
@@ -251,7 +251,7 @@ ScenarioRule::ScenarioRule(Scenario *scenario)
     setParent(scenario);
 }
 
-int ScenarioRule::getPriority() const{
+int ScenarioRule::getPriority(TriggerEvent) const{
     return 0;
 }
 
@@ -431,7 +431,7 @@ FakeMoveSkill::FakeMoveSkill(const QString &name)
     events << BeforeCardsMove << CardsMoveOneTime;
 }
 
-int FakeMoveSkill::getPriority() const{
+int FakeMoveSkill::getPriority(TriggerEvent) const{
     return 10;
 }
 

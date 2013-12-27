@@ -245,7 +245,7 @@ public:
         events << EventPhaseStart << EventPhaseChanging;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 4;
     }
 

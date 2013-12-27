@@ -33,7 +33,7 @@ bool GameRule::triggerable(const ServerPlayer *target) const{
     return true;
 }
 
-int GameRule::getPriority() const{
+int GameRule::getPriority(TriggerEvent) const{
     return 0;
 }
 
@@ -977,7 +977,7 @@ QString BasaraMode::getMappedRole(const QString &role) {
     return roles[role];
 }
 
-int BasaraMode::getPriority() const{
+int BasaraMode::getPriority(TriggerEvent) const{
     return 15;
 }
 

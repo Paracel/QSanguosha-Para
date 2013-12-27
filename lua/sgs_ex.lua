@@ -31,6 +31,10 @@ function sgs.CreateTriggerSkill(spec)
 	end
 	if type(spec.priority) == "number" then
 		skill.priority = spec.priority
+	elseif type(spec.priority) == "table" then
+		for triggerEvent, priority in pairs(spec.priority) do
+			skill:insertPriorityTable(triggerEvent, priority)
+		end
 	end
 
 	return skill

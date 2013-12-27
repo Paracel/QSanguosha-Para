@@ -1137,7 +1137,7 @@ public:
         return target != NULL;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 5;
     }
 

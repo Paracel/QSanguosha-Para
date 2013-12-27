@@ -9,7 +9,7 @@ class GameRule: public TriggerSkill {
 public:
     GameRule(QObject *parent);
     virtual bool triggerable(const ServerPlayer *target) const;
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
 
 private:
@@ -35,7 +35,7 @@ public:
     BasaraMode(QObject *parent);
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     void playerShowed(ServerPlayer *player) const;
     void generalShowed(ServerPlayer *player, QString general_name) const;
     static QString getMappedRole(const QString &role);

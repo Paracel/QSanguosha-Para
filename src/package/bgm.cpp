@@ -1918,7 +1918,7 @@ public:
         Config.AIDelay = ai_delay;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 4;
     }
 

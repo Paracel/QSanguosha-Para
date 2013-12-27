@@ -14,14 +14,18 @@ public:
     inline void addEvent(TriggerEvent triggerEvent) { events << triggerEvent; }
     inline void setViewAsSkill(ViewAsSkill *view_as_skill) { this->view_as_skill = view_as_skill; }
     inline void setGlobal(bool global) { this->global = global; }
+    inline void insertPriorityTable(TriggerEvent triggerEvent, int priority) { priority_table[triggerEvent] = priority; }
 
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     virtual bool triggerable(const ServerPlayer *target) const;
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
 
     LuaFunction on_trigger;
     LuaFunction can_trigger;
     int priority;
+
+protected:
+    QMap<TriggerEvent, int> priority_table;
 };
 
 class LuaProhibitSkill: public ProhibitSkill {

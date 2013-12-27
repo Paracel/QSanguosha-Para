@@ -120,7 +120,7 @@ public:
     const ViewAsSkill *getViewAsSkill() const;
     QList<TriggerEvent> getTriggerEvents() const;
 
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     virtual bool triggerable(const ServerPlayer *target) const;
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const = 0;
 
@@ -146,7 +146,7 @@ class ScenarioRule: public TriggerSkill {
 public:
     ScenarioRule(Scenario *scenario);
 
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     virtual bool triggerable(const ServerPlayer *target) const;
 };
 
@@ -276,7 +276,7 @@ class FakeMoveSkill: public TriggerSkill {
 public:
     FakeMoveSkill(const QString &skillname);
 
-    virtual int getPriority() const;
+    virtual int getPriority(TriggerEvent triggerEvent) const;
     virtual bool triggerable(const ServerPlayer *target) const;
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const;
 

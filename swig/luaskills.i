@@ -4,6 +4,7 @@ public:
     void addEvent(TriggerEvent event);
     void setViewAsSkill(ViewAsSkill *view_as_skill);
     void setGlobal(bool global);
+    void insertPriorityTable(TriggerEvent triggerEvent, int priority);
     
     virtual bool triggerable(const ServerPlayer *target) const;
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;

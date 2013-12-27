@@ -624,7 +624,7 @@ bool RoomThread::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *ta
         QList<const TriggerSkill *> triggered;
         QList<const TriggerSkill *> &skills = skill_table[triggerEvent];
         foreach (const TriggerSkill *skill, skills) {
-            double priority = skill->getPriority();
+            double priority = skill->getPriority(triggerEvent);
             int len = room->getPlayers().length();
             foreach (ServerPlayer *p, room->getAllPlayers(true)) {
                 if (p->hasSkill(skill->objectName()) || p->hasEquipSkill(skill->objectName())) {
@@ -695,7 +695,7 @@ void RoomThread::addTriggerSkill(const TriggerSkill *skill) {
         QList<const TriggerSkill *> &table = skill_table[triggerEvent];
         table << skill;
         foreach (const TriggerSkill *askill, table) {
-            double priority = askill->getPriority();
+            double priority = askill->getPriority(triggerEvent);
             int len = room->getPlayers().length();
             foreach (ServerPlayer *p, room->getAllPlayers(true)) {
                 if (p->hasSkill(askill->objectName())) {

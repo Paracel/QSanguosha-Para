@@ -981,7 +981,7 @@ public:
         events << PreCardUsed;
     }
 
-    virtual int getPriority() const{
+    virtual int getPriority(TriggerEvent) const{
         return 6;
     }
 

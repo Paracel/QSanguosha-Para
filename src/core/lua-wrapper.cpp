@@ -2,14 +2,18 @@
 #include "util.h"
 
 LuaTriggerSkill::LuaTriggerSkill(const char *name, Frequency frequency, const char *limit_mark)
-    : TriggerSkill(name), on_trigger(0), can_trigger(0), priority(2)
+    : TriggerSkill(name), on_trigger(0), can_trigger(0)
 {
     this->frequency = frequency;
     this->limit_mark = QString(limit_mark);
+    this->priority = (frequency == Skill::Wake) ? 3 : 2;
 }
 
-int LuaTriggerSkill::getPriority() const{
-    return priority;
+int LuaTriggerSkill::getPriority(TriggerEvent triggerEvent) const{
+    if (priority_table.keys().contains(triggerEvent))
+        return priority_table[triggerEvent];
+    else
+        return priority;
 }
 
 LuaProhibitSkill::LuaProhibitSkill(const char *name)

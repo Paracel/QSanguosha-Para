@@ -247,8 +247,15 @@ public:
 class Yongjue: public TriggerSkill {
 public:
     Yongjue(): TriggerSkill("yongjue") {
-        events << PreCardUsed << CardResponded << BeforeCardsMove;
+        events << PreCardUsed << CardResponded << BeforeCardsMove << EventPhaseStart;
         global = true;
+    }
+
+    virtual int getPriority(TriggerEvent triggerEvent) const{
+        if (triggerEvent == EventPhaseStart)
+            return 10;
+        else
+            return TriggerSkill::getPriority(triggerEvent);
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -281,7 +288,7 @@ public:
                     }
                 }
             }
-        } else if (TriggerSkill::triggerable(player)) {
+        } else if (triggerEvent == BeforeCardsMove && TriggerSkill::triggerable(player)) {
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
                 && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
@@ -311,28 +318,10 @@ public:
                     }
                 }
             }
+        } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Play) {
+            player->setMark("yongjue", 0);
         }
 
-        return false;
-    }
-};
-
-class YongjueStart: public PhaseChangeSkill {
-public:
-    YongjueStart(): PhaseChangeSkill("#yongjue-start") {
-    }
-
-    virtual int getPriority() const{
-        return 10;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool onPhaseChange(ServerPlayer *target) const{
-        if (target->getPhase() == Player::Play)
-            target->setMark("yongjue", 0);
         return false;
     }
 };
@@ -665,8 +654,7 @@ HMomentumPackage::HMomentumPackage()
     zhangren->addSkill(new Chuanxin);
     zhangren->addSkill(new Fengshi);
 
-    skills << new Yongjue << new YongjueStart;
-    related_skills.insertMulti("yongjue", "#yongjue-start");
+    skills << new Yongjue;
 
     addMetaObject<GuixiuCard>();
     addMetaObject<CunsiCard>();

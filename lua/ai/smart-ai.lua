@@ -1195,7 +1195,7 @@ function SmartAI:objectiveLevel(player)
 					return -1
 				end
 			else
-				local explicit_renegade
+				local explicit_renegade = 0
 				for _, aplayer in sgs.qlist(self.room:getOtherPlayers(player)) do
 					if sgs.ai_role[aplayer:objectName()] == "renegade" then
 						explicit_renegade = explicit_renegade + 1

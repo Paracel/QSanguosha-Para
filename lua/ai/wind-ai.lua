@@ -216,7 +216,7 @@ sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 	local all_cards = self.player:getCards("he")
 	if all_cards:isEmpty() then return "." end
 
-	local needTokeep = ((self.player:hasSkill("leiji") and judge.card:isRed()) or (self.player:hasSkill("nosleiji") and judge.card:getSuit() ~= sgs.Card_Spade)
+	local needTokeep = ((self.player:hasSkill("leiji") and judge.card:isRed()) or (self.player:hasSkill("nosleiji") and judge.card:getSuit() ~= sgs.Card_Spade))
 						and sgs.ai_AOE_data and self:playerGetRound(judge.who) < self:playerGetRound(self.player) and self:findLeijiTarget(self.player, 50)
 						and (self:getCardsNum("Jink") > 0 or self:hasEightDiagramEffect()) and self:getFinalRetrial() == 1
 

@@ -5369,7 +5369,7 @@ dofile "lua/ai/maneuvering-ai.lua"
 dofile "lua/ai/standard-ai.lua"
 dofile "lua/ai/basara-ai.lua"
 dofile "lua/ai/hulaoguan-ai.lua"
-dofile "lua/ai/convertion-ai.lua"
+dofile "lua/ai/conversion-ai.lua"
 
 local loaded = "standard|standard_cards|maneuvering"
 

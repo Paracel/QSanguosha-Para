@@ -241,7 +241,7 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 			end
 		else
 			for _, card in ipairs(cards) do
-				if card:getSuit() == sgs.Card_Heart and not isCard("Peach", card, target) and not isCard("Nullification", card, target) then
+				if card:getSuit() == sgs.Card_Heart and not isCard("Peach", card, target) and not isCard("ExNihilo", card, target) then
 					heart_card = card
 					break
 				end
@@ -249,7 +249,6 @@ sgs.ai_skill_use_func.NosXuanhuoCard = function(card, use, self)
 		end
 
 		if heart_card then
-			target:setFlags("AI_NosXuanhuoTarget")
 			use.card = sgs.Card_Parse("@NosXuanhuoCard=" .. heart_card:getEffectiveId())
 			if use.to then use.to:append(target) end
 		end
@@ -258,21 +257,25 @@ end
 
 sgs.ai_skill_playerchosen.nosxuanhuo = function(self, targets)
 	for _, player in sgs.qlist(targets) do
-		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player)
-			and not player:hasFlag("AI_NosXuanhuoTarget") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
+		if (player:getHandcardNum() <= 2 or player:getHp() < 2) and self:isFriend(player) and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end
 	for _, player in sgs.qlist(targets) do
-		if self:isFriend(player)
-			and not player:hasFlag("AI_NosXuanhuoTarget") and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
+		if self:isFriend(player) and not self:needKongcheng(player, true) and not player:hasSkill("manjuan") then
 			return player
 		end
 	end
-	for _, player in sgs.qlist(targets) do
-		if player == self.player then
-			return player
-		end
+	return self.player
+end
+
+sgs.ai_card_intention.NosXuanhuoCard = function(self, card, from, tos)
+	local rcard = sgs.Sanguosha:getCard(card:getEffectiveId())
+	if self:isValuableCard(rcard) then return end
+	local to = tos[1]
+	if not to:hasSkill("manjuan") and (self:needToThrowArmor(to) or (to:hasSkills(sgs.lose_equip_skill) and not to:getEquips():isEmpty()) or to:hasSkill("tuntian")) then
+	else
+		sgs.updateIntention(from, to, 40)
 	end
 end
 

@@ -225,7 +225,7 @@ config = {
 		"pangde->sp_pangde",
 		"shenlvbu->sp_shenlvbu",
 		"sunshangxiang->sp_sunshangxiang",
-		"xiaoqiao->wz_xiaoqiao|heg_xiaoqiao",
+		"xiaoqiao->wz_xiaoqiao|heg_xiaoqiao|sp_heg_xiaoqiao",
 		"yuanshu->tw_yuanshu",
 		"yuejin->sp_yuejin",
 		"zhangliao->tw_zhangliao",

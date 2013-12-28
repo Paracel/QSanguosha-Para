@@ -1033,8 +1033,6 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
         room->changeHero(player, general_name, false, false, true, false);
     }
 
-    room->getThread()->addPlayerSkills(player);
-
     names.removeOne(general_name);
     room->setTag(player->objectName(), QVariant::fromValue(names));
 

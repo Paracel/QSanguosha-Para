@@ -1143,7 +1143,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == EventLoseSkill) {
-            if (data.toString() == objectName()) return false;
+            if (data.toString() != objectName()) return false;
             room->removePlayerMark(player, "@chanyuan");
         } else if (triggerEvent == EventAcquireSkill) {
             if (data.toString() != objectName()) return false;

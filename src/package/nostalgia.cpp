@@ -910,16 +910,16 @@ public:
 
         QString choice = room->askForChoice(weiwudi, objectName(), "modify+obtain");
 
-        int index = qrand() % 2;
+        int index = qrand() % 2 + 1;
 
         if (choice == "modify") {
-            PlayerStar to_modify = room->askForPlayerChosen(weiwudi, room->getOtherPlayers(weiwudi), objectName());
-            room->setTag("Guixin2Modify", QVariant::fromValue(to_modify));
+            ServerPlayer *to_modify = room->askForPlayerChosen(weiwudi, room->getOtherPlayers(weiwudi), objectName());
             QStringList kingdomList = Sanguosha->getKingdoms();
             kingdomList.removeOne("god");
-            QString kingdom = room->askForChoice(weiwudi, objectName(), kingdomList.join("+"));
-            room->removeTag("Guixin2Modify");
             QString old_kingdom = to_modify->getKingdom();
+            kingdomList.removeOne(old_kingdom);
+            if (kingdomList.isEmpty()) return false;
+            QString kingdom = room->askForChoice(weiwudi, "nosguixin_kingdom", kingdomList.join("+"), QVariant::fromValue((PlayerStar)to_modify));
             room->setPlayerProperty(to_modify, "kingdom", kingdom);
 
             room->broadcastSkillInvoke(objectName(), index);
@@ -963,7 +963,7 @@ public:
             }
 
             if (!lord_skills.isEmpty()) {
-                QString skill_name = room->askForChoice(weiwudi, objectName(), lord_skills.join("+"));
+                QString skill_name = room->askForChoice(weiwudi, "nosguixin_lordskills", lord_skills.join("+"));
 
                 const Skill *skill = Sanguosha->getSkill(skill_name);
                 room->acquireSkill(weiwudi, skill);

@@ -170,5 +170,7 @@ return {
 	[":nosguixin"] = "结束阶段开始时，你可以选择一项：1.改变一名其他角色的势力。 2.获得并可以发动一名已死亡或未上场角色的主公技。",
 	["nosguixin:modify"] = "改变一名其他角色的势力",
 	["nosguixin:obtain"] = "获得一项主公技",
+	["nosguixin_kingdom"] = "归心-改变势力",
+	["nosguixin_lordskills"] = "归心-获得技能",
 }
 

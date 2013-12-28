@@ -1203,3 +1203,99 @@ sgs.ai_skill_choice.nosguhuo_slash = sgs.ai_skill_choice.guhuo_slash
 function sgs.ai_cardneed.nosguhuo(to, card)
 	return card:getSuit() == sgs.Card_Heart and (card:isKindOf("BasicCard") or card:isNDTrick())
 end
+
+sgs.ai_skill_invoke.nosguixin = true
+
+local function findPlayerForModifyKingdom(self, players)
+	if players and not players:isEmpty() then
+		local lord = self.room:getLord()
+		local isGood = lord and self:isFriend(lord)
+
+		for _, player in sgs.qlist(players) do
+			if not player:isLord() then
+				if sgs.evaluatePlayerRole(player) == "loyalist" and not player:hasSkill("huashen") then
+					local sameKingdom =lord and player:getKingdom() == lord:getKingdom() 
+					if isGood ~= sameKingdom then
+						return player
+					end
+				elseif lord and lord:hasLordSkill("xueyi") and not player:isLord() and not player:hasSkill("huashen") then
+					local isQun = player:getKingdom() == "qun"
+					if isGood ~= isQun then
+						return player
+					end
+				end
+			end
+		end
+	end
+end
+
+local function chooseKingdomForPlayer(self, to_modify)
+	local lord = self.room:getLord()
+	local isGood = self:isFriend(lord)
+	if  sgs.evaluatePlayerRole(to_modify) == "loyalist" or sgs.evaluatePlayerRole(to_modify) == "renegade" then
+		if isGood then
+			return lord and lord:getKingdom()
+		else
+			-- find a kingdom that is different from the lord
+			local kingdoms = { "qun","wei", "shu", "wu" }
+			for _, kingdom in ipairs(kingdoms) do
+				if lord and lord:getKingdom() ~= kingdom then
+					return kingdom
+				end
+			end
+		end
+	elseif lord and lord:hasLordSkill("xueyi") and not to_modify:isLord() then
+		return isGood and "qun" or "wei"
+	elseif self.player:hasLordSkill("xueyi") then
+		return "qun"
+	end
+
+	return "qun"
+end
+
+sgs.ai_skill_choice.nosguixin = function(self, choices)
+	if self.player:getRole() == "renegade" or self.player:getRole() == "lord" then
+		return "obtain"
+	end
+	
+	local lord = self.room:getLord()
+	if not lord then return "obtain" end
+
+	local skills = lord:getVisibleSkillList()
+	local hasLordSkill = false
+	for _, skill in sgs.qlist(skills) do
+		if skill:isLordSkill() then
+			hasLordSkill = true
+			break
+		end
+	end
+
+	if not hasLordSkill then
+		return "obtain"
+	end
+
+	local players = self.room:getOtherPlayers(self.player)
+	players:removeOne(lord)
+	if findPlayerForModifyKingdom(self, players) then
+		return "modify"
+	else
+		return "obtain"
+	end
+end
+
+sgs.ai_skill_choice.nosguixin_kingdom = function(self, choices, data)
+	local to_modify = data:toPlayer()
+	return chooseKingdomForPlayer(self, to_modify)
+end
+
+sgs.ai_skill_choice.nosguixin_lordskills = function(self, choices)
+	if choices:match("xueyi") and not self.room:getLieges("qun", self.player):isEmpty() then return "xueyi" end
+	if choices:match("ruoyu") then return "ruoyu" end
+end
+
+sgs.ai_skill_playerchosen.nosguixin = function(self, players)
+	if players and not players:isEmpty() then
+		local player = findPlayerForModifyKingdom(self, players)
+		return player or players:first()
+	end
+end

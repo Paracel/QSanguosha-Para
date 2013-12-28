@@ -108,7 +108,7 @@ public slots:
 
 protected:
     void _createExtraButtons();
-    virtual void _adjustComponentZValues();
+    virtual void _adjustComponentZValues(bool killed = false);
     virtual void addHandCards(QList<CardItem *> &cards);
     virtual QList<CardItem *> removeHandCards(const QList<int> &cardIds);
 

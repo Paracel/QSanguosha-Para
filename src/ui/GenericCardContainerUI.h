@@ -97,7 +97,7 @@ public slots:
     void updateVotes(bool need_select = true, bool display_1 = false);
     void updateReformState();
     void showDistance();
-    virtual void refresh();
+    virtual void refresh(bool killed = false);
 
 protected:
     // overrider parent functions
@@ -131,7 +131,7 @@ protected:
     QPixmap _getPixmap(const QString &key);
     QPixmap _getPixmap(const QString &key, const QString &arg);
     QPixmap _getEquipPixmap(const EquipCard *equip);
-    virtual void _adjustComponentZValues();
+    virtual void _adjustComponentZValues(bool killed = false);
     void _updateFloatingArea();
     // We use QList of cards instead of a single card as parameter here, just in case
     // we need to do group animation in the future.

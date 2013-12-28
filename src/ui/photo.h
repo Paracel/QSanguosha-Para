@@ -46,7 +46,7 @@ public slots:
     void hideEmotion();
     void hideSkillName();
     virtual void updateDuanchang();
-    virtual void refresh();
+    virtual void refresh(bool killed = false);
 
 protected:
     inline virtual QGraphicsItem *_getEquipParent() { return _m_groupMain; }
@@ -60,7 +60,7 @@ protected:
     inline virtual QGraphicsItem *_getDeathIconParent() { return _m_groupDeath;}
     virtual QGraphicsItem *_getPileParent() { return _m_groupMain; }
     inline virtual QString getResourceKeyName() { return QSanRoomSkin::S_SKIN_KEY_PHOTO; }
-    virtual void _adjustComponentZValues();
+    virtual void _adjustComponentZValues(bool killed = false);
     bool _addCardItems(QList<CardItem *> &card_items, const CardsMoveStruct &moveInfo);
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

@@ -60,8 +60,8 @@ Photo::Photo(): PlayerCardContainer() {
     _createControls();
 }
 
-void Photo::refresh() {
-    PlayerCardContainer::refresh();
+void Photo::refresh(bool killed) {
+    PlayerCardContainer::refresh(killed);
     if (!m_player) return;
     QString state_str = m_player->getState();
     if (!state_str.isEmpty() && state_str != "online") {
@@ -97,8 +97,8 @@ void Photo::repaintAll() {
     refresh();
 }
 
-void Photo::_adjustComponentZValues() {
-    PlayerCardContainer::_adjustComponentZValues();
+void Photo::_adjustComponentZValues(bool killed) {
+    PlayerCardContainer::_adjustComponentZValues(killed);
     _layBetween(_m_mainFrame, _m_faceTurnedIcon, _m_equipRegions[3]);    
     _layBetween(emotion_item, _m_chainIcon, _m_roleComboBox);
     _layBetween(_m_skillNameItem, _m_chainIcon, _m_roleComboBox);

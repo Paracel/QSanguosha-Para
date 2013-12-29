@@ -39,7 +39,8 @@
     //"equipDistanceArea": [14, -5, 30, 21], // need adjustment
     "equipPointArea": [98, -8, 25, 25],
     //"equipFont": ["FZLiBian-S02", [14, 14, 0], 50, [0, 0, 0, 255], 3, 50, [0, 0], [255, 255, 190, 255]],
-    "equipPointFont": ["font/font.ttf", [13, 13, 3], 20, [0, 0, 0, 255], 1, 1, [0, 0], [255, 255, 190, 128]], 
+    "equipPointFontBlack": ["font/font.ttf", [13, 13, 3], 20, [0, 0, 0, 255], 1, 1, [0, 0], [255, 255, 190, 128]],
+    "equipPointFontRed": ["font/font.ttf", [13, 13, 3], 20, [164, 0, 0, 255], 1, 1, [0, 0], [255, 255, 190, 128]],
     "delayedTrickFirstRegion": [-10, 16, 28, 28],
     "delayedTrickStep": [0, 19],
     "roleComboBoxPos": [104, 1],

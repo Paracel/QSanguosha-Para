@@ -543,10 +543,17 @@ QPixmap PlayerCardContainer::_getEquipPixmap(const EquipCard *equip) {
     // equip suit
     painter.drawPixmap(_m_layout->m_equipSuitArea, G_ROOM_SKIN.getCardSuitPixmap(realCard->getSuit()));
     // equip point
-    _m_layout->m_equipPointFont.paintText(&painter,
-                                          _m_layout->m_equipPointArea,
-                                          Qt::AlignLeft | Qt::AlignVCenter,
-                                          realCard->getNumberString());
+    if (realCard->isRed()) {
+        _m_layout->m_equipPointFontRed.paintText(&painter,
+                                                 _m_layout->m_equipPointArea,
+                                                 Qt::AlignLeft | Qt::AlignVCenter,
+                                                 realCard->getNumberString());
+    } else {
+        _m_layout->m_equipPointFontBlack.paintText(&painter,
+                                                   _m_layout->m_equipPointArea,
+                                                   Qt::AlignLeft | Qt::AlignVCenter,
+                                                   realCard->getNumberString());
+    }
     // distance
     int index = (int)(equip->location());
     QString distance;

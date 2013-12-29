@@ -827,7 +827,10 @@ bool QSanRoomSkin::_loadLayoutConfig(const Json::Value &layoutConfig) {
         tryParse(playerConfig["equipDistanceArea"], layout->m_equipDistanceArea);
         tryParse(playerConfig["equipPointArea"], layout->m_equipPointArea);
         layout->m_equipFont.tryParse(playerConfig["equipFont"]);
-        layout->m_equipPointFont.tryParse(playerConfig["equipPointFont"]);
+        if (!layout->m_equipPointFontBlack.tryParse(playerConfig["equipPointFontBlack"]))
+            layout->m_equipPointFontBlack.tryParse(playerConfig["equipPointFont"]);
+        if (!layout->m_equipPointFontRed.tryParse(playerConfig["equipPointFontRed"]))
+            layout->m_equipPointFontRed.tryParse(playerConfig["equipPointFont"]);
 
         tryParse(playerConfig["delayedTrickFirstRegion"], layout->m_delayedTrickFirstRegion);
         tryParse(playerConfig["delayedTrickStep"], layout->m_delayedTrickStep);

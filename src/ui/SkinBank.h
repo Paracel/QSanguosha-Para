@@ -144,7 +144,8 @@ public:
         QRect m_equipDistanceArea;
         QRect m_equipPointArea;
         QSanShadowTextFont m_equipFont;
-        QSanShadowTextFont m_equipPointFont;
+        QSanShadowTextFont m_equipPointFontBlack;
+        QSanShadowTextFont m_equipPointFontRed;
 
         // delayed trick area
         QRect m_delayedTrickFirstRegion;

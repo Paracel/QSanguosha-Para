@@ -502,6 +502,10 @@ void Client::arrange(const QStringList &order) {
 }
 
 void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> &targets) {
+    if (Self->hasFlag("Client_PreventPeach")) {
+        Self->setFlags("-Client_PreventPeach");
+        Self->removeCardLimitation("use", "Peach$0");
+    }
     if ((status & ClientStatusBasicMask) == Responding)
         _m_roomState.setCurrentCardUsePattern(QString());
     if (card == NULL) {
@@ -519,10 +523,6 @@ void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> 
             delete card;
     }
 
-    if (Self->hasFlag("Client_PreventPeach")) {
-        Self->setFlags("-Client_PreventPeach");
-        Self->removeCardLimitation("use", "Peach$0");
-    }
     setStatus(NotActive);
 }
 
@@ -1362,15 +1362,13 @@ void Client::askForSinglePeach(const Json::Value &arg) {
 
     // @todo: anti-cheating of askForSinglePeach is not done yet!!!
     QStringList pattern;
+    pattern << "peach";
     if (dying == Self) {
         prompt_doc->setHtml(tr("You are dying, please provide %1 peach(es)(or analeptic) to save yourself").arg(peaches));
-        pattern << "peach" << "analeptic";
-        _m_roomState.setCurrentCardUsePattern("peach+analeptic");
+        pattern << "analeptic";
     } else {
         QString dying_general = getPlayerName(dying->objectName());
         prompt_doc->setHtml(tr("%1 is dying, please provide %2 peach(es) to save him").arg(dying_general).arg(peaches));
-        pattern << "peach";
-        _m_roomState.setCurrentCardUsePattern("peach");
     }
     if (Self->hasFlag("Global_PreventPeach")) {
         bool has_skill = false;

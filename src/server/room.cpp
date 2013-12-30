@@ -3346,7 +3346,7 @@ bool Room::broadcastProperty(ServerPlayer *player, const char *property_name, co
     QString real_value = value;
     if (real_value.isNull()) real_value = player->property(property_name).toString();
 
-    if (property_name == "role")
+    if (strcmp(property_name, "role") == 0)
         player->setShownRole(true);
 
     Json::Value arg(Json::arrayValue);
@@ -4653,7 +4653,7 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, Guanxing
         bool success = doRequest(zhuge, S_COMMAND_SKILL_GUANXING, guanxingArgs, true);
         if (!success) {
             foreach (int card_id, cards) {
-                if (guanxing_type = GuanxingDownOnly)
+                if (guanxing_type == GuanxingDownOnly)
                     m_drawPile->append(card_id);
                 else
                     m_drawPile->prepend(card_id);

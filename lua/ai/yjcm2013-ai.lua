@@ -12,7 +12,7 @@ function sgs.ai_cardsview_valuable.renxin(self, class_name, player)
 		if not dying or self:isEnemy(dying, player) or dying:objectName() == player:objectName() then return nil end
 		if hasManjuanEffect(dying) then
 			local peach_num = 0
-			if not player:hasFlag("Global_PreventPeach") then
+			if player:getMark("Global_PreventPeach") == 0 then
 				for _, c in sgs.qlist(player:getCards("he")) do
 					if isCard("Peach", c, player) then peach_num = peach_num + 1 end
 					if peach_num > 1 then return nil end
@@ -24,7 +24,7 @@ function sgs.ai_cardsview_valuable.renxin(self, class_name, player)
 			if player:getHp() < 2 and (getCardsNum("Jink", player, self.player) > 0 or getCardsNum("Analeptic", player, self.player) > 0) then return nil end
 			return "@RenxinCard=."
 		else
-			if not dying:hasFlag("Global_PreventPeach") then
+			if dying:getMark("Global_PreventPeach") == 0 then
 				for _, c in sgs.qlist(player:getHandcards()) do
 					if not isCard("Peach", c, player) then return nil end
 				end

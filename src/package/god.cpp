@@ -1236,7 +1236,7 @@ Longhun::Longhun(): ViewAsSkill("longhun") {
 bool Longhun::isEnabledAtResponse(const Player *player, const QString &pattern) const{
     return pattern == "slash"
            || pattern == "jink"
-           || (pattern.contains("peach") && !player->hasFlag("Global_PreventPeach"))
+           || (pattern.contains("peach") && player->getMark("Global_PreventPeach") == 0)
            || pattern == "nullification";
 }
 

@@ -1495,7 +1495,7 @@ public:
         if (pattern == "slash")
             return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
         else if (pattern == "peach")
-            return !player->hasFlag("Global_PreventPeach");
+            return player->getMark("Global_PreventPeach") == 0;
         else if (pattern.contains("analeptic"))
             return true;
         return false;
@@ -1504,7 +1504,7 @@ public:
     virtual const Card *viewAs() const{
         AocaiCard *aocai_card = new AocaiCard;
         QString pattern = Sanguosha->currentRoomState()->getCurrentCardUsePattern();
-        if (pattern == "peach+analeptic" && Self->hasFlag("Global_PreventPeach"))
+        if (pattern == "peach+analeptic" && Self->getMark("Global_PreventPeach") > 0)
             pattern = "analeptic";
         aocai_card->setUserString(pattern);
         return aocai_card;

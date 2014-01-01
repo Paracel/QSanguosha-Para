@@ -1370,7 +1370,7 @@ void Client::askForSinglePeach(const Json::Value &arg) {
         QString dying_general = getPlayerName(dying->objectName());
         prompt_doc->setHtml(tr("%1 is dying, please provide %2 peach(es) to save him").arg(dying_general).arg(peaches));
     }
-    if (Self->hasFlag("Global_PreventPeach")) {
+    if (Self->getMark("Global_PreventPeach") > 0) {
         bool has_skill = false;
         foreach (const Skill *skill, Self->getVisibleSkillList(true)) {
             const ViewAsSkill *view_as_skill = ViewAsSkill::parseViewAsSkill(skill);

@@ -3737,7 +3737,7 @@ end
 
 local function prohibitUseDirectly(card, player)
 	if player:isCardLimited(card, card:getHandlingMethod()) then return true end
-	if card:isKindOf("Peach") and player:hasFlag("Global_PreventPeach") then return true end
+	if card:isKindOf("Peach") and player:getMark("Global_PreventPeach") > 0 then return true end
 	return false
 end
 

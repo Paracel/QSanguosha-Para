@@ -192,8 +192,9 @@ void Room::enterDying(ServerPlayer *player, DamageStruct *reason) {
     DyingStruct dying;
     dying.who = player;
     dying.damage = reason;
-
     QVariant dying_data = QVariant::fromValue(dying);
+
+    thread->trigger(EnterDying, this, player, dying_data);
     foreach (ServerPlayer *p, getAllPlayers()) {
         if (thread->trigger(Dying, this, p, dying_data) || player->getHp() > 0 || player->isDead())
             break;

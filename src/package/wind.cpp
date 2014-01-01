@@ -1042,7 +1042,7 @@ public:
         if (player->isKongcheng() || player->hasFlag("GuhuoUsed")
             || pattern.startsWith(".") || pattern.startsWith("@"))
             return false;
-        if (pattern == "peach" && player->hasFlag("Global_PreventPeach")) return false;
+        if (pattern == "peach" && player->getMark("Global_PreventPeach") > 0) return false;
         for (int i = 0; i < pattern.length(); i++) {
             QChar ch = pattern[i];
             if (ch.isUpper() || ch.isDigit()) return false; // This is an extremely dirty hack!! For we need to prevent patterns like 'BasicCard'

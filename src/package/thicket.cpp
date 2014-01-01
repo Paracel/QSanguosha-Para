@@ -577,7 +577,9 @@ public:
 class Wansha: public TriggerSkill {
 public:
     Wansha(): TriggerSkill("wansha") {
-        events << AskForPeaches << EventPhaseChanging << Death;
+        // just to broadcast audio effects and to send log messages
+        // main part in the AskForPeaches trigger of Game Rule
+        events << AskForPeaches;
         frequency = Compulsory;
     }
 
@@ -585,45 +587,33 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == AskForPeaches) {
+    virtual int getPriority(TriggerEvent) const{
+        return 7;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (player == room->getAllPlayers().first()) {
             DyingStruct dying = data.value<DyingStruct>();
             ServerPlayer *jiaxu = room->getCurrent();
             if (!jiaxu || !TriggerSkill::triggerable(jiaxu) || jiaxu->getPhase() == Player::NotActive)
                 return false;
-            if (player == room->getAllPlayers().first()) {
-                if (jiaxu->hasInnateSkill("wansha") || !jiaxu->hasSkill("jilve"))
-                    room->broadcastSkillInvoke(objectName());
-                else
-                    room->broadcastSkillInvoke("jilve", 3);
+            if (jiaxu->hasInnateSkill("wansha") || !jiaxu->hasSkill("jilve"))
+                room->broadcastSkillInvoke(objectName());
+            else
+                room->broadcastSkillInvoke("jilve", 3);
 
-                room->notifySkillInvoked(jiaxu, objectName());
+            room->notifySkillInvoked(jiaxu, objectName());
 
-                LogMessage log;
-                log.from = jiaxu;
-                log.arg = objectName();
-                if (jiaxu != dying.who) {
-                    log.type = "#WanshaTwo";
-                    log.to << dying.who;
-                } else {
-                    log.type = "#WanshaOne";
-                }
-                room->sendLog(log);
+            LogMessage log;
+            log.from = jiaxu;
+            log.arg = objectName();
+            if (jiaxu != dying.who) {
+                log.type = "#WanshaTwo";
+                log.to << dying.who;
+            } else {
+                log.type = "#WanshaOne";
             }
-            if (dying.who != player && jiaxu != player)
-                room->setPlayerFlag(player, "Global_PreventPeach");
-        } else {
-            if (triggerEvent == EventPhaseChanging) {
-                PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-                if (change.to != Player::NotActive) return false;
-            } else if (triggerEvent == Death) {
-                DeathStruct death = data.value<DeathStruct>();
-                if (death.who != player || death.who->getPhase() == Player::NotActive) return false;
-            }
-            foreach (ServerPlayer *p, room->getAlivePlayers()) {
-                if (p->hasFlag("Global_PreventPeach"))
-                    room->setPlayerFlag(p, "-Global_PreventPeach");
-            }
+            room->sendLog(log);
         }
         return false;
     }

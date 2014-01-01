@@ -302,26 +302,30 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             DyingStruct dying = data.value<DyingStruct>();
             const Card *peach = NULL;
 
-            try {
-                while (dying.who->getHp() <= 0) {
-                    peach = NULL;
-                    if (dying.who->isAlive())
-                        peach = room->askForSinglePeach(player, dying.who);
-                    if (peach == NULL)
-                        break;
-                    room->useCard(CardUseStruct(peach, player, dying.who), false);
-                }
-                if (player->hasFlag("Global_PreventPeach"))
-                    room->setPlayerFlag(player, "-Global_PreventPeach");
-            }
-            catch (TriggerEvent triggerEvent) {
-                if (triggerEvent == TurnBroken || triggerEvent == StageChange) {
-                    if (player->hasFlag("Global_PreventPeach"))
-                        room->setPlayerFlag(player, "-Global_PreventPeach");
-                }
-                throw triggerEvent;
-            }
+            while (dying.who->getHp() <= 0) {
+                peach = NULL;
 
+                // coupling Wansha here to deal with complicated rule problems
+                ServerPlayer *current = room->getCurrent();
+                if (current && current->isAlive() && current->getPhase() != Player::NotActive && current->hasSkill("wansha")) {
+                    if (player != current && player != dying.who) {
+                        player->setFlags("wansha");
+                        room->addPlayerMark(player, "Global_PreventPeach");
+                    }
+                }
+
+                if (dying.who->isAlive())
+                    peach = room->askForSinglePeach(player, dying.who);
+
+                if (player->hasFlag("wansha") && player->getMark("Global_PreventPeach") > 0) {
+                    player->setFlags("-wansha");
+                    room->removePlayerMark(player, "Global_PreventPeach");
+                }
+
+                if (peach == NULL)
+                    break;
+                room->useCard(CardUseStruct(peach, player, dying.who), false);
+            }
             break;
         }
     case AskForPeachesDone: {

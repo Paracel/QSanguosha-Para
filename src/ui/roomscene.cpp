@@ -400,7 +400,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
         }
     case S_GAME_EVENT_DETACH_SKILL: {
             QString player_name = arg[1].asCString();
-            QString skill_name =  arg[2].asCString();
+            QString skill_name = arg[2].asCString();
 
             ClientPlayer *player = ClientInstance->getPlayer(player_name);
             player->detachSkill(skill_name);
@@ -447,11 +447,13 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
             container->updateAvatarTooltip();
             break;
         }
+    case S_GAME_EVENT_PREPARE_SKILL:
     case S_GAME_EVENT_UPDATE_SKILL: {
             foreach (Photo *photo, photos)
                 photo->updateAvatarTooltip();
             dashboard->updateAvatarTooltip();
-            updateSkillButtons();
+            if (eventType == S_GAME_EVENT_PREPARE_SKILL)
+                updateSkillButtons();
             break;
         }
     case S_GAME_EVENT_CHANGE_GENDER: {

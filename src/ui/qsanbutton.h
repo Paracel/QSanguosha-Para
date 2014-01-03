@@ -137,8 +137,8 @@ public:
     inline void addSkillButton(QSanInvokeSkillButton *button) { _m_buttons.push_back(button);  }
     inline void removeSkillButton(QSanInvokeSkillButton *button) {
         if (button == NULL) return;
-        disconnect(button);
         _m_buttons.removeAll(button);
+        disconnect(button);
     }
     // Any one who call the following functions are responsible for
     // destroying the buttons returned

@@ -4078,7 +4078,7 @@ void Room::preparePlayers() {
     }
 
     Json::Value args;
-    args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+    args[0] = QSanProtocol::S_GAME_EVENT_PREPARE_SKILL;
     doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
 }
 

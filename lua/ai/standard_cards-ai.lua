@@ -1041,7 +1041,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		if self.player:hasSkill("tieji")
 			or (self.player:hasSkill("liegong") and (num >= self.player:getHp() or num <= self.player:getAttackRange()))
 			or (self.player:hasSkill("kofliegong") and num >= self.player:getHp()) then return false end
-		if target:hasSkills("tuntian+zaoxian") then return false end
+		if target:hasSkills("tuntian+zaoxian") and target:getPhase() == sgs.Player_NotActive then return false end
 		if target:hasSkills(sgs.need_kongcheng) then return false end
 		if target:getCards("he"):length() < 4 and target:getCards("he"):length() > 1 then return true end
 		return false

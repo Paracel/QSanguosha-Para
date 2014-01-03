@@ -45,6 +45,7 @@ config = {
 		"WangZheZhiZhan",
 		"BGM",
 		"BGMDIY",
+		"Ling",
 		"Hegemony",
 		"HFormation",
 		"HMomentum",

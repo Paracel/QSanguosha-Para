@@ -62,7 +62,7 @@ void Settings::init() {
 
     QStringList banpackagelist = value("BanPackages").toStringList();
     if (banpackagelist.isEmpty()) {
-        banpackagelist << "nostalgia"
+        banpackagelist << "ling" << "nostalgia"
                        << "nostal_standard" << "nostal_general" << "nostal_wind"
                        << "nostal_yjcm" << "nostal_yjcm2012"
                        << "test" << "GreenHand" << "dragon"

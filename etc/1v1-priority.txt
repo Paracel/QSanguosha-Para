@@ -160,6 +160,9 @@ vs_guanyu				58
 vs_zhaoyun				68					
 vs_lvbu					76					
 wenpin					10					
+neo_guanyu				65					
+neo_zhangfei			23					
+neo_zhaoyun				70					
 kof_zhangliao			77					
 kof_xuchu				37					
 kof_zhenji				71					

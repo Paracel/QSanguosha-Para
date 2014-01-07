@@ -983,6 +983,7 @@ local jijiang_skill = {}
 jijiang_skill.name = "jijiang"
 table.insert(sgs.ai_skills, jijiang_skill)
 jijiang_skill.getTurnUseCard = function(self)
+	if not self.player:hasLordSkill("jijiang") then return end
 	local lieges = self.room:getLieges("shu", self.player)
 	if lieges:isEmpty() then return end
 	local has_friend

@@ -412,6 +412,16 @@ sgs.ai_skill_playerchosen.yanhuo = function(self, targets)
 	if target and target:objectName() ~= self.player:objectName() then return target end
 end
 
+sgs.ai_skill_invoke.renwang = function(self, data)
+	local use = data:toCardUse()
+	if self:isFriend(use.from) then
+		return self:needToThrowArmor(use.from) or (self:needKongcheng(use.from, true) and use.from:getHandcardNum() == 1)
+	elseif not self:doNotDiscard(use.from, "he") and use.from:getCardCount() > 0 then
+		return true
+	end
+	return
+end
+
 sgs.ai_skill_invoke.kofkuanggu = function(self, data)
 	local zhangbao = self.room:findPlayerBySkillName("yingbing")
 	if zhangbao and self:isEnemy(zhangbao)

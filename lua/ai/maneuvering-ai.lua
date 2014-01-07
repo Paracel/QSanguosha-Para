@@ -655,11 +655,22 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing") and not self.player:hasSkill("mingshi")
 		and not self.room:isProhibited(self.player, self.player, fire_attack)
 		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
-		and self:hasTrickEffective(fire_attack, self.player)
-		and (self.player:getHp() > 1 or self:getCardsNum("Peach") >= 1 or self:getCardsNum("Analeptic") >= 1 or hasBuquEffect(self.player)
-			or (self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0)) then
+		and self:hasTrickEffective(fire_attack, self.player) then
 
-		table.insert(targets, self.player)
+		if self.player:hasSkill("niepan") and self.player:getMark("@nirvana") > 0 then
+			table.insert(targets, self.player)
+		elseif hasBuquEffect(self.player)then
+			table.insert(targets, self.player)
+		else
+			local leastHP = 1
+			if self.player:hasArmorEffect("vine") then leastHP = leastHP + 1 end
+			if self.player:getMark("@gale") > 0 then leastHP = leastHP + 1 end
+			if self.player:getHp() > leastHP then
+				table.insert(targets, self.player)
+			elseif self:getCardsNum("Peach") + self:getCardsNum("Analeptic") > self.player:getHp() - leastHP then
+				table.insert(targets, self.player)
+			end
+		end
 	end
 
 	for _, enemy in ipairs(enemies) do

@@ -1764,7 +1764,17 @@ function SmartAI:getValuableCard(who)
 	end
 
 	if defhorse and not self:doNotDiscard(who, "e") then
-		return defhorse:getEffectiveId()
+		if self.player:getPhase() == sgs.Player_Play then
+			local slash = sgs.Sanguosha:cloneCard("slash")
+			if self.player:hasWeapon("kylin_bow") and self:slashIsAvailable(self.player, slash) and self.player:canSlash(who)
+				and self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), who, self.player)
+				and (getCardsNum("Jink", who, self.player) < 1 or sgs.card_lack[who:objectName()].Jink == 1) then
+			else
+				return defhorse:getEffectiveId()
+			end
+		else
+			return defhorse:getEffectiveId()
+		end
 	end
 
 	if armor and self:evaluateArmor(armor, who) > 3

@@ -2214,7 +2214,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 
 		if self:isFriend(to) then
 			if not (to:hasSkill("guanxing") and global_room:alivePlayerCount() > 4) then
-				if trick:isKindOf("Indulgence") then
+				if trick:isKindOf("Indulgence") and not to:isSkipped(sgs.Player_Play) then
 					if to:getPile("incantation"):length() > 0 then
 						local card = sgs.Sanguosha:getCard(to:getPile("incantation"):first())
 						if card:getSuit() == sgs.Card_Heart or (to:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade) then return nil end
@@ -2223,7 +2223,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					if to:hasSkill("tuxi") and to:getHp() > 2 then return nil end
 					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
 					return null_card
-				elseif trick:isKindOf("SupplyShortage") then
+				elseif trick:isKindOf("SupplyShortage") and not to:isSkipped(sgs.Player_Draw) then
 					if to:getPile("incantation"):length() > 0 then
 						local card = sgs.Sanguosha:getCard(to:getPile("incantation"):first())
 						if card:getSuit() == sgs.Card_Club then return nil end

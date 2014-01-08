@@ -11,6 +11,14 @@ sgs.ai_skill_choice.moukui = function(self, choices, data)
 	return "discard"
 end
 
+sgs.ai_skill_cardchosen.moukui = function(self, who, flags)
+	local use = self.room:getTag("MoukuiDiscard"):toCardUse()
+	self.moukui_effect = use.card
+	local id = self:askForCardChosen(who, flags, "dummy")
+	self.moukui_effect = nil
+	return id
+end
+
 sgs.ai_skill_invoke.tianming = function(self, data)
 	self.tianming_discard = nil
 	if hasManjuanEffect(self.player) then return false end

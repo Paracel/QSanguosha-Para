@@ -103,7 +103,7 @@ sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
 	for i = 1, #cards, 1 do
 		if (cards[i]:getSuit() == suit and suit ~= sgs.Card_Spade)
 			or (cards[i]:getSuit() == suit and suit == sgs.Card_Spade and cards[i]:getNumber() >= 2 and cards[i]:getNumber() <= 9) then
-			return cards[i]
+			return cards[i]:getEffectiveId()
 		end
 	end
 	return nil

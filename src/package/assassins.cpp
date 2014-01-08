@@ -31,7 +31,9 @@ public:
                         player->drawCards(1);
                     } else {
                         room->broadcastSkillInvoke(objectName(), 2);
+                        room->setTag("MoukuiDiscard", data);
                         int disc = room->askForCardChosen(player, p, "he", objectName(), false, Card::MethodDiscard);
+                        room->removeTag("MoukuiDiscard");
                         room->throwCard(disc, p, player);
                     }
                     room->addPlayerMark(p, objectName() + use.card->toString());

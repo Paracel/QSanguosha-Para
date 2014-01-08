@@ -327,10 +327,14 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	if not slash or not to then self.room:writeToConsole(debug.traceback()) return false end
 	from = from or self.player
 	if not ignore_armor and from:objectName() == self.player:objectName() then
-		if to:getArmor() and from:hasSkill("moukui") then
+		if self.moukui_effect then
+			ignore_armor = true
+		elseif to:getArmor() and from:hasSkill("moukui") then
 			if not self:isFriend(to) or (to:getArmor() and self:needToThrowArmor(to, true)) then
 				if not (self:isEnemy(to) and self:doNotDiscard(to)) then
-					local id = self:askForCardChosen(to, "he", "moukui")
+					self.moukui_effect = slash
+					local id = self:askForCardChosen(to, "he", "dummy")
+					self.moukui_effect = nil
 					if id == to:getArmor():getEffectiveId() then ignore_armor = true end
 				end
 			end
@@ -1779,7 +1783,8 @@ function SmartAI:getValuableCard(who)
 
 	if armor and self:evaluateArmor(armor, who) > 3
 		and not self:needToThrowArmor(who)
-		and not self:doNotDiscard(who, "e") then
+		and not self:doNotDiscard(who, "e")
+		and not (self.moukui_effect and self.moukui_effect:isKindOf("FireSlash") and armor:isKindOf("Vine") and not self.player:hasSkill("jueqing")) then
 		return armor:getEffectiveId()
 	end
 
@@ -1798,7 +1803,8 @@ function SmartAI:getValuableCard(who)
 		if who:hasSkills(sgs.need_equip_skill) and not who:hasSkills(sgs.lose_equip_skill) then return equip:getEffectiveId() end
 	end
 
-	if armor and not self:needToThrowArmor(who) and not self:doNotDiscard(who, "e") then
+	if armor and not self:needToThrowArmor(who) and not self:doNotDiscard(who, "e")
+		and not (self.moukui_effect and self.moukui_effect:isKindOf("FireSlash") and armor:isKindOf("Vine") and not self.player:hasSkill("jueqing")) then
 		return armor:getEffectiveId()
 	end
 

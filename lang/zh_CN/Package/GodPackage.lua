@@ -60,7 +60,7 @@ return {
 	["#shencaocao"] = "超世之英杰",
 	["shencaocao"] = "神曹操",
 	["guixin"] = "归心",
-	[":guixin"] = "每当你受到1点伤害后，你可以依次获得所有其他角色区域里的一张牌，然后将武将牌翻面。",
+	[":guixin"] = "每当你受到1点伤害后，你可以依次获得所有其他角色区域内的一张牌，然后将武将牌翻面。",
 	["$GuixinAnimate"] = "image=image/animate/guixin.png",
 	["feiying"] = "飞影",
 	[":feiying"] = "<font color=\"blue\"><b>锁定技。</b></font>其他角色与你的距离+1",

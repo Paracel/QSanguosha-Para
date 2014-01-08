@@ -50,7 +50,7 @@ return {
 	["dangxian"] = "当先",
 	[":dangxian"] = "<font color=\"blue\"><b>锁定技。</b></font>回合开始时，你执行一个额外的出牌阶段。",
 	["fuli"] = "伏枥",
-	[":fuli"] = "<font color=\"red\"><b>限定技。</b></font>每当你处于濒死状态时，你可以将体力回复至X点，然后将武将牌翻面。（X为现存势力数）",
+	[":fuli"] = "<font color=\"red\"><b>限定技。</b></font>每当你处于濒死状态时，你可以将回复至X点体力，然后将武将牌翻面。（X为现存势力数）",
 	["@laoji"] = "伏枥",
 	["$FuliAnimate"] = "image=image/animate/fuli.png",
 

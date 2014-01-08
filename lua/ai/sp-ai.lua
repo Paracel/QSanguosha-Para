@@ -868,14 +868,22 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 			if shouldUse then table.insert(card_ids, zcard:getId()) end
 		end
 	end
-	local hc_num = #card_ids
+
+	local to_discard = {}
+	for _, id in ipairs(card_ids) do
+		local c = sgs.Sanguosha:getCard(id)
+		if not self.player:isJilei(c) then table.insert(to_discard, id) end
+	end
+	if #to_discard == 0 then return end
+
+	local hc_num = #to_discard
 	local eq_num = 0
-	if self.player:getOffensiveHorse() then
-		table.insert(card_ids, self.player:getOffensiveHorse():getEffectiveId())
+	if self.player:getOffensiveHorse() and not self.player:isJilei(self.player:getOffensiveHorse():getEffectiveId()) then
+		table.insert(to_discard, self.player:getOffensiveHorse():getEffectiveId())
 		eq_num = eq_num + 1
 	end
-	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5 then
-		table.insert(card_ids, self.player:getWeapon():getEffectiveId())
+	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5 and not self.player:isJilei(self.player:getWeapon():getEffectiveId()) then
+		table.insert(to_discard, self.player:getWeapon():getEffectiveId())
 		eq_num = eq_num + 2
 	end
 
@@ -901,18 +909,20 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 		elseif enemy:getHp() > 1 then
 			local hp_ids = {}
 			if self.player:distanceTo(enemy, getRangefix(enemy:getHp())) <= self.player:getAttackRange() then
-				for _, id in ipairs(card_ids) do
+				for _, id in ipairs(to_discard) do
 					table.insert(hp_ids, id)
 					if #hp_ids == enemy:getHp() then break end
 				end
-				use.card = sgs.Card_Parse("@DuwuCard=" .. table.concat(hp_ids, "+"))
-				if use.to then use.to:append(enemy) end
-				return
+				if #hp_ids == enemy:getHp() then
+					use.card = sgs.Card_Parse("@DuwuCard=" .. table.concat(hp_ids, "+"))
+					if use.to then use.to:append(enemy) end
+					return
+				end
 			end
 		else
 			if not self:isWeak() or self:getSaveNum(true) >= 1 then
 				if self.player:distanceTo(enemy, getRangefix(1)) <= self.player:getAttackRange() then
-					use.card = sgs.Card_Parse("@DuwuCard=" .. card_ids[1])
+					use.card = sgs.Card_Parse("@DuwuCard=" .. to_discard[1])
 					if use.to then use.to:append(enemy) end
 					return
 				end

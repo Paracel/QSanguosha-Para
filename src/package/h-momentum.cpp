@@ -59,9 +59,9 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         ServerPlayer *target = NULL;
-        if (triggerEvent == Damage)
+        if (triggerEvent == Damage && !damage.to->hasFlag("Global_KOFDebut"))
             target = damage.to;
-        else
+        else if (triggerEvent == Damaged)
             target = damage.from;
         if (!target || target == player) return false;
         QList<ServerPlayer *> players;

@@ -479,7 +479,8 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *panfeng, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         ServerPlayer *target = damage.to;
-        if (damage.card && damage.card->isKindOf("Slash") && target->hasEquip() && !damage.chain && !damage.transfer) {
+        if (damage.card && damage.card->isKindOf("Slash") && target->hasEquip()
+            && !target->hasFlag("Global_KOFDebut") && !damage.chain && !damage.transfer) {
             QStringList equiplist;
             for (int i = 0; i <= 3; i++) {
                 if (!target->getEquip(i)) continue;

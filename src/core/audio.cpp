@@ -64,8 +64,9 @@ void Audio::play(const QString &filename) {
     if (sound == NULL) {
         sound = new Sound(filename);
         SoundCache.insert(filename, sound);
-    } else if (sound->isPlaying())
-        return;
+    }
+    // else if (sound->isPlaying())
+    //    return;
 
     sound->play();
 }

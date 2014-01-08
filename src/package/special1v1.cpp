@@ -563,7 +563,8 @@ void MouzhuCard::onEffect(const CardEffectStruct &effect) const{
         card = target->getHandcards().first();
     }
     Q_ASSERT(card != NULL);
-    hejin->obtainCard(card, false);
+    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, target->objectName(), hejin->objectName(), "mouzhu", QString());
+    room->obtainCard(hejin, card, reason, false);
     if (!hejin->isAlive() || !target->isAlive()) return;
     if (hejin->getHandcardNum() > target->getHandcardNum()) {
         QStringList choicelist;

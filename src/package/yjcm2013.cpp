@@ -69,8 +69,7 @@ void RenxinCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> &) 
     if (!who) return;
 
     player->turnOver();
-    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName());
-    reason.m_playerId = who->objectName();
+    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName(), who->objectName(), "renxin", QString());
     room->obtainCard(who, player->wholeHandCards(), reason, false);
 
     RecoverStruct recover;
@@ -1137,7 +1136,8 @@ public:
                     Q_ASSERT(target->getHandcardNum() == 1);
                     card = target->getHandcards().first();
                 }
-                player->obtainCard(card);
+                CardMoveReason reason(CardMoveReason::S_REASON_GIVE, target->objectName(), player->objectName(), "qiuyuan", QString());
+                room->obtainCard(player, card, reason);
                 room->showCard(player, card->getEffectiveId());
                 if (!card->isKindOf("Jink")) {
                     if (use.from->canSlash(target, use.card, false)) {

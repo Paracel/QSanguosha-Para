@@ -694,8 +694,7 @@ void AnxuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
         room->broadcastSkillInvoke("anxu", 1);
     int id = room->askForCardChosen(from, to, "h", "anxu");
     const Card *cd = Sanguosha->getCard(id);
-    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, source->objectName());
-    room->obtainCard(from, cd, reason);
+    from->obtainCard(cd);
     room->showCard(from, id);
     if (cd->getSuit() != Card::Spade)
         source->drawCards(1);

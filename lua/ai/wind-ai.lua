@@ -477,8 +477,6 @@ sgs.ai_skill_invoke.fenji = function(self, data)
 	if self:isWeak() or not from or not self:isFriend(from)
 		or hasManjuanEffect(from)
 		or self:needKongcheng(from, true) then return false end
-	local skill_name = move.reason.m_skillName
-	if skill_name == "rende" or skill_name == "nosrende" then return true end
 	return from:getHandcardNum() < (self.player:getHp() <= 1 and 3 or 5)
 end
 

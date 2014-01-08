@@ -228,7 +228,8 @@ bool ZhiyuanCard::targetFilter(const QList<const Player *> &targets, const Playe
 }
 
 void ZhiyuanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    targets.first()->obtainCard(this, false);
+    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, source->objectName(), targets.first()->objectName(), "zhiyuan", QString());
+    room->obtainCard(targets.first(), this, reason, false);
     room->removePlayerMark(source, "zhiyuan");
 }
 

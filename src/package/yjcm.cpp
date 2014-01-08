@@ -617,7 +617,8 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
     }
 
     try {
-        effect.to->obtainCard(this);
+        CardMoveReason reason(CardMoveReason::S_REASON_GIVE, effect.from->objectName(), effect.to->objectName(), "mingce", QString());
+        room->obtainCard(effect.to, this, reason);
     }
     catch (TriggerEvent triggerEvent) {
         if (triggerEvent == TurnBroken || triggerEvent == StageChange)

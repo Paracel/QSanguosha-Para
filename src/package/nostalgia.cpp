@@ -219,8 +219,7 @@ void NosXuanhuoCard::onEffect(const CardEffectStruct &effect) const{
     QList<ServerPlayer *> targets = room->getOtherPlayers(effect.to);
     ServerPlayer *target = room->askForPlayerChosen(effect.from, targets, "nosxuanhuo", "@nosxuanhuo-give:" + effect.to->objectName());
     if (target != effect.from) {
-        CardMoveReason reason2(CardMoveReason::S_REASON_GIVE, effect.from->objectName());
-        reason2.m_playerId = target->objectName();
+        CardMoveReason reason2(CardMoveReason::S_REASON_GIVE, effect.from->objectName(), target->objectName(), "nosxuanhuo", QString());
         room->obtainCard(target, Sanguosha->getCard(card_id), reason2, false);
     }
 }

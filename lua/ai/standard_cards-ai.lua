@@ -1023,7 +1023,14 @@ sgs.ai_skill_cardask["double-sword-card"] = function(self, data, pattern, target
 end
 
 function sgs.ai_weapon_value.qinggang_sword(self, enemy)
-	if enemy and enemy:getArmor() then return 3 end
+	if enemy and enemy:getArmor() and enemy:hasArmorEffect(enemy:getArmor():objectName()) then return 3 end
+end
+
+function sgs.ai_slash_weaponfilter.qinggang_sword(self, enemy)
+	if enemy and enemy:getArmor() and enemy:hasArmorEffect(enemy:getArmor():objectName())
+		and (sgs.card_lack[enemy:objectName()] == 1 or getCardsNum("Jink", enemy, self.player) < 1) then
+		return true
+	end
 end
 
 sgs.ai_skill_invoke.ice_sword = function(self, data)

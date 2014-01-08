@@ -50,6 +50,7 @@ sgs.ai_slash_prohibit = {}
 sgs.ai_view_as = {}
 sgs.ai_cardsview = {}
 sgs.ai_cardsview_valuable = {}
+sgs.ai_nullification = {}
 sgs.dynamic_value = {
 	damage_card = {},
 	control_usecard = {},
@@ -2162,6 +2163,12 @@ function SmartAI:askForNullification(trick, from, to, positive)
 		return nil
 	end
 	if trick:isKindOf("Drowning") and self:needToThrowArmor(to) and self:isFriend(to) then return nil end
+
+	local callback = sgs.ai_nullification[trick:getClassName()]
+	if type(callback) == "function" then
+		local shouldUse = callback(self, trick, from, to, positive)
+		if shouldUse then return null_card end
+	end
 
 	if positive then
 		if from and (trick:isKindOf("FireAttack") or trick:isKindOf("Duel") or trick:isKindOf("AOE"))

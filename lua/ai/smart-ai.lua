@@ -562,14 +562,14 @@ function SmartAI:adjustUsePriority(card, v)
 	if card:isKindOf("Slash") then
 		if card:getSkillName() == "Spear" then v = v - 0.1 end
 		if card:isRed() then
-			if self.slashAvail == 1 and self.player:hasSkill("jie") then v = v + 0.21
+			if self.slashAvail == 1 and self.player:hasSkill("jie") then v = v + 0.26 end
 			for _, friend in ipairs(self.friends) do
 				if friend:hasSkill("longyin") and friend:canDiscard(friend, "he") and not hasManjuanEffect(friend) then
-					v = v + 0.1
+					v = v + 0.26
 					break
 				end
 			end
-			else v = v - 0.05 end
+			v = v - 0.05
 		end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
 		if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 0.21 end

@@ -286,7 +286,7 @@ public:
     void drawCards(QList<ServerPlayer *> players, QList<int> n_list, const QString &reason = QString());
     void obtainCard(ServerPlayer *target, const Card *card, bool unhide = true);
     void obtainCard(ServerPlayer *target, int card_id, bool unhide = true);
-    void obtainCard(ServerPlayer *target, const Card *card,  const CardMoveReason &reason, bool unhide = true);
+    void obtainCard(ServerPlayer *target, const Card *card, const CardMoveReason &reason, bool unhide = true);
 
     void throwCard(int card_id, ServerPlayer *who, ServerPlayer *thrower = NULL);
     void throwCard(const Card *card, ServerPlayer *who, ServerPlayer *thrower = NULL);

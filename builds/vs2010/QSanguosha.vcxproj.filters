@@ -1038,8 +1038,5 @@
     <ClInclude Include="..\..\src\ui\uiUtils.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\package\h-momentum.h">
-      <Filter>package</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

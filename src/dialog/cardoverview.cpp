@@ -160,7 +160,7 @@ void CardOverview::on_malePlayButton_clicked() {
     if (row >= 0) {
         int card_id = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toInt();
         const Card *card = Sanguosha->getEngineCard(card_id);
-        Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(card->objectName(), true));
+        Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(card->objectName(), true), false);
     }
 }
 
@@ -169,7 +169,7 @@ void CardOverview::on_femalePlayButton_clicked() {
     if (row >= 0) {
         int card_id = ui->tableWidget->item(row, 0)->data(Qt::UserRole).toInt();
         const Card *card = Sanguosha->getEngineCard(card_id);
-        Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(card->objectName(), false));
+        Sanguosha->playAudioEffect(G_ROOM_SKIN.getPlayerAudioEffectPath(card->objectName(), false), false);
     }
 }
 
@@ -185,7 +185,7 @@ void CardOverview::on_playAudioEffectButton_clicked() {
             QString fileName = G_ROOM_SKIN.getPlayerAudioEffectPath(objectName, QString("equip"), -1);
             if (!QFile::exists(fileName))
                 fileName = G_ROOM_SKIN.getPlayerAudioEffectPath(card->getCommonEffectName(), QString("common"), -1);
-            Sanguosha->playAudioEffect(fileName);
+            Sanguosha->playAudioEffect(fileName, false);
         }
     }
 }

@@ -111,7 +111,7 @@ void Button::setFont(const QFont &font) {
 
 void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
     setFocus(Qt::MouseFocusReason);
-    if (!mute) Sanguosha->playSystemAudioEffect("button-hover");
+    if (!mute) Sanguosha->playSystemAudioEffect("button-hover", false);
     if (!timer_id) timer_id = QObject::startTimer(40);
 }
 
@@ -120,7 +120,7 @@ void Button::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void Button::mouseReleaseEvent(QGraphicsSceneMouseEvent *) {
-    if (!mute) Sanguosha->playSystemAudioEffect("button-down");
+    if (!mute) Sanguosha->playSystemAudioEffect("button-down", false);
     emit clicked();
 }
 

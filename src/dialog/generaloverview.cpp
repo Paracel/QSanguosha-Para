@@ -551,7 +551,7 @@ void GeneralOverview::playAudioEffect() {
     if (button) {
         QString source = button->objectName();
         if (!source.isEmpty())
-            Sanguosha->playAudioEffect(source);
+            Sanguosha->playAudioEffect(source, false);
     }
 }
 

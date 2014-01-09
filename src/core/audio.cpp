@@ -59,14 +59,14 @@ void Audio::quit() {
     }
 }
 
-void Audio::play(const QString &filename) {
+void Audio::play(const QString &filename, bool superpose) {
     Sound *sound = SoundCache[filename];
     if (sound == NULL) {
         sound = new Sound(filename);
         SoundCache.insert(filename, sound);
+    } else if (!superpose && sound->isPlaying()) {
+        return;
     }
-    // else if (sound->isPlaying())
-    //    return;
 
     sound->play();
 }

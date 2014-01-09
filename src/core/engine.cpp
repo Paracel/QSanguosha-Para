@@ -986,25 +986,25 @@ QString Engine::getRandomGeneralName() const{
     return generals.keys().at(qrand() % generals.size());
 }
 
-void Engine::playSystemAudioEffect(const QString &name) const{
-    playAudioEffect(QString("audio/system/%1.ogg").arg(name));
+void Engine::playSystemAudioEffect(const QString &name, bool superpose) const{
+    playAudioEffect(QString("audio/system/%1.ogg").arg(name), superpose);
 }
 
-void Engine::playAudioEffect(const QString &filename) const{
+void Engine::playAudioEffect(const QString &filename, bool superpose) const{
 #ifdef AUDIO_SUPPORT
     if (!Config.EnableEffects)
         return;
     if (filename.isNull())
         return;
 
-    Audio::play(filename);
+    Audio::play(filename, superpose);
 #endif
 }
 
-void Engine::playSkillAudioEffect(const QString &skill_name, int index) const{
+void Engine::playSkillAudioEffect(const QString &skill_name, int index, bool superpose) const{
     const Skill *skill = skills.value(skill_name, NULL);
     if (skill)
-        skill->playAudioEffect(index);
+        skill->playAudioEffect(index, superpose);
 }
 
 const Skill *Engine::getSkill(const QString &skill_name) const{

@@ -99,9 +99,9 @@ public:
     QString getRandomGeneralName() const;
     QStringList getLimitedGeneralNames() const;
 
-    void playSystemAudioEffect(const QString &name) const;
-    void playAudioEffect(const QString &filename) const;
-    void playSkillAudioEffect(const QString &skill_name, int index) const;
+    void playSystemAudioEffect(const QString &name, bool superpose = true) const;
+    void playAudioEffect(const QString &filename, bool superpose = true) const;
+    void playSkillAudioEffect(const QString &skill_name, int index, bool superpose = true) const;
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     int correctDistance(const Player *from, const Player *to) const;

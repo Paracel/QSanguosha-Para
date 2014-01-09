@@ -43,7 +43,7 @@ public:
     virtual Location getLocation() const;
 
     void initMediaSource();
-    void playAudioEffect(int index = -1) const;
+    void playAudioEffect(int index = -1, bool superpose = true) const;
     Frequency getFrequency() const;
     QString getLimitMark() const;
     QStringList getSources() const;

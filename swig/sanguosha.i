@@ -911,9 +911,9 @@ public:
     QString getRandomGeneralName() const;
     QStringList getLimitedGeneralNames() const;
 
-    void playSystemAudioEffect(const char *name) const;
-    void playAudioEffect(const char *filename) const;
-    void playSkillAudioEffect(const char *skill_name, int index) const;
+    void playSystemAudioEffect(const char *name, bool superpose = true) const;
+    void playAudioEffect(const char *filename, bool superpose = true) const;
+    void playSkillAudioEffect(const char *skill_name, int index, bool superpose = true) const;
 
     const ProhibitSkill *isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;
     int correctDistance(const Player *from, const Player *to) const;
@@ -949,7 +949,7 @@ public:
     virtual Location getLocation() const;
 
     void initMediaSource();
-    void playAudioEffect(int index = -1) const;
+    void playAudioEffect(int index = -1, bool superpose = true) const;
     Frequency getFrequency() const;
     QStringList getSources() const;
 };

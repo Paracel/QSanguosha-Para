@@ -103,7 +103,7 @@ bool ExpPattern::matchOne(const Player *player, const Card *card, QString exp) c
 
     checkpoint = false;
     QString place = factors.at(3);
-    if (place == ".") checkpoint = true;
+    if (!player || place == ".") checkpoint = true;
     else if (place == "equipped" && player->hasEquip(card)) checkpoint = true;
     else if (place == "hand" && card->getEffectiveId() >= 0 && !player->hasEquip(card)) checkpoint = true;
     return checkpoint;

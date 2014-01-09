@@ -448,16 +448,17 @@ void ServerDialog::updateButtonEnablility(QAbstractButton *button) {
 void BanlistDialog::switchTo(int item) {
     this->item = item;
     list = lists.at(item);
-    if (add2nd) add2nd->setVisible((list->objectName()=="Pairs"));
+    if (add2nd) add2nd->setVisible((list->objectName() == "Pairs"));
 }
 
 BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     : QDialog(parent), add2nd(NULL)
 {
     setWindowTitle(tr("Select generals that are excluded"));
+    setMinimumWidth(455);
 
     if (ban_list.isEmpty())
-        ban_list << "Roles" << "1v1" << "HulaoPass" << "XMode" << "Basara" << "Hegemony" << "Pairs";
+        ban_list << "Roles" << "1v1" << "HulaoPass" << "XMode" << "Basara" << "Hegemony" << "Pairs" << "Cards";
     QVBoxLayout *layout = new QVBoxLayout;
 
     QTabWidget *tab = new QTabWidget;
@@ -465,42 +466,38 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     connect(tab, SIGNAL(currentChanged(int)), this, SLOT(switchTo(int)));
 
     foreach (QString item, ban_list) {
-        if (item == "Pairs") continue;
         QWidget *apage = new QWidget;
 
         list = new QListWidget;
         list->setObjectName(item);
 
-        QStringList banlist = Config.value(QString("Banlist/%1").arg(item)).toStringList();
-        foreach (QString name, banlist)
-            addGeneral(name);
+        if (item == "Pairs") {
+            foreach (QString banned, BanPair::getAllBanSet().toList())
+                addGeneral(banned);
+            foreach (QString banned, BanPair::getSecondBanSet().toList())
+                add2ndGeneral(banned);
+            foreach (BanPair pair, BanPair::getBanPairSet().toList())
+                addPair(pair.first, pair.second);
+        } else {
+            QStringList banlist = Config.value(QString("Banlist/%1").arg(item)).toStringList();
+            foreach (QString name, banlist)
+                addGeneral(name);
+        }
 
         lists << list;
 
         QVBoxLayout *vlay = new QVBoxLayout;
         vlay->addWidget(list);
+        if (item == "Cards") {
+            vlay->addWidget(new QLabel(tr("Input card pattern to ban:"), this));
+
+            card_to_ban = new QLineEdit(this);
+            vlay->addWidget(card_to_ban);
+        }
         apage->setLayout(vlay);
 
         tab->addTab(apage, Sanguosha->translate(item));
     }
-
-    QWidget *apage = new QWidget;
-
-    list = new QListWidget;
-    list->setObjectName("Pairs");
-    this->list = list;
-    foreach (QString banned, BanPair::getAllBanSet().toList())
-        addGeneral(banned);
-    foreach (QString banned, BanPair::getSecondBanSet().toList())
-        add2ndGeneral(banned);
-    foreach (BanPair pair, BanPair::getBanPairSet().toList())
-        addPair(pair.first, pair.second);
-
-    QVBoxLayout *vlay = new QVBoxLayout;
-    vlay->addWidget(list);
-    apage->setLayout(vlay);
-    tab->addTab(apage, Sanguosha->translate("Pairs"));
-    lists << list;
 
     QPushButton *add = new QPushButton(tr("Add ..."));
     QPushButton *remove = new QPushButton(tr("Remove"));
@@ -529,9 +526,11 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     setLayout(layout);
 
     foreach (QListWidget *alist, lists) {
-        if (alist->objectName() == "Pairs") continue;
+        if (alist->objectName() == "Pairs" || alist->objectName() == "Cards")
+            continue;
         alist->setViewMode(QListView::IconMode);
         alist->setDragDropMode(QListView::NoDragDrop);
+        alist->setResizeMode(QListView::Adjust);
     }
 }
 
@@ -541,6 +540,12 @@ void BanlistDialog::addGeneral(const QString &name) {
         banned_items["Pairs"].append(name);
         QString text = QString(tr("Banned for all: %1")).arg(Sanguosha->translate(name));
         QListWidgetItem *item = new QListWidgetItem(text);
+        item->setData(Qt::UserRole, QVariant::fromValue(name));
+        list->addItem(item);
+    } else if (list->objectName() == "Cards") {
+        if (banned_items["Cards"].contains(name)) return;
+        banned_items["Cards"].append(name);
+        QListWidgetItem *item = new QListWidgetItem(name);
         item->setData(Qt::UserRole, QVariant::fromValue(name));
         list->addItem(item);
     } else {
@@ -579,11 +584,21 @@ void BanlistDialog::addPair(const QString &first, const QString &second) {
 }
 
 void BanlistDialog::doAddButton() {
-    FreeChooseDialog *chooser = new FreeChooseDialog(this,
-                                                     (list->objectName() == "Pairs") ? FreeChooseDialog::Pair : FreeChooseDialog::Multi);
-    connect(chooser, SIGNAL(general_chosen(QString)), this, SLOT(addGeneral(QString)));
-    connect(chooser, SIGNAL(pair_chosen(QString, QString)), this, SLOT(addPair(QString, QString)));
-    chooser->exec();
+    if (list->objectName() == "Cards") {
+        QString pattern;
+        if (card_to_ban) {
+            pattern = card_to_ban->text();
+            card_to_ban->clear();
+        }
+        if (!pattern.isEmpty())
+            addGeneral(pattern);
+    } else {
+        FreeChooseDialog *chooser = new FreeChooseDialog(this,
+                                                         (list->objectName() == "Pairs") ? FreeChooseDialog::Pair : FreeChooseDialog::Multi);
+        connect(chooser, SIGNAL(general_chosen(QString)), this, SLOT(addGeneral(QString)));
+        connect(chooser, SIGNAL(pair_chosen(QString, QString)), this, SLOT(addPair(QString, QString)));
+        chooser->exec();
+    }
 }
 
 void BanlistDialog::doAdd2ndButton() {
@@ -594,8 +609,10 @@ void BanlistDialog::doAdd2ndButton() {
 
 void BanlistDialog::doRemoveButton() {
     int row = list->currentRow();
-    if (row != -1)
+    if (row != -1) {
+        banned_items[list->objectName()].removeOne(list->item(row)->data(Qt::UserRole).toString());
         delete list->takeItem(row);
+    }
 }
 
 void BanlistDialog::save() {

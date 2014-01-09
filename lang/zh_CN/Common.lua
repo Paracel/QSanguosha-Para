@@ -13,6 +13,7 @@ CommonTranslationTable = {
 
 	["Pairs"] = "双将",
 	["XMode"] = "血战到底",
+	["Cards"] = "卡牌",
 	["cancel"] = "取消",
 	["GeneralA"] = "主将",
 	["GeneralB"] = "副将",

@@ -55,6 +55,7 @@ private:
     QStringList ban_list;
     QPushButton *add2nd;
     QMap<QString, QStringList> banned_items;
+    QLineEdit *card_to_ban;
 
 private slots:
     void addGeneral(const QString &name);

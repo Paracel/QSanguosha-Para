@@ -939,6 +939,17 @@ QList<int> Engine::getRandomCards() const{
     foreach (Card *card, cards) {
         card->clearFlags();
 
+        QStringList banned_patterns = Config.value("Banlist/Cards").toStringList();
+        bool removed = false;
+        foreach (QString banned_pattern, banned_patterns) {
+            if (matchExpPattern(banned_pattern, NULL, card)) {
+                removed = true;
+                break;
+            }
+        }
+        if (removed)
+            continue;
+
         if (exclude_disaters && card->isKindOf("Disaster"))
             continue;
 

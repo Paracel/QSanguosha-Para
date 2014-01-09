@@ -412,6 +412,7 @@ function SmartAI:getKeepValue(card, kept, wrt)
 			else return 3.19
 			end
 		end
+		return self.keepValue[card:getId()] or self.keepdata[card:getClassName()] or 0
 	end
 
 	local value_suit, value_number, newvalue = 0, 0, 0

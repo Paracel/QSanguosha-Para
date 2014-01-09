@@ -3135,10 +3135,10 @@ void Room::damage(const DamageStruct &data) {
                 damage_data.to->removeQinggangTag(damage_data.card);
             thread->trigger(DamageDone, this, damage_data.to, qdata);
 
-            if (damage_data.from && !damage_data.from->hasFlag("Global_KOFDebut"))
+            if (damage_data.from && !damage_data.from->hasFlag("Global_DebutFlag"))
                 thread->trigger(Damage, this, damage_data.from, qdata);
 
-            if (!damage_data.to->hasFlag("Global_KOFDebut"))
+            if (!damage_data.to->hasFlag("Global_DebutFlag"))
                 thread->trigger(Damaged, this, damage_data.to, qdata);
         } while (false);
 

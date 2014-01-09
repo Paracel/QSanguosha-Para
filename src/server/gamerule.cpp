@@ -406,11 +406,12 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     }
                 }
             }
-            if (room->getMode() == "02_1v1") {
+            if (room->getMode() == "02_1v1" || room->getMode() == "06_XMode") {
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
-                    if (p->hasFlag("Global_KOFDebut")) {
-                        p->setFlags("-Global_KOFDebut");
-                        room->getThread()->trigger(Debut, room, p);
+                    if (p->hasFlag("Global_DebutFlag")) {
+                        p->setFlags("-Global_DebutFlag");
+                        if (room->getMode() == "02_1v1")
+                            room->getThread()->trigger(Debut, room, p);
                     }
                 }
             }
@@ -517,10 +518,12 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 if (death.damage == NULL)
                     room->getThread()->trigger(Debut, room, player);
                 else
-                    player->setFlags("Global_KOFDebut");
+                    player->setFlags("Global_DebutFlag");
                 return false;
             } else if (room->getMode() == "06_XMode") {
                 changeGeneralXMode(player);
+                if (death.damage != NULL)
+                    player->setFlags("Global_DebutFlag");
                 return false;
             }
 

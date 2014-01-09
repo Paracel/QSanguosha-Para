@@ -594,6 +594,7 @@ void RoomThread::run() {
                 trigger(Debut, (Room *)room, second);
                 room->setCurrent(first);
             }
+
             actionNormal(game_rule);
         }
     }

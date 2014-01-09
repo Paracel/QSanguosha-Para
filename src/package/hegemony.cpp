@@ -480,7 +480,7 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
         ServerPlayer *target = damage.to;
         if (damage.card && damage.card->isKindOf("Slash") && target->hasEquip()
-            && !target->hasFlag("Global_KOFDebut") && !damage.chain && !damage.transfer) {
+            && !target->hasFlag("Global_DebutFlag") && !damage.chain && !damage.transfer) {
             QStringList equiplist;
             for (int i = 0; i <= 3; i++) {
                 if (!target->getEquip(i)) continue;

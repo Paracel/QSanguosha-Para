@@ -37,8 +37,6 @@ public:
     inline void setHomeOpacity(double opacity) { m_opacityAtHome = opacity; }
     inline double getHomeOpacity() { return m_opacityAtHome; }
 
-    void showFrame(const QString &frame);
-    void hideFrame();
     void showAvatar(const General *general);
     void hideAvatar();
     void setAutoBack(bool auto_back);
@@ -84,10 +82,12 @@ protected:
     
 private:    
     int m_cardId;
-    QString _m_frameType, _m_avatarName;
+    QString _m_avatarName;
     QPointF home_pos;
     QPointF _m_lastMousePressScenePos;
     bool auto_back, frozen;
+    bool m_isShiny;
+
 signals:
     void toggle_discards();
     void clicked();

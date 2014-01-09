@@ -692,7 +692,6 @@ QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids) {
         Q_ASSERT(card_item);
         if (card_item) {
             m_handCards.removeOne(card_item);
-            card_item->hideFrame();
             card_item->disconnect(this);
             result.append(card_item);
         }

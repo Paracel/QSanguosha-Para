@@ -30,6 +30,7 @@ void CardItem::_initialize() {
 CardItem::CardItem(const Card *card) {
     _initialize();
     setCard(card);    
+    m_isShiny = (qrand() <= ((RAND_MAX + 1) / 4096));
     setAcceptHoverEvents(true);
 }
 
@@ -37,6 +38,7 @@ CardItem::CardItem(const QString &general_name) {
     m_cardId = Card::S_UNKNOWN_CARD_ID;
     _initialize();
     changeGeneral(general_name);
+    m_isShiny = false;
     m_currentAnimation = NULL;
     m_opacityAtHome = 1.0;
 }
@@ -148,14 +150,6 @@ QAbstractAnimation *CardItem::getGoBackAnimation(bool doFade, bool smoothTransit
     return m_currentAnimation;
 }
 
-void CardItem::showFrame(const QString &result) {
-    _m_frameType = result;    
-}
-
-void CardItem::hideFrame() {
-    _m_frameType = QString();
-}
-
 void CardItem::showAvatar(const General *general) {
     _m_avatarName = general->objectName();
 }
@@ -247,9 +241,6 @@ void CardItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
 void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     painter->setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     
-    if (!_m_frameType.isEmpty())
-        painter->drawPixmap(G_COMMON_LAYOUT.m_cardFrameArea, G_ROOM_SKIN.getCardAvatarPixmap(_m_frameType));
-    
     if (!isEnabled()) {
         painter->fillRect(G_COMMON_LAYOUT.m_cardMainArea, QColor(100, 100, 100, 255 * opacity()));
         painter->setOpacity(0.7 * opacity());
@@ -270,6 +261,12 @@ void CardItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     
     if (!_m_avatarName.isEmpty())
         painter->drawPixmap(G_COMMON_LAYOUT.m_cardAvatarArea, G_ROOM_SKIN.getCardAvatarPixmap(_m_avatarName));
+
+    if (m_isShiny) {
+        QBrush painter_brush(QColor(255, 215, 0, 64));
+        painter->setBrush(painter_brush);
+        painter->drawRect(G_COMMON_LAYOUT.m_cardMainArea);
+    }
 }
 
 void CardItem::setFootnote(const QString &desc) {

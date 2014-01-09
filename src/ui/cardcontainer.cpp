@@ -233,7 +233,7 @@ GuanxingBox::GuanxingBox()
     setFlag(ItemIsMovable);
 }
 
-void GuanxingBox::doGuanxing (const QList<int> &card_ids, bool up_only) {
+void GuanxingBox::doGuanxing(const QList<int> &card_ids, bool up_only) {
     if (card_ids.isEmpty()) {
         clear();
         return;

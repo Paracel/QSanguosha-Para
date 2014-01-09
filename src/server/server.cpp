@@ -452,7 +452,7 @@ void BanlistDialog::switchTo(int item) {
 }
 
 BanlistDialog::BanlistDialog(QWidget *parent, bool view)
-    : QDialog(parent), add2nd(NULL)
+    : QDialog(parent), add2nd(NULL), card_to_ban(NULL)
 {
     setWindowTitle(tr("Select generals that are excluded"));
     setMinimumWidth(455);
@@ -488,9 +488,8 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
 
         QVBoxLayout *vlay = new QVBoxLayout;
         vlay->addWidget(list);
-        if (item == "Cards") {
+        if (item == "Cards" && !view) {
             vlay->addWidget(new QLabel(tr("Input card pattern to ban:"), this));
-
             card_to_ban = new QLineEdit(this);
             vlay->addWidget(card_to_ban);
         }

@@ -878,11 +878,11 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 
 	local hc_num = #to_discard
 	local eq_num = 0
-	if self.player:getOffensiveHorse() and not self.player:isJilei(self.player:getOffensiveHorse():getEffectiveId()) then
+	if self.player:getOffensiveHorse() and not self.player:isJilei(self.player:getOffensiveHorse()) then
 		table.insert(to_discard, self.player:getOffensiveHorse():getEffectiveId())
 		eq_num = eq_num + 1
 	end
-	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5 and not self.player:isJilei(self.player:getWeapon():getEffectiveId()) then
+	if self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5 and not self.player:isJilei(self.player:getWeapon()) then
 		table.insert(to_discard, self.player:getWeapon():getEffectiveId())
 		eq_num = eq_num + 2
 	end

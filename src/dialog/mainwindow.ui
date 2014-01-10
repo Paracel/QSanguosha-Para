@@ -29,7 +29,6 @@
     </property>
     <addaction name="actionStart_Game"/>
     <addaction name="actionStart_Server"/>
-    <addaction name="actionPC_Console_Start"/>
     <addaction name="actionReplay"/>
     <addaction name="actionExit"/>
    </widget>
@@ -288,35 +287,6 @@
   <action name="actionRevive_wand">
    <property name="text">
     <string>Revive wand ...</string>
-   </property>
-  </action>
-  <action name="actionCard_editor">
-   <property name="text">
-    <string>Card editor ...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+T</string>
-   </property>
-  </action>
-  <action name="actionPC_Console_Start">
-   <property name="text">
-    <string>PC Console Start</string>
-   </property>
-  </action>
-  <action name="actionPackaging">
-   <property name="text">
-    <string>Package manager ...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+P</string>
-   </property>
-  </action>
-  <action name="actionAI_Melee">
-   <property name="text">
-    <string>AI Melee</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+M</string>
    </property>
   </action>
   <action name="actionReplay_file_convert">

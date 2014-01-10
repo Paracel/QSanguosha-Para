@@ -84,14 +84,12 @@ MainWindow::MainWindow(QWidget *parent)
     QList<QAction *> actions;
     actions << ui->actionStart_Game
             << ui->actionStart_Server
-            << ui->actionPC_Console_Start
             << ui->actionReplay
             << ui->actionConfigure
             << ui->actionGeneral_Overview
             << ui->actionCard_Overview
             << ui->actionScenario_Overview
-            << ui->actionAbout
-            << ui->actionAcknowledgement;
+            << ui->actionAbout;
 
     foreach (QAction *action, actions)
         start_scene->addButton(action);
@@ -157,7 +155,8 @@ void MainWindow::on_actionExit_triggered() {
 
 void MainWindow::on_actionStart_Server_triggered() {
     ServerDialog *dialog = new ServerDialog(this);
-    if (!dialog->config())
+    int accept_type = dialog->config();
+    if (accept_type == 0)
         return;
 
     Server *server = new Server(this);
@@ -166,16 +165,23 @@ void MainWindow::on_actionStart_Server_triggered() {
         return;
     }
 
-    server->daemonize();
+    if (accept_type == 1) {
+        server->daemonize();
 
-    ui->actionStart_Game->disconnect();
-    connect(ui->actionStart_Game, SIGNAL(triggered()), this, SLOT(startGameInAnotherInstance()));
+        ui->actionStart_Game->disconnect();
+        connect(ui->actionStart_Game, SIGNAL(triggered()), this, SLOT(startGameInAnotherInstance()));
 
-    StartScene *start_scene = qobject_cast<StartScene *>(scene);
-    if (start_scene) {
-        start_scene->switchToServer(server);
-        if (Config.value("EnableMinimizeDialog", false).toBool())
-            this->on_actionMinimize_to_system_tray_triggered();
+        StartScene *start_scene = qobject_cast<StartScene *>(scene);
+        if (start_scene) {
+            start_scene->switchToServer(server);
+            if (Config.value("EnableMinimizeDialog", false).toBool())
+                this->on_actionMinimize_to_system_tray_triggered();
+        }
+    } else {
+        server->createNewRoom();
+
+        Config.HostAddress = "127.0.0.1";
+        startConnection();
     }
 }
 
@@ -315,14 +321,12 @@ void MainWindow::gotoStartScene() {
     QList<QAction *> actions;
     actions << ui->actionStart_Game
             << ui->actionStart_Server
-            << ui->actionPC_Console_Start
             << ui->actionReplay
             << ui->actionConfigure
             << ui->actionGeneral_Overview
             << ui->actionCard_Overview
             << ui->actionScenario_Overview
-            << ui->actionAbout
-            << ui->actionAcknowledgement;
+            << ui->actionAbout;
 
     foreach (QAction *action, actions)
         start_scene->addButton(action);
@@ -609,24 +613,6 @@ void MainWindow::on_actionAcknowledgement_triggered() {
                   scene && scene->inherits("RoomScene") ? scene->height() : 0);
 
     window->appear();
-}
-
-void MainWindow::on_actionPC_Console_Start_triggered() {
-    ServerDialog *dialog = new ServerDialog(this);
-    dialog->ensureEnableAI();
-    if (!dialog->config())
-        return;
-
-    Server *server = new Server(this);
-    if (!server->listen()) {
-        QMessageBox::warning(this, tr("Warning"), tr("Can not start server!"));
-        return;
-    }
-
-    server->createNewRoom();
-
-    Config.HostAddress = "127.0.0.1";
-    startConnection();
 }
 
 #include <QGroupBox>

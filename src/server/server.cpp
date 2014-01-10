@@ -31,7 +31,7 @@ static QLayout *HLay(QWidget *left, QWidget *right) {
 }
 
 ServerDialog::ServerDialog(QWidget *parent)
-    : QDialog(parent)
+    : QDialog(parent), accept_type(0)
 {
     setWindowTitle(tr("Start server"));
 
@@ -417,10 +417,6 @@ QWidget *ServerDialog::createMiscTab() {
     QWidget *widget = new QWidget;
     widget->setLayout(tablayout);
     return widget;
-}
-
-void ServerDialog::ensureEnableAI() {
-    ai_enable_checkbox->setChecked(true);
 }
 
 void ServerDialog::updateButtonEnablility(QAbstractButton *button) {
@@ -893,13 +889,16 @@ QLayout *ServerDialog::createButtonLayout() {
     QHBoxLayout *button_layout = new QHBoxLayout;
     button_layout->addStretch();
 
-    QPushButton *ok_button = new QPushButton(tr("OK"));
+    QPushButton *console_button = new QPushButton(tr("PC Console Start"));
+    QPushButton *server_button = new QPushButton(tr("Start Server"));
     QPushButton *cancel_button = new QPushButton(tr("Cancel"));
 
-    button_layout->addWidget(ok_button);
+    button_layout->addWidget(console_button);
+    button_layout->addWidget(server_button);
     button_layout->addWidget(cancel_button);
 
-    connect(ok_button, SIGNAL(clicked()), this, SLOT(onOkButtonClicked()));
+    connect(console_button, SIGNAL(clicked()), this, SLOT(onConsoleButtonClicked()));
+    connect(server_button, SIGNAL(clicked()), this, SLOT(onServerButtonClicked()));
     connect(cancel_button, SIGNAL(clicked()), this, SLOT(reject()));
 
     return button_layout;
@@ -917,7 +916,13 @@ void ServerDialog::onDetectButtonClicked() {
     }
 }
 
-void ServerDialog::onOkButtonClicked() {
+void ServerDialog::onConsoleButtonClicked() {
+    accept_type = -1;
+    accept();
+}
+
+void ServerDialog::onServerButtonClicked() {
+    accept_type = 1;
     accept();
 }
 
@@ -1036,11 +1041,11 @@ void ServerDialog::select3v3Generals() {
     dialog->exec();
 }
 
-bool ServerDialog::config() {
+int ServerDialog::config() {
     exec();
 
     if (result() != Accepted)
-        return false;
+        return 0;
 
     Config.ServerName = server_name_edit->text();
     Config.OperationTimeout = timeout_spinbox->value();
@@ -1158,7 +1163,7 @@ bool ServerDialog::config() {
     Config.BanPackages = ban_packages.toList();
     Config.setValue("BanPackages", Config.BanPackages);
 
-    return true;
+    return accept_type;
 }
 
 Server::Server(QObject *parent)

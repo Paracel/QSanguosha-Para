@@ -312,6 +312,18 @@ void MainWindow::enterRoom() {
 
 void MainWindow::gotoStartScene() {
     ServerInfo.DuringGame = false;
+    delete systray;
+    systray = NULL;
+    if (ClientInstance) {
+        ClientInstance->disconnectFromHost();
+        if (Self) {
+            delete Self;
+            Self = NULL;
+        }
+        delete ClientInstance;
+        ClientInstance = NULL;
+    }
+
     QList<Server *> servers = findChildren<Server *>();
     if (!servers.isEmpty())
         servers.first()->deleteLater();
@@ -343,16 +355,6 @@ void MainWindow::gotoStartScene() {
 
     addAction(ui->actionShow_Hide_Menu);
     addAction(ui->actionFullscreen);
-
-    delete systray;
-    systray = NULL;
-    if (ClientInstance) {
-        if (Self) {
-            delete Self;
-            Self = NULL;
-        }
-        delete ClientInstance;
-    }
 }
 
 void MainWindow::startGameInAnotherInstance() {

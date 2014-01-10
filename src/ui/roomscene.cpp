@@ -302,6 +302,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     add_robot = NULL;
     fill_robots = NULL;
+    return_to_main_menu = NULL;
     if (ServerInfo.EnableAI) {
         control_panel = addRect(0, 0, 500, 150, Qt::NoPen);
         control_panel->hide();
@@ -309,15 +310,21 @@ RoomScene::RoomScene(QMainWindow *main_window)
         add_robot = new Button(tr("Add a robot"));
         add_robot->setParentItem(control_panel);
         add_robot->setTransform(QTransform::fromTranslate(-add_robot->boundingRect().width() / 2, -add_robot->boundingRect().height() / 2), true);
-        add_robot->setPos(0, -add_robot->boundingRect().height() - 10);
+        add_robot->setPos(0, -2 * add_robot->boundingRect().height() - 20);
 
         fill_robots = new Button(tr("Fill robots"));
         fill_robots->setParentItem(control_panel);
         fill_robots->setTransform(QTransform::fromTranslate(-fill_robots->boundingRect().width() / 2, -fill_robots->boundingRect().height() / 2), true);
-        add_robot->setPos(0, add_robot->boundingRect().height() + 10);
+        add_robot->setPos(0, -add_robot->boundingRect().height() - 10);
+
+        return_to_main_menu = new Button(tr("Return to main menu"));
+        return_to_main_menu->setParentItem(control_panel);
+        return_to_main_menu->setTransform(QTransform::fromTranslate(-return_to_main_menu->boundingRect().width() / 2, -return_to_main_menu->boundingRect().height() / 2), true);
+        return_to_main_menu->setPos(0, add_robot->boundingRect().height() + 10);
 
         connect(add_robot, SIGNAL(clicked()), ClientInstance, SLOT(addRobot()));
         connect(fill_robots, SIGNAL(clicked()), ClientInstance, SLOT(fillRobots()));
+        connect(return_to_main_menu, SIGNAL(clicked()), this, SIGNAL(return_to_start()));
         connect(Self, SIGNAL(owner_changed(bool)), this, SLOT(showOwnerButtons(bool)));
     } else {
         control_panel = NULL;
@@ -2675,6 +2682,7 @@ void RoomScene::hideAvatars() {
 void RoomScene::startInXs() {
     if (add_robot) add_robot->hide();
     if (fill_robots) fill_robots->hide();
+    if (return_to_main_menu) return_to_main_menu->hide();
 }
 
 void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nature, bool losthp) {

@@ -237,5 +237,17 @@ config = {
 		"zhugeke->diy_zhugeke",
 		"zhugeliang->heg_zhugeliang|tw_zhugeliang",
 		"zhugejin->sp_zhugejin"
+	},
+
+	removed_hidden_generals = {
+	},
+
+	extra_hidden_generals = {
+	},
+
+	removed_default_lords = {
+	},
+
+	extra_default_lords = {
 	}
 }

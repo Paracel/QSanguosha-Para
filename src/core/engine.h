@@ -161,6 +161,11 @@ private:
     QHash<QString, const LuaArmor *> luaArmors;
 
     QMultiMap<QString, QString> sp_convert_pairs;
+    QStringList extra_hidden_generals;
+    QStringList removed_hidden_generals;
+    QStringList extra_default_lords;
+    QStringList removed_default_lords;
+
 };
 
 static inline QVariant GetConfigFromLuaState(lua_State *L, const char *key) {

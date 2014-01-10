@@ -77,6 +77,11 @@ Engine::Engine()
             sp_convert_pairs.insertMulti(pairs.at(0), to);
     }
 
+    extra_hidden_generals = GetConfigFromLuaState(lua, "extra_hidden_generals").toStringList();
+    removed_hidden_generals = GetConfigFromLuaState(lua, "removed_hidden_generals").toStringList();
+    extra_default_lords = GetConfigFromLuaState(lua, "extra_default_lords").toStringList();
+    removed_default_lords = GetConfigFromLuaState(lua, "removed_default_lords").toStringList();
+
     QStringList package_names = GetConfigFromLuaState(lua, "package_names").toStringList();
     foreach (QString name, package_names)
         addPackage(name);
@@ -253,7 +258,9 @@ void Engine::addPackage(Package *package) {
         }
         generals.insert(general->objectName(), general);
         if (isGeneralHidden(general->objectName())) continue;
-        if (general->isLord()) lord_list << general->objectName();
+        if ((general->isLord() && !removed_default_lords.contains(general->objectName()))
+            || extra_default_lords.contains(general->objectName()))
+            lord_list << general->objectName();
     }
 
     QList<const QMetaObject *> metas = package->getMetaObjects();
@@ -435,11 +442,9 @@ QString Engine::findConvertFrom(const QString &general_name) const{
 
 bool Engine::isGeneralHidden(const QString &general_name) const{
     const General *general = getGeneral(general_name);
-    if (!general) return false;
-    if (!general->isHidden())
-        return Config.ExtraHiddenGenerals.contains(general_name);
-    else
-        return !Config.RemovedHiddenGenerals.contains(general_name);
+    if (!general) return true;
+    return (general->isHidden() && !removed_hidden_generals.contains(general_name))
+           || extra_hidden_generals.contains(general_name);
 }
 
 WrappedCard *Engine::getWrappedCard(int cardId) {

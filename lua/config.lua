@@ -110,7 +110,6 @@ config = {
 	},
 
 	hulao_ban = {
-		"yuji"
 	},
 
 	xmode_ban = {

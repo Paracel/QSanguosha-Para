@@ -620,9 +620,9 @@ sgs.ai_skill_use_func.ZhibaCard = function(card, use, self)
 	for _, lord in ipairs(lords) do
 		local zhiba_str
 		local lord_max_card, lord_min_card = self:getMaxCard(lord), self:getMinCard(lord)
-		local lord_max_num, lord_min_num = 0, 14
-		lord_max_num = (lord_max_card and lord:hasSkill("yingyang")) and math.min(lord_max_card:getNumber() + 3, 13) or lord_max_card:getNumber()
-		lord_min_num = (lord_min_card and lord:hasSkill("yingyang")) and math.max(1, lord_min_card:getNumber() - 3) or lord_min_card:getNumber()
+		local lord_max_num, lord_min_num = (lord_max_card and lord_max_card:getNumber() or 0), (lord_min_card and lord_min_card:getNumber() or 14)
+		if lord_max_card and lord:hasSkill("yingyang") then lord_max_num = math.min(lord_max_num + 3, 13) end
+		if lord_min_card and lord:hasSkill("yingyang") then lord_min_num = math.max(1, lord_min_num - 3) end
 
 		if self:isEnemy(lord) and max_num > 10 and max_num > lord_max_num then
 			if isCard("Jink", max_card, self.player) and self:getCardsNum("Jink") == 1 then return end

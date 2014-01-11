@@ -43,6 +43,7 @@
 #include <QFormLayout>
 #include <QCoreApplication>
 #include <QInputDialog>
+#include <QScrollBar>
 #include <qmath.h>
 #include "uiUtils.h"
 
@@ -259,6 +260,15 @@ RoomScene::RoomScene(QMainWindow *main_window)
     log_box_widget->setObjectName("log_box_widget");
     log_box_widget->setZValue(-1.0);
     connect(ClientInstance, SIGNAL(log_received(QStringList)), log_box, SLOT(appendLog(QStringList)));
+
+    // @todo: why do not qss settings take effect if I do not reload it here?
+    QScrollBar *bar1 = chat_box->verticalScrollBar(), *bar2 = log_box->verticalScrollBar();
+    QFile file("sanguosha.qss");
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream stream(&file);
+        bar1->setStyleSheet(stream.readAll());
+        bar2->setStyleSheet(stream.readAll());
+    }
 
     prompt_box = new Window(tr("QSanguosha"), QSize(480, 200));
     prompt_box->setOpacity(0);

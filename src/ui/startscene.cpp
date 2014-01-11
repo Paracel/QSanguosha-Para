@@ -6,6 +6,8 @@
 #include <QParallelAnimationGroup>
 #include <QNetworkInterface>
 #include <QGraphicsDropShadowEffect>
+#include <QScrollBar>
+#include <QFile>
 
 StartScene::StartScene()
 {
@@ -79,6 +81,13 @@ void StartScene::switchToServer(Server *server) {
     server_log->setTextColor(Config.TextEditColor);
     setServerLogBackground();
     addWidget(server_log);
+
+    QScrollBar *bar = server_log->verticalScrollBar();
+    QFile file("qss/scroll.qss");
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream stream(&file);
+        bar->setStyleSheet(stream.readAll());
+    }
 
     printServerInfo();
     connect(server, SIGNAL(server_message(QString)), server_log, SLOT(append(QString)));

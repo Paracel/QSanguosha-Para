@@ -74,7 +74,7 @@ int main(int argc, char *argv[]) {
         return qApp->exec();
     }
 
-    QFile file("sanguosha.qss");
+    QFile file("qss/sanguosha.qss");
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
         qApp->setStyleSheet(stream.readAll());

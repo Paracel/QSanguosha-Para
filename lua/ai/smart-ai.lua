@@ -4836,15 +4836,22 @@ end
 
 sgs.ai_weapon_value = {}
 
-function SmartAI:evaluateWeapon(card, player)
+function SmartAI:evaluateWeapon(card, player, enemy)
 	player = player or self.player
+	local enemies = {}
+	if enemy then
+		if type(enemy) == "table" then enemies = enemy
+		else enemies = { enemy } end
+	else
+		enemies = self:getEnemies(player)
+	end
 	local deltaSelfThreat = 0
 	local currentRange
 	if not card then return -1
 	else
-		currentRange = sgs.weapon_range[card:getClassName()] or 0
+		currentRange = math.max(sgs.weapon_range[card:getClassName()] or 0, player:getAttackRange(false))
 	end
-	for _, enemy in ipairs(self:getEnemies(player)) do
+	for _, enemy in ipairs(enemies) do
 		if player:distanceTo(enemy) <= currentRange then
 			deltaSelfThreat = deltaSelfThreat + 6 / sgs.getDefense(enemy)
 		end
@@ -4857,7 +4864,7 @@ function SmartAI:evaluateWeapon(card, player)
 		deltaSelfThreat = deltaSelfThreat + slash_num * 3 - 2
 		if player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat + peach_num + analeptic_num + self.player:getHp() end
 		if player:getWeapon() and not self:hasCrossbowEffect(player) and not player:canSlashWithoutCrossbow() and slash_num > 0 then
-			for _, enemy in ipairs(self:getEnemies(player)) do
+			for _, enemy in ipairs(enemies) do
 				if player:distanceTo(enemy) <= currentRange
 					and (sgs.card_lack[enemy:objectName()]["Jink"] == 1 or slash_num >= enemy:getHp()) then
 					deltaSelfThreat = deltaSelfThreat + 10
@@ -4868,7 +4875,7 @@ function SmartAI:evaluateWeapon(card, player)
 	local callback = sgs.ai_weapon_value[card:objectName()]
 	if type(callback) == "function" then
 		deltaSelfThreat = deltaSelfThreat + (callback(self, nil, player) or 0)
-		for _, enemy in ipairs(self:getEnemies(player)) do
+		for _, enemy in ipairs(enemies) do
 			if player:distanceTo(enemy) <= currentRange and callback then
 				local added = sgs.ai_slash_weaponfilter[card:objectName()]
 				if added and type(added) == "function" and added(self, enemy, player) then deltaSelfThreat = deltaSelfThreat + 1 end

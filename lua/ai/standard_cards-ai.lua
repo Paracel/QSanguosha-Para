@@ -403,6 +403,29 @@ function SmartAI:slashIsAvailable(player, slash)
 	return slash:isAvailable(player)
 end
 
+function SmartAI:findWeaponToUse(enemy)
+	local weaponvalue = {}
+	local hasweapon
+	for _, c in sgs.qlist(self.player:getHandcards()) do
+		if c:isKindOf("Weapon") then
+			local dummy_use = { isDummy == true }
+			self:useEquipCard(c, dummy_use)
+			if dummy_use.card then
+				weaponvalue[c] = self:evaluateWeapon(c, self.player, enemy)
+				hasweapon = true
+			end
+		end
+	end
+	if not hasweapon then return end
+	if self.player:getWeapon() then weaponvalue[self.player:getWeapon()] = self:evaluateWeapon(self.player:getWeapon(), self.player, enemy) end
+	local max_value, max_card = -10
+	for c, v in pairs(weaponvalue) do
+		if v > max_value then max_card = c max_value = v end
+	end
+	if self.player:getWeapon() and self.player:getWeapon():getEffectiveId() == max_card:getEffectiveId() then return false end
+	return max_card
+end
+
 function SmartAI:isPriorFriendOfSlash(friend, card, source)
 	source = source or self.player
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
@@ -503,23 +526,9 @@ function SmartAI:useCardSlash(card, use)
 				if self.player:hasWeapon("spear") and card:getSkillName() == "spear" and self:getCardsNum("Slash") == 0 then
 				elseif self.player:hasWeapon("crossbow") and self:getCardsNum("Slash") > 1 then
 				elseif not use.isDummy then
-					local Weapons = {}
-					for _, acard in sgs.qlist(self.player:getHandcards()) do
-						if acard:isKindOf("Weapon") then
-							local callback = sgs.ai_slash_weaponfilter[acard:objectName()]
-							if callback and type(callback) == "function" and callback(self, target, self.player)
-								and self.player:distanceTo(target) <= (sgs.weapon_range[acard:getClassName()] or 1) then
-								self:useEquipCard(acard, use)
-								if use.card then table.insert(Weapons, acard) end
-							end
-						end
-					end
-					if #Weapons > 0 then
-						local cmp = function(a, b)
-							return self:evaluateWeapon(a) > self:evaluateWeapon(b)
-						end
-						table.sort(Weapons, cmp)
-						use.card = Weapons[1]
+					local card = self:findWeaponToUse(target)
+					if card then
+						use.card = card
 						return
 					end
 				end
@@ -1060,7 +1069,7 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 end
 
 function sgs.ai_slash_weaponfilter.guding_blade(self, to)
-	return to:isKongcheng()
+	return to:isKongcheng() and not to:hasArmorEffect("silver_lion")
 end
 
 function sgs.ai_weapon_value.guding_blade(self, enemy)

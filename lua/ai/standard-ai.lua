@@ -53,8 +53,9 @@ sgs.ai_choicemade_filter.cardResponded["@hujia-jink"] = function(self, player, p
 	if promptlist[#promptlist] ~= "_nil_" then
 		sgs.updateIntention(player, sgs.hujiasource, -80)
 		sgs.hujiasource = nil
-	elseif sgs.hujiasource and player:objectName() == self.room:getLieges("wei", sgs.hujiasource):last():objectName() then
-		sgs.hujiasource = nil
+	elseif sgs.hujiasource then
+		if self:isFriend(player, sgs.hujiasource) then sgs.card_lack[player:objectName()]["Jink"] = 1 end
+		if player:objectName() == self.room:getLieges("wei", sgs.hujiasource):last():objectName() then sgs.hujiasource = nil end
 	end
 end
 
@@ -1041,9 +1042,12 @@ sgs.ai_choicemade_filter.cardResponded["@jijiang-slash"] = function(self, player
 		sgs.updateIntention(player, sgs.jijiangsource, -40)
 		sgs.jijiangsource = nil
 		sgs.jijiangtarget = nil
-	elseif sgs.jijiangsource and player:objectName() == player:getRoom():getLieges("shu", sgs.jijiangsource):last():objectName() then
-		sgs.jijiangsource = nil
-		sgs.jijiangtarget = nil
+	elseif sgs.jijiangsource then
+		if self:isFriend(player, sgs.jijiangsource) then sgs.card_lack[player:objectName()]["Slash"] = 1 end
+		if player:objectName() == player:getRoom():getLieges("shu", sgs.jijiangsource):last():objectName() then
+			sgs.jijiangsource = nil
+			sgs.jijiangtarget = nil
+		end
 	end
 end
 

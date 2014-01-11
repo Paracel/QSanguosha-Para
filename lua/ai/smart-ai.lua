@@ -4163,7 +4163,7 @@ function getCardsNum(class_name, player, from)
 		else
 			slashnum = num + (player:getHandcardNum() - shownum) * 0.35
 		end
-		return player:hasSkill("wushuang") and slashnum * 2 or slashnum
+		return slashnum
 	elseif class_name == "Jink" then
 		if player:hasSkill("qingguo") then
 			return blackcard + num + (player:getHandcardNum() - shownum) * 0.85
@@ -4245,9 +4245,6 @@ function SmartAI:getCardsNum(class_name, flag, selfonly)
 			end
 		end
 	elseif class_name == "Slash" then
-		if player:hasSkill("wushuang") then
-			n = n * 2
-		end
 		if player:hasLordSkill("jijiang") then
 			local lieges = self.room:getLieges("shu", player)
 			for _, liege in sgs.qlist(lieges) do

@@ -511,11 +511,19 @@ function SmartAI:useCardSlash(card, use)
 		for _, friend in ipairs(self.friends_noself) do
 			if self:canLiuli(target, friend) and self:slashIsEffective(card, friend) and #targets > 1 and friend:getHp() < 3 then canliuli = true end
 		end
+		local use_wuqian = false
+		if self.player:hasSkill("wuqian") and self.player:getMark("@wrath") >= 2
+			and (not self.player:hasSkill("wushuang") or target:getMark("Armor_Nullified") == 0)
+			and not target:isLocked(sgs.Sanguosha:cloneCard("jink"))
+			and (self:hasHeavySlashDamage(self.player, card, target)
+				or (getCardsNum("Jink", target, self.player) < 2 and getCardsNum("Jink", target, self.player) >= 1 and target:getHp() <= 2)) then
+			use_wuqian = true
+		end
 		if (not use.current_targets or not table.contains(use.current_targets, target:objectName()))
 			and (self.player:canSlash(target, card, not no_distance, rangefix)
 				or (use.isDummy and self.predictedRange and self.player:distanceTo(target, rangefix) <= self.predictedRange))
 			and self:objectiveLevel(target) > 3
-			and self:slashIsEffective(card, target)
+			and self:slashIsEffective(card, target, self.player, use_wuqian)
 			and not (target:hasSkill("xiangle") and basicnum < 2)
 			and not canliuli
 			and not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
@@ -570,6 +578,14 @@ function SmartAI:useCardSlash(card, use)
 					use.card = sgs.Card_Parse("@JilveCard=.")
 					sgs.ai_skill_choice.jilve = "wansha"
 					if use.to then use.to = sgs.SPlayerList() end
+					return
+				end
+				if use_wuqian then
+					use.card = sgs.Card_Parse("@WuqianCard=.")
+					if use.to then
+						use.to = sgs.SPlayerList()
+						use.to:append(target)
+					end
 					return
 				end
 			end
@@ -1583,6 +1599,7 @@ function SmartAI:useCardDuel(duel, use)
 	local enemies = self:exclude(self.enemies, duel)
 	local friends = self:exclude(self.friends_noself, duel)
 	local n1 = self:getCardsNum("Slash")
+	if use.isWuqian or self.player:hasSkill("wushuang") then n1 = n1 * 2 end
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 	local targets = {}
 
@@ -1636,6 +1653,7 @@ function SmartAI:useCardDuel(duel, use)
 	for _, enemy in ipairs(enemies) do
 		local useduel
 		local n2 = getCardsNum("Slash", enemy, self.player)
+		if enemy:hasSkill("wushuang") then n2 = n2 * 2 end
 		if sgs.card_lack[enemy:objectName()]["Slash"] == 1 then n2 = 0 end
 		useduel = n1 >= n2 or self:needToLoseHp(self.player)
 					or self:getDamagedEffects(self.player, enemy) or (n2 < 1 and sgs.isGoodHp(self.player))
@@ -1671,6 +1689,7 @@ function SmartAI:useCardDuel(duel, use)
 		use.card = duel
 		for i = 1, #targets, 1 do
 			local n2 = getCardsNum("Slash", targets[i], self.player)
+			if targets[i]:hasSkill("wushuang") then n2 = n2 * 2 end
 			if sgs.card_lack[targets[i]:objectName()]["Slash"] == 1 then n2 = 0 end
 			if self:isEnemy(targets[i]) then enemySlash = enemySlash + n2 end
 

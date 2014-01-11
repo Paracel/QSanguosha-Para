@@ -761,47 +761,24 @@ local wuqian_skill = {}
 wuqian_skill.name = "wuqian"
 table.insert(sgs.ai_skills, wuqian_skill)
 wuqian_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("WuqianCard") or self.player:getMark("@wrath") < 2 then return end
-
-	local card_str = ("@WuqianCard=.")
-	self:sort(self.enemies, "hp")
-	local has_enemy
-	for _, enemy in ipairs(self.enemies) do
-		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy, self.player) < 2 and self.player:distanceTo(enemy) <= self.player:getAttackRange() then
-			has_enemy = enemy
-			break
-		end
-	end
-
-	if has_enemy and self:getCardsNum("Slash") > 0 then
-		for _, card in sgs.qlist(self.player:getHandcards()) do
-			if isCard("Slash", card, self.player) then
-				local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
-				if self:slashIsEffective(slash, has_enemy) and self.player:canSlash(has_enemy, slash)
-					and (self:getCardsNum("Analeptic") > 0 or has_enemy:getHp() <= 1) and slash:isAvailable(self.player) then
-					return sgs.Card_Parse(card_str)
-				end
-			elseif isCard("Duel", card, self.player) then
-				local dummy_use = { isDummy = true }
-				local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
-				self:useCardDuel(duel, dummy_use)
-				if dummy_use.card then return sgs.Card_Parse(card_str) end
-			end
-		end
-	end
+	if self.player:hasSkill("wushuang") or self.player:getMark("@wrath") < 2 then return end
+	return sgs.Card_Parse("@WuqianCard=.")
 end
 
-sgs.ai_skill_use_func.WuqianCard = function(card, use, self)
+sgs.ai_skill_use_func.WuqianCard = function(wuqiancard, use, self)
 	self:sort(self.enemies, "hp")
-	for _, enemy in ipairs(self.enemies) do
-		if enemy:getHp() <= 2 and getCardsNum("Jink", enemy, self.player) < 2 and self.player:inMyAttackRange(enemy) then
-			if (not enemy:getArmor() or enemy:hasArmorEffect("silver_lion")) and getCardsNum("Jink", enemy, self.player) < 1 then
-			else
-				if use.to then
-					use.to:append(enemy)
+	
+	if self:getCardsNum("Slash") > 0 then
+		for _, card in sgs.qlist(self.player:getHandcards()) do
+			if isCard("Duel", card, self.player) then
+				local dummy_use = { isDummy = true, isWuqian = true, to = sgs.SPlayetList() }
+				local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
+				self:useCardDuel(duel, dummy_use)
+				if dummy_use.card and dummy_use.to:length() > 0 then
+					use.card = wuqiancard
+					if use.to then use.to:append(dummy_use.to:first()) end
+					return
 				end
-				use.card = card
-				return
 			end
 		end
 	end

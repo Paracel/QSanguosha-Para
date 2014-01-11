@@ -633,27 +633,35 @@ void MainWindow::on_actionReplay_file_convert_triggered() {
         return;
 
     QFile file(filename);
+    bool success = false;
     if (file.open(QIODevice::ReadOnly)) {
         QFileInfo info(filename);
         QString tosave = info.absoluteDir().absoluteFilePath(info.baseName());
+        QString suffix = filename.right(4).toLower();
 
-        if (filename.endsWith(".txt")) {
+        if (suffix == ".txt") {
             tosave.append(".png");
 
             // txt to png
             Recorder::TXT2PNG(file.readAll()).save(tosave);
-
-        } else if (filename.endsWith(".png")) {
+            success = true;
+        } else if (suffix == ".png") {
             tosave.append(".txt");
 
             // png to txt
-            QByteArray data = Replayer::PNG2TXT(filename);
+            QByteArray data = Recorder::PNG2TXT(filename);
 
             QFile tosave_file(tosave);
-            if (tosave_file.open(QIODevice::WriteOnly))
+            if (!data.isEmpty() && tosave_file.open(QIODevice::WriteOnly)) {
                 tosave_file.write(data);
+                success = true;
+            }
         }
     }
+    if (!success)
+        QMessageBox::warning(this, tr("Replay file convert"), tr("Conversion failed!"));
+    else
+        QMessageBox::warning(this, tr("Replay file convert"), tr("Conversion done!"));
 }
 
 void MainWindow::on_actionRecord_analysis_triggered() {

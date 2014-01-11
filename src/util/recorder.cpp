@@ -63,13 +63,24 @@ QImage Recorder::TXT2PNG(QByteArray txtData) {
     return image;
 }
 
+QByteArray Recorder::PNG2TXT(const QString filename) {
+    QImage image(filename);
+    image = image.convertToFormat(QImage::Format_ARGB32);
+    const uchar *imageData = image.bits();
+    qint32 actual_size = *(const qint32 *)imageData;
+    QByteArray data((const char *)(imageData + 4), actual_size);
+    data = qUncompress(data);
+
+    return data;
+}
+
 Replayer::Replayer(QObject *parent, const QString &filename)
     : QThread(parent), m_commandSeriesCounter(1),
       filename(filename), speed(1.0), playing(true)
 {
     QIODevice *device = NULL;
     if (filename.endsWith(".png")) {
-        QByteArray *data = new QByteArray(PNG2TXT(filename));
+        QByteArray *data = new QByteArray(Recorder::PNG2TXT(filename));
         QBuffer *buffer = new QBuffer(data);
         device = buffer;
     } else if (filename.endsWith(".txt")) {
@@ -106,17 +117,6 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     }
 
     delete device;
-}
-
-QByteArray Replayer::PNG2TXT(const QString filename) {
-    QImage image(filename);
-    image = image.convertToFormat(QImage::Format_ARGB32);
-    const uchar *imageData = image.bits();
-    qint32 actual_size = *(const qint32 *)imageData;
-    QByteArray data((const char *)(imageData + 4), actual_size);
-    data = qUncompress(data);
-
-    return data;
 }
 
 QString &Replayer::commandProceed(QString &cmd) {

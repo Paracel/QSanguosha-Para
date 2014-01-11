@@ -16,23 +16,25 @@ void RecAnalysis::initialize(QString dir) {
     QStringList records_line;
     if (dir.isEmpty())
         records_line = ClientInstance->getRecords();
-    else if (dir.endsWith(".png")) {
-        QByteArray data = Replayer::PNG2TXT(dir);
-        QString record_data(data);
-        records_line = record_data.split("\n");
-    }
-    else if (dir.endsWith(".txt")) {
-        QFile file(dir);
-        if (file.open(QIODevice::ReadOnly)) {
-            QTextStream stream(&file);
-            while (!stream.atEnd()) {
-                QString line = stream.readLine();
-                records_line << line;
+    else {
+        QString suffix = dir.right(4).toLower();
+        if (suffix == ".png") {
+            QByteArray data = Recorder::PNG2TXT(dir);
+            QString record_data(data);
+            records_line = record_data.split("\n");
+        } else if (suffix == ".txt") {
+            QFile file(dir);
+            if (file.open(QIODevice::ReadOnly)) {
+                QTextStream stream(&file);
+                while (!stream.atEnd()) {
+                    QString line = stream.readLine();
+                    records_line << line;
+                }
             }
+        } else {
+            QMessageBox::warning(NULL, tr("Warning"), tr("The file is unreadable"));
+            return;
         }
-    } else {
-        QMessageBox::warning(NULL, tr("Warning"), tr("The file is unreadable"));
-        return;
     }
     records_line.removeAll(QString());
 

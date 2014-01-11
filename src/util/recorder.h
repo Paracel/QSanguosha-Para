@@ -16,7 +16,10 @@ class Recorder: public QObject {
 
 public:
     explicit Recorder(QObject *parent);
+
     static QImage TXT2PNG(QByteArray data);
+    static QByteArray PNG2TXT(const QString filename);
+
     bool save(const QString &filename) const;
     void recordLine(const QString &line);
     QList<QString> getRecords() const;
@@ -34,7 +37,6 @@ class Replayer: public QThread {
 
 public:
     explicit Replayer(QObject *parent, const QString &filename);
-    static QByteArray PNG2TXT(const QString filename);
 
     QString &commandProceed(QString &cmd);
     int getDuration() const;

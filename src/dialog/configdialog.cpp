@@ -71,7 +71,7 @@ ConfigDialog::~ConfigDialog() {
 void ConfigDialog::on_browseBgButton_clicked() {
     QString filename = QFileDialog::getOpenFileName(this,
                                                     tr("Select a background image"),
-                                                    "backdrop/",
+                                                    "image/system/backdrop/",
                                                     tr("Images (*.png *.bmp *.jpg)"));
 
     if (!filename.isEmpty()) {
@@ -90,7 +90,7 @@ void ConfigDialog::on_browseBgButton_clicked() {
 void ConfigDialog::on_resetBgButton_clicked() {
     ui->bgPathLineEdit->clear();
 
-    QString filename = "backdrop/default.jpg";
+    QString filename = "image/system/backdrop/default.jpg";
     Config.BackgroundImage = filename;
     Config.setValue("BackgroundImage", filename);
 

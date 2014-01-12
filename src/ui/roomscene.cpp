@@ -3336,20 +3336,23 @@ void RoomScene::speak() {
             broadcast = false;
             Config.EnableBgMusic = true;
             Config.setValue("EnableBgMusic", true);
+            _m_bgEnabled = true;
+            _m_bgMusicPath = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
 #ifdef AUDIO_SUPPORT
             Audio::stopBGM();
-            QString bgmusic_path = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
-            Audio::playBGM(bgmusic_path);
+            Audio::playBGM(_m_bgMusicPath);
             Audio::setBGMVolume(Config.BGMVolume);
 #endif
         } else if (text.startsWith(".StartBgMusic=")) {
             broadcast = false;
             Config.EnableBgMusic = true;
             Config.setValue("EnableBgMusic", true);
+            _m_bgEnabled = true;
             QString path = text.mid(14);
             if (path.startsWith("|")) {
                 path = path.mid(1);
                 Config.setValue("BackgroundMusic", path);
+                _m_bgMusicPath = path;
             }
 #ifdef AUDIO_SUPPORT
             Audio::stopBGM();
@@ -3360,6 +3363,7 @@ void RoomScene::speak() {
             broadcast = false;
             Config.EnableBgMusic = false;
             Config.setValue("EnableBgMusic", false);
+            _m_bgEnabled = false;
 #ifdef AUDIO_SUPPORT
             Audio::stopBGM();
 #endif
@@ -3505,15 +3509,17 @@ void RoomScene::onGameStart() {
 
     connect(Self, SIGNAL(skill_state_changed(QString)), this, SLOT(skillStateChange(QString)));
     trust_button->setEnabled(true);
-#ifdef AUDIO_SUPPORT
     if (Config.EnableBgMusic) {
         // start playing background music
-        QString bgmusic_path = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
-
-        Audio::playBGM(bgmusic_path);
+        _m_bgMusicPath = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
+#ifdef AUDIO_SUPPORT
+        Audio::playBGM(_m_bgMusicPath);
         Audio::setBGMVolume(Config.BGMVolume);
-    }
 #endif
+        _m_bgEnabled = true;
+    } else {
+        _m_bgEnabled = false;
+    }
     game_started = true;
 }
 
@@ -4321,5 +4327,31 @@ void RoomScene::setChatBoxVisible(bool show) {
         chat_widget->show();
         log_box->resize(_m_infoPlane.width(),
                         _m_infoPlane.height() * _m_roomLayout->m_logBoxHeightPercentage);
+    }
+}
+
+void RoomScene::updateVolumeConfig() {
+    if (Config.EnableBgMusic) {
+        // start playing background music
+        QString bgMusicPath = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();
+        bool modified = false;
+        if (bgMusicPath != _m_bgMusicPath) {
+#ifdef AUDIO_SUPPORT
+            Audio::stopBGM();
+#endif
+            _m_bgMusicPath = bgMusicPath;
+            modified = true;
+        }
+#ifdef AUDIO_SUPPORT
+        if (modified || !_m_bgEnabled)
+            Audio::playBGM(_m_bgMusicPath);
+        Audio::setBGMVolume(Config.BGMVolume);
+#endif
+        _m_bgEnabled = true;
+    } else {
+#ifdef AUDIO_SUPPORT
+        Audio::stopBGM();
+#endif
+        _m_bgEnabled = false;
     }
 }

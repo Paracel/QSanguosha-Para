@@ -1,6 +1,7 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
 #include "settings.h"
+#include "roomscene.h"
 
 #include <QFileDialog>
 #include <QDesktopServices>
@@ -128,6 +129,9 @@ void ConfigDialog::saveConfig() {
 
     Config.EnableDoubleClick = ui->doubleClickCheckBox->isChecked();
     Config.setValue("EnableDoubleClick", Config.EnableDoubleClick);
+
+    if (RoomSceneInstance)
+        RoomSceneInstance->updateVolumeConfig();
 }
 
 void ConfigDialog::on_browseBgMusicButton_clicked() {

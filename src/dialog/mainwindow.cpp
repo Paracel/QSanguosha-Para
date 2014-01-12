@@ -279,6 +279,8 @@ void MainWindow::enterRoom() {
     ui->actionSurrender->setEnabled(true);
     ui->actionNever_nullify_my_trick->setEnabled(true);
     ui->actionSaveRecord->setEnabled(true);
+    ui->actionPause_Resume->setEnabled(true);
+    ui->actionHide_Show_chat_box->setEnabled(true);
 
     connect(ClientInstance, SIGNAL(surrender_enabled(bool)), ui->actionSurrender, SLOT(setEnabled(bool)));
 
@@ -287,6 +289,8 @@ void MainWindow::enterRoom() {
     connect(ui->actionServerInformation, SIGNAL(triggered()), room_scene, SLOT(showServerInformation()));
     connect(ui->actionSurrender, SIGNAL(triggered()), room_scene, SLOT(surrender()));
     connect(ui->actionSaveRecord, SIGNAL(triggered()), room_scene, SLOT(saveReplayRecord()));
+    connect(ui->actionPause_Resume, SIGNAL(triggered()), room_scene, SLOT(pause()));
+    connect(ui->actionHide_Show_chat_box, SIGNAL(triggered()), room_scene, SLOT(setChatBoxVisibleSlot()));
 
     if (ServerInfo.EnableCheat) {
         ui->menuCheat->setEnabled(true);

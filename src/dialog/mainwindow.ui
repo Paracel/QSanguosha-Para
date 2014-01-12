@@ -52,6 +52,9 @@
     <addaction name="actionServerInformation"/>
     <addaction name="actionSurrender"/>
     <addaction name="actionSaveRecord"/>
+    <addaction name="separator"/>
+    <addaction name="actionPause_Resume"/>
+    <addaction name="actionHide_Show_chat_box"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -340,6 +343,28 @@
   <action name="actionAcknowledgement_2">
    <property name="text">
     <string>Acknowledgement</string>
+   </property>
+  </action>
+  <action name="actionPause_Resume">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Pause/Resume</string>
+   </property>
+   <property name="shortcut">
+    <string>F6</string>
+   </property>
+  </action>
+  <action name="actionHide_Show_chat_box">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Hide/Show chat box</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
  </widget>

@@ -172,6 +172,9 @@ public slots:
     void doOkButton();
     void doCancelButton();
     void doDiscardButton();
+
+    void setChatBoxVisibleSlot();
+    void pause();
     
 protected:    
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);

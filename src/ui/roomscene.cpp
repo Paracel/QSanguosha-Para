@@ -1267,27 +1267,12 @@ void RoomScene::keyReleaseEvent(QKeyEvent *event) {
             adjustItems();
             break;
         }
-    case Qt::Key_F6: {
-            if (!Self || !Self->isOwner() || ClientInstance->getPlayers().length() < Sanguosha->getPlayerCount(ServerInfo.GameMode)) break;
-            foreach (const ClientPlayer *p, ClientInstance->getPlayers()) {
-                if (p != Self && p->isAlive() && p->getState() != "robot")
-                    break;
-            }
-            bool paused = pausing_text->isVisible();
-            QString message = QString("pause %1").arg((paused ? "false" : "true"));
-            ClientInstance->request(message);
-            break;
-        }
     case Qt::Key_F7: {
             if (control_is_down) {
                 if (add_robot && add_robot->isVisible())
                     ClientInstance->addRobot();
             } else if (fill_robots && fill_robots->isVisible())
                 ClientInstance->fillRobots();
-            break;
-        }
-    case Qt::Key_F8: {
-            setChatBoxVisible(!chat_box_widget->isVisible());
             break;
         }
     case Qt::Key_F12: {
@@ -4328,6 +4313,21 @@ void RoomScene::setChatBoxVisible(bool show) {
         log_box->resize(_m_infoPlane.width(),
                         _m_infoPlane.height() * _m_roomLayout->m_logBoxHeightPercentage);
     }
+}
+
+void RoomScene::setChatBoxVisibleSlot() {
+    setChatBoxVisible(!chat_box_widget->isVisible());
+}
+
+void RoomScene::pause() {
+    if (!Self || !Self->isOwner() || ClientInstance->getPlayers().length() < Sanguosha->getPlayerCount(ServerInfo.GameMode)) return;
+    foreach (const ClientPlayer *p, ClientInstance->getPlayers()) {
+        if (p != Self && p->isAlive() && p->getState() != "robot")
+            return;
+    }
+    bool paused = pausing_text->isVisible();
+    QString message = QString("pause %1").arg((paused ? "false" : "true"));
+    ClientInstance->request(message);
 }
 
 void RoomScene::updateVolumeConfig() {

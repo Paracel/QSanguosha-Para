@@ -3552,13 +3552,7 @@ void RoomScene::moveFocus(const QStringList &players, Countdown countdown) {
 }
 
 void RoomScene::setEmotion(const QString &who, const QString &emotion) {
-    bool permanent = false;
-    if (emotion == "question" || emotion == "no-question")
-        permanent = true;
-    setEmotion(who, emotion, permanent);
-}
-
-void RoomScene::setEmotion(const QString &who, const QString &emotion, bool permanent) {
+    bool permanent = (emotion == "question" || emotion == "no-question");
     if (emotion.startsWith("weapon/") || emotion.startsWith("armor/")) {
         if (Config.value("NoEquipAnim", false).toBool()) return;
         QString name = emotion.split("/").last();

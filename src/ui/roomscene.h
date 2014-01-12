@@ -337,7 +337,6 @@ private slots:
     void changeMaxHp(const QString &who, int delta);
     void moveFocus(const QStringList &who, QSanProtocol::Countdown);
     void setEmotion(const QString &who, const QString &emotion);
-    void setEmotion(const QString &who, const QString &emotion, bool permanent);
     void showSkillInvocation(const QString &who, const QString &skill_name);
     void doAnimation(int name, const QStringList &args);
     void showOwnerButtons(bool owner);

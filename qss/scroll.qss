@@ -1,5 +1,3 @@
-
-
 QTextEdit QScrollBar:vertical {
     border: 1px solid gray;
     background-color: rgba(43, 45, 31, 114);

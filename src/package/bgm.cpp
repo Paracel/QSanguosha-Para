@@ -235,11 +235,10 @@ public:
         if (toGainList.isEmpty()) return;
 
         room->fillAG(toGainList, sp_pangtong);
-        int id = room->askForAG(sp_pangtong, toGainList, false, objectName());
+        int id = room->askForAG(sp_pangtong, toGainList, true, objectName());
+        room->clearAG(sp_pangtong);
         if (id != -1)
             room->moveCardTo(Sanguosha->getCard(id), sp_pangtong, Player::PlaceHand, true);
-
-        room->clearAG(sp_pangtong);
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *sp_pangtong, QVariant &data) const{

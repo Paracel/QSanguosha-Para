@@ -74,7 +74,11 @@ sgs.ai_choicemade_filter = {
 sgs.card_lack = {}
 sgs.ai_need_damaged = {}
 sgs.ai_debug_func = {}
-sgs.ai_chat_func = {}
+sgs.ai_event_callback = {}
+
+for i = sgs.NonTrigger, sgs.NumOfEvents, 1 do
+	sgs.ai_event_callback[i] = {}
+end
 
 function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
@@ -1606,11 +1610,15 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 	else
 		sgs.debugmode = false
 	end
-	if player:objectName() == self.player:objectName() and sgs.debugmode and sgs.ai_debug_func[triggerEvent] and type(sgs.ai_debug_func[triggerEvent]) == "function" then
-		sgs.ai_debug_func[triggerEvent](self, player, data)
-	end
-	if sgs.GetConfig("AIChat", true) and player:objectName() == self.player:objectName() and player:getState() == "robot" and sgs.ai_chat_func[triggerEvent] and type(sgs.ai_chat_func[triggerEvent]) == "function" then
-		sgs.ai_chat_func[triggerEvent](self, player, data)
+	if player:objectName() == self.player:objectName() then
+		if sgs.debugmode and sgs.ai_debug_func[triggerEvent] and type(sgs.ai_debug_func[triggerEvent]) == "function" then
+			sgs.ai_debug_func[triggerEvent](self, player, data)
+		end
+		if type(sgs.ai_event_callback[event]) == "table" then
+			for _, callback in pairs(sgs.ai_event_callback[event]) do
+				if type(callback) == "function" then callback(self, player, data) end
+			end
+		end
 	end
 
 	if triggerEvent == sgs.ChoiceMade and self == sgs.recorder then

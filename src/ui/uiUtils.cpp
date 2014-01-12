@@ -493,4 +493,3 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(QPainter *painter, QSt
     painter->drawImage(topLeft.x() + xstart, topLeft.y() + ystart, result);
     return true;
 }
-

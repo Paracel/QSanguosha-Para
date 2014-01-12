@@ -44,3 +44,7 @@ ai.html
 *.sh
 /Qt*.dll
 /psd
+/lib/libplibul.a
+/lib/libfmodex.a
+/lib/libfreetype.dll.a
+/lib/libplibjs.a

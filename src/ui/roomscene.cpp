@@ -366,6 +366,8 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     pindian_from_card = NULL;
     pindian_to_card = NULL;
+
+    _m_bgEnabled = false;
 }
 
 void RoomScene::handleGameEvent(const Json::Value &arg) {
@@ -3473,7 +3475,7 @@ void KOFOrderBox::killPlayer(const QString &general_name) {
 
 void RoomScene::onGameStart() {
     main_window->activateWindow();
-    if (Config.GameMode.contains("_mini_")) {
+    if (ServerInfo.GameMode.contains("_mini_")) {
         QString id = Config.GameMode;
         id.replace("_mini_", "");
         _m_currentStage = id.toInt();
@@ -4331,6 +4333,7 @@ void RoomScene::pause() {
 }
 
 void RoomScene::updateVolumeConfig() {
+    if (!game_started) return;
     if (Config.EnableBgMusic) {
         // start playing background music
         QString bgMusicPath = Config.value("BackgroundMusic", "audio/system/background.ogg").toString();

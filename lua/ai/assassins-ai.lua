@@ -195,6 +195,9 @@ function sgs.ai_skill_pindian.mizhao(minusecard, self, requestor, maxcard)
 		req = requestor
 	end
 	local cards, maxcard = sgs.QList2Table(self.player:getHandcards())
+	local max_value = 0
+	self:sortByKeepValue(cards)
+	max_value = self:getKeepValue(cards[#cards])
 	local function compare_func1(a, b)
 		return a:getNumber() > b:getNumber()
 	end
@@ -207,7 +210,7 @@ function sgs.ai_skill_pindian.mizhao(minusecard, self, requestor, maxcard)
 		table.sort(cards, compare_func1)
 	end
 	for _, card in ipairs(cards) do
-		if self:getKeepValue(card) < 8 or card:isKindOf("EquipCard") then maxcard = card break end
+		if max_value > 7 or self:getKeepValue(card) < 7 or card:isKindOf("EquipCard") then maxcard = card break end
 	end
 	return maxcard or cards[1]
 end

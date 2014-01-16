@@ -1189,7 +1189,7 @@ sgs.ai_skill_use_func.NosGuhuoCard = function(card, use, self)
 	nosguhuocard:setSkillName("nosguhuo")
 	if nosguhuocard:getTypeId() == sgs.Card_TypeBasic then
 		self:useBasicCard(nosguhuocard, use)
-		if not use.isDummy and use.card and use.card:isKindOf("Slash") and (not use.to or use.to:isEmpty()) then return end
+		if not use.isDummy and use.card and nosguhuocard:isKindOf("Slash") and (not use.to or use.to:isEmpty()) then return end
 	else
 		assert(nosguhuocard)
 		self:useTrickCard(nosguhuocard, use)

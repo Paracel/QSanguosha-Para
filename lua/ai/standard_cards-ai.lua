@@ -593,6 +593,13 @@ function SmartAI:useCardSlash(card, use)
 		end
 	end
 
+	local qiuyuan_effect = false
+	for _, enemy in ipairs(self.enemies) do
+		if not enemy:isKongcheng() and not (enemy:getHandcardNum() == 1 and self:needKongcheng(enemy, true)) then
+			qiuyuan_effect = true
+			break
+		end
+	end
 	for _, friend in ipairs(self.friends_noself) do
 		local slash_prohibit = self:slashProhibit(card, friend)
 		if (not use.current_targets or not table.contains(use.current_targets, friend:objectName()))
@@ -600,7 +607,8 @@ function SmartAI:useCardSlash(card, use)
 			and (not use.to or not use.to:contains(friend))
 			and (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend, self.player) == 0 and friend:getHandcardNum() < 3)
 			or (self:getDamagedEffects(friend, self.player) and not (friend:isLord() and #self.enemies < 1))
-			or (self:needToLoseHp(friend, self.player, true, true) and not (friend:isLord() and #self.enemies < 1)) then
+			or (self:needToLoseHp(friend, self.player, true, true) and not (friend:isLord() and #self.enemies < 1))
+			or (friend:hasSkill("qiuyuan") and getKnownCard(friend, "Jink", true, true) >= 1 and qiuyuan_effect) then
 
 			if not slash_prohibit then
 				if ((self.player:canSlash(friend, card, not no_distance, rangefix))

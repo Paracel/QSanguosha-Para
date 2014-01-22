@@ -125,6 +125,14 @@ return {
 	["@kangkai-give"] = "请交给 %src 一张牌",
 	["kangkai_use:use"] = "你可以使用该装备牌",
 
+	["#xingcai"] = "敬哀皇后",
+	["xingcai"] = "星彩",
+	["illustrator:xingcai"] = "depp",
+	["shenxian"] = "甚贤",
+	[":shenxian"] = "你的回合外，每当一名其他角色因弃置而失去牌后，若其中有基本牌，你可以摸一张牌。",
+	["qiangwu"] = "枪舞",
+	[":qiangwu"] = "<font color=\"green\"><b>阶段技。</b></font>你可以进行判定：若如此做，本回合，你使用点数小于判定牌点数的【杀】无距离限制，你使用点数大于判定牌点数的【杀】不计入次数限制。",
+
 	["OL"] = "OL专属",
 
 	["#zhugeke"] = "兴家赤族",

@@ -575,6 +575,7 @@ function SmartAI:adjustUsePriority(card, v)
 			end
 			v = v - 0.05
 		end
+		if self.player:getMark("qiangwu") > 0 and card:getNumber() > self.player:getMark("qiangwu") then v = v + 0.21 end
 		if card:isKindOf("NatureSlash") then v = v - 0.1 end
 		if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 0.21 end
 		if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 0.21 or -0.1) end

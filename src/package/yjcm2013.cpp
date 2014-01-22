@@ -237,8 +237,11 @@ public:
             if (guanping && guanping->canDiscard(guanping, "he")
                 && room->askForCard(guanping, "..", "@longyin", data, objectName())) {
                 room->broadcastSkillInvoke(objectName(), use.card->isRed() ? 2 : 1);
-                if (use.m_addHistory)
+                if (use.m_addHistory) {
                     room->addPlayerHistory(player, use.card->getClassName(), -1);
+                    use.m_addHistory = false;
+                    data = QVariant::fromValue(use);
+                }
                 if (use.card->isRed())
                     guanping->drawCards(1);
             }

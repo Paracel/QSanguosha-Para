@@ -109,6 +109,8 @@ xiahouba				40
 chenlin					43					
 erqiao					60					
 xiahoushi				51					
+caoang					55					
+xingcai					67					
 zhugeke					78					
 lingcao					94					
 sunru					34					

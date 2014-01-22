@@ -1215,6 +1215,25 @@ sgs.ai_skill_invoke.kangkai = function(self, data)
 	end
 end
 
+sgs.ai_skill_invoke.shenxian = function(self, data)
+	return not hasManjuanEffect(self.player) and not self:needKongcheng(self.player, true)
+end
+
+local qiangwu_skill = {}
+qiangwu_skill.name = "qiangwu"
+table.insert(sgs.ai_skills, qiangwu_skill)
+qiangwu_skill.getTurnUseCard = function(self, inclusive)
+	if not self.player:hasUsed("QiangwuCard") then
+		return sgs.Card_Parse("@QiangwuCard=.")
+	end
+end
+
+sgs.ai_skill_use_func.QiangwuCard = function(card, use, self)
+	use.card = card
+end
+
+sgs.ai_use_priority.QiangwuCard = 11.0
+
 sgs.ai_skill_cardask["@kangkai_give"] = function(self, data, pattern, target)
 	if self:isFriend(target) then
 		local id = getKangkaiCard(self, target, data)

@@ -1480,6 +1480,113 @@ public:
     }
 };
 
+class Shenxian: public TriggerSkill {
+public:
+    Shenxian(): TriggerSkill("shenxian") {
+        events << CardsMoveOneTime;
+        frequency = Frequent;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (player->getPhase() == Player::NotActive && move.from && move.from->isAlive()
+            && move.from->objectName() != player->objectName()
+            && (move.from_places.contains(Player::PlaceHand) || move.from_places.contains(Player::PlaceEquip))
+            && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+            foreach (int id, move.card_ids) {
+                if (Sanguosha->getCard(id)->getTypeId() == Card::TypeBasic) {
+                    if (room->askForSkillInvoke(player, objectName(), data)) {
+                        room->broadcastSkillInvoke(objectName());
+                        player->drawCards(1);
+                    }
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+QiangwuCard::QiangwuCard() {
+    target_fixed = true;
+}
+
+void QiangwuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    JudgeStruct judge;
+    judge.pattern = ".";
+    judge.who = source;
+    judge.reason = "qiangwu";
+    judge.play_animation = false;
+    room->judge(judge);
+
+    bool ok = false;
+    int num = judge.pattern.toInt(&ok);
+    if (ok)
+        room->setPlayerMark(source, "qiangwu", num);
+}
+
+class QiangwuViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    QiangwuViewAsSkill(): ZeroCardViewAsSkill("qiangwu") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("QiangwuCard");
+    }
+
+    virtual const Card *viewAs() const{
+        return new QiangwuCard;
+    }
+};
+
+class Qiangwu: public TriggerSkill {
+public:
+    Qiangwu(): TriggerSkill("qiangwu") {
+        events << EventPhaseStart << PreCardUsed << FinishJudge;
+        view_as_skill = new QiangwuViewAsSkill;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive)
+                room->setPlayerMark(player, "qiangwu", 0);
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason == "qiangwu")
+                judge->pattern = QString::number(judge->card->getNumber());
+        } else if (triggerEvent == PreCardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.card->isKindOf("Slash") && player->getMark("qiangwu") > 0
+                && use.card->getNumber() > player->getMark("qiangwu")) {
+                if (use.m_addHistory) {
+                    room->addPlayerHistory(player, use.card->getClassName(), -1);
+                    use.m_addHistory = false;
+                    data = QVariant::fromValue(use);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class QiangwuTargetMod: public TargetModSkill {
+public:
+    QiangwuTargetMod(): TargetModSkill("#qiangwu-target") {
+    }
+
+    virtual int getDistanceLimit(const Player *from, const Card *card) const{
+        if (card->getNumber() < from->getMark("qiangwu"))
+            return 1000;
+        else
+            return 0;
+    }
+};
+
 #include "jsonutils.h"
 class AocaiViewAsSkill: public ZeroCardViewAsSkill {
 public:
@@ -1953,11 +2060,18 @@ SPPackage::SPPackage()
     sp_zhugejin->addSkill("huanshi");
     sp_zhugejin->addSkill("mingzhe");
 
+    General *xingcai = new General(this, "xingcai", "shu", 3, false); // SP 028
+    xingcai->addSkill(new Shenxian);
+    xingcai->addSkill(new Qiangwu);
+    xingcai->addSkill(new QiangwuTargetMod);
+    related_skills.insertMulti("qiangwu", "#qiangwu-target");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();
     addMetaObject<SongciCard>();
     addMetaObject<ZhoufuCard>();
+    addMetaObject<QiangwuCard>();
 }
 
 ADD_PACKAGE(SP)

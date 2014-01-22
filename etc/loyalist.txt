@@ -67,6 +67,7 @@ liubei					nos_huangyueying		1.0
 liubei					nos_zhangjiao			0.9
 liubei					nos_guanxingzhangbao	0.9
 liushan					shenzhugeliang			-0.6
+liushan					xingcai					0.3
 nos_liubei				xuchu					0.5
 nos_liubei				zhanghe					0.8
 nos_liubei				xuhuang					0.7

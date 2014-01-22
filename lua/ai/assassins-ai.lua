@@ -27,12 +27,18 @@ sgs.ai_skill_invoke.tianming = function(self, data)
 	local unpreferedCards = {}
 	local cards = sgs.QList2Table(self.player:getHandcards())
 
-	if self:getCardsNum("Slash") > 1 then
-		self:sortByKeepValue(cards)
+	self:sortByKeepValue(cards)
+	if self:isWeak() then
 		for _, card in ipairs(cards) do
 			if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
 		end
-		table.remove(unpreferedCards, 1)
+	else
+		if self:getCardsNum("Slash") > 1 then
+			for _, card in ipairs(cards) do
+				if card:isKindOf("Slash") then table.insert(unpreferedCards, card:getId()) end
+			end
+			table.remove(unpreferedCards, 1)
+		end
 	end
 
 	local num = self:getCardsNum("Jink") - 1

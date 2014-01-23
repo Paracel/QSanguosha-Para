@@ -1050,10 +1050,6 @@ public:
     virtual const Card *viewAs() const{
         return new PaiyiCard;
     }
-
-    virtual Location getLocation() const{
-        return Right;
-    }
 };
 
 class Jueqing: public TriggerSkill {

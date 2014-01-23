@@ -80,10 +80,6 @@ void Skill::initMediaSource() {
     }
 }
 
-Skill::Location Skill::getLocation() const{
-    return parent() ? Right : Left;
-}
-
 void Skill::playAudioEffect(int index, bool superpose) const{
     if (!sources.isEmpty()) {
         if (index == -1)

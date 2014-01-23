@@ -13,7 +13,6 @@ class QDialog;
 class Skill: public QObject {
     Q_OBJECT
     Q_ENUMS(Frequency)
-    Q_ENUMS(Location)
 
 public:
     enum Frequency {
@@ -22,11 +21,6 @@ public:
         Compulsory,
         Limited,
         Wake
-    };
-
-    enum Location {
-        Left,
-        Right
     };
 
     explicit Skill(const QString &name, Frequency frequent = NotFrequent);
@@ -39,8 +33,6 @@ public:
     virtual QString getDefaultChoice(ServerPlayer *player) const;
     virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const;
     virtual QDialog *getDialog() const;
-
-    virtual Location getLocation() const;
 
     void initMediaSource();
     void playAudioEffect(int index = -1, bool superpose = true) const;

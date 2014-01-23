@@ -768,10 +768,6 @@ public:
     virtual const Card *viewAs() const{
         return new NosYexinCard;
     }
-
-    virtual Location getLocation() const{
-        return Right;
-    }
 };
 
 class NosYexin: public TriggerSkill {

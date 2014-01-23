@@ -1161,10 +1161,6 @@ public:
         room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
         return false;
     }
-
-    virtual Location getLocation() const{
-        return Right;
-    }
 };
 
 WindPackage::WindPackage()

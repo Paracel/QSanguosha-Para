@@ -2148,7 +2148,6 @@ BGMDIYPackage::BGMDIYPackage(): Package("BGMDIY") {
     diy_liuxie->addSkill(new HantongDetach);
     related_skills.insertMulti("hantong", "#hantong-acquire");
     related_skills.insertMulti("hantong", "#hantong-detach");
-    related_skills.insertMulti("hantong", "#hantong-clear");
 
     General *diy_gongsunzan = new General(this, "diy_gongsunzan", "qun"); // DIY 004
     diy_gongsunzan->addSkill(new DIYYicong);

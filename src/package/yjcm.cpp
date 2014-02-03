@@ -873,9 +873,9 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
         else
             non_hearts << card_id;
     }
-    DummyCard *dummy = new DummyCard;
 
     if (!hearts.isEmpty()) {
+        DummyCard *dummy = new DummyCard;
         do {
             room->fillAG(left, source, non_hearts);
             int card_id = room->askForAG(source, hearts, true, "xinzhan");

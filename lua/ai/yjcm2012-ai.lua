@@ -387,10 +387,13 @@ sgs.ai_skill_use_func.JiefanCard = function(card, use, self)
 	local target
 	local use_value = 0
 	local max_value = -10000
+	local p_count = 0
 	for _, friend in ipairs(self.friends) do
 		use_value = 0
+		local count = 0
 		for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
 			if p:inMyAttackRange(friend) then
+				count = count + 1
 				if self:isFriend(p) then
 					if not friend:hasSkill("manjuan") then use_value = use_value + 1 end
 				else
@@ -402,6 +405,7 @@ sgs.ai_skill_use_func.JiefanCard = function(card, use, self)
 				end
 			end
 		end
+		if friend:objectName() == self.player:objectName() then p_count = count end
 		use_value = use_value - friend:getHandcardNum() / 2
 		if use_value > max_value then
 			max_value = use_value
@@ -412,6 +416,12 @@ sgs.ai_skill_use_func.JiefanCard = function(card, use, self)
 	if target and max_value >= self.player:aliveCount() / 2 then
 		use.card = card
 		if use.to then use.to:append(target) end
+		return
+	end
+
+	if self:isWeak() and p_count > 0 then
+		use.card = card
+		if use.to then use.to:append(self.player) end
 	end
 end
 

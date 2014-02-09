@@ -418,7 +418,7 @@ function SmartAI:findWeaponToUse(enemy)
 	end
 	if not hasweapon then return end
 	if self.player:getWeapon() then weaponvalue[self.player:getWeapon()] = self:evaluateWeapon(self.player:getWeapon(), self.player, enemy) end
-	local max_value, max_card = -10
+	local max_value, max_card = -1000
 	for c, v in pairs(weaponvalue) do
 		if v > max_value then max_card = c max_value = v end
 	end

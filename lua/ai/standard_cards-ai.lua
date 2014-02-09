@@ -1849,7 +1849,7 @@ function SmartAI:getValuableCard(who)
 
 	local equips = sgs.QList2Table(who:getEquips())
 	for _, equip in ipairs(equips) do
-		if who:hasSkills("longhun|guose|yanxiao") and not equip:getSuit() == sgs.Card_Diamond then return equip:getEffectiveId() end
+		if who:hasSkills("longhun|guose|yanxiao") and equip:getSuit() ~= sgs.Card_Diamond then return equip:getEffectiveId() end
 		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
 		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
 		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
@@ -2436,7 +2436,7 @@ sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target,
 				return slash:toString()
 			end
 		end
-		if (target:getHp() > 2 or getCardsNum("Jink", target, self.player) > 1) and not target:getRole() == "lord" and self.player:getHandcardNum() > 1 then
+		if (target:getHp() > 2 or getCardsNum("Jink", target, self.player) > 1) and target:getRole() ~= "lord" and self.player:getHandcardNum() > 1 then
 			for _, slash in ipairs(self:getCards("Slash")) do
 				return slash:toString()
 			end

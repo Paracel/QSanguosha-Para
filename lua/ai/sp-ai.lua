@@ -1058,7 +1058,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 				end
 			elseif reason == "supply_shortage" then
 				for _, card in ipairs(cards) do
-					if not card:getSuit() == sgs.Card_Club and not self:isValuableCard(card) then
+					if card:getSuit() ~= sgs.Card_Club and not self:isValuableCard(card) then
 						use.card = sgs.Card_Parse("@ZhoufuCard=" .. card:getEffectiveId())
 						if use.to then use.to:append(enemy) end
 						return

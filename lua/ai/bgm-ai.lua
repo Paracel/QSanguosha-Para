@@ -1036,7 +1036,7 @@ sgs.ai_skill_cardask["@langgu-card"] = function(self, data)
 		if judge.card:getSuit() == sgs.Card_Spade then
 			self:sortByKeepValue(cards)
 			for _, card in ipairs(cards) do
-				if not card:getSuit() == sgs.Card_Spade and not isCard("Peach", card, self.player) then
+				if card:getSuit() ~= sgs.Card_Spade and not isCard("Peach", card, self.player) then
 					return "$" .. card:getId()
 				end
 			end

@@ -227,7 +227,7 @@ function sgs.getDefense(player, gameProcess, update)
 		return sgs.ai_defense[defenseType][player:objectName()] or 0
 	end
 
-	local defense = math.min(sgs.getValue(player), player:getHp() * 3)
+	local defense = math.min(player:getHp() * 2 + player:getHandcardNum(), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
 	local hasEightDiagram = false
 	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
@@ -283,10 +283,6 @@ function sgs.getDefense(player, gameProcess, update)
 		if sgs.isLordInDanger() then defense = defense - 0.7 end
 	end
 
-	if not gameProcess and (sgs.ai_chaofeng[player:getGeneralName()] or 0) >= 3 then
-		defense = defense - math.max(6, (sgs.ai_chaofeng[player:getGeneralName()] or 0)) * 0.035
-	end
-
 	if not player:faceUp() then defense = defense - 0.35 end
 	if player:containsTrick("indulgence") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
 	if player:containsTrick("supply_shortage") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
@@ -300,7 +296,7 @@ function sgs.getDefense(player, gameProcess, update)
 		if player:hasSkills("noslijian|lijian") then defense = defense - 2.2 end
 		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
 	end
-	defense = defense + player:getHandcardNum() * 0.25
+
 	sgs.ai_defense[defenseType][player:objectName()] = defense
 	return defense
 end
@@ -970,7 +966,10 @@ sgs.ai_card_intention.general = function(from, to, level)
 		end
 		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
 	end
-	sgs.evaluateAlivePlayersRole()
+
+	for _, p in sgs.qlist(global_room:getAllPlayers()) do
+		sgs.ais[p:objectName()]:updatePlayers(true, p:isLord())
+	end
 	sgs.outputRoleValues(from, level)
 end
 
@@ -1969,7 +1968,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 							and not has_slash_prohibit_skill and sgs.isGoodTarget(target, self.enemies, self) then
 							if is_neutral then
 								sgs.updateIntention(player, target, -35)
-								self:updatePlayers()
 							end
 						end
 					end
@@ -1981,7 +1979,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 							local aplayer = self:exclude({ target }, card, player)
 							if #aplayer == 1 and is_neutral then
 								sgs.updateIntention(player, target, -35)
-								self:updatePlayers()
 							end
 						end
 					end
@@ -1994,7 +1991,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 							local aplayer = self:exclude({ target }, card, player)
 							if #aplayer == 1 and is_neutral then
 								sgs.updateIntention(player, target, -35)
-								self:updatePlayers()
 							end
 						end
 					end

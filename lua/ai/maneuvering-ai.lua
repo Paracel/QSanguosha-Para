@@ -420,7 +420,7 @@ function SmartAI:useCardIronChain(card, use)
 		if self:getOverflow() <= 0 and self.player:hasSkill("manjuan") then return end
 		if self.player:hasSkill("wumou") and self.player:getMark("@wrath") < 7 then return end
 	end
-	local friendtargets = {}
+	local friendtargets, friendtargets2 = {}, {}
 	local otherfriends = {}
 	local enemytargets = {}
 	local yangxiu = self.room:findPlayerBySkillName("danlao")
@@ -429,11 +429,16 @@ function SmartAI:useCardIronChain(card, use)
 	for _, friend in ipairs(self.friends) do
 		if use.current_targets and table.contains(use.current_targets, friend:objectName()) then continue end
 		if friend:isChained() and not self:isGoodChainPartner(friend) and self:hasTrickEffective(card, friend) and not friend:hasSkill("danlao") then
-			table.insert(friendtargets, friend)
+			if friend:containsTrick("lightning") then
+				table.insert(friendtargets, friend)
+			else
+				table.insert(friendtargets2, friend)
+			end
 		else
 			table.insert(otherfriends, friend)
 		end
 	end
+	table.insertTable(friendtargets, friendtargets2)
 	if not (liuxie and self:isEnemy(liuxie)) then
 		self:sort(self.enemies, "defense")
 		for _, enemy in ipairs(self.enemies) do

@@ -75,6 +75,10 @@ sgs.card_lack = {}
 sgs.ai_need_damaged = {}
 sgs.ai_debug_func = {}
 sgs.ai_event_callback = {}
+sgs.ai_defense = {
+	Normal = {},
+	Process = {}
+}
 
 for i = sgs.NonTrigger, sgs.NumOfEvents, 1 do
 	sgs.ai_event_callback[i] = {}
@@ -215,8 +219,14 @@ function sgs.getValue(player)
 	return player:getHp() * 2 + player:getHandcardNum()
 end
 
-function sgs.getDefense(player, gameProcess)
+function sgs.getDefense(player, gameProcess, update)
 	if not player then return 0 end
+
+	local defenseType = gameProcess and "Process" or "Normal"
+	if not update and global_room:getCurrent() then
+		return sgs.ai_defense[defenseType][player:objectName()] or 0
+	end
+
 	local defense = math.min(sgs.getValue(player), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
 	local hasEightDiagram = false
@@ -291,6 +301,7 @@ function sgs.getDefense(player, gameProcess)
 		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
 	end
 	defense = defense + player:getHandcardNum() * 0.25
+	sgs.ai_defense[defenseType][player:objectName()] = defense
 	return defense
 end
 
@@ -1431,6 +1442,9 @@ function SmartAI:updatePlayers(clear_flags)
 		return
 	end
 
+	self:updateAlivePlayerRoles()
+	sgs.evaluateAlivePlayersRole()
+
 	self.enemies = {}
 	self.friends = {}
 	self.friends_noself = {}
@@ -1449,9 +1463,12 @@ function SmartAI:updatePlayers(clear_flags)
 	end
 	table.insert(self.friends, self.player)
 
-	if sgs.isRolePredictable() then return end
-	self:updateAlivePlayerRoles()
-	sgs.evaluateAlivePlayersRole()
+	if update then
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			sgs.getDefense(p, true, true)
+			sgs.getDefense(p, false, true)
+		end
+	end
 end
 
 function sgs.evaluateAlivePlayersRole()
@@ -1657,10 +1674,10 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				end
 			end
 		end
-	elseif triggerEvent == sgs.CardUsed or triggerEvent == sgs.CardEffected or triggerEvent == sgs.GameStart or triggerEvent == sgs.EventPhaseStart then
-		self:updatePlayers()
-	elseif triggerEvent == sgs.BuryVictim or triggerEvent == sgs.HpChanged or triggerEvent == sgs.MaxHpChanged then
-		self:updatePlayers(false)
+	elseif event == sgs.CardUsed or event == sgs.GameStart or event == sgs.EventPhaseStart then
+		self:updatePlayers(true, self == sgs.recorder)
+	elseif event == sgs.BuryVictim or event == sgs.HpChanged or event == sgs.MaxHpChanged then
+		self:updatePlayers(false, self == sgs.recorder)
 	end
 
 	if triggerEvent == sgs.BuryVictim then

@@ -103,7 +103,8 @@ function sgs.ai_armor_value.vine(player, self)
 		return player:hasSkill("kongcheng") and 5 or 3.8
 	end
 	if player:hasSkills(sgs.lose_equip_skill) then return 3.8 end
-	return 3.5
+	if player:hasSkill("xiansi") and player:getPile("counter"):length() > 1 then return 3.5 end
+	return 3
 end
 
 function SmartAI:useCardAnaleptic(card, use)

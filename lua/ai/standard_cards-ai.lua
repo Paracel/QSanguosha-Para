@@ -528,6 +528,16 @@ function SmartAI:useCardSlash(card, use)
 			and not canliuli
 			and not (not self:isWeak(target) and #self.enemies > 1 and #self.friends > 1 and self.player:hasSkill("keji")
 			and self:getOverflow() > 0 and not self:hasCrossbowEffect()) then
+
+			if target:getHp() > 1 and target:hasSkill("jianxiong") and card:getSkillName() == "spear" then
+				local ids, isGood = card:getSubcards(), true
+				for _, id in sgs.qlist(ids) do
+					local c = sgs.Sanguosha:getCard(id)
+					if isCard("Peach", c, target) or isCard("Analeptic", c, target) then isGood = false break end
+				end
+				if not isGood then continue end
+			end
+ 
 			-- fill the card use struct
 			local usecard = card
 			if not use.to or use.to:isEmpty() then

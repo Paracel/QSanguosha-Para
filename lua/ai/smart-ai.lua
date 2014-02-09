@@ -1158,7 +1158,7 @@ function SmartAI:objectiveLevel(player)
 			local process = sgs.gameProcess(self.room)
 			if process == "neutral" or (sgs.turncount <= 1 and sgs.isLordHealthy()) then
 				if sgs.turncount <= 1 and sgs.isLordHealthy() then
-					if self:getOverflow() <= 0 then return 0 end
+					if self:getOverflow() <= -1 then return 0 end
 					local rebelish = (sgs.current_mode_players["loyalist"] + 1 < sgs.current_mode_players["rebel"])
 					if player:isLord() then return rebelish and -1 or 0 end
 					if target_role == "loyalist" then return rebelish and 0 or 3.5

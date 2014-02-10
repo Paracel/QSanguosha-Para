@@ -419,8 +419,7 @@ sgs.ai_skill_use_func.TanhuCard = function(card, use, self)
 	end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByUseValue(cards, true)
-	if self:getUseValue(cards[1]) >= 6 or self:getKeepValue(cards[1]) >= 6 then return end
-	if self:getOverflow() > 0 then
+	if (self:getUseValue(cards[1]) < 6 and self:getKeepValue(cards[1]) < 6) or self:getOverflow() > 0 then
 		if not ptarget:isKongcheng() then
 			self.tanhu_card = max_card:getEffectiveId()
 			use.card = sgs.Card_Parse("@TanhuCard=.")

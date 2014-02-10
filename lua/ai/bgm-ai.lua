@@ -647,7 +647,6 @@ end
 
 sgs.ai_skill_use_func.YanxiaoCard = function(card, use, self)
 	local players = self.room:getOtherPlayers(self.player)
-	local tricks
 	self:sort(self.friends_noself, "defense")
 	for _, friend in ipairs(self.friends_noself) do
 		local judges = friend:getJudgingArea()

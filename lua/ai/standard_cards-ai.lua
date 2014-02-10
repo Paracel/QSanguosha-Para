@@ -852,7 +852,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 			end
 		end
 		if self.player:getHp() > 1 and getKnownCard(target, self.player, "Slash") >= 1 and getKnownCard(target, self.player, "Analeptic") >= 1 and self:getCardsNum("Jink") == 1
-			and (target:getPhase() < sgs.Player_Play or (self:slashIsAvailable(player) and player:canSlash(self.player))) then
+			and (target:getPhase() < sgs.Player_Play or (self:slashIsAvailable(target) and target:canSlash(self.player))) then
 			return "."
 		end
 		if not (target:hasSkill("nosqianxi") and target:distanceTo(self.player) == 1) then

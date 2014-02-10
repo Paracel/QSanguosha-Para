@@ -1173,7 +1173,7 @@ function SmartAI:objectiveLevel(player)
 				end
 				return 3
 			elseif process:match("rebel") then
-				return target_role == "rebel" and 5 or -1
+				return target_role == "rebel" and 5 or (target_role == "neutral" and 0 or -1)
 			elseif process:match("dilemma") then
 				if target_role == "rebel" then return 5
 				elseif target_role == "loyalist" or target_role == "renegade" then return 0
@@ -1217,8 +1217,8 @@ function SmartAI:objectiveLevel(player)
 				elseif current_enemy_num + (consider_renegade and current_renegade_num or rebelish and 0 or current_renegade_num)
 						>= rebel_num + (consider_renegade and renegade_num or (rebelish and 0 or renegade_num)) then
 					return -1
-				elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or disadvantage) and current_renegade_num or 0) + 1
-						== loyal_num + ((disadvantage or consider_renegade) and renegade_num or 0) + 1) and current_enemy_num <= 1 then
+				elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or rebelish) and current_renegade_num or 0) + 1
+						== loyal_num + ((rebelish or consider_renegade) and renegade_num or 0) + 1) and current_enemy_num <= 1 then
 					return 1
 				end
 			else
@@ -1309,8 +1309,8 @@ function SmartAI:objectiveLevel(player)
 			elseif current_enemy_num + (consider_renegade and current_renegade_num or loyalish and 0 or current_renegade_num)
 					>= loyal_num + (consider_renegade and renegade_num or (loyalish and 0 or renegade_num)) + 1 then
 				return -2
-			elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or disadvantage) and current_renegade_num or 0) + 1
-					== rebel_num + ((consider_renegade or disadvantage) and renegade_num or 0)) and current_enemy_num <= 1 then
+			elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or loyalish) and current_renegade_num or 0) + 1
+					== rebel_num + ((consider_renegade or loyalish) and renegade_num or 0)) and current_enemy_num <= 1 then
 				return 1
 			else
 				return 0

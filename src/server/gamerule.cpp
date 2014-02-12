@@ -829,7 +829,6 @@ HulaoPassMode::HulaoPassMode(QObject *parent)
 {
     setObjectName("hulaopass_mode");
     events << HpChanged << StageChange;
-    default_choice = "recover";
 }
 
 bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

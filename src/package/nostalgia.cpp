@@ -245,7 +245,6 @@ class NosXuanfeng: public TriggerSkill {
 public:
     NosXuanfeng(): TriggerSkill("nosxuanfeng") {
         events << CardsMoveOneTime;
-        default_choice = "nothing";
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lingtong, QVariant &data) const{

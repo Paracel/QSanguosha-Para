@@ -20,7 +20,7 @@ Skill::Skill(const QString &name, Frequency frequency)
         copy.remove(lord_symbol);
         setObjectName(copy);
         lord_skill = true;
-    } if (name.endsWith(attached_lord_symbol)) {
+    } else if (name.endsWith(attached_lord_symbol)) {
         QString copy = name;
         copy.remove(attached_lord_symbol);
         setObjectName(copy);

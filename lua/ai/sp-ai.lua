@@ -98,8 +98,6 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 	return to_discard
 end
 
-sgs.ai_chaofeng.yuanshu = 3
-
 sgs.ai_skill_invoke.danlao = function(self, data)
 	local effect = data:toCardUse()
 	local current = self.room:getCurrent()

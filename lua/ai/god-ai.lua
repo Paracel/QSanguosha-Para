@@ -129,8 +129,6 @@ function SmartAI:doNotSave(player)
 	return false
 end
 
-sgs.ai_chaofeng.shenguanyu = -6
-
 sgs.ai_skill_invoke.shelie = true
 
 local gongxin_skill = {}
@@ -745,8 +743,6 @@ sgs.ai_need_damaged.guixin = function(self, attacker, player)
 	end
 	return not self:isLihunTarget(player, drawcards)
 end
-
-sgs.ai_chaofeng.shencaocao = -6
 
 sgs.ai_skill_choice.wumou = function(self, choices)
 	if self.player:getMark("@wrath") > 6 then return "discard" end

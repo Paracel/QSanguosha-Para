@@ -119,8 +119,6 @@ function sgs.ai_slash_prohibit.huilei(self, from, to)
 	return #(self:getEnemies(from)) > 1 and self:isWeak(to) and from:getHandcardNum() > 3
 end
 
-sgs.ai_chaofeng.masu = -4
-
 sgs.ai_skill_invoke.enyuan = function(self, data)
 	local damage = data:toDamage()
 	if damage and damage.from then
@@ -309,8 +307,6 @@ sgs.ai_skill_cardask["xuanhuo-slash"] = function(self, data, pattern, target, ta
 	end
 	return "."
 end
-
-sgs.ai_chaofeng.fazheng = -3
 
 function sgs.ai_skill_invoke.xuanfeng(self, data)
 	if self.player:getPhase() == sgs.Player_Discard then

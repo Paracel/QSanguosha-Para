@@ -230,8 +230,6 @@ sgs.guicai_suit_value = {
 	spade = 3.5
 }
 
-sgs.ai_chaofeng.simayi = -2
-
 sgs.ai_skill_invoke.ganglie = function(self, data)
 	local mode = self.room:getMode()
 	if mode:find("_mini_40") or mode:find("_mini_46") then return true end
@@ -315,8 +313,6 @@ sgs.ai_choicemade_filter.skillInvoke.ganglie = function(self, player, promptlist
 		end
 	end
 end
-
-sgs.ai_chaofeng.xiahoudun = -3
 
 sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	self:sort(self.enemies, "handcard")
@@ -456,8 +452,6 @@ sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 	end
 end
 
-sgs.ai_chaofeng.zhangliao = 4
-
 sgs.ai_skill_invoke.luoyi = function(self, data)
 	if self.player:isSkipped(sgs.Player_Play) then return false end
 	local cards = self.player:getHandcards()
@@ -536,8 +530,6 @@ sgs.luoyi_keep_value = {
 	SPMoonSpear = 4.5,
 	DefensiveHorse = 4
 }
-
-sgs.ai_chaofeng.xuchu = 3
 
 sgs.ai_skill_invoke.tiandu = sgs.ai_skill_invoke.jianxiong
 
@@ -621,8 +613,6 @@ sgs.ai_need_damaged.yiji = function(self, attacker, player)
 
 	return player:getHp() > 2 and sgs.turncount > 2 and #friends > 1
 end
-
-sgs.ai_chaofeng.guojia = -4
 
 sgs.ai_view_as.qingguo = function(card, player, card_place)
 	local suit = card:getSuitString()
@@ -1105,8 +1095,6 @@ function sgs.ai_cardsview_valuable.jijiang(self, class_name, player, need_lord)
 	end
 end
 
-sgs.ai_chaofeng.liubei = -2
-
 function SmartAI:getJijiangSlashNum(player)
 	if not player then self.room:writeToConsole(debug.traceback()) return 0 end
 	if not player:hasLordSkill("jijiang") then return 0 end
@@ -1192,8 +1180,6 @@ sgs.paoxiao_keep_value = {
 	ExNihilo = 4.7
 }
 
-sgs.ai_chaofeng.zhangfei = 3
-
 dofile "lua/ai/guanxing-ai.lua"
 
 local longdan_skill = {}
@@ -1267,8 +1253,6 @@ sgs.ai_skill_invoke.tieji = function(self, data)
 	return true
 end
 
-sgs.ai_chaofeng.machao = 1
-
 function SmartAI:isValuableCard(card, player)
 	player = player or self.player
 	if (isCard("Peach", card, player) and getCardsNum("Peach", player, self.player) <= 2)
@@ -1327,8 +1311,6 @@ sgs.jizhi_keep_value = {
 	Collateral = 5,
 	FireAttack = 4.9
 }
-
-sgs.ai_chaofeng.huangyueying = 4
 
 local zhiheng_skill = {}
 zhiheng_skill.name = "zhiheng"
@@ -1549,8 +1531,6 @@ function sgs.ai_cardneed.qixi(to, card)
 	return card:isBlack()
 end
 
-sgs.ai_chaofeng.ganning = 2
-
 local kurou_skill = {}
 kurou_skill.name = "kurou"
 table.insert(sgs.ai_skills, kurou_skill)
@@ -1596,8 +1576,6 @@ sgs.ai_skill_use_func.KurouCard = function(card, use, self)
 end
 
 sgs.ai_use_priority.KurouCard = 6.8
-
-sgs.ai_chaofeng.huanggai = 3
 
 local fanjian_skill = {}
 fanjian_skill.name = "fanjian"
@@ -1670,8 +1648,6 @@ function sgs.ai_skill_suit.fanjian(self)
 end
 
 sgs.dynamic_value.damage_card.FanjianCard = true
-
-sgs.ai_chaofeng.zhouyu = 3
 
 sgs.ai_skill_invoke.lianying = function(self, data)
 	if self:needKongcheng(self.player, true) then
@@ -1863,10 +1839,6 @@ sgs.guose_suit_value = {
 	diamond = 3.9
 }
 
-sgs.ai_chaofeng.daqiao = 2
-
-sgs.ai_chaofeng.luxun = -1
-
 local jieyin_skill = {}
 jieyin_skill.name = "jieyin"
 table.insert(sgs.ai_skills, jieyin_skill)
@@ -1974,7 +1946,7 @@ sgs.ai_skill_use_func.JieyinCard = function(card, use, self)
 		local others = self.room:getOtherPlayers(self.player)
 		for _, other in sgs.qlist(others) do
 			if other:isWounded() and other:isMale() then
-				if (sgs.ai_chaofeng[other:getGeneralName()] or 0) <= 2 and not other:hasSkills(sgs.masochism_skill) then
+				if not other:hasSkills(sgs.masochism_skill) then
 					target = other
 					self.player:setFlags("AI_JieyinToEnemy_" .. other:objectName())
 					break
@@ -2008,8 +1980,6 @@ sgs.xiaoji_keep_value = {
 	OffensiveHorse = 4.8,
 	DefensiveHorse = 5
 }
-
-sgs.ai_chaofeng.sunshangxiang = 6
 
 local qingnang_skill = {}
 qingnang_skill.name = "qingnang"
@@ -2070,8 +2040,6 @@ sgs.ai_cardneed.jijiu = function(to, card)
 	return card:isRed()
 end
 
-sgs.ai_chaofeng.huatuo = 6
-
 sgs.ai_skill_cardask["@wushuang-slash-1"] = function(self, data, pattern, target)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 	if self:canUseJieyuanDecrease(target) then return "." end
@@ -2093,8 +2061,6 @@ sgs.ai_skill_cardask["@multi-jink-start"] = function(self, data, pattern, target
 end
 
 sgs.ai_skill_cardask["@multi-jink"] = sgs.ai_skill_cardask["@multi-jink-start"]
-
-sgs.ai_chaofeng.lvbu = 1
 
 function SmartAI:getLijianCard()
 	local card_id
@@ -2431,8 +2397,6 @@ end
 sgs.ai_skill_invoke.biyue = function(self, data)
 	return not self:needKongcheng(self.player, true)
 end
-
-sgs.ai_chaofeng.diaochan = 4
 
 function SmartAI:canUseJieyuanDecrease(damage_from, player)
 	if not damage_from then return false end

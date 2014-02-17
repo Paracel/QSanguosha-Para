@@ -128,8 +128,6 @@ sgs.ai_playerchosen_intention.jieming = function(self, from, to)
 	end
 end
 
-sgs.ai_chaofeng.xunyu = 3
-
 local qiangxi_skill = {}
 qiangxi_skill.name = "qiangxi"
 table.insert(sgs.ai_skills, qiangxi_skill)
@@ -197,8 +195,6 @@ sgs.qiangxi_keep_value = {
 	Jink = 5.1,
 	Weapon = 5
 }
-
-sgs.ai_chaofeng.dianwei = 2
 
 local huoji_skill = {}
 huoji_skill.name = "huoji"
@@ -331,8 +327,6 @@ sgs.ai_skill_invoke.niepan = function(self, data)
 	local peaches = 1 - dying.who:getHp()
 	return self:getCardsNum("Peach") + self:getCardsNum("Analeptic") < peaches
 end
-
-sgs.ai_chaofeng.pangtong = -1
 
 local tianyi_skill = {}
 tianyi_skill.name = "tianyi"
@@ -504,8 +498,6 @@ sgs.dynamic_value.control_card.TianyiCard = true
 
 sgs.ai_use_value.TianyiCard = 8.5
 
-sgs.ai_chaofeng.taishici = 3
-
 local luanji_skill = {}
 luanji_skill.name = "luanji"
 table.insert(sgs.ai_skills, luanji_skill)
@@ -553,8 +545,6 @@ luanji_skill.getTurnUseCard = function(self)
 	end
 end
 
-sgs.ai_chaofeng.yuanshao = 1
-
 sgs.ai_skill_invoke.shuangxiong = function(self, data)
 	if self.player:isSkipped(sgs.Player_Play) or (self.player:getHp() < 2 and not (self:getCardsNum("Slash") > 1 and self.player:getHandcardNum() >= 4))
 		or #self.enemies == 0 then
@@ -600,8 +590,6 @@ shuangxiong_skill.getTurnUseCard = function(self)
 	assert(skillcard)
 	return skillcard
 end
-
-sgs.ai_chaofeng.yanliangwenchou = 1
 
 sgs.ai_skill_invoke.mengjin = function(self, data)
 	local effect = data:toSlashEffect()

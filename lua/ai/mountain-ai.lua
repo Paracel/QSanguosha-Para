@@ -906,8 +906,6 @@ sgs.ai_skill_askforag.guzheng = function(self, card_ids)
 	return card_ids[1]
 end
 
-sgs.ai_chaofeng.erzhang = 5
-
 sgs.ai_skill_cardask["@beige"] = function(self, data)
 	local damage = data:toDamage()
 	if not self:isFriend(damage.to) or self:isFriend(damage.from) then return "." end
@@ -928,8 +926,6 @@ function sgs.ai_slash_prohibit.duanchang(self, from, to)
 	if from:getMaxHp() <= 3 or (self.room:getLord() and from:getRole() == "renegade") then return true end
 	return false
 end
-
-sgs.ai_chaofeng.caiwenji = -5
 
 sgs.ai_skill_invoke.huashen = function(self)
 	return self.player:getHp() > 0

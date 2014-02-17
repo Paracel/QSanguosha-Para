@@ -247,10 +247,6 @@ function sgs.getDefenseSlash(player, self)
 		if sgs.isLordInDanger() then defense = defense - 0.7 end
 	end
 
-	if (sgs.ai_chaofeng[player:getGeneralName()] or 0) >= 3 then
-		defense = defense - math.max(6, (sgs.ai_chaofeng[player:getGeneralName()] or 0)) * 0.035
- 	end
-
 	if not player:faceUp() then defense = defense - 0.35 end
 
 	if player:containsTrick("indulgence") and not player:containsTrick("YanxiaoCard") then defense = defense - 0.15 end
@@ -2548,8 +2544,8 @@ function SmartAI:useCardIndulgence(card, use)
 
 		local value = enemy:getHandcardNum() - enemy:getHp()
 
-		if enemy:hasSkills("noslijian|lijian|fanjian|dimeng|jijiu|jieyin|anxu|yongsi|zhiheng|manjuan|nosrende|rende") then value = value + 10 end
-		if enemy:hasSkills("nosrende|rende|qixi|qice|guose|duanliang|nosjujian|luoshen|nosjizhi|jizhi|jilve|wansha|mingce") then value = value + 5 end
+		if enemy:hasSkills("noslijian|lijian|fanjian|dimeng|jijiu|jieyin|anxu|yongsi|zhiheng|manjuan|nosrende|rende|qixi|jixi") then value = value + 10 end
+		if enemy:hasSkills("qice|guose|duanliang|nosjujian|luoshen|nosjizhi|jizhi|jilve|wansha|mingce") then value = value + 5 end
 		if enemy:hasSkills("guzheng|luoying|yinling|gongxin|shenfen|ganlu|duoshi") then value = value + 3 end
 		if self:isWeak(enemy) then value = value + 3 end
 		if enemy:isLord() then value = value + 3 end
@@ -2739,7 +2735,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	end
 	if (not friendNeedPeach and peach) or peachnum > 1 then return peach end
 
-	local exnihilo, jink, analeptic, nullification, snatch, dismantlement
+	local exnihilo, jink, analeptic, nullification, snatch, dismantlement, indulgence
 	for _, card in ipairs(cards) do
 		if isCard("ExNihilo", card, self.player) then
 			if not nextPlayerCanUse or (not self:willSkipPlayPhase() and (self.player:hasSkills("nosjizhi|jizhi|zhiheng|nosrende|rende") or not nextp:hasSkills("nosjizhi|jizhi|zhiheng"))) then
@@ -2755,6 +2751,8 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			snatch = card
 		elseif isCard("Dismantlement", card, self.player) then
 			dismantlement = card
+		elseif isCard("Indulgence", card, self.player) then
+			indulgence = card:getEffectiveId(
 		end
 	end
 
@@ -2776,6 +2774,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		if (jink or analeptic) and (self:getCardsNum("Jink") == 0 or (self:isWeak() and self:getOverflow() == 0)) then
 			return jink or analeptic
 		end
+		if indulgence then return indulgence end
 	else
 		local CP = self.room:getCurrent()
 		local possible_attack = 0
@@ -2787,7 +2786,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		if possible_attack > self:getCardsNum("Jink") and self:getCardsNum("Jink") <= 2 and sgs.getDefenseSlash(self.player, self) <= 2 then
 			if jink or analeptic or exnihilo then return jink or analeptic or exnihilo end
 		else
-			if exnihilo then return exnihilo end
+			if exnihilo or indulgence then return exnihilo or indulgence
 		end
 	end
 

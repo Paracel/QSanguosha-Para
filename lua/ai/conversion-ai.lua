@@ -24,8 +24,6 @@ sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	return lord:getKingdom() == "shu"
 end
 
-sgs.ai_chaofeng.sp_sunshangxiang = sgs.ai_chaofeng.sunshangxiang
-
 sgs.ai_skill_invoke.cv_caiwenji = function(self, data)
 	local lord = self.room:getLord()
 	if lord and not self.player:getGeneral2Name() == "caiwenji" and lord:hasLordSkill("xueyi") then
@@ -33,8 +31,6 @@ sgs.ai_skill_invoke.cv_caiwenji = function(self, data)
 	end
 	return lord:getKingdom() == "wei"
 end
-
-sgs.ai_chaofeng.sp_caiwenji = sgs.ai_chaofeng.caiwenji
 
 sgs.ai_skill_invoke.cv_machao = function(self, data)
 	local lord = self.room:getLord()
@@ -51,8 +47,6 @@ sgs.ai_skill_invoke.cv_machao = function(self, data)
 	end
 end
 
-sgs.ai_chaofeng.sp_machao = sgs.ai_chaofeng.machao
-
 sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	if math.random(0, 2) == 0 then return false
 	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "tw_diaochan"
@@ -60,8 +54,6 @@ sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	else sgs.ai_skill_choice.cv_diaochan = "sp_diaochan" end
 	return true
 end
-
-sgs.ai_chaofeng.sp_diaochan = sgs.ai_chaofeng.diaochan
 
 sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
 sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji

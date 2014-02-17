@@ -27,7 +27,6 @@ sgs.role_evaluation = {}
 sgs.ai_keep_value = {}
 sgs.ai_use_value = {}
 sgs.ai_use_priority = {}
-sgs.ai_chaofeng = {}
 sgs.ai_global_flags = {}
 sgs.ai_current_judge = {}
 sgs.ai_skill_invoke = {}
@@ -187,12 +186,6 @@ function SmartAI:initialize(player)
 	sgs.card_lack[player:objectName()]["Slash"] = 0
 	sgs.card_lack[player:objectName()]["Jink"] = 0
 	sgs.card_lack[player:objectName()]["Peach"] = 0
-
-	if self.player:isLord() and not sgs.GetConfig("EnableHegemony", false) then
-		if (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) < 3 then
-			sgs.ai_chaofeng[self.player:getGeneralName()] = 3
-		end
-	end
 
 	self:updateAlivePlayerRoles()
 	self:updatePlayers()
@@ -735,17 +728,6 @@ sgs.ai_compare_funcs = {
 		end
 	end,
 
-	chaofeng = function(a, b)
-		local c1 = sgs.ai_chaofeng[a:getGeneralName()] or 0
-		local c2 = sgs.ai_chaofeng[b:getGeneralName()] or 0
-
-		if c1 == c2 then
-			return sgs.ai_compare_funcs.value(a, b)
-		else
-			return c1 > c2
-		end
-	end,
-
 	defense = function(a, b)
 		return sgs.getDefense(a) < sgs.getDefense(b)
 	end,
@@ -766,10 +748,7 @@ sgs.ai_compare_funcs = {
 			end
 		end
 
-		local c1 = sgs.ai_chaofeng[a:getGeneralName()] or 0
-		local c2 = sgs.ai_chaofeng[b:getGeneralName()] or 0
-
-		return d1 + c1 / 2 > d2 + c2 / 2
+		return d1 > d2
 	end,
 }
 
@@ -1169,7 +1148,6 @@ function SmartAI:objectiveLevel(player)
 				local renegade_attack_skill = string.format("buqu|nosbuqu|%s|%s|%s|%s", sgs.priority_skill, sgs.save_skill, sgs.recover_skill, sgs.drawpeach_skill)
 				for i = 1, #players, 1 do
 					if not players[i]:isLord() and players[i]:hasSkills(renegade_attack_skill) then return 5 end
-					if not players[i]:isLord() and math.abs(sgs.ai_chaofeng[players[i]:getGeneralName()] or 0) > 3 then return 5 end
 				end
 				return 3
 			elseif process:match("rebel") then
@@ -2324,7 +2302,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					local NP = to:getNextAlive()
 					if self:isFriend(NP) then
 						local ag_ids = self.room:getTag("AmazingGrace"):toIntList()
-						local peach_num, exnihilo_num, snatch_num, analeptic_num, crossbow_num = 0, 0, 0, 0, 0
+						local peach_num, exnihilo_num, snatch_num, analeptic_num, crossbow_num, indulgence_num = 0, 0, 0, 0, 0, 0
+						local fa_card
 						for _, ag_id in sgs.qlist(ag_ids) do
 							local ag_card = sgs.Sanguosha:getCard(ag_id)
 							if ag_card:isKindOf("Peach") then peach_num = peach_num + 1 end
@@ -2332,6 +2311,8 @@ function SmartAI:askForNullification(trick, from, to, positive)
 							if ag_card:isKindOf("Snatch") then snatch_num = snatch_num + 1 end
 							if ag_card:isKindOf("Analeptic") then analeptic_num = analeptic_num + 1 end
 							if ag_card:isKindOf("Crossbow") then crossbow_num = crossbow_num + 1 end
+							if ag_card:isKindOf("FireAttack") then fa_card = ag_card end
+							if ag_card:isKindOf("Indulgence") then indulgence_num = indulgence_num + 1 end
 						end
 						if (peach_num == 1 and to:getHp() < getBestHp(to))
 							or (peach_num > 0 and (self:isWeak(to) or (NP:getHp() < getBestHp(NP) and self:getOverflow(NP) <= 0))) then
@@ -2344,8 +2325,10 @@ function SmartAI:askForNullification(trick, from, to, positive)
 									or (NP:hasSkill("jilve") and NP:getMark("@bear") > 0) then return null_card end
 							else
 								for _, enemy in ipairs(self.enemies) do
-									if snatch_num > 0 and to:distanceTo(enemy) == 1
-										and (self:willSkipPlayPhase(enemy, true) or self:willSkipDrawPhase(enemy, true)) then
+									if indulgence_num > 0 and not self:willSkipPlayPhase(enemy, true) then
+										return null_card
+									elseif snatch_num > 0 and to:distanceTo(enemy) == 1
+											and (self:willSkipPlayPhase(enemy, true) or self:willSkipDrawPhase(enemy, true)) then
 										return null_card
 									elseif analeptic_num > 0 and (enemy:hasWeapon("axe") or getCardsNum("Axe", enemy, self.player) > 0) then
 										return null_card
@@ -2358,6 +2341,14 @@ function SmartAI:askForNullification(trick, from, to, positive)
 										end
 									end
 								end
+							end
+						end
+					end
+					if fa_card then
+						for _, friend in ipairs(self.friends) do
+							if (friend:hasArmorEffect("vine") or friend:getMark("@gale") > 0) and not to:hasSkill("jueqing")
+								and self:hasTrickEffective(fa_card, friend, to) and to:getHandcardNum() > 2 then
+								return null_card
 							end
 						end
 					end
@@ -3074,7 +3065,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
 			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
-					and (friend:hasSkills(sgs.priority_skill) or (sgs.ai_chaofeng[self.player:getGeneralName()] or 0) > 2) then
+					and (friend:hasSkills(sgs.priority_skill) then
 				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() <= 3 then
 					return hcard, friend
 				end

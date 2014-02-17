@@ -283,8 +283,6 @@ sgs.nosxuanhuo_suit_value = {
 	heart = 3.9
 }
 
-sgs.ai_chaofeng.nos_fazheng = -3
-
 sgs.ai_cardneed.nosxuanhuo = function(to, card)
 	return card:getSuit() == sgs.Card_Heart
 end
@@ -879,8 +877,6 @@ end
 
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
 
-sgs.ai_chaofeng.nos_huangyueying = sgs.ai_chaofeng.huangyueying
-
 function sgs.ai_skill_invoke.nosjushou(self, data)
 	local sbdiaochan = self.room:findPlayerBySkillName("lihun")
 	if sbdiaochan and sbdiaochan:faceUp() and not self:willSkipPlayPhase(sbdiaochan)
@@ -917,8 +913,6 @@ function sgs.ai_skill_invoke.nosbuqu(self, data)
 		return true
 	end
 end
-
-sgs.ai_chaofeng.nos_zhoutai = -4
 
 sgs.ai_skill_playerchosen.nosleiji = function(self, targets)
 	local mode = self.room:getMode()

@@ -107,8 +107,6 @@ sgs.ai_playerchosen_intention.koftuxi = function(self, from, to)
 	end
 end
 
-sgs.ai_chaofeng.kof_zhangliao = 4
-
 xiechan_skill = {}
 xiechan_skill.name = "xiechan"
 table.insert(sgs.ai_skills, xiechan_skill)

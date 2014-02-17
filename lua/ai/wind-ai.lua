@@ -203,13 +203,9 @@ function sgs.ai_cardneed.liegong(to, card, self)
 			or (card:isKindOf("Weapon") and not (to:getWeapon() or getKnownCard(to, self, "Weapon") > 0))
 end
 
-sgs.ai_chaofeng.huangzhong = 1
-
 function sgs.ai_cardneed.kuanggu(to, card, self)
 	return card:isKindOf("OffensiveHorse") and not (to:getOffensiveHorse() or getKnownCard(to, self, "OffensiveHorse", false) > 0)
 end
-
-sgs.ai_chaofeng.weiyan = -2
 
 sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 	local judge = data:toJudge()
@@ -468,8 +464,6 @@ sgs.guidao_suit_value = {
 	spade = 3.9,
 	club = 2.7
 }
-
-sgs.ai_chaofeng.zhangjiao = 4
 
 sgs.ai_skill_invoke.fenji = function(self, data)
 	local move = data:toMoveOneTime()

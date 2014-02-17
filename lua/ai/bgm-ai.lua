@@ -249,8 +249,6 @@ sgs.ai_view_as.yanzheng = function(card, player, card_place)
 	end
 end
 
-sgs.ai_chaofeng.bgm_pangtong = 10
-
 sgs.ai_skill_invoke.manjuan = true
 sgs.ai_skill_invoke.zuixiang = true
 

@@ -1213,7 +1213,7 @@ function SmartAI:objectiveLevel(player)
 					end
 				end
 				if current_friend_num + ((consider_renegade or rebelish) and current_renegade_num or 0) >= loyal_num + ((rebelish or consider_renegade) and renegade_num or 0) + 1 then
-					return 5
+					return self:getOverflow() > -1 and 5 or 3
 				elseif current_enemy_num + (consider_renegade and current_renegade_num or rebelish and 0 or current_renegade_num)
 						>= rebel_num + (consider_renegade and renegade_num or (rebelish and 0 or renegade_num)) then
 					return -1
@@ -1305,7 +1305,7 @@ function SmartAI:objectiveLevel(player)
 			local mode = self.room:getMode()
 			local consider_renegade = (mode == "05p") or (mode == "07p") or (mode == "09p")
 			if current_friend_num + ((consider_renegade or loyalish) and current_renegade_num or 0) >= rebel_num + ((consider_renegade or loyalish) and renegade_num or 0) then
-				return 5
+				return self:getOverflow() > -1 and 5 or 3
 			elseif current_enemy_num + (consider_renegade and current_renegade_num or loyalish and 0 or current_renegade_num)
 					>= loyal_num + (consider_renegade and renegade_num or (loyalish and 0 or renegade_num)) + 1 then
 				return -2

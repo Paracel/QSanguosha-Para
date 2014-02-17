@@ -553,7 +553,7 @@ public:
 class XiansiAttach: public TriggerSkill {
 public:
     XiansiAttach(): TriggerSkill("#xiansi-attach") {
-        events << GameStart << EventAcquireSkill << EventLoseSkill;
+        events << GameStart << EventAcquireSkill << EventLoseSkill << Debut;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -571,6 +571,14 @@ public:
             foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
                 if (p->hasSkill("xiansi_slash"))
                     room->detachSkillFromPlayer(p, "xiansi_slash", true);
+            }
+        } else if (triggerEvent == Debut) {
+            QList<ServerPlayer *> liufengs = room->findPlayersBySkillName("xiansi");
+            foreach (ServerPlayer *liufeng, liufengs) {
+                if (player != liufeng && !player->hasSkill("xiansi_attach")) {
+                    room->attachSkillToPlayer(player, "xiansi_attach");
+                    break;
+                }
             }
         }
         return false;

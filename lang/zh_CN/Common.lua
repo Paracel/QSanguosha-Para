@@ -52,6 +52,7 @@ CommonTranslationTable = {
 	["draw"] = "摸牌",
 	["play"] = "出牌",
 	["discard"] = "弃牌",
+	["gamerule"] = "弃牌阶段", -- display reason
 	["finish"] = "结束",
 	["use"] = "使用",
 	["response"] = "打出",

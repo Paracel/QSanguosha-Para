@@ -619,6 +619,27 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	return math.random(1, x) == 1 and "question" or "noquestion"
 end
 
+sgs.ai_choicemade_filter.skillChoice.guhuo = function(self, player, promptlist)
+	if promptlist[#promptlist] == "question" then
+		local yuji = self.room:findPlayerBySkillName("guhuo")
+		if not yuji then return end
+		local guhuoname = self.room:getTag("GuhuoType"):toString()
+		if guhuoname == "peach+analeptic" or guhuoname == "peach" then
+			sgs.updateIntention(player, yuji, 80)
+			return
+		end
+		if guhuoname == "normal_slash" then guhuoname = "slash" end
+		local guhuocard = sgs.Sanguosha:cloneCard(guhuoname)
+		if guhuocard then
+			local guhuotype = guhuocard:getClassName()
+			if guhuotype and self:getRestCardsNum(guhuotype, yuji) > 0 then
+				sgs.updateIntention(player, yuji, 80)
+				return
+			end
+		end
+	end
+end
+
 local guhuo_skill = {}
 guhuo_skill.name = "guhuo"
 table.insert(sgs.ai_skills, guhuo_skill)

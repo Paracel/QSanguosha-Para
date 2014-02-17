@@ -1008,6 +1008,22 @@ end
 sgs.ai_choicemade_filter.skillChoice.nosguhuo = function(self, player, promptlist)
 	if promptlist[#promptlist] == "question" then
 		sgs.questioner = player
+		local yuji = self.room:findPlayerBySkillName("nosguhuo")
+		if not yuji then return end
+		local nosguhuoname = self.room:getTag("NosGuhuoType"):toString()
+		if nosguhuoname == "peach+analeptic" or nosguhuoname == "peach" then
+			sgs.updateIntention(player, yuji, 80)
+			return
+		end
+		if nosguhuoname == "normal_slash" then nosguhuoname = "slash" end
+		local nosguhuocard = sgs.Sanguosha:cloneCard(nosguhuoname)
+		if nosguhuocard then
+			local nosguhuotype = nosguhuocard:getClassName()
+			if nosguhuotype and self:getRestCardsNum(nosguhuotype, yuji) > 0 then
+				sgs.updateIntention(player, yuji, 80)
+				return
+			end
+		end
 	end
 end
 

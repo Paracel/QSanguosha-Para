@@ -1459,7 +1459,6 @@ BGMPackage::BGMPackage(): Package("BGM") {
     bgm_ganning->addSkill(new Yinling);
     bgm_ganning->addSkill(new Junwei);
     bgm_ganning->addSkill(new JunweiGot);
-    related_skills.insertMulti("yinling", "#yinling-clear");
     related_skills.insertMulti("junwei", "#junwei-got");
 
     General *bgm_xiahoudun = new General(this, "bgm_xiahoudun", "wei"); // *SP 010

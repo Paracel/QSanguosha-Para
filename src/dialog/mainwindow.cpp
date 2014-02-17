@@ -178,8 +178,6 @@ void MainWindow::on_actionStart_Server_triggered() {
                 this->on_actionMinimize_to_system_tray_triggered();
         }
     } else {
-        server->createNewRoom();
-
         Config.HostAddress = "127.0.0.1";
         startConnection();
     }

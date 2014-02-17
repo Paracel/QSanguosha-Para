@@ -563,14 +563,12 @@ end
 
 sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	local to = tos[1]
-	if self:getDamagedEffects(to) or self:needToLoseHp(to) then return end
-	local intention = 10
-	if hasBuquEffect(to) then intention = 0
-	elseif (to:getHp() >= 2 and to:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu"))
+	if self:getDamagedEffects(to) or self:needToLoseHp(to) or hasBuquEffect(to)
+		or (to:getHp() >= 2 and to:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|fangzhu"))
 		or (to:getHandcardNum() < 3 and (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard")))) then
-		intention = -10
+		return
 	end
-	sgs.updateIntention(from, to, intention)
+	sgs.updateIntention(from, to, 10)
 end
 
 function sgs.ai_slash_prohibit.tianxiang(self, from, to)

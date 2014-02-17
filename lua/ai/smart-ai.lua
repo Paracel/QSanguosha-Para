@@ -3073,7 +3073,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 	for _, hcard in ipairs(cardtogive) do
 		for _, friend in ipairs(friends) do
 			if not self:needKongcheng(friend) and not friend:hasSkill("manjuan") and not self:willSkipPlayPhase(friend)
-					and (friend:hasSkills(sgs.priority_skill) then
+					and friend:hasSkills(sgs.priority_skill) then
 				if (self:getOverflow() > 0 or self.player:getHandcardNum() > 3) and friend:getHandcardNum() <= 3 then
 					return hcard, friend
 				end

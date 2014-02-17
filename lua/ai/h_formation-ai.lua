@@ -320,7 +320,7 @@ sgs.ai_skill_invoke.qianhuan = function(self, data)
 	else
 		local to = use.to:first()
 		if to:objectName() == self.player:objectName() then
-			if use.card:isKindOf("Peach") then retun false end
+			if use.card:isKindOf("Peach") then return false end
 			return not (use.from and (use.from:objectName() == to:objectName()
 										or (use.card:isKindOf("Slash") and self:isPriorFriendOfSlash(self.player, use.card, use.from))))
 		else

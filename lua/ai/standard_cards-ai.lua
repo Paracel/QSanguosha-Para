@@ -2752,7 +2752,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		elseif isCard("Dismantlement", card, self.player) then
 			dismantlement = card
 		elseif isCard("Indulgence", card, self.player) then
-			indulgence = card:getEffectiveId(
+			indulgence = card:getEffectiveId()
 		end
 	end
 
@@ -2786,7 +2786,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		if possible_attack > self:getCardsNum("Jink") and self:getCardsNum("Jink") <= 2 and sgs.getDefenseSlash(self.player, self) <= 2 then
 			if jink or analeptic or exnihilo then return jink or analeptic or exnihilo end
 		else
-			if exnihilo or indulgence then return exnihilo or indulgence
+			if exnihilo or indulgence then return exnihilo or indulgence end
 		end
 	end
 

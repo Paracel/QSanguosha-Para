@@ -582,6 +582,7 @@ function SmartAI:adjustUsePriority(card, v)
 		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.21 end
 		if self.player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart then v = v + 0.11 end
 		if self.player:hasSkill("jinjiu") and card:getEffectiveId() >= 0 and sgs.Sanguosha:getEngineCard(card:getEffectiveId()):isKindOf("Analeptic") then v = v + 0.11 end
+		if self.player:hasSkill("lihuo") and card:isKindOf("FireSlash") then v = v + (card:getSkillName() == "lihuo" and 0.1 or 0.2) end
 	end
 	if self.player:hasSkill("mingzhe") and card:isRed() then v = v + (self.player:getPhase() ~= sgs.Player_NotActive and 0.05 or -0.05) end
 	v = v + (13 - card:getNumber()) / 1000

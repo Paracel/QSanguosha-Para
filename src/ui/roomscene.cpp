@@ -3974,7 +3974,7 @@ void RoomScene::takeGeneral(const QString &who, const QString &name, const QStri
     general_item->goBack(true);
 
     if (((ServerInfo.GameMode == "06_3v3" && Self->getRole() != "lord" && Self->getRole() != "renegade")
-         || (ServerInfo.GameMode == "02_1v1" && rule == "OL"))
+         || (ServerInfo.GameMode == "02_1v1" && rule == "2013"))
         && general_items.isEmpty()) {
         if (selector_box) {
             selector_box->hide();

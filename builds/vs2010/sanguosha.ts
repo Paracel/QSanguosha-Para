@@ -3342,6 +3342,11 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>同势力最大亮将数</translation>
     </message>
     <message>
+        <location filename="../../src/server/server.cpp" line="646"/>
+        <source>WZZZ</source>
+        <translation>王者之战</translation>
+    </message>
+    <message>
         <location filename="../../src/server/server.cpp" line="892"/>
         <source>PC Console Start</source>
         <translation>单机启动</translation>

@@ -480,7 +480,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             if (room->getMode() == "02_1v1") {
                 QStringList list = player->tag["1v1Arrange"].toStringList();
                 QString rule = Config.value("1v1/Rule", "2013").toString();
-                if (list.length() > ((rule == "OL") ? 3 : 0)) break;
+                if (list.length() > ((rule == "2013") ? 3 : 0)) break;
             }
 
             QString winner = getWinner(player);
@@ -505,7 +505,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             if (room->getMode() == "02_1v1") {
                 QStringList list = player->tag["1v1Arrange"].toStringList();
                 QString rule = Config.value("1v1/Rule", "2013").toString();
-                if (list.length() <= ((rule == "OL") ? 3 : 0)) break;
+                if (list.length() <= ((rule == "2013") ? 3 : 0)) break;
 
                 if (rule == "Classical") {
                     player->tag["1v1ChangeGeneral"] = list.takeFirst();

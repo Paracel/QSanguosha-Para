@@ -41,7 +41,7 @@ void RoomThread1v1::run() {
                        << "sunquan" << "ganning" << "huanggai" << "zhouyu"
                        << "luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
                        << "lvbu" << "kof_diaochan" << "yanliangwenchou" << "hejin";
-            if (rule == "OL") {
+            if (rule == "2013") {
                 candidates << "kof_liubei" << "kof_weiyan" << "kof_lvmeng" << "kof_daqiao"
                            << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "pangde"
                            << "niujin" << "hansui";
@@ -62,9 +62,9 @@ void RoomThread1v1::run() {
             general_names[i + 6] = QString("x%1").arg(QString::number(i));
 
         room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(known_list << "x0" << "x1" << "x2" << "x3"));
-    } else if (rule == "2013") {
+    } else if (rule == "WZZZ") {
         room->doBroadcastNotify(S_COMMAND_FILL_GENERAL, toJsonArray(general_names));
-    } else if (rule == "OL") {
+    } else if (rule == "2013") {
         QStringList known_list = general_names.mid(0, 6);
         unknown_list = general_names.mid(6, 6);
 
@@ -87,7 +87,7 @@ void RoomThread1v1::run() {
     room->broadcastProperty(next, "role");
     room->adjustSeats();
 
-    if (rule == "OL") {
+    if (rule == "2013") {
         takeGeneral(first, "x0");
         takeGeneral(first, "x2");
         takeGeneral(first, "x4");
@@ -106,7 +106,7 @@ void RoomThread1v1::run() {
     }
     askForTakeGeneral(next);
 
-    if (rule == "OL")
+    if (rule == "2013")
         askForFirstGeneral(QList<ServerPlayer *>() << first << next);
     else
         startArrange(QList<ServerPlayer *>() << first << next);
@@ -242,7 +242,7 @@ void RoomThread1v1::askForFirstGeneral(QList<ServerPlayer *> players) {
 
 void RoomThread1v1::arrange(ServerPlayer *player, const QStringList &arranged) {
     QString rule = Config.value("1v1/Rule", "2013").toString();
-    Q_ASSERT(arranged.length() == ((rule == "OL") ? 6 : 3));
+    Q_ASSERT(arranged.length() == ((rule == "2013") ? 6 : 3));
 
     QStringList left = arranged.mid(1);
     player->tag["1v1Arrange"] = QVariant::fromValue(left);

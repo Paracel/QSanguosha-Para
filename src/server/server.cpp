@@ -643,14 +643,14 @@ QGroupBox *ServerDialog::create1v1Box() {
     QComboBox *officialComboBox = new QComboBox;
     officialComboBox->addItem(tr("Classical"), "Classical");
     officialComboBox->addItem("2013", "2013");
-    officialComboBox->addItem("OL", "OL");
+    officialComboBox->addItem(tr("WZZZ"), "WZZZ");
 
     official_1v1_ComboBox = officialComboBox;
 
     QString rule = Config.value("1v1/Rule", "2013").toString();
     if (rule == "2013")
         officialComboBox->setCurrentIndex(1);
-    else if (rule == "OL")
+    else if (rule == "WZZZ")
         officialComboBox->setCurrentIndex(2);
 
     kof_using_extension_checkbox = new QCheckBox(tr("General extensions"));

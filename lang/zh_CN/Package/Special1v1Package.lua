@@ -96,8 +96,6 @@ return {
 	["drowning:damage"] = "受到1点伤害",
 	["drowning:throw"] = "弃置所有装备",
 
-	["Special1v1OL"] = "1v1-OL",
-
 	["kof_liubei"] = "刘备1v1",
 	["&kof_liubei"] = "刘备",
 	["renwang"] = "仁望",

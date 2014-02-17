@@ -827,7 +827,7 @@ public:
             int n = 3;
             if (room->getMode() == "02_1v1") {
                 n = player->tag["1v1Arrange"].toStringList().length();
-                if (Config.value("1v1/Rule", "2013").toString() != "OL")
+                if (Config.value("1v1/Rule", "2013").toString() != "2013")
                     n += 3;
                 int origin = (Config.value("1v1/Rule", "2013").toString() != "Classical") ? 4 : player->getMaxHp();
                 n += (2 - origin);
@@ -1017,6 +1017,10 @@ Special1v1Package::Special1v1Package()
     kof_xiahouyuan->addSkill("shensu");
     kof_xiahouyuan->addSkill(new Suzi);
 
+    General *kof_liubei = new General(this, "kof_liubei$", "shu");
+    kof_liubei->addSkill(new Renwang);
+    kof_liubei->addSkill("jijiang");
+
     General *kof_guanyu = new General(this, "kof_guanyu", "shu");
     kof_guanyu->addSkill("wusheng");
     kof_guanyu->addSkill(new Huwei);
@@ -1029,6 +1033,9 @@ Special1v1Package::Special1v1Package()
 
     General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
     kof_huangzhong->addSkill(new KOFLiegong);
+
+    General *kof_weiyan = new General(this, "kof_weiyan", "shu");
+    kof_weiyan->addSkill(new KOFKuanggu);
 
     General *kof_jiangwei = new General(this, "kof_jiangwei", "shu");
     kof_jiangwei->addSkill("tiaoxin");
@@ -1043,9 +1050,22 @@ Special1v1Package::Special1v1Package()
     kof_zhurong->addSkill("manyi");
     kof_zhurong->addSkill("lieren");
 
+    General *kof_lvmeng = new General(this, "kof_lvmeng", "wu");
+    kof_lvmeng->addSkill(new Shenju);
+    kof_lvmeng->addSkill(new ShenjuMark);
+    related_skills.insertMulti("shenju", "#shenju");
+
+    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3, false);
+    kof_daqiao->addSkill("guose");
+    kof_daqiao->addSkill(new Wanrong);
+
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);
     kof_sunshangxiang->addSkill(new KOFXiaoji);
+
+    General *kof_huatuo = new General(this, "kof_huatuo", "qun", 3);
+    kof_huatuo->addSkill("jijiu");
+    kof_huatuo->addSkill(new Puji);
 
     General *kof_diaochan = new General(this, "kof_diaochan", "qun", 3, false);
     kof_diaochan->addSkill(new Pianyi);
@@ -1057,38 +1077,11 @@ Special1v1Package::Special1v1Package()
 
     addMetaObject<XiechanCard>();
     addMetaObject<CangjiCard>();
+    addMetaObject<PujiCard>();
     addMetaObject<MouzhuCard>();
 }
 
 ADD_PACKAGE(Special1v1)
-
-Special1v1OLPackage::Special1v1OLPackage()
-    : Package("Special1v1OL")
-{
-    General *kof_liubei = new General(this, "kof_liubei$", "shu");
-    kof_liubei->addSkill(new Renwang);
-    kof_liubei->addSkill("jijiang");
-
-    General *kof_weiyan = new General(this, "kof_weiyan", "shu");
-    kof_weiyan->addSkill(new KOFKuanggu);
-
-    General *kof_lvmeng = new General(this, "kof_lvmeng", "wu");
-    kof_lvmeng->addSkill(new Shenju);
-    kof_lvmeng->addSkill(new ShenjuMark);
-    related_skills.insertMulti("shenju", "#shenju");
-
-    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3, false);
-    kof_daqiao->addSkill("guose");
-    kof_daqiao->addSkill(new Wanrong);
-
-    General *kof_huatuo = new General(this, "kof_huatuo", "qun", 3);
-    kof_huatuo->addSkill("jijiu");
-    kof_huatuo->addSkill(new Puji);
-
-    addMetaObject<PujiCard>();
-}
-
-ADD_PACKAGE(Special1v1OL)
 
 Special1v1ExtPackage::Special1v1ExtPackage()
     : Package("Special1v1Ext")

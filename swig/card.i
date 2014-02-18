@@ -39,7 +39,8 @@ public:
         WeaponLocation,
         ArmorLocation,
         DefensiveHorseLocation,
-        OffensiveHorseLocation
+        OffensiveHorseLocation,
+        TreasureLocation
     };
 
     EquipCard(Suit suit, int number): Card(suit, number, true) { handling_method = MethodUse; }
@@ -109,6 +110,14 @@ class DefensiveHorse: public Horse {
 public:
     DefensiveHorse(Card::Suit suit, int number, int correct = +1);
     virtual QString getSubtype() const;
+};
+
+class Treasure: public EquipCard {
+public:
+    Treasure(Suit suit, int number): EquipCard(suit, number) {}
+    virtual QString getSubtype() const;
+
+    virtual Location location() const;
 };
 
 class Slash: public BasicCard {

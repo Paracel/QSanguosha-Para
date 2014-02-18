@@ -490,6 +490,17 @@ bool ArmorSkill::triggerable(const ServerPlayer *target) const{
     return target->hasArmorEffect(objectName());
 }
 
+TreasureSkill::TreasureSkill(const QString &name)
+    : TriggerSkill(name)
+{
+}
+
+bool TreasureSkill::triggerable(const ServerPlayer *target) const{
+    if (target == NULL || target->getTreasure() == NULL)
+        return false;
+    return target->hasTreasure(objectName());
+}
+
 MarkAssignSkill::MarkAssignSkill(const QString &mark, int n)
     : GameStartSkill(QString("#%1-%2").arg(mark).arg(n)), mark_name(mark), n(n)
 {

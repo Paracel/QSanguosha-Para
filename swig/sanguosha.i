@@ -171,11 +171,13 @@ public:
     WrappedCard *getArmor() const;
     WrappedCard *getDefensiveHorse() const;
     WrappedCard *getOffensiveHorse() const;
+    WrappedCard *getTreasure() const;
     QList<const Card *> getEquips() const;
     const EquipCard *getEquip(int index) const;
 
     bool hasWeapon(const char *weapon_name) const;
     bool hasArmorEffect(const char *armor_name) const;
+    bool hasTreasure(const char *treasure_name) const;
 
     bool isKongcheng() const;
     bool isNude() const;

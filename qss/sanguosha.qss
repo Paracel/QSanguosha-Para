@@ -43,3 +43,15 @@ QPushButton[private_pile = true] {
     border-radius: 5px;
     color: white;
 }
+
+QMenu[treasure = true] {
+    background-color: rgba(64, 52, 0, 200);
+    border-radius: 5px;
+    color: white;
+}
+
+QPushButton[treasure = true] {
+    background-color: rgba(64, 52, 0, 200);
+    border-radius: 5px;
+    color: white;
+}

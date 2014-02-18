@@ -135,8 +135,8 @@ protected:
     void _updateFloatingArea();
     // We use QList of cards instead of a single card as parameter here, just in case
     // we need to do group animation in the future.
-    virtual void addEquips(QList<CardItem *> &equips);
-    virtual QList<CardItem *> removeEquips(const QList<int> &cardIds);
+    virtual void addEquips(QList<CardItem *> &equips, bool isDashboard = true);
+    virtual QList<CardItem *> removeEquips(const QList<int> &cardIds, bool isDashboard = true);
     virtual void addDelayedTricks(QList<CardItem *> &judges);
     virtual QList<CardItem *> removeDelayedTricks(const QList<int> &cardIds);
     virtual void updateDelayedTricks();
@@ -184,10 +184,11 @@ protected:
     QList<QGraphicsPixmapItem *> _m_judgeIcons;
     QList<CardItem *> _m_judgeCards;
 
-    QGraphicsProxyWidget *_m_equipRegions[4];  
-    CardItem *_m_equipCards[4];
-    QLabel *_m_equipLabel[4];
-    QParallelAnimationGroup *_m_equipAnim[4];
+    QGraphicsProxyWidget *_m_equipRegions[5];
+    CardItem *_m_equipCards[5];
+    CardItem *_m_photo_treasure; // for photos to display treasure only
+    QLabel *_m_equipLabel[5];
+    QParallelAnimationGroup *_m_equipAnim[5];
     QMutex _mutexEquipAnim;
 
     // controls

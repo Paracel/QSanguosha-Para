@@ -307,6 +307,15 @@ public:
     virtual bool triggerable(const ServerPlayer *target) const;
 };
 
+class TreasureSkill: public TriggerSkill {
+    Q_OBJECT
+
+public:
+    TreasureSkill(const QString &name);
+
+    virtual bool triggerable(const ServerPlayer *target) const;
+};
+
 class MarkAssignSkill: public GameStartSkill {
     Q_OBJECT
 

@@ -91,6 +91,7 @@ CommonTranslationTable = {
 	["armor"] = "防具",
 	["defensive_horse"] = "+1坐骑",
 	["offensive_horse"] = "-1坐骑",
+	["treasure"] = "宝物",
 
 	["wei"] = "魏",
 	["shu"] = "蜀",

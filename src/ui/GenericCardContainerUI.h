@@ -226,6 +226,8 @@ private:
     int _lastZ;
     bool _allZAdjusted;
 
+    QString _m_treasureName;
+
 signals:
     void selected_changed();
     void enable_changed();

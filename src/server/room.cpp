@@ -3979,6 +3979,13 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
         Json::Value arg(Json::arrayValue);
         arg[0] = moveId;
         for (int i = 0; i < cards_moves.size(); i++) {
+            ServerPlayer *to = NULL;
+            foreach (ServerPlayer *player, m_players) {
+                if (player->objectName() == cards_moves[i].to_player_name) {
+                    to = player;
+                    break;
+                }
+            }
             cards_moves[i].open = forceVisible || cards_moves[i].isRelevant(player)
                                   // forceVisible will override cards to be visible
                                   || cards_moves[i].to_place == Player::PlaceEquip
@@ -3992,6 +3999,9 @@ bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves,
                                   || cards_moves[i].from_place == Player::PlaceTable
                                   || cards_moves[i].to_place == Player::PlaceTable
                                   // any card from/to place table should be visible
+                                  || (cards_moves[i].to_place == Player::PlaceSpecial
+                                      && to && to->pileOpen(cards_moves[i].to_pile_name, player->objectName()))
+                                  // pile open to specific players
                                   || player->hasFlag("Global_GongxinOperator");
                                   // the player put someone's cards to the drawpile
             arg[i + 1] = cards_moves[i].toJsonValue();

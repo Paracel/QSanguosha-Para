@@ -1225,6 +1225,7 @@ public:
 };
 
 Longhun::Longhun(): ViewAsSkill("longhun") {
+    response_or_use = true;
 }
 
 bool Longhun::isEnabledAtResponse(const Player *player, const QString &pattern) const{

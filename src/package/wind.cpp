@@ -1028,6 +1028,7 @@ class Guhuo: public OneCardViewAsSkill {
 public:
     Guhuo(): OneCardViewAsSkill("guhuo") {
         filter_pattern = ".|.|.|hand";
+        response_or_use = true;
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{

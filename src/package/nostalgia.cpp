@@ -1547,6 +1547,7 @@ class NosGuhuo: public OneCardViewAsSkill {
 public:
     NosGuhuo(): OneCardViewAsSkill("nosguhuo") {
         filter_pattern = ".|.|.|hand";
+        response_or_use = true;
     }
 
     virtual bool isEnabledAtResponse(const Player *player, const QString &pattern) const{

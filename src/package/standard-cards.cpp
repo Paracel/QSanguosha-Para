@@ -507,6 +507,7 @@ Blade::Blade(Suit suit, int number)
 class SpearSkill: public ViewAsSkill {
 public:
     SpearSkill(): ViewAsSkill("spear") {
+        response_or_use = true;
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -1343,9 +1344,12 @@ public:
             if (move.from_places[i] != Player::PlaceEquip) continue;
             const Card *card = Sanguosha->getEngineCard(move.card_ids[i]);
             if (card->objectName() == "wooden_ox") {
-                if (move.to_place == Player::PlaceEquip) {
-                    ServerPlayer *to = (ServerPlayer *)move.to;
-                    to->addToPile("wooden_ox", player->getPile("wooden_ox"), false);
+                ServerPlayer *to = (ServerPlayer *)move.to;
+                if (to && to->getTreasure() && to->getTreasure()->objectName() == "wooden_ox"
+                    && move.to_place == Player::PlaceEquip) {
+                    QList<ServerPlayer *> p_list;
+                    p_list << to;
+                    to->addToPile("wooden_ox", player->getPile("wooden_ox"), false, p_list);
                 } else {
                     player->clearOnePrivatePile("wooden_ox");
                 }

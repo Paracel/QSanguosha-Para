@@ -302,13 +302,15 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
     if (p_name.endsWith("+&")) {
         treasure = 1;
         p_name.chop(2);
+        _m_treasureName = p_name;
     } else if (p_name.endsWith("-&")) {
         treasure = -1;
         p_name.chop(2);
+        _m_treasureName = QString();
     }
     const QList<int> &pile = player->getPile(p_name);
-    if (pile.size() == 0 && treasure == 0) {
-        if (_m_privatePiles.contains(p_name) && _m_privatePiles[p_name]->property("treasure").toString() != "true") {
+    if (pile.size() == 0 && treasure == 0 && _m_treasureName != p_name) {
+        if (_m_privatePiles.contains(p_name)) {
             delete _m_privatePiles[p_name];
             _m_privatePiles[p_name] = NULL;
             _m_privatePiles.remove(p_name);
@@ -340,10 +342,10 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
 
         button->setText(QString("%1(%2)").arg(Sanguosha->translate(p_name)).arg(pile.length()));
         menu = new QMenu(button);
-        if (treasure == 0)
-            menu->setProperty("private_pile", "true");
-        else
+        if (_m_treasureName == p_name)
             menu->setProperty("treasure", "true");
+        else
+            menu->setProperty("private_pile", "true");
 
         //Sort the cards in pile by number can let players know what is in this pile more clear.
         //If someone has "buqu", we can got which card he need or which he hate easier.
@@ -371,7 +373,7 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
     QSize size = _m_layout->m_privatePileButtonSize;
     QList<QGraphicsProxyWidget *> widgets_t, widgets_p, widgets = _m_privatePiles.values();
     foreach (QGraphicsProxyWidget *widget, widgets) {
-        if (widget->property("treasure").toString() == "true")
+        if (widget->objectName() == _m_treasureName)
             widgets_t << widget;
         else
             widgets_p << widget;
@@ -801,6 +803,8 @@ PlayerCardContainer::PlayerCardContainer() {
     _m_groupDeath->setFlag(ItemHasNoContents);
     _m_groupDeath->setPos(0, 0);
     _allZAdjusted = false;
+
+    _m_treasureName = QString();
 }
 
 void PlayerCardContainer::hideAvatars() {

@@ -448,6 +448,10 @@ bool ServerPlayer::hasNullification() const{
         if (card->objectName() == "nullification")
             return true;
     }
+    foreach (int id, getPile("wooden_ox")) {
+        if (Sanguosha->getCard(id)->objectName() == "nullification")
+            return true;
+    }
 
     foreach (const Skill *skill, getVisibleSkillList(true)) {
         if (skill->inherits("ViewAsSkill")) {
@@ -1026,32 +1030,34 @@ void ServerPlayer::marshal(ServerPlayer *player) const{
         room->notifyProperty(player, this, "role");
 }
 
-void ServerPlayer::addToPile(const QString &pile_name, const Card *card, bool open) {
+void ServerPlayer::addToPile(const QString &pile_name, const Card *card, bool open, QList<ServerPlayer *> open_players) {
     QList<int> card_ids;
     if (card->isVirtualCard())
         card_ids = card->getSubcards();
     else
         card_ids << card->getEffectiveId();
-    return addToPile(pile_name, card_ids, open);
+    return addToPile(pile_name, card_ids, open, open_players);
 }
 
-void ServerPlayer::addToPile(const QString &pile_name, int card_id, bool open) {
+void ServerPlayer::addToPile(const QString &pile_name, int card_id, bool open, QList<ServerPlayer *> open_players) {
     QList<int> card_ids;
     card_ids << card_id;
-    return addToPile(pile_name, card_ids, open);
+    return addToPile(pile_name, card_ids, open, open_players);
 }
 
-void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open) {
-    return addToPile(pile_name, card_ids, open, CardMoveReason());
+void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open, QList<ServerPlayer *> open_players) {
+    return addToPile(pile_name, card_ids, open, open_players, CardMoveReason());
 }
 
-void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids, bool open, CardMoveReason reason) {
-    QList<ServerPlayer *> open_players;
+void ServerPlayer::addToPile(const QString &pile_name, QList<int> card_ids,
+                             bool open, QList<ServerPlayer *> open_players, CardMoveReason reason) {
     if (!open) {
-        foreach(int id, card_ids) {
-            ServerPlayer *owner = room->getCardOwner(id);
-            if (owner && !open_players.contains(owner))
-                open_players << owner;
+        if (open_players.isEmpty()) {
+            foreach(int id, card_ids) {
+                ServerPlayer *owner = room->getCardOwner(id);
+                if (owner && !open_players.contains(owner))
+                    open_players << owner;
+            }
         }
     } else {
         open_players = room->getAllPlayers();

@@ -27,6 +27,7 @@ Dashboard::Dashboard(QGraphicsItem *widget)
     _m_rightFrameBg = NULL;
     animations = new EffectAnimation();
     pending_card = NULL;
+    _m_woodenOx_expanded = false;
     for (int i = 0; i < 5; i++) {
         _m_equipSkillBtns[i] = NULL;
         _m_isEquipsAnimOn[i] = false;
@@ -224,7 +225,7 @@ void Dashboard::addHandCards(QList<CardItem *> &card_items) {
     updateHandcardNum();
 }
 
-void Dashboard::_addHandCard(CardItem *card_item) {
+void Dashboard::_addHandCard(CardItem *card_item, bool prepend, const QString &footnote) {
     if (ClientInstance->getStatus() == Client::Playing)
         card_item->setEnabled(card_item->getCard()->isAvailable(Self));
     else
@@ -234,7 +235,14 @@ void Dashboard::_addHandCard(CardItem *card_item) {
     card_item->setRotation(0.0);
     card_item->setFlags(ItemIsFocusable);
     card_item->setZValue(0.1);
-    m_handCards << card_item;
+    if (!footnote.isEmpty()) {
+        card_item->setFootnote(footnote);
+        card_item->showFootnote();
+    }
+    if (prepend)
+        m_handCards.prepend(card_item);
+    else
+        m_handCards.append(card_item);
 
     connect(card_item, SIGNAL(clicked()), this, SLOT(onCardItemClicked()));
     connect(card_item, SIGNAL(double_clicked()), this, SLOT(onCardItemDoubleClicked()));
@@ -499,6 +507,7 @@ void Dashboard::skillButtonDeactivated() {
 }
 
 void Dashboard::selectAll() {
+    retractWoodenOxCards();
     if (view_as_skill) {
         unselectAll();
         foreach (CardItem *card_item, m_handCards) {
@@ -831,6 +840,7 @@ void Dashboard::disableAllCards() {
 
 void Dashboard::enableCards() {
     m_mutexEnableCards.lock();
+    expandWoodenOxCards();
     foreach (CardItem *card_item, m_handCards)
         card_item->setEnabled(card_item->getCard()->isAvailable(Self));
     m_mutexEnableCards.unlock();
@@ -849,6 +859,17 @@ void Dashboard::startPending(const ViewAsSkill *skill) {
     pendings.clear();
     unselectAll();
 
+    bool expand = (skill && skill->isResponseOrUse());
+    if (!expand && skill && skill->inherits("ResponseSkill")) {
+        const ResponseSkill *resp_skill = qobject_cast<const ResponseSkill *>(skill);
+        if (resp_skill && (resp_skill->getRequest() == Card::MethodResponse || resp_skill->getRequest() == Card::MethodUse))
+            expand = true;
+    }
+    if (expand)
+        expandWoodenOxCards();
+    else
+        retractWoodenOxCards();
+
     for (int i = 0; i < 5; i++) {
         if (_m_equipCards[i] != NULL)
             connect(_m_equipCards[i], SIGNAL(mark_changed()), this, SLOT(onMarkChanged()));
@@ -866,6 +887,7 @@ void Dashboard::stopPending() {
     }
     view_as_skill = NULL;
     pending_card = NULL;
+    retractWoodenOxCards();
     emit card_selected(NULL);
 
     foreach (CardItem *item, m_handCards) {
@@ -886,6 +908,44 @@ void Dashboard::stopPending() {
     pendings.clear();
     adjustCards(true);
     m_mutexEnableCards.unlock();
+}
+
+void Dashboard::expandWoodenOxCards() {
+    if (_m_woodenOx_expanded) return;
+    _m_woodenOx_expanded = true;
+    QList<int> wooden_ox = Self->getPile("wooden_ox");
+    if (wooden_ox.isEmpty()) return;
+    QList<CardItem *> card_items = _createCards(wooden_ox);
+    foreach (CardItem *card_item, card_items) {
+        card_item->setPos(mapFromScene(card_item->scenePos()));
+        card_item->setParentItem(this);
+    }
+    foreach (CardItem *card_item, card_items)
+        _addHandCard(card_item, true, Sanguosha->translate("wooden_ox"));
+    adjustCards();
+    _playMoveCardsAnimation(card_items, false);
+    update();
+}
+
+void Dashboard::retractWoodenOxCards() {
+    if (!_m_woodenOx_expanded) return;
+    _m_woodenOx_expanded = false;
+    QList<int> wooden_ox = Self->getPile("wooden_ox");
+    if (wooden_ox.isEmpty()) return;
+    CardItem *card_item;
+    foreach (int card_id, Self->getPile("wooden_ox")) {
+        card_item = CardItem::FindItem(m_handCards, card_id);
+        if (card_item == selected) selected = NULL;
+        Q_ASSERT(card_item);
+        if (card_item) {
+            m_handCards.removeOne(card_item);
+            card_item->disconnect(this);
+            delete card_item;
+            card_item = NULL;
+        }
+    }
+    adjustCards();
+    update();
 }
 
 void Dashboard::onCardItemClicked() {

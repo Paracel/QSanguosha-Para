@@ -107,6 +107,7 @@ class Duanliang: public OneCardViewAsSkill {
 public:
     Duanliang(): OneCardViewAsSkill("duanliang") {
         filter_pattern = "BasicCard,EquipCard|black";
+        response_or_use = true;
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
@@ -693,6 +694,7 @@ class Jiuchi: public OneCardViewAsSkill {
 public:
     Jiuchi(): OneCardViewAsSkill("jiuchi") {
         filter_pattern = ".|spade|.|hand";
+        response_or_use = true;
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{

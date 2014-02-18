@@ -193,6 +193,7 @@ class Yanzheng: public OneCardViewAsSkill {
 public:
     Yanzheng(): OneCardViewAsSkill("yanzheng") {
         filter_pattern = ".|.|.|equipped";
+        response_or_use = true;
     }
 
     virtual bool isEnabledAtPlay(const Player *) const{
@@ -1868,7 +1869,7 @@ public:
                 }
                 data = QVariant::fromValue(move);
                 if (!to_add.isEmpty())
-                    liuxie->addToPile("edict", to_add, true, move.reason);
+                    liuxie->addToPile("edict", to_add, true, QList<ServerPlayer *>(), move.reason);
             }
         }
         return false;

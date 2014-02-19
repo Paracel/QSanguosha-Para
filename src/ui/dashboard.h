@@ -78,8 +78,8 @@ public:
     const ViewAsSkill *currentSkill() const;
     const Card *pendingCard() const;
 
-    void expandWoodenOxCards();
-    void retractWoodenOxCards();
+    void expandPileCards(const QString &pile_name);
+    void retractPileCards(const QString &pile_name);
 
     void selectCard(CardItem *item, bool isSelected);
 
@@ -172,7 +172,7 @@ protected:
     const Card *pending_card;
     const ViewAsSkill *view_as_skill;
     const FilterSkill *filter;
-    bool _m_woodenOx_expanded;
+    QStringList _m_pile_expanded;
     
     // for equip skill/selections
     PixmapAnimation *_m_equipBorders[5];

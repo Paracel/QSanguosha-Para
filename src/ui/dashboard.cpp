@@ -27,7 +27,7 @@ Dashboard::Dashboard(QGraphicsItem *widget)
     _m_rightFrameBg = NULL;
     animations = new EffectAnimation();
     pending_card = NULL;
-    _m_woodenOx_expanded = false;
+    _m_pile_expanded = QStringList();
     for (int i = 0; i < 5; i++) {
         _m_equipSkillBtns[i] = NULL;
         _m_isEquipsAnimOn[i] = false;
@@ -412,7 +412,7 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName) {
     _mutexEquipAnim.unlock();
 #ifndef QT_NO_DEBUG
     const Skill *skill = Sanguosha->getSkill(skillName);
-    Q_ASSERT(skill && !skill->inherits("WeaponSkill") && !skill->inherits("ArmorSkill"));
+    Q_ASSERT(skill && !skill->inherits("WeaponSkill") && !skill->inherits("ArmorSkill") && !skill->inherits("TreasureSkill"));
 #endif
     if (_m_skillDock->getSkillButtonByName(skillName) != NULL) {
         _m_button_recycle.append(_m_skillDock->getSkillButtonByName(skillName));
@@ -507,7 +507,7 @@ void Dashboard::skillButtonDeactivated() {
 }
 
 void Dashboard::selectAll() {
-    retractWoodenOxCards();
+    retractPileCards("wooden_ox");
     if (view_as_skill) {
         unselectAll();
         foreach (CardItem *card_item, m_handCards) {
@@ -840,7 +840,7 @@ void Dashboard::disableAllCards() {
 
 void Dashboard::enableCards() {
     m_mutexEnableCards.lock();
-    expandWoodenOxCards();
+    expandPileCards("wooden_ox");
     foreach (CardItem *card_item, m_handCards)
         card_item->setEnabled(card_item->getCard()->isAvailable(Self));
     m_mutexEnableCards.unlock();
@@ -866,9 +866,12 @@ void Dashboard::startPending(const ViewAsSkill *skill) {
             expand = true;
     }
     if (expand)
-        expandWoodenOxCards();
-    else
-        retractWoodenOxCards();
+        expandPileCards("wooden_ox");
+    else {
+        retractPileCards("wooden_ox");
+        if (skill && skill->objectName() == "jixi")
+            expandPileCards("field");
+    }
 
     for (int i = 0; i < 5; i++) {
         if (_m_equipCards[i] != NULL)
@@ -881,13 +884,17 @@ void Dashboard::startPending(const ViewAsSkill *skill) {
 
 void Dashboard::stopPending() {
     m_mutexEnableCards.lock();
-    if (view_as_skill && view_as_skill->objectName().contains("guhuo")) {
-        foreach (CardItem *item, m_handCards)
-            item->hideFootnote();
+    if (view_as_skill) {
+        if (view_as_skill->objectName().contains("guhuo")) {
+            foreach (CardItem *item, m_handCards)
+                item->hideFootnote();
+        } else if (view_as_skill->objectName() == "jixi") {
+            retractPileCards("field");
+        }
     }
     view_as_skill = NULL;
     pending_card = NULL;
-    retractWoodenOxCards();
+    retractPileCards("wooden_ox");
     emit card_selected(NULL);
 
     foreach (CardItem *item, m_handCards) {
@@ -910,30 +917,30 @@ void Dashboard::stopPending() {
     m_mutexEnableCards.unlock();
 }
 
-void Dashboard::expandWoodenOxCards() {
-    if (_m_woodenOx_expanded) return;
-    _m_woodenOx_expanded = true;
-    QList<int> wooden_ox = Self->getPile("wooden_ox");
-    if (wooden_ox.isEmpty()) return;
-    QList<CardItem *> card_items = _createCards(wooden_ox);
+void Dashboard::expandPileCards(const QString &pile_name) {
+    if (_m_pile_expanded.contains(pile_name)) return;
+    _m_pile_expanded << pile_name;
+    QList<int> pile = Self->getPile(pile_name);
+    if (pile.isEmpty()) return;
+    QList<CardItem *> card_items = _createCards(pile);
     foreach (CardItem *card_item, card_items) {
         card_item->setPos(mapFromScene(card_item->scenePos()));
         card_item->setParentItem(this);
     }
     foreach (CardItem *card_item, card_items)
-        _addHandCard(card_item, true, Sanguosha->translate("wooden_ox"));
+        _addHandCard(card_item, true, Sanguosha->translate(pile_name));
     adjustCards();
     _playMoveCardsAnimation(card_items, false);
     update();
 }
 
-void Dashboard::retractWoodenOxCards() {
-    if (!_m_woodenOx_expanded) return;
-    _m_woodenOx_expanded = false;
-    QList<int> wooden_ox = Self->getPile("wooden_ox");
-    if (wooden_ox.isEmpty()) return;
+void Dashboard::retractPileCards(const QString &pile_name) {
+    if (!_m_pile_expanded.contains(pile_name)) return;
+    _m_pile_expanded.removeOne(pile_name);
+    QList<int> pile = Self->getPile(pile_name);
+    if (pile.isEmpty()) return;
     CardItem *card_item;
-    foreach (int card_id, Self->getPile("wooden_ox")) {
+    foreach (int card_id, Self->getPile(pile_name)) {
         card_item = CardItem::FindItem(m_handCards, card_id);
         if (card_item == selected) selected = NULL;
         Q_ASSERT(card_item);

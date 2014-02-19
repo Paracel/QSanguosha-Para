@@ -2141,7 +2141,7 @@ void RoomScene::useSelectedCard() {
     if (skill)
         dashboard->stopPending();
     else
-        dashboard->retractWoodenOxCards();
+        dashboard->retractPileCards("wooden_ox");
 }
 
 void RoomScene::onEnabledChange() {

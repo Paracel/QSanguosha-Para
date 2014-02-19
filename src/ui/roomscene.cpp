@@ -470,7 +470,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
                 photo->updateAvatarTooltip();
             dashboard->updateAvatarTooltip();
             if (eventType == S_GAME_EVENT_PREPARE_SKILL)
-                updateSkillButtons();
+                updateSkillButtons(true);
             break;
         }
     case S_GAME_EVENT_CHANGE_GENDER: {
@@ -2033,15 +2033,24 @@ void RoomScene::acquireSkill(const ClientPlayer *player, const QString &skill_na
     if (player == Self) addSkillButton(Sanguosha->getSkill(skill_name));
 }
 
-void RoomScene::updateSkillButtons() {
-    foreach (const Skill *skill, Self->getVisibleSkillList()) {
+void RoomScene::updateSkillButtons(bool isPrepare) {
+    QList<const Skill *> skill_list;
+    if (isPrepare) {
+        if (Self->getGeneral())
+            skill_list << Self->getGeneral()->getVisibleSkillList();
+        if (Self->getGeneral2())
+            skill_list << Self->getGeneral2()->getVisibleSkillList();
+    } else {
+        skill_list = Self->getVisibleSkillList();
+    }
+    foreach (const Skill *skill, skill_list) {
         if (skill->isLordSkill()
             && (Self->getRole() != "lord"
                 || ServerInfo.GameMode == "06_3v3"
                 || ServerInfo.GameMode == "06_XMode"
                 || ServerInfo.GameMode == "02_1v1"
                 || Config.value("WithoutLordskill", false).toBool()))
-                continue;
+            continue;
 
         addSkillButton(skill);
     }

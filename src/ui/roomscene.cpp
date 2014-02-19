@@ -192,7 +192,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
 
     card_container->moveBy(-120, 0);
 
-    connect(ClientInstance, SIGNAL(skill_attached(QString, bool)), this, SLOT(attachSkill(QString, bool)));
+    connect(ClientInstance, SIGNAL(skill_attached(QString)), this, SLOT(attachSkill(QString)));
     connect(ClientInstance, SIGNAL(skill_detached(QString)), this, SLOT(detachSkill(QString)));
 
     enemy_box = NULL;
@@ -517,7 +517,7 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
 
             if (newHero) {
                 foreach (const Skill *skill, newHero->getVisibleSkills())
-                    attachSkill(skill->objectName(), false);
+                    attachSkill(skill->objectName());
             }
             break;
         }
@@ -1995,7 +1995,7 @@ void RoomScene::keepGetCardLog(const CardsMoveStruct &move) {
         log_box->appendLog("$TurnOver", move.reason.m_playerId, QStringList(), IntList2StringList(move.card_ids).join("+"));
 }
 
-void RoomScene::addSkillButton(const Skill *skill, bool) {
+void RoomScene::addSkillButton(const Skill *skill) {
     if (skill->inherits("SPConvertSkill")) return;
     // check duplication
     QSanSkillButton *btn = dashboard->addSkillButton(skill->objectName());
@@ -3298,10 +3298,10 @@ void RoomScene::chooseSkillButton() {
     dialog->exec();
 }
 
-void RoomScene::attachSkill(const QString &skill_name, bool from_left) {
+void RoomScene::attachSkill(const QString &skill_name) {
     const Skill *skill = Sanguosha->getSkill(skill_name);
     if (skill)
-        addSkillButton(skill, from_left);
+        addSkillButton(skill);
 }
 
 void RoomScene::detachSkill(const QString &skill_name) {

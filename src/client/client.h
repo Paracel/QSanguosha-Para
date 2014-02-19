@@ -309,7 +309,7 @@ signals:
     void move_cards_lost(int moveId, QList<CardsMoveStruct> moves);
     void move_cards_got(int moveId, QList<CardsMoveStruct> moves);
 
-    void skill_attached(const QString &skill_name, bool from_left);
+    void skill_attached(const QString &skill_name);
     void skill_detached(const QString &skill_name);
     void do_filter();
 

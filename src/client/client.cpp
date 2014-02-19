@@ -1444,7 +1444,7 @@ void Client::attachSkill(const Json::Value &skill) {
 
     QString skill_name = toQString(skill);
     Self->acquireSkill(skill_name);
-    emit skill_attached(skill_name, true);
+    emit skill_attached(skill_name);
 }
 
 void Client::askForAssign(const Json::Value &) {

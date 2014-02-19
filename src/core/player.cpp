@@ -643,8 +643,8 @@ bool Player::canDiscard(const Player *to, const QString &flags) const{
     if (flags.contains(handcard_flag) && !to->isKongcheng()) return true;
     if (flags.contains(judging_flag) && !to->getJudgingArea().isEmpty()) return true;
     if (flags.contains(equip_flag)) {
-        if (to->getDefensiveHorse() || to->getOffensiveHorse() || to->getTreasure()) return true;
-        if ((to->getWeapon() || to->getArmor()) && (!to->hasSkill("qicai") || this == to)) return true;
+        if (to->getDefensiveHorse() || to->getOffensiveHorse()) return true;
+        if ((to->getWeapon() || to->getArmor() || to->getTreasure()) && (!to->hasSkill("qicai") || this == to)) return true;
     }
     return false;
 }

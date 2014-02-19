@@ -93,6 +93,7 @@ config = {
 		"kof_xuchu",
 		"kof_zhenji",
 		"kof_xiahouyuan",
+		"kof_liubei",
 		"kof_guanyu",
 		"kof_huangyueying",
 		"kof_huangzhong",
@@ -100,7 +101,10 @@ config = {
 		"kof_jiangwei",
 		"kof_menghuo",
 		"kof_zhurong",
+		"kof_lvmeng",
+		"kof_daqiao",
 		"kof_sunshangxiang",
+		"kof_huatuo",
 		"kof_diaochan",
 	},
 

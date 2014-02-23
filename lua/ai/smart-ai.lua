@@ -1083,6 +1083,10 @@ function SmartAI:objectiveLevel(player)
 
 	if self.role == "renegade" then
 		if player:isLord() and player:getHp() <= 0 and player:hasFlag("Global_Dying") then return -2 end
+		if target_role == "rebel" and player:getHp() <= 1 and not hasBuquEffect(player) and not player:hasSkill("kongcheng")
+			and (player:isKongcheng() or sgs.card_lack[player:objectName()]["Jink"] == 1 and player:getHandcardNum() <= 1)
+			and getCardsNum("Peach", player, self.player) < 1 and getCardsNum("Analeptic", player, self.player) < 1 then return 5 end
+
 		if rebel_num == 0 or loyal_num == 0 then
 			if rebel_num > 0 then
 				if rebel_num > 1 then
@@ -1208,7 +1212,7 @@ function SmartAI:objectiveLevel(player)
 						>= rebel_num + (consider_renegade and renegade_num or (rebelish and 0 or renegade_num)) then
 					return -1
 				elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or rebelish) and current_renegade_num or 0) + 1
-						== loyal_num + ((rebelish or consider_renegade) and renegade_num or 0) + 1) and current_enemy_num <= 1 then
+						== loyal_num + ((rebelish or consider_renegade) and renegade_num or 0) + 1) and current_enemy_num <= 1 and current_enemy_num / rebel_num < 0.35 then
 					return 1
 				end
 			else
@@ -1298,9 +1302,9 @@ function SmartAI:objectiveLevel(player)
 				return self:getOverflow() > -1 and 5 or 3
 			elseif current_enemy_num + (consider_renegade and current_renegade_num or loyalish and 0 or current_renegade_num)
 					>= loyal_num + (consider_renegade and renegade_num or (loyalish and 0 or renegade_num)) + 1 then
-				return -2
-			elseif self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or loyalish) and current_renegade_num or 0) + 1
-					== rebel_num + ((consider_renegade or loyalish) and renegade_num or 0)) and current_enemy_num <= 1 then
+				return -1
+			elseif loyal_num + renegade_num > 0 and self:getOverflow() > -1 and (current_friend_num + ((consider_renegade or loyalish) and current_renegade_num or 0) + 1
+					== rebel_num + ((consider_renegade or loyalish) and renegade_num or 0)) and current_enemy_num <= 1 and current_enemy_num / (loyal_num + renegade_num) < 0.35 then
 				return 1
 			else
 				return 0

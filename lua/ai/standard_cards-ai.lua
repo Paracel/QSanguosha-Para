@@ -1953,14 +1953,28 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 			end
 		end
 		enemies = self:exclude(enemies, card)
+		local temp = {}
+		for _, enemy in ipairs(enemies) do
+			if self:hasTrickEffective(card, enemy) or isYinling then
+				table.insert(temp, enemy)
+			end
+		end
+		enemies = temp
 		self:sort(enemies, "defense")
 		enemies = sgs.reverse(enemies)
 	else
 		enemies = self:exclude(self.enemies, card)
+		local temp = {}
+		for _, enemy in ipairs(enemies) do
+			if self:hasTrickEffective(card, enemy) or isYinling then
+				table.insert(temp, enemy)
+			end
+		end
+		enemies = temp
 		self:sort(enemies, "defense")
 	end
 	for _, enemy in ipairs(enemies) do
-		if self:slashIsAvailable() and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if self:slashIsAvailable() then
 			for _, slash in ipairs(self:getCards("Slash")) do
 				if not self:slashProhibit(slash, enemy) and enemy:getHandcardNum() == 1 and enemy:getHp() == 1 and self:hasLoseHandcardEffective(enemy)
 					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and not enemy:hasSkills("kongcheng|tianming") and self.player:canSlash(enemy, slash)
@@ -1972,7 +1986,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		end
 	end
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if not enemy:isNude() then
 			local dangerous = self:getDangerousCard(enemy)
 			if dangerous and (not isDiscard or self.player:canDiscard(enemy, dangerous)) then
 				if addTarget(enemy, dangerous) then return end
@@ -2020,7 +2034,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if not enemy:isNude() then
 			local valuable = self:getValuableCard(enemy)
 			if valuable and (not isDiscard or self.player:canDiscard(enemy, valuable)) then
 				if addTarget(enemy, valuable) then return end
@@ -2054,7 +2068,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	for _, enemy in ipairs(enemies) do
 		local cards = sgs.QList2Table(enemy:getHandcards())
 		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), enemy:objectName())
-		if #cards <= 2 and (self:hasTrickEffective(card, enemy) or isYinling) and not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h", true) then
+		if #cards <= 2 and not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h", true) then
 			for _, cc in ipairs(cards) do
 				if (cc:hasFlag("visible") or cc:hasFlag(flag)) and (cc:isKindOf("Peach") or cc:isKindOf("Analeptic")) then
 					if addTarget(enemy, self:getCardRandomly(enemy, "h")) then return end
@@ -2064,7 +2078,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if not enemy:isNude() then
 			if enemy:hasSkills("jijiu|qingnang|jieyin") then
 				local cardchosen
 				local equips = { enemy:getDefensiveHorse(), enemy:getArmor(), enemy:getOffensiveHorse(), enemy:getWeapon() }
@@ -2091,15 +2105,14 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if (self:hasTrickEffective(card, enemy) or isYinling) and enemy:hasArmorEffect("eight_diagram")
-			and not self:needToThrowArmor(enemy) and (not isDiscard or self.player:canDiscard(enemy, enemy:getArmor():getEffectiveId())) then
+		if enemy:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(enemy) and (not isDiscard or self.player:canDiscard(enemy, enemy:getArmor():getEffectiveId())) then
 			addTarget(enemy, enemy:getArmor():getEffectiveId())
 		end
 	end
 
 	for i = 1, 2 + (isJixi and 3 or 0), 1 do
 		for _, enemy in ipairs(enemies) do
-			if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling)
+			if not enemy:isNude()
 				and not (self:needKongcheng(enemy) and i <= 2) and not self:doNotDiscard(enemy) then
 				if (enemy:getHandcardNum() == i and sgs.getDefenseSlash(enemy, self) < 6 + (isJixi and 6 or 0) and enemy:getHp() <= 3 + (isJixi and 2 or 0)) then
 					local cardchosen
@@ -2121,7 +2134,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isNude() and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if not enemy:isNude() then
 			local valuable = self:getValuableCard(enemy)
 			if valuable and (not isDiscard or self.player:canDiscard(enemy, valuable)) then
 				if addTarget(enemy, valuable) then return end
@@ -2139,14 +2152,14 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h") and (self:hasTrickEffective(card, enemy) or isYinling)
+		if not enemy:isKongcheng() and not self:doNotDiscard(enemy, "h")
 			and enemy:hasSkills(sgs.cardneed_skill) and (not isDiscard or self.player:canDiscard(enemy, "h")) then
 			if addTarget(enemy, self:getCardRandomly(enemy, "h")) then return end
 		end
 	end
 
 	for _, enemy in ipairs(enemies) do
-		if enemy:hasEquip() and not self:doNotDiscard(enemy, "e") and (self:hasTrickEffective(card, enemy) or isYinling) then
+		if enemy:hasEquip() and not self:doNotDiscard(enemy, "e") then
 			local cardchosen
 			if enemy:getDefensiveHorse() and (not isDiscard or self.player:canDiscard(enemy, enemy:getDefensiveHorse():getEffectiveId())) then
 				cardchosen = enemy:getDefensiveHorse():getEffectiveId()
@@ -2166,7 +2179,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 	if name == "snatch" or self:getOverflow() > 0 then
 		for _, enemy in ipairs(enemies) do
 			local equips = enemy:getEquips()
-			if not enemy:isNude() and self:hasTrickEffective(card, enemy) and not self:doNotDiscard(enemy, "he") then
+			if not enemy:isNude() and not self:doNotDiscard(enemy, "he") then
 				local cardchosen
 				if not equips:isEmpty() and not self:doNotDiscard(enemy, "e") then
 					cardchosen = self:getCardRandomly(enemy, "e")

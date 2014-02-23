@@ -1822,6 +1822,22 @@ function SmartAI:getValuableCard(who)
 		end
 	end
 
+	local equips = sgs.QList2Table(who:getEquips())
+	for _, equip in ipairs(equips) do
+		if who:hasSkills("longhun|guose|yanxiao") and equip:getSuit() ~= sgs.Card_Diamond then return equip:getEffectiveId() end
+		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
+		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
+		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
+		if who:hasSkills(sgs.need_equip_skill) and not who:hasSkills(sgs.lose_equip_skill) then return equip:getEffectiveId() end
+	end
+
+	if armor and self:evaluateArmor(armor, who) > 3
+		and not self:needToThrowArmor(who)
+		and not self:doNotDiscard(who, "e")
+		and not (self.moukui_effect and self.moukui_effect:isKindOf("FireSlash") and armor:isKindOf("Vine") and not self.player:hasSkill("jueqing")) then
+		return armor:getEffectiveId()
+	end
+
 	if defhorse and not self:doNotDiscard(who, "e") then
 		if self.player:getPhase() == sgs.Player_Play then
 			local slash = sgs.Sanguosha:cloneCard("slash")
@@ -1836,27 +1852,12 @@ function SmartAI:getValuableCard(who)
 		end
 	end
 
-	if armor and self:evaluateArmor(armor, who) > 3
-		and not self:needToThrowArmor(who)
-		and not self:doNotDiscard(who, "e")
-		and not (self.moukui_effect and self.moukui_effect:isKindOf("FireSlash") and armor:isKindOf("Vine") and not self.player:hasSkill("jueqing")) then
-		return armor:getEffectiveId()
-	end
-
 	if offhorse then
 		if who:hasSkills("nosqianxi|kuanggu|duanbing|qianxi") then
 			return offhorse:getEffectiveId()
 		end
 	end
 
-	local equips = sgs.QList2Table(who:getEquips())
-	for _, equip in ipairs(equips) do
-		if who:hasSkills("longhun|guose|yanxiao") and equip:getSuit() ~= sgs.Card_Diamond then return equip:getEffectiveId() end
-		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
-		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
-		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
-		if who:hasSkills(sgs.need_equip_skill) and not who:hasSkills(sgs.lose_equip_skill) then return equip:getEffectiveId() end
-	end
 
 	if armor and not self:needToThrowArmor(who) and not self:doNotDiscard(who, "e")
 		and not (self.moukui_effect and self.moukui_effect:isKindOf("FireSlash") and armor:isKindOf("Vine") and not self.player:hasSkill("jueqing")) then

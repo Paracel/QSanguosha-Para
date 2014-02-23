@@ -45,7 +45,7 @@ sgs.ai_skill_askforag.huanshi = function(self, card_ids)
 	local zhugejin = self.room:findPlayerBySkillName("huanshi")
 
 	local cmp = function(a, b)
-		local a_keep_value, b_keep_value = sgs.ai_keep_value[a:getClassName()], sgs.ai_keep_value[b:getClassName()]
+		local a_keep_value, b_keep_value = sgs.ai_keep_value[a:getClassName()] or 0, sgs.ai_keep_value[b:getClassName()] or 0
 		a_keep_value = a_keep_value + a:getNumber() / 100
 		b_keep_value = b_keep_value + b:getNumber() / 100
 		if zhugejin and zhugejin:hasSkill("mingzhe") then

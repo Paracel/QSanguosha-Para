@@ -131,14 +131,10 @@ function SmartAI:searchForAnaleptic(use, enemy, slash)
 	if not use.to or use.to:isEmpty() then return nil end
 	if analepticAvail > 1 and analepticAvail < slashAvail then return nil end
 	if not sgs.Analeptic_IsAvailable(self.player) then return nil end
-	local shouldUse = false
 	for _, p in sgs.qlist(use.to) do
-		if not p:hasSkill("zhenlie") and not (p:hasSkill("anxian") and not p:isKongcheng()) then
-			shouldUse = true
-			break
-		end
+		if p:hasSkill("zhenlie") then return end
+		if p:hasSkill("anxian") and not p:isKongcheng() then return end
 	end
-	if not shouldUse then return nil end
 
 	local cards = self.player:getHandcards()
 	cards = sgs.QList2Table(cards)

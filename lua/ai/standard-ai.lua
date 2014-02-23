@@ -2014,6 +2014,15 @@ sgs.ai_skill_use_func.QingnangCard = function(card, use, self)
 		end
 		return
 	end
+	if self:getOverflow() > 0 and #arr2 > 0 then
+		for _, friend in ipairs(arr2) do
+			if not friend:hasSkills("hunzi|longhun") then
+				use.card = card
+				if use.to then use.to:append(friend) end
+				return
+			end
+		end
+	end
 end
 
 sgs.ai_use_priority.QingnangCard = 4.2

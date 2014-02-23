@@ -1208,7 +1208,8 @@ end
 
 function sgs.ai_weapon_value.axe(self, enemy, player)
 	if player:hasSkills("jiushi|jiuchi|luoyi|pojun") then return 6 end
-	if enemy and enemy:getHp() < 3 then return 5 - enemy:getHp() end
+	if enemy and enemy:getHp() < 3 then return 6 - enemy:getHp() end
+	if enemy and self:getOverflow() > 0 then return 3.1 end
 end
 
 sgs.ai_skill_cardask["blade-slash"] = function(self, data, pattern, target)

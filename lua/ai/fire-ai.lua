@@ -370,7 +370,7 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 
 	local slash = self:getCard("Slash")
-	local dummy_use = { isDummy = true }
+	local dummy_use = { isDummy = true, extra_target = 1, to = sgs.SPlayerList() }
 	self.player:setFlags("slashNoDistanceLimit")
 	if slash then self:useBasicCard(slash, dummy_use) end
 	self.player:setFlags("-slashNoDistanceLimit")
@@ -401,18 +401,20 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 			end
 		end
 
-		self:sort(self.friends_noself, "handcard")
-		for index = #self.friends_noself, 1, -1 do
-			local friend = self.friends_noself[index]
-			if not friend:isKongcheng() then
-				local friend_min_card = self:getMinCard(friend)
-				local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
-				if friend:hasSkill("yingyang") then friend_min_point = math.max(1, friend_min_point - 3) end
-				if max_point > friend_min_point then
-					self.tianyi_card = max_card:getId()
-					use.card = sgs.Card_Parse("@TianyiCard=.")
-					if use.to then use.to:append(friend) end
-					return
+		if dummy_use.to:length() > 1 then
+			self:sort(self.friends_noself, "handcard")
+			for index = #self.friends_noself, 1, -1 do
+				local friend = self.friends_noself[index]
+				if not friend:isKongcheng() then
+					local friend_min_card = self:getMinCard(friend)
+					local friend_min_point = friend_min_card and friend_min_card:getNumber() or 100
+					if friend:hasSkill("yingyang") then friend_min_point = math.max(1, friend_min_point - 3) end
+					if max_point > friend_min_point then
+						self.tianyi_card = max_card:getId()
+						use.card = sgs.Card_Parse("@TianyiCard=.")
+						if use.to then use.to:append(friend) end
+						return
+					end
 				end
 			end
 		end
@@ -423,18 +425,6 @@ sgs.ai_skill_use_func.TianyiCard = function(card, use, self)
 				use.card = sgs.Card_Parse("@TianyiCard=.")
 				if use.to then use.to:append(zhugeliang) end
 				return
-			end
-		end
-
-		for index = #self.friends_noself, 1, -1 do
-			local friend = self.friends_noself[index]
-			if not friend:isKongcheng() then
-				if max_point >= 7 then
-					self.tianyi_card = max_card:getId()
-					use.card = sgs.Card_Parse("@TianyiCard=.")
-					if use.to then use.to:append(friend) end
-					return
-				end
 			end
 		end
 	end

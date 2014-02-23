@@ -449,6 +449,7 @@ function SmartAI:useCardSlash(card, use)
 						or self.player:hasFlag("slashNoDistanceLimit")
 						or card:getSkillName() == "qiaoshui"
 	self.slash_targets = 1 + sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_ExtraTarget, self.player, card)
+	if use.isDummy and use.extra_target then self.slash_targets = self.slash_targets + use.extra_target end
 	if self.player:hasSkill("duanbing") then self.slash_targets = self.slash_targets + 1 end
 
 	local rangefix = 0

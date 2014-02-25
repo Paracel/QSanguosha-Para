@@ -454,7 +454,7 @@ BanlistDialog::BanlistDialog(QWidget *parent, bool view)
     setMinimumWidth(455);
 
     if (ban_list.isEmpty())
-        ban_list << "Roles" << "1v1" << "HulaoPass" << "XMode" << "Basara" << "Hegemony" << "Pairs" << "Cards";
+        ban_list << "Roles" << "1v1" << "Basara" << "Hegemony" << "Pairs" << "Cards";
     QVBoxLayout *layout = new QVBoxLayout;
 
     QTabWidget *tab = new QTabWidget;

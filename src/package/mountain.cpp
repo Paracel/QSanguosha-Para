@@ -1035,10 +1035,7 @@ public:
             || room->getMode().contains("_mini_")
             || room->getMode() == "custom_scenario")
             all.subtract(Config.value("Banlist/Roles", "").toStringList().toSet());
-        else if (room->getMode() == "04_1v3")
-            all.subtract(Config.value("Banlist/HulaoPass", "").toStringList().toSet());
         else if (room->getMode() == "06_XMode") {
-            all.subtract(Config.value("Banlist/XMode", "").toStringList().toSet());
             foreach (ServerPlayer *p, room->getAlivePlayers())
                 all.subtract(p->tag["XModeBackup"].toStringList().toSet());
         } else if (room->getMode() == "02_1v1") {

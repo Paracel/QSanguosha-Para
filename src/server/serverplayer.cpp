@@ -89,7 +89,7 @@ void ServerPlayer::throwAllEquips() {
     }
     if (card->subcardsLength() > 0)
         room->throwCard(card, this);
-    card->deleteLater();
+    delete card;
 }
 
 void ServerPlayer::throwAllHandCards() {
@@ -125,7 +125,7 @@ void ServerPlayer::clearOnePrivatePile(QString pile_name) {
     DummyCard *dummy = new DummyCard(pile);
     CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, this->objectName());
     room->throwCard(dummy, reason, NULL);
-    dummy->deleteLater();
+    delete dummy;
     piles.remove(pile_name);
 }
 
@@ -151,7 +151,7 @@ void ServerPlayer::throwAllCards() {
         card->addSubcard(equip);
     if (card->subcardsLength() != 0)
         room->throwCard(card, this);
-    card->deleteLater();
+    delete card;
 
     QList<const Card *> tricks = getJudgingArea();
     foreach (const Card *trick, tricks) {

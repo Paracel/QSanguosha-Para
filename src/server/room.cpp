@@ -1755,7 +1755,7 @@ void Room::resetAI(ServerPlayer *player) {
     if (smart_ai) {
         index = ais.indexOf(smart_ai);
         ais.removeOne(smart_ai);
-        smart_ai->deleteLater();
+        delete smart_ai;
     }
     AI *new_ai = cloneAI(player);
     player->setAI(new_ai);
@@ -4566,8 +4566,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
     data = QString("%1:%2").arg("cardDiscard").arg(dummy_card->toString());
     thread->trigger(ChoiceMade, this, player, data);
 
-    dummy_card->deleteLater();
-
+    delete dummy_card;
     return true;
 }
 

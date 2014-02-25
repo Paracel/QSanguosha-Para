@@ -4182,16 +4182,14 @@ void RoomScene::finishArrange() {
     if (arrange_items.length() != 3) return;
 
     arrange_button->deleteLater();
-    arrange_button = NULL;
 
     QStringList names;
     foreach (CardItem *item, arrange_items)
         names << item->objectName();
 
-    if (selector_box) {
+    if (selector_box)
         selector_box->deleteLater();
-        selector_box = NULL;
-    }
+
     arrange_rects.clear();
 
     ClientInstance->replyToServer(S_COMMAND_ARRANGE_GENERAL, Utils::toJsonArray(names));

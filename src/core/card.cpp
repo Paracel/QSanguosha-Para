@@ -468,7 +468,7 @@ const Card *Card::Parse(const QString &str) {
             suit = dummy->getSuit();
         else
             suit = suit_map.value(suit_string, Card::NoSuit);
-        dummy->deleteLater();
+        delete dummy;
 
         int number = 0;
         if (number_string == "A")

@@ -114,6 +114,17 @@ public:
     LuaFunction extra_target_func;
 };
 
+class LuaInvaliditySkill: public InvaliditySkill {
+    Q_OBJECT
+
+public:
+    LuaInvaliditySkill(const char *name);
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const;
+
+    LuaFunction skill_valid;
+};
+
 class LuaSkillCard: public SkillCard {
     Q_OBJECT
 

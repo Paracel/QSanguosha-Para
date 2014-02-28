@@ -415,6 +415,11 @@ SlashNoDistanceLimitSkill::SlashNoDistanceLimitSkill(const QString &skill_name)
 {
 }
 
+InvaliditySkill::InvaliditySkill(const QString &name)
+    : Skill(name)
+{
+}
+
 int SlashNoDistanceLimitSkill::getDistanceLimit(const Player *from, const Card *card) const{
     if (from->hasSkill(name) && card->getSkillName() == name)
         return 1000;

@@ -299,20 +299,7 @@ bool Player::hasSkill(const QString &skill_name, bool include_lose) const{
     if (!include_lose) {
         if (!hasEquipSkill(skill_name)) {
             const Skill *skill = Sanguosha->getSkill(skill_name);
-            if (phase == Player::NotActive) {
-                const Player *current = NULL;
-                foreach (const Player *p, getAliveSiblings()) {
-                    if (p->getPhase() != Player::NotActive) {
-                        current = p;
-                        break;
-                    }
-                }
-                if (current && current->hasSkill("huoshui") && hp >= (max_hp + 1) / 2 && (!skill || !skill->isAttachedLordSkill()))
-                    return false;
-            }
-            if (getMark("Qingcheng" + skill_name) > 0)
-                return false;
-            if (skill_name != "chanyuan" && hasSkill("chanyuan") && hp == 1 && (!skill || !skill->isAttachedLordSkill()))
+            if (skill && !Sanguosha->correctSkillValidity(this, skill))
                 return false;
         }
     }

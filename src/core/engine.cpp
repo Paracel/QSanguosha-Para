@@ -171,6 +171,8 @@ void Engine::addSkills(const QList<const Skill *> &all_skills) {
             maxcards_skills << qobject_cast<const MaxCardsSkill *>(skill);
         else if (skill->inherits("TargetModSkill"))
             targetmod_skills << qobject_cast<const TargetModSkill *>(skill);
+        else if (skill->inherits("InvaliditySkill"))
+            invalidity_skills << qobject_cast<const InvaliditySkill *>(skill);
         else if (skill->inherits("TriggerSkill")) {
             const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
             if (trigger_skill && trigger_skill->isGlobal())
@@ -189,6 +191,10 @@ QList<const MaxCardsSkill *> Engine::getMaxCardsSkills() const{
 
 QList<const TargetModSkill *> Engine::getTargetModSkills() const{
     return targetmod_skills;
+}
+
+QList<const InvaliditySkill *> Engine::getInvaliditySkills() const{
+    return invalidity_skills;
 }
 
 QList<const TriggerSkill *> Engine::getGlobalTriggerSkills() const{
@@ -1109,3 +1115,10 @@ int Engine::correctCardTarget(const TargetModSkill::ModType type, const Player *
     return x;
 }
 
+bool Engine::correctSkillValidity(const Player *player, const Skill *skill) const{
+    foreach (const InvaliditySkill *is, invalidity_skills) {
+        if (!is->isSkillValid(player, skill))
+            return false;
+    }
+    return true;
+}

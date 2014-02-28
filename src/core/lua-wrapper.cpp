@@ -50,6 +50,11 @@ LuaTargetModSkill::LuaTargetModSkill(const char *name, const char *pattern)
     this->pattern = pattern;
 }
 
+LuaInvaliditySkill::LuaInvaliditySkill(const char *name)
+    : InvaliditySkill(name)
+{
+}
+
 static QHash<QString, const LuaSkillCard *> LuaSkillCards;
 static QHash<QString, QString> LuaSkillCardsSkillName;
 

@@ -1335,7 +1335,7 @@
         <translation>重复技能: %1</translation>
     </message>
     <message>
-        <location filename="../../src/core/engine.cpp" line="687"/>
+        <location filename="../../src/core/engine.cpp" line="693"/>
         <source>%1 [Scenario mode]</source>
         <translation>%1 【剧情模式】</translation>
     </message>
@@ -2295,7 +2295,7 @@
 <context>
     <name>Player</name>
     <message>
-        <location filename="../../src/core/player.cpp" line="877"/>
+        <location filename="../../src/core/player.cpp" line="864"/>
         <source>No skills</source>
         <translation>无技能</translation>
     </message>

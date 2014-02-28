@@ -63,6 +63,13 @@ protected:
     QString pattern;
 };
 
+class InvaliditySkill: public Skill {
+public:
+    InvaliditySkill(const QString &name);
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const = 0;
+};
+
 class LuaProhibitSkill: public ProhibitSkill {
 public:
     LuaProhibitSkill(const char *name);
@@ -156,6 +163,14 @@ public:
     LuaFunction residue_func;
     LuaFunction distance_limit_func;
     LuaFunction extra_target_func;
+};
+
+class LuaInvaliditySkill: public InvaliditySkill {
+public:
+    LuaInvaliditySkill(const char *name);
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const;
+
+    LuaFunction skill_valid;
 };
 
 class LuaSkillCard: public SkillCard {
@@ -518,6 +533,30 @@ int LuaTargetModSkill::getExtraTargetNum(const Player *from, const Card *card) c
     lua_pop(L, 1);
 
     return extra_target_func;
+}
+
+bool LuaInvaliditySkill::isSkillValid(const Player *player, const Skill *skill) const{
+    if (skill_valid == 0)
+        return 0;
+
+    lua_State *L = Sanguosha->getLuaState();
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, skill_valid);
+
+    SWIG_NewPointerObj(L, this, SWIGTYPE_p_LuaInvaliditySkill, 0);
+    SWIG_NewPointerObj(L, player, SWIGTYPE_p_Player, 0);
+    SWIG_NewPointerObj(L, skill, SWIGTYPE_p_Skill, 0);
+
+    int error = lua_pcall(L, 3, 1, 0);
+    if (error) {
+        Error(L);
+        return true;
+    }
+
+    bool validity = lua_toboolean(L, -1);
+    lua_pop(L, 1);
+
+    return validity;
 }
 
 bool LuaFilterSkill::viewFilter(const Card *to_select) const{

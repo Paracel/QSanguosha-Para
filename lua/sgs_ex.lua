@@ -105,6 +105,16 @@ function sgs.CreateTargetModSkill(spec)
 	return skill
 end
 
+function sgs.CreateInvaliditySkill(spec)
+	assert(type(spec.name) == "string")
+	assert(type(spec.skill_valid) == "function")
+
+	local skill = sgs.LuaInvaliditySkill(spec.name)
+	skill.skill_valid = spec.skill_valid
+
+	return skill
+end
+
 function sgs.CreateMasochismSkill(spec)
 	assert(type(spec.on_damaged) == "function")
 

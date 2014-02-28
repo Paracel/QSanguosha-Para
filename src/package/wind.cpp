@@ -1164,6 +1164,17 @@ public:
     }
 };
 
+class ChanyuanInvalidity: public InvaliditySkill {
+public:
+    ChanyuanInvalidity(): InvaliditySkill("#chanyuan-inv") {
+    }
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const{
+        return skill->objectName() == "chanyuan" || !player->hasSkill("chanyuan")
+               || player->getHp() != 1 || skill->isAttachedLordSkill();
+    }
+};
+
 WindPackage::WindPackage()
     :Package("wind")
 {
@@ -1210,7 +1221,8 @@ WindPackage::WindPackage()
     addMetaObject<HuangtianCard>();
     addMetaObject<GuhuoCard>();
 
-    skills << new HuangtianViewAsSkill << new Chanyuan;
+    skills << new HuangtianViewAsSkill << new Chanyuan << new ChanyuanInvalidity;
+    related_skills.insertMulti("chanyuan", "#chanyuan-inv");
 }
 
 ADD_PACKAGE(Wind)

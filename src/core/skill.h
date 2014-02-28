@@ -263,6 +263,15 @@ protected:
     QString name;
 };
 
+class InvaliditySkill: public Skill {
+    Q_OBJECT
+
+public:
+    InvaliditySkill(const QString &skill_name);
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const = 0;
+};
+
 // a nasty way for 'fake moves', usually used in the process of multi-card chosen
 class FakeMoveSkill: public TriggerSkill {
     Q_OBJECT

@@ -557,6 +557,28 @@ public:
     }
 };
 
+class HuoshuiInvalidity: public InvaliditySkill {
+public:
+    HuoshuiInvalidity(): InvaliditySkill("#huoshui-inv") {
+    }
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const{
+        if (player->getPhase() == Player::NotActive) {
+            const Player *current = NULL;
+            foreach (const Player *p, player->getAliveSiblings()) {
+                if (p->getPhase() != Player::NotActive) {
+                    current = p;
+                    break;
+                }
+            }
+            if (current && current->hasSkill("huoshui")
+                && player->getHp() >= (player->getMaxHp() + 1) / 2 && !skill->isAttachedLordSkill())
+                return false;
+        }
+        return true;
+    }
+};
+
 QingchengCard::QingchengCard() {
     handling_method = Card::MethodDiscard;
 }
@@ -680,6 +702,16 @@ public:
     }
 };
 
+class QingchengInvalidity: public InvaliditySkill {
+public:
+    QingchengInvalidity(): InvaliditySkill("#qingcheng-inv") {
+    }
+
+    virtual bool isSkillValid(const Player *player, const Skill *skill) const{
+        return player->getMark("Qingcheng" + skill->objectName()) == 0;
+    }
+};
+
 HegemonyPackage::HegemonyPackage()
     : Package("hegemony")
 {
@@ -720,7 +752,11 @@ HegemonyPackage::HegemonyPackage()
 
     General *zoushi = new General(this, "zoushi", "qun", 3, false); // QUN 018
     zoushi->addSkill(new Huoshui);
+    zoushi->addSkill(new HuoshuiInvalidity);
     zoushi->addSkill(new Qingcheng);
+    zoushi->addSkill(new QingchengInvalidity);
+    related_skills.insertMulti("huoshui", "#huoshui-inv");
+    related_skills.insertMulti("qingcheng", "#qingcheng-inv");
 
     General *heg_caopi = new General(this, "heg_caopi$", "wei", 3, true, true); // WEI 014 G
     heg_caopi->addSkill("fangzhu");

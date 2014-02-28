@@ -1588,6 +1588,13 @@ public:
         else
             return 0;
     }
+
+    virtual int getResidueNum(const Player *from, const Card *card) const{
+        if (card->getNumber() > from->getMark("qiangwu") || card->hasFlag("Global_SlashAvailabilityChecker"))
+            return 1000;
+        else
+            return 0;
+    }
 };
 
 #include "jsonutils.h"

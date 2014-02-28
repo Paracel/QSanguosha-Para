@@ -73,7 +73,7 @@ return {
 	["#zhangfei"] = "万夫不当",
 	["zhangfei"] = "张飞",
 	["paoxiao"] = "咆哮",
-	[":paoxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你使用【杀】无数量限制。",
+	[":paoxiao"] = "<font color=\"blue\"><b>锁定技。</b></font>出牌阶段，你使用【杀】无次数限制。",
 
 	["#zhugeliang"] = "迟暮的丞相",
 	["zhugeliang"] = "诸葛亮",

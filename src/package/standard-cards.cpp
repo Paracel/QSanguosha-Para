@@ -1470,7 +1470,7 @@ StandardCardPackage::StandardCardPackage()
 
     skills << new HorseSkill;
 
-    cards << new WoodenOx(Card::Diamond, 5);
+    //cards << new WoodenOx(Card::Diamond, 5);
 
     cards << new AmazingGrace(Card::Heart, 3)
           << new AmazingGrace(Card::Heart, 4)

@@ -68,36 +68,39 @@ public:
     }
 };
 
-class Miji: public PhaseChangeSkill {
+class Miji: public TriggerSkill {
 public:
-    Miji(): PhaseChangeSkill("miji") {
+    Miji(): TriggerSkill("miji") {
+        events << EventPhaseStart << ChoiceMade;
     }
 
-    virtual bool onPhaseChange(ServerPlayer *target) const{
-        Room *room = target->getRoom();
-        if (target->getPhase() == Player::Finish && target->isWounded() && target->askForSkillInvoke(objectName())) {
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *target, QVariant &data) const{
+        if (TriggerSkill::triggerable(target) && triggerEvent == EventPhaseStart
+            && target->getPhase() == Player::Finish && target->isWounded() && target->askForSkillInvoke(objectName())) {
             room->broadcastSkillInvoke(objectName(), 1);
             QStringList draw_num;
             for (int i = 1; i <= target->getLostHp(); draw_num << QString::number(i++)) {}
             int num = room->askForChoice(target, "miji_draw", draw_num.join("+")).toInt();
             target->drawCards(num, objectName());
-
+            target->setMark(objectName(), 0);
             if (!target->isKongcheng()) {
-                int n = 0;
                 forever {
-                    int original_handcardnum = target->getHandcardNum();
+                    int n = target->getMark(objectName());
                     if (n < num && !target->isKongcheng()) {
                         QList<int> handcards = target->handCards();
                         if (!room->askForYiji(target, handcards, objectName(), false, false, false, num - n))
                             break;
-                        n += original_handcardnum - target->getHandcardNum();
                     } else {
                         break;
                     }
                 }
                 // give the rest cards randomly
-                if (n < num && !target->isKongcheng()) {
-                    int rest_num = num - n;
+                if (target->getMark(objectName()) < num && !target->isKongcheng()) {
+                    int rest_num = num - target->getMark(objectName());
                     forever {
                         QList<int> handcard_list = target->handCards();
                         qShuffle(handcard_list);
@@ -114,6 +117,10 @@ public:
                 }
                 room->broadcastSkillInvoke(objectName(), qrand() % 2 + 2);
             }
+        } else if (triggerEvent == ChoiceMade) {
+            QString str = data.toString();
+            if (str.startsWith("Yiji:" + objectName()))
+                target->addMark(objectName(), str.split(":").last().split("+").length());
         }
         return false;
     }

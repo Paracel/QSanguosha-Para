@@ -212,13 +212,8 @@ function sgs.getValue(player)
 	return player:getHp() * 2 + player:getHandcardNum()
 end
 
-function sgs.getDefense(player, gameProcess, update)
+function sgs.getDefense(player, gameProcess)
 	if not player then return 0 end
-
-	local defenseType = gameProcess and "Process" or "Normal"
-	if not update and global_room:getCurrent() then
-		return sgs.ai_defense[defenseType][player:objectName()] or 0
-	end
 
 	local defense = math.min(player:getHp() * 2 + player:getHandcardNum(), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
@@ -290,7 +285,6 @@ function sgs.getDefense(player, gameProcess, update)
 		if player:hasSkill("nosmiji") and player:isWounded() then defense = defense - 1.5 end
 	end
 
-	sgs.ai_defense[defenseType][player:objectName()] = defense
 	return defense
 end
 
@@ -968,8 +962,8 @@ function sgs.outputRoleValues(player, level)
 	global_room:writeToConsole(player:getGeneralName() .. " " .. level .. " " .. sgs.evaluatePlayerRole(player)
 								.. " L " .. math.ceil(sgs.role_evaluation[player:objectName()]["loyalist"])
 								.. " R " .. math.ceil(sgs.role_evaluation[player:objectName()]["renegade"])
-								.. " " .. sgs.gameProcess(player:getRoom())
-								.. " " .. sgs.current_mode_players["loyalist"] .. sgs.current_mode_players["rebel"]	.. sgs.current_mode_players["renegade"])
+								.. " " .. sgs.gameProcess(player:getRoom()) .. "d=" .. sgs.gameProcess(player:getRoom(), 1)
+								.. " " .. sgs.current_mode_players["loyalist"] .. sgs.current_mode_players["rebel"] .. sgs.current_mode_players["renegade"])
 end
 
 function sgs.updateIntention(from, to, intention, card)
@@ -1003,7 +997,15 @@ function sgs.isLordInDanger()
 	return lord_hp < 3
 end
 
-function sgs.gameProcess(room, arg)
+function sgs.gameProcess(room, arg, update)
+	if not update then
+		if arg and arg == 1 then
+			return sgs.ai_gameProcess_arg
+		else
+			return sgs.ai_gameProcess
+		end
+	end
+
 	local rebel_num = sgs.current_mode_players["rebel"]
 	local loyal_num = sgs.current_mode_players["loyalist"]
 	if rebel_num == 0 and loyal_num > 0 then return "loyalist"
@@ -1043,21 +1045,25 @@ function sgs.gameProcess(room, arg)
 		end
 	end
 	local diff = loyal_value - rebel_value + (loyal_num + 1 - rebel_num) * 2
+	sgs.ai_gameProcess_arg = diff
 	if arg and arg == 1 then return diff end
 
+	local process = "neutral"
 	if diff >= 2 then
-		if health then return "loyalist"
-		else return "dilemma" end
+		if health then process = "loyalist"
+		else process = "dilemma" end
 	elseif diff >= 1 then
-		if health then return "loyalish"
-		elseif danger then return "dilemma"
-		else return "rebelish" end
-	elseif diff <= -2 then return "rebel"
+		if health then process = "loyalish"
+		elseif danger then process = "dilemma"
+		else process = "rebelish" end
+	elseif diff <= -2 then process = "rebel"
 	elseif diff <= -1 then
-		if health then return "rebelish"
-		else return "rebel" end
-	elseif not health then return "rebelish"
-	else return "neutral" end
+		if health then process = "rebelish"
+		else process = "rebel" end
+	elseif not health then process = "rebelish"
+	end
+	sgs.ai_gameProcess = process
+	return process
 end
 
 function SmartAI:objectiveLevel(player)
@@ -1463,10 +1469,8 @@ function SmartAI:updatePlayers(clear_flags)
 	table.insert(self.friends, self.player)
 
 	if update then
-		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-			sgs.getDefense(p, true, true)
-			sgs.getDefense(p, false, true)
-		end
+		self:updateAlivePlayerRoles()
+		sgs.gameProcess(self.room, 1, true)
 	end
 end
 

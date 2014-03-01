@@ -248,7 +248,7 @@ sgs.ai_skill_invoke.chuanxin = function(self, data)
 end
 
 sgs.ai_skill_choice.chuanxin = function(self, choices, data)
-	if self.player:hasSkills("benghuai|shiyong}yaowu|wumou|chanyuan|jinjiu|tongji") then return "detach" end
+	if self.player:hasSkills("benghuai|shiyong|yaowu|wumou|chanyuan|jinjiu|tongji") then return "detach" end
 	if self:needToLoseHp(self.player) or self:needToThrowArmor() or self.player:getEquips():length() <= 2 or self.player:hasSkills(sgs.lose_equip_skill) then
 		return "throw"
 	end

@@ -13,6 +13,12 @@ return {
 	["nostal_yjcm"] = "怀旧-一将",
 	["nostal_yjcm2012"] = "怀旧-一将2",
 
+	["nos_xiahoudun"] = "夏侯惇-旧",
+	["&nos_xiahoudun"] = "夏侯惇",
+	["nosganglie"] = "刚烈",
+	[":nosganglie"] = "每当你受到伤害后，你可以进行判定：若结果不为<font color=\"red\">♥</font>，则伤害来源选择一项：弃置两张手牌，或受到你造成的1点伤害。",
+
+
 	["nos_liubei"] = "刘备-旧",
 	["&nos_liubei"] = "刘备",
 	["nosrende"] = "仁德",

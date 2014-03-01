@@ -230,89 +230,8 @@ sgs.guicai_suit_value = {
 	spade = 3.5
 }
 
-sgs.ai_skill_invoke.ganglie = function(self, data)
-	local mode = self.room:getMode()
-	if mode:find("_mini_40") or mode:find("_mini_46") then return true end
-	local damage = data:toDamage()
-	if not damage.from then
-		local zhangjiao = self.room:findPlayerBySkillName("guidao")
-		return zhangjiao and self:isFriend(zhangjiao) and not zhangjiao:isNude()
-	end
-	if self:getDamagedEffects(damage.from, self.player) then
-		if self:isFriend(damage.from) then
-			sgs.ai_ganglie_effect = string.format("%s_%s_%d", self.player:objectName(), damage.from:objectName(), sgs.turncount)
-			return true
-		end
-		return false
-	end
-	return not self:isFriend(damage.from) and self:canAttack(damage.from)
-end
-
-sgs.ai_need_damaged.ganglie = function(self, attacker, player)
-	if not attacker then return false end
-	if not attacker:hasSkill("ganglie") and self:getDamagedEffects(attacker, player) then return self:isFriend(attacker, player) end
-	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
-		and not (attacker:hasSkills(sgs.need_kongcheng .. "|buqu") and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self:getEnemies(attacker), self) then
-		return true
-	end
-	return false
-end
-
-function ganglie_discard(self, discard_num, min_num, optional, include_equip, skillName)
-	local xiahou = self.room:findPlayerBySkillName(skillName)
-	if xiahou and (not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, xiahou) or self:getDamagedEffects(self.player, xiahou)) then return {} end
-	if xiahou and self:needToLoseHp(self.player, xiahou) then return {} end
-	local to_discard = {}
-	local cards = sgs.QList2Table(self.player:getHandcards())
-	local index = 0
-	local all_peaches = 0
-	for _, card in ipairs(cards) do
-		if isCard("Peach", card, self.player) then
-			all_peaches = all_peaches + 1
-		end
-	end
-	if all_peaches >= 2 and self:getOverflow() <= 0 then return {} end
-	self:sortByKeepValue(cards)
-	cards = sgs.reverse(cards)
-
-	for i = #cards, 1, -1 do
-		local card = cards[i]
-		if not isCard("Peach", card, self.player) and not self.player:isJilei(card) then
-			table.insert(to_discard, card:getEffectiveId())
-			table.remove(cards, i)
-			index = index + 1
-			if index == 2 then break end
-		end
-	end
-	if #to_discard < 2 then return {}
-	else
-		return to_discard
-	end
-end
-
-sgs.ai_skill_discard.ganglie = function(self, discard_num, min_num, optional, include_equip)
-	return ganglie_discard(self, discard_num, min_num, optional, include_equip, "ganglie")
-end
-
-function sgs.ai_slash_prohibit.ganglie(self, from, to)
-	if self:isFriend(from, to) then return false end
-	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
-	if from:hasFlag("NosJiefanUsed") then return false end
-	return from:getHandcardNum() + from:getHp() < 4
-end
-
-sgs.ai_choicemade_filter.skillInvoke.ganglie = function(self, player, promptlist)
-	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
-	if damage.from and damage.to then
-		if promptlist[#promptlist] == "yes" then
-			if not self:getDamagedEffects(damage.from, player) and not self:needToLoseHp(damage.from, player) then
-				sgs.updateIntention(damage.to, damage.from, 40)
-			end
-		elseif self:canAttack(damage.from) then
-			sgs.updateIntention(damage.to, damage.from, -40)
-		end
-	end
-end
+-- @todo: Ganglie AI
+-- @todo: Qingjian AI
 
 sgs.ai_skill_use["@@tuxi"] = function(self, prompt)
 	self:sort(self.enemies, "handcard")
@@ -2136,7 +2055,7 @@ function SmartAI:findLijianTarget(card_name, use)
 
 		if friend_maxSlash then
 			local safe = false
-			if first:hasSkills("vsganglie|fankui|enyuan|ganglie|nosenyuan") and not first:hasSkills("wuyan|noswuyan") then
+			if first:hasSkills("vsganglie|fankui|enyuan|nosganglie|nosenyuan") and not first:hasSkills("wuyan|noswuyan") then
 				if (first:getHp() <= 1 and first:getHandcardNum() == 0) then safe = true end
 			elseif (getCardsNum("Slash", friend_maxSlash, self.player) >= getCardsNum("Slash", first, self.player)) then safe = true end
 			if safe then return friend_maxSlash end
@@ -2351,7 +2270,7 @@ function SmartAI:findLijianTarget(card_name, use)
 					if self.role == "rebel" and not lord:isLocked(duel) and not first:isLord() and self:hasTrickEffective(duel, first, lord) then
 						second = lord
 					else
-						if (self.role == "loyalist" or self.role == "renegade") and not first:hasSkills("enyuan|vsganglie|ganglie|nosenyuan")
+						if (self.role == "loyalist" or self.role == "renegade") and not first:hasSkills("enyuan|vsganglie|nosganglie|nosenyuan")
 							and getCardsNum("Slash", first, self.player) <= getCardsNum("Slash", second, self.player) and not lord:isLocked(duel) then
 							second = lord
 						end

@@ -659,100 +659,88 @@ sgs.ai_skill_choice.nospaiyi = function(self, choices)
 	return "Hand"
 end
 
-sgs.ai_skill_invoke.weiwudi_guixin = true
-
-local function findPlayerForModifyKingdom(self, players)
-	local lord = self.room:getLord()
-	local isGood = self:isFriend(lord)
-
-	for _, player in sgs.qlist(players) do
-		if player:hasSkill("huashen") then
-		elseif lord and not player:isLord() then
-			if sgs.evaluatePlayerRole(player) == "loyalist" then
-				local sameKingdom = player:getKingdom() == lord:getKingdom()
-				if isGood ~= sameKingdom then
-					return player
-				end
-			elseif lord:hasLordSkill("xueyi") and not player:isLord() then
-				local isQun = player:getKingdom() == "qun"
-				if isGood ~= isQun then
-					return player
-				end
-			end
-		end
+sgs.ai_skill_invoke.nosganglie = function(self, data)
+	local mode = self.room:getMode()
+	if mode:find("_mini_40") or mode:find("_mini_46") then return true end
+	local damage = data:toDamage()
+	if not damage.from then
+		local zhangjiao = self.room:findPlayerBySkillName("guidao")
+		return zhangjiao and self:isFriend(zhangjiao) and not zhangjiao:isNude()
 	end
+	if self:getDamagedEffects(damage.from, self.player) then
+		if self:isFriend(damage.from) then
+			sgs.ai_nosganglie_effect = string.format("%s_%s_%d", self.player:objectName(), damage.from:objectName(), sgs.turncount)
+			return true
+		end
+		return false
+	end
+	return not self:isFriend(damage.from) and self:canAttack(damage.from)
 end
 
-local function chooseKingdomForPlayer(self, to_modify)
-	local lord = self.room:getLord()
-	local isGood = lord and self:isFriend(lord)
-	if sgs.evaluatePlayerRole(to_modify) == "loyalist" or sgs.evaluatePlayerRole(to_modify) == "renegade" then
-		if isGood then
-			return lord:getKingdom()
-		else
-			-- find a kingdom that is different from the lord
-			if lord then
-				local kingdoms = {"wei", "shu", "wu", "qun"}
-				for _, kingdom in ipairs(kingdoms) do
-					if lord:getKingdom() ~= kingdom then
-						return kingdom
-					end
-				end
-			end
-		end
-	elseif lord and lord:hasLordSkill("xueyi") and not to_modify:isLord() then
-		return isGood and "qun" or "wei"
-	elseif self.player:hasLordSkill("xueyi") then
-		return "qun"
+sgs.ai_need_damaged.nosganglie = function(self, attacker, player)
+	if not attacker then return false end
+	if not attacker:hasSkill("nosganglie") and self:getDamagedEffects(attacker, player) then return self:isFriend(attacker, player) end
+	if self:isEnemy(attacker) and attacker:getHp() + attacker:getHandcardNum() <= 3
+		and not (attacker:hasSkills(sgs.need_kongcheng .. "|buqu") and attacker:getHandcardNum() > 1) and sgs.isGoodTarget(attacker, self:getEnemies(attacker), self) then
+		return true
 	end
-
-	return "wei"
+	return false
 end
 
-sgs.ai_skill_choice.weiwudi_guixin = function(self, choices)
-	if choices == "wei+shu+wu+qun" then
-		local to_modify = self.room:getTag("Guixin2Modify"):toPlayer()
-		return chooseKingdomForPlayer(self, to_modify)
-	end
-
-	if choices ~= "modify+obtain" then
-		if choices:match("xueyi") and not self.room:getLieges("qun", self.player):isEmpty() then return "xueyi" end
-		if choices:match("ruoyu") then return "ruoyu" end
-		local choice_table = choices:split("+")
-		return choice_table[math.random(1, #choice_table)]
-	end
-
-	-- two choices: modify and obtain
-	if self.player:getRole() == "renegade" or self.player:getRole() == "lord" then
-		return "obtain"
-	end
-
-	local lord = self.room:getLord()
-	local skills = lord:getVisibleSkillList()
-	local hasLordSkill = false
-	for _, skill in sgs.qlist(skills) do
-		if skill:isLordSkill() then
-			hasLordSkill = true
-			break
+function nosganglie_discard(self, discard_num, min_num, optional, include_equip, skillName)
+	local xiahou = self.room:findPlayerBySkillName(skillName)
+	if xiahou and (not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, xiahou) or self:getDamagedEffects(self.player, xiahou)) then return {} end
+	if xiahou and self:needToLoseHp(self.player, xiahou) then return {} end
+	local to_discard = {}
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	local index = 0
+	local all_peaches = 0
+	for _, card in ipairs(cards) do
+		if isCard("Peach", card, self.player) then
+			all_peaches = all_peaches + 1
 		end
 	end
+	if all_peaches >= 2 and self:getOverflow() <= 0 then return {} end
+	self:sortByKeepValue(cards)
+	cards = sgs.reverse(cards)
 
-	if not hasLordSkill then
-		return "obtain"
+	for i = #cards, 1, -1 do
+		local card = cards[i]
+		if not isCard("Peach", card, self.player) and not self.player:isJilei(card) then
+			table.insert(to_discard, card:getEffectiveId())
+			table.remove(cards, i)
+			index = index + 1
+			if index == 2 then break end
+		end
 	end
-
-	local players = self.room:getOtherPlayers(self.player)
-	players:removeOne(lord)
-	if findPlayerForModifyKingdom(self, players) then
-		return "modify"
+	if #to_discard < 2 then return {}
 	else
-		return "obtain"
+		return to_discard
 	end
 end
 
-sgs.ai_skill_playerchosen.weiwudi_guixin = function(self, players)
-	local player = findPlayerForModifyKingdom(self, players)
-	return player or players:first()
+sgs.ai_skill_discard.nosganglie = function(self, discard_num, min_num, optional, include_equip)
+	return nosganglie_discard(self, discard_num, min_num, optional, include_equip, "nosganglie")
+end
+
+function sgs.ai_slash_prohibit.nosganglie(self, from, to)
+	if self:isFriend(from, to) then return false end
+	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
+	if from:hasFlag("NosJiefanUsed") then return false end
+	return from:getHandcardNum() + from:getHp() < 4
+end
+
+sgs.ai_choicemade_filter.skillInvoke.nosganglie = function(self, player, promptlist)
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	if damage.from and damage.to then
+		if promptlist[#promptlist] == "yes" then
+			if not self:getDamagedEffects(damage.from, player) and not self:needToLoseHp(damage.from, player) then
+				sgs.updateIntention(damage.to, damage.from, 40)
+			end
+		elseif self:canAttack(damage.from) then
+			sgs.updateIntention(damage.to, damage.from, -40)
+		end
+	end
 end
 
 local noslijian_skill = {}
@@ -945,7 +933,7 @@ function sgs.ai_slash_prohibit.nosleiji(self, from, to, card)
 				break
 			end
 		end
-		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from, to) > 0 or from:hasSkills("ganglie|vsganglie"))) or from:hasSkill("hongyan")) then
+		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from, to) > 0 or from:hasSkills("nosganglie|vsganglie"))) or from:hasSkill("hongyan")) then
 			return false
 		end
 	end

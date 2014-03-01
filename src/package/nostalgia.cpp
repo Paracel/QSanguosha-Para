@@ -969,6 +969,35 @@ public:
 
 // old stantard generals
 
+class NosGanglie: public MasochismSkill {
+public:
+    NosGanglie(): MasochismSkill("nosganglie") {
+    }
+
+    virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
+        ServerPlayer *from = damage.from;
+        Room *room = xiahou->getRoom();
+        QVariant data = QVariant::fromValue(damage);
+
+        if (room->askForSkillInvoke(xiahou, "nosganglie", data)) {
+            room->broadcastSkillInvoke("ganglie");
+
+            JudgeStruct judge;
+            judge.pattern = ".|heart";
+            judge.good = false;
+            judge.reason = objectName();
+            judge.who = xiahou;
+
+            room->judge(judge);
+            if (!from || from->isDead()) return;
+            if (judge.isGood()) {
+                if (from->getHandcardNum() < 2 || !room->askForDiscard(from, objectName(), 2, 2, true))
+                    room->damage(DamageStruct(objectName(), xiahou, from));
+            }
+        }
+    }
+};
+
 NosRendeCard::NosRendeCard() {
     mute = true;
     will_throw = false;
@@ -1627,6 +1656,9 @@ NostalGeneralPackage::NostalGeneralPackage()
 NostalStandardPackage::NostalStandardPackage()
     : Package("nostal_standard")
 {
+    General *nos_xiahoudun = new General(this, "nos_xiahoudun", "wei");
+    nos_xiahoudun->addSkill(new NosGanglie);
+
     General *nos_liubei = new General(this, "nos_liubei$", "shu");
     nos_liubei->addSkill(new NosRende);
     nos_liubei->addSkill("jijiang");

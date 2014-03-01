@@ -88,13 +88,13 @@ function setInitialTables()
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
 	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|vsganglie|ganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
+	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|noslijian|lijian|" ..
 							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
-	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|vsganglie|ganglie|guixin|jieming|nosmiji"
+	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|vsganglie|nosganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|nosguhuo|kanpo|" ..
 							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo"
@@ -1748,8 +1748,8 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 				intention = 100
 			end
 
-			if sgs.ai_ganglie_effect and sgs.ai_ganglie_effect == string.format("%s_%s_%d", from:objectName(), to:objectName(), sgs.turncount) then
-				sgs.ai_ganglie_effect = nil
+			if sgs.ai_nosganglie_effect and sgs.ai_nosganglie_effect == string.format("%s_%s_%d", from:objectName(), to:objectName(), sgs.turncount) then
+				sgs.ai_nosganglie_effect = nil
 				intention = -30
 			end
 

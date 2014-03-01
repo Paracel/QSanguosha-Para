@@ -183,32 +183,85 @@ void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
     }
 }
 
-class Ganglie: public MasochismSkill {
+class Ganglie: public TriggerSkill {
 public:
-    Ganglie(): MasochismSkill("ganglie") {
+    Ganglie(): TriggerSkill("ganglie") {
+        events << Damaged << FinishJudge;
     }
 
-    virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
-        ServerPlayer *from = damage.from;
-        Room *room = xiahou->getRoom();
-        QVariant data = QVariant::fromValue(damage);
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
 
-        if (room->askForSkillInvoke(xiahou, "ganglie", data)) {
-            room->broadcastSkillInvoke(objectName());
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *xiahou, QVariant &data) const{
+        if (triggerEvent == Damaged && TriggerSkill::triggerable(xiahou)) {
+            DamageStruct damage = data.value<DamageStruct>();
+            ServerPlayer *from = damage.from;
 
-            JudgeStruct judge;
-            judge.pattern = ".|heart";
-            judge.good = false;
-            judge.reason = objectName();
-            judge.who = xiahou;
+            for (int i = 0; i < damage.damage; i++) {
+                if (room->askForSkillInvoke(xiahou, "ganglie", data)) {
+                    room->broadcastSkillInvoke(objectName());
 
-            room->judge(judge);
-            if (!from || from->isDead()) return;
-            if (judge.isGood()) {
-                if (from->getHandcardNum() < 2 || !room->askForDiscard(from, objectName(), 2, 2, true))
-                    room->damage(DamageStruct(objectName(), xiahou, from));
+                    JudgeStruct judge;
+                    judge.pattern = ".";
+                    judge.play_animation = false;
+                    judge.reason = objectName();
+                    judge.who = xiahou;
+
+                    room->judge(judge);
+                    if (!from || from->isDead()) continue;
+                    Card::Suit suit = (Card::Suit)(judge.pattern.toInt());
+                    switch (suit) {
+                    case Card::Heart:
+                    case Card::Diamond: {
+                            room->damage(DamageStruct(objectName(), xiahou, from));
+                            break;
+                        }
+                    case Card::Club:
+                    case Card::Spade: {
+                            if (xiahou->canDiscard(from, "he")) {
+                                int id = room->askForCardChosen(xiahou, from, "he", objectName(), false, Card::MethodDiscard);
+                                room->throwCard(id, from, xiahou);
+                            }
+                            break;
+                        }
+                    default:
+                            break;
+                    }
+                }
+            }
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason != objectName()) return false;
+            judge->pattern = QString::number(int(judge->card->getSuit()));
+        }
+        return false;
+    }
+};
+
+class Qingjian: public TriggerSkill {
+public:
+    Qingjian(): TriggerSkill("qingjian") {
+        events << CardsMoveOneTime;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (!room->getTag("FirstRound").toBool() && player->getPhase() != Player::Draw
+            && move.to == player && move.to_place == Player::PlaceHand) {
+            QList<int> ids;
+            foreach (int id, move.card_ids) {
+                if (room->getCardOwner(id) == player && room->getCardPlace(id) == Player::PlaceHand)
+                    ids << id;
+            }
+            if (ids.isEmpty())
+                return false;
+            while (room->askForYiji(player, ids, objectName(), false, false, true, -1,
+                                    QList<ServerPlayer *>(), CardMoveReason(), "@qingjian-distribute", true)) {
+                if (player->isDead()) return false;
             }
         }
+        return false;
     }
 };
 
@@ -1439,6 +1492,7 @@ void StandardPackage::addGenerals() {
 
     General *xiahoudun = new General(this, "xiahoudun", "wei"); // WEI 003
     xiahoudun->addSkill(new Ganglie);
+    xiahoudun->addSkill(new Qingjian);
 
     General *zhangliao = new General(this, "zhangliao", "wei"); // WEI 004
     zhangliao->addSkill(new Tuxi);

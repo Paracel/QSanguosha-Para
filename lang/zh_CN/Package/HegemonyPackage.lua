@@ -47,10 +47,8 @@ return {
 	["illustrator:kongrong"] = "苍月白龙",
 	["mingshi"] = "名士",
 	[":mingshi"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到伤害时，若伤害来源装备区的牌数不大于你的装备区的牌数，此伤害-1。",
-	["mingshi:yes"] = "展示所有手牌",
-	["mingshi:no"] = "不展示",
 	["lirang"] = "礼让",
-	[":lirang"] = "当你的牌因弃置而置入弃牌堆时，你可以将其中任意数量的牌任意分配给其他角色。",
+	[":lirang"] = "每当你的牌因弃置而置入弃牌堆时，你可以将其中任意数量的牌任意分配给其他角色。",
 	["@lirang-distribute"] = "你可以发动“礼让”将 %arg 张牌任意分配给任意数量的其他角色",
 	["#Mingshi"] = "%from 的“<font color=\"yellow\"><b>名士</b></font>”被触发，伤害从 %arg 点减少至 %arg2 点",
 

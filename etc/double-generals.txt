@@ -10,7 +10,7 @@ simayi wolong							80
 simayi sunshangxiang					52
 simayi huatuo							53
 simayi nos_liubei						52
-xiahoudun guojia						65
+xiahoudun guojia						55
 xiahoudun xiaoqiao						30
 zhangliao xuchu							15
 zhangliao zhouyu						35
@@ -35,6 +35,7 @@ guojia wuguotai							87
 guojia madai							58
 guojia bgm_lvmeng						79
 guojia vs_xiahoudun						66
+guojia nos_xiahoudun					65
 guojia nos_liubei						58
 guojia nos_madai						65
 guojia nos_wangyi						73
@@ -270,6 +271,7 @@ xiaoqiao heg_sunce						56
 xiaoqiao vs_xiahoudun					34
 xiaoqiao vs_guanyu						53
 xiaoqiao neo_guanyu						53
+xiaoqiao nos_xiahoudun					30
 xiaoqiao nos_zhangjiao					20
 xiaoqiao nos_guanxingzhangbao			64
 xiaoqiao nos_madai						35

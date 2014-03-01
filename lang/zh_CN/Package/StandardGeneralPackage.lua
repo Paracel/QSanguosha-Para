@@ -23,8 +23,12 @@ return {
 
 	["#xiahoudun"] = "独眼的罗刹",
 	["xiahoudun"] = "夏侯惇",
+	["illustration:xiahoudun"] = "DH",
 	["ganglie"] = "刚烈",
-	[":ganglie"] = "每当你受到伤害后，你可以进行判定：若结果不为<font color=\"red\">♥</font>，则伤害来源选择一项：弃置两张手牌，或受到你造成的1点伤害。",
+	[":ganglie"] = "每当你受到1点伤害后，你可以进行判定：若结果为红色，你对伤害来源造成的1点伤害；若结果为黑色，你弃置伤害来源一张牌。",
+	["qingjian"] = "清俭",
+	[":qingjian"] = "每当你于摸牌阶段外获得手牌后，你可以将其中任意数量的牌任意分配给其他角色。",
+	["@qingjian-distribute"] = "你可以发动“清俭”将 %arg 张牌任意分配给任意数量的其他角色",
 
 	["#zhangliao"] = "前将军",
 	["zhangliao"] = "张辽",

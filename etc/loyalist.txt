@@ -27,6 +27,7 @@ caopi					bgm_diaochan			0.9
 caopi					bgm_caoren				1.5
 caopi					heg_dengai				1.1
 caopi					vs_xiahoudun			1.1
+caopi					nos_xiahoudun			1.1
 caopi					nos_caoren				1.5
 caopi					nos_wangyi				2.5
 dongzhuo				zhoutai					-2.0

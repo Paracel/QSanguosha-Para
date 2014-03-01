@@ -351,7 +351,7 @@ function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 				break
 			end
 		end
-		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from, self.player) > 0 or from:hasSkills("ganglie|vsganglie"))) or from:hasSkill("hongyan")) then
+		if not other_rebel and ((from:getHp() >= 4 and (getCardsNum("Peach", from, self.player) > 0 or from:hasSkills("nosganglie|vsganglie"))) or from:hasSkill("hongyan")) then
 			return false
 		end
 	end
@@ -516,7 +516,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 
 	for _, enemy in ipairs(self.enemies) do
 		if (enemy:getHp() <= dmg.damage and enemy:isAlive()) then
-			if (enemy:getHandcardNum() <= 2 or enemy:hasSkills("guose|leiji|ganglie|enyuan|qingguo|wuyan|kongcheng") or enemy:containsTrick("indulgence"))
+			if (enemy:getHandcardNum() <= 2 or enemy:hasSkills("guose|leiji|nosganglie|vsganglie|enyuan|qingguo|wuyan|kongcheng") or enemy:containsTrick("indulgence"))
 				and self:canAttack(enemy, dmg.from or self.room:getCurrent(), dmg.nature)
 				and not (dmg.card and dmg.card:getTypeId() == sgs.Card_TypeTrick and enemy:hasSkill("wuyan")) then
 				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName()
@@ -542,7 +542,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 	for _, enemy in ipairs(self.enemies) do
 		if (enemy:getLostHp() <= 1 or dmg.damage > 1) and enemy:isAlive() then
 			if (enemy:getHandcardNum() <= 2)
-				or enemy:containsTrick("indulgence") or enemy:hasSkills("guose|leiji|vsganglie|ganglie|enyuan|qingguo|wuyan|kongcheng")
+				or enemy:containsTrick("indulgence") or enemy:hasSkills("guose|leiji|vsganglie|nosganglie|enyuan|qingguo|wuyan|kongcheng")
 				and self:canAttack(enemy, (dmg.from or self.room:getCurrent()), dmg.nature)
 				and not (dmg.card and dmg.card:getTypeId() == sgs.Card_TypeTrick and enemy:hasSkill("wuyan")) then
 				return "@TianxiangCard=" .. card_id .. "->" .. enemy:objectName() end

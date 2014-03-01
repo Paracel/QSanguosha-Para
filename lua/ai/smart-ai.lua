@@ -572,7 +572,22 @@ function SmartAI:adjustUsePriority(card, v)
 			v = v - 0.05
 		end
 		if self.player:getMark("qiangwu") > 0 and card:getNumber() > self.player:getMark("qiangwu") then v = v + 0.08 end
-		if card:isKindOf("NatureSlash") then v = v + (self.slashAvail == 1 and 0.05 or -0.05) end
+		if card:isKindOf("NatureSlash") then
+			if self.slashAvail == 1 then
+				v = v + 0.05
+				if card:isKindOf("FireSlash") then
+					for _, enemy in ipairs(self.enemies) do
+						if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then v = v + 0.07 break end
+					end
+				elseif card:isKindOf("ThunderSlash") then
+					for _, enemy in ipairs(self.enemies) do
+						if enemy:getMark("@fog") > 0 then v = v + 0.06 break end
+					end
+				end
+			else
+				v = v - 0.05
+			end
+		end
 		if card:getSkillName() == "longdan" and self.player:hasSkill("chongzhen") then v = v + 0.08 end
 		if card:getSkillName() == "fuhun" then v = v + (self.player:getPhase() == sgs.Player_Play and 0.06 or -0.05) end
 		if self.player:hasSkill("jiang") and card:isRed() then v = v + 0.05 end

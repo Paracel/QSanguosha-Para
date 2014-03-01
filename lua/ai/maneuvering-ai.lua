@@ -302,7 +302,7 @@ function SmartAI:isGoodChainPartner(player)
 end
 
 function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
-	if not who:isChained() then return false end
+	if not who:isChained() then return not self:isFriend(who) end
 	source = source or self.player
 	if source:hasSkill("jueqing") then return not self:isFriend(who) end
 	damagecount = damagecount or 1
@@ -318,7 +318,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
 		else nature = sgs.DamageStruct_Normal end
 	end
 	if card then
-		if card:isKindOf("FireAttack") and not self:hasTrickEffective(card, who, self.player) then return end
+		if card:isKindOf("TrickCard") and not self:hasTrickEffective(card, who, self.player) then return end
 		if card:isKindOf("Slash") and not self:slashIsEffective(card, who, self.player) then return end
 	end
 	if not self:damageIsEffective(who, nature, source) then return end
@@ -381,7 +381,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
 
 	for _, player in sgs.qlist(self.room:getAllPlayers()) do
 		if player:objectName() ~= who:objectName() and player:isChained() and self:damageIsEffective(player, nature, source)
-			and not (card and card:isKindOf("FireAttack") and not self:hasTrickEffective(card, player, self.player)) then
+			and not (card and card:isKindOf("TrickCard") and not self:hasTrickEffective(card, player, self.player)) then
 			local getvalue = getChainedPlayerValue(player, 0)
 			if kills == #self.enemies and not killlord and sgs.getDefenseSlash(player, self) < 2 then
 				if card then card:setFlags("AIGlobal_KillOff") end 

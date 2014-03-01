@@ -275,6 +275,7 @@ end
 function SmartAI:slashProhibit(card, enemy, from)
 	card = card or sgs.Sanguosha:cloneCard("slash")
 	from = from or self.player
+	if self.room:isProhibited(from, enemy, card) then return true end
 	local nature = sgs.DamageStruct_Normal
 	if card:isKindOf("FireSlash") then nature = sgs.DamageStruct_Fire
 	elseif card:isKindOf("ThunderSlash") then nature = sgs.DamageStruct_Thunder end
@@ -299,7 +300,7 @@ function SmartAI:slashProhibit(card, enemy, from)
 		end
 	end
 
-	return self.room:isProhibited(from, enemy, card) or not self:slashIsEffective(card, enemy, from)
+	return not self:slashIsEffective(card, enemy, from)
 end
 
 function SmartAI:canLiuli(other, another)
@@ -381,10 +382,23 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 					and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen" or skillname == "guhuo" or skillname == "nosguhuo")
 	local armor = to:getArmor()
 	if armor and to:hasArmorEffect(armor:objectName()) and not from:hasWeapon("qinggang_sword") and not ignore_armor then
-		if armor:objectName() == "renwang_shield" then
-			return not slash:isBlack()
-		elseif armor:objectName() == "vine" then
-			return nature ~= sgs.DamageStruct_Normal or (not changed and (from:hasWeapon("fan") or (from:hasSkill("lihuo") and not self:isWeak(from))))
+		if armor:objectName() == "renwang_shield" and slash:isBlack() then return false end
+		if armor:objectName() == "vine"
+			and not (nature ~= sgs.DamageStruct_Normal or (not changed and (from:hasWeapon("fan") or (from:hasSkill("lihuo") and not self:isWeak(from))))) then
+			return false
+		end
+	end
+	if slash:isKindOf("ThunderSlash") then
+		local f_slash = self:getCard("FireSlash")
+		if f_slash and self:hasHeavySlashDamage(from, f_slash, to, true) > self:hasHeavySlashDamage(from, slash, to, true)
+			and (not to:isChained() or self:isGoodChainTarget(to, from, sgs.DamageStruct_Fire, nil, f_slash)) then
+			return self:slashProhibit(f_slash, to, from)
+		end
+	elseif slash:isKindOf("FireSlash") then
+		local t_slash = self:getCard("ThunderSlash")
+		if t_slash and self:hasHeavySlashDamage(from, t_slash, to, true) > self:hasHeavySlashDamage(from, slash, to, true)
+			and (not to:isChained() or self:isGoodChainTarget(to, from, sgs.DamageStruct_Thunder, nil, t_slash)) then
+			return self:slashProhibit(t_slash, to, from)
 		end
 	end
 

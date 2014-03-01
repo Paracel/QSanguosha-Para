@@ -981,7 +981,7 @@ sgs.ai_skill_choice.nosguhuo = function(self, choices)
 	if self.player:getHp() < 2 and self:getCardsNum("Peach") < 1 and self.room:alivePlayerCount() > 2 then return "noquestion" end
 	if self:isFriend(yuji) then return "noquestion"
 	elseif sgs.questioner then return "noquestion"
-	elseif self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion" end
+	elseif self.player:getHp() < self.friends[#self.friends]:getHp() then return "noquestion"
 	end
 	if self:needToLoseHp(self.player) and not self.player:hasSkills(sgs.masochism_skill) and x ~= 1 then return "question" end
 

@@ -1955,6 +1955,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		enemies = self:exclude(enemies, card)
 		local temp = {}
 		for _, enemy in ipairs(enemies) do
+			if enemy:hasSkill("tuntian+guidao") and enemy:hasSkills("zaoxian|jixi|ziliang|leiji|nosleiji") then continue end
 			if self:hasTrickEffective(card, enemy) or isYinling then
 				table.insert(temp, enemy)
 			end
@@ -1966,6 +1967,7 @@ function SmartAI:useCardSnatchOrDismantlement(card, use)
 		enemies = self:exclude(self.enemies, card)
 		local temp = {}
 		for _, enemy in ipairs(enemies) do
+			if enemy:hasSkill("tuntian+guidao") and enemy:hasSkills("zaoxian|jixi|ziliang|leiji|nosleiji") then continue end
 			if self:hasTrickEffective(card, enemy) or isYinling then
 				table.insert(temp, enemy)
 			end

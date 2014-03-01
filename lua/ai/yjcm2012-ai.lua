@@ -366,7 +366,7 @@ end
 sgs.ai_skill_use_func.GongqiCard = function(card, use, self)
 	local id = card:getSubcards():first()
 	local subcard = sgs.Sanguosha:getCard(id)
-	if subcard:isKindOf("SilverLion") and room:getCardPlace(id) == sgs.Player_PlaceHand then
+	if subcard:isKindOf("SilverLion") and self.room:getCardPlace(id) == sgs.Player_PlaceHand then
 		local dummy_use = { isDummy = true }
 		self:useEquipCard(subcard, dummy_use)
 		if dummy_use.card then

@@ -3999,15 +3999,15 @@ end
 
 function getKnownCard(player, from, class_name, viewas, flags)
 	if not player or (flags and type(flags) ~= "string") then global_room:writeToConsole(debug.traceback()) return 0 end
-	from = from or global_room:getCurrent()
 	flags = flags or "h"
 	player = findPlayerByObjectName(global_room, player:objectName())
 	local cards = player:getCards(flags)
 	local known = 0
 	local suits = { ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }
 	for _, card in sgs.qlist(cards) do
-		local flag = string.format("%s_%s_%s", "visible", from:objectName(), player:objectName())
-		if card:hasFlag("visible") or card:hasFlag(flag) or player:objectName() == from:objectName() then
+		local flag = nil
+		if from then flag = string.format("%s_%s_%s", "visible", from:objectName(), player:objectName()) end
+		if card:hasFlag("visible") or (flag and card:hasFlag(flag)) or (from and player:objectName() == from:objectName()) then
 			for _, name in ipairs(class_name:split("|")) do
 				if (suits[name] and card:getSuitString() == name)
 					or (name == "red" and card:isRed()) or (name == "black" and card:isBlack())
@@ -4120,7 +4120,6 @@ end
 
 function getCardsNum(class_name, player, from)
 	if not player then global_room:writeToConsole(debug.traceback()) end
-	from = from or global_room:getCurrent()
 	local cards = sgs.QList2Table(player:getHandcards())
 	local num = 0
 	local shownum = 0
@@ -4140,7 +4139,7 @@ function getCardsNum(class_name, player, from)
 	local slashjink = 0
 
 	for _, card in ipairs(cards) do
-		local flag
+		local flag = nil
 		if from then flag = string.format("%s_%s_%s", "visible", from:objectName(), player:objectName()) end
 		if card:hasFlag("visible") or (from and card:hasFlag(flag)) or (from and from:objectName() == player:objectName()) then
 			shownum = shownum + 1

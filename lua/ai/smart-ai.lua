@@ -169,6 +169,8 @@ function SmartAI:initialize(player)
 		sgs.initialized = true
 		sgs.ais = {}
 		sgs.turncount = 0
+		sgs.ai_gameProcess = nil
+		sgs.ai_gameProcess_arg = nil
 		global_room = self.room
 		global_room:writeToConsole(version .. ", Powered by " .. _VERSION)
 
@@ -962,7 +964,7 @@ function sgs.outputRoleValues(player, level)
 	global_room:writeToConsole(player:getGeneralName() .. " " .. level .. " " .. sgs.evaluatePlayerRole(player)
 								.. " L " .. math.ceil(sgs.role_evaluation[player:objectName()]["loyalist"])
 								.. " R " .. math.ceil(sgs.role_evaluation[player:objectName()]["renegade"])
-								.. " " .. sgs.gameProcess(player:getRoom()) .. "d=" .. sgs.gameProcess(player:getRoom(), 1)
+								.. " " .. sgs.gameProcess(player:getRoom()) .. ":" .. sgs.gameProcess(player:getRoom(), 1)
 								.. " " .. sgs.current_mode_players["loyalist"] .. sgs.current_mode_players["rebel"] .. sgs.current_mode_players["renegade"])
 end
 
@@ -998,7 +1000,7 @@ function sgs.isLordInDanger()
 end
 
 function sgs.gameProcess(room, arg, update)
-	if not update then
+	if not update and sgs.ai_gameProcess and sgs.ai_gameProcess_arg then
 		if arg and arg == 1 then
 			return sgs.ai_gameProcess_arg
 		else

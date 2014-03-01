@@ -1590,7 +1590,8 @@ public:
     }
 
     virtual int getResidueNum(const Player *from, const Card *card) const{
-        if (card->getNumber() > from->getMark("qiangwu") || card->hasFlag("Global_SlashAvailabilityChecker"))
+        if (from->getMark("qiangwu") > 0
+            && (card->getNumber() > from->getMark("qiangwu") || card->hasFlag("Global_SlashAvailabilityChecker")))
             return 1000;
         else
             return 0;

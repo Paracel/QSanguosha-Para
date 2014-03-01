@@ -596,7 +596,7 @@ sgs.ai_skill_choice.guhuo = function(self, choices)
 	if guhuoname == "normal_slash" then guhuoname = "slash" end
 	local guhuocard = sgs.Sanguosha:cloneCard(guhuoname)
 	local guhuotype = guhuocard:getClassName()
-	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
+	if guhuotype and self:getRestCardsNum(guhuotype, yuji) == 0 then return "question" end
 	if guhuotype and guhuotype == "AmazingGrace" then return "noquestion" end
 	if self.player:hasSkill("hunzi") and self.player:getMark("hunzi") == 0 and math.random(1, 15) ~= 1 then return "noquestion" end
 	if guhuotype:match("Slash") then

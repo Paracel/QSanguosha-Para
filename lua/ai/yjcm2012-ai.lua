@@ -172,7 +172,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
 					and not (use.from:hasSkill("hongyan") and self:hasSuit("spade")) then
 					return not self:doNotDiscard(use.from)
-				elseif self.player:isChained() and not self:isGoodChainTarget(self.player, use.from) then
+				elseif self.player:isChained() and not self:isGoodChainTarget(self.player, use.from, sgs.DamageStruct_Fire, nil, use.card) then
 					return not self:doNotDiscard(use.from)
 				end
 			elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))

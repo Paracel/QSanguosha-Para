@@ -421,7 +421,7 @@ yeyan_skill.getTurnUseCard = function(self)
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:isChained() and self:isGoodChainTarget(enemy) then 
+		if enemy:isChained() and self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire) then 
 			if chained == 0 then target_num = target_num +1 end
 			chained = chained + 1
 		end
@@ -518,7 +518,7 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
 		if not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
-			and enemy:isChained() and self:isGoodChainTarget(enemy) and (enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then
+			and enemy:isChained() and self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire) and (enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then
 			targets:append(enemy)
 			if targets:length() >= 3 then break end
 		end
@@ -526,8 +526,8 @@ sgs.ai_skill_use_func.SmallYeyanCard = function(card, use, self)
 	if targets:length() < 3 then
 		for _, enemy in ipairs(self.enemies) do
 			if not targets:contains(enemy)
-				and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
-				and enemy:isChained() and self:isGoodChainTarget(enemy) then
+				and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0)
+				and enemy:isChained() and self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire) then
 				targets:append(enemy)
 				if targets:length() >= 3 then break end
 			end

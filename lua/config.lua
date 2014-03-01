@@ -212,6 +212,7 @@ config = {
 		"machao->sp_machao|tw_machao",
 		"madai->heg_madai",
 		"nos_huangyueying->heg_huangyueying|tw_huangyueying",
+		"panfeng->sp_panfeng",
 		"pangde->sp_pangde",
 		"shenlvbu->sp_shenlvbu",
 		"sunshangxiang->sp_sunshangxiang",

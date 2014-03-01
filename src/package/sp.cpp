@@ -2077,6 +2077,9 @@ SPPackage::SPPackage()
     xingcai->addSkill(new QiangwuTargetMod);
     related_skills.insertMulti("qiangwu", "#qiangwu-target");
 
+    General *sp_panfeng = new General(this, "sp_panfeng", "qun", 4, true, true); // SP 029
+    sp_panfeng->addSkill("kuangfu");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();

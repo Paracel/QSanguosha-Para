@@ -1793,6 +1793,12 @@ function SmartAI:getDangerousCard(who)
 			end
 		end
 	end
+	if weapon then
+		if who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] > 2 then return weapon:getEffectiveId() end
+		for _, friend in ipairs(self.friends) do
+			if who:distanceTo(friend) < who:getAttackRange(false) and self:isWeak(friend) and not self:doNotDiscard(who, "e", true) then return weapon:getEffectiveId() end
+		end
+	end
 end
 
 function SmartAI:getValuableCard(who)
@@ -1804,9 +1810,8 @@ function SmartAI:getValuableCard(who)
 	local friend
 	if #self.friends > 0 then friend = self.friends[1] end
 	if friend and self:isWeak(friend) and who:distanceTo(friend) <= who:getAttackRange() and not self:doNotDiscard(who, "e", true) then
-		if weapon and who:distanceTo(friend) > 1
-			and not ((weapon:isKindOf("MoonSpear") or weapon:isKindOf("SPMoonSpear")) and who:hasSkill("keji") and who:getHandcardNum() > 5) then return weapon:getEffectiveId() end
-		if offhorse and who:distanceTo(friend) > 1 then return offhorse:getEffectiveId() end
+		if weapon and who:distanceTo(friend) > who:getAttackRange(false) then return weapon:getEffectiveId() end
+		if offhorse and who:distanceTo(friend) > who:getAttackRange() + 1 then return offhorse:getEffectiveId() end
 	end
 
 	if armor then

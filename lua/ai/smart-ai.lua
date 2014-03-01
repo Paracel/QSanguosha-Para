@@ -1171,7 +1171,7 @@ function SmartAI:objectiveLevel(player)
 				for i = 1, #players, 1 do
 					if not players[i]:isLord() and players[i]:hasSkills(renegade_attack_skill) then return 5 end
 				end
-				return 3
+				return self:getOverflow() > 0 and 3 or 0
 			elseif process:match("rebel") then
 				return target_role == "rebel" and 5 or (target_role == "neutral" and 0 or -1)
 			elseif process:match("dilemma") then

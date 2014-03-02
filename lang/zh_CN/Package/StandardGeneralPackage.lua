@@ -23,7 +23,7 @@ return {
 
 	["#xiahoudun"] = "独眼的罗刹",
 	["xiahoudun"] = "夏侯惇",
-	["illustration:xiahoudun"] = "DH",
+	["illustrator:xiahoudun"] = "DH",
 	["ganglie"] = "刚烈",
 	[":ganglie"] = "每当你受到1点伤害后，你可以进行判定：若结果为红色，你对伤害来源造成的1点伤害；若结果为黑色，你弃置伤害来源一张牌。",
 	["qingjian"] = "清俭",
@@ -32,10 +32,11 @@ return {
 
 	["#zhangliao"] = "前将军",
 	["zhangliao"] = "张辽",
+	["illustrator:zhangliao"] = "张帅",
 	["tuxi"] = "突袭",
-	[":tuxi"] = "摸牌阶段，你可以放弃摸牌并选择一至两名有手牌的其他角色：若如此做，你依次获得这些角色各一张手牌。",
-	["@tuxi-card"] = "你可以发动“突袭”",
-	["~tuxi"] = "选择 1-2 名其他角色→点击确定",
+	[":tuxi"] = "摸牌阶段，你可以少摸任意数量的牌并选择等量的有手牌的手牌数不少于你的其他角色：若如此做，你依次获得这些角色各一张手牌。",
+	["@tuxi-card"] = "你可以发动“突袭”选择至多 %arg 名其他角色",
+	["~tuxi"] = "选择若干名其他角色→点击确定",
 
 	["#guojia"] = "早终的先知",
 	["guojia"] = "郭嘉",
@@ -114,7 +115,7 @@ return {
 	["#sunquan"] = "年轻的贤君",
 	["sunquan"] = "孙权",
 	["zhiheng"] = "制衡",
-	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置任意数量的牌，然后摸等数量的牌。",
+	[":zhiheng"] = "<font color=\"green\"><b>阶段技。</b></font>你可以弃置任意数量的牌，然后摸等量的牌。",
 	["jiuyuan"] = "救援",
 	[":jiuyuan"] = "<font color=\"orange\"><b>主公技。</b></font><font color=\"blue\"><b>锁定技。</b></font>若你处于濒死状态，其他吴势力角色对你使用【桃】时，你回复的体力+1。",
 	["#JiuyuanExtraRecover"] = "%from 的“%arg”被触发，将额外回复 <font color=\"yellow\"><b>1</b></font> 点体力",
@@ -209,7 +210,7 @@ return {
 	["zhiba_sunquan"] = "制霸孙权",
 	["&zhiba_sunquan"] = "孙权",
 	["super_zhiheng"] = "制衡",
-	[":super_zhiheng"] = "出牌阶段限X+1次，你可以弃置任意数量的牌：若如此做，你摸等数量的牌。（X为你已损失的体力值）",
+	[":super_zhiheng"] = "出牌阶段限X+1次，你可以弃置任意数量的牌：若如此做，你摸等量的牌。（X为你已损失的体力值）",
 	["$super_zhiheng1"] = "容我三思。",
 	["$super_zhiheng2"] = "且慢。",
 

@@ -100,8 +100,8 @@ bool SmallTuxiCard::targetFilter(const QList<const Player *> &targets, const Pla
 }
 
 void SmallTuxiCard::onEffect(const CardEffectStruct &effect) const{
-    TuxiCard::onEffect(effect);
     effect.from->getRoom()->broadcastSkillInvoke("tuxi");
+    NosTuxiCard::onEffect(effect);
 }
 
 class SmallTuxiViewAsSkill: public ZeroCardViewAsSkill {
@@ -180,8 +180,8 @@ public:
                 room->acquireSkill(guanyu, "zhanshuangxiong");
 
 
-                ServerPlayer *zhangliao = room->findPlayer("zhangliao");
-                room->handleAcquireDetachSkills(zhangliao, "-tuxi|smalltuxi");
+                ServerPlayer *zhangliao = room->findPlayer("nos_zhangliao");
+                room->handleAcquireDetachSkills(zhangliao, "-nostuxi|smalltuxi");
 
                 break;
             }
@@ -264,7 +264,7 @@ GuanduScenario::GuanduScenario()
 {
     lord = "yuanshao";
     loyalists << "yanliangwenchou" << "zhenji";
-    rebels << "caocao" << "zhangliao" << "guojia";
+    rebels << "caocao" << "nos_zhangliao" << "guojia";
     renegades << "liubei" << "guanyu";
 
     rule = new GuanduRule(this);
@@ -290,11 +290,9 @@ void GuanduScenario::onTagSet(Room *room, const QString &) const{
     bool burnwuchao = room->getTag("BurnWuchao").toBool();
 
     if (burnwuchao) {
-        ServerPlayer *zhangliao = room->findPlayer("zhangliao");
-        if (zhangliao && !zhangliao->hasSkill("tuxi")) {
-            room->acquireSkill(zhangliao, "tuxi");
-            room->detachSkillFromPlayer(zhangliao, "smalltuxi");
-        }
+        ServerPlayer *zhangliao = room->findPlayer("nos_zhangliao");
+        if (zhangliao && !zhangliao->hasSkill("nostuxi"))
+            room->handleAcquireDetachSkills(zhangliao, "-smalltuxi|nostuxi");
     }
     if (zhanshuangxiong && burnwuchao) {
         ServerPlayer *guojia = room->findPlayer("guojia");

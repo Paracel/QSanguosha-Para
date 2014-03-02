@@ -77,7 +77,7 @@ sgs.ai_skill_choice.drowning = function(self, choices, data)
 end
 
 sgs.ai_skill_playerchosen.koftuxi = function(self, targets)
-	local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
+	local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
 	if cardstr:match("->") then
 		local targetstr = cardstr:split("->")[2]:split("+")
 		if #targetstr > 0 then

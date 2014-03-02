@@ -81,19 +81,14 @@ TuxiCard::TuxiCard() {
 }
 
 bool TuxiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    if (targets.length() >= 2 || to_select == Self)
+    if (targets.length() >= Self->getMark("tuxi") || to_select->getHandcardNum() < Self->getHandcardNum() || to_select == Self)
         return false;
 
     return !to_select->isKongcheng();
 }
 
 void TuxiCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.from->getRoom();
-    if (effect.from->isAlive() && !effect.to->isKongcheng()) {
-        int card_id = room->askForCardChosen(effect.from, effect.to, "h", "tuxi");
-        CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, effect.from->objectName());
-        room->obtainCard(effect.from, Sanguosha->getCard(card_id), reason, false);
-    }
+    effect.to->setFlags("TuxiTarget");
 }
 
 FanjianCard::FanjianCard() {

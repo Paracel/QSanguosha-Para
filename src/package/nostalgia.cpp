@@ -969,6 +969,68 @@ public:
 
 // old stantard generals
 
+NosTuxiCard::NosTuxiCard() {
+    mute = true;
+}
+
+bool NosTuxiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (targets.length() >= 2 || to_select == Self)
+        return false;
+
+    return !to_select->isKongcheng();
+}
+
+void NosTuxiCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    if (!effect.from->hasFlag("NosTuxiAudioBroadcast")) {
+        room->broadcastSkillInvoke("tuxi");
+        effect.from->setFlags("NosTuxiAudioBroadcast");
+    }
+    if (effect.from->isAlive() && !effect.to->isKongcheng()) {
+        int card_id = room->askForCardChosen(effect.from, effect.to, "h", "tuxi");
+        CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, effect.from->objectName());
+        room->obtainCard(effect.from, Sanguosha->getCard(card_id), reason, false);
+    }
+}
+
+class NosTuxiViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    NosTuxiViewAsSkill(): ZeroCardViewAsSkill("nostuxi") {
+        response_pattern = "@@nostuxi";
+    }
+
+    virtual const Card *viewAs() const{
+        return new NosTuxiCard;
+    }
+};
+
+class NosTuxi: public PhaseChangeSkill {
+public:
+    NosTuxi(): PhaseChangeSkill("nostuxi") {
+        view_as_skill = new NosTuxiViewAsSkill;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *zhangliao) const{
+        if (zhangliao->getPhase() == Player::Draw) {
+            Room *room = zhangliao->getRoom();
+            bool can_invoke = false;
+            QList<ServerPlayer *> other_players = room->getOtherPlayers(zhangliao);
+            foreach (ServerPlayer *player, other_players) {
+                if (!player->isKongcheng()) {
+                    can_invoke = true;
+                    break;
+                }
+            }
+            zhangliao->setFlags("-NosTuxiAudioBroadcast");
+
+            if (can_invoke && room->askForUseCard(zhangliao, "@@nostuxi", "@nostuxi-card"))
+                return true;
+        }
+
+        return false;
+    }
+};
+
 class NosGanglie: public MasochismSkill {
 public:
     NosGanglie(): MasochismSkill("nosganglie") {
@@ -1659,6 +1721,9 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_xiahoudun = new General(this, "nos_xiahoudun", "wei");
     nos_xiahoudun->addSkill(new NosGanglie);
 
+    General *nos_zhangliao = new General(this, "nos_zhangliao", "wei");
+    nos_zhangliao->addSkill(new NosTuxi);
+
     General *nos_liubei = new General(this, "nos_liubei$", "shu");
     nos_liubei->addSkill(new NosRende);
     nos_liubei->addSkill("jijiang");
@@ -1671,6 +1736,7 @@ NostalStandardPackage::NostalStandardPackage()
     nos_diaochan->addSkill(new NosLijian);
     nos_diaochan->addSkill("biyue");
 
+    addMetaObject<NosTuxiCard>();
     addMetaObject<NosRendeCard>();
     addMetaObject<NosLijianCard>();
 }

@@ -92,13 +92,13 @@ function setInitialTables()
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|noslijian|lijian|" ..
-							"manjuan|lihun|tuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng|zhaoxin"
+							"manjuan|lihun|nostuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|ganglie|vsganglie|nosganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|nosguhuo|kanpo|" ..
 							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo"
-	sgs.drawpeach_skill = "tuxi|qiaobian"
+	sgs.drawpeach_skill = "nostuxi|qiaobian"
 	sgs.recover_skill = "nosrende|rende|kuanggu|kofkuanggu|zaiqi|jieyin|qingnang|shenzhi"
 	sgs.use_lion_skill = "longhun|duanliang|qixi|guidao|noslijian|lijian|jujian|nosjujian|zhiheng|mingce|yongsi|fenxun|gongqi|" ..
 							"yinling|jilve|qingcheng|diyyicong"
@@ -2279,7 +2279,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 						if card:getSuit() == sgs.Card_Heart or (to:hasSkill("hongyan") and card:getSuit() == sgs.Card_Spade) then return nil end
 					end
 					if to:getHp() - to:getHandcardNum() >= 2 then return nil end
-					if to:hasSkill("tuxi") and to:getHp() > 2 then return nil end
+					if to:hasSkill("nostuxi") and to:getHp() > 2 then return nil end
 					if to:hasSkill("qiaobian") and not to:isKongcheng() then return nil end
 					return null_card
 				elseif trick:isKindOf("SupplyShortage") and not to:isSkipped(sgs.Player_Draw) then
@@ -3611,7 +3611,7 @@ function SmartAI:needRetrial(judge)
 		end
 		if self:isFriend(who) then
 			if who:getHp() - who:getHandcardNum() >= 2 and self:getOverflow() <= 0 then return false end
-			if who:hasSkill("tuxi") and who:getHp() > 2 and self:getOverflow() <= 0 then return false end
+			if who:hasSkill("nostuxi") and who:getHp() > 2 and self:getOverflow() <= 0 then return false end
 			return not good
 		else
 			return good

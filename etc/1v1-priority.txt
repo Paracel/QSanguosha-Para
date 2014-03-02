@@ -1,7 +1,7 @@
 caocao					60					
 simayi					65					
 xiahoudun				68					
-zhangliao				22					
+zhangliao				72					
 xuchu					32					
 guojia					62					
 zhenji					93					
@@ -185,7 +185,8 @@ kof_lvmeng				65
 kof_daqiao				55					
 kof_huatuo				65					
 kof_pangde				56					
-xiahoudun				62					
+nos_xiahoudun			62					
+nos_zhangliao			22					
 nos_liubei				19					
 nos_huangyueying		61					
 nos_diaochan			72					

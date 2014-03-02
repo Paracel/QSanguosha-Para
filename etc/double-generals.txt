@@ -13,14 +13,11 @@ simayi nos_liubei						52
 xiahoudun guojia						55
 xiahoudun xiaoqiao						30
 zhangliao xuchu							15
-zhangliao zhouyu						35
-zhangliao lusu							20
 zhangliao yanliangwenchou				32
-zhangliao liubiao						31
-zhangliao yuanshu						11
 xuchu liubei							15
 xuchu machao							54
 xuchu huangzhong						55
+xuchu nos_zhangliao						15
 xuchu nos_liubei						15
 guojia zhanghe							76
 guojia liubei							58
@@ -222,6 +219,7 @@ lvmeng neo_zhangfei						58
 lvmeng nos_zhoutai						57
 zhouyu masu								57
 zhouyu liaohua							56
+zhouyu nos_zhangliao					35
 daqiao luxun							75
 daqiao sunshangxiang					52
 daqiao lingtong							51
@@ -280,6 +278,7 @@ taishici dingfeng						62
 zhoutai shensimayi						48
 lusu lingtong							52
 lusu yuanshu							54
+lusu nos_zhangliao						20
 lusu nos_liubei							75
 lusu nos_lingtong						53
 erzhang nos_liubei						63
@@ -295,6 +294,7 @@ yuanshao nos_xushu						2
 yanliangwenchou xushu					3
 yanliangwenchou yuanshu					8
 yanliangwenchou neo_zhangfei			35
+yanliangwenchou nos_zhangliao			32
 yanliangwenchou nos_liubei				17
 yanliangwenchou nos_xushu				2
 zhangjiao nos_liubei					22
@@ -345,11 +345,13 @@ guanxingzhangbao neo_guanyu				15
 guanxingzhangbao nos_zhangchunhua		11
 handang nos_lingtong					51
 liaohua ganfuren						52
+liubiao nos_zhangliao					31
 xunyou yuanshu							55
 xunyou liuxie							58
 xunyou nos_xushu						35
 xunyou nos_zhangchunhua					56
 yuanshu liuxie							65
+yuanshu nos_zhangliao					11
 yuanshu nos_liubei						68
 yuanshu nos_lingtong					53
 sp_guanyu nos_lingtong					52

@@ -139,7 +139,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	for i = 1, #cards, 1 do
 		local isPeach = cards[i]:isKindOf("Peach")
 		if isPeach then
-			local stealer = self.room:findPlayerBySkillName("tuxi")
+			local stealer = self.room:findPlayerBySkillName("nostuxi")
 			if stealer and self:isEnemy(stealer) and self.player:getHandcardNum() <= 2 and not self:willSkipDrawPhase(stealer) then
 				card = cards[i]
 				break
@@ -158,7 +158,7 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 			return to_discard
 		elseif self.player:containsTrick("supply_shortage") then
 			if self.player:getHp() > self.player:getHandcardNum() then return to_discard end
-			local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
+			local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
 			if cardstr:match("->") then
 				local targetstr = cardstr:split("->")[2]
 				local targets = targetstr:split("+")
@@ -176,8 +176,8 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 		end
 	elseif current_phase == sgs.Player_Draw and not self.player:isSkipped(sgs.Player_Draw) then
 		self.qiaobian_draw_targets = {}
-		if self.player:hasSkill("tuxi") and not self:willSkipDrawPhase() then return {} end
-		local cardstr = sgs.ai_skill_use["@@tuxi"](self, "@tuxi")
+		if self.player:hasSkill("nostuxi") and not self:willSkipDrawPhase() then return {} end
+		local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
 		if cardstr:match("->") then
 			local targetstr = cardstr:split("->")[2]
 			local targets = targetstr:split("+")
@@ -248,7 +248,7 @@ sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 	self:updatePlayers()
 
 	if prompt == "@qiaobian-2" then
-		if self.player:hasSkill("tuxi") then return "." end
+		if self.player:hasSkill("nostuxi") then return "." end
 		if #self.qiaobian_draw_targets == 2 then
 			return "@QiaobianCard=.->" .. table.concat(self.qiaobian_draw_targets, "+")
 		end
@@ -295,7 +295,7 @@ sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.QiaobianCard = function(self, card, from, tos)
-	if from:getMark("qiaobianPhase") == 3 then return sgs.ai_card_intention.TuxiCard(self, card, from, tos) end
+	if from:getMark("qiaobianPhase") == 3 then return sgs.ai_card_intention.NosTuxiCard(self, card, from, tos) end
 end
 
 function sgs.ai_cardneed.qiaobian(to, card)
@@ -996,7 +996,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		if self.player:getWeapon() and str:matchOne("qiangxi") then return "qiangxi" end
 
-		for _, askill in ipairs(("manjuan|xiansi|tuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|xunxun|luoshen|" ..
+		for _, askill in ipairs(("manjuan|xiansi|nostuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|xunxun|luoshen|" ..
 								"yongsi|dujin|shude|zhiyan|biyue|yingzi|qingnang"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end

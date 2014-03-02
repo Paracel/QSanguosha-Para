@@ -104,7 +104,7 @@ sgs.ai_skill_invoke.cv_huanggai = function(self, data)
 	return math.random(0, 4) == 0
 end
 
-sgs.ai_skill_invoke.cv_zhangliao = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_luxun = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_guojia = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_zhugeke = sgs.ai_skill_invoke.cv_huanggai

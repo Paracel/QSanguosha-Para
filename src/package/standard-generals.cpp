@@ -38,7 +38,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *caocao, QVariant &data) const{
-		QString pattern = data.toStringList().first();
+        QString pattern = data.toStringList().first();
         QString prompt = data.toStringList().at(1);
         if (pattern != "jink" || prompt.startsWith("@hujia-jink"))
             return false;
@@ -76,28 +76,73 @@ public:
     }
 };
 
-class Tuxi: public PhaseChangeSkill {
+class Tuxi: public DrawCardsSkill {
 public:
-    Tuxi(): PhaseChangeSkill("tuxi") {
+    Tuxi(): DrawCardsSkill("tuxi") {
         view_as_skill = new TuxiViewAsSkill;
     }
 
-    virtual bool onPhaseChange(ServerPlayer *zhangliao) const{
-        if (zhangliao->getPhase() == Player::Draw) {
-            Room *room = zhangliao->getRoom();
-            bool can_invoke = false;
-            QList<ServerPlayer *> other_players = room->getOtherPlayers(zhangliao);
-            foreach (ServerPlayer *player, other_players) {
-                if (!player->isKongcheng()) {
-                    can_invoke = true;
-                    break;
-                }
+    virtual int getPriority(TriggerEvent) const{
+        return 1;
+    }
+
+    virtual int getDrawNum(ServerPlayer *zhangliao, int n) const{
+        Room *room = zhangliao->getRoom();
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
+            if (p->getHandcardNum() >= zhangliao->getHandcardNum())
+                targets << p;
+        int num = qMin(targets.length(), n);
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
+            p->setFlags("-TuxiTarget");
+
+        if (num > 0) {
+            room->setPlayerMark(zhangliao, "tuxi", num);
+            int count = 0;
+            if (room->askForUseCard(zhangliao, "@@tuxi", "@tuxi-card:::" + QString::number(num))) {
+                room->broadcastSkillInvoke(objectName());
+                foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao))
+                    if (p->hasFlag("TuxiTarget")) count++;
+            } else {
+                room->setPlayerMark(zhangliao, "tuxi", 0);
             }
+            return n - count;
+        } else
+            return n;
+    }
+};
 
-            if (can_invoke && room->askForUseCard(zhangliao, "@@tuxi", "@tuxi-card"))
-                return true;
+class TuxiAct: public TriggerSkill {
+public:
+    TuxiAct(): TriggerSkill("#tuxi") {
+        events << AfterDrawNCards;
+    }
+
+    virtual bool triggerable(const ServerPlayer *player) const{
+        return player != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhangliao, QVariant &) const{
+        if (zhangliao->getMark("tuxi") == 0) return false;
+        room->setPlayerMark(zhangliao, "tuxi", 0);
+
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(zhangliao)) {
+            if (p->hasFlag("TuxiTarget")) {
+                p->setFlags("-TuxiTarget");
+                targets << p;
+            }
         }
+        foreach (ServerPlayer *p, targets) {
+            if (!zhangliao->isAlive())
+                break;
+            if (p->isAlive() && !p->isKongcheng()) {
+                int card_id = room->askForCardChosen(zhangliao, p, "h", "tuxi");
 
+                CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, zhangliao->objectName());
+                room->obtainCard(zhangliao, Sanguosha->getCard(card_id), reason, false);
+            }
+        }
         return false;
     }
 };
@@ -1497,6 +1542,8 @@ void StandardPackage::addGenerals() {
 
     General *zhangliao = new General(this, "zhangliao", "wei"); // WEI 004
     zhangliao->addSkill(new Tuxi);
+    zhangliao->addSkill(new TuxiAct);
+    related_skills.insertMulti("tuxi", "#tuxi");
 
     General *xuchu = new General(this, "xuchu", "wei"); // WEI 005
     xuchu->addSkill(new Luoyi);

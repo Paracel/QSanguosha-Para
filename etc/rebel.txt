@@ -21,7 +21,7 @@ dongzhuo				zhoutai					2.0
 dongzhuo				nos_zhoutai				1.8
 liubei					zhugeliang				-0.5
 nos_liubei				zhugeliang				-0.5
-nos_zhangjiao			zhangliao				0.8
+nos_zhangjiao			zhangliao				0.7
 nos_zhangjiao			xunyu					0.2
 nos_zhangjiao			dengai					0.8
 nos_zhangjiao			machao					-0.5
@@ -39,6 +39,7 @@ nos_zhangjiao			bgm_ganning				1.0
 nos_zhangjiao			yuejin					0.3
 nos_zhangjiao			jiangqin				0.6
 nos_zhangjiao			hetaihou				0.3
+nos_zhangjiao			nos_zhangliao			0.8
 sunce					yuji					1.5
 sunquan					zhangliao				0.4
 sunquan					ganning					0.5

@@ -207,7 +207,7 @@ public:
     void setPileOpen(const char *pile_name, const char *player);
 
     void addHistory(const char *name, int times = 1);
-    void clearHistory();
+    void clearHistory(const char *name = "");
     bool hasUsed(const char *card_class) const;
     int usedTimes(const char *card_class) const;
     int getSlashCount() const;

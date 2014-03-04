@@ -1367,6 +1367,10 @@ WoodenOx::WoodenOx(Suit suit, int number)
     setObjectName("wooden_ox");
 }
 
+void WoodenOx::onUninstall(ServerPlayer *player) const{
+    player->getRoom()->addPlayerHistory(player, "WoodenOxCard", 0);
+}
+
 StandardCardPackage::StandardCardPackage()
     : Package("standard_cards", Package::CardPack)
 {

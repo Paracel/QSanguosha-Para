@@ -1482,6 +1482,8 @@ void Room::addPlayerHistory(ServerPlayer *player, const QString &key, int times)
     if (player) {
         if (key == ".")
             player->clearHistory();
+        else if (times == 0)
+            player->clearHistory(key);
         else
             player->addHistory(key, times);
     }
@@ -3101,39 +3103,46 @@ void Room::damage(const DamageStruct &data) {
         damage_data = qdata.value<DamageStruct>();
     }
 
+#define REMOVE_QINGGANG_TAG if (damage_data.card && damage_data.card->isKindOf("Slash")) damage_data.to->removeQinggangTag(damage_data.card);
+
     // Predamage
     if (thread->trigger(Predamage, this, damage_data.from, qdata)) {
-        if (damage_data.card && damage_data.card->isKindOf("Slash"))
-            damage_data.to->removeQinggangTag(damage_data.card);
+        REMOVE_QINGGANG_TAG
         return;
     }
 
     try {
         bool enter_stack = false;
         do {
-            bool prevent = thread->trigger(DamageForseen, this, damage_data.to, qdata);
-            if (prevent)
+            if (thread->trigger(DamageForseen, this, damage_data.to, qdata)) {
+                REMOVE_QINGGANG_TAG
                 break;
+            }
 
             if (damage_data.from) {
-                if (thread->trigger(DamageCaused, this, damage_data.from, qdata))
+                if (thread->trigger(DamageCaused, this, damage_data.from, qdata)) {
+                    REMOVE_QINGGANG_TAG
                     break;
+                }
             }
 
             damage_data = qdata.value<DamageStruct>();
-
-            bool broken = thread->trigger(DamageInflicted, this, damage_data.to, qdata);
-            if (broken)
+            damage_data.to->tag.remove("TransferDamage");
+            if (thread->trigger(DamageInflicted, this, damage_data.to, qdata)) {
+                REMOVE_QINGGANG_TAG
+                // Make sure that the trigger in which 'TransferDamage' tag is set returns TRUE
+                DamageStruct transfer_damage_data = damage_data.to->tag["TranferDamage"].value<DamageStruct>();
+                if (transfer_damage_data.to)
+                    damage(transferr_damage_data);
                 break;
+            }
 
             enter_stack = true;
             m_damageStack.push_back(damage_data);
             setTag("CurrentDamageStruct", qdata);
 
             thread->trigger(PreDamageDone, this, damage_data.to, qdata);
-
-            if (damage_data.card && damage_data.card->isKindOf("Slash"))
-                damage_data.to->removeQinggangTag(damage_data.card);
+            REMOVE_QINGGANG_TAG
             thread->trigger(DamageDone, this, damage_data.to, qdata);
 
             if (damage_data.from && !damage_data.from->hasFlag("Global_DebutFlag"))
@@ -3142,10 +3151,13 @@ void Room::damage(const DamageStruct &data) {
             if (!damage_data.to->hasFlag("Global_DebutFlag"))
                 thread->trigger(Damaged, this, damage_data.to, qdata);
         } while (false);
+#undef REMOVE_QINGGANG_TAG
 
-        if (!enter_stack)
-            setTag("SkipGameRule", true);
         damage_data = qdata.value<DamageStruct>();
+        if (!enter_stack) {
+            damage_data.prevented = true;
+            qdata = QVariant::fromValue(damage_data);
+        }
         thread->trigger(DamageComplete, this, damage_data.to, qdata);
 
         if (enter_stack) {

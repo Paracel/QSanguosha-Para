@@ -968,7 +968,10 @@ void Client::addHistory(const Json::Value &history) {
         return;
     }
 
-    Self->addHistory(add_str, times);
+    if (times == 0)
+        Self->clearHistory(add_str);
+    else
+        Self->addHistory(add_str, times);
 }
 
 int Client::alivePlayerCount() const{

@@ -94,6 +94,8 @@ class WoodenOx: public Treasure {
 
 public:
     Q_INVOKABLE WoodenOx(Card::Suit suit, int number);
+
+    virtual void onUninstall(ServerPlayer *player) const;
 };
 
 class StandardCardPackage: public Package {

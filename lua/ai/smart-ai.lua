@@ -300,7 +300,7 @@ function SmartAI:assignKeep(start)
 		for k, v in pairs(sgs.ai_keep_value) do
 			self.keepdata[k] = v
 		end
-		for _, askill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+		for _, askill in ipairs(sgs.getPlayerSkillList(self.player)) do
 			local skilltable = sgs[askill:objectName() .. "_keep_value"]
 			if skilltable then
 				for k, v in pairs(skilltable) do
@@ -324,7 +324,7 @@ function SmartAI:assignKeep(start)
 			if self.player:getHp() > getBestHp(self.player) then needDamaged = true end
 			if not needDamaged and not sgs.isGoodTarget(self.player, self.friends, self) then needDamaged = true end
 			if not needDamaged then
-				for _, skill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+				for _, skill in ipairs(sgs.getPlayerSkillList(self.player)) do
 					local callback = sgs.ai_need_damaged[skill:objectName()]
 					if type(callback) == "function" and callback(self, nil, self.player) then
 						needDamaged = true
@@ -423,7 +423,7 @@ function SmartAI:getKeepValue(card, kept, wrt)
 		local number = card:getNumber()
 		local i = 0
 		
-		for _, askill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+		for _, askill in ipairs(sgs.getPlayerSkillList(self.player)) do
 			if sgs[askill:objectName() .. "_suit_value"] then
 				local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
 				if v then
@@ -435,7 +435,7 @@ function SmartAI:getKeepValue(card, kept, wrt)
 		if i > 0 then value_suit = value_suit / i end
 		
 		i = 0
-		for _, askill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+		for _, askill in ipairs(sgs.getPlayerSkillList(self.player)) do
 			if sgs[askill:objectName() .. "_number_value"] then
 				local v = sgs[askill:objectName() .. "_number_value"][tostring(number)]
 				if v then
@@ -686,7 +686,7 @@ function SmartAI:cardNeed(card)
 	if self:isWeak() and card:isKindOf("Jink") and self:getCardsNum("Jink") < 1 then return 11 end
 
 	local i = 0
-	for _, askill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+	for _, askill in ipairs(sgs.getPlayerSkillList(self.player)) do
 		if sgs[askill:objectName() .. "_keep_value"] then
 			local v = sgs[askill:objectName() .. "_keep_value"][class_name]
 			if v then
@@ -697,7 +697,7 @@ function SmartAI:cardNeed(card)
 	end
 	if value then return value / i + 4 end
 	i = 0
-	for _, askill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+	for _, askill in ipairs(sgs.getPlayerSkillList(self.player)) do
 		if sgs[askill:objectName() .. "_suit_value"] then
 			local v = sgs[askill:objectName() .. "_suit_value"][suit_string]
 			if v then
@@ -1978,7 +1978,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 							end
 							if basic_num < 2 then has_slash_prohibit_skill = true break end
 						else
-							for _, askill in sgs.qlist(sgs.getPlayerSkillList(target)) do
+							for _, askill in ipairs(sgs.getPlayerSkillList(target)) do
 								local filter = sgs.ai_slash_prohibit[askill:objectName()]
 								if filter and type(filter) == "function" and filter(self, player, target, card) then
 									has_slash_prohibit_skill = true
@@ -3071,7 +3071,7 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 	for _, friend in ipairs(friends) do
 		if not self:needKongcheng(friend) and friend:faceUp() then
 			for _, hcard in ipairs(cardtogive) do
-				for _, askill in sgs.qlist(sgs.getPlayerSkillList(friend)) do
+				for _, askill in ipairs(sgs.getPlayerSkillList(friend)) do
 					local callback = sgs.ai_cardneed[askill:objectName()]
 					if type(callback) == "function" and callback(friend, hcard, self) then
 						return hcard, friend
@@ -3830,7 +3830,7 @@ function SmartAI:getDamagedEffects(player, damage_from, isSlash)
 	if attacker:objectName() ~= player:objectName() and self:hasHeavySlashDamage(attacker, nil, player) then return false end
 
 	if sgs.isGoodHp(player) then
-		for _, askill in sgs.qlist(sgs.getPlayerSkillList(player)) do
+		for _, askill in ipairs(sgs.getPlayerSkillList(player)) do
 			local callback = sgs.ai_need_damaged[askill:objectName()]
 			if type(callback) == "function" and callback(self, attacker, player) then return true end
 		end

@@ -274,7 +274,7 @@ sgs.ai_skill_askforyiji.qingjian = function(self, card_ids)
 	return sgs.ai_skill_askforyiji.yiji(self, card_ids)
 end
 
-function SmartAI:getTuxiTargets(self, reason, isDummy)
+function SmartAI:getTuxiTargets(reason, isDummy)
 	reason = reason or "tuxi"
 	self:sort(self.enemies, "handcard")
 	local upperlimit = (reason == "tuxi") and self.player:getMark("tuxi") or (reason == "koftuxi" and 1 or 2)

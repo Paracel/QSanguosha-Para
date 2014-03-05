@@ -279,7 +279,7 @@ function SmartAI:slashProhibit(card, enemy, from)
 	local nature = sgs.DamageStruct_Normal
 	if card:isKindOf("FireSlash") then nature = sgs.DamageStruct_Fire
 	elseif card:isKindOf("ThunderSlash") then nature = sgs.DamageStruct_Thunder end
-	for _, askill in sgs.qlist(sgs.getPlayerSkillList(enemy)) do
+	for _, askill in ipairs(sgs.getPlayerSkillList(enemy)) do
 		local filter = sgs.ai_slash_prohibit[askill:objectName()]
 		if filter and type(filter) == "function" and filter(self, from, enemy, card) then return true end
 	end
@@ -3025,7 +3025,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	self:sortByUseValue(cards)
 	for _, card in ipairs(cards) do
-		for _, skill in sgs.qlist(sgs.getPlayerSkillList(self.player)) do
+		for _, skill in ipairs(sgs.getPlayerSkillList(self.player)) do
 			local callback = sgs.ai_cardneed[skill:objectName()]
 			if type(callback) == "function" and callback(self.player, card, self) then
 				return card:getEffectiveId()

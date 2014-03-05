@@ -2592,7 +2592,7 @@ function SmartAI:useCardIndulgence(card, use)
 		if enemy:hasSkills("keji|shensu") then value = value - enemy:getHandcardNum() end
 		if enemy:hasSkills("guanxing|xiuluo") then value = value - 5 end
 		if enemy:hasSkills("lirang") then value = value - 5 end
-		if enemy:hasSkills("nostuxi|noszhenlie|guanxing|qinyin|zongshi|tiandu") then value = value - 3 end
+		if enemy:hasSkills("tuxi|nostuxi|noszhenlie|guanxing|qinyin|zongshi|tiandu") then value = value - 3 end
 		if self:needBear(enemy) then value = value - 20 end
 		if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 1 end
 		return value

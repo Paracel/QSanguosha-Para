@@ -77,13 +77,10 @@ sgs.ai_skill_choice.drowning = function(self, choices, data)
 end
 
 sgs.ai_skill_playerchosen.koftuxi = function(self, targets)
-	local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
-	if cardstr:match("->") then
-		local targetstr = cardstr:split("->")[2]:split("+")
-		if #targetstr > 0 then
-			local target = findPlayerByObjectName(self.room, targetstr[1])
-			return target
-		end
+	local targetstr = self:getTuxiTargets("koftuxi", true)
+	if #targetstr > 0 then
+		local target = findPlayerByObjectName(self.room, targetstr[1])
+		return target
 	end
 	return nil
 end

@@ -139,8 +139,10 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	for i = 1, #cards, 1 do
 		local isPeach = cards[i]:isKindOf("Peach")
 		if isPeach then
-			local stealer = self.room:findPlayerBySkillName("nostuxi")
-			if stealer and self:isEnemy(stealer) and self.player:getHandcardNum() <= 2 and not self:willSkipDrawPhase(stealer) then
+			local stealer = self.room:findPlayerBySkillName("nostuxi") or self.room:findPlayerBySkillName("tuxi")
+			if stealer and self:isEnemy(stealer)
+				and self.player:getHandcardNum() <= 2 and (stealer:hasSkill("nostuxi") or self.player:getHandcardNum() - 1 >= stealer:getHandcardNum())
+				and not self:willSkipDrawPhase(stealer) then
 				card = cards[i]
 				break
 			end
@@ -158,13 +160,9 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 			return to_discard
 		elseif self.player:containsTrick("supply_shortage") then
 			if self.player:getHp() > self.player:getHandcardNum() then return to_discard end
-			local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
-			if cardstr:match("->") then
-				local targetstr = cardstr:split("->")[2]
-				local targets = targetstr:split("+")
-				if #targets == 2 then
-					return to_discard
-				end
+			local targets = self:getTuxiTargets("nostuxi", true)
+			if #targets == 2 then
+				return to_discard
 			end
 		elseif self.player:containsTrick("indulgence") then 
 			if self.player:getHandcardNum() > 3 or self.player:getHandcardNum() > self.player:getHp() - 1 then return to_discard end
@@ -177,13 +175,20 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 	elseif current_phase == sgs.Player_Draw and not self.player:isSkipped(sgs.Player_Draw) then
 		self.qiaobian_draw_targets = {}
 		if self.player:hasSkill("nostuxi") and not self:willSkipDrawPhase() then return {} end
+		if self.player:hasSkill("tuxi") and not self:willSkipDrawPhase() then
+			local count = 0
+			for _, enemy in ipairs(self.enemies) do
+				if enemy:getHandcardNum() >= self.player:getHandcardNum() then count = count + 1 end
+				if count == 2 then return {} end
+			end
+		end
 		local cardstr = sgs.ai_skill_use["@@nostuxi"](self, "@nostuxi")
 		if cardstr:match("->") then
-			local targetstr = cardstr:split("->")[2]
-			local targets = targetstr:split("+")
+			local targets = self:getTuxiTargets("nostuxi", true)
 			if #targets == 2 then
-				table.insert(self.qiaobian_draw_targets, targets[1])
-				table.insert(self.qiaobian_draw_targets, targets[2])
+				local t1, t2 = findPlayerByObjectName(self.room, targets[1]), findPlayerByObjectName(self.room, targets[2])
+				table.insert(self.qiaobian_draw_targets, t1)
+				table.insert(self.qiaobian_draw_targets, t2)
 				return to_discard
 			end
 		end
@@ -248,7 +253,6 @@ sgs.ai_skill_use["@@qiaobian"] = function(self, prompt)
 	self:updatePlayers()
 
 	if prompt == "@qiaobian-2" then
-		if self.player:hasSkill("nostuxi") then return "." end
 		if #self.qiaobian_draw_targets == 2 then
 			return "@QiaobianCard=.->" .. table.concat(self.qiaobian_draw_targets, "+")
 		end
@@ -996,7 +1000,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		if self.player:getWeapon() and str:matchOne("qiangxi") then return "qiangxi" end
 
-		for _, askill in ipairs(("manjuan|xiansi|nostuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|xunxun|luoshen|" ..
+		for _, askill in ipairs(("manjuan|xiansi|tuxi|nostuxi|dimeng|haoshi|guanxing|zhiheng|qiaobian|qice|tanhu|noslijian|lijian|shelie|xunxun|luoshen|" ..
 								"yongsi|dujin|shude|zhiyan|biyue|yingzi|qingnang"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end

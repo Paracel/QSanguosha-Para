@@ -564,23 +564,11 @@ TianxiangCard::TianxiangCard() {
 }
 
 void TianxiangCard::onEffect(const CardEffectStruct &effect) const{
-    Room *room = effect.to->getRoom();
-    effect.to->addMark("TianxiangTarget");
     DamageStruct damage = effect.from->tag.value("TianxiangDamage").value<DamageStruct>();
-
-    if (damage.card && damage.card->isKindOf("Slash"))
-        effect.from->removeQinggangTag(damage.card);
-
     damage.to = effect.to;
     damage.transfer = true;
-    try {
-        room->damage(damage);
-    }
-    catch (TriggerEvent triggerEvent) {
-        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
-            effect.to->removeMark("TianxiangTarget");
-        throw triggerEvent;
-    }
+    damage.transfer_reason = "tianxiang";
+    effect.from->tag["TransferDamage"] = QVariant::fromValue(damage);
 }
 
 class TianxiangViewAsSkill: public OneCardViewAsSkill {
@@ -625,11 +613,8 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (player->isAlive() && player->getMark("TianxiangTarget") > 0 && damage.transfer) {
+        if (player->isAlive() && damage.transfer && damage.transfer_reason == "tianxiang")
             player->drawCards(player->getLostHp());
-            player->removeMark("TianxiangTarget");
-        }
-
         return false;
     }
 };

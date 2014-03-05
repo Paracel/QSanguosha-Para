@@ -3131,9 +3131,9 @@ void Room::damage(const DamageStruct &data) {
             if (thread->trigger(DamageInflicted, this, damage_data.to, qdata)) {
                 REMOVE_QINGGANG_TAG
                 // Make sure that the trigger in which 'TransferDamage' tag is set returns TRUE
-                DamageStruct transfer_damage_data = damage_data.to->tag["TranferDamage"].value<DamageStruct>();
+                DamageStruct transfer_damage_data = damage_data.to->tag["TransferDamage"].value<DamageStruct>();
                 if (transfer_damage_data.to)
-                    damage(transferr_damage_data);
+                    damage(transfer_damage_data);
                 break;
             }
 

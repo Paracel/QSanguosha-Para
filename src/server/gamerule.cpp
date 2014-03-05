@@ -376,6 +376,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
         }
     case DamageComplete: {
             DamageStruct damage = data.value<DamageStruct>();
+            if (damage.prevented)
+                break;
             if (damage.nature != DamageStruct::Normal && player->isChained())
                 room->setPlayerProperty(player, "chained", false);
             if (room->getTag("is_chained").toInt() > 0) {

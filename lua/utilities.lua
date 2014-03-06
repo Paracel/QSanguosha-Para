@@ -51,10 +51,16 @@ function string:split(delimiter)
 	return result
 end
 
-function table:contains(element)
+function table:contains(element, compare_objectName)
 	if #self == 0 or type(self[1]) ~= type(element) then return false end
-	for _, e in ipairs(self) do
-		if e == element then return true end
+	if compare_objectName then
+		for _, e in ipairs(self) do
+			if e:objectName() == element:objectName() then return true end
+		end
+	else
+		for _, e in ipairs(self) do
+			if e == element then return true end
+		end
 	end
 end
 

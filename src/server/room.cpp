@@ -4742,6 +4742,14 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, Guanxing
     doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 }
 
+void Room::returnToTopDrawPile(const QList<int> &cards) {
+    QListIterator<int> i(cards);
+    i.toBack();
+    while (i.hasPrevious())
+        m_drawPile->prepend(i.previous());
+    doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
+}
+
 int Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target, QList<int> enabled_ids, QString skill_name) {
     Q_ASSERT(!target->isKongcheng());
     while (isPaused()) {}

@@ -1221,7 +1221,7 @@ function sgs.ai_slash_weaponfilter.axe(self, to, player)
 end
 
 function sgs.ai_weapon_value.axe(self, enemy, player)
-	if player:hasSkills("jiushi|jiuchi|luoyi|pojun") then return 6 end
+	if player:hasSkills("jiushi|jiuchi|luoyi|nosluoyi|pojun") then return 6 end
 	if enemy and enemy:getHp() < 3 then return 6 - enemy:getHp() end
 	if enemy and self:getOverflow() > 0 then return 3.1 end
 end
@@ -1791,7 +1791,7 @@ function SmartAI:getDangerousCard(who)
 	local weapon = who:getWeapon()
 	local armor = who:getArmor()
 	if weapon and weapon:isKindOf("Spear") and who:getHandcardNum() >= 3 and who:hasSkill("paoxiao") then return weapon:getEffectiveId() end
-	if weapon and weapon:isKindOf("Axe") and who:hasSkills("luoyi|pojun|jiushi|jiuchi|jie||jieyuan") then return weapon:getEffectiveId() end
+	if weapon and weapon:isKindOf("Axe") and who:hasSkills("luoyi|nosluoyi|pojun|jiushi|jiuchi|jie||jieyuan") then return weapon:getEffectiveId() end
 	if armor and armor:isKindOf("EightDiagram") and who:hasSkills("leiji|nosleiji") then return armor:getEffectiveId() end
 	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and who:hasSkills("guidao|longdan|guicai|jilve|huanshi|qingguo|kanpo") then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end

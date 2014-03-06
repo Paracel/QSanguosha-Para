@@ -39,7 +39,7 @@ dongzhuo				shenlvbu				1.8
 dongzhuo				vs_lvbu					1.1
 dongzhuo				nos_zhoutai				-3.0
 dongzhuo				nos_zhangjiao			1.4
-liubei					xuchu					0.5
+liubei					xuchu					0.6
 liubei					zhanghe					0.8
 liubei					xuhuang					0.7
 liubei					xunyu					1.5
@@ -64,12 +64,13 @@ liubei					bgm_ganning				0.8
 liubei					kongrong				1.1
 liubei					tianfeng				-0.5
 liubei					neo_zhangfei			0.6
+liubei					nos_xuchu				0.5
 liubei					nos_huangyueying		1.0
 liubei					nos_zhangjiao			0.9
 liubei					nos_guanxingzhangbao	0.9
 liushan					shenzhugeliang			-0.6
 liushan					xingcai					0.3
-nos_liubei				xuchu					0.5
+nos_liubei				xuchu					0.6
 nos_liubei				zhanghe					0.8
 nos_liubei				xuhuang					0.7
 nos_liubei				xunyu					1.5
@@ -94,6 +95,7 @@ nos_liubei				bgm_ganning				0.8
 nos_liubei				kongrong				1.1
 nos_liubei				tianfeng				-0.5
 nos_liubei				neo_zhangfei			0.6
+nos_liubei				nos_xuchu				0.6
 nos_liubei				nos_huangyueying		1.0
 nos_liubei				nos_zhangjiao			0.9
 nos_liubei				nos_guanxingzhangbao	0.9

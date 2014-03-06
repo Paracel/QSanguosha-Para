@@ -751,13 +751,45 @@ end
 
 sgs.ai_card_intention.NosTuxiCard = sgs.ai_card_intention.TuxiCard
 
+sgs.ai_skill_invoke.nosluoyi = function(self, data)
+	if self.player:isSkipped(sgs.Player_Play) then return false end
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
+	local slashtarget = 0
+	local dueltarget = 0
+	self:sort(self.enemies, "hp")
+	for _, card in ipairs(cards) do
+		if isCard("Slash", card, self.player) then
+			local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
+			for _, enemy in ipairs(self.enemies) do
+				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 and sgs.isGoodTarget(enemy, self.enemies, self) then
+					if getCardsNum("Jink", enemy, self.player) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
+						slashtarget = slashtarget + 1
+					end
+				end
+			end
+		end
+		if card:isKindOf("Duel") then
+			local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
+			for _, enemy in ipairs(self.enemies) do
+				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy, self.player) and self:hasTrickEffective(duel, enemy)
+					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy, self.player, 2) and self:damageIsEffective(enemy) then
+					dueltarget = dueltarget + 1
+				end
+			end
+		end
+	end
+	return slashtarget + dueltarget > 0
+end
+
+sgs.ai_cardneed.nosluoyi = sgs.ai_cardneed.luoyi
+sgs.nosluoyi_keep_value = sgs.luoyi_keep_value
+
 local noslijian_skill = {}
 noslijian_skill.name = "noslijian"
 table.insert(sgs.ai_skills, noslijian_skill)
 noslijian_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("NosLijianCard") or self.player:isNude() then
-		return
-	end
+	if self.player:hasUsed("NosLijianCard") or not self.player:canDiscard(self.player, "he") then return end
 	local card_id = self:getLijianCard()
 	if card_id then return sgs.Card_Parse("@NosLijianCard=" .. card_id) end
 end

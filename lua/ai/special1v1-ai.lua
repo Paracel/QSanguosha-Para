@@ -110,7 +110,7 @@ table.insert(sgs.ai_skills, xiechan_skill)
 xiechan_skill.getTurnUseCard = function(self)
 	if self.player:getMark("@twine") <= 0 then return end
 	self:sort(self.enemies, "handcard")
-	if self.player:hasSkill("luoyi") and not self.player:hasFlag("luoyi") then return end
+	if self.player:hasSkill("nosluoyi") and not self.player:hasFlag("nosluoyi") then return end
 	return sgs.Card_Parse("@XiechanCard=.")
 end
 

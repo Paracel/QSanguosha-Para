@@ -22,7 +22,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     QList<const General *> generals;
 
     QStringList list_name;
-    list_name << "caocao" << "simayi" << "nos_xiahoudun" << "zhangliao" << "xuchu" << "guojia" << "zhenji"
+    list_name << "caocao" << "simayi" << "nos_xiahoudun" << "nos_zhangliao" << "nos_xuchu" << "guojia" << "zhenji"
               << "nos_liubei" << "guanyu" << "zhangfei" << "zhaoyun" << "zhugeliang" << "machao" << "nos_huangyueying"
               << "sunquan" << "ganning" << "lvmeng" << "huanggai" << "zhouyu" << "daqiao" << "luxun" << "sunshangxiang"
               << "huatuo" << "lvbu" << "nos_diaochan"
@@ -43,7 +43,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     } else if (rule == "2013") {
         QStringList list_remove, list_add;
         list_remove << "nos_zhangjiao" << "nos_caoren" << "lvmeng" << "nos_xiahoudun" << "weiyan"
-                    << "luxun" << "huangzhong" << "xuchu" << "nos_zhoutai" << "zhaoyun"
+                    << "luxun" << "huangzhong" << "nos_xuchu" << "nos_zhoutai" << "zhaoyun"
                     << "guanyu" << "lvbu";
         list_add << "sunjian" << "xuhuang" << "pangde" << "jiaxu" << "sunce"
                  << "jiangwei" << "zhugejin" << "vs_xiahoudun" << "vs_guanyu" << "vs_zhaoyun"

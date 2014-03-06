@@ -969,6 +969,35 @@ public:
 
 // old stantard generals
 
+class NosGanglie: public MasochismSkill {
+public:
+    NosGanglie(): MasochismSkill("nosganglie") {
+    }
+
+    virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
+        ServerPlayer *from = damage.from;
+        Room *room = xiahou->getRoom();
+        QVariant data = QVariant::fromValue(damage);
+
+        if (room->askForSkillInvoke(xiahou, "nosganglie", data)) {
+            room->broadcastSkillInvoke("ganglie");
+
+            JudgeStruct judge;
+            judge.pattern = ".|heart";
+            judge.good = false;
+            judge.reason = objectName();
+            judge.who = xiahou;
+
+            room->judge(judge);
+            if (!from || from->isDead()) return;
+            if (judge.isGood()) {
+                if (from->getHandcardNum() < 2 || !room->askForDiscard(from, objectName(), 2, 2, true))
+                    room->damage(DamageStruct(objectName(), xiahou, from));
+            }
+        }
+    }
+};
+
 NosTuxiCard::NosTuxiCard() {
     mute = true;
 }
@@ -1031,32 +1060,49 @@ public:
     }
 };
 
-class NosGanglie: public MasochismSkill {
+class NosLuoyiBuff: public TriggerSkill {
 public:
-    NosGanglie(): MasochismSkill("nosganglie") {
+    NosLuoyiBuff(): TriggerSkill("#nosluoyi") {
+        events << DamageCaused;
     }
 
-    virtual void onDamaged(ServerPlayer *xiahou, const DamageStruct &damage) const{
-        ServerPlayer *from = damage.from;
-        Room *room = xiahou->getRoom();
-        QVariant data = QVariant::fromValue(damage);
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL && target->hasFlag("nosluoyi") && target->isAlive();
+    }
 
-        if (room->askForSkillInvoke(xiahou, "nosganglie", data)) {
-            room->broadcastSkillInvoke("ganglie");
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xuchu, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.chain || damage.transfer || !damage.by_user) return false;
+        const Card *reason = damage.card;
+        if (reason && (reason->isKindOf("Slash") || reason->isKindOf("Duel"))) {
+            LogMessage log;
+            log.type = "#LuoyiBuff";
+            log.from = xuchu;
+            log.to << damage.to;
+            log.arg = QString::number(damage.damage);
+            log.arg2 = QString::number(++damage.damage);
+            room->sendLog(log);
 
-            JudgeStruct judge;
-            judge.pattern = ".|heart";
-            judge.good = false;
-            judge.reason = objectName();
-            judge.who = xiahou;
-
-            room->judge(judge);
-            if (!from || from->isDead()) return;
-            if (judge.isGood()) {
-                if (from->getHandcardNum() < 2 || !room->askForDiscard(from, objectName(), 2, 2, true))
-                    room->damage(DamageStruct(objectName(), xiahou, from));
-            }
+            data = QVariant::fromValue(damage);
         }
+
+        return false;
+    }
+};
+
+class NosLuoyi: public DrawCardsSkill {
+public:
+    NosLuoyi(): DrawCardsSkill("nosluoyi") {
+    }
+
+    virtual int getDrawNum(ServerPlayer *xuchu, int n) const{
+        Room *room = xuchu->getRoom();
+        if (room->askForSkillInvoke(xuchu, objectName())) {
+            room->broadcastSkillInvoke("luoyi");
+            xuchu->setFlags(objectName());
+            return n - 1;
+        } else
+            return n;
     }
 };
 
@@ -1723,6 +1769,11 @@ NostalStandardPackage::NostalStandardPackage()
 
     General *nos_zhangliao = new General(this, "nos_zhangliao", "wei");
     nos_zhangliao->addSkill(new NosTuxi);
+
+    General *nos_xuchu = new General(this, "nos_xuchu", "wei");
+    nos_xuchu->addSkill(new NosLuoyi);
+    nos_xuchu->addSkill(new NosLuoyiBuff);
+    related_skills.insertMulti("nosluoyi", "#nosluoyi");
 
     General *nos_liubei = new General(this, "nos_liubei$", "shu");
     nos_liubei->addSkill(new NosRende);

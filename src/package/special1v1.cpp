@@ -1006,7 +1006,7 @@ Special1v1Package::Special1v1Package()
     related_skills.insertMulti("koftuxi", "#koftuxi");
 
     General *kof_xuchu = new General(this, "kof_xuchu", "wei");
-    kof_xuchu->addSkill("luoyi");
+    kof_xuchu->addSkill("nosluoyi");
     kof_xuchu->addSkill(new Xiechan);
 
     General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3, false);

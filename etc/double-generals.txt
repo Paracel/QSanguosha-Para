@@ -14,9 +14,10 @@ xiahoudun guojia						55
 xiahoudun xiaoqiao						30
 zhangliao xuchu							15
 zhangliao yanliangwenchou				32
+zhangliao nos_xuchu						15
 xuchu liubei							15
-xuchu machao							54
-xuchu huangzhong						55
+xuchu machao							58
+xuchu huangzhong						59
 xuchu nos_zhangliao						15
 xuchu nos_liubei						15
 guojia zhanghe							76
@@ -79,6 +80,7 @@ liubei yuanshu							68
 liubei bgm_diaochan						54
 liubei diy_wangyuanji					83
 liubei nos_zhangjiao					22
+liubei nos_xuchu						15
 liubei nos_guanxingzhangbao				16
 guanyu zhangfei							77
 guanyu sunshangxiang					52
@@ -143,6 +145,7 @@ machao caozhi							53
 machao xusheng							66
 machao fuwan							52
 machao lingju							53
+machao nos_xuchu						54
 machao nos_madai						78
 huangyueying pangtong					59
 huangyueying sunquan					60
@@ -167,6 +170,7 @@ huangzhong caozhi						54
 huangzhong xusheng						67
 huangzhong fuwan						54
 huangzhong lingju						55
+huangzhong nos_xuchu					55
 huangzhong nos_madai					77
 weiyan huanggai							75
 weiyan lvbu								65
@@ -403,6 +407,8 @@ neo_guanyu nos_guanxingzhangbao			15
 neo_zhangfei neo_zhaoyun				69
 neo_zhangfei nos_liubei					15
 neo_zhangfei nos_guanxingzhangbao		11
+nos_zhangliao nos_xuchu					15
+nos_xuchu nos_liubei					15
 nos_liubei nos_zhangjiao				22
 nos_liubei nos_guanxingzhangbao			16
 nos_lingtong nos_handang				55

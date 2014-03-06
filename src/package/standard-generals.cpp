@@ -371,12 +371,12 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->hasFlag("luoyi") && target->isAlive();
+        return target != NULL && target->getMark("@luoyi") > 0 && target->isAlive();
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xuchu, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (damage.chain || damage.transfer || !damage.by_user) return false;
+        if (damage.chain || damage.transfer) return false;
         const Card *reason = damage.card;
         if (reason && (reason->isKindOf("Slash") || reason->isKindOf("Duel"))) {
             LogMessage log;
@@ -394,19 +394,63 @@ public:
     }
 };
 
-class Luoyi: public DrawCardsSkill {
+class Luoyi: public TriggerSkill {
 public:
-    Luoyi(): DrawCardsSkill("luoyi") {
+    Luoyi(): TriggerSkill("luoyi") {
+        events << EventPhaseStart << EventPhaseChanging;
     }
 
-    virtual int getDrawNum(ServerPlayer *xuchu, int n) const{
-        Room *room = xuchu->getRoom();
-        if (room->askForSkillInvoke(xuchu, objectName())) {
-            room->broadcastSkillInvoke(objectName());
-            xuchu->setFlags(objectName());
-            return n - 1;
-        } else
-            return n;
+    virtual int getPriority(TriggerEvent triggerEvent) const{
+        if (triggerEvent == EventPhaseStart)
+            return 4;
+        else
+            return TriggerSkill::getPriority(triggerEvent);
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart) {
+            if (player->getPhase() == Player::RoundStart && player->getMark("@luoyi") > 0)
+                room->setPlayerMark(player, "@luoyi", 0);
+        } else {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (TriggerSkill::triggerable(player) && change.to == Player::Draw && !player->isSkipped(Player::Draw)
+                && room->askForSkillInvoke(player, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                player->skip(Player::Draw, true);
+                room->setPlayerMark(player, "@luoyi", 1);
+
+                QList<int> ids = room->getNCards(3, false);
+                CardsMoveStruct move(ids, player, Player::PlaceTable,
+                                     CardMoveReason(CardMoveReason::S_REASON_TURNOVER, player->objectName(), "luoyi", QString()));
+                room->moveCardsAtomic(move, true);
+
+                room->getThread()->delay();
+                room->getThread()->delay();
+
+                QList<int> card_to_return;
+                QList<int> card_to_gotback;
+                for (int i = 0; i < 3; i++) {
+                    const Card *card = Sanguosha->getCard(ids[i]);
+                    if (card->getTypeId() == Card::TypeBasic || card->isKindOf("Weapon") || card->isKindOf("Duel"))
+                        card_to_gotback << ids[i];
+                    else
+                        card_to_return << ids[i];
+                }
+                if (!card_to_return.isEmpty())
+                    room->returnToTopDrawPile(card_to_return);
+                if (!card_to_gotback.isEmpty()) {
+                    DummyCard *dummy = new DummyCard(card_to_gotback);
+                    CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, player->objectName());
+                    room->obtainCard(player, dummy, reason);
+                    delete dummy;
+                }
+            }
+        }
+        return false;
     }
 };
 

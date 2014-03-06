@@ -96,7 +96,7 @@ function setInitialTables()
 							"anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|ganglie|vsganglie|nosganglie|guixin|jieming|nosmiji"
-	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|luoyi|guhuo|nosguhuo|kanpo|" ..
+	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|nosluoyi|guhuo|nosguhuo|kanpo|" ..
 							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo"
 	sgs.drawpeach_skill = "tuxi|nostuxi|qiaobian"
@@ -714,7 +714,7 @@ function SmartAI:cardNeed(card)
 	end
 	if card:isKindOf("Slash") and (self:getCardsNum("Slash") > 0) then return 4 end
 	if card:isKindOf("Crossbow") and self.player:hasSkills("luoshen|yongsi|kurou|keji|wusheng|wushen") then return 20 end
-	if card:isKindOf("Axe") and self.player:hasSkills("luoyi|jiushi|jiuchi|pojun") then return 15 end
+	if card:isKindOf("Axe") and self.player:hasSkills("luoyi|nosluoyi|jiushi|jiuchi|pojun") then return 15 end
 	if card:isKindOf("Weapon") and (not self.player:getWeapon()) and (self:getCardsNum("Slash") > 1) then return 6 end
 	if card:isKindOf("Nullification") and self:getCardsNum("Nullification") == 0 then
 		if self:willSkipPlayPhase() or self:willSkipDrawPhase() then return 10 end
@@ -2800,7 +2800,8 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 		dmg = dmg + from:getMark("drank")
 	end
 	if not from:hasSkill("jueqing") then
-		if from:hasFlag("luoyi") then dmg = dmg + 1 end
+		if from:hasFlag("nosluoyi") then dmg = dmg + 1 end
+		if from:getMark("@luoyi") > 0 then dmg = dmg + 1 end
 		if from:hasSkill("drluoyi") and not from:getWeapon() then dmg = dmg + 1 end
 		if slash and from:hasSkill("jie") and slash:isRed() then dmg = dmg + 1 end
 		if from:hasSkill("anjian") and not to:inMyAttackRange(from) then dmg = dmg + 1 end

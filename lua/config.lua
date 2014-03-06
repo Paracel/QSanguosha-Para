@@ -165,6 +165,7 @@ config = {
 		"wangyi+heg_dongzhuo",
 		"guanping+nos_zhangchunhua",
 		"zhuran+hetaihou",
+		"yuanshu+nos_lvmeng",
 		"xiahouba+nos_zhangchunhua",
 		"zhugeke+nos_zhangchunhua",
 		"bgm_diaochan+bgm_caoren", "bgm_dianchao+nos_caoren",

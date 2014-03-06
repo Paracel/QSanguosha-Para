@@ -35,6 +35,10 @@ return {
 	["nosrende"] = "仁德",
 	[":nosrende"] = "出牌阶段，你可以将任意数量的手牌任意分配给其他角色。每当你于本阶段内以此法给出的手牌首次达到两张或更多后，你回复1点体力。",
 
+	["#nos_lvmeng"] = "白衣渡江",
+	["nos_lvmeng"] = "吕蒙-旧",
+	["&nos_lvmeng"] = "吕蒙",
+
 	["nos_diaochan"] = "貂蝉-旧",
 	["&nos_diaochan"] = "貂蝉",
 	["noslijian"] = "离间",

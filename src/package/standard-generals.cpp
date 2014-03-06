@@ -1076,6 +1076,43 @@ public:
     }
 };
 
+class Qinxue: public PhaseChangeSkill {
+public:
+    Qinxue(): PhaseChangeSkill("qinxue") {
+        frequency = Wake;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL && PhaseChangeSkill::triggerable(target)
+               && target->getPhase() == Player::Start
+               && target->getMark("qinxue") == 0;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *lvmeng) const{
+        Room *room = lvmeng->getRoom();
+        int n = lvmeng->getHandcardNum() - lvmeng->getHp();
+        int wake_lim = (Sanguosha->getPlayerCount(room->getMode()) >= 7) ? 2 : 3;
+        if (n < wake_lim) return false;
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(lvmeng, objectName());
+        //room->doLightbox("$QinxueAnimate");
+
+        LogMessage log;
+        log.type = "#QinxueWake";
+        log.from = lvmeng;
+        log.arg = QString::number(n);
+        log.arg2 = "qinxue";
+        room->sendLog(log);
+
+        room->setPlayerMark(lvmeng, "qinxue", 1);
+        if (room->changeMaxHpForAwakenSkill(lvmeng))
+            room->acquireSkill(lvmeng, "gongxin");
+
+        return false;
+    }
+};
+
 class Lianying: public TriggerSkill {
 public:
     Lianying(): TriggerSkill("lianying") {
@@ -1640,6 +1677,7 @@ void StandardPackage::addGenerals() {
 
     General *lvmeng = new General(this, "lvmeng", "wu"); // WU 003
     lvmeng->addSkill(new Keji);
+    lvmeng->addSkill(new Qinxue);
 
     General *huanggai = new General(this, "huanggai", "wu"); // WU 004
     huanggai->addSkill(new Kurou);

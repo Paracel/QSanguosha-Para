@@ -126,10 +126,15 @@ return {
 	["qixi"] = "奇袭",
 	[":qixi"] = "你可以将一张黑色牌当【过河拆桥】使用。",
 
-	["#lvmeng"] = "白衣渡江",
+	["#lvmeng"] = "士别三日",
 	["lvmeng"] = "吕蒙",
+	["illustrator:lvmeng"] = "樱花闪乱",
 	["keji"] = "克己",
 	[":keji"] = "若你未于出牌阶段内使用或打出【杀】，你可以跳过弃牌阶段。",
+	["qinxue"] = "勤学",
+	[":qinxue"] = "<font color=\"purple\"><b>觉醒技。</b></font>准备阶段开始时，若你的手牌数比体力值多3（七人及以上游戏为2）或更多，你失去1点体力上限，然后获得“攻心”。",
+	["$QinxueAnimate"] = "image=image/animate/qinxue.png",
+	["#QinxueWake"] = "%from 手牌数比体力值多 %arg，触发“%arg2”觉醒",
 
 	["#zhouyu"] = "大都督",
 	["zhouyu"] = "周瑜",

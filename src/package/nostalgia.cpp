@@ -1779,9 +1779,12 @@ NostalStandardPackage::NostalStandardPackage()
     nos_liubei->addSkill(new NosRende);
     nos_liubei->addSkill("jijiang");
 
-    General *huangyueying = new General(this, "nos_huangyueying", "shu", 3, false);
-    huangyueying->addSkill(new NosJizhi);
-    huangyueying->addSkill(new NosQicai);
+    General *nos_huangyueying = new General(this, "nos_huangyueying", "shu", 3, false);
+    nos_huangyueying->addSkill(new NosJizhi);
+    nos_huangyueying->addSkill(new NosQicai);
+
+    General *nos_lvmeng = new General(this, "nos_lvmeng", "wu");
+    nos_lvmeng->addSkill("keji");
 
     General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
     nos_diaochan->addSkill(new NosLijian);

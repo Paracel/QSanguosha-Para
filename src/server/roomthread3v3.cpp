@@ -24,7 +24,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     QStringList list_name;
     list_name << "caocao" << "simayi" << "nos_xiahoudun" << "nos_zhangliao" << "nos_xuchu" << "guojia" << "zhenji"
               << "nos_liubei" << "guanyu" << "zhangfei" << "zhaoyun" << "zhugeliang" << "machao" << "nos_huangyueying"
-              << "sunquan" << "ganning" << "lvmeng" << "huanggai" << "zhouyu" << "daqiao" << "luxun" << "sunshangxiang"
+              << "sunquan" << "ganning" << "nos_lvmeng" << "huanggai" << "zhouyu" << "daqiao" << "luxun" << "sunshangxiang"
               << "huatuo" << "lvbu" << "nos_diaochan"
               << "nos_caoren" << "xiahouyuan" << "weiyan" << "huangzhong"
               << "xiaoqiao" << "nos_zhoutai" << "nos_zhangjiao";
@@ -34,7 +34,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     QString rule = Config.value("3v3/OfficialRule", "2013").toString();
     if (rule == "2012") {
         QStringList list_remove, list_add;
-        list_remove << "nos_zhangjiao" << "nos_caoren" << "lvmeng" << "nos_xiahoudun" << "weiyan";
+        list_remove << "nos_zhangjiao" << "nos_caoren" << "nos_lvmeng" << "nos_xiahoudun" << "weiyan";
         list_add << "sunjian" << "menghuo" << "xuhuang" << "pangde" << "zhugejin";
         foreach (QString general_name, list_remove)
             generals.removeOne(Sanguosha->getGeneral(general_name));
@@ -42,7 +42,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
             generals << Sanguosha->getGeneral(general_name);
     } else if (rule == "2013") {
         QStringList list_remove, list_add;
-        list_remove << "nos_zhangjiao" << "nos_caoren" << "lvmeng" << "nos_xiahoudun" << "weiyan"
+        list_remove << "nos_zhangjiao" << "nos_caoren" << "nos_lvmeng" << "nos_xiahoudun" << "weiyan"
                     << "luxun" << "huangzhong" << "nos_xuchu" << "nos_zhoutai" << "zhaoyun"
                     << "guanyu" << "lvbu";
         list_add << "sunjian" << "xuhuang" << "pangde" << "jiaxu" << "sunce"

@@ -3,4 +3,4 @@ general:pangtong general2:select role:rebel starter:true maxhp:3 hp:3 endedByPil
 general:huatuo general2:sunshangxiang role:loyalist hp:2 draw:0 equip:159,60 
 general:caocao general2:zhaoyun role:lord hp:3 draw:0 
 general:wolong general2:yujin role:loyalist hp:2 draw:0 hand:62,107 
-general:lvmeng role:rebel hp:3 draw:0 hand:8,3
+general:nos_lvmeng role:rebel hp:3 draw:0 hand:8,3

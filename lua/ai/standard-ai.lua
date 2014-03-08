@@ -1829,8 +1829,9 @@ jieyin_skill.getTurnUseCard = function(self)
 	return sgs.Card_Parse(card_str)
 end
 
-function SmartAI:getWoundedFriend(maleOnly)
-	self:sort(self.friends, "hp")
+function SmartAI:getWoundedFriend(maleOnly, include_self)
+	local friends = include_self and self.friends or self.friends_noself
+	self:sort(friends, "hp")
 	local list1 = {}  -- need help
 	local list2 = {}  -- do not need help
 	local addToList = function(p, index)
@@ -1857,7 +1858,7 @@ function SmartAI:getWoundedFriend(maleOnly)
 		end
 	end
 
-	for _, friend in ipairs(self.friends) do
+	for _, friend in ipairs(friends) do
 		if friend:isLord() then
 			if friend:getMark("hunzi") == 0 and friend:hasSkill("hunzi")
 				and self:getEnemyNumBySeat(self.player, friend) <= (friend:getHp() >= 2 and 1 or 0) then
@@ -1954,7 +1955,7 @@ qingnang_skill.getTurnUseCard = function(self)
 end
 
 sgs.ai_skill_use_func.QingnangCard = function(card, use, self)
-	local arr1, arr2 = self:getWoundedFriend()
+	local arr1, arr2 = self:getWoundedFriend(false, true)
 	local target = nil
 
 	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end

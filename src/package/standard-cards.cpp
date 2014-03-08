@@ -1339,10 +1339,10 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (move.from != player || !move.from_places.contains(Player::PlaceEquip) || player->getPile("wooden_ox").isEmpty())
+        if (!move.from || move.from != player || player->getPile("wooden_ox").isEmpty())
             return false;
         for (int i = 0; i < move.card_ids.size(); i++) {
-            if (move.from_places[i] != Player::PlaceEquip) continue;
+            if (move.from_places[i] != Player::PlaceEquip && move.from_places[i] != Player::PlaceTable) continue;
             const Card *card = Sanguosha->getEngineCard(move.card_ids[i]);
             if (card->objectName() == "wooden_ox") {
                 ServerPlayer *to = (ServerPlayer *)move.to;
@@ -1351,7 +1351,7 @@ public:
                     QList<ServerPlayer *> p_list;
                     p_list << to;
                     to->addToPile("wooden_ox", player->getPile("wooden_ox"), false, p_list);
-                } else {
+                } else if (!move.transit) {
                     player->clearOnePrivatePile("wooden_ox");
                 }
                 return false;

@@ -45,6 +45,9 @@ struct CardEffectStruct {
 
     ServerPlayer *from;
     ServerPlayer *to;
+
+    bool multiple; // helper to judge whether the card has multiple targets
+                   // does not make sense if the card inherits SkillCard
 };
 
 struct SlashEffectStruct {

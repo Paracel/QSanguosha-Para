@@ -199,13 +199,7 @@ bool QingnangCard::targetsFeasible(const QList<const Player *> &targets, const P
 
 void QingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *target = targets.value(0, source);
-
-    CardEffectStruct effect;
-    effect.card = this;
-    effect.from = source;
-    effect.to = target;
-
-    room->cardEffect(effect);
+    room->cardEffect(this, source, target);
 }
 
 void QingnangCard::onEffect(const CardEffectStruct &effect) const{

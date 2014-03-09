@@ -3054,11 +3054,12 @@ void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_
     thread->trigger(HpRecover, this, player, data);
 }
 
-bool Room::cardEffect(const Card *card, ServerPlayer *from, ServerPlayer *to) {
+bool Room::cardEffect(const Card *card, ServerPlayer *from, ServerPlayer *to, bool multiple) {
     CardEffectStruct effect;
     effect.card = card;
     effect.from = from;
     effect.to = to;
+    effect.multiple = multiple;
 
     return cardEffect(effect);
 }

@@ -9,6 +9,9 @@ sgs.ai_skill_cardask["@huanshi-card"] = function(self, data)
 
 	if self:needRetrial(judge) then
 		local cards = sgs.QList2Table(self.player:getCards("he"))
+		for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+			cards:append(sgs.Sanguosha:getCard(id))
+		end
 		local card_id = self:getRetrialCardId(cards, judge)
 		if card_id ~= -1 then
 			return "$" .. card_id

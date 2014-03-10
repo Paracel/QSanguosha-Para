@@ -210,6 +210,9 @@ end
 sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 	local judge = data:toJudge()
 	local all_cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		all_cards:append(sgs.Sanguosha:getCard(id))
+	end
 	if all_cards:isEmpty() then return "." end
 
 	local needTokeep = ((self.player:hasSkill("leiji") and judge.card:isRed()) or (self.player:hasSkill("nosleiji") and judge.card:getSuit() ~= sgs.Card_Spade))

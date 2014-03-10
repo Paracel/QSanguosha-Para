@@ -215,7 +215,7 @@ function sgs.getDefenseSlash(player, self)
 		defense = defense - 0.4
 	end
 
-	if player:getHandcardNum() == 0 and hujiaJink == 0 and not player:hasSkill("kongcheng") then
+	if player:getHandcardNum() == 0 and player:getPile("wooden_ox"):isEmpty() and hujiaJink == 0 and not player:hasSkill("kongcheng") then
 		if player:getHp() <= 1 then defense = defense - 2.5 end
 		if player:getHp() == 2 then defense = defense - 1.5 end
 		if not hasEightDiagram then defense = defense - 2 end
@@ -1244,6 +1244,9 @@ end
 
 function cardsView_spear(self, player, skill_name)
 	local cards = player:getCards("he")
+	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 	if skill_name ~= "fuhun" or player:hasSkill("wusheng") then
 		for _, acard in ipairs(cards) do
@@ -1274,6 +1277,9 @@ end
 
 function turnUse_spear(self, inclusive, skill_name)
 	local cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 	if skill_name ~= "fuhun" or self.player:hasSkill("wusheng") then
 		for _, acard in ipairs(cards) do
@@ -1820,6 +1826,7 @@ function SmartAI:getValuableCard(who)
 	local armor = who:getArmor()
 	local offhorse = who:getOffensiveHorse()
 	local defhorse = who:getDefensiveHorse()
+	local treasure = who:getTreasure()
 	self:sort(self.friends, "hp")
 	local friend
 	if #self.friends > 0 then friend = self.friends[1] end
@@ -1832,6 +1839,12 @@ function SmartAI:getValuableCard(who)
 		local lord = self.room:getLord()
 		if lord and self:isFriend(who, lord) and lord:hasLordSkill("hujia") and who:getKingdom() == "wei" and armor:isKindOf("EightDiagram") then
 			return armor:getEffectiveId()
+		end
+	end
+
+	if treasure then
+		if treasure:isKindOf("WoodenOx") and who:getPile("wooden_ox"):length() > 1 then
+			return treasure:getEffectiveId()
 		end
 	end
 
@@ -1891,6 +1904,10 @@ function SmartAI:getValuableCard(who)
 				end
 			end
 		end
+	end
+
+	if treasure then
+		return treasure:getEffectiveId()
 	end
 
 	if weapon and who:getHandcardNum() > 1 then
@@ -2836,7 +2853,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		return jink
 	end
 
-	local eightdiagram, silverlion, vine, renwang, armor, defHorse, offHorse
+	local eightdiagram, silverlion, vine, renwang, armor, defHorse, offHorse, wooden_ox
 	local weapon, crossbow, halberd, double, qinggang, axe, gudingblade
 	for _, card in ipairs(cards) do
 		if card:isKindOf("EightDiagram") then eightdiagram = card:getEffectiveId()
@@ -2852,7 +2869,9 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		elseif card:isKindOf("GudingBlade") then gudingblade = card:getEffectiveId()
 		elseif card:isKindOf("Halberd") then halberd = card:getEffectiveId() end
 		if card:isKindOf("Armor") then armor = card:getEffectiveId()
-		elseif card:isKindOf("Weapon") then weapon = card:getEffectiveId() end
+		elseif card:isKindOf("Weapon") then weapon = card:getEffectiveId()
+		elseif card:isKindOf("WoodenOx") then wooden_ox = card:getEffectiveId()
+		end
 	end
 
 	if armor and not self.player:hasSkills("yizhong|bazhen") then
@@ -2915,6 +2934,12 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			end
 		end
 		if before_num > after_num and (self:isWeak() or self:getCardsNum("Jink") == 0) then return defHorse end
+	end
+
+	if wooden_ox then
+		local zhanghe = self.room:findPlayerBySkillName("qiaobian")
+		local wuguotai = self.room:findPlayerBySkillName("ganlu")
+		if not (zhanghe and self:isEnemy(zhanghe)) and not (wuguotai and self:isEnemy(wuguotai)) then return wooden_ox end
 	end
 
 	if analeptic then
@@ -3155,3 +3180,31 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	return cards[1]:getEffectiveId()
 end
+
+local wooden_ox_skill = {}
+wooden_ox_skill.name = "wooden_ox"
+table.insert(sgs.ai_skills, wooden_ox_skill)
+wooden_ox_skill.getTurnUseCard = function(self)
+	if self.player:hasUsed("WoodenOxCard") or self.player:isKongcheng() then return end
+	self.wooden_ox_assist = nil
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByUseValue(cards, true)
+	local card, friend = self:getCardNeedPlayer(cards)
+	if card and friend and friend:objectName() ~= self.player:objectName() and (self:getOverflow() > 0 or self:isWeak(friend)) then
+		self.wooden_ox_assist = friend
+		return sgs.Card_Parse("@WoodenOxCard=" .. card:getEffectiveId())
+	end
+	if self:getOverflow() > 0 or (self:needKongcheng() and #cards == 1) then
+		return sgs.Card_Parse("@WoodenOxCard=" .. cards[1]:getEffectiveId())
+	end
+end
+
+sgs.ai_skill_use_func.WoodenOxCard = function(card, use, self)
+	use.card = card
+end
+
+sgs.ai_skill_playerchosen.wooden_ox = function(self, targets)
+	return self.wooden_ox_assist
+end
+
+sgs.ai_playerchosen_intention.wooden_ox = -60

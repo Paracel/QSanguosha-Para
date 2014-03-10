@@ -81,11 +81,11 @@ local function card_for_qiaobian(self, who, return_prompt)
 		end
 
 		if card == nil or target == nil then
-			if not who:hasEquip() or who:hasSkills(sgs.lose_equip_skill) then return nil end
+			if not who:hasEquip() or (who:hasSkills(sgs.lose_equip_skill) and not who:getTreasure()) then return nil end
 			local card_id = self:askForCardChosen(who, "e", "dummy")
 			if who:hasEquip(sgs.Sanguosha:getCard(card_id)) then card = sgs.Sanguosha:getCard(card_id) end
 			if card then
-				if card:isKindOf("Armor") or card:isKindOf("DefensiveHorse") then
+				if card:isKindOf("Armor") or card:isKindOf("DefensiveHorse") or card:isKindOf("WoodenOx") then
 					self:sort(self.friends, "defense")
 				else
 					self:sort(self.friends, "handcard")
@@ -97,10 +97,12 @@ local function card_for_qiaobian(self, who, return_prompt)
 						break
 					end
 				end
-				for _, friend in ipairs(self.friends) do
-					if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
-						target = friend
-						break
+				if not target then
+					for _, friend in ipairs(self.friends) do
+						if not self:getSameEquip(card, friend) and friend:objectName() ~= who:objectName() then
+							target = friend
+							break
+						end
 					end
 				end
 			end

@@ -54,6 +54,9 @@ fan_skill.name = "fan"
 table.insert(sgs.ai_skills, fan_skill)
 fan_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 	local slash_card
 

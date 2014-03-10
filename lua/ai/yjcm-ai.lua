@@ -377,7 +377,10 @@ sgs.ai_skill_use_func.GanluCard = function(card, use, self)
 	local target, min_friend, max_enemy
 
 	local compare_func = function(a, b)
-		return a:getEquips():length() > b:getEquips():length()
+		local al, bl = a:getEquips():length(), b:getEquips():length()
+		if a:getTreasure() then al = al + 1 end
+		if b:getTreasure() then bl = bl + 1 end
+		return al > bl
 	end
 	table.sort(self.enemies, compare_func)
 	table.sort(self.friends, compare_func)

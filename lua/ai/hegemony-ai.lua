@@ -492,6 +492,7 @@ sgs.ai_skill_choice.kuangfu_equip = function(self, choices, data)
 			elseif card:isKindOf("OffensiveHorse") and choices:match("3") then return "3"
 			end
 		end
+		if choices:match("4") and who:getPile("wooden_ox"):length() > 1 then return "4" end
 		if choices:match("1") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who) then return "1" end
 		if who:hasSkills("jijiu|beige|mingce|weimu|qingcheng") and not self:doNotDiscard(who, "e", false, 1, reason) then
 			if choices:match("2") then return "2" end

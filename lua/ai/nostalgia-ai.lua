@@ -324,6 +324,9 @@ nosgongqi_skill.name = "nosgongqi"
 table.insert(sgs.ai_skills, nosgongqi_skill)
 nosgongqi_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 
 	local equip_card
@@ -459,6 +462,7 @@ function sgs.ai_cardneed.noszhenggong(to, card, self)
 end
 
 sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
+	if who:getTreasure() then return who:getTreasure():getEffectiveId() end
 	for i = 0, 3 do
 		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong")) then
 			return who:getEquip(i):getEffectiveId()

@@ -218,7 +218,7 @@ end
 function sgs.getDefense(player, gameProcess)
 	if not player then return 0 end
 
-	local defense = math.min(player:getHp() * 2 + player:getHandcardNum(), player:getHp() * 3)
+	local defense = math.min(player:getHp() * 2 + player:getHandcardNum() + player:getPile("wooden_ox"):length(), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
 	local hasEightDiagram = false
 	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
@@ -800,23 +800,6 @@ function SmartAI:sortByKeepValue(cards, inverse, kept, wrt)
 		if v1 ~= v2 then
 			if inverse then return v1 > v2 end
 			return v1 < v2
-		else
-			if not inverse then return a:getNumber() > b:getNumber() end
-			return a:getNumber() < b:getNumber()
-		end
-	end
-
-	table.sort(cards, compare_func)
-end
-
-function SmartAI:sortByUseValue(cards, inverse)
-	local compare_func = function(a, b)
-		local value1 = self:getUseValue(a)
-		local value2 = self:getUseValue(b)
-
-		if value1 ~= value2 then
-			if not inverse then return value1 > value2 end
-			return value1 < value2
 		else
 			if not inverse then return a:getNumber() > b:getNumber() end
 			return a:getNumber() < b:getNumber()
@@ -2154,9 +2137,11 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 			elseif card:isKindOf("OffensiveHorse") then return 1
 			elseif card:isKindOf("Weapon") then return 2
 			elseif card:isKindOf("DefensiveHorse") then return 3
+			elseif card:isKindOf("Treasure") then return 4
 			elseif self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return 0
 			elseif card:isKindOf("Armor") then return 4
 			end
+			return 0
 		elseif self.player:hasSkills(sgs.lose_equip_skill) then return 5
 		else return 0
 		end
@@ -2537,6 +2522,9 @@ function SmartAI:askForCardChosen(who, flags, reason, method)
 	else
 		local dangerous = self:getDangerousCard(who)
 		if flags:match("e") and dangerous and (not isDiscard or self.player:canDiscard(who, dangerous)) then return dangerous end
+		if flags:match("e") and who:getTreasure() and who:getPile("wooden_ox"):length() > 1 and (not isDiscard or self.player:canDiscard(who, who:getTreasure():getId())) then
+			return who:getTreasure():getId()
+		end
 		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who)
 			and (not isDiscard or self.player:canDiscard(who, who:getArmor():getId())) then return who:getArmor():getId() end
 		if flags:match("e") and who:hasSkills("jijiu|beige|mingce|weimu|qingcheng") and not self:doNotDiscard(who, "e", false, 1, reason) then
@@ -3415,6 +3403,9 @@ end
 
 function SmartAI:getTurnUse()
 	local cards = self.player:getHandcards()
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 
 	local turnUse = {}
@@ -3858,6 +3849,19 @@ function sgs.getPlayerSkillList(player)
 	return skills
 end
 
+function sgs.getCardPlace(room, card)
+	local id = card:getEffectiveId()
+	local card_place = room:getCardPlace(id)
+	if card_place == sgs.Player_PlaceSpecial then
+		local player = room:getCardOwner(id)
+		if player then
+			local pile_name = player:getPileName(id)
+			if pile_name == "wooden_ox" then return sgs.Player_PlaceHand end
+		end
+	end
+	return card_place
+end
+
 local function cardsViewValuable(self, class_name, player)
 	for _, skill in ipairs(sgs.getPlayerSkillList(player)) do
 		local askill = skill:objectName()
@@ -3916,7 +3920,7 @@ function isCard(class_name, card, player)
 		local place
 		local id = card:getEffectiveId()
 		if global_room:getCardOwner(id) == nil or global_room:getCardOwner(id):objectName() ~= player:objectName() then place = sgs.Player_PlaceHand
-		else place = global_room:getCardPlace(card:getEffectiveId()) end
+		else place = sgs.getCardPlace(global_room, card) end
 		if getSkillViewCard(card, class_name, player, place) then return true end
 		if player:hasSkill("wushen") and card:getSuit() == sgs.Card_Heart and class_name == "Slash" then return true end
 		if player:hasSkill("jinjiu") and card:isKindOf("Analeptic") and class_name == "Slash" then return true end
@@ -4002,6 +4006,9 @@ function SmartAI:getKnownNum(player)
 		return self.player:getHandcardNum()
 	else
 		local cards = player:getHandcards()
+		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+			cards:append(sgs.Sanguosha:getCard(id))
+		end
 		local known = 0
 		for _, card in sgs.qlist(cards) do
 			local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
@@ -4018,6 +4025,11 @@ function getKnownCard(player, from, class_name, viewas, flags)
 	flags = flags or "h"
 	player = findPlayerByObjectName(global_room, player:objectName())
 	local cards = player:getCards(flags)
+	if flags:match("h") then
+		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+			cards:append(sgs.Sanguosha:getCard(id))
+		end
+	end
 	local known = 0
 	local suits = { ["club"] = 1, ["spade"] = 1, ["diamond"] = 1, ["heart"] = 1 }
 	for _, card in sgs.qlist(cards) do
@@ -4061,7 +4073,7 @@ function SmartAI:getCardId(class_name, player, acard)
 
 	for _, card in ipairs(cards) do
 		local viewas, cardid
-		local card_place = self.room:getCardPlace(card:getEffectiveId())
+		local card_place = sgs.getCardPlace(self.room, card)
 		viewas = getSkillViewCard(card, class_name, player, card_place)
 		if viewas then table.insert(viewArr, viewas) end
 		if card:isKindOf(class_name) and not prohibitUseDirectly(card, player) and card_place ~= sgs.Player_PlaceSpecial then
@@ -4100,6 +4112,10 @@ function SmartAI:getCards(class_name, flag)
 				all_cards:append(sgs.Sanguosha:getCard(id))
 			end
 		end
+	elseif flag:match("h") then
+		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+			all_cards:append(sgs.Sanguosha:getCard(id))
+		end
 	end
 
 	local cards = {}
@@ -4112,7 +4128,7 @@ function SmartAI:getCards(class_name, flag)
 	end
 
 	for _, card in sgs.qlist(all_cards) do
-		card_place = room:getCardPlace(card:getEffectiveId())
+		card_place = sgs.getCardPlace(room, card)
 
 		if class_name == "." and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
 		elseif card:isKindOf(class_name) and not prohibitUseDirectly(card, player) and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
@@ -4137,6 +4153,10 @@ end
 function getCardsNum(class_name, player, from)
 	if not player then global_room:writeToConsole(debug.traceback()) end
 	local cards = sgs.QList2Table(player:getHandcards())
+	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+		table.insert(cards, sgs.Sanguosha:getCard(id))
+	end
+
 	local num = 0
 	local shownum = 0
 	local redpeach = 0
@@ -5075,6 +5095,13 @@ function SmartAI:useEquipCard(card, use)
 		end
 		if self:evaluateArmor(card) > self:evaluateArmor() or (isfriend_zzzh == false and self:getOverflow() > 0) then use.card = card end
 		return
+	elseif card:isKindOf("Treasure") then
+		if card:isKindOf("WoodenOx") then
+			local zhanghe = self.room:findPlayerBySkillName("qiaobian")
+			local wuguotai = self.room:findPlayerBySkillName("ganlu")
+			if (zhanghe and self:isEnemy(zhanghe)) or (wuguotai and self:isEnemy(wuguotai)) then return end
+			use.card = card
+		end
 	elseif self:needBear() then return
 	elseif card:isKindOf("OffensiveHorse") then
 		if (self.player:hasSkill("nosrende") or (self.player:hasSkill("rende") and not self.player:hasUsed("RendeCard"))) then

@@ -905,6 +905,13 @@ end
 
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
 
+sgs.ai_skill_invoke.noslianying = function(self, data)
+	if self:needKongcheng(self.player, true) then
+		return self.player:getPhase() == sgs.Player_Play
+	end
+	return true
+end
+
 function sgs.ai_skill_invoke.nosjushou(self, data)
 	local sbdiaochan = self.room:findPlayerBySkillName("lihun")
 	if sbdiaochan and sbdiaochan:faceUp() and not self:willSkipPlayPhase(sbdiaochan)

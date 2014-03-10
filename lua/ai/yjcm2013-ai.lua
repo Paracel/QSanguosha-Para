@@ -280,6 +280,7 @@ sgs.ai_skill_use["@@xiansi"] = function(self, prompt)
 
 	local zhugeliang = self.room:findPlayerBySkillName("kongcheng")
 	local luxun = self.room:findPlayerBySkillName("lianying")
+	local nosluxun = self.room:findPlayerBySkillName("noslianying")
 	local dengai = self.room:findPlayerBySkillName("tuntian")
 	local jiangwei = self.room:findPlayerBySkillName("zhiji")
 
@@ -316,8 +317,14 @@ sgs.ai_skill_use["@@xiansi"] = function(self, prompt)
 		end
 	end
 
-	if luxun and add_player(luxun, (self:isFriend(luxun) and 1 or nil)) == rest_num then
-		return "@XiansiCard=.->" .. table.concat(targets, "+")
+	if nosluxun and self:isFriend(nosluxun) and nosluxun:getHandcardNum() == 1 and self:getEnemyNumBySeat(self.player, nosluxun) > 0 then
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), nosluxun:objectName())
+		local cards = sgs.QList2Table(nosluxun:getHandcards())
+		if #cards == 1 and (cards[1]:hasFlag("visible") or cards[1]:hasFlag(flag)) then
+			if cards[1]:isKindOf("TrickCard") or cards[1]:isKindOf("Slash") or cards[1]:isKindOf("EquipCard") then
+				if add_player(nosluxun, 1) == rest_num then return "@XiansiCard=.->" .. table.concat(targets, "+") end
+			end
+		end
 	end
 
 	if dengai and self:isFriend(dengai) and (not self:isWeak(dengai) or self:getEnemyNumBySeat(self.player, dengai) == 0) and add_player(dengai, 1) == rest_num then
@@ -350,7 +357,7 @@ sgs.ai_card_intention.XiansiCard = function(self, card, from, tos)
 	end
 	if from:getState() == "online" then
 		for _, to in ipairs(tos) do
-			if (to:hasSkills("kongcheng|zhiji|lianying") and to:getHandcardNum() == 1) or to:hasSkills("tuntian+zaoxian") then
+			if (to:hasSkills("kongcheng|zhiji|lianying|noslianying") and to:getHandcardNum() == 1) or to:hasSkills("tuntian+zaoxian") then
 			else
 				sgs.updateIntention(from, to, 80)
 			end

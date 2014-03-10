@@ -285,7 +285,7 @@ sgs.ai_skill_choice.chuanxin_lose = function(self, choices, data)
 		end
 	end
 	if self.player:hasSkill("mouduan") and (self.player:getMark("@wu") > 0 or self.player:getMark("@wen") > 0) then
-		for _, skill in ipairs(("jiang|qianxun|yingzi|keji"):split("|")) do
+		for _, skill in ipairs(("jiang|nosqianxun|qianxun|yingzi|keji"):split("|")) do
 			if self.player:hasSkill(skill) then return skill end
 		end
 	end

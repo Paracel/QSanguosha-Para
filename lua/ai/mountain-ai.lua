@@ -309,7 +309,7 @@ end
 sgs.ai_skill_invoke.tuntian = function(self, data)
 	if self.player:hasSkill("zaoxian") and self.player:getPile("field"):length() < 3 and self.player:getMark("zaoxian") == 0 then
 		for _, enemy in ipairs(self.enemies) do
-			if not enemy:hasSkills("qianxun|noswuyan") then return true end
+			if not enemy:hasSkills("nosqianxun|noswuyan") then return true end
 		end
 		return false
 	end
@@ -321,7 +321,7 @@ sgs.ai_slash_prohibit.tuntian = function(self, from, to, card)
 	local enemies = self:getEnemies(to)
 	local good_enemy = false
 	for _, enemy in ipairs(enemies) do
-		if not enemy:hasSkills("qianxun|noswuyan|weimu") then
+		if not enemy:hasSkills("nosqianxun|noswuyan|weimu") then
 			good_enemy = true
 			break
 		end
@@ -1019,7 +1019,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"longhun|jiuchi|qingcheng|shuangren|kuangfu|nosgongqi|wushen|lianhuan|duanxie|" ..
 								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|" ..
 								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|noszhenlie|kurou|wansha|lianpo|qiluan|xiaode|qingjian|" ..
-								"yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|tianyi|xianzhen|qiaoshui|juece|sijian|zongshi|keji|paoxiao|" ..
+								"yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|xianzhen|qiaoshui|juece|sijian|zongshi|keji|paoxiao|" ..
 								"kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|" ..
 								"jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|hongyan|" ..
 								"zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|shenfen"):split("|")) do
@@ -1083,9 +1083,9 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 			if str:matchOne(askill) then return askill end
 		end
 
-		for _, askill in ipairs(("huangen|jianxiong|jiang|qianxun|danlao|juxiang|huoshou|zhichi|" ..
+		for _, askill in ipairs(("huangen|jianxiong|jiang|nosqianxun|qianxun|danlao|juxiang|huoshou|zhichi|" ..
 								"lirang|qingjian|yicong|wusheng|wushuang|tianxiang|leiji|nosleiji|guhuo|nosguhuo|nosshangshi|shangshi|" ..
-								"zhiyu|guidao|guicai|jijiu|buyi|renxin|lianying|shoucheng|shenxian|sijian|tianming|drjijiu|jieyuan|" ..
+								"zhiyu|guidao|guicai|jijiu|buyi|renxin|lianying|noslianying|shoucheng|shenxian|sijian|tianming|drjijiu|jieyuan|" ..
 								"yanyu|zhendu|xiaoguo|tianfu|shushen|niaoxiang|zhenlie|tiandu|yingyang|noszhenlie"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end

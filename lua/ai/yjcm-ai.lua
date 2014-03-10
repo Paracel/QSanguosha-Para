@@ -181,7 +181,7 @@ end
 
 sgs.ai_need_damaged.enyuan = function(self, attacker, player)
 	if attacker and self:isEnemy(attacker, player) and self:isWeak(attacker)
-		and attacker:getHandcardNum() < 3 and not attacker:hasSkills("lianying|kongcheng")
+		and attacker:getHandcardNum() < 3 and not attacker:hasSkills("lianying|noslianying|kongcheng")
 		and not self:needToLoseHp(attacker) then
 		return true
 	end
@@ -753,7 +753,7 @@ sgs.ai_use_value.XianzhenCard = 9.2
 sgs.ai_use_priority.XianzhenCard = 9.2
 
 sgs.ai_skill_invoke.shangshi = function(self, data)
-	if self.player:getLostHp() == 1 then return sgs.ai_skill_invoke.lianying(self, data) end
+	if self.player:getLostHp() == 1 then return sgs.ai_skill_invoke.noslianying(self, data) end
 	return true
 end
 

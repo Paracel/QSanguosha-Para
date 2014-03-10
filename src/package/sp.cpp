@@ -2164,8 +2164,8 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_guojia->addSkill("yiji");
 
     General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true); // TW SP 016
-    tw_luxun->addSkill("qianxun");
-    tw_luxun->addSkill("lianying");
+    tw_luxun->addSkill("nosqianxun");
+    tw_luxun->addSkill("noslianying");
 }
 
 ADD_PACKAGE(TaiwanSP)

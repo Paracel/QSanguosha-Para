@@ -39,6 +39,13 @@ return {
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",
 
+	["nos_luxun"] = "陆逊-旧",
+	["&nos_luxun"] = "陆逊",
+	["nosqianxun"] = "谦逊",
+	[":nosqianxun"] = "<font color=\"blue\"><b>锁定技。</b></font>你不能被选择为【顺手牵羊】与【乐不思蜀】的目标。",
+	["noslianying"] = "连营",
+	[":noslianying"] = "每当你失去最后的手牌后，你可以摸一张牌。",
+
 	["nos_diaochan"] = "貂蝉-旧",
 	["&nos_diaochan"] = "貂蝉",
 	["noslijian"] = "离间",

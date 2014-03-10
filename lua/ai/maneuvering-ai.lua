@@ -625,6 +625,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		if self.player:hasFlag("FireAttackFailed_" .. enemy:objectName()) then
 			return false
 		end
+		if enemy:hasSkill("qianxun") then return false end
 		local damage = 1
 		if not self.player:hasSkill("jueqing") and not enemy:hasArmorEffect("silver_lion") then
 			if enemy:hasArmorEffect("vine") then damage = damage + 1 end

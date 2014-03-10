@@ -108,7 +108,7 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 		local jwfy = self.room:findPlayerBySkillName("shoucheng")
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:isMale() and not enemy:isKongcheng() and not enemy:hasSkill("kongcheng") then
-				if ((enemy:hasSkill("lianying") or (jwfy and self:isFriend(jwfy, enemy))) and self:damageMinusHp(self, enemy, 1) > 0)
+				if ((enemy:hasSkills("lianying|noslianying") or (jwfy and self:isFriend(jwfy, enemy))) and self:damageMinusHp(self, enemy, 1) > 0)
 					or (enemy:getHp() < 3 and self:damageMinusHp(self, enemy, 0) > 0 and enemy:getHandcardNum() > 0)
 					or (enemy:getHandcardNum() >= enemy:getHp() and enemy:getHp() > 2 and self:damageMinusHp(self, enemy, 0) >= -1)
 					or (enemy:getHandcardNum() - enemy:getHp() > 2) then

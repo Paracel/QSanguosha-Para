@@ -471,6 +471,7 @@ enum TriggerEvent {
     PostCardEffected,
     CardFinished,
     TrickCardCanceling,
+    TrickEffect,
 
     ChoiceMade,
 

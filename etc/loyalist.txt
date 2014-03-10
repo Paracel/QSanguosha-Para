@@ -66,6 +66,7 @@ liubei					tianfeng				-0.5
 liubei					neo_zhangfei			0.6
 liubei					nos_xuchu				0.5
 liubei					nos_huangyueying		1.0
+liubei					nos_luxun				-0.5
 liubei					nos_zhangjiao			0.9
 liubei					nos_guanxingzhangbao	0.9
 liushan					shenzhugeliang			-0.6
@@ -97,6 +98,7 @@ nos_liubei				tianfeng				-0.5
 nos_liubei				neo_zhangfei			0.6
 nos_liubei				nos_xuchu				0.6
 nos_liubei				nos_huangyueying		1.0
+nos_liubei				nos_luxun				-0.5
 nos_liubei				nos_zhangjiao			0.9
 nos_liubei				nos_guanxingzhangbao	0.9
 nos_zhangjiao			zhenji					0.7

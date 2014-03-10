@@ -834,7 +834,7 @@ local function getShenfenUseValueOfHECards(self, to)
 	-- value of handcards
 	local value_h = 0
 	local hcard = to:getHandcardNum()
-	if to:hasSkill("lianying") then
+	if to:hasSkills("lianying|noslianying") then
 		hcard = hcard - 0.9
 	elseif to:hasSkills("shangshi|nosshangshi") then
 		hcard = hcard - 0.9 * to:getLostHp()

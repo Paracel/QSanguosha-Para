@@ -127,6 +127,17 @@ void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) c
         room->drawCards(source, 2);
 }
 
+LianyingCard::LianyingCard() {
+}
+
+bool LianyingCard::targetFilter(const QList<const Player *> &targets, const Player *, const Player *Self) const{
+    return targets.length() < Self->getMark("lianying");
+}
+
+void LianyingCard::onEffect(const CardEffectStruct &effect) const{
+    effect.to->drawCards(1, "lianying");
+}
+
 LijianCard::LijianCard(bool cancelable): duel_cancelable(cancelable) {
     mute = true;
 }

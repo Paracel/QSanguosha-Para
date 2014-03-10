@@ -191,6 +191,7 @@ nos_xuchu				32
 nos_liubei				19					
 nos_huangyueying		61					
 nos_lvmeng				63					
+nos_luxun				57					
 nos_diaochan			72					
 nos_caoren				61					
 nos_zhoutai				40					

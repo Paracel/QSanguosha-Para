@@ -22,7 +22,7 @@ nos_lvmeng				2
 huanggai				6
 zhouyu					6
 daqiao					6
-luxun					3
+nos_luxun				3
 sunshangxiang			7
 xiaoqiao				6
 zhoutai					2

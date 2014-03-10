@@ -87,7 +87,7 @@ function setInitialTables()
 	sgs.current_mode_players = { lord = 0, loyalist = 0, rebel = 0, renegade = 0 }
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
 	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
-	sgs.need_kongcheng = "lianying|kongcheng|sijian"
+	sgs.need_kongcheng = "lianying|noslianying|kongcheng|sijian"
 	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
@@ -2833,7 +2833,7 @@ end
 function SmartAI:getLeastHandcardNum(player)
 	player = player or self.player
 	local least = 0
-	if player:hasSkill("lianying") and least < 1 then least = 1 end
+	if player:hasSkills("lianying|noslianying") and least < 1 then least = 1 end
 	local jwfy = self.room:findPlayerBySkillName("shoucheng")
 	if least < 1 and jwfy and self:isFriend(jwfy, player) then least = 1 end
 	if player:hasSkill("shangshi") and least < math.min(2, player:getLostHp()) then least = math.min(2, player:getLostHp()) end
@@ -5197,7 +5197,7 @@ function SmartAI:doNotDiscard(to, flags, conservative, n, reason)
 	local enemies = self:getEnemies(to)
 	local good_enemy = false
 	for _, enemy in ipairs(enemies) do
-		if not enemy:hasSkills("qianxun|noswuyan|weimu") then
+		if not enemy:hasSkills("nosqianxun|noswuyan|weimu") then
 			good_enemy = true
 			break
 		end

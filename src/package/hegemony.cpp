@@ -723,7 +723,7 @@ HegemonyPackage::HegemonyPackage()
     ganfuren->addSkill(new Shenzhi);
 
     General *heg_luxun = new General(this, "heg_luxun", "wu", 3); // WU 007 G
-    heg_luxun->addSkill("qianxun");
+    heg_luxun->addSkill("nosqianxun");
     heg_luxun->addSkill(new Duoshi);
 
     General *dingfeng = new General(this, "dingfeng", "wu"); // WU 016

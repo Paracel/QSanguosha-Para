@@ -3,4 +3,4 @@ general:nos_zhangliao role:loyalist starter:true endedByPile:rebel beforeNext:re
 general:dianwei role:rebel draw:0 hand:55 
 general:xiaoqiao role:rebel draw:0 hand:74 
 general:zhugeliang role:rebel maxhp:3 hp:2 draw:0 hand:46 
-general:luxun role:lord maxhp:3 hp:1 draw:0 hand:30
+general:nos_luxun role:lord maxhp:3 hp:1 draw:0 hand:30

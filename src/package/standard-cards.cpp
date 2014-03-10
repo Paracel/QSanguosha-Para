@@ -1337,9 +1337,25 @@ public:
         return target != NULL && target->isAlive();
     }
 
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (!move.from || move.from != player || player->getPile("wooden_ox").isEmpty())
+        if (!move.from || move.from != player)
+            return false;
+        if (player->hasTreasure("wooden_ox")) {
+            int count = 0;
+            for (int i = 0; i < move.card_ids.size(); i++) {
+                if (move.from_pile_names[i] == "wooden_ox") count++;
+            }
+            if (count > 0) {
+                LogMessage log;
+                log.type = "$WoodenOx";
+                log.from = player;
+                log.arg = QString::number(count);
+                log.arg2 = "wooden_ox";
+                room->sendLog(log);
+            }
+        }
+        if (player->getPile("wooden_ox").isEmpty())
             return false;
         for (int i = 0; i < move.card_ids.size(); i++) {
             if (move.from_places[i] != Player::PlaceEquip && move.from_places[i] != Player::PlaceTable) continue;

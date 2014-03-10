@@ -482,7 +482,7 @@ public:
         if (damage.card && damage.card->isKindOf("Slash") && target->hasEquip()
             && !target->hasFlag("Global_DebutFlag") && !damage.chain && !damage.transfer) {
             QStringList equiplist;
-            for (int i = 0; i <= 3; i++) {
+            for (int i = 0; i < S_EQUIP_AREA_LENGTH; i++) {
                 if (!target->getEquip(i)) continue;
                 if (panfeng->canDiscard(target, target->getEquip(i)->getEffectiveId()) || panfeng->getEquip(i) == NULL)
                     equiplist << QString::number(i);

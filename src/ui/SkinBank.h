@@ -5,6 +5,7 @@
 
 #include "card.h"
 #include "qsanbutton.h"
+#include "util.h"
 
 #include <json/json.h>
 #include <QString>
@@ -137,7 +138,7 @@ public:
         QRect m_handCardArea;
         
         // equips
-        QRect m_equipAreas[5];
+        QRect m_equipAreas[S_EQUIP_AREA_LENGTH];
         QRect m_equipImageArea;
         QRect m_equipTextArea;
         QRect m_equipSuitArea;

@@ -4574,11 +4574,11 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
 
     DummyCard *dummy_card = new DummyCard(to_discard);
     if (reason == "gamerule") {
-        CardMoveReason reason(CardMoveReason::S_REASON_RULEDISCARD, player->objectName(), QString(), dummy_card->getSkillName(), reason);
-        throwCard(dummy_card, reason, player);
+        CardMoveReason mreason(CardMoveReason::S_REASON_RULEDISCARD, player->objectName(), QString(), dummy_card->getSkillName(), reason);
+        throwCard(dummy_card, mreason, player);
     } else {
-        CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), dummy_card->getSkillName(), reason);
-        throwCard(dummy_card, reason, player);
+        CardMoveReason mreason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), dummy_card->getSkillName(), reason);
+        throwCard(dummy_card, mreason, player);
     }
 
     QVariant data;

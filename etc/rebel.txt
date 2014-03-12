@@ -13,6 +13,10 @@ caocao					zhangchunhua			0.5
 caocao					zhuran					0.2
 caocao					nos_zhangchunhua		0.5
 caocao					nos_madai				0.4
+nos_caocao				zhangchunhua			0.5
+nos_caocao				zhuran					0.2
+nos_caocao				nos_zhangchunhua		0.5
+nos_caocao				nos_madai				0.4
 caopi					zhangchunhua			0.5
 caopi					zhuran					0.2
 caopi					nos_zhangchunhua		0.5

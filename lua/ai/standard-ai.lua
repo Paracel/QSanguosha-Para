@@ -1,5 +1,54 @@
-sgs.ai_skill_invoke.jianxiong = function(self, data)
-	return not self:needKongcheng(self.player, true)
+sgs.ai_skill_choice.jianxiong = function(self, choices, data)
+	local function getChoice(id)
+		local card = sgs.Sanguosha:getCard(id)
+		if card:isKindOf("Lightning") then
+			local dummy = { isDummy = true }
+			self:useCardLightning(card, dummy)
+			return (dummy.card and dummy.card:isKindOf("Lightning")) and "obtain" or "draw"
+		elseif card:isKindOf("Slash") then
+			if self:getCardsNum("Slash") >= 1
+				and ((not self.player:hasSkills("paoxiao|xianzhen") and not self.player:hasWeapon("crossbow") and not self.player:hasWeapon("vs_crossbow"))
+					or self:willSkipPlayPhase()) then
+				return "draw"
+			end
+			return "obtain"
+		elseif self:willSkipPlayPhase() or self:isWeak() then
+			return self:isValuableCard(card) and "obtain" or "draw"
+		else
+			return "obtain"
+		end
+	end
+
+	local choice_table = choices:split("+")
+	if not table.contains(choice_table, "obtain") then
+		return self:needKongcheng(self.player, true) and "cancel" or "draw"
+	else
+		local damage = data:toDamage()
+		if self.player:isKongcheng() and damage.from and damage.from:isAlive() and damage.from:getPhase() == sgs.Player_Play
+			and damage.from:hasSkills("longdan+chongzhen") and self:slashIsAvailable(damage.from)
+			and card:isKindOf("Jink") and getKnownCard(damage.from, self.player, "Jink", false) > 0 then
+			return getKnownCard(self.player, self.player, "Jink", false) >= 2 and "cancel" or "draw"
+		end
+		local len = damage.card:isVirtualCard() and damage.card:subcardsLength() or 1
+		if len >= 3 then return "obtain"
+		elseif len == 2 then
+			for _, card in sgs.qlist(damage.card:getSubcards()) do
+				if self:isValuableCard(card) then return "obtain" end
+			end
+		end
+		if self:needKongcheng(self.player, true) then return "cancel" end
+		if len == 2 then
+			for _, card in sgs.qlist(damage.card:getSubcards()) do
+				local id = card:getEffectiveId()
+				if getChoice(id) == "obtain" then return "obtain" end
+			end
+			return "draw"
+		else
+			local id = damage.card:getEffectiveId()
+			return getChoice(id)
+		end
+	end
+	return "cancel"
 end
 
 table.insert(sgs.ai_global_flags, "hujiasource")
@@ -496,7 +545,9 @@ sgs.luoyi_keep_value = {
 	DefensiveHorse = 4
 }
 
-sgs.ai_skill_invoke.tiandu = sgs.ai_skill_invoke.jianxiong
+sgs.ai_skill_invoke.tiandu = function(self, data)
+	return not self:needKongcheng(self.player, true)
+end
 
 function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end

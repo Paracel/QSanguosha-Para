@@ -4,4 +4,4 @@ general:simayi role:loyalist draw:0
 general:nos_xiahoudun role:loyalist draw:0 
 general:sujiang role:lord chained:true draw:0 equip:122 hand:98 
 general:caozhi role:loyalist draw:0 
-general:caocao role:loyalist chained:true draw:0 hand:127
+general:nos_caocao role:loyalist chained:true draw:0 hand:127

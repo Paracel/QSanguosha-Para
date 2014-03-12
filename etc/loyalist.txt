@@ -17,6 +17,9 @@ bgm_liubei				ganfuren				1.0
 caocao					zhurong					0.5
 caocao					xiaoqiao				1.0
 caocao					erqiao					0.7
+nos_caocao				zhurong					0.5
+nos_caocao				xiaoqiao				1.0
+nos_caocao				erqiao					0.7
 caopi					xiahoudun				1.0
 caopi					zhenji					2.5
 caopi					caoren					1.6

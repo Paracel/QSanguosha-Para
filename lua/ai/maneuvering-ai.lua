@@ -643,7 +643,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 				and self:hasTrickEffective(fire_attack, enemy)
 				and sgs.isGoodTarget(enemy, self.enemies, self)
 				and (self.player:hasSkill("jueqing")
-					or (not (enemy:hasSkill("jianxiong") and not self:isWeak(enemy))
+					or (not (enemy:hasSkills("jianxiong|nosjianxionh") and not self:isWeak(enemy))
 						and not (self:getDamagedEffects(enemy, self.player))
 						and not (enemy:isChained() and not self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire, nil, fire_attack))))
 	end

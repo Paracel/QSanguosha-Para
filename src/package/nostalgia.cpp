@@ -969,6 +969,24 @@ public:
 
 // old stantard generals
 
+class NosJianxiong: public MasochismSkill {
+public:
+    NosJianxiong(): MasochismSkill("nosjianxiong") {
+    }
+
+    virtual void onDamaged(ServerPlayer *caocao, const DamageStruct &damage) const{
+        Room *room = caocao->getRoom();
+        const Card *card = damage.card;
+        if (card && room->getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
+            QVariant data = QVariant::fromValue(damage);
+            if (room->askForSkillInvoke(caocao, "nosjianxiong", data)) {
+                room->broadcastSkillInvoke("jianxiong");
+                caocao->obtainCard(card);
+            }
+        }
+    }
+};
+
 class NosGanglie: public MasochismSkill {
 public:
     NosGanglie(): MasochismSkill("nosganglie") {
@@ -1873,6 +1891,10 @@ NostalGeneralPackage::NostalGeneralPackage()
 NostalStandardPackage::NostalStandardPackage()
     : Package("nostal_standard")
 {
+    General *nos_caocao = new General(this, "nos_caocao$", "wei");
+    nos_caocao->addSkill(new NosJianxiong);
+    nos_caocao->addSkill("hujia");
+
     General *nos_xiahoudun = new General(this, "nos_xiahoudun", "wei");
     nos_xiahoudun->addSkill(new NosGanglie);
 

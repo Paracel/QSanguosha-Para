@@ -6,8 +6,11 @@ return {
 	-- 魏势力
 	["#caocao"] = "魏武帝",
 	["caocao"] = "曹操",
+	["illustrator:caocao"] = "青骑士",
 	["jianxiong"] = "奸雄",
-	[":jianxiong"] = "每当你受到伤害后，你可以获得对你造成伤害的牌。",
+	[":jianxiong"] = "每当你受到伤害后，你可以选择一项：获得对你造成伤害的牌，或摸一张牌。",
+	["jianxiong:obtain"] = "获得对你造成伤害的牌",
+	["jianxiong:draw"] = "摸一张牌",
 	["hujia"] = "护驾",
 	[":hujia"] = "<font color=\"orange\"><b>主公技。</b></font>每当你需要使用或打出一张【闪】时，你可以令其他魏势力角色打出一张【闪】，视为你使用或打出之。",
 	["@hujia-jink"] = "请打出一张【闪】响应 %src “护驾”",

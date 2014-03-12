@@ -13,6 +13,11 @@ return {
 	["nostal_yjcm"] = "怀旧-一将",
 	["nostal_yjcm2012"] = "怀旧-一将2",
 
+	["nos_caocao"] = "曹操-旧",
+	["&nos_caocao"] = "曹操",
+	["nosjianxiong"] = "奸雄",
+	[":nosjianxiong"] = "每当你受到伤害后，你可以获得对你造成伤害的牌。",
+
 	["nos_xiahoudun"] = "夏侯惇-旧",
 	["&nos_xiahoudun"] = "夏侯惇",
 	["nosganglie"] = "刚烈",

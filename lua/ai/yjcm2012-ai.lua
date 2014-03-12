@@ -817,7 +817,7 @@ qice_skill.getTurnUseCard = function(self)
 	local aoe
 	local i
 	local good, bad = 0, 0
-	local caocao = self.room:findPlayerBySkillName("jianxiong")
+	local caocao = self.room:findPlayerBySkillName("jianxiong") or self.room:findPlayerBySkillName("nosjianxiong")
 	local qicetrick = "savage_assault|archery_attack|ex_nihilo|god_salvation"
 	local qicetricks = qicetrick:split("|")
 	local aoe_available, ge_available, ex_available = true, true, true

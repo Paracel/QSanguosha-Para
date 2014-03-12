@@ -664,6 +664,24 @@ sgs.ai_skill_choice.nospaiyi = function(self, choices)
 	return "Hand"
 end
 
+sgs.ai_skill_invoke.nosjianxiong = function(self, data)
+	local damage = data:toDamage()
+	local id = damage.card:getEffectiveId()
+	local card = sgs.Sanguosha:getCard(id)
+	if self.player:isKongcheng() and damage.from and damage.from:isAlive() and damage.from:getPhase() == sgs.Player_Play
+		and damage.from:hasSkills("longdan+chongzhen") and self:slashIsAvailable(damage.from)
+		and card:isKindOf("Jink") and getKnownCard(damage.from, self.player, "Jink", false) > 0 then
+		return false
+	end
+	if damage.card:isVirtualCard() and damage.card:subcardsLength() >= 3 then return true
+	elseif damage.card:isVirtualCard() and damage.card:subcardsLength() == 2 then
+		for _, card in sgs.qlist(damage.card:getSubcards()) do
+			if self:isValuableCard(card) then return true end
+		end
+	end
+	return not self:needKongcheng(self.player, true)
+end
+
 sgs.ai_skill_invoke.nosganglie = function(self, data)
 	local mode = self.room:getMode()
 	if mode:find("_mini_40") or mode:find("_mini_46") then return true end

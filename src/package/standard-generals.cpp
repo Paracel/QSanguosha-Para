@@ -16,13 +16,28 @@ public:
 
     virtual void onDamaged(ServerPlayer *caocao, const DamageStruct &damage) const{
         Room *room = caocao->getRoom();
+        QVariant data = QVariant::fromValue(damage);
+        QStringList choices;
+        choices << "draw" << "cancel";
+
         const Card *card = damage.card;
-        if (card && room->getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
-            QVariant data = QVariant::fromValue(card);
-            if (room->askForSkillInvoke(caocao, "jianxiong", data)) {
-                room->broadcastSkillInvoke(objectName());
+        if (card && room->getCardPlace(card->getEffectiveId()) == Player::PlaceTable)
+            choices.prepend("obtain");
+
+        QString choice = room->askForChoice(caocao, objectName(), choices.join("+"), data);
+        if (choice != "cancel") {
+            LogMessage log;
+            log.type = "#InvokeSkill";
+            log.from = caocao;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            room->notifySkillInvoked(caocao, objectName());
+            room->broadcastSkillInvoke(objectName());
+            if (choice == "obtain")
                 caocao->obtainCard(card);
-            }
+            else
+                caocao->drawCards(1, objectName());
         }
     }
 };

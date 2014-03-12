@@ -1,4 +1,4 @@
-caocao					5
+nos_caocao				5
 simayi					7
 nos_xiahoudun			3
 nos_zhangliao			9

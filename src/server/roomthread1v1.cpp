@@ -33,7 +33,7 @@ void RoomThread1v1::run() {
             foreach (const General *general, windpack->findChildren<const General *>())
                 candidates << general->objectName();
         } else {
-            candidates << "caocao" << "simayi" << "nos_xiahoudun" << "kof_zhangliao"
+            candidates << "nos_caocao" << "simayi" << "nos_xiahoudun" << "kof_zhangliao"
                        << "kof_xuchu" << "guojia" << "kof_zhenji" << "kof_xiahouyuan"
                        << "nos_caoren" << "dianwei" << "kof_guanyu" << "zhangfei"
                        << "zhugeliang" << "zhaoyun" << "machao" << "kof_huangyueying"

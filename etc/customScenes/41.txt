@@ -3,4 +3,4 @@ general:select general2:select role:loyalist starter:true hp:1 chained:true ende
 general:sp_guanyu general2:huatuo role:rebel maxhp:3 hp:1 chained:true acquireSkills:mashu draw:0 equip:54,159 hand:30,32
 general:liubei general2:wuguotai role:rebel hp:3 draw:0 hand:96,135,65
 general:zhangfei general2:caozhi role:rebel hp:2 draw:0 hand:86
-general:caocao general2:nos_luxun role:lord hp:1 chained:true draw:0 equip:53,68 hand:12 judge:103
+general:nos_caocao general2:nos_luxun role:lord hp:1 chained:true draw:0 equip:53,68 hand:12 judge:103

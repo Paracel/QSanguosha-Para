@@ -2085,17 +2085,9 @@ function SmartAI:askForChoice(skill_name, choices, data)
 	elseif type(choice) == "function" then
 		return choice(self, choices, data)
 	else
-		local skill = sgs.Sanguosha:getSkill(skill_name)
-		if skill and choices:match(skill:getDefaultChoice(self.player)) then
-			return skill:getDefaultChoice(self.player)
-		else
-			local choice_table = choices:split("+")
-			for index, achoice in ipairs(choice_table) do
-				if achoice == "benghuai" then table.remove(choice_table, index) break end
-			end
-			local r = math.random(1, #choice_table)
-			return choice_table[r]
-		end
+		local choice_table = choices:split("+")
+		local r = math.random(1, #choice_table)
+		return choice_table[r]
 	end
 end
 
@@ -4269,7 +4261,7 @@ function getCardsNum(class_name, player, from)
 		if player:hasSkill("qingguo") then
 			return blackcard + num + (player:getHandcardNum() - shownum) * 0.85
 		elseif player:hasSkill("longdan") then
-			return slashjink+(player:getHandcardNum() - shownum) * 0.72
+			return slashjink + (player:getHandcardNum() - shownum) * 0.72
 		elseif player:hasSkill("longhun") then
 			return clubcard + num + (player:getHandcardNum() - shownum) * 0.65
 		elseif player:hasSkill("kofqingguo") then
@@ -4653,8 +4645,10 @@ function SmartAI:getAoeValueTo(card, to, from)
 			if to:getHp() > 1 then
 				if to:hasSkill("quanji") then value = value + 10 end
 				if to:hasSkill("langgu") and self:isEnemy(to, from) then value = value - 15 end
-				if to:hasSkill("jianxiong") then
-					value = value + ((card:isVirtualCard() and card:subcardsLength() * 10) or 10)
+				if to:hasSkills("jianxiong|nosjianxiong") then
+					local v = 10
+					if card:isVirtualCard() then v = math.max(to:hasSkill("jianxiong") and 1 or 0, card:subcardsLength()) * 10 end
+					value = value + v
 				end
 				if to:hasSkills("fenyong+xuehen") and to:getMark("@fenyong") == 0 then
 					value = value + 30
@@ -4803,7 +4797,7 @@ function SmartAI:getAoeValue(card, player)
 			bad = bad + 300
 		end
 	end
-	if attacker:hasSkills("jianxiong|luanji|qice|manjuan") then good = good + 2 * enemy_number end
+	if attacker:hasSkills("jianxiong|nosjianxiong|luanji|qice|manjuan") then good = good + 2 * enemy_number end
 
 	local xiahou = self.room:findPlayerBySkillName("yanyu")
 	if xiahou and self:isEnemy(xiahou) and xiahou:getMark("YanyuDiscard2") > 0 then bad = bad + 50 end

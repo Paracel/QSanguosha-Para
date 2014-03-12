@@ -1,4 +1,4 @@
-caocao					60					
+caocao					62					
 simayi					65					
 xiahoudun				68					
 zhangliao				72					
@@ -185,6 +185,7 @@ kof_lvmeng				65
 kof_daqiao				55					
 kof_huatuo				65					
 kof_pangde				56					
+nos_caocao				60					
 nos_xiahoudun			62					
 nos_zhangliao			22					
 nos_xuchu				32					

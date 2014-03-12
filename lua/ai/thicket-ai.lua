@@ -422,7 +422,7 @@ sgs.ai_skill_invoke.haoshi = function(self, data)
 		extra = extra + #kingdoms
 	end
 	local draw_skills = {
-						["yingzi"] = 1, ["zishou"] = self.player:getLostHp(), ["shenwei"] = 2, ["juejing"] = self.player:getLostHp(),
+						["yingzi"] = 1, ["nosyingzi"] = 1, ["zishou"] = self.player:getLostHp(), ["shenwei"] = 2, ["juejing"] = self.player:getLostHp(),
 						["luoyi"] = -1, ["zhaolie"] = -1, ["hongyuan"] = -1, ["dujin"] = math.floor(self.player:getEquips():length() / 2 + 1)
 						}
 	for skill_name, n in ipairs(draw_skills) do

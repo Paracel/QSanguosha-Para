@@ -91,7 +91,7 @@ function setInitialTables()
 	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|guidao|jilve"
-	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|noslijian|lijian|" ..
+	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|nosfanjian|noslijian|lijian|" ..
 							"manjuan|lihun|tuxi|nostuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|" ..
 							"anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
@@ -1162,9 +1162,9 @@ function SmartAI:objectiveLevel(player)
 					if renegade_num > 1 or self:getOverflow() <= -1 then return 0 end
 					local rebelish = (sgs.current_mode_players["loyalist"] + 1 < sgs.current_mode_players["rebel"])
 					if player:isLord() then return rebelish and -1 or 0 end
-					if target_role == "loyalist" then return rebelish and 0 or 3.5
+					if target_role == "loyalist" then return rebelish and -0.5 or 3.5
 					elseif target_role == "rebel" then return rebelish and 3.5 or 0
-					else return 5
+					else return 0
 					end
 				end
 				if player:isLord() then return -1 end
@@ -2058,7 +2058,6 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 end
 
 function SmartAI:askForSuit(reason)
-	if not reason then return sgs.ai_skill_suit.fanjian(self) end -- this line is kept for back-compatibility
 	local callback = sgs.ai_skill_suit[reason]
 	if type(callback) == "function" then
 		if callback(self) then return callback(self) end

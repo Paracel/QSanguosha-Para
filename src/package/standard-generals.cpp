@@ -999,38 +999,59 @@ public:
 class Yingzi: public DrawCardsSkill {
 public:
     Yingzi(): DrawCardsSkill("yingzi") {
-        frequency = Frequent;
+        frequency = Compulsory;
     }
 
     virtual int getDrawNum(ServerPlayer *zhouyu, int n) const{
         Room *room = zhouyu->getRoom();
-        if (room->askForSkillInvoke(zhouyu, objectName())) {
-            int index = qrand() % 2 + 1;
-            if (!zhouyu->hasInnateSkill(objectName())) {
-                if (zhouyu->hasSkill("hunzi"))
-                    index += 2;
-                else if (zhouyu->hasSkill("mouduan"))
-                    index += 4;
-            }
 
-            room->broadcastSkillInvoke(objectName(), index);
-            return n + 1;
-        } else
-            return n;
+        int index = qrand() % 2 + 1;
+        if (!zhouyu->hasInnateSkill(objectName())) {
+            if (zhouyu->hasSkill("hunzi"))
+                index += 2;
+            else if (zhouyu->hasSkill("mouduan"))
+                index += 4;
+        }
+        room->broadcastSkillInvoke(objectName(), index);
+
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = zhouyu;
+        log.arg = objectName();
+        room->sendLog(log);
+
+        return n + 1;
     }
 };
 
-class Fanjian: public ZeroCardViewAsSkill {
+class YingziMaxCards: public MaxCardsSkill {
 public:
-    Fanjian(): ZeroCardViewAsSkill("fanjian") {
+    YingziMaxCards(): MaxCardsSkill("#yingzi") {
+    }
+
+    virtual int getFixed(const Player *target) const{
+        if (target->hasSkill("yingzi"))
+            return target->getMaxHp();
+        else
+            return -1;
+    }
+};
+
+class Fanjian: public OneCardViewAsSkill {
+public:
+    Fanjian(): OneCardViewAsSkill("fanjian") {
+        filter_pattern = ".|.|.|hand";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->isKongcheng() && !player->hasUsed("FanjianCard");
     }
 
-    virtual const Card *viewAs() const{
-        return new FanjianCard;
+    virtual const Card *viewAs(const Card *originalCard) const{
+        FanjianCard *card = new FanjianCard;
+        card->addSubcard(originalCard);
+        card->setSkillName(objectName());
+        return card;
     }
 };
 
@@ -1737,7 +1758,9 @@ void StandardPackage::addGenerals() {
 
     General *zhouyu = new General(this, "zhouyu", "wu", 3); // WU 005
     zhouyu->addSkill(new Yingzi);
+    zhouyu->addSkill(new YingziMaxCards);
     zhouyu->addSkill(new Fanjian);
+    related_skills.insertMulti("yingzi", "#yingzi");
 
     General *daqiao = new General(this, "daqiao", "wu", 3, false); // WU 006
     daqiao->addSkill(new Guose);

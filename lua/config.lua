@@ -215,6 +215,7 @@ config = {
 		"madai->heg_madai",
 		"nos_huangyueying->heg_huangyueying|tw_huangyueying",
 		"nos_zhangliao->tw_zhangliao",
+		"nos_zhouyu->heg_zhouyu|sp_heg_zhouyu",
 		"panfeng->sp_panfeng",
 		"pangde->sp_pangde",
 		"shenlvbu->sp_shenlvbu",
@@ -224,7 +225,6 @@ config = {
 		"yuejin->sp_yuejin",
 		"zhaoyun->tw_zhaoyun",
 		"zhenji->sp_zhenji|heg_zhenji|tw_zhenji",
-		"zhouyu->heg_zhouyu|sp_heg_zhouyu",
 		"zhugeke->diy_zhugeke",
 		"zhugeliang->heg_zhugeliang|tw_zhugeliang",
 		"zhugejin->sp_zhugejin"

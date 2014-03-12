@@ -587,7 +587,8 @@ sgs.ai_skill_playerchosen.nospaiyi = function(self, targets)
 
 		local enemies = self.enemies
 		for _, enemy in ipairs(enemies) do
-			if enemy:hasSkills("noslijian|lijian|fanjian") and not enemy:containsTrick("indulgence") and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
+			if enemy:hasSkills("noslijian|lijian|fanjian|nosfanjian") and not enemy:containsTrick("indulgence")
+				and not enemy:isKongcheng() and enemy:faceUp() and self:objectiveLevel(enemy) > 3 then
 				sgs.nosPaiyiTarget = enemy
 				sgs.nosPaiyiCard = nil
 				return enemy
@@ -908,6 +909,78 @@ function sgs.ai_cardneed.nosjizhi(to, card)
 end
 
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
+
+local nosfanjian_skill = {}
+nosfanjian_skill.name = "nosfanjian"
+table.insert(sgs.ai_skills, nosfanjian_skill)
+nosfanjian_skill.getTurnUseCard = function(self)
+	if self.player:isKongcheng() or self.player:hasUsed("NosFanjianCard") then return nil end
+	return sgs.Card_Parse("@NosFanjianCard=.")
+end
+
+sgs.ai_skill_use_func.NosFanjianCard = function(card, use, self)
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	self:sortByUseValue(cards, true)
+	if #cards == 1 and cards[1]:getSuit() == sgs.Card_Diamond then return end
+	if #cards <= 4 and (self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then return end
+	self:sort(self.enemies, "defense")
+
+	local suits = {}
+	local suits_num = 0
+	for _, c in ipairs(cards) do
+		if not suits[c:getSuitString()] then
+			suits[c:getSuitString()] = true
+			suits_num = suits_num + 1
+		end
+	end
+
+	local wgt = self.room:findPlayerBySkillName("buyi")
+	if wgt and self:isFriend(wgt) then wgt = nil end
+	local basic_num = 0
+	for _, c in ipairs(cards) do
+		if c:getTypeId() == sgs.Card_TypeBasic then basic_num = basic_num + 1 end
+	end
+	local visible = 0
+	for _, enemy in ipairs(self.enemies) do
+		local visible = 0
+		for _, c in ipairs(cards) do
+			local flag = string.format("%s_%s_%s", "visible", enemy:objectName(), self.player:objectName())
+			if c:hasFlag("visible") or c:hasFlag(flag) then visible = visible + 1 end
+		end
+		if visible > 0 and (#cards <= 2 or suits_num <= 2) then continue end
+		if self:canAttack(enemy) and not enemy:hasSkills("qingnang|jijiu|tianxiang")
+			and not (wgt and basic_num / enemy:getHandcardNum() <= 0.3 and (enemy:getHandcardNum() <= 1 or enemy:objectName() == wgt:objectName())) then
+			use.card = card
+			if use.to then use.to:append(enemy) end
+			return
+		end
+	end
+end
+
+sgs.ai_card_intention.NosFanjianCard = 70
+
+function sgs.ai_skill_suit.nosfanjian(self)
+	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
+	local suit = map[math.random(1, 8)]
+	local tg = self.room:getCurrent()
+	local suits = {}
+	local maxnum, maxsuit = 0
+	for _, c in sgs.qlist(tg:getHandcards()) do
+		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), tg:objectName())
+		if c:hasFlag(flag) or c:hasFlag("visible") then
+			if not suits[c:getSuitString()] then suits[c:getSuitString()] = 1 else suits[c:getSuitString()] = suits[c:getSuitString()] + 1 end
+			if suits[c:getSuitString()] > maxnum then
+				maxnum = suits[c:getSuitString()]
+				maxsuit = c:getSuit()
+			end
+		end
+	end
+	local return_suit = maxsuit or suit
+	if self.player:hasSkill("hongyan") and return_suit == sgs.Card_Spade then return sgs.Card_Heart end
+	return return_suit
+end
+
+sgs.dynamic_value.damage_card.NosFanjianCard = true
 
 sgs.ai_skill_invoke.noslianying = function(self, data)
 	if self:needKongcheng(self.player, true) then

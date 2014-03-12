@@ -1068,18 +1068,20 @@ int Engine::correctDistance(const Player *from, const Player *to) const{
 }
 
 int Engine::correctMaxCards(const Player *target, bool fixed) const{
-    int extra = 0;
-
-    foreach (const MaxCardsSkill *skill, maxcards_skills) {
-        if (fixed) {
+    if (fixed) {
+        int max = -1;
+        foreach (const MaxCardsSkill *skill, maxcards_skills) {
             int f = skill->getFixed(target);
-            if (f >= 0) return f;
-        } else {
-            extra += skill->getExtra(target);
+            if (f > max) max = f;
         }
+        return max;
+    } else {
+        int extra = 0;
+        foreach (const MaxCardsSkill *skill, maxcards_skills)
+            extra += skill->getExtra(target);
+        return extra;
     }
-
-    return extra;
+    return 0;
 }
 
 int Engine::correctCardTarget(const TargetModSkill::ModType type, const Player *from, const Card *card) const{

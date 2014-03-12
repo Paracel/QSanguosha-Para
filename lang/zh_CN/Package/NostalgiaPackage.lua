@@ -46,6 +46,14 @@ return {
 	["noslianying"] = "连营",
 	[":noslianying"] = "每当你失去最后的手牌后，你可以摸一张牌。",
 
+	["nos_zhouyu"] = "周瑜-旧",
+	["&nos_zhouyu"] = "周瑜",
+	["nosyingzi"] = "英姿",
+	[":nosyingzi"] = "摸牌阶段，你可以额外摸一张牌。",
+	["nosfanjian"] = "反间",
+	[":nosfanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后正面朝上获得你的一张手牌。若该牌花色与该角色所选花色不同，你对其造成1点伤害。",
+
+
 	["nos_diaochan"] = "貂蝉-旧",
 	["&nos_diaochan"] = "貂蝉",
 	["noslijian"] = "离间",

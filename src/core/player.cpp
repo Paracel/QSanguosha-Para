@@ -583,7 +583,7 @@ void Player::setFaceUp(bool face_up) {
 
 int Player::getMaxCards() const{
     int origin = Sanguosha->correctMaxCards(this, true);
-    if (origin == 0)
+    if (origin < 0)
         origin = qMax(hp, 0);
     int rule = 0, total = 0, extra = 0;
     if (Config.MaxHpScheme == 3 && general2) {

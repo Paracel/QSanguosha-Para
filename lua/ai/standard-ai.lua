@@ -1559,68 +1559,98 @@ end
 sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByUseValue(cards, true)
-	if #cards == 1 and cards[1]:getSuit() == sgs.Card_Diamond then return end
-	if #cards <= 4 and (self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then return end
 	self:sort(self.enemies, "defense")
 
-	local suits = {}
-	local suits_num = 0
-	for _, c in ipairs(cards) do
-		if not suits[c:getSuitString()] then
-			suits[c:getSuitString()] = true
-			suits_num = suits_num + 1
-		end
-	end
-
-	local wgt = self.room:findPlayerBySkillName("buyi")
-	if wgt and self:isFriend(wgt) then wgt = nil end
-	local basic_num = 0
-	for _, c in ipairs(cards) do
-		if c:getTypeId() == sgs.Card_TypeBasic then basic_num = basic_num + 1 end
-	end
-	local visible = 0
+	if self:getOverflow() <= 0 then return end
 	for _, enemy in ipairs(self.enemies) do
-		local visible = 0
-		for _, c in ipairs(cards) do
-			local flag = string.format("%s_%s_%s", "visible", enemy:objectName(), self.player:objectName())
-			if c:hasFlag("visible") or c:hasFlag(flag) then visible = visible + 1 end
-		end
-		if visible > 0 and (#cards <= 2 or suits_num <= 2) then continue end
-		if self:canAttack(enemy) and not enemy:hasSkills("qingnang|jijiu|tianxiang")
-			and not (wgt and basic_num / enemy:getHandcardNum() <= 0.3 and (enemy:getHandcardNum() <= 1 or enemy:objectName() == wgt:objectName())) then
-			use.card = card
-			if use.to then use.to:append(enemy) end
-			return
-		end
-	end
-end
-
-sgs.ai_card_intention.FanjianCard = 70
-
-function sgs.ai_skill_suit.fanjian(self)
-	local map = { 0, 0, 1, 2, 2, 3, 3, 3 }
-	local suit = map[math.random(1, 8)]
-	local tg = self.room:getCurrent()
-	local suits = {}
-	local maxnum, maxsuit = 0
-	for _, c in sgs.qlist(tg:getHandcards()) do
-		local flag = string.format("%s_%s_%s", "visible", self.player:objectName(), tg:objectName())
-		if c:hasFlag(flag) or c:hasFlag("visible") then
-			if not suits[c:getSuitString()] then suits[c:getSuitString()] = 1 else suits[c:getSuitString()] = suits[c:getSuitString()] + 1 end
-			if suits[c:getSuitString()] > maxnum then
-				maxnum = suits[c:getSuitString()]
-				maxsuit = c:getSuit()
+		if enemy:getHandcardNum() > 2 then
+			local max_suit_num, max_suit = 0, {}
+			local suit_table = { "spade", "club", "heart", "diamond" }
+			for i = 0, 3, 1 do
+				local suit_num = getKnownCard(enemy, self.player, suit_table[i + 1])
+				if suit_num > max_suit_num then
+					max_suit_num = suit_num
+					max_suit = { i }
+				elseif suit_num == max_suit_num then
+					table.insert(max_suit, i)
+				end
+			end
+			if max_suit_num == 0 then
+				max_suit = {}
+				local suit_value = { 1, 1, 1.3, 1.5 }
+				for _, skill in ipairs(sgs.getPlayerSkillList(enemy)) do
+					if sgs[skill:objectName() .. "_suit_value"] then
+						for i = 1, 4, 1 do
+							local v = sgs[skill:objectName() .. "_suit_value"][suit_table[i]]
+							if v then suit_value[i] = suit_value[i] + v end
+						end
+					end
+				end
+				local max_suit_val = 0
+				for i = 0, 3, 1 do
+					local suit_val = suit_value[i + 1]
+					if suit_val > max_suit_val then
+						max_suit_val = suit_val
+						max_suit = { i }
+					elseif suit_val == max_suit_val then
+						table.insert(max_suit, i)
+					end
+				end
+			end
+			for _, card in ipairs(cards) do
+				if self:getUseValue(card) < 6 and table.contains(max_suit, card:getSuit()) then
+					use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
+					if use.to then use.to:append(enemy) end
+					return
+				end
+			end
+			if getCardsNum("Peach", enemy, self.player) < 2 then
+				for _, card in ipairs(cards) do
+					if self:getUseValue(card) < 6 and not self:isValuableCard(card) then
+						use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
+						if use.to then use.to:append(enemy) end
+						return
+					end
+				end
 			end
 		end
 	end
-	local return_suit = maxsuit or suit
-	if self.player:hasSkill("hongyan") and return_suit == sgs.Card_Spade then return sgs.Card_Heart end
-	return return_suit
+	for _, friend in ipairs(self.friends_noself) do
+		if friend:hasSkill("hongyan") then
+			for _, card in ipairs(cards) do
+				if self:getUseValue(card) < 6 and card:getSuit() == sgs.Card_Spade then
+					use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
+					if use.to then use.to:append(friend) end
+					return
+				end
+			end
+		end
+	end
 end
 
-sgs.dynamic_value.damage_card.FanjianCard = true
+sgs.ai_card_intention.FanjianCard = function(self, card, from, tos)
+	local to = tos[1]
+	if card:getSuit() == sgs.Card_Spade and to:hasSkill("hongyan") then
+		sgs.updateIntention(from, to, -10)
+	else
+		sgs.updateIntention(from, to, 60)
+	end
+end
 
--- @todo: Qianxun AI
+sgs.ai_skill_invoke.fanjian_discard = function(self, data)
+	if self:getCardsNum("Peach") >= 1 and not self:willSkipPlayPhase() then return false end
+	if self.player:getHandcardNum() <= 3 or self:isWeak() then return true end
+	local suit = self.player:getMark("FanjianSuit")
+	local count = 0
+	for _, card in sgs.qlist(self.player:getHandcards()) do
+		if card:getSuit() == suit then
+			count = count + 1
+			if self:isValuableCard(card) then count = count + 0.5 end
+		end
+	end
+	return count / self.player:getHandcardNum() <= 0.6
+end
+
 sgs.ai_skill_invoke.qianxun = function(self, data)
 	local effect = data:toCardEffect()
 	if effect.card:isKindOf("Collateral") and self.player:getWeapon() then

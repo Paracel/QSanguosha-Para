@@ -32,7 +32,7 @@ sunquan					99
 ganning					69					
 lvmeng					68					
 huanggai				55					
-zhouyu					80					
+zhouyu					82					
 daqiao					14					
 luxun					57					
 sunshangxiang			62					
@@ -191,6 +191,7 @@ nos_xuchu				32
 nos_liubei				19					
 nos_huangyueying		61					
 nos_lvmeng				63					
+nos_zhouyu				82					
 nos_luxun				57					
 nos_diaochan			72					
 nos_caoren				61					

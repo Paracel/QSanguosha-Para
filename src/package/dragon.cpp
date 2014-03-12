@@ -304,7 +304,7 @@ DragonPackage::DragonPackage():Package("dragon")
     dr_sunquan->addSkill("jiuyuan");
 
     General *dr_zhouyu = new General(this, "dr_zhouyu", "wu", 3);
-    dr_zhouyu->addSkill("yingzi");
+    dr_zhouyu->addSkill("nosyingzi");
     dr_zhouyu->addSkill(new DrJiedao);
 
     General *dr_huatuo = new General(this, "dr_huatuo", "qun", 3);

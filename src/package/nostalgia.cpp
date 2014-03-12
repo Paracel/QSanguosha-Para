@@ -1212,6 +1212,63 @@ public:
     }
 };
 
+class NosYingzi: public DrawCardsSkill {
+public:
+    NosYingzi(): DrawCardsSkill("nosyingzi") {
+        frequency = Frequent;
+    }
+
+    virtual int getDrawNum(ServerPlayer *zhouyu, int n) const{
+        Room *room = zhouyu->getRoom();
+        if (room->askForSkillInvoke(zhouyu, objectName())) {
+            room->broadcastSkillInvoke("yingzi", qrand() % 2 + 1);
+            return n + 1;
+        } else
+            return n;
+    }
+};
+
+NosFanjianCard::NosFanjianCard() {
+    mute = true;
+}
+
+void NosFanjianCard::onEffect(const CardEffectStruct &effect) const{
+    ServerPlayer *zhouyu = effect.from;
+    ServerPlayer *target = effect.to;
+    Room *room = zhouyu->getRoom();
+    room->broadcastSkillInvoke("fanjian");
+
+    int card_id = zhouyu->getRandomHandCardId();
+    const Card *card = Sanguosha->getCard(card_id);
+    Card::Suit suit = room->askForSuit(target, "nosfanjian");
+
+    LogMessage log;
+    log.type = "#ChooseSuit";
+    log.from = target;
+    log.arg = Card::Suit2String(suit);
+    room->sendLog(log);
+
+    room->getThread()->delay();
+    target->obtainCard(card);
+    room->showCard(target, card_id);
+
+    if (card->getSuit() != suit)
+        room->damage(DamageStruct("nosfanjian", zhouyu, target));
+}
+
+class NosFanjian: public ZeroCardViewAsSkill {
+public:
+    NosFanjian(): ZeroCardViewAsSkill("nosfanjian") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->isKongcheng() && !player->hasUsed("NosFanjianCard");
+    }
+
+    virtual const Card *viewAs() const{
+        return new NosFanjianCard;
+    }
+};
 
 class NosQianxun: public ProhibitSkill {
 public:
@@ -1838,6 +1895,10 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_lvmeng = new General(this, "nos_lvmeng", "wu");
     nos_lvmeng->addSkill("keji");
 
+    General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
+    nos_zhouyu->addSkill(new NosYingzi);
+    nos_zhouyu->addSkill(new NosFanjian);
+
     General *nos_luxun = new General(this, "nos_luxun", "wu", 3);
     nos_luxun->addSkill(new NosQianxun);
     nos_luxun->addSkill(new NosLianying);
@@ -1850,6 +1911,7 @@ NostalStandardPackage::NostalStandardPackage()
 
     addMetaObject<NosTuxiCard>();
     addMetaObject<NosRendeCard>();
+    addMetaObject<NosFanjianCard>();
     addMetaObject<NosLijianCard>();
 }
 

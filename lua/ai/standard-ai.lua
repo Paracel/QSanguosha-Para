@@ -1199,6 +1199,11 @@ sgs.paoxiao_keep_value = {
 	ExNihilo = 4.7
 }
 
+sgs.ai_skill_invoke.tishen = function(self, data)
+	local x = data:toInt()
+	return x >= 2 and not self:willSkipPlayPhase()
+end
+
 dofile "lua/ai/guanxing-ai.lua"
 
 local longdan_skill = {}

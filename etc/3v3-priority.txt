@@ -9,7 +9,7 @@ xiahouyuan				4
 caoren					1
 nos_liubei				9
 guanyu					3
-zhangfei				5
+nos_zhangfei			5
 zhugeliang				9
 zhaoyun					1
 machao					5

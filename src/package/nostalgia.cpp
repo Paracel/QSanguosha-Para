@@ -1910,6 +1910,9 @@ NostalStandardPackage::NostalStandardPackage()
     nos_liubei->addSkill(new NosRende);
     nos_liubei->addSkill("jijiang");
 
+    General *nos_zhangfei = new General(this, "nos_zhangfei", "shu");
+    nos_zhangfei->addSkill("paoxiao");
+
     General *nos_huangyueying = new General(this, "nos_huangyueying", "shu", 3, false);
     nos_huangyueying->addSkill(new NosJizhi);
     nos_huangyueying->addSkill(new NosQicai);

@@ -721,6 +721,46 @@ public:
     }
 };
 
+class Tishen: public TriggerSkill {
+public:
+    Tishen(): TriggerSkill("tishen") {
+        events << EventPhaseChanging << EventPhaseStart;
+        frequency = Limited;
+        limit_mark = "@substitute";
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive) {
+                room->setPlayerProperty(player, "tishen_hp", QString::number(player->getHp()));
+                room->setPlayerMark(player, "@substitute", player->getMark("@substitute")); // For UI coupling
+            }
+        } else if (triggerEvent == EventPhaseStart && TriggerSkill::triggerable(player)
+                   && player->getMark("@substitute") > 0 && player->getPhase() == Player::Start) {
+            QString hp_str = player->property("tishen_hp").toString();
+            if (hp_str.isEmpty()) return false;
+            int hp = hp_str.toInt();
+            if (hp > player->getHp() && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(hp - player->getHp()))) {
+                room->removePlayerMark(player, "@substitute");
+                room->broadcastSkillInvoke(objectName());
+                //room->doLightbox("$TishenAnimate");
+
+                int x = hp - player->getHp();
+                RecoverStruct recover;
+                recover.recover = x;
+                room->recover(player, recover);
+                player->drawCards(x, objectName());
+            }
+        }
+        return false;
+    }
+};
+
 class Longdan: public OneCardViewAsSkill {
 public:
     Longdan(): OneCardViewAsSkill("longdan") {
@@ -1746,6 +1786,7 @@ void StandardPackage::addGenerals() {
 
     General *zhangfei = new General(this, "zhangfei", "shu"); // SHU 003
     zhangfei->addSkill(new Paoxiao);
+    zhangfei->addSkill(new Tishen);
 
     General *zhugeliang = new General(this, "zhugeliang", "shu", 3); // SHU 004
     zhugeliang->addSkill(new Guanxing);

@@ -648,7 +648,6 @@ sgs.ai_skill_use_func.YanxiaoCard = function(card, use, self)
 	local players = self.room:getOtherPlayers(self.player)
 	self:sort(self.friends_noself, "defense")
 	for _, friend in ipairs(self.friends_noself) do
-		local judges = friend:getJudgingArea()
 		local need_yanxiao = (friend:containsTrick("lightning") and self:getFinalRetrial(friend) == 2)
 							or friend:containsTrick("indulgence") or friend:containsTrick("supply_shortage")
 		if need_yanxiao and not friend:containsTrick("YanxiaoCard") then
@@ -671,7 +670,6 @@ sgs.ai_skill_use_func.YanxiaoCard = function(card, use, self)
 		end
 
 		for _, friend in ipairs(self.friends_noself) do
-			local judges = friend:getJudgingArea()
 			if not friend:containsTrick("YanxiaoCard") then
 				use.card = card
 				if use.to then use.to:append(friend) end

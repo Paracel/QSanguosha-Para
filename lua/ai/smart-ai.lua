@@ -1645,7 +1645,7 @@ function SmartAI:filterEvent(triggerEvent, player, data)
 		end
 	end
 
-	if triggerEvent == sgs.ChoiceMade and self == sgs.recorder then
+	if triggerEvent == sgs.ChoiceMade and (self == sgs.recorder or self.player:objectName() == sgs.recorder.player:objectName()) then
 		local carduse = data:toCardUse()
 		if carduse and carduse.card ~= nil then
 			for _, aflag in ipairs(sgs.ai_global_flags) do

@@ -88,6 +88,11 @@ local function getOwnCards(self, up, bottom, next_judge)
 					table.insert(up, gcard)
 					table.remove(bottom, index)
 				end
+			elseif self.player:hasSkill("luoyi") then
+				if gcard:isKindOf("Weapon") or gcard:isKindOf("Duel") or gcard:getTypeId() == sgs.Card_TypeBasic then
+					table.insert(up, gcard)
+					table.remove(bottom, index)
+				end
 			else
 				if has_slash then
 					if not gcard:isKindOf("Slash") then

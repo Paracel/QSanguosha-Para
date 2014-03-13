@@ -823,6 +823,10 @@ public:
         frequency = Frequent;
     }
 
+    virtual int getPriority(TriggerEvent) const{
+        return 1;
+    }
+
     virtual bool onPhaseChange(ServerPlayer *zhuge) const{
         if (zhuge->getPhase() == Player::Start && zhuge->askForSkillInvoke(objectName())) {
             Room *room = zhuge->getRoom();

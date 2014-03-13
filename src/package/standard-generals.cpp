@@ -745,12 +745,12 @@ public:
             QString hp_str = player->property("tishen_hp").toString();
             if (hp_str.isEmpty()) return false;
             int hp = hp_str.toInt();
-            if (hp > player->getHp() && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(hp - player->getHp()))) {
+            int x = qMin(hp - player->getHp(), player->getMaxHp() - player->getHp());
+            if (x > 0 && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(x))) {
                 room->removePlayerMark(player, "@substitute");
                 room->broadcastSkillInvoke(objectName());
                 //room->doLightbox("$TishenAnimate");
 
-                int x = hp - player->getHp();
                 RecoverStruct recover;
                 recover.recover = x;
                 room->recover(player, recover);

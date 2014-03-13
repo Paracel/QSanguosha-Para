@@ -446,17 +446,21 @@ public:
                 room->getThread()->delay();
                 room->getThread()->delay();
 
-                QList<int> card_to_return;
+                QList<int> card_to_throw;
                 QList<int> card_to_gotback;
                 for (int i = 0; i < 3; i++) {
                     const Card *card = Sanguosha->getCard(ids[i]);
                     if (card->getTypeId() == Card::TypeBasic || card->isKindOf("Weapon") || card->isKindOf("Duel"))
                         card_to_gotback << ids[i];
                     else
-                        card_to_return << ids[i];
+                        card_to_throw << ids[i];
                 }
-                if (!card_to_return.isEmpty())
-                    room->returnToTopDrawPile(card_to_return);
+                if (!card_to_throw.isEmpty()) {
+                    DummyCard *dummy = new DummyCard(card_to_throw);
+                    CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, player->objectName(), "luoyi", QString());
+                    room->throwCard(dummy, reason, NULL);
+                    delete dummy;
+                }
                 if (!card_to_gotback.isEmpty()) {
                     DummyCard *dummy = new DummyCard(card_to_gotback);
                     CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, player->objectName());

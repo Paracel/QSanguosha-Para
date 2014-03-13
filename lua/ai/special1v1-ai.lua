@@ -179,6 +179,7 @@ sgs.ai_skill_choice.kofxiaoji = function(self, choices)
 end
 
 sgs.kofxiaoji_keep_value = sgs.xiaoji_keep_value
+sgs.ai_cardneed.kofxiaoji = sgs.ai_cardneed.equip
 
 sgs.ai_skill_invoke.suzi = true
 sgs.ai_skill_invoke.cangji = true

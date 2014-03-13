@@ -307,6 +307,7 @@ sgs.ai_playerchosen_intention.nosxuanfeng_damage = 80
 sgs.ai_playerchosen_intention.nosxuanfeng_slash = 80
 
 sgs.nosxuanfeng_keep_value = sgs.xiaoji_keep_value
+sgs.ai_cardneed.nosxuanfeng = sgs.ai_cardneed.equip
 
 sgs.ai_skill_invoke.nosshangshi = sgs.ai_skill_invoke.shangshi
 

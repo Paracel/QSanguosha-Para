@@ -331,6 +331,7 @@ sgs.ai_playerchosen_intention.xuanfeng = function(self, from, to)
 end
 
 sgs.xuanfeng_keep_value = sgs.xiaoji_keep_value
+sgs.ai_cardneed.xuanfeng = sgs.ai_cardneed.equip
 
 sgs.ai_skill_invoke.pojun = function(self, data)
 	local damage = data:toDamage()

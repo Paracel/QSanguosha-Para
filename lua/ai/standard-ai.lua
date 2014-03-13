@@ -2096,6 +2096,8 @@ sgs.xiaoji_keep_value = {
 	DefensiveHorse = 5
 }
 
+sgs.ai_cardneed.xiaoji = sgs.ai_cardneed.equip
+
 local qingnang_skill = {}
 qingnang_skill.name = "qingnang"
 table.insert(sgs.ai_skills, qingnang_skill)

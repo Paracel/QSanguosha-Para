@@ -74,7 +74,7 @@ void Analeptic::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     room->setEmotion(effect.to, "analeptic");
 
-    if (effect.to->hasFlag("Global_Dying") && Sanguosha->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY) {
+    if (effect.to->hasFlag("Global_Dying") && Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY) {
         // recover hp
         RecoverStruct recover;
         recover.card = this;
@@ -320,7 +320,7 @@ bool IronChain::targetFilter(const QList<const Player *> &targets, const Player 
 }
 
 bool IronChain::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
-    bool rec = true;
+    bool rec = (Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_PLAY);
     QList<int> sub;
     if (isVirtualCard())
         sub = subcards;

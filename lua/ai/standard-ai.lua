@@ -2369,7 +2369,7 @@ function SmartAI:findLijianTarget(card_name, use)
 	local males, others = {}, {}
 	local first, second
 	local zhugeliang_kongcheng, xunyu, xuchu
-		for _, player in ipairs(self.room:getOtherPlayers(self.player)) do
+		for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if player:isMale() and player:getMark("@luoyi") > 0 and not player:isLocked(duel) then
 			xuchu = enemy
 			break

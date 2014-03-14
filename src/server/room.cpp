@@ -1246,7 +1246,22 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         }
     }
 
+    bool isHandcard = true;
     if (card) {
+        QList<int> ids;
+        if (!card->isVirtualCard()) ids << card->getEffectiveId();
+        else ids = card->getSubcards();
+        if (!ids.isEmpty()) {
+            foreach (int id, ids) {
+                if (getCardOwner(id) != player || getCardPlace(id) != Player::PlaceHand) {
+                    isHandcard = false;
+                    break;
+                }
+            }
+        } else {
+            isHandcard = false;
+        }
+
         QVariant decisionData = QVariant::fromValue(QString("cardResponded:%1:%2:_%3_").arg(pattern).arg(prompt).arg(card->toString()));
         thread->trigger(ChoiceMade, this, player, decisionData);
 
@@ -1267,6 +1282,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
                 && player->hasSkill(card->getSkillName()))
                 notifySkillInvoked(player, card->getSkillName());
             CardResponseStruct resp(card, to, method == Card::MethodUse);
+            resp.m_isHandcard = isHandcard;
             QVariant data = QVariant::fromValue(resp);
             thread->trigger(CardResponded, this, player, data);
             if (method == Card::MethodUse) {
@@ -2827,7 +2843,21 @@ void Room::processResponse(ServerPlayer *player, const QSanGeneralPacket *packet
 bool Room::useCard(const CardUseStruct &use, bool add_history) {
     CardUseStruct card_use = use;
     card_use.m_addHistory = false;
+    card_use.m_isHandcard = true;
     const Card *card = card_use.card;
+    QList<int> ids;
+    if (!card->isVirtualCard()) ids << card->getEffectiveId();
+    else ids = card->getSubcards();
+    if (!ids.isEmpty()) {
+        foreach (int id, ids) {
+            if (getCardOwner(id) != use.from || getCardPlace(id) != Player::PlaceHand) {
+                card_use.m_isHandcard = false;
+                break;
+            }
+        }
+    } else {
+        card_use.m_isHandcard = false;
+    }
 
     if (card_use.from->isCardLimited(card, card->getHandlingMethod())
         && (!card->canRecast() || card_use.from->isCardLimited(card, Card::MethodRecast)))
@@ -4748,8 +4778,11 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, Guanxing
 void Room::returnToTopDrawPile(const QList<int> &cards) {
     QListIterator<int> i(cards);
     i.toBack();
-    while (i.hasPrevious())
-        m_drawPile->prepend(i.previous());
+    while (i.hasPrevious()) {
+        int id = i.previous();
+        setCardMapping(id, NULL, Player::DrawPile);
+        m_drawPile->prepend(id);
+    }
     doBroadcastNotify(S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 }
 
@@ -5288,6 +5321,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     if (card == NULL) return;
 
     bool triggerResponded = getCardOwner(card->getEffectiveId()) == player;
+    bool isHandcard = (triggerResponded && getCardPlace(card->getEffectiveId()) == Player::PlaceHand);
 
     const Card *oldJudge = judge->card;
     judge->card = Sanguosha->getCard(card->getEffectiveId());
@@ -5331,6 +5365,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
 
     if (triggerResponded) {
         CardResponseStruct resp(card, judge->who);
+        resp.m_isHandcard = isHandcard;
         QVariant data = QVariant::fromValue(resp);
         thread->trigger(CardResponded, this, player, data);
     }

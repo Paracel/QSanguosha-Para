@@ -151,10 +151,11 @@ zhaoyun sunce							76
 zhaoyun bgm_zhaoyun						45
 zhaoyun bgm_zhangfei					74
 zhaoyun heg_sunce						76
-zhaoyun vs_zhaoyun						1
+zhaoyun vs_zhaoyun						45
 zhaoyun neo_zhangfei					71
-zhaoyun neo_zhaoyun						45
+zhaoyun neo_zhaoyun						25
 zhaoyun nos_zhangfei					71
+zhaoyun nos_zhaoyun						1
 machao huangzhong						48
 machao weiyan							71
 machao zhurong							56

@@ -1236,7 +1236,6 @@ longdan_skill.getTurnUseCard = function(self)
 	assert(slash)
 
 	return slash
-
 end
 
 sgs.ai_view_as.longdan = function(card, player, card_place)
@@ -1261,6 +1260,108 @@ sgs.longdan_keep_value = {
 	ThunderSlash = 5.5,
 	ExNihilo = 4.7
 }
+
+sgs.ai_skill_invoke.yajiao = true
+
+sgs.ai_skill_playerchosen.yajiao = function(self, targets)
+	local id = self.player:getMark("yajiao")
+	local card = sgs.Sanguosha:getCard(id)
+	local cards = { card }
+	local c, friend = self:getCardNeedPlayer(cards, true)
+	if friend then return friend end
+
+	self:sort(self.friends)
+	for _, friend in ipairs(self.friends) do
+		if self:isValuableCard(card, friend) and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+	for _, friend in ipairs(self.friends) do
+		if self:isWeak(friend) and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+	local trash = card:isKindOf("Disaster") or card:isKindOf("GodSalvation") or card:isKindOf("AmazingGrace")
+	if trash then
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:getPhase() > sgs.Player_Play and self:needKongcheng(enemy, true) and not hasManjuanEffect(enemy) then return enemy end
+		end
+	end
+	for _, friend in ipairs(self.friends) do
+		if not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+end
+
+sgs.ai_playerchosen_intention.yajiao = function(self, from, to)
+	if not self:needKongcheng(to, true) and not hasManjuanEffect(to) then sgs.updateIntention(from, to, -50) end
+end
+
+sgs.ai_skill_choice.yajiao = function(self, choices, data)
+	local card = data:toCard()
+	local valuable = self:isValuableCard(card)
+	local current = self.room:getCurrent()
+	if not current then return "throw" end -- avoid potential errors
+	if current:isAlive() then
+		local currentMayObtain = getKnownCard(current, self.player, "ExNihilo") + getKnownCard(current, self.player, "IronChain") > 0
+		if currentMayObtain then
+			local valuable = self:isValuableCard(card, current)
+			return (self:isFriend(current) == valuable) and "cancel" or "throw"
+		end
+	end
+
+	local hasLightning, hasIndulgence, hasSupplyShortage
+	local nextAlive = current:getNextAlive()
+	local tricks = nextAlive:getJudgingArea()
+	if not tricks:isEmpty() and not nextAlive:containsTrick("YanxiaoCard") and not nextAlive:hasSkill("qianxi") then
+		local trick = tricks:at(tricks:length() - 1)
+		if self:hasTrickEffective(trick, nextAlive) then
+			if trick:isKindOf("Lightning") then hasLightning = true
+			elseif trick:isKindOf("Indulgence") then hasIndulgence = true
+			elseif trick:isKindOf("SupplyShortage") then hasSupplyShortage = true
+			end
+		end
+	end
+
+	if nextAlive:hasSkill("luoshen") then
+		local valid = card:isRed()
+		return (self:isFriend(nextAlive) == valid) and "throw" or "cancel"
+	end
+	if nextAlive:hasSkill("yinghun") and nextAlive:isWounded() then
+		return self:isFriend(nextAlive) and "cancel" or "throw"
+	end
+	if hasLightning then
+		local valid = (card:getSuit() == sgs.Card_Spade and card:getNumber() >= 2 and card:getNumber() <= 9)
+		return (self:isFriend(nextAlive) == valid) and "throw" or "cancel"
+	end
+	if hasIndulgence then
+		local valid = (card:getSuit() ~= sgs.Card_Heart)
+		return (self:isFriend(nextAlive) == valid) and "throw" or "cancel"
+	end
+	if hasSupplyShortage then
+		local valid = (card:getSuit() ~= sgs.Card_Club)
+		return (self:isFriend(nextAlive) == valid) and "throw" or "cancel"
+	end
+
+	if self:isFriend(nextAlive) and not self:willSkipDrawPhase(nextAlive) and not self:willSkipPlayPhase(nextAlive)
+		and not nextAlive:hasSkill("luoshen")
+		and not nextAlive:hasSkills("tuxi|nostuxi") and not (nextAlive:hasSkill("qiaobian") and nextAlive:getHandcardNum() > 0) then
+		if self:isValuableCard(card, nextAlive) then
+			return "cancel"
+		end
+		if card:isKindOf("Jink") and getCardsNum("Jink", nextAlive, self.player) < 1 then
+			return "cancel"
+		end
+		if card:isKindOf("Nullification") and getCardsNum("Nullification", nextAlive, self.player) < 1 then
+			return "cancel"
+		end
+		if card:isKindOf("Slash") and self:hasCrossbowEffect(nextAlive) then
+			return "cancel"
+		end
+		for _, skill in ipairs(sgs.getPlayerSkillList(nextAlive)) do
+			if sgs.ai_cardneed[skill:objectName()] and sgs.ai_cardneed[skill:objectName()](nextAlive, card) then return "cancel" end
+		end
+	end
+
+	local trash = card:isKindOf("Disaster") or card:isKindOf("AmazingGrace") or card:isKindOf("GodSalvation")
+	if trash and self:isEnemy(nextAlive) then return "cancel" end
+	return "throw"
+end
 
 sgs.ai_skill_invoke.tieji = function(self, data)
 	local target = data:toPlayer()

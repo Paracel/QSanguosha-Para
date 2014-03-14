@@ -204,6 +204,7 @@ function sgs.getDefenseSlash(player, self)
 	if player:hasSkill("kofkuanggu") and player:getHp() > 1 then defense = defense + 0.25 end
 	if player:hasSkill("zaiqi") and player:getHp() > 1 then defense = defense + 0.35 end
 	if player:hasSkill("tianming") then defense = defense + 0.1 end
+	if player:hasSkill("yajiao") then defense = defense + 0.1 end
 
 	if player:getHp() > getBestHp(player) then defense = defense + 1.3 end
 	if player:hasSkill("tianxiang") then defense = defense + player:getHandcardNum() * 0.5 end

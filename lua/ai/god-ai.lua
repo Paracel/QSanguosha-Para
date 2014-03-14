@@ -197,7 +197,7 @@ sgs.ai_skill_askforag.gongxin = function(self, card_ids)
 	elseif self:getCardsNum("IronChain") > 0 then
 		local iron_chain = self:getCard("IronChain")
 		if iron_chain then
-			local dummy_use = { to = sgs.SPlayerList(), isDummy = true }
+			local dummy_use = { to = sgs.SPlayerList(), isDummy = true, canRecast = true }
 			self:useTrickCard(iron_chain, dummy_use)
 			if dummy_use.card and dummy_use.to:isEmpty() then willRecast = true end
 		end

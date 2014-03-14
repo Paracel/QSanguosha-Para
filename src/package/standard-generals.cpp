@@ -811,6 +811,66 @@ public:
     }
 };
 
+class Yajiao: public TriggerSkill {
+public:
+    Yajiao(): TriggerSkill("yajiao") {
+        events << CardUsed << CardResponded;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (player->getPhase() != Player::NotActive) return false;
+        CardStar cardstar = NULL;
+        bool isHandcard = false;
+        if (triggerEvent == CardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            cardstar = use.card;
+            isHandcard = use.m_isHandcard;
+        } else {
+            CardResponseStruct resp = data.value<CardResponseStruct>();
+            cardstar = resp.m_card;
+            isHandcard = resp.m_isHandcard;
+        }
+        if (isHandcard && room->askForSkillInvoke(player, objectName(), data)) {
+            room->broadcastSkillInvoke(objectName());
+            QList<int> ids = room->getNCards(1, false);
+            CardsMoveStruct move(ids, player, Player::PlaceTable,
+                                 CardMoveReason(CardMoveReason::S_REASON_TURNOVER, player->objectName(), "yajiao", QString()));
+            room->moveCardsAtomic(move, true);
+
+            int id = ids.first();
+            const Card *card = Sanguosha->getCard(id);
+            room->fillAG(ids, player);
+            bool dealt = false;
+            if (card->getTypeId() == cardstar->getTypeId()) {
+                player->setMark("yajiao", id); // For AI
+                ServerPlayer *target = room->askForPlayerChosen(player, room->getAlivePlayers(), objectName(),
+                                                                QString("@yajiao-give:::%1:%2\\%3").arg(card->objectName())
+                                                                                                   .arg(card->getSuitString() + "_char")
+                                                                                                   .arg(card->getNumberString()),
+                                                                true);
+                if (target) {
+                    room->clearAG(player);
+                    dealt = true;
+                    target->obtainCard(card);
+                }
+            } else {
+                QVariant carddata = QVariant::fromValue((CardStar)card);
+                if (room->askForChoice(player, objectName(), "throw+cancel", carddata) == "throw") {
+                    room->clearAG(player);
+                    dealt = true;
+                    CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, player->objectName(), "yajiao", QString());
+                    room->throwCard(card, reason, NULL);
+                }
+            }
+            if (!dealt) {
+                room->clearAG(player);
+                room->returnToTopDrawPile(ids);
+            }
+        }
+        return false;
+    }
+};
+
 class Tieji: public TriggerSkill {
 public:
     Tieji(): TriggerSkill("tieji") {
@@ -1796,6 +1856,7 @@ void StandardPackage::addGenerals() {
 
     General *zhaoyun = new General(this, "zhaoyun", "shu"); // SHU 005
     zhaoyun->addSkill(new Longdan);
+    zhaoyun->addSkill(new Yajiao);
 
     General *machao = new General(this, "machao", "shu"); // SHU 006
     machao->addSkill(new Tieji);

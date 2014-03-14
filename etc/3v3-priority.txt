@@ -11,7 +11,7 @@ nos_liubei				9
 guanyu					3
 nos_zhangfei			5
 zhugeliang				9
-zhaoyun					1
+nos_zhaoyun				1
 machao					5
 huangyueying			8
 huangzhong				4

@@ -97,10 +97,15 @@ return {
 	["$GuanxingTop"] = "置于牌堆顶的牌：%card",
 	["$GuanxingBottom"] = "置于牌堆底的牌：%card",
 
-	["#zhaoyun"] = "少年将军",
+	["#zhaoyun"] = "虎威将军",
 	["zhaoyun"] = "赵云",
+	["illustrator:zhaoyun"] = "DH",
 	["longdan"] = "龙胆",
 	[":longdan"] = "你可以将一张【杀】当【闪】使用或打出，或将一张【闪】当普通【杀】使用或打出。",
+	["yajiao"] = "涯角",
+	[":yajiao"] = "每当你于回合外使用或打出手牌时，你可以展示牌堆顶的一张牌：若该牌与你使用或打出的手牌类别相同，你可以令一名角色获得之，否则你可以将之置入弃牌堆。",
+	["@yajiao-give"] = "你可以令一名角色获得 %arg[%arg2]",
+	["yajiao:throw"] = "置入弃牌堆",
 
 	["#machao"] = "一骑当千",
 	["machao"] = "马超",

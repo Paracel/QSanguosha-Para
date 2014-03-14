@@ -43,6 +43,10 @@ return {
 	["nos_zhangfei"] = "张飞-旧",
 	["&nos_zhangfei"] = "张飞",
 
+	["#nos_zhaoyun"] = "少年将军",
+	["nos_zhaoyun"] = "赵云-旧",
+	["&nos_zhaoyun"] = "赵云",
+
 	["#nos_lvmeng"] = "白衣渡江",
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",

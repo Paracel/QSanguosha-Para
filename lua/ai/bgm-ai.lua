@@ -501,7 +501,7 @@ local function will_discard_zhaolie(self, nobasic)
 			local willTianxiang = sgs.ai_skill_use["@@tianxiang"](self, dmgStr, sgs.Card_MethodDiscard)
 			if willTianxiang ~= "." then damage_num = 0 end
 		end
-		if self.player:hasSkill("mingshi") and spliubei:getEquips():length() <= self.player:getEquips():length() and damage_num > 0 then
+		if self.player:hasSkill("mingshi") and spliubei:getEquips():length() <= math.min(2, self.player:getEquips():length()) and damage_num > 0 then
 			damage_num = damage_num - 1
 		end
 		if self.player:hasArmorEffect("silver_lion") and damage_num > 1 then damage_num = 1 end

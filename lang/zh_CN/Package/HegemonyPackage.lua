@@ -46,7 +46,7 @@ return {
 	["kongrong"] = "孔融",
 	["illustrator:kongrong"] = "苍月白龙",
 	["mingshi"] = "名士",
-	[":mingshi"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到伤害时，若伤害来源装备区的牌数不大于你的装备区的牌数，此伤害-1。",
+	[":mingshi"] = "<font color=\"blue\"><b>锁定技。</b></font>每当你受到有来源的伤害时，若伤害来源装备区的牌数不大于X，此伤害-1。（X为你装备区的牌数且至多为2）",
 	["lirang"] = "礼让",
 	[":lirang"] = "每当你的牌因弃置而置入弃牌堆时，你可以将其中任意数量的牌任意分配给其他角色。",
 	["@lirang-distribute"] = "你可以发动“礼让”将 %arg 张牌任意分配给任意数量的其他角色",

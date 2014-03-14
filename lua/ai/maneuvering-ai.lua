@@ -635,7 +635,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
 			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 		end
-		if not self.player:hasSkill("jueqing") and enemy:hasSkill("mingshi") and self.player:getEquips():length() <= enemy:getEquips():length() then
+		if not self.player:hasSkill("jueqing") and enemy:hasSkill("mingshi") and self.player:getEquips():length() <= math.min(2, enemy:getEquips():length()) then
 			damage = damage - 1
 		end
 		return self:objectiveLevel(enemy) > 3 and damage > 0 and not enemy:isKongcheng() and not self.room:isProhibited(self.player, enemy, fire_attack)
@@ -665,7 +665,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 
 	if (not use.current_targets or not table.contains(use.current_targets, self.player:objectName()))
 		and self.role ~= "renegade" and can_FireAttack_self and self.player:isChained() and self:isGoodChainTarget(self.player, sgs.DamageStruct_Fire, nil, fire_attack)
-		and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing") and not self.player:hasSkill("mingshi")
+		and self.player:getHandcardNum() > 1 and not self.player:hasSkill("jueqing") and not (self.player:hasSkill("mingshi") and self.player:getEquips():length() <= 2)
 		and not self.room:isProhibited(self.player, self.player, fire_attack)
 		and self:damageIsEffective(self.player, sgs.DamageStruct_Fire, self.player) and not self:cantbeHurt(self.player)
 		and self:hasTrickEffective(fire_attack, self.player) then
@@ -709,7 +709,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
 			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 		end
-		if not self.player:hasSkill("jueqing") and enemy:hasSkill("mingshi") and self.player:getEquips():length() <= enemy:getEquips():length() then
+		if not self.player:hasSkill("jueqing") and enemy:hasSkill("mingshi") and self.player:getEquips():length() <= math.min(2, enemy:getEquips():length()) then
 			damage = damage - 1
 		end
 		if (not use.current_targets or not table.contains(use.current_targets, enemy:objectName()))

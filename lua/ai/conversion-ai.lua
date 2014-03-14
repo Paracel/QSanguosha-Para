@@ -59,7 +59,7 @@ sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
 sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
 
 sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_zhaoyun = sgs.ai_skill_invoke.cv_caopi
+sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_caopi
 sgs.ai_skill_invoke.cv_ganning = sgs.ai_skill_invoke.cv_caopi
 sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_caopi
 
@@ -78,7 +78,7 @@ sgs.ai_skill_invoke.cv_xiaoqiao = function(self, data)
 	return true
 end
 
-sgs.ai_skill_invoke.cv_zhouyu = function(self, data)
+sgs.ai_skill_invoke.cv_nos_zhouyu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhouyu = "heg_zhouyu"
 	else sgs.ai_skill_choice.cv_zhouyu = "sp_heg_zhouyu" end
@@ -105,8 +105,8 @@ sgs.ai_skill_invoke.cv_huanggai = function(self, data)
 end
 
 sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_luxun = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_guojia = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_luxun = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_guojia = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_zhugeke = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_madai = sgs.ai_skill_invoke.cv_huanggai

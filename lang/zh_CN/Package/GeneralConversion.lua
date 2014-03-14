@@ -124,6 +124,15 @@ return {
 	["&diy_zhugeke"] = "诸葛恪",
 	["illustrator:diy_zhugeke"] = "大佬荣",
 
+	["ol_fazheng"] = "OL法正",
+	["&ol_fazheng"] = "法正",
+	["illustrator:ol_fazheng"] = "L",
+
+	["#ol_xushu"] = "智勇侠义",
+	["ol_xushu"] = "OL徐庶",
+	["&ol_xushu"] = "徐庶",
+	["illustrator:ol_xushu"] = "L",
+
 	-- Hegemony SP
 	["hegemony_sp"] = "国战SP",
 

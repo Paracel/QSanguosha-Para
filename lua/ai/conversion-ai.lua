@@ -111,6 +111,8 @@ sgs.ai_skill_invoke.cv_zhugeke = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_madai = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_panfeng = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_xushu = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_fazheng = sgs.ai_skill_invoke.cv_huanggai
 
 sgs.ai_skill_invoke.cv_zhugejin = function(self, data)
 	return math.random(0, 4) > 1

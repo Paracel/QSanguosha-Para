@@ -790,7 +790,7 @@ BifaCard::BifaCard() {
 }
 
 bool BifaCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self;
+    return targets.isEmpty() && to_select->getPile("bifa").isEmpty() && to_select != Self;
 }
 
 void BifaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -829,49 +829,44 @@ public:
         if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Finish && !player->isKongcheng()) {
             room->askForUseCard(player, "@@bifa", "@bifa-remove", -1, Card::MethodNone);
         } else if (player->getPhase() == Player::RoundStart && player->getPile("bifa").length() > 0) {
-            QList<int> bifa_list = player->getPile("bifa");
+            int card_id = player->getPile("bifa").first();
+            ServerPlayer *chenlin = player->tag["BifaSource" + QString::number(card_id)].value<PlayerStar>();
+            QList<int> ids;
+            ids << card_id;
 
-            while (!bifa_list.isEmpty()) {
-                int card_id = bifa_list.last();
-                ServerPlayer *chenlin = player->tag["BifaSource" + QString::number(card_id)].value<PlayerStar>();
-                QList<int> ids;
-                ids << card_id;
+            LogMessage log;
+            log.type = "$BifaView";
+            log.from = player;
+            log.card_str = QString::number(card_id);
+            log.arg = "bifa";
+            room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 
-                LogMessage log;
-                log.type = "$BifaView";
-                log.from = player;
-                log.card_str = QString::number(card_id);
-                log.arg = "bifa";
-                room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
-
-                room->fillAG(ids, player);
-                const Card *cd = Sanguosha->getCard(card_id);
-                QString pattern;
-                if (cd->isKindOf("BasicCard"))
-                    pattern = "BasicCard";
-                else if (cd->isKindOf("TrickCard"))
-                    pattern = "TrickCard";
-                else if (cd->isKindOf("EquipCard"))
-                    pattern = "EquipCard";
-                QVariant data_for_ai = QVariant::fromValue(pattern);
-                pattern.append("|.|.|hand");
-                const Card *to_give = NULL;
-                if (!player->isKongcheng() && chenlin && chenlin->isAlive())
-                    to_give = room->askForCard(player, pattern, "@bifa-give", data_for_ai, Card::MethodNone, chenlin);
-                if (chenlin && to_give) {
-                    room->broadcastSkillInvoke(objectName(), 2);
-                    chenlin->obtainCard(to_give, false);
-                    player->obtainCard(cd, false);
-                } else {
-                    room->broadcastSkillInvoke(objectName(), 3);
-                    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), objectName(), QString());
-                    room->throwCard(cd, reason, NULL);
-                    room->loseHp(player);
-                }
-                bifa_list.removeOne(card_id);
-                room->clearAG(player);
-                player->tag.remove("BifaSource" + QString::number(card_id));
+            room->fillAG(ids, player);
+            const Card *cd = Sanguosha->getCard(card_id);
+            QString pattern;
+            if (cd->isKindOf("BasicCard"))
+                pattern = "BasicCard";
+            else if (cd->isKindOf("TrickCard"))
+                pattern = "TrickCard";
+            else if (cd->isKindOf("EquipCard"))
+                pattern = "EquipCard";
+            QVariant data_for_ai = QVariant::fromValue(pattern);
+            pattern.append("|.|.|hand");
+            const Card *to_give = NULL;
+            if (!player->isKongcheng() && chenlin && chenlin->isAlive())
+                to_give = room->askForCard(player, pattern, "@bifa-give", data_for_ai, Card::MethodNone, chenlin);
+            if (chenlin && to_give) {
+                room->broadcastSkillInvoke(objectName(), 2);
+                chenlin->obtainCard(to_give, false);
+                player->obtainCard(cd, false);
+            } else {
+                room->broadcastSkillInvoke(objectName(), 3);
+                CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), objectName(), QString());
+                room->throwCard(cd, reason, NULL);
+                room->loseHp(player);
             }
+            room->clearAG(player);
+            player->tag.remove("BifaSource" + QString::number(card_id));
         }
         return false;
     }

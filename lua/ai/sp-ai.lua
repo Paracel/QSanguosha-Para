@@ -429,7 +429,7 @@ sgs.ai_skill_use["@@bifa"] = function(self, prompt)
 	self:sort(self.enemies, "handcard")
 	if #self.enemies == 0 then return "." end
 	for _, enemy in ipairs(self.enemies) do
-		if not self:needToLoseHp(enemy) then
+		if not self:needToLoseHp(enemy) and enemy:getPile("bifa"):isEmpty() then
 			for _, c in ipairs(cards) do
 				if c:isKindOf("EquipCard") then return "@BifaCard=" .. c:getEffectiveId() .. "->" .. self.enemies[1]:objectName() end
 			end

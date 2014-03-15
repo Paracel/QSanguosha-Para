@@ -1718,7 +1718,39 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 	self:sortByUseValue(cards, true)
 	self:sort(self.enemies, "defense")
 
+	if self:getCardsNum("Slash") > 0 then
+		local slash = self:getCard("Slash")
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
+		self:useCardSlash(slash, dummy_use)
+		if dummy_use.card and dummy_use.to:length() > 0 then
+			sgs.ai_use_priority.FanjianCard = sgs.ai_use_priority.Slash + 0.15
+			local target = dummy_use.to:first()
+			if self:isEnemy(target) and sgs.card_lack[target:objectName()]["Jink"] ~= 1 and target:getMark("yijue") == 0
+				and not target:isKongcheng() and (self:getOverflow() > 0 or target:getHandcardNum() > 2)
+				and not (self.player:hasSkill("liegong") and (target:getHandcardNum() >= self.player:getHp() or target:getHandcardNum() <= self.player:getAttackRange()))
+				and not (self.player:hasSkill("kofliegong") and target:getHandcardNum() >= self.player:getHp()) then
+				if target:hasSkill("qingguo") then
+					for _, card in ipairs(cards) do
+						if self:getUseValue(card) < 6 and card:isBlack() then
+							use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
+							if use.to then use.to:append(enemy) end
+							return
+						end
+					end
+				end
+				for _, card in ipairs(cards) do
+					if self:getUseValue(card) < 6 and card:getSuit() == sgs.Card_Diamond then
+						use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
+						if use.to then use.to:append(enemy) end
+						return
+					end
+				end
+			end
+		end
+	end
+
 	if self:getOverflow() <= 0 then return end
+	sgs.ai_use_priority.FanjianCard = 0.2
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHandcardNum() > 2 then
 			local max_suit_num, max_suit = 0, {}
@@ -1793,6 +1825,8 @@ sgs.ai_card_intention.FanjianCard = function(self, card, from, tos)
 		sgs.updateIntention(from, to, 60)
 	end
 end
+
+sgs.ai_use_priority.FanjianCard = 0.2
 
 sgs.ai_skill_invoke.fanjian_discard = function(self, data)
 	if self:getCardsNum("Peach") >= 1 and not self:willSkipPlayPhase() then return false end

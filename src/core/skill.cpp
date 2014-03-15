@@ -10,7 +10,7 @@
 #include <QFile>
 
 Skill::Skill(const QString &name, Frequency frequency)
-    : frequency(frequency), limit_mark(QString()), attached_lord_skill(false)
+    : frequency(frequency), limit_mark(QString()), lord_skill(false), attached_lord_skill(false)
 {
     static QChar lord_symbol('$');
     static QChar attached_lord_symbol('&');

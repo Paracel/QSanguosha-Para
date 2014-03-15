@@ -303,7 +303,7 @@ function sgs.ai_slash_prohibit.ganglie(self, from, to)
 	if self:isFriend(from, to) then return false end
 	if from:hasSkill("jueqing") or (from:hasSkill("nosqianxi") and from:distanceTo(to) == 1) then return false end
 	if from:hasFlag("NosJiefanUsed") then return false end
-	return from:isWeak()
+	return self:isWeak(from)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.ganglie = function(self, player, promptlist)

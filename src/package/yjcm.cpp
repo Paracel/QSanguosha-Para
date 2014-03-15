@@ -173,7 +173,7 @@ public:
                 log.arg2 = objectName();
                 room->sendLog(log);
                 room->notifySkillInvoked(player, objectName());
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke(objectName(), 2);
 
                 return true;
             } else if (triggerEvent == DamageCaused && damage.from && TriggerSkill::triggerable(damage.from)) {
@@ -184,7 +184,7 @@ public:
                 log.arg2 = objectName();
                 room->sendLog(log);
                 room->notifySkillInvoked(player, objectName());
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke(objectName(), 1);
 
                 return true;
             }
@@ -195,6 +195,7 @@ public:
 };
 
 JujianCard::JujianCard() {
+    mute = true;
 }
 
 bool JujianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -203,6 +204,11 @@ bool JujianCard::targetFilter(const QList<const Player *> &targets, const Player
 
 void JujianCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
+    if (effect.to->getGeneralName().contains("zhugeliang") || effect.to->getGeneralName() == "wolong")
+        room->broadcastSkillInvoke("jujian", 2);
+    else
+        room->broadcastSkillInvoke("jujian", 1);
+
     QStringList choicelist;
     choicelist << "draw";
     if (effect.to->isWounded())
@@ -271,7 +277,7 @@ public:
                 move.from->setFlags("-EnyuanDrawTarget");
                 if (invoke) {
                     room->drawCards((ServerPlayer *)move.from, 1);
-                    room->broadcastSkillInvoke(objectName(), qrand() % 2 + 1);
+                    room->broadcastSkillInvoke(objectName(), 1);
                 }
             }
         } else if (triggerEvent == Damaged) {
@@ -281,7 +287,7 @@ public:
             int x = damage.damage;
             for (int i = 0; i < x; i++) {
                 if (source->isAlive() && player->isAlive() && room->askForSkillInvoke(player, objectName(), data)) {
-                    room->broadcastSkillInvoke(objectName(), qrand() % 2 + 3);
+                    room->broadcastSkillInvoke(objectName(), 2);
                     const Card *card = NULL;
                     if (!source->isKongcheng())
                         card = room->askForExchange(source, objectName(), 1, false, "EnyuanGive", true);
@@ -312,7 +318,7 @@ public:
         if (fazheng->getPhase() == Player::Draw) {
             ServerPlayer *to = room->askForPlayerChosen(fazheng, room->getOtherPlayers(fazheng), objectName(), "xuanhuo-invoke", true, true);
             if (to) {
-                room->broadcastSkillInvoke(objectName());
+                room->broadcastSkillInvoke(objectName(), 1);
                 room->drawCards(to, 2);
                 if (!fazheng->isAlive() || !to->isAlive())
                     return true;
@@ -336,6 +342,7 @@ public:
                 if (victim == NULL || !room->askForUseSlashTo(to, victim, QString("xuanhuo-slash:%1:%2").arg(fazheng->objectName()).arg(victim->objectName()))) {
                     if (to->isNude())
                         return true;
+                    room->broadcastSkillInvoke(objectName(), 2);
                     room->setPlayerFlag(to, "xuanhuo_InTempMoving");
                     int first_id = room->askForCardChosen(fazheng, to, "he", "xuanhuo");
                     Player::Place original_place = room->getCardPlace(first_id);

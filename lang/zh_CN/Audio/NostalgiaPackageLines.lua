@@ -1,20 +1,57 @@
 -- lines for Nostalgia Package
 
 return {
+	-- 旧 张辽
+	["$nostuxi1"] = "哼，没想到吧！",
+	["$nostuxi2"] = "拿来吧！",
+
+	-- 旧 周泰
+	["$nosbuqu1"] = "我绝不会倒下！",
+	["$nosbuqu2"] = "还不够！",
+	["~nos_zhoutai"] = "已经尽力了……",
+
+	-- 旧 张角
+	["$nosleiji1"] = "雷公助我！",
+	["$nosleiji2"] = "以我之真气，合天地之造化。",
+	["$guidao3"] = "哼哼哼哼……",
+	["$guidao4"] = "天下大势，为我所控！",
+	["$huangtian3"] = "苍天已死，黄天当立！",
+	["$huangtian4"] = "岁在甲子，天下大吉！",
+	["~nos_zhangjiao"] = "黄天…也死了……",
+
 	-- 旧 于吉
 	["$nosguhuo1"] = "你信吗？",
 	["$nosguhuo2"] = "猜猜看哪？",
+	["~nos_yuji"] = "竟然…被猜到了……",
+
+	-- 旧 法正
+	["cv:nos_fazheng"] = "苏遥东，官方",
+	["$nosenyuan1"] = "得人恩果千年记。",
+	["$nosenyuan2"] = "滴水之恩，涌泉以报。",
+	["$nosenyuan3"] = "谁敢得罪我！",
+	["$nosenyuan4"] = "睚眦之怨，无不报复。",
+	["$nosxuanhuo1"] = "重用许靖，以眩远近。",
+	["$nosxuanhuo2"] = "给你的，十倍奉还给我！",
+	["~nos_fazheng"] = "辅翼既折，蜀汉衰矣……",
 
 	-- 旧 凌统
 	["cv:nos_lingtong"] = "官方",
 	["$nosxuanfeng1"] = "伤敌于千里之外！",
 	["$nosxuanfeng2"] = "索命于须臾之间！",
 
+	-- 旧 徐庶
+	["$noswuyan1"] = "唉，一切尽在不言中。",
+	["$noswuyan2"] = "嘘，言多必失啊。",
+	["$nosjujian1"] = "我看好你！",
+	["$nosjujian2"] = "将军岂愿抓牌乎？",
+	["~nos_xushu"] = "娘，孩儿不孝，向您…请罪……",
+
 	-- 旧 关兴张苞
 	["cv:nos_guanxingzhangbao"] = "喵小林，风叹息",
 	["$nosfuhun1"] = "吾父武名，声震海内！",
 	["$nosfuhun2"] = "父魂佑我！",
 	["$nosfuhun3"] = "父辈功勋，望尘莫及……",
+	["~nos_guanxingzhangbao"] = "东吴未灭，父仇未报，可恨，可恨！",
 
 	-- 旧 韩当
 	["cv:nos_handang"] = "风叹息",

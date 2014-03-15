@@ -41,7 +41,9 @@ public:
         const Card *card = room->askForCard(player, ".|black", prompt, data, Card::MethodResponse, judge->who, true);
 
         if (card != NULL) {
-            room->broadcastSkillInvoke(objectName());
+            int index = qrand() % 2 + 1;
+            if (player->hasSkill("nosleiji") && !player->hasSkill("leiji")) index += 2;
+            room->broadcastSkillInvoke(objectName(), index);
             room->retrial(card, player, judge, objectName(), true);
         }
         return false;
@@ -102,7 +104,11 @@ void HuangtianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
     ServerPlayer *zhangjiao = targets.first();
     if (zhangjiao->hasLordSkill("huangtian")) {
         room->setPlayerFlag(zhangjiao, "HuangtianInvoked");
-        room->broadcastSkillInvoke("huangtian");
+
+        int index = qrand() % 2 + 1;
+        if (player->hasSkill("nosleiji") && !player->hasSkill("leiji")) index += 2;
+        room->broadcastSkillInvoke(objectName(), index);
+
         room->notifySkillInvoked(zhangjiao, "huangtian");
         CardMoveReason reason(CardMoveReason::S_REASON_GIVE, source->objectName(), zhangjiao->objectName(), "huangtian", QString());
         room->obtainCard(zhangjiao, this, reason);
@@ -525,6 +531,7 @@ public:
             bool invoke = room->askForSkillInvoke(player, objectName(), data);
             move.from->setFlags("-FenjiMoveFrom");
             if (invoke) {
+                room->broadcastSkillInvoke(objectName());
                 room->loseHp(player);
                 if (move.from->isAlive())
                     room->drawCards((ServerPlayer *)move.from, 2);

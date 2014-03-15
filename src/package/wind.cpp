@@ -106,7 +106,7 @@ void HuangtianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
         room->setPlayerFlag(zhangjiao, "HuangtianInvoked");
 
         int index = qrand() % 2 + 1;
-        if (player->hasSkill("nosleiji") && !player->hasSkill("leiji")) index += 2;
+        if (zhangjiao->hasSkill("nosleiji") && !zhangjiao->hasSkill("leiji")) index += 2;
         room->broadcastSkillInvoke(objectName(), index);
 
         room->notifySkillInvoked(zhangjiao, "huangtian");

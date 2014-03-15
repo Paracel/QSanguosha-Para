@@ -231,9 +231,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
         log.from = use.from;
         log.arg = "moon_spear";
         room->sendLog(log);
-    } else if (use.card->isVirtualCard() && use.card->getSkillName() == "spear")
-        room->setEmotion(player, "weapon/spear");
-    else if (use.to.size() > 1 && player->hasWeapon("halberd") && player->isLastHandCard(this))
+    } else if (use.to.size() > 1 && player->hasWeapon("halberd") && player->isLastHandCard(this))
         room->setEmotion(player, "weapon/halberd");
     else if (use.card->isVirtualCard() && use.card->getSkillName() == "fan")
         room->setEmotion(player, "weapon/fan");
@@ -536,6 +534,29 @@ public:
     }
 };
 
+class SpearEmotion: public TriggerSkill {
+public:
+    SpearEmotion(): TriggerSkill("#spear-emotion") {
+        events << PreCardUsed << CardResponded;
+        global = true;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardStar card = NULL;
+        if (triggerEvent == PreCardUsed)
+            card = data.value<CardUseStruct>().card;
+        else
+            card = data.value<CardResponseStruct>().m_card;
+        if (card->isKindOf("Slash") && card->getSkillName() == "spear")
+            room->setEmotion(player, "weapon/spear");
+        return false;
+    }
+};
+
 Spear::Spear(Suit suit, int number)
     : Weapon(suit, number, 3)
 {
@@ -789,10 +810,8 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
                                          QVariant::fromValue(effect),
                                          Card::MethodResponse,
                                          effect.from->isAlive() ? effect.from : NULL);
-    if (slash) {
-        if (slash->getSkillName() == "spear") room->setEmotion(effect.to, "weapon/spear");
+    if (slash)
         room->setEmotion(effect.to, "killer");
-    }
 
     // ================================
     bool drwushuang_effect = true;
@@ -1470,6 +1489,9 @@ StandardCardPackage::StandardCardPackage()
            << new BladeSkill << new SpearSkill << new AxeSkill
            << new KylinBowSkill << new EightDiagramSkill
            << new HalberdSkill << new WoodenOxSkill << new WoodenOxTriggerSkill;
+
+    skills << new SpearEmotion;
+    related_skills.insertMulti("spear", "#spear-emotion");
 
     QList<Card *> horses;
     horses << new DefensiveHorse(Card::Spade, 5)

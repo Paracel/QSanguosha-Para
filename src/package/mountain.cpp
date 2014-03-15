@@ -1023,7 +1023,7 @@ public:
         log2.type = "#GetHuashenDetail";
         log2.from = zuoci;
         log2.arg = acquired.join("\\, \\");
-        room->doNotify(zuoci, QSanProtocol::S_COMMAND_LOG_SKILL, log2.toJsonValue());
+        room->sendLog(log, zuoci);
 
         room->setPlayerMark(zuoci, "@huashen", huashens.length());
     }

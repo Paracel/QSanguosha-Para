@@ -121,7 +121,7 @@ public:
                     log.from = judge->who;
                     log.to << player;
                     log.card_str = IntList2StringList(player->handCards()).join("+");
-                    room->doNotify(judge->who, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+                    room->sendLog(log, judge->who);
                 }
                 judge->who->tag["HuanshiJudge"] = data;
                 room->fillAG(ids + disabled_ids, judge->who, disabled_ids);

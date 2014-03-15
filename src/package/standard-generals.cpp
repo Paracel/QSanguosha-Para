@@ -944,7 +944,7 @@ public:
             log.type = "$ViewDrawPile";
             log.from = zhuge;
             log.card_str = IntList2StringList(guanxing).join("+");
-            room->doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+            room->sendLog(log, zhuge);
 
             room->askForGuanxing(zhuge, guanxing);
         }

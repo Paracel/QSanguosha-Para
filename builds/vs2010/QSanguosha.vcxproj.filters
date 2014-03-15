@@ -939,10 +939,10 @@
     <CustomBuild Include="..\..\src\package\h-formation.h">
       <Filter>package</Filter>
     </CustomBuild>
-    <CustomBuild Include="..\..\src\package\h-momentum.h">
-      <Filter>Generated Files</Filter>
-    </CustomBuild>
     <CustomBuild Include="..\..\src\package\ling.h">
+      <Filter>package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\package\h-momentum.h">
       <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>

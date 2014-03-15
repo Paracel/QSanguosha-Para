@@ -163,7 +163,7 @@ void RoomThread1v1::takeGeneral(ServerPlayer *player, const QString &name) {
         log.type = "#VsTakeGeneral";
         log.arg = group;
         log.arg2 = (p == player) ? general_name : namearg;
-        room->doNotify(p, S_COMMAND_LOG_SKILL, log.toJsonValue());
+        room->sendLog(log, p);
     }
 
     general_names.removeOne(name);

@@ -861,7 +861,7 @@ void XinzhanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
     log.type = "$ViewDrawPile";
     log.from = source;
     log.card_str = IntList2StringList(cards).join("+");
-    room->doNotify(source, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    room->sendLog(log, source);
 
     left = cards;
 

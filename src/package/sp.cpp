@@ -839,7 +839,7 @@ public:
             log.from = player;
             log.card_str = QString::number(card_id);
             log.arg = "bifa";
-            room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+            room->sendLog(log, player);
 
             room->fillAG(ids, player);
             const Card *cd = Sanguosha->getCard(card_id);
@@ -1660,7 +1660,8 @@ public:
         log.type = "$ViewDrawPile";
         log.from = player;
         log.card_str = IntList2StringList(ids).join("+");
-        room->doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        room->sendLog(log, player);
+
         room->broadcastSkillInvoke("aocai");
         room->notifySkillInvoked(player, "aocai");
         if (enabled.isEmpty()) {

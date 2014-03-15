@@ -384,7 +384,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
     log.from = effect.from;
     log.to << effect.to;
     log.arg = "shangyi:" + choice;
-    room->doBroadcastNotify(room->getOtherPlayers(effect.from), QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    room->sendLog(log, room->getOtherPlayers(effect.from));
 
     if (choice == "handcards") {
         QList<int> ids;
@@ -410,7 +410,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
             log.from = effect.from;
             log.to << player;
             log.arg = name;
-            room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+            room->sendLog(log, effect.from);
         }
         Json::Value arr(Json::arrayValue);
         arr[0] = QSanProtocol::Utils::toJsonString("shangyi");
@@ -424,7 +424,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
             log.from = effect.from;
             log.to << player;
             log.arg = name;
-            room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+            room->sendLog(log, effect.from);
         }
         Json::Value arg(Json::arrayValue);
         arg[0] = QSanProtocol::Utils::toJsonString("shangyi");
@@ -441,7 +441,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
         log.from = effect.from;
         log.to << player;
         log.arg = player->getRole();
-        room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        room->sendLog(log, effect.from);
     }
 }
 

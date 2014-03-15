@@ -1577,7 +1577,7 @@ public:
                     log.from = simazhao;
                     log.to << damage.from;
                     log.card_str = IntList2StringList(damage.from->handCards()).join("+");
-                    room->doNotify(simazhao, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+                    room->sendLog(log, simazhao);
 
                     while (!langgu_discard.isEmpty()) {
                         room->fillAG(langgu_discard + other, simazhao, other);

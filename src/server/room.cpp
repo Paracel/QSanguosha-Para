@@ -4753,14 +4753,14 @@ void Room::askForGuanxing(ServerPlayer *zhuge, const QList<int> &cards, Guanxing
         log.type = "$GuanxingTop";
         log.from = zhuge;
         log.card_str = IntList2StringList(top_cards).join("+");
-        doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        sendLog(log, zhuge);
     }
     if (!bottom_cards.isEmpty()) {
         LogMessage log;
         log.type = "$GuanxingBottom";
         log.from = zhuge;
         log.card_str = IntList2StringList(bottom_cards).join("+");
-        doNotify(zhuge, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        sendLog(log, zhuge);
     }
 
     QListIterator<int> i(top_cards);
@@ -4796,7 +4796,7 @@ int Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target, QList<int> e
     log.from = shenlvmeng;
     log.to << target;
     log.card_str = IntList2StringList(target->handCards()).join("+");
-    doNotify(shenlvmeng, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    sendLog(log, shenlvmeng);
 
     QVariant decisionData = QVariant::fromValue("viewCards:" + shenlvmeng->objectName() + ":" + target->objectName());
     thread->trigger(ChoiceMade, this, shenlvmeng, decisionData);
@@ -5228,11 +5228,19 @@ QList<ServerPlayer *> Room::getLieges(const QString &kingdom, ServerPlayer *lord
     return lieges;
 }
 
-void Room::sendLog(const LogMessage &log) {
+void Room::sendLog(const LogMessage &log, QList<ServerPlayer *> players) {
     if (log.type.isEmpty())
         return;
+    if (players.isEmpty())
+        doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+    else
+        doBroadcastNotify(players, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+}
 
-    doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+void Room::sendLog(const LogMessage &log, ServerPlayer *player) {
+    if (log.type.isEmpty())
+        return;
+    doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 }
 
 void Room::showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer) {
@@ -5298,7 +5306,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
         log.from = to;
         log.to << player;
         log.card_str = IntList2StringList(player->handCards()).join("+");
-        doNotify(to, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+        sendLog(log, to);
 
         QVariant decisionData = QVariant::fromValue("viewCards:" + to->objectName() + ":" + player->objectName());
         thread->trigger(ChoiceMade, this, to, decisionData);

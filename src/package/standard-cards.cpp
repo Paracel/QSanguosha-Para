@@ -1134,7 +1134,7 @@ void Dismantlement::onEffect(const CardEffectStruct &effect) const{
             log.from = effect.from;
             log.to << effect.to;
             log.card_str = IntList2StringList(effect.to->handCards()).join("+");
-            room->doNotify(effect.from, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
+            room->sendLog(log, effect.from);
 
             card_id = room->askForCardChosen(effect.from, effect.to, "h", objectName(), true, Card::MethodDiscard);
         }

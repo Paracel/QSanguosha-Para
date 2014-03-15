@@ -429,26 +429,15 @@ public:
     }
 
     virtual int getCorrect(const Player *from, const Player *to) const{
-        if (to->hasSkill("zhenwei")) {
-            return 0;
-        } else {
-            bool hasWenpin = false;
-            foreach (const Player *p, to->getAliveSiblings()) {
-                if (p->hasSkill("zhenwei")) {
-                    hasWenpin = true;
-                    break;
-                }
-            }
-            if (!hasWenpin) return 0;
-        }
         if (ServerInfo.GameMode.startsWith("06_")) {
             if (from->getRole().at(0) != to->getRole().at(0)) {
                 foreach (const Player *p, to->getAliveSiblings()) {
-                    if (p->hasSkill(objectName()) && p->getRole().at(0) == to->getRole().at(0))
+                    if (p->hasSkill("zhenwei") && p->getRole().at(0) == to->getRole().at(0))
                         return 1;
                 }
             }
-        } else if (to->getMark("@defense") > 0 && from->getMark("@defense") == 0 && !from->hasSkill("zhenwei")) {
+        } else if (to->getMark("@defense") > 0 && from->getMark("@defense") == 0
+                   && from->objectName() != to->property("zhenwei_from").toString()) {
             return 1;
         }
         return 0;
@@ -464,7 +453,9 @@ bool ZhenweiCard::targetFilter(const QList<const Player *> &targets, const Playe
 }
 
 void ZhenweiCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->gainMark("@defense");
+    Room *room = effect.from->getRoom();
+    room->setPlayerProperty(effect.to, "zhenwei_from", QVariant::fromValue(effect.from->objectName()));
+    room->addPlayerMark(effect.to, "@defense");
 }
 
 class ZhenweiViewAsSkill: public ZeroCardViewAsSkill {
@@ -505,8 +496,10 @@ public:
             if (change.to != Player::NotActive)
                 return false;
         }
-        foreach (ServerPlayer *p, room->getOtherPlayers(player))
+        foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+            room->setPlayerProperty(p, "zhenwei_from", QVariant());
             room->setPlayerMark(p, "@defense", 0);
+        }
         if (triggerEvent == EventPhaseChanging && Sanguosha->getPlayerCount(room->getMode()) > 3)
             room->askForUseCard(player, "@@zhenwei", "@zhenwei");
         return false;

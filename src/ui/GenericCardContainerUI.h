@@ -184,11 +184,11 @@ protected:
     QList<QGraphicsPixmapItem *> _m_judgeIcons;
     QList<CardItem *> _m_judgeCards;
 
-    QGraphicsProxyWidget *_m_equipRegions[5];
-    CardItem *_m_equipCards[5];
+    QGraphicsProxyWidget *_m_equipRegions[S_EQUIP_AREA_LENGTH];
+    CardItem *_m_equipCards[S_EQUIP_AREA_LENGTH];
     CardItem *_m_photo_treasure; // for photos to display treasure only
-    QLabel *_m_equipLabel[5];
-    QParallelAnimationGroup *_m_equipAnim[5];
+    QLabel *_m_equipLabel[S_EQUIP_AREA_LENGTH];
+    QParallelAnimationGroup *_m_equipAnim[S_EQUIP_AREA_LENGTH];
     QMutex _mutexEquipAnim;
 
     // controls

@@ -2111,45 +2111,39 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 			return {}
 		end
 	elseif optional then
-		return {}
+		return min_num == 1 and self:needToThrowArmor() and self.player:getArmor():getEffectiveId() or {}
 	end
 
 	local flag = "h"
 	if include_equip and (self.player:getEquips():isEmpty() or not self.player:isJilei(self.player:getEquips():first())) then flag = flag .. "e" end
 	local cards = self.player:getCards(flag)
-	local to_discard = {}
 	cards = sgs.QList2Table(cards)
-	local aux_func = function(card)
-		local place = self.room:getCardPlace(card:getEffectiveId())
-		if place == sgs.Player_PlaceEquip then
-			if card:isKindOf("SilverLion") and self.player:isWounded() then return -2
-			elseif card:isKindOf("Weapon") and self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
-			elseif card:isKindOf("OffensiveHorse") and self.player:getHandcardNum() < discard_num + 2 and not self:needKongcheng() then return 0
-			elseif card:isKindOf("OffensiveHorse") then return 1
-			elseif card:isKindOf("Weapon") then return 2
-			elseif card:isKindOf("DefensiveHorse") then return 3
-			elseif card:isKindOf("Treasure") then return 4
-			elseif self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return 0
-			elseif card:isKindOf("Armor") then return 4
-			end
-			return 0
-		elseif self.player:hasSkills(sgs.lose_equip_skill) then return 5
-		else return 0
-		end
-	end
-	local compare_func = function(a, b)
-		if aux_func(a) ~= aux_func(b) then return aux_func(a) < aux_func(b) end
-		return self:getKeepValue(a) < self:getKeepValue(b)
-	end
+	self:sortByKeepValue(cards)
+	local to_discard = {}
 
-	table.sort(cards, compare_func)
 	local least = min_num
 	if discard_num - min_num > 1 then
 		least = discard_num - 1
 	end
 	for _, card in ipairs(cards) do
+		if exchange or not self.player:isJilei(card) then
+			place = self.room:getCardPlace(card:getEffectiveId())
+			if discardEquip and place == sgs.Player_PlaceEquip then
+				table.insert(temp, card:getEffectiveId())
+			elseif self:getKeepValue(card) >= 4.1 then
+				table.insert(temp, card:getEffectiveId())
+			else
+				table.insert(to_discard, card:getEffectiveId())
+			end
+			if self.player:hasSkills(sgs.lose_equip_skill) and place == sgs.Player_PlaceEquip then discardEquip = true end
+		end
 		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then break end
-		if exchange or not self.player:isJilei(card) then table.insert(to_discard, card:getId()) end
+	end
+	if #to_discard < discard_num then
+		for _, id in ipairs(temp) do
+			table.insert(to_discard, id)
+			if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then break end
+		end
 	end
 	return to_discard
 end

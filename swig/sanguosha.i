@@ -225,8 +225,8 @@ public:
     bool canSlashWithoutCrossbow() const;
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
-    bool isJilei(const Card *card) const;
-    bool isLocked(const Card *card) const;
+    bool isJilei(const Card *card, bool isHandcard = false) const;
+    bool isLocked(const Card *card, bool isHandcard = false) const;
 
     void setCardLimitation(const char *limit_list, const char *pattern, bool single_turn = false);
     void removeCardLimitation(const char *limit_list, const char *pattern);

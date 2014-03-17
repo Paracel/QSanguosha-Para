@@ -213,8 +213,8 @@ public:
     bool canSlashWithoutCrossbow(const Card *slash = NULL) const;
     virtual bool isLastHandCard(const Card *card, bool contain = false) const = 0;
 
-    inline bool isJilei(const Card *card) const{ return isCardLimited(card, Card::MethodDiscard); }
-    inline bool isLocked(const Card *card) const{ return isCardLimited(card, Card::MethodUse); }
+    inline bool isJilei(const Card *card, bool isHandcard = false) const{ return isCardLimited(card, Card::MethodDiscard, isHandcard); }
+    inline bool isLocked(const Card *card, bool isHandcard = false) const{ return isCardLimited(card, Card::MethodUse, isHandcard); }
 
     void setCardLimitation(const QString &limit_list, const QString &pattern, bool single_turn = false);
     void removeCardLimitation(const QString &limit_list, const QString &pattern);

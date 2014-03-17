@@ -118,13 +118,13 @@ function sgs.getDefenseSlash(player, self)
 		hasEightDiagram = true
 	end
 
-	if not hasEightDiagramEffect then
-		if player:getMark("@qianxi_red") > 0 and (not player:hasSkill("qingguo") and not (player:hasSkill("longhun") and player:getHp() == 1)) then
-			defense = 0
-		elseif player:getMark("@qianxi_black") > 0 then
-			if player:hasSkill("qingguo") then defense = defense / 2 end
-			if player:hasSkill("longhun") and player:getHp() == 1 then defense = defense * 3 / 4 end
-		end
+	if player:getMark("yijue") > 0 then
+		defense = 0
+	elseif player:getMark("@qianxi_red") > 0 and (not player:hasSkill("qingguo") and not (player:hasSkill("longhun") and player:getHp() == 1)) then
+		defense = 0
+	elseif player:getMark("@qianxi_black") > 0 then
+		if player:hasSkill("qingguo") then defense = defense / 2 end
+		if player:hasSkill("longhun") and player:getHp() == 1 then defense = defense * 3 / 4 end
 	end
 
 	if hasEightDiagram then
@@ -133,7 +133,7 @@ function sgs.getDefenseSlash(player, self)
 		if player:hasSkill("guicai") or player:hasSkill("huanshi") then defense = defense + 0.3 end
 	end
 
-	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 then defense = defense + 1.5 end
+	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 and player:getMark("yijue") == 0 then defense = defense + 1.5 end
 	if player:hasSkill("aocai") and player:getPhase() == sgs.Player_NotActive then defense = defense + 0.5 end
 	if player:hasSkill("wanrong") and not hasManjuanEffect(player) then defense = defense + 0.5 end
 

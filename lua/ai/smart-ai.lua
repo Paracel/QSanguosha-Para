@@ -218,7 +218,8 @@ end
 function sgs.getDefense(player, gameProcess)
 	if not player then return 0 end
 
-	local defense = math.min(player:getHp() * 2 + player:getHandcardNum() + player:getPile("wooden_ox"):length(), player:getHp() * 3)
+	local handcard = (player:getMark("yijue") > 0) and 0 or player:getHandcardNum()
+	local defense = math.min(player:getHp() * 2 + handcard + player:getPile("wooden_ox"):length(), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
 	local hasEightDiagram = false
 	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
@@ -236,7 +237,7 @@ function sgs.getDefense(player, gameProcess)
 		if player:hasSkill("hongyan") then defense = defense + 0.2 end
 	end
 
-	if player:hasSkills("tuntian+zaoxian") then defense = defense + player:getHandcardNum() * 0.4 end
+	if player:hasSkills("tuntian+zaoxian") and player:getMark("yijue") == 0 then defense = defense + player:getHandcardNum() * 0.4 end
 	if player:hasSkill("aocai") and player:getPhase() == sgs.Player_NotActive then defense = defense + 0.3 end
 	if (attacker and not attacker:hasSkill("jueqing")) or gameProcess then
 		local m = sgs.masochism_skill:split("|")
@@ -347,12 +348,13 @@ function SmartAI:assignKeep(start)
 		if self:isWeak() then
 			for _, ap in sgs.qlist(self.room:getAlivePlayers()) do
 				if ap:hasSkill("buyi") and self:isFriend(ap) then
-					self.keepdata = { TrickCard = 8, EquipCard = 7.9 }
+					self.keepdata.TrickCard = 8
+					self.keepdata.EquipCard = 7.9
 					break
 				end
 			end
-			self.keepdata.Peach = self.keepdata.Peach + (4 - math.max(self.player:getHp(), 0))
-			self.keepdata.Analeptic = self.keepdata.Analeptic + (4 - math.max(self.player:getHp(), 0))
+			self.keepdata.Peach = (self.keepdata.Peach or 7) + (4 - math.max(self.player:getHp(), 0))
+			self.keepdata.Analeptic = (self.keepdata.Analeptic or 4.1) + (4 - math.max(self.player:getHp(), 0))
 		end
 	end
 	local cards = self.player:getHandcards()

@@ -44,7 +44,6 @@ end
 
 sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, include_equip)
 	self:assignKeep(true)
-	if optional then return {} end
 	local flag = "h"
 	local equips = self.player:getEquips()
 	if include_equip and not (equips:isEmpty() or self.player:isJilei(equips:first())) then flag = flag .. "e" end

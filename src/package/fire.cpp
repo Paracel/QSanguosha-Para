@@ -431,9 +431,9 @@ void TianyiCard::use(Room *room, ServerPlayer *taishici, QList<ServerPlayer *> &
         room->setPlayerCardLimitation(taishici, "use", "Slash", true);
 }
 
-class TianyiViewAsSkill: public ZeroCardViewAsSkill {
+class Tianyi: public ZeroCardViewAsSkill {
 public:
-    TianyiViewAsSkill(): ZeroCardViewAsSkill("tianyi") {
+    Tianyi(): ZeroCardViewAsSkill("tianyi") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
@@ -442,25 +442,6 @@ public:
 
     virtual const Card *viewAs() const{
         return new TianyiCard;
-    }
-};
-
-class Tianyi: public TriggerSkill {
-public:
-    Tianyi(): TriggerSkill("tianyi") {
-        events << EventLoseSkill;
-        view_as_skill = new TianyiViewAsSkill;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target && target->hasFlag("TianyiSuccess");
-    }
-
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *taishici, QVariant &data) const{
-        if (data.toString() == objectName())
-            room->setPlayerFlag(taishici, "-TianyiSuccess");
-
-        return false;
     }
 };
 

@@ -23,7 +23,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
 
     QStringList list_name;
     list_name << "nos_caocao" << "simayi" << "nos_xiahoudun" << "nos_zhangliao" << "nos_xuchu" << "guojia" << "zhenji"
-              << "nos_liubei" << "guanyu" << "nos_zhangfei" << "nos_zhaoyun" << "zhugeliang" << "machao" << "nos_huangyueying"
+              << "nos_liubei" << "nos_guanyu" << "nos_zhangfei" << "nos_zhaoyun" << "zhugeliang" << "machao" << "nos_huangyueying"
               << "sunquan" << "ganning" << "nos_lvmeng" << "huanggai" << "nos_zhouyu" << "daqiao" << "nos_luxun" << "sunshangxiang"
               << "huatuo" << "lvbu" << "nos_diaochan"
               << "nos_caoren" << "xiahouyuan" << "weiyan" << "huangzhong"
@@ -44,7 +44,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
         QStringList list_remove, list_add;
         list_remove << "nos_zhangjiao" << "nos_caoren" << "nos_lvmeng" << "nos_xiahoudun" << "weiyan"
                     << "nos_luxun" << "huangzhong" << "nos_xuchu" << "nos_zhoutai" << "nos_zhaoyun"
-                    << "guanyu" << "lvbu";
+                    << "nos_guanyu" << "lvbu";
         list_add << "sunjian" << "xuhuang" << "pangde" << "jiaxu" << "sunce"
                  << "jiangwei" << "zhugejin" << "vs_xiahoudun" << "vs_guanyu" << "vs_zhaoyun"
                  << "vs_lvbu" << "wenpin";

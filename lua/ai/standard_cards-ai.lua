@@ -442,7 +442,7 @@ function SmartAI:isPriorFriendOfSlash(friend, card, source)
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 	if not self:hasHeavySlashDamage(source, card, friend) and card:getSkillName() ~= "lihuo"
 			and (self:findLeijiTarget(friend, 50, source)
-				or (friend:isLord() and source:hasSkill("guagu") and friend:getLostHp() >= 1 and getCardsNum("Jink", friend, source) == 0)
+				or (friend:isLord() and source:hasSkill("guagu") and friend:getLostHp() >= 1)
 				or (friend:hasSkill("jieming") and source:hasSkill("nosrende") and (huatuo and self:isFriend(huatuo, source)))
 				or (friend:hasSkill("hunzi") and friend:getHp() == 2 and self:getDamagedEffects(friend, source))) then
 		return true
@@ -526,7 +526,7 @@ function SmartAI:useCardSlash(card, use)
 		local use_wuqian = false
 		if self.player:hasSkill("wuqian") and self.player:getMark("@wrath") >= 2
 			and (not self.player:hasSkill("wushuang") or target:getMark("Armor_Nullified") == 0)
-			and not target:isLocked(sgs.Sanguosha:cloneCard("jink"))
+			and not target:isLocked(sgs.Sanguosha:cloneCard("jink")) and not target:isLocked(sgs.Sanguosha:cloneCard("jink"), true)
 			and (self:hasHeavySlashDamage(self.player, card, target)
 				or (getCardsNum("Jink", target, self.player) < 2 and getCardsNum("Jink", target, self.player) >= 1 and target:getHp() <= 2)) then
 			use_wuqian = true
@@ -2239,14 +2239,10 @@ sgs.ai_use_value.Snatch = 9
 sgs.ai_use_priority.Snatch = 4.3
 sgs.ai_keep_value.Snatch = 3.18
 
-sgs.dynamic_value.control_card.Snatch = true
-
 SmartAI.useCardDismantlement = SmartAI.useCardSnatchOrDismantlement
 
 sgs.ai_use_value.Dismantlement = 5.6
 sgs.ai_use_priority.Dismantlement = 4.4
-
-sgs.dynamic_value.control_card.Dismantlement = true
 
 sgs.ai_choicemade_filter.cardChosen.snatch = function(self, player, promptlist)
 	local from = findPlayerByObjectName(self.room, promptlist[4])
@@ -2448,8 +2444,6 @@ sgs.ai_card_intention.Collateral = function(self, card, from, tos)
 	end]]
 	sgs.ai_collateral = true
 end
-
-sgs.dynamic_value.control_card.Collateral = true
 
 sgs.ai_skill_cardask["collateral-slash"] = function(self, data, pattern, target, target2)
 	if target2 and target2:hasFlag("AI_CollateralNeedCrossbow") and self:isFriend(target2) then

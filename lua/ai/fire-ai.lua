@@ -74,7 +74,6 @@ sgs.ai_skill_playerchosen.quhu = sgs.ai_skill_playerchosen.damage
 sgs.ai_playerchosen_intention.quhu = 80
 
 sgs.ai_card_intention.QuhuCard = 0
-sgs.dynamic_value.control_card.QuhuCard = true
 
 sgs.ai_skill_playerchosen.jieming = function(self, targets)
 	local friends = {}
@@ -487,8 +486,6 @@ sgs.ai_cardneed.tianyi = function(to, card, self)
 end
 
 sgs.ai_card_intention.TianyiCard = 0
-sgs.dynamic_value.control_card.TianyiCard = true
-
 sgs.ai_use_value.TianyiCard = 8.5
 
 local luanji_skill = {}

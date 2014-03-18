@@ -278,7 +278,7 @@ function SmartAI:findLeijiTarget(player, leiji_value, slasher, latest_version)
 	if not latest_version then
 		return self:findLeijiTarget(player, leiji_value, slasher, 1) or self:findLeijiTarget(player, leiji_value, slasher, -1)
 	end
-	if not player:hasSkill(latest_version == 1 and "leiji" or "nosleiji") then return nil end
+	if not player:hasSkill(latest_version == 1 and "leiji" or "nosleiji") or player:getMark("yijue") > 0 then return nil end
 	if slasher then
 		if not self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), player, slasher, slasher:hasWeapon("qinggang_sword")) then return nil end
 		if slasher:hasSkill("liegong") and slasher:getPhase() == sgs.Player_Play and self:isEnemy(player, slasher)
@@ -428,6 +428,8 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 				if self.player:hasSkill("tianyi") and not self.player:hasUsed("TianyiCard") then
 					flag = true
 				elseif self.player:hasSkill("xianzhen") and not self.player:hasUsed("XianzhenCard") then
+					flag = true
+				elseif self.player:hasSkill("yijue") and not self.player:hasUsed("YijueCard") then
 					flag = true
 				end
 				if flag then

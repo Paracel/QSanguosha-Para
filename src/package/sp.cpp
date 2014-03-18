@@ -94,6 +94,10 @@ public:
         events << EventPhaseChanging << Death;
     }
 
+    virtual int getPriority(TriggerEvent) const{
+        return 5;
+    }
+
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }

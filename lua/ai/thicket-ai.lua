@@ -671,8 +671,6 @@ end
 sgs.ai_use_value.DimengCard = 3.5
 sgs.ai_use_priority.DimengCard = 2.8
 
-sgs.dynamic_value.control_card.DimengCard = true
-
 luanwu_skill = {}
 luanwu_skill.name = "luanwu"
 table.insert(sgs.ai_skills, luanwu_skill)

@@ -20,6 +20,16 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+class YijueCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE YijueCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
 class JieyinCard: public SkillCard {
     Q_OBJECT
 

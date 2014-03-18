@@ -8,7 +8,7 @@ zhenji					5
 xiahouyuan				4
 caoren					1
 nos_liubei				9
-guanyu					3
+nos_guanyu				3
 nos_zhangfei			5
 zhugeliang				9
 nos_zhaoyun				1

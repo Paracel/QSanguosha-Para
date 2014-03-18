@@ -76,8 +76,12 @@ return {
 
 	["#guanyu"] = "美髯公",
 	["guanyu"] = "关羽",
+	["illustrator:guanyu"] = "俊西JUNC",
 	["wusheng"] = "武圣",
 	[":wusheng"] = "你可以将一张红色牌当普通【杀】使用或打出。",
+	["yijue"] = "义绝",
+	[":yijue"] = "<font color=\"green\"><b>阶段技。</b></font>你可以与一名其他角色拼点：若你赢，该角色不能使用或打出手牌且其非锁定技无效，直到回合结束；若你没赢，你可以令该角色回复1点体力。",
+	["yijue:recover"] = "令目标角色回复1点体力",
 
 	["#zhangfei"] = "万夫不当",
 	["zhangfei"] = "张飞",

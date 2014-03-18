@@ -57,6 +57,33 @@ void RendeCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
         room->addPlayerHistory(source, "RendeCard");
 }
 
+YijueCard::YijueCard() {
+}
+
+bool YijueCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && !to_select->isKongcheng() && to_select != Self;
+}
+
+void YijueCard::use(Room *room, ServerPlayer *guanyu, QList<ServerPlayer *> &targets) const{
+    ServerPlayer *target = targets.first();
+    bool success = guanyu->pindian(target, "yijue", NULL);
+    if (success) {
+        target->addMark("yijue");
+        room->setPlayerCardLimitation(target, "use,response", ".|.|.|hand", true);
+        room->addPlayerMark(target, "@skill_invalidity");
+    } else {
+        if (!target->isWounded()) return;
+        target->setFlags("YijueTarget");
+        QString choice = room->askForChoice(guanyu, "yijue", "recover+cancel");
+        target->setFlags("-YijueTarget");
+        if (choice == "recover") {
+            RecoverStruct recover;
+            recover.who = guanyu;
+            room->recover(target, recover);
+        }
+    }
+}
+
 JieyinCard::JieyinCard() {
 }
 

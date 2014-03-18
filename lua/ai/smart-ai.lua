@@ -3522,10 +3522,13 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 		for _, equip in sgs.qlist(player:getEquips()) do
 			if equip:isBlack() then blackequipnum = blackequipnum + 1 end
 		end
-		if blackequipnum + player:getHandcardNum() > 0 then return true end
+		local h_num = (player:getMark("yijue") > 0) and 0 or player:getHandcardNum()
+		if blackequipnum + h_num then return true end
 	end
+	if player:getMark("yijue") == 0 then return false end
 	if player:hasSkill("guicai") and player:getHandcardNum() > 0 then return true end
-	if player:hasSkill("huanshi") and not player:isNude() then return true end
+	if player:hasSkill("huanshi") and not player:isNude()
+		and (not string.startsWith(self.room:getMode(), "06_") or self:isFriend(to_retrial, player)) then return true end
 	if player:hasSkill("jilve") and (player:getHandcardNum() > 0 and player:getMark("@bear") > 0) then return true end
 end
 

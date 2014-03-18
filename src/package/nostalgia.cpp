@@ -1901,6 +1901,9 @@ NostalStandardPackage::NostalStandardPackage()
     nos_liubei->addSkill(new NosRende);
     nos_liubei->addSkill("jijiang");
 
+    General *nos_guanyu = new General(this, "nos_guanyu", "shu");
+    nos_guanyu->addSkill("wusheng");
+
     General *nos_zhangfei = new General(this, "nos_zhangfei", "shu");
     nos_zhangfei->addSkill("paoxiao");
 

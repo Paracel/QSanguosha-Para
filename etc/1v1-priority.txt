@@ -14,7 +14,7 @@ xunyu					17
 caopi					26					
 dengai					81					
 liubei					19					
-guanyu					57					
+guanyu					70					
 zhangfei				25					
 zhugeliang				64					
 zhaoyun					74					
@@ -190,6 +190,7 @@ nos_xiahoudun			62
 nos_zhangliao			22					
 nos_xuchu				32					
 nos_liubei				19					
+nos_guanyu				57					
 nos_zhangfei			23					
 nos_zhaoyun				68					
 nos_huangyueying		61					

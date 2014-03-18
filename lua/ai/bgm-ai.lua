@@ -366,7 +366,6 @@ end
 sgs.ai_cardneed.dahe = sgs.ai_cardneed.bignumber
 
 sgs.ai_card_intention.DaheCard = 60
-sgs.dynamic_value.control_card.DaheCard = true
 
 sgs.ai_use_value.DaheCard = 8.5
 sgs.ai_use_priority.DaheCard = 8
@@ -437,7 +436,6 @@ end
 
 sgs.ai_cardneed.tanhu = sgs.ai_cardneed.bignumber
 sgs.ai_card_intention.TanhuCard = 30
-sgs.dynamic_value.control_card.TanhuCard = true
 sgs.ai_use_priority.TanhuCard = 8
 
 function sgs.ai_skill_pindian.tanhu(minusecard, self, requestor)

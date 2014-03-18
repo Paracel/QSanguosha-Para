@@ -139,6 +139,8 @@ sgs.ai_skill_choice.yingyang = function(self, choices, data)
 		return (amFrom and self:isFriend(to)) and "down" or "up"
 	elseif table.contains(table_pindian_friends, reason) then
 		return (not amFrom and self:isFriend(from)) and "down" or "up"
+	elseif reason == "yijue" then
+		return (amFrom and self:isFriend(to)) and "down" or "up"
 	else
 		return "up"
 	end

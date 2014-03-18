@@ -949,7 +949,6 @@ sgs.ai_use_value.ShenfenCard = 8
 sgs.ai_use_priority.ShenfenCard = 5.3
 
 sgs.dynamic_value.damage_card.ShenfenCard = true
-sgs.dynamic_value.control_card.ShenfenCard = true
 
 local longhun_skill = {}
 longhun_skill.name = "longhun"

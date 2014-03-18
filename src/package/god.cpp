@@ -382,7 +382,7 @@ public:
 class Qinyin: public TriggerSkill {
 public:
     Qinyin(): TriggerSkill("qinyin") {
-        events << CardsMoveOneTime << EventPhaseChanging;
+        events << CardsMoveOneTime << EventPhaseEnd << EventPhaseChanging;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -404,7 +404,6 @@ public:
             foreach (ServerPlayer *player, all_players) {
                 room->loseHp(player);
             }
-
             room->broadcastSkillInvoke(objectName(), 1);
         }
     }
@@ -414,17 +413,14 @@ public:
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (shenzhouyu->getPhase() == Player::Discard && move.from == shenzhouyu
                 && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
-                shenzhouyu->setMark("qinyin", shenzhouyu->getMark("qinyin") + move.card_ids.size());
-                if (!shenzhouyu->hasFlag("QinyinUsed") && shenzhouyu->getMark("qinyin") >= 2) {
-                    if (TriggerSkill::triggerable(shenzhouyu) && shenzhouyu->askForSkillInvoke(objectName())) {
-                        shenzhouyu->setFlags("QinyinUsed");
-                        perform(shenzhouyu);
-                    }
-                }
+                shenzhouyu->addMark("qinyin", move.card_ids.size());
             }
+        } else if (triggerEvent == EventPhaseEnd && TriggerSkill::triggerable(shenzhouyu)
+                   && shenzhouyu->getPhase() == Player::Discard && shenzhouyu->getMark("qinyin") >= 2) {
+            if (shenzhouyu->askForSkillInvoke(objectName()))
+                perform(shenzhouyu);
         } else if (triggerEvent == EventPhaseChanging) {
             shenzhouyu->setMark("qinyin", 0);
-            shenzhouyu->setFlags("-QinyinUsed");
         }
 
         return false;

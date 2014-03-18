@@ -147,7 +147,7 @@ return {
 	["designer:nos_zhangchunhua"] = "JZHIEI",
 	["illustrator:nos_zhangchunhua"] = "樱花闪乱",
 	["nosshangshi"] = "伤逝",
-	[":nosshangshi"] = "每当你于弃牌阶段外手牌数改变后，或已损失体力值改变后，或弃牌阶段结束后，若你的手牌数小于X，你可以将手牌补至X张。（X为你已损失的体力值）",
+	[":nosshangshi"] = "每当你的手牌数改变后或已损失体力值改变后，若你的手牌数小于X，你可以将手牌补至X张。（X为你已损失的体力值）",
 
 	["nos_handang"] = "韩当-旧",
 	["&nos_handang"] = "韩当",

@@ -1490,40 +1490,12 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
             luxun->tag["LianyingMoveData"] = data;
-            if (luxun->getPhase() == Player::Discard && luxun->getMaxCards() == 0) {
-                if (!luxun->hasFlag("LianyingZeroMaxCards"))
-                    luxun->setFlags("LianyingZeroMaxCards");
-            } else {
-                int count = 0;
-                for (int i = 0; i < move.from_places.length(); i++) {
-                    if (move.from_places[i] == Player::PlaceHand) count++;
-                }
-                room->setPlayerMark(luxun, "lianying", count);
-                room->askForUseCard(luxun, "@@lianying", "@lianying-card:::" + QString::number(count));
-            }
-        }
-        return false;
-    }
-};
-
-class LianyingForZeroMaxCards: public TriggerSkill {
-public:
-    LianyingForZeroMaxCards(): TriggerSkill("#lianying-for-zero-maxcards") {
-        events << EventPhaseChanging;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.from == Player::Discard && player->hasFlag("LianyingZeroMaxCards")) {
-            player->setFlags("-LianyingZeroMaxCards");
-            CardsMoveOneTimeStruct move = player->tag["LianyingMoveData"].value<CardsMoveOneTimeStruct>();
-            if (!move.from) return false;
             int count = 0;
             for (int i = 0; i < move.from_places.length(); i++) {
                 if (move.from_places[i] == Player::PlaceHand) count++;
             }
-            room->setPlayerMark(player, "lianying", count);
-            room->askForUseCard(player, "@@lianying", "@lianying-card:::" + QString::number(count));
+            room->setPlayerMark(luxun, "lianying", count);
+            room->askForUseCard(luxun, "@@lianying", "@lianying-card:::" + QString::number(count));
         }
         return false;
     }
@@ -1955,8 +1927,6 @@ void StandardPackage::addGenerals() {
     General *luxun = new General(this, "luxun", "wu", 3); // WU 007
     luxun->addSkill(new Qianxun);
     luxun->addSkill(new Lianying);
-    luxun->addSkill(new LianyingForZeroMaxCards);
-    related_skills.insertMulti("lianying", "#lianying-for-zero-maxcards");
 
     General *sunshangxiang = new General(this, "sunshangxiang", "wu", 3, false); // WU 008
     sunshangxiang->addSkill(new Jieyin);
@@ -2089,7 +2059,7 @@ public:
 class NosJuejing: public TriggerSkill {
 public:
     NosJuejing(): TriggerSkill("nosjuejing") {
-        events << CardsMoveOneTime << EventPhaseChanging;
+        events << CardsMoveOneTime;
         frequency = Compulsory;
     }
 
@@ -2098,17 +2068,7 @@ public:
             CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
             if (move.from != gaodayihao && move.to != gaodayihao)
                 return false;
-            if ((move.to_place != Player::PlaceHand && !move.from_places.contains(Player::PlaceHand))
-                || gaodayihao->getPhase() == Player::Discard) {
-                return false;
-            }
-        }
-        if (triggerEvent == EventPhaseChanging) {
-            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::Draw) {
-                gaodayihao->skip(change.to);
-                return false;
-            } else if (change.to != Player::Finish)
+            if (move.to_place != Player::PlaceHand && !move.from_places.contains(Player::PlaceHand))
                 return false;
         }
         if (gaodayihao->getHandcardNum() == 4)

@@ -90,9 +90,6 @@ sgs.ai_skill_discard.yongsi = function(self, discard_num, min_num, optional, inc
 		if not self.player:isJilei(card) then
 			table.insert(to_discard, card:getId())
 		end
-		if (self.player:hasSkill("qinyin") and #to_discard >= least) or #to_discard >= discard_num then
-			break
-		end
 	end
 	return to_discard
 end

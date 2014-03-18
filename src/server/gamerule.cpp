@@ -86,14 +86,9 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
             break;
         }
     case Player::Discard: {
-            int discard_num = 0;
-            do {
-                discard_num = player->getHandcardNum() - player->getMaxCards();
-                if (discard_num > 0) {
-                    if (!room->askForDiscard(player, "gamerule", discard_num, 1))
-                        break;
-                }
-            } while (discard_num > 0);
+            int discard_num = player->getHandcardNum() - player->getMaxCards();
+            if (discard_num > 0)
+                room->askForDiscard(player, "gamerule", discard_num, discard_num);
             break;
         }
     case Player::Finish: {

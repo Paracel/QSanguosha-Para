@@ -1299,31 +1299,9 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *luxun, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
-            if (luxun->getPhase() == Player::Discard && luxun->getMaxCards() == 0) {
-                if (!luxun->hasFlag("NosLianyingZeroMaxCards"))
-                    luxun->setFlags("NosLianyingZeroMaxCards");
-            } else if (room->askForSkillInvoke(luxun, objectName(), data)) {
+            if (room->askForSkillInvoke(luxun, objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
                 luxun->drawCards(1);
-            }
-        }
-        return false;
-    }
-};
-
-class NosLianyingForZeroMaxCards: public TriggerSkill {
-public:
-    NosLianyingForZeroMaxCards(): TriggerSkill("#noslianying-for-zero-maxcards") {
-        events << EventPhaseChanging;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-        if (change.from == Player::Discard && player->hasFlag("NosLianyingZeroMaxCards")) {
-            player->setFlags("-NosLianyingZeroMaxCards");
-            if (player->isKongcheng() && room->askForSkillInvoke(player, "noslianying")) {
-                room->broadcastSkillInvoke("lianying");
-                player->drawCards(1);
             }
         }
         return false;
@@ -1924,8 +1902,6 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_luxun = new General(this, "nos_luxun", "wu", 3);
     nos_luxun->addSkill(new NosQianxun);
     nos_luxun->addSkill(new NosLianying);
-    nos_luxun->addSkill(new NosLianyingForZeroMaxCards);
-    related_skills.insertMulti("noslianying", "#noslianying-for-zero-maxcards");
 
     General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
     nos_diaochan->addSkill(new NosLijian);

@@ -342,10 +342,8 @@ sgs.ai_playerchosen_intention.leiji = 80
 
 function sgs.ai_slash_prohibit.leiji(self, from, to, card)
 	if self:isFriend(to, from) then return false end
-	if to:hasFlag("QianxiTarget") and (not self:hasEightDiagramEffect(to) or self.player:hasWeapon("qinggang_sword")) then return false end
-	local hcard = to:getHandcardNum()
-	if from:hasSkill("liegong") and (hcard >= from:getHp() or hcard <= from:getAttackRange()) then return false end
-	if from:hasSkill("kofliegong") and hcard >= from:getHp() then return false end
+	if (to:hasFlag("QianxiTarget") or to:getMark("yijue") > 0) and (not self:hasEightDiagramEffect(to) or self.player:hasWeapon("qinggang_sword")) then return false end
+	if not self:isJinkAvailable(from, to, card, to:hasSkill("guidao")) then return false end
 	if from:getRole() == "rebel" and to:isLord() then
 		local other_rebel
 		for _, player in sgs.qlist(self.room:getOtherPlayers(from)) do

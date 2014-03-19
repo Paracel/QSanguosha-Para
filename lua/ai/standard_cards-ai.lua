@@ -149,10 +149,8 @@ function sgs.getDefenseSlash(player, self)
 		defense = defense + hujiaJink
 	end
 
-	if attacker and attacker:objectName() ~= player:objectName() and attacker:canSlashWithoutCrossbow() and attacker:getPhase() == sgs.Player_Play then
-		local hcard = player:getHandcardNum()
-		if attacker:hasSkill("liegong") and (hcard >= attacker:getHp() or hcard <= attacker:getAttackRange()) then defense = 0 end
-		if attacker:hasSkill("kofliegong") and hcard >= attacker:getHp() then defense = 0 end
+	if attacker and attacker:objectName() ~= player:objectName() and attacker:canSlashWithoutCrossbow() then
+		if not self:isJinkAvailable(attacker, player) then defense = 0 end
 	end
 
 	if defense > 0 and attacker:objectName() ~= player:objectName() then
@@ -412,6 +410,14 @@ function SmartAI:slashIsAvailable(player, slash)
 	if not slash or not slash:isKindOf("Slash") then slash = sgs.Sanguosha:cloneCard("slash") end
 	assert(slash)
 	return slash:isAvailable(player)
+end
+
+function SmartAI:isJinkAvailable(from, to, slash, judge_considered)
+	return (not judge_considered and from:hasSkills("tieji|nostieji"))
+			or (from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play
+				and (to:getHandcardNum() <= from:getAttackRange() or to:getHandcardNum() >= from:getHp()))
+			or (from:hasSkill("kofliegong") and from:getPhase() == sgs.Player_Play and to:getHandcardNum() >= from:getHp())
+			or (from:hasFlag("ZhaxiangInvoked") and slash and slash:isRed())
 end
 
 function SmartAI:findWeaponToUse(enemy)
@@ -1107,10 +1113,6 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 		if target:getArmor() and self:evaluateArmor(target:getArmor(), target) > 3 and not (target:hasArmorEffect("silver_lion") and target:isWounded()) then
 			return true
 		end
-		local num = target:getHandcardNum()
-		if self.player:hasSkill("tieji")
-			or (self.player:hasSkill("liegong") and (num >= self.player:getHp() or num <= self.player:getAttackRange()))
-			or (self.player:hasSkill("kofliegong") and num >= self.player:getHp()) then return false end
 		if target:hasSkills("tuntian+zaoxian") and target:getPhase() == sgs.Player_NotActive then return false end
 		if target:hasSkills(sgs.need_kongcheng) then return false end
 		if target:getCards("he"):length() < 4 and target:getCards("he"):length() > 1 then return true end

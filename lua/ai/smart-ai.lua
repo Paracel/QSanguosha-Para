@@ -2121,7 +2121,7 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	local cards = self.player:getCards(flag)
 	cards = sgs.QList2Table(cards)
 	self:sortByKeepValue(cards)
-	local to_discard = {}
+	local to_discard, temp = {}, {}
 
 	local least = min_num
 	if discard_num - min_num > 1 then

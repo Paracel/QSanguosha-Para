@@ -323,7 +323,7 @@ sgs.ai_use_value.GongxinCard = 8.5
 sgs.ai_use_priority.GongxinCard = 9.5
 sgs.ai_card_intention.GongxinCard = 80
 
-sgs.ai_skill_invoke.qinyin = function(self, data)
+sgs.ai_skill_choice.qinyin = function(self, choices)
 	self:sort(self.friends, "hp")
 	self:sort(self.enemies, "hp")
 	local up = 0
@@ -369,13 +369,11 @@ sgs.ai_skill_invoke.qinyin = function(self, data)
 	end
 
 	if down > 0 then
-		sgs.ai_skill_choice.qinyin = "down"
-		return true
+		return "down"
 	elseif up > 0 then
-		sgs.ai_skill_choice.qinyin = "up"
-		return true
+		return choices:match("up") and "up" or "cancel"
 	end
-	return false
+	return "cancel"
 end
 
 local yeyan_skill = {}

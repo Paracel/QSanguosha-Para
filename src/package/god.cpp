@@ -391,8 +391,20 @@ public:
 
     void perform(ServerPlayer *shenzhouyu) const{
         Room *room = shenzhouyu->getRoom();
-        QString result = room->askForChoice(shenzhouyu, objectName(), "up+down");
+        QStringList choices;
+        choices << "down" << "cancel";
         QList<ServerPlayer *> all_players = room->getAllPlayers();
+        foreach (ServerPlayer *player, all_players) {
+            if (player->isWounded()) {
+                choices.prepend("up");
+                break;
+            }
+        }
+        QString result = room->askForChoice(shenzhouyu, objectName(), choices.join("+"));
+        if (result == "cancel")
+            return;
+        else
+            room->notifySkillInvoked(shenzhouyu, "qinyin");
         if (result == "up") {
             room->broadcastSkillInvoke(objectName(), 2);
             foreach (ServerPlayer *player, all_players) {
@@ -401,10 +413,9 @@ public:
                 room->recover(player, recover);
             }
         } else if (result == "down") {
-            foreach (ServerPlayer *player, all_players) {
-                room->loseHp(player);
-            }
             room->broadcastSkillInvoke(objectName(), 1);
+            foreach (ServerPlayer *player, all_players)
+                room->loseHp(player);
         }
     }
 
@@ -417,12 +428,10 @@ public:
             }
         } else if (triggerEvent == EventPhaseEnd && TriggerSkill::triggerable(shenzhouyu)
                    && shenzhouyu->getPhase() == Player::Discard && shenzhouyu->getMark("qinyin") >= 2) {
-            if (shenzhouyu->askForSkillInvoke(objectName()))
-                perform(shenzhouyu);
+            perform(shenzhouyu);
         } else if (triggerEvent == EventPhaseChanging) {
             shenzhouyu->setMark("qinyin", 0);
         }
-
         return false;
     }
 };

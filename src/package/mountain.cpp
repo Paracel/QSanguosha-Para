@@ -674,19 +674,23 @@ public:
 class Guzheng: public TriggerSkill {
 public:
     Guzheng(): TriggerSkill("guzheng") {
-        events << CardsMoveOneTime;
+        events << CardsMoveOneTime << EventPhaseEnd << EventPhaseChanging;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *erzhang, QVariant &data) const{
-        ServerPlayer *current = room->getCurrent();
-        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
 
-        if (!current || erzhang == current)
-            return false;
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == CardsMoveOneTime && TriggerSkill::triggerable(player)) {
+            ServerPlayer *current = room->getCurrent();
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
 
-        if (current->getPhase() == Player::Discard) {
-            QVariantList guzhengToGet = erzhang->tag["GuzhengToGet"].toList();
-            QVariantList guzhengOther = erzhang->tag["GuzhengOther"].toList();
+            if (!current || player == current || current->getPhase() != Player::Discard)
+                return false;
+
+            QVariantList guzhengToGet = player->tag["GuzhengToGet"].toList();
+            QVariantList guzhengOther = player->tag["GuzhengOther"].toList();
 
             if ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
                 foreach (int card_id, move.card_ids) {
@@ -697,70 +701,64 @@ public:
                 }
             }
 
-            erzhang->tag["GuzhengToGet"] = guzhengToGet;
-            erzhang->tag["GuzhengOther"] = guzhengOther;
-        }
+            player->tag["GuzhengToGet"] = guzhengToGet;
+            player->tag["GuzhengOther"] = guzhengOther;
+        } else if (triggerEvent == EventPhaseEnd && player->getPhase() == Player::Discard) {
+            ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
+            if (erzhang == NULL)
+                return false;
 
-        return false;
-    }
-};
+            QVariantList guzheng_cardsToGet = erzhang->tag["GuzhengToGet"].toList();
+            QVariantList guzheng_cardsOther = erzhang->tag["GuzhengOther"].toList();
+            erzhang->tag.remove("GuzhengToGet");
+            erzhang->tag.remove("GuzhengOther");
 
-class GuzhengGet: public TriggerSkill {
-public:
-    GuzhengGet(): TriggerSkill("#guzheng-get") {
-        events << EventPhaseEnd;
-    }
+            if (player->isDead())
+                return false;
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->getPhase() == Player::Discard;
-    }
-
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &) const{
-        ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
-        if (erzhang == NULL)
-            return false;
-
-        QVariantList guzheng_cardsToGet = erzhang->tag["GuzhengToGet"].toList();
-        QVariantList guzheng_cardsOther = erzhang->tag["GuzhengOther"].toList();
-        erzhang->tag.remove("GuzhengToGet");
-        erzhang->tag.remove("GuzhengOther");
-
-        if (player->isDead())
-            return false;
-
-        QList<int> cardsToGet;
-        foreach (QVariant card_data, guzheng_cardsToGet) {
-            int card_id = card_data.toInt();
-            if (room->getCardPlace(card_id) == Player::DiscardPile)
-                cardsToGet << card_id;
-        }
-        QList<int> cardsOther;
-        foreach (QVariant card_data, guzheng_cardsOther) {
-            int card_id = card_data.toInt();
-            if (room->getCardPlace(card_id) == Player::DiscardPile)
-                cardsOther << card_id;
-        }
+            QList<int> cardsToGet;
+            foreach (QVariant card_data, guzheng_cardsToGet) {
+                int card_id = card_data.toInt();
+                if (room->getCardPlace(card_id) == Player::DiscardPile)
+                    cardsToGet << card_id;
+            }
+            QList<int> cardsOther;
+            foreach (QVariant card_data, guzheng_cardsOther) {
+                int card_id = card_data.toInt();
+                if (room->getCardPlace(card_id) == Player::DiscardPile)
+                    cardsOther << card_id;
+            }
 
 
-        if (cardsToGet.isEmpty())
-            return false;
+            if (cardsToGet.isEmpty())
+                return false;
 
-        QList<int> cards = cardsToGet + cardsOther;
+            QList<int> cards = cardsToGet + cardsOther;
 
-        if (erzhang->askForSkillInvoke("guzheng", cards.length())) {
-            room->broadcastSkillInvoke("guzheng");
-            room->fillAG(cards, erzhang, cardsOther);
+            if (erzhang->askForSkillInvoke(objectName(), cards.length())) {
+                room->broadcastSkillInvoke(objectName());
+                room->fillAG(cards, erzhang, cardsOther);
 
-            int to_back = room->askForAG(erzhang, cardsToGet, false, "guzheng");
-            player->obtainCard(Sanguosha->getCard(to_back));
+                int to_back = room->askForAG(erzhang, cardsToGet, false, objectName());
+                player->obtainCard(Sanguosha->getCard(to_back));
 
-            cards.removeOne(to_back);
+                cards.removeOne(to_back);
 
-            room->clearAG(erzhang);
+                room->clearAG(erzhang);
 
-            DummyCard *dummy = new DummyCard(cards);
-            room->obtainCard(erzhang, dummy);
-            delete dummy;
+                DummyCard *dummy = new DummyCard(cards);
+                room->obtainCard(erzhang, dummy);
+                delete dummy;
+            }
+        } else if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::Discard) {
+                ServerPlayer *erzhang = room->findPlayerBySkillName(objectName());
+                if (erzhang == NULL)
+                    return false;
+                erzhang->tag.remove("GuzhengToGet");
+                erzhang->tag.remove("GuzhengOther");
+            }
         }
 
         return false;
@@ -1275,8 +1273,6 @@ MountainPackage::MountainPackage()
     General *erzhang = new General(this, "erzhang", "wu", 3); // WU 015
     erzhang->addSkill(new Zhijian);
     erzhang->addSkill(new Guzheng);
-    erzhang->addSkill(new GuzhengGet);
-    related_skills.insertMulti("guzheng", "#guzheng-get");
 
     General *zuoci = new General(this, "zuoci", "qun", 3); // QUN 009
     zuoci->addSkill(new Huashen);

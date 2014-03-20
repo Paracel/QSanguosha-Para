@@ -124,7 +124,7 @@ config = {
 	},
 
 	pairs_ban = {
-		"huatuo", "zhoutai", "zuoci", "bgm_pangtong", "nos_zhoutai",
+		"huatuo", "zuoci", "bgm_pangtong",
 		"simayi+zhenji", "simayi+dengai",
 		"xiahoudun+luxun", "xiahoudun+zhangchunhua", "xiahoudun+nos_luxun", "xiahoudun+nos_zhangchunhua",
 		"caoren+shenlvbu", "caoren+caozhi", "caoren+bgm_diaochan", "caoren+bgm_caoren", "caoren+nos_caoren",
@@ -150,6 +150,7 @@ config = {
 		    "luxun+nos_liubei", "luxun+nos_yuji", "luxun+nos_guanxingzhangbao",
 		"sunshangxiang+shensimayi", "sunshangxiang+heg_luxun",
 		"sunce+guanxingzhangbao", "sunce+nos_guanxingzhangbao",
+		"xiaoqiao+zhangchunhua", "xiaoqiao+nos_zhangchunhua",
 		"yuanshao+nos_huangyueying",
 		"yanliangwenchou+zhangchunhua", "yanliangwenchou+nos_huangyueying", "yanliangwenchou+nos_luxun", "yanliangwenchou+nos_zhangchunhua",
 		"dongzhuo+shenzhaoyun", "dongzhuo+wangyi", "dongzhuo+diy_wangyuanji", "dongzhuo+nos_zhangchunhua", "dongzhuo+nos_wangyi",
@@ -158,7 +159,7 @@ config = {
 		"shenzhaoyun+huaxiong", "shenzhaoyun+heg_dongzhuo",
 		"caozhi+bgm_diaochan", "caozhi+bgm_caoren", "caozhi+nos_caoren",
 		"gaoshun+zhangchunhua", "gaoshun+nos_zhangchunhua",
-		"wuguotai+caochong",
+		"wuguotai+zhangchunhua", "wuguotai+caochong", "wuguotai+nos_zhangchunhua",
 		"zhangchunhua+guanxingzhangbao", "zhangchunhua+guanping", "zhangchunhua+xiahouba", "zhangchunhua+zhugeke",
 		    "zhangchunhua+heg_luxun", "zhangchunhua+neo_zhangfei", "zhangchunhua+nos_liubei", "zhangchunhua+nos_zhangfei",
 		    "zhangchunhua+nos_yuji", "zhangchunhua+nos_guanxingzhangbao",

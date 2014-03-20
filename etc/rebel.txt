@@ -66,6 +66,7 @@ yuanshao				bgm_pangtong			0.4
 yuanshao				bgm_ganning				0.2
 yuanshao				diy_liuxie				2.0
 yuanshao				vs_xiahoudun			0.7
+yuanshao				nos_simayi				0.8
 yuanshao				nos_zhangjiao			0.3
 yuanshao				nos_fazheng				1.2
 yuanshao				nos_xushu				1.0

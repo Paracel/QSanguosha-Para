@@ -288,6 +288,8 @@ public:
                     default:
                             break;
                     }
+                } else {
+                    break;
                 }
             }
         } else if (triggerEvent == FinishJudge) {
@@ -334,13 +336,17 @@ public:
     virtual void onDamaged(ServerPlayer *simayi, const DamageStruct &damage) const{
         ServerPlayer *from = damage.from;
         Room *room = simayi->getRoom();
-        QVariant data = QVariant::fromValue(from);
-        if (from && !from->isNude() && room->askForSkillInvoke(simayi, "fankui", data)) {
-            room->broadcastSkillInvoke(objectName());
-            int card_id = room->askForCardChosen(simayi, from, "he", "fankui");
-            CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, simayi->objectName());
-            room->obtainCard(simayi, Sanguosha->getCard(card_id),
-                             reason, room->getCardPlace(card_id) != Player::PlaceHand);
+        for (int i = 0; i < damage.damage; i++) {
+            QVariant data = QVariant::fromValue(from);
+            if (from && !from->isNude() && room->askForSkillInvoke(simayi, "fankui", data)) {
+                room->broadcastSkillInvoke(objectName());
+                int card_id = room->askForCardChosen(simayi, from, "he", "fankui");
+                CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, simayi->objectName());
+                room->obtainCard(simayi, Sanguosha->getCard(card_id),
+                                 reason, room->getCardPlace(card_id) != Player::PlaceHand);
+            } else {
+                break;
+            }
         }
     }
 };
@@ -352,7 +358,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (player->isKongcheng())
+        if (player->isNude())
             return false;
 
         JudgeStar judge = data.value<JudgeStar>();
@@ -364,7 +370,7 @@ public:
         bool forced = false;
         if (player->getMark("JilveEvent") == int(AskForRetrial))
             forced = true;
-        const Card *card = room->askForCard(player, forced ? ".!" : "." , prompt, data, Card::MethodResponse, judge->who, true);
+        const Card *card = room->askForCard(player, forced ? "..!" : ".." , prompt, data, Card::MethodResponse, judge->who, true);
         if (forced && card == NULL)
             card = player->getRandomHandCard();
         if (card) {

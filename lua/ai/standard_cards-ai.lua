@@ -130,7 +130,7 @@ function sgs.getDefenseSlash(player, self)
 	if hasEightDiagram then
 		defense = defense + 1.5
 		if player:hasSkill("tiandu") then defense = defense + 0.6 end
-		if player:hasSkill("guicai") or player:hasSkill("huanshi") then defense = defense + 0.3 end
+		if player:hasSkills("guicai|nosguicai") or player:hasSkill("huanshi") then defense = defense + 0.3 end
 	end
 
 	if player:hasSkills("tuntian+zaoxian") and getCardsNum("Jink", player) > 0 and player:getMark("yijue") == 0 then defense = defense + 1.5 end
@@ -1802,7 +1802,7 @@ function SmartAI:getDangerousCard(who)
 	if weapon and weapon:isKindOf("Spear") and who:getHandcardNum() >= 3 and who:hasSkill("paoxiao") then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Axe") and who:hasSkills("luoyi|nosluoyi|pojun|jiushi|jiuchi|jie||jieyuan") then return weapon:getEffectiveId() end
 	if armor and armor:isKindOf("EightDiagram") and who:hasSkills("leiji|nosleiji") then return armor:getEffectiveId() end
-	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and who:hasSkills("guidao|longdan|guicai|jilve|huanshi|qingguo|kanpo") then return weapon:getEffectiveId() end
+	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and who:hasSkills("guidao|longdan|guicai|nosguicai|jilve|huanshi|qingguo|kanpo") then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end
 	if weapon and weapon:isKindOf("Crossbow") and getCardsNum("Slash", who, self.player) > 1 then
 		for _, friend in ipairs(self.friends) do

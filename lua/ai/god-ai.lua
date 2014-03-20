@@ -904,6 +904,7 @@ sgs.ai_skill_use_func.ShenfenCard = function(card, use, self)
 				end
 			end
 			if player:hasSkill("fankui") then value_d = value_d * 0.8 end
+			if player:hasSkill("nosfankui") then value_d = value_d * 0.8 end
 			if player:hasSkill("guixin") then
 				if not player:faceUp() then
 					value_d = value_d * 0.4
@@ -1015,7 +1016,7 @@ sgs.ai_skill_invoke.jilve_guicai = function(self, data)
 	local judge = data:toJudge()
 	if not self:needRetrial(judge) then return false end
 	return (use or judge.who == self.player or judge.reason == "lightning")
-			and self:getRetrialCardId(sgs.QList2Table(self.player:getHandcards()), judge) ~= -1
+			and self:getRetrialCardId(sgs.QList2Table(self.player:getCards("he")), judge) ~= -1
 end
 
 sgs.ai_skill_invoke.jilve_fangzhu = function(self, data)

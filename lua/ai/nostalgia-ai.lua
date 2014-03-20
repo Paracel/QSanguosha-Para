@@ -683,6 +683,33 @@ sgs.ai_skill_invoke.nosjianxiong = function(self, data)
 	return not self:needKongcheng(self.player, true)
 end
 
+sgs.ai_skill_invoke.nosfankui = sgs.ai_skill_invoke.fankui
+sgs.ai_skill_cardchosen.nosfankui = sgs.ai_skill_cardchosen.fankui
+sgs.ai_need_damaged.nosfankui = sgs.ai_need_damaged.fankui
+sgs.ai_choicemade_filter.skillInvoke.nosfankui = sgs.ai_choicemade_filter.skillInvoke.fankui
+sgs.ai_choicemade_filter.cardChosen.nosfankui = sgs.ai_choicemade_filter.cardChosen.fankui
+
+sgs.ai_skill_cardask["@nosguicai-card"] = function(self, data)
+	local judge = data:toJudge()
+
+	if self.room:getMode():find("_mini_46") and not judge:isGood() then return "$" .. self.player:handCards():first() end
+	if self:needRetrial(judge) then
+		local cards = sgs.QList2Table(self.player:getHandcards())
+		for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+			cards:append(sgs.Sanguosha:getCard(id))
+		end
+		local card_id = self:getRetrialCardId(cards, judge)
+		if card_id ~= -1 then
+			return "$" .. card_id
+		end
+	end
+
+	return "."
+end
+
+sgs.ai_card_need.nosguicai = sgs.ai_card_need.guicai
+sgs.nosguicai_suit_value = sgs.guicai_suit_value
+
 sgs.ai_skill_invoke.nosganglie = function(self, data)
 	local mode = self.room:getMode()
 	if mode:find("_mini_40") or mode:find("_mini_46") then return true end

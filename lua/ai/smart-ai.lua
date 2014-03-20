@@ -88,16 +88,16 @@ function setInitialTables()
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
 	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|noslianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
-	sgs.wizard_skill = "guicai|guidao|jilve|tiandu|noszhenlie|huanshi"
-	sgs.wizard_harm_skill = "guicai|guidao|jilve"
+	sgs.masochism_skill = "yiji|jieming|fankui|nosfankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
+	sgs.wizard_skill = "guicainosguicai|guidao|jilve|tiandu|noszhenlie|huanshi"
+	sgs.wizard_harm_skill = "guicai|nosguicai|guidao|jilve|huanshi"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|nosfanjian|noslijian|lijian|" ..
 							"manjuan|lihun|tuxi|nostuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|" ..
 							"anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
 	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|ganglie|vsganglie|nosganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|nosluoyi|guhuo|nosguhuo|kanpo|" ..
-							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
+							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|nosguicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo"
 	sgs.drawpeach_skill = "tuxi|nostuxi|qiaobian"
 	sgs.recover_skill = "nosrende|rende|kuanggu|kofkuanggu|zaiqi|jieyin|qingnang|shenzhi"
@@ -3523,8 +3523,9 @@ function SmartAI:canRetrial(player, to_retrial, reason)
 		local h_num = (player:getMark("yijue") > 0) and 0 or player:getHandcardNum()
 		if blackequipnum + h_num then return true end
 	end
+	if player:hasSkill("guicai") and not player:getEquips():isEmpty() then return true end
 	if player:getMark("yijue") == 0 then return false end
-	if player:hasSkill("guicai") and player:getHandcardNum() > 0 then return true end
+	if player:hasSkills("guicai|nosguicai") and player:getHandcardNum() > 0 then return true end
 	if player:hasSkill("huanshi") and not player:isNude()
 		and (not string.startsWith(self.room:getMode(), "06_") or self:isFriend(to_retrial, player)) then return true end
 	if player:hasSkill("jilve") and (player:getHandcardNum() > 0 and player:getMark("@bear") > 0) then return true end

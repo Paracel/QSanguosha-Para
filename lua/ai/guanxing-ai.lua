@@ -680,7 +680,7 @@ function SmartAI:getValuableCardForGuanxing(cards)
 			if aplayer:containsTrick("lightning") then
 				lightning = true
 			end
-			if aplayer:hasSkills("guicai|guidao") and self:isEnemy(aplayer) then
+			if aplayer:hasSkills("guicai|nosguicai|guidao") and self:isEnemy(aplayer) then
 				canRetrial = true
 			end
 		end

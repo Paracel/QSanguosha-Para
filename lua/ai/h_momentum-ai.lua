@@ -269,7 +269,7 @@ sgs.ai_skill_choice.chuanxin_lose = function(self, choices, data)
 	end
 	if self.player:hasSkill("cuorui") and self.player:getMark("CuoruiSkipJudge") > 0 then return "cuorui" end
 	if self.player:hasSkills("paoxiao+huxiao") then return "huxiao" end
-	if self.player:hasSkills("fankui+duodao") then return "duodao" end
+	if self.player:hasSkills("fankui+duodao|nosfankui+duodao") then return "duodao" end
 	if self.player:hasSkills("jilve+wansha") then return "wansha" end
 	if self.player:hasSkills("wuqian+wushuang") then return "wushuang" end
 	if self.player:hasSkills("tianfu+kanpo") then return "kanpo" end

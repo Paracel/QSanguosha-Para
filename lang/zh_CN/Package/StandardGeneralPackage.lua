@@ -17,12 +17,13 @@ return {
 
 	["#simayi"] = "狼顾之鬼",
 	["simayi"] = "司马懿",
+	["illustrator:simayi"] = "木美人",
 	["fankui"] = "反馈",
-	[":fankui"] = "每当你受到伤害后，你可以获得伤害来源的一张牌。",
+	[":fankui"] = "每当你受到1点伤害后，你可以获得伤害来源的一张牌。",
 	["guicai"] = "鬼才",
-	[":guicai"] = "每当一名角色的判定牌生效前，你可以打出一张手牌代替之。",
+	[":guicai"] = "每当一名角色的判定牌生效前，你可以打出一张牌代替之。",
 	["@guicai-card"] = CommonTranslationTable["@askforretrial"],
-	["~guicai"] = "选择一张手牌→点击确定",
+	["~guicai"] = "选择一张牌→点击确定",
 
 	["#xiahoudun"] = "独眼的罗刹",
 	["xiahoudun"] = "夏侯惇",

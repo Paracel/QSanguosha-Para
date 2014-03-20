@@ -983,6 +983,53 @@ public:
     }
 };
 
+class NosFankui: public MasochismSkill {
+public:
+    NosFankui(): MasochismSkill("nosfankui") {
+    }
+
+    virtual void onDamaged(ServerPlayer *simayi, const DamageStruct &damage) const{
+        ServerPlayer *from = damage.from;
+        Room *room = simayi->getRoom();
+        QVariant data = QVariant::fromValue(from);
+        if (from && !from->isNude() && room->askForSkillInvoke(simayi, "nosfankui", data)) {
+            room->broadcastSkillInvoke("fankui");
+            int card_id = room->askForCardChosen(simayi, from, "he", "nosfankui");
+            CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, simayi->objectName());
+            room->obtainCard(simayi, Sanguosha->getCard(card_id),
+                             reason, room->getCardPlace(card_id) != Player::PlaceHand);
+        }
+    }
+};
+
+class NosGuicai: public TriggerSkill {
+public:
+    NosGuicai(): TriggerSkill("nosguicai") {
+        events << AskForRetrial;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (player->isKongcheng())
+            return false;
+
+        JudgeStar judge = data.value<JudgeStar>();
+
+        QStringList prompt_list;
+        prompt_list << "@nosguicai-card" << judge->who->objectName()
+                    << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
+        QString prompt = prompt_list.join(":");
+        const Card *card = room->askForCard(player, "." , prompt, data, Card::MethodResponse, judge->who, true);
+        if (forced && card == NULL)
+            card = player->getRandomHandCard();
+        if (card) {
+            room->broadcastSkillInvoke("guicai");
+            room->retrial(card, player, judge, objectName());
+        }
+
+        return false;
+    }
+};
+
 class NosGanglie: public MasochismSkill {
 public:
     NosGanglie(): MasochismSkill("nosganglie") {
@@ -1870,6 +1917,10 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_caocao = new General(this, "nos_caocao$", "wei");
     nos_caocao->addSkill(new NosJianxiong);
     nos_caocao->addSkill("hujia");
+
+    General *nos_simayi = new General(this, "nos_simayi", "wei", 3);
+    nos_simayi->addSkill(new NosFankui);
+    nos_simayi->addSkill(new NosGuicai);
 
     General *nos_xiahoudun = new General(this, "nos_xiahoudun", "wei");
     nos_xiahoudun->addSkill(new NosGanglie);

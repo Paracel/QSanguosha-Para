@@ -160,7 +160,7 @@ sgs.ai_skill_cardchosen.fankui = function(self, who, flags)
 end
 
 sgs.ai_need_damaged.fankui = function(self, attacker, player)
-	if not attacker or not player:hasSkill("guicai") then return false end
+	if not attacker or not player:hasSkills("guicai|nosguicai") then return false end
 	local need_retrial = function(splayer)
 		local alive_num = self.room:alivePlayerCount()
 		return alive_num + splayer:getSeat() % alive_num > self.room:getCurrent():getSeat()
@@ -2542,7 +2542,7 @@ function SmartAI:findLijianTarget(card_name, use)
 
 		if friend_maxSlash then
 			local safe = false
-			if first:hasSkills("ganglie|vsganglie|fankui|enyuan|nosganglie|nosenyuan") and not first:hasSkills("wuyan|noswuyan") then
+			if first:hasSkills("ganglie|vsganglie|fankui|nosfankui|enyuan|nosganglie|nosenyuan") and not first:hasSkills("wuyan|noswuyan") then
 				if (first:getHp() <= 1 and first:getHandcardNum() == 0) then safe = true end
 			elseif (getCardsNum("Slash", friend_maxSlash, self.player) >= getCardsNum("Slash", first, self.player)) then safe = true end
 			if safe then return friend_maxSlash end

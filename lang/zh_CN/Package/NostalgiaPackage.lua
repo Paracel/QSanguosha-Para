@@ -18,6 +18,15 @@ return {
 	["nosjianxiong"] = "奸雄",
 	[":nosjianxiong"] = "每当你受到伤害后，你可以获得对你造成伤害的牌。",
 
+	["nos_simayi"] = "司马懿-旧",
+	["&nos_simayi"] = "司马懿",
+	["nosfankui"] = "反馈",
+	[":nosfankui"] = "每当你受到伤害后，你可以获得伤害来源的一张牌。",
+	["nosguicai"] = "鬼才",
+	[":nosguicai"] = "每当一名角色的判定牌生效前，你可以打出一张手牌代替之。",
+	["@nosguicai-card"] = CommonTranslationTable["@askforretrial"],
+	["~nosguicai"] = "选择一张手牌→点击确定",
+
 	["nos_xiahoudun"] = "夏侯惇-旧",
 	["&nos_xiahoudun"] = "夏侯惇",
 	["nosganglie"] = "刚烈",

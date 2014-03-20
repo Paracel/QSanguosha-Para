@@ -1527,8 +1527,10 @@ void Room::setPlayerProperty(ServerPlayer *player, const char *property_name, co
     player->setProperty(property_name, value);
     broadcastProperty(player, property_name);
 
-    if (strcmp(property_name, "hp") == 0)
-        thread->trigger(HpChanged, this, player);
+    if (strcmp(property_name, "hp") == 0) {
+        QVariant data = getTag("HpChangedData");
+        thread->trigger(HpChanged, this, player, data);
+    }
 
     if (strcmp(property_name, "maxhp") == 0)
         thread->trigger(MaxHpChanged, this, player);
@@ -2962,13 +2964,14 @@ void Room::loseHp(ServerPlayer *victim, int lose) {
     log.arg = QString::number(lose);
     sendLog(log);
 
-    setPlayerProperty(victim, "hp", victim->getHp() - lose);
-
     Json::Value arg(Json::arrayValue);
     arg[0] = toJsonString(victim->objectName());
     arg[1] = -lose;
     arg[2] = -1;
     doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
+
+    setTag("HpChangedData", data);
+    setPlayerProperty(victim, "hp", victim->getHp() - lose);
 
     thread->trigger(PostHpReduced, this, victim, data);
 }
@@ -3043,7 +3046,6 @@ bool Room::changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude) {
 void Room::applyDamage(ServerPlayer *victim, const DamageStruct &damage) {
     int new_hp = victim->getHp() - damage.damage;
 
-    setPlayerProperty(victim, "hp", new_hp);
     QString change_str = QString("%1:%2").arg(victim->objectName()).arg(-damage.damage);
     switch (damage.nature) {
     case DamageStruct::Fire: change_str.append("F"); break;
@@ -3056,6 +3058,10 @@ void Room::applyDamage(ServerPlayer *victim, const DamageStruct &damage) {
     arg[1] = -damage.damage;
     arg[2] = int(damage.nature);
     doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
+
+    QVariant data = QVariant::fromValue(damage);
+    setTag("HpChangedData", data);
+    setPlayerProperty(victim, "hp", new_hp);
 }
 
 void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_emotion) {
@@ -3070,16 +3076,18 @@ void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_
     recover_struct = data.value<RecoverStruct>();
     int recover_num = recover_struct.recover;
 
-    int new_hp = qMin(player->getHp() + recover_num, player->getMaxHp());
-    setPlayerProperty(player, "hp", new_hp);
-
     Json::Value arg(Json::arrayValue);
     arg[0] = toJsonString(player->objectName());
     arg[1] = recover_num;
     arg[2] = 0;
     doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
 
-    if (set_emotion) setEmotion(player, "recover");
+    int new_hp = qMin(player->getHp() + recover_num, player->getMaxHp());
+    setTag("HpChangedData", data);
+    setPlayerProperty(player, "hp", new_hp);
+
+    if (set_emotion)
+        setEmotion(player, "recover");
 
     thread->trigger(HpRecover, this, player, data);
 }
@@ -5133,6 +5141,7 @@ void Room::makeReviving(const QString &name) {
     ServerPlayer *player = findChild<ServerPlayer *>(name);
     Q_ASSERT(player);
     revivePlayer(player);
+    removeTag("HpChangedData");
     setPlayerProperty(player, "maxhp", player->getGeneralMaxHp());
     setPlayerProperty(player, "hp", player->getMaxHp());
 }

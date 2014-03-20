@@ -2700,19 +2700,19 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
     else
         dashboard->update();
 
+    QString hp =  QString::number(ClientInstance->getPlayer(who)->getHp() + delta);
+    QString maxhp = QString::number(ClientInstance->getPlayer(who)->getMaxHp());
     if (delta < 0) {
         if (losthp) {
             Sanguosha->playSystemAudioEffect("hplost");
             QString from_general = ClientInstance->getPlayer(who)->objectName();
-            log_box->appendLog("#GetHp", from_general, QStringList(), QString(),
-                               QString::number(ClientInstance->getPlayer(who)->getHp()), QString::number(ClientInstance->getPlayer(who)->getMaxHp()));
+            log_box->appendLog("#GetHp", from_general, QStringList(), QString(), hp, maxhp);
             return;
         }
 
         QString damage_effect;
         QString from_general = ClientInstance->getPlayer(who)->objectName();
-        log_box->appendLog("#GetHp", from_general, QStringList(), QString(),
-                           QString::number(ClientInstance->getPlayer(who)->getHp()), QString::number(ClientInstance->getPlayer(who)->getMaxHp()));
+        log_box->appendLog("#GetHp", from_general, QStringList(), QString(), hp, maxhp);
         switch (delta) {
         case -1: damage_effect = "injure1"; break;
         case -2: damage_effect = "injure2"; break;
@@ -2737,8 +2737,7 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
         QString n = QString::number(delta);
 
         log_box->appendLog(type, from_general, QStringList(), QString(), n);
-        log_box->appendLog("#GetHp", from_general, QStringList(), QString(),
-                           QString::number(ClientInstance->getPlayer(who)->getHp()), QString::number(ClientInstance->getPlayer(who)->getMaxHp()));
+        log_box->appendLog("#GetHp", from_general, QStringList(), QString(), hp, maxhp);
     }
 }
 

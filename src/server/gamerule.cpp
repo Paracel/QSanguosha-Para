@@ -20,7 +20,7 @@ GameRule::GameRule(QObject *)
     events << GameStart << TurnStart
            << EventPhaseProceeding << EventPhaseEnd << EventPhaseChanging
            << PreCardUsed << CardUsed << CardFinished << CardEffected
-           << PostHpReduced
+           << HpChanged
            << EventLoseSkill << EventAcquireSkill
            << AskForPeaches << AskForPeachesDone << BuryVictim << GameOverJudge
            << SlashHit << SlashEffected << SlashProceed
@@ -282,14 +282,17 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
 
             break;
         }
-    case PostHpReduced: {
+    case HpChanged: {
             if (player->getHp() > 0)
+                break;
+            if (data.isNull() || data.canConvert<RecoverStruct>())
                 break;
             if (data.canConvert<DamageStruct>()) {
                 DamageStruct damage = data.value<DamageStruct>();
                 room->enterDying(player, &damage);
-            } else
+            } else {
                 room->enterDying(player, NULL);
+            }
 
             break;
         }

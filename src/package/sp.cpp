@@ -400,23 +400,24 @@ public:
 class YicongEffect: public TriggerSkill {
 public:
     YicongEffect(): TriggerSkill("#yicong-effect") {
-        events << PostHpReduced << HpRecover;
+        events << HpChanged;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         int hp = player->getHp();
         int index = 0;
-        if (triggerEvent == HpRecover) {
-            RecoverStruct recover = data.value<RecoverStruct>();
-            if (hp > 2 && hp - recover.recover <= 2)
+        int reduce = 0;
+        if (data.canConvert<RecoverStruct>()) {
+            int rec = data.value<RecoverStruct>().recover;
+            if (hp > 2 && hp - rec < 2)
                 index = 1;
-        } else if (triggerEvent == PostHpReduced) {
-            int reduce = 0;
+        } else {
             if (data.canConvert<DamageStruct>()) {
                 DamageStruct damage = data.value<DamageStruct>();
                 reduce = damage.damage;
-            } else
+            } else if (!data.isNull()) {
                 reduce = data.toInt();
+            }
             if (hp <= 2 && hp + reduce > 2)
                 index = 2;
         }

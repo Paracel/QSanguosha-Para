@@ -1430,11 +1430,18 @@ public:
 class NosBuqu: public TriggerSkill {
 public:
     NosBuqu(): TriggerSkill("nosbuqu") {
-        events << PostHpReduced << AskForPeachesDone;
+        events << HpChanged << AskForPeachesDone;
+    }
+
+    virtual int getPriority(TriggerEvent triggerEvent) const{
+        if (triggerEvent == HpChanged)
+            return 1;
+        else
+            return TriggerSkill::getPriority(triggerEvent);
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhoutai, QVariant &data) const{
-        if (triggerEvent == PostHpReduced && zhoutai->getHp() < 1) {
+        if (triggerEvent == HpChanged && !data.isNull() && !data.canConvert<RecoverStruct>() && zhoutai->getHp() < 1) {
             if (room->askForSkillInvoke(zhoutai, objectName(), data)) {
                 room->setTag("NosBuqu", zhoutai->objectName());
                 room->broadcastSkillInvoke("nosbuqu");

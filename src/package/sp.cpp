@@ -2175,12 +2175,21 @@ TaiwanSPPackage::TaiwanSPPackage()
     General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true); // TW SP 016
     tw_luxun->addSkill("nosqianxun");
     tw_luxun->addSkill("noslianying");
+
+    General *tw_guanyu = new General(this, "tw_guanyu", "shu", 4, true, true);
+    tw_guanyu->addSkill("wusheng");
+
+    General *tw_xuchu = new General(this, "tw_xuchu", "wei", 4, true, true);
+    tw_xuchu->addSkill("nosluoyi");
+
+    General *tw_xiahoudun = new General(this, "tw_xiahoudun", "wei", 4, true, true);
+    tw_xiahoudun->addSkill("nosganglie");
 }
 
 ADD_PACKAGE(TaiwanSP)
 
-WangZheZhiZhanPackage::WangZheZhiZhanPackage()
-    : Package("wangzhezhizhan")
+MiscellaneousPackage::MiscellaneousPackage()
+    : Package("miscellaneous")
 {
     General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true); // WZ 001
     wz_daqiao->addSkill("guose");
@@ -2189,9 +2198,13 @@ WangZheZhiZhanPackage::WangZheZhiZhanPackage()
     General *wz_xiaoqiao = new General(this, "wz_xiaoqiao", "wu", 3, false, true); // WZ 002
     wz_xiaoqiao->addSkill("tianxiang");
     wz_xiaoqiao->addSkill("hongyan");
+
+    General *pr_shencaocao = new General(this, "pr_shencaocao", "god", 3, true, true); // PR LE 005
+    pr_shencaocao->addSkill("guixin");
+    pr_shencaocao->addSkill("feiying");
 }
 
-ADD_PACKAGE(WangZheZhiZhan)
+ADD_PACKAGE(Miscellaneous)
 
 HegemonySPPackage::HegemonySPPackage()
     : Package("hegemony_sp")

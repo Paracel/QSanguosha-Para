@@ -32,11 +32,11 @@ public:
     TaiwanSPPackage();
 };
 
-class WangZheZhiZhanPackage: public Package {
+class MiscellaneousPackage: public Package {
     Q_OBJECT
 
 public:
-    WangZheZhiZhanPackage();
+    MiscellaneousPackage();
 };
 
 class Yongsi: public TriggerSkill {

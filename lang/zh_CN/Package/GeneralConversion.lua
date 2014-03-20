@@ -5,6 +5,9 @@ return {
 	["@sp_convert"] = "你可以替换为%arg",
 	["or"] = "或",
 
+	["Taiwan_sp"] = "台版SP",
+	["miscellaneous"] = "其他",
+
 	["sp_diaochan"] = "SP貂蝉",
 	["&sp_diaochan"] = "貂蝉",
 	["illustrator:sp_diaochan"] = "巴萨小马",
@@ -64,6 +67,7 @@ return {
 	["&tw_yuanshu"] = "袁术", 
 	["illustrator:tw_yuanshu"] = "湯翔麟",
 
+	["#tw_zhaoyun"] = "少年将军",
 	["tw_zhaoyun"] = "台版赵云",
 	["&tw_zhaoyun"] = "赵云", 
 	["illustrator:tw_zhaoyun"] = "湯翔麟",
@@ -112,6 +116,18 @@ return {
 	["&tw_huanggai"] = "黄盖", 
 	["illustrator:tw_huanggai"] = "巴萨小马",
 
+	["tw_guanyu"] = "台版关羽",
+	["&tw_guanyu"] = "关羽", 
+	["illustrator:tw_guanyu"] = "",
+
+	["tw_xiahoudun"] = "台版夏侯惇",
+	["&tw_xiahoudun"] = "夏侯惇", 
+	["illustrator:tw_xiahoudun"] = "",
+
+	["tw_xuchu"] = "台版许褚",
+	["&tw_xuchu"] = "许褚", 
+	["illustrator:tw_xuchu"] = "",
+
 	["wz_daqiao"] = "王战大乔",
 	["&wz_daqiao"] = "大乔", 
 	["illustrator:wz_daqiao"] = "Natsu",
@@ -119,6 +135,10 @@ return {
 	["wz_xiaoqiao"] = "王战小乔",
 	["&wz_xiaoqiao"] = "小乔", 
 	["illustrator:wz_xiaoqiao"] = "Natsu",
+
+	["pr_shencaocao"] = "PR神曹操",
+	["&pr_shencaocao"] = "神曹操", 
+	["illustrator:pr_shencaocao"] = "陈岳",
 
 	["diy_zhugeke"] = "诸葛恪-贴纸",
 	["&diy_zhugeke"] = "诸葛恪",

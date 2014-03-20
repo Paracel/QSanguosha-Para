@@ -2138,11 +2138,13 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 				table.insert(to_discard, card:getEffectiveId())
 			end
 			if self.player:hasSkills(sgs.lose_equip_skill) and place == sgs.Player_PlaceEquip then discardEquip = true end
+			if #to_discard == discard_num then return to_discard end
 		end
 	end
 	if #to_discard < discard_num then
 		for _, id in ipairs(temp) do
 			table.insert(to_discard, id)
+			if #to_discard == discard_num then return to_discard end
 		end
 	end
 	return to_discard

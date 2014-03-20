@@ -707,7 +707,7 @@ sgs.ai_skill_cardask["@nosguicai-card"] = function(self, data)
 	return "."
 end
 
-sgs.ai_card_need.nosguicai = sgs.ai_card_need.guicai
+sgs.ai_cardneed.nosguicai = sgs.ai_cardneed.guicai
 sgs.nosguicai_suit_value = sgs.guicai_suit_value
 
 sgs.ai_skill_invoke.nosganglie = function(self, data)

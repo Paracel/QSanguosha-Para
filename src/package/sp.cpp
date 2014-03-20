@@ -444,7 +444,7 @@ public:
     virtual bool onPhaseChange(ServerPlayer *guanyu) const{
         Room *room = guanyu->getRoom();
         ServerPlayer *the_lord = room->getLord();
-        if (the_lord && (the_lord->getGeneralName() == "caocao" || the_lord->getGeneral2Name() == "caocao")) {
+        if (the_lord && (the_lord->getGeneralName().contains("caocao") || the_lord->getGeneral2Name().contains("caocao"))) {
             room->notifySkillInvoked(guanyu, objectName());
 
             LogMessage log;

@@ -1019,8 +1019,6 @@ public:
                     << objectName() << judge->reason << QString::number(judge->card->getEffectiveId());
         QString prompt = prompt_list.join(":");
         const Card *card = room->askForCard(player, "." , prompt, data, Card::MethodResponse, judge->who, true);
-        if (forced && card == NULL)
-            card = player->getRandomHandCard();
         if (card) {
             room->broadcastSkillInvoke("guicai");
             room->retrial(card, player, judge, objectName());

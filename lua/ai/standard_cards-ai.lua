@@ -2276,6 +2276,16 @@ sgs.ai_choicemade_filter.cardChosen.snatch = function(self, player, promptlist)
 					intention = 0
 				end
 			end
+			if promptlist[2] == "snatch" and (card:isKindOf("OffensiveHorse") or card:isKindOf("Weapon")) and self:isFriend(from, to) then
+				local canAttack
+				for _, p in ipairs(self:getEnemies(from)) do
+					if from:inMyAttackRange(p) then
+						canAttack = true
+						break
+					end
+				end
+				if not canAttack then intention = 0 end
+			end
 		elseif place == sgs.Player_PlaceHand then
 			if self:needKongcheng(to, true) and to:getHandcardNum() == 1 then
 				intention = 0

@@ -433,7 +433,7 @@ sgs.ai_skill_invoke.fangquan = function(self, data)
 			if dummy_use.card then shouldUse = shouldUse + (card:isKindOf("ExNihilo") and 2 or 1) end
 		end
 		if card:isKindOf("Weapon") then
-			local new_range = sgs.weapon_range[card:getClassName()]
+			local new_range = sgs.weapon_range[card:getClassName()] or 0
 			local current_range = self.player:getAttackRange()
 			range_fix = math.min(current_range - new_range, 0)
 		end

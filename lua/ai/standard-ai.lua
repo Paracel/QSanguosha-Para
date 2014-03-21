@@ -2868,3 +2868,9 @@ sgs.ai_skill_invoke.wangzun = function(self, data)
 	end
 	return false
 end
+
+sgs.ai_skill_invoke.qiaomeng = function(self, data)
+	local damage = data:toDamage()
+	if self:isFriend(damage.to) then return damage.to:getArmor() and self:needToThrowArmor(damage.to) end
+	return not self:doNotDiscard(damage.to, "e")
+end

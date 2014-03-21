@@ -57,6 +57,7 @@ yuji					55
 caiwenji				52 *				
 st_yuanshu				10					
 st_huaxiong				36					
+st_gongsunzan			48					
 shenguanyu				28 *				
 shenlvmeng				100					
 shenzhouyu				64					

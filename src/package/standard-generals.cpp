@@ -1822,6 +1822,43 @@ public:
     }
 };
 
+class Qiaomeng: public TriggerSkill {
+public:
+    Qiaomeng(): TriggerSkill("qiaomeng") {
+        events << Damage << BeforeCardsMove;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.to->isAlive() && damage.card && damage.card->isKindOf("Slash") && damage.card->isBlack()
+                && player->canDiscard(damage.to, "e") && room->askForSkillInvoke(player, objectName(), data)) {
+                room->broadcastSkillInvoke(objectName());
+                int id = room->askForCardChosen(player, damage.to, "e", objectName(), false, Card::MethodDiscard);
+                CardMoveReason reason(CardMoveReason::S_REASON_DISMANTLE, player->objectName(), damage.to->objectName(),
+                                      objectName(), QString());
+                room->throwCard(Sanguosha->getCard(id), reason, damage.to, player);
+            }
+        } else if (triggerEvent == BeforeCardsMove) {
+            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+            if (move.reason.m_skillName == objectName() && move.reason.m_playerId == player->objectName()
+                && move.card_ids.length() > 0) {
+                const Card *card = Sanguosha->getCard(move.card_ids.first());
+                if (card->isKindOf("Horse")) {
+                    move.card_ids.clear();
+                    data = QVariant::fromValue(move);
+                    room->obtainCard(player, card);
+                }
+            }
+        }
+        return false;
+    }
+};
+
 class Xiaoxi: public TriggerSkill {
 public:
     Xiaoxi(): TriggerSkill("xiaoxi") {
@@ -1952,14 +1989,18 @@ void StandardPackage::addGenerals() {
     diaochan->addSkill(new Lijian);
     diaochan->addSkill(new Biyue);
 
-    General *st_yuanshu = new General(this, "st_yuanshu", "qun", 4);
+    General *st_huaxiong = new General(this, "st_huaxiong", "qun", 6); // QUN 019
+    st_huaxiong->addSkill(new Yaowu);
+
+    General *st_yuanshu = new General(this, "st_yuanshu", "qun"); // QUN 021
     st_yuanshu->addSkill(new Wangzun);
     st_yuanshu->addSkill(new WangzunMaxCards);
-    related_skills.insertMulti("wangzun", "#wangzun-maxcard");
     st_yuanshu->addSkill(new Tongji);
+    related_skills.insertMulti("wangzun", "#wangzun-maxcard");
 
-    General *st_huaxiong = new General(this, "st_huaxiong", "qun", 6);
-    st_huaxiong->addSkill(new Yaowu);
+    General *st_gongsunzan = new General(this, "st_gongsunzan", "qun"); // QUN 026
+    st_gongsunzan->addSkill(new Qiaomeng);
+    st_gongsunzan->addSkill("yicong");
 
     // for skill cards
     addMetaObject<ZhihengCard>();

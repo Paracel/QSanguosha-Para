@@ -18,7 +18,8 @@ return {
 	["#DanlaoAvoid"] = "“%arg2”效果被触发，【%arg】 对 %from 无效",
 
 	["#gongsunzan"] = "白马将军",
-	["gongsunzan"] = "公孙瓒",
+	["gongsunzan"] = "SP公孙瓒",
+	["&gongsunzan"] = "公孙瓒",
 	["illustrator:gongsunzan"] = "Vincent",
 	["yicong"] = "义从",
 	[":yicong"] = "<font color=\"blue\"><b>锁定技。</b></font>若你的体力值大于2，你与其他角色的距离-1；若你的体力值小于或等于2，其他角色与你的距离+1。",

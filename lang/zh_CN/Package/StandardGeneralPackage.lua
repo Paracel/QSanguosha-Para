@@ -230,6 +230,11 @@ return {
 	["yaowu:recover"] = "回复1点体力",
 	["yaowu:draw"] = "摸一张牌",
 
+	["st_gongsunzan"] = "公孙瓒",
+	["illustrator:st_gongsunzan"] = "Vincent",
+	["qiaomeng"] = "趫猛",
+	[":qiaomeng"] = "每当你使用黑色【杀】对一名角色造成伤害后，你可以弃置该角色装备区的一张牌：若该牌为坐骑牌，该牌置入弃牌堆时你获得之。",
+
 	-- Test
 	["test"] = "测试",
 

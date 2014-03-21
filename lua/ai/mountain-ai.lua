@@ -1015,17 +1015,18 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|nosguhuo|xuanhuo|nosxuanhuo|qiangxi|huangen|" ..
 								"nosjujian|lieren|pojun|yishi|danshou|qixi|yinling|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|" ..
 								"qiangwu|jingce|shengxi|wangxi|luoyi|nosluoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|" ..
-								"longhun|jiuchi|qingcheng|shuangren|kuangfu|nosgongqi|wushen|lianhuan|duanxie|" ..
+								"longhun|jiuchi|qingcheng|shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|" ..
 								"qianxi|jujian|shensu|luanji|zhijian|shuangxiong|fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|" ..
 								"xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|kurou|wansha|lianpo|qiluan|xiaode|qingjian|" ..
 								"yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|xianzhen|qiaoshui|juece|sijian|zongshi|keji|paoxiao|" ..
 								"kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|" ..
 								"jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|hongyan|" ..
-								"zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|shenfen"):split("|")) do
+								"zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do
 			if askill == "yinghun" and not self.player:isWounded() then continue end
 			if askill == "hengzheng" and (self.room:alivePlayerCount() <= 3 or self.player:getHp() > 1 or not self.player:isKongcheng()) then continue end
 			if str:matchOne(askill) then return askill end
 		end
+		if str:matchOne("juedi") and not self.player:getPile("yinbing"):isEmpty() then return "juedi" end
 	else
 		if self.player:getHp() == 1 then
 			if str:matchOne("wuhun") then return "wuhun" end

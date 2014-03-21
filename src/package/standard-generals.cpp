@@ -1721,6 +1721,76 @@ public:
     }
 };
 
+class Xunxun: public PhaseChangeSkill {
+public:
+    Xunxun(): PhaseChangeSkill("xunxun") {
+        frequency = Frequent;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *lidian) const{
+        if (lidian->getPhase() == Player::Draw) {
+            Room *room = lidian->getRoom();
+            if (room->askForSkillInvoke(lidian, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                QList<ServerPlayer *> p_list;
+                p_list << lidian;
+                QList<int> card_ids = room->getNCards(4);
+                QList<int> obtained;
+                room->fillAG(card_ids, lidian);
+                int id1 = room->askForAG(lidian, card_ids, false, objectName());
+                card_ids.removeOne(id1);
+                obtained << id1;
+                room->takeAG(lidian, id1, false, p_list);
+                int id2 = room->askForAG(lidian, card_ids, false, objectName());
+                card_ids.removeOne(id2);
+                obtained << id2;
+                room->clearAG(lidian);
+
+                room->askForGuanxing(lidian, card_ids, Room::GuanxingDownOnly);
+                DummyCard *dummy = new DummyCard(obtained);
+                lidian->obtainCard(dummy, false);
+                delete dummy;
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+};
+
+class Wangxi: public TriggerSkill {
+public:
+    Wangxi(): TriggerSkill("wangxi") {
+        events << Damage << Damaged;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        ServerPlayer *target = NULL;
+        if (triggerEvent == Damage && !damage.to->hasFlag("Global_DebutFlag"))
+            target = damage.to;
+        else if (triggerEvent == Damaged)
+            target = damage.from;
+        if (!target || target == player) return false;
+        QList<ServerPlayer *> players;
+        players << player << target;
+        room->sortByActionOrder(players);
+
+        for (int i = 1; i <= damage.damage; i++) {
+            if (!target->isAlive() || !player->isAlive())
+                return false;
+            if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)target))) {
+                room->broadcastSkillInvoke(objectName());
+                room->drawCards(players, 1, objectName());
+            } else {
+                break;
+            }
+        }
+        return false;
+    }
+};
+
 class Wangzun: public PhaseChangeSkill {
 public:
     Wangzun(): PhaseChangeSkill("wangzun") {
@@ -1835,7 +1905,8 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.to->isAlive() && damage.card && damage.card->isKindOf("Slash") && damage.card->isBlack()
+            if (damage.to->isAlive() && !damage.to->hasFlag("Global_DebutFlag")
+                && damage.card && damage.card->isKindOf("Slash") && damage.card->isBlack()
                 && player->canDiscard(damage.to, "e") && room->askForSkillInvoke(player, objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
                 int id = room->askForCardChosen(player, damage.to, "e", objectName(), false, Card::MethodDiscard);
@@ -1912,6 +1983,11 @@ void StandardPackage::addGenerals() {
     General *zhenji = new General(this, "zhenji", "wei", 3, false); // WEI 007
     zhenji->addSkill(new Qingguo);
     zhenji->addSkill(new Luoshen);
+
+    General *lidian = new General(this, "lidian", "wei", 3); // WEI 017
+    lidian->addSkill(new Xunxun);
+    lidian->addSkill(new Wangxi);
+
 
     // Shu
     General *liubei = new General(this, "liubei$", "shu"); // SHU 001

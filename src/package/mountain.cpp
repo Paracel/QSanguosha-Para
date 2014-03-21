@@ -184,7 +184,7 @@ public:
                         }
                     case Card::Diamond: {
                             room->broadcastSkillInvoke(objectName(), 3);
-                            player->drawCards(2);
+                            player->drawCards(2, objectName());
                             break;
                         }
                     case Card::Club: {
@@ -376,7 +376,7 @@ public:
                     if (!sunce->hasInnateSkill(objectName()) && sunce->hasSkill("mouduan"))
                         index += 2;
                     room->broadcastSkillInvoke(objectName(), index + (use.from == sunce ? 0 : 1));
-                    sunce->drawCards(1);
+                    sunce->drawCards(1, objectName());
                 }
             }
         }
@@ -619,7 +619,7 @@ public:
                 recover.who = jiangwei;
                 room->recover(jiangwei, recover);
             } else {
-                room->drawCards(jiangwei, 2);
+                room->drawCards(jiangwei, 2, objectName());
             }
             room->acquireSkill(jiangwei, "guanxing");
         }
@@ -655,7 +655,7 @@ void ZhijianCard::onEffect(const CardEffectStruct &effect) const{
     log.card_str = QString::number(getEffectiveId());
     erzhang->getRoom()->sendLog(log);
 
-    erzhang->drawCards(1);
+    erzhang->drawCards(1, "zhijian");
 }
 
 class Zhijian: public OneCardViewAsSkill {

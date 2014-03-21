@@ -469,7 +469,7 @@ public:
                 }
                 if (!card_to_gotback.isEmpty()) {
                     DummyCard *dummy = new DummyCard(card_to_gotback);
-                    CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, player->objectName());
+                    CardMoveReason reason(CardMoveReason::S_REASON_DRAW, player->objectName(), "luoyi", QString());
                     room->obtainCard(player, dummy, reason);
                     delete dummy;
                 }
@@ -917,7 +917,8 @@ public:
                 if (target) {
                     room->clearAG(player);
                     dealt = true;
-                    target->obtainCard(card);
+                    CardMoveReason reason(CardMoveReason::S_REASON_DRAW, target->objectName(), "yajiao", QString());
+                    room->obtainCard(target, card, reason);
                 }
             } else {
                 QVariant carddata = QVariant::fromValue((CardStar)card);
@@ -1075,7 +1076,8 @@ public:
             int id = ids.first();
             const Card *card = Sanguosha->getCard(id);
             if (!card->isKindOf("BasicCard")) {
-                yueying->obtainCard(card);
+                CardMoveReason reason(CardMoveReason::S_REASON_DRAW, yueying->objectName(), "jizhi", QString());
+                room->obtainCard(yueying, card, reason);
             } else {
                 const Card *card_ex = NULL;
                 if (!yueying->isKongcheng())
@@ -1083,7 +1085,7 @@ public:
                                                QVariant::fromValue((CardStar)card), Card::MethodNone);
                 if (card_ex) {
                     CardMoveReason reason1(CardMoveReason::S_REASON_PUT, yueying->objectName(), "jizhi", QString());
-                    CardMoveReason reason2(CardMoveReason::S_REASON_OVERRIDE, yueying->objectName(), "jizhi", QString());
+                    CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, yueying->objectName(), "jizhi", QString());
                     CardsMoveStruct move1(card_ex->getEffectiveId(), yueying, NULL, Player::PlaceUnknown, Player::DrawPile, reason1);
                     CardsMoveStruct move2(ids, yueying, yueying, Player::PlaceUnknown, Player::PlaceHand, reason2);
 
@@ -1549,7 +1551,7 @@ public:
                 if (move.from_places[i] == Player::PlaceEquip) {
                     if (room->askForSkillInvoke(sunshangxiang, objectName())) {
                         room->broadcastSkillInvoke(objectName());
-                        sunshangxiang->drawCards(2);
+                        sunshangxiang->drawCards(2, objectName());
                     } else {
                         break;
                     }
@@ -1657,7 +1659,7 @@ public:
             Room *room = diaochan->getRoom();
             if (room->askForSkillInvoke(diaochan, objectName())) {
                 room->broadcastSkillInvoke(objectName());
-                diaochan->drawCards(1);
+                diaochan->drawCards(1, objectName());
             }
         }
 
@@ -1736,7 +1738,7 @@ public:
             ServerPlayer *yuanshu = room->findPlayerBySkillName(objectName());
             if (yuanshu && room->askForSkillInvoke(yuanshu, objectName())) {
                 room->broadcastSkillInvoke(objectName());
-                yuanshu->drawCards(1);
+                yuanshu->drawCards(1, objectName());
                 room->setPlayerFlag(target, "WangzunDecMaxCards");
             }
         }
@@ -1813,7 +1815,7 @@ public:
                 recover.who = damage.to;
                 room->recover(damage.from, recover);
             } else {
-                damage.from->drawCards(1);
+                damage.from->drawCards(1, objectName());
             }
         }
         return false;
@@ -2087,7 +2089,7 @@ public:
             log.arg = objectName();
             room->sendLog(log);
             room->notifySkillInvoked(gaodayihao, objectName());
-            gaodayihao->drawCards(diff);
+            gaodayihao->drawCards(diff, objectName());
         } else if (gaodayihao->getHandcardNum() > 4) {
             LogMessage log;
             log.type = "#TriggerSkill";

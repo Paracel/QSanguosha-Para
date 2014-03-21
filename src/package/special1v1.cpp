@@ -445,7 +445,7 @@ public:
                     log.arg = objectName();
                     room->sendLog(log);
                     if (choice == "draw")
-                        sunshangxiang->drawCards(2);
+                        sunshangxiang->drawCards(2, objectName());
                     else {
                         RecoverStruct recover;
                         recover.who = sunshangxiang;
@@ -775,7 +775,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("Slash") && use.to.contains(player)
             && room->askForSkillInvoke(player, objectName(), data))
-            player->drawCards(1);
+            player->drawCards(1, objectName());
         return false;
     }
 };
@@ -793,9 +793,9 @@ void PujiCard::onEffect(const CardEffectStruct &effect) const{
     room->throwCard(id, effect.to, effect.from);
 
     if (effect.from->isAlive() && this->getSuit() == Card::Spade)
-        effect.from->drawCards(1);
+        effect.from->drawCards(1, "puji");
     if (effect.to->isAlive() && Sanguosha->getCard(id)->getSuit() == Card::Spade)
-        effect.to->drawCards(1);
+        effect.to->drawCards(1, "puji");
 }
 
 class Puji: public OneCardViewAsSkill {

@@ -3394,6 +3394,7 @@ void Room::drawCards(QList<ServerPlayer *> players, QList<int> n_list, const QSt
         move.from = NULL;
         move.to = player;
         move.to_place = Player::PlaceHand;
+        move.reason = CardMoveReason(CardMoveReason::S_REASON_DRAW, player->objectName(), reason, QString());
         moves.append(move);
     }
     moveCardsAtomic(moves, false);

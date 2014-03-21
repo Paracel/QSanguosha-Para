@@ -213,7 +213,7 @@ public:
 
     virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
         if (target->askForSkillInvoke(objectName(), QVariant::fromValue(damage))) {
-            target->drawCards(1);
+            target->drawCards(1, objectName());
 
             Room *room = target->getRoom();
             room->broadcastSkillInvoke(objectName());
@@ -653,7 +653,7 @@ void JiefanCard::onEffect(const CardEffectStruct &effect) const{
     PlayerStar target = effect.from->tag["JiefanTarget"].value<PlayerStar>();
     QVariant data = effect.from->tag["JiefanTarget"];
     if (target && !room->askForCard(effect.to, ".Weapon", "@jiefan-discard::" + target->objectName(), data))
-        target->drawCards(1);
+        target->drawCards(1, "jiefan");
 }
 
 class Jiefan: public ZeroCardViewAsSkill {
@@ -704,7 +704,7 @@ void AnxuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
     from->obtainCard(cd);
     room->showCard(from, id);
     if (cd->getSuit() != Card::Spade)
-        source->drawCards(1);
+        source->drawCards(1, "anxu");
 }
 
 class Anxu: public ZeroCardViewAsSkill {
@@ -752,7 +752,7 @@ public:
         else
             room->broadcastSkillInvoke(objectName(), 1);
 
-        target->drawCards(3);
+        target->drawCards(3, objectName());
         RecoverStruct recover;
         recover.who = player;
         recover.recover = 1;

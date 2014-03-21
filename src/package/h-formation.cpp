@@ -302,7 +302,7 @@ public:
         if (triggerEvent == EventPhaseEnd) {
             if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Play) {
                 if (!player->hasFlag("ShengxiDamageInPlayPhase") && player->askForSkillInvoke(objectName()))
-                    player->drawCards(2);
+                    player->drawCards(2, objectName());
             }
             if (player->hasFlag("ShengxiDamageInPlayPhase"))
                 player->setFlags("-ShengxiDamageInPlayPhase");
@@ -330,7 +330,7 @@ public:
                 if (move.from == player || room->askForChoice(player, objectName(), "accept+reject") == "accept") {
                     room->broadcastSkillInvoke(objectName());
                     ServerPlayer *from = (ServerPlayer *)move.from;
-                    from->drawCards(1);
+                    from->drawCards(1, objectName());
                 } else {
                     LogMessage log;
                     log.type = "#ZhibaReject";
@@ -496,7 +496,7 @@ public:
         if (!use.card->isKindOf("Slash")) return false;
         foreach (ServerPlayer *p, use.to) {
             if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue(p))) {
-                p->drawCards(1);
+                p->drawCards(1, objectName());
                 if (p->isAlive() && p->canDiscard(p, "he"))
                     room->askForDiscard(p, objectName(), 1, 1, false, true);
             }
@@ -659,7 +659,7 @@ public:
 
                 foreach (ServerPlayer *p, hetaihous) {
                     if (p->isAlive() && room->askForSkillInvoke(p, objectName()))
-                        p->drawCards(3);
+                        p->drawCards(3, objectName());
                 }
             }
         }

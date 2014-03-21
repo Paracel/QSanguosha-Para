@@ -125,7 +125,7 @@ public:
             if (player->getPhase() == Player::Play && player->getMark(objectName()) >= player->getHp()) {
                 if (room->askForSkillInvoke(player, objectName())) {
                     room->broadcastSkillInvoke(objectName());
-                    player->drawCards(2);
+                    player->drawCards(2, objectName());
                 }
             }
         }
@@ -243,7 +243,7 @@ public:
                     data = QVariant::fromValue(use);
                 }
                 if (use.card->isRed())
-                    guanping->drawCards(1);
+                    guanping->drawCards(1, objectName());
             }
         }
         return false;
@@ -849,7 +849,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (room->askForSkillInvoke(player, objectName(), data)) {
-            player->drawCards(1);
+            player->drawCards(1, objectName());
             ServerPlayer *current = room->getCurrent();
             if (current && current->isAlive() && current->getPhase() != Player::NotActive) {
                 room->broadcastSkillInvoke(objectName());

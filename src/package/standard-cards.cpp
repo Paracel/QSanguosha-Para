@@ -428,7 +428,7 @@ public:
                         if (!card) draw_card = true;
                     }
                     if (draw_card)
-                       use.from->drawCards(1);
+                       use.from->drawCards(1, objectName());
                 }
             }
         }
@@ -1017,7 +1017,7 @@ void ExNihilo::onEffect(const CardEffectStruct &effect) const{
         }
         if (friend_num < enemy_num) extra = 1;
     }
-    effect.to->drawCards(2 + extra);
+    effect.to->drawCards(2 + extra, "ex_nihilo");
 }
 
 Duel::Duel(Suit suit, int number)

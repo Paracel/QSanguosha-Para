@@ -374,7 +374,7 @@ void Weapon::onUse(Room *room, const CardUseStruct &card_use) const{
         log.card_str = use.card->toString();
         room->sendLog(log);
 
-        player->drawCards(1);
+        player->drawCards(1, "weapon_recast");
         return;
     }
     EquipCard::onUse(room, use);

@@ -70,7 +70,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
             room->getThread()->trigger(DrawNCards, room, player, data);
             int n = data.toInt();
             if (n > 0)
-                player->drawCards(n);
+                player->drawCards(n, "draw_phase");
             room->getThread()->trigger(AfterDrawNCards, room, player, QVariant::fromValue(n));
             break;
         }
@@ -758,12 +758,12 @@ void GameRule::rewardAndPunish(ServerPlayer *killer, ServerPlayer *victim) const
 
     if (killer->getRoom()->getMode() == "06_3v3") {
         if (Config.value("3v3/OfficialRule", "2013").toString().startsWith("201"))
-            killer->drawCards(2);
+            killer->drawCards(2, "kill");
         else
-            killer->drawCards(3);
+            killer->drawCards(3, "kill");
     } else {
         if (victim->getRole() == "rebel" && killer != victim)
-            killer->drawCards(3);
+            killer->drawCards(3, "kill");
         else if (victim->getRole() == "loyalist" && killer->getRole() == "lord")
             killer->throwAllHandCardsAndEquips();
     }
@@ -944,7 +944,7 @@ bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
 
             foreach (ServerPlayer *p, room->getOtherPlayers(room->getLord())) {
                 if (p->isAlive() && p->askForSkillInvoke("draw_1v3"))
-                    p->drawCards(1);
+                    p->drawCards(1, "draw_1v3");
             }
 
             return false;
@@ -1184,7 +1184,7 @@ bool BasaraMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *pl
                     if (killer->getKingdom() == player->getKingdom())
                         killer->throwAllHandCardsAndEquips();
                     else if (killer->isAlive())
-                        killer->drawCards(3);
+                        killer->drawCards(3, "kill");
                 }
                 return true;
             }

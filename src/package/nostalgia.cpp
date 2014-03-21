@@ -106,10 +106,10 @@ NosJujianCard::NosJujianCard() {
 
 void NosJujianCard::onEffect(const CardEffectStruct &effect) const{
     int n = subcardsLength();
-    effect.to->drawCards(n);
+    effect.to->drawCards(n, "nosjujian");
     Room *room = effect.from->getRoom();
 
-    if (n == 3) {
+    if (effect.from->isAlive() && n == 3) {
         QSet<Card::CardType> types;
         foreach (int card_id, effect.card->getSubcards())
             types << Sanguosha->getCard(card_id)->getTypeId();
@@ -172,7 +172,7 @@ public:
 
                 room->broadcastSkillInvoke("nosenyuan", qrand() % 2 + 1);
                 room->notifySkillInvoked(player, objectName());
-                recover.who->drawCards(recover.recover);
+                recover.who->drawCards(recover.recover, objectName());
             }
         } else if (triggerEvent == Damaged) {
             DamageStruct damage = data.value<DamageStruct>();
@@ -318,21 +318,21 @@ public:
             if (shuangying->askForSkillInvoke(objectName())) {
                 int card1 = room->drawCard();
                 int card2 = room->drawCard();
+                QList<int> ids;
+                ids << card1 << card2;
                 bool diff = (Sanguosha->getCard(card1)->getColor() != Sanguosha->getCard(card2)->getColor());
 
                 CardsMoveStruct move, move2;
-                move.card_ids.append(card1);
-                move.card_ids.append(card2);
+                move.card_ids = ids;
                 move.reason = CardMoveReason(CardMoveReason::S_REASON_TURNOVER, shuangying->objectName(), "fuhun", QString());
                 move.to_place = Player::PlaceTable;
                 room->moveCardsAtomic(move, true);
                 room->getThread()->delay();
 
-                move2 = move;
-                move2.to_place = Player::PlaceHand;
-                move2.to = shuangying;
-                move2.reason.m_reason = CardMoveReason::S_REASON_DRAW;
-                room->moveCardsAtomic(move2, true);
+                DummyCard *dummy = new DummyCard(move.card_ids);
+                CardMoveReason reason = CardMoveReason(CardMoveReason::S_REASON_DRAW, shuangying->objectName(), "fuhun", QString());
+                room->obtainCard(shuangying, dummy, reason);
+                delete dummy;
 
                 if (diff) {
                     room->handleAcquireDetachSkills(shuangying, "wusheng|paoxiao");
@@ -840,7 +840,7 @@ public:
         int index = 1;
         if (target != zhonghui) {
             index++;
-            room->drawCards(zhonghui, 1);
+            room->drawCards(zhonghui, 1, objectName());
         }
         room->broadcastSkillInvoke(objectName(), index);
 
@@ -1245,7 +1245,7 @@ public:
 
         if (use.card->isNDTrick() && room->askForSkillInvoke(yueying, objectName())) {
             room->broadcastSkillInvoke("jizhi");
-            yueying->drawCards(1);
+            yueying->drawCards(1, objectName());
         }
 
         return false;
@@ -1346,7 +1346,7 @@ public:
         if (move.from == luxun && move.from_places.contains(Player::PlaceHand) && move.is_last_handcard) {
             if (room->askForSkillInvoke(luxun, objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
-                luxun->drawCards(1);
+                luxun->drawCards(1, objectName());
             }
         }
         return false;
@@ -1680,7 +1680,7 @@ bool NosGuhuoCard::nosguhuo(ServerPlayer *yuji) const{
                 if (real)
                     room->loseHp(player);
                 else
-                    player->drawCards(1);
+                    player->drawCards(1, "nosguhuo");
             }
         }
     }

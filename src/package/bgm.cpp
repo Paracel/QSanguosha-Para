@@ -164,7 +164,7 @@ public:
 
             room->broadcastSkillInvoke(objectName());
             int n = getWeaponCount(caoren);
-            caoren->drawCards(n + 2);
+            caoren->drawCards(n + 2, objectName());
             caoren->turnOver();
 
             if (caoren->getMark("@kuiwei") == 0)
@@ -834,19 +834,22 @@ public:
         if (no_basic == 0) {
             if (room->askForSkillInvoke(victim, "zhaolie_obtain", "obtain:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
-                liubei->obtainCard(dummy);
+                CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, liubei->objectName(), "zhaolie", QString());
+                room->obtainCard(liubei, dummy, reason2);
             } else {
                 room->broadcastSkillInvoke("zhaolie", 1);
-                victim->obtainCard(dummy);
+                CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, victim->objectName(), "zhaolie", QString());
+                room->obtainCard(victim, dummy, reason2);
             }
         } else {
             if (victim->getCardCount() >= no_basic
                 && room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
                 if (dummy->subcardsLength() > 0) {
-                    if (liubei->isAlive())
-                        liubei->obtainCard(dummy);
-                    else
+                    if (liubei->isAlive()) {
+                        CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, liubei->objectName(), "zhaolie", QString());
+                        room->obtainCard(liubei, dummy, reason2);
+                    } else
                         room->throwCard(dummy, reason, NULL);
                 }
             } else {
@@ -854,9 +857,10 @@ public:
                 if (no_basic > 0)
                     room->damage(DamageStruct("zhaolie", liubei, victim, no_basic));
                 if (dummy->subcardsLength() > 0) {
-                    if (victim->isAlive())
-                        victim->obtainCard(dummy);
-                    else
+                    if (victim->isAlive()) {
+                        CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, victim->objectName(), "zhaolie", QString());
+                        room->obtainCard(victim, dummy, reason2);
+                    } else
                         room->throwCard(dummy, reason, NULL);
                 }
             }
@@ -979,7 +983,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (player->isAlive() && damage.transfer && damage.transfer_reason == "shichou")
-            player->drawCards(damage.damage);
+            player->drawCards(damage.damage, "shichou");
         return false;
     }
 };
@@ -1079,7 +1083,7 @@ public:
                 room->sendLog(log);
                 if (damage.to->canDiscard(damage.to, "h"))
                     room->askForDiscard(damage.to, "anxian", 1, 1);
-                daqiao->drawCards(1);
+                daqiao->drawCards(1, objectName());
                 return true;
             }
         } else if (triggerEvent == TargetConfirming) {
@@ -1090,7 +1094,7 @@ public:
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
                     daqiao->addMark("anxian");
-                    use.from->drawCards(1);
+                    use.from->drawCards(1, objectName());
                 }
             }
         } else if (triggerEvent == SlashEffected) {
@@ -1711,7 +1715,7 @@ public:
             int handcard = wangyuanji->getHandcardNum();
             if (handcard < upper && room->askForSkillInvoke(wangyuanji, objectName())) {
                 room->broadcastSkillInvoke(objectName());
-                wangyuanji->drawCards(upper - handcard);
+                wangyuanji->drawCards(upper - handcard, objectName());
             }
         }
 
@@ -1728,7 +1732,7 @@ bool HuangenCard::targetFilter(const QList<const Player *> &targets, const Playe
 
 void HuangenCard::onEffect(const CardEffectStruct &effect) const{
     effect.to->tag["Huangen"] = effect.from->tag["Huangen_user"].toString();
-    effect.to->drawCards(1);
+    effect.to->drawCards(1, "huangen");
 }
 
 class HuangenViewAsSkill: public ZeroCardViewAsSkill {
@@ -2088,7 +2092,7 @@ public:
 
                 if (n <= 2) {
                     index++;
-                    gongsunzan->drawCards(1);
+                    gongsunzan->drawCards(1, objectName());
                 }
                 room->broadcastSkillInvoke(objectName(), index);
             }

@@ -175,7 +175,7 @@ public:
                         player->removeMark(objectName());
                         if (player->isAlive() && player->askForSkillInvoke(objectName(), data)) {
                             room->broadcastSkillInvoke(objectName());
-                            player->drawCards(1);
+                            player->drawCards(1, objectName());
                         } else {
                             break;
                         }
@@ -199,7 +199,7 @@ public:
             }
             if (card && card->isRed() && player->askForSkillInvoke(objectName(), data)) {
                 room->broadcastSkillInvoke(objectName());
-                player->drawCards(1);
+                player->drawCards(1, objectName());
             }
         }
         return false;

@@ -28,7 +28,7 @@ public:
                         choice = room->askForChoice(player, objectName(), "draw+discard", QVariant::fromValue(p));
                     if (choice == "draw") {
                         room->broadcastSkillInvoke(objectName(), 1);
-                        player->drawCards(1);
+                        player->drawCards(1, objectName());
                     } else {
                         room->broadcastSkillInvoke(objectName(), 2);
                         room->setTag("MoukuiDiscard", data);
@@ -72,7 +72,7 @@ public:
         if (use.card->isKindOf("Slash") && room->askForSkillInvoke(player, objectName())) {
             room->broadcastSkillInvoke(objectName(), 1);
             room->askForDiscard(player, objectName(), 2, 2, false, true);
-            player->drawCards(2);
+            player->drawCards(2, objectName());
 
             int max = -1000;
             foreach (ServerPlayer *p, room->getAllPlayers())
@@ -95,7 +95,7 @@ public:
                     index = 3;
                 room->broadcastSkillInvoke(objectName(), index);
                 room->askForDiscard(mosthp, objectName(), 2, 2, false, true);
-                mosthp->drawCards(2);
+                mosthp->drawCards(2, objectName());
             }
         }
 

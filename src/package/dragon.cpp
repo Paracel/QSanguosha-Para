@@ -63,7 +63,7 @@ bool DrZhihengCard::targetsFeasible(const QList<const Player *> &targets, const 
 void DrZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     if (source->isAlive() && source->getHp() > source->getHandcardNum()) {
         room->broadcastSkillInvoke("zhiheng");
-        room->drawCards(source, source->getHp() - source->getHandcardNum());
+        room->drawCards(source, source->getHp() - source->getHandcardNum(), "drzhiheng");
     }
 }
 

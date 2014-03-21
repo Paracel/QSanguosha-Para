@@ -24,7 +24,7 @@ public:
             recover.who = damage.from;
             recover.recover = x * 2;
             room->recover(damage.to, recover);
-            player->drawCards(x);
+            player->drawCards(x, objectName());
         }
 
         return false;
@@ -211,7 +211,7 @@ public:
             if (guanyu->askForSkillInvoke("xiansheng")) {
                 guanyu->throwAllHandCardsAndEquips();
                 room->changeHero(guanyu, "shenguanyu", true);
-                room->drawCards(guanyu, 3);
+                room->drawCards(guanyu, 3, objectName());
             }
         }
         return false;

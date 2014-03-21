@@ -62,7 +62,7 @@ public:
             if (x <= 0) continue;
 
             room->broadcastSkillInvoke(objectName());
-            to->drawCards(x);
+            to->drawCards(x, objectName());
             if (!xunyu->isAlive())
                 break;
         }
@@ -326,7 +326,7 @@ public:
             recover.recover = qMin(3, pangtong->getMaxHp()) - pangtong->getHp();
             room->recover(pangtong, recover);
 
-            pangtong->drawCards(3);
+            pangtong->drawCards(3, objectName());
 
             if (pangtong->isChained())
                 room->setPlayerProperty(pangtong, "chained", false);

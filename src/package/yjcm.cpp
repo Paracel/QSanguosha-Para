@@ -218,7 +218,7 @@ void JujianCard::onEffect(const CardEffectStruct &effect) const{
     QString choice = room->askForChoice(effect.to, "jujian", choicelist.join("+"));
 
     if (choice == "draw")
-        effect.to->drawCards(2);
+        effect.to->drawCards(2, "jujian");
     else if (choice == "recover") {
         RecoverStruct recover;
         recover.who = effect.from;
@@ -276,7 +276,7 @@ public:
                 bool invoke = room->askForSkillInvoke(player, objectName(), data);
                 move.from->setFlags("-EnyuanDrawTarget");
                 if (invoke) {
-                    room->drawCards((ServerPlayer *)move.from, 1);
+                    room->drawCards((ServerPlayer *)move.from, 1, objectName());
                     room->broadcastSkillInvoke(objectName(), 1);
                 }
             }
@@ -319,7 +319,7 @@ public:
             ServerPlayer *to = room->askForPlayerChosen(fazheng, room->getOtherPlayers(fazheng), objectName(), "xuanhuo-invoke", true, true);
             if (to) {
                 room->broadcastSkillInvoke(objectName(), 1);
-                room->drawCards(to, 2);
+                room->drawCards(to, 2, objectName());
                 if (!fazheng->isAlive() || !to->isAlive())
                     return true;
 
@@ -489,7 +489,7 @@ public:
             && room->askForSkillInvoke(player, objectName(), data)) {
             int x = qMin(5, damage.to->getHp());
             room->broadcastSkillInvoke(objectName(), (x >= 3 || !damage.to->faceUp()) ? 2 : 1);
-            damage.to->drawCards(x);
+            damage.to->drawCards(x, objectName());
             damage.to->turnOver();
         }
         return false;
@@ -646,7 +646,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
             room->useCard(CardUseStruct(slash, effect.to, target), false);
         }
     } else if (choice == "draw") {
-        effect.to->drawCards(1);
+        effect.to->drawCards(1, "mingce");
     }
 }
 
@@ -940,7 +940,7 @@ public:
         for (int i = 0; i < x; i++) {
             if (zhonghui->askForSkillInvoke("quanji")) {
                 room->broadcastSkillInvoke("quanji");
-                room->drawCards(zhonghui, 1);
+                room->drawCards(zhonghui, 1, objectName());
                 if (!zhonghui->isKongcheng()) {
                     int card_id;
                     if (zhonghui->getHandcardNum() == 1) {
@@ -1004,7 +1004,7 @@ public:
                 recover.who = zhonghui;
                 room->recover(zhonghui, recover);
             } else {
-                room->drawCards(zhonghui, 2);
+                room->drawCards(zhonghui, 2, objectName());
             }
             room->acquireSkill(zhonghui, "paiyi");
         }
@@ -1117,8 +1117,8 @@ bool Shangshi::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhan
     }
 
     if (zhangchunhua->getHandcardNum() < losthp && zhangchunhua->askForSkillInvoke(objectName())) {
-        zhangchunhua->drawCards(losthp - zhangchunhua->getHandcardNum());
         room->broadcastSkillInvoke("shangshi");
+        zhangchunhua->drawCards(losthp - zhangchunhua->getHandcardNum(), objectName());
     }
 
     return false;

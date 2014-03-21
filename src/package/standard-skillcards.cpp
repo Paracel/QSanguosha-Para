@@ -16,7 +16,7 @@ void ZhihengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
     else
         room->broadcastSkillInvoke("jilve", 4);
     if (source->isAlive())
-        room->drawCards(source, subcards.length());
+        room->drawCards(source, subcards.length(), "zhiheng");
 }
 
 RendeCard::RendeCard() {
@@ -160,7 +160,7 @@ KurouCard::KurouCard() {
 void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->loseHp(source);
     if (source->isAlive())
-        room->drawCards(source, 2);
+        room->drawCards(source, 2, "kurou");
 }
 
 LianyingCard::LianyingCard() {

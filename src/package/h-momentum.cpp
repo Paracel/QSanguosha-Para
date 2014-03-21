@@ -136,7 +136,7 @@ public:
                 }
                 player->setFlags("-HengjiangDiscarded");
                 room->setPlayerMark(player, "@hengjiang", 0);
-                if (invoke) zangba->drawCards(1);
+                if (invoke) zangba->drawCards(1, objectName());
             }
         }
         return false;
@@ -230,7 +230,7 @@ void CunsiCard::onEffect(const CardEffectStruct &effect) const{
 
     room->acquireSkill(effect.to, "yongjue");
     if (effect.to != effect.from)
-        effect.to->drawCards(2);
+        effect.to->drawCards(2, "cunsi");
 }
 
 class Cunsi: public ZeroCardViewAsSkill {

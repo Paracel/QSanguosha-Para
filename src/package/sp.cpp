@@ -151,7 +151,7 @@ public:
             player->tag["Danlao"] = use.card->toString();
             room->broadcastSkillInvoke(objectName());
 
-            player->drawCards(1);
+            player->drawCards(1, objectName());
         } else {
             if (!player->isAlive() || !player->hasSkill(objectName()))
                 return false;
@@ -526,7 +526,7 @@ void YuanhuCard::onEffect(const CardEffectStruct &effect) const{
           room->throwCard(Sanguosha->getCard(card_id), to_dismantle, caohong);
       }
     } else if (card->isKindOf("Armor")) {
-        effect.to->drawCards(1);
+        effect.to->drawCards(1, "yuanhu");
     } else if (card->isKindOf("Horse")) {
         RecoverStruct recover;
         recover.who = effect.from;
@@ -594,7 +594,7 @@ void XuejiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
     }
     foreach (ServerPlayer *p, targets) {
         if (p->isAlive())
-            p->drawCards(1);
+            p->drawCards(1, "xueji");
     }
 }
 
@@ -1429,7 +1429,7 @@ public:
         if (zhangbao && TriggerSkill::triggerable(zhangbao)
             && zhangbao->askForSkillInvoke(objectName(), data)) {
             room->broadcastSkillInvoke(objectName());
-            zhangbao->drawCards(2);
+            zhangbao->drawCards(2, "yingbing");
         }
         return false;
     }
@@ -1452,7 +1452,7 @@ public:
                     player->tag.remove("KangkaiSlash");
                     if (!will_use) continue;
 
-                    player->drawCards(1);
+                    player->drawCards(1, "kangkai");
                     if (!player->isNude() && player != to) {
                         const Card *card = NULL;
                         if (player->getCardCount() > 1) {
@@ -1499,7 +1499,7 @@ public:
                 if (Sanguosha->getCard(id)->getTypeId() == Card::TypeBasic) {
                     if (room->askForSkillInvoke(player, objectName(), data)) {
                         room->broadcastSkillInvoke(objectName());
-                        player->drawCards(1);
+                        player->drawCards(1, "shenxian");
                     }
                     break;
                 }

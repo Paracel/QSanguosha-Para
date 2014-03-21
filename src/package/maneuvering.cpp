@@ -355,7 +355,7 @@ void IronChain::onUse(Room *room, const CardUseStruct &card_use) const{
         log.card_str = card_use.card->toString();
         room->sendLog(log);
 
-        card_use.from->drawCards(1);
+        card_use.from->drawCards(1, "iron_chain");
     } else
         TrickCard::onUse(room, card_use);
 }

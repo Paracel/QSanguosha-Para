@@ -114,7 +114,7 @@ public:
                     if (scenario->getSpouse(killer) == player)
                         killer->throwAllHandCardsAndEquips();
                     else
-                        killer->drawCards(3);
+                        killer->drawCards(3, "kill");
                 }
 
                 break;

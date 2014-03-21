@@ -53,7 +53,7 @@ public:
             else
                 room->broadcastSkillInvoke("jilve", 2);
 
-            to->drawCards(caopi->getLostHp());
+            to->drawCards(caopi->getLostHp(), objectName());
             to->turnOver();
         }
     }
@@ -92,7 +92,7 @@ public:
                     log.arg = objectName();
                     room->sendLog(log);
 
-                    caopi->drawCards(1);
+                    caopi->drawCards(1, objectName());
                     caopis.removeOne(caopi);
                 } else
                     break;
@@ -273,7 +273,7 @@ public:
                 }
                 if (!card_to_gotback.isEmpty()) {
                     DummyCard *dummy2 = new DummyCard(card_to_gotback);
-                    CardMoveReason reason(CardMoveReason::S_REASON_GOTBACK, menghuo->objectName());
+                    CardMoveReason reason(CardMoveReason::S_REASON_DRAW, menghuo->objectName(), "zaiqi", objectName());
                     room->obtainCard(menghuo, dummy2, reason);
                     delete dummy2;
                 }
@@ -359,7 +359,7 @@ public:
             if (x == 1) {
                 room->broadcastSkillInvoke(objectName(), index);
 
-                to->drawCards(1);
+                to->drawCards(1, objectName());
                 room->askForDiscard(to, objectName(), 1, 1, false, true);
             } else {
                 to->setFlags("YinghunTarget");
@@ -368,12 +368,12 @@ public:
                 if (choice == "d1tx") {
                     room->broadcastSkillInvoke(objectName(), index + 1);
 
-                    to->drawCards(1);
+                    to->drawCards(1, objectName());
                     room->askForDiscard(to, objectName(), x, x, false, true);
                 } else {
                     room->broadcastSkillInvoke(objectName(), index);
 
-                    to->drawCards(x);
+                    to->drawCards(x, objectName());
                     room->askForDiscard(to, objectName(), 1, 1, false, true);
                 }
             }

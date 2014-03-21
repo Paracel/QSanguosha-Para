@@ -310,7 +310,7 @@ bool Jushou::onPhaseChange(ServerPlayer *target) const{
         Room *room = target->getRoom();
         if (room->askForSkillInvoke(target, objectName())) {          
             room->broadcastSkillInvoke("jushou");
-            target->drawCards(getJushouDrawNum(target));
+            target->drawCards(getJushouDrawNum(target), objectName());
             target->turnOver();
         }
     }
@@ -326,7 +326,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (!room->askForSkillInvoke(player, objectName())) return false;
-        player->drawCards(1);
+        player->drawCards(1, objectName());
 
         const Card *card = room->askForUseCard(player, "TrickCard+^Nullification,EquipCard|.|.|hand", "@jiewei");
         if (!card) return false;
@@ -534,7 +534,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
                 room->loseHp(player);
                 if (move.from->isAlive())
-                    room->drawCards((ServerPlayer *)move.from, 2);
+                    room->drawCards((ServerPlayer *)move.from, 2, "fenji");
             }
         }
         return false;
@@ -621,7 +621,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (player->isAlive() && damage.transfer && damage.transfer_reason == "tianxiang")
-            player->drawCards(player->getLostHp());
+            player->drawCards(player->getLostHp(), objectName());
         return false;
     }
 };

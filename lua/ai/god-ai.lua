@@ -999,7 +999,9 @@ sgs.ai_skill_invoke.lianpo = true
 
 function SmartAI:needBear(player)
 	player = player or self.player
-	return player:hasSkills("renjie+baiyin") and not player:hasSkill("jilve") and player:getMark("@bear") < 4
+	if player:hasSkills("renjie+baiyin") and player:getMark("baiyin") == 0 and not player:hasSkill("jilve") and player:getMark("@bear") < 4 then return true end
+	local sup = (sgs.Sanguosha:getPlayerCount(self.room:getMode()) >= 7) and 2 or 3
+	if player:hasSkills("keji+qinxue") and player:getMark("qinxue") == 0 and not player:hasSkill("gongxin") and player:getHandcardNum() - player:getHp() < sup then return true end
 end
 
 sgs.ai_skill_invoke.jilve_jizhi = function(self, data)

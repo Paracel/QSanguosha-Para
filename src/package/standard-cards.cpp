@@ -1488,7 +1488,7 @@ StandardCardPackage::StandardCardPackage()
     skills << new DoubleSwordSkill << new QinggangSwordSkill
            << new BladeSkill << new SpearSkill << new AxeSkill
            << new KylinBowSkill << new EightDiagramSkill
-           << new HalberdSkill << new WoodenOxSkill << new WoodenOxTriggerSkill;
+           << new HalberdSkill;
 
     skills << new SpearEmotion;
     related_skills.insertMulti("spear", "#spear-emotion");
@@ -1511,8 +1511,6 @@ StandardCardPackage::StandardCardPackage()
     cards << horses;
 
     skills << new HorseSkill;
-
-    cards << new WoodenOx(Card::Diamond, 5);
 
     cards << new AmazingGrace(Card::Heart, 3)
           << new AmazingGrace(Card::Heart, 4)
@@ -1551,8 +1549,6 @@ StandardCardPackage::StandardCardPackage()
 
     foreach (Card *card, cards)
         card->setParent(this);
-
-    addMetaObject<WoodenOxCard>();
 }
 
 StandardExCardPackage::StandardExCardPackage()
@@ -1570,6 +1566,21 @@ StandardExCardPackage::StandardExCardPackage()
         card->setParent(this);
 }
 
+LimitationBrokenPackage::LimitationBrokenPackage()
+    : Package("limitation_broken", Package::CardPack)
+{
+    QList<Card *> cards;
+    cards << new WoodenOx(Card::Diamond, 5);
+
+    skills << new WoodenOxSkill << new WoodenOxTriggerSkill;
+
+    foreach (Card *card, cards)
+        card->setParent(this);
+
+    addMetaObject<WoodenOxCard>();
+}
+
 ADD_PACKAGE(StandardCard)
 ADD_PACKAGE(StandardExCard)
+ADD_PACKAGE(LimitationBroken)
 

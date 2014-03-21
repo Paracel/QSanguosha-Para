@@ -112,5 +112,12 @@ public:
     StandardExCardPackage();
 };
 
+class LimitationBrokenPackage: public Package {
+    Q_OBJECT
+
+public:
+    LimitationBrokenPackage();
+};
+
 #endif
 

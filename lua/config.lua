@@ -18,6 +18,7 @@ config = {
 		"StandardCard",
 		"StandardExCard",
 		"Maneuvering",
+		"LimitationBroken",
 		"SPCard",
 		"Nostalgia",
 		"GreenHandCard",

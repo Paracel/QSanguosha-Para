@@ -1263,6 +1263,66 @@ sgs.ai_skill_invoke.kangkai_use = function(self, data)
 	return true
 end
 
+sgs.ai_skill_use["@@yinbing"] = function(self, prompt)
+	local ids = {}
+	if self:needToThrowArmor() then table.insert(ids, self.player:getArmor():getEffectiveId()) end
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	if #cards > 0 then
+		self:sortByKeepValue(cards)
+		local kept_null
+		for _, card in ipairs(cards) do
+			if card:getTypeId() == sgs.Card_TypeBasic or self:isValuableCard(card) then continue end
+			if card:getTypeId() == sgs.Card_TypeEquip then
+				if self:getSameEquip(card, self.player)
+					or (card:isKindOf("Weapon") and self:evaluateWeapon(card, self.player) <= 3)
+					or (card:isKindOf("Armor") and self:evaluateArmor(card, self.player) <= 1) then
+					table.insert(ids, card:getEffectiveId())
+				end
+			elseif card:getTypeId() == sgs.Card_TypeTrick then
+				if card:isKindOf("Nullification") then
+					if not kept_null then kept_null = true else table.insert(ids, card:getEffectiveId()) end
+				elseif self:getUseValue(card) < 6 then
+					table.insert(ids, card:getEffectiveId())
+				end
+			end
+		end
+	end
+	if #ids > 0 then
+		return "@YinbingCard=" .. table.concat(ids, "+") .. "->."
+	end
+	return "."
+end
+
+sgs.ai_skill_invoke.juedi = true
+
+sgs.ai_skill_playerchosen.juedi = function(self, targets)
+	local ids = self.player:getPile("yinbing")
+	local friends = self:getWoundedFriend()
+	for _, friend in ipairs(friends) do
+		if friend:getHp() <= self.player:getHp()
+			and not (self:needKongcheng(friend, true) and not self:isWeak(friend)) and not (hasManjuanEffect(friend) and ids:length() > 2) then
+			return friend
+		end
+	end
+	if ids:length() == 1 then
+		local id = ids:first()
+		local card = sgs.Sanguosha:getCard(id)
+		if card:isKindOf("Disaster") or card:isKindOf("AmazingGrace") or card:isKindOf("GodSalvation") or card:isKindOf("OffensiveHorse") then
+			for _, enemy in ipairs(self.enemies) do
+				if not enemy:isWounded() and enemy:getHp() <= self.player:getHp() and self:needKongcheng(enemy, true) then return enemy end
+			end
+		end
+	end
+	return nil
+end
+
+sgs.ai_playerchosen_intention.juedi = function(self, from, to)
+	if not to:isWounded() and self:needKongcheng(to, true) then
+	else
+		sgs.updateIntention(from, to, -60)
+	end
+end
+
 sgs.ai_skill_use["@@qingyi"] = function(self, prompt)
 	local card_str = sgs.ai_skill_use["@@shensu1"](self, "@shensu1")
 	return string.gsub(card_str, "ShensuCard", "QingyiCard")

@@ -111,6 +111,7 @@ erqiao					60
 xiahoushi				51					
 caoang					55					
 xingcai					67					
+zumao					50					
 zhugeke					78					
 lingcao					94					
 sunru					34					

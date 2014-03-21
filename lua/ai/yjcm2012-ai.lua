@@ -736,7 +736,7 @@ sgs.ai_skill_use["@@chunlao"] = function(self, prompt)
 		end
 	end
 	if #slashcards > 0 and chunlao:isEmpty() then
-		return "@ChunlaoCard=" .. table.concat(slashcards, "+") .. "->" .. "."
+		return "@ChunlaoCard=" .. table.concat(slashcards, "+") .. "->."
 	end
 	return "."
 end

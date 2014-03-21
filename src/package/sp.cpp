@@ -1501,8 +1501,7 @@ public:
                         room->broadcastSkillInvoke(objectName());
                         player->drawCards(1);
                     }
-                    if (move.reason.m_reason != CardMoveReason::S_REASON_RULEDISCARD)
-                        break;
+                    break;
                 }
             }
         }

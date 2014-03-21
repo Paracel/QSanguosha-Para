@@ -3043,27 +3043,6 @@ bool Room::changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude) {
     return (player->getMark("@waked") >= n);
 }
 
-void Room::applyDamage(ServerPlayer *victim, const DamageStruct &damage) {
-    int new_hp = victim->getHp() - damage.damage;
-
-    QString change_str = QString("%1:%2").arg(victim->objectName()).arg(-damage.damage);
-    switch (damage.nature) {
-    case DamageStruct::Fire: change_str.append("F"); break;
-    case DamageStruct::Thunder: change_str.append("T"); break;
-    default: break;
-    }
-
-    Json::Value arg(Json::arrayValue);
-    arg[0] = toJsonString(victim->objectName());
-    arg[1] = -damage.damage;
-    arg[2] = int(damage.nature);
-    doBroadcastNotify(S_COMMAND_CHANGE_HP, arg);
-
-    QVariant data = QVariant::fromValue(damage);
-    setTag("HpChangedData", data);
-    setPlayerProperty(victim, "hp", new_hp);
-}
-
 void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_emotion) {
     if (player->getLostHp() == 0 || player->isDead())
         return;
@@ -3215,28 +3194,6 @@ void Room::damage(const DamageStruct &data) {
         }
         throw triggerEvent;
     }
-}
-
-void Room::sendDamageLog(const DamageStruct &data) {
-    LogMessage log;
-
-    if (data.from) {
-        log.type = "#Damage";
-        log.from = data.from;
-    } else {
-        log.type = "#DamageNoSource";
-    }
-
-    log.to << data.to;
-    log.arg = QString::number(data.damage);
-
-    switch (data.nature) {
-    case DamageStruct::Normal: log.arg2 = "normal_nature"; break;
-    case DamageStruct::Fire: log.arg2 = "fire_nature"; break;
-    case DamageStruct::Thunder: log.arg2 = "thunder_nature"; break;
-    }
-
-    sendLog(log);
 }
 
 bool Room::hasWelfare(const ServerPlayer *player) const{

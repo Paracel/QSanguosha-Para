@@ -360,9 +360,45 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             if (damage.from && !damage.from->isAlive())
                 damage.from = NULL;
             data = QVariant::fromValue(damage);
-            room->sendDamageLog(damage);
 
-            room->applyDamage(player, damage);
+            LogMessage log;
+
+            if (damage.from) {
+                log.type = "#Damage";
+                log.from = damage.from;
+            } else {
+                log.type = "#DamageNoSource";
+            }
+
+            log.to << damage.to;
+            log.arg = QString::number(damage.damage);
+
+            switch (damage.nature) {
+            case DamageStruct::Normal: log.arg2 = "normal_nature"; break;
+            case DamageStruct::Fire: log.arg2 = "fire_nature"; break;
+            case DamageStruct::Thunder: log.arg2 = "thunder_nature"; break;
+            }
+
+            room->sendLog(log);
+
+            int new_hp = damage.to->getHp() - damage.damage;
+
+            QString change_str = QString("%1:%2").arg(damage.to->objectName()).arg(-damage.damage);
+            switch (damage.nature) {
+            case DamageStruct::Fire: change_str.append("F"); break;
+            case DamageStruct::Thunder: change_str.append("T"); break;
+            default: break;
+            }
+
+            Json::Value arg(Json::arrayValue);
+            arg[0] = QSanProtocol::Utils::toJsonString(damage.to->objectName());
+            arg[1] = -damage.damage;
+            arg[2] = int(damage.nature);
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_CHANGE_HP, arg);
+
+            room->setTag("HpChangedData", data);
+            room->setPlayerProperty(damage.to, "hp", new_hp);
+
             if (damage.nature != DamageStruct::Normal && player->isChained() && !damage.chain) {
                 int n = room->getTag("is_chained").toInt();
                 n++;

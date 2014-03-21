@@ -83,11 +83,9 @@ public:
     void clearCardFlag(int card_id, ServerPlayer *who = NULL);
     bool useCard(const CardUseStruct &card_use, bool add_history = true);
     void damage(const DamageStruct &data);
-    void sendDamageLog(const DamageStruct &data);
     void loseHp(ServerPlayer *victim, int lose = 1);
     void loseMaxHp(ServerPlayer *victim, int lose = 1);
     bool changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude = -1);
-    void applyDamage(ServerPlayer *victim, const DamageStruct &damage);
     void recover(ServerPlayer *player, const RecoverStruct &recover, bool set_emotion = false);
     bool cardEffect(const Card *card, ServerPlayer *from, ServerPlayer *to, bool multiple = false);
     bool cardEffect(const CardEffectStruct &effect);

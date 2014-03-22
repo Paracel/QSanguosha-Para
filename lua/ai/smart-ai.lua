@@ -2,13 +2,12 @@
 
 -- "middleclass" is the Lua OOP library written by kikito
 -- more information see: https://github.com/kikito/middleclass
-require "middleclass"
 
 -- initialize the random seed for later use
 math.randomseed(os.time())
 
 -- SmartAI is the base class for all other specialized AI classes
-SmartAI = class "SmartAI"
+SmartAI = (require "middleclass").class("SmartAI")
 
 version = "QSanguosha AI 20140301 (V1.414 Alpha)"
 --- this function is only function that exposed to the host program

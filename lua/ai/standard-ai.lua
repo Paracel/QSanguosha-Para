@@ -1891,7 +1891,7 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 					for _, card in ipairs(cards) do
 						if self:getUseValue(card) < 6 and card:isBlack() then
 							use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
-							if use.to then use.to:append(enemy) end
+							if use.to then use.to:append(target) end
 							return
 						end
 					end
@@ -1899,7 +1899,7 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 				for _, card in ipairs(cards) do
 					if self:getUseValue(card) < 6 and card:getSuit() == sgs.Card_Diamond then
 						use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
-						if use.to then use.to:append(enemy) end
+						if use.to then use.to:append(target) end
 						return
 					end
 				end

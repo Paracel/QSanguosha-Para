@@ -141,7 +141,7 @@ end
 
 sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 	self:sort(self.enemies, "handcard")
-	sgs.reverse(self.enemies)
+	self.enemies = sgs.reverse(self.enemies)
 
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isKongcheng() and self:objectiveLevel(enemy) > 0 

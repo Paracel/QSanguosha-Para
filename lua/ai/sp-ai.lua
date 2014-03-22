@@ -1228,7 +1228,7 @@ end
 
 sgs.ai_use_priority.QiangwuCard = 11.0
 
-sgs.ai_skill_cardask["@kangkai=give"] = function(self, data, pattern, target)
+sgs.ai_skill_cardask["@kangkai-give"] = function(self, data, pattern, target)
 	if self:isFriend(target) then
 		local id = getKangkaiCard(self, target, data)
 		if id then return "$" .. id end

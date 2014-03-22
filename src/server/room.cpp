@@ -49,8 +49,8 @@ Room::Room(QObject *parent, const QString &mode)
     initCallbacks();
 
     L = CreateLuaState();
-    DoLuaScript(L, "lua/sanguosha.lua");
-    DoLuaScript(L, "lua/ai/smart-ai.lua");
+    if (!DoLuaScript(L, "lua/sanguosha.lua") || !DoLuaScript(L, "lua/ai/smart-ai.lua"))
+        L = NULL;
 }
 
 void Room::initCallbacks() {

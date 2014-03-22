@@ -67,7 +67,7 @@ Engine::Engine()
     Sanguosha = this;
 
     lua = CreateLuaState();
-    DoLuaScript(lua, "lua/config.lua");
+    if (!DoLuaScript(lua, "lua/config.lua")) exit(1);
 
     QStringList stringlist_sp_convert = GetConfigFromLuaState(lua, "convert_pairs").toStringList();
     foreach (QString cv_pair, stringlist_sp_convert) {
@@ -90,7 +90,7 @@ Engine::Engine()
     _loadModScenarios();
     m_customScene = new CustomScenario();
 
-    DoLuaScript(lua, "lua/sanguosha.lua");
+    if (!DoLuaScript(lua, "lua/sanguosha.lua")) exit(1);
 
     // available game modes
     modes["02p"] = tr("2 players");

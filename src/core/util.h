@@ -19,7 +19,7 @@ void qShuffle(QList<T> &list) {
 
 // lua interpreter related
 lua_State *CreateLuaState();
-void DoLuaScript(lua_State *L, const char *script);
+bool DoLuaScript(lua_State *L, const char *script);
 
 QVariant GetValueFromLuaState(lua_State *L, const char *table_name, const char *key);
 

@@ -184,6 +184,7 @@ private:
     QHash<QString, ServerPlayer *> players;
     QSet<QString> addresses;
     QMultiHash<QString, QString> name2objname;
+    bool created_successfully;
 
 private slots:
     void processNewConnection(ClientSocket *socket);

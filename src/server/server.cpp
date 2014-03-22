@@ -1167,7 +1167,7 @@ int ServerDialog::config() {
 }
 
 Server::Server(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), created_successfully(true)
 {
     server = new NativeServerSocket;
     server->setParent(this);
@@ -1176,7 +1176,7 @@ Server::Server(QObject *parent)
     ServerInfo.parse(Sanguosha->getSetupString());
 
     current = NULL;
-    createNewRoom();
+    if (!createNewRoom()) created_successfully = false;
 
     connect(server, SIGNAL(new_connection(ClientSocket *)), this, SLOT(processNewConnection(ClientSocket *)));
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(deleteLater()));
@@ -1190,7 +1190,7 @@ void Server::broadcast(const QString &msg) {
 }
 
 bool Server::listen() {
-    return server->listen();
+    return created_successfully && server->listen();
 }
 
 void Server::daemonize() {
@@ -1199,6 +1199,8 @@ void Server::daemonize() {
 
 Room *Server::createNewRoom() {
     Room *new_room = new Room(this, Config.GameMode);
+    if (!new_room->getLuaState())
+        return NULL;
     current = new_room;
     rooms.insert(current);
 
@@ -1259,8 +1261,9 @@ void Server::processRequest(const char *request) {
         }
     }
 
-    if (current == NULL || current->isFull() || current->isFinished())
-        createNewRoom();
+    if (current == NULL || current->isFull() || current->isFinished()) {
+        if (!createNewRoom()) return;
+    }
 
     ServerPlayer *player = current->addSocket(socket);
     current->signup(player, screen_name, avatar, false);

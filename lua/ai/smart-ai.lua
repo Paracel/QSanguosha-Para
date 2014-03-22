@@ -3636,10 +3636,10 @@ function SmartAI:needRetrial(judge)
 		end
 	end
 
-	if reason == "tieji" then
+	if reason == "nostieji" then
 		local target
 		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-			if p:hasFlag("TiejiTarget") then
+			if p:hasFlag("NosTiejiTarget") then
 				target = p
 				break
 			end
@@ -3680,10 +3680,10 @@ function SmartAI:dontRespondPeachInJudge(judge)
 	if judge.reason == "tuntian" and judge.who:getMark("zaoxian") == 0 and judge.who:getPile("field"):length() < 2 then return true
 	elseif (judge.reason == "eight_diagram" or judge.reason == "bazhen") and self:isFriend(judge.who) and not self:isWeak(judge.who) then return true
 	elseif judge.reason == "nosmiji" and judge.who:getLostHp() == 1 then return true
-	elseif judge.reason == "tieji" then
+	elseif judge.reason == "nostieji" then
 		local target
 		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-			if p:hasFlag("TiejiTarget") then
+			if p:hasFlag("NosTiejiTarget") then
 				target = p
 				break
 			end

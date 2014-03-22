@@ -1015,7 +1015,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 						return
 					end
 				end
-			elseif reason == "tieji" then
+			elseif reason == "nostieji" then
 				for _, card in ipairs(cards) do
 					if (card:isRed() or (card:getSuit() == sgs.Card_Spade and friend:hasSkill("hongyan")))
 						and (friend:hasSkill("tiandu") or not self:isValuableCard(card)) then
@@ -1083,7 +1083,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 						return
 					end
 				end
-			elseif reason == "tieji" then
+			elseif reason == "nostieji" then
 				for _, card in ipairs(cards) do
 					if (card:getSuit() == sgs.Card_Club or (card:getSuit() == sgs.Card_Spade and not enemy:hasSkill("hongyan")))
 						and not self:isValuableCard(card) then

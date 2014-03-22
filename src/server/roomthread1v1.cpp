@@ -36,7 +36,7 @@ void RoomThread1v1::run() {
             candidates << "nos_caocao" << "nos_simayi" << "nos_xiahoudun" << "kof_zhangliao"
                        << "kof_xuchu" << "guojia" << "kof_zhenji" << "kof_xiahouyuan"
                        << "nos_caoren" << "dianwei" << "kof_guanyu" << "nos_zhangfei"
-                       << "zhugeliang" << "nos_zhaoyun" << "machao" << "kof_huangyueying"
+                       << "zhugeliang" << "nos_zhaoyun" << "nos_machao" << "kof_huangyueying"
                        << "kof_huangzhong" << "kof_jiangwei" << "kof_menghuo" << "kof_zhurong"
                        << "sunquan" << "ganning" << "huanggai" << "nos_zhouyu"
                        << "nos_luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"

@@ -23,7 +23,7 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
 
     QStringList list_name;
     list_name << "nos_caocao" << "nos_simayi" << "nos_xiahoudun" << "nos_zhangliao" << "nos_xuchu" << "guojia" << "zhenji"
-              << "nos_liubei" << "nos_guanyu" << "nos_zhangfei" << "nos_zhaoyun" << "zhugeliang" << "machao" << "nos_huangyueying"
+              << "nos_liubei" << "nos_guanyu" << "nos_zhangfei" << "nos_zhaoyun" << "zhugeliang" << "nos_machao" << "nos_huangyueying"
               << "sunquan" << "ganning" << "nos_lvmeng" << "huanggai" << "nos_zhouyu" << "daqiao" << "nos_luxun" << "sunshangxiang"
               << "huatuo" << "lvbu" << "nos_diaochan"
               << "nos_caoren" << "xiahouyuan" << "weiyan" << "huangzhong"

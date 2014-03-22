@@ -11,16 +11,10 @@ sgs.ai_skill_invoke.chongzhen = function(self, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.chongzhen = function(self, player, promptlist)
-	local target
-	for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
-		if p:hasFlag("ChongzhenTarget") then
-			target = p
-			break
-		end
-	end
+	local target = findPlayerByObjectName(self.room, promptlist[#promptlist - 1])
 	if target then
 		local intention = 60
-		if promptlist[3] == "yes" then
+		if promptlist[#promptlist] == "yes" then
 			if not self:hasLoseHandcardEffective(target) or (self:needKongcheng(target) and target:getHandcardNum() == 1) then
 				intention = 0
 			end

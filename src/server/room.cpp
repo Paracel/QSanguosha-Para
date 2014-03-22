@@ -880,10 +880,10 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
         if (data.type() == QVariant::String)
             skillCommand = toJsonArray(skill_name, data.toString());
         else {
-            PlayerStar player = data.value<PlayerStar>();
+            PlayerStar p = data.value<PlayerStar>();
             QString data_str;
-            if (player != NULL)
-                data_str = "playerdata:" + player->objectName();
+            if (p != NULL)
+                data_str = "playerdata:" + p->objectName();
             skillCommand = toJsonArray(skill_name, data_str);
         }
 
@@ -902,7 +902,12 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
         notifySkillInvoked(player, skill_name);
     }
 
-    QVariant decisionData = QVariant::fromValue("skillInvoke:" + skill_name + ":" + (invoked ? "yes" : "no"));
+    QString decisionString = QString("skillInvoke:" + skill_name);
+    PlayerStar p = data.value<PlayerStar>();
+    if (p != NULL)
+        decisionString = decisionString + ":" + p->objectName();
+    decisionString = decisionString + ":" + (invoked ? "yes" : "no");
+    QVariant decisionData = QVariant::fromValue(decisionString);
     thread->trigger(ChoiceMade, this, player, decisionData);
     return invoked;
 }

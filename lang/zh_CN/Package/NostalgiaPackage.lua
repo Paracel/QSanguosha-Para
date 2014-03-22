@@ -59,6 +59,11 @@ return {
 	["nos_zhaoyun"] = "赵云-旧",
 	["&nos_zhaoyun"] = "赵云",
 
+	["nos_machao"] = "马超-旧",
+	["&nos_machao"] = "马超",
+	["nostieji"] = "铁骑",
+	[":nostieji"] = "每当你指定【杀】的目标后，你可以进行判定：若结果为红色，该角色不能使用【闪】响应此【杀】。",
+
 	["#nos_lvmeng"] = "白衣渡江",
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",

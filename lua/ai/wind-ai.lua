@@ -203,6 +203,13 @@ function sgs.ai_cardneed.liegong(to, card, self)
 			or (card:isKindOf("Weapon") and not (to:getWeapon() or getKnownCard(to, self, "Weapon") > 0))
 end
 
+sgs.ai_choicemade_filter.skillInvoke.liegong = function(self, player, promptlist)
+	if promptlist[#promptlist] == "yes" then
+		local target = findPlayerByObjectName(self.room, promptlist[#promptlist - 1])
+		if target then sgs.updateIntention(player, target, 50) end
+	end
+end
+
 function sgs.ai_cardneed.kuanggu(to, card, self)
 	return card:isKindOf("OffensiveHorse") and not (to:getOffensiveHorse() or getKnownCard(to, self, "OffensiveHorse", false) > 0)
 end
@@ -478,7 +485,7 @@ sgs.ai_skill_invoke.fenji = function(self, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.fenji = function(self, player, promptlist)
-	if promptlist[3] == "yes" then
+	if promptlist[#promptlist] == "yes" then
 		local fenji_target
 		for _, p in sgs.qlist(self.room:getAllPlayers()) do
 			if p:hasFlag("FenjiMoveFrom") then

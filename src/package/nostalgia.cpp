@@ -1233,6 +1233,57 @@ public:
     }
 };
 
+class NosTieji: public TriggerSkill {
+public:
+    NosTieji(): TriggerSkill("nostieji") {
+        events << TargetConfirmed;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (player != use.from || !use.card->isKindOf("Slash"))
+            return false;
+        QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+        int index = 0;
+        foreach (ServerPlayer *p, use.to) {
+            if (!player->isAlive()) break;
+            if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
+                room->broadcastSkillInvoke("tieji");
+
+                p->setFlags("NosTiejiTarget"); // For AI
+
+                JudgeStruct judge;
+                judge.pattern = ".|red";
+                judge.good = true;
+                judge.reason = objectName();
+                judge.who = player;
+
+                try {
+                    room->judge(judge);
+                }
+                catch (TriggerEvent triggerEvent) {
+                    if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+                        p->setFlags("-NosTiejiTarget");
+                    throw triggerEvent;
+                }
+
+                if (judge.isGood()) {
+                    LogMessage log;
+                    log.type = "#NoJink";
+                    log.from = p;
+                    room->sendLog(log);
+                    jink_list.replace(index, QVariant(0));
+                }
+
+                p->setFlags("-NosTiejiTarget");
+            }
+            index++;
+        }
+        player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+        return false;
+    }
+};
+
 class NosJizhi: public TriggerSkill {
 public:
     NosJizhi(): TriggerSkill("nosjizhi") {
@@ -1943,6 +1994,10 @@ NostalStandardPackage::NostalStandardPackage()
 
     General *nos_zhaoyun = new General(this, "nos_zhaoyun", "shu");
     nos_zhaoyun->addSkill("longdan");
+
+    General *nos_machao = new General(this, "nos_machao", "shu");
+    nos_machao->addSkill("mashu");
+    nos_machao->addSkill(new NosTieji);
 
     General *nos_huangyueying = new General(this, "nos_huangyueying", "shu", 3, false);
     nos_huangyueying->addSkill(new NosJizhi);

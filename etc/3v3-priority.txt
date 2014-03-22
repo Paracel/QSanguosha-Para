@@ -12,7 +12,7 @@ nos_guanyu				3
 nos_zhangfei			5
 zhugeliang				9
 nos_zhaoyun				1
-machao					5
+nos_machao				5
 huangyueying			8
 huangzhong				4
 weiyan					2

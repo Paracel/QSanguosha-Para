@@ -28,7 +28,7 @@ nos_liubei				zhugeliang				-0.5
 nos_zhangjiao			zhangliao				0.7
 nos_zhangjiao			xunyu					0.2
 nos_zhangjiao			dengai					0.8
-nos_zhangjiao			machao					-0.5
+nos_zhangjiao			nos_machao				-0.5
 nos_zhangjiao			dianwei					0.5
 nos_zhangjiao			huangzhong				1.5
 nos_zhangjiao			jiangwei				0.7
@@ -73,7 +73,7 @@ yuanshao				nos_xushu				1.0
 zhangjiao				zhangliao				0.8
 zhangjiao				xunyu					0.2
 zhangjiao				dengai					0.8
-zhangjiao				machao					-0.5
+zhangjiao				nos_machao				-0.5
 zhangjiao				dianwei					0.5
 zhangjiao				huangzhong				1.5
 zhangjiao				jiangwei				0.7

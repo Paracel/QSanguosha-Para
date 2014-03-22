@@ -166,6 +166,13 @@ function sgs.ai_cardneed.kofliegong(to, card, self)
 	return isCard("Slash", card, to) and getKnownCard(to, self.player, "Slash", true) == 0
 end
 
+sgs.ai_choicemade_filter.skillInvoke.kofliegong = function(self, player, promptlist)
+	if promptlist[#promptlist] == "yes" then
+		local target = findPlayerByObjectName(self.room, promptlist[#promptlist - 1])
+		if target then sgs.updateIntention(player, target, 50) end
+	end
+end
+
 sgs.ai_skill_invoke.yinli = function(self)
 	return not self:needKongcheng(self.player, true)
 end
@@ -297,7 +304,7 @@ sgs.ai_skill_use_func.MouzhuCard = function(card, use, self)
 		elseif enemy:getHandcardNum() > 0 then
 			if not self:slashIsEffective(slash_nosuit, self.player, nil, enemy) and self:getCardsNum("Slash") > getCardsNum("Slash", enemy, self.player) and not second then
 				second = enemy
-			elseif not enemy:hasSkills("wushuang|mengjin|tieji")
+			elseif not enemy:hasSkills("wushuang|mengjin|tieji|nostieji")
 				and not ((enemy:hasSkill("roulin") or enemy:hasWeapon("double_sword")) and enemy:getGender() ~= self.player:getGender()) then
 
 				if enemy:getHandcardNum() == 1 and slash and not third and self.player:inMyAttackRange(enemy)

@@ -950,6 +950,37 @@ sgs.ai_card_intention.NosRendeCard = sgs.ai_card_intention.RendeCard
 
 sgs.dynamic_value.benefit.NosRendeCard = true
 
+sgs.ai_skill_invoke.nostieji = function(self, data)
+	local target = data:toPlayer()
+	if self:isFriend(target) then return false end
+
+	local zj = self.room:findPlayerBySkillName("guidao")
+	if zj and self:isEnemy(zj) and self:canRetrial(zj) then return false end
+
+	if target:hasArmorEffect("eight_diagram") and not self.player:hasWeapon("qinggang_sword") then return true end
+	if target:hasLordSkill("hujia") then
+		for _, p in ipairs(self.enemies) do
+			if p:getKingdom() == "wei" and (p:hasArmorEffect("eight_diagram") or p:getHandcardNum() > 0) then return true end
+		end
+	end
+	if target:hasSkill("longhun") and target:getHp() == 1 and self:hasSuit("club", true, target) then return true end
+	if target:isKongcheng() or (self:getKnownNum(target) == target:getHandcardNum() and getKnownCard(target, self.player, "Jink", true) == 0) then return false end
+	return true
+end
+
+sgs.ai_choicemade_filter.skillInvoke.nostieji = function(self, player, promptlist)
+	if promptlist[#promptlist] == "yes" then
+		local target
+		for _, p in sgs.qlist(self.room:getAllPlayers()) do
+			if p:hasFlag("NosTiejiTarget") then
+				target = p
+				break
+			end
+		end
+		if target then sgs.updateIntention(player, target, 50) end
+	end
+end
+
 function sgs.ai_cardneed.nosjizhi(to, card)
 	return card:isNDTrick()
 end

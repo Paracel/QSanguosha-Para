@@ -71,6 +71,12 @@ void YijueCard::use(Room *room, ServerPlayer *guanyu, QList<ServerPlayer *> &tar
         target->addMark("yijue");
         room->setPlayerCardLimitation(target, "use,response", ".|.|.|hand", true);
         room->addPlayerMark(target, "@skill_invalidity");
+
+        foreach (ServerPlayer *p, room->getAllPlayers())
+            room->filterCards(p, p->getCards("he"), true);
+        Json::Value args;
+        args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
     } else {
         if (!target->isWounded()) return;
         target->setFlags("YijueTarget");

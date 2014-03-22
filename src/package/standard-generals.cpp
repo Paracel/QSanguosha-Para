@@ -758,6 +758,13 @@ public:
             if (player->getMark("yijue") == 0) continue;
             player->removeMark("yijue");
             room->removePlayerMark(player, "@skill_invalidity");
+
+            foreach (ServerPlayer *p, room->getAllPlayers())
+                room->filterCards(p, p->getCards("he"), false);
+            Json::Value args;
+            args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+
             room->removePlayerCardLimitation(player, "use,response", ".|.|.|hand$1");
         }
         return false;
@@ -941,49 +948,105 @@ public:
 class Tieji: public TriggerSkill {
 public:
     Tieji(): TriggerSkill("tieji") {
-        events << TargetConfirmed;
+        events << TargetConfirmed << FinishJudge;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        CardUseStruct use = data.value<CardUseStruct>();
-        if (player != use.from || !use.card->isKindOf("Slash"))
-            return false;
-        QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
-        int index = 0;
-        foreach (ServerPlayer *p, use.to) {
-            if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
-                room->broadcastSkillInvoke(objectName());
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
 
-                p->setFlags("TiejiTarget"); // For AI
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == TargetConfirmed && TriggerSkill::triggerable(player)) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (player != use.from || !use.card->isKindOf("Slash"))
+                return false;
+            QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
+            int index = 0;
+            QList<ServerPlayer *> tos;
+            foreach (ServerPlayer *p, use.to) {
+                if (!player->isAlive()) break;
+                if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {
+                    room->broadcastSkillInvoke(objectName());
+                    if (!tos.contains(p)) {
+                        p->addMark("tieji");
+                        room->addPlayerMark(p, "@skill_invalidity");
+                        tos << p;
 
-                JudgeStruct judge;
-                judge.pattern = ".|red";
-                judge.good = true;
-                judge.reason = objectName();
-                judge.who = player;
+                        foreach (ServerPlayer *pl, room->getAllPlayers())
+                            room->filterCards(pl, pl->getCards("he"), true);
+                        Json::Value args;
+                        args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+                        room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+                    }
 
-                try {
+                    JudgeStruct judge;
+                    judge.pattern = ".";
+                    judge.good = true;
+                    judge.reason = objectName();
+                    judge.who = player;
+                    judge.play_animation = false;
+
                     room->judge(judge);
-                }
-                catch (TriggerEvent triggerEvent) {
-                    if (triggerEvent == TurnBroken || triggerEvent == StageChange)
-                        p->setFlags("-TiejiTarget");
-                    throw triggerEvent;
-                }
 
-                if (judge.isGood()) {
-                    LogMessage log;
-                    log.type = "#NoJink";
-                    log.from = p;
-                    room->sendLog(log);
-                    jink_list.replace(index, QVariant(0));
+                    if (p->isAlive() && !p->canDiscard(p, "he")
+                        || !room->askForCard(p, ".|" + judge.pattern, "@tieji-discard:::" + judge.pattern, data, Card::MethodDiscard)) {
+                        LogMessage log;
+                        log.type = "#NoJink";
+                        log.from = p;
+                        room->sendLog(log);
+                        jink_list.replace(index, QVariant(0));
+                    }
                 }
-
-                p->setFlags("-TiejiTarget");
+                index++;
             }
-            index++;
+            player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+            return false;
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStar judge = data.value<JudgeStar>();
+            if (judge->reason == objectName()) {
+                judge->pattern = judge->card->getSuitString();
+            }
         }
-        player->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
+        return false;
+    }
+};
+
+class TiejiClear: public TriggerSkill {
+public:
+    TiejiClear(): TriggerSkill("#tieji-clear") {
+        events << EventPhaseChanging << Death;
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 5;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *target, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to != Player::NotActive)
+                return false;
+        } else if (triggerEvent == Death) {
+            DeathStruct death = data.value<DeathStruct>();
+            if (death.who != target || target != room->getCurrent())
+                return false;
+        }
+        QList<ServerPlayer *> players = room->getAllPlayers();
+        foreach (ServerPlayer *player, players) {
+            if (player->getMark("tieji") == 0) continue;
+            player->removeMark("tieji");
+            room->removePlayerMark(player, "@skill_invalidity");
+
+            foreach (ServerPlayer *p, room->getAllPlayers())
+                room->filterCards(p, p->getCards("he"), false);
+            Json::Value args;
+            args[0] = QSanProtocol::S_GAME_EVENT_UPDATE_SKILL;
+            room->doBroadcastNotify(QSanProtocol::S_COMMAND_LOG_EVENT, args);
+        }
         return false;
     }
 };
@@ -1988,7 +2051,6 @@ void StandardPackage::addGenerals() {
     lidian->addSkill(new Xunxun);
     lidian->addSkill(new Wangxi);
 
-
     // Shu
     General *liubei = new General(this, "liubei$", "shu"); // SHU 001
     liubei->addSkill(new Rende);
@@ -2013,8 +2075,10 @@ void StandardPackage::addGenerals() {
     zhaoyun->addSkill(new Yajiao);
 
     General *machao = new General(this, "machao", "shu"); // SHU 006
-    machao->addSkill(new Tieji);
     machao->addSkill(new Mashu);
+    machao->addSkill(new Tieji);
+    machao->addSkill(new TiejiClear);
+    related_skills.insertMulti("tieji", "#tieji-clear");
 
     General *huangyueying = new General(this, "huangyueying", "shu", 3, false); // SHU 007
     huangyueying->addSkill(new Jizhi);

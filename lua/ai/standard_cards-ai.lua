@@ -158,7 +158,7 @@ function sgs.getDefenseSlash(player, self)
 		local need_double_jink = attacker:hasSkills("wushuang|drwushuang")
 								or (attacker:hasSkill("roulin") and player:isFemale())
 								or (player:hasSkill("roulin") and attacker:isFemale())
-								or (jiangqin and jiangqin:isAdjacentTo(player) and attacker:isAdjacentTo(player) and self and self:isFriend(jiangqin, attacker))
+								or (jiangqin and jiangqin:isAdjacentTo(player) and attacker:isAdjacentTo(player) and self and self:isEnemy(jiangqin))
 		if need_double_jink and getKnownCard(player, nil, "Jink", true, "he") < 2
 			and getCardsNum("Jink", player) < 1.5
 			and (not player:hasLordSkill("hujia") or hujiaJink < 2) then
@@ -2963,7 +2963,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 					hit_num = hit_num + 1
 					if getCardsNum("Jink", enemy, self.player) < 1
 						or enemy:isKongcheng() 
-						or self.player:hasSkills("tieji|liegong|kofliegong|wushuang|dahe|qianxi")
+						or self.player:hasSkills("tieji|nostieji|liegong|kofliegong|wushuang|dahe|qianxi")
 						or self.player:hasSkill("roulin") and enemy:isFemale()
 						or (self.player:hasWeapon("axe") or self:getCardsNum("Axe") > 0) and self.player:getCards("he"):length() > 4 then
 						return analeptic

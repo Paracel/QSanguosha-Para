@@ -18,7 +18,7 @@ guanyu					70
 zhangfei				25					
 zhugeliang				64					
 zhaoyun					74					
-machao					65					
+machao					70					
 huangyueying			65					
 huangzhong				75					
 weiyan					74					
@@ -196,6 +196,7 @@ nos_liubei				19
 nos_guanyu				57					
 nos_zhangfei			23					
 nos_zhaoyun				68					
+nos_machao				65					
 nos_huangyueying		61					
 nos_lvmeng				63					
 nos_zhouyu				82					

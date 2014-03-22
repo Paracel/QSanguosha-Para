@@ -16,7 +16,7 @@ sgs.ai_choicemade_filter.skillInvoke.wangxi = function(self, player, promptlist)
 	elseif damage.to and damage.to:objectName() == player:objectName() then
 		target = damage.from
 	end
-	if target and promptlist[3] == "yes" then
+	if target and promptlist[#promptlist] == "yes" then
 		if self:needKongcheng(target, true) then sgs.updateIntention(player, target, 10)
 		elseif not hasManjuanEffect(target) and player:getState() == "robot" then sgs.updateIntention(player, target, -60)
 		end
@@ -37,7 +37,7 @@ function sgs.ai_skill_invoke.hengjiang(self, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.hengjiang = function(self, player, promptlist)
-	if promptlist[3] == "yes" then
+	if promptlist[#promptlist] == "yes" then
 		local current = self.room:getCurrent()
 		if current and current:getPhase() <= sgs.Player_Discard
 			and not (current:hasSkill("keji") and not current:hasFlag("KejiSlashInPlayPhase")) and current:getHandcardNum() > current:getMaxCards() - 2 then
@@ -320,7 +320,7 @@ sgs.ai_skill_choice.chuanxin_lose = function(self, choices, data)
 end
 
 sgs.ai_choicemade_filter.skillInvoke.fengshi = function(self, player, promptlist)
-	if promptlist[3] == "yes" then
+	if promptlist[#promptlist] == "yes" then
 		local fengshi_target
 		for _, p in sgs.qlist(self.room:getAllPlayers()) do
 			if p:hasFlag("FengshiTarget") then

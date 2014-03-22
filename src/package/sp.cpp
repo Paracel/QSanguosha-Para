@@ -2112,7 +2112,7 @@ SPPackage::SPPackage()
 
     General *sp_machao = new General(this, "sp_machao", "qun", 4, true, true); // SP 011
     sp_machao->addSkill("mashu");
-    sp_machao->addSkill("tieji");
+    sp_machao->addSkill("nostieji");
 
     General *sp_jiaxu = new General(this, "sp_jiaxu", "wei", 3, true, true); // SP 012
     sp_jiaxu->addSkill("wansha");
@@ -2260,7 +2260,7 @@ TaiwanSPPackage::TaiwanSPPackage()
 
     General *tw_machao = new General(this, "tw_machao", "shu", 4, true, true); // TW SP 010
     tw_machao->addSkill("mashu");
-    tw_machao->addSkill("tieji");
+    tw_machao->addSkill("nostieji");
 
     General *tw_huangyueying = new General(this, "tw_huangyueying", "shu", 3, false, true); // TW SP 011
     tw_huangyueying->addSkill("nosjizhi");

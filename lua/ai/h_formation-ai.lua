@@ -255,6 +255,13 @@ sgs.ai_skill_invoke.niaoxiang = function(self, data)
 	return true
 end
 
+sgs.ai_choicemade_filter.skillInvoke.niaoxiang = function(self, player, promptlist)
+	if promptlist[#promptlist] == "yes" then
+		local target = findPlayerByObjectName(self.room, promptlist[#promptlist - 1])
+		if target then sgs.updateIntention(player, target, 50) end
+	end
+end
+
 sgs.ai_skill_invoke.yicheng = function(self, data)
 	local player = data:toPlayer()
 	if hasManjuanEffect(player) then
@@ -351,7 +358,7 @@ local function will_discard_zhendu(self)
 			local slash = sgs.Sanguosha:cloneCard("slash")
 			local trend = 3
 			if current:hasWeapon("axe") then trend = trend - 1
-			elseif current:hasSkills("liegong|kofliegong|tieji|wushuang|niaoxiang") then trend = trend - 0.4 end
+			elseif current:hasSkills("liegong|kofliegong|tieji|nostieji|wushuang|niaoxiang") then trend = trend - 0.4 end
 			for _, enemy in ipairs(self.enemies) do
 				if current:canSlash(enemy) and not self:slashProhibit(slash, enemy, current)
 					and self:slashIsEffective(slash, enemy, current) and sgs.isGoodTarget(enemy, self.enemies, self, true) then

@@ -350,7 +350,7 @@ end
 
 sgs.ai_choicemade_filter.skillInvoke.pojun = function(self, player, promptlist)
 	local intention = 60
-	local index = promptlist[#promptlist] == "yes" and 1 or -1
+	local index = (promptlist[#promptlist] == "yes") and 1 or -1
 	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 	if damage.from and damage.to then
 		if not damage.to:faceUp() then

@@ -82,7 +82,7 @@ sgs.ai_skill_use_func.DrJiedaoCard = function(card, use, self)
 	end
 end
 
-sgs.ai_skill_cardask["@JijiuDecrease"] = function(self, data)
+sgs.ai_skill_cardask["@jijiu-decrease"] = function(self, data)
 	local damage = data:toDamage()
 	if not self:isFriend(damage.to) then return "." end
 	if damage.to:hasSkills(sgs.masochism_skill) and damage.damage <= 1 and damage.to:getHp() > 1 then return "." end

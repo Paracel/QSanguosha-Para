@@ -41,6 +41,6 @@ return {
 	[":drqingnang"] = "出牌阶段，若你已受伤，你可以弃置一张牌：若如此做，你回复1点体力。",
 	["drjijiu"] = "急救",
 	[":drjijiu"] = "每当一名角色受到伤害时，你可以弃置一张红色牌：若如此做，此伤害-1。",
-	["@DrJijiuDecrease"] = "你可以弃置一张红色牌：若如此做，此伤害-1",
+	["@drjijiu-decrease"] = "你可以弃置一张红色牌：若如此做，此伤害-1",
 	["#DrJijiuDecrease"] = "%from 发动了“<font color=\"yellow\"><b>急救</b></font>”，伤害点数从 %arg 点减少至 %arg2 点",
 }

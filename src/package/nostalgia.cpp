@@ -187,7 +187,7 @@ public:
                 room->broadcastSkillInvoke("nosenyuan", qrand() % 2 + 3);
                 room->notifySkillInvoked(player, objectName());
 
-                const Card *card = room->askForCard(source, ".|heart|.|hand", "@enyuanheart", data, Card::MethodNone);
+                const Card *card = room->askForCard(source, ".|heart|.|hand", "@nosenyuan-heart", data, Card::MethodNone);
                 if (card)
                     player->obtainCard(card);
                 else

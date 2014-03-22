@@ -1257,6 +1257,9 @@ function cardsView_spear(self, player, skill_name)
 		end
 	end
 	local cards = player:getCards("h")
+	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
+		cards:append(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 	local newcards = {}
 	for _, card in ipairs(cards) do
@@ -3197,7 +3200,7 @@ local wooden_ox_skill = {}
 wooden_ox_skill.name = "wooden_ox"
 table.insert(sgs.ai_skills, wooden_ox_skill)
 wooden_ox_skill.getTurnUseCard = function(self)
-	if self.player:hasUsed("WoodenOxCard") or self.player:isKongcheng() then return end
+	if self.player:hasUsed("WoodenOxCard") or self.player:isKongcheng() or not self.player:hasTreasure("wooden_ox") then return end
 	self.wooden_ox_assist = nil
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByUseValue(cards, true)

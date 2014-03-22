@@ -3907,6 +3907,8 @@ end
 
 function isCard(class_name, card, player)
 	if not player or not card then global_room:writeToConsole(debug.traceback()) end
+	if type(card) == "number" and card >= 0 then card = sgs.Sanguosha:getCard(card)
+	elseif type(card) ~= "userdata" then global_room:writeToConsole(debug.traceback()) end
 	if not card:isKindOf(class_name) then
 		local place
 		local id = card:getEffectiveId()

@@ -30,6 +30,10 @@
     <addaction name="actionStart_Game"/>
     <addaction name="actionStart_Server"/>
     <addaction name="actionReplay"/>
+    <addaction name="separator"/>
+    <addaction name="actionRestart_Game"/>
+    <addaction name="actionReturn_to_Main_Menu"/>
+    <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
@@ -365,6 +369,22 @@
    </property>
    <property name="shortcut">
     <string>F8</string>
+   </property>
+  </action>
+  <action name="actionRestart_Game">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Restart Game</string>
+   </property>
+  </action>
+  <action name="actionReturn_to_Main_Menu">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Return to Main Menu</string>
    </property>
   </action>
  </widget>

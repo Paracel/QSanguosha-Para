@@ -553,7 +553,6 @@ function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
--- @todo: YiJi AI
 sgs.ai_skill_invoke.yiji = function(self)
 	local sb_diaochan = self.room:getCurrent()
 	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then

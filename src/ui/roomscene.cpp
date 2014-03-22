@@ -2828,6 +2828,7 @@ void RoomScene::onGameOver() {
     fillTable(loser_table, loser_list);
 
     addRestartButton(dialog);
+    connect(dialog, SIGNAL(rejected()), this, SIGNAL(game_over_dialog_rejected()));
     m_roomMutex.unlock();
     dialog->exec();
 }
@@ -2855,7 +2856,7 @@ void RoomScene::addRestartButton(QDialog *dialog) {
     connect(restart_button, SIGNAL(clicked()), dialog, SLOT(accept()));
     connect(return_button, SIGNAL(clicked()), dialog, SLOT(accept()));
     connect(save_button, SIGNAL(clicked()), this, SLOT(saveReplayRecord()));
-    connect(dialog, SIGNAL(accepted()), this, SIGNAL(restart()));
+    connect(restart_button, SIGNAL(clicked()), this, SIGNAL(restart()));
     connect(return_button, SIGNAL(clicked()), this, SIGNAL(return_to_start()));
 }
 

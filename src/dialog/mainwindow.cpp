@@ -270,6 +270,9 @@ void MainWindow::enterRoom() {
 
     ui->actionStart_Game->setEnabled(false);
     ui->actionStart_Server->setEnabled(false);
+    ui->actionReplay->setEnabled(false);
+    ui->actionRestart_Game->setEnabled(false);
+    ui->actionReturn_to_Main_Menu->setEnabled(false);
 
     RoomScene *room_scene = new RoomScene(this);
     ui->actionView_Discarded->setEnabled(true);
@@ -290,6 +293,8 @@ void MainWindow::enterRoom() {
     connect(ui->actionSaveRecord, SIGNAL(triggered()), room_scene, SLOT(saveReplayRecord()));
     connect(ui->actionPause_Resume, SIGNAL(triggered()), room_scene, SLOT(pause()));
     connect(ui->actionHide_Show_chat_box, SIGNAL(triggered()), room_scene, SLOT(setChatBoxVisibleSlot()));
+    connect(ui->actionRestart_Game, SIGNAL(triggered()), this, SLOT(startConnection()));
+    connect(ui->actionReturn_to_Main_Menu, SIGNAL(triggered()), this, SLOT(gotoStartScene()));
 
     if (ServerInfo.EnableCheat) {
         ui->menuCheat->setEnabled(true);
@@ -309,6 +314,7 @@ void MainWindow::enterRoom() {
 
     connect(room_scene, SIGNAL(restart()), this, SLOT(startConnection()));
     connect(room_scene, SIGNAL(return_to_start()), this, SLOT(gotoStartScene()));
+    connect(room_scene, SIGNAL(game_over_dialog_rejected()), this, SLOT(enableDialogButtons()));
 
     gotoScene(room_scene);
 }
@@ -358,6 +364,11 @@ void MainWindow::gotoStartScene() {
 
     addAction(ui->actionShow_Hide_Menu);
     addAction(ui->actionFullscreen);
+}
+
+void MainWindow::enableDialogButtons() {
+    ui->actionRestart_Game->setEnabled(true);
+    ui->actionReturn_to_Main_Menu->setEnabled(true);
 }
 
 void MainWindow::startGameInAnotherInstance() {

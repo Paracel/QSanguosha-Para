@@ -148,7 +148,7 @@ void Settings::init() {
     QStringList banlist = value("Banlist/Roles").toStringList();
     if (banlist.isEmpty()) {
         foreach (QString ban_general, roles_ban)
-                banlist << ban_general;
+            banlist << ban_general;
 
         setValue("Banlist/Roles", banlist);
     }

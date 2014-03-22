@@ -3,7 +3,7 @@ nos_simayi				7
 nos_xiahoudun			3
 nos_zhangliao			9
 nos_xuchu				5
-guojia					9
+nos_guojia				9
 zhenji					5
 xiahouyuan				4
 caoren					1

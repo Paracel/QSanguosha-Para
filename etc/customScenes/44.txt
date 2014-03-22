@@ -3,4 +3,4 @@ general:select general2:select role:renegade acquireSkills:kuangfeng,dawu marks:
 general:zhanghe role:loyalist marks:@fog*1 hp:1 draw:0 
 general:zhugeliang role:loyalist draw:0 
 general:liushan role:lord draw:0 hand:3 
-general:guojia role:loyalist starter:true draw:0
+general:nos_guojia role:loyalist starter:true draw:0

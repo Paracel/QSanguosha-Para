@@ -185,63 +185,62 @@ public:
     }
 };
 
-Yiji::Yiji(): MasochismSkill("yiji") {
-    frequency = Frequent;
-    n = 2;
-}
+class YijiViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    YijiViewAsSkill(): ZeroCardViewAsSkill("yiji") {
+        response_pattern = "@@yiji";
+    }
 
-void Yiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
-    Room *room = guojia->getRoom();
-    int x = damage.damage;
-    for (int i = 0; i < x; i++) {
-        if (!guojia->isAlive() || !room->askForSkillInvoke(guojia, objectName()))
-            return;
-        room->broadcastSkillInvoke("yiji");
+    virtual const Card *viewAs() const{
+        return new YijiCard;
+    }
+};
 
-        QList<ServerPlayer *> _guojia;
-        _guojia.append(guojia);
-        QList<int> yiji_cards = room->getNCards(n, false);
+class Yiji: public MasochismSkill {
+public:
+    Yiji(): MasochismSkill("yiji") {
+        view_as_skill = new YijiViewAsSkill;
+        frequency = Frequent;
+    }
 
-        CardsMoveStruct move(yiji_cards, NULL, guojia, Player::PlaceTable, Player::PlaceHand,
-                             CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
-        QList<CardsMoveStruct> moves;
-        moves.append(move);
-        room->notifyMoveCards(true, moves, false, _guojia);
-        room->notifyMoveCards(false, moves, false, _guojia);
-
-        QList<int> origin_yiji = yiji_cards;
-        while (room->askForYiji(guojia, yiji_cards, objectName(), true, false, true, -1, room->getAlivePlayers())) {
-            CardsMoveStruct move(QList<int>(), guojia, NULL, Player::PlaceHand, Player::PlaceTable,
-                                 CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
-            foreach (int id, origin_yiji) {
-                if (room->getCardPlace(id) != Player::DrawPile) {
-                    move.card_ids << id;
-                    yiji_cards.removeOne(id);
-                }
+    virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
+        Room *room = target->getRoom();
+        for (int i = 0; i < damage.damage; i++) {
+            if (target->isAlive() && room->askForSkillInvoke(target, objectName(), QVariant::fromValue(damage))) {
+                room->broadcastSkillInvoke(objectName());
+                target->drawCards(2, objectName());
+                room->askForUseCard(target, "@@yiji", "@yiji");
+            } else {
+                break;
             }
-            origin_yiji = yiji_cards;
-            QList<CardsMoveStruct> moves;
-            moves.append(move);
-            room->notifyMoveCards(true, moves, false, _guojia);
-            room->notifyMoveCards(false, moves, false, _guojia);
-            if (!guojia->isAlive())
-                return;
-        }
-
-        if (!yiji_cards.isEmpty()) {
-            CardsMoveStruct move(yiji_cards, guojia, NULL, Player::PlaceHand, Player::PlaceTable,
-                                 CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
-            QList<CardsMoveStruct> moves;
-            moves.append(move);
-            room->notifyMoveCards(true, moves, false, _guojia);
-            room->notifyMoveCards(false, moves, false, _guojia);
-
-            DummyCard *dummy = new DummyCard(yiji_cards);
-            guojia->obtainCard(dummy, false);
-            delete dummy;
         }
     }
-}
+};
+
+class YijiObtain: public PhaseChangeSkill {
+public:
+    YijiObtain(): PhaseChangeSkill("#yiji") {
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 4;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (target->getPhase() == Player::Draw && !target->getPile("yiji").isEmpty()) {
+            DummyCard *dummy = new DummyCard(target->getPile("yiji"));
+            CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, target->objectName(), "yiji", QString());
+            room->obtainCard(target, dummy, reason, false);
+            delete dummy;
+        }
+        return false;
+    }
+};
 
 class Ganglie: public TriggerSkill {
 public:
@@ -1528,7 +1527,7 @@ public:
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
                     if (p->getPile("qianxun").length() > 0) {
                         DummyCard *dummy = new DummyCard(p->getPile("qianxun"));
-                        CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, p->objectName(), "qianxun", objectName());
+                        CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, p->objectName(), "qianxun", QString());
                         room->obtainCard(p, dummy, reason, false);
                         delete dummy;
                     }
@@ -2088,6 +2087,8 @@ void StandardPackage::addGenerals() {
     General *guojia = new General(this, "guojia", "wei", 3); // WEI 006
     guojia->addSkill(new Tiandu);
     guojia->addSkill(new Yiji);
+    guojia->addSkill(new YijiObtain);
+    related_skills.insertMulti("yiji", "#yiji");
 
     General *zhenji = new General(this, "zhenji", "wei", 3, false); // WEI 007
     zhenji->addSkill(new Qingguo);
@@ -2202,6 +2203,7 @@ void StandardPackage::addGenerals() {
     addMetaObject<LiuliCard>();
     addMetaObject<LianyingCard>();
     addMetaObject<JijiangCard>();
+    addMetaObject<YijiCard>();
 
     skills << new Xiaoxi << new NonCompulsoryInvalidity;
 }

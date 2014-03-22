@@ -333,7 +333,7 @@ local function can_be_selected_as_target_xueji(self, card, who)
 					if not enemy:faceUp() then return false end
 				end
 			end
-			if who:hasSkill("yiji") then
+			if who:hasSkill("nosyiji") then
 				local huatuo = self.room:findPlayerBySkillName("jijiu")
 				if huatuo and self:isEnemy(huatuo) and huatuo:getHandcardNum() >= 3 then
 					return false
@@ -342,7 +342,7 @@ local function can_be_selected_as_target_xueji(self, card, who)
 		end
 		return true
 	elseif self:isFriend(who) then
-		if who:hasSkill("yiji") and not self.player:hasSkill("jueqing") then
+		if who:hasSkill("nosyiji") and not self.player:hasSkill("jueqing") then
 			local huatuo = self.room:findPlayerBySkillName("jijiu")
 			if (huatuo and self:isFriend(huatuo) and huatuo:getHandcardNum() >= 3 and huatuo ~= self.player)
 				or (who:getLostHp() == 0 and who:getMaxHp() >= 3) then
@@ -400,7 +400,7 @@ sgs.ai_card_intention.XuejiCard = function(self, card, from, tos)
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 	for _, to in ipairs(tos) do
 		local intention = 60
-		if to:hasSkill("yiji") and not from:hasSkill("jueqing") then
+		if to:hasSkill("nosyiji") and not from:hasSkill("jueqing") then
 			if (huatuo and self:isFriend(huatuo) and huatuo:getHandcardNum() >= 3 and huatuo:objectName() ~= from:objectName()) then
 				intention = -30
 			end
@@ -722,7 +722,7 @@ sgs.ai_skill_askforag.yanyu = function(self, card_ids)
 		table.insert(cards, sgs.Sanguosha:getEngineCard(id))
 	end
 	self.yanyu_need_player = nil
-	local card, player = self:getCardNeedPlayer(cards, true)
+	local card, player = self:getCardNeedPlayer(cards, self.friends)
 	if card and player then
 		self.yanyu_need_player = player
 		return card:getEffectiveId()
@@ -741,7 +741,7 @@ sgs.ai_skill_playerchosen.yanyu = function(self, targets)
 			return self.player
 		end
 		local cards = { card }
-		local c, player = self:getCardNeedPlayer(cards, true)
+		local c, player = self:getCardNeedPlayer(cards, self.friends)
 		return player
 	end
 end

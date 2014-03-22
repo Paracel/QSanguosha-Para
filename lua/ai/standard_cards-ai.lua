@@ -41,7 +41,7 @@ function sgs.isGoodHp(player)
 end
 
 function sgs.isGoodTarget(player, targets, self, isSlash)
-	local arr = { "jieming", "yiji", "guixin", "fangzhu", "vsganglie", "nosmiji" }
+	local arr = { "jieming", "nosyiji", "yiji", "guixin", "fangzhu", "vsganglie", "nosmiji" }
 	local m_skill = false
 	local attacker = global_room:getCurrent()
 
@@ -62,7 +62,7 @@ function sgs.isGoodTarget(player, targets, self, isSlash)
 			if masochism == "nosmiji" and player:isWounded() then m_skill = false
 			elseif attacker and attacker:hasSkill("jueqing") then m_skill = false
 			elseif masochism == "jieming" and self and self:getJiemingChaofeng(player) > -4 then m_skill = false
-			elseif masochism == "yiji" and self and not self:findFriendsByType(sgs.Friend_Draw, player) then m_skill = false
+			elseif masochism == "nosyiji" and self and not self:findFriendsByType(sgs.Friend_Draw, player) then m_skill = false
 			else
 				m_skill = true
 				break
@@ -165,7 +165,7 @@ function sgs.getDefenseSlash(player, self)
 			defense = 0
 		end
 
-		if attacker:hasSkill("dahe") and player:hasFlag("dahe") and self:getKnownNum(player) / player:getHandcardNum() >= 0.7 then
+		if attacker:hasSkill("dahe") and player:hasFlag("dahe") and getKnownNum(player) / player:getHandcardNum() >= 0.7 then
 			local cards = player:getHandcards()
 			local known = 0
 			for _, card in sgs.qlist(cards) do
@@ -190,6 +190,7 @@ function sgs.getDefenseSlash(player, self)
 		end
 		if attacker:getWeapon() and player:hasSkill("duodao") and player:canDiscard(player, "he") then defense = defense + 1 end
 		if player:hasSkill("jieming") then defense = defense + 3 end
+		if player:hasSkill("nosyiji") then defense = defense + 3 end
 		if player:hasSkill("yiji") then defense = defense + 3 end
 		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 1 end

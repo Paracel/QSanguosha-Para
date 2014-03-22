@@ -119,7 +119,7 @@ public:
                     if (diaochan->getEquip(i))
                         to_goback->addSubcard(diaochan->getEquip(i)->getEffectiveId());
             } else
-                to_goback = (DummyCard *)room->askForExchange(diaochan, objectName(), target->getHp(), true, "LihunGoBack");
+                to_goback = (DummyCard *)room->askForExchange(diaochan, objectName(), target->getHp(), target->getHp(), true, "LihunGoBack");
 
             CardMoveReason reason(CardMoveReason::S_REASON_GIVE, diaochan->objectName(),
                                   target->objectName(), objectName(), QString());

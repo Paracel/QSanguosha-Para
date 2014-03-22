@@ -18,9 +18,9 @@ void ZhanShuangxiongCard::use(Room *room, ServerPlayer *source, QList<ServerPlay
     source->pindian(targets.first(), "zhanshuangxiong");
 }
 
-class GreatYiji: public Yiji {
+class GreatYiji: public NosYiji {
 public:
-    GreatYiji(): Yiji() {
+    GreatYiji(): NosYiji() {
         setObjectName("greatyiji");
         n = 3;
     }
@@ -190,7 +190,7 @@ public:
                     bool burned = room->getTag("BurnWuchao").toBool();
                     if (!burned) {
                         QString name = player->getGeneralName();
-                        if (name == "caocao" || name == "guojia" || name == "guanyu")
+                        if (name == "caocao" || name == "nos_guojia" || name == "guanyu")
                             data = data.toInt() - 1;
                     }
                 }
@@ -264,7 +264,7 @@ GuanduScenario::GuanduScenario()
 {
     lord = "yuanshao";
     loyalists << "yanliangwenchou" << "zhenji";
-    rebels << "caocao" << "nos_zhangliao" << "guojia";
+    rebels << "caocao" << "nos_zhangliao" << "nos_guojia";
     renegades << "liubei" << "guanyu";
 
     rule = new GuanduRule(this);
@@ -295,12 +295,11 @@ void GuanduScenario::onTagSet(Room *room, const QString &) const{
             room->handleAcquireDetachSkills(zhangliao, "-smalltuxi|nostuxi");
     }
     if (zhanshuangxiong && burnwuchao) {
-        ServerPlayer *guojia = room->findPlayer("guojia");
+        ServerPlayer *guojia = room->findPlayer("nos_guojia");
         if (guojia && !guojia->hasSkill("greatyiji")) {
-            room->detachSkillFromPlayer(guojia, "yiji");
+            room->detachSkillFromPlayer(guojia, "nosyiji");
             room->acquireSkill(guojia, "greatyiji");
             room->acquireSkill(guojia, "damagebeforeplay", false);
         }
     }
 }
-

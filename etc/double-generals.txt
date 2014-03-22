@@ -9,9 +9,11 @@ simayi liubei							54
 simayi wolong							82
 simayi sunshangxiang					54
 simayi nos_simayi						48
+simayi nos_guojia						67
 simayi nos_liubei						54
 xiahoudun guojia						55
 xiahoudun xiaoqiao						30
+xiahoudun nos_guojia					55
 zhangliao xuchu							15
 zhangliao yanliangwenchou				32
 zhangliao nos_zhangliao					5
@@ -37,6 +39,7 @@ guojia bgm_lvmeng						79
 guojia vs_xiahoudun						66
 guojia nos_simayi						65
 guojia nos_xiahoudun					65
+guojia nos_guojia						79
 guojia nos_liubei						58
 guojia nos_machao						76
 guojia nos_lvmeng						77
@@ -55,6 +58,7 @@ xiahouyuan yuanshu						33
 xiahouyuan xiahouba						40
 xiahouyuan nos_lingtong					58
 zhanghe bgm_caoren						70
+zhanghe nos_guojia						76
 xuhuang sunshangxiang					56
 xuhuang xiaoqiao						25
 xuhuang lingtong						55
@@ -85,6 +89,7 @@ liubei diy_wangyuanji					83
 liubei nos_caocao						53
 liubei nos_simayi						52
 liubei nos_xuchu						15
+liubei nos_guojia						58
 liubei nos_liubei						45
 liubei nos_zhangfei						15
 liubei nos_zhangjiao					22
@@ -164,6 +169,7 @@ machao xusheng							68
 machao fuwan							60
 machao lingju							55
 machao nos_xuchu						56
+machao nos_guojia						77
 machao nos_madai						80
 huangyueying pangtong					59
 huangyueying sunquan					60
@@ -218,6 +224,7 @@ pangtong nos_xushu						30
 wolong xiaoqiao							51
 wolong zhangjiao						74
 wolong nos_simayi						80
+wolong nos_guojia						62
 wolong nos_zhangjiao					74
 jiangwei lvmeng							31
 jiangwei xunyou							56
@@ -251,6 +258,7 @@ lvmeng shensimayi						48
 lvmeng masu								59
 lvmeng bgm_lvmeng						8
 lvmeng neo_zhangfei						60
+lvmeng nos_guojia						79
 lvmeng nos_zhangfei						60
 lvmeng nos_lvmeng						5
 lvmeng nos_zhoutai						59
@@ -284,6 +292,7 @@ sunshangxiang vs_guanyu					52
 sunshangxiang neo_guanyu				52
 sunshangxiang nos_caocao				53
 sunshangxiang nos_simayi				52
+sunshangxiang nos_guojia				85
 sunshangxiang nos_guanyu				52
 sunshangxiang nos_lingtong				59
 sunshangxiang nos_handang				56
@@ -337,6 +346,7 @@ diaochan masu							55
 diaochan nos_lingtong					52
 yuanshao xushu							3
 yuanshao yuanshu						65
+yuanshao nos_guojia						54
 yuanshao nos_liubei						19
 yuanshao nos_xushu						2
 yanliangwenchou xushu					3
@@ -344,6 +354,7 @@ yanliangwenchou yuanshu					8
 yanliangwenchou neo_zhangfei			35
 yanliangwenchou nos_caocao				60
 yanliangwenchou nos_zhangliao			32
+yanliangwenchou nos_guojia				55
 yanliangwenchou nos_liubei				17
 yanliangwenchou nos_zhangfei			35
 yanliangwenchou nos_xushu				2
@@ -386,6 +397,7 @@ masu bgm_caoren							54
 masu nos_lvmeng							56
 masu nos_zhouyu							57
 masu nos_caoren							53
+wuguotai nos_guojia						87
 wuguotai nos_luxun						79
 xusheng zhangchunhua					3
 xusheng nos_machao						66
@@ -407,6 +419,7 @@ handang nos_lingtong					51
 liaohua ganfuren						52
 liaohua nos_zhouyu						56
 liubiao nos_zhangliao					31
+madai nos_guojia						58
 xunyou yuanshu							55
 xunyou liuxie							58
 xunyou nos_luxun						52
@@ -453,6 +466,7 @@ bgm_zhangfei neo_zhaoyun				74
 bgm_zhangfei nos_guanyu					77
 bgm_zhangfei nos_zhaoyun				72
 bgm_lvmeng neo_zhangfei					63
+bgm_lvmeng nos_guojia					79
 bgm_lvmeng nos_zhangfei					63
 bgm_lvmeng nos_lvmeng					8
 bgm_lvmeng nos_zhoutai					59
@@ -470,6 +484,7 @@ heg_sunce neo_guanyu					79
 heg_sunce neo_zhaoyun					76
 heg_sunce nos_guanyu					79
 heg_sunce nos_zhaoyun					74
+vs_xiahoudun nos_guojia					66
 vs_guanyu neo_guanyu					1
 vs_guanyu neo_zhangfei					80
 vs_guanyu nos_guanyu					1
@@ -497,9 +512,16 @@ neo_zhangfei nos_guanxingzhangbao		11
 neo_zhaoyun nos_zhaoyun					1
 nos_caocao nos_liubei					53
 nos_caocao nos_zhangfei					56
+nos_simayi nos_guojia					65
+nos_xiahoudun nos_guojia				65
 nos_zhangliao nos_xuchu					15
 nos_xuchu nos_liubei					15
 nos_xuchu nos_machao					54
+nos_guojia nos_liubei					58
+nos_guojia nos_machao					76
+nos_guojia nos_lvmeng					77
+nos_guojia nos_madai					65
+nos_guojia nos_wangyi					73
 nos_liubei nos_simayi					52
 nos_liubei nos_zhangfei					15
 nos_liubei nos_zhangjiao				22

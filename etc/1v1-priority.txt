@@ -192,6 +192,7 @@ nos_simayi				65
 nos_xiahoudun			62					
 nos_zhangliao			22					
 nos_xuchu				32					
+nos_guojia				62					
 nos_liubei				19					
 nos_guanyu				57					
 nos_zhangfei			23					

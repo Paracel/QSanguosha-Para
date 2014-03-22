@@ -1160,6 +1160,64 @@ public:
     }
 };
 
+NosYiji::NosYiji(): MasochismSkill("nosyiji") {
+    frequency = Frequent;
+    n = 2;
+}
+
+void NosYiji::onDamaged(ServerPlayer *guojia, const DamageStruct &damage) const{
+    Room *room = guojia->getRoom();
+    int x = damage.damage;
+    for (int i = 0; i < x; i++) {
+        if (!guojia->isAlive() || !room->askForSkillInvoke(guojia, objectName()))
+            return;
+        room->broadcastSkillInvoke("yiji");
+
+        QList<ServerPlayer *> _guojia;
+        _guojia.append(guojia);
+        QList<int> yiji_cards = room->getNCards(n, false);
+
+        CardsMoveStruct move(yiji_cards, NULL, guojia, Player::PlaceTable, Player::PlaceHand,
+                             CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
+        QList<CardsMoveStruct> moves;
+        moves.append(move);
+        room->notifyMoveCards(true, moves, false, _guojia);
+        room->notifyMoveCards(false, moves, false, _guojia);
+
+        QList<int> origin_yiji = yiji_cards;
+        while (room->askForYiji(guojia, yiji_cards, objectName(), true, false, true, -1, room->getAlivePlayers())) {
+            CardsMoveStruct move(QList<int>(), guojia, NULL, Player::PlaceHand, Player::PlaceTable,
+                                 CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
+            foreach (int id, origin_yiji) {
+                if (room->getCardPlace(id) != Player::DrawPile) {
+                    move.card_ids << id;
+                    yiji_cards.removeOne(id);
+                }
+            }
+            origin_yiji = yiji_cards;
+            QList<CardsMoveStruct> moves;
+            moves.append(move);
+            room->notifyMoveCards(true, moves, false, _guojia);
+            room->notifyMoveCards(false, moves, false, _guojia);
+            if (!guojia->isAlive())
+                return;
+        }
+
+        if (!yiji_cards.isEmpty()) {
+            CardsMoveStruct move(yiji_cards, guojia, NULL, Player::PlaceHand, Player::PlaceTable,
+                                 CardMoveReason(CardMoveReason::S_REASON_PREVIEW, guojia->objectName(), objectName(), QString()));
+            QList<CardsMoveStruct> moves;
+            moves.append(move);
+            room->notifyMoveCards(true, moves, false, _guojia);
+            room->notifyMoveCards(false, moves, false, _guojia);
+
+            DummyCard *dummy = new DummyCard(yiji_cards);
+            guojia->obtainCard(dummy, false);
+            delete dummy;
+        }
+    }
+}
+
 NosRendeCard::NosRendeCard() {
     mute = true;
     will_throw = false;
@@ -1981,6 +2039,10 @@ NostalStandardPackage::NostalStandardPackage()
     nos_xuchu->addSkill(new NosLuoyi);
     nos_xuchu->addSkill(new NosLuoyiBuff);
     related_skills.insertMulti("nosluoyi", "#nosluoyi");
+
+    General *nos_guojia = new General(this, "nos_guojia", "wei", 3);
+    nos_guojia->addSkill("tiandu");
+    nos_guojia->addSkill(new NosYiji);
 
     General *nos_liubei = new General(this, "nos_liubei$", "shu");
     nos_liubei->addSkill(new NosRende);

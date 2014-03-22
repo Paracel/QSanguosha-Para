@@ -115,7 +115,7 @@ RoomScene::RoomScene(QMainWindow *main_window)
     response_skill = new ResponseSkill;
     showorpindian_skill = new ShowOrPindianSkill;
     discard_skill = new DiscardSkill;
-    yiji_skill = new YijiViewAsSkill;
+    yiji_skill = new NosYijiViewAsSkill;
     choose_skill = new ChoosePlayerSkill;
 
     miscellaneous_menu = new QMenu(main_window);

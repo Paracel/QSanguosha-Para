@@ -54,13 +54,13 @@ public:
     virtual bool matchPattern(const Player *player, const Card *card) const;
 };
 
-class YijiCard;
+class NosYijiCard;
 
-class YijiViewAsSkill: public ViewAsSkill {
+class NosYijiViewAsSkill: public ViewAsSkill {
     Q_OBJECT
 
 public:
-    explicit YijiViewAsSkill();
+    explicit NosYijiViewAsSkill();
     void setCards(const QString &card_str);
     void setMaxNum(int max_num);
     void setPlayerNames(const QStringList &names);
@@ -69,7 +69,7 @@ public:
     virtual const Card *viewAs(const QList<const Card *> &cards) const;
 
 private:
-    YijiCard *card;
+    NosYijiCard *card;
     QList<int> ids;
     int max_num;
 };

@@ -333,6 +333,7 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
             else
                 button->setProperty("treasure", "true");
             QGraphicsProxyWidget *button_widget = new QGraphicsProxyWidget(_getPileParent());
+            button_widget->setObjectName(p_name);
             button_widget->setWidget(button);
             _m_privatePiles[p_name] = button_widget;
         } else {

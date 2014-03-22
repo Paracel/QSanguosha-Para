@@ -145,7 +145,7 @@ sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isKongcheng() and self:objectiveLevel(enemy) > 0 
-			and (self:hasSuit("heart", false, enemy) or self:getKnownNum(eneny) ~= enemy:getHandcardNum()) then
+			and (self:hasSuit("heart", false, enemy) or getKnownNum(eneny) ~= enemy:getHandcardNum()) then
 			use.card = card
 			if use.to then
 				use.to:append(enemy)

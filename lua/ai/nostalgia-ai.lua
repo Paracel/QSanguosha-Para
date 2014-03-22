@@ -502,7 +502,7 @@ sgs.ai_skill_invoke.nosquanji = function(self, data)
 			local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
 			if enemy_max_card and current:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
 			local allknown = 0
-			if self:getKnownNum(current) == current:getHandcardNum() then
+			if getKnownNum(current) == current:getHandcardNum() then
 				allknown = allknown + 1
 			end
 			if (enemy_max_card and max_point > enemy_number and allknown > 0)
@@ -836,6 +836,83 @@ end
 sgs.ai_cardneed.nosluoyi = sgs.ai_cardneed.luoyi
 sgs.nosluoyi_keep_value = sgs.luoyi_keep_value
 
+sgs.ai_skill_invoke.nosyiji = function(self)
+	local sb_diaochan = self.room:getCurrent()
+	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then
+		local invoke
+		for _, friend in ipairs(self.friends) do
+			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
+				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true)
+				and not self:isLihunTarget(friend) then
+				invoke = true
+				break
+			end
+		end
+		return invoke
+	end
+	return true
+end
+
+sgs.ai_skill_askforyiji.nosyiji = function(self, card_ids)
+	local Shenfen_user
+	for _, player in sgs.qlist(self.room:getAllPlayers()) do
+		if player:hasFlag("ShenfenUsing") then
+			Shenfen_user = player
+			break
+		end
+	end
+
+	if self.player:getHandcardNum() <= 2 and not Shenfen_user then
+		return nil, -1
+	end
+
+	local available_friends = {}
+	for _, friend in ipairs(self.friends) do
+		local insert = true
+		if insert and hasManjuanEffect(friend) then insert = false end
+		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
+		if insert and self:isLihunTarget(friend) then insert = false end
+		if insert then table.insert(available_friends, friend) end
+	end
+
+	local cards = {}
+	for _, card_id in ipairs(card_ids) do
+		table.insert(cards, sgs.Sanguosha:getCard(card_id))
+	end
+	local id = card_ids[1]
+
+	local card, friend = self:getCardNeedPlayer(cards)
+	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
+	if #available_friends > 0 then
+		self:sort(available_friends, "handcard")
+		if Shenfen_user and table.contains(available_friends, Shenfen_user) then
+			return Shenfen_user, id
+		end
+		for _, afriend in ipairs(available_friends) do
+			if not self:needKongcheng(afriend, true) then
+				return afriend, id
+			end
+		end
+	end
+	return nil, -1
+end
+
+sgs.ai_need_damaged.nosyiji = function(self, attacker, player)
+	local need_card = false
+	local current = self.room:getCurrent()
+	if current:hasWeapon("Crossbow") or current:hasSkill("paoxiao") or current:hasFlag("shuangxiong") then need_card = true end
+	if current:hasSkills("jieyin|jijiu") and self:getOverflow(current) <= 0 then need_card = true end
+	if self:isFriend(current, player) and need_card then return true end
+
+	local friends = self:getFriends(player)
+	self:sort(friends, "hp")
+
+	if #friends > 0 and friends[1]:objectName() == player:objectName() and self:isWeak(player) and getCardsNum("Peach", player, attacker) == 0 then return false end
+	if #friends > 1 and self:isWeak(friends[2]) then return true end
+
+	return player:getHp() > 2 and sgs.turncount > 2 and #friends > 1
+end
+
 local noslijian_skill = {}
 noslijian_skill.name = "noslijian"
 table.insert(sgs.ai_skills, noslijian_skill)
@@ -964,7 +1041,7 @@ sgs.ai_skill_invoke.nostieji = function(self, data)
 		end
 	end
 	if target:hasSkill("longhun") and target:getHp() == 1 and self:hasSuit("club", true, target) then return true end
-	if target:isKongcheng() or (self:getKnownNum(target) == target:getHandcardNum() and getKnownCard(target, self.player, "Jink", true) == 0) then return false end
+	if target:isKongcheng() or (getKnownNum(target) == target:getHandcardNum() and getKnownCard(target, self.player, "Jink", true) == 0) then return false end
 	return true
 end
 

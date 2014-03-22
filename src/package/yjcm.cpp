@@ -290,7 +290,7 @@ public:
                     room->broadcastSkillInvoke(objectName(), 2);
                     const Card *card = NULL;
                     if (!source->isKongcheng())
-                        card = room->askForExchange(source, objectName(), 1, false, "EnyuanGive", true);
+                        card = room->askForExchange(source, objectName(), 1, 1, false, "EnyuanGive::" + player->objectName(), true);
                     if (card) {
                         CardMoveReason reason(CardMoveReason::S_REASON_GIVE, source->objectName(),
                                               player->objectName(), objectName(), QString());
@@ -947,7 +947,7 @@ public:
                         room->getThread()->delay();
                         card_id = zhonghui->handCards().first();
                     } else
-                        card_id = room->askForExchange(zhonghui, "quanji", 1, false, "QuanjiPush")->getSubcards().first();
+                        card_id = room->askForExchange(zhonghui, "quanji", 1, 1, false, "QuanjiPush")->getSubcards().first();
                     zhonghui->addToPile("power", card_id);
                 }
             }

@@ -112,6 +112,16 @@ public:
     virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
+class YijiCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE YijiCard();
+
+    virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const;
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
 class JijiangCard: public SkillCard {
     Q_OBJECT
 
@@ -134,17 +144,6 @@ public:
 
 private:
     static bool hasShuGenerals(const Player *player);
-};
-
-class Yiji: public MasochismSkill {
-    Q_OBJECT
-
-public:
-    Yiji();
-    virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const;
-
-protected:
-    int n;
 };
 
 #endif

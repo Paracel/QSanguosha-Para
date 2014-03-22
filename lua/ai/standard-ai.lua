@@ -323,7 +323,7 @@ end
 sgs.ai_skill_askforyiji.qingjian = function(self, card_ids)
 	local move_skill = self.player:getTag("QingjianCurrentMoveSkill"):toString()
 	if move_skill == "rende" or move_skill == "nosrende" then return nil, -1 end
-	return sgs.ai_skill_askforyiji.yiji(self, card_ids)
+	return sgs.ai_skill_askforyiji.nosyiji(self, card_ids)
 end
 
 function SmartAI:getTuxiTargets(reason, isDummy)
@@ -553,81 +553,53 @@ function sgs.ai_slash_prohibit.tiandu(self, from, to)
 	if self:isEnemy(to, from) and self:hasEightDiagramEffect(to) then return true end
 end
 
+-- @todo: YiJi AI
 sgs.ai_skill_invoke.yiji = function(self)
 	local sb_diaochan = self.room:getCurrent()
 	if sb_diaochan and sb_diaochan:hasSkill("lihun") and not sb_diaochan:hasUsed("LihunCard") and not self:isFriend(sb_diaochan) and sb_diaochan:getPhase() == sgs.Player_Play then
-		local invoke
-		for _, friend in ipairs(self.friends) do
-			if (not friend:isMale() or (friend:getHandcardNum() < friend:getHp() + 1 and sb_diaochan:faceUp())
-				or (friend:getHandcardNum() < friend:getHp() - 2 and not sb_diaochan:faceUp())) and not self:needKongcheng(friend, true)
-				and not self:isLihunTarget(friend) then
-				invoke = true
-				break
-			end
-		end
-		return invoke
+		return #self.friends_noself > 0
 	end
 	return true
 end
 
-sgs.ai_skill_askforyiji.yiji = function(self, card_ids)
-	local Shenfen_user
-	for _, player in sgs.qlist(self.room:getAllPlayers()) do
-		if player:hasFlag("ShenfenUsing") then
-			Shenfen_user = player
-			break
+sgs.ai_skill_use["@@yiji"] = function(self, prompt)
+	self.yiji = {}
+	if self.player:getHandcardNum() <= 2 then return "." end
+	local friends = {}
+	for _, friend in ipairs(self.friends_noself) do
+		if not self:willSkipDrawPhase(friend) then table.insert(friends, friend) end
+	end
+	if #friends == 0 then return "." end
+	local friend_table = {}
+	local cards = sgs.QList2Table(self.player:getHandcards())
+	while true do
+		local card, friend = self:getCardNeedPlayer(cards, friends, false)
+		if not (card and friend) then break end
+		if not self.yiji[friend:objectName()] then
+			self.yiji[friend:objectName()] = { card:getEffectiveId() }
+		else
+			table.insert(self.yiji[friend:objectName()], card:getEffectiveId())
 		end
-	end
-
-	if self.player:getHandcardNum() <= 2 and not Shenfen_user then
-		return nil, -1
-	end
-
-	local available_friends = {}
-	for _, friend in ipairs(self.friends) do
-		local insert = true
-		if insert and hasManjuanEffect(friend) then insert = false end
-		if insert and Shenfen_user and friend:objectName() ~= Shenfen_user:objectName() and friend:getHandcardNum() < 4 then insert = false end
-		if insert and self:isLihunTarget(friend) then insert = false end
-		if insert then table.insert(available_friends, friend) end
-	end
-
-	local cards = {}
-	for _, card_id in ipairs(card_ids) do
-		table.insert(cards, sgs.Sanguosha:getCard(card_id))
-	end
-	local id = card_ids[1]
-
-	local card, friend = self:getCardNeedPlayer(cards)
-	if card and friend and table.contains(available_friends, friend) then return friend, card:getId() end
-	if #available_friends > 0 then
-		self:sort(available_friends, "handcard")
-		if Shenfen_user and table.contains(available_friends, Shenfen_user) then
-			return Shenfen_user, id
-		end
-		for _, afriend in ipairs(available_friends) do
-			if not self:needKongcheng(afriend, true) then
-				return afriend, id
+		cards = self:resetCards(cards, card)
+		if #self.yiji[friend:objectName()] == 2 then
+			table.insert(friend_table, friend:objectName())
+			local temp = {}
+			for _, f in ipairs(friends) do
+				if f:objectName() ~= friend:objectName() then table.insert(temp, f) end
 			end
+			friends = temp
 		end
+		if #cards == 0 or #friend_table == 2 then break end
 	end
-	return nil, -1
+	if #friend_table > 0 then return "@YijiCard=.->" .. table.concat(friend_table, "+") end
+	return "."
 end
 
-sgs.ai_need_damaged.yiji = function(self, attacker, player)
-	local need_card = false
-	local current = self.room:getCurrent()
-	if current:hasWeapon("Crossbow") or current:hasSkill("paoxiao") or current:hasFlag("shuangxiong") then need_card = true end
-	if current:hasSkills("jieyin|jijiu") and self:getOverflow(current) <= 0 then need_card = true end
-	if self:isFriend(current, player) and need_card then return true end
+sgs.ai_card_intention.YijiCard = -80
 
-	local friends = self:getFriends(player)
-	self:sort(friends, "hp")
-
-	if #friends > 0 and friends[1]:objectName() == player:objectName() and self:isWeak(player) and getCardsNum("Peach", player, attacker) == 0 then return false end
-	if #friends > 1 and self:isWeak(friends[2]) then return true end
-
-	return player:getHp() > 2 and sgs.turncount > 2 and #friends > 1
+sgs.ai_skill_discard.yiji = function(self)
+	local target = self.player:getTag("YijiTarget"):toString()
+	return self.yiji[target]
 end
 
 sgs.ai_view_as.qingguo = function(card, player, card_place)
@@ -1416,7 +1388,7 @@ sgs.ai_skill_playerchosen.yajiao = function(self, targets)
 	local id = self.player:getMark("yajiao")
 	local card = sgs.Sanguosha:getCard(id)
 	local cards = { card }
-	local c, friend = self:getCardNeedPlayer(cards, true)
+	local c, friend = self:getCardNeedPlayer(cards, self.friends)
 	if friend then return friend end
 
 	self:sort(self.friends)
@@ -2906,7 +2878,7 @@ function SmartAI:findLijianTarget(card_name, use)
 			and self:hasTrickEffective(duel, males[1], lord)
 			and not lord:isLocked(duel) and (getCardsNum("Slash", males[1], self.player) < 1
 											or getCardsNum("Slash", males[1], self.player) < getCardsNum("Slash", lord, self.player)
-											or (self:getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], self.player, "Slash", true, "he") == 0)) then
+											or (getKnownNum(males[1]) == males[1]:getHandcardNum() and getKnownCard(males[1], self.player, "Slash", true, "he") == 0)) then
 			return males[1], lord
 		end
 		local afriend = findFriend_maxSlash(self, males[1])

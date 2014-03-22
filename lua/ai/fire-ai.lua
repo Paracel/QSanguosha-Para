@@ -18,7 +18,7 @@ sgs.ai_skill_use_func.QuhuCard = function(card, use, self)
 			local enemy_number = enemy_max_card and enemy_max_card:getNumber() or 0
 			if enemy_max_card and enemy:hasSkill("yingyang") then enemy_number = math.min(enemy_number + 3, 13) end
 			local allknown = 0
-			if self:getKnownNum(enemy) == enemy:getHandcardNum() then
+			if getKnownNum(enemy) == enemy:getHandcardNum() then
 				allknown = allknown + 1
 			end
 			if (enemy_max_card and max_point > enemy_max_card:getNumber() and allknown > 0)

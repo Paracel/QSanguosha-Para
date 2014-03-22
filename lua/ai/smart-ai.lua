@@ -87,14 +87,14 @@ function setInitialTables()
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
 	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|noslianying|kongcheng|sijian"
-	sgs.masochism_skill = "yiji|jieming|fankui|nosfankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
+	sgs.masochism_skill = "nosyiji|yiji|jieming|fankui|nosfankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
 	sgs.wizard_skill = "guicainosguicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|nosguicai|guidao|jilve|huanshi"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|guose|duanliang|jujian|fanjian|nosfanjian|noslijian|lijian|" ..
 							"manjuan|lihun|tuxi|nostuxi|qiaobian|yongsi|zhiheng|luoshen|nosrende|rende|mingce|wansha|gongxin|jilve|" ..
 							"anxu|qice|yinling|qingcheng|zhaoxin"
 	sgs.save_skill = "jijiu|buyi|nosjiefan|chunlao|longhun"
-	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|yiji|ganglie|vsganglie|nosganglie|guixin|jieming|nosmiji"
+	sgs.exclusive_skill = "huilei|duanchang|enyuan|wuhun|zhuiyi|buqu|nosbuqu|nosyiji|yiji|ganglie|vsganglie|nosganglie|guixin|jieming|nosmiji"
 	sgs.cardneed_skill = "paoxiao|tianyi|xianzhen|shuangxiong|nosjizhi|jizhi|guose|duanliang|qixi|qingnang|yinling|nosluoyi|guhuo|nosguhuo|kanpo|" ..
 							"jieyin|renjie|zhiheng|nosrende|rende|nosjujian|guicai|nosguicai|guidao|longhun|luanji|qiaobian|beige|jieyuan|" ..
 							"mingce|nosfuhun|lirang|xuanfeng|xinzhan|dangxian|bifa|xiaoguo"
@@ -246,6 +246,7 @@ function sgs.getDefense(player, gameProcess)
 			end
 		end
 		if player:hasSkill("jieming") then defense = defense + 3 end
+		if player:hasSkill("nosyiji") then defense = defense + 3 end
 		if player:hasSkill("yiji") then defense = defense + 3 end
 		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 2 end
@@ -2282,7 +2283,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 					return nil
 				end
 				if self.player:objectName() == to:objectName() then
-					if self.player:hasSkills("jieming|yiji|guixin")
+					if self.player:hasSkills("jieming|nosyiji|yiji|guixin")
 						and (self.player:getHp() > 1 or self:getCardsNum("Peach") > 0 or self:getCardsNum("Analeptic") > 0) then
 						return nil
 					elseif not self:canAvoidAOE(trick) and not (self.player:hasSkill("wumou") and sgs.ai_skill_choice.wumou(self) == "losehp") then
@@ -2820,8 +2821,9 @@ function SmartAI:hasLoseHandcardEffective(player)
 	return player:getHandcardNum() > self:getLeastHandcardNum(player)
 end
 
-function SmartAI:getCardNeedPlayer(cards, include_self)
+function SmartAI:getCardNeedPlayer(cards, friends_table, handcard)
 	cards = cards or sgs.QList2Table(self.player:getHandcards())
+	if handcard == nil then handcard = true end
 	local cardtogivespecial = {}
 	local specialnum = 0
 	local keptslash = 0
@@ -2834,14 +2836,14 @@ function SmartAI:getCardNeedPlayer(cards, include_self)
 		return a:getNumber() > b:getNumber()
 	end
 
-	local friends_table = include_self and self.friends or self.friends_noself
+	friends_table = friends_table or self.friends_noself
 	for _, player in ipairs(friends_table) do
-		local exclude = self:needKongcheng(player) or self:willSkipPlayPhase(player)
+		local exclude = (handcard and self:needKongcheng(player)) or self:willSkipPlayPhase(player)
 		if player:hasSkills("keji|qiaobian|shensu") or player:getHp() - player:getHandcardNum() >= 3
 			or (player:isLord() and self:isWeak(player) and self:getEnemyNumBySeat(self.player, player) >= 1) then
 			exclude = false
 		end
-		if self:objectiveLevel(player) <= -2 and not hasManjuanEffect(player) and not exclude then
+		if self:objectiveLevel(player) <= -2 and not (handcard and hasManjuanEffect(player)) and not exclude then
 			table.insert(friends, player)
 		end
 	end
@@ -3301,7 +3303,7 @@ function SmartAI:willUsePeachTo(dying)
 		if sgs.turncount > 1 and not dying:isLord() and dying:objectName() ~= self.player:objectName() then
 			local possible_friend = 0
 			for _, friend in ipairs(self.friends_noself) do
-				if (self:getKnownNum(friend) == friend:getHandcardNum() and getCardsNum("Peach", friend, self.player) == 0)
+				if (getKnownNum(friend) == friend:getHandcardNum() and getCardsNum("Peach", friend, self.player) == 0)
 					or (self:playerGetRound(friend) < self:playerGetRound(self.player)) then
 				elseif sgs.card_lack[friend:objectName()]["Peach"] == 1 then
 				elseif not self:ableToSave(friend, dying) then
@@ -3994,7 +3996,7 @@ function SmartAI:getMinCard(player)
 	return min_card
 end
 
-function SmartAI:getKnownNum(player)
+function getKnownNum(player)
 	if not player then
 		return self.player:getHandcardNum()
 	else

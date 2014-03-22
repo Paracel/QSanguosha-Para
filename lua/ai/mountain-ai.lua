@@ -1039,6 +1039,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		if self:getAllPeachNum() > 0 or self.player:getHp() > 1 or not self:isWeak() then
 			if str:matchOne("guixin") and self.room:alivePlayerCount() > 3 then return "guixin" end
+			if str:matchOne("nosyiji") then return "nosyiji" end
 			if str:matchOne("yiji") then return "yiji" end
 			if str:matchOne("yuce") and not self.player:isKongcheng() then return "yuce" end
 			for _, askill in ipairs(("fankui|nosfankui|jieming|chengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|duodao|langgu"):split("|")) do
@@ -1078,7 +1079,8 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		end
 		if str:matchOne("kofqingguo") and not self.player:getEquips():isEmpty() then return "kofqingguo" end
 
-		for _, askill in ipairs(("yiji|yuce|fankui|nosfankui|jieming|chengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|wangxi|hengjiang|duodao|langgu"):split("|")) do
+		for _, askill in ipairs(("nosyiji|yiji|yuce|fankui|nosfankui|jieming|chengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|" ..
+								"wangxi|hengjiang|duodao|langgu"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 

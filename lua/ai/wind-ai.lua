@@ -538,7 +538,7 @@ sgs.ai_skill_use["@@tianxiang"] = function(self, data, method)
 		if (friend:getLostHp() + dmg.damage > 1 and friend:isAlive()) then
 			if friend:isChained() and dmg.nature ~= sgs.DamageStruct_Normal and not self:isGoodChainTarget(friend, dmg.from, dmg.nature, dmg.damage, dmg.card) then
 			elseif friend:getHp() >= 2 and dmg.damage < 2
-					and (friend:hasSkills("yiji|buqu|nosbuqu|shuangxiong|zaiqi|yinghun|jianxiong|nosjianxiong|fangzhu")
+					and (friend:hasSkills("nosyiji|yiji|buqu|nosbuqu|shuangxiong|zaiqi|yinghun|jianxiong|nosjianxiong|fangzhu")
 						or self:getDamagedEffects(friend, dmg.from or self.room:getCurrent())
 						or self:needToLoseHp(friend)
 						or (friend:getHandcardNum() < 3 and (friend:hasSkill("nosrende") or (friend:hasSkill("rende") and not friend:hasUsed("RendeCard"))))) then
@@ -574,7 +574,7 @@ end
 sgs.ai_card_intention.TianxiangCard = function(self, card, from, tos)
 	local to = tos[1]
 	if self:getDamagedEffects(to) or self:needToLoseHp(to) or hasBuquEffect(to)
-		or (to:getHp() >= 2 and to:hasSkills("yiji|shuangxiong|zaiqi|yinghun|jianxiong|nosjianxiong|fangzhu"))
+		or (to:getHp() >= 2 and to:hasSkills("nosyiji|yiji|shuangxiong|zaiqi|yinghun|jianxiong|nosjianxiong|fangzhu"))
 		or (to:getHandcardNum() < 3 and (to:hasSkill("nosrende") or (to:hasSkill("rende") and not to:hasUsed("RendeCard")))) then
 		return
 	end

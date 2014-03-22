@@ -863,7 +863,8 @@ public:
             if (chenlin && to_give) {
                 room->broadcastSkillInvoke(objectName(), 2);
                 chenlin->obtainCard(to_give, false);
-                player->obtainCard(cd, false);
+                CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, player->objectName(), "bifa", QString());
+                room->obtainCard(player, cd, reason, false);
             } else {
                 room->broadcastSkillInvoke(objectName(), 3);
                 CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), objectName(), QString());
@@ -2278,7 +2279,7 @@ TaiwanSPPackage::TaiwanSPPackage()
 
     General *tw_guojia = new General(this, "tw_guojia", "wei", 3, true, true); // TW SP 015
     tw_guojia->addSkill("tiandu");
-    tw_guojia->addSkill("yiji");
+    tw_guojia->addSkill("nosyiji");
 
     General *tw_luxun = new General(this, "tw_luxun", "wu", 3, true, true); // TW SP 016
     tw_luxun->addSkill("nosqianxun");

@@ -4480,6 +4480,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
         return false;
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_DISCARD_CARD);
+    min_num = qMin(min_num, discard_num);
 
     if (!optional) {
         DummyCard *dummy = new DummyCard;
@@ -4590,38 +4591,34 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
     return true;
 }
 
-const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, int discard_num, bool include_equip,
-                                 const QString &prompt, bool optional) {
+const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, int discard_num, int min_num,
+                                 bool include_equip, const QString &prompt, bool optional) {
     if (!player->isAlive())
         return NULL;
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_EXCHANGE_CARD);
+    min_num = qMin(min_num, discard_num);
 
     AI *ai = player->getAI();
     QList<int> to_exchange;
     if (ai) {
         // share the same callback interface
         player->setFlags("Global_AIDiscardExchanging");
-        try {
-            to_exchange = ai->askForDiscard(reason, discard_num, discard_num, optional, include_equip);
-            player->setFlags("-Global_AIDiscardExchanging");
-        }
-        catch (TriggerEvent triggerEvent) {
-            if (triggerEvent == TurnBroken || triggerEvent == StageChange)
-                player->setFlags("-Global_AIDiscardExchanging");
-            throw triggerEvent;
-        }
+        to_exchange = ai->askForDiscard(reason, discard_num, min_num, optional, include_equip);
+        player->setFlags("-Global_AIDiscardExchanging");
     } else {
         Json::Value exchange_str(Json::arrayValue);
         exchange_str[0] = discard_num;
-        exchange_str[1] = include_equip;
-        exchange_str[2] = toJsonString(prompt);
-        exchange_str[3] = optional;
+        exchange_str[1] = min_num;
+        exchange_str[2] = include_equip;
+        exchange_str[3] = toJsonString(prompt);
+        exchange_str[4] = optional;
 
         bool success = doRequest(player, S_COMMAND_EXCHANGE_CARD, exchange_str, true);
         //@todo: also check if the player does have that card!!!
         Json::Value clientReply = player->getClientReply();
-        if (!success || !clientReply.isArray() || (int)clientReply.size() != discard_num
+        if (!success || !clientReply.isArray()
+            || (int)clientReply.size() > discard_num || (int)clientReply.size() < min_num
             || !tryParse(clientReply, to_exchange)) {
             if (optional) return NULL;
             to_exchange = player->forceToDiscard(discard_num, include_equip, false);

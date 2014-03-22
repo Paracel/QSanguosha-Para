@@ -735,7 +735,7 @@ public:
             data = data.toInt() + 7;
         } else if (triggerEvent == AfterDrawInitialCards) {
             room->broadcastSkillInvoke("qixing");
-            const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", 7);
+            const Card *exchange_card = room->askForExchange(shenzhuge, "qixing", 7, 7);
             shenzhuge->addToPile("stars", exchange_card->getSubcards(), false);
             delete exchange_card;
         }

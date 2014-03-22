@@ -161,6 +161,7 @@ void MainWindow::on_actionStart_Server_triggered() {
 
     Server *server = new Server(this);
     if (!server->listen()) {
+        delete server;
         QMessageBox::warning(this, tr("Warning"), tr("Can not start server!"));
         return;
     }

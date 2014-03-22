@@ -1199,8 +1199,10 @@ void Server::daemonize() {
 
 Room *Server::createNewRoom() {
     Room *new_room = new Room(this, Config.GameMode);
-    if (!new_room->getLuaState())
+    if (!new_room->getLuaState()) {
+        delete new_room;
         return NULL;
+    }
     current = new_room;
     rooms.insert(current);
 

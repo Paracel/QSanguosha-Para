@@ -68,8 +68,10 @@ int main(int argc, char *argv[]) {
 
         if (server->listen())
             printf("Starting successfully\n");
-        else
+        else {
+            delete server;
             printf("Starting failed!\n");
+        }
 
         return qApp->exec();
     }

@@ -999,7 +999,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("SingleTargetTrick") && !use.card->targetFixed() && use.to.length() > 1
             && use.card->isBlack() && use.from->hasSkill("mieji"))
-            room->broadcastSkillInvoke(objectName());
+            room->broadcastSkillInvoke("mieji");
         return false;
     }
 };

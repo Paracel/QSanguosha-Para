@@ -412,7 +412,7 @@ function SmartAI:slashIsAvailable(player, slash)
 	return slash:isAvailable(player)
 end
 
-function SmartAI:isJinkAvailable(from, to, slash, judge_considered)
+function sgs.isJinkAvailable(from, to, slash, judge_considered)
 	return (not judge_considered and from:hasSkills("tieji|nostieji"))
 			or (from:hasSkill("liegong") and from:getPhase() == sgs.Player_Play
 				and (to:getHandcardNum() <= from:getAttackRange() or to:getHandcardNum() >= from:getHp()))

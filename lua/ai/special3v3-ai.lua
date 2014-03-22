@@ -253,7 +253,7 @@ zhongyi_skill.getTurnUseCard = function(self)
 			if friend:canSlash(enemy) and not self:slashProhibit(slash, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 				local_value = local_value + 0.8
 				if getCardsNum("Jink", enemy, self.player) < 1 then local_value = local_value + 0.5 end
-				if not self:isJinkAvailable(friend, enemy) then
+				if not sgs.isJinkAvailable(friend, enemy) then
 					local_value = local_value + 0.5
 				end
 				break

@@ -727,7 +727,7 @@ function SmartAI:getValuableCardForGuanxing(cards)
 					hit_num = hit_num + 1
 					if getCardsNum("Jink", enemy, self.player) < 1
 						or enemy:isKongcheng()
-						or self:isJinkAvailable(self.player, enemy)
+						or sgs.isJinkAvailable(self.player, enemy)
 						or self.player:hasSkills("wushuang|dahe|qianxi")
 						or self.player:hasSkill("roulin") and enemy:isFemale()
 						or (self.player:hasWeapon("Axe") or self:getCardsNum("Axe") > 0) and self.player:getCards("he"):length() > 4

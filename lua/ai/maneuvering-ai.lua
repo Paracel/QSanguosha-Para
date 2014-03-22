@@ -174,7 +174,7 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 		return
 	end
 
-	if not self:isJinkAvailable(self.player, target, slash) then return true end
+	if not sgs.isJinkAvailable(self.player, target, slash) then return true end
 	if self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4 then return true end
 	if target:hasFlag("dahe") then return true end
 

@@ -27,7 +27,7 @@ sunshangxiang			7
 xiaoqiao				6
 zhoutai					2
 huatuo					8
-lvbu					5
+nos_lvbu				5
 nos_diaochan			8
 zhangjiao				6
 xuhuang					6

@@ -44,7 +44,7 @@ zhoutai					55
 lusu					60					
 erzhang					16					
 huatuo					63					
-lvbu					76					
+lvbu					77					
 diaochan				72					
 yuanshao				21					
 yanliangwenchou			67					
@@ -201,6 +201,7 @@ nos_huangyueying		61
 nos_lvmeng				63					
 nos_zhouyu				82					
 nos_luxun				57					
+nos_lvbu				76					
 nos_diaochan			72					
 nos_caoren				61					
 nos_zhoutai				40					

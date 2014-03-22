@@ -1689,6 +1689,52 @@ public:
     }
 };
 
+class Liyu: public TriggerSkill {
+public:
+    Liyu(): TriggerSkill("liyu") {
+        events << Damage;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.to->isAlive() && player != damage.to && !damage.to->hasFlag("Global_DebutFlag") && !damage.to->isNude()
+            && damage.card && damage.card->isKindOf("Slash")) {
+            Duel *duel = new Duel(Card::NoSuit, 0);
+            duel->setSkillName("_liyu");
+
+            QList<ServerPlayer *> targets;
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (p != damage.to && !player->isProhibited(p, duel))
+                    targets << p;
+            }
+            if (targets.isEmpty()) {
+                delete duel;
+            } else {
+                ServerPlayer *target = room->askForPlayerChosen(damage.to, targets, objectName(), "@liyu", true);
+                if (target) {
+                    room->broadcastSkillInvoke(objectName());
+                    room->notifySkillInvoked(player, objectName());
+
+                    LogMessage log;
+                    log.type = "#InvokeOthersSkill";
+                    log.from = damage.to;
+                    log.to << player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
+                    int id = room->askForCardChosen(player, damage.to, "he", objectName());
+                    room->obtainCard(player, id);
+                    if (player->isAlive() && target->isAlive() && !player->isLocked(duel))
+                        room->useCard(CardUseStruct(duel, player, target));
+                    else
+                        delete duel;
+                }
+            }
+        }
+        return false;
+    }
+};
+
 class Lijian: public OneCardViewAsSkill {
 public:
     Lijian(): OneCardViewAsSkill("lijian") {
@@ -2122,8 +2168,9 @@ void StandardPackage::addGenerals() {
     huatuo->addSkill(new Qingnang);
     huatuo->addSkill(new Jijiu);
 
-    General *lvbu = new General(this, "lvbu", "qun"); // QUN 002
+    General *lvbu = new General(this, "lvbu", "qun", 5); // QUN 002
     lvbu->addSkill(new Wushuang);
+    lvbu->addSkill(new Liyu);
 
     General *diaochan = new General(this, "diaochan", "qun", 3, false); // QUN 003
     diaochan->addSkill(new Lijian);

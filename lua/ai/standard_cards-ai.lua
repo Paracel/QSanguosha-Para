@@ -150,7 +150,7 @@ function sgs.getDefenseSlash(player, self)
 	end
 
 	if attacker and attacker:objectName() ~= player:objectName() and attacker:canSlashWithoutCrossbow() then
-		if not self:isJinkAvailable(attacker, player) then defense = 0 end
+		if not sgs.isJinkAvailable(attacker, player) then defense = 0 end
 	end
 
 	if defense > 0 and attacker:objectName() ~= player:objectName() then
@@ -518,7 +518,7 @@ function SmartAI:useCardSlash(card, use)
 	local forbidden = {}
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		if not self:slashProhibit(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self, true) then
+		if not self:slashProhibit(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self, true) and not self:hasLiyuEffect(enemy, card) then
 			if not self:getDamagedEffects(enemy, self.player, true) then table.insert(targets, enemy) else table.insert(forbidden, enemy) end
 		end
 	end
@@ -1756,7 +1756,7 @@ function SmartAI:useCardDuel(duel, use)
 end
 
 sgs.ai_card_intention.Duel = function(self, card, from, tos)
-	if string.find(card:getSkillName(), "lijian") then return end
+	if string.find(card:getSkillName(), "lijian") or card:getSkillName() == "liyu" then return end
 	sgs.updateIntentions(from, tos, 80)
 end
 

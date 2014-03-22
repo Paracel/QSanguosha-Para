@@ -40,7 +40,7 @@ void RoomThread1v1::run() {
                        << "kof_huangzhong" << "kof_jiangwei" << "kof_menghuo" << "kof_zhurong"
                        << "sunquan" << "ganning" << "huanggai" << "nos_zhouyu"
                        << "nos_luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
-                       << "lvbu" << "kof_diaochan" << "yanliangwenchou" << "hejin";
+                       << "nos_lvbu" << "kof_diaochan" << "yanliangwenchou" << "hejin";
             if (rule == "2013") {
                 candidates << "kof_liubei" << "kof_weiyan" << "kof_lvmeng" << "kof_daqiao"
                            << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "pangde"

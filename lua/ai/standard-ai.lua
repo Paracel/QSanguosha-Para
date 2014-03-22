@@ -1526,7 +1526,7 @@ sgs.ai_skill_cardask["@tieji-discard"] = function(self, data, pattern)
 		or (not self:hasHeavySlashDamage(use.from, use.card, self.player)
 			and (self:getDamagedEffects(self.player, use.from, true) or self:needToLoseHp(self.player, use.from, true))) then return "." end
 	if not self:hasHeavySlashDamage(use.from, use.card, self.player) and self:getCardsNum("Peach") > 0 then return "." end
-	if self:getCardsNum("Jink") == 0 or not self:isJinkAvailable(use.from, self.player, use.card, true) then return "." end
+	if self:getCardsNum("Jink") == 0 or not sgs.isJinkAvailable(use.from, self.player, use.card, true) then return "." end
 
 	local equip_index = { 3, 0, 2, 4, 1 }
 	if self.player:hasSkills(sgs.lose_equip_skill) then
@@ -2513,6 +2513,164 @@ sgs.ai_skill_cardask["@multi-jink-start"] = function(self, data, pattern, target
 end
 
 sgs.ai_skill_cardask["@multi-jink"] = sgs.ai_skill_cardask["@multi-jink-start"]
+
+local function getPriorFriendsOfLiyu(self, lvbu)
+	lvbu = lvbu or self.player
+	local prior_friends = {}
+	if not string.startsWith(self.room:getMode(), "06_") and not sgs.GetConfig("EnableHegemony", false) then
+		if lvbu:isLord() then
+			for _, friend in ipairs(self:getFriendsNoself(lvbu)) do
+				if sgs.evaluatePlayerRole(friend) == "loyalist" then table.insert(prior_friends, friend) end
+			end
+		elseif lvbu:getRole() == "loyalist" then
+			local lord = self.room:getLord()
+			if lord then prior_friends = { lord } end
+		elseif self.room:getMode() == "couple" then
+			local diaochan = self.room:getPlayer("diaochan")
+			if diaochan then prior_friends = { diaochan } end
+		end
+	elseif self.room:getMode() == "06_3v3" then
+		if lvbu:getRole() == "loyalist" then
+			for _, friend in ipairs(self:getFriendsNoself(lvbu)) do
+				if friend:getRole() == "lord" then table.insert(prior_friends, friend) break end
+			end
+		elseif lvbu:getRole() == "rebel" then
+			for _, friend in ipairs(self:getFriendsNoself(lvbu)) do
+				if friend:getRole() == "renegade" then table.insert(prior_friends, friend) break end
+			end
+		end
+	elseif self.room:getMode() == "06_XMode" then
+		local leader = lvbu:getTag("XModeLeader"):toPlayer()
+		local backup = 0
+		if leader then
+			backup = #leader:getTag("XModeBackup"):toStringList()
+			if backup == 0 then
+				prior_friends = self:getFriendsNoself(lvbu)
+			end
+		end
+	end
+	return prior_friends
+end
+
+function SmartAI:hasLiyuEffect(target, slash)
+	local upperlimit = (self.player:hasSkill("wushuang") and 2 or 1)
+	if #self.friends_noself == 0 or self.player:hasSkill("jueqing") then return false end
+	if not self:slashIsEffective(slash, target, self.player) then return false end
+
+	local targets = { target }
+	if not self.player:hasSkill("jueqing") and target:isChained() and slash:isKindOf("NatureSlash") then
+		for _, p in sgs.qlist(self.room:getOtherPlayers(target)) do
+			if p:isChained() and p:objectName() ~= self.player:objectName() then table.insert(targets, p) end
+		end
+	end
+	local unsafe = false
+	for _, p in ipairs(targets) do
+		if self:isEnemy(target) and not target:isNude() then
+			unsafe = true
+			break
+		end
+	end
+	if not unsafe then return false end
+
+	local duel = sgs.Sanguosha:cloneCard("Duel")
+	if self.player:isLocked(duel) then return false end
+
+	local enemy_null = 0
+	for _, p in sgs.qlist(self.room:getOtherPlayers(self.player)) do
+		if self:isFriend(p) then enemy_null = enemy_null - getCardsNum("Nullification", p, self.player) end
+		if self:isEnemy(p) then enemy_null = enemy_null + getCardsNum("Nullification", p, self.player) end
+	end
+	enemy_null = enemy_null - self:getCardsNum("Nullification")
+	if enemy_null <= -1 then return false end
+
+	local prior_friends = getPriorFriendsOfLiyu(self)
+	if #prior_friends == 0 then return false end
+	for _, friend in ipairs(prior_friends) do
+		if self:hasTrickEffective(duel, friend, self.player) and self:isWeak(friend) and (getCardsNum("Slash", friend, self.player) < upperlimit or self:isWeak()) then
+			return true
+		end
+	end
+
+	if sgs.isJinkAvailable(self.player, target, slash) and getCardsNum("Jink", target, self.player) >= upperlimit
+		and not self:needToLoseHp(target, self.player, true) and not self:getDamagedEffects(target, self.player, true) then return false end
+	if slash:hasFlag("AIGlobal_KillOff") or (target:getHp() == 1 and self:isWeak(target) and self:getSaveNum() < 1) then return false end
+
+	if self.player:hasSkill("wumou") and self.player:getMark("@wrath") == 0 and (self:isWeak() or not self.player:hasSkill("zhaxiang")) then return true end
+	if self.player:hasSkills("jizhi|nosjizhi") or (self.player:hasSkill("jilve") and self.player:getMark("@bear") > 0) then return false end
+	if not string.startsWith(self.room:getMode(), "06_") and not sgs.GetConfig("EnableHegemony", false) and self.role ~= "rebel" then
+		for _, friend in ipairs(self.friends_noself) do
+			if self:hasTrickEffective(duel, friend, self.player) and self:isWeak(friend) and (getCardsNum("Slash", friend, self.player) < upperlimit or self:isWeak())
+				and self:getSaveNum(true) < 1 then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+sgs.ai_skill_playerchosen.liyu = function(self, targets)
+	local enemies = {}
+	for _, target in sgs.qlist(targets) do
+		if self:isEnemy(target) then table.insert(enemies, target) end
+	end
+	-- should give one card to Lv Bu
+	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
+	local lvbu = damage.from
+	if not lvbu then return nil end
+	local duel = sgs.Sanguosha:cloneCard("duel")
+	if lvbu:isLocked(duel) then
+		if self:isFriend(lvbu) and self:needToThrowArmor() and #enemies > 0 then
+			return enemies[1]
+		else
+			return nil
+		end
+	end
+	if self:isFriend(lvbu) then
+		if self.player:getHandcardNum() >= 3 or self:needKongcheng()
+			or (self:getLeastHandcardNum() > 0 and self.player:getHandcardNum() <= self:getLeastHandcardNum())
+			or self:needToThrowArmor() or self.player:getOffensiveHorse() or (self.player:getWeapon() and self:evaluateWeapon(self.player:getWeapon()) < 5)
+			or (not self.player:getEquips():isEmpty() and lvbu:hasSkills("zhijian|yuanhu|huyuan")) then
+		else
+			return nil
+		end
+	else
+		if self.player:getEquips():isEmpty() then
+			local all_peach = true
+			for _, card in sgs.qlist(self.player:getHandcards()) do
+				if not isCard("Peach", card, lvbu) then all_peach = false break end
+			end
+			if all_peach then return nil end
+		end
+		local upperlimit = (self.player:hasSkill("wushuang") and 2 or 1)
+		local prior_friends = getPriorFriendsOfLiyu(self, lvbu)
+		if #prior_friends > 0 then
+			for _, friend in ipairs(prior_friends) do
+				if self:hasTrickEffective(duel, friend, lvbu) and self:isWeak(friend)
+					and (getCardsNum("Slash", friend, self.player) < upperlimit or self:isWeak(lvbu)) then
+					return friend
+				end
+			end
+		end
+		if self:getValuableCard(self.player) then return nil end
+		local valuable = 0
+		for _, card in sgs.qlist(self.player:getHandcards()) do
+			if self:isValuableCard(card) then valuable = valuable + 1 end
+		end
+		if valuable / self.player:getHandcardNum() > 0.4 then return nil end
+	end
+
+	-- the target of the Duel
+	self:sort(enemies)
+	for _, enemy in ipairs(enemies) do
+		if self:hasTrickEffective(duel, enemy, lvbu) then
+			if not (self:isFriend(lvbu) and getCardsNum("Slash", enemy, self.player) > upperlimit and self:isWeak(lvbu)) then
+				return enemy
+			end
+		end
+	end
+end
+
+sgs.ai_playerchosen_intention.liyu = 60
 
 function SmartAI:getLijianCard()
 	local card_id

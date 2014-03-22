@@ -2205,7 +2205,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 			if self:isEnemy(from) then return null_card end
 			if self:isFriend(to) and to:isNude() then return nil end
 		end
-		if trick:isKindOf("Duel") and trick:getSkillName() == "lijian" and (self:isFriend(to) or (self:isFriend(from) and to:hasSkill("wuhun"))) then
+		if trick:isKindOf("Duel") and (trick:getSkillName() == "lijian" or trick:getSkillName() == "liyu") and (self:isFriend(to) or (self:isFriend(from) and to:hasSkill("wuhun"))) then
 			if to:getHp() == 1 and sgs.ai_role[to:objectName()] == "rebel" and from and sgs.ai_role[from:objectName()] == "rebel" then return end
 			return null_card
 		end
@@ -2379,7 +2379,7 @@ function SmartAI:askForNullification(trick, from, to, positive)
 				if self:isEnemy(from) then return null_card end
 				return
 			end
-			if trick:getSkillName() == "lijian" and trick:isKindOf("Duel") then
+			if (trick:getSkillName() == "lijian" or trick:getSkillName() == "liyu") and trick:isKindOf("Duel") then
 				if self:isEnemy(to) and (self:isWeak(to) or null_num > 1 or self:getOverflow() > 0 or not self:isWeak()) then return null_card end
 				return
 			end

@@ -2014,6 +2014,9 @@ NostalStandardPackage::NostalStandardPackage()
     nos_luxun->addSkill(new NosQianxun);
     nos_luxun->addSkill(new NosLianying);
 
+    General *nos_lvbu = new General(this, "nos_lvbu", "qun");
+    nos_lvbu->addSkill("wushuang");
+
     General *nos_diaochan = new General(this, "nos_diaochan", "qun", 3, false);
     nos_diaochan->addSkill(new NosLijian);
     nos_diaochan->addSkill("biyue");

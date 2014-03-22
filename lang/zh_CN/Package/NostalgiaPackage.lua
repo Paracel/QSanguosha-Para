@@ -82,6 +82,8 @@ return {
 	["nosfanjian"] = "反间",
 	[":nosfanjian"] = "<font color=\"green\"><b>阶段技。</b></font>你可以令一名其他角色选择一种花色，然后正面朝上获得你的一张手牌。若该牌花色与该角色所选花色不同，你对其造成1点伤害。",
 
+	["nos_lvbu"] = "吕布-旧",
+	["&nos_lvbu"] = "吕布",
 
 	["nos_diaochan"] = "貂蝉-旧",
 	["&nos_diaochan"] = "貂蝉",

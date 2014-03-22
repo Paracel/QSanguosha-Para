@@ -170,6 +170,7 @@ huangyueying sunquan					60
 huangyueying lvmeng						55
 huangyueying huanggai					52
 huangyueying zhouyu						57
+huangyueying lvbu						55
 huangyueying diaochan					57
 huangyueying shenlvmeng					57
 huangyueying shensimayi					45
@@ -202,6 +203,7 @@ weiyan bgm_liubei						55
 weiyan yuejin							55
 weiyan vs_lvbu							75
 weiyan nos_machao						69
+weiyan nos_lvbu							65
 weiyan nos_lingtong						69
 weiyan nos_zhangchunhua					2
 pangtong wolong							54
@@ -228,6 +230,7 @@ zhurong lvbu							60
 zhurong zhangchunhua					3
 zhurong vs_lvbu							61
 zhurong nos_machao						52
+zhurong nos_lvbu						60
 zhurong nos_zhangchunhua				3
 sunquan huanggai						53
 sunquan luxun							51
@@ -324,6 +327,11 @@ lusu nos_zhangliao						20
 lusu nos_liubei							75
 lusu nos_lingtong						53
 erzhang nos_liubei						63
+lvbu shenlvbu							40
+lvbu shensimayi							55
+lvbu vs_lvbu							40
+lvbu nos_huangyueying					56
+lvbu nos_lvbu							1
 diaochan lingtong						52
 diaochan masu							55
 diaochan nos_lingtong					52
@@ -472,6 +480,7 @@ vs_zhaoyun neo_zhangfei					70
 vs_zhaoyun neo_zhaoyun					10
 vs_zhaoyun nos_zhangfei					70
 vs_zhaoyun nos_zhaoyun					1
+vs_lvbu nos_lvbu						1
 neo_guanyu neo_zhangfei					77
 neo_guanyu nos_guanyu					1
 neo_guanyu nos_zhangfei					77

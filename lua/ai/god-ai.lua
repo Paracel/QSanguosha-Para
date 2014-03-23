@@ -743,6 +743,7 @@ sgs.ai_need_damaged.guixin = function(self, attacker, player)
 end
 
 sgs.ai_skill_choice.wumou = function(self, choices)
+	if self.player:hasSkill("zhaxiang") and not self:isWeak() and not (self.player:hasSkill("chanyuan") and self.player:getHp() == 2) then return "losehp" end
 	if self.player:getMark("@wrath") > 6 then return "discard" end
 	if self.player:getHp() + self:getCardsNum("Peach") > 3 then
 		return "losehp"

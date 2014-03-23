@@ -1064,6 +1064,52 @@ end
 
 sgs.nosjizhi_keep_value = sgs.jizhi_keep_value
 
+local noskurou_skill = {}
+noskurou_skill.name = "noskurou"
+table.insert(sgs.ai_skills, noskurou_skill)
+noskurou_skill.getTurnUseCard = function(self, inclusive)
+	if (self.player:getHp() > 3 and self.player:getHandcardNum() > self.player:getHp())
+		or (self.player:getHp() - self.player:getHandcardNum() >= 2) then
+		return sgs.Card_Parse("@NosKurouCard=.")
+	end
+
+	local function can_noskurou_with_cb(self)
+		if self.player:getHp() > 1 then return true end
+		local has_save = false
+		local huatuo = self.room:findPlayerBySkillName("jijiu")
+		if huatuo and self:isFriend(huatuo) then
+			for _, equip in sgs.qlist(huatuo:getEquips()) do
+				if equip:isRed() then has_save = true break end
+			end
+			if not has_save then has_save = (huatuo:getHandcardNum() > 3) end
+		end
+		if has_save then return true end
+		local handang = self.room:findPlayerBySkillName("nosjiefan")
+		if handang and self:isFriend(handang) and getCardsNum("Slash", handang, self.player) >= 1 then return true end
+		return false
+	end
+
+	local slash = sgs.Sanguosha:cloneCard("slash")
+	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
+		for _, enemy in ipairs(self.enemies) do
+			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
+				and sgs.isGoodTarget(enemy, self.enemies, self, true) and not self:slashProhibit(slash, enemy) and can_noskurou_with_cb(self) then
+				return sgs.Card_Parse("@NosKurouCard=.")
+			end
+		end
+	end
+
+	if self.player:getHp() <= 1 and self:getCardsNum("Analeptic") + self:getCardsNum("Peach") > 1 then
+		return sgs.Card_Parse("@NosKurouCard=.")
+ 	end
+end
+
+sgs.ai_skill_use_func.NosKurouCard = function(card, use, self)
+	use.card = card
+end
+
+sgs.ai_use_priority.NosKurouCard = 6.8
+
 local nosfanjian_skill = {}
 nosfanjian_skill.name = "nosfanjian"
 table.insert(sgs.ai_skills, nosfanjian_skill)
@@ -1259,6 +1305,7 @@ sgs.ai_skill_choice.nosguhuo = function(self, choices)
 		end
 	end
 	if not questioner then questioner = self.friends[#self.friends] end
+	if self.player:hasSkill("zhaxiang") then return "question" end
 	return self.player:objectName() == questioner:objectName() and x ~= 1 and "question" or "noquestion"
 end
 

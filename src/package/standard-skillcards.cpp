@@ -165,8 +165,6 @@ KurouCard::KurouCard() {
 
 void KurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->loseHp(source);
-    if (source->isAlive())
-        room->drawCards(source, 2, "kurou");
 }
 
 LianyingCard::LianyingCard() {

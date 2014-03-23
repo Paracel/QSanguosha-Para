@@ -251,6 +251,7 @@ function sgs.getDefense(player, gameProcess)
 		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 2 end
 	end
+	if attacker and attacker:hasSkill("jueqing") and player:hasSkill("zhaxiang") then defense = defense + 4 end
 
 	if not gameProcess and not sgs.isGoodTarget(player) then defense = defense + 10 end
 	if player:hasSkills("rende|nosrende") and player:getHp() > 2 then defense = defense + 1 end
@@ -501,7 +502,7 @@ function SmartAI:getUseValue(card)
 		if not self:getSameEquip(card) then v = 6.7 end
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("qiangxi") and card:isKindOf("Weapon") then v = 2 end
-		if self.player:hasSkill("kurou") and card:isKindOf("Crossbow") then return 9 end
+		if self.player:hasSkill("noskurou") and card:isKindOf("Crossbow") then return 9 end
 		if self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then v = 2 end
 		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong")
 			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
@@ -680,7 +681,7 @@ function SmartAI:cardNeed(card)
 	if card:isKindOf("Peach") then
 		self:sort(self.friends, "hp")
 		if self.friends[1]:getHp() < 2 then return 13 end
-		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not (self.player:hasSkill("longhun") or hasBuquEffect(self.player))) or self.player:hasSkills("kurou|benghuai") then return 15 end
+		if (self.player:getHp() < 3 or self.player:getLostHp() > 1 and not (self.player:hasSkill("longhun") or hasBuquEffect(self.player))) or self.player:hasSkills("noskurou|benghuai") then return 15 end
 		return self:getUseValue(card)
 	end
 	local wuguotai = self.room:findPlayerBySkillName("buyi")
@@ -715,7 +716,7 @@ function SmartAI:cardNeed(card)
 		if self.player:getHp() < 2 then return 10 end
 	end
 	if card:isKindOf("Slash") and (self:getCardsNum("Slash") > 0) then return 4 end
-	if card:isKindOf("Crossbow") and self.player:hasSkills("luoshen|yongsi|kurou|keji|wusheng|wushen") then return 20 end
+	if card:isKindOf("Crossbow") and self.player:hasSkills("luoshen|yongsi|noskurou|keji|wusheng|wushen") then return 20 end
 	if card:isKindOf("Axe") and self.player:hasSkills("luoyi|nosluoyi|jiushi|jiuchi|pojun") then return 15 end
 	if card:isKindOf("Weapon") and (not self.player:getWeapon()) and (self:getCardsNum("Slash") > 1) then return 6 end
 	if card:isKindOf("Nullification") and self:getCardsNum("Nullification") == 0 then
@@ -3590,9 +3591,9 @@ function SmartAI:needRetrial(judge)
 	if reason == "indulgence" then
 		if who:isSkipped(sgs.Player_Draw) and who:isKongcheng() then
 			if (who:hasSkill("shenfen") and who:getMark("@wrath") >= 6)
-				or (who:hasSkill("kurou") and who:getHp() >= 3) 
+				or (who:hasSkills("noskurou|kurou+zhaxiang") and who:getHp() >= 3)
 				or (who:hasSkill("jixi") and who:getPile("field"):length() > 2)
-				or (who:hasSkill("lihun") and self:IsLihunTarget(self:getEnemies(who), 0))
+				or (who:hasSkill("lihun") and self:isLihunTarget(self:getEnemies(who), 0))
 				or (who:hasSkill("xiongyi") and who:getMark("@arise") > 0) then
 				if self:isFriend(who) then
 					return not good
@@ -4965,7 +4966,7 @@ function SmartAI:evaluateWeapon(card, player, enemy)
 	local peach_num = player:objectName() == self.player:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", player, self.player)
 	if card:isKindOf("Crossbow") and not player:hasSkill("paoxiao") and deltaSelfThreat ~= 0 then
 		deltaSelfThreat = deltaSelfThreat + slash_num * 3 - 2
-		if player:hasSkill("kurou") then deltaSelfThreat = deltaSelfThreat + peach_num + analeptic_num + self.player:getHp() end
+		if player:hasSkill("noskurou") then deltaSelfThreat = deltaSelfThreat + peach_num + analeptic_num + self.player:getHp() end
 		if player:getWeapon() and not self:hasCrossbowEffect(player) and not player:canSlashWithoutCrossbow() and slash_num > 0 then
 			for _, enemy in ipairs(enemies) do
 				if player:distanceTo(enemy) <= currentRange

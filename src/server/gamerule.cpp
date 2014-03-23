@@ -404,7 +404,6 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 n++;
                 room->setTag("is_chained", n);
             }
-            room->getThread()->trigger(PostHpReduced, room, player, data);
 
             break;
         }

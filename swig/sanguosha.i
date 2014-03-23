@@ -629,9 +629,9 @@ enum TriggerEvent {
     PreHpRecover,
     HpRecover,
     PreHpLost,
+    HpLost,
     HpChanged,
     MaxHpChanged,
-    PostHpReduced,
 
     EventLoseSkill,
     EventAcquireSkill,

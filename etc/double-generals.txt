@@ -174,7 +174,6 @@ machao nos_madai						80
 huangyueying pangtong					59
 huangyueying sunquan					60
 huangyueying lvmeng						55
-huangyueying huanggai					52
 huangyueying zhouyu						57
 huangyueying lvbu						55
 huangyueying diaochan					57
@@ -186,6 +185,7 @@ huangyueying bgm_diaochan				58
 huangyueying bgm_caoren					58
 huangyueying bgm_lvmeng					57
 huangyueying nos_lvmeng					53
+huangyueying nos_huanggai				52
 huangyueying nos_zhouyu					56
 huangyueying nos_caoren					53
 huangyueying nos_xushu					36
@@ -200,7 +200,6 @@ huangzhong lingju						55
 huangzhong nos_xuchu					55
 huangzhong nos_machao					37
 huangzhong nos_madai					77
-weiyan huanggai							75
 weiyan lvbu								65
 weiyan shenlvbu							71
 weiyan zhangchunhua						2
@@ -239,11 +238,11 @@ zhurong vs_lvbu							61
 zhurong nos_machao						52
 zhurong nos_lvbu						60
 zhurong nos_zhangchunhua				3
-sunquan huanggai						53
 sunquan luxun							51
 sunquan shensimayi						45
 sunquan lingtong						54
 sunquan liaohua							60
+sunquan nos_huanggai					53
 sunquan nos_luxun						51
 sunquan nos_lingtong					53
 ganning luxun							70
@@ -262,6 +261,7 @@ lvmeng nos_guojia						79
 lvmeng nos_zhangfei						60
 lvmeng nos_lvmeng						5
 lvmeng nos_zhoutai						59
+huanggai shenlvbu						53
 zhouyu masu								57
 zhouyu liaohua							56
 daqiao luxun							75

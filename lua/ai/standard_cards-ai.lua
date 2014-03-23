@@ -195,6 +195,7 @@ function sgs.getDefenseSlash(player, self)
 		if player:hasSkill("guixin") then defense = defense + 4 end
 		if player:hasSkill("yuce") then defense = defense + 1 end
 	end
+	if attacker and attacker:hasSkill("jueqing") and attacker:objectName() ~= player:objectName() and player:hasSkill("zhaxiang") then defense = defense + 4 end
 
 	if not sgs.isGoodTarget(player) then defense = defense + 10 end
 
@@ -2987,7 +2988,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		self:sort(self.enemies, "defense")
 
 		if crossbow then
-			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("kurou|keji") 
+			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("noskurou|keji") 
 				or (self.player:hasSkills("luoshen|yongsi|luoying|guzheng") and not selfIsCurrent and self.room:alivePlayerCount() >= 4) then
 				return crossbow
 			end
@@ -3007,7 +3008,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 					if enemy:hasSkill("buyi") then canSave = true end
 					if enemy:hasSkill("jijiu") and getKnownCard(enemy, self.player, "red", nil, "he") > 1 then canSave = true end
 					if enemy:hasSkill("chunlao") and enemy:getPile("wine"):length() > 1 then canSave = true end
-					if enemy:hasSkill("kurou") then huanggai = enemy end
+					if enemy:hasSkill("noskurou") then huanggai = enemy end
 					if enemy:hasSkill("keji") then return crossbow end
 					if enemy:hasSkills("luoshen|yongsi|guzheng") then return crossbow end
 					if enemy:hasSkill("luoying") and sgs.Sanguosha:getCard(crossbow):getSuit() ~= sgs.Card_Club then return crossbow end

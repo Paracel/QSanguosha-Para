@@ -31,7 +31,7 @@ zhurong					44
 sunquan					99					
 ganning					69					
 lvmeng					68					
-huanggai				55					
+huanggai				60					
 zhouyu					82					
 daqiao					14					
 luxun					57					
@@ -200,6 +200,7 @@ nos_zhaoyun				68
 nos_machao				65					
 nos_huangyueying		61					
 nos_lvmeng				63					
+nos_huanggai			55					
 nos_zhouyu				82					
 nos_luxun				57					
 nos_lvbu				76					

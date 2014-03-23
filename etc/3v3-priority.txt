@@ -19,7 +19,7 @@ weiyan					2
 sunquan					7
 ganning					6
 nos_lvmeng				2
-huanggai				6
+nos_huanggai			6
 nos_zhouyu				6
 daqiao					6
 nos_luxun				3

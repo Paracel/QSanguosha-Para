@@ -1017,7 +1017,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"wangxi|luoyi|nosluoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|longhun|jiuchi|qingcheng|" ..
 								"shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|qianxi|jujian|shensu|luanji|zhijian|shuangxiong|" ..
 								"fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|" ..
-								"kurou|wansha|lianpo|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
+								"noskurou|wansha|lianpo|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
 								"xianzhen|qiaoshui|juece|sijian|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|" ..
 								"hongyan|zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do
@@ -1101,7 +1101,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
 		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|kofkuanggu|" ..
-								"zhuikong|lianpo|qiluan|suishi|xiaode"):split("|")) do
+								"zhuikong|lianpo|qiluan|zhaxiang|suishi|xiaode"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 	end

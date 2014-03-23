@@ -2275,7 +2275,7 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_zhangliao->addSkill("tuxi");
 
     General *tw_huanggai = new General(this, "tw_huanggai", "wu", 4, true, true); // TW SP 014
-    tw_huanggai->addSkill("kurou");
+    tw_huanggai->addSkill("noskurou");
 
     General *tw_guojia = new General(this, "tw_guojia", "wei", 3, true, true); // TW SP 015
     tw_guojia->addSkill("tiandu");

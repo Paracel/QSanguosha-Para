@@ -749,7 +749,7 @@ function SmartAI:getValuableCardForGuanxing(cards)
 		self:sort(self.enemies, "defense")
 
 		if crossbow then
-			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("kurou|keji") then
+			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("noskurou|keji") then
 				return crossbow
 			end
 			if self.player:hasSkill("guixin") and self.room:alivePlayerCount() >= 6 and (self.player:getHp() > 1 or self:getCardsNum("Peach") > 0) then

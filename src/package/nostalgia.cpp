@@ -1375,6 +1375,28 @@ public:
     }
 };
 
+NosKurouCard::NosKurouCard() {
+    mute = true;
+    target_fixed = true;
+}
+
+void NosKurouCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    room->broadcastSkillInvoke("kurou");
+    room->loseHp(source);
+    if (source->isAlive())
+        room->drawCards(source, 2, "noskurou");
+}
+
+class NosKurou: public ZeroCardViewAsSkill {
+public:
+    NosKurou(): ZeroCardViewAsSkill("noskurou") {
+    }
+
+    virtual const Card *viewAs() const{
+        return new NosKurouCard;
+    }
+};
+
 class NosYingzi: public DrawCardsSkill {
 public:
     NosYingzi(): DrawCardsSkill("nosyingzi") {
@@ -2068,6 +2090,9 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_lvmeng = new General(this, "nos_lvmeng", "wu");
     nos_lvmeng->addSkill("keji");
 
+    General *nos_huanggai = new General(this, "nos_huanggai", "wu");
+    nos_huanggai->addSkill(new NosKurou);
+
     General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
     nos_zhouyu->addSkill(new NosYingzi);
     nos_zhouyu->addSkill(new NosFanjian);
@@ -2085,6 +2110,7 @@ NostalStandardPackage::NostalStandardPackage()
 
     addMetaObject<NosTuxiCard>();
     addMetaObject<NosRendeCard>();
+    addMetaObject<NosKurouCard>();
     addMetaObject<NosFanjianCard>();
     addMetaObject<NosLijianCard>();
 }

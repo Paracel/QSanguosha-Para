@@ -2978,13 +2978,11 @@ void Room::loseHp(ServerPlayer *victim, int lose) {
     setTag("HpChangedData", data);
     setPlayerProperty(victim, "hp", victim->getHp() - lose);
 
-    thread->trigger(PostHpReduced, this, victim, data);
+    thread->trigger(HpLost, this, victim, data);
 }
 
 void Room::loseMaxHp(ServerPlayer *victim, int lose) {
-    int hp_1 = victim->getHp();
     victim->setMaxHp(qMax(victim->getMaxHp() - lose, 0));
-    int hp_2 = victim->getHp();
 
     broadcastProperty(victim, "maxhp");
     broadcastProperty(victim, "hp");
@@ -3009,13 +3007,8 @@ void Room::loseMaxHp(ServerPlayer *victim, int lose) {
 
     if (victim->getMaxHp() == 0)
         killPlayer(victim);
-    else {
+    else
         thread->trigger(MaxHpChanged, this, victim);
-        if (hp_1 > hp_2) {
-            QVariant data = QVariant::fromValue(hp_1 - hp_2);
-            thread->trigger(PostHpReduced, this, victim, data);
-        }
-    }
 }
 
 bool Room::changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude) {

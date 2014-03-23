@@ -73,6 +73,11 @@ return {
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",
 
+	["nos_huanggai"] = "黄盖-旧",
+	["&nos_huanggai"] = "黄盖",
+	["noskurou"] = "苦肉",
+	[":noskurou"] = "出牌阶段，你可以失去1点体力：若如此做，你摸两张牌。",
+
 	["nos_luxun"] = "陆逊-旧",
 	["&nos_luxun"] = "陆逊",
 	["nosqianxun"] = "谦逊",

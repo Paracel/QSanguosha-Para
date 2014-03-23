@@ -1691,6 +1691,13 @@ public:
         room->doBroadcastNotify(QSanProtocol::S_COMMAND_UPDATE_PILE, Json::Value(drawPile.length()));
         if (result == -1)
             room->setPlayerFlag(player, "Global_AocaiFailed");
+        else {
+            LogMessage log;
+            log.type = "#AocaiUse";
+            log.from = player;
+            log.arg = "aocai";
+            room->sendLog(log);
+        }
         return result;
     }
 };

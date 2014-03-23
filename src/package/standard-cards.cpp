@@ -1367,7 +1367,7 @@ public:
             }
             if (count > 0) {
                 LogMessage log;
-                log.type = "$WoodenOx";
+                log.type = "#WoodenOx";
                 log.from = player;
                 log.arg = QString::number(count);
                 log.arg2 = "wooden_ox";

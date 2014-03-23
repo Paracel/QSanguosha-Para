@@ -1794,7 +1794,7 @@ public:
                 room->recover(to_give, recover);
             }
             DummyCard *dummy = new DummyCard(target->getPile("yinbing"));
-            room->obtainCard(target, dummy);
+            room->obtainCard(to_give, dummy);
             delete dummy;
         } else {
             int len = target->getPile("yinbing").length();

@@ -3130,3 +3130,110 @@ sgs.ai_choicemade_filter.skillInvoke.wangxi = function(self, player, promptlist)
 		end
 	end
 end
+
+sgs.ai_skill_cardask["@zhuhai-slash"] = function(self, data, pattern, target, target2)
+	for _, slash in ipairs(self:getCards("Slash")) do
+		if self:isFriend(target2) and self:slashIsEffective(slash, target2) then
+			if self:findLeijiTarget(target2, 50, self.player) then return slash:toString() end
+			if self:getDamagedEffects(target2, self.player, true) then return slash:toString() end
+		end
+
+		local nature = sgs.DamageStruct_Normal
+		if slash:isKindOf("FireSlash") then nature = sgs.DamageStruct_Fire
+		elseif slash:isKindOf("ThunderSlash") then nature = sgs.DamageStruct_Thunder end
+		if self:isEnemy(target2) and self:slashIsEffective(slash, target2) and self:canAttack(target2, self.player, nature)
+			and not self:getDamagedEffects(target2, self.player, true) and not self:findLeijiTarget(target2, 50, self.player) then
+			return slash:toString()
+		end
+	end
+	return "."
+end
+
+local jianyan_skill = {}
+jianyan_skill.name = "jianyan"
+table.insert(sgs.ai_skills, jianyan_skill)
+jianyan_skill.getTurnUseCard = function(self)
+	if not self.player:hasUsed("JianyanCard") then return sgs.Card_Parse("@JianyanCard=.") end
+end
+
+sgs.ai_skill_use_func.JianyanCard = function(card, use, self)
+	self.jianyan_choice = nil
+	self.jianyan_enemy = nil
+	sgs.ai_use_priority.JianyanCard = 9.5
+	self:sort(self.friends)
+	local use_card
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then
+			if self:isWeak(friend) then self.jianyan_choice = "basic" end
+			use_card = true
+		end
+	end
+	if use_card then
+		use.card = card
+		return
+	end
+
+	sgs.ai_use_priority.JianyanCard = 0.5
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:isMale() and not hasManjuanEffect(enemy) and self:needKongcheng(enemy, true) then
+			self.jianyan_choice = "equip"
+			self.jianyan_enemy = enemy
+			use.card = card
+			return
+		end
+	end
+end
+
+sgs.ai_use_priority.JianyanCard = 9.5
+
+sgs.ai_skill_choice.jianyan = function(self, choices)
+	if self.jianyan_choice then return self.jianyan_choice end
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then
+			if friend:getHandcardNum() < 3 and friend:getEquips():length() < 2 then return "equip" end
+		end
+	end
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then
+			if friend:hasSkills("jizhi|nosjizhi|jilve") then return "trick" end
+		end
+	end
+	local rand = math.random(0, 100)
+	if rand > 60 then return "trick"
+	elseif rand > 35 then return "red"
+	elseif rand > 10 then return "equip"
+	elseif rand > 8 then return "basic"
+	else return "black"
+	end
+end
+
+sgs.ai_skill_playerchosen.jianyan = function(self, targets)
+	if self.jianyan_enemy then return self.jianyan_enemy end
+
+	local id = self.player:getMark("jianyan")
+	local card = sgs.Sanguosha:getCard(id)
+	local cards = { card }
+	local c, friend = self:getCardNeedPlayer(cards, self.friends)
+	if friend then return friend end
+
+	self:sort(self.friends)
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and self:isValuableCard(card, friend) and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and self:isWeak(friend) and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+	local trash = card:isKindOf("EquipCard") or card:isKindOf("Disaster") or card:isKindOf("GodSalvation") or card:isKindOf("AmazingGrace") or card:isKindOf("Slash")
+	if trash then
+		for _, enemy in ipairs(self.enemies) do
+			if enemy:isMale() and enemy:getPhase() > sgs.Player_Play and self:needKongcheng(enemy, true) and not hasManjuanEffect(enemy) then return enemy end
+		end
+	end
+	for _, friend in ipairs(self.friends) do
+		if friend:isMale() and not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+end
+
+sgs.ai_playerchosen_intention.yajiao = function(self, from, to)
+	if not self:needKongcheng(to, true) and not hasManjuanEffect(to) then sgs.updateIntention(from, to, -50) end
+end

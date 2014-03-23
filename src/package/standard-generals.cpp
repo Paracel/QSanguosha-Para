@@ -1180,6 +1180,113 @@ public:
     }
 };
 
+class Zhuhai: public TriggerSkill {
+public:
+    Zhuhai(): TriggerSkill("zhuhai") {
+        events << EventPhaseStart << PreCardUsed;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Finish) {
+            ServerPlayer *xushu = room->findPlayerBySkillName(objectName());
+            if (xushu && xushu != player && xushu->canSlash(player, false)
+                && player->hasFlag("ZhuhaiDamage")) {
+                xushu->setFlags("ZhuhaiSlash");
+                QString prompt = QString("@zhuhai-slash:%1:%2").arg(xushu->objectName()).arg(player->objectName());
+                if (!room->askForUseSlashTo(xushu, player, prompt, false))
+                    xushu->setFlags("-ZhuhaiSlash");
+            }
+        } else if (triggerEvent == PreCardUsed && player->hasFlag("ZhuhaiSlash")) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (!use.card->isKindOf("Slash")) return false;
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
+
+            LogMessage log;
+            log.type = "#InvokeSkill";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            player->setFlags("-ZhuhaiSlash");
+        }
+        return false;
+    }
+};
+
+class ZhuhaiRecord: public TriggerSkill {
+public:
+    ZhuhaiRecord(): TriggerSkill("#zhuhai-record") {
+        events << DamageDone;
+        global = true;
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 4;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.from && damage.from->getPhase() != Player::NotActive && !damage.from->hasFlag("ZhuhaiDamage"))
+            damage.from->setFlags("ZhuhaiDamage");
+        return false;
+    }
+};
+
+class Qianxin: public TriggerSkill {
+public:
+    Qianxin(): TriggerSkill("qianxin") {
+        events << Damage;
+        frequency = Wake;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL && TriggerSkill::triggerable(target)
+               && target->getMark("qianxin") == 0
+               && target->isWounded();
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
+        //room->doLightbox("$QianxinAnimate");
+
+        LogMessage log;
+        log.type = "#QianxinWake";
+        log.from = player;
+        log.arg = objectName();
+        room->sendLog(log);
+
+        room->setPlayerMark(player, "qianxin", 1);
+        if (room->changeMaxHpForAwakenSkill(player))
+            room->acquireSkill(player, "jianyan");
+
+        return false;
+    }
+};
+
+class Jianyan: public ZeroCardViewAsSkill {
+public:
+    Jianyan(): ZeroCardViewAsSkill("jianyan") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("JianyanCard");
+    }
+
+    virtual const Card *viewAs() const{
+        return new JianyanCard;
+    }
+};
+
 class Zhiheng: public ViewAsSkill {
 public:
     Zhiheng(): ViewAsSkill("zhiheng") {
@@ -2220,6 +2327,13 @@ void StandardPackage::addGenerals() {
     huangyueying->addSkill(new Jizhi);
     huangyueying->addSkill(new Qicai);
 
+    General *st_xushu = new General(this, "st_xushu", "shu"); // SHU 017
+    st_xushu->addSkill(new Zhuhai);
+    st_xushu->addSkill(new ZhuhaiRecord);
+    st_xushu->addSkill(new Qianxin);
+    st_xushu->addRelateSkill("jianyan");
+    related_skills.insertMulti("zhuhai", "#zhuhai-record");
+
     // Wu
     General *sunquan = new General(this, "sunquan$", "wu"); // WU 001
     sunquan->addSkill(new Zhiheng);
@@ -2298,8 +2412,9 @@ void StandardPackage::addGenerals() {
     addMetaObject<LianyingCard>();
     addMetaObject<JijiangCard>();
     addMetaObject<YijiCard>();
+    addMetaObject<JianyanCard>();
 
-    skills << new Xiaoxi << new NonCompulsoryInvalidity;
+    skills << new Xiaoxi << new NonCompulsoryInvalidity << new Jianyan;
 }
 
 class SuperZhiheng: public Zhiheng {

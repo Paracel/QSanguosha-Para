@@ -1099,7 +1099,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		end
 
 		if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
-		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
+		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|zhuhai|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|kofkuanggu|" ..
 								"zhuikong|lianpo|qiluan|zhaxiang|suishi|xiaode"):split("|")) do
 			if str:matchOne(askill) then return askill end

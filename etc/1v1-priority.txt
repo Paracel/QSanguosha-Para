@@ -28,6 +28,7 @@ jiangwei				78
 liushan					46					
 menghuo					62					
 zhurong					44					
+st_xushu				70					
 sunquan					99					
 ganning					69					
 lvmeng					68					

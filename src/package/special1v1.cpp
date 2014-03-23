@@ -950,6 +950,7 @@ class NiluanRecord: public TriggerSkill {
 public:
     NiluanRecord(): TriggerSkill("#niluan-record") {
         events << TargetConfirmed << EventPhaseStart;
+        global = true;
     }
 
     virtual int getPriority(TriggerEvent) const{

@@ -149,7 +149,7 @@ return {
 	["illustrator:ol_fazheng"] = "L",
 
 	["#ol_xushu"] = "智勇侠义",
-	["ol_xushu"] = "OL徐庶",
+	["ol_xushu"] = "OL YJ徐庶",
 	["&ol_xushu"] = "徐庶",
 	["illustrator:ol_xushu"] = "L",
 

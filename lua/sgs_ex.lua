@@ -314,17 +314,18 @@ function onUse_DelayedTrick(self, room, card_use)
 	local wrapped = sgs.Sanguosha:getWrappedCard(self:getEffectiveId())
 	use.card = wrapped
 
+	local data = sgs.QVariant()
+	data:setValue(use)
+	local thread = room:getThread()
+	thread:trigger(sgs.PreCardUsed, room, use.from, data)
+	use = data:toCardUse()
+
 	local logm = sgs.LogMessage()
 	logm.from = use.from
 	logm.to = use.to
 	logm.type = "#UseCard"
 	logm.card_str = self:toString()
 	room:sendLog(logm)
-
-	local data = sgs.QVariant()
-	data:setValue(use)
-	local thread = room:getThread()
-	thread:trigger(sgs.PreCardUsed, room, use.from, data)
 
 	local reason = sgs.CardMoveReason(sgs.CardMoveReason_S_REASON_USE, use.from:objectName(), use.to:first():objectName(), self:getSkillName(), "")
 	room:moveCardTo(self, use.from, use.to:first(), sgs.Player_PlaceDelayedTrick, reason, true)

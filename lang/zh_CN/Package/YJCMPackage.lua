@@ -43,7 +43,8 @@ return {
 	["#HuileiThrow"] = "%from 的“%arg”被触发，伤害来源 %to 弃置所有牌",
 
 	["#xushu"] = "忠孝的侠士",
-	["xushu"] = "徐庶",
+	["xushu"] = "YJ徐庶",
+	["&xushu"] = "徐庶",
 	["designer:xushu"] = "双叶松",
 	["illustrator:xushu"] = "XINA",
 	["wuyan"] = "无言",

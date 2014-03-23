@@ -145,7 +145,7 @@ return {
 	[":nosxuanhuo"] = "<font color=\"green\"><b>阶段技。</b></font>你可以将一张<font color=\"red\">♥</font>手牌交给一名其他角色：若如此做，你获得该角色的一张牌，然后将该牌交给除该角色外的另一名角色。",
 	["@nosxuanhuo-give"] = "你可以将该牌交给除 %src 外的一名角色",
 
-	["nos_xushu"] = "徐庶-旧",
+	["nos_xushu"] = "YJ徐庶-旧",
 	["&nos_xushu"] = "徐庶",
 	["designer:nos_xushu"] = "双叶松",
 	["illustrator:nos_xushu"] = "XINA",

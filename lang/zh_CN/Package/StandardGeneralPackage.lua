@@ -142,6 +142,20 @@ return {
 	["qicai"] = "奇才",
 	[":qicai"] = "<font color=\"blue\"><b>锁定技。</b></font>你使用锦囊牌无距离限制。其他角色不能弃置你装备区的除坐骑牌外的牌。",
 
+	["#st_xushu"] = "化剑为犁",
+	["st_xushu"] = "徐庶",
+	["illustrator:st_xushu"] = "MSNZero",
+	["zhuhai"] = "诛害",
+	[":zhuhai"] = "一名其他角色的结束阶段开始时，若该角色本回合造成过伤害，你可以对其使用一张无距离限制的【杀】。",
+	["qianxin"] = "潜心",
+	[":qianxin"] = "<font color=\"purple\"><b>觉醒技。</b></font>每当你造成伤害后，若你已受伤，你失去1点体力上限，然后获得“荐言”（<font color=\"green\"><b>阶段技。</b></font>你可以选择一种牌的类别或颜色，然后你依次展示牌堆顶的牌直到与你的选择相符，然后你令一名男性角色获得此牌，再将展示的牌置入弃牌堆）。",
+	["jianyan"] = "荐言",
+	[":jianyan"] = "<font color=\"green\"><b>阶段技。</b></font>你可以选择一种牌的类别或颜色，然后你依次展示牌堆顶的牌直到与你的选择相符，然后你令一名男性角色获得此牌，再将展示的牌置入弃牌堆。",
+	["@zhuhai-slash"] = "你可以发动“诛害”对 %dest 使用一张【杀】",
+	["@jianyan-give"] = "你可以令一名男性角色获得 %arg[%arg2]",
+	["#QianxinWake"] = "%from 已受伤，触发“%arg”觉醒",
+	["#JianyanChoice"] = "%from 选择了 %arg",
+
 	-- 吴势力
 	["#sunquan"] = "年轻的贤君",
 	["sunquan"] = "孙权",

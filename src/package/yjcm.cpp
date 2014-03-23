@@ -465,7 +465,7 @@ public:
                 && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)
                 lingtong->addMark("xuanfeng", move.card_ids.length());
 
-            if (move.from_places.contains(Player::PlaceEquip))
+            if (move.from_places.contains(Player::PlaceEquip) && TriggerSkill::triggerable(lingtong))
                 perform(room, lingtong);
         } else if (triggerEvent == EventPhaseEnd && TriggerSkill::triggerable(lingtong)
                    && lingtong->getPhase() == Player::Discard && lingtong->getMark("xuanfeng") >= 2) {

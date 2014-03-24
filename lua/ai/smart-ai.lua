@@ -5512,16 +5512,18 @@ dofile "lua/ai/conversion-ai.lua"
 
 local loaded = "standard|standard_cards|maneuvering"
 
-local files = table.concat(sgs.GetFileNames("lua/ai"), " ")
+local ai_files = sgs.GetFileNames("lua/ai")
 
 for _, aextension in ipairs(sgs.Sanguosha:getExtensions()) do
-	if not loaded:match(aextension) and files:match(string.lower(aextension)) then
-		dofile("lua/ai/" .. string.lower(aextension) .. "-ai.lua")
+	if not loaded:match(aextension) then
+		local file_name = string.lower(aextension) .. "-ai.lua"
+		if table.contains(ai_files, file_name) then dofile("lua/ai/" .. file_name) end
 	end
 end
 
 for _, ascenario in ipairs(sgs.Sanguosha:getModScenarioNames()) do
-	if not loaded:match(ascenario) and files:match(string.lower(ascenario)) then
-		dofile("lua/ai/" .. string.lower(ascenario) .. "-ai.lua")
+	if not loaded:match(ascenario) then
+		local file_name = string.lower(ascenario) .. "-ai.lua"
+		if table.contains(ai_files, file_name) then dofile("lua/ai/" .. file_name) end
 	end
 end

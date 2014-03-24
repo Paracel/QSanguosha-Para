@@ -823,9 +823,7 @@ public:
                 room->broadcastSkillInvoke(objectName());
                 //room->doLightbox("$TishenAnimate");
 
-                RecoverStruct recover;
-                recover.recover = x;
-                room->recover(player, recover);
+                room->recover(player, RecoverStruct(player, NULL, x));
                 player->drawCards(x, objectName());
             }
         }
@@ -2184,13 +2182,10 @@ public:
             log.arg = objectName();
             room->sendLog(log);
 
-            if (damage.from->isWounded() && room->askForChoice(damage.from, objectName(), "recover+draw", data) == "recover") {
-                RecoverStruct recover;
-                recover.who = damage.to;
-                room->recover(damage.from, recover);
-            } else {
+            if (damage.from->isWounded() && room->askForChoice(damage.from, objectName(), "recover+draw", data) == "recover")
+                room->recover(damage.from, RecoverStruct(damage.to));
+            else
                 damage.from->drawCards(1, objectName());
-            }
         }
         return false;
     }

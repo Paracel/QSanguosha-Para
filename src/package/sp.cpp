@@ -528,9 +528,7 @@ void YuanhuCard::onEffect(const CardEffectStruct &effect) const{
     } else if (card->isKindOf("Armor")) {
         effect.to->drawCards(1, "yuanhu");
     } else if (card->isKindOf("Horse")) {
-        RecoverStruct recover;
-        recover.who = effect.from;
-        room->recover(effect.to, recover);
+        room->recover(effect.to, RecoverStruct(effect.from));
     }
 }
 
@@ -716,10 +714,7 @@ public:
         room->addPlayerMark(player, "wuji");
 
         if (room->changeMaxHpForAwakenSkill(player, 1)) {
-            RecoverStruct recover;
-            recover.who = player;
-            room->recover(player, recover);
-
+            room->recover(player, RecoverStruct(player));
             room->detachSkillFromPlayer(player, "huxiao");
         }
 
@@ -1788,11 +1783,7 @@ public:
         if (!playerlist.isEmpty())
             to_give = room->askForPlayerChosen(target, playerlist, objectName(), "@juedi", true);
         if (to_give) {
-            if (to_give->isWounded()) {
-                RecoverStruct recover;
-                recover.who = target;
-                room->recover(to_give, recover);
-            }
+            room->recover(to_give, RecoverStruct(target));
             DummyCard *dummy = new DummyCard(target->getPile("yinbing"));
             room->obtainCard(to_give, dummy);
             delete dummy;

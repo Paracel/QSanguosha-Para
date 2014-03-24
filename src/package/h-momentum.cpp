@@ -141,9 +141,7 @@ public:
         if (player->isWounded() && room->askForSkillInvoke(player, "guixiu_rec", "recover")) {
             room->broadcastSkillInvoke("guixiu", 2);
             room->notifySkillInvoked(player, "guixiu");
-            RecoverStruct recover;
-            recover.who = player;
-            room->recover(player, recover);
+            room->recover(player, RecoverStruct(player));
         }
     }
 };
@@ -459,11 +457,7 @@ public:
         room->addPlayerMark(player, "baoling");
 
         if (room->changeMaxHpForAwakenSkill(player, 3)) {
-            RecoverStruct recover;
-            recover.who = player;
-            recover.recover = 3;
-            room->recover(player, recover);
-
+            room->recover(player, RecoverStruct(player, NULL, 3));
             room->acquireSkill(player, "benghuai");
         }
 

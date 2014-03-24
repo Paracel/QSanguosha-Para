@@ -219,11 +219,8 @@ void JujianCard::onEffect(const CardEffectStruct &effect) const{
 
     if (choice == "draw")
         effect.to->drawCards(2, "jujian");
-    else if (choice == "recover") {
-        RecoverStruct recover;
-        recover.who = effect.from;
-        room->recover(effect.to, recover);
-    }
+    else if (choice == "recover")
+        room->recover(effect.to, RecoverStruct(effect.from));
     else if (choice == "reset") {
         if (effect.to->isChained())
             room->setPlayerProperty(effect.to, "chained", false);
@@ -849,10 +846,7 @@ public:
                     room->throwCard(card, player);
 
                 room->broadcastSkillInvoke(objectName());
-
-                RecoverStruct recover;
-                recover.who = wuguotai;
-                room->recover(player, recover);
+                room->recover(player, RecoverStruct(wuguotai));
             }
         }
         return false;
@@ -999,13 +993,10 @@ public:
 
         room->addPlayerMark(zhonghui, "zili");
         if (room->changeMaxHpForAwakenSkill(zhonghui)) {
-            if (zhonghui->isWounded() && room->askForChoice(zhonghui, objectName(), "recover+draw") == "recover") {
-                RecoverStruct recover;
-                recover.who = zhonghui;
-                room->recover(zhonghui, recover);
-            } else {
+            if (zhonghui->isWounded() && room->askForChoice(zhonghui, objectName(), "recover+draw") == "recover")
+                room->recover(zhonghui, RecoverStruct(zhonghui));
+            else
                 room->drawCards(zhonghui, 2, objectName());
-            }
             room->acquireSkill(zhonghui, "paiyi");
         }
 

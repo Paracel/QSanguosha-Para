@@ -121,11 +121,7 @@ void NosJujianCard::onEffect(const CardEffectStruct &effect) const{
             const Card *card = Sanguosha->getCard(subcards.first());
             log.arg = card->getType();
             room->sendLog(log);
-
-            RecoverStruct recover;
-            recover.card = this;
-            recover.who = effect.from;
-            room->recover(effect.from, recover);
+            room->recover(effect.from, RecoverStruct(effect.from));
         }
     }
 }
@@ -728,9 +724,7 @@ public:
         room->addPlayerMark(zhonghui, "nosbaijiang");
 
         if (room->changeMaxHpForAwakenSkill(zhonghui, 1)) {
-            RecoverStruct recover;
-            recover.who = zhonghui;
-            room->recover(zhonghui, recover);
+            room->recover(zhonghui, RecoverStruct(zhonghui));
             room->handleAcquireDetachSkills(zhonghui, "-noszhenggong|-nosquanji|nosyexin");
         }
 
@@ -1235,12 +1229,8 @@ void NosRendeCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     int new_value = old_value + subcards.length();
     room->setPlayerMark(source, "nosrende", new_value);
 
-    if (old_value < 2 && new_value >= 2) {
-        RecoverStruct recover;
-        recover.card = this;
-        recover.who = source;
-        room->recover(source, recover);
-    }
+    if (old_value < 2 && new_value >= 2)
+        room->recover(source, RecoverStruct(source));
 }
 
 class NosRendeViewAsSkill: public ViewAsSkill {

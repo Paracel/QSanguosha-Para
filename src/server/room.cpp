@@ -3051,6 +3051,7 @@ void Room::recover(ServerPlayer *player, const RecoverStruct &recover, bool set_
         return;
 
     recover_struct = data.value<RecoverStruct>();
+    recover_struct.recover = qMin(player->getMaxHp() - player->getHp(), recover_struct.recover);
     int recover_num = recover_struct.recover;
 
     Json::Value arg(Json::arrayValue);
@@ -5048,7 +5049,7 @@ void Room::makeDamage(const QString &source, const QString &target, QSanProtocol
     ServerPlayer *sourcePlayer = findChild<ServerPlayer *>(source);
     ServerPlayer *targetPlayer = findChild<ServerPlayer *>(target);
     if (targetPlayer == NULL) return;
-    // damage
+
     if (nature == S_CHEAT_HP_LOSE) {
         loseHp(targetPlayer, point);
         return;
@@ -5056,10 +5057,7 @@ void Room::makeDamage(const QString &source, const QString &target, QSanProtocol
         loseMaxHp(targetPlayer, point);
         return;
     } else if (nature == S_CHEAT_HP_RECOVER) {
-        RecoverStruct recover;
-        recover.who = sourcePlayer;
-        recover.recover = point;
-        this->recover(targetPlayer, recover);
+        recover(targetPlayer, RecoverStruct(sourcePlayer, NULL, point));
         return;
     } else if (nature == S_CHEAT_MAX_HP_RESET) {
         setPlayerProperty(targetPlayer, "maxhp", point);

@@ -43,12 +43,8 @@ void RendeCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &tar
     int new_value = old_value + subcards.length();
     room->setPlayerMark(source, "rende", new_value);
 
-    if (old_value < 2 && new_value >= 2) {
-        RecoverStruct recover;
-        recover.card = this;
-        recover.who = source;
-        room->recover(source, recover);
-    }
+    if (old_value < 2 && new_value >= 2)
+        room->recover(source, RecoverStruct(source));
 
     if (room->getMode() == "04_1v3" && source->getMark("rende") >= 2) return;
     if (source->isKongcheng() || source->isDead() || rende_list.isEmpty()) return;
@@ -82,11 +78,8 @@ void YijueCard::use(Room *room, ServerPlayer *guanyu, QList<ServerPlayer *> &tar
         target->setFlags("YijueTarget");
         QString choice = room->askForChoice(guanyu, "yijue", "recover+cancel");
         target->setFlags("-YijueTarget");
-        if (choice == "recover") {
-            RecoverStruct recover;
-            recover.who = guanyu;
-            room->recover(target, recover);
-        }
+        if (choice == "recover")
+            room->recover(target, RecoverStruct(guanyu));
     }
 }
 
@@ -102,10 +95,7 @@ bool JieyinCard::targetFilter(const QList<const Player *> &targets, const Player
 
 void JieyinCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-    RecoverStruct recover;
-    recover.card = this;
-    recover.who = effect.from;
-
+    RecoverStruct recover(effect.from);
     room->recover(effect.from, recover, true);
     room->recover(effect.to, recover, true);
 }
@@ -254,10 +244,7 @@ void QingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
 }
 
 void QingnangCard::onEffect(const CardEffectStruct &effect) const{
-    RecoverStruct recover;
-    recover.card = this;
-    recover.who = effect.from;
-    effect.to->getRoom()->recover(effect.to, recover);
+    effect.to->getRoom()->recover(effect.to, RecoverStruct(effect.from));
 }
 
 LiuliCard::LiuliCard() {

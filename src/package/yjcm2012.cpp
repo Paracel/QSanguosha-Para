@@ -439,10 +439,7 @@ public:
             room->doLightbox("$FuliAnimate", 3000);
 
             room->removePlayerMark(liaohua, "@laoji");
-
-            RecoverStruct recover;
-            recover.recover = qMin(getKingdoms(room), liaohua->getMaxHp()) - liaohua->getHp();
-            room->recover(liaohua, recover);
+            room->recover(liaohua, RecoverStruct(liaohua, NULL, getKingdoms(room) - liaohua->getHp()));
 
             liaohua->turnOver();
         }
@@ -753,10 +750,7 @@ public:
             room->broadcastSkillInvoke(objectName(), 1);
 
         target->drawCards(3, objectName());
-        RecoverStruct recover;
-        recover.who = player;
-        recover.recover = 1;
-        room->recover(target, recover, true);
+        room->recover(target, RecoverStruct(player), true);
         return false;
     }
 };

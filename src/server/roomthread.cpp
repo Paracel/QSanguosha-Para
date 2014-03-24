@@ -99,8 +99,8 @@ DeathStruct::DeathStruct()
 {
 }
 
-RecoverStruct::RecoverStruct()
-    : recover(1), who(NULL), card(NULL)
+RecoverStruct::RecoverStruct(ServerPlayer *who, const Card *card, int recover)
+    : recover(recover), who(who), card(card)
 {
 }
 

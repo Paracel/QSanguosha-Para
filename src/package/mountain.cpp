@@ -176,9 +176,7 @@ public:
                     switch (suit) {
                     case Card::Heart: {
                             room->broadcastSkillInvoke(objectName(), 4);
-                            RecoverStruct recover;
-                            recover.who = caiwenji;
-                            room->recover(player, recover);
+                            room->recover(player, RecoverStruct(caiwenji));
 
                             break;
                         }
@@ -614,13 +612,10 @@ public:
 
         room->addPlayerMark(jiangwei, "zhiji");
         if (room->changeMaxHpForAwakenSkill(jiangwei)) {
-            if (jiangwei->isWounded() && room->askForChoice(jiangwei, objectName(), "recover+draw") == "recover") {
-                RecoverStruct recover;
-                recover.who = jiangwei;
-                room->recover(jiangwei, recover);
-            } else {
+            if (jiangwei->isWounded() && room->askForChoice(jiangwei, objectName(), "recover+draw") == "recover")
+                room->recover(jiangwei, RecoverStruct(jiangwei));
+            else
                 room->drawCards(jiangwei, 2, objectName());
-            }
             room->acquireSkill(jiangwei, "guanxing");
         }
 
@@ -958,10 +953,7 @@ public:
             room->addPlayerMark(liushan, "ruoyu");
 
             if (room->changeMaxHpForAwakenSkill(liushan, 1)) {
-                RecoverStruct recover;
-                recover.who = liushan;
-                room->recover(liushan, recover);
-
+                room->recover(liushan, RecoverStruct(liushan));
                 if (liushan->isLord())
                     room->acquireSkill(liushan, "jijiang");
             }

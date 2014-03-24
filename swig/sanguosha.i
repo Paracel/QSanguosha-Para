@@ -551,7 +551,7 @@ struct DeathStruct {
 };
 
 struct RecoverStruct {
-    RecoverStruct();
+    RecoverStruct(ServerPlayer *who = NULL, const Card *card = NULL, int recover = 1);
 
     int recover;
     ServerPlayer *who;

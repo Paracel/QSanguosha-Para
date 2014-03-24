@@ -380,12 +380,7 @@ void Peach::onUse(Room *room, const CardUseStruct &card_use) const{
 void Peach::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     room->setEmotion(effect.from, "peach");
-
-    // recover hp
-    RecoverStruct recover;
-    recover.card = this;
-    recover.who = effect.from;
-    room->recover(effect.to, recover);
+    room->recover(effect.to, RecoverStruct(effect.from, this));
 }
 
 bool Peach::isAvailable(const Player *player) const{
@@ -788,12 +783,8 @@ void GodSalvation::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     if (!effect.to->isWounded())
         room->setEmotion(effect.to, "skill_nullify");
-    else {
-        RecoverStruct recover;
-        recover.card = this;
-        recover.who = effect.from;
-        room->recover(effect.to, recover);
-    }
+    else
+        room->recover(effect.to, RecoverStruct(effect.from, this));
 }
 
 SavageAssault::SavageAssault(Suit suit, int number)

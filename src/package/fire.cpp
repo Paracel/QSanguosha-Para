@@ -322,10 +322,7 @@ public:
                 room->throwCard(trick, reason, NULL);
             }
 
-            RecoverStruct recover;
-            recover.recover = qMin(3, pangtong->getMaxHp()) - pangtong->getHp();
-            room->recover(pangtong, recover);
-
+            room->recover(pangtong, RecoverStruct(pangtong, NULL, 3 - pangtong->getHp()));
             pangtong->drawCards(3, objectName());
 
             if (pangtong->isChained())

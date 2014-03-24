@@ -446,11 +446,8 @@ public:
                     room->sendLog(log);
                     if (choice == "draw")
                         sunshangxiang->drawCards(2, objectName());
-                    else {
-                        RecoverStruct recover;
-                        recover.who = sunshangxiang;
-                        room->recover(sunshangxiang, recover);
-                    }
+                    else
+                        room->recover(sunshangxiang, RecoverStruct(sunshangxiang));
                 }
             }
         }
@@ -720,10 +717,7 @@ public:
             room->judge(judge);
             if (judge.isGood() && player->isWounded()) {
                 room->broadcastSkillInvoke("kuanggu");
-
-                RecoverStruct recover;
-                recover.who = player;
-                room->recover(player, recover);
+                room->recover(player, RecoverStruct(player));
             }
         }
 

@@ -71,10 +71,7 @@ void RenxinCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> &) 
     player->turnOver();
     CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName(), who->objectName(), "renxin", QString());
     room->obtainCard(who, player->wholeHandCards(), reason, false);
-
-    RecoverStruct recover;
-    recover.who = player;
-    room->recover(who, recover);
+    room->recover(who, RecoverStruct(player));
 }
 
 class Renxin: public ZeroCardViewAsSkill {
@@ -212,9 +209,7 @@ public:
                                              .arg(target->objectName())
                                              .arg(types.first()).arg(types.last()),
                                      data)) {
-                RecoverStruct recover;
-                recover.who = target;
-                room->recover(target, recover);
+                room->recover(target, RecoverStruct(target));
             }
         }
     }
@@ -828,11 +823,7 @@ public:
             room->showCard(to, ids.first());
 
             if (card->isKindOf("EquipCard")) {
-                if (to->isWounded()) {
-                    RecoverStruct recover;
-                    recover.who = target;
-                    room->recover(to, recover);
-                }
+                room->recover(to, RecoverStruct(target));
                 if (to->isAlive() && !to->isCardLimited(card, Card::MethodUse))
                     room->useCard(CardUseStruct(card, to, to));
             }

@@ -327,9 +327,7 @@ void JiuzhuCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> &) 
     if (!who) return;
 
     room->loseHp(player);
-    RecoverStruct recover;
-    recover.who = player;
-    room->recover(who, recover);
+    room->recover(who, RecoverStruct(player));
 }
 
 class Jiuzhu: public OneCardViewAsSkill {

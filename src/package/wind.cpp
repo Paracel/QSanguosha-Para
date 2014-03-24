@@ -83,11 +83,8 @@ public:
             }
         } else if (triggerEvent == DamageCaused && zhangjiao->isAlive() && zhangjiao->isWounded()) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.reason == objectName()) {
-                RecoverStruct recover;
-                recover.who = zhangjiao;
-                room->recover(zhangjiao, recover);
-            }
+            if (damage.reason == objectName())
+                room->recover(zhangjiao, RecoverStruct(zhangjiao));
         }
         return false;
     }
@@ -420,6 +417,7 @@ public:
     Kuanggu(): TriggerSkill("kuanggu") {
         frequency = Compulsory;
         events << Damage << PreDamageDone;
+        global = true;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -428,10 +426,10 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
-        if (triggerEvent == PreDamageDone && damage.from && damage.from->hasSkill("kuanggu") && damage.from->isAlive()) {
+        if (triggerEvent == PreDamageDone) {
             ServerPlayer *weiyan = damage.from;
             weiyan->tag["InvokeKuanggu"] = weiyan->distanceTo(damage.to) <= 1;
-        } else if (triggerEvent == Damage && player->hasSkill("kuanggu") && player->isAlive()) {
+        } else if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
             bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
             player->tag["InvokeKuanggu"] = false;
             if (invoke && player->isWounded()) {
@@ -444,10 +442,7 @@ public:
                 room->sendLog(log);
                 room->notifySkillInvoked(player, objectName());
 
-                RecoverStruct recover;
-                recover.who = player;
-                recover.recover = damage.damage;
-                room->recover(player, recover);
+                room->recover(player, RecoverStruct(player, NULL, damage.damage));
             }
         }
 
@@ -490,10 +485,7 @@ public:
             CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), objectName(), QString());
             room->throwCard(Sanguosha->getCard(id), reason, NULL);
         } else {
-            RecoverStruct recover;
-            recover.who = zhoutai;
-            recover.recover = 1 - zhoutai->getHp();
-            room->recover(zhoutai, recover);
+            room->recover(zhoutai, RecoverStruct(zhoutai, NULL, 1 - zhoutai->getHp()));
         }
         return false;
     }

@@ -259,13 +259,9 @@ public:
                         card_to_gotback << ids[i];
                 }
                 if (!card_to_throw.isEmpty()) {
+                    room->recover(menghuo, RecoverStruct(menghuo, NULL, card_to_throw.length()));
+
                     DummyCard *dummy = new DummyCard(card_to_throw);
-
-                    RecoverStruct recover;
-                    recover.who = menghuo;
-                    recover.recover = card_to_throw.length();
-                    room->recover(menghuo, recover);
-
                     CardMoveReason reason(CardMoveReason::S_REASON_NATURAL_ENTER, menghuo->objectName(), "zaiqi", QString());
                     room->throwCard(dummy, reason, NULL);
                     delete dummy;
@@ -825,6 +821,7 @@ class Baonue: public TriggerSkill {
 public:
     Baonue(): TriggerSkill("baonue$") {
         events << Damage << PreDamageDone;
+        global = true;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -865,10 +862,7 @@ public:
 
                     if (judge.isGood()) {
                         room->broadcastSkillInvoke(objectName());
-
-                        RecoverStruct recover;
-                        recover.who = player;
-                        room->recover(dongzhuo, recover);
+                        room->recover(dongzhuo, RecoverStruct(player));
                     }
                 } else
                     break;

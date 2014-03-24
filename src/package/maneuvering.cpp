@@ -74,15 +74,10 @@ void Analeptic::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
     room->setEmotion(effect.to, "analeptic");
 
-    if (effect.to->hasFlag("Global_Dying") && Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY) {
-        // recover hp
-        RecoverStruct recover;
-        recover.card = this;
-        recover.who = effect.from;
-        room->recover(effect.to, recover);
-    } else {
+    if (effect.to->hasFlag("Global_Dying") && Sanguosha->currentRoomState()->getCurrentCardUseReason() != CardUseStruct::CARD_USE_REASON_PLAY)
+        room->recover(effect.to, RecoverStruct(effect.from, this));
+    else
         room->addPlayerMark(effect.to, "drank");
-    }
 }
 
 class FanSkill: public OneCardViewAsSkill {
@@ -245,14 +240,11 @@ public:
                     player->setFlags("-SilverLionRecover");
                     if (player->isWounded()) {
                         room->setEmotion(player, "armor/silver_lion");
-                        RecoverStruct recover;
-                        recover.card = card;
-                        room->recover(player, recover);
+                        room->recover(player, RecoverStruct(NULL, card));
                     }
                     return false;
                 }
             }
-
         }
         return false;
     }

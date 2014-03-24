@@ -268,10 +268,7 @@ DrQingnangCard::DrQingnangCard() {
 
 void DrQingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
     room->broadcastSkillInvoke("qingnang");
-    RecoverStruct recover;
-    recover.card = this;
-    recover.who = source;
-    room->recover(source, recover);
+    room->recover(source, RecoverStruct(source, this));
 }
 
 class DrQingnang: public OneCardViewAsSkill {

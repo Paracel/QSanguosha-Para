@@ -407,11 +407,8 @@ public:
             room->notifySkillInvoked(shenzhouyu, "qinyin");
         if (result == "up") {
             room->broadcastSkillInvoke(objectName(), 2);
-            foreach (ServerPlayer *player, all_players) {
-                RecoverStruct recover;
-                recover.who = shenzhouyu;
-                room->recover(player, recover);
-            }
+            foreach (ServerPlayer *player, all_players)
+                room->recover(player, RecoverStruct(shenzhouyu));
         } else if (result == "down") {
             room->broadcastSkillInvoke(objectName(), 1);
             foreach (ServerPlayer *player, all_players)

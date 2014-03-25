@@ -642,7 +642,7 @@ bool Player::canDiscard(const Player *to, int card_id) const{
             || (to->getArmor() && card_id == to->getArmor()->getEffectiveId()))
             return false;
     } else if (this == to) {
-        if (isJilei(Sanguosha->getCard(card_id)))
+        if (!getJudgingAreaID().contains(card_id) && isJilei(Sanguosha->getCard(card_id)))
             return false;
     }
     return true;

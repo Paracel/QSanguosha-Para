@@ -604,8 +604,15 @@ void RoomThread::run() {
             terminate();
             Sanguosha->unregisterRoom();
             return;
-        } else
+        } else if (triggerEvent == TurnBroken || triggerEvent == StageChange) { // caused in Debut trigger
+            ServerPlayer *first = room->getPlayers().first();
+            if (first->getRole() != "renegade")
+                first = room->getPlayers().at(1);
+            room->setCurrent(first);
+            actionNormal(game_rule);
+        } else {
             Q_ASSERT(false);
+        }
     }
 }
 

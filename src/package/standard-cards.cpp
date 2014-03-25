@@ -396,18 +396,11 @@ Crossbow::Crossbow(Suit suit, int number)
 class DoubleSwordSkill: public WeaponSkill {
 public:
     DoubleSwordSkill(): WeaponSkill("double_sword") {
-        events << TargetConfirmed;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return WeaponSkill::triggerable(target);
+        events << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.from != player)
-            return false;
-
         foreach (ServerPlayer *to, use.to) {
             if (((use.from->isMale() && to->isFemale()) || (use.from->isFemale() && to->isMale()))
                 && use.card->isKindOf("Slash")) {
@@ -441,12 +434,12 @@ DoubleSword::DoubleSword(Suit suit, int number)
 class QinggangSwordSkill: public WeaponSkill {
 public:
     QinggangSwordSkill(): WeaponSkill("qinggang_sword") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (WeaponSkill::triggerable(use.from) && use.from == player && use.card->isKindOf("Slash")) {
+        if (use.card->isKindOf("Slash")) {
             bool do_anim = false;
             foreach (ServerPlayer *p, use.to.toSet()) {
                 if (p->getMark("Equips_of_Others_Nullified_to_You") == 0) {

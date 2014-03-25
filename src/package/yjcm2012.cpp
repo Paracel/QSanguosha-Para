@@ -17,20 +17,18 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            if (TriggerSkill::triggerable(player)) {
-                CardUseStruct use = data.value<CardUseStruct>();
-                if (use.to.contains(player) && use.from != player) {
-                    if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
-                        if (room->askForSkillInvoke(player, objectName(), data)) {
-                            room->broadcastSkillInvoke(objectName());
-                            room->setCardFlag(use.card, "ZhenlieNullify");
-                            player->setFlags("ZhenlieTarget");
-                            room->loseHp(player);
-                            if (player->isAlive() && player->hasFlag("ZhenlieTarget") && player->canDiscard(use.from, "he")) {
-                                int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
-                                room->throwCard(id, use.from, player);
-                            }
+        if (triggerEvent == TargetConfirmed && TriggerSkill::triggerable(player)) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.to.contains(player) && use.from != player) {
+                if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
+                    if (room->askForSkillInvoke(player, objectName(), data)) {
+                        room->broadcastSkillInvoke(objectName());
+                        room->setCardFlag(use.card, "ZhenlieNullify");
+                        player->setFlags("ZhenlieTarget");
+                        room->loseHp(player);
+                        if (player->isAlive() && player->hasFlag("ZhenlieTarget") && player->canDiscard(use.from, "he")) {
+                            int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
+                            room->throwCard(id, use.from, player);
                         }
                     }
                 }

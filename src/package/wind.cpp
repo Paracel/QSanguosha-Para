@@ -384,7 +384,7 @@ public:
 class Liegong: public TriggerSkill {
 public:
     Liegong(): TriggerSkill("liegong") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

@@ -8,7 +8,7 @@
 class Chongzhen: public TriggerSkill {
 public:
     Chongzhen(): TriggerSkill("chongzhen") {
-        events << CardResponded << TargetConfirmed;
+        events << CardResponded << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -26,7 +26,7 @@ public:
             }
         } else {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.from == player && use.card->getSkillName() == "longdan") {
+            if (use.card->getSkillName() == "longdan") {
                 foreach (ServerPlayer *p, use.to) {
                     if (p->isKongcheng()) continue;
                     QVariant data = QVariant::fromValue((PlayerStar)p);
@@ -1759,15 +1759,24 @@ public:
         if (triggerEvent == TargetConfirmed) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (player != liuxie || liuxie->getHp() <= 0) return false;
-            if (use.to.length() <= 1 || !use.card->isKindOf("TrickCard") || use.card->isKindOf("Collateral"))
-                    return false;
+            if (use.to.length() <= 1 || !use.card->isKindOf("TrickCard"))
+                return false;
 
             liuxie->tag["Huangen_user"] = use.card->toString();
             foreach (ServerPlayer *p, use.to)
                 room->setPlayerFlag(p, "HuangenTarget");
-            room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
-            foreach (ServerPlayer *p, use.to)
-                room->setPlayerFlag(p, "-HuangenTarget");
+            try {
+                room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
+                foreach (ServerPlayer *p, use.to)
+                    room->setPlayerFlag(p, "-HuangenTarget");
+            }
+            catch (TriggerEvent triggerEvent) {
+                if (triggerEvent == StageChange || triggerEvent == TurnBroken) {
+                    foreach (ServerPlayer *p, use.to)
+                        room->setPlayerFlag(p, "-HuangenTarget");
+                }
+                throw triggerEvent;
+            }
         } else if (triggerEvent == CardEffected) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (liuxie->tag["Huangen_user"].toString() == effect.card->toString())

@@ -166,7 +166,7 @@ private:
 class Huoshou: public TriggerSkill {
 public:
     Huoshou(): TriggerSkill("huoshou") {
-        events << TargetConfirmed << ConfirmDamage << CardFinished;
+        events << TargetSpecified << ConfirmDamage;
         frequency = Compulsory;
     }
 
@@ -175,25 +175,38 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed && TriggerSkill::triggerable(player)) {
+        if (triggerEvent == TargetSpecified) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("SavageAssault") && use.from != player) {
-                room->notifySkillInvoked(player, objectName());
-                room->broadcastSkillInvoke(objectName());
-                room->setTag("HuoshouSource", QVariant::fromValue((PlayerStar)player));
+            if (use.card->isKindOf("SavageAssault")) {
+                ServerPlayer *menghuo = room->findPlayerBySkillName(objectName());
+                if (menghuo && menghuo != use.from) {
+                    LogMessage log;
+                    log.type = "#TriggerSkill";
+                    log.from = menghuo;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
+                    room->notifySkillInvoked(player, objectName());
+                    room->broadcastSkillInvoke(objectName());
+
+                    use.card->setFlags("HuoshouDamage_" + menghuo->objectName());
+                }
             }
-        } else if (triggerEvent == ConfirmDamage && !room->getTag("HuoshouSource").isNull()) {
+        } else if (triggerEvent == ConfirmDamage) {
             DamageStruct damage = data.value<DamageStruct>();
             if (!damage.card || !damage.card->isKindOf("SavageAssault"))
                 return false;
 
-            ServerPlayer *menghuo = room->getTag("HuoshouSource").value<PlayerStar>();
+            ServerPlayer *menghuo = NULL;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (damage.card->hasFlag("HuoshouDamage_" + p->objectName())) {
+                    menghuo = p;
+                    break;
+                }
+            }
+            if (!menghuo) return false;
             damage.from = menghuo->isAlive() ? menghuo : NULL;
             data = QVariant::fromValue(damage);
-        } else if (triggerEvent == CardFinished) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("SavageAssault"))
-                room->removeTag("HuoshouSource");
         }
 
         return false;
@@ -711,21 +724,21 @@ public:
 class Roulin: public TriggerSkill {
 public:
     Roulin(): TriggerSkill("roulin") {
-        events << TargetConfirmed;
+        events << TargetConfirmed << TargetSpecified;
         frequency = Compulsory;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && (target->hasSkill(objectName()) || target->isFemale());
+        return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash") && player == use.from) {
+        if (use.card->isKindOf("Slash")) {
             QVariantList jink_list = use.from->tag["Jink_" + use.card->toString()].toList();
             int index = 0;
             bool play_effect = false;
-            if (TriggerSkill::triggerable(use.from)) {
+            if (triggerEvent == TargetSpecified && TriggerSkill::triggerable(use.from)) {
                 foreach (ServerPlayer *p, use.to) {
                     if (p->isFemale()) {
                         play_effect = true;
@@ -745,7 +758,7 @@ public:
 
                     room->broadcastSkillInvoke(objectName(), 1);
                 }
-            } else if (use.from->isFemale()) {
+            } else if (triggerEvent == TargetConfirmed && use.from->isFemale()) {
                 foreach (ServerPlayer *p, use.to) {
                     if (p->hasSkill(objectName())) {
                         play_effect = true;

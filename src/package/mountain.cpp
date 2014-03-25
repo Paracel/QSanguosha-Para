@@ -361,13 +361,13 @@ public:
 class Jiang: public TriggerSkill {
 public:
     Jiang(): TriggerSkill("jiang") {
-        events << TargetConfirmed;
+        events << TargetSpecified << TargetConfirmed;
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *sunce, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *sunce, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.from == sunce || use.to.contains(sunce)) {
+        if (triggerEvent == TargetSpecified || (triggerEvent == TargetConfirmed && use.to.contains(sunce))) {
             if (use.card->isKindOf("Duel") || (use.card->isKindOf("Slash") && use.card->isRed())) {
                 if (sunce->askForSkillInvoke(objectName(), data)) {
                     int index = 1;

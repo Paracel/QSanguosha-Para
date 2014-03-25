@@ -342,12 +342,12 @@ public:
 class KOFLiegong: public TriggerSkill {
 public:
     KOFLiegong(): TriggerSkill("kofliegong") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (player != use.from || player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
+        if (player->getPhase() != Player::Play || !use.card->isKindOf("Slash"))
             return false;
         QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
         int index = 0;
@@ -943,7 +943,7 @@ public:
 class NiluanRecord: public TriggerSkill {
 public:
     NiluanRecord(): TriggerSkill("#niluan-record") {
-        events << TargetConfirmed << EventPhaseStart;
+        events << TargetSpecified << EventPhaseStart;
         global = true;
     }
 
@@ -956,9 +956,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
+        if (triggerEvent == TargetSpecified) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (use.from && use.from == player && use.card->isKindOf("Slash")) {
+            if (use.card->isKindOf("Slash")) {
                 foreach (ServerPlayer *to, use.to) {
                     if (!to->hasFlag("NiluanSlashTarget"))
                         to->setFlags("NiluanSlashTarget");

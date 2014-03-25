@@ -944,7 +944,7 @@ public:
 class Tieji: public TriggerSkill {
 public:
     Tieji(): TriggerSkill("tieji") {
-        events << TargetConfirmed << FinishJudge;
+        events << TargetSpecified << FinishJudge;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -952,9 +952,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed && TriggerSkill::triggerable(player)) {
+        if (triggerEvent == TargetSpecified && TriggerSkill::triggerable(player)) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (player != use.from || !use.card->isKindOf("Slash"))
+            if (!use.card->isKindOf("Slash"))
                 return false;
             QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
             int index = 0;
@@ -1560,7 +1560,7 @@ public:
 class ZhaxiangRedSlash: public TriggerSkill {
 public:
     ZhaxiangRedSlash(): TriggerSkill("#zhaxiang") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -1569,7 +1569,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (player != use.from || !use.card->isKindOf("Slash") || !use.card->isRed())
+        if (!use.card->isKindOf("Slash") || !use.card->isRed())
             return false;
         QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
         int index = 0;
@@ -1818,7 +1818,7 @@ public:
 class Wushuang: public TriggerSkill {
 public:
     Wushuang(): TriggerSkill("wushuang") {
-        events << TargetConfirmed << CardFinished;
+        events << TargetSpecified << CardFinished;
         frequency = Compulsory;
     }
 
@@ -1827,10 +1827,10 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
+        if (triggerEvent == TargetSpecified && TriggerSkill::triggerable(player)) {
             CardUseStruct use = data.value<CardUseStruct>();
             bool can_invoke = false;
-            if (use.card->isKindOf("Slash") && TriggerSkill::triggerable(use.from) && use.from == player) {
+            if (use.card->isKindOf("Slash")) {
                 can_invoke = true;
                 QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
                 for (int i = 0; i < use.to.length(); i++) {

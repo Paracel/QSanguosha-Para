@@ -1283,12 +1283,12 @@ public:
 class NosTieji: public TriggerSkill {
 public:
     NosTieji(): TriggerSkill("nostieji") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (player != use.from || !use.card->isKindOf("Slash"))
+        if (!use.card->isKindOf("Slash"))
             return false;
         QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
         int index = 0;

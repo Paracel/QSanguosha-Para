@@ -188,13 +188,13 @@ public:
 class DrWushuang: public TriggerSkill {
 public:
     DrWushuang(): TriggerSkill("drwushuang") {
-        events << TargetConfirmed;
+        events << TargetSpecified;
         frequency = Compulsory;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash") && use.from == player) {
+        if (use.card->isKindOf("Slash")) {
             QVariantList jink_list = player->tag["Jink_" + use.card->toString()].toList();
             int index = 0;
             for (int i = 0; i < use.to.length(); i++) {

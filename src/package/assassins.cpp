@@ -7,7 +7,7 @@
 class Moukui: public TriggerSkill {
 public:
     Moukui(): TriggerSkill("moukui") {
-        events << TargetConfirmed << SlashMissed << CardFinished;
+        events << TargetSpecified << SlashMissed << CardFinished;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -15,9 +15,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
+        if (triggerEvent == TargetSpecified && TriggerSkill::triggerable(player)) {
             CardUseStruct use = data.value<CardUseStruct>();
-            if (player != use.from || !TriggerSkill::triggerable(player) || !use.card->isKindOf("Slash"))
+            if (!use.card->isKindOf("Slash"))
                 return false;
             foreach (ServerPlayer *p, use.to) {
                 if (player->askForSkillInvoke(objectName(), QVariant::fromValue(p))) {

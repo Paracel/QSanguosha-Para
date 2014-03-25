@@ -763,7 +763,7 @@ public:
 class Xiangle: public TriggerSkill {
 public:
     Xiangle(): TriggerSkill("xiangle") {
-        events << SlashEffected << TargetConfirming;
+        events << TargetConfirming;
         frequency = Compulsory;
     }
 
@@ -781,43 +781,13 @@ public:
                 room->sendLog(log);
 
                 QVariant dataforai = QVariant::fromValue(liushan);
-                if (!room->askForCard(use.from, ".Basic", "@xiangle-discard", dataforai))
-                    liushan->addMark("xiangle");
-            }
-        } else {
-            SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (liushan->getMark("xiangle") > 0) {
-                LogMessage log;
-                log.type = "#XiangleAvoid";
-                log.from = effect.from;
-                log.to << liushan;
-                log.arg = objectName();
-                room->sendLog(log);
-                liushan->removeMark("xiangle");
-                return true;
+                if (!room->askForCard(use.from, ".Basic", "@xiangle-discard", dataforai)) {
+                    use.nullified_list << liushan->objectName();
+                    data = QVariant::fromValue(use);
+                }
             }
         }
 
-        return false;
-    }
-};
-
-class XiangleRemoveMark: public TriggerSkill {
-public:
-    XiangleRemoveMark(): TriggerSkill("#xiangle") {
-        events << CardFinished;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
-        CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash")) {
-            foreach (ServerPlayer *to, use.to)
-                to->setMark("xiangle", 0);
-        }
         return false;
     }
 };
@@ -1252,10 +1222,8 @@ MountainPackage::MountainPackage()
 
     General *liushan = new General(this, "liushan$", "shu", 3); // SHU 013
     liushan->addSkill(new Xiangle);
-    liushan->addSkill(new XiangleRemoveMark);
     liushan->addSkill(new Fangquan);
     liushan->addSkill(new Ruoyu);
-    related_skills.insertMulti("xiangle", "#xiangle");
 
     General *sunce = new General(this, "sunce$", "wu"); // WU 010
     sunce->addSkill(new Jiang);

@@ -15,7 +15,6 @@ return {
 	[":danlao"] = "每当至少两名角色成为锦囊牌的目标后，若你为目标角色，你可以摸一张牌，然后该锦囊牌对你无效。",
 	["#Jilei"] = "由于“<font color=\"yellow\"><b>鸡肋</b></font>”效果，%from 本回合不能使用、打出或弃置 %arg",
 	["#JileiClear"] = "%from 的“<font color=\"yellow\"><b>鸡肋</b></font>”效果消失",
-	["#DanlaoAvoid"] = "“%arg2”效果被触发，【%arg】 对 %from 无效",
 
 	["#gongsunzan"] = "白马将军",
 	["gongsunzan"] = "SP公孙瓒",

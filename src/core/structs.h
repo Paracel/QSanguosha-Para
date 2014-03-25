@@ -48,6 +48,7 @@ struct CardEffectStruct {
 
     bool multiple; // helper to judge whether the card has multiple targets
                    // does not make sense if the card inherits SkillCard
+    bool nullified;
 };
 
 struct SlashEffectStruct {
@@ -64,6 +65,8 @@ struct SlashEffectStruct {
     int drank;
 
     DamageStruct::Nature nature;
+
+    bool nullified;
 };
 
 struct CardUseStruct {
@@ -87,6 +90,7 @@ struct CardUseStruct {
     bool m_isOwnerUse;
     bool m_addHistory;
     bool m_isHandcard;
+    QStringList nullified_list;
 };
 
 class CardMoveReason {

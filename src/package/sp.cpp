@@ -148,10 +148,15 @@ public:
                 || !room->askForSkillInvoke(player, objectName(), data))
                 return false;
 
-            player->tag["Danlao"] = use.card->toString();
             room->broadcastSkillInvoke(objectName());
-
+            player->setFlags("-DanlaoTarget");
+            player->setFlags("DanlaoTarget");
             player->drawCards(1, objectName());
+            if (player->isAlive() && player->hasFlag("DanlaoTarget")) {
+                player->setFlags("-DanlaoTarget");
+                use.nullified_list << player->objectName();
+                data = QVariant::fromValue(use);
+            }
         } else {
             if (!player->isAlive() || !player->hasSkill(objectName()))
                 return false;

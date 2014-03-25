@@ -65,9 +65,9 @@ void Analeptic::onUse(Room *room, const CardUseStruct &card_use) const{
 }
 
 void Analeptic::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    BasicCard::use(room, source, targets);
     if (targets.isEmpty())
-        room->cardEffect(this, source, source);
+        targets << source;
+    BasicCard::use(room, source, targets);
 }
 
 void Analeptic::onEffect(const CardEffectStruct &effect) const{

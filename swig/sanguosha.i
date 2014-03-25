@@ -464,6 +464,8 @@ struct CardEffectStruct {
 
     ServerPlayer *from;
     ServerPlayer *to;
+
+    bool nullified;
 };
 
 struct SlashEffectStruct {
@@ -480,6 +482,8 @@ struct SlashEffectStruct {
     int drank;
 
     DamageStruct::Nature nature;
+
+    bool nullified;
 };
 
 struct CardUseStruct {
@@ -503,6 +507,7 @@ struct CardUseStruct {
     bool m_isOwnerUse;
     bool m_addHistory;
     bool m_isHandcard;
+    QStringList nullified_list;
 };
 
 struct CardsMoveStruct {

@@ -1062,7 +1062,7 @@ public:
 class Anxian: public TriggerSkill {
 public:
     Anxian(): TriggerSkill("anxian") {
-        events << DamageCaused << TargetConfirming << SlashEffected;
+        events << DamageCaused << TargetConfirming;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *daqiao, QVariant &data) const{
@@ -1089,42 +1089,16 @@ public:
             if (use.card->isKindOf("Slash")) {
                 if (room->askForCard(daqiao, ".", "@anxian-discard", data, objectName())) {
                     room->broadcastSkillInvoke(objectName(), 2);
-                    daqiao->addMark("anxian");
+                    daqiao->setFlags("-AnxianTarget");
+                    daqiao->setFlags("AnxianTarget");
                     use.from->drawCards(1, objectName());
+                    if (daqiao->isAlive() && daqiao->hasFlag("AnxianTarget")) {
+                        daqiao->setFlags("-AnxianTarget");
+                        use.nullified_list << daqiao->objectName();
+                        data = QVariant::fromValue(use);
+                    }
                 }
             }
-        } else if (triggerEvent == SlashEffected) {
-            SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (daqiao->getMark("anxian") > 0) {
-                LogMessage log;
-                log.type = "#AnxianAvoid";
-                log.from = effect.from;
-                log.to << daqiao;
-                log.arg = objectName();
-                room->sendLog(log);
-                daqiao->removeMark("anxian");
-                return true;
-            }
-        }
-        return false;
-    }
-};
-
-class AnxianRemoveMark: public TriggerSkill {
-public:
-    AnxianRemoveMark(): TriggerSkill("#anxian") {
-        events << CardFinished;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
-        CardUseStruct use = data.value<CardUseStruct>();
-        if (use.card->isKindOf("Slash")) {
-            foreach (ServerPlayer *to, use.to)
-                to->setMark("anxian", 0);
         }
         return false;
     }
@@ -1438,8 +1412,6 @@ BGMPackage::BGMPackage(): Package("BGM") {
     General *bgm_daqiao = new General(this, "bgm_daqiao", "wu", 3, false); // *SP 008
     bgm_daqiao->addSkill(new Yanxiao);
     bgm_daqiao->addSkill(new Anxian);
-    bgm_daqiao->addSkill(new AnxianRemoveMark);
-    related_skills.insertMulti("anxian", "#anxian");
 
     General *bgm_ganning = new General(this, "bgm_ganning", "qun"); // *SP 009
     bgm_ganning->addSkill(new Yinling);
@@ -1727,7 +1699,7 @@ bool HuangenCard::targetFilter(const QList<const Player *> &targets, const Playe
 }
 
 void HuangenCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->tag["Huangen"] = effect.from->tag["Huangen_user"].toString();
+    effect.to->setFlags("HuangenSpecified");
     effect.to->drawCards(1, "huangen");
 }
 
@@ -1745,7 +1717,7 @@ public:
 class Huangen: public TriggerSkill {
 public:
     Huangen(): TriggerSkill("huangen") {
-        events << TargetConfirmed << CardEffected;
+        events << TargetConfirmed;
         view_as_skill = new HuangenViewAsSkill;
     }
 
@@ -1762,43 +1734,33 @@ public:
             if (use.to.length() <= 1 || !use.card->isKindOf("TrickCard"))
                 return false;
 
-            liuxie->tag["Huangen_user"] = use.card->toString();
             foreach (ServerPlayer *p, use.to)
                 room->setPlayerFlag(p, "HuangenTarget");
             try {
                 room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
-                foreach (ServerPlayer *p, use.to)
+                foreach (ServerPlayer *p, use.to) {
+                    if (p->hasFlag("HuangenSpecified")) {
+                        use.nullified_list << p->objectName();
+                        p->setFlags("-HuangenSpecified");
+                    }
                     room->setPlayerFlag(p, "-HuangenTarget");
+                }
+                data = QVariant::fromValue(use);
             }
             catch (TriggerEvent triggerEvent) {
                 if (triggerEvent == StageChange || triggerEvent == TurnBroken) {
-                    foreach (ServerPlayer *p, use.to)
+                    foreach (ServerPlayer *p, use.to) {
+                        if (p->hasFlag("HuangenSpecified")) {
+                            use.nullified_list << p->objectName();
+                            p->setFlags("-HuangenSpecified");
+                        }
                         room->setPlayerFlag(p, "-HuangenTarget");
+                    }
+                    data = QVariant::fromValue(use);
                 }
                 throw triggerEvent;
             }
-        } else if (triggerEvent == CardEffected) {
-            CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (liuxie->tag["Huangen_user"].toString() == effect.card->toString())
-                liuxie->tag.remove("Huangen_user");
-            if (!player->isAlive())
-                return false;
-
-            if (player->tag["Huangen"].isNull() || player->tag["Huangen"].toString() != effect.card->toString())
-                return false;
-
-            player->tag["Huangen"] = QVariant(QString());
-
-            LogMessage log;
-            log.type = "#DanlaoAvoid";
-            log.from = player;
-            log.arg = effect.card->objectName();
-            log.arg2 = objectName();
-            room->sendLog(log);
-
-            return true;
         }
-
         return false;
     }
 };

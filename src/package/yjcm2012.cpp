@@ -9,7 +9,7 @@
 class Zhenlie: public TriggerSkill {
 public:
     Zhenlie(): TriggerSkill("zhenlie") {
-        events << TargetConfirmed << CardEffected << SlashEffected;
+        events << TargetConfirmed;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -23,43 +23,20 @@ public:
                 if (use.card->isKindOf("Slash") || use.card->isNDTrick()) {
                     if (room->askForSkillInvoke(player, objectName(), data)) {
                         room->broadcastSkillInvoke(objectName());
-                        room->setCardFlag(use.card, "ZhenlieNullify");
+                        player->setFlags("-ZhenlieTarget");
                         player->setFlags("ZhenlieTarget");
                         room->loseHp(player);
-                        if (player->isAlive() && player->hasFlag("ZhenlieTarget") && player->canDiscard(use.from, "he")) {
-                            int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
-                            room->throwCard(id, use.from, player);
+                        if (player->isAlive() && player->hasFlag("ZhenlieTarget")) {
+                            player->setFlags("-ZhenlieTarget");
+                            use.nullified_list << player->objectName();
+                            data = QVariant::fromValue(use);
+                            if (player->canDiscard(use.from, "he")) {
+                                int id = room->askForCardChosen(player, use.from, "he", objectName(), false, Card::MethodDiscard);
+                                room->throwCard(id, use.from, player);
+                            }
                         }
                     }
                 }
-            }
-        } else if (triggerEvent == CardEffected) {
-            CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (!effect.card->isKindOf("Slash") && effect.card->hasFlag("ZhenlieNullify") && player->hasFlag("ZhenlieTarget")) {
-                player->setFlags("-ZhenlieTarget");
-
-                LogMessage log;
-                log.type = "#DanlaoAvoid";
-                log.from = player;
-                log.arg = effect.card->objectName();
-                log.arg2 = objectName();
-                room->sendLog(log);
-
-                return true;
-            }
-        } else if (triggerEvent == SlashEffected) {
-            SlashEffectStruct effect = data.value<SlashEffectStruct>();
-            if (effect.slash->hasFlag("ZhenlieNullify") && player->hasFlag("ZhenlieTarget")) {
-                player->setFlags("-ZhenlieTarget");
-
-                LogMessage log;
-                log.type = "#DanlaoAvoid";
-                log.from = player;
-                log.arg = effect.slash->objectName();
-                log.arg2 = objectName();
-                room->sendLog(log);
-
-                return true;
             }
         }
         return false;

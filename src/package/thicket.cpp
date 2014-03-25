@@ -527,7 +527,7 @@ void DimengCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
                               CardMoveReason(CardMoveReason::S_REASON_SWAP, b->objectName(), a->objectName(), "dimeng", QString()));
         exchangeMove.push_back(move1);
         exchangeMove.push_back(move2);
-        room->moveCards(exchangeMove, false);
+        room->moveCardsAtomic(exchangeMove, false);
 
         LogMessage log;
         log.type = "#Dimeng";

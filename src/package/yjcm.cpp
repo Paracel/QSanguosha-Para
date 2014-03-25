@@ -776,7 +776,7 @@ void GanluCard::swapEquip(ServerPlayer *first, ServerPlayer *second) const{
                           CardMoveReason(CardMoveReason::S_REASON_SWAP, second->objectName(), first->objectName(), "ganlu", QString()));
     exchangeMove.push_back(move2);
     exchangeMove.push_back(move1);
-    room->moveCards(exchangeMove, false);
+    room->moveCardsAtomic(exchangeMove, false);
 }
 
 bool GanluCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{

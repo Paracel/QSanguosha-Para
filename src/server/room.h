@@ -301,8 +301,6 @@ public:
                     const QString &pileName, const CardMoveReason &reason, bool forceMoveVisible = false);
     void moveCardsAtomic(QList<CardsMoveStruct> cards_move, bool forceMoveVisible);
     void moveCardsAtomic(CardsMoveStruct cards_move, bool forceMoveVisible);
-    void moveCards(CardsMoveStruct cards_move, bool forceMoveVisible, bool ignoreChanges = true);
-    void moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible, bool ignoreChanges = true);
     QList<CardsMoveStruct> _breakDownCardMoves(QList<CardsMoveStruct> &cards_moves);
 
     // interactive methods
@@ -444,7 +442,6 @@ private:
     void _fillMoveInfo(CardsMoveStruct &moves, int card_index) const;
     QList<CardsMoveOneTimeStruct> _mergeMoves(QList<CardsMoveStruct> cards_moves);
     QList<CardsMoveStruct> _separateMoves(QList<CardsMoveOneTimeStruct> moveOneTimes);
-    void _moveCards(QList<CardsMoveStruct> cards_moves, bool forceMoveVisible, bool ignoreChanges);
     QString _chooseDefaultGeneral(ServerPlayer *player) const;
     bool _setPlayerGeneral(ServerPlayer *player, const QString &generalName, bool isFirst);
     QString mode;

@@ -1181,7 +1181,7 @@ public:
 class Zhuhai: public TriggerSkill {
 public:
     Zhuhai(): TriggerSkill("zhuhai") {
-        events << EventPhaseStart << PreCardUsed;
+        events << EventPhaseStart << ChoiceMade;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
@@ -1198,9 +1198,7 @@ public:
                 if (!room->askForUseSlashTo(xushu, player, prompt, false))
                     xushu->setFlags("-ZhuhaiSlash");
             }
-        } else if (triggerEvent == PreCardUsed && player->hasFlag("ZhuhaiSlash")) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (!use.card->isKindOf("Slash")) return false;
+        } else if (triggerEvent == ChoiceMade && player->hasFlag("ZhuhaiSlash") && data.canConvert<CardUseStruct>()) {
             room->broadcastSkillInvoke(objectName());
             room->notifySkillInvoked(player, objectName());
 

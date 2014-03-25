@@ -194,7 +194,7 @@ return {
 	["designer:nos_wangyi"] = "Virgopal",
 	["illustrator:nos_wangyi"] = "木美人",
 	["noszhenlie"] = "贞烈",
-	[":noszhenlie"] = "每当你的判定牌生效前，你可以展示牌堆顶的一张牌代替之。",
+	[":noszhenlie"] = "每当你的判定牌生效前，你可以亮出牌堆顶的一张牌代替之。",
 	["nosmiji"] = "秘计",
 	[":nosmiji"] = "回合开始或结束阶段开始时，若你已受伤，你可以进行判定：若结果为黑色，你观看牌堆顶的X张牌然后将其交给一名角色。（X为你已损失的体力值）",
 
@@ -210,7 +210,7 @@ return {
 	["designer:nos_guanxingzhangbao"] = "诺思冥羽",
 	["illustrator:nos_guanxingzhangbao"] = "HOOO",
 	["nosfuhun"] = "父魂",
-	[":nosfuhun"] = "摸牌阶段开始时，你可以放弃摸牌，展示牌堆顶的两张牌并获得之：若展示的牌不为同一颜色，你拥有“武圣”、“咆哮”，直到回合结束。",
+	[":nosfuhun"] = "摸牌阶段开始时，你可以放弃摸牌，亮出牌堆顶的两张牌并获得之：若展示的牌不为同一颜色，你拥有“武圣”、“咆哮”，直到回合结束。",
 
 	["nos_zhonghui"] = "钟会-内测",
 	["&nos_zhonghui"] = "钟会",

@@ -834,22 +834,19 @@ public:
         if (no_basic == 0) {
             if (room->askForSkillInvoke(victim, "zhaolie_obtain", "obtain:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
-                CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, liubei->objectName(), "zhaolie", QString());
-                room->obtainCard(liubei, dummy, reason2);
+                room->obtainCard(liubei, dummy);
             } else {
                 room->broadcastSkillInvoke("zhaolie", 1);
-                CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, victim->objectName(), "zhaolie", QString());
-                room->obtainCard(victim, dummy, reason2);
+                room->obtainCard(victim, dummy);
             }
         } else {
             if (victim->getCardCount() >= no_basic
                 && room->askForDiscard(victim, "zhaolie", no_basic, no_basic, true, true, "@zhaolie-discard:" + liubei->objectName())) {
                 room->broadcastSkillInvoke("zhaolie", 2);
                 if (dummy->subcardsLength() > 0) {
-                    if (liubei->isAlive()) {
-                        CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, liubei->objectName(), "zhaolie", QString());
-                        room->obtainCard(liubei, dummy, reason2);
-                    } else
+                    if (liubei->isAlive())
+                        room->obtainCard(liubei, dummy);
+                    else
                         room->throwCard(dummy, reason, NULL);
                 }
             } else {
@@ -857,10 +854,9 @@ public:
                 if (no_basic > 0)
                     room->damage(DamageStruct("zhaolie", liubei, victim, no_basic));
                 if (dummy->subcardsLength() > 0) {
-                    if (victim->isAlive()) {
-                        CardMoveReason reason2(CardMoveReason::S_REASON_DRAW, victim->objectName(), "zhaolie", QString());
-                        room->obtainCard(victim, dummy, reason2);
-                    } else
+                    if (victim->isAlive())
+                        room->obtainCard(victim, dummy);
+                    else
                         room->throwCard(dummy, reason, NULL);
                 }
             }

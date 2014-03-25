@@ -326,8 +326,7 @@ public:
                 room->getThread()->delay();
 
                 DummyCard *dummy = new DummyCard(move.card_ids);
-                CardMoveReason reason = CardMoveReason(CardMoveReason::S_REASON_DRAW, shuangying->objectName(), "fuhun", QString());
-                room->obtainCard(shuangying, dummy, reason);
+                room->obtainCard(shuangying, dummy);
                 delete dummy;
 
                 if (diff) {

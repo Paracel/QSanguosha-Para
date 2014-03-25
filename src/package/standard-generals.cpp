@@ -468,8 +468,7 @@ public:
                 }
                 if (!card_to_gotback.isEmpty()) {
                     DummyCard *dummy = new DummyCard(card_to_gotback);
-                    CardMoveReason reason(CardMoveReason::S_REASON_DRAW, player->objectName(), "luoyi", QString());
-                    room->obtainCard(player, dummy, reason);
+                    room->obtainCard(player, dummy);
                     delete dummy;
                 }
             }

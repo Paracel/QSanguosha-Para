@@ -269,8 +269,7 @@ public:
                 }
                 if (!card_to_gotback.isEmpty()) {
                     DummyCard *dummy2 = new DummyCard(card_to_gotback);
-                    CardMoveReason reason(CardMoveReason::S_REASON_DRAW, menghuo->objectName(), "zaiqi", objectName());
-                    room->obtainCard(menghuo, dummy2, reason);
+                    room->obtainCard(menghuo, dummy2);
                     delete dummy2;
                 }
 

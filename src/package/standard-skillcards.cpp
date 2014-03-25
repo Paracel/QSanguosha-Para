@@ -410,8 +410,7 @@ void JianyanCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &)
                                                                                                     .arg(card->getSuitString() + "_char")
                                                                                                     .arg(card->getNumberString()));
                 room->clearAG(source);
-                CardMoveReason reason(CardMoveReason::S_REASON_DRAW, source->objectName(), "jianyan", QString());
-                room->obtainCard(target, card, reason);
+                room->obtainCard(target, card);
             }
             break;
         }

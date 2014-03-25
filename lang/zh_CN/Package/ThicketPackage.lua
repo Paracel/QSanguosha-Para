@@ -27,7 +27,7 @@ return {
 	["huoshou"] = "祸首",
 	[":huoshou"] = "<font color=\"blue\"><b>锁定技。</b></font>【南蛮入侵】对你无效。你是【南蛮入侵】的伤害来源。",
 	["zaiqi"] = "再起",
-	[":zaiqi"] = "摸牌阶段开始时，若你已受伤，你可以放弃摸牌并展示牌堆顶的X张牌：每有一张<font color=\"red\">♥</font>牌，你回复1点体力，然后将所有<font color=\"red\">♥</font>牌置入弃牌堆并获得其余的牌。（X为你已损失的体力值）",
+	[":zaiqi"] = "摸牌阶段开始时，若你已受伤，你可以放弃摸牌并亮出牌堆顶的X张牌：每有一张<font color=\"red\">♥</font>牌，你回复1点体力，然后将所有<font color=\"red\">♥</font>牌置入弃牌堆并获得其余的牌。（X为你已损失的体力值）",
 	["#HuoshouTransfer"] = "%from 的“%arg2”被触发，【<font color=\"yellow\"><b>南蛮入侵</b></font>】的伤害来源改为 %from",
 
 	["#zhurong"] = "野性的女王",

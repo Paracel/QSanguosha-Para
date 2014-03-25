@@ -846,7 +846,7 @@ protected:
     QString user_string;
 };
 
-class DummyCard: public Card {
+class DummyCard: public SkillCard {
 public:
     DummyCard();
     DummyCard(const QList<int> &subcards);

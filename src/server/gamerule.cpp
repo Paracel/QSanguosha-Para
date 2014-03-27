@@ -937,7 +937,7 @@ bool HulaoPassMode::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
     case HpChanged: {
             if (player->isLord() && player->getHp() <= 4 && player->getMark("secondMode") == 0)
                 throw StageChange;
-            return false;
+            break;
         }
     case GameOverJudge: {
             if (player->isLord())

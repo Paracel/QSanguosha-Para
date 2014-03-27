@@ -371,7 +371,8 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
         if (list.length() > 0)
             choicelist.append("remainedgenerals");
     } else if (Config.EnableBasara) {
-        if (player->getGeneralName() == "anjiang" || player->getGeneral2Name() == "anjiang")
+        QString hidden_generals = player->property("basara_generals").toString();
+        if (!hidden_generals.isEmpty())
             choicelist.append("generals");
     } else if (!player->isLord()) {
         choicelist.append("role");
@@ -417,7 +418,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
         arr[1] = QSanProtocol::Utils::toJsonArray(list);
         room->doNotify(effect.from, QSanProtocol::S_COMMAND_VIEW_GENERALS, arr);
     } else if (choice == "generals") {
-        QStringList list = room->getTag(player->objectName()).toStringList();
+        QStringList list = player->property("basara_generals").toString().split("+");
         foreach (QString name, list) {
             LogMessage log;
             log.type = "$ShangyiViewUnknown";

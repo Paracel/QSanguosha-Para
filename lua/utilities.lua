@@ -39,6 +39,7 @@ end
 -- copied from "Well House Consultants"
 -- used to split string into a table, similar with php' explode function
 function string:split(delimiter)
+	if #self == 0 then return {} end
 	local result = {}
 	local from = 1
 	local delim_from, delim_to = string.find(self, delimiter, from)

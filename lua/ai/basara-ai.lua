@@ -104,7 +104,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 	end
 
 	SmartAI.getHegKingdom = function(self)
-		local names = self.room:getTag(self.player:objectName()):toStringList()
+		local names = self.player:property("basara_generals"):toString():split("+")
 		if #names == 0 then return self.player:getKingdom() end
 		local kingdom = sgs.Sanguosha:getGeneral(names[1]):getKingdom()
 		return kingdom
@@ -112,7 +112,7 @@ if sgs.GetConfig("EnableHegemony", false) then
 
 	SmartAI.getHegGeneralName = function(self, player)
 		player = player or self.player
-		local names = self.room:getTag(player:objectName()):toStringList()
+		local names = player:property("basara_generals"):toString():split("+")
 		if #names > 0 then return names[1] else return player:getGeneralName() end
 	end
 

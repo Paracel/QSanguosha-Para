@@ -854,9 +854,21 @@ QSet<QString> Player::getAcquiredSkills() const{
 
 QString Player::getSkillDescription() const{
     QString description = QString();
+    QList<const Skill *> skill_list = getVisibleSkillList();
+    QList<const Skill *> basara_list;
+    if (getGeneralName() == "anjiang" || getGeneral2Name() == "anjiang") {
+        QString basara = property("basara_generals").toString();
+        if (!basara.isEmpty()) {
+            QStringList basaras = basara.split("+");
+            foreach (QString basara_gen, basaras) {
+                const General *general = Sanguosha->getGeneral(basara_gen);
+                if (general) basara_list.append(general->getVisibleSkillList());
+            }
+        }
+    }
 
-    foreach (const Skill *skill, getVisibleSkillList()) {
-        if (skill->isAttachedLordSkill() || !hasSkill(skill->objectName()))
+    foreach (const Skill *skill, skill_list + basara_list) {
+        if (skill->isAttachedLordSkill() || (!hasSkill(skill->objectName()) && !basara_list.contains(skill)))
             continue;
         QString skill_name = Sanguosha->translate(skill->objectName());
         QString desc = skill->getDescription();

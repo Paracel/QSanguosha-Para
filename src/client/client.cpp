@@ -1614,7 +1614,7 @@ void Client::log(const Json::Value &log_str) {
     else {
         QStringList log;
         tryParse(log_str, log);
-        if (log.first() == "#BasaraReveal")
+        if (log.first().contains("#BasaraReveal"))
             Sanguosha->playSystemAudioEffect("choose-item");
         else if (log.first() == "#UseLuckCard") {
             ClientPlayer *from = getPlayer(log.at(1));

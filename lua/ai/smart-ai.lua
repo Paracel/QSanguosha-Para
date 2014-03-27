@@ -4,7 +4,7 @@
 -- more information see: https://github.com/kikito/middleclass
 
 -- initialize the random seed for later use
-math.randomseed(os.time())
+math.randomseed(tostring(os.time()):reverse():sub(1, 6))
 
 -- SmartAI is the base class for all other specialized AI classes
 SmartAI = (require "middleclass").class("SmartAI")

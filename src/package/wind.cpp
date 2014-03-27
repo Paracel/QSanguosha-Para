@@ -428,7 +428,8 @@ public:
         DamageStruct damage = data.value<DamageStruct>();
         if (triggerEvent == PreDamageDone) {
             ServerPlayer *weiyan = damage.from;
-            weiyan->tag["InvokeKuanggu"] = weiyan->distanceTo(damage.to) <= 1;
+            if (weiyan)
+                weiyan->tag["InvokeKuanggu"] = (weiyan->distanceTo(damage.to) <= 1);
         } else if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
             bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
             player->tag["InvokeKuanggu"] = false;

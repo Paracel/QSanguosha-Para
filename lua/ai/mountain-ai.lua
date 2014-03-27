@@ -946,7 +946,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		if self.player:getHandcardNum() > 4 then
 			if not self.player:getWeapon() and str:matchOne("drluoyi") then return "drluoyi" end
 			for _, askill in ipairs(("shuangxiong|duwu|nosfuhun|tianyi|xianzhen|qiaoshui|paoxiao|luanji|huoji|qixi|" ..
-									"duanliang|guose|luoyi|nosluoyi|dangxian|fuluan|longyin"):split("|")) do
+									"duanliang|nosguose|guose|luoyi|nosluoyi|dangxian|fuluan|longyin"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 			if self:findFriendsByType(sgs.Friend_Draw) then
@@ -1010,7 +1010,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 			end
 		end
 
-		for _, askill in ipairs(("hongyuan|drzhiheng|fangquan|mizhao|quhu|fanjian|nosfanjian|junxing|hengzheng|duanliang|guose|baobian|ganlu|" ..
+		for _, askill in ipairs(("hongyuan|drzhiheng|fangquan|mizhao|quhu|fanjian|nosfanjian|junxing|hengzheng|duanliang|nosguose|guose|baobian|ganlu|" ..
 								"tiaoxin|zhaolie|chuanxin|fengshi|nostieji|moukui|liegong|mengjin|tieji|kofliegong|wushuang|drwushuang|niaoxiang|" ..
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|nosguhuo|xuanhuo|nosxuanhuo|qiangxi|huangen|nosjujian|lieren|pojun|" ..
 								"yishi|danshou|chuli|yinling|qixi|puji|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|qiangwu|jingce|shengxi|" ..

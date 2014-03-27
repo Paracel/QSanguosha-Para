@@ -53,7 +53,7 @@ liubei					zhugeliang				-1.0
 liubei					huangyueying			1.0
 liubei					wolong					0.9
 liubei					ganning					0.8
-liubei					daqiao					0.9
+liubei					daqiao					0.3
 liubei					luxun					-0.5
 liubei					sunshangxiang			0.9
 liubei					zhoutai					1.0
@@ -74,6 +74,7 @@ liubei					nos_xuchu				0.5
 liubei					nos_zhangfei			0.5
 liubei					nos_huangyueying		1.0
 liubei					nos_ganning				0.8
+liubei					nos_daqiao				0.9
 liubei					nos_luxun				-0.5
 liubei					nos_huatuo				1.1
 liubei					nos_zhangjiao			0.9
@@ -89,7 +90,7 @@ nos_liubei				zhugeliang				-1.0
 nos_liubei				huangyueying			1.0
 nos_liubei				wolong					0.9
 nos_liubei				ganning					0.8
-nos_liubei				daqiao					0.9
+nos_liubei				daqiao					0.3
 nos_liubei				luxun					-0.5
 nos_liubei				sunshangxiang			0.9
 nos_liubei				zhoutai					1.0
@@ -110,6 +111,7 @@ nos_liubei				nos_xuchu				0.6
 nos_liubei				nos_zhangfei			0.5
 nos_liubei				nos_huangyueying		1.0
 nos_liubei				nos_ganning				0.8
+nos_liubei				nos_daqiao				0.9
 nos_liubei				nos_luxun				-0.5
 nos_liubei				nos_huatuo				1.1
 nos_liubei				nos_zhangjiao			0.9

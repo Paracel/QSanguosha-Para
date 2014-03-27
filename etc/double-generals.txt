@@ -270,6 +270,7 @@ daqiao luxun							75
 daqiao sunshangxiang					52
 daqiao lingtong							51
 daqiao zhangchunhua						76
+daqiao nos_daqiao						10
 daqiao nos_luxun						75
 daqiao nos_lingtong						51
 daqiao nos_zhangchunhua					77
@@ -280,6 +281,7 @@ luxun bgm_ganning						65
 luxun neo_zhangfei						52
 luxun nos_zhangfei						52
 luxun nos_ganning						70
+luxun nos_daqiao						75
 sunshangxiang lusu						54
 sunshangxiang diaochan					53
 sunshangxiang shenzhaoyun				58
@@ -299,6 +301,7 @@ sunshangxiang nos_simayi				52
 sunshangxiang nos_guojia				85
 sunshangxiang nos_guanyu				52
 sunshangxiang nos_ganning				54
+sunshangxiang nos_daqiao				52
 sunshangxiang nos_lingtong				59
 sunshangxiang nos_handang				56
 sunjian zhoutai							52
@@ -394,6 +397,7 @@ lingtong vs_guanyu						52
 lingtong neo_guanyu						52
 lingtong nos_guanyu						52
 lingtong nos_ganning					53
+lingtong nos_daqiao						51
 lingtong nos_lingtong					57
 lingtong nos_handang					55
 masu zhonghui							54
@@ -415,6 +419,7 @@ zhangchunhua guanxingzhangbao			10
 zhangchunhua xunyou						56
 zhangchunhua liuxie						56
 zhangchunhua lingju						35
+zhangchunhua nos_daqiao					76
 zhangchunhua nos_madai					4
 guanxingzhangbao vs_guanyu				15
 guanxingzhangbao neo_guanyu				15
@@ -547,6 +552,9 @@ nos_ganning nos_lingtong				53
 nos_ganning nos_xushu					2
 nos_lvmeng nos_zhoutai					57
 nos_zhouyu nos_zhangliao				35
+nos_daqiao nos_luxun					75
+nos_daqiao nos_lingtong					51
+nos_daqiao nos_zhangchunhua				77
 nos_lingtong nos_handang				55
 nos_zhangchunhua nos_madai				4
 nos_guanxingzhangbao neo_guanyu			16

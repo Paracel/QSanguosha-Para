@@ -2257,7 +2257,7 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_yuanshu->addSkill("weidi");
 
     General *tw_daqiao = new General(this, "tw_daqiao", "wu", 3, false, true); // TW SP 005
-    tw_daqiao->addSkill("guose");
+    tw_daqiao->addSkill("nosguose");
     tw_daqiao->addSkill("liuli");
 
     General *tw_zhaoyun = new General(this, "tw_zhaoyun", "shu", 4, true, true); // TW SP 006
@@ -2328,7 +2328,7 @@ MiscellaneousPackage::MiscellaneousPackage()
     : Package("miscellaneous")
 {
     General *wz_daqiao = new General(this, "wz_daqiao", "wu", 3, false, true); // WZ 001
-    wz_daqiao->addSkill("guose");
+    wz_daqiao->addSkill("nosguose");
     wz_daqiao->addSkill("liuli");
 
     General *wz_xiaoqiao = new General(this, "wz_xiaoqiao", "wu", 3, false, true); // WZ 002

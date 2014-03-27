@@ -1647,18 +1647,49 @@ public:
     }
 };
 
-class Guose: public OneCardViewAsSkill {
+class GuoseViewAsSkill: public OneCardViewAsSkill {
 public:
-    Guose(): OneCardViewAsSkill("guose") {
+    GuoseViewAsSkill(): OneCardViewAsSkill("guose") {
         filter_pattern = ".|diamond";
         response_or_use = true;
     }
 
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("GuoseCard") && !(player->isNude() && player->getPile("wooden_ox").isEmpty());
+    }
+
     virtual const Card *viewAs(const Card *originalCard) const{
-        Indulgence *indulgence = new Indulgence(originalCard->getSuit(), originalCard->getNumber());
-        indulgence->addSubcard(originalCard->getId());
-        indulgence->setSkillName(objectName());
-        return indulgence;
+        GuoseCard *card = new GuoseCard;
+        card->addSubcard(originalCard);
+        card->setSkillName(objectName());
+        return card;
+    }
+};
+
+class Guose: public TriggerSkill {
+public:
+    Guose(): TriggerSkill("guose") {
+        events << CardFinished;
+        view_as_skill = new GuoseViewAsSkill;
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 1;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Indulgence") && use.card->getSkillName() == objectName())
+            player->drawCards(1, objectName());
+        return false;
+    }
+
+    virtual int getEffectIndex(const ServerPlayer *player, const Card *card) const{
+        return (card->isKindOf("Indulgence") ? 1 : 2);
     }
 };
 
@@ -2451,6 +2482,7 @@ void StandardPackage::addGenerals() {
     addMetaObject<YijiCard>();
     addMetaObject<FenweiCard>();
     addMetaObject<JianyanCard>();
+    addMetaObject<GuoseCard>();
 
     skills << new Xiaoxi << new NonCompulsoryInvalidity << new Jianyan;
 }

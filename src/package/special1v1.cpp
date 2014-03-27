@@ -1055,7 +1055,7 @@ Special1v1Package::Special1v1Package()
     related_skills.insertMulti("shenju", "#shenju");
 
     General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3, false);
-    kof_daqiao->addSkill("guose");
+    kof_daqiao->addSkill("nosguose");
     kof_daqiao->addSkill(new Wanrong);
 
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);

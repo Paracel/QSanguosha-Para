@@ -204,6 +204,7 @@ nos_ganning				69
 nos_lvmeng				63					
 nos_huanggai			55					
 nos_zhouyu				82					
+nos_daqiao				14					
 nos_luxun				57					
 nos_huatuo				63					
 nos_lvbu				76					

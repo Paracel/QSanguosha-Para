@@ -1189,6 +1189,64 @@ sgs.ai_skill_invoke.noslianying = function(self, data)
 	return true
 end
 
+local nosguose_skill = {}
+nosguose_skill.name = "nosguose"
+table.insert(sgs.ai_skills, nosguose_skill)
+nosguose_skill.getTurnUseCard = function(self, inclusive)
+	local cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		local c = sgs.Sanguosha:getCard(id)
+		cards:append(c)
+	end
+	cards = sgs.QList2Table(cards)
+
+	local card
+	self:sortByUseValue(cards, true)
+	local has_weapon, has_armor = false, false
+
+	for _, acard in ipairs(cards) do
+		if acard:isKindOf("Weapon") and not (acard:getSuit() == sgs.Card_Diamond) then has_weapon = true end
+	end
+
+	for _, acard in ipairs(cards) do
+		if acard:isKindOf("Armor") and not (acard:getSuit() == sgs.Card_Diamond) then has_armor = true end
+	end
+
+	for _, acard in ipairs(cards) do
+		if (acard:getSuit() == sgs.Card_Diamond) and ((self:getUseValue(acard) < sgs.ai_use_value.Indulgence) or inclusive) then
+			local shouldUse = true
+
+			if acard:isKindOf("Armor") then
+				if not self.player:getArmor() then shouldUse = false
+				elseif self.player:hasEquip(acard) and not has_armor and self:evaluateArmor() > 0 then shouldUse = false
+				end
+			end
+
+			if acard:isKindOf("Weapon") then
+				if not self.player:getWeapon() then shouldUse = false
+				elseif self.player:hasEquip(acard) and not has_weapon then shouldUse = false
+				end
+			end
+
+			if shouldUse then
+				card = acard
+				break
+			end
+		end
+	end
+
+	if not card then return nil end
+	local number = card:getNumberString()
+	local card_id = card:getEffectiveId()
+	local card_str = ("indulgence:nosguose[diamond:%s]=%d"):format(number, card_id)
+	local indulgence = sgs.Card_Parse(card_str)
+	assert(indulgence)
+	return indulgence
+end
+
+sgs.ai_cardneed.nosguose = sgs.ai_cardneed.guose
+sgs.nosguose_suit_value = sgs.guose_suit_value
+
 local qingnang_skill = {}
 qingnang_skill.name = "qingnang"
 table.insert(sgs.ai_skills, qingnang_skill)

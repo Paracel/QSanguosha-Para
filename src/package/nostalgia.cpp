@@ -1444,6 +1444,21 @@ public:
     }
 };
 
+class NosGuose: public OneCardViewAsSkill {
+public:
+    NosGuose(): OneCardViewAsSkill("nosguose") {
+        filter_pattern = ".|diamond";
+        response_or_use = true;
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        Indulgence *indulgence = new Indulgence(originalCard->getSuit(), originalCard->getNumber());
+        indulgence->addSubcard(originalCard->getId());
+        indulgence->setSkillName(objectName());
+        return indulgence;
+    }
+};
+
 class NosQianxun: public ProhibitSkill {
 public:
     NosQianxun(): ProhibitSkill("nosqianxun") {
@@ -2125,6 +2140,10 @@ NostalStandardPackage::NostalStandardPackage()
     General *nos_zhouyu = new General(this, "nos_zhouyu", "wu", 3);
     nos_zhouyu->addSkill(new NosYingzi);
     nos_zhouyu->addSkill(new NosFanjian);
+
+    General *nos_daqiao = new General(this, "nos_daqiao", "wu", 3, false);
+    nos_daqiao->addSkill(new NosGuose);
+    nos_daqiao->addSkill("liuli");
 
     General *nos_luxun = new General(this, "nos_luxun", "wu", 3);
     nos_luxun->addSkill(new NosQianxun);

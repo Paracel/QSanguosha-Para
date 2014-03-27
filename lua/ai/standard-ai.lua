@@ -1647,6 +1647,7 @@ sgs.ai_skill_use_func.ZhihengCard = function(card, use, self)
 					if keep_weapon and zcard:getEffectiveId() == keep_weapon:getEffectiveId() then shouldUse = false end
 				end
 				if self.player:hasEquip(zcard) and zcard:isKindOf("Armor") and not self:needToThrowArmor() then shouldUse = false end
+				if self.player:hasTreasure(zcard) then shouldUse = false end
 				if isCard("Jink", zcard, self.player) and not keep_jink then
 					keep_jink = true
 					shouldUse = false
@@ -2196,11 +2197,16 @@ local guose_skill = {}
 guose_skill.name = "guose"
 table.insert(sgs.ai_skills, guose_skill)
 guose_skill.getTurnUseCard = function(self, inclusive)
+	if self.player:hasUsed("GuoseCard") then return end
 	local cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		local c = sgs.Sanguosha:getCard(id)
+		cards:append(c)
+	end
 	cards = sgs.QList2Table(cards)
 
-	local card
 	self:sortByUseValue(cards, true)
+	local card = nil
 	local has_weapon, has_armor = false, false
 
 	for _, acard in ipairs(cards) do
@@ -2235,17 +2241,84 @@ guose_skill.getTurnUseCard = function(self, inclusive)
 	end
 
 	if not card then return nil end
-	local number = card:getNumberString()
-	local card_id = card:getEffectiveId()
-	local card_str = ("indulgence:guose[diamond:%s]=%d"):format(number, card_id)
-	local indulgence = sgs.Card_Parse(card_str)
-	assert(indulgence)
-	return indulgence
+	return sgs.Card_Parse("@GuoseCard=" .. card:getEffectiveId())
 end
+
+sgs.ai_skill_use_func.GuoseCard = function(card, use, self)
+	self:sort(self.friends)
+	local id = card:getEffectiveId()
+	local indul_only = self.player:handCards():contains(id)
+	local rcard = sgs.Sanguosha:getCard(id)
+	if not indul_only and not self.player:isJilei(rcard) then
+		sgs.ai_use_priority.GuoseCard = 5.5
+		for _, friend in ipairs(self.friends) do
+			if friend:containsTrick("indulgence") and self:willSkipPlayPhase(friend)
+				and not friend:hasSkills("shensu|qingyi|qiaobian") and (self:isWeak(friend) or self:getOverflow(friend) > 1) then
+				for _, c in sgs.qlist(friend:getJudgingArea()) do
+					if c:isKindOf("Indulgence") and self.player:canDiscard(friend, card:getEffectiveId()) then
+						use.card = card
+						if use.to then use.to:append(friend) end
+						return
+					end
+				end
+			end
+		end
+	end
+
+	local indulgence = sgs.Sanguosha:cloneCard("indulgence")
+	indulgence:addSubcard(id)
+	if not self.player:isLocked(indulgence) then
+		sgs.ai_use_priority.GuoseCard = sgs.ai_use_priority.Indulgence
+		local dummy_use = { isDummy = true, to = sgs.SPlayerList() }
+		self:useCardIndulgence(indulgence, dummy_use)
+		if dummy_use.card and dummy_use.to:length() > 0 then
+			use.card = card
+			if use.to then use.to:append(dummy_use.to:first()) end
+			return
+		end
+	end
+
+	sgs.ai_use_priority.GuoseCard = 5.5
+	if not indul_only and not self.player:isJilei(rcard) then
+		for _, friend in ipairs(self.friends) do
+			if friend:containsTrick("indulgence") and self:willSkipPlayPhase(friend) then
+				for _, c in sgs.qlist(friend:getJudgingArea()) do
+					if c:isKindOf("Indulgence") and self.player:canDiscard(friend, card:getEffectiveId()) then
+						use.card = card
+						if use.to then use.to:append(friend) end
+						return
+					end
+				end
+			end
+		end
+	end
+
+	if not indul_only and not self.player:isJilei(rcard) then
+		for _, friend in ipairs(self.friends) do
+			if friend:containsTrick("indulgence") then
+				for _, c in sgs.qlist(friend:getJudgingArea()) do
+					if c:isKindOf("Indulgence") and self.player:canDiscard(friend, card:getEffectiveId()) then
+						use.card = card
+						if use.to then use.to:append(friend) end
+						return
+					end
+				end
+			end
+		end
+	end
+end
+
+sgs.ai_use_priority.GuoseCard = 5.5
+sgs.ai_use_value.GuoseCard = 5
+sgs.ai_card_intention.GuoseCard = -60
 
 function sgs.ai_cardneed.guose(to, card)
 	return card:getSuit() == sgs.Card_Diamond
 end
+
+sgs.guose_suit_value = {
+	diamond = 3.9
+}
 
 sgs.ai_skill_use["@@liuli"] = function(self, prompt, method)
 	local others = self.room:getOtherPlayers(self.player)
@@ -2370,10 +2443,6 @@ end
 function sgs.ai_cardneed.liuli(to, card)
 	return to:getCards("he"):length() <= 2
 end
-
-sgs.guose_suit_value = {
-	diamond = 3.9
-}
 
 local jieyin_skill = {}
 jieyin_skill.name = "jieyin"

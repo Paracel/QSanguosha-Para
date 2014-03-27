@@ -21,7 +21,7 @@ ganning					6
 nos_lvmeng				2
 nos_huanggai			6
 nos_zhouyu				6
-daqiao					6
+nos_daqiao				6
 nos_luxun				3
 sunshangxiang			7
 xiaoqiao				6

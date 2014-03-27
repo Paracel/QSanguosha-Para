@@ -1882,7 +1882,7 @@ function SmartAI:getValuableCard(who)
 
 	local equips = sgs.QList2Table(who:getEquips())
 	for _, equip in ipairs(equips) do
-		if who:hasSkills("longhun|guose|yanxiao") and equip:getSuit() ~= sgs.Card_Diamond then return equip:getEffectiveId() end
+		if who:hasSkills("longhun|nosguose|guose|yanxiao") and equip:getSuit() ~= sgs.Card_Diamond then return equip:getEffectiveId() end
 		if who:hasSkills("qixi|yinling|guidao|duanliang") and equip:isBlack() then return equip:getEffectiveId() end
 		if who:hasSkill("jijiu|wusheng|xueji|nosfuhun") and equip:isRed() then return equip:getEffectiveId() end
 		if who:hasSkill("baobian") and who:getHp() <= 2 then return  equip:getEffectiveId() end
@@ -2630,7 +2630,7 @@ function SmartAI:useCardIndulgence(card, use)
 		local value = enemy:getHandcardNum() - enemy:getHp()
 
 		if enemy:hasSkills("noslijian|lijian|fanjian|nosfanjian|dimeng|jijiu|jieyin|anxu|yongsi|zhiheng|manjuan|nosrende|rende|qixi|jixi") then value = value + 10 end
-		if enemy:hasSkills("qice|guose|duanliang|nosjujian|luoshen|nosjizhi|jizhi|jilve|wansha|mingce") then value = value + 5 end
+		if enemy:hasSkills("qice|nosguose|guose|duanliang|nosjujian|luoshen|nosjizhi|jizhi|jilve|wansha|mingce") then value = value + 5 end
 		if enemy:hasSkills("guzheng|luoying|yinling|gongxin|shenfen|ganlu|duoshi") then value = value + 3 end
 		if self:isWeak(enemy) then value = value + 3 end
 		if enemy:isLord() then value = value + 3 end

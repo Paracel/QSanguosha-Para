@@ -301,11 +301,11 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
     int treasure = 0;
     if (p_name.endsWith("+&")) {
         treasure = 1;
-        p_name.chop(2);
+        p_name = pile_name.split(":").first();
         _m_treasureName = p_name;
     } else if (p_name.endsWith("-&")) {
         treasure = -1;
-        p_name.chop(2);
+        p_name = pile_name.split(":").first();
         _m_treasureName = QString();
     }
     const QList<int> &pile = player->getPile(p_name);
@@ -330,8 +330,15 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
             button->setObjectName(p_name);
             if (treasure == 0)
                 button->setProperty("private_pile", "true");
-            else
+            else {
+                QStringList namelist = pile_name.split(":");
+                QString toolTip = QString("<b>%1 [</b><img src='image/system/log/%2.png' height = 12/><b>%3]</b>")
+                                          .arg(Sanguosha->translate(namelist.at(0)))
+                                          .arg(namelist.at(1))
+                                          .arg(namelist.at(2));
+                button->setToolTip(toolTip);
                 button->setProperty("treasure", "true");
+            }
             QGraphicsProxyWidget *button_widget = new QGraphicsProxyWidget(_getPileParent());
             button_widget->setObjectName(p_name);
             button_widget->setWidget(button);
@@ -341,7 +348,10 @@ void PlayerCardContainer::updatePile(const QString &pile_name) {
             menu = button->menu();
         }
 
-        button->setText(QString("%1(%2)").arg(Sanguosha->translate(p_name)).arg(pile.length()));
+        QString text = Sanguosha->translate(p_name);
+        if (pile.length() > 0 || _m_treasureName != p_name)
+            text.append(QString("(%1)").arg(pile.length()));
+        button->setText(text);
         menu = new QMenu(button);
         if (_m_treasureName == p_name)
             menu->setProperty("treasure", "true");
@@ -630,7 +640,10 @@ void PlayerCardContainer::addEquips(QList<CardItem *> &equips, bool isDashboard)
         const EquipCard *equip_card = qobject_cast<const EquipCard *>(equip->getCard()->getRealCard());
         int index = (int)(equip_card->location());
         if (equip_card->location() == EquipCard::TreasureLocation && !isDashboard) {
-            updatePile(equip_card->objectName() + "+&");
+            QString name = QString("%1:%2:%3:+&").arg(equip_card->objectName())
+                                                 .arg(equip_card->getSuitString())
+                                                 .arg(equip_card->getNumberString());
+            updatePile(name);
             _m_photo_treasure = equip;
             continue;
         }
@@ -673,7 +686,10 @@ QList<CardItem *> PlayerCardContainer::removeEquips(const QList<int> &cardIds, b
         const EquipCard *equip_card = qobject_cast<const EquipCard *>(Sanguosha->getEngineCard(card_id));
         int index = (int)(equip_card->location());
         if (equip_card->location() == EquipCard::TreasureLocation && !isDashboard) {
-            updatePile(equip_card->objectName() + "-&");
+            QString name = QString("%1:%2:%3:-&").arg(equip_card->objectName())
+                                                 .arg(equip_card->getSuitString())
+                                                 .arg(equip_card->getNumberString());
+            updatePile(name);
             Q_ASSERT(_m_photo_treasure != NULL);
             CardItem *equip = _m_photo_treasure;
             equip->setHomeOpacity(0.0);

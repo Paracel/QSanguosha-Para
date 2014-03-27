@@ -67,19 +67,24 @@ config = {
 		"Test"
 	},
 
-	hulao_generals = { -- Temp settings
-		"package:standard",
-		"package:wind"
+	hulao_generals = {
+		"package:nostal_standard",
+		"package:wind",
+		"package:nostal_wind",
+		"zhenji", "zhugeliang", "sunquan", "sunshangxiang",
+		"-zhangjiao", "-zhoutai", "-caoren", "-yuji",
+		"-nos_yuji"
 	},
 
 	xmode_generals = {
-		"package:standard",
+		"package:nostal_standard",
 		"package:wind",
 		"package:fire",
-		"package:nostal_standard",
 		"package:nostal_wind",
-		"-huatuo",
-		"-zhangjiao"
+		"zhenji", "zhugeliang", "sunquan", "sunshangxiang",
+		"-nos_huatuo",
+		"-zhangjiao", "-zhoutai", "-caoren", "-yuji",
+		"-nos_zhangjiao", "-nos_yuji"
 	},
 
 	easy_text = {

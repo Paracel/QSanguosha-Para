@@ -1,4 +1,4 @@
--- utilities, i.e: convert QList<const Card> to Lua's native table
+-- utilities, i.e: convert QList<const Card *> to Lua's native table
 function sgs.QList2Table(qlist)
 	local t = {}
 	for i = 0, qlist:length() - 1 do

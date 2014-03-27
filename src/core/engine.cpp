@@ -830,11 +830,11 @@ int Engine::getCardCount() const{
 
 QStringList Engine::getLords(bool contain_banned) const{
     QStringList lords;
+    QStringList general_names = getLimitedGeneralNames();
 
     // add intrinsic lord
     foreach (QString lord, lord_list) {
-        const General *general = generals.value(lord);
-        if (getBanPackages().contains(general->getPackage()))
+        if (!general_names.contains(lord))
             continue;
         if (!contain_banned) {
             if (ServerInfo.GameMode.endsWith("p")
@@ -844,7 +844,7 @@ QStringList Engine::getLords(bool contain_banned) const{
                 || ServerInfo.GameMode == "custom_scenario")
                 if (Config.value("Banlist/Roles", "").toStringList().contains(lord))
                     continue;
-            if (Config.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
+            if (Config.Enable2ndGeneral && BanPair::isBanned(lord))
                 continue;
         }
         lords << lord;
@@ -907,25 +907,15 @@ QStringList Engine::getRandomLords() const{
 QStringList Engine::getLimitedGeneralNames() const{
     QStringList general_names;
     QHashIterator<QString, const General *> itor(generals);
-    if (ServerInfo.GameMode == "04_1v3") {
-        QList<const General *> hulao_generals = QList<const General *>();
-        foreach (QString pack_name, GetConfigFromLuaState(lua, "hulao_packages").toStringList()) {
-             const Package *pack = Sanguosha->findChild<const Package *>(pack_name);
-             if (pack) hulao_generals << pack->findChildren<const General *>();
-        }
+    while (itor.hasNext()) {
+        itor.next();
+        if (!isGeneralHidden(itor.value()->objectName()) && !getBanPackages().contains(itor.value()->getPackage()))
+            general_names << itor.key();
+    }
 
-        foreach (const General *general, hulao_generals) {
-            if (isGeneralHidden(general->objectName()) || general->isTotallyHidden()
-                || general->objectName() == "shenlvbu1" || general->objectName() == "shenlvbu2")
-                continue;
-            general_names << general->objectName();
-        }
-    } else {
-        while (itor.hasNext()) {
-            itor.next();
-            if (!isGeneralHidden(itor.value()->objectName()) && !getBanPackages().contains(itor.value()->getPackage()))
-                general_names << itor.key();
-        }
+    // special case for neo standard package
+    if (getBanPackages().contains("standard") && !getBanPackages().contains("nostal_standard")) {
+        general_names << "zhenji" << "zhugeliang" << "sunquan" << "sunshangxiang";
     }
 
     return general_names;

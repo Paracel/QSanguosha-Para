@@ -11,6 +11,12 @@ CommonTranslationTable = {
 	["offensive"] = "先手",
 	["defensive"] = "后手",
 
+	["compulsoryskill"] = "锁定技。",
+	["limitedskill"] = "限定技。",
+	["wakeskill"] = "觉醒技。",
+	["lordskill"] = "主公技。",
+	["oppphskill"] = "阶段技。",
+
 	["Pairs"] = "双将",
 	["XMode"] = "血战到底",
 	["Cards"] = "卡牌",

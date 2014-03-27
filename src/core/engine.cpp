@@ -632,11 +632,30 @@ QColor Engine::getKingdomColor(const QString &kingdom) const{
             }
             color_map[itor.key()] = color;
         }
-
         Q_ASSERT(!color_map.isEmpty());
     }
 
     return color_map.value(kingdom);
+}
+
+QMap<QString, QColor> Engine::getSkillTypeColorMap() const{
+    static QMap<QString, QColor> color_map;
+    if (color_map.isEmpty()) {
+        QVariantMap map = GetValueFromLuaState(lua, "config", "skill_type_colors").toMap();
+        QMapIterator<QString, QVariant> itor(map);
+        while (itor.hasNext()) {
+            itor.next();
+            QColor color(itor.value().toString());
+            if (!color.isValid()) {
+                qWarning("Invalid color for skill type %s", qPrintable(itor.key()));
+                color = QColor(128, 128, 128);
+            }
+            color_map[itor.key()] = color;
+        }
+        Q_ASSERT(!color_map.isEmpty());
+    }
+
+    return color_map;
 }
 
 QStringList Engine::getChattingEasyTexts() const{

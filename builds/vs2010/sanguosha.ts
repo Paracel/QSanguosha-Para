@@ -1335,7 +1335,7 @@
         <translation>重复技能: %1</translation>
     </message>
     <message>
-        <location filename="../../src/core/engine.cpp" line="708"/>
+        <location filename="../../src/core/engine.cpp" line="727"/>
         <source>%1 [Scenario mode]</source>
         <translation>%1 【剧情模式】</translation>
     </message>
@@ -2305,7 +2305,7 @@
 <context>
     <name>Player</name>
     <message>
-        <location filename="../../src/core/player.cpp" line="867"/>
+        <location filename="../../src/core/player.cpp" line="879"/>
         <source>No skills</source>
         <translation>无技能</translation>
     </message>
@@ -2689,34 +2689,34 @@
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2808"/>
+        <location filename="../../src/server/room.cpp" line="2809"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2810"/>
+        <location filename="../../src/server/room.cpp" line="2811"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2812"/>
+        <location filename="../../src/server/room.cpp" line="2813"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2815"/>
+        <location filename="../../src/server/room.cpp" line="2816"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4119"/>
+        <location filename="../../src/server/room.cpp" line="4120"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="5292"/>
+        <location filename="../../src/server/room.cpp" line="5293"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>

@@ -14,6 +14,14 @@ config = {
 		god = "#96943D",
 	},
 
+	skill_type_colors = {
+		compulsoryskill = "#0000FF",
+		limitedskill = "#FF0000",
+		wakeskill = "#800080",
+		lordskill = "#FFA500",
+		oppphskill = "#008000",
+	},
+
 	package_names = {
 		"StandardCard",
 		"StandardExCard",

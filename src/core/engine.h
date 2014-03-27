@@ -53,6 +53,7 @@ public:
     QStringList getExtensions() const;
     QStringList getKingdoms() const;
     QColor getKingdomColor(const QString &kingdom) const;
+    QMap<QString, QColor> getSkillTypeColorMap() const;
     QStringList getChattingEasyTexts() const;
     QString getSetupString() const;
 

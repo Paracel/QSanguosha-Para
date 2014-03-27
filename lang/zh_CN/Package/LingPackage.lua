@@ -14,7 +14,7 @@ return {
 	["&neo_zhangfei"] = "张飞",
 	["designer:neo_zhangfei"] = "官方，凌天翼",
 	["tannang"] = "探囊",
-	[":tannang"] = "<font color=\"blue\"><b>锁定技。</b></font>你与其他角色的距离-X。（X为你已损失的体力值）",
+	[":tannang"] = "锁定技。你与其他角色的距离-X。（X为你已损失的体力值）",
 
 	["neo_zhaoyun"] = "赵云-新",
 	["&neo_zhaoyun"] = "赵云", 

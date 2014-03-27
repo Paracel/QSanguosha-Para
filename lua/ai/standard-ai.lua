@@ -3218,7 +3218,7 @@ sgs.ai_skill_choice.jianyan = function(self, choices)
 	if rand > 60 then return "trick"
 	elseif rand > 35 then return "red"
 	elseif rand > 10 then return "equip"
-	elseif rand > 8 then return "basic"
+	elseif rand > 2 then return "basic"
 	else return "black"
 	end
 end

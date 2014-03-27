@@ -1155,54 +1155,15 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 	local i = 1
 	local players = sgs.QList2Table(self.room:getAllPlayers())
 	self:sort(players, "defense")
+	local target_table = {}
 	for _, player in ipairs(players) do
-		if player:hasFlag("HuangenTarget") then
-			if not first_index and need_huangen(self, player) then
-				first_index = i
-			elseif not second_index and need_huangen(self, player) then
-				second_index = i
-			elseif not third_index and need_huangen(self, player) then
-				third_index = i
-			elseif not forth_index and need_huangen(self, player) then
-				forth_index = i
-			elseif need_huangen(self, player) then
-				fifth_index = i
-			end
-			if fifth_index then break end
+		if player:hasFlag("HuangenTarget") and need_huangen(self, player) then
+			table.insert(target_table, player:objectName())
+			if #target_table == self.player:getHp() then break end
 		end
-		i = i + 1
 	end
-	if not first_index then return "." end
-
-	local first, second, third, forth, fifth
-	if first_index then
-		first = players[first_index]:objectName()
-	end
-	if second_index then
-		second = players[second_index]:objectName()
-	end
-	if third_index then
-		third = players[third_index]:objectName()
-	end
-	if forth_index then
-		forth = players[forth_index]:objectName()
-	end
-	if fifth_index then
-		fifth = players[fifth_index]:objectName()
-	end
-
-	local hp = self.player:getHp()
-	if fifth_index and hp >= 5 then
-		return ("@HuangenCard=.->%s+%s+%s+%s+%s"):format(first, second, third, forth, fifth)
-	elseif forth_index and hp >= 4 then
-		return ("@HuangenCard=.->%s+%s+%s+%s"):format(first, second, third, forth)
-	elseif third_index and hp >= 3 then
-		return ("@HuangenCard=.->%s+%s+%s"):format(first, second, third)
-	elseif second_index and hp >= 2 then
-		return ("@HuangenCard=.->%s+%s"):format(first, second)
-	elseif first_index and hp >= 1 then
-		return ("@HuangenCard=.->%s"):format(first)
-	end
+	if #target_table == 0 then return "." end
+	return "@HuangenCard=.->" .. table.concat(target_table, "+")
 end
 
 sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)

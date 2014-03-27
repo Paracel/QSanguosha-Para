@@ -1738,6 +1738,7 @@ public:
             foreach (ServerPlayer *p, use.to)
                 room->setPlayerFlag(p, "HuangenTarget");
             try {
+                liuxie->tag["Huangen_user"] = QVariant::fromValue(use.card->toString());
                 room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
                 foreach (ServerPlayer *p, use.to) {
                     if (p->hasFlag("HuangenSpecified")) {

@@ -1189,6 +1189,55 @@ sgs.ai_skill_invoke.noslianying = function(self, data)
 	return true
 end
 
+local qingnang_skill = {}
+qingnang_skill.name = "qingnang"
+table.insert(sgs.ai_skills, qingnang_skill)
+qingnang_skill.getTurnUseCard = function(self)
+	if self.player:getHandcardNum() < 1 then return nil end
+	if self.player:usedTimes("QingnangCard") > 0 then return nil end
+
+	local cards = self.player:getHandcards()
+	cards = sgs.QList2Table(cards)
+
+	local compare_func = function(a, b)
+		local v1 = self:getKeepValue(a) + (a:isRed() and 50 or 0) + (a:isKindOf("Peach") and 50 or 0)
+		local v2 = self:getKeepValue(b) + (b:isRed() and 50 or 0) + (b:isKindOf("Peach") and 50 or 0)
+		return v1 < v2
+	end
+	table.sort(cards, compare_func)
+
+	local card_str = ("@QingnangCard=%d"):format(cards[1]:getId())
+	return sgs.Card_Parse(card_str)
+end
+
+sgs.ai_skill_use_func.QingnangCard = function(card, use, self)
+	local arr1, arr2 = self:getWoundedFriend(false, true)
+	local target = nil
+
+	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
+	if target then
+		use.card = card
+		if use.to then
+			use.to:append(target)
+		end
+		return
+	end
+	if self:getOverflow() > 0 and #arr2 > 0 then
+		for _, friend in ipairs(arr2) do
+			if not friend:hasSkills("hunzi|longhun") then
+				use.card = card
+				if use.to then use.to:append(friend) end
+				return
+			end
+		end
+	end
+end
+
+sgs.ai_use_priority.QingnangCard = 4.2
+sgs.ai_card_intention.QingnangCard = -100
+
+sgs.dynamic_value.benefit.QingnangCard = true
+
 function sgs.ai_skill_invoke.nosjushou(self, data)
 	local sbdiaochan = self.room:findPlayerBySkillName("lihun")
 	if sbdiaochan and sbdiaochan:faceUp() and not self:willSkipPlayPhase(sbdiaochan)

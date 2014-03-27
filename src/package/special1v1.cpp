@@ -783,12 +783,16 @@ bool PujiCard::targetFilter(const QList<const Player *> &targets, const Player *
 
 void PujiCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
-    int id = room->askForCardChosen(effect.from, effect.to, "he", "puji", false, Card::MethodDiscard);
-    room->throwCard(id, effect.to, effect.from);
+    bool spade = false;
+    if (effect.from->canDiscard(effect.to, "he")) {
+        int id = room->askForCardChosen(effect.from, effect.to, "he", "puji", false, Card::MethodDiscard);
+        room->throwCard(id, effect.to, effect.from);
+        spade = (Sanguosha->getCard(id)->getSuit() == Card::Spade);
+    }
 
-    if (effect.from->isAlive() && this->getSuit() == Card::Spade)
+    if (effect.from->isAlive() && Sanguosha->getCard(getEffectiveId())->getSuit() == Card::Spade)
         effect.from->drawCards(1, "puji");
-    if (effect.to->isAlive() && Sanguosha->getCard(id)->getSuit() == Card::Spade)
+    if (effect.to->isAlive() && spade)
         effect.to->drawCards(1, "puji");
 }
 

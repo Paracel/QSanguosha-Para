@@ -1473,6 +1473,43 @@ public:
     }
 };
 
+QingnangCard::QingnangCard() {
+}
+
+bool QingnangCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && to_select->isWounded();
+}
+
+bool QingnangCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
+    return targets.value(0, Self)->isWounded();
+}
+
+void QingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    ServerPlayer *target = targets.value(0, source);
+    room->cardEffect(this, source, target);
+}
+
+void QingnangCard::onEffect(const CardEffectStruct &effect) const{
+    effect.to->getRoom()->recover(effect.to, RecoverStruct(effect.from));
+}
+
+class Qingnang: public OneCardViewAsSkill {
+public:
+    Qingnang(): OneCardViewAsSkill("qingnang") {
+        filter_pattern = ".|.|.|hand!";
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return player->canDiscard(player, "h") && !player->hasUsed("QingnangCard");
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        QingnangCard *qingnang_card = new QingnangCard;
+        qingnang_card->addSubcard(originalCard->getId());
+        return qingnang_card;
+    }
+};
+
 NosLijianCard::NosLijianCard(): LijianCard(false) {
 }
 
@@ -2090,6 +2127,10 @@ NostalStandardPackage::NostalStandardPackage()
     nos_luxun->addSkill(new NosQianxun);
     nos_luxun->addSkill(new NosLianying);
 
+    General *nos_huatuo = new General(this, "nos_huatuo", "qun", 3);
+    nos_huatuo->addSkill(new Qingnang);
+    nos_huatuo->addSkill("jijiu");
+
     General *nos_lvbu = new General(this, "nos_lvbu", "qun");
     nos_lvbu->addSkill("wushuang");
 
@@ -2102,6 +2143,7 @@ NostalStandardPackage::NostalStandardPackage()
     addMetaObject<NosKurouCard>();
     addMetaObject<NosFanjianCard>();
     addMetaObject<NosLijianCard>();
+    addMetaObject<QingnangCard>();
 }
 
 NostalWindPackage::NostalWindPackage()

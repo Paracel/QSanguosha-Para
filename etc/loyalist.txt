@@ -68,11 +68,13 @@ liubei					bgm_pangtong			-1.5
 liubei					bgm_ganning				0.8
 liubei					kongrong				1.1
 liubei					tianfeng				-0.5
+liubei					kof_huatuo				1.1
 liubei					neo_zhangfei			0.6
 liubei					nos_xuchu				0.5
 liubei					nos_zhangfei			0.5
 liubei					nos_huangyueying		1.0
 liubei					nos_luxun				-0.5
+liubei					nos_huatuo				1.1
 liubei					nos_zhangjiao			0.9
 liubei					nos_guanxingzhangbao	0.9
 liushan					shenzhugeliang			-0.6
@@ -101,11 +103,13 @@ nos_liubei				bgm_pangtong			-1.5
 nos_liubei				bgm_ganning				0.8
 nos_liubei				kongrong				1.1
 nos_liubei				tianfeng				-0.5
+nos_liubei				kof_huatuo				1.1
 nos_liubei				neo_zhangfei			0.6
 nos_liubei				nos_xuchu				0.6
 nos_liubei				nos_zhangfei			0.5
 nos_liubei				nos_huangyueying		1.0
 nos_liubei				nos_luxun				-0.5
+nos_liubei				nos_huatuo				1.1
 nos_liubei				nos_zhangjiao			0.9
 nos_liubei				nos_guanxingzhangbao	0.9
 nos_zhangjiao			zhenji					0.7

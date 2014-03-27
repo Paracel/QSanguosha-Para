@@ -69,6 +69,13 @@ return {
 	["nostieji"] = "铁骑",
 	[":nostieji"] = "每当你指定【杀】的目标后，你可以进行判定：若结果为红色，该角色不能使用【闪】响应此【杀】。",
 
+	["nos_huangyueying"] = "黄月英-旧",
+	["&nos_huangyueying"] = "黄月英",
+	["nosjizhi"] = "集智",
+	[":nosjizhi"] = "每当你使用一张非延时锦囊牌时，你可以摸一张牌。",
+	["nosqicai"] = "奇才",
+	[":nosqicai"] = "锁定技。你使用锦囊牌无距离限制。",
+
 	["#nos_lvmeng"] = "白衣渡江",
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",
@@ -92,6 +99,11 @@ return {
 	["nosfanjian"] = "反间",
 	[":nosfanjian"] = "阶段技。你可以令一名其他角色选择一种花色，然后正面朝上获得你的一张手牌。若该牌花色与该角色所选花色不同，你对其造成1点伤害。",
 
+	["nos_huatuo"] = "华佗-旧",
+	["&nos_huatuo"] = "华佗",
+	["qingnang"] = "青囊",
+	[":qingnang"] = "阶段技。你可以弃置一张手牌并选择一名已受伤的角色：若如此做，该角色回复1点体力。",
+
 	["nos_lvbu"] = "吕布-旧",
 	["&nos_lvbu"] = "吕布",
 
@@ -99,13 +111,6 @@ return {
 	["&nos_diaochan"] = "貂蝉",
 	["noslijian"] = "离间",
 	[":noslijian"] = "阶段技。你可以弃置一张牌并选择两名男性角色：若如此做，视为其中一名角色对另一名角色使用一张【决斗】，此【决斗】不能被【无懈可击】响应。",
-
-	["nos_huangyueying"] = "黄月英-旧",
-	["&nos_huangyueying"] = "黄月英",
-	["nosjizhi"] = "集智",
-	[":nosjizhi"] = "每当你使用一张非延时锦囊牌时，你可以摸一张牌。",
-	["nosqicai"] = "奇才",
-	[":nosqicai"] = "锁定技。你使用锦囊牌无距离限制。",
 
 	["nos_caoren"] = "曹仁-旧",
 	["&nos_caoren"] = "曹仁",

@@ -236,8 +236,9 @@ return {
 
 	["#huatuo"] = "神医",
 	["huatuo"] = "华佗",
-	["qingnang"] = "青囊",
-	[":qingnang"] = "阶段技。你可以弃置一张手牌并选择一名已受伤的角色：若如此做，该角色回复1点体力。",
+	["illustrator:huatuo"] = "琛·美弟奇",
+	["chuli"] = "除疠",
+	[":chuli"] = "阶段技。若你有牌，你可以选择至少一名势力各不相同的有牌的其他角色：若如此做，你弃置你与这些角色各一张牌，然后以此法弃置黑桃牌的角色摸一张牌。",
 	["jijiu"] = "急救",
 	[":jijiu"] = "你的回合外，你可以将一张红色牌当【桃】使用。",
 
@@ -283,13 +284,13 @@ return {
 	["super_guanxing"] = "观星",
 	[":super_guanxing"] = "准备阶段开始时，你可以观看牌堆顶的五张牌，然后将任意数量的牌以任意顺序置于牌堆顶，将其余的牌以任意顺序置于牌堆底。",
 
-	["super_yuanshu"] = "袁术-测试",
+	["super_yuanshu"] = "SP袁术-测试",
 	["&super_yuanshu"] = "袁术",
 	["illustrator:super_yuanshu"] = "吴昊",
 	["super_yongsi"] = "庸肆",
 	[":super_yongsi"] = "锁定技。摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。",
 
-	["super_caoren"] = "曹仁-测试",
+	["super_caoren"] = "曹仁-旧-测试",
 	["&super_caoren"] = "曹仁",
 	["super_jushou"] = "据守",
 	[":super_jushou"] = "结束阶段开始时，你可以摸X张牌，然后将武将牌翻面。",
@@ -300,7 +301,6 @@ return {
 
 	["#gaodayihao"] = "神威如龙",
 	["gaodayihao"] = "高达一号",
-	["&gaodayihao"] = "神赵云",
 	["illustrator:gaodayihao"] = "巴萨小马",
 	["nosjuejing"] = "绝境",
 	[":nosjuejing"] = "锁定技。摸牌阶段，你不摸牌。每当你的手牌数变化后，若你的手牌数不为4，你须将手牌补至或弃置至四张。",

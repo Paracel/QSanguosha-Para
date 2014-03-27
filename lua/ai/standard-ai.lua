@@ -2460,54 +2460,70 @@ sgs.xiaoji_keep_value = {
 
 sgs.ai_cardneed.xiaoji = sgs.ai_cardneed.equip
 
-local qingnang_skill = {}
-qingnang_skill.name = "qingnang"
-table.insert(sgs.ai_skills, qingnang_skill)
-qingnang_skill.getTurnUseCard = function(self)
-	if self.player:getHandcardNum() < 1 then return nil end
-	if self.player:usedTimes("QingnangCard") > 0 then return nil end
+local chuli_skill = {}
+chuli_skill.name = "chuli"
+table.insert(sgs.ai_skills, chuli_skill)
+chuli_skill.getTurnUseCard = function(self, inclusive)
+	if not self.player:canDiscard(self.player, "he") or self.player:hasUsed("ChuliCard") then return nil end
 
-	local cards = self.player:getHandcards()
+	local cards = self.player:getCards("he")
 	cards = sgs.QList2Table(cards)
+	self:sortByUseValue(cards, true)
 
-	local compare_func = function(a, b)
-		local v1 = self:getKeepValue(a) + (a:isRed() and 50 or 0) + (a:isKindOf("Peach") and 50 or 0)
-		local v2 = self:getKeepValue(b) + (b:isRed() and 50 or 0) + (b:isKindOf("Peach") and 50 or 0)
-		return v1 < v2
-	end
-	table.sort(cards, compare_func)
-
-	local card_str = ("@QingnangCard=%d"):format(cards[1]:getId())
-	return sgs.Card_Parse(card_str)
-end
-
-sgs.ai_skill_use_func.QingnangCard = function(card, use, self)
-	local arr1, arr2 = self:getWoundedFriend(false, true)
-	local target = nil
-
-	if #arr1 > 0 and (self:isWeak(arr1[1]) or self:getOverflow() >= 1) and arr1[1]:getHp() < getBestHp(arr1[1]) then target = arr1[1] end
-	if target then
-		use.card = card
-		if use.to then
-			use.to:append(target)
+	if self:needToThrowArmor() then return sgs.Card_Parse("@ChuliCard=" .. self.player:getArmor():getEffectiveId()) end
+	for _, card in ipairs(cards) do
+		if not self:isValuableCard(card) then
+			if card:getSuit() == sgs.Card_Spade then return sgs.Card_Parse("@ChuliCard=" .. card:getEffectiveId()) end
 		end
-		return
 	end
-	if self:getOverflow() > 0 and #arr2 > 0 then
-		for _, friend in ipairs(arr2) do
-			if not friend:hasSkills("hunzi|longhun") then
-				use.card = card
-				if use.to then use.to:append(friend) end
-				return
-			end
+	for _, card in ipairs(cards) do
+		if not self:isValuableCard(card) and not (self.player:hasSkill("jijiu") and card:isRed() and self:getOverflow() < 2) then
+			if card:getSuit() == sgs.Card_Spade then return sgs.Card_Parse("@ChuliCard=" .. card:getEffectiveId()) end
 		end
 	end
 end
 
-sgs.ai_use_priority.QingnangCard = 4.2
-sgs.ai_card_intention.QingnangCard = -100
+sgs.ai_skill_use_func.ChuliCard = function(card, use, self)
+	self.chuli_id_choice = {}
+	local players = self:findPlayerToDiscard("he", false, true, nil, true)
+	local kingdoms = {}
+	local targets = {}
+	for _, player in ipairs(players) do
+		if self:isFriend(player) and not table.contains(kingdoms, player:getKingdom()) then
+			table.insert(targets, player)
+			table.insert(kingdoms, player:getKingdom())
+		end
+	end
+	for _, player in ipairs(players) do
+		if not table.contains(targets, player, true) and not table.contains(kingdoms, player:getKingdom()) then
+			table.insert(targets, player)
+			table.insert(kingdoms, player:getKingdom())
+		end
+	end
+	if #targets == 0 then return end
+	for _, p in ipairs(targets) do
+		local id = self:askForCardChosen(p, "he", "dummyreason", sgs.Card_MethodDiscard)
+		local chosen_card
+		if id then chosen_card = sgs.Sanguosha:getCard(id) end
+		if id and chosen_card and (self:isFriend(p) or not p:hasEquip(chosen_card) or sgs.Sanguosha:getCard(id):getSuit() ~= sgs.Card_Spade) then
+			if not use.card then use.card = card end
+			self.chuli_id_choice[p:objectName()] = id
+			if use.to then use.to:append(p) end
+		end
+	end
+end
 
-sgs.dynamic_value.benefit.QingnangCard = true
+sgs.ai_use_value.ChuliCard = 5
+sgs.ai_use_priority.ChuliCard = 4.6
+
+sgs.ai_card_intention.ChuliCard = function(self, card, from, tos)
+	for _, to in ipairs(tos) do
+		if self.chuli_id_choice[to:objectName()] then
+			local em_prompt = { "cardChosen", "chuli", tostring(self.chuli_id_choice[to:objectName()]), from:objectName(), to:objectName() }
+			sgs.ai_choicemade_filter.cardChosen.snatch(self, nil, em_prompt)
+		end
+	end
+end
 
 sgs.ai_view_as.jijiu = function(card, player, card_place)
 	local suit = card:getSuitString()

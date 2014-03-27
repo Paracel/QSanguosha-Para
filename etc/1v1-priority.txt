@@ -44,7 +44,7 @@ taishici				50
 zhoutai					55					
 lusu					60					
 erzhang					16					
-huatuo					63					
+huatuo					65					
 lvbu					77					
 diaochan				72					
 yuanshao				21					
@@ -204,6 +204,7 @@ nos_lvmeng				63
 nos_huanggai			55					
 nos_zhouyu				82					
 nos_luxun				57					
+nos_huatuo				63					
 nos_lvbu				76					
 nos_diaochan			72					
 nos_caoren				61					

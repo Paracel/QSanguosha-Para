@@ -227,24 +227,31 @@ void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets)
         delete duel;
 }
 
-QingnangCard::QingnangCard() {
+ChuliCard::ChuliCard() {
 }
 
-bool QingnangCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select->isWounded();
+bool ChuliCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (to_select == Self) return false;
+    QSet<QString> kingdoms;
+    foreach (const Player *p, targets)
+        kingdoms << p->getKingdom();
+    return Self->canDiscard(to_select, "he") && !kingdoms.contains(to_select->getKingdom());
 }
 
-bool QingnangCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
-    return targets.value(0, Self)->isWounded();
-}
+void ChuliCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    QList<ServerPlayer *> draw_card;
+    if (Sanguosha->getCard(getEffectiveId())->getSuit() == Card::Spade)
+        draw_card << source;
+    foreach (ServerPlayer *target, targets) {
+        if (!source->canDiscard(target, "he")) continue;
+        int id = room->askForCardChosen(source, target, "he", "chuli", false, Card::MethodDiscard);
+        room->throwCard(id, target, source);
+        if (Sanguosha->getCard(id)->getSuit() == Card::Spade)
+            draw_card << target;
+    }
 
-void QingnangCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    ServerPlayer *target = targets.value(0, source);
-    room->cardEffect(this, source, target);
-}
-
-void QingnangCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->getRoom()->recover(effect.to, RecoverStruct(effect.from));
+    foreach (ServerPlayer *p, draw_card)
+        room->drawCards(p, 1, "chuli");
 }
 
 LiuliCard::LiuliCard() {

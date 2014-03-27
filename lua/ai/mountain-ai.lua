@@ -1013,7 +1013,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		for _, askill in ipairs(("hongyuan|drzhiheng|fangquan|mizhao|quhu|fanjian|nosfanjian|junxing|hengzheng|duanliang|guose|baobian|ganlu|" ..
 								"tiaoxin|zhaolie|chuanxin|fengshi|nostieji|moukui|liegong|mengjin|tieji|kofliegong|wushuang|drwushuang|niaoxiang|" ..
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|nosguhuo|xuanhuo|nosxuanhuo|qiangxi|huangen|nosjujian|lieren|pojun|" ..
-								"yishi|danshou|qixi|yinling|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|qiangwu|jingce|shengxi|" ..
+								"yishi|danshou|chuli|yinling|qixi|puji|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|qiangwu|jingce|shengxi|" ..
 								"wangxi|luoyi|nosluoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|longhun|jiuchi|qingcheng|" ..
 								"shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|qianxi|jujian|shensu|luanji|zhijian|shuangxiong|" ..
 								"fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|" ..

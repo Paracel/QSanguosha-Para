@@ -1966,20 +1966,20 @@ public:
     }
 };
 
-class Qingnang: public OneCardViewAsSkill {
+class Chuli: public OneCardViewAsSkill {
 public:
-    Qingnang(): OneCardViewAsSkill("qingnang") {
-        filter_pattern = ".|.|.|hand!";
+    Chuli(): OneCardViewAsSkill("chuli") {
+        filter_pattern = ".!";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->canDiscard(player, "h") && !player->hasUsed("QingnangCard");
+        return player->canDiscard(player, "he") && !player->hasUsed("ChuliCard");
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
-        QingnangCard *qingnang_card = new QingnangCard;
-        qingnang_card->addSubcard(originalCard->getId());
-        return qingnang_card;
+        ChuliCard *chuli_card = new ChuliCard;
+        chuli_card->addSubcard(originalCard->getId());
+        return chuli_card;
     }
 };
 
@@ -2366,7 +2366,7 @@ void StandardPackage::addGenerals() {
 
     // Qun
     General *huatuo = new General(this, "huatuo", "qun", 3); // QUN 001
-    huatuo->addSkill(new Qingnang);
+    huatuo->addSkill(new Chuli);
     huatuo->addSkill(new Jijiu);
 
     General *lvbu = new General(this, "lvbu", "qun", 5); // QUN 002
@@ -2399,7 +2399,7 @@ void StandardPackage::addGenerals() {
     addMetaObject<KurouCard>();
     addMetaObject<LijianCard>();
     addMetaObject<FanjianCard>();
-    addMetaObject<QingnangCard>();
+    addMetaObject<ChuliCard>();
     addMetaObject<LiuliCard>();
     addMetaObject<LianyingCard>();
     addMetaObject<JijiangCard>();

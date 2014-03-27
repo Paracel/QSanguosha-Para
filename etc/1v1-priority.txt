@@ -200,6 +200,7 @@ nos_zhangfei			23
 nos_zhaoyun				68					
 nos_machao				65					
 nos_huangyueying		61					
+nos_ganning				69					
 nos_lvmeng				63					
 nos_huanggai			55					
 nos_zhouyu				82					

@@ -1816,7 +1816,67 @@ function sgs.ai_cardneed.qixi(to, card)
 	return card:isBlack()
 end
 
--- @todo: KuRou AI
+local function getFenweiValue(self, who, card, from)
+	if not self:hasTrickEffective(card, who, from) then return 0 end
+	if card:isKindOf("AOE") then
+		if not self:isFriend(who) then return 0 end
+		local value = self:getAoeValueTo(card, who, from)
+		if value < 0 then return -value / 30 end
+	elseif card:isKindOf("GodSalvation") then
+		if not self:isEnemy(who) or not who:isWounded() or who:getHp() >= getBestHp(who) then return 0 end
+		if self:isWeak(who) then return 1.2 end
+		if who:hasSkills(sgs.masochism_skill) then return 1.0 end
+		return 0.9
+	elseif card:isKindOf("AmazingGrace") then
+		if not self:isEnemy(who) or hasManjuanEffect(who) then return 0 end
+		local v = 1.2
+		local p = self.room:getCurrent()
+		while p:objectName() ~= who:objectName() do
+			v = v * 0.9
+			p = p:getNextAlive()
+		end
+		return v
+	end
+	return 0
+end
+
+sgs.ai_skill_use["@@fenwei"] = function(self, prompt)
+	local liuxie = self.room:findPlayerBySkillName("huangen")
+	if liuxie and self:isFriend(liuxie) and not self:isWeak(liuxie) then return "." end
+
+	local card = self.player:getTag("fenwei"):toCardUse().card
+	local from = self.player:getTag("fenwei"):toCardUse().from
+
+	local players = sgs.QList2Table(self.room:getAllPlayers())
+	self:sort(players, "defense")
+	local target_table = {}
+	local targetslist = self.player:property("fenwei_targets"):toString():split("+")
+	local value = 0
+	for _, player in ipairs(players) do
+		if not player:hasSkill("danlao") and table.contains(targetslist, player:objectName()) then
+			local val = getFenweiValue(self, player, card, from)
+			if val > 0 then
+				value = value + val
+				table.insert(target_table, player:objectName())
+			end
+		end
+	end
+	if #target_table == 0 or value / (self.room:alivePlayerCount() - 1) < 0.55 then return "." end
+	return "@FenweiCard=.->" .. table.concat(target_table, "+")
+end
+
+sgs.ai_card_intention.FenweiCard = function(self, card, from, tos)
+	local cardx = self.player:getTag("fenwei"):toCardUse().card
+	local from = self.player:getTag("fenwei"):toCardUse().from
+	if not cardx then return end
+	local intention = (cardx:isKindOf("AOE") and -50 or 50)
+	for _, to in ipairs(tos) do
+		if to:hasSkill("danlao") or not self:hasTrickEffective(cardx, to, from) then continue end
+		if cardx:isKindOf("GodSalvation") and not to:isWounded() then continue end
+		sgs.updateIntention(from, to, intention)
+	end
+end
+
 local function getKurouCard(self, not_slash)
 	local card_id
 	local hold_crossbow = (self:getCardsNum("Slash") > 1)

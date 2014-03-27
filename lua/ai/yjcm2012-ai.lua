@@ -154,7 +154,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			friend_null = friend_null + self:getCardsNum("Nullification")
 			local sj_num = self:getCardsNum(use.card:isKindOf("SavageAssault") and "Slash" or "Jink")
 
-			if not self:hasTrickEffective(use.card, self.player, from) then return false end
+			if not self:hasTrickEffective(use.card, self.player, from) or table.contains(use.nullified_list, self.player:objectName()) then return false end
 			if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, from) then return false end
 			if use.from:hasSkill("drwushuang") and self.player:getCardCount() == 1 and self:hasLoseHandcardEffective() then return true end
 			if sj_num == 0 and friend_null <= 0 then
@@ -167,7 +167,7 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 			end
 		elseif self:isEnemy(use.from) then
 			if use.card:isKindOf("FireAttack") and not use.from:isKongcheng() then
-				if not self:hasTrickEffective(use.card, self.player) then return false end
+				if not self:hasTrickEffective(use.card, self.player) or table.contains(use.nullified_list, self.player:objectName()) then return false end
 				if not self:damageIsEffective(self.player, sgs.DamageStruct_Fire, use.from) then return false end
 				if (self.player:hasArmorEffect("vine") or self.player:getMark("@gale") > 0) and use.from:getHandcardNum() > 3
 					and not (use.from:hasSkill("hongyan") and self:hasSuit("spade")) then
@@ -177,11 +177,11 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 				end
 			elseif (use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement"))
 					and self:getCardsNum("Peach") == self.player:getHandcardNum() and not self.player:isKongcheng() then
-				if not self:hasTrickEffective(use.card, self.player) then return false end
+				if not self:hasTrickEffective(use.card, self.player) or table.contains(use.nullified_list, self.player:objectName()) then return false end
 				return not self:doNotDiscard(use.from)
 			elseif use.card:isKindOf("Duel") then
 				if self:getCardsNum("Slash") == 0 or self:getCardsNum("Slash") < getCardsNum("Slash", use.from, self.player) then
-					if not self:hasTrickEffective(use.card, self.player) then return false end
+					if not self:hasTrickEffective(use.card, self.player) or table.contains(use.nullified_list, self.player:objectName()) then return false end
 					if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, use.from) then return false end
 					return not self:doNotDiscard(use.from)
 				end

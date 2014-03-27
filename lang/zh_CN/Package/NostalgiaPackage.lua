@@ -76,6 +76,9 @@ return {
 	["nosqicai"] = "奇才",
 	[":nosqicai"] = "锁定技。你使用锦囊牌无距离限制。",
 
+	["nos_ganning"] = "甘宁-旧",
+	["&nos_ganning"] = "甘宁",
+
 	["#nos_lvmeng"] = "白衣渡江",
 	["nos_lvmeng"] = "吕蒙-旧",
 	["&nos_lvmeng"] = "吕蒙",

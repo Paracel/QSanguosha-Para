@@ -73,6 +73,7 @@ liubei					neo_zhangfei			0.6
 liubei					nos_xuchu				0.5
 liubei					nos_zhangfei			0.5
 liubei					nos_huangyueying		1.0
+liubei					nos_ganning				0.8
 liubei					nos_luxun				-0.5
 liubei					nos_huatuo				1.1
 liubei					nos_zhangjiao			0.9
@@ -108,6 +109,7 @@ nos_liubei				neo_zhangfei			0.6
 nos_liubei				nos_xuchu				0.6
 nos_liubei				nos_zhangfei			0.5
 nos_liubei				nos_huangyueying		1.0
+nos_liubei				nos_ganning				0.8
 nos_liubei				nos_luxun				-0.5
 nos_liubei				nos_huatuo				1.1
 nos_liubei				nos_zhangjiao			0.9

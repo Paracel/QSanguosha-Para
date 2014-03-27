@@ -1504,6 +1504,50 @@ public:
     }
 };
 
+class FenweiViewAsSkill: public ZeroCardViewAsSkill {
+public:
+    FenweiViewAsSkill():ZeroCardViewAsSkill("fenwei") {
+        response_pattern = "@@fenwei";
+    }
+
+    virtual const Card *viewAs() const{
+        return new FenweiCard;
+    }
+};
+
+class Fenwei: public TriggerSkill {
+public:
+    Fenwei(): TriggerSkill("fenwei") {
+        events << TargetSpecifying;
+        view_as_skill = new FenweiViewAsSkill;
+        frequency = Limited;
+        limit_mark = "@fenwei";
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        ServerPlayer *ganning = room->findPlayerBySkillName(objectName());
+        if (!ganning || ganning->getMark("@fenwei") <= 0) return false;
+
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.to.length() <= 1 || !use.card->isNDTrick())
+            return false;
+
+        QStringList target_list;
+        foreach (ServerPlayer *p, use.to)
+            target_list << p->objectName();
+        room->setPlayerProperty(ganning, "fenwei_targets", target_list.join("+"));
+        ganning->tag["fenwei"] = data;
+        room->askForUseCard(ganning, "@@fenwei", "@fenwei-card");
+        data = ganning->tag["fenwei"];
+
+        return false;
+    }
+};
+
 class Kurou: public OneCardViewAsSkill {
 public:
     Kurou(): OneCardViewAsSkill("kurou") {
@@ -2333,6 +2377,7 @@ void StandardPackage::addGenerals() {
 
     General *ganning = new General(this, "ganning", "wu"); // WU 002
     ganning->addSkill(new Qixi);
+    ganning->addSkill(new Fenwei);
 
     General *lvmeng = new General(this, "lvmeng", "wu"); // WU 003
     lvmeng->addSkill(new Keji);
@@ -2404,6 +2449,7 @@ void StandardPackage::addGenerals() {
     addMetaObject<LianyingCard>();
     addMetaObject<JijiangCard>();
     addMetaObject<YijiCard>();
+    addMetaObject<FenweiCard>();
     addMetaObject<JianyanCard>();
 
     skills << new Xiaoxi << new NonCompulsoryInvalidity << new Jianyan;

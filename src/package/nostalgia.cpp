@@ -2113,6 +2113,9 @@ NostalStandardPackage::NostalStandardPackage()
     nos_huangyueying->addSkill(new NosJizhi);
     nos_huangyueying->addSkill(new NosQicai);
 
+    General *nos_ganning = new General(this, "nos_ganning", "wu");
+    nos_ganning->addSkill("qixi");
+
     General *nos_lvmeng = new General(this, "nos_lvmeng", "wu");
     nos_lvmeng->addSkill("keji");
 

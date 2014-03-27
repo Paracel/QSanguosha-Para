@@ -1548,10 +1548,17 @@ function SmartAI:useCardAmazingGrace(card, use)
 		suf = 0.6
 		coeff = 0.6
 	end
+
+	local pos_ind, neg_ind = 1, -1
+	local ganning = self.room:findPlayerBySkillName("fenwei")
+	if ganning and ganning:getMark("@fenwei") > 0 then
+		if self:isEnemy(ganning) then pos_ind = 0.9 elseif self:isFriend(ganning) then neg_ind = -0.9 end
+	end
+
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		local index = 0
 		if self:hasTrickEffective(card, player, self.player) then
-			if self:isFriend(player) then index = 1 elseif self:isEnemy(player) then index = -1 end
+			if self:isFriend(player) then index = pos_ind elseif self:isEnemy(player) then index = neg_ind end
 		end
 		value = value + index * suf
 		if value < 0 then return end
@@ -1630,6 +1637,14 @@ function SmartAI:willUseGodSalvation(card)
 			end
 		end
 	end
+
+	if self.room:alivePlayerCount() > 2 then
+		local ganning = self.room:findPlayerBySkillName("fenwei")
+		if ganning and ganning:getMark("@fenwei") > 0 then
+			if self:isEnemy(ganning) then bad = bad * 1.1 elseif self:isFriend(ganning) then good = good * 1.1 end
+		end
+	end
+
 	return (good - bad > 2 and wounded_friend > 0)  or (wounded_friend == 0 and wounded_enemy == 0 and self.player:hasSkills("nosjizhi|jizhi"))
 end
 

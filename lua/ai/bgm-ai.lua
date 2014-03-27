@@ -1118,11 +1118,11 @@ sgs.ai_card_intention.FuluanCard = function(self, card, from, tos)
 end
 
 local function need_huangen(self, who)
-	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
+	local card = sgs.Card_Parse(self.player:getTag("huangen"):toString())
 	if card == nil then return false end
-	local from = self.room:getCurrent()
+	local from = self.player:getTag("huangen"):toCardUse().from
 	if self:isEnemy(who) then
-		if card:isKindOf("GodSalvation") and who:isWounded() and self:hasTrickEffective(card, who, from) then
+		if card:isKindOf("GodSalvation") and who:isWounded() and who:getHp() < getBestHp(who) and self:hasTrickEffective(card, who, from) then
 			if hasManjuanEffect(who) then return true end
 			if self:isWeak(who) then return true end
 			if who:hasSkills(sgs.masochism_skill) then return true end
@@ -1150,14 +1150,13 @@ local function need_huangen(self, who)
 end
 
 sgs.ai_skill_use["@@huangen"] = function(self, prompt)
-	local card = sgs.Card_Parse(self.player:getTag("Huangen_user"):toString())
-	local first_index, second_index, third_index, forth_index, fifth_index
-	local i = 1
+	local card = self.player:getTag("huangen"):toCardUse().card
 	local players = sgs.QList2Table(self.room:getAllPlayers())
 	self:sort(players, "defense")
 	local target_table = {}
+	local targetslist = self.player:property("huangen_targets"):toString():split("+")
 	for _, player in ipairs(players) do
-		if player:hasFlag("HuangenTarget") and need_huangen(self, player) then
+		if table.contains(targetslist, player:objectName()) and need_huangen(self, player) then
 			table.insert(target_table, player:objectName())
 			if #target_table == self.player:getHp() then break end
 		end
@@ -1167,7 +1166,7 @@ sgs.ai_skill_use["@@huangen"] = function(self, prompt)
 end
 
 sgs.ai_card_intention.HuangenCard = function(self, card, from, tos)
-	local cardx = sgs.Card_Parse(from:getTag("Huangen_user"):toString())
+	local cardx = self.player:getTag("huangen"):toCardUse().card
 	if not cardx then return end
 	for _, to in ipairs(tos) do
 		local intention = -80

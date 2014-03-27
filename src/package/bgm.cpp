@@ -1246,7 +1246,7 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (triggerEvent == Damaged) {
             if (player->getMark("@fenyong") == 0 && room->askForSkillInvoke(player, objectName())) {
-                player->gainMark("@fenyong");
+                room->addPlayerMark(player, "@fenyong");
                 room->broadcastSkillInvoke(objectName(), 1);
             }
         } else if (triggerEvent == DamageInflicted) {
@@ -1320,7 +1320,7 @@ public:
             room->sendLog(log);
             room->notifySkillInvoked(player, objectName());
 
-            xiahou->loseMark("@fenyong");
+            room->removePlayerMark(xiahou, "@fenyong");
             QList<ServerPlayer *> targets;
             foreach (ServerPlayer *p, room->getOtherPlayers(xiahou))
                 if (xiahou->canSlash(p, NULL, false))
@@ -1696,11 +1696,15 @@ HuangenCard::HuangenCard() {
 }
 
 bool HuangenCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.length() < Self->getHp() && to_select->hasFlag("HuangenTarget");
+    if (targets.length() >= Self->getHp()) return false;
+    QStringList targetslist = Self->property("huangen_targets").toString().split("+");
+    return targetslist.contains(to_select->objectName());
 }
 
 void HuangenCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->setFlags("HuangenSpecified");
+    CardUseStruct use = effect.from->tag["huangen"].value<CardUseStruct>();
+    use.nullified_list << effect.to->objectName();
+    effect.from->tag["huangen"] = QVariant::fromValue(use);
     effect.to->drawCards(1, "huangen");
 }
 
@@ -1722,47 +1726,21 @@ public:
         view_as_skill = new HuangenViewAsSkill;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liuxie, QVariant &data) const{
+        if (liuxie->getHp() <= 0) return false;
+        CardUseStruct use = data.value<CardUseStruct>();
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        ServerPlayer *liuxie = room->findPlayerBySkillName(objectName());
-        if (liuxie == NULL) return false;
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (player != liuxie || liuxie->getHp() <= 0) return false;
-            if (use.to.length() <= 1 || !use.card->isKindOf("TrickCard"))
-                return false;
+        if (use.to.length() <= 1 || !use.card->isNDTrick())
+            return false;
 
-            foreach (ServerPlayer *p, use.to)
-                room->setPlayerFlag(p, "HuangenTarget");
-            try {
-                liuxie->tag["Huangen_user"] = QVariant::fromValue(use.card->toString());
-                room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
-                foreach (ServerPlayer *p, use.to) {
-                    if (p->hasFlag("HuangenSpecified")) {
-                        use.nullified_list << p->objectName();
-                        p->setFlags("-HuangenSpecified");
-                    }
-                    room->setPlayerFlag(p, "-HuangenTarget");
-                }
-                data = QVariant::fromValue(use);
-            }
-            catch (TriggerEvent triggerEvent) {
-                if (triggerEvent == StageChange || triggerEvent == TurnBroken) {
-                    foreach (ServerPlayer *p, use.to) {
-                        if (p->hasFlag("HuangenSpecified")) {
-                            use.nullified_list << p->objectName();
-                            p->setFlags("-HuangenSpecified");
-                        }
-                        room->setPlayerFlag(p, "-HuangenTarget");
-                    }
-                    data = QVariant::fromValue(use);
-                }
-                throw triggerEvent;
-            }
-        }
+        QStringList target_list;
+        foreach (ServerPlayer *p, use.to)
+            target_list << p->objectName();
+        room->setPlayerProperty(liuxie, "huangen_targets", target_list.join("+"));
+        liuxie->tag["huangen"] = data;
+        room->askForUseCard(liuxie, "@@huangen", "@huangen-card");
+        data = liuxie->tag["huangen"];
+
         return false;
     }
 };

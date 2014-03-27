@@ -49,9 +49,10 @@ zhenji xuhuang							60
 zhenji zhugeliang						70
 zhenji huangyueying						55
 zhenji wolong							57
-zhenji ganning							58
+zhenji ganning							59
 zhenji xiaoqiao							16
 zhenji bgm_ganning						60
+zhenji nos_ganning						58
 xiahouyuan sunshangxiang				59
 xiahouyuan lingtong						58
 xiahouyuan yuanshu						33
@@ -245,13 +246,14 @@ sunquan liaohua							60
 sunquan nos_huanggai					53
 sunquan nos_luxun						51
 sunquan nos_lingtong					53
-ganning luxun							70
-ganning sunshangxiang					54
+ganning luxun							71
+ganning sunshangxiang					55
 ganning xiaoqiao						22
-ganning lingtong						53
+ganning lingtong						54
 ganning bgm_ganning						40
-ganning nos_luxun						70
-ganning nos_lingtong					53
+ganning nos_ganning						5
+ganning nos_luxun						71
+ganning nos_lingtong					54
 ganning nos_xushu						2
 lvmeng shensimayi						48
 lvmeng masu								59
@@ -274,8 +276,10 @@ daqiao nos_zhangchunhua					77
 luxun wuguotai							79
 luxun xunyou							52
 luxun liuxie 							52
+luxun bgm_ganning						65
 luxun neo_zhangfei						52
 luxun nos_zhangfei						52
+luxun nos_ganning						70
 sunshangxiang lusu						54
 sunshangxiang diaochan					53
 sunshangxiang shenzhaoyun				58
@@ -294,6 +298,7 @@ sunshangxiang nos_caocao				53
 sunshangxiang nos_simayi				52
 sunshangxiang nos_guojia				85
 sunshangxiang nos_guanyu				52
+sunshangxiang nos_ganning				54
 sunshangxiang nos_lingtong				59
 sunshangxiang nos_handang				56
 sunjian zhoutai							52
@@ -323,6 +328,7 @@ xiaoqiao neo_guanyu						53
 xiaoqiao nos_xiahoudun					30
 xiaoqiao nos_guanyu						53
 xiaoqiao nos_machao						56
+xiaoqiao nos_ganning					22
 xiaoqiao nos_zhangjiao					20
 xiaoqiao nos_guanxingzhangbao			64
 xiaoqiao nos_madai						35
@@ -387,6 +393,7 @@ lingtong heg_caohong					53
 lingtong vs_guanyu						52
 lingtong neo_guanyu						52
 lingtong nos_guanyu						52
+lingtong nos_ganning					53
 lingtong nos_lingtong					57
 lingtong nos_handang					55
 masu zhonghui							54
@@ -470,6 +477,7 @@ bgm_lvmeng nos_guojia					79
 bgm_lvmeng nos_zhangfei					63
 bgm_lvmeng nos_lvmeng					8
 bgm_lvmeng nos_zhoutai					59
+bgm_ganning nos_ganning					40
 bgm_ganning nos_lingtong				54
 diy_wangyuanji vs_guanyu				33
 diy_wangyuanji neo_guanyu				33
@@ -534,6 +542,9 @@ nos_zhangfei nos_lvmeng					58
 nos_zhangfei nos_luxun					52
 nos_zhangfei nos_guanxingzhangbao		11
 nos_machao nos_madai					78
+nos_ganning nos_luxun					70
+nos_ganning nos_lingtong				53
+nos_ganning nos_xushu					2
 nos_lvmeng nos_zhoutai					57
 nos_zhouyu nos_zhangliao				35
 nos_lingtong nos_handang				55

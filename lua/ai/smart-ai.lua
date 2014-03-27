@@ -4659,7 +4659,7 @@ function SmartAI:getAoeValueTo(card, to, from)
 					value = value + 30
 				end
 				if to:hasSkill("shenfen") and to:hasSkill("kuangbao") then
-					value = value + math.min(25, to:getMark("@wrath")*5)
+					value = value + math.min(25, to:getMark("@wrath") * 5)
 				end
 			end
 		end
@@ -4806,6 +4806,13 @@ function SmartAI:getAoeValue(card, player)
 
 	local xiahou = self.room:findPlayerBySkillName("yanyu")
 	if xiahou and self:isEnemy(xiahou) and xiahou:getMark("YanyuDiscard2") > 0 then bad = bad + 50 end
+
+	if self.room:alivePlayerCount() > 2 then
+		local ganning = self.room:findPlayerBySkillName("fenwei")
+		if ganning and ganning:getMark("@fenwei") > 0 then
+			if self:isEnemy(ganning) then bad = bad * 1.1 elseif self:isFriend(ganning) then good = good * 1.1 end
+		end
+	end
 
 	return good - bad
 end

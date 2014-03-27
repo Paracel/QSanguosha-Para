@@ -2,6 +2,42 @@ sgs.ai_skill_invoke.cv_caopi = function(self, data)
 	return math.random(0, 2) == 0
 end
 
+sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_caopi
+sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_caopi
+sgs.ai_skill_invoke.cv_nos_ganning = sgs.ai_skill_invoke.cv_caopi
+sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_caopi
+sgs.ai_skill_invoke.cv_zhugejin = sgs.ai_skill_invoke.cv_caopi
+
+sgs.ai_skill_invoke.cv_shencaocao = function(self, data)
+	return math.random(0, 3) == 0
+end
+
+sgs.ai_skill_invoke.cv_panfeng = sgs.ai_skill_invoke.cv_shencaocao
+
+sgs.ai_skill_invoke.cv_zhugeke = function(self, data)
+	return math.random(0, 4) == 0
+end
+
+sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_xushu = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_fazheng = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_guanxingzhangbao = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_wangyi = sgs.ai_skill_invoke.cv_zhugeke
+
+sgs.ai_skill_invoke.cv_nos_huanggai = function(self, data)
+	return math.random(0, 6) == 0
+end
+
+sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_luxun = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_guojia = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_guanyu = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_xiahoudun = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_caocao = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_simayi = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_lvmeng = sgs.ai_skill_invoke.cv_huanggai
+
 sgs.ai_skill_invoke.cv_zhugeliang = function(self, data)
 	if math.random(0, 2) > 0 then return false end
 	if math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhugeliang = "tw_zhugeliang"
@@ -32,6 +68,9 @@ sgs.ai_skill_invoke.cv_caiwenji = function(self, data)
 	return lord:getKingdom() == "wei"
 end
 
+sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
+sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
+
 sgs.ai_skill_invoke.cv_machao = function(self, data)
 	local lord = self.room:getLord()
 	if lord and not self.player:getGeneral2Name() == "machao"
@@ -54,14 +93,6 @@ sgs.ai_skill_invoke.cv_diaochan = function(self, data)
 	else sgs.ai_skill_choice.cv_diaochan = "sp_diaochan" end
 	return true
 end
-
-sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
-sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
-
-sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_nos_ganning = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_caopi
 
 sgs.ai_skill_invoke.cv_nos_daqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
@@ -100,27 +131,9 @@ sgs.ai_skill_invoke.cv_nos_lvbu = function(self, data)
 	return true
 end
 
-sgs.ai_skill_invoke.cv_nos_huanggai = function(self, data)
-	return math.random(0, 4) == 0
-end
-
-sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_luxun = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_guojia = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_zhugeke = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_madai = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_panfeng = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_xushu = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_fazheng = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_guanyu = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_xiahoudun = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_huanggai
-
-sgs.ai_skill_invoke.cv_zhugejin = function(self, data)
-	return math.random(0, 4) > 1
-end
-
-sgs.ai_skill_invoke.cv_shencaocao = function(self, data)
-	return math.random(0, 3) == 0
+sgs.ai_skill_invoke.cv_madai = function(self, data)
+	if math.random(0, 3) > 0 then return false
+	elseif math.random(0, 3) > 0 then sgs.ai_skill_choice.cv_madai = "heg_madai"
+	else sgs.ai_skill_choice.cv_madai = "ol_madai" end
+	return true
 end

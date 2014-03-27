@@ -2227,6 +2227,17 @@ OLPackage::OLPackage()
     ol_xushu->addSkill("wuyan");
     ol_xushu->addSkill("jujian");
 
+    General *ol_guanxingzhangbao = new General(this, "ol_guanxingzhangbao", "shu", 4, true, true);
+    ol_guanxingzhangbao->addSkill("fuhun");
+
+    General *ol_madai = new General(this, "ol_madai", "shu", 4, true, true);
+    ol_madai->addSkill("mashu");
+    ol_madai->addSkill("qianxi");
+
+    General *ol_wangyi = new General(this, "ol_wangyi", "wei", 3, false, true);
+    ol_wangyi->addSkill("zhenlie");
+    ol_wangyi->addSkill("miji");
+
     addMetaObject<AocaiCard>();
     addMetaObject<DuwuCard>();
     addMetaObject<QingyiCard>();
@@ -2296,6 +2307,19 @@ TaiwanSPPackage::TaiwanSPPackage()
 
     General *tw_xiahoudun = new General(this, "tw_xiahoudun", "wei", 4, true, true);
     tw_xiahoudun->addSkill("nosganglie");
+
+    General *tw_caocao = new General(this, "tw_caocao$", "wei", 4, true, true);
+    tw_caocao->addSkill("nosjianxiong");
+    tw_caocao->addSkill("hujia");
+
+    General *tw_simayi = new General(this, "tw_simayi", "wei", 3, true, true);
+    tw_simayi->addSkill("nosfankui");
+    tw_simayi->addSkill("nosguicai");
+
+    General *tw_lvmeng = new General(this, "tw_lvmeng", "wu", 4, true, true);
+    tw_lvmeng->addSkill("keji");
+
+    // Liu Bei, Zhang Fei, Sun Quan, Zhou Yu, Sun Shangxiang, Hua Tuo
 }
 
 ADD_PACKAGE(TaiwanSP)

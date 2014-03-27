@@ -128,6 +128,19 @@ return {
 	["&tw_xuchu"] = "许褚", 
 	["illustrator:tw_xuchu"] = "",
 
+	["tw_caocao"] = "台版曹操",
+	["&tw_caocao"] = "曹操",
+	["illustrator:tw_caocao"] = "",
+
+	["tw_simayi"] = "台版司马懿",
+	["&tw_simayi"] = "司马懿",
+	["illustrator:tw_simayi"] = "",
+
+	["#tw_lvmeng"] = "白衣渡江",
+	["tw_lvmeng"] = "台版吕蒙",
+	["&tw_lvmeng"] = "吕蒙",
+	["illustrator:tw_lvmeng"] = "",
+
 	["wz_daqiao"] = "王战大乔",
 	["&wz_daqiao"] = "大乔", 
 	["illustrator:wz_daqiao"] = "Natsu",
@@ -152,6 +165,18 @@ return {
 	["ol_xushu"] = "OL YJ徐庶",
 	["&ol_xushu"] = "徐庶",
 	["illustrator:ol_xushu"] = "L",
+
+	["ol_guanxingzhangbao"] = "OL关兴＆张苞",
+	["&ol_guanxingzhangbao"] = "关兴张苞",
+	["illustrator:ol_guanxingzhangbao"] = "HOOO",
+
+	["ol_madai"] = "OL马岱",
+	["&ol_madai"] = "马岱",
+	["illustrator:ol_madai"] = "琛·美弟奇",
+
+	["ol_wangyi"] = "OL王异",
+	["&ol_wangyi"] = "王异",
+	["illustrator:ol_wangyi"] = "团扇子大人",
 
 	-- Hegemony SP
 	["hegemony_sp"] = "国战SP",

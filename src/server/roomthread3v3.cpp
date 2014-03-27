@@ -24,8 +24,8 @@ QStringList RoomThread3v3::getGeneralsWithoutExtension() const{
     QStringList list_name;
     list_name << "nos_caocao" << "nos_simayi" << "nos_xiahoudun" << "nos_zhangliao" << "nos_xuchu" << "nos_guojia" << "zhenji"
               << "nos_liubei" << "nos_guanyu" << "nos_zhangfei" << "nos_zhaoyun" << "zhugeliang" << "nos_machao" << "nos_huangyueying"
-              << "sunquan" << "ganning" << "nos_lvmeng" << "huanggai" << "nos_zhouyu" << "daqiao" << "nos_luxun" << "sunshangxiang"
-              << "huatuo" << "nos_lvbu" << "nos_diaochan"
+              << "sunquan" << "nos_ganning" << "nos_lvmeng" << "nos_huanggai" << "nos_zhouyu" << "nos_daqiao" << "nos_luxun" << "sunshangxiang"
+              << "nos_huatuo" << "nos_lvbu" << "nos_diaochan"
               << "nos_caoren" << "xiahouyuan" << "weiyan" << "huangzhong"
               << "xiaoqiao" << "nos_zhoutai" << "nos_zhangjiao";
     foreach (QString general_name, list_name)

@@ -280,9 +280,9 @@ public:
                 ServerPlayer *sp_pangde = room->findPlayer("sp_pangde");
                 room->acquireSkill(sp_pangde, "taichen_fight");
 
-                ServerPlayer *huatuo = room->findPlayer("huatuo");
-                room->installEquip(huatuo, "hualiu");
-                room->acquireSkill(huatuo, "guagu");
+                ServerPlayer *nos_huatuo = room->findPlayer("nos_huatuo");
+                room->installEquip(nos_huatuo, "hualiu");
+                room->acquireSkill(nos_huatuo, "guagu");
 
                 ServerPlayer *lvmeng = room->findPlayer("lvmeng");
                 room->acquireSkill(lvmeng, "dujiang");
@@ -329,7 +329,7 @@ FanchengScenario::FanchengScenario()
     : Scenario("fancheng")
 {
     lord = "guanyu";
-    loyalists << "huatuo";
+    loyalists << "nos_huatuo";
     rebels << "caoren" << "sp_pangde" << "xuhuang";
     renegades << "lvmeng";
 

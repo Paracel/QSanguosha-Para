@@ -1083,16 +1083,18 @@ int ServerDialog::config() {
     Config.EnableLuckCard = luck_card_checkbox->isChecked();
 
     // game mode
-    QString objname = mode_group->checkedButton()->objectName();
-    if (objname == "scenario")
-        Config.GameMode = scenario_ComboBox->itemData(scenario_ComboBox->currentIndex()).toString();
-    else if (objname == "mini") {
-        if (mini_scene_ComboBox->isEnabled())
-            Config.GameMode = mini_scene_ComboBox->itemData(mini_scene_ComboBox->currentIndex()).toString();
-        else
-            Config.GameMode = "custom_scenario";
-    } else
-        Config.GameMode = objname;
+    if (mode_group->checkedButton()) {
+        QString objname = mode_group->checkedButton()->objectName();
+        if (objname == "scenario")
+            Config.GameMode = scenario_ComboBox->itemData(scenario_ComboBox->currentIndex()).toString();
+        else if (objname == "mini") {
+            if (mini_scene_ComboBox->isEnabled())
+                Config.GameMode = mini_scene_ComboBox->itemData(mini_scene_ComboBox->currentIndex()).toString();
+            else
+                Config.GameMode = "custom_scenario";
+        } else
+            Config.GameMode = objname;
+    }
 
     Config.setValue("ServerName", Config.ServerName);
     Config.setValue("GameMode", Config.GameMode);

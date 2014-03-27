@@ -728,7 +728,7 @@ QString Engine::getModeName(const QString &mode) const{
 }
 
 int Engine::getPlayerCount(const QString &mode) const{
-    if (modes.contains(mode)) {
+    if (modes.contains(mode) || isNormalGameMode(mode)) { // hidden pz settings?
         QRegExp rx("(\\d+)");
         int index = rx.indexIn(mode);
         if (index != -1)
@@ -752,7 +752,7 @@ QString Engine::getRoles(const QString &mode) const{
         return "ZFFF";
     }
 
-    if (modes.contains(mode)) {
+    if (modes.contains(mode) || isNormalGameMode(mode)) { // hidden pz settings?
         static const char *table1[] = {
             "",
             "",

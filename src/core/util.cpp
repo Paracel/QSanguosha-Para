@@ -115,5 +115,6 @@ QList<int> VariantList2IntList(const QVariantList &variantlist) {
 }
 
 bool isNormalGameMode(const QString &mode) {
-    return mode.endsWith("p") || mode.endsWith("pd") || mode.endsWith("pz");
+    QRegExp moderx("(0[2-9]|10)p[dz]*");
+    return moderx.exactMatch(mode);
 }

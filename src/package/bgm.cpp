@@ -1659,7 +1659,8 @@ public:
 class FuluanForbid: public TriggerSkill {
 public:
     FuluanForbid(): TriggerSkill("#fuluan-forbid") {
-        events << CardUsed;
+        events << PreCardUsed;
+        global = true;
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

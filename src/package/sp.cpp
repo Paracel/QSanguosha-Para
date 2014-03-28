@@ -1660,7 +1660,7 @@ public:
     }
 
     static int view(Room *room, ServerPlayer *player, QList<int> &ids, QList<int> &enabled, QList<int> &disabled) {
-        int result = -1;
+        int result = -1, index = -1;
         LogMessage log;
         log.type = "$ViewDrawPile";
         log.from = player;
@@ -1679,6 +1679,7 @@ public:
             room->fillAG(ids, player, disabled);
             int id = room->askForAG(player, enabled, true, "aocai");
             if (id != -1) {
+                index = ids.indexOf(id);
                 ids.removeOne(id);
                 result = id;
             }
@@ -1696,6 +1697,7 @@ public:
             log.type = "#AocaiUse";
             log.from = player;
             log.arg = "aocai";
+            log.arg2 = QString("CAPITAL(%1)").arg(index + 1);
             room->sendLog(log);
         }
         return result;

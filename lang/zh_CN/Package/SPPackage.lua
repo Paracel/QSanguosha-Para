@@ -30,7 +30,7 @@ return {
 	["yongsi"] = "庸肆",
 	[":yongsi"] = "锁定技。摸牌阶段，你额外摸X张牌。弃牌阶段开始时，你须弃置X张牌。（X为现存势力数）",
 	["weidi"] = "伪帝",
-	[":weidi"] = "锁定技。你拥有且可以发动主公的主公技。",
+	[":weidi"] = "[NoAutoRep]<font color=#0000FF><b>锁定技。</b></font>你拥有且可以发动主公的主公技。",
 	["@weidi-jijiang"] = "请发动“激将”",
 	["#YongsiGood"] = "%from 的“%arg2”被触发，额外摸了 %arg 张牌",
 	["#YongsiBad"] = "%from 的“%arg2”被触发，须弃置 %arg 张牌",

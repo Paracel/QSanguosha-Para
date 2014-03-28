@@ -46,6 +46,8 @@ QString Skill::getDescription() const{
         des_src = Sanguosha->translate(":" + objectName());
     if (des_src.startsWith(":"))
         return QString();
+    if (des_src.startsWith("[NoAutoRep]"))
+        return des_src.mid(11);
 
     if (Config.value("AutoSkillTypeColorReplacement", true).toBool()) {
         QMap<QString, QColor> skilltype_color_map = Sanguosha->getSkillTypeColorMap();

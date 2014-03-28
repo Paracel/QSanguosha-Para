@@ -64,7 +64,12 @@ bool General::isTotallyHidden() const{
     return never_shown;
 }
 
+#include <QMessageBox>
 void General::addSkill(Skill *skill) {
+    if (!skill) {
+        QMessageBox::warning(NULL, "", tr("Invalid skill added to general %1").arg(objectName()));
+        return;
+    }
     skill->setParent(this);
     skill_set << skill->objectName();
     if (!skillname_list.contains(skill->objectName()))

@@ -1331,11 +1331,16 @@
     </message>
     <message>
         <location filename="../../src/core/engine.cpp" line="162"/>
+        <source>The engine tries to add an invalid skill</source>
+        <translation>程序试图添加不合法技能</translation>
+    </message>
+    <message>
+        <location filename="../../src/core/engine.cpp" line="166"/>
         <source>Duplicated skill : %1</source>
         <translation>重复技能: %1</translation>
     </message>
     <message>
-        <location filename="../../src/core/engine.cpp" line="727"/>
+        <location filename="../../src/core/engine.cpp" line="731"/>
         <source>%1 [Scenario mode]</source>
         <translation>%1 【剧情模式】</translation>
     </message>
@@ -1356,6 +1361,14 @@
         <location filename="../../src/dialog/choosegeneraldialog.cpp" line="280"/>
         <source>Cancel</source>
         <translation>取消</translation>
+    </message>
+</context>
+<context>
+    <name>General</name>
+    <message>
+        <location filename="../../src/core/general.cpp" line="70"/>
+        <source>Invalid skill added to general %1</source>
+        <translation>武将 %1 试图添加不合法技能</translation>
     </message>
 </context>
 <context>

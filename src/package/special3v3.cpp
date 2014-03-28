@@ -470,7 +470,7 @@ public:
 class Zhenwei: public TriggerSkill {
 public:
     Zhenwei(): TriggerSkill("zhenwei") {
-        events << EventPhaseChanging << Death << EventLoseSkill;
+        events << EventPhaseChanging << Death;
         view_as_skill = new ZhenweiViewAsSkill;
         frequency = Compulsory;
     }
@@ -480,26 +480,24 @@ public:
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == EventLoseSkill) {
-            if (data.toString() != objectName())
-                return false;
-        } else if (triggerEvent == Death) {
+        if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
-            if (death.who != player || !player->hasSkill(objectName()))
+            if (death.who != player || !player->hasSkill(objectName(), true))
                 return false;
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (p->tag["zhenwei_from"].toString() == player->objectName()) {
+                    room->setPlayerProperty(p, "zhenwei_from", QVariant());
+                    room->setPlayerMark(p, "@defense", 0);
+                }
+            }
         } else if (triggerEvent == EventPhaseChanging) {
-            if (!TriggerSkill::triggerable(player))
+            if (!TriggerSkill::triggerable(player) || Sanguosha->getPlayerCount(room->getMode()) <= 3)
                 return false;
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
-        }
-        foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
-            room->setPlayerProperty(p, "zhenwei_from", QVariant());
-            room->setPlayerMark(p, "@defense", 0);
-        }
-        if (triggerEvent == EventPhaseChanging && Sanguosha->getPlayerCount(room->getMode()) > 3)
             room->askForUseCard(player, "@@zhenwei", "@zhenwei");
+        }
         return false;
     }
 };

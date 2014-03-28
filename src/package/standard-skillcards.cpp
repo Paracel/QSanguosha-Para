@@ -460,9 +460,7 @@ void YijiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
         if (source->getHandcardNum() == 2 && targets.length() == 2 && targets.last()->isAlive() && target == targets.first())
             max = 1;
         const Card *dummy = room->askForExchange(source, "yiji", max, 1, false, "YijiGive::" + target->objectName());
-        QList<ServerPlayer *> open_players;
-        open_players << target;
-        target->addToPile("yiji", dummy, false, open_players);
+        target->addToPile("yiji", dummy, false);
     }
 }
 

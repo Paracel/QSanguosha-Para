@@ -104,9 +104,7 @@ public:
 };
 
 MizhaoCard::MizhaoCard() {
-    will_throw = false;
     mute = true;
-    handling_method = Card::MethodNone;
 }
 
 bool MizhaoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
@@ -114,7 +112,7 @@ bool MizhaoCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->obtainCard(effect.card, false);
+    effect.to->obtainCard(effect.from->wholeHandCards(), false);
     if (effect.to->isKongcheng()) return;
 
     Room *room = effect.from->getRoom();
@@ -133,26 +131,17 @@ void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
     }
 }
 
-class MizhaoViewAsSkill: public ViewAsSkill {
+class MizhaoViewAsSkill: public ZeroCardViewAsSkill {
 public:
-    MizhaoViewAsSkill(): ViewAsSkill("mizhao") {
+    MizhaoViewAsSkill(): ZeroCardViewAsSkill("mizhao") {
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->isKongcheng() && !player->hasUsed("MizhaoCard");
     }
 
-    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
-        return !to_select->isEquipped();
-    }
-
-    virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (cards.length() < Self->getHandcardNum())
-            return NULL;
-
-        MizhaoCard *card = new MizhaoCard;
-        card->addSubcards(cards);
-        return card;
+    virtual const Card *viewAs() const{
+        return new MizhaoCard;
     }
 };
 

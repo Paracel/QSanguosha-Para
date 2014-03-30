@@ -96,14 +96,7 @@ mizhao_skill.name = "mizhao"
 table.insert(sgs.ai_skills, mizhao_skill)
 mizhao_skill.getTurnUseCard = function(self)
 	if self.player:hasUsed("MizhaoCard") or self.player:isKongcheng() then return end
-	local cards = self.player:getHandcards()
-	local allcard = {}
-	cards = sgs.QList2Table(cards)
-	for _, card in ipairs(cards) do
-		table.insert(allcard, card:getId())
-	end
-	local parsed_card = sgs.Card_Parse("@MizhaoCard=" .. table.concat(allcard, "+"))
-	return parsed_card
+	return sgs.Card_Parse("@MizhaoCard=.")
 end
 
 sgs.ai_skill_use_func.MizhaoCard = function(card, use, self)

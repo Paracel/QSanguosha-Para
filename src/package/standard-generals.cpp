@@ -1975,7 +1975,7 @@ public:
             if (targets.isEmpty()) {
                 delete duel;
             } else {
-                ServerPlayer *target = room->askForPlayerChosen(damage.to, targets, objectName(), "@liyu", true);
+                ServerPlayer *target = room->askForPlayerChosen(damage.to, targets, objectName(), "@liyu:" + player->objectName(), true);
                 if (target) {
                     room->broadcastSkillInvoke(objectName());
                     room->notifySkillInvoked(player, objectName());

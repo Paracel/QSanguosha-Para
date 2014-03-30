@@ -983,7 +983,7 @@ public:
         log2.type = "#GetHuashenDetail";
         log2.from = zuoci;
         log2.arg = acquired.join("\\, \\");
-        room->sendLog(log, zuoci);
+        room->sendLog(log2, zuoci);
 
         room->setPlayerMark(zuoci, "@huashen", huashens.length());
     }

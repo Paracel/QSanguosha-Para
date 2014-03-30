@@ -991,24 +991,13 @@ void ServerPlayer::marshal(ServerPlayer *player) const{
         }
     }
 
-    foreach(const QString skill_name, skills) {
-        if (Sanguosha->getSkill(skill_name)->isVisible()) {
-            Json::Value args1;
-            args1[0] = S_GAME_EVENT_ACQUIRE_SKILL;
-            args1[1] = toJsonString(objectName());
-            args1[2] = toJsonString(skill_name);
-            room->doNotify(player, S_COMMAND_LOG_EVENT, args1);
-        }
-
-        foreach (const Skill *related_skill, Sanguosha->getRelatedSkills(skill_name)) {
-            if (!related_skill->isVisible()) {
-                Json::Value args2;
-                args2[0] = S_GAME_EVENT_ACQUIRE_SKILL;
-                args2[1] = toJsonString(objectName());
-                args2[2] = toJsonString(skill_name);
-                room->doNotify(player, S_COMMAND_LOG_EVENT, args2);
-            }
-        }
+    foreach(const Skill *skill, getVisibleSkillList(true)) {
+        QString skill_name = skill->objectName();
+        Json::Value args1;
+        args1[0] = S_GAME_EVENT_ACQUIRE_SKILL;
+        args1[1] = toJsonString(objectName());
+        args1[2] = toJsonString(skill_name);
+        room->doNotify(player, S_COMMAND_LOG_EVENT, args1);
     }
 
     foreach (QString flag, flags)

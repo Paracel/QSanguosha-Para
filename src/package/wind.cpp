@@ -83,7 +83,7 @@ public:
             }
         } else if (triggerEvent == DamageCaused && zhangjiao->isAlive() && zhangjiao->isWounded()) {
             DamageStruct damage = data.value<DamageStruct>();
-            if (damage.reason == objectName())
+            if (damage.reason == objectName() && !damage.chain)
                 room->recover(zhangjiao, RecoverStruct(zhangjiao));
         }
         return false;

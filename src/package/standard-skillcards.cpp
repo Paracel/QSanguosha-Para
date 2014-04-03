@@ -446,6 +446,7 @@ YijiCard::YijiCard() {
 }
 
 bool YijiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (to_select == Self) return false;
     if (Self->getHandcardNum() == 1)
         return targets.isEmpty();
     else

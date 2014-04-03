@@ -3245,6 +3245,14 @@ sgs.ai_skill_invoke.wangzun = function(self, data)
 	return false
 end
 
+sgs.ai_choicemade_filter.skillInvoke.wangzun = function(self, player, promptlist)
+	if promptlist[#promptlist] == "yes" then
+		local lord = self.room:getCurrent()
+		if not self:isWeak(lord) and (self:getOverflow(lord) < -2 or (self:willSkipDrawPhase(lord) and self:getOverflow(lord) < 0)) then return end
+		sgs.updateIntention(player, lord, 30)
+	end
+end
+
 sgs.ai_skill_invoke.qiaomeng = function(self, data)
 	local damage = data:toDamage()
 	if self:isFriend(damage.to) then return damage.to:getArmor() and self:needToThrowArmor(damage.to) end

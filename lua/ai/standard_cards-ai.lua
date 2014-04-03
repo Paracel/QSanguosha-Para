@@ -1664,7 +1664,9 @@ function SmartAI:useCardDuel(duel, use)
 
 	local enemies = self:exclude(self.enemies, duel)
 	local friends = self:exclude(self.friends_noself, duel)
+	duel:setFlags("AI_Using")
 	local n1 = self:getCardsNum("Slash")
+	duel:setFlags("-AI_Using")
 	if use.isWuqian or self.player:hasSkill("wushuang") then n1 = n1 * 2 end
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
 	local targets = {}

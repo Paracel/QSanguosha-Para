@@ -4126,7 +4126,8 @@ function SmartAI:getCards(class_name, flag)
 	for _, card in sgs.qlist(all_cards) do
 		card_place = sgs.getCardPlace(room, card)
 
-		if class_name == "." and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
+		if card:hasFlag("AI_Using") then
+		elseif class_name == "." and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
 		elseif card:isKindOf(class_name) and not prohibitUseDirectly(card, player) and card_place ~= sgs.Player_PlaceSpecial then table.insert(cards, card)
 		else
 			card_str = getSkillViewCard(card, class_name, player, card_place)

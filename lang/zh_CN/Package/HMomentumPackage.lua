@@ -8,7 +8,6 @@ return {
 	["illustrator:zangba"] = "HOOO",
 	["hengjiang"] = "横江",
 	[":hengjiang"] = "每当你受到1点伤害后，你可以令当前回合角色本回合手牌上限-1，然后其回合结束时，若你于此回合发动过“横江”，且其未于弃牌阶段内弃置牌，你摸一张牌。",
-	["@hengjiang"] = "横江",
 	["#HengjiangDraw"] = "%from 未于弃牌阶段内弃置牌，触发 %to 的“%arg”效果",
 
 	["#mifuren"] = "乱世沉香",
@@ -51,7 +50,6 @@ return {
 	["illustrator:zhangren"] = "DH",
 	["chuanxin"] = "穿心",
 	[":chuanxin"] = "每当你使用【杀】或【决斗】对目标角色造成伤害时，你可以防止此伤害，令其选择一项：1.若其有多于一个武将技能，其选择失去一项武将技能（对每名角色限一次）；2.弃置装备区的所有牌（至少一张）：若如此做，其失去1点体力。",
-	["@chuanxin"] = "穿心",
 	["chuanxin_lose"] = "穿心失去技能",
 	["chuanxin:throw"] = "弃置装备区的所有牌，失去1点体力",
 	["chuanxin:detach"] = "失去一项武将技能",

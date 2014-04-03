@@ -123,6 +123,5 @@ return {
 	["~mieji"] = "选择【借刀杀人】的目标角色→选择【杀】的目标角色→点击确定",
 	["fencheng"] = "焚城",
 	[":fencheng"] = "限定技。出牌阶段，你可以令所有其他角色弃置X张牌，否则你对该角色造成1点火焰伤害。（X为该角色装备区牌的数量且至少为1）",
-	["@burn"] = "焚城",
 	["$FenchengAnimate"] = "image=image/animate/fencheng.png",
 }

@@ -66,7 +66,6 @@ return {
 	[":weimu"] = "锁定技。你不能被选择为黑色锦囊牌的目标。",
 	["luanwu"] = "乱武",
 	[":luanwu"] = "限定技。出牌阶段，你可以令所有其他角色对距离最近的另一名角色使用一张【杀】，否则该角色失去1点体力。",
-	["@chaos"] = "乱武",
 	["@luanwu-slash"] = "请使用一张【杀】响应“乱武”",
 	["$LuanwuAnimate"] = "image=image/animate/luanwu.png",
 	["#WanshaOne"] = "%from 的“%arg”被触发，只能 %from 自救",

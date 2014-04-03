@@ -173,7 +173,6 @@ return {
 	[":qixi"] = "你可以将一张黑色牌当【过河拆桥】使用。",
 	["fenwei"] = "奋威",
 	[":fenwei"] = "限定技。每当一名角色的非延时类锦囊牌指定了至少两名目标时，你可以令该牌对至少一名目标角色无效。",
-	["@fenwei"] = "奋威",
 	["@fenwei-card"] = "你可以发动“奋威”",
 	["~fenwei"] = "选则任意名角色→点击确定",
 	["$FenweiAnimate"] = "image=image/animate/fenwei.png",

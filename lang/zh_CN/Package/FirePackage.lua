@@ -38,7 +38,6 @@ return {
 	["niepan"] = "涅槃",
 	[":niepan"] = "限定技。每当你处于濒死状态时，你可以弃置你区域内的牌，将武将牌恢复至初始状态，然后摸三张牌并回复至3点体力。",
 	["$NiepanAnimate"] = "image=image/animate/niepan.png",
-	["@nirvana"] = "涅槃",
 
 	["#taishici"] = "笃烈之士",
 	["taishici"] = "太史慈",

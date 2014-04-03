@@ -31,6 +31,5 @@ return {
 	["#JieyuanDecrease"] = "%from 发动了“<font color=\"yellow\"><b>竭缘</b></font>”，伤害点数从 %arg 点减少至 %arg2 点",
 	["fenxin"] = "焚心",
 	[":fenxin"] = "限定技。若你不是主公，你杀死一名非主公其他角色时，展示身份牌前，你可以与该角色交换身份牌。",
-	["@burnheart"] = "焚心",
 	["$FenxinAnimate"] = "image=image/animate/fenxin.png",
 }

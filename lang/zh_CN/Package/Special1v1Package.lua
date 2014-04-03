@@ -15,7 +15,6 @@ return {
 	["&kof_xuchu"] = "许褚",
 	["xiechan"] = "挟缠",
 	[":xiechan"] = "限定技。出牌阶段，你可以与对手拼点：若你赢，视为你对对手使用一张【决斗】；若你没赢，视为对手对你使用一张【决斗】。",
-	["@twine"] = "挟缠",
 	["$XiechanAnimate"] = "image=image/animate/xiechan.png",
 
 	["kof_zhenji"] = "甄姬1v1",

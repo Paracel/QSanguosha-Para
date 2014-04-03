@@ -106,7 +106,6 @@ return {
 	["mingce:draw"] = "摸一张牌",
 	["#ZhichiDamaged"] = "%from 受到了伤害，本回合内【<font color=\"yellow\"><b>杀</b></font>】和非延时锦囊都将对其无效",
 	["#ZhichiAvoid"] = "%from 的“%arg”被触发，【<font color=\"yellow\"><b>杀</b></font>】和非延时锦囊对其无效",
-	["@late"] = "智迟",
 
 	["#zhangchunhua"] = "冷血皇后",
 	["zhangchunhua"] = "张春华",

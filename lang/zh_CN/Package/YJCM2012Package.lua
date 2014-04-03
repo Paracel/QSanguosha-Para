@@ -51,7 +51,6 @@ return {
 	[":dangxian"] = "锁定技。回合开始时，你执行一个额外的出牌阶段。",
 	["fuli"] = "伏枥",
 	[":fuli"] = "限定技。每当你处于濒死状态时，你可以将回复至X点体力，然后将武将牌翻面。（X为现存势力数）",
-	["@laoji"] = "伏枥",
 	["$FuliAnimate"] = "image=image/animate/fuli.png",
 
 	["#guanxingzhangbao"] = "将门虎子",
@@ -95,7 +94,6 @@ return {
 	["jiefan"] = "解烦",
 	[":jiefan"] = "限定技。出牌阶段，你可以选择一名角色，然后攻击范围内包含该角色的除该角色外的所有角色选择一项：弃置一张武器牌，或令该角色摸一张牌。",
 	["@jiefan-discard"] = "请弃置一张武器牌，否则 %dest 摸一张牌",
-	["@rescue"] = "解烦",
 	["$JiefanAnimate"] = "image=image/animate/jiefan.png",
 
 	["#liubiao"] = "跨蹈汉南",

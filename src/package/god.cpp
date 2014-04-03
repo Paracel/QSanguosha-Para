@@ -451,7 +451,7 @@ public:
                     room->broadcastSkillInvoke(objectName());
 
                     shencc->setFlags("GuixinUsing");
-                    if (players.length() >= 4 && (shencc->getGeneralName() == "shencaocao") || shencc->getGeneral2Name() == "shencaocao")
+                    if (players.length() >= 4 && (shencc->getGeneralName() == "shencaocao" || shencc->getGeneral2Name() == "shencaocao"))
                         room->doLightbox("$GuixinAnimate");
 
                     foreach (ServerPlayer *player, players) {

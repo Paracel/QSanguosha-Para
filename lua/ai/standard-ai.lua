@@ -2023,12 +2023,25 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 
 	if self:getOverflow() <= 0 then return end
 	sgs.ai_use_priority.FanjianCard = 0.2
+	local suit_table = { "spade", "club", "heart", "diamond" }
+	local equip_val_table = { 1.2, 1.5, 0.5, 1, 1.3 }
 	for _, enemy in ipairs(self.enemies) do
 		if enemy:getHandcardNum() > 2 then
 			local max_suit_num, max_suit = 0, {}
-			local suit_table = { "spade", "club", "heart", "diamond" }
 			for i = 0, 3, 1 do
 				local suit_num = getKnownCard(enemy, self.player, suit_table[i + 1])
+				for j = 0, 4, 1 do
+					if enemy:getEquip(j) and enemy:getEquip(j):getSuit() == i then
+						local val = equip_val_table[j + 1]
+						if j == 1 and self:needToThrowArmor(enemy) then val = -0.5
+						else
+							if enemy:hasSkills(sgs.lose_equip_skill) then val = val / 8 end
+							if enemy:getEquip(j):getEffectiveId() == self:getValuableCard(enemy) then val = val * 1.1 end
+							if enemy:getEquip(j):getEffectiveId() == self:getDangerousCard(enemy) then val = val * 1.1 end
+						end
+						suit_num = suit_num + j
+					end
+				end
 				if suit_num > max_suit_num then
 					max_suit_num = suit_num
 					max_suit = { i }
@@ -2088,7 +2101,7 @@ sgs.ai_skill_use_func.FanjianCard = function(card, use, self)
 		end
 		if friend:hasSkill("zhaxiang") and not self:isWeak(friend) and not (friend:getHp() == 2 and friend:hasSkill("chanyuan")) then
 			for _, card in ipairs(cards) do
-				if self:getUseValue(card) < 6 and card:getSuit() == sgs.Card_Spade then
+				if self:getUseValue(card) < 6 then
 					use.card = sgs.Card_Parse("@FanjianCard=" .. card:getEffectiveId())
 					if use.to then use.to:append(friend) end
 					return
@@ -2122,7 +2135,18 @@ sgs.ai_skill_invoke.fanjian_discard = function(self, data)
 			if self:isValuableCard(card) then count = count + 0.5 end
 		end
 	end
-	return count / self.player:getHandcardNum() <= 0.6
+	local equip_val_table = { 2, 2.5, 1, 1.5, 2.2 }
+	for i = 0, 4, 1 do
+		if self.player:getEquip(i) and self.player:getEquip(i):getSuit() == suit then
+			if i == 1 and self:needToThrowArmor() then
+				count = count - 1
+			else
+				count = equip_val_table[i + 1]
+				if self.player:hasSkills(sgs.lose_equip_skill) then count = count + 0.5 end
+			end
+		end
+	end
+	return count / self.player:getCardCount(true) <= 0.6
 end
 
 sgs.ai_skill_invoke.qianxun = function(self, data)

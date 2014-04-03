@@ -129,18 +129,19 @@ void FanjianCard::onEffect(const CardEffectStruct &effect) const{
     room->obtainCard(target, this, reason);
 
     if (target->isAlive()) {
-        if (target->isKongcheng()) {
+        if (target->isNude()) {
             room->loseHp(target);
         } else {
             target->setMark("FanjianSuit", int(suit)); // For AI
             if (room->askForSkillInvoke(target, "fanjian_discard", "prompt:::" + Card::Suit2String(suit))) {
                 room->showAllCards(target);
                 DummyCard *dummy = new DummyCard;
-                foreach (const Card *card, target->getHandcards()) {
+                foreach (const Card *card, target->getCards("he")) {
                     if (card->getSuit() == suit)
                         dummy->addSubcard(card);
                 }
-                room->throwCard(dummy, target);
+                if (dummy->subcardsLength() > 0)
+                    room->throwCard(dummy, target);
                 delete dummy;
             } else {
                 room->loseHp(target);

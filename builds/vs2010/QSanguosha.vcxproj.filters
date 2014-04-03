@@ -676,6 +676,15 @@
     <ClCompile Include="Release\moc_ling.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\package\yjcm2014.cpp">
+      <Filter>package</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_yjcm2014.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_yjcm2014.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\src\server\ai.h">
@@ -943,6 +952,9 @@
       <Filter>package</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\package\h-momentum.h">
+      <Filter>package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\package\yjcm2014.h">
       <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>

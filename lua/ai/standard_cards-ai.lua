@@ -1268,7 +1268,7 @@ function cardsView_spear(self, player, skill_name)
 		if not isCard("Slash", card, player) and not isCard("Peach", card, player) and not (isCard("ExNihilo", card, player) and player:getPhase() == sgs.Player_Play) then table.insert(newcards, card) end
 	end
 	if #newcards < 2 then return end
-	self:sortByKeepValue(newcards)
+	sgs.ais[player:objectName()]:sortByKeepValue(newcards)
 
 	local card_id1 = newcards[1]:getEffectiveId()
 	local card_id2 = newcards[2]:getEffectiveId()

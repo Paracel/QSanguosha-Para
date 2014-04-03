@@ -3,11 +3,6 @@
 
 #include "package.h"
 #include "card.h"
-#include "wind.h"
-
-#include <QMutex>
-#include <QGroupBox>
-#include <QAbstractButton>
 
 class YJCM2013Package: public Package {
     Q_OBJECT

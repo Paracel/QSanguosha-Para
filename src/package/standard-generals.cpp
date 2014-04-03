@@ -820,7 +820,7 @@ public:
             if (x > 0 && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(x))) {
                 room->removePlayerMark(player, "@substitute");
                 room->broadcastSkillInvoke(objectName());
-                //room->doLightbox("$TishenAnimate");
+                room->doLightbox("$TishenAnimate");
 
                 room->recover(player, RecoverStruct(player, NULL, x));
                 player->drawCards(x, objectName());

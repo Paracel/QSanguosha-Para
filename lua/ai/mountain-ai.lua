@@ -1022,11 +1022,12 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|qianxi|jujian|shensu|luanji|zhijian|shuangxiong|" ..
 								"fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|" ..
 								"noskurou|wansha|lianpo|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
-								"xianzhen|qiaoshui|juece|sijian|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
+								"xianzhen|qiaoshui|juece|sijian|chunlao|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|" ..
 								"hongyan|zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do
 			if askill == "yinghun" and not self.player:isWounded() then continue end
 			if askill == "hengzheng" and (self.room:alivePlayerCount() <= 3 or self.player:getHp() > 1 or not self.player:isKongcheng()) then continue end
+			if askill == "chunlao" and not self.player:getPile("wine"):isEmpty() then continue end
 			if str:matchOne(askill) then return askill end
 		end
 		if str:matchOne("juedi") and not self.player:getPile("yinbing"):isEmpty() then return "juedi" end
@@ -1034,7 +1035,8 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		if self.player:getHp() == 1 then
 			if str:matchOne("wuhun") then return "wuhun" end
 			if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
-			for _, askill in ipairs(("wuhun|duanchang|jijiu|longhun|jiushi|jiuchi|buyi|huilei|juejing|nosbuqu|zhuiyi"):split("|")) do
+			for _, askill in ipairs(("wuhun|duanchang|chunlao|jijiu|longhun|jiushi|jiuchi|buyi|huilei|juejing|nosbuqu|zhuiyi"):split("|")) do
+				if askill == "chunlao" and self.player:getPile("wine"):isEmpty() then continue end
 				if str:matchOne(askill) then return askill end
 			end
 		end
@@ -1090,8 +1092,9 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		for _, askill in ipairs(("huangen|jianxiong|nosjianxiong|jiang|nosqianxun|qianxun|danlao|juxiang|huoshou|zhichi|" ..
 								"lirang|qingjian|yicong|wusheng|wushuang|tianxiang|leiji|nosleiji|guhuo|nosguhuo|nosshangshi|shangshi|" ..
-								"zhiyu|guidao|guicai|nosguicai|jijiu|buyi|renxin|lianying|noslianying|shoucheng|shenxian|sijian|tianming|drjijiu|jieyuan|" ..
-								"yanyu|zhendu|xiaoguo|tianfu|shushen|niaoxiang|zhenlie|tiandu|yingyang|noszhenlie"):split("|")) do
+								"zhiyu|guidao|guicai|nosguicai|chunlao|jijiu|buyi|renxin|lianying|noslianying|shoucheng|shenxian|sijian|tianming|" ..
+								"drjijiu|jieyuan|yanyu|zhendu|xiaoguo|tianfu|shushen|niaoxiang|zhenlie|tiandu|yingyang|noszhenlie"):split("|")) do
+			if askill == "chunlao" and self.player:getPile("wine"):isEmpty() then continue end
 			if str:matchOne(askill) then return askill end
 		end
 

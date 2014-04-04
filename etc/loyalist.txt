@@ -30,7 +30,7 @@ caopi					caochong				0.9
 caopi					bgm_diaochan			0.9
 caopi					bgm_caoren				1.5
 caopi					heg_dengai				1.1
-caopi					vs_xiahoudun			1.1
+caopi					vs_nos_xiahoudun		1.1
 caopi					nos_xiahoudun			1.1
 caopi					nos_caoren				1.5
 caopi					nos_wangyi				2.5
@@ -40,7 +40,7 @@ dongzhuo				yuanshao				2.0
 dongzhuo				yanliangwenchou			0.7
 dongzhuo				zhangjiao				1.5
 dongzhuo				shenlvbu				1.8
-dongzhuo				vs_lvbu					1.1
+dongzhuo				vs_nos_lvbu				1.1
 dongzhuo				nos_lvbu				1.0
 dongzhuo				nos_zhoutai				-3.0
 dongzhuo				nos_zhangjiao			1.4
@@ -154,7 +154,7 @@ heg_dongzhuo			yuanshao				2.0
 heg_dongzhuo			yanliangwenchou			0.7
 heg_dongzhuo			zhangjiao				1.5
 heg_dongzhuo			shenlvbu				1.8
-heg_dongzhuo			vs_lvbu					1.1
+heg_dongzhuo			vs_nos_lvbu				1.1
 heg_dongzhuo			nos_lvbu				1.0
 heg_dongzhuo			nos_zhoutai				-3.0
 heg_dongzhuo			nos_zhangjiao			1.4

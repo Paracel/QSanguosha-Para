@@ -4,15 +4,15 @@ return {
 	["Special1v1"] = "1v1",
 	["New1v1Card"] = "1v1卡牌",
 
-	["kof_zhangliao"] = "张辽1v1",
-	["&kof_zhangliao"] = "张辽",
+	["kof_nos_zhangliao"] = "张辽1v1",
+	["&kof_nos_zhangliao"] = "张辽",
 	["koftuxi"] = "突袭",
 	[":koftuxi"] = "摸牌阶段，若你的手牌少于对手，你可以少摸一张牌并获得对手的一张手牌。",
 	[":koftuxi_p"] = "摸牌阶段，你可以少摸一张牌并选择一名手牌多于你的其他角色：若如此做，你获得该角色一张手牌。",
 	["koftuxi-invoke"] = "你可以发动“突袭”<br/> <b>操作提示</b>: 选择一名其他角色→点击确定<br/>",
 
-	["kof_xuchu"] = "许褚1v1",
-	["&kof_xuchu"] = "许褚",
+	["kof_nos_xuchu"] = "许褚1v1",
+	["&kof_nos_xuchu"] = "许褚",
 	["xiechan"] = "挟缠",
 	[":xiechan"] = "限定技。出牌阶段，你可以与对手拼点：若你赢，视为你对对手使用一张【决斗】；若你没赢，视为对手对你使用一张【决斗】。",
 	["$XiechanAnimate"] = "image=image/animate/xiechan.png",
@@ -28,16 +28,16 @@ return {
 	[":suzi"] = "每当已死亡的对手的牌因弃置而置入弃牌堆前，你可以获得之。",
 	[":suzi_p"] = "已死亡的其他角色的牌因弃置而置入弃牌堆前，你可以获得之。",
 
-	["kof_guanyu"] = "关羽1v1",
-	["&kof_guanyu"] = "关羽",
+	["kof_nos_guanyu"] = "关羽1v1",
+	["&kof_nos_guanyu"] = "关羽",
 	["huwei"] = "虎威",
 	[":huwei"] = "你登场时，你可以视为使用一张【水淹七军】。",
 
 	["xiaoxi"] = "骁袭",
 	[":xiaoxi"] = "你登场时，你可以视为使用一张【杀】。",
 
-	["kof_huangyueying"] = "黄月英1v1",
-	["&kof_huangyueying"] = "黄月英",
+	["kof_nos_huangyueying"] = "黄月英1v1",
+	["&kof_nos_huangyueying"] = "黄月英",
 	["cangji"] = "藏机",
 	[":cangji"] = "你死亡时，你可以将装备区的所有牌移出游戏：若如此做，你的下个武将登场时，将这些牌置于装备区。",
 	[":cangji_p"] = "你死亡时，你可以将你装备区的任意数量的牌以任意分配方式置于其他角色的装备区。",
@@ -71,8 +71,8 @@ return {
 	["kofxiaoji:recover"] = "回复1点体力",
 	["kofxiaoji:cancel"] = "不发动",
 
-	["kof_diaochan"] = "貂蝉1v1",
-	["&kof_diaochan"] = "貂蝉",
+	["kof_nos_diaochan"] = "貂蝉1v1",
+	["&kof_nos_diaochan"] = "貂蝉",
 	["pianyi"] = "翩仪",
 	[":pianyi"] = "锁定技。你登场时，若处于对手的回合，则结束当前回合并结束一切结算。",
 
@@ -95,8 +95,8 @@ return {
 	["drowning:damage"] = "受到1点伤害",
 	["drowning:throw"] = "弃置所有装备",
 
-	["kof_liubei"] = "刘备1v1",
-	["&kof_liubei"] = "刘备",
+	["kof_nos_liubei"] = "刘备1v1",
+	["&kof_nos_liubei"] = "刘备",
 	["renwang"] = "仁望",
 	[":renwang"] = "对手于其出牌阶段内对包括你的角色使用第二张及以上【杀】或非延时锦囊牌时，你可以弃置其一张牌。",
 	[":renwang_p"] = "一名其他角色于其出牌阶段内对包括你的角色使用第二张及以上【杀】或非延时锦囊牌时，你可以弃置其一张牌。",
@@ -106,22 +106,22 @@ return {
 	["kofkuanggu"] = "狂骨",
 	[":kofkuanggu"] = "每当你造成伤害后，你可以进行判定：若结果为黑色，你回复1点体力。",
 
-	["kof_lvmeng"] = "吕蒙1v1",
-	["&kof_lvmeng"] = "吕蒙",
+	["kof_nos_lvmeng"] = "吕蒙1v1",
+	["&kof_nos_lvmeng"] = "吕蒙",
 	["shenju"] = "慎拒",
 	[":shenju"] = "锁定技。你的手牌上限+X。（X为弃牌阶段开始时对手的体力值）",
 	[":shenju_p"] = "锁定技。你的手牌上限+X。（X为弃牌阶段开始时其他角色最大的体力值）",
 
-	["kof_huatuo"] = "华佗1v1",
-	["&kof_huatuo"] = "华佗",
+	["kof_nos_huatuo"] = "华佗1v1",
+	["&kof_nos_huatuo"] = "华佗",
 	["puji"] = "普济",
 	[":puji"] = "阶段技。若你与对手均有牌，你可以弃置你与其各一张牌，然后以此法弃置黑桃牌的角色摸一张牌。",
 	[":puji_p"] = "阶段技。若你有牌，你可以选择一名有牌的其他角色：若如此做，你弃置你与其各一张牌，然后以此法弃置黑桃牌的角色摸一张牌。",
 
-	["kof_daqiao"] = "大乔1v1",
-	["&kof_daqiao"] = "大乔",
+	["kof_nos_daqiao"] = "大乔1v1",
+	["&kof_nos_daqiao"] = "大乔",
 	["wanrong"] = "婉容",
-	[":wanrong"] = "每当你被指定为【杀】的目标后，你可以摸一张牌。",
+	[":wanrong"] = "每当你成为【杀】的目标后，你可以摸一张牌。",
 
 	["Special1v1Ext"] = "1v1扩展",
 

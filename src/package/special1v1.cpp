@@ -731,30 +731,14 @@ public:
     }
 
     virtual int getExtra(const Player *target) const{
-        if (target->hasSkill(objectName()))
-            return target->getMark(objectName());
-        else
-            return 0;
-    }
-};
-
-class ShenjuMark: public TriggerSkill {
-public:
-    ShenjuMark(): TriggerSkill("#shenju") {
-        events << EventPhaseStart;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        if (player->getPhase() == Player::Discard) {
-            int max_hp = -1000;
-            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
-                int hp = p->getHp();
-                if (hp > max_hp)
-                    max_hp = hp;
+        if (target->hasSkill(objectName())) {
+            int max = 0;
+            foreach (const Player *p, target->getAliveSiblings()) {
+				if (p->getHp() > max) max = p->getHp();
             }
-            player->setMark("shenju", qMax(max_hp, 0));
-        }
-        return false;
+            return max;
+        } else
+            return 0;
     }
 };
 
@@ -999,14 +983,14 @@ void Drowning::onEffect(const CardEffectStruct &effect) const{
 Special1v1Package::Special1v1Package()
     : Package("Special1v1")
 {
-    General *kof_zhangliao = new General(this, "kof_zhangliao", "wei");
-    kof_zhangliao->addSkill(new KOFTuxi);
-    kof_zhangliao->addSkill(new KOFTuxiAct);
+    General *kof_nos_zhangliao = new General(this, "kof_nos_zhangliao", "wei");
+    kof_nos_zhangliao->addSkill(new KOFTuxi);
+    kof_nos_zhangliao->addSkill(new KOFTuxiAct);
     related_skills.insertMulti("koftuxi", "#koftuxi");
 
-    General *kof_xuchu = new General(this, "kof_xuchu", "wei");
-    kof_xuchu->addSkill("nosluoyi");
-    kof_xuchu->addSkill(new Xiechan);
+    General *kof_nos_xuchu = new General(this, "kof_nos_xuchu", "wei");
+    kof_nos_xuchu->addSkill("nosluoyi");
+    kof_nos_xuchu->addSkill(new Xiechan);
 
     General *kof_zhenji = new General(this, "kof_zhenji", "wei", 3, false);
     kof_zhenji->addSkill(new KOFQingguo);
@@ -1016,18 +1000,18 @@ Special1v1Package::Special1v1Package()
     kof_xiahouyuan->addSkill("shensu");
     kof_xiahouyuan->addSkill(new Suzi);
 
-    General *kof_liubei = new General(this, "kof_liubei$", "shu");
-    kof_liubei->addSkill(new Renwang);
-    kof_liubei->addSkill("jijiang");
+    General *kof_nos_liubei = new General(this, "kof_nos_liubei$", "shu");
+    kof_nos_liubei->addSkill(new Renwang);
+    kof_nos_liubei->addSkill("jijiang");
 
-    General *kof_guanyu = new General(this, "kof_guanyu", "shu");
-    kof_guanyu->addSkill("wusheng");
-    kof_guanyu->addSkill(new Huwei);
+    General *kof_nos_guanyu = new General(this, "kof_nos_guanyu", "shu");
+    kof_nos_guanyu->addSkill("wusheng");
+    kof_nos_guanyu->addSkill(new Huwei);
 
-    General *kof_huangyueying = new General(this, "kof_huangyueying", "shu", 3, false);
-    kof_huangyueying->addSkill("nosjizhi");
-    kof_huangyueying->addSkill(new Cangji);
-    kof_huangyueying->addSkill(new CangjiInstall);
+    General *kof_nos_huangyueying = new General(this, "kof_nos_huangyueying", "shu", 3, false);
+    kof_nos_huangyueying->addSkill("nosjizhi");
+    kof_nos_huangyueying->addSkill(new Cangji);
+    kof_nos_huangyueying->addSkill(new CangjiInstall);
     related_skills.insertMulti("cangji", "#cangji-install");
 
     General *kof_huangzhong = new General(this, "kof_huangzhong", "shu");
@@ -1049,35 +1033,29 @@ Special1v1Package::Special1v1Package()
     kof_zhurong->addSkill("manyi");
     kof_zhurong->addSkill("lieren");
 
-    General *kof_lvmeng = new General(this, "kof_lvmeng", "wu");
-    kof_lvmeng->addSkill(new Shenju);
-    kof_lvmeng->addSkill(new ShenjuMark);
-    related_skills.insertMulti("shenju", "#shenju");
+    General *kof_nos_lvmeng = new General(this, "kof_nos_lvmeng", "wu");
+    kof_nos_lvmeng->addSkill(new Shenju);
+    //kof_nos_lvmeng->addSkill(new Botu);
 
-    General *kof_daqiao = new General(this, "kof_daqiao", "wu", 3, false);
-    kof_daqiao->addSkill("nosguose");
-    kof_daqiao->addSkill(new Wanrong);
+    General *kof_nos_daqiao = new General(this, "kof_nos_daqiao", "wu", 3, false);
+    kof_nos_daqiao->addSkill("nosguose");
+    kof_nos_daqiao->addSkill(new Wanrong);
 
     General *kof_sunshangxiang = new General(this, "kof_sunshangxiang", "wu", 3, false);
     kof_sunshangxiang->addSkill(new Yinli);
     kof_sunshangxiang->addSkill(new KOFXiaoji);
 
-    General *kof_huatuo = new General(this, "kof_huatuo", "qun", 3);
-    kof_huatuo->addSkill("jijiu");
-    kof_huatuo->addSkill(new Puji);
+    General *kof_nos_huatuo = new General(this, "kof_nos_huatuo", "qun", 3);
+    kof_nos_huatuo->addSkill("jijiu");
+    kof_nos_huatuo->addSkill(new Puji);
 
-    General *kof_diaochan = new General(this, "kof_diaochan", "qun", 3, false);
-    kof_diaochan->addSkill(new Pianyi);
-    kof_diaochan->addSkill("biyue");
-
-    General *hejin = new General(this, "hejin", "qun", 4); // QUN 025
-    hejin->addSkill(new Mouzhu);
-    hejin->addSkill(new Yanhuo);
+    General *kof_nos_diaochan = new General(this, "kof_nos_diaochan", "qun", 3, false);
+    kof_nos_diaochan->addSkill(new Pianyi);
+    kof_nos_diaochan->addSkill("biyue");
 
     addMetaObject<XiechanCard>();
     addMetaObject<CangjiCard>();
     addMetaObject<PujiCard>();
-    addMetaObject<MouzhuCard>();
 }
 
 ADD_PACKAGE(Special1v1)
@@ -1085,6 +1063,10 @@ ADD_PACKAGE(Special1v1)
 Special1v1ExtPackage::Special1v1ExtPackage()
     : Package("Special1v1Ext")
 {
+    General *hejin = new General(this, "hejin", "qun", 4); // QUN 025
+    hejin->addSkill(new Mouzhu);
+    hejin->addSkill(new Yanhuo);
+
     General *niujin = new General(this, "niujin", "wei"); // WEI 025
     niujin->addSkill(new Cuorui);
     niujin->addSkill(new Liewei);
@@ -1094,6 +1076,8 @@ Special1v1ExtPackage::Special1v1ExtPackage()
     hansui->addSkill(new Niluan);
     hansui->addSkill(new NiluanRecord);
     related_skills.insertMulti("niluan", "#niluan-record");
+
+    addMetaObject<MouzhuCard>();
 }
 
 ADD_PACKAGE(Special1v1Ext)

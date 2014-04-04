@@ -33,17 +33,17 @@ void RoomThread1v1::run() {
             foreach (const General *general, windpack->findChildren<const General *>())
                 candidates << general->objectName();
         } else {
-            candidates << "nos_caocao" << "nos_simayi" << "nos_xiahoudun" << "kof_zhangliao"
-                       << "kof_xuchu" << "nos_guojia" << "kof_zhenji" << "kof_xiahouyuan"
-                       << "nos_caoren" << "dianwei" << "kof_guanyu" << "nos_zhangfei"
-                       << "zhugeliang" << "nos_zhaoyun" << "nos_machao" << "kof_huangyueying"
+            candidates << "nos_caocao" << "nos_simayi" << "nos_xiahoudun" << "kof_nos_zhangliao"
+                       << "kof_nos_xuchu" << "nos_guojia" << "kof_zhenji" << "kof_xiahouyuan"
+                       << "nos_caoren" << "dianwei" << "kof_nos_guanyu" << "nos_zhangfei"
+                       << "zhugeliang" << "nos_zhaoyun" << "nos_machao" << "kof_nos_huangyueying"
                        << "kof_huangzhong" << "kof_jiangwei" << "kof_menghuo" << "kof_zhurong"
                        << "sunquan" << "nos_ganning" << "nos_huanggai" << "nos_zhouyu"
                        << "nos_luxun" << "kof_sunshangxiang" << "sunjian" << "xiaoqiao"
-                       << "nos_lvbu" << "kof_diaochan" << "yanliangwenchou" << "hejin";
+                       << "nos_lvbu" << "kof_nos_diaochan" << "yanliangwenchou" << "hejin";
             if (rule == "2013") {
-                candidates << "kof_liubei" << "kof_weiyan" << "kof_lvmeng" << "kof_daqiao"
-                           << "nos_zhoutai" << "kof_huatuo" << "nos_zhangjiao" << "pangde"
+                candidates << "kof_nos_liubei" << "kof_weiyan" << "kof_nos_lvmeng" << "kof_nos_daqiao"
+                           << "nos_zhoutai" << "kof_nos_huatuo" << "nos_zhangjiao" << "pangde"
                            << "niujin" << "hansui";
             }
         }

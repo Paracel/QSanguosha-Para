@@ -39,7 +39,7 @@ jiaxu					5
 sunce					4
 jiangwei				7
 wenpin					5
-vs_xiahoudun			5
-vs_guanyu				6
-vs_zhaoyun				7
-vs_lvbu					7
+vs_nos_xiahoudun		5
+vs_nos_guanyu			6
+vs_nos_zhaoyun			7
+vs_nos_lvbu				7

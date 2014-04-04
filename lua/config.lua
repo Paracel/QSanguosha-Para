@@ -46,6 +46,7 @@ config = {
 		--"YJCM2014",
 		"Assassins",
 		"Special3v3",
+		"Special3v3Ext",
 		"Special1v1",
 		"Special1v1Ext",
 		"SP",
@@ -102,32 +103,10 @@ config = {
 	},
 
 	roles_ban = {
-		"vs_xiahoudun",
-		"vs_guanyu",
-		"vs_zhaoyun",
-		"vs_lvbu",
-		"kof_zhangliao",
-		"kof_xuchu",
-		"kof_zhenji",
-		"kof_xiahouyuan",
-		"kof_liubei",
-		"kof_guanyu",
-		"kof_huangyueying",
-		"kof_huangzhong",
-		"kof_weiyan",
-		"kof_jiangwei",
-		"kof_menghuo",
-		"kof_zhurong",
-		"kof_lvmeng",
-		"kof_daqiao",
-		"kof_sunshangxiang",
-		"kof_huatuo",
-		"kof_diaochan",
 	},
 
 	kof_ban = {
 		"sunquan",
-		"huatuo"
 	},
 
 	basara_ban = {
@@ -139,7 +118,7 @@ config = {
 	},
 
 	pairs_ban = {
-		"huatuo", "zuoci", "bgm_pangtong", "kof_huatuo", "nos_huatuo",
+		"huatuo", "zuoci", "bgm_pangtong", "kof_nos_huatuo", "nos_huatuo",
 		"simayi+zhenji", "simayi+dengai",
 		"xiahoudun+luxun", "xiahoudun+zhangchunhua", "xiahoudun+nos_luxun", "xiahoudun+nos_zhangchunhua",
 		"caoren+shenlvbu", "caoren+caozhi", "caoren+bgm_diaochan", "caoren+bgm_caoren", "caoren+nos_caoren",
@@ -193,7 +172,7 @@ config = {
 		"diy_wangyuanji+heg_dongzhuo",
 		"heg_sunce+nos_guanxingzhangbao",
 		"heg_dongzhuo+nos_zhangchunhua", "heg_dongzhuo+nos_wangyi",
-		"neo_zhanggei+nos_huanggai", "neo_zhangfei+nos_zhangchunhua",
+		"neo_zhangfei+nos_huanggai", "neo_zhangfei+nos_zhangchunhua",
 		"nos_liubei+nos_luxun", "nos_liubei+nos_zhangchunhua",
 		"nos_zhangfei+nos_huanggai", "nos_zhangfei+nos_zhangchunhua",
 		"nos_huangyueying+nos_huanggai",

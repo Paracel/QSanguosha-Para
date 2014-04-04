@@ -550,23 +550,32 @@ ADD_PACKAGE(New3v3_2013Card)
 Special3v3Package::Special3v3Package()
     : Package("Special3v3")
 {
-    General *vs_xiahoudun = new General(this, "vs_xiahoudun", "wei");
-    vs_xiahoudun->addSkill(new VsGanglie);
+    General *vs_nos_xiahoudun = new General(this, "vs_nos_xiahoudun", "wei");
+    vs_nos_xiahoudun->addSkill(new VsGanglie);
 
-    General *vs_guanyu = new General(this, "vs_guanyu", "shu");
-    vs_guanyu->addSkill("wusheng");
-    vs_guanyu->addSkill(new Zhongyi);
-    vs_guanyu->addSkill(new ZhongyiAction);
+    General *vs_nos_guanyu = new General(this, "vs_nos_guanyu", "shu");
+    vs_nos_guanyu->addSkill("wusheng");
+    vs_nos_guanyu->addSkill(new Zhongyi);
+    vs_nos_guanyu->addSkill(new ZhongyiAction);
     related_skills.insertMulti("zhongyi", "#zhongyi-action");
 
-    General *vs_zhaoyun = new General(this, "vs_zhaoyun", "shu");
-    vs_zhaoyun->addSkill("longdan");
-    vs_zhaoyun->addSkill(new Jiuzhu);
+    General *vs_nos_zhaoyun = new General(this, "vs_nos_zhaoyun", "shu");
+    vs_nos_zhaoyun->addSkill("longdan");
+    vs_nos_zhaoyun->addSkill(new Jiuzhu);
 
-    General *vs_lvbu = new General(this, "vs_lvbu", "qun");
-    vs_lvbu->addSkill("wushuang");
-    vs_lvbu->addSkill(new Zhanshen);
+    General *vs_nos_lvbu = new General(this, "vs_nos_lvbu", "qun");
+    vs_nos_lvbu->addSkill("wushuang");
+    vs_nos_lvbu->addSkill(new Zhanshen);
 
+    addMetaObject<ZhongyiCard>();
+    addMetaObject<JiuzhuCard>();
+}
+
+ADD_PACKAGE(Special3v3)
+
+Special3v3ExtPackage::Special3v3ExtPackage()
+    : Package("Special3v3Ext")
+{
     General *wenpin = new General(this, "wenpin", "wei"); // WEI 019
     wenpin->addSkill(new Zhenwei);
     wenpin->addSkill(new ZhenweiDistance);
@@ -579,11 +588,8 @@ Special3v3Package::Special3v3Package()
     zhugejin->addSkill(new Mingzhe);
     related_skills.insertMulti("hongyuan", "#hongyuan");
 
-    addMetaObject<ZhongyiCard>();
-    addMetaObject<JiuzhuCard>();
     addMetaObject<ZhenweiCard>();
     addMetaObject<HongyuanCard>();
 }
 
-ADD_PACKAGE(Special3v3)
-
+ADD_PACKAGE(Special3v3Ext)

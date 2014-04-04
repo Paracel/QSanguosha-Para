@@ -3820,12 +3820,12 @@ P = 你自己, R = 你所在的房间</translation>
         <translation>不能载入字体文件 %1 !</translation>
     </message>
     <message>
-        <location filename="../../src/core/settings.cpp" line="106"/>
+        <location filename="../../src/core/settings.cpp" line="107"/>
         <source>Sanguosha-fans</source>
         <translation>三国杀fans</translation>
     </message>
     <message>
-        <location filename="../../src/core/settings.cpp" line="107"/>
+        <location filename="../../src/core/settings.cpp" line="108"/>
         <source>%1&apos;s server</source>
         <translation>%1的服务器</translation>
     </message>

@@ -93,5 +93,8 @@ return {
 	["illustrator:zhuhuan"] = "XXX",
 	["designer:zhuhuan"] = "半缘修道",
 	["youdi"] = "诱敌",
-	[":youdi"] = "",
+	[":youdi"] = "结束阶段开始时，你可以令一名其他角色弃置你一张牌：若该牌不为【杀】，你可以获得其一张牌。",
+	["youdi:obtain"] = "获得其一张牌",
+	["youdi-invoke"] = "你可以发动“诱敌”<br> <b>操作提示</b>：选择一名其他角色→点击确定<br/>",
+	["youdi_obtain"] = "诱敌获得牌",
 }

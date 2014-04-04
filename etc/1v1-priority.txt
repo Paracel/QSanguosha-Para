@@ -101,6 +101,7 @@ manchong				85
 panzhangmazhong			68					
 yufan					79					
 zhuran					72					
+zhuhuan					65					
 yangxiu					16					
 gongsunzan				40					
 yuanshu					96					

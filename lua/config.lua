@@ -43,7 +43,7 @@ config = {
 		"YJCM",
 		"YJCM2012",
 		"YJCM2013",
-		--"YJCM2014",
+		"YJCM2014",
 		"Assassins",
 		"Special3v3",
 		"Special3v3Ext",

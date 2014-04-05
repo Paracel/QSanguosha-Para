@@ -156,13 +156,13 @@ return {
 
 	["#lingcao"] = "侠义先锋", -- unofficial
 	["lingcao"] = "凌操",
-	["illustrator:lingcao"] = "",
+	["illustrator:lingcao"] = "樱花闪乱", -- unofficial, origin: 凌统 (一将成名2011参赛稿)
 	["dujin"] = "独进",
 	[":dujin"] = "摸牌阶段，你可以额外摸X+1张牌。（X为你装备区的牌数的一半，向下取整）",
 
 	["#sunru"] = "温善贤惠", -- unofficial
 	["sunru"] = "孙茹",
-	["illustrator:sunru"] = "",
+	["illustrator:sunru"] = "Yi章", -- unofficial, origin: 步练师 (一将成名2012参赛稿)
 	["qingyi"] = "轻逸",
 	[":qingyi"] = "你可以跳过判定阶段和摸牌阶段：若如此做，视为你使用一张无距离限制的【杀】。",
 	["@qingyi-slash"] = "你可以跳过判定阶段和摸牌阶段发动“轻逸”",

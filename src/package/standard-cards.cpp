@@ -11,14 +11,7 @@ Slash::Slash(Suit suit, int number): BasicCard(suit, number)
     setObjectName("slash");
     nature = DamageStruct::Normal;
     drank = 0;
-}
-
-DamageStruct::Nature Slash::getNature() const{
-    return nature;
-}
-
-void Slash::setNature(DamageStruct::Nature nature) {
-    this->nature = nature;
+    specific_assignee = QStringList();
 }
 
 bool Slash::IsAvailable(const Player *player, const Card *slash, bool considerSpecificAssignee) {
@@ -70,6 +63,10 @@ bool Slash::IsSpecificAssignee(const Player *player, const Player *from, const C
              && !Slash::IsAvailable(from, slash, false)) {
         QStringList assignee_list = from->property("extra_slash_specific_assignee").toString().split("+");
         if (assignee_list.contains(player->objectName())) return true;
+    } else {
+        const Slash *s = qobject_cast<const Slash *>(slash);
+        if (s && s->hasSpecificAssignee(player))
+            return true;
     }
     return false;
 }

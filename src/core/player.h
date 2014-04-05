@@ -238,8 +238,8 @@ protected:
     QMap<QString, QStringList> pile_open;
     QSet<QString> acquired_skills;
     QStringList skills;
-    QSet<QString> flags;
     QHash<QString, int> history;
+    mutable QSet<QString> flags;
 
 private:
     QString screen_name;

@@ -581,13 +581,51 @@ public:
 };
 
 XiansiSlashCard::XiansiSlashCard() {
-    target_fixed = true;
     m_skillName = "xiansi_slash";
 }
 
-void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
-    ServerPlayer *liufeng = room->findPlayerBySkillName("xiansi");
-    if (!liufeng || liufeng->getPile("counter").length() < 2) return;
+bool XiansiSlashCard::targetsFeasible(const QList<const Player *> &, const Player *) const{
+    return true;
+}
+
+bool XiansiSlashCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    Slash *slash = new Slash(Card::SuitToBeDecided, -1);
+    if (targets.isEmpty()) {
+        bool filter = to_select->hasSkill("xiansi") && to_select->getPile("counter").length() >= 2
+                      && slash->targetFilter(QList<const Player *>(), to_select, Self);
+        delete slash;
+        return filter;
+    } else {
+        slash->addSpecificAssignee(targets.first());
+        bool filter = slash->targetFilter(targets, to_select, Self);
+        delete slash;
+        return filter;
+    }
+    return false;
+}
+
+void XiansiSlashCard::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    if (use.to.isEmpty()) {
+        QList<ServerPlayer *> liufengs = room->findPlayersBySkillName("xiansi");
+        foreach (ServerPlayer *liufeng, liufengs) {
+            if (liufeng->getPile("counter").length() < 2) continue;
+            if (use.from->canSlash(liufeng)) {
+                use.to << liufeng;
+                break;
+            }
+        }
+    }
+    if (!use.to.isEmpty()) {
+        use.from->tag["xiansi"] = QVariant::fromValue((PlayerStar)use.to.first());
+        SkillCard::onUse(room, use);
+    }
+}
+
+void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
+    PlayerStar liufeng = source->tag["xiansi"].value<PlayerStar>();
+    source->tag.remove("xiansi");
+    if (liufeng->getPile("counter").length() < 2) return;
 
     DummyCard *dummy = new DummyCard;
     if (liufeng->getPile("counter").length() == 2) {
@@ -614,11 +652,19 @@ void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *
     room->throwCard(dummy, reason, NULL);
     delete dummy;
 
-    if (source->canSlash(liufeng, NULL, false)) {
-        Slash *slash = new Slash(Card::SuitToBeDecided, -1);
-        slash->setSkillName("_xiansi");
-        room->useCard(CardUseStruct(slash, source, liufeng));
+    Slash *slash = new Slash(Card::SuitToBeDecided, -1);
+    slash->setSkillName("_xiansi");
+    CardUseStruct use;
+    use.from = source;
+    use.card = slash;
+    foreach (ServerPlayer *p, targets) {
+        if (source->canSlash(p, slash))
+            use.to << p;
     }
+    if (!use.to.isEmpty())
+        room->useCard(use);
+    else
+        delete slash;
 }
 
 class XiansiSlashViewAsSkill: public ZeroCardViewAsSkill {
@@ -643,18 +689,17 @@ public:
 
 private:
     static bool canSlashLiufeng(const Player *player) {
-        const Player *liufeng = NULL;
+        Slash *slash = new Slash(Card::SuitToBeDecided, -1);
         foreach (const Player *p, player->getAliveSiblings()) {
             if (p->hasSkill("xiansi") && p->getPile("counter").length() > 1) {
-                liufeng = p;
-                break;
+                if (slash->targetFilter(QList<const Player *>(), p, player)) {
+                    delete slash;
+                    return true;
+                }
             }
         }
-        if (!liufeng) return false;
-
-        Slash *slash = new Slash(Card::SuitToBeDecided, -1);
-        slash->deleteLater();
-        return slash->targetFilter(QList<const Player *>(), liufeng, player);
+        delete slash;
+        return false;
     }
 };
 

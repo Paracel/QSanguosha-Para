@@ -314,8 +314,11 @@ class Slash: public BasicCard {
 
 public:
     Q_INVOKABLE Slash(Card::Suit suit, int number);
-    DamageStruct::Nature getNature() const;
-    void setNature(DamageStruct::Nature nature);
+
+    inline void setNature(DamageStruct::Nature nature) { this->nature = nature; }
+    inline DamageStruct::Nature getNature() const{ return nature; }
+    inline void addSpecificAssignee(const Player *player) { specific_assignee << player->objectName(); }
+    inline bool hasSpecificAssignee(const Player *player) const{ return specific_assignee.contains(player->objectName()); }
 
     virtual QString getSubtype() const;
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
@@ -331,6 +334,7 @@ public:
 protected:
     DamageStruct::Nature nature;
     mutable int drank;
+    QStringList specific_assignee;
 };
 
 class Jink: public BasicCard {

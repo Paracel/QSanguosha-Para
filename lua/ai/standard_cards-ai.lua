@@ -677,7 +677,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 
 		if parsedPrompt[1] ~= "@niluan-slash" and target:hasSkill("xiansi") and target:getPile("counter"):length() > 1
 			and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
-			return "@XiansiSlashCard=.->" .. target:objectName()
+			return "@XiansiSlashCard=."
 		end
 
 		self:useCardSlash(slash, use)
@@ -729,7 +729,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 		use.to:append(target)
 
 		if target:hasSkill("xiansi") and target:getPile("counter"):length() > 1 and not (self:needKongcheng() and self.player:isLastHandCard(slash, true)) then
-			return "@XiansiSlashCard=.->" .. target:objectName()
+			return "@XiansiSlashCard=."
 		end
 
 		self:useCardSlash(useslash, use)

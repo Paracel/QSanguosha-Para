@@ -123,8 +123,11 @@ public:
 class Slash: public BasicCard {
 public:
     Slash(Card::Suit suit, int number);
-    DamageStruct::Nature getNature() const;
+
     void setNature(DamageStruct::Nature nature);
+    DamageStruct::Nature getNature() const;
+    void addSpecificAssignee(const Player *player);
+    bool hasSpecificAssignee(const Player *player) const;
 
     static bool IsAvailable(const Player *player, const Card *slash = NULL, bool considerSpecificAssignee = true);
     static bool IsSpecificAssignee(const Player *player, const Player *from, const Card *slash);
@@ -132,6 +135,7 @@ public:
 protected:
     DamageStruct::Nature nature;
     mutable int drank;
+    QStringList specific_assignee;
 };
 
 class Analeptic: public BasicCard {

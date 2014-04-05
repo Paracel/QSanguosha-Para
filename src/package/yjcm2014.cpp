@@ -24,7 +24,7 @@ public:
         if (player) {
             int id = room->askForCardChosen(player, target, "he", objectName(), false, Card::MethodDiscard);
             room->throwCard(id, target, player);
-            if (!Sanguosha->getCard(id)->isKindOf("Slash") && !player->isNude()) {
+            if (!Sanguosha->getCard(id)->isKindOf("Slash") && player->isAlive() && !player->isNude()) {
                 QVariant player_data = QVariant::fromValue((PlayerStar)player);
                 if (room->askForChoice(target, objectName(), "obtain+cancel", player_data) == "obtain") {
                     int id2= room->askForCardChosen(target, player, "he", "youdi_obtain");

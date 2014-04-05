@@ -1829,13 +1829,15 @@ function SmartAI:getDangerousCard(who)
 	if armor and armor:isKindOf("EightDiagram") and who:hasSkills("leiji|nosleiji") then return armor:getEffectiveId() end
 	if weapon and (weapon:isKindOf("SPMoonSpear") or weapon:isKindOf("MoonSpear")) and who:hasSkills("guidao|longdan|guicai|nosguicai|jilve|huanshi|qingguo|kanpo") then return weapon:getEffectiveId() end
 	if weapon and who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] >= who:getHp() - 1 then return weapon:getEffectiveId() end
+
+	if self:isFriend(who) then return end
 	if weapon and weapon:isKindOf("Crossbow") and getCardsNum("Slash", who, self.player) > 1 then
-		for _, friend in ipairs(self.friends) do
+		for _, friend in ipairs(self:getEnemies(who)) do
 			if who:canSlash(friend) then return weapon:getEffectiveId() end
 		end
 	end
 	if weapon and weapon:isKindOf("GudingBlade") and not who:hasSkill("jueqing") and getCardsNum("Slash", who, self.player) > 0 then
-		for _, friend in ipairs(self.friends) do
+		for _, friend in ipairs(self:getEnemies(who)) do
 			if who:canSlash(friend) and friend:isKongcheng() and not friend:hasSkills("kongcheng|tianming") then
 				return weapon:getEffectiveId()
 			end
@@ -1843,7 +1845,7 @@ function SmartAI:getDangerousCard(who)
 	end
 	if weapon then
 		if who:hasSkill("liegong") and sgs.weapon_range[weapon:getClassName()] > 2 then return weapon:getEffectiveId() end
-		for _, friend in ipairs(self.friends) do
+		for _, friend in ipairs(self:getEnemies(who)) do
 			if who:distanceTo(friend) < who:getAttackRange(false) and self:isWeak(friend) and not self:doNotDiscard(who, "e", true) then return weapon:getEffectiveId() end
 		end
 	end
@@ -1855,9 +1857,11 @@ function SmartAI:getValuableCard(who)
 	local offhorse = who:getOffensiveHorse()
 	local defhorse = who:getDefensiveHorse()
 	local treasure = who:getTreasure()
-	self:sort(self.friends, "hp")
+
+	local friends = self:getEnemies(who)
+	self:sort(friends, "hp")
 	local friend
-	if #self.friends > 0 then friend = self.friends[1] end
+	if #friends > 0 then friend = friends[1] end
 	if friend and self:isWeak(friend) and who:distanceTo(friend) <= who:getAttackRange() and not self:doNotDiscard(who, "e", true) then
 		if weapon and who:distanceTo(friend) > who:getAttackRange(false) then return weapon:getEffectiveId() end
 		if offhorse and who:distanceTo(friend) > who:getAttackRange() + 1 then return offhorse:getEffectiveId() end
@@ -1926,7 +1930,7 @@ function SmartAI:getValuableCard(who)
 
 	if offhorse and who:getHandcardNum() > 1 then
 		if not self:doNotDiscard(who, "e", true) then
-			for _, friend in ipairs(self.friends) do
+			for _, friend in ipairs(self:getEnemies(who)) do
 				if who:distanceTo(friend) == who:getAttackRange() and who:getAttackRange() > 1 then
 					return offhorse:getEffectiveId()
 				end
@@ -1940,7 +1944,7 @@ function SmartAI:getValuableCard(who)
 
 	if weapon and who:getHandcardNum() > 1 then
 		if not self:doNotDiscard(who, "e", true) then
-			for _, friend in ipairs(self.friends) do
+			for _, friend in ipairs(self:getEnemies(who)) do
 				if (who:distanceTo(friend) <= who:getAttackRange()) and (who:distanceTo(friend) > 1) then
 					return weapon:getEffectiveId()
 				end
@@ -2301,7 +2305,8 @@ sgs.ai_choicemade_filter.cardChosen.snatch = function(self, player, promptlist)
 					intention = 0
 				end
 			end
-			if promptlist[2] == "snatch" and (card:isKindOf("OffensiveHorse") or card:isKindOf("Weapon")) and self:isFriend(from, to) then
+			if (promptlist[2] == "snatch" or promptlist[2] == "youdi_obtain")
+				and (card:isKindOf("OffensiveHorse") or card:isKindOf("Weapon")) and self:isFriend(from, to) then
 				local canAttack
 				for _, p in ipairs(self:getEnemies(from)) do
 					if from:inMyAttackRange(p) then

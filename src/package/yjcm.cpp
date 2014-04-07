@@ -70,7 +70,7 @@ public:
             else if (caozhi->askForSkillInvoke(objectName(), data)) {
                 int ai_delay = Config.AIDelay;
                 Config.AIDelay = 0;
-                while (!card_ids.isEmpty()) {
+                while (card_ids.length() > 1) {
                     room->fillAG(card_ids, caozhi);
                     int id = room->askForAG(caozhi, card_ids, true, objectName());
                     if (id == -1) {
@@ -85,15 +85,13 @@ public:
                 if (!card_ids.isEmpty()) {
                     room->broadcastSkillInvoke("luoying");
                     foreach (int id, card_ids) {
-                        if (move.card_ids.contains(id)) {
-                            move.from_places.removeAt(move.card_ids.indexOf(id));
-                            move.card_ids.removeOne(id);
-                            data = QVariant::fromValue(move);
-                        }
-                        room->moveCardTo(Sanguosha->getCard(id), caozhi, Player::PlaceHand, move.reason, true);
-                        if (!caozhi->isAlive())
-                            break;
+                        move.from_places.removeAt(move.card_ids.indexOf(id));
+                        move.card_ids.removeOne(id);
                     }
+                    data = QVariant::fromValue(move);
+                    DummyCard *dummy = new DummyCard(card_ids);
+                    room->moveCardTo(dummy, caozhi, Player::PlaceHand, move.reason, true);
+                    delete dummy;
                 }
             }
         }

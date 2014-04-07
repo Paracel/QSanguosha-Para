@@ -742,6 +742,57 @@ public:
     }
 };
 
+class BotuCount: public TriggerSkill {
+public:
+    BotuCount(): TriggerSkill("#botu-count") {
+        events << PreCardUsed << CardResponded << TurnStart;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
+        if (player->getPhase() == Player::Play && (triggerEvent == PreCardUsed || triggerEvent == CardResponded)) {
+            CardStar c = NULL;
+            if (triggerEvent == PreCardUsed)
+                c = data.value<CardUseStruct>().card;
+            else
+                c = data.value<CardResponseStruct>().m_card;
+            if (c && int(c->getSuit()) <= 3) {
+                player->setMark("botu", player->getMark("botu") | (1 << int(c->getSuit())));
+            }
+        } else if (triggerEvent == TurnStart) {
+            player->setMark("botu", 0);
+        }
+
+        return false;
+    }
+};
+
+class Botu: public PhaseChangeSkill {
+public:
+    Botu(): PhaseChangeSkill("botu") {
+        frequency = Frequent;
+        global = true;
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 1;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *player) const{
+        Room *room = player->getRoom();
+        if (player->getPhase() == Player::NotActive) {
+            if (player->getMark("botu") != 0xF || !player->askForSkillInvoke("botu"))
+                return false;
+            room->broadcastSkillInvoke(objectName());
+            player->gainAnExtraTurn();
+        }
+        return false;
+    }
+};
+
 class Wanrong: public TriggerSkill {
 public:
     Wanrong(): TriggerSkill("wanrong") {
@@ -1035,7 +1086,9 @@ Special1v1Package::Special1v1Package()
 
     General *kof_nos_lvmeng = new General(this, "kof_nos_lvmeng", "wu");
     kof_nos_lvmeng->addSkill(new Shenju);
-    //kof_nos_lvmeng->addSkill(new Botu);
+    kof_nos_lvmeng->addSkill(new Botu);
+    kof_nos_lvmeng->addSkill(new BotuCount);
+    related_skills.insertMulti("botu", "#botu-count");
 
     General *kof_nos_daqiao = new General(this, "kof_nos_daqiao", "wu", 3, false);
     kof_nos_daqiao->addSkill("nosguose");

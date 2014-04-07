@@ -184,7 +184,7 @@ kof_nos_diaochan		78
 hejin					80					
 kof_nos_liubei			41					
 kof_weiyan				71					
-kof_nos_lvmeng			65					
+kof_nos_lvmeng			66					
 kof_nos_daqiao			55					
 kof_nos_huatuo			65					
 nos_caocao				60					

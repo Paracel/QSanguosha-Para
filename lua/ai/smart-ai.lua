@@ -605,6 +605,8 @@ function SmartAI:adjustUsePriority(card, v)
 	end
 	if self.player:hasSkill("mingzhe") and card:isRed() then v = v + (self.player:getPhase() ~= sgs.Player_NotActive and 0.05 or -0.05) end
 	v = v + (13 - card:getNumber()) / 1000
+	if self.player:getPhase() == sgs.Player_Play and self.player:hasSkill("botu") and card:getSuit() <= 3
+		and bit32.band(self.player:getMark("botu"), bit32.lshift(1, card:getSuit())) == 0 then v = v + 0.05 end
 	return v
 end
 

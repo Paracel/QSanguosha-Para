@@ -935,6 +935,8 @@ function sgs.ai_slash_prohibit.duanchang(self, from, to)
 end
 
 sgs.ai_skill_invoke.huashen = function(self)
+	local huashen_skill = self.player:getTag("HuashenSkills"):toString()
+	if (huashen_skill == "lianpo" and self.player:getMark("lianpo") > 0) or (huashen_skill == "botu" and self.player:getMark("botu") == 15) then return false end
 	return self.player:getHp() > 0
 end
 
@@ -1021,7 +1023,7 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 								"wangxi|luoyi|nosluoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|longhun|jiuchi|qingcheng|" ..
 								"shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|qianxi|jujian|shensu|luanji|zhijian|shuangxiong|" ..
 								"fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|" ..
-								"noskurou|wansha|lianpo|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
+								"noskurou|wansha|lianpo|botu|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
 								"xianzhen|qiaoshui|juece|sijian|chunlao|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|" ..
 								"hongyan|zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do

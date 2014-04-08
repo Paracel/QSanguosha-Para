@@ -239,7 +239,7 @@ protected:
     QSet<QString> acquired_skills;
     QStringList skills;
     QHash<QString, int> history;
-    mutable QSet<QString> flags;
+    QSet<QString> flags;
 
 private:
     QString screen_name;

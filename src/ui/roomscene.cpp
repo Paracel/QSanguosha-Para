@@ -2452,7 +2452,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
                 m_choiceDialog->setParent(main_window, Qt::Dialog);
                 m_choiceDialog->show();
                 ok_button->setEnabled(false);
-                cancel_button->setEnabled(true);
+                cancel_button->setEnabled(false);
                 discard_button->setEnabled(false);
             }
             break;

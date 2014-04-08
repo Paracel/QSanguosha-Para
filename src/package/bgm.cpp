@@ -1239,17 +1239,21 @@ public:
 class Fenyong: public TriggerSkill {
 public:
     Fenyong(): TriggerSkill("fenyong") {
-        events << Damaged << DamageInflicted;
+        events << Damaged << DamageInflicted << EventPhaseStart;
         frequency = Frequent;
     }
 
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        if (triggerEvent == Damaged) {
+        if (triggerEvent == Damaged && TriggerSkill::triggerable(player)) {
             if (player->getMark("@fenyong") == 0 && room->askForSkillInvoke(player, objectName())) {
                 room->addPlayerMark(player, "@fenyong");
                 room->broadcastSkillInvoke(objectName(), 1);
             }
-        } else if (triggerEvent == DamageInflicted) {
+        } else if (triggerEvent == DamageInflicted && TriggerSkill::triggerable(player)) {
             if (player->getMark("@fenyong") > 0) {
                 room->broadcastSkillInvoke(objectName(), 2);
                 LogMessage log;
@@ -1259,106 +1263,96 @@ public:
                 room->sendLog(log);
                 return true;
             }
+        } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Finish) {
+            const TriggerSkill *xuehen_trigger = NULL;
+            const Skill *xuehen = Sanguosha->getSkill("xuehen");
+            if (xuehen) xuehen_trigger = qobject_cast<const TriggerSkill *>(xuehen);
+            if (!xuehen_trigger) return false;
+
+            QVariant data = QVariant::fromValue((PlayerStar)player);
+            QList<ServerPlayer *> xiahous = room->findPlayersBySkillName("fenyong");
+            foreach (ServerPlayer *xiahou, xiahous) {
+                if (xiahou->getMark("@fenyong") > 0) {
+                    room->setPlayerMark(xiahou, "@fenyong", 0);
+                    if (xiahou->hasSkill("xuehen"))
+                        xuehen_trigger->trigger(NonTrigger, room, xiahou, data);
+                }
+            }
         }
         return false;
     }
 };
 
-class FenyongWithoutXuehen: public TriggerSkill {
+class FenyongDetach: public DetachEffectSkill {
 public:
-    FenyongWithoutXuehen():TriggerSkill("#fenyong-without-xuehen") {
-        events << EventPhaseStart;
+    FenyongDetach(): DetachEffectSkill("fenyong") {
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        ServerPlayer *xiahou = room->findPlayerBySkillName("fenyong");
-        if (xiahou == NULL)
-            return false;
-        if (xiahou->getPhase() == Player::Finish && xiahou->getMark("@fenyong") > 0) {
-            if (xiahou->tag["HuashenSkill"].toString() == "fenyong"
-                || xiahou->tag["XiaodeSkill"].toString() == "fenyong")
-                room->setPlayerMark(xiahou, "@fenyong", 0);
-        }
-        return false;
+    virtual void onSkillDetached(Room *room, ServerPlayer *player) const{
+        if (player->getMark("@fenyong") > 0)
+            room->setPlayerMark(player, "@fenyong", 0);
     }
 };
 
-class FenyongClear: public DetachEffectSkill {
-public:
-    FenyongClear(): DetachEffectSkill("fenyong") {
-    }
-
-    virtual void onSkillDetached(Room *, ServerPlayer *player) const{
-        player->loseAllMarks("@fenyong");
-    }
-};
-
+/* XueHen is triggered in the codes of FenYong
+ * So 'events' will not be set
+ * And triggerable() will always return false */
 class Xuehen: public TriggerSkill {
 public:
     Xuehen(): TriggerSkill("xuehen") {
-        events << EventPhaseStart;
         frequency = Compulsory;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
+    virtual bool triggerable(const ServerPlayer *) const{
+        return false;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        ServerPlayer *xiahou = room->findPlayerBySkillName(objectName());
-        if (xiahou == NULL)
-            return false;
-        if (player->getPhase() == Player::Finish && xiahou->getMark("@fenyong") > 0) {
-            LogMessage log;
-            log.from = xiahou;
-            log.arg = objectName();
-            log.type = "#TriggerSkill";
-            room->sendLog(log);
-            room->notifySkillInvoked(player, objectName());
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xiahou, QVariant &data) const{
+        LogMessage log;
+        log.from = xiahou;
+        log.arg = objectName();
+        log.type = "#TriggerSkill";
+        room->sendLog(log);
+        room->notifySkillInvoked(xiahou, objectName());
 
-            room->removePlayerMark(xiahou, "@fenyong");
-            QList<ServerPlayer *> targets;
-            foreach (ServerPlayer *p, room->getOtherPlayers(xiahou))
-                if (xiahou->canSlash(p, NULL, false))
-                    targets << p;
-            QString choice;
-            if (!Slash::IsAvailable(xiahou) || targets.isEmpty())
-                choice = "discard";
-            else
-                choice = room->askForChoice(xiahou, objectName(), "discard+slash");
-            if (choice == "slash") {
-                room->broadcastSkillInvoke(objectName(), 2);
+		PlayerStar player = data.value<PlayerStar>();
+        QList<ServerPlayer *> targets;
+        foreach (ServerPlayer *p, room->getOtherPlayers(xiahou))
+            if (xiahou->canSlash(p, NULL, false))
+                targets << p;
+        QString choice;
+        if (!Slash::IsAvailable(xiahou) || targets.isEmpty())
+            choice = "discard";
+        else
+            choice = room->askForChoice(xiahou, objectName(), "discard+slash");
+        if (choice == "slash") {
+            room->broadcastSkillInvoke(objectName(), 2);
 
-                ServerPlayer *victim = room->askForPlayerChosen(xiahou, targets, objectName(), "@dummy-slash");
+            ServerPlayer *victim = room->askForPlayerChosen(xiahou, targets, objectName(), "@dummy-slash");
 
-                Slash *slash = new Slash(Card::NoSuit, 0);
-                slash->setSkillName(objectName());
-                room->useCard(CardUseStruct(slash, xiahou, victim), false);
-            } else {
-                room->broadcastSkillInvoke(objectName(), 1);
-                room->setPlayerFlag(player, "xuehen_InTempMoving");
-                DummyCard *dummy = new DummyCard;
-                QList<int> card_ids;
-                QList<Player::Place> original_places;
-                for (int i = 0; i < xiahou->getLostHp(); i++) {
-                    if (!xiahou->canDiscard(player, "he"))
-                        break;
-                    card_ids << room->askForCardChosen(xiahou, player, "he", objectName(), false, Card::MethodDiscard);
-                    original_places << room->getCardPlace(card_ids[i]);
-                    dummy->addSubcard(card_ids[i]);
-                    player->addToPile("#xuehen", card_ids[i], false);
-                }
-                for (int i = 0; i < dummy->subcardsLength(); i++)
-                    room->moveCardTo(Sanguosha->getCard(card_ids[i]), player, original_places[i], false);
-                room->setPlayerFlag(player, "-xuehen_InTempMoving");
-                if (dummy->subcardsLength() > 0)
-                    room->throwCard(dummy, player, xiahou);
-                dummy->deleteLater();
+            Slash *slash = new Slash(Card::NoSuit, 0);
+            slash->setSkillName(objectName());
+            room->useCard(CardUseStruct(slash, xiahou, victim), false);
+        } else {
+            room->broadcastSkillInvoke(objectName(), 1);
+            room->setPlayerFlag(player, "xuehen_InTempMoving");
+            DummyCard *dummy = new DummyCard;
+            QList<int> card_ids;
+            QList<Player::Place> original_places;
+            for (int i = 0; i < xiahou->getLostHp(); i++) {
+                if (!xiahou->canDiscard(player, "he"))
+                    break;
+                card_ids << room->askForCardChosen(xiahou, player, "he", objectName(), false, Card::MethodDiscard);
+                original_places << room->getCardPlace(card_ids[i]);
+                dummy->addSubcard(card_ids[i]);
+                player->addToPile("#xuehen", card_ids[i], false);
             }
+            for (int i = 0; i < dummy->subcardsLength(); i++)
+                room->moveCardTo(Sanguosha->getCard(card_ids[i]), player, original_places[i], false);
+            room->setPlayerFlag(player, "-xuehen_InTempMoving");
+            if (dummy->subcardsLength() > 0)
+                room->throwCard(dummy, player, xiahou);
+            dummy->deleteLater();
         }
         return false;
     }
@@ -1421,13 +1415,11 @@ BGMPackage::BGMPackage(): Package("BGM") {
 
     General *bgm_xiahoudun = new General(this, "bgm_xiahoudun", "wei"); // *SP 010
     bgm_xiahoudun->addSkill(new Fenyong);
-    bgm_xiahoudun->addSkill(new FenyongClear);
-    bgm_xiahoudun->addSkill(new FenyongWithoutXuehen);
+    bgm_xiahoudun->addSkill(new FenyongDetach);
     bgm_xiahoudun->addSkill(new Xuehen);
     bgm_xiahoudun->addSkill(new SlashNoDistanceLimitSkill("xuehen"));
     bgm_xiahoudun->addSkill(new FakeMoveSkill("xuehen"));
     related_skills.insertMulti("fenyong", "#fenyong-clear");
-    related_skills.insertMulti("fenyong", "#fenyong-without-xuehen");
     related_skills.insertMulti("xuehen", "#xuehen-slash-ndl");
     related_skills.insertMulti("xuehen", "#xuehen-fake-move");
 

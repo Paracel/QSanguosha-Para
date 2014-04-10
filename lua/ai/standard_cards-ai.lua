@@ -947,8 +947,8 @@ function SmartAI:useCardPeach(card, use)
 					and getKnownCard(enemy, self.player, "black", nil, "he") >= 1)
 				or (not self.player:hasSkills("qianxun|nosqianxun") and getCardsNum("Snatch", enemy, self.player) >= 1
 					and (enemy:distanceTo(self.player) == 1 or enemy:hasSkills("qicai|nosqicai")))
-				or (enemy:hasSkill("tiaoxin") and self.player:inMyAttackRange(enemy)
-					and (self:getCardsNum("Slash") < 1) or not self.player:canSlash(enemy))) then
+				or (enemy:hasSkill("tiaoxin") and (self.player:inMyAttackRange(enemy) and self:getCardsNum("Slash") < 1)
+					or not self.player:canSlash(enemy))) then
 			mustusepeach = true
 			break
 		end

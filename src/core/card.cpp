@@ -314,6 +314,34 @@ void Card::setSkillName(const QString &name) {
 
 QString Card::getDescription() const{
     QString desc = Sanguosha->translate(":" + objectName());
+    if (desc.startsWith(":"))
+        desc = QString();
+    else if (desc.startsWith("[NoAutoRep]"))
+        desc = desc.mid(11);
+    else {
+        if (Config.value("AutoSkillTypeColorReplacement", true).toBool()) {
+            QMap<QString, QColor> skilltype_color_map = Sanguosha->getSkillTypeColorMap();
+            foreach (QString skill_type, skilltype_color_map.keys()) {
+                QString type_name = Sanguosha->translate(skill_type);
+                QString color_name = skilltype_color_map[skill_type].name();
+                desc.replace(type_name, QString("<font color=%1><b>%2</b></font>").arg(color_name).arg(type_name));
+            }
+        }
+        if (Config.value("AutoSuitReplacement", true).toBool()) {
+            for (int i = 0; i <= 3; i++) {
+                Card::Suit suit = (Card::Suit)i;
+                QString suit_name = Sanguosha->translate(Card::Suit2String(suit));
+                QString suit_char = Sanguosha->translate(Card::Suit2String(suit) + "_char");
+                QString colored_suit_char;
+                if (i < 2)
+                    colored_suit_char = suit_char;
+                else
+                    colored_suit_char = QString("<font color=#FF0000>%1</font>").arg(suit_char);
+                desc.replace(suit_char, colored_suit_char);
+                desc.replace(suit_name, colored_suit_char);
+            }
+        }
+    }
     desc.replace("\n", "<br/>");
     return tr("<b>[%1]</b> %2").arg(getName()).arg(desc);
 }

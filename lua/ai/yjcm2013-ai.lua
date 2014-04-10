@@ -1089,3 +1089,14 @@ function sgs.ai_slash_prohibit.qiuyuan(self, from, to)
 		if not to:isKongcheng() and not (to:getHandcardNum() == 1 and (to:hasSkill("kongcheng") or (to:hasSkill("zhiji") and to:getMark("zhiji") == 0))) then return true end
 	end
 end
+
+function SmartAI:hasQiuyuanEffect(from, to)
+	if not from or not to:hasSkill("qiuyuan") then return false end
+	if getKnownCard(to, self.player, "Jink", true, "he") >= 1 then
+		for _, target in ipairs(self:getEnemies(to)) do
+			if not target:isKongcheng() and not (target:getHandcardNum() == 1 and self:needKongcheng(target, true)) then
+				return true
+			end
+		end
+	end
+end

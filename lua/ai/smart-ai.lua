@@ -2766,6 +2766,7 @@ end
 function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 	from = from or self.room:getCurrent()
 	to = to or self.player
+	local is_friend = self:isFriend(from, to)
 	if not from:hasSkill("jueqing") and to:hasArmorEffect("silver_lion") then
 		if return_value then return 1 else return false end
 	end
@@ -2785,13 +2786,13 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 		if from:hasSkill("anjian") and not to:inMyAttackRange(from) then dmg = dmg + 1 end
 
 		local guanyu = self.room:findPlayerBySkillName("zhongyi")
-		if guanyu and guanyu:getPile("loyal"):length() > 0 and self:isFriend(guanyu, from) then dmg = dmg + 1 end
+		if guanyu and guanyu:getPile("loyal"):length() > 0 and self:isFriend(guanyu, from) and not is_friend then dmg = dmg + 1 end
 
 		if (to:hasArmorEffect("vine") or to:getMark("@gale") > 0) and fireSlash then dmg = dmg + 1 end
 		if from:hasWeapon("guding_blade") and slash and to:isKongcheng() then dmg = dmg + 1 end
-		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 then dmg = dmg + 1 end
+		if from:hasSkill("jieyuan") and to:getHp() >= from:getHp() and from:getHandcardNum() >= 3 and not is_friend then dmg = dmg + 1 end
 		if to:hasSkill("jieyuan") and from:getHp() >= to:getHp()
-			and (to:getHandcardNum() > 3 or getKnownCard(to, self.player, "red") > 0) then dmg = dmg - 1 end
+			and (to:getHandcardNum() > 3 or getKnownCard(to, self.player, "red") > 0) and not is_friend then dmg = dmg - 1 end
 	end
 	if return_value then return dmg end
 	return dmg > 1

@@ -447,16 +447,15 @@ end
 
 function SmartAI:isPriorFriendOfSlash(friend, card, source)
 	source = source or self.player
+	if self:hasHeavySlashDamage(source, card, friend) or card:getSkillName() == "lihuo" then return false end
 	local huatuo = self.room:findPlayerBySkillName("jijiu")
-	if not self:hasHeavySlashDamage(source, card, friend) and card:getSkillName() ~= "lihuo"
-			and (self:findLeijiTarget(friend, 50, source)
-				or (friend:isLord() and source:hasSkill("guagu") and friend:getLostHp() >= 1)
-				or (friend:hasSkill("jieming") and source:hasSkill("nosrende") and (huatuo and self:isFriend(huatuo, source)))
-				or (friend:hasSkill("hunzi") and friend:getHp() == 2 and self:getDamagedEffects(friend, source))) then
-		return true
-	end
-	if not source:hasSkill("jueqing") and card:isKindOf("NatureSlash") and friend:isChained() and self:isGoodChainTarget(friend, source, nil, nil, card) then return true end
-	return
+	return self:findLeijiTarget(friend, 50, source)
+			or (not source:hasSkill("jueqing") and friend:isLord() and source:hasSkill("guagu") and friend:getLostHp() >= 1)
+			or (not source:hasSkill("jueqing") and friend:hasSkill("jieming") and source:hasSkill("nosrende") and (huatuo and self:isFriend(huatuo, source)))
+			or (friend:hasSkill("hunzi") and friend:getHp() == 2 and self:getDamagedEffects(friend, source))
+			or (not source:hasSkill("jueqing") and card:isKindOf("NatureSlash") and friend:isChained() and self:isGoodChainTarget(friend, source, nil, nil, card))
+			or (source:hasSkill("jueqing") and friend:hasSkill("zhaxiang") and not self:isWeak(friend) and not (friend:getHp() == 2 and friend:hasSkill("chanyuan")))
+			or self:hasQiuyuanEffect(source, friend)
 end
 
 function SmartAI:useCardSlash(card, use)
@@ -521,7 +520,8 @@ function SmartAI:useCardSlash(card, use)
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		if not self:slashProhibit(card, enemy) and sgs.isGoodTarget(enemy, self.enemies, self, true) and not self:hasLiyuEffect(enemy, card) then
-			if not self:getDamagedEffects(enemy, self.player, true) then table.insert(targets, enemy) else table.insert(forbidden, enemy) end
+			if not self:getDamagedEffects(enemy, self.player, true) and not self:hasQiuyuanEffect(self.player, enemy) then table.insert(targets, enemy)
+			else table.insert(forbidden, enemy) end
 		end
 	end
 	if #targets == 0 and #forbidden > 0 then targets = forbidden end
@@ -800,14 +800,15 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 	if sgs.ai_collateral then sgs.ai_collateral = false return end
 	if card:hasFlag("nosjiefan-slash") or card:getSkillName() == "mizhao" then return end
 	for _, to in ipairs(tos) do
-		local value = 80
 		if table.contains(sgs.ai_leiji_effect, to) then
 			table.removeOne(sgs.ai_leiji_effect, to)
 			continue
 		end
+		if to:hasSkill("qiuyuan") then continue end
+		if from:hasSkill("jueqing") and to:hasSkill("zhaxiang") then continue end
 		if not self:hasHeavySlashDamage(from, card, to) and (self:getDamagedEffects(to, from, true) or self:needToLoseHp(to, from, true)) then continue end
 		if from:hasSkill("pojun") and to:getHp() > 2 + self:hasHeavySlashDamage(from, card, to, true) then continue end
-		sgs.updateIntention(from, to, value)
+		sgs.updateIntention(from, to, 80)
 	end
 end
 

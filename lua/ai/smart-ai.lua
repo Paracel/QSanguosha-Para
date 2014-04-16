@@ -3931,13 +3931,13 @@ function isCard(class_name, card, player)
 	return false
 end
 
-function SmartAI:getMaxCard(player)
+function SmartAI:getMaxCard(player, cards)
 	player = player or self.player
 	if player:isKongcheng() then return nil end
 
-	local cards = player:getHandcards()
+	cards = cards or sgs.QList2Table(player:getHandcards())
 	local max_card, max_point = nil, 0
-	for _, card in sgs.qlist(cards) do
+	for _, card in ipairs(cards) do
 		local flag = string.format("%s_%s_%s", "visible", global_room:getCurrent():objectName(), player:objectName())
 		if (player:objectName() == self.player:objectName() and not self:isValuableCard(card)) or card:hasFlag("visible") or card:hasFlag(flag) then
 			local point = card:getNumber()

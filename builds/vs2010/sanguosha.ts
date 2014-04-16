@@ -80,12 +80,12 @@
         <translation>无色</translation>
     </message>
     <message>
-        <location filename="../../src/core/card.cpp" line="318"/>
+        <location filename="../../src/core/card.cpp" line="346"/>
         <source>&lt;b&gt;[%1]&lt;/b&gt; %2</source>
         <translation>&lt;b&gt;【%1】&lt;/b&gt; %2</translation>
     </message>
     <message>
-        <location filename="../../src/core/card.cpp" line="653"/>
+        <location filename="../../src/core/card.cpp" line="681"/>
         <source>Subcard must not be virtual card!</source>
         <translation>子卡不能是虚拟卡牌 !</translation>
     </message>

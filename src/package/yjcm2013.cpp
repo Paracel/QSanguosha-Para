@@ -604,28 +604,23 @@ bool XiansiSlashCard::targetFilter(const QList<const Player *> &targets, const P
     return false;
 }
 
-void XiansiSlashCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    CardUseStruct use = card_use;
-    if (use.to.isEmpty()) {
+const Card *XiansiSlashCard::validate(CardUseStruct &cardUse) const{
+    Room *room = cardUse.from->getRoom();
+    if (cardUse.to.isEmpty()) {
         QList<ServerPlayer *> liufengs = room->findPlayersBySkillName("xiansi");
         foreach (ServerPlayer *liufeng, liufengs) {
             if (liufeng->getPile("counter").length() < 2) continue;
-            if (use.from->canSlash(liufeng)) {
-                use.to << liufeng;
+            if (cardUse.from->canSlash(liufeng)) {
+                cardUse.to << liufeng;
                 break;
             }
         }
+        if (cardUse.to.isEmpty())
+            return NULL;
     }
-    if (!use.to.isEmpty()) {
-        use.from->tag["xiansi"] = QVariant::fromValue((PlayerStar)use.to.first());
-        SkillCard::onUse(room, use);
-    }
-}
-
-void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    PlayerStar liufeng = source->tag["xiansi"].value<PlayerStar>();
-    source->tag.remove("xiansi");
-    if (liufeng->getPile("counter").length() < 2) return;
+    ServerPlayer *liufeng = cardUse.to.first();
+    if (liufeng->getPile("counter").length() < 2) return NULL;
+    ServerPlayer *source = cardUse.from;
 
     DummyCard *dummy = new DummyCard;
     if (liufeng->getPile("counter").length() == 2) {
@@ -654,17 +649,18 @@ void XiansiSlashCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *
 
     Slash *slash = new Slash(Card::SuitToBeDecided, -1);
     slash->setSkillName("_xiansi");
-    CardUseStruct use;
-    use.from = source;
-    use.card = slash;
-    foreach (ServerPlayer *p, targets) {
-        if (source->canSlash(p, slash))
-            use.to << p;
+
+    QList<ServerPlayer *> targets = cardUse.to;
+    foreach (ServerPlayer *target, targets) {
+        if (!source->canSlash(target, slash))
+            cardUse.to.removeOne(target);
     }
-    if (!use.to.isEmpty())
-        room->useCard(use);
-    else
+    if (cardUse.to.length() > 0)
+        return slash;
+    else {
         delete slash;
+        return NULL;
+    }
 }
 
 class XiansiSlashViewAsSkill: public ZeroCardViewAsSkill {

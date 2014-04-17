@@ -2886,7 +2886,9 @@ bool Room::useCard(const CardUseStruct &use, bool add_history) {
     if (card == NULL)
         return false;
 
-    if (card_use.from->getPhase() == Player::Play && add_history) {
+    if (card_use.from->getPhase() == Player::Play
+        && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_PLAY
+        && add_history) {
         if (!slash_not_record) {
             card_use.m_addHistory = true;
             addPlayerHistory(card_use.from, key);

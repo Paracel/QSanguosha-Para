@@ -59,87 +59,115 @@ return {
 	["&sp_zhugejin"] = "诸葛瑾",
 	["illustrator:sp_zhugejin"] = "G.G.G.",
 
-	["tw_diaochan"] = "台版貂蝉",
+	["tw_diaochan"] = "TW貂蝉",
 	["&tw_diaochan"] = "貂蝉",
 	["illustrator:tw_diaochan"] = "陳俊佐",
 
-	["tw_yuanshu"] = "台版袁术",
+	["tw_yuanshu"] = "TW袁术",
 	["&tw_yuanshu"] = "袁术", 
 	["illustrator:tw_yuanshu"] = "湯翔麟",
 
 	["#tw_zhaoyun"] = "少年将军",
-	["tw_zhaoyun"] = "台版赵云",
+	["tw_zhaoyun"] = "TW赵云",
 	["&tw_zhaoyun"] = "赵云", 
 	["illustrator:tw_zhaoyun"] = "湯翔麟",
 
-	["tw_daqiao"] = "台版大乔",
+	["tw_daqiao"] = "TW大乔",
 	["&tw_daqiao"] = "大乔", 
 	["illustrator:tw_daqiao"] = "玄兔",
 
-	["tw_zhenji"] = "台版甄姬",
+	["tw_zhenji"] = "TW甄姬",
 	["&tw_zhenji"] = "甄姬", 
 	["illustrator:tw_zhenji"] = "DM添",
 
-	["tw_machao"] = "台版马超",
+	["tw_machao"] = "TW马超",
 	["&tw_machao"] = "马超", 
 	["illustrator:tw_machao"] = "greey",
 
-	["tw_ganning"] = "台版甘宁",
+	["tw_ganning"] = "TW甘宁",
 	["&tw_ganning"] = "甘宁", 
 	["illustrator:tw_ganning"] = "greey",
 
-	["tw_huangyueying"] = "台版黄月英",
+	["tw_huangyueying"] = "TW黄月英",
 	["&tw_huangyueying"] = "黄月英", 
 	["illustrator:tw_huangyueying"] = "焚烧的大葱",
 
-	["tw_zhugeliang"] = "台版诸葛亮",
+	["tw_zhugeliang"] = "TW诸葛亮",
 	["&tw_zhugeliang"] = "诸葛亮", 
 	["illustrator:tw_zhugeliang"] = "巴萨小马",
 
-	["tw_lvbu"] = "台版吕布",
+	["tw_lvbu"] = "TW吕布",
 	["&tw_lvbu"] = "吕布", 
 	["illustrator:tw_lvbu"] = "焚烧的大葱",
 
-	["tw_zhangliao"] = "台版张辽",
+	["tw_zhangliao"] = "TW张辽",
 	["&tw_zhangliao"] = "张辽", 
 	["illustrator:tw_zhangliao"] = "巴萨小马",
 
-	["tw_luxun"] = "台版陆逊",
+	["tw_luxun"] = "TW陆逊",
 	["&tw_luxun"] = "陆逊", 
 	["illustrator:tw_luxun"] = "巴萨小马",
 
-	["tw_guojia"] = "台版郭嘉",
+	["tw_guojia"] = "TW郭嘉",
 	["&tw_guojia"] = "郭嘉", 
 	["illustrator:tw_guojia"] = "巴萨小马",
 
-	["tw_huanggai"] = "台版黄盖",
+	["tw_huanggai"] = "TW黄盖",
 	["&tw_huanggai"] = "黄盖", 
 	["illustrator:tw_huanggai"] = "巴萨小马",
 
-	["tw_guanyu"] = "台版关羽",
+	["tw_guanyu"] = "TW关羽",
 	["&tw_guanyu"] = "关羽", 
 	["illustrator:tw_guanyu"] = "",
 
-	["tw_xiahoudun"] = "台版夏侯惇",
+	["tw_xiahoudun"] = "TW夏侯惇",
 	["&tw_xiahoudun"] = "夏侯惇", 
 	["illustrator:tw_xiahoudun"] = "",
 
-	["tw_xuchu"] = "台版许褚",
+	["tw_xuchu"] = "TW许褚",
 	["&tw_xuchu"] = "许褚", 
 	["illustrator:tw_xuchu"] = "",
 
-	["tw_caocao"] = "台版曹操",
+	["tw_caocao"] = "TW曹操",
 	["&tw_caocao"] = "曹操",
 	["illustrator:tw_caocao"] = "",
 
-	["tw_simayi"] = "台版司马懿",
+	["tw_simayi"] = "TW司马懿",
 	["&tw_simayi"] = "司马懿",
 	["illustrator:tw_simayi"] = "",
 
 	["#tw_lvmeng"] = "白衣渡江",
-	["tw_lvmeng"] = "台版吕蒙",
+	["tw_lvmeng"] = "TW吕蒙",
 	["&tw_lvmeng"] = "吕蒙",
 	["illustrator:tw_lvmeng"] = "",
+
+	["tw_liubei"] = "TW刘备",
+	["&tw_liubei"] = "刘备",
+	["illustrator:tw_liubei"] = "",
+
+	["tw_zhangfei"] = "TW张飞",
+	["&tw_zhangfei"] = "张飞",
+	["illustrator:tw_zhangfei"] = "",
+
+	["tw_zhouyu"] = "TW周瑜",
+	["&tw_zhouyu"] = "周瑜",
+	["illustrator:tw_zhouyu"] = "",
+
+	["tw_xiaoqiao"] = "TW小乔",
+	["&tw_xiaoqiao"] = "小乔",
+	["illustrator:tw_xiaoqiao"] = "",
+
+	["tw_sunquan"] = "TW孙权",
+	["&tw_sunquan"] = "孙权",
+	["illustrator:tw_sunquan"] = "",
+
+	["tw_sunshangxiang"] = "TW孙尚香",
+	["&tw_sunshangxiang"] = "孙尚香",
+	["illustrator:tw_sunshangxiang"] = "",
+
+	["tw_huatuo"] = "TW华佗",
+	["&tw_huatuo"] = "华佗",
+	["illustrator:tw_huatuo"] = "",
 
 	["wz_daqiao"] = "王战大乔",
 	["&wz_daqiao"] = "大乔", 

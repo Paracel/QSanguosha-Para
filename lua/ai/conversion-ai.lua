@@ -37,6 +37,8 @@ sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_caocao = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_simayi = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_lvmeng = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_liubei = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_zhangfei = sgs.ai_skill_invoke.cv_huanggai
 
 sgs.ai_skill_invoke.cv_zhugeliang = function(self, data)
 	if math.random(0, 2) > 0 then return false end
@@ -71,26 +73,26 @@ end
 sgs.ai_skill_invoke.cv_pangde = sgs.ai_skill_invoke.cv_caiwenji
 sgs.ai_skill_invoke.cv_jiaxu = sgs.ai_skill_invoke.cv_caiwenji
 
-sgs.ai_skill_invoke.cv_machao = function(self, data)
+sgs.ai_skill_invoke.cv_nos_machao = function(self, data)
 	local lord = self.room:getLord()
-	if lord and not self.player:getGeneral2Name() == "machao"
+	if lord and not self.player:getGeneral2Name() == "nos_machao"
 		and ((lord:hasLordSkill("xueyi") and self:isFriend(lord))
 			or (self.player:getKingdom() == "shu" and lord:hasLordSkill("shichou") and not self:isFriend(lord))
 			or (lord:getKingdom() == "qun" and not lord:hasLordSkill("xueyi"))) then
-		sgs.ai_skill_choice.cv_machao = "sp_machao"
+		sgs.ai_skill_choice.cv_nos_machao = "sp_machao"
 		return true
 	end
 	if math.random(0, 2) == 0 then
-		sgs.ai_skill_choice.cv_machao = "tw_machao"
+		sgs.ai_skill_choice.cv_nos_machao = "tw_machao"
 		return true
 	end
 end
 
-sgs.ai_skill_invoke.cv_diaochan = function(self, data)
+sgs.ai_skill_invoke.cv_nos_diaochan = function(self, data)
 	if math.random(0, 2) == 0 then return false
-	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "tw_diaochan"
-	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_diaochan = "heg_diaochan"
-	else sgs.ai_skill_choice.cv_diaochan = "sp_diaochan" end
+	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_nos_diaochan = "tw_diaochan"
+	elseif math.random(0, 3) == 0 then sgs.ai_skill_choice.cv_nos_diaochan = "heg_diaochan"
+	else sgs.ai_skill_choice.cv_nos_diaochan = "sp_diaochan" end
 	return true
 end
 
@@ -105,14 +107,16 @@ sgs.ai_skill_invoke.cv_xiaoqiao = function(self, data)
 	if math.random(0, 3) >= 1 then return false
 	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_xiaoqiao = "wz_xiaoqiao"
 	elseif math.random(0, 2) > 0 then sgs.ai_skill_choice.cv_xiaoqiao = "heg_xiaoqiao"
-	else sgs.ai_skill_choice.cv_xiaoqiao = "sp_heg_xiaoqiao" end
+	elseif math.random(0, 4) > 0 then sgs.ai_skill_choice.cv_xiaoqiao = "sp_heg_xiaoqiao"
+	else sgs.ai_skill_choice.cv_xiaoqiao = "tw_xiaoqiao" end
 	return true
 end
 
 sgs.ai_skill_invoke.cv_nos_zhouyu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_zhouyu = "heg_zhouyu"
-	else sgs.ai_skill_choice.cv_zhouyu = "sp_heg_zhouyu" end
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_nos_zhouyu = "heg_zhouyu"
+	elseif math.random(0, 4) > 0 then sgs.ai_skill_choice.cv_nos_zhouyu = "sp_heg_zhouyu"
+	else sgs.ai_skill_choice.cv_nos_zhouyu = "tw_zhouyu" end
 	return true
 end
 
@@ -126,8 +130,8 @@ end
 
 sgs.ai_skill_invoke.cv_nos_lvbu = function(self, data)
 	if math.random(0, 3) >= 1 then return false
-	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_lvbu = "tw_lvbu"
-	else sgs.ai_skill_choice.cv_lvbu = "heg_lvbu" end
+	elseif math.random(0, 4) == 0 then sgs.ai_skill_choice.cv_nos_lvbu = "tw_lvbu"
+	else sgs.ai_skill_choice.cv_nos_lvbu = "heg_lvbu" end
 	return true
 end
 

@@ -3015,7 +3015,7 @@ void Room::loseMaxHp(ServerPlayer *victim, int lose) {
 }
 
 bool Room::changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude) {
-    player->gainMark("@waked");
+    addPlayerMark(player, "@waked");
     int n = player->getMark("@waked");
     if (magnitude < 0) {
         if (Config.Enable2ndGeneral && player->getGeneral() && player->getGeneral2()

@@ -1472,7 +1472,7 @@ public:
 
         room->broadcastSkillInvoke(objectName());
         room->notifySkillInvoked(lvmeng, objectName());
-        //room->doLightbox("$QinxueAnimate");
+        room->doLightbox("$QinxueAnimate");
 
         LogMessage log;
         log.type = "#QinxueWake";

@@ -897,23 +897,18 @@ public:
 class Liewei: public TriggerSkill {
 public:
     Liewei(): TriggerSkill("liewei") {
-        events << BuryVictim;
+        events << Death;
         frequency = Frequent;
-    }
-
-    virtual int getPriority(TriggerEvent) const{
-        return -2;
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
-        DeathStruct death = data.value<DeathStruct>();
-        if (death.damage && death.damage->from && TriggerSkill::triggerable(death.damage->from)
-            && room->askForSkillInvoke(death.damage->from, objectName(), data))
-            death.damage->from->drawCards(3, objectName());
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (TriggerSkill::triggerable(player)
+            && room->askForSkillInvoke(player, objectName(), data))
+            player->drawCards(3, objectName());
         return false;
     }
 };

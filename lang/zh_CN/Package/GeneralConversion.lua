@@ -59,6 +59,10 @@ return {
 	["&sp_zhugejin"] = "诸葛瑾",
 	["illustrator:sp_zhugejin"] = "G.G.G.",
 
+	["sp_dingfeng"] = "SP丁奉",
+	["&sp_dingfeng"] = "丁奉",
+	["illustrator:sp_dingfeng"] = "",
+
 	["tw_diaochan"] = "TW貂蝉",
 	["&tw_diaochan"] = "貂蝉",
 	["illustrator:tw_diaochan"] = "陳俊佐",

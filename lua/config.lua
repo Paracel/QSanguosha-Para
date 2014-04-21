@@ -204,6 +204,7 @@ config = {
 	convert_pairs = {
 		"caiwenji->sp_caiwenji",
 		"caopi->heg_caopi",
+		"dingfeng->sp_dingfeng",
 		"fazheng->ol_fazheng",
 		"guanxingzhangbao->ol_guanxingzhangbao",
 		"jiaxu->sp_jiaxu",

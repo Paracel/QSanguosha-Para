@@ -2,10 +2,6 @@ sgs.ai_skill_invoke.cv_caopi = function(self, data)
 	return math.random(0, 2) == 0
 end
 
-sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_nos_ganning = sgs.ai_skill_invoke.cv_caopi
-sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_caopi
 sgs.ai_skill_invoke.cv_zhugejin = sgs.ai_skill_invoke.cv_caopi
 
 sgs.ai_skill_invoke.cv_shencaocao = function(self, data)
@@ -19,10 +15,15 @@ sgs.ai_skill_invoke.cv_zhugeke = function(self, data)
 end
 
 sgs.ai_skill_invoke.cv_yuejin = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_dingfeng = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_xushu = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_fazheng = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_guanxingzhangbao = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_wangyi = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_nos_ganning = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_zhugeke
 
 sgs.ai_skill_invoke.cv_nos_huanggai = function(self, data)
 	return math.random(0, 6) == 0

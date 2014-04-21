@@ -2194,6 +2194,10 @@ SPPackage::SPPackage()
     zumao->addSkill(new Yinbing);
     zumao->addSkill(new Juedi);
 
+    General *sp_dingfeng = new General(this, "sp_dingfeng", "wu", 4, true, true); // SP 031
+    sp_dingfeng->addSkill("duanbing");
+    sp_dingfeng->addSkill("fenxun");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();

@@ -64,7 +64,6 @@ private:
     int max_hp;
     Gender gender;
     bool lord;
-    QSet<QString> skill_set;
     QSet<QString> extra_set;
     QStringList skillname_list;
     QStringList related_skills;

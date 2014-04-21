@@ -218,7 +218,7 @@ public:
     QList<const Skill *> getSkillList(bool include_equip = false, bool visible_only = true) const;
     QSet<const Skill *> getVisibleSkills(bool include_equip = false) const;
     QList<const Skill *> getVisibleSkillList(bool include_equip = false) const;
-    QSet<QString> getAcquiredSkills() const;
+    QStringList getAcquiredSkills() const;
     QString getSkillDescription() const;
 
     virtual bool isProhibited(const Player *to, const Card *card, const QList<const Player *> &others = QList<const Player *>()) const;

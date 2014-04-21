@@ -601,8 +601,10 @@ void Room::handleAcquireDetachSkills(ServerPlayer *player, const QStringList &sk
         } else {
             const Skill *skill = Sanguosha->getSkill(skill_name);
             if (!skill) continue;
-            if (player->getAcquiredSkills().contains(skill_name)) continue;
+            bool acquired = false;
+            if (player->getAcquiredSkills().contains(skill_name)) acquired = true;
             player->acquireSkill(skill_name);
+            if (acquired) continue;
 
             if (skill->inherits("TriggerSkill")) {
                 const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);
@@ -4019,9 +4021,10 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
 
 void Room::acquireSkill(ServerPlayer *player, const Skill *skill, bool open) {
     QString skill_name = skill->objectName();
-    if (player->getAcquiredSkills().contains(skill_name))
-        return;
+    bool acquired = false;
+    if (player->getAcquiredSkills().contains(skill_name)) acquired = true;
     player->acquireSkill(skill_name);
+    if (acquired) return;
 
     if (skill->inherits("TriggerSkill")) {
         const TriggerSkill *trigger_skill = qobject_cast<const TriggerSkill *>(skill);

@@ -70,21 +70,21 @@ void General::addSkill(Skill *skill) {
         QMessageBox::warning(NULL, "", tr("Invalid skill added to general %1").arg(objectName()));
         return;
     }
-    skill->setParent(this);
-    skill_set << skill->objectName();
-    if (!skillname_list.contains(skill->objectName()))
+    if (!skillname_list.contains(skill->objectName())) {
+        skill->setParent(this);
         skillname_list << skill->objectName();
+    }
 }
 
 void General::addSkill(const QString &skill_name) {
-    if (extra_set.contains(skill_name)) return;
-    extra_set << skill_name;
-    if (!skillname_list.contains(skill_name))
+    if (!skillname_list.contains(skill_name)) {
+        extra_set.insert(skill_name);
         skillname_list << skill_name;
+    }
 }
 
 bool General::hasSkill(const QString &skill_name) const{
-    return skill_set.contains(skill_name) || extra_set.contains(skill_name);
+    return skillname_list.contains(skill_name);
 }
 
 QList<const Skill *> General::getSkillList() const{

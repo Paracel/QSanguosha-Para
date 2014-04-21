@@ -362,11 +362,11 @@ bool Player::hasLordSkill(const QString &skill_name, bool include_lose) const{
 }
 
 void Player::acquireSkill(const QString &skill_name) {
-    acquired_skills.insert(skill_name);
+    acquired_skills.append(skill_name);
 }
 
 void Player::detachSkill(const QString &skill_name) {
-    acquired_skills.remove(skill_name);
+    acquired_skills.removeOne(skill_name);
 }
 
 void Player::detachAllSkills() {
@@ -812,8 +812,8 @@ bool Player::hasEquipSkill(const QString &skill_name) const{
 
 QSet<const TriggerSkill *> Player::getTriggerSkills() const{
     QSet<const TriggerSkill *> skillList;
-
-    foreach (QString skill_name, skills + acquired_skills.toList()) {
+    QStringList skill_list = skills + acquired_skills;
+    foreach (QString skill_name, skill_list.toSet()) {
         const TriggerSkill *skill = Sanguosha->getTriggerSkill(skill_name);
         if (skill && !hasEquipSkill(skill->objectName()))
             skillList << skill;
@@ -828,8 +828,8 @@ QSet<const Skill *> Player::getSkills(bool include_equip, bool visible_only) con
 
 QList<const Skill *> Player::getSkillList(bool include_equip, bool visible_only) const{
     QList<const Skill *> skillList;
-
-    foreach (QString skill_name, skills + acquired_skills.toList()) {
+    QStringList skill_list = skills + acquired_skills;
+    foreach (QString skill_name, skill_list.toSet()) {
         const Skill *skill = Sanguosha->getSkill(skill_name);
         if (skill
             && (include_equip || !hasEquipSkill(skill->objectName()))
@@ -848,7 +848,7 @@ QList<const Skill *> Player::getVisibleSkillList(bool include_equip) const{
     return getSkillList(include_equip, true);
 }
 
-QSet<QString> Player::getAcquiredSkills() const{
+QStringList Player::getAcquiredSkills() const{
     return acquired_skills;
 }
 
@@ -979,7 +979,7 @@ void Player::copyFrom(Player *p) {
 
     b->marks            = QMap<QString, int>(a->marks);
     b->piles            = QMap<QString, QList<int> >(a->piles);
-    b->acquired_skills  = QSet<QString>(a->acquired_skills);
+    b->acquired_skills  = QStringList(a->acquired_skills);
     b->flags            = QSet<QString>(a->flags);
     b->history          = QHash<QString, int>(a->history);
     b->m_gender         = a->m_gender;

@@ -623,10 +623,10 @@ function SmartAI:useCardSlash(card, use)
 		end
 	end
 
-	local qiuyuan_effect = false
+	local nosqiuyuan_effect = false
 	for _, enemy in ipairs(self.enemies) do
 		if not enemy:isKongcheng() and not (enemy:getHandcardNum() == 1 and self:needKongcheng(enemy, true)) then
-			qiuyuan_effect = true
+			nosqiuyuan_effect = true
 			break
 		end
 	end
@@ -638,7 +638,7 @@ function SmartAI:useCardSlash(card, use)
 			and (self.player:hasSkill("pojun") and friend:getHp() > 4 and getCardsNum("Jink", friend, self.player) == 0 and friend:getHandcardNum() < 3)
 			or (self:getDamagedEffects(friend, self.player) and not (friend:isLord() and #self.enemies < 1))
 			or (self:needToLoseHp(friend, self.player, true, true) and not (friend:isLord() and #self.enemies < 1))
-			or (friend:hasSkill("qiuyuan") and getKnownCard(friend, "Jink", true, true) >= 1 and qiuyuan_effect) then
+			or self:hasQiuyuanEffect(self.player, friend) then
 
 			if not slash_prohibit then
 				if ((self.player:canSlash(friend, card, not no_distance, rangefix))
@@ -804,7 +804,7 @@ sgs.ai_card_intention.Slash = function(self, card, from, tos)
 			table.removeOne(sgs.ai_leiji_effect, to)
 			continue
 		end
-		if to:hasSkill("qiuyuan") then continue end
+		if to:hasSkill("nosqiuyuan") then continue end
 		if from:hasSkill("jueqing") and to:hasSkill("zhaxiang") then continue end
 		if not self:hasHeavySlashDamage(from, card, to) and (self:getDamagedEffects(to, from, true) or self:needToLoseHp(to, from, true)) then continue end
 		if from:hasSkill("pojun") and to:getHp() > 2 + self:hasHeavySlashDamage(from, card, to, true) then continue end
@@ -850,7 +850,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 		if self:hasHeavySlashDamage(target, slash) then return getJink() end
 
 		local current = self.room:getCurrent()
-		if current and current:hasSkill("juece") and self.player:getHp() > 0 then
+		if current and current:hasSkill("nosjuece") and self.player:getHp() > 0 then
 			local use = false
 			for _, card in ipairs(self:getCards("Jink")) do
 				if not self.player:isLastHandCard(card, true) then
@@ -1516,7 +1516,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	end
 
 	local current = self.room:getCurrent()
-	if current and current:hasSkill("juece") and self:isEnemy(current) and self.player:getHp() > 0 then
+	if current and current:hasSkill("nosjuece") and self:isEnemy(current) and self.player:getHp() > 0 then
 		local classname = (name == "savage_assault" and "Slash" or "Jink")
 		local use = false
 		for _, card in ipairs(self:getCards(classname)) do

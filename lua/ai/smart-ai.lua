@@ -87,7 +87,7 @@ function setInitialTables()
 	sgs.ai_type_name = { "Skill", "Basic", "Trick", "Equip" }
 	sgs.lose_equip_skill = "kofxiaoji|xiaoji|xuanfeng|nosxuanfeng"
 	sgs.need_kongcheng = "lianying|noslianying|kongcheng|sijian"
-	sgs.masochism_skill = "nosyiji|yiji|jieming|fankui|nosfankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang"
+	sgs.masochism_skill = "nosyiji|yiji|jieming|fankui|nosfankui|nosenyuan|ganglie|vsganglie|nosganglie|enyuan|fangzhu|guixin|langgu|quanji|fenyong|chengxiang|noschengxiang"
 	sgs.wizard_skill = "guicainosguicai|guidao|jilve|tiandu|noszhenlie|huanshi"
 	sgs.wizard_harm_skill = "guicai|nosguicai|guidao|jilve|huanshi"
 	sgs.priority_skill = "dimeng|haoshi|qingnang|nosjizhi|jizhi|guzheng|qixi|jieyin|nosguose|guose|duanliang|jujian|fanjian|nosfanjian|noslijian|lijian|" ..
@@ -629,7 +629,7 @@ function SmartAI:getDynamicUsePriority(card)
 	if card:isKindOf("DelayedTrick") and not card:isKindOf("YanxiaoCard") and #card:getSkillName() > 0 then
 		return (sgs.ai_use_priority[card:getClassName()] or 0.01) - 0.01
 	end
-	if self.player:hasSkill("danshou") and not self.player:hasSkill("jueqing")
+	if self.player:hasSkill("nosdanshou") and not self.player:hasSkill("jueqing")
 		and (card:isKindOf("Slash") or card:isKindOf("Duel") or card:isKindOf("AOE")
 			or sgs.dynamic_value.damage_card[card:getClassName()]) then
 		return 0
@@ -3243,11 +3243,11 @@ function SmartAI:ableToSave(saver, dying)
 	local current = self.room:getCurrent()
 	if current and current:getPhase() ~= sgs.Player_NotActive and current:hasSkill("wansha")
 		and current:objectName() ~= saver:objectName() and current:objectName() ~= dying:objectName()
-		and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|renxin") then
+		and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|nosrenxin") then
 		return false
 	end
 	local peach = sgs.Sanguosha:cloneCard("peach", sgs.Card_NoSuitRed, 0)
-	if saver:isCardLimited(peach, sgs.Card_MethodUse, true) and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|renxin") then return false end
+	if saver:isCardLimited(peach, sgs.Card_MethodUse, true) and not saver:hasSkills("jiuzhu|chunlao|nosjiefan|nosrenxin") then return false end
 	return true
 end
 
@@ -4331,7 +4331,7 @@ function SmartAI:getCardsNum(class_name, flag, selfonly)
 			n = math.max(n, math.max(0, math.min(player:getCardCount(), player:getHp() - 1)))
 		elseif card_str:getSkillName() == "chunlao" then
 			n = n + player:getPile("wine"):length() - 1
-		elseif card_str:getSkillName() == "renxin" then
+		elseif card_str:getSkillName() == "nosrenxin" then
 			n = n + 1
 		end
 	end

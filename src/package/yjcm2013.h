@@ -11,15 +11,6 @@ public:
     YJCM2013Package();
 };
 
-class RenxinCard: public SkillCard {
-    Q_OBJECT
-
-public:
-    Q_INVOKABLE RenxinCard();
-
-    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
-};
-
 class JunxingCard: public SkillCard {
     Q_OBJECT
 
@@ -78,6 +69,7 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+/*
 class FenchengCard: public SkillCard {
     Q_OBJECT
 
@@ -86,6 +78,19 @@ public:
 
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
+};
+*/
+
+#include "skill.h"
+class Chengxiang: public MasochismSkill {
+    Q_OBJECT
+
+public:
+    Chengxiang();
+    virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const;
+
+protected:
+    int total_point;
 };
 
 #endif

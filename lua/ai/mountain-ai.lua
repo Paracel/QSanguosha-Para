@@ -1019,14 +1019,14 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		for _, askill in ipairs(("hongyuan|drzhiheng|fangquan|mizhao|quhu|fanjian|nosfanjian|junxing|hengzheng|duanliang|nosguose|guose|baobian|ganlu|" ..
 								"tiaoxin|zhaolie|chuanxin|fengshi|nostieji|moukui|liegong|mengjin|tieji|kofliegong|wushuang|drwushuang|niaoxiang|" ..
 								"juejing|nosfuhun|nosqianxi|yanxiao|guhuo|nosguhuo|xuanhuo|nosxuanhuo|qiangxi|huangen|nosjujian|lieren|pojun|" ..
-								"yishi|danshou|chuli|yinling|qixi|puji|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|qiangwu|jingce|shengxi|" ..
+								"yishi|nosdanshou|chuli|yinling|qixi|puji|gongxin|shangyi|duoshi|nosjizhi|jizhi|zhaoxin|gongqi|drjiedao|qiangwu|jingce|shengxi|" ..
 								"wangxi|luoyi|nosluoyi|jie|anjian|jiangchi|wusheng|longdan|jueqing|xueji|duwu|yinghun|longhun|jiuchi|qingcheng|" ..
 								"shuangren|kuangfu|qiaomeng|nosgongqi|wushen|lianhuan|duanxie|qianxi|jujian|shensu|luanji|zhijian|shuangxiong|" ..
 								"fuluan|yanyu|drluoyi|qingyi|huoshui|zhoufu|bifa|xinzhan|jieyuan|duanbing|fenxun|guidao|guicai|nosguicai|noszhenlie|" ..
 								"noskurou|wansha|lianpo|botu|qiluan|xiaode|qingjian|yicong|zhenwei|heyi|nosshangshi|shangshi|lianying|noslianying|tianyi|" ..
-								"xianzhen|qiaoshui|juece|sijian|chunlao|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
+								"xianzhen|qiaoshui|nosjuece|sijian|chunlao|zongshi|keji|paoxiao|kuiwei|yuanhu|huyuan|nosjushou|fenming|huoji|roulin|lihuo|" ..
 								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|jiushi|shushen|longyin|shoucheng|qicai|dangxian|tannang|mashu|nosqicai|" ..
-								"hongyan|zongxuan|mieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do
+								"hongyan|zongxuan|nosmieji|suishi|qinyin|tianfu|jinjiu|yicheng|jushou|nosguixin|yinbing|shenfen"):split("|")) do
 			if askill == "yinghun" and not self.player:isWounded() then continue end
 			if askill == "hengzheng" and (self.room:alivePlayerCount() <= 3 or self.player:getHp() > 1 or not self.player:isKongcheng()) then continue end
 			if askill == "chunlao" and not self.player:getPile("wine"):isEmpty() then continue end
@@ -1043,14 +1043,14 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 			end
 		end
 
-		if str:matchOne("qiuyuan") and self.room:alivePlayerCount() > 2 then return "qiuyuan" end
+		if str:matchOne("nosqiuyuan") and self.room:alivePlayerCount() > 2 then return "nosqiuyuan" end
 
 		if self:getAllPeachNum() > 0 or self.player:getHp() > 1 or not self:isWeak() then
 			if str:matchOne("guixin") and self.room:alivePlayerCount() > 3 then return "guixin" end
 			if str:matchOne("nosyiji") then return "nosyiji" end
 			if str:matchOne("yiji") then return "yiji" end
 			if str:matchOne("yuce") and not self.player:isKongcheng() then return "yuce" end
-			for _, askill in ipairs(("fankui|nosfankui|jieming|chengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|duodao|langgu"):split("|")) do
+			for _, askill in ipairs(("fankui|nosfankui|jieming|chengxiang|noschengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|duodao|langgu"):split("|")) do
 				if str:matchOne(askill) then return askill end
 			end
 		end
@@ -1087,14 +1087,14 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 		end
 		if str:matchOne("kofqingguo") and not self.player:getEquips():isEmpty() then return "kofqingguo" end
 
-		for _, askill in ipairs(("nosyiji|yiji|yuce|fankui|nosfankui|jieming|chengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|" ..
+		for _, askill in ipairs(("nosyiji|yiji|yuce|fankui|nosfankui|jieming|chengxiang|noschengxiang|ganglie|vsganglie|nosganglie|enyuan|fangzhu|nosenyuan|" ..
 								"wangxi|hengjiang|duodao|langgu"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 
 		for _, askill in ipairs(("huangen|jianxiong|nosjianxiong|jiang|nosqianxun|qianxun|danlao|juxiang|huoshou|zhichi|" ..
 								"lirang|qingjian|yicong|wusheng|wushuang|tianxiang|leiji|nosleiji|guhuo|nosguhuo|nosshangshi|shangshi|" ..
-								"zhiyu|guidao|guicai|nosguicai|chunlao|jijiu|buyi|renxin|lianying|noslianying|shoucheng|shenxian|sijian|tianming|" ..
+								"zhiyu|guidao|guicai|nosguicai|chunlao|jijiu|buyi|nosrenxin|lianying|noslianying|shoucheng|shenxian|sijian|tianming|" ..
 								"drjijiu|jieyuan|yanyu|zhendu|xiaoguo|tianfu|shushen|niaoxiang|zhenlie|tiandu|yingyang|noszhenlie"):split("|")) do
 			if askill == "chunlao" and self.player:getPile("wine"):isEmpty() then continue end
 			if str:matchOne(askill) then return askill end
@@ -1109,8 +1109,8 @@ function sgs.ai_skill_choice.huashen(self, choices, data, xiaode_choice)
 
 		if str:matchOne("buqu") and self.player:getPile("buqu"):length() <= 3 then return "buqu" end
 		for _, askill in ipairs(("xingshang|weidi|jilei|sijian|nosjizhi|jizhi|anxian|zhuhai|wuhun|hongyan|nosbuqu|zhuiyi|huilei|yanzheng|" ..
-								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|renxin|nosjiefan|zongshih|zongxuan|kuanggu|kofkuanggu|" ..
-								"zhuikong|lianpo|qiluan|zhaxiang|suishi|xiaode"):split("|")) do
+								"kofxiaoji|xiaoji|xuanfeng|nosxuanfeng|longhun|jiushi|jiuchi|nosrenxin|nosjiefan|zongshih|zongxuan|kuanggu|kofkuanggu|" ..
+								"noszhuikong|lianpo|qiluan|zhaxiang|suishi|xiaode"):split("|")) do
 			if str:matchOne(askill) then return askill end
 		end
 	end

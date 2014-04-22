@@ -55,6 +55,13 @@ public:
     NostalYJCM2012Package();
 };
 
+class NostalYJCM2013Package: public Package {
+    Q_OBJECT
+
+public:
+    NostalYJCM2013Package();
+};
+
 class NosJujianCard: public SkillCard {
     Q_OBJECT
 
@@ -80,6 +87,25 @@ public:
     Q_INVOKABLE NosJiefanCard();
 
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+class NosRenxinCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE NosRenxinCard();
+
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+class NosFenchengCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE NosFenchengCard();
+
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+    virtual void onEffect(const CardEffectStruct &effect) const;
 };
 
 class NosYexinCard: public SkillCard {

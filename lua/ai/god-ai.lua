@@ -810,7 +810,7 @@ function SmartAI:getSaveNum(isFriend)
 			if player:hasSkill("jiuzhu") and player:getHp() > 1 and not player:isNude() then
 				num = num + 0.9 * math.max(0, math.min(player:getHp() - 1, player:getCardCount()))
 			end
-			if player:hasSkill("renxin") and player:objectName() ~= self.player:objectName() and not player:isKongcheng() then num = num + 1 end
+			if player:hasSkill("nosrenxin") and player:objectName() ~= self.player:objectName() and not player:isKongcheng() then num = num + 1 end
 		end
 	end
 	return num

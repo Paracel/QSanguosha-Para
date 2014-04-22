@@ -25,7 +25,6 @@ return {
 
 	["#wangyi"] = "决意的巾帼",
 	["wangyi"] = "王异",
-	["designer:wangyi"] = "Virgopal",
 	["illustrator:wangyi"] = "木美人",
 	["zhenlie"] = "贞烈",
 	[":zhenlie"] = "每当你成为其他角色的【杀】或非延时锦囊牌的目标后，你可以失去1点体力：若如此做，你弃置该角色的一张牌，该牌对你无效。",
@@ -56,7 +55,6 @@ return {
 	["#guanxingzhangbao"] = "将门虎子",
 	["guanxingzhangbao"] = "关兴＆张苞",
 	["&guanxingzhangbao"] = "关兴张苞",
-	["designer:guanxingzhangbao"] = "诺思冥羽",
 	["illustrator:guanxingzhangbao"] = "HOOO",
 	["fuhun"] = "父魂",
 	[":fuhun"] = "你可以将两张手牌当普通【杀】使用或打出。每当你于出牌阶段内以此法使用【杀】造成伤害后，你拥有“武圣”、“咆哮”，直到回合结束。",
@@ -86,7 +84,6 @@ return {
 
 	["#handang"] = "石城侯",
 	["handang"] = "韩当",
-	["designer:handang"] = "ByArt",
 	["illustrator:handang"] = "DH",
 	["gongqi"] = "弓骑",
 	[":gongqi"] = "阶段技。你可以弃置一张牌：若如此做，本回合你的攻击范围无限；若该牌为装备牌，你可以弃置一名其他角色的一张牌。",

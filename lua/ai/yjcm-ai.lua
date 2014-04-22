@@ -759,12 +759,12 @@ end
 
 sgs.ai_skill_invoke.quanji = function(self, data)
 	local current = self.room:getCurrent()
-	local juece_effect = (current and current:isAlive() and current:getPhase() ~= sgs.Player_NotActive and self:isEnemy(current) and current:hasSkill("juece"))
+	local nosjuece_effect = (current and current:isAlive() and current:getPhase() ~= sgs.Player_NotActive and self:isEnemy(current) and current:hasSkill("juece"))
 	local manjuan_effect = hasManjuanEffect(self.player)
 	if self.player:isKongcheng() then
-		if manjuan_effect or juece_effect then return false end
+		if manjuan_effect or nosjuece_effect then return false end
 	elseif self.player:getHandcardNum() == 1 then
-		if manjuan_effect and juece_effect then return false end
+		if manjuan_effect and nosjuece_effect then return false end
 	end
 	return true
 end

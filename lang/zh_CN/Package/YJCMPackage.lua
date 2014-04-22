@@ -45,7 +45,6 @@ return {
 	["#xushu"] = "忠孝的侠士",
 	["xushu"] = "YJ徐庶",
 	["&xushu"] = "徐庶",
-	["designer:xushu"] = "双叶松",
 	["illustrator:xushu"] = "XINA",
 	["wuyan"] = "无言",
 	[":wuyan"] = "锁定技。每当你造成或受到伤害时，防止锦囊牌的伤害。",
@@ -62,7 +61,6 @@ return {
 
 	["#lingtong"] = "豪情烈胆",
 	["lingtong"] = "凌统",
-	["designer:lingtong"] = "ShadowLee",
 	["illustrator:lingtong"] = "绵Myan",
 	["xuanfeng"] = "旋风",
 	[":xuanfeng"] = "每当你失去一次装备区的牌后，或弃牌阶段结束时若你于本阶段内弃置了至少两张你的牌，你可以弃置一名其他角色的一张牌，然后弃置一名其他角色的一张牌。",

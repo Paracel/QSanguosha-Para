@@ -21,8 +21,23 @@ public:
         choices << "draw" << "cancel";
 
         const Card *card = damage.card;
-        if (card && room->getCardPlace(card->getEffectiveId()) == Player::PlaceTable)
-            choices.prepend("obtain");
+        if (card) {
+            QList<int> ids;
+            if (card->isVirtualCard())
+                ids = card->getSubcards();
+            else
+                ids << card->getEffectiveId();
+            if (ids.length() > 0) {
+                bool all_place_table = true;
+                foreach (int id, ids) {
+                    if (room->getCardPlace(id) != Player::PlaceTable) {
+                        all_place_table = false;
+                        break;
+                    }
+                }
+                if (all_place_table) choices.append("obtain");
+            }
+        }
 
         QString choice = room->askForChoice(caocao, objectName(), choices.join("+"), data);
         if (choice != "cancel") {

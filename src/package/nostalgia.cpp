@@ -1333,12 +1333,22 @@ public:
     virtual void onDamaged(ServerPlayer *caocao, const DamageStruct &damage) const{
         Room *room = caocao->getRoom();
         const Card *card = damage.card;
-        if (card && room->getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
-            QVariant data = QVariant::fromValue(damage);
-            if (room->askForSkillInvoke(caocao, "nosjianxiong", data)) {
-                room->broadcastSkillInvoke("jianxiong");
-                caocao->obtainCard(card);
-            }
+        if (!card) return;
+
+        QList<int> ids;
+        if (card->isVirtualCard())
+            ids = card->getSubcards();
+        else
+            ids << card->getEffectiveId();
+
+        if (ids.isEmpty()) return;
+        foreach (int id, ids) {
+            if (room->getCardPlace(id) != Player::PlaceTable) return;
+        }
+        QVariant data = QVariant::fromValue(damage);
+        if (room->askForSkillInvoke(caocao, "nosjianxiong", data)) {
+            room->broadcastSkillInvoke("jianxiong");
+            caocao->obtainCard(card);
         }
     }
 };

@@ -883,9 +883,116 @@ public:
 
 // Fencheng
 
-// Zhuikong
+class Zhuikong: public TriggerSkill {
+public:
+    Zhuikong(): TriggerSkill("zhuikong") {
+        events << EventPhaseStart;
+    }
 
-// Qiuyuan
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (player->getPhase() != Player::RoundStart || player->isKongcheng())
+            return false;
+
+        foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
+            if (player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
+                && room->askForSkillInvoke(fuhuanghou, objectName())) {
+                room->broadcastSkillInvoke("zhuikong");
+                if (fuhuanghou->pindian(player, objectName(), NULL)) {
+                    room->setPlayerFlag(player, "zhuikong");
+                } else {
+                    room->setFixedDistance(player, fuhuanghou, 1);
+                    QVariantList zhuikonglist = player->tag[objectName()].toList();
+                    zhuikonglist.append(QVariant::fromValue((PlayerStar)fuhuanghou));
+                    player->tag[objectName()] = QVariant::fromValue(zhuikonglist);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class ZhuikongClear: public TriggerSkill {
+public:
+    ZhuikongClear(): TriggerSkill("#zhuikong-clear") {
+        events << EventPhaseChanging;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+        if (change.to != Player::NotActive)
+            return false;
+
+        QVariantList zhuikonglist = player->tag["zhuikong"].toList();
+        if (zhuikonglist.isEmpty()) return false;
+        foreach (QVariant p, zhuikonglist) {
+            PlayerStar fuhuanghou = p.value<PlayerStar>();
+            room->setFixedDistance(player, fuhuanghou, -1);
+        }
+        player->tag.remove("zhuikong");
+        return false;
+    }
+};
+
+class ZhuikongProhibit: public ProhibitSkill {
+public:
+    ZhuikongProhibit(): ProhibitSkill("#zhuikong") {
+    }
+
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *, const QList<const Player *> &) const{
+        if (from->hasFlag("zhuikong"))
+            return to != from;
+        return false;
+    }
+};
+
+class Qiuyuan: public TriggerSkill {
+public:
+    Qiuyuan(): TriggerSkill("qiuyuan") {
+        events << TargetConfirming;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("Slash")) {
+            QList<ServerPlayer *> targets;
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (p != use.from)
+                    targets << p;
+            }
+            if (targets.isEmpty()) return false;
+            ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "qiuyuan-invoke", true, true);
+            if (target) {
+                if (target->getGeneralName().contains("fuwan") || target->getGeneral2Name().contains("fuwan"))
+                    room->broadcastSkillInvoke("qiuyuan", 2);
+                else
+                    room->broadcastSkillInvoke("qiuyuan", 1);
+                const Card *card = NULL;
+                if (!target->isKongcheng())
+                    card = room->askForCard(target, "Jink", "@qiuyuan-give:" + player->objectName(), data, Card::MethodNone);
+                CardMoveReason reason(CardMoveReason::S_REASON_GIVE, target->objectName(), player->objectName(), "nosqiuyuan", QString());
+                if (!card) {
+                    if (use.from->canSlash(target, use.card, false)) {
+                        use.to.append(target);
+                        room->sortByActionOrder(use.to);
+                        data = QVariant::fromValue(use);
+                        room->getThread()->trigger(TargetConfirming, room, target, data);
+                    }
+                } else {
+                    room->obtainCard(player, card, reason);
+                }
+            }
+        }
+        return false;
+    }
+};
 
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
@@ -894,11 +1001,13 @@ YJCM2013Package::YJCM2013Package()
     caochong->addSkill(new Chengxiang);
     caochong->addSkill(new Renxin);
 
-    /*General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3, false); // YJ 202
+    General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3, false); // YJ 202
     fuhuanghou->addSkill(new Zhuikong);
     fuhuanghou->addSkill(new ZhuikongClear);
+    fuhuanghou->addSkill(new ZhuikongProhibit);
     fuhuanghou->addSkill(new Qiuyuan);
-    related_skills.insertMulti("zhuikong", "#zhuikong-clear");*/
+    related_skills.insertMulti("zhuikong", "#zhuikong");
+    related_skills.insertMulti("zhuikong", "#zhuikong-clear");
 
     General *guohuai = new General(this, "guohuai", "wei"); // YJ 203
     guohuai->addSkill(new Jingce);

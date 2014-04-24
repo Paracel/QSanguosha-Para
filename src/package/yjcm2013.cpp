@@ -57,7 +57,42 @@ void Chengxiang::onDamaged(ServerPlayer *target, const DamageStruct &damage) con
     room->clearAG();
 }
 
-// Renxin
+class Renxin: public TriggerSkill {
+public:
+    Renxin(): TriggerSkill("renxin") {
+        events << DamageInflicted << ChoiceMade;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == DamageInflicted) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.to->getHp() == 1) {
+                foreach (ServerPlayer *p, room->getOtherPlayers(damage.to)) {
+                    if (TriggerSkill::triggerable(p) && p->canDiscard(p, "he")) {
+                        if (room->askForCard(p, ".Equip", "@renxin-card:" + damage.to->objectName(), data, objectName())) {
+                            room->broadcastSkillInvoke(objectName());
+                            LogMessage log;
+                            log.type = "#Renxin";
+                            log.from = damage.to;
+                            log.arg = objectName();
+                            room->sendLog(log);
+                            return true;
+                        }
+                    }
+                }
+            }
+        } else if (triggerEvent == ChoiceMade) {
+            QStringList data_list = data.toString().split(":");
+            if (data_list.length() > 3 && data_list.at(2) == "@renxin-card" && data_list.last() != "_nil_")
+                player->turnOver();
+        }
+        return false;
+    }
+};
 
 class Jingce: public TriggerSkill {
 public:
@@ -855,9 +890,9 @@ public:
 YJCM2013Package::YJCM2013Package()
     : Package("YJCM2013")
 {
-    /*General *caochong = new General(this, "caochong", "wei", 3); // YJ 201
+    General *caochong = new General(this, "caochong", "wei", 3); // YJ 201
     caochong->addSkill(new Chengxiang);
-    caochong->addSkill(new Renxin);*/
+    caochong->addSkill(new Renxin);
 
     /*General *fuhuanghou = new General(this, "fuhuanghou", "qun", 3, false); // YJ 202
     fuhuanghou->addSkill(new Zhuikong);
@@ -908,7 +943,6 @@ YJCM2013Package::YJCM2013Package()
     /*General *zhuran = new General(this, "zhuran", "wu"); // YJ 211
     zhuran->addSkill(new Danshou);*/
 
-    //addMetaObject<RenxinCard>();
     addMetaObject<JunxingCard>();
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();

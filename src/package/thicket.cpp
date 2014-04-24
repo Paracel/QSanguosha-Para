@@ -728,17 +728,13 @@ public:
         frequency = Compulsory;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isKindOf("Slash")) {
             QVariantList jink_list = use.from->tag["Jink_" + use.card->toString()].toList();
             int index = 0;
-            bool play_effect = false;
-            if (triggerEvent == TargetSpecified && TriggerSkill::triggerable(use.from)) {
+            if (triggerEvent == TargetSpecified) {
+                bool play_effect = false;
                 foreach (ServerPlayer *p, use.to) {
                     if (p->isFemale()) {
                         play_effect = true;
@@ -760,27 +756,22 @@ public:
                 }
             } else if (triggerEvent == TargetConfirmed && use.from->isFemale()) {
                 foreach (ServerPlayer *p, use.to) {
-                    if (p->hasSkill(objectName())) {
-                        play_effect = true;
+                    if (p == player) {
                         if (jink_list.at(index).toInt() == 1)
                             jink_list.replace(index, QVariant(2));
                     }
                     index++;
                 }
                 use.from->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
-                if (play_effect) {
-                    foreach (ServerPlayer *p, use.to) {
-                        if (p->hasSkill(objectName())) {
-                            LogMessage log;
-                            log.from = p;
-                            log.arg = objectName();
-                            log.type = "#TriggerSkill";
-                            room->sendLog(log);
-                            room->notifySkillInvoked(p, objectName());
-                        }
-                    }
-                    room->broadcastSkillInvoke(objectName(), 2);
-                }
+
+                LogMessage log;
+                log.from = player;
+                log.arg = objectName();
+                log.type = "#TriggerSkill";
+                room->sendLog(log);
+                room->notifySkillInvoked(player, objectName());
+
+                room->broadcastSkillInvoke(objectName(), 2);
             }
         }
 

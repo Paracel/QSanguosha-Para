@@ -286,7 +286,7 @@ bool LiuliCard::targetFilter(const QList<const Player *> &targets, const Player 
         range_fix += 1;
     }
 
-    return Self->distanceTo(to_select, range_fix) <= Self->getAttackRange();
+    return Self->inMyAttackRange(to_select, range_fix);
 }
 
 void LiuliCard::onEffect(const CardEffectStruct &effect) const{

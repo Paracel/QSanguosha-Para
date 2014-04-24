@@ -3023,7 +3023,7 @@ function SmartAI:getCardNeedPlayer(cards, friends_table, handcard)
 		if friend:faceUp() then
 			local can_slash = false
 			for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) <= friend:getAttackRange() then
+				if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:inMyAttackRange(p) then
 					can_slash = true
 					break
 				end
@@ -3031,7 +3031,7 @@ function SmartAI:getCardNeedPlayer(cards, friends_table, handcard)
 
 			if not can_slash then
 				for _, p in sgs.qlist(self.room:getOtherPlayers(friend)) do
-					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:distanceTo(p) > friend:getAttackRange() then
+					if self:isEnemy(p) and sgs.isGoodTarget(p, self.enemies, self) and friend:inMyAttackRange(p) then
 						for _, hcard in ipairs(cardtogive) do
 							if hcard:isKindOf("Weapon")
 								and friend:distanceTo(p) <= friend:getAttackRange() + (sgs.weapon_range[hcard:getClassName()] or 0) and not friend:getWeapon() then
@@ -5169,7 +5169,7 @@ function SmartAI:damageMinusHp(self, enemy, type)
 				end
 				trick_effectivenum = trick_effectivenum + 1
 			elseif acard:isKindOf("Slash") and self:slashIsEffective(acard, enemy) and (slash_damagenum == 0 or self:hasCrossbowEffect())
-				and (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then
+				and self.player:inMyAttackRange(enemy) then
 				if not (enemy:hasSkill("xiangle") and basicnum < 2) then
 					slash_damagenum = slash_damagenum + 1
 				end

@@ -758,7 +758,7 @@ public:
 
     virtual int getDrawNum(ServerPlayer *liubei, int n) const{
         Room *room = liubei->getRoom();
-        QList<ServerPlayer *> targets = room->getOtherPlayers(liubei);
+        QList<ServerPlayer *> targets = room->getAlivePlayers();
         QList<ServerPlayer *> victims;
         foreach (ServerPlayer *p, targets) {
             if (liubei->inMyAttackRange(p))
@@ -1592,19 +1592,16 @@ bool FuluanCard::targetFilter(const QList<const Player *> &targets, const Player
     if (!targets.isEmpty())
         return false;
 
-    if (!Self->inMyAttackRange(to_select) || Self == to_select)
-        return false;
-
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         int distance_fix = weapon->getRange() - Self->getAttackRange(false);
         if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
             distance_fix += 1;
-        return Self->distanceTo(to_select, distance_fix) <= Self->getAttackRange();
+        return Self->inMyAttackRange(to_select, distance_fix);
     } else if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId())) {
-        return Self->distanceTo(to_select, 1) <= Self->getAttackRange();
+        return Self->inMyAttackRange(to_select, 1);
     } else
-        return true;
+        return Self->inMyAttackRange(to_select);
 }
 
 void FuluanCard::onEffect(const CardEffectStruct &effect) const{

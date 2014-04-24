@@ -2240,7 +2240,7 @@ public:
             // find yuanshu
             foreach (const Player *p, from->getAliveSiblings()) {
                 if (p->hasSkill(objectName()) && p != to && p->getHandcardNum() > p->getHp()
-                    && from->distanceTo(p, rangefix) <= from->getAttackRange()) {
+                    && from->inMyAttackRange(p, rangefix)) {
                     return true;
                 }
             }

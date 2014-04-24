@@ -700,7 +700,7 @@ luanwu_skill.getTurnUseCard = function(self)
 		local can_slash = false
 		if not can_slash then
 			for _, p in sgs.qlist(self.room:getOtherPlayers(player)) do
-				if player:distanceTo(p) <= player:getAttackRange() then can_slash = true break end
+				if player:inMyAttackRange(p) then can_slash = true break end
 			end
 		end
 		if not has_slash or not can_slash then

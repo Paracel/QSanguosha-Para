@@ -315,8 +315,8 @@ function SmartAI:canLiuli(other, another)
 	end
 	if not self:needToLoseHp(another, self.player, true) or not self:getDamagedEffects(another, self.player, true) then return false end
 	local n = other:getHandcardNum()
-	if n > 0 and other:distanceTo(another) <= other:getAttackRange() then return true
-	elseif other:getWeapon() and other:getOffensiveHorse() and (other:distanceTo(another) <= other:getAttackRange()) then return true
+	if n > 0 and other:inMyAttackRange(another) then return true
+	elseif other:getWeapon() and other:getOffensiveHorse() and other:inMyAttackRange(another) then return true
 	elseif other:getWeapon() or other:getOffensiveHorse() then return other:distanceTo(another) <= 1
 	else return false end
 end
@@ -1863,7 +1863,7 @@ function SmartAI:getValuableCard(who)
 	self:sort(friends, "hp")
 	local friend
 	if #friends > 0 then friend = friends[1] end
-	if friend and self:isWeak(friend) and who:distanceTo(friend) <= who:getAttackRange() and not self:doNotDiscard(who, "e", true) then
+	if friend and self:isWeak(friend) and who:isMyAttackRange(friend) and not self:doNotDiscard(who, "e", true) then
 		if weapon and who:distanceTo(friend) > who:getAttackRange(false) then return weapon:getEffectiveId() end
 		if offhorse and who:distanceTo(friend) > who:getAttackRange() + 1 then return offhorse:getEffectiveId() end
 	end
@@ -1946,7 +1946,7 @@ function SmartAI:getValuableCard(who)
 	if weapon and who:getHandcardNum() > 1 then
 		if not self:doNotDiscard(who, "e", true) then
 			for _, friend in ipairs(self:getEnemies(who)) do
-				if (who:distanceTo(friend) <= who:getAttackRange()) and (who:distanceTo(friend) > 1) then
+				if who:inMyAttackRange(friend) and who:distanceTo(friend) > who:getAttackRange(false) then
 					return weapon:getEffectiveId()
 				end
 			end

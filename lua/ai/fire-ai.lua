@@ -151,14 +151,14 @@ sgs.ai_skill_use_func.QiangxiCard = function(card, use, self)
 		self.equipsToDec = hand_weapon and 0 or 1
 		for _, enemy in ipairs(self.enemies) do
 			if self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
-				if hand_weapon and self.player:distanceTo(enemy) <= self.player:getAttackRange() then
+				if hand_weapon and self.player:inMyAttackRange(enemy) then
 					use.card = sgs.Card_Parse("@QiangxiCard=" .. hand_weapon:getId())
 					if use.to then
 						use.to:append(enemy)
 					end
 					break
 				end
-				if self.player:distanceTo(enemy) <= 1 then
+				if self.player:distanceTo(enemy) <= self.player:getAttackRange(false) then
 					use.card = sgs.Card_Parse("@QiangxiCard=" .. weapon:getId())
 					if use.to then
 						use.to:append(enemy)
@@ -172,7 +172,7 @@ sgs.ai_skill_use_func.QiangxiCard = function(card, use, self)
 		self:sort(self.enemies, "hp")
 		for _, enemy in ipairs(self.enemies) do
 			if self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy) and self:damageIsEffective(enemy) then
-				if self.player:distanceTo(enemy) <= self.player:getAttackRange() and self.player:getHp() > enemy:getHp() and self.player:getHp() > 2 then
+				if self.player:inMyAttackRange(enemy) and self.player:getHp() > enemy:getHp() and self.player:getHp() > 2 then
 					use.card = sgs.Card_Parse("@QiangxiCard=.")
 					if use.to then
 						use.to:append(enemy)

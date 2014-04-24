@@ -395,10 +395,10 @@ sgs.ai_skill_cardask["@longyin"] = function(self, data)
 		local offhorse_avail, weapon_avail
 		for _, enemy in ipairs(self.enemies) do
 			if self:canAttack(enemy, self.player) then
-				if not offhorse_avail and self.player:getOffensiveHorse() and self.player:distanceTo(enemy, 1) <= self.player:getAttackRange() then
+				if not offhorse_avail and self.player:getOffensiveHorse() and self.player:inMyAttackRange(enemy, 1) then
 					offhorse_avail = true
 				end
-				if not weapon_avail and self.player:getWeapon() and self.player:distanceTo(enemy) == 1 then
+				if not weapon_avail and self.player:getWeapon() and self.player:distanceTo(enemy) <= self.player:getAttackRange(false) then
 					weapon_avail = true
 				end
 			end
@@ -646,10 +646,10 @@ sgs.ai_skill_cardask["@duodao-get"] = function(self, data)
 		local offhorse_avail, weapon_avail
 		for _, enemy in ipairs(self.enemies) do
 			if self:canAttack(enemy, self.player) then
-				if not offhorse_avail and self.player:getOffensiveHorse() and self.player:distanceTo(enemy, 1) <= self.player:getAttackRange() then
+				if not offhorse_avail and self.player:getOffensiveHorse() and self.player:inMyAttackRange(enemy, 1) then
 					offhorse_avail = true
 				end
-				if not weapon_avail and self.player:getWeapon() and self.player:distanceTo(enemy) == 1 then
+				if not weapon_avail and self.player:getWeapon() and self.player:distanceTo(enemy) <= self.player:getAttackRange(false) then
 					weapon_avail = true
 				end
 			end

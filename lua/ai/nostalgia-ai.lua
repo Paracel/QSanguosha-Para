@@ -389,7 +389,7 @@ end
 sgs.ai_skill_invoke.nosfuhun = function(self, data)
 	local target = 0
 	for _, enemy in ipairs(self.enemies) do
-		if (self.player:distanceTo(enemy) <= self.player:getAttackRange()) then target = target + 1 end
+		if self.player:inMyAttackRange(enemy) then target = target + 1 end
 	end
 	return target > 0 and not self.player:isSkipped(sgs.Player_Play)
 end

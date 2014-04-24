@@ -167,8 +167,8 @@ int Player::getAttackRange(bool include_weapon) const{
     return qMax(original_range, weapon_range);
 }
 
-bool Player::inMyAttackRange(const Player *other) const{
-    return distanceTo(other) <= getAttackRange();
+bool Player::inMyAttackRange(const Player *other, int distance_fix) const{
+    return this != other && distanceTo(other, distance_fix) <= getAttackRange();
 }
 
 void Player::setFixedDistance(const Player *player, int distance) {

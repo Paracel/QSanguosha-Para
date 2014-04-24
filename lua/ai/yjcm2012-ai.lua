@@ -449,7 +449,7 @@ sgs.ai_skill_cardask["@jiefan-discard"] = function(self, data)
 	local range_fix = sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)
 
 	for _, p in sgs.qlist(self.room:getAllPlayers()) do
-		if self:isEnemy(p) and self.player:distanceTo(p, range_fix) > self.player:getAttackRange() then count = count + 1 end
+		if self:isEnemy(p) and not self.player:inMyAttackRange(p, range_fix) then count = count + 1 end
 	end
 
 	if count <= 2 then return "$" .. self.player:getWeapon():getEffectiveId() end

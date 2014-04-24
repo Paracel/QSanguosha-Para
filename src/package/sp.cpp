@@ -29,7 +29,7 @@ public:
             return false;
 
         QList<ServerPlayer *> targets;
-        foreach (ServerPlayer *tmp, room->getOtherPlayers(player)) {
+        foreach (ServerPlayer *tmp, room->getAlivePlayers()) {
             if (player->inMyAttackRange(tmp))
                 targets << tmp;
         }
@@ -583,7 +583,7 @@ bool XuejiCard::targetFilter(const QList<const Player *> &targets, const Player 
     } else if (Self->getOffensiveHorse() && Self->getOffensiveHorse()->getEffectiveId() == getEffectiveId())
         range_fix += 1;
 
-    return Self->distanceTo(to_select, range_fix) <= Self->getAttackRange();
+    return Self->inMyAttackRange(to_select, range_fix);
 }
 
 void XuejiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
@@ -1887,19 +1887,17 @@ DuwuCard::DuwuCard() {
 bool DuwuCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
     if (!targets.isEmpty() || qMax(0, to_select->getHp()) != subcardsLength())
         return false;
-    if (!Self->inMyAttackRange(to_select) || Self == to_select)
-        return false;
 
     if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
         const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
         int distance_fix = weapon->getRange() - Self->getAttackRange(false);
         if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
             distance_fix += 1;
-        return Self->distanceTo(to_select, distance_fix) <= Self->getAttackRange();
+        return Self->inMyAttackRange(to_select, distance_fix);
     } else if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId())) {
-        return Self->distanceTo(to_select, 1) <= Self->getAttackRange();
+        return Self->inMyAttackRange(to_select, 1);
     } else
-        return true;
+        return Self->inMyAttackRange(to_select);
 }
 
 void DuwuCard::onEffect(const CardEffectStruct &effect) const{

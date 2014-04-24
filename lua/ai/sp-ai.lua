@@ -259,10 +259,10 @@ end
 local function can_be_selected_as_target_xueji(self, card, who)
 	-- validation of rule
 	if self.player:getWeapon() and self.player:getWeapon():getEffectiveId() == card:getEffectiveId() then
-		if self.player:distanceTo(who, sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)) > self.player:getAttackRange() then return false end
+		if not self.player:inMyAttackRange(who, sgs.weapon_range[self.player:getWeapon():getClassName()] - self.player:getAttackRange(false)) then return false end
 	elseif self.player:getOffensiveHorse() and self.player:getOffensiveHorse():getEffectiveId() == card:getEffectiveId() then
-		if self.player:distanceTo(who, 1) > self.player:getAttackRange() then return false end
-	elseif self.player:distanceTo(who) > self.player:getAttackRange() then
+		if not self.player:inMyAttackRange(who, 1) then return false end
+	elseif not self.player:inMyAttackRange(who) then
 		return false
 	end
 	-- validation of strategy
@@ -850,7 +850,7 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 			return
 		elseif enemy:getHp() > 1 then
 			local hp_ids = {}
-			if self.player:distanceTo(enemy, getRangefix(enemy:getHp())) <= self.player:getAttackRange() then
+			if self.player:inMyAttackRange(enemy, getRangefix(enemy:getHp())) then
 				for _, id in ipairs(to_discard) do
 					table.insert(hp_ids, id)
 					if #hp_ids == enemy:getHp() then break end
@@ -863,7 +863,7 @@ sgs.ai_skill_use_func.DuwuCard = function(card, use, self)
 			end
 		else
 			if not self:isWeak() or self:getSaveNum(true) >= 1 then
-				if self.player:distanceTo(enemy, getRangefix(1)) <= self.player:getAttackRange() then
+				if self.player:inMyAttackRange(enemy, getRangefix(1)) then
 					use.card = sgs.Card_Parse("@DuwuCard=" .. to_discard[1])
 					if use.to then use.to:append(enemy) end
 					return

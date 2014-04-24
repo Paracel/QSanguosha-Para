@@ -93,10 +93,10 @@ bool QiangxiCard::targetFilter(const QList<const Player *> &targets, const Playe
     int rangefix = 0;
     if (!subcards.isEmpty() && Self->getWeapon() && Self->getWeapon()->getId() == subcards.first()) {
         const Weapon *card = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
-        rangefix += card->getRange() - 1;
+        rangefix += card->getRange() - Self->getAttackRange(false);;
     }
 
-    return Self->distanceTo(to_select, rangefix) <= Self->getAttackRange();
+    return Self->inMyAttackRange(to_select, rangefix);
 }
 
 void QiangxiCard::onEffect(const CardEffectStruct &effect) const{

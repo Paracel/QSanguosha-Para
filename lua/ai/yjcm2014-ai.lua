@@ -6,11 +6,9 @@ sgs.ai_skill_playerchosen.youdi = function(self, targets)
 			if friend:canDiscard(self.player, self.player:getArmor():getEffectiveId())
 				and (self:needToThrowArmor(friend) or (self:needKongcheng(friend) and friend:getHandcardNum() == 1)
 					or friend:getHandcardNum() <= self:getLeastHandcardNum(friend)) then
-				self.youdi_obtain_to_friend = true
 				return friend
 			end
 		end
-		return self.friends_noself[1]
 	end
 
 	local valuable, dangerous = self:getValuableCard(self.player), self:getDangerousCard(self.player)
@@ -34,13 +32,6 @@ sgs.ai_skill_playerchosen.youdi = function(self, targets)
 			end
 		end
 	end
-end
-
-sgs.ai_skill_choice.youdi = function(self, choices, data)
-	local player = data:toPlayer()
-	if not player then return "cancel" end
-	if self:isFriend(player) and not self.youdi_obtain_to_friend then return "cancel" end
-	return "obtain"
 end
 
 sgs.ai_choicemade_filter.cardChosen.youdi_obtain = sgs.ai_choicemade_filter.cardChosen.snatch

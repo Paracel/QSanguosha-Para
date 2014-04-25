@@ -4289,12 +4289,13 @@ QString Room::askForKingdom(ServerPlayer *player) {
 }
 
 bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discard_num, int min_num,
-                         bool optional, bool include_equip, const QString &prompt) {
+                         bool optional, bool include_equip, const QString &prompt, const QString &pattern) {
     if (!player->isAlive())
         return false;
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_DISCARD_CARD);
     min_num = qMin(min_num, discard_num);
+    ExpPattern exp_pattern(pattern);
 
     if (!optional) {
         DummyCard *dummy = new DummyCard;
@@ -4302,7 +4303,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
         QList<int> jilei_list;
         QList<const Card *> handcards = player->getHandcards();
         foreach (const Card *card, handcards) {
-            if (!player->isJilei(card))
+            if (!player->isJilei(card) && exp_pattern.match(player, card))
                 dummy->addSubcard(card);
             else
                 jilei_list << card->getId();
@@ -4329,7 +4330,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
                 throwCard(dummy, movereason, player);
 
                 QVariant data;
-                data = QString("%1:%2").arg("cardDiscard").arg(dummy->toString());
+                data = QString("%1:%2:%3").arg("cardDiscard").arg(reason).arg(dummy->toString());
                 thread->trigger(ChoiceMade, this, player, data);
             }
 
@@ -4366,7 +4367,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
     AI *ai = player->getAI();
     QList<int> to_discard;
     if (ai) {
-        to_discard = ai->askForDiscard(reason, discard_num, min_num, optional, include_equip);
+        to_discard = ai->askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern);
     } else {
         Json::Value ask_str(Json::arrayValue);
         ask_str[0] = discard_num;
@@ -4374,6 +4375,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
         ask_str[2] = optional;
         ask_str[3] = include_equip;
         ask_str[4] = toJsonString(prompt);
+        ask_str[5] = toJsonString(pattern);
         bool success = doRequest(player, S_COMMAND_DISCARD_CARD, ask_str, true);
 
         //@todo: also check if the player does have that card!!!
@@ -4382,7 +4384,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
            || !tryParse(clientReply, to_discard)) {
             if (optional) return false;
             // time is up, and the server choose the cards to discard
-            to_discard = player->forceToDiscard(discard_num, include_equip);
+            to_discard = player->forceToDiscard(discard_num, include_equip, true, pattern);
         }
     }
 
@@ -4398,7 +4400,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
     }
 
     QVariant data;
-    data = QString("%1:%2").arg("cardDiscard").arg(dummy_card->toString());
+    data = QString("%1:%2:%3").arg("cardDiscard").arg(reason).arg(dummy_card->toString());
     thread->trigger(ChoiceMade, this, player, data);
 
     delete dummy_card;
@@ -4406,7 +4408,7 @@ bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discar
 }
 
 const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, int discard_num, int min_num,
-                                 bool include_equip, const QString &prompt, bool optional) {
+                                 bool include_equip, const QString &prompt, bool optional, const QString &pattern) {
     if (!player->isAlive())
         return NULL;
     while (isPaused()) {}
@@ -4418,7 +4420,7 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
     if (ai) {
         // share the same callback interface
         player->setFlags("Global_AIDiscardExchanging");
-        to_exchange = ai->askForDiscard(reason, discard_num, min_num, optional, include_equip);
+        to_exchange = ai->askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern);
         player->setFlags("-Global_AIDiscardExchanging");
     } else {
         Json::Value exchange_str(Json::arrayValue);
@@ -4435,7 +4437,7 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
             || (int)clientReply.size() > discard_num || (int)clientReply.size() < min_num
             || !tryParse(clientReply, to_exchange)) {
             if (optional) return NULL;
-            to_exchange = player->forceToDiscard(discard_num, include_equip, false);
+            to_exchange = player->forceToDiscard(discard_num, include_equip, false, pattern);
         }
     }
 

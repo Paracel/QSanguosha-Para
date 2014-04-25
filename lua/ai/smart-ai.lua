@@ -2096,13 +2096,13 @@ function SmartAI:askForChoice(skill_name, choices, data)
 	end
 end
 
-function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_equip)
+function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern)
 	min_num = min_num or discard_num
 	local exchange = self.player:hasFlag("Global_AIDiscardExchanging")
 	local callback = sgs.ai_skill_discard[reason]
 	self:assignKeep(true)
 	if type(callback) == "function" then
-		local cb = callback(self, discard_num, min_num, optional, include_equip)
+		local cb = callback(self, discard_num, min_num, optional, include_equip, pattern)
 		if cb then
 			if type(cb) == "number" and not self.player:isJilei(sgs.Sanguosha:getCard(cb)) then return { cb }
 			elseif type(cb) == "table" then
@@ -2116,13 +2116,17 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 			return {}
 		end
 	elseif optional then
-		return min_num == 1 and self:needToThrowArmor() and self.player:getArmor():getEffectiveId() or {}
+		return min_num == 1 and self:needToThrowArmor() and sgs.Sanguosha:matchExpPattern(pattern, self.player, self.player:getArmor())
+				and self.player:getArmor():getEffectiveId() or {}
 	end
 
 	local flag = "h"
 	if include_equip and (self.player:getEquips():isEmpty() or not self.player:isJilei(self.player:getEquips():first())) then flag = flag .. "e" end
-	local cards = self.player:getCards(flag)
-	cards = sgs.QList2Table(cards)
+	local all_cards = self.player:getCards(flag)
+	local cards = {}
+	for _, c in sgs.qlist(all_cards) do
+		if sgs.Sanguosha:matchExpPattern(pattern, self.player, c) then table.insert(cards, c) end
+	end
 	self:sortByKeepValue(cards)
 	local to_discard, temp = {}, {}
 

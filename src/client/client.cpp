@@ -1067,14 +1067,20 @@ void Client::updatePileNum() {
 }
 
 void Client::askForDiscard(const Json::Value &req) {
-    if (!req.isArray() || !req[0].isInt() || !req[1].isInt() || !req[2].isBool() || !req[3].isBool())
+    if (!req.isArray() || !req[0].isInt() || !req[1].isInt() || !req[2].isBool() || !req[3].isBool()
+        || !req[4].isString() || !req[5].isString()) {
+        QMessageBox::warning(NULL, tr("Warning"), tr("Discard string is not well formatted!"));
         return;
+    }
 
     discard_num = req[0].asInt();    
     min_num = req[1].asInt();
     m_isDiscardActionRefusable = req[2].asBool();
     m_canDiscardEquip = req[3].asBool();
     QString prompt = req[4].asCString();
+    QString pattern = req[5].asCString();
+    if (pattern.isEmpty()) pattern = ".";
+    m_cardDiscardPattern = pattern;
 
     if (prompt.isEmpty()) {
         if (m_canDiscardEquip)
@@ -1101,7 +1107,8 @@ void Client::askForDiscard(const Json::Value &req) {
 
 void Client::askForExchange(const Json::Value &exchange_str) {
     if (!exchange_str.isArray() || !exchange_str[0].isInt() || !exchange_str[1].isInt()
-        || !exchange_str[2].isBool() || !exchange_str[3].isString() || !exchange_str[4].isBool()) {
+        || !exchange_str[2].isBool() || !exchange_str[3].isString() || !exchange_str[4].isBool()
+        || !exchange_str[5].isString()) {
         QMessageBox::warning(NULL, tr("Warning"), tr("Exchange string is not well formatted!"));
         return;
     }
@@ -1111,6 +1118,10 @@ void Client::askForExchange(const Json::Value &exchange_str) {
     m_canDiscardEquip = exchange_str[2].asBool();
     QString prompt = exchange_str[3].asCString();
     m_isDiscardActionRefusable = exchange_str[4].asBool();
+
+    QString pattern = exchange_str[5].asCString();
+    if (pattern.isEmpty()) pattern = ".";
+    m_cardDiscardPattern = pattern;
 
     if (prompt.isEmpty()) {
         prompt = tr("Please give %1 cards to exchange").arg(discard_num);

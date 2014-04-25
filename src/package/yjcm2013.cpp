@@ -875,13 +875,246 @@ public:
     }
 };
 
-// Danshou
+DanshouCard::DanshouCard() {
+}
 
-// Juece
+bool DanshouCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (!targets.isEmpty())
+        return false;
 
-// Mieji
+    if (Self->getWeapon() && subcards.contains(Self->getWeapon()->getId())) {
+        const Weapon *weapon = qobject_cast<const Weapon *>(Self->getWeapon()->getRealCard());
+        int distance_fix = weapon->getRange() - Self->getAttackRange(false);
+        if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId()))
+            distance_fix += 1;
+        return Self->inMyAttackRange(to_select, distance_fix);
+    } else if (Self->getOffensiveHorse() && subcards.contains(Self->getOffensiveHorse()->getId())) {
+        return Self->inMyAttackRange(to_select, 1);
+    } else
+        return Self->inMyAttackRange(to_select);
+}
 
-// Fencheng
+void DanshouCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    int len = subcardsLength();
+    switch (len) {
+    case 0:
+            Q_ASSERT(false);
+            break;
+    case 1:
+            if (effect.from->canDiscard(effect.to, "he")) {
+                int id = room->askForCardChosen(effect.from, effect.to, "he", "danshou", false, Card::MethodDiscard);
+                room->throwCard(id, effect.to, effect.from);
+            }
+            break;
+    case 2:
+            if (!effect.to->isNude()) {
+                int id = room->askForCardChosen(effect.from, effect.to, "he", "danshou");
+                room->obtainCard(effect.from, id, false);
+            }
+            break;
+    case 3:
+            room->damage(DamageStruct("danshou", effect.from, effect.to));
+            break;
+    default:
+            room->drawCards(effect.from, 2, "danshou");
+            room->drawCards(effect.to, 2, "danshou");
+            break;
+    }
+}
+
+class DanshouViewAsSkill: public ViewAsSkill {
+public:
+    DanshouViewAsSkill(): ViewAsSkill("danshou") {
+    }
+
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+        return !Self->isJilei(to_select) && selected.length() <= Self->getMark("danshou");
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        if (cards.length() != Self->getMark("danshou") + 1) return NULL;
+        DanshouCard *danshou = new DanshouCard;
+        danshou->addSubcards(cards);
+        return danshou;
+    }
+};
+
+class Danshou: public TriggerSkill {
+public:
+    Danshou(): TriggerSkill("danshou") {
+        events << EventPhaseStart << PreCardUsed;
+        view_as_skill = new DanshouViewAsSkill;
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 6;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Play) {
+            room->setPlayerMark(player, "danshou", 0);
+        } else if (triggerEvent == PreCardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.card->isKindOf("DanshouCard"))
+                room->addPlayerMark(use.from, "danshou");
+        }
+        return false;
+    }
+};
+
+class Juece: public PhaseChangeSkill {
+public:
+    Juece(): PhaseChangeSkill("juece") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+        QList<ServerPlayer *> kongcheng_players;
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (p->isKongcheng())
+                kongcheng_players << p;
+        }
+        if (kongcheng_players.isEmpty()) return false;
+
+        ServerPlayer *to_damage = room->askForPlayerChosen(target, kongcheng_players, objectName(),
+                                                           "@juece", true, true);
+        if (to_damage) {
+            room->broadcastSkillInvoke(objectName());
+            room->damage(DamageStruct(objectName(), target, to_damage));
+        }
+        return false;
+    }
+};
+
+MiejiCard::MiejiCard() {
+    will_throw = false;
+    handling_method = Card::MethodNone;
+}
+
+bool MiejiCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    return targets.isEmpty() && to_select != Self && !to_select->isKongcheng();
+}
+
+void MiejiCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+    CardMoveReason reason(CardMoveReason::S_REASON_PUT, effect.from->objectName(), QString(), "mieji", QString());
+    room->moveCardTo(this, effect.from, NULL, Player::DrawPile, reason, true);
+
+    int trick_num = 0, nontrick_num = 0;
+    foreach (const Card *c, effect.to->getCards("he")) {
+        if (effect.to->canDiscard(effect.to, c->getId())) {
+            if (c->isKindOf("TrickCard"))
+                trick_num++;
+            else
+                nontrick_num++;
+        }
+    }
+    bool discarded = room->askForDiscard(effect.to, "mieji", 1, qMin(1, trick_num), nontrick_num > 1, true, "@mieji-trick", "TrickCard");
+    if (trick_num == 0 || !discarded)
+        room->askForDiscard(effect.to, "mieji", 2, 2, false, true, "@mieji-nontrick", "^TrickCard");
+}
+
+class Mieji: public OneCardViewAsSkill {
+public:
+    Mieji(): OneCardViewAsSkill("mieji") {
+        filter_pattern = "TrickCard|black";
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return !player->hasUsed("MiejiCard");
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        MiejiCard *card = new MiejiCard;
+        card->addSubcard(originalCard);
+        return card;
+    }
+};
+
+class Fencheng: public ZeroCardViewAsSkill {
+public:
+    Fencheng(): ZeroCardViewAsSkill("fencheng") {
+        frequency = Limited;
+        limit_mark = "@burn";
+    }
+
+    virtual const Card *viewAs() const{
+        return new FenchengCard;
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return player->getMark("@burn") >= 1;
+    }
+};
+
+class FenchengMark: public TriggerSkill {
+public:
+    FenchengMark(): TriggerSkill("#fencheng") {
+        events << ChoiceMade;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        QStringList data_str = data.toString().split(":");
+        if (data_str.length() != 3 || data_str.first() != "cardDiscard" || data_str.at(1) != "fencheng")
+            return false;
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (p->hasFlag("FenchengUsing")) {
+                p->setMark("fencheng", data_str.last().split("+").length());
+                return false;
+            }
+        }
+        return false;
+    }
+};
+
+FenchengCard::FenchengCard() {
+    mute = true;
+    target_fixed = true;
+}
+
+void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    room->removePlayerMark(source, "@burn");
+    room->broadcastSkillInvoke("fencheng");
+    room->doLightbox("$FenchengAnimate", 3000);
+    source->setMark("fencheng", 0);
+
+    QList<ServerPlayer *> players = room->getOtherPlayers(source);
+    source->setFlags("FenchengUsing");
+    try {
+        foreach (ServerPlayer *player, players) {
+            if (player->isAlive())
+                room->cardEffect(this, source, player);
+                room->getThread()->delay();
+        }
+        source->setFlags("-FenchengUsing");
+    }
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+            source->setFlags("-FenchengUsing");
+        throw triggerEvent;
+    }
+}
+
+void FenchengCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.to->getRoom();
+
+    int length = effect.from->getMark("fencheng") + 1;
+    if (!effect.to->canDiscard(effect.to, "he") || effect.to->getCardCount(true) < length
+        || !room->askForDiscard(effect.to, "fencheng", 1000, length, true, true, "@fencheng:::" + QString::number(length))) {
+        effect.from->setMark("fencheng", 0);
+        room->damage(DamageStruct("fencheng", effect.from, effect.to, 2, DamageStruct::Fire));
+    }
+}
 
 class Zhuikong: public TriggerSkill {
 public:
@@ -1023,14 +1256,12 @@ YJCM2013Package::YJCM2013Package()
     related_skills.insertMulti("qiaoshui", "#qiaoshui-use");
     related_skills.insertMulti("qiaoshui", "#qiaoshui-target");
 
-    /*General *liru = new General(this, "liru", "qun", 3); // YJ 206
+    General *liru = new General(this, "liru", "qun", 3); // YJ 206
     liru->addSkill(new Juece);
     liru->addSkill(new Mieji);
-    liru->addSkill(new MiejiForExNihiloAndCollateral);
-    liru->addSkill(new MiejiEffect);
     liru->addSkill(new Fencheng);
-    related_skills.insertMulti("mieji", "#mieji");
-    related_skills.insertMulti("mieji", "#mieji-effect");*/
+    liru->addSkill(new FenchengMark);
+    related_skills.insertMulti("fencheng", "#fencheng");
 
     General *liufeng = new General(this, "liufeng", "shu"); // YJ 207
     liufeng->addSkill(new Xiansi);
@@ -1049,16 +1280,18 @@ YJCM2013Package::YJCM2013Package()
     yufan->addSkill(new Zongxuan);
     yufan->addSkill(new Zhiyan);
 
-    /*General *zhuran = new General(this, "zhuran", "wu"); // YJ 211
-    zhuran->addSkill(new Danshou);*/
+    General *zhuran = new General(this, "zhuran", "wu"); // YJ 211
+    zhuran->addSkill(new Danshou);
 
     addMetaObject<JunxingCard>();
     addMetaObject<QiaoshuiCard>();
     addMetaObject<XiansiCard>();
     addMetaObject<XiansiSlashCard>();
     addMetaObject<ZongxuanCard>();
-    //addMetaObject<FenchengCard>();
+    addMetaObject<MiejiCard>();
+    addMetaObject<FenchengCard>();
     addMetaObject<ExtraCollateralCard>();
+    addMetaObject<DanshouCard>();
 
     skills << new XiansiSlashViewAsSkill;
 }

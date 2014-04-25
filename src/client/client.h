@@ -194,6 +194,7 @@ public:
     // public fields
     bool m_isDiscardActionRefusable;
     bool m_canDiscardEquip;
+    QString m_cardDiscardPattern;
     bool m_noNullificationThisTime;
     QString m_noNullificationTrickName;
     int discard_num;

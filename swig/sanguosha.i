@@ -281,7 +281,7 @@ public:
     void clearPrivatePiles();
     void drawCards(int n, const char *reason = NULL);
     bool askForSkillInvoke(const char *skill_name, const QVariant &data = QVariant());
-    QList<int> forceToDiscard(int discard_num, bool include_equip, bool is_discard = true);
+    QList<int> forceToDiscard(int discard_num, bool include_equip, bool is_discard = true, const char *pattern = ".");
     QList<int> handCards() const;
     virtual QList<const Card *> getHandcards() const;
     QList<const Card *> getCards(const char *flags) const;
@@ -1166,9 +1166,9 @@ public:
     bool askForSkillInvoke(ServerPlayer *player, const char *skill_name, const QVariant &data = QVariant());
     QString askForChoice(ServerPlayer *player, const char *skill_name, const char *choices, const QVariant &data = QVariant());
     bool askForDiscard(ServerPlayer *target, const char *reason, int discard_num, int min_num,
-                       bool optional = false, bool include_equip = false, const char *prompt = NULL);
+                       bool optional = false, bool include_equip = false, const char *prompt = NULL, const char *pattern = ".");
     const Card *askForExchange(ServerPlayer *player, const char *reason, int discard_num, int min_num,
-                               bool include_equip = false, const char *prompt = NULL, bool optional = false);
+                               bool include_equip = false, const char *prompt = NULL, bool optional = false, const char *pattern = ".");
     bool askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive);
     bool isCanceled(const CardEffectStruct &effect);
     int askForCardChosen(ServerPlayer *player, ServerPlayer *who, const char *flags, const char *reason,

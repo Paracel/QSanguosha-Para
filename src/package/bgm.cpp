@@ -80,7 +80,7 @@ public:
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
-        Card *card = new LihunCard;
+        LihunCard *card = new LihunCard;
         card->addSubcard(originalCard);
         return card;
     }
@@ -205,7 +205,7 @@ public:
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{
-        Card *ncard = new Nullification(originalCard->getSuit(), originalCard->getNumber());
+        Nullification *ncard = new Nullification(originalCard->getSuit(), originalCard->getNumber());
         ncard->addSubcard(originalCard);
         ncard->setSkillName(objectName());
         return ncard;

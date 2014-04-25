@@ -2444,6 +2444,7 @@ void RoomScene::updateStatus(Client::Status oldStatus, Client::Status newStatus)
             discard_skill->setMinNum(ClientInstance->min_num);
             discard_skill->setIncludeEquip(ClientInstance->m_canDiscardEquip);
             discard_skill->setIsDiscard(newStatus != Client::Exchanging);
+            discard_skill->setPattern(ClientInstance->m_cardDiscardPattern);
             dashboard->startPending(discard_skill);
             break;
         }

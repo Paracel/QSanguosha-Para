@@ -252,12 +252,12 @@ QString TrustAI::askForChoice(const QString &, const QString &choice, const QVar
     return choices.at(qrand() % choices.length());
 }
 
-QList<int> TrustAI::askForDiscard(const QString &, int discard_num, int min_num, bool optional, bool include_equip) {
+QList<int> TrustAI::askForDiscard(const QString &, int, int min_num, bool optional, bool include_equip, const QString &pattern) {
     QList<int> to_discard;
     if (optional)
         return to_discard;
     else
-        return self->forceToDiscard(discard_num, include_equip, self->hasFlag("Global_AIDiscardExchanging"));
+        return self->forceToDiscard(min_num, include_equip, self->hasFlag("Global_AIDiscardExchanging"), pattern);
 }
 
 const Card *TrustAI::askForNullification(const Card *, ServerPlayer *, ServerPlayer *, bool) {
@@ -381,7 +381,7 @@ QString LuaAI::askForUseCard(const QString &pattern, const QString &prompt, cons
     return result;
 }
 
-QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip) {
+QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_num, bool optional, bool include_equip, const QString &pattern) {
     lua_State *L = room->getLuaState();
 
     pushCallback(L, __FUNCTION__);
@@ -390,18 +390,19 @@ QList<int> LuaAI::askForDiscard(const QString &reason, int discard_num, int min_
     lua_pushinteger(L, min_num);
     lua_pushboolean(L, optional);
     lua_pushboolean(L, include_equip);
+    lua_pushstring(L, pattern.toAscii());
 
-    int error = lua_pcall(L, 6, 1, 0);
+    int error = lua_pcall(L, 7, 1, 0);
     if (error) {
         reportError(L);
-        return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip);
+        return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern);
     }
 
     QList<int> result;
     if (getTable(L, result))
         return result;
     else
-        return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip);
+        return TrustAI::askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern);
 }
 
 bool LuaAI::getTable(lua_State *L, QList<int> &table) {

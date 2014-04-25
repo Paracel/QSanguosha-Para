@@ -2,6 +2,7 @@
 #define _AUX_SKILLS_H
 
 #include "skill.h"
+#include "exppattern.h"
 
 class DiscardSkill: public ViewAsSkill {
     Q_OBJECT
@@ -13,6 +14,7 @@ public:
     void setMinNum(int minnum);
     void setIncludeEquip(bool include_equip);
     void setIsDiscard(bool is_discard);
+    void setPattern(const QString &pattern);
 
     virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const;
     virtual const Card *viewAs(const QList<const Card *> &cards) const;
@@ -23,6 +25,7 @@ private:
     int minnum;
     bool include_equip;
     bool is_discard;
+    QString pattern;
 };
 
 class CardPattern;

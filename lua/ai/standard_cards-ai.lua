@@ -1863,7 +1863,7 @@ function SmartAI:getValuableCard(who)
 	self:sort(friends, "hp")
 	local friend
 	if #friends > 0 then friend = friends[1] end
-	if friend and self:isWeak(friend) and who:isMyAttackRange(friend) and not self:doNotDiscard(who, "e", true) then
+	if friend and self:isWeak(friend) and who:inMyAttackRange(friend) and not self:doNotDiscard(who, "e", true) then
 		if weapon and who:distanceTo(friend) > who:getAttackRange(false) then return weapon:getEffectiveId() end
 		if offhorse and who:distanceTo(friend) > who:getAttackRange() + 1 then return offhorse:getEffectiveId() end
 	end

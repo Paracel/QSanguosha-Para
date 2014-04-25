@@ -28,8 +28,15 @@ void DiscardSkill::setIsDiscard(bool is_discard) {
     this->is_discard = is_discard;
 }
 
+void DiscardSkill::setPattern(const QString &pattern) {
+    this->pattern = pattern;
+}
+
 bool DiscardSkill::viewFilter(const QList<const Card *> &selected, const Card *card) const{
     if (selected.length() >= num)
+        return false;
+
+    if (!Sanguosha->matchExpPattern(pattern, Self, card))
         return false;
 
     if (!include_equip && card->isEquipped())

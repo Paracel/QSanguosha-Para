@@ -54,13 +54,13 @@ return {
 	["illustrator:jvshou"] = "酱油之神",
 	["designer:jvshou"] = "精精神神",
 	["jianying"] = "渐营",
-	[":jianying"] = "每当你于出牌阶段内使用一张牌时，若该牌与你本阶段使用的上一张牌颜色或点数相同，你可以摸一张牌。",
+	[":jianying"] = "每当你于出牌阶段内使用一张牌时，若该牌与你本阶段使用的上一张牌花色或点数相同，你可以摸一张牌。",
 	["shibei"] = "矢北",
 	[":shibei"] = "锁定技。每当你于一名角色的回合内受到伤害后，若为你本回合第一次受到伤害，你回复1点体力，否则你失去1点体力。",
 
 	["#sunluban"] = "为虎作伥",
 	["sunluban"] = "孙鲁班",
-	["illustrator:sunluban"] = "futoubao1",
+	["illustrator:sunluban"] = "FOOLTOWN",
 	["designer:sunluban"] = "CatCat44",
 	["zenhui"] = "谮毁",
 	[":zenhui"] = "阶段技。每当你于出牌阶段内使用【杀】或黑色非延时类锦囊牌指定唯一目标时，你可以令为该牌合法目标的另一名其他角色选择一项：交给你一张牌并成为该牌的使用者，或成为该牌的目标。",
@@ -85,10 +85,10 @@ return {
 
 	["#zhoucang"] = "披肝沥胆",
 	["zhoucang"] = "周仓",
-	["illustrator:zhoucang"] = "ocsky",
+	["illustrator:zhoucang"] = "Sky",
 	["designer:zhoucang"] = "WOLVES29",
 	["zhongyong"] = "忠勇",
-	[":zhongyong"] = "",
+	[":zhongyong"] = "每当你于出牌阶段内使用【杀】被【闪】抵消时，你可以令除目标角色外的一名角色获得弃牌堆中的此次使用的【闪】：若该角色不为你，你可以对同一目标角色再使用一张【杀】（不能选择额外目标）",
 
 	["#zhuhuan"] = "中洲拒天人",
 	["zhuhuan"] = "朱桓",

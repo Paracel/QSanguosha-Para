@@ -120,6 +120,92 @@ public:
     }
 };
 
+class Jianying: public TriggerSkill {
+public:
+    Jianying(): TriggerSkill("jianying") {
+        events << CardUsed << CardResponded << EventPhaseChanging;
+        frequency = Frequent;
+        global = true;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if ((triggerEvent == CardUsed || triggerEvent == CardResponded) && player->getPhase() == Player::Play) {
+            CardStar card = NULL;
+            if (triggerEvent == CardUsed)
+                card = data.value<CardUseStruct>().card;
+            else if (triggerEvent == CardResponded) {
+                CardResponseStruct resp = data.value<CardResponseStruct>();
+                if (resp.m_isUse)
+                    card = resp.m_card;
+            }
+            if (!card || card->getTypeId() == Card::TypeSkill) return false;
+            int suit = player->getMark("JianyingSuit"), number = player->getMark("JianyingNumber");
+            player->setMark("JianyingSuit", int(card->getSuit()) > 3 ? 0 : (int(card->getSuit()) + 1));
+            player->setMark("JianyingNumber", card->getNumber());
+            if (TriggerSkill::triggerable(player)
+                && ((suit > 0 && int(card->getSuit()) + 1 == suit)
+                    || (number > 0 && card->getNumber() == number))
+                && room->askForSkillInvoke(player, objectName(), data)) {
+                room->broadcastSkillInvoke(objectName());
+                room->drawCards(player, 1, objectName());
+            }
+        } else if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.from == Player::Play) {
+                player->setMark("JianyingSuit", 0);
+                player->setMark("JianyingNumber", 0);
+            }
+        }
+        return false;
+    }
+};
+
+class Shibei: public TriggerSkill {
+public:
+    Shibei(): TriggerSkill("shibei") {
+        events << DamageDone << Damaged << EventPhaseChanging;
+        frequency = Compulsory;
+        global = true;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive) {
+                foreach (ServerPlayer *p, room->getAlivePlayers())
+                    p->setMark("shibei", 0);
+            }
+        } else if (triggerEvent == DamageDone) {
+            ServerPlayer *current = room->getCurrent();
+            if (!current || current->isDead() || current->getPhase() == Player::NotActive)
+                return false;
+            player->addMark("shibei");
+        } else if (triggerEvent == Damaged && TriggerSkill::triggerable(player) && player->getMark("shibei") > 0) {
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
+            room->broadcastSkillInvoke(objectName());
+
+            if (player->getMark("shibei") == 1)
+                room->recover(player, RecoverStruct(player));
+            else
+                room->loseHp(player);
+        }
+        return false;
+    }
+};
+
 YJCM2014Package::YJCM2014Package()
     : Package("YJCM2014")
 {
@@ -142,9 +228,9 @@ YJCM2014Package::YJCM2014Package()
     hanhaoshihuan->addSkill(new Shenduan);
     hanhaoshihuan->addSkill(new Yonglve);*/
 
-    /*General *jvshou = new General(this, "jvshou", "qun", 3); // YJ 306
+    General *jvshou = new General(this, "jvshou", "qun", 3); // YJ 306
     jvshou->addSkill(new Jianying);
-    jvshou->addSkill(new Shibei);*/
+    jvshou->addSkill(new Shibei);
 
     /*General *sunluban = new General(this, "sunluban", "wu", 3, false); // YJ 307
     sunluban->addSkill(new Zenhui);

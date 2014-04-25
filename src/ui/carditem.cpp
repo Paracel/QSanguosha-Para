@@ -29,8 +29,8 @@ void CardItem::_initialize() {
 
 CardItem::CardItem(const Card *card) {
     _initialize();
-    setCard(card);    
     m_isShiny = (qrand() <= ((RAND_MAX + 1) / 4096));
+    setCard(card);
     setAcceptHoverEvents(true);
 }
 
@@ -53,7 +53,10 @@ void CardItem::setCard(const Card *card) {
         const Card *engineCard = Sanguosha->getEngineCard(m_cardId);
         Q_ASSERT(engineCard != NULL);
         setObjectName(engineCard->objectName());
-        setToolTip(engineCard->getDescription());
+        QString description = engineCard->getDescription();
+        if (m_isShiny)
+            description = QString("<font color=#FF0000>%1</font>").arg(description);
+        setToolTip(description);
     } else {
         m_cardId = Card::S_UNKNOWN_CARD_ID;
         setObjectName("unknown");

@@ -1757,6 +1757,8 @@ public:
                     foreach (ServerPlayer *p, players) {
                         if (p->hasFlag("LiuliTarget")) {
                             p->setFlags("-LiuliTarget");
+                            if (!use.from->canSlash(p, false))
+                                return false;
                             use.to.removeOne(daqiao);
                             use.to.append(p);
                             room->sortByActionOrder(use.to);

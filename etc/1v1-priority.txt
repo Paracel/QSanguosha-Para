@@ -90,8 +90,8 @@ liubiao					57
 madai					68					
 wangyi					48					
 xunyou					89					
-caochong				53					
-fuhuanghou				36					
+caochong				54					
+fuhuanghou				34					
 guohuai					56					
 guanping				44					
 jianyong				61					
@@ -100,7 +100,7 @@ liufeng					71
 manchong				85					
 panzhangmazhong			68					
 yufan					79					
-zhuran					72					
+zhuran					55					
 zhuhuan					65					
 yangxiu					16					
 gongsunzan				40					
@@ -222,3 +222,7 @@ nos_guanxingzhangbao	69
 nos_handang				53					
 nos_madai				68					
 nos_wangyi				77					
+nos_caochong			53					
+nos_fuhuanghou			36					
+nos_liru				53					
+nos_zhuran				72					

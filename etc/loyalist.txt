@@ -34,6 +34,7 @@ caopi					vs_nos_xiahoudun		1.1
 caopi					nos_xiahoudun			1.1
 caopi					nos_caoren				1.5
 caopi					nos_wangyi				2.5
+caopi					nos_caochong			0.9
 dongzhuo				zhoutai					-2.0
 dongzhuo				lvbu					1.1
 dongzhuo				yuanshao				2.0

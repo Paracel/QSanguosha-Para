@@ -417,6 +417,7 @@ xushu xunyou							46
 yujin heg_sunce							75
 zhangchunhua guanxingzhangbao			10
 zhangchunhua xunyou						56
+zhangchunhua zhuran						60
 zhangchunhua liuxie						56
 zhangchunhua lingju						35
 zhangchunhua nos_daqiao					76
@@ -437,6 +438,7 @@ xunyou liuxie							58
 xunyou nos_luxun						52
 xunyou nos_xushu						35
 xunyou nos_zhangchunhua					56
+zhuran nos_zhangchunhua					61
 yuanshu liuxie							65
 yuanshu nos_zhangliao					11
 yuanshu nos_liubei						68

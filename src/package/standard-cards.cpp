@@ -473,12 +473,11 @@ public:
         int weapon_id = player->getWeapon()->getId();
         room->setCardFlag(weapon_id, "using");
         effect.from->setFlags("BladeUse");
-        if (!room->askForUseSlashTo(effect.from, effect.to, QString("blade-slash:%1").arg(effect.to->objectName()), false, true))
-            effect.from->setFlags("-BladeUse");
-
+        bool use = room->askForUseSlashTo(effect.from, effect.to, QString("blade-slash:%1").arg(effect.to->objectName()), false, true);
+        if (!use) effect.from->setFlags("-BladeUse");
         room->setCardFlag(weapon_id, "-using");
 
-        return false;
+        return use;
     }
 };
 

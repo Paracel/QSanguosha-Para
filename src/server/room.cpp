@@ -3980,7 +3980,7 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
             filterSkills.append(filter);
         }
     }
-    if (filterSkills.size() == 0) return;
+    if (filterSkills.size() == 0) goto final;
 
     for (int i = 0; i < cards.size(); i++) {
         const Card *card = cards[i];
@@ -4019,7 +4019,8 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
         }
     }
 
-    delete cardChanged;
+final:
+    delete[] cardChanged;
 }
 
 void Room::acquireSkill(ServerPlayer *player, const Skill *skill, bool open) {

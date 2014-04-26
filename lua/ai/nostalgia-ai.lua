@@ -453,7 +453,7 @@ function sgs.ai_cardsview_valuable.nosrenxin(self, class_name, player)
 		end
 		if self:playerGetRound(dying) < self:playerGetRound(self.player) and dying:getHp() < 0 then return nil end
 		if not player:faceUp() then
-			if player:getHp() < 2 and (getCardsNum("Jink", player, self.player) > 0 or getCardsNum("Analeptic", player, self.player) > 0) then return nil end
+			if player:getHp() < 2 and (getCardsNum("Jink", player, self.player) > 0 or getCardsNum("Analeptic", player, self.player) > 0) and not dying:isLord() then return nil end
 			return "@RenxinCard=."
 		else
 			if dying:getMark("Global_PreventPeach") == 0 then
@@ -471,7 +471,7 @@ function sgs.ai_cardsview.nosrenxin(self, class_name, player)
 	if class_name == "Peach" and not player:isKongcheng() then
 		local dying = player:getRoom():getCurrentDyingPlayer()
 		if not dying or self:isEnemy(dying, player) or dying:objectName() == player:objectName() then return nil end
-		if player:getHp() < 2 and (getCardsNum("Jink", player, self.player) > 0 or getCardsNum("Analeptic", player, self.player) > 0) then return nil end
+		if player:getHp() < 2 and (getCardsNum("Jink", player, self.player) > 0 or getCardsNum("Analeptic", player, self.player) > 0) and not dying:isLord() then return nil end
 		if not self:isWeak(player) then return "@RenxinCard=." end
 		return nil
 	end

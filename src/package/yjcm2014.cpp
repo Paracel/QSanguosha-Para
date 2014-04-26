@@ -7,6 +7,70 @@
 #include "engine.h"
 #include "maneuvering.h"
 
+class Sidi: public TriggerSkill {
+public:
+    Sidi(): TriggerSkill("sidi") {
+        events << CardResponded << EventPhaseStart << EventPhaseChanging;
+        frequency = Frequent;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.from == Player::Play)
+                room->setPlayerMark(player, "sidi", 0);
+        } else if (triggerEvent == CardResponded) {
+            CardResponseStruct resp = data.value<CardResponseStruct>();
+            if (resp.m_isUse && resp.m_card->isKindOf("Jink")) {
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (TriggerSkill::triggerable(p) && (p == player || p->getPhase() != Player::NotActive)
+                        && room->askForSkillInvoke(p, objectName(), data)) {
+                        room->broadcastSkillInvoke(objectName());
+                        QList<int> ids = room->getNCards(1, false); // For UI
+                        CardsMoveStruct move(ids, p, Player::PlaceTable,
+                                             CardMoveReason(CardMoveReason::S_REASON_TURNOVER, p->objectName(), "sidi", QString()));
+                        room->moveCardsAtomic(move, true);
+                        p->addToPile("sidi", ids);
+                    }
+                }
+            }
+        } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Play) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (player->getPhase() != Player::Play) return false;
+                if (TriggerSkill::triggerable(p) && p->getPile("sidi").length() > 0
+                    && room->askForSkillInvoke(p, "sidi_remove", "remove")) {
+                    LogMessage log;
+                    log.type = "#InvokeSkill";
+                    log.from = p;
+                    log.arg = "sidi";
+                    room->sendLog(log);
+
+                    room->fillAG(p->getPile("sidi"), p);
+                    int id = room->askForAG(p, p->getPile("sidi"), false, "sidi");
+                    room->clearAG(p);
+                    room->throwCard(id, NULL);
+                    room->addPlayerMark(player, "sidi");
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class SidiTargetMod: public TargetModSkill {
+public:
+    SidiTargetMod(): TargetModSkill("#sidi-target") {
+    }
+
+    virtual int getResidueNum(const Player *from, const Card *card) const{
+        return card->isKindOf("Slash") ? -from->getMark("sidi") : 0;
+    }
+};
+
 class Zhongyong: public TriggerSkill {
 public:
     Zhongyong(): TriggerSkill("zhongyong") {
@@ -256,8 +320,10 @@ YJCM2014Package::YJCM2014Package()
     caifuren->addSkill(new Qieting);
     caifuren->addSkill(new Xianzhou);*/
 
-    /*General *caozhen = new General(this, "caozhen", "wei"); // YJ 302
-    caozhen->addSkill(new Sidi);*/
+    General *caozhen = new General(this, "caozhen", "wei"); // YJ 302
+    caozhen->addSkill(new Sidi);
+    caozhen->addSkill(new SidiTargetMod);
+    related_skills.insertMulti("sidi", "#sidi-target");
 
     /*General *chenqun = new General(this, "chenqun", "wei", 3); // YJ 303
     chenqun->addSkill(new Dingpin);

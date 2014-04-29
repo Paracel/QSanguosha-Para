@@ -532,7 +532,9 @@ sgs.ai_skill_invoke.nosdanshou = function(self, data)
 		local current = self.room:getCurrent()
 		if not current or not current:isAlive() or current:getPhase() == sgs.Player_NotActive then return true end
 		if self:isFriend(current) then
-			return self:getOverflow(current) >= 2
+			if self:getOverflow(current) >= 2 then return true end
+			if current:getHandcardNum() < 2 then return self:isEnemy(damage.to) and damage.to:hasSkills(sgs.masochism_skill) end
+			return false
 		else
 			if self:getOverflow(current) <= 2 then
 				return true

@@ -201,6 +201,128 @@ public:
     }
 };
 
+class Zenhui: public TriggerSkill {
+public:
+    Zenhui(): TriggerSkill("zenhui") {
+        events << TargetSpecifying << CardFinished;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (triggerEvent == CardFinished
+            && (use.card->isKindOf("Slash") || (use.card->isNDTrick() && use.card->isBlack()))) {
+            use.from->setFlags("-ZenhuiUser_" + use.card->toString());
+            return false;
+        }
+        if (!TriggerSkill::triggerable(player) || player->getPhase() != Player::Play || player->hasFlag(objectName()))
+            return false;
+
+        if (use.to.length() == 1 && !use.card->targetFixed()
+            && (use.card->isKindOf("Slash") || (use.card->isNDTrick() && use.card->isBlack()))) {
+            QList<ServerPlayer *> targets;
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (p != player && p != use.to.first()
+                    && !room->isProhibited(player, p, use.card)
+                    && use.card->targetFilter(QList<const Player *>(), p, player))
+                    targets << p;
+            }
+            if (targets.isEmpty()) return false;
+            ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(),
+                                                            "zenhui-invoke:" + use.to.first()->objectName(), true, true);
+            if (target) {
+                player->setFlags(objectName());
+
+                // Collateral
+                ServerPlayer *collateral_victim = NULL;
+                if (use.card->isKindOf("Collateral")) {
+                    QList<ServerPlayer *> victims;
+                    foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
+                        if (target->canSlash(p))
+                            victims << p;
+                    }
+                    Q_ASSERT(!victims.isEmpty());
+                    collateral_victim = room->askForPlayerChosen(player, victims, "zenhui_collateral", "@zenhui-collateral:" + target->objectName());
+                    target->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)(collateral_victim));
+
+                    LogMessage log;
+                    log.type = "#CollateralSlash";
+                    log.from = player;
+                    log.to << collateral_victim;
+                    room->sendLog(log);
+                }
+
+                bool extra_target = true;
+                if (!target->isNude()) {
+                    const Card *card = room->askForCard(target, "..", "@zenhui-give:" + player->objectName(), data, Card::MethodNone);
+                    if (card) {
+                        extra_target = false;
+                        player->obtainCard(card);
+
+                        if (target->isAlive()) {
+                            LogMessage log;
+                            log.type = "#BecomeUser";
+                            log.from = target;
+                            log.card_str = use.card->toString();
+
+                            target->setFlags("ZenhuiUser_" + use.card->toString()); // For AI
+                            use.from = target;
+                            data = QVariant::fromValue(use);
+                        }
+                    }
+                }
+                if (extra_target) {
+                    LogMessage log;
+                    log.type = "#BecomeTarget";
+                    log.from = target;
+                    log.card_str = use.card->toString();
+                    room->sendLog(log);
+
+                    room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), target->objectName());
+                    if (use.card->isKindOf("Collateral") && collateral_victim)
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, target->objectName(), collateral_victim->objectName());
+
+                    use.to.append(target);
+                    room->sortByActionOrder(use.to);
+                    data = QVariant::fromValue(use);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class Jiaojin: public TriggerSkill {
+public:
+    Jiaojin(): TriggerSkill("jiaojin") {
+        events << DamageInflicted;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.from && damage.from->isMale() && player->canDiscard(player, "he")) {
+            if (room->askForCard(player, ".Equip", "@jiaojin", data, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+
+                LogMessage log;
+                log.type = "#Jiaojin";
+                log.from = player;
+                log.arg = QString::number(damage.damage);
+                log.arg2 = QString::number(--damage.damage);
+                room->sendLog(log);
+
+                if (damage.damage < 1)
+                    return true;
+                data = QVariant::fromValue(damage);
+            }
+        }
+        return false;
+    }
+};
+
 class Youdi: public PhaseChangeSkill {
 public:
     Youdi(): PhaseChangeSkill("youdi") {
@@ -341,9 +463,9 @@ YJCM2014Package::YJCM2014Package()
     jvshou->addSkill(new Jianying);
     jvshou->addSkill(new Shibei);
 
-    /*General *sunluban = new General(this, "sunluban", "wu", 3, false); // YJ 307
+    General *sunluban = new General(this, "sunluban", "wu", 3, false); // YJ 307
     sunluban->addSkill(new Zenhui);
-    sunluban->addSkill(new Jiaojin);*/
+    sunluban->addSkill(new Jiaojin);
 
     /*General *wuyi = new General(this, "wuyi", "shu"); // YJ 308
     wuyi->addSkill(new Benxi);*/

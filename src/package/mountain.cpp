@@ -115,7 +115,7 @@ public:
         return TriggerSkill::triggerable(target) && target->canDiscard(target, "h");
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *zhanghe, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhanghe, QVariant &data) const{
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();
         room->setPlayerMark(zhanghe, "qiaobianPhase", (int)change.to);
         int index = 0;

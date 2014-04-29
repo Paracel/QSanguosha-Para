@@ -414,8 +414,8 @@ public:
                 log.type = "#QiaoshuiAdd";
                 log.from = jianyong;
                 log.to << extra;
-                log.arg = use.card->objectName();
-                log.arg2 = "qiaoshui";
+                log.card_str = use.card->toString();
+                log.arg = "qiaoshui";
                 room->sendLog(log);
                 room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, jianyong->objectName(), extra->objectName());
 
@@ -438,8 +438,8 @@ public:
                 log.type = "#QiaoshuiRemove";
                 log.from = jianyong;
                 log.to << removed;
-                log.arg = use.card->objectName();
-                log.arg2 = "qiaoshui";
+                log.card_str = use.card->toString();
+                log.arg = "qiaoshui";
                 room->sendLog(log);
             }
         }
@@ -795,7 +795,7 @@ public:
         view_as_skill = new ZongxuanViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from != player)
             return false;
@@ -1213,6 +1213,14 @@ public:
                 CardMoveReason reason(CardMoveReason::S_REASON_GIVE, target->objectName(), player->objectName(), "nosqiuyuan", QString());
                 if (!card) {
                     if (use.from->canSlash(target, use.card, false)) {
+                        LogMessage log;
+                        log.type = "#BecomeTarget";
+                        log.from = target;
+                        log.card_str = use.card->toString();
+                        room->sendLog(log);
+
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), target->objectName());
+
                         use.to.append(target);
                         room->sortByActionOrder(use.to);
                         data = QVariant::fromValue(use);

@@ -216,6 +216,8 @@ end
 
 function sgs.getDefense(player)
 	if not player then return 0 end
+	local current_player = global_room:getCurrent()
+	if not current_player then return sgs.getValue(player) end
 
 	local handcard = (player:getMark("yijue") > 0) and 0 or player:getHandcardNum()
 	local defense = math.min(player:getHp() * 2 + handcard + player:getPile("wooden_ox"):length(), player:getHp() * 3)

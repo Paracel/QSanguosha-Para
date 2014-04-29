@@ -252,7 +252,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (!isNormalGameMode(room->getMode()))
             return false;
         DeathStruct death = data.value<DeathStruct>();

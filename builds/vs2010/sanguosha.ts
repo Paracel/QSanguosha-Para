@@ -484,7 +484,7 @@
         <translation>，目标是 %to</translation>
     </message>
     <message>
-        <location filename="../../src/ui/clientlogbox.cpp" line="177"/>
+        <location filename="../../src/ui/clientlogbox.cpp" line="184"/>
         <source>Log string is not well formatted: %1</source>
         <translation>游戏日志没有格式化好: %1</translation>
     </message>

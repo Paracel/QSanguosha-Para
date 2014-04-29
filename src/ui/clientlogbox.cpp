@@ -85,7 +85,7 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
         return;
     }
 
-    if (!card_str.isEmpty() && !from_general.isEmpty()) {
+    if (type.startsWith("#UseCard") && !card_str.isEmpty() && !from_general.isEmpty()) {
         // do Indicator animation
         foreach (QString to, tos)
             RoomSceneInstance->showIndicator(from_general, to);
@@ -143,8 +143,15 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
             log = tr("%from %2 %1").arg(card_name).arg(reason);
 
         if (!to.isEmpty()) log.append(tr(", target is %to"));
-    } else
+    } else {
         log = Sanguosha->translate(type);
+        const Card *card = Card::Parse(card_str);
+        if (card) {
+            QString card_name = card->getLogName();
+            card_name = bold(card_name, Qt::yellow);
+            log.replace("%card", card_name);
+        }
+    }
 
     log.replace("%from", from);
     log.replace("%to", to);

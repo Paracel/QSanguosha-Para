@@ -1230,7 +1230,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             LogMessage log;
             log.card_str = card->toString();
             log.from = player;
-            log.type = QString("#%1").arg(card->getClassName());
+            log.type = "#UseCard";
             if (method == Card::MethodResponse)
                 log.type += "_Resp";
             sendLog(log);

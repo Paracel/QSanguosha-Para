@@ -370,7 +370,7 @@ void Weapon::onUse(Room *room, const CardUseStruct &card_use) const{
         player->broadcastSkillInvoke("@recast");
 
         LogMessage log;
-        log.type = "#Card_Recast";
+        log.type = "#UseCard_Recast";
         log.from = player;
         log.card_str = use.card->toString();
         room->sendLog(log);

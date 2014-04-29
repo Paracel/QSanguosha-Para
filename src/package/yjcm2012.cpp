@@ -362,7 +362,7 @@ public:
         events << EventPhaseStart;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *liaohua, QVariant &) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liaohua, QVariant &) const{
         if (liaohua->getPhase() == Player::RoundStart) {
             room->broadcastSkillInvoke(objectName());
             LogMessage log;

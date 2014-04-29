@@ -116,7 +116,7 @@ public:
         events << DamageCaused;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.card && damage.card->isKindOf("Slash")
             && damage.to->getMark("Equips_of_Others_Nullified_to_You") == 0
@@ -342,7 +342,7 @@ void IronChain::onUse(Room *room, const CardUseStruct &card_use) const{
         card_use.from->broadcastSkillInvoke("@recast");
 
         LogMessage log;
-        log.type = "#Card_Recast";
+        log.type = "#UseCard_Recast";
         log.from = card_use.from;
         log.card_str = card_use.card->toString();
         room->sendLog(log);

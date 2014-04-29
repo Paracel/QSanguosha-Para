@@ -45,7 +45,7 @@ public:
         frequency = Frequent;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *caozhi, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *caozhi, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from == caozhi || move.from == NULL)
             return false;

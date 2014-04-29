@@ -57,8 +57,8 @@ return {
 	["~qiaoshui"] = "选择【借刀杀人】的目标角色→选择【杀】的目标角色→点击确定",
 	["zongshih"] = "纵适",
 	[":zongshih"] = "每当你拼点赢，你可以获得对方的拼点牌。每当你拼点没赢，你可以获得你的拼点牌。",
-	["#QiaoshuiAdd"] = "%from 发动了“%arg2”为【%arg】增加了额外目标 %to",
-	["#QiaoshuiRemove"] = "%from 发动了“%arg2”为【%arg】减少了目标 %to",
+	["#QiaoshuiAdd"] = "%from 发动了“%arg”为 %card 增加了额外目标 %to",
+	["#QiaoshuiRemove"] = "%from 发动了“%arg”为 %card 减少了目标 %to",
 
 	["#liufeng"] = "骑虎之殇",
 	["liufeng"] = "刘封",

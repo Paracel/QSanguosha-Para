@@ -2014,7 +2014,7 @@ public:
         view_as_skill = new QingyiViewAsSkill;
     }
 
-    virtual bool trigger(TriggerEvent , Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         PhaseChangeStruct change = data.value<PhaseChangeStruct>();
         if (change.to == Player::Judge && !player->isSkipped(Player::Judge)
             && !player->isSkipped(Player::Draw)) {

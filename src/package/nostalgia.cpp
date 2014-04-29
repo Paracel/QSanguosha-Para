@@ -975,6 +975,14 @@ public:
                 room->showCard(player, card->getEffectiveId());
                 if (!card->isKindOf("Jink")) {
                     if (use.from->canSlash(target, use.card, false)) {
+                        LogMessage log;
+                        log.type = "#BecomeTarget";
+                        log.from = target;
+                        log.card_str = use.card->toString();
+                        room->sendLog(log);
+
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), target->objectName());
+
                         use.to.append(target);
                         room->sortByActionOrder(use.to);
                         data = QVariant::fromValue(use);

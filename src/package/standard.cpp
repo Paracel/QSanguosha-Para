@@ -231,6 +231,7 @@ void DelayedTrick::onUse(Room *room, const CardUseStruct &card_use) const{
     room->moveCardTo(this, use.from, use.to.first(), Player::PlaceDelayedTrick, reason, true);
 
     thread->trigger(CardUsed, room, use.from, data);
+    use = data.value<CardUseStruct>();
     thread->trigger(CardFinished, room, use.from, data);
 }
 

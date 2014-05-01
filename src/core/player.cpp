@@ -823,9 +823,9 @@ QSet<const Skill *> Player::getSkills(bool include_equip, bool visible_only) con
 QList<const Skill *> Player::getSkillList(bool include_equip, bool visible_only) const{
     QList<const Skill *> skillList;
     QStringList skill_list = skills + acquired_skills;
-    foreach (QString skill_name, skill_list.toSet()) {
+    foreach (QString skill_name, skill_list) {
         const Skill *skill = Sanguosha->getSkill(skill_name);
-        if (skill
+        if (skill && !skillList.contains(skill)
             && (include_equip || !hasEquipSkill(skill->objectName()))
             && (!visible_only || skill->isVisible()))
             skillList << skill;

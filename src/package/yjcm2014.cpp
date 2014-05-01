@@ -430,6 +430,18 @@ XianzhouDamageCard::XianzhouDamageCard() {
     mute = true;
 }
 
+void XianzhouDamageCard::onUse(Room *room, const CardUseStruct &card_use) const{
+    CardUseStruct use = card_use;
+    QVariant data = QVariant::fromValue(use);
+    RoomThread *thread = room->getThread();
+
+    thread->trigger(PreCardUsed, room, use.from, data);
+    use = data.value<CardUseStruct>();
+    thread->trigger(CardUsed, room, use.from, data);
+    use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, use.from, data);
+}
+
 bool XianzhouDamageCard::targetsFeasible(const QList<const Player *> &targets, const Player *Self) const{
     return targets.length() == Self->getMark("xianzhou");
 }

@@ -590,24 +590,22 @@ void Card::doPreAction(Room *, const CardUseStruct &) const{
 
 void Card::onUse(Room *room, const CardUseStruct &use) const{
     CardUseStruct card_use = use;
-    ServerPlayer *player = card_use.from;
-
     room->sortByActionOrder(card_use.to);
 
     QList<ServerPlayer *> targets = card_use.to;
     if (room->getMode() == "06_3v3" && (isKindOf("AOE") || isKindOf("GlobalEffect")))
-        room->reverseFor3v3(this, player, targets);
+        room->reverseFor3v3(this, card_use.from, targets);
     card_use.to = targets;
 
     bool hidden = (card_use.card->getTypeId() == TypeSkill && !card_use.card->willThrow());
 
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
-    thread->trigger(PreCardUsed, room, player, data);
+    thread->trigger(PreCardUsed, room, card_use.from, data);
     card_use = data.value<CardUseStruct>();
 
     LogMessage log;
-    log.from = player;
+    log.from = card_use.from;
     if (!card_use.card->targetFixed() || card_use.to.length() > 1 || !card_use.to.contains(card_use.from))
         log.to = card_use.to;
     log.type = "#UseCard";
@@ -634,19 +632,20 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
         used_cards << card_use.card->getEffectiveId();
  
     if (card_use.card->getTypeId() != TypeSkill) {
-        CardMoveReason reason(CardMoveReason::S_REASON_USE, player->objectName(), QString(), card_use.card->getSkillName(), QString());
+        CardMoveReason reason(CardMoveReason::S_REASON_USE, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
         if (card_use.to.size() == 1)
             reason.m_targetId = card_use.to.first()->objectName();
         CardsMoveStruct move(used_cards, card_use.from, NULL, Player::PlaceUnknown, Player::PlaceTable, reason);
         moves.append(move);
         room->moveCardsAtomic(moves, true);
     } else if (card_use.card->willThrow()) {
-        CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), card_use.card->getSkillName(), QString());
-        room->moveCardTo(this, player, NULL, Player::DiscardPile, reason, true);
+        CardMoveReason reason(CardMoveReason::S_REASON_THROW, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
+        room->moveCardTo(this, card_use.from, NULL, Player::DiscardPile, reason, true);
     }
 
-    thread->trigger(CardUsed, room, player, data);
-    thread->trigger(CardFinished, room, player, data);
+    thread->trigger(CardUsed, room, card_use.from, data);
+    card_use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, card_use.from, data);
 }
 
 void Card::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{

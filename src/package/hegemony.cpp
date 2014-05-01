@@ -629,8 +629,9 @@ void QingchengCard::onUse(Room *room, const CardUseStruct &use) const{
     CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), card_use.card->getSkillName(), QString());
     room->moveCardTo(this, player, NULL, Player::DiscardPile, reason, true);
 
-    thread->trigger(CardUsed, room, player, data);
-    thread->trigger(CardFinished, room, player, data);
+    thread->trigger(CardUsed, room, card_use.from, data);
+    card_use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, card_use.from, data);
 }
 
 bool QingchengCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{

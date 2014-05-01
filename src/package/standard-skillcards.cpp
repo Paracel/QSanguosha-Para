@@ -193,26 +193,28 @@ bool LijianCard::targetsFeasible(const QList<const Player *> &targets, const Pla
 }
 
 void LijianCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    ServerPlayer *diaochan = card_use.from;
-
-    QVariant data = QVariant::fromValue(card_use);
+    CardUseStruct use = card_use;
+    QVariant data = QVariant::fromValue(use);
     RoomThread *thread = room->getThread();
 
-    thread->trigger(PreCardUsed, room, diaochan, data);
+    thread->trigger(PreCardUsed, room, card_use.from, data);
+    use = data.value<CardUseStruct>();
+
     room->broadcastSkillInvoke("lijian");
 
     LogMessage log;
-    log.from = diaochan;
+    log.from = card_use.from;
     log.to << card_use.to;
     log.type = "#UseCard";
     log.card_str = toString();
     room->sendLog(log);
 
-    CardMoveReason reason(CardMoveReason::S_REASON_THROW, diaochan->objectName(), QString(), "lijian", QString());
-    room->moveCardTo(this, diaochan, NULL, Player::DiscardPile, reason, true);
+    CardMoveReason reason(CardMoveReason::S_REASON_THROW, card_use.from->objectName(), QString(), "lijian", QString());
+    room->moveCardTo(this, card_use.from, NULL, Player::DiscardPile, reason, true);
 
-    thread->trigger(CardUsed, room, diaochan, data);
-    thread->trigger(CardFinished, room, diaochan, data);
+    thread->trigger(CardUsed, room, card_use.from, data);
+    use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, card_use.from, data);
 }
 
 void LijianCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &targets) const{
@@ -356,25 +358,25 @@ const Card *GuoseCard::validate(CardUseStruct &cardUse) const{
 
 void GuoseCard::onUse(Room *room, const CardUseStruct &use) const{
     CardUseStruct card_use = use;
-    ServerPlayer *player = card_use.from;
 
     QVariant data = QVariant::fromValue(card_use);
     RoomThread *thread = room->getThread();
-    thread->trigger(PreCardUsed, room, player, data);
+    thread->trigger(PreCardUsed, room, card_use.from, data);
     card_use = data.value<CardUseStruct>();
 
     LogMessage log;
-    log.from = player;
+    log.from = card_use.from;
     log.to = card_use.to;
     log.type = "#UseCard";
     log.card_str = card_use.card->toString();
     room->sendLog(log);
 
-    CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName(), QString(), "guose", QString());
-    room->moveCardTo(this, player, NULL, Player::DiscardPile, reason, true);
+    CardMoveReason reason(CardMoveReason::S_REASON_THROW, card_use.from->objectName(), QString(), "guose", QString());
+    room->moveCardTo(this, card_use.from, NULL, Player::DiscardPile, reason, true);
 
-    thread->trigger(CardUsed, room, player, data);
-    thread->trigger(CardFinished, room, player, data);
+    thread->trigger(CardUsed, room, card_use.from, data);
+    card_use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, card_use.from, data);
 }
 
 void GuoseCard::onEffect(const CardEffectStruct &effect) const{

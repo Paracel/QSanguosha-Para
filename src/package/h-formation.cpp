@@ -133,21 +133,23 @@ bool HeyiCard::targetsFeasible(const QList<const Player *> &targets, const Playe
 }
 
 void HeyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
-    ServerPlayer *caohong = card_use.from;
+    CardUseStruct use = card_use;
 
     LogMessage log;
-    log.from = caohong;
+    log.from = use.from;
     log.to << card_use.to;
     log.type = "#UseCard";
     log.card_str = toString();
     room->sendLog(log);
 
-    QVariant data = QVariant::fromValue(card_use);
+    QVariant data = QVariant::fromValue(use);
     RoomThread *thread = room->getThread();
 
-    thread->trigger(PreCardUsed, room, caohong, data);
-    thread->trigger(CardUsed, room, caohong, data);
-    thread->trigger(CardFinished, room, caohong, data);
+    thread->trigger(PreCardUsed, room, use.from, data);
+    use = data.value<CardUseStruct>();
+    thread->trigger(CardUsed, room, use.from, data);
+    use = data.value<CardUseStruct>();
+    thread->trigger(CardFinished, room, use.from, data);
 }
 
 void HeyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{

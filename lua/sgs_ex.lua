@@ -331,6 +331,7 @@ function onUse_DelayedTrick(self, room, card_use)
 	room:moveCardTo(self, use.from, use.to:first(), sgs.Player_PlaceDelayedTrick, reason, true)
 
 	thread:trigger(sgs.CardUsed, room, use.from, data)
+	use = data:toCardUse()
 	thread:trigger(sgs.CardFinished, room, use.from, data)
 end
 

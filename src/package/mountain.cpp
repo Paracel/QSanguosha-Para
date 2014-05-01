@@ -161,8 +161,8 @@ public:
             if (damage.card == NULL || !damage.card->isKindOf("Slash") || damage.to->isDead())
                 return false;
 
-            QList<ServerPlayer *> cais = room->findPlayersBySkillName(objectName());
-            foreach (ServerPlayer *caiwenji, cais) {
+            foreach (ServerPlayer *caiwenji, room->getAllPlayers()) {
+                if (!TriggerSkill::triggerable(caiwenji)) continue;
                 if (caiwenji->canDiscard(caiwenji, "he") && room->askForCard(caiwenji, "..", "@beige", data, objectName())) {
                     JudgeStruct judge;
                     judge.good = true;

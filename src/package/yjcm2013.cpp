@@ -1136,8 +1136,9 @@ public:
         if (player->getPhase() != Player::RoundStart || player->isKongcheng())
             return false;
 
-        foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
-            if (player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
+        foreach (ServerPlayer *fuhuanghou, room->getAllPlayers()) {
+            if (TriggerSkill::triggerable(fuhuanghou)
+                && player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
                 && room->askForSkillInvoke(fuhuanghou, objectName())) {
                 room->broadcastSkillInvoke("zhuikong");
                 if (fuhuanghou->pindian(player, objectName(), NULL)) {

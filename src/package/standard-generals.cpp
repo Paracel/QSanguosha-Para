@@ -1437,7 +1437,7 @@ public:
                 lvmeng->setFlags("-KejiSlashInPlayPhase");
             }
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::Discard && TriggerSkill::triggerable(lvmeng)) {
+            if (change.to == Player::Discard && lvmeng->isAlive() && lvmeng->hasSkill(objectName()) ) {
                 if (can_trigger && lvmeng->askForSkillInvoke(objectName())) {
                     if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
                         int index = qrand() % 2 + 1;

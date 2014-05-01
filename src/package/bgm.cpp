@@ -56,6 +56,7 @@ bool LihunCard::targetFilter(const QList<const Player *> &targets, const Player 
 
 void LihunCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
+    effect.to->setFlags("LihunTarget");
     effect.from->turnOver();
     room->broadcastSkillInvoke("lihun", 1);
 
@@ -65,7 +66,6 @@ void LihunCard::onEffect(const CardEffectStruct &effect) const{
                               effect.to->objectName(), "lihun", QString());
         room->moveCardTo(dummy_card, effect.to, effect.from, Player::PlaceHand, reason, false);
     }
-    effect.to->setFlags("LihunTarget");
     delete dummy_card;
 }
 
@@ -1270,9 +1270,8 @@ public:
             if (!xuehen_trigger) return false;
 
             QVariant data = QVariant::fromValue((PlayerStar)player);
-            QList<ServerPlayer *> xiahous = room->findPlayersBySkillName("fenyong");
-            foreach (ServerPlayer *xiahou, xiahous) {
-                if (xiahou->getMark("@fenyong") > 0) {
+            foreach (ServerPlayer *xiahou, room->getAllPlayers()) {
+                if (TriggerSkill::triggerable(xiahou) && xiahou->getMark("@fenyong") > 0) {
                     room->setPlayerMark(xiahou, "@fenyong", 0);
                     if (xiahou->hasSkill("xuehen"))
                         xuehen_trigger->trigger(NonTrigger, room, xiahou, data);

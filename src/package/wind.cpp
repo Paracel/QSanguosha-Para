@@ -453,6 +453,7 @@ public:
             if (weiyan)
                 weiyan->tag["InvokeKuanggu"] = (weiyan->distanceTo(damage.to) <= 1);
         }
+        return false;
     }
 };
 

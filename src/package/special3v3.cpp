@@ -380,7 +380,8 @@ public:
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != player)
                 return false;
-            foreach (ServerPlayer *lvbu, room->findPlayersBySkillName(objectName())) {
+            foreach (ServerPlayer *lvbu, room->getAllPlayers()) {
+                if (!TriggerSkill::triggerable(lvbu)) continue;
                 if (room->getMode().startsWith("06_")) {
                     if (lvbu->getMark(objectName()) == 0 && lvbu->getMark("zhanshen_fight") == 0
                         && AI::GetRelation3v3(lvbu, player) == AI::Friend)

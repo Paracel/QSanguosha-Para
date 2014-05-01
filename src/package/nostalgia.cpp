@@ -893,8 +893,9 @@ public:
             return false;
 
         bool skip = false;
-        foreach (ServerPlayer *fuhuanghou, room->findPlayersBySkillName(objectName())) {
-            if (player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
+        foreach (ServerPlayer *fuhuanghou, room->getAllPlayers()) {
+            if (TriggerSkill::triggerable(fuhuanghou)
+                && player != fuhuanghou && fuhuanghou->isWounded() && !fuhuanghou->isKongcheng()
                 && room->askForSkillInvoke(fuhuanghou, objectName())) {
                 room->broadcastSkillInvoke("zhuikong");
                 if (fuhuanghou->pindian(player, objectName(), NULL)) {
@@ -1047,8 +1048,8 @@ public:
             return false;
 
         bool skip = false;
-        foreach (ServerPlayer *zhonghui, room->findPlayersBySkillName(objectName())) {
-            if (zhonghui == player || zhonghui->isKongcheng()
+        foreach (ServerPlayer *zhonghui, room->getAllPlayers()) {
+            if (!TriggerSkill::triggerable(zhonghui) || zhonghui == player || zhonghui->isKongcheng()
                 || zhonghui->getMark("nosbaijiang") > 0 || player->isKongcheng())
                 continue;
 

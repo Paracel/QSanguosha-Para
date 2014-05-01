@@ -1508,7 +1508,7 @@ sgs.ai_skill_cardask["@tieji-discard"] = function(self, data, pattern)
 	end
 
 	local jiangqin = self.room:findPlayerBySkillName("niaoxiang")
-	local need_double_jink = use.from:hasSkills("wushuang|drwushuang")
+	local need_double_jink = use.from:hasSkill("wushuang")
 							or (use.from:hasSkill("roulin") and self.player:isFemale())
 							or (self.player:hasSkill("roulin") and use.from:isFemale())
 							or (jiangqin and jiangqin:isAdjacentTo(self.player) and use.from:isAdjacentTo(self.player) and self:isEnemy(jiangqin))

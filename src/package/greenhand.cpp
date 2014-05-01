@@ -1,13 +1,7 @@
 #include "greenhand.h"
-#include "general.h"
 #include "standard.h"
 #include "standard-equips.h"
-#include "skill.h"
 #include "engine.h"
-#include "client.h"
-#include "serverplayer.h"
-#include "room.h"
-#include "ai.h"
 
 Broadsword::Broadsword(Suit suit, int number)
     :Weapon(suit, number, 2)

@@ -786,24 +786,9 @@ void SavageAssault::onEffect(const CardEffectStruct &effect) const{
                                          QVariant::fromValue(effect),
                                          Card::MethodResponse,
                                          effect.from->isAlive() ? effect.from : NULL);
-    if (slash)
+    if (slash) {
         room->setEmotion(effect.to, "killer");
-
-    // ================================
-    bool drwushuang_effect = true;
-    if (slash && effect.from->hasSkill("drwushuang")) {
-        room->broadcastSkillInvoke("wushuang");
-
-        LogMessage log;
-        log.from = effect.from;
-        log.arg = "drwushuang";
-        log.type = "#TriggerSkill";
-        room->sendLog(log);
-
-        drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
-    }
-    // ================================
-    if (!slash || !drwushuang_effect) {
+    } else {
         room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
         room->getThread()->delay();
     }
@@ -823,24 +808,9 @@ void ArcheryAttack::onEffect(const CardEffectStruct &effect) const{
                                         QVariant::fromValue(effect),
                                         Card::MethodResponse,
                                         effect.from->isAlive() ? effect.from : NULL);
-    if (jink && jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen")
+    if (jink && jink->getSkillName() != "eight_diagram" && jink->getSkillName() != "bazhen") {
         room->setEmotion(effect.to, "jink");
-
-    // ================================
-    bool drwushuang_effect = true;
-    if (jink && effect.from->hasSkill("drwushuang")) {
-        room->broadcastSkillInvoke("wushuang");
-
-        LogMessage log;
-        log.from = effect.from;
-        log.arg = "drwushuang";
-        log.type = "#TriggerSkill";
-        room->sendLog(log);
-
-        drwushuang_effect = room->askForDiscard(effect.to, "drwushuang", 1, 1, true, true);
-    }
-    // ================================
-    if (!jink || !drwushuang_effect) {
+    } else if (!jink) {
         room->damage(DamageStruct(this, effect.from->isAlive() ? effect.from : NULL, effect.to));
         room->getThread()->delay();
     }

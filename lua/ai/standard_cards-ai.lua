@@ -155,7 +155,7 @@ function sgs.getDefenseSlash(player, self)
 
 	if defense > 0 and attacker:objectName() ~= player:objectName() then
 		local jiangqin = global_room:findPlayerBySkillName("niaoxiang")
-		local need_double_jink = attacker:hasSkills("wushuang|drwushuang")
+		local need_double_jink = attacker:hasSkill("wushuang")
 								or (attacker:hasSkill("roulin") and player:isFemale())
 								or (player:hasSkill("roulin") and attacker:isFemale())
 								or (jiangqin and jiangqin:isAdjacentTo(player) and attacker:isAdjacentTo(player) and self and self:isEnemy(jiangqin))
@@ -1487,7 +1487,6 @@ sgs.ai_keep_value.SavageAssault = 3.13
 sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if self.room:getMode():find("_mini_34") and self.player:getLostHp() == 1 and name == "archery_attack" then return "." end
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
-	if target:hasSkill("drwushuang") and self.player:getCardCount() == 1 and self:hasLoseHandcardEffective() then return "." end
 
 	local aoe
 	if type(data) == "userdata" then aoe = data:toCardEffect().card else aoe = sgs.Sanguosha:cloneCard(name) end

@@ -1200,7 +1200,7 @@ sgs.ai_skill_invoke.kangkai_use = function(self, data)
 	if not use.card or not card then return false end
 	if card:isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, self.player, use.from) then return false end
 	if ((card:isKindOf("DefensiveHorse") and self.player:getDefensiveHorse())
-		or (card:isKindOf("OffensiveHorse") and (self.player:getOffensiveHorse() or (self.player:hasSkill("drmashu") and self.player:getDefensiveHorse()))))
+		or (card:isKindOf("OffensiveHorse") and self.player:getOffensiveHorse()))
 		and not self.player:hasSkills(sgs.lose_equip_skill) then
 		return false
 	end

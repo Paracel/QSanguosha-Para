@@ -508,12 +508,6 @@ const EquipCard *Player::getEquip(int index) const{
     default:
             return NULL;
     }
-    if (equip == NULL && hasSkill("drmashu")) {
-        if (index == 2 && offensive_horse)
-            equip = offensive_horse;
-        else if (index == 3 && defensive_horse)
-            equip = defensive_horse;
-    }
     if (equip != NULL)
         return qobject_cast<const EquipCard *>(equip->getRealCard());
 

@@ -2591,9 +2591,9 @@ public:
 
 #include "god.h"
 #include "maneuvering.h"
-class NosJuejing: public TriggerSkill {
+class GdJuejing: public TriggerSkill {
 public:
-    NosJuejing(): TriggerSkill("nosjuejing") {
+    GdJuejing(): TriggerSkill("gdjuejing") {
         events << CardsMoveOneTime;
         frequency = Compulsory;
     }
@@ -2631,10 +2631,10 @@ public:
     }
 };
 
-class NosLonghun: public Longhun {
+class GdLonghun: public Longhun {
 public:
-    NosLonghun(): Longhun() {
-        setObjectName("noslonghun");
+    GdLonghun(): Longhun() {
+        setObjectName("gdlonghun");
     }
 
     virtual int getEffHp(const Player *) const{
@@ -2642,9 +2642,9 @@ public:
     }
 };
 
-class NosDuojian: public TriggerSkill {
+class GdLonghunDuojian: public TriggerSkill {
 public:
-    NosDuojian(): TriggerSkill("#noslonghun_duojian") {
+    GdLonghunDuojian(): TriggerSkill("#gdlonghun-duojian") {
         events << EventPhaseStart;
     }
 
@@ -2652,8 +2652,8 @@ public:
         if (gaodayihao->getPhase() == Player::Start) {
             foreach (ServerPlayer *p, room->getOtherPlayers(gaodayihao)) {
                if (p->getWeapon() && p->getWeapon()->isKindOf("QinggangSword")) {
-                   if (room->askForSkillInvoke(gaodayihao, "noslonghun")) {
-                       room->broadcastSkillInvoke("noslonghun", 5);
+                   if (room->askForSkillInvoke(gaodayihao, "gdlonghun")) {
+                       room->broadcastSkillInvoke("gdlonghun", 5);
                        gaodayihao->obtainCard(p->getWeapon());
                     }
                     break;
@@ -2677,6 +2677,12 @@ TestPackage::TestPackage()
     wuxing_zhuge->addSkill(new SuperGuanxing);
     wuxing_zhuge->addSkill("kongcheng");
 
+    General *gaodayihao = new General(this, "gaodayihao", "god", 1, true, true);
+    gaodayihao->addSkill(new GdJuejing);
+    gaodayihao->addSkill(new GdLonghun);
+    gaodayihao->addSkill(new GdLonghunDuojian);
+    related_skills.insertMulti("gdlonghun", "#gdlonghun-duojian");
+
     General *super_yuanshu = new General(this, "super_yuanshu", "qun", 4, true, true);
     super_yuanshu->addSkill(new SuperYongsi);
     super_yuanshu->addSkill(new MarkAssignSkill("@yongsi_test", 4));
@@ -2687,12 +2693,6 @@ TestPackage::TestPackage()
     super_caoren->addSkill(new SuperJushou);
     super_caoren->addSkill(new MarkAssignSkill("@jushou_test", 5));
     related_skills.insertMulti("super_jushou", "#@jushou_test-5");
-
-    General *gd_shenzhaoyun = new General(this, "gaodayihao", "god", 1, true, true);
-    gd_shenzhaoyun->addSkill(new NosJuejing);
-    gd_shenzhaoyun->addSkill(new NosLonghun);
-    gd_shenzhaoyun->addSkill(new NosDuojian);
-    related_skills.insertMulti("noslonghun", "#noslonghun_duojian");
 
     General *nobenghuai_dongzhuo = new General(this, "nobenghuai_dongzhuo$", "qun", 4, true, true);
     nobenghuai_dongzhuo->addSkill("jiuchi");

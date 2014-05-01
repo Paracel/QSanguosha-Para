@@ -156,7 +156,6 @@ function sgs.ai_skill_invoke.zhenlie(self, data)
 
 			if not self:hasTrickEffective(use.card, self.player, from) or table.contains(use.nullified_list, self.player:objectName()) then return false end
 			if not self:damageIsEffective(self.player, sgs.DamageStruct_Normal, from) then return false end
-			if use.from:hasSkill("drwushuang") and self.player:getCardCount() == 1 and self:hasLoseHandcardEffective() then return true end
 			if sj_num == 0 and friend_null <= 0 then
 				if self:isEnemy(from) and from:hasSkill("jueqing") then return not self:doNotDiscard(from) end
 				if self:isFriend(from) and self.role == "loyalist" and from:isLord() and self.player:getHp() == 1 and not from:hasSkill("jueqing") then return true end

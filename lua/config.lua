@@ -66,7 +66,6 @@ config = {
 		"NostalYJCM2012",
 		"NostalYJCM2013",
 		"NostalGeneral",
-		"Dragon",
 		"Test"
 	},
 

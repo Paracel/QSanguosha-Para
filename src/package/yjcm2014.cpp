@@ -484,6 +484,7 @@ void XianzhouCard::onEffect(const CardEffectStruct &effect) const{
 class Xianzhou: public ZeroCardViewAsSkill {
 public:
     Xianzhou(): ZeroCardViewAsSkill("xianzhou") {
+        frequency = Skill::Limited;
         limit_mark = "@handover";
     }
 

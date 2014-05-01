@@ -1096,10 +1096,7 @@ class LianpoCount: public TriggerSkill {
 public:
     LianpoCount(): TriggerSkill("#lianpo-count") {
         events << Death << TurnStart;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
+        global = true;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -1137,7 +1134,6 @@ class Lianpo: public PhaseChangeSkill {
 public:
     Lianpo(): PhaseChangeSkill("lianpo") {
         frequency = Frequent;
-        global = true;
     }
 
     virtual int getPriority(TriggerEvent) const{

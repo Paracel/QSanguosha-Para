@@ -1231,16 +1231,12 @@ public:
 class ZhuhaiRecord: public TriggerSkill {
 public:
     ZhuhaiRecord(): TriggerSkill("#zhuhai-record") {
-        events << DamageDone;
+        events << PreDamageDone;
         global = true;
     }
 
     virtual int getPriority(TriggerEvent) const{
         return 4;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent, Room *, ServerPlayer *, QVariant &data) const{
@@ -1433,15 +1429,16 @@ public:
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *lvmeng, QVariant &data) const{
         if (triggerEvent == EventPhaseChanging) {
+            bool can_trigger = true;
+            if (lvmeng->hasFlag("KejiSlashInPlayPhase")) {
+                can_trigger = false;
+                lvmeng->setFlags("-KejiSlashInPlayPhase");
+            }
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Discard && TriggerSkill::triggerable(lvmeng)) {
-                if (!lvmeng->hasFlag("KejiSlashInPlayPhase") && lvmeng->askForSkillInvoke(objectName())) {
+                if (can_trigger && lvmeng->askForSkillInvoke(objectName())) {
                     if (lvmeng->getHandcardNum() > lvmeng->getMaxCards()) {
                         int index = qrand() % 2 + 1;
                         if (!lvmeng->hasInnateSkill(objectName()) && lvmeng->hasSkill("mouduan"))
@@ -1451,8 +1448,6 @@ public:
                     lvmeng->skip(Player::Discard);
                 }
             }
-            if (lvmeng->hasFlag("KejiSlashInPlayPhase"))
-                lvmeng->setFlags("-KejiSlashInPlayPhase");
         } else if (lvmeng->getPhase() == Player::Play) {
             CardStar card = NULL;
             if (triggerEvent == PreCardUsed)

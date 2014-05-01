@@ -289,23 +289,23 @@ public:
 class Shengxi: public TriggerSkill {
 public:
     Shengxi(): TriggerSkill("shengxi") {
-        events << DamageDone << EventPhaseEnd;
+        events << PreDamageDone << EventPhaseEnd;
         frequency = Frequent;
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == EventPhaseEnd) {
-            if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Play) {
-                if (!player->hasFlag("ShengxiDamageInPlayPhase") && player->askForSkillInvoke(objectName()))
-                    player->drawCards(2, objectName());
-            }
-            if (player->hasFlag("ShengxiDamageInPlayPhase"))
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == PreEventPhaseEnd) {
+            bool can_trigger = true;
+            if (player->hasFlag("ShengxiDamageInPlayPhase")) {
+                can_trigger = false;
                 player->setFlags("-ShengxiDamageInPlayPhase");
+            }
+            if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Play
+                && can_trigger && player->askForSkillInvoke(objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                player->drawCards(2, objectName());
+            }
         } else if (triggerEvent == DamageDone) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.from && damage.from->getPhase() == Player::Play && !damage.from->hasFlag("ShengxiDamageInPlayPhase"))

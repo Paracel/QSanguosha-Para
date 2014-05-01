@@ -525,10 +525,6 @@ public:
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardStar card = NULL;
         if (triggerEvent == PreCardUsed)
@@ -1332,13 +1328,9 @@ public:
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->isAlive();
-    }
-
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-        if (!move.from || move.from != player)
+        if (!player->isAlive() || !move.from || move.from != player)
             return false;
         if (player->hasTreasure("wooden_ox")) {
             int count = 0;

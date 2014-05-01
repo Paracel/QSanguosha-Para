@@ -97,13 +97,26 @@ public:
 class Jingce: public TriggerSkill {
 public:
     Jingce(): TriggerSkill("jingce") {
-        events << PreCardUsed << CardResponded << EventPhaseStart << EventPhaseEnd;
+        events << EventPhaseEnd;
         frequency = Frequent;
-        global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (player->getPhase() == Player::Play && player->getMark(objectName()) >= player->getHp()) {
+            if (room->askForSkillInvoke(player, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                player->drawCards(2, objectName());
+            }
+        }
+        return false;
+    }
+};
+
+class JingceRecord: public TriggerSkill {
+public:
+    JingceRecord(): TriggerSkill("#jingce-record") {
+        events << PreCardUsed << CardResponded << EventPhaseStart;
+        global = true;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -116,17 +129,10 @@ public:
                 if (response.m_isUse)
                    card = response.m_card;
             }
-            if (card && card->getHandlingMethod() == Card::MethodUse)
-                player->addMark(objectName());
+            if (card && card->getTypeId() != Card::TypeSkill)
+                player->addMark("jingce");
         } else if (triggerEvent == EventPhaseStart && player->getPhase() == Player::RoundStart) {
-                player->setMark(objectName(), 0);
-        } else if (triggerEvent == EventPhaseEnd && TriggerSkill::triggerable(player)) {
-            if (player->getPhase() == Player::Play && player->getMark(objectName()) >= player->getHp()) {
-                if (room->askForSkillInvoke(player, objectName())) {
-                    room->broadcastSkillInvoke(objectName());
-                    player->drawCards(2, objectName());
-                }
-            }
+            player->setMark("jingce", 0);
         }
         return false;
     }
@@ -1252,6 +1258,8 @@ YJCM2013Package::YJCM2013Package()
 
     General *guohuai = new General(this, "guohuai", "wei"); // YJ 203
     guohuai->addSkill(new Jingce);
+    guohuai->addSkill(new JingceRecord);
+    related_skills.insertMulti("jingce", "#jingce-record");
 
     General *guanping = new General(this, "guanping", "shu", 4); // YJ 204
     guanping->addSkill(new Longyin);

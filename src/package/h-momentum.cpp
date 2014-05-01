@@ -177,7 +177,46 @@ public:
 class Yongjue: public TriggerSkill {
 public:
     Yongjue(): TriggerSkill("yongjue") {
-        events << PreCardUsed << CardResponded << BeforeCardsMove << EventPhaseStart;
+        events << BeforeCardsMove;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
+            && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
+            PlayerStar yongjue_user = room->getTag("yongjue_user").value<PlayerStar>();
+            CardStar yongjue_card = room->getTag("yongjue_card").value<CardStar>();
+            room->removeTag("yongjue_user");
+            room->removeTag("yongjue_card");
+            if (yongjue_user && yongjue_card && yongjue_card->hasFlag("yongjue")) {
+                QList<int> ids;
+                if (!yongjue_card->isVirtualCard())
+                    ids << yongjue_card->getEffectiveId();
+                else if (yongjue_card->subcardsLength() > 0)
+                    ids = yongjue_card->getSubcards();
+                if (!ids.isEmpty()) {
+                    foreach (int id, ids) {
+                        if (!move.card_ids.contains(id)) return false;
+                    }
+                } else {
+                    return false;
+                }
+                if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue(yongjue_user))) {
+                    DummyCard *dummy = new DummyCard(ids);
+                    yongjue_user->obtainCard(dummy);
+                    delete dummy;
+                    move.card_ids.clear();
+                    data = QVariant::fromValue(move);
+                }
+            }
+        }
+    }
+};
+
+class YongjueRecord: public TriggerSkill {
+public:
+    YongjueRecord(): TriggerSkill("#yongjue-record") {
+        events << PreCardUsed << CardResponded << EventPhaseStart;
         global = true;
     }
 
@@ -186,10 +225,6 @@ public:
             return 10;
         else
             return TriggerSkill::getPriority(triggerEvent);
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -203,8 +238,8 @@ public:
                    card = response.m_card;
             }
             if (card && card->getHandlingMethod() == Card::MethodUse
-                && player->getPhase() == Player::Play && player->getMark(objectName()) == 0) {
-                player->addMark(objectName());
+                && player->getPhase() == Player::Play && player->getMark("yongjue") == 0) {
+                player->addMark("yongjue");
                 if (card->isKindOf("Slash")) {
                     QList<int> ids;
                     if (!card->isVirtualCard())
@@ -215,36 +250,6 @@ public:
                         room->setCardFlag(card, "yongjue");
                         room->setTag("yongjue_user", QVariant::fromValue((PlayerStar)player));
                         room->setTag("yongjue_card", QVariant::fromValue((CardStar)card));
-                    }
-                }
-            }
-        } else if (triggerEvent == BeforeCardsMove && TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
-                && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
-                PlayerStar yongjue_user = room->getTag("yongjue_user").value<PlayerStar>();
-                CardStar yongjue_card = room->getTag("yongjue_card").value<CardStar>();
-                room->removeTag("yongjue_user");
-                room->removeTag("yongjue_card");
-                if (yongjue_user && yongjue_card && yongjue_card->hasFlag("yongjue")) {
-                    QList<int> ids;
-                    if (!yongjue_card->isVirtualCard())
-                        ids << yongjue_card->getEffectiveId();
-                    else if (yongjue_card->subcardsLength() > 0)
-                        ids = yongjue_card->getSubcards();
-                    if (!ids.isEmpty()) {
-                        foreach (int id, ids) {
-                            if (!move.card_ids.contains(id)) return false;
-                        }
-                    } else {
-                        return false;
-                    }
-                    if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue(yongjue_user))) {
-                        DummyCard *dummy = new DummyCard(ids);
-                        yongjue_user->obtainCard(dummy);
-                        delete dummy;
-                        move.card_ids.clear();
-                        data = QVariant::fromValue(move);
                     }
                 }
             }
@@ -576,7 +581,8 @@ HMomentumPackage::HMomentumPackage()
     zhangren->addSkill(new Chuanxin);
     zhangren->addSkill(new Fengshi);
 
-    skills << new Yongjue;
+    skills << new Yongjue << new YongjueRecord;
+    related_skills.insertMulti("yongjue", "#yongjue-record");
 
     addMetaObject<GuixiuCard>();
     addMetaObject<CunsiCard>();

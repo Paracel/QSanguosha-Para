@@ -416,38 +416,43 @@ class Kuanggu: public TriggerSkill {
 public:
     Kuanggu(): TriggerSkill("kuanggu") {
         frequency = Compulsory;
-        events << Damage << PreDamageDone;
+        events << Damage;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
+        player->tag["InvokeKuanggu"] = false;
+        if (invoke && player->isWounded()) {
+            room->broadcastSkillInvoke(objectName());
+
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = player;
+            log.arg = objectName();
+            room->sendLog(log);
+            room->notifySkillInvoked(player, objectName());
+
+            room->recover(player, RecoverStruct(player, NULL, damage.damage));
+        }
+        return false;
+    }
+};
+
+class KuangguRecord: public TriggerSkill {
+public:
+    KuangguRecord(): TriggerSkill("#kuanggu-record") {
+        events << PreDamageDone;
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (triggerEvent == PreDamageDone) {
             ServerPlayer *weiyan = damage.from;
             if (weiyan)
                 weiyan->tag["InvokeKuanggu"] = (weiyan->distanceTo(damage.to) <= 1);
-        } else if (triggerEvent == Damage && TriggerSkill::triggerable(player)) {
-            bool invoke = player->tag.value("InvokeKuanggu", false).toBool();
-            player->tag["InvokeKuanggu"] = false;
-            if (invoke && player->isWounded()) {
-                room->broadcastSkillInvoke(objectName());
-
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = objectName();
-                room->sendLog(log);
-                room->notifySkillInvoked(player, objectName());
-
-                room->recover(player, RecoverStruct(player, NULL, damage.damage));
-            }
         }
-
-        return false;
     }
 };
 
@@ -1177,6 +1182,8 @@ WindPackage::WindPackage()
 
     General *weiyan = new General(this, "weiyan", "shu"); // SHU 009
     weiyan->addSkill(new Kuanggu);
+    weiyan->addSkill(new KuangguRecord);
+    related_skills.insertMulti("kuanggu", "#kuanggu-record");
 
     General *xiaoqiao = new General(this, "xiaoqiao", "wu", 3, false); // WU 011
     xiaoqiao->addSkill(new Tianxiang);

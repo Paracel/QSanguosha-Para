@@ -746,10 +746,7 @@ class BotuCount: public TriggerSkill {
 public:
     BotuCount(): TriggerSkill("#botu-count") {
         events << PreCardUsed << CardResponded << TurnStart;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
+        global = true;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
@@ -774,7 +771,6 @@ class Botu: public PhaseChangeSkill {
 public:
     Botu(): PhaseChangeSkill("botu") {
         frequency = Frequent;
-        global = true;
     }
 
     virtual int getPriority(TriggerEvent) const{
@@ -983,10 +979,6 @@ public:
 
     virtual int getPriority(TriggerEvent) const{
         return 4;
-    }
-
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

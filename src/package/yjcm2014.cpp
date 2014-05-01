@@ -358,10 +358,6 @@ public:
         global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if ((triggerEvent == CardUsed || triggerEvent == CardResponded) && player->getPhase() == Player::Play) {
             CardStar card = NULL;
@@ -394,31 +390,14 @@ public:
     }
 };
 
-class Shibei: public TriggerSkill {
+class Shibei: public MasochismSkill {
 public:
-    Shibei(): TriggerSkill("shibei") {
-        events << DamageDone << Damaged << EventPhaseChanging;
+    Shibei(): MasochismSkill("shibei") {
         frequency = Compulsory;
-        global = true;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == EventPhaseChanging) {
-            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive) {
-                foreach (ServerPlayer *p, room->getAlivePlayers())
-                    p->setMark("shibei", 0);
-            }
-        } else if (triggerEvent == DamageDone) {
-            ServerPlayer *current = room->getCurrent();
-            if (!current || current->isDead() || current->getPhase() == Player::NotActive)
-                return false;
-            player->addMark("shibei");
-        } else if (triggerEvent == Damaged && TriggerSkill::triggerable(player) && player->getMark("shibei") > 0) {
+    virtual void onDamaged(ServerPlayer *player, const DamageStruct &) const{
+        if (player->getMark("shibei") > 0) {
             LogMessage log;
             log.type = "#TriggerSkill";
             log.from = player;
@@ -431,6 +410,30 @@ public:
                 room->recover(player, RecoverStruct(player));
             else
                 room->loseHp(player);
+        }
+    }
+};
+
+class ShibeiRecord: public TriggerSkill {
+public:
+    ShibeiRecord(): TriggerSkill("#shibei-record") {
+        events << PreDamageDone << EventPhaseChanging;
+        frequency = Compulsory;
+        global = true;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive) {
+                foreach (ServerPlayer *p, room->getAlivePlayers())
+                    p->setMark("shibei", 0);
+            }
+        } else if (triggerEvent == PreDamageDone) {
+            ServerPlayer *current = room->getCurrent();
+            if (!current || current->isDead() || current->getPhase() == Player::NotActive)
+                return false;
+            player->addMark("shibei");
         }
         return false;
     }
@@ -463,6 +466,8 @@ YJCM2014Package::YJCM2014Package()
     General *jvshou = new General(this, "jvshou", "qun", 3); // YJ 306
     jvshou->addSkill(new Jianying);
     jvshou->addSkill(new Shibei);
+    jvshou->addSkill(new ShibeiRecord);
+    related_skills.insertMulti("shibei", "#shibei-record");
 
     General *sunluban = new General(this, "sunluban", "wu", 3, false); // YJ 307
     sunluban->addSkill(new Zenhui);

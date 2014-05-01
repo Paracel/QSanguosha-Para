@@ -457,6 +457,7 @@ bool ServerPlayer::hasNullification() const{
     }
 
     foreach (const Skill *skill, getVisibleSkillList(true)) {
+        if (!hasSkill(skill->objectName())) continue;
         if (skill->inherits("ViewAsSkill")) {
             const ViewAsSkill *vsskill = qobject_cast<const ViewAsSkill *>(skill);
             if (vsskill->isEnabledAtNullification(this)) return true;

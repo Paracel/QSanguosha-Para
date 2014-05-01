@@ -234,6 +234,7 @@ public:
             ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(),
                                                             "zenhui-invoke:" + use.to.first()->objectName(), true, true);
             if (target) {
+                room->broadcastSkillInvoke(objectName());
                 player->setFlags(objectName());
 
                 // Collateral

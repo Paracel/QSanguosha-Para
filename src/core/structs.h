@@ -196,7 +196,6 @@ struct CardsMoveOneTimeStruct {
     QString to_pile_name;
 
     QList<bool> open; // helper to prevent sending card_id to unrelevant clients
-    bool transit; // helper to judge whether the move is intermediate
     bool is_last_handcard;
 };
 

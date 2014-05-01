@@ -1358,7 +1358,7 @@ public:
                     QList<ServerPlayer *> p_list;
                     p_list << to;
                     to->addToPile("wooden_ox", player->getPile("wooden_ox"), false, p_list);
-                } else if (!move.transit) {
+                } else {
                     player->clearOnePrivatePile("wooden_ox");
                 }
                 return false;

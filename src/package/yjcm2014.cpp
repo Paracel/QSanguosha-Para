@@ -7,6 +7,136 @@
 #include "engine.h"
 #include "maneuvering.h"
 
+DingpinCard::DingpinCard() {
+}
+
+bool DingpinCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *) const{
+    return targets.isEmpty() && to_select->isWounded() && !to_select->hasFlag("dingpin");
+}
+
+void DingpinCard::onEffect(const CardEffectStruct &effect) const{
+    Room *room = effect.from->getRoom();
+
+    JudgeStruct judge;
+    judge.who = effect.to;
+    judge.good = true;
+    judge.pattern = ".|black";
+    judge.reason = "dingpin";
+
+    room->judge(judge);
+
+    if (judge.isGood()) {
+        room->setPlayerFlag(effect.to, "dingpin");
+        effect.to->drawCards(effect.to->getLostHp(), "dingpin");
+    } else {
+        effect.from->turnOver();
+    }
+}
+
+class DingpinViewAsSkill: public OneCardViewAsSkill {
+public:
+    DingpinViewAsSkill(): OneCardViewAsSkill("dingpin") {
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        if (!player->canDiscard(player, "h") || player->getMark("dingpin") == 0xE) return false;
+        if (!player->hasFlag("dingpin") && player->isWounded()) return true;
+        foreach (const Player *p, player->getAliveSiblings()) {
+            if (!p->hasFlag("dingpin") && p->isWounded()) return true;
+        }
+        return false;
+    }
+
+    virtual bool viewFilter(const Card *to_select) const{
+        return !to_select->isEquipped() && (Self->getMark("dingpin") & (1 << int(to_select->getTypeId()))) == 0;
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        DingpinCard *card = new DingpinCard;
+        card->addSubcard(originalCard);
+        return card;
+    }
+};
+
+class Dingpin: public TriggerSkill {
+public:
+    Dingpin(): TriggerSkill("dingpin") {
+        events << EventPhaseChanging << PreCardUsed << CardResponded << BeforeCardsMove;
+        view_as_skill = new DingpinViewAsSkill;
+        global = true;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.from == Player::Play) {
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (p->hasFlag("dingpin"))
+                        room->setPlayerFlag(p, "-dingpin");
+                }
+                if (player->getMark("dingpin") > 0)
+                    room->setPlayerMark(player, "dingpin", 0);
+            }
+        } else {
+            if (!player->isAlive() || player->getPhase() == Player::NotActive) return false;
+            if (triggerEvent == PreCardUsed || triggerEvent == CardResponded) {
+                CardStar card = NULL;
+                if (triggerEvent == PreCardUsed) {
+                    card = data.value<CardUseStruct>().card;
+                } else {
+                    CardResponseStruct resp = data.value<CardResponseStruct>();
+                    if (resp.m_isUse)
+                        card = resp.m_card;
+                }
+                if (!card || card->getTypeId() == Card::TypeSkill) return false;
+                recordDingpinCardType(room, player, card);
+            } else if (triggerEvent == BeforeCardsMove) {
+                CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+                if (player != move.from
+                    || ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) != CardMoveReason::S_REASON_DISCARD))
+                    return false;
+                foreach (int id, move.card_ids) {
+                    const Card *c = Sanguosha->getCard(id);
+                    recordDingpinCardType(room, player, c);
+                }
+            }
+        }
+        return false;
+    }
+
+private:
+    void recordDingpinCardType(Room *room, ServerPlayer *player, const Card *card) const{
+        if (player->getMark("dingpin") == 0xE) return;
+        int typeID = (1 << int(card->getTypeId()));
+        int mark = player->getMark("dingpin");
+        if ((mark & typeID) == 0)
+            room->setPlayerMark(player, "dingpin", mark | typeID);
+    }
+};
+
+class Faen: public TriggerSkill {
+public:
+    Faen(): TriggerSkill("faen") {
+        events << TurnedOver << ChainStateChanged;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        if (triggerEvent == ChainStateChanged && !player->isChained()) return false;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (TriggerSkill::triggerable(p)
+                && room->askForSkillInvoke(p, objectName(), QVariant::fromValue((PlayerStar)player))) {
+                room->broadcastSkillInvoke(objectName());
+                player->drawCards(1, objectName());
+            }
+        }
+        return false;
+    }
+};
+
 class Sidi: public TriggerSkill {
 public:
     Sidi(): TriggerSkill("sidi") {
@@ -622,9 +752,9 @@ YJCM2014Package::YJCM2014Package()
     caozhen->addSkill(new SidiTargetMod);
     related_skills.insertMulti("sidi", "#sidi-target");
 
-    /*General *chenqun = new General(this, "chenqun", "wei", 3); // YJ 303
+    General *chenqun = new General(this, "chenqun", "wei", 3); // YJ 303
     chenqun->addSkill(new Dingpin);
-    chenqun->addSkill(new Faen);*/
+    chenqun->addSkill(new Faen);
 
     General *guyong = new General (this, "guyong", "wu", 3); // YJ 304
     guyong->addSkill(new Shenxing);
@@ -657,6 +787,7 @@ YJCM2014Package::YJCM2014Package()
     General *zhuhuan = new General(this, "zhuhuan", "wu"); // YJ 311
     zhuhuan->addSkill(new Youdi);
 
+    addMetaObject<DingpinCard>();
     addMetaObject<ShenxingCard>();
     addMetaObject<BingyiCard>();
     addMetaObject<XianzhouCard>();

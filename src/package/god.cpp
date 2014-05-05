@@ -1111,7 +1111,7 @@ public:
                 && current->getPhase() != Player::NotActive) {
                 killer->addMark("lianpo");
 
-                if (TriggerSkill::triggerable(player)) {
+                if (player->isAlive() && player->hasSkill("lianpo")) {
                     LogMessage log;
                     log.type = "#LianpoRecord";
                     log.from = killer;

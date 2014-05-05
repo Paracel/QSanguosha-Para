@@ -474,6 +474,7 @@ void YijiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targ
             max = 1;
         const Card *dummy = room->askForExchange(source, "yiji", max, 1, false, "YijiGive::" + target->objectName());
         target->addToPile("yiji", dummy, false);
+        delete dummy;
     }
 }
 

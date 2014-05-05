@@ -291,6 +291,7 @@ public:
                                               player->objectName(), objectName(), QString());
                         reason.m_playerId = player->objectName();
                         room->moveCardTo(card, source, player, Player::PlaceHand, reason);
+                        delete card;
                     } else {
                         room->loseHp(source);
                     }
@@ -938,8 +939,11 @@ public:
                     if (zhonghui->getHandcardNum() == 1) {
                         room->getThread()->delay();
                         card_id = zhonghui->handCards().first();
-                    } else
-                        card_id = room->askForExchange(zhonghui, "quanji", 1, 1, false, "QuanjiPush")->getSubcards().first();
+                    } else {
+                        const Card *card = room->askForExchange(zhonghui, "quanji", 1, 1, false, "QuanjiPush");
+                        card_id = card->getEffectiveId();
+                        delete card;
+                    }
                     zhonghui->addToPile("power", card_id);
                 }
             }

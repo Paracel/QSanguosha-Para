@@ -127,6 +127,7 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (triggerEvent == ChainStateChanged && !player->isChained()) return false;
         foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!player->isAlive()) return false;
             if (TriggerSkill::triggerable(p)
                 && room->askForSkillInvoke(p, objectName(), QVariant::fromValue((PlayerStar)player))) {
                 room->broadcastSkillInvoke(objectName());
@@ -198,6 +199,121 @@ public:
 
     virtual int getResidueNum(const Player *from, const Card *card) const{
         return card->isKindOf("Slash") ? -from->getMark("sidi") : 0;
+    }
+};
+
+class Qiangzhi: public TriggerSkill {
+public:
+    Qiangzhi(): TriggerSkill("qiangzhi") {
+        events << EventPhaseStart << CardUsed << CardResponded;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL && target->getPhase() == Player::Play;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart) {
+            player->setMark(objectName(), 0);
+            if (TriggerSkill::triggerable(player)) {
+                QList<ServerPlayer *> targets;
+                foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                    if (!p->isKongcheng())
+                        targets << p;
+                }
+                if (targets.isEmpty()) return false;
+                ServerPlayer *target = room->askForPlayerChosen(player, targets, objectName(), "qiangzhi-invoke", true, true);
+                if (target) {
+                    room->broadcastSkillInvoke(objectName(), 1);
+                    int id = room->askForCardChosen(player, target, "h", objectName());
+                    room->showCard(target, id);
+                    player->setMark(objectName(), int(Sanguosha->getCard(id)->getTypeId()));
+                }
+            }
+        } else if (player->getMark(objectName()) > 0) {
+            CardStar card = NULL;
+            if (triggerEvent == CardUsed) {
+                card = data.value<CardUseStruct>().card;
+            } else {
+                CardResponseStruct resp = data.value<CardResponseStruct>();
+                if (resp.m_isUse)
+                    card = resp.m_card;
+            }
+            if (card && int(card->getTypeId()) == player->getMark(objectName())
+                && room->askForSkillInvoke(player, objectName(), data)) {
+                if (!player->hasSkill(objectName())) {
+                    LogMessage log;
+                    log.type = "#InvokeSkill";
+                    log.from = player;
+                    log.arg = objectName();
+                    room->sendLog(log);
+                }
+                room->broadcastSkillInvoke(objectName(), 2);
+                player->drawCards(1, objectName());
+            }
+        }
+        return false;
+    }
+};
+
+class Xiantu: public TriggerSkill {
+public:
+    Xiantu(): TriggerSkill("xiantu") {
+        events << EventPhaseStart << EventPhaseChanging << Death;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && player->getPhase() == Player::Play) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (!player->isAlive()) return false;
+                if (TriggerSkill::triggerable(p) && room->askForSkillInvoke(p, objectName())) {
+                    p->setFlags("XiantuInvoked");
+                    p->drawCards(2, objectName());
+                    if (p->isAlive() && player->isAlive()) {
+                        if (!p->isNude()) {
+                            int num = qMin(2, p->getCardCount(true));
+                            const Card *to_give = room->askForExchange(p, objectName(), num, num, true,
+                                                                       QString("@xiantu-give::%1:%2").arg(player->objectName()).arg(num));
+                            player->obtainCard(to_give, false);
+                        }
+                    }
+                }
+            }
+        } else if (triggerEvent == EventPhaseChanging) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.from == Player::Play) {
+                QList<ServerPlayer *> zhangsongs;
+                foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                    if (p->hasFlag("XiantuInvoked")) {
+                        p->setFlags("-XiantuInvoked");
+                        zhangsongs << p;
+                    }
+                }
+                if (player->getMark("XiantuKill") > 0) {
+                    player->setMark("XiantuKill", 0);
+                    return false;
+                }
+                foreach (ServerPlayer *zs, zhangsongs) {
+                    LogMessage log;
+                    log.type = "#Xiantu";
+                    log.from = player;
+                    log.to << zs;
+                    log.arg = objectName();
+                    room->sendLog(log);
+
+                    room->loseHp(zs);
+                }
+            }
+        } else if (triggerEvent == Death) {
+            DeathStruct death = data.value<DeathStruct>();
+            if (death.damage && death.damage->from && death.damage->from->getPhase() == Player::Play)
+                death.damage->from->addMark("XiantuKill");
+        }
+        return false;
     }
 };
 
@@ -777,9 +893,9 @@ YJCM2014Package::YJCM2014Package()
     /*General *wuyi = new General(this, "wuyi", "shu"); // YJ 308
     wuyi->addSkill(new Benxi);*/
 
-    /*General *zhangsong = new General(this, "zhangsong", "shu", 3); // YJ 309
+    General *zhangsong = new General(this, "zhangsong", "shu", 3); // YJ 309
     zhangsong->addSkill(new Qiangzhi);
-    zhangsong->addSkill(new Xiantu);*/
+    zhangsong->addSkill(new Xiantu);
 
     General *zhoucang = new General(this, "zhoucang", "shu"); // YJ 310
     zhoucang->addSkill(new Zhongyong);

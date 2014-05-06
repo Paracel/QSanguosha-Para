@@ -251,15 +251,12 @@ public:
                 if (kongrong->isDead()) break;
             }
 
-            QList<int> ids = move.card_ids;
-            i = 0;
-            foreach (int card_id, ids) {
-                if (original_lirang.contains(card_id) && !lirang_card.contains(card_id)) {
-                    move.card_ids.removeOne(card_id);
-                    move.from_places.removeAt(i);
-                }
-                i++;
+            QList<int> ids;
+            foreach (int card_id, original_lirang) {
+                if (!lirang_card.contains(card_id))
+                    ids << card_id;
             }
+            move.removeCardIds(ids);
             data = QVariant::fromValue(move);
         }
         return false;

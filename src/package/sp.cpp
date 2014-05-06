@@ -1213,10 +1213,10 @@ public:
                     player->setMark("YanyuOnlyId", 0);
                     if (target) {
                         player->removeMark("YanyuDiscard" + QString::number(card->getTypeId()));
-                        int index = move.card_ids.indexOf(card_id);
-                        Player::Place place = move.from_places.at(index);
-                        move.from_places.removeAt(index);
-                        move.card_ids.removeOne(card_id);
+                        Player::Place place = move.from_places.at(move.card_ids.indexOf(card_id));
+                        QList<int> _card_id;
+                        _card_id << card_id;
+                        move.removeCardIds(_card_id);
                         data = QVariant::fromValue(move);
                         ids.removeOne(card_id);
                         disabled << card_id;

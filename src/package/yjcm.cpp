@@ -84,10 +84,7 @@ public:
 
                 if (!card_ids.isEmpty()) {
                     room->broadcastSkillInvoke("luoying");
-                    foreach (int id, card_ids) {
-                        move.from_places.removeAt(move.card_ids.indexOf(id));
-                        move.card_ids.removeOne(id);
-                    }
+                    move.removeCardIds(card_ids);
                     data = QVariant::fromValue(move);
                     DummyCard *dummy = new DummyCard(card_ids);
                     room->moveCardTo(dummy, caozhi, Player::PlaceHand, move.reason, true);

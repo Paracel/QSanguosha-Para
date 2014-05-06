@@ -833,11 +833,10 @@ public:
                         zongxuan_card.removeOne(id);
                         zongxuan.removeOne(QString::number(id));
                         room->setPlayerProperty(player, "zongxuan", zongxuan.join("+"));
-                        if (move.card_ids.contains(id)) {
-                            move.from_places.removeAt(move.card_ids.indexOf(id));
-                            move.card_ids.removeOne(id);
-                            data = QVariant::fromValue(move);
-                        }
+                        QList<int> _id;
+                        _id << id;
+                        move.removeCardIds(_id);
+                        data = QVariant::fromValue(move);
                         room->setPlayerProperty(player, "zongxuan_move", QString::number(id)); // For UI to translate the move reason
                         room->moveCardTo(Sanguosha->getCard(id), player, NULL, Player::DrawPile, move.reason, true);
                         if (!player->isAlive())

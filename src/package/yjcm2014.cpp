@@ -202,6 +202,169 @@ public:
     }
 };
 
+class ShenduanViewAsSkill: public OneCardViewAsSkill {
+public:
+    ShenduanViewAsSkill(): OneCardViewAsSkill("shenduan") {
+        response_pattern = "@@shenduan";
+    }
+
+    bool viewFilter(const Card *to_select) const{
+        QStringList shenduan = Self->property("shenduan").toString().split("+");
+        foreach (QString id, shenduan) {
+            bool ok;
+            if (id.toInt(&ok) == to_select->getEffectiveId() && ok)
+                return true;
+        }
+        return false;
+    }
+
+    const Card *viewAs(const Card *originalCard) const{
+        SupplyShortage *ss = new SupplyShortage(originalCard->getSuit(), originalCard->getNumber());
+        ss->addSubcard(originalCard);
+        ss->setSkillName("_shenduan");
+        return ss;
+    }
+};
+
+class Shenduan: public TriggerSkill {
+public:
+    Shenduan(): TriggerSkill("shenduan") {
+        events << BeforeCardsMove;
+        view_as_skill = new ShenduanViewAsSkill;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.from != player)
+            return false;
+        if (move.to_place == Player::DiscardPile
+            && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
+
+            int i = 0;
+            QList<int> shenduan_card;
+            foreach (int card_id, move.card_ids) {
+                const Card *c = Sanguosha->getCard(card_id);
+                if (room->getCardOwner(card_id) == move.from
+                    && (move.from_places[i] == Player::PlaceHand || move.from_places[i] == Player::PlaceEquip)
+                    && c->isBlack() && c->getTypeId() == Card::TypeBasic) {
+                    shenduan_card << card_id;
+                }
+                i++;
+            }
+            if (shenduan_card.isEmpty())
+                return false;
+
+            room->setPlayerProperty(player, "shenduan", IntList2StringList(shenduan_card).join("+"));
+            do {
+                if (!room->askForUseCard(player, "@@shenduan", "@shenduan-use")) break;
+                QList<int> ids = StringList2IntList(player->property("shenduan").toString().split("+"));
+                QList<int> to_remove;
+                foreach (int card_id, shenduan_card) {
+                    if (!ids.contains(card_id))
+                        to_remove << card_id;
+                }
+                move.removeCardIds(to_remove);
+                data = QVariant::fromValue(move);
+                shenduan_card = ids;
+            } while (!shenduan_card.isEmpty());
+        }
+        return false;
+    }
+};
+
+class ShenduanUse: public TriggerSkill {
+public:
+    ShenduanUse(): TriggerSkill("#shenduan") {
+        events << PreCardUsed;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.card->isKindOf("SupplyShortage") && use.card->getSkillName() == "shenduan") {
+            QList<int> ids = StringList2IntList(player->property("shenduan").toString().split("+"));
+            ids.removeOne(use.card->getEffectiveId());
+            room->setPlayerProperty(player, "shenduan", IntList2StringList(ids).join("+"));
+        }
+        return false;
+    }
+};
+
+class ShenduanTargetMod: public TargetModSkill {
+public:
+    ShenduanTargetMod(): TargetModSkill("#shenduan-target") {
+        pattern = "SupplyShortage";
+    }
+
+    virtual int getDistanceLimit(const Player *, const Card *card) const{
+        if (card->getSkillName() == "shenduan")
+            return 1000;
+        else
+            return 0;
+    }
+};
+
+class Yonglve: public PhaseChangeSkill {
+public:
+    Yonglve(): PhaseChangeSkill("yonglve") {
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Judge) return false;
+        Room *room = target->getRoom();
+        foreach (ServerPlayer *hs, room->getOtherPlayers(target)) {
+            if (target->isDead() || target->getJudgingArea().isEmpty()) break;
+            if (!TriggerSkill::triggerable(hs)) continue;
+            if (room->askForSkillInvoke(hs, objectName())) {
+                room->broadcastSkillInvoke(objectName());
+                int id = room->askForCardChosen(hs, target, "j", objectName(), false, Card::MethodDiscard);
+                room->throwCard(id, NULL, hs);
+                if (hs->isAlive() && target->isAlive() && hs->canSlash(target, false)) {
+                    room->setTag("YonglveUser", QVariant::fromValue((PlayerStar)hs));
+                    Slash *slash = new Slash(Card::NoSuit, 0);
+                    slash->setSkillName("_yonglve");
+                    room->useCard(CardUseStruct(slash, hs, target), false);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class YonglveSlash: public TriggerSkill {
+public:
+    YonglveSlash(): TriggerSkill("#yonglve") {
+        events << PreDamageDone << CardFinished;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
+        if (triggerEvent == PreDamageDone) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.card && damage.card->isKindOf("Slash") && damage.card->getSkillName() == "yonglve")
+                damage.card->setFlags("YonglveDamage");
+        } else {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.card->isKindOf("Slash") && use.card->getSkillName() == "yonglve" && !use.card->hasFlag("YonglveDamage")) {
+                PlayerStar hs = room->getTag("YonglveUser").value<PlayerStar>();
+                if (hs)
+                    hs->drawCards(1, "yonglve");
+            }
+        }
+        return false;
+    }
+};
+
 class Qiangzhi: public TriggerSkill {
 public:
     Qiangzhi(): TriggerSkill("qiangzhi") {
@@ -876,9 +1039,15 @@ YJCM2014Package::YJCM2014Package()
     guyong->addSkill(new Shenxing);
     guyong->addSkill(new Bingyi);
 
-    /*General *hanhaoshihuan = new General(this, "hanhaoshihuan", "wei"); // YJ 305
+    General *hanhaoshihuan = new General(this, "hanhaoshihuan", "wei"); // YJ 305
     hanhaoshihuan->addSkill(new Shenduan);
-    hanhaoshihuan->addSkill(new Yonglve);*/
+    hanhaoshihuan->addSkill(new ShenduanUse);
+    hanhaoshihuan->addSkill(new ShenduanTargetMod);
+    hanhaoshihuan->addSkill(new Yonglve);
+    hanhaoshihuan->addSkill(new YonglveSlash);
+    related_skills.insertMulti("shenduan", "#shenduan");
+    related_skills.insertMulti("shenduan", "#shenduan-target");
+    related_skills.insertMulti("yonglve", "#yonglve");
 
     General *jvshou = new General(this, "jvshou", "qun", 3); // YJ 306
     jvshou->addSkill(new Jianying);

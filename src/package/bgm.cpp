@@ -1040,6 +1040,10 @@ public:
         return target && target->getPhase() == Player::Judge && target->containsTrick("YanxiaoCard");
     }
 
+    virtual int getPriority(TriggerEvent) const{
+        return 3;
+    }
+
     virtual bool onPhaseChange(ServerPlayer *target) const{
         CardsMoveStruct move;
         LogMessage log;
@@ -1780,17 +1784,14 @@ public:
             && ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD)) {
             if (liuxie->askForSkillInvoke(objectName())) {
                 room->broadcastSkillInvoke(objectName(), 1);
+                QList<int> to_add;
                 int i = 0;
-                QList<int> ids = move.card_ids, to_add;
-                QList<Player::Place> places = move.from_places;
-                foreach (int card_id, ids) {
-                    if (places[i] == Player::PlaceHand) {
+                foreach (int card_id, move.card_ids) {
+                    if (move.from_places[i] == Player::PlaceHand)
                         to_add.append(card_id);
-                        move.card_ids.removeOne(card_id);
-                        move.from_places.removeAt(i);
-                    }
                     i++;
                 }
+                move.removeCardIds(to_add);
                 data = QVariant::fromValue(move);
                 if (!to_add.isEmpty())
                     liuxie->addToPile("edict", to_add, true, QList<ServerPlayer *>(), move.reason);

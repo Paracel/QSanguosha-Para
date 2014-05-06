@@ -538,6 +538,8 @@ struct CardsMoveOneTimeStruct {
 
     QList<bool> open; // helper to prevent sending card_id to unrelevant clients
     bool is_last_handcard;
+
+    void removeCardIds(const QList<int> &to_remove);
 };
 
 struct DyingStruct {

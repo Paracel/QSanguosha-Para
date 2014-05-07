@@ -525,6 +525,25 @@ bool Player::hasArmorEffect(const QString &armor_name) const{
     if (!tag["Qinggang"].toStringList().isEmpty() || getMark("Armor_Nullified") > 0
         || getMark("Equips_Nullified_to_Yourself") > 0)
         return false;
+
+    const Player *current = NULL;
+    foreach (const Player *p, getAliveSiblings()) {
+        if (p->getPhase() != Player::NotActive) {
+            current = p;
+            break;
+        }
+    }
+    if (current && current->hasSkill("benxi")) {
+        bool alladj = true;
+        foreach (const Player *p, current->getAliveSiblings()) {
+            if (current->distanceTo(p) != 1) {
+                alladj = false;
+                break;
+            }
+        }
+        if (alladj) return false;
+    }
+
     if (armor_name == "bazhen")
         return armor == NULL && alive && hasSkill("bazhen");
     else {

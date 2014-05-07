@@ -1545,7 +1545,7 @@ public:
 class Qiangwu: public TriggerSkill {
 public:
     Qiangwu(): TriggerSkill("qiangwu") {
-        events << EventPhaseStart << PreCardUsed << FinishJudge;
+        events << EventPhaseChanging << PreCardUsed << FinishJudge;
         view_as_skill = new QiangwuViewAsSkill;
     }
 

@@ -61,7 +61,7 @@ return {
 
 	["sp_dingfeng"] = "SP丁奉",
 	["&sp_dingfeng"] = "丁奉",
-	["illustrator:sp_dingfeng"] = "",
+	["illustrator:sp_dingfeng"] = "G.G.G.",
 
 	["tw_diaochan"] = "TW貂蝉",
 	["&tw_diaochan"] = "貂蝉",

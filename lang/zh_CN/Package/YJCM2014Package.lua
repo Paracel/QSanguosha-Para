@@ -82,7 +82,7 @@ return {
 	["jiaojin"] = "骄矜",
 	[":jiaojin"] = "每当你受到男性角色的伤害时，你可以弃置一张装备牌：若如此做，此伤害-1。",
 	["@jiaojin"] = "你可以弃置一张装备牌发动“骄矜”令此伤害-1",
-	["#Jiaojin"] = "%from 发动了“%<font color=\"yellow\"><b>骄矜</b></font>”，伤害从 %arg 点减少至 %arg2 点",
+	["#Jiaojin"] = "%from 发动了“<font color=\"yellow\"><b>骄矜</b></font>”，伤害从 %arg 点减少至 %arg2 点",
 
 	["#wuyi"] = "建兴鞍辔",
 	["wuyi"] = "吴懿",

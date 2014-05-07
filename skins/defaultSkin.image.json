@@ -111,6 +111,15 @@
 "playerGeneralIcon-panzhangmazhong-7": "image/generals/big/panzhangmazhong.png",
 "playerGeneralIcon-panzhangmazhong-8": "image/generals/kof/panzhangmazhong.png",
 
+"playerGeneralIcon-hanhaoshihuan-0": ["image/generals/big/hanhaoshihuan.png", [0, 0, 134, 134], [40, 40]],
+"playerGeneralIcon-hanhaoshihuan-1": "image/generals/small/hanhaoshihuan.png",
+"playerGeneralIcon-hanhaoshihuan-2": "image/generals/big/hanhaoshihuan.png",
+"playerGeneralIcon-hanhaoshihuan-4": ["image/generals/big/hanhaoshihuan.png", [0, 0, 134, 134], [51, 51]],
+"playerGeneralIcon-hanhaoshihuan-5": ["image/generals/big/hanhaoshihuan.png", [0, 0, 134, 134], [70, 70]],
+"playerGeneralIcon-hanhaoshihuan-6": "image/generals/small/hanhaoshihuan.png",
+"playerGeneralIcon-hanhaoshihuan-7": "image/generals/big/hanhaoshihuan.png",
+"playerGeneralIcon-hanhaoshihuan-8": "image/generals/kof/hanhaoshihuan.png",
+
 "playerGeneralIcon-erqiao-0": ["image/generals/big/erqiao.png", [0, 0, 134, 134], [40, 40]],
 "playerGeneralIcon-erqiao-1": "image/generals/small/erqiao.png",
 "playerGeneralIcon-erqiao-2": "image/generals/big/erqiao.png",

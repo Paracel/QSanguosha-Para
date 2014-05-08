@@ -378,7 +378,7 @@ public:
         if (death.who != player)
             return false;
         ServerPlayer *killer = death.damage ? death.damage->from : NULL;
-        if (killer) {
+        if (killer && killer != player) {
             LogMessage log;
             log.type = "#HuileiThrow";
             log.from = player;

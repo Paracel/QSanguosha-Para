@@ -1185,8 +1185,8 @@ public:
     ZhuikongProhibit(): ProhibitSkill("#zhuikong") {
     }
 
-    virtual bool isProhibited(const Player *from, const Player *to, const Card *, const QList<const Player *> &) const{
-        if (from->hasFlag("zhuikong"))
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &) const{
+        if (card->getTypeId() != Card::TypeSkill && from->hasFlag("zhuikong"))
             return to != from;
         return false;
     }

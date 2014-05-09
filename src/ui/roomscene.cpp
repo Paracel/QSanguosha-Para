@@ -1109,6 +1109,9 @@ void RoomScene::enableTargets(const Card *card) {
             if (Self->isCardLimited(card, method))
                 enabled = false;
         }
+        if (status == Client::RespondingUse && ClientInstance->m_respondingUseFixedTarget
+            && Sanguosha->isProhibited(Self, ClientInstance->m_respondingUseFixedTarget, card))
+            enabled = false;
         if (status == Client::RespondingForDiscard && Self->isCardLimited(card, Card::MethodDiscard))
             enabled = false;
     }

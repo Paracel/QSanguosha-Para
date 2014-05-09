@@ -197,6 +197,7 @@ public:
     QString m_cardDiscardPattern;
     bool m_noNullificationThisTime;
     QString m_noNullificationTrickName;
+    const ClientPlayer *m_respondingUseFixedTarget;
     int discard_num;
     int min_num;
     QString skill_name;

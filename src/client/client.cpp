@@ -124,6 +124,7 @@ Client::Client(QObject *parent, const QString &filename)
 
     m_noNullificationThisTime = false;
     m_noNullificationTrickName = ".";
+    m_respondingUseFixedTarget = NULL;
 
     Self = new ClientPlayer(this);
     Self->setScreenName(Config.UserName);
@@ -802,6 +803,7 @@ void Client::askForCardOrUseCard(const Json::Value &cardUsage) {
     }
 
     Status status = Responding;
+    m_respondingUseFixedTarget = NULL;
     if (cardUsage[2].isInt()) {
         Card::HandlingMethod method = (Card::HandlingMethod)(cardUsage[2].asInt());
         switch (method) {
@@ -910,7 +912,7 @@ void Client::askForNullification(const Json::Value &arg) {
 
     _m_roomState.setCurrentCardUsePattern("nullification");
     m_isDiscardActionRefusable = true;
-
+    m_respondingUseFixedTarget = NULL;
     setStatus(RespondingUse);
 }
 
@@ -1406,6 +1408,7 @@ void Client::askForSinglePeach(const Json::Value &arg) {
     }
     _m_roomState.setCurrentCardUsePattern(pattern.join("+"));
     m_isDiscardActionRefusable = true;
+    m_respondingUseFixedTarget = dying;
     setStatus(RespondingUse);
 }
 

@@ -3656,7 +3656,10 @@ void RoomScene::doAppearingAnimation(const QString &name, const QStringList &arg
     item->setZValue(10086.0);
     addItem(item);
 
-    QPointF from = getAnimationObject(args.at(0))->scenePos();
+    QGraphicsObject *fromItem = getAnimationObject(args.at(0));
+    QPointF from = fromItem->scenePos();
+    if (fromItem == dashboard)
+        from.setX(fromItem->boundingRect().width() / 2);
     item->setPos(from);
 
     QPropertyAnimation *disappear = new QPropertyAnimation(item, "opacity");

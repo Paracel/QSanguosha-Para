@@ -690,7 +690,15 @@ sgs.ai_skill_playerchosen.yanyu = function(self, targets)
 		end
 		local cards = { card }
 		local c, player = self:getCardNeedPlayer(cards, self.friends)
-		return player
+		if player then return player
+		else
+			self:sort(self.friends)
+			for _, friend in ipairs(self.friends) do
+				if not self:needKongcheng(friend) and not hasManjuanEffect(friend) then
+					return friend
+				end
+			end
+		end
 	end
 end
 

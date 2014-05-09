@@ -359,7 +359,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target->hasArmorEffect(objectName());
+        return TriggerSkill::triggerable(target) && !target->getArmor() && target->hasArmorEffect("eight_diagram");
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *wolong, QVariant &data) const{

@@ -667,6 +667,12 @@
     <ClCompile Include="Release\moc_ling.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Debug\moc_boss.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_boss.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\src\package\yjcm2014.cpp">
       <Filter>package</Filter>
     </ClCompile>
@@ -675,6 +681,9 @@
     </ClCompile>
     <ClCompile Include="Release\moc_yjcm2014.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\package\boss.cpp">
+      <Filter>package</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -943,6 +952,9 @@
       <Filter>package</Filter>
     </CustomBuild>
     <CustomBuild Include="..\..\src\package\yjcm2014.h">
+      <Filter>package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\package\boss.h">
       <Filter>package</Filter>
     </CustomBuild>
   </ItemGroup>

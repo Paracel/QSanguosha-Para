@@ -99,6 +99,7 @@ Engine::Engine()
     modes["03p"] = tr("3 players");
     modes["04p"] = tr("4 players");
     modes["04_1v3"] = tr("4 players (Hulao Pass)");
+    modes["04_boss"] = tr("4 players(Boss)");
     modes["05p"] = tr("5 players");
     modes["06p"] = tr("6 players");
     modes["06pd"] = tr("6 players (2 renegades)");
@@ -752,7 +753,7 @@ QString Engine::getRoles(const QString &mode) const{
 
     if (mode == "02_1v1") {
         return "ZN";
-    } else if (mode == "04_1v3") {
+    } else if (mode == "04_1v3" || mode == "04_boss") {
         return "ZFFF";
     }
 
@@ -935,6 +936,8 @@ QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) c
         general_set = general_set.subtract(Config.value("Banlist/Basara", "").toStringList().toSet());
     if (Config.EnableHegemony)
         general_set = general_set.subtract(Config.value("Banlist/Hegemony", "").toStringList().toSet());
+    if (ServerInfo.GameMode == "04_boss")
+        general_set = general_set.subtract(Config.value("Banlist/BossMode", "").toStringList().toSet());
 
     if (isNormalGameMode(ServerInfo.GameMode)
         || ServerInfo.GameMode.contains("_mini_")

@@ -501,6 +501,7 @@ void DetachEffectSkill::onSkillDetached(Room *, ServerPlayer *) const{
 WeaponSkill::WeaponSkill(const QString &name)
     : TriggerSkill(name)
 {
+    global = true;
 }
 
 bool WeaponSkill::triggerable(const ServerPlayer *target) const{
@@ -512,6 +513,7 @@ bool WeaponSkill::triggerable(const ServerPlayer *target) const{
 ArmorSkill::ArmorSkill(const QString &name)
     : TriggerSkill(name)
 {
+    global = true;
 }
 
 bool ArmorSkill::triggerable(const ServerPlayer *target) const{
@@ -523,6 +525,7 @@ bool ArmorSkill::triggerable(const ServerPlayer *target) const{
 TreasureSkill::TreasureSkill(const QString &name)
     : TriggerSkill(name)
 {
+    global = true;
 }
 
 bool TreasureSkill::triggerable(const ServerPlayer *target) const{

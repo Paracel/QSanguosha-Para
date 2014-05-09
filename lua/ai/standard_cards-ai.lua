@@ -381,10 +381,9 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	local skillname = slash:getSkillName()
 	local changed = not cloned and slash:isVirtualCard() and slash:subcardsLength() > 0
 					and not (skillname == "hongyan" or skillname == "jinjiu" or skillname == "wushen" or skillname == "guhuo" or skillname == "nosguhuo")
-	local armor = to:getArmor()
-	if armor and to:hasArmorEffect(armor:objectName()) and not from:hasWeapon("qinggang_sword") and not ignore_armor then
-		if armor:objectName() == "renwang_shield" and slash:isBlack() then return false end
-		if armor:objectName() == "vine"
+	if not from:hasWeapon("qinggang_sword") and not ignore_armor then
+		if to:hasArmorEffect("renwang_shield") and slash:isBlack() then return false end
+		if to:hasArmorEffect("vine")
 			and not (nature ~= sgs.DamageStruct_Normal or (not changed and (from:hasWeapon("fan") or (from:hasSkill("lihuo") and not self:isWeak(from))))) then
 			return false
 		end
@@ -1251,7 +1250,7 @@ end
 function cardsView_spear(self, player, skill_name)
 	local cards = player:getCards("he")
 	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 	if skill_name ~= "fuhun" or player:hasSkill("wusheng") then
@@ -1261,7 +1260,7 @@ function cardsView_spear(self, player, skill_name)
 	end
 	local cards = player:getCards("h")
 	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 	local newcards = {}
@@ -1287,7 +1286,7 @@ end
 function turnUse_spear(self, inclusive, skill_name)
 	local cards = self.player:getCards("he")
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 	if skill_name ~= "fuhun" or self.player:hasSkill("wusheng") then

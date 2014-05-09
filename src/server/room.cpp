@@ -1953,7 +1953,7 @@ void Room::prepareForStart() {
                     if (role == "lord" && !ServerInfo.EnableHegemony)
                         broadcastProperty(player, "role", "lord");
                     else {
-                        if (mode == "04_1v3")
+                        if (mode == "04_1v3" || mode == "04_boss")
                             broadcastProperty(player, "role", role);
                         else
                             notifyProperty(player, player, "role");
@@ -1970,7 +1970,7 @@ void Room::prepareForStart() {
                     m_players.swap(i, m_players.indexOf(player));
                 }
             }
-        } else if (mode == "04_1v3") {
+        } else if (mode == "04_1v3" || mode == "04_boss") {
             if (Config.RandomSeat)
                 qShuffle(m_players);
             ServerPlayer *lord = m_players.at(qrand() % 4);
@@ -2370,16 +2370,17 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
     }
 }
 
-void Room::chooseGenerals() {
+void Room::chooseGenerals(QList<ServerPlayer *> players) {
+    if (players.isEmpty()) players = m_players;
     // for lord.
     int lord_num = Config.value("LordMaxChoice", -1).toInt();
     int nonlord_num = Config.value("NonLordMaxChoice", 2).toInt();
     if (lord_num == 0 && nonlord_num == 0)
         nonlord_num = 1;
     int nonlord_prob = (lord_num == -1) ? 5 : 55 - qMin(lord_num, 10);
-    if (!Config.EnableHegemony) {
+    ServerPlayer *the_lord = getLord();
+    if (!Config.EnableHegemony && the_lord && players.contains(the_lord)) {
         QStringList lord_list;
-        ServerPlayer *the_lord = getLord();
         if (Config.EnableSame)
             lord_list = Sanguosha->getRandomGenerals(Config.value("MaxChoice", 5).toInt());
         else if (the_lord->getState() == "robot")
@@ -2396,7 +2397,7 @@ void Room::chooseGenerals() {
             broadcastProperty(the_lord, "general", general);
 
         if (Config.EnableSame) {
-            foreach (ServerPlayer *p, m_players) {
+            foreach (ServerPlayer *p, players) {
                 if (!p->isLord())
                     p->setGeneralName(general);
             }
@@ -2405,8 +2406,8 @@ void Room::chooseGenerals() {
             return;
         }
     }
-    QList<ServerPlayer *> to_assign = m_players;
-    if (!Config.EnableHegemony) to_assign.removeOne(getLord());
+    QList<ServerPlayer *> to_assign = players;
+    if (!Config.EnableHegemony) to_assign.removeOne(the_lord);
 
     assignGeneralsForPlayers(to_assign);
     foreach (ServerPlayer *player, to_assign)
@@ -2422,7 +2423,7 @@ void Room::chooseGenerals() {
     }
 
     if (Config.Enable2ndGeneral) {
-        QList<ServerPlayer *> to_assign = m_players;
+        QList<ServerPlayer *> to_assign = players;
         assignGeneralsForPlayers(to_assign);
         foreach (ServerPlayer *player, to_assign)
             _setupChooseGeneralRequestArgs(player);
@@ -2543,6 +2544,21 @@ void Room::run() {
             names.removeOne(name);
         }
 
+        startGame();
+    } else if (mode == "04_boss") {
+        ServerPlayer *lord = m_players.first();
+        QStringList boss_lv_1;
+        boss_lv_1 << "boss_chi" << "boss_mei" << "boss_wang" << "boss_liang";
+        if (Config.value("OptionalBoss", false).toBool()) {
+            QString gen = askForGeneral(lord, boss_lv_1);
+            setPlayerProperty(lord, "general", gen);
+        } else {
+            setPlayerProperty(lord, "general", boss_lv_1.at(qrand() % 4));
+        }
+
+        QList<ServerPlayer *> players = m_players;
+        players.removeOne(lord);
+        chooseGenerals(players);
         startGame();
     } else {
         chooseGenerals();

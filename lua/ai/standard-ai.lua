@@ -249,7 +249,7 @@ sgs.ai_skill_cardask["@guicai-card"] = function(self, data)
 	if self:needRetrial(judge) then
 		local cards = sgs.QList2Table(self.player:getHandcards())
 		for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-			cards:append(sgs.Sanguosha:getCard(id))
+			cards:prepend(sgs.Sanguosha:getCard(id))
 		end
 		local card_id = self:getRetrialCardId(cards, judge)
 		if card_id ~= -1 then
@@ -1109,7 +1109,7 @@ table.insert(sgs.ai_skills, wusheng_skill)
 wusheng_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 
@@ -1332,7 +1332,7 @@ table.insert(sgs.ai_skills, longdan_skill)
 longdan_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 
@@ -2225,7 +2225,7 @@ guose_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
 		local c = sgs.Sanguosha:getCard(id)
-		cards:append(c)
+		cards:prepend(c)
 	end
 	cards = sgs.QList2Table(cards)
 

@@ -66,6 +66,7 @@ config = {
 		"NostalYJCM2012",
 		"NostalYJCM2013",
 		"NostalGeneral",
+		"BossMode",
 		"Test"
 	},
 
@@ -107,6 +108,20 @@ config = {
 
 	kof_ban = {
 		"sunquan",
+	},
+
+	bossmode_ban = {
+		"caopi",
+		"manchong",
+		"xusheng",
+		"yuji",
+		"caiwenji",
+		"zuoci",
+		"lusu",
+		"bgm_diaochan",
+		"shenguanyu",
+		"nos_yuji",
+		"nos_zhuran"
 	},
 
 	basara_ban = {

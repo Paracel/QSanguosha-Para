@@ -110,7 +110,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
     if (player == NULL) {
         if (triggerEvent == GameStart) {
             foreach (ServerPlayer *player, room->getPlayers()) {
-                if (player->getGeneral()->getKingdom() == "god" && player->getGeneralName() != "anjiang") {
+                if (player->getGeneral()->getKingdom() == "god" && player->getGeneralName() != "anjiang"
+                    && !player->getGeneralName().startsWith("boss_")) {
                     QString new_kingdom = room->askForKingdom(player);
                     room->setPlayerProperty(player, "kingdom", new_kingdom);
 
@@ -536,6 +537,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             break;
         }
     case GameOverJudge: {
+            if (room->getMode() == "04_boss" && player->isLord() && room->getTag("BossModeLevel").toInt() < 3)
+                break;
             if (room->getMode() == "02_1v1") {
                 QStringList list = player->tag["1v1Arrange"].toStringList();
                 QString rule = Config.value("1v1/Rule", "2013").toString();
@@ -581,6 +584,13 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 return false;
             } else if (room->getMode() == "06_XMode") {
                 changeGeneralXMode(player);
+                if (death.damage != NULL)
+                    player->setFlags("Global_DebutFlag");
+                return false;
+            } else if (room->getMode() == "04_boss" && player->isLord()) {
+                int level = room->getTag("BossModeLevel").toInt();
+                room->setTag("BossModeLevel", level + 1);
+                changeGeneralBossMode(player);
                 if (death.damage != NULL)
                     player->setFlags("Global_DebutFlag");
                 return false;
@@ -671,11 +681,12 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
         player->tag["1v1Arrange"] = QVariant::fromValue(list);
     }
 
-    if (player->getPhase() != Player::NotActive) {
-        player->setPhase(Player::NotActive);
-        room->broadcastProperty(player, "phase");
-    }
+    if (player->getPhase() != Player::NotActive)
+        player->changePhase(player->getPhase(), Player::NotActive);
+
+    int turn = player->getMark("Global_TurnCount");
     room->revivePlayer(player);
+    room->setPlayerMark(player, "Global_TurnCount", turn);
     room->changeHero(player, new_general, true, true);
     if (player->getGeneral()->getKingdom() == "god") {
         QString new_kingdom = room->askForKingdom(player);
@@ -732,7 +743,13 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
     else
         backup.takeFirst();
     leader->tag["XModeBackup"] = QVariant::fromValue(backup);
+
+    if (player->getPhase() != Player::NotActive)
+        player->changePhase(player->getPhase(), Player::NotActive);
+
+    int turn = player->getMark("Global_TurnCount");
     room->revivePlayer(player);
+    room->setPlayerMark(player, "Global_TurnCount", turn);
     room->changeHero(player, general, true, true);
     if (player->getGeneral()->getKingdom() == "god") {
         QString new_kingdom = room->askForKingdom(player);
@@ -771,8 +788,63 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
     room->getThread()->trigger(AfterDrawInitialCards, room, player, QVariant::fromValue(num));
 }
 
+void GameRule::changeGeneralBossMode(ServerPlayer *player) const{
+    Config.AIDelay = Config.OriginAIDelay;
+
+    Room *room = player->getRoom();
+    static QList<QStringList> boss_generals;
+    if (boss_generals.isEmpty()) {
+        QStringList lv2, lv3, lv4;
+        lv2 << "boss_niutou" << "boss_mamian";
+        lv3 << "boss_heiwuchang" << "boss_baiwuchang";
+        lv4 << "boss_luocha" << "boss_yecha";
+        boss_generals << lv2 << lv3 << lv4;
+    }
+    int level = room->getTag("BossModeLevel").toInt();
+
+    QString general;
+    if (Config.value("OptionalBoss", false).toBool())
+        general = room->askForGeneral(player, boss_generals.at(level - 1));
+    else
+        general = boss_generals.at(level - 1).at(qrand() % 2);
+
+    if (player->getPhase() != Player::NotActive)
+        player->changePhase(player->getPhase(), Player::NotActive);
+
+    int turn = player->getMark("Global_TurnCount");
+    room->revivePlayer(player);
+    room->setPlayerMark(player, "Global_TurnCount", turn);
+    room->changeHero(player, general, true, true);
+    room->addPlayerHistory(player, ".");
+
+    if (player->getKingdom() != player->getGeneral()->getKingdom())
+        room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
+
+    if (!player->faceUp())
+        player->turnOver();
+
+    if (player->isChained())
+        room->setPlayerProperty(player, "chained", false);
+
+    room->setTag("FirstRound", true); //For Manjuan
+    QVariant data(4);
+    room->getThread()->trigger(DrawInitialCards, room, player, data);
+    int num = data.toInt();
+    try {
+        player->drawCards(num);
+        room->setTag("FirstRound", false);
+    }
+    catch (TriggerEvent triggerEvent) {
+        if (triggerEvent == TurnBroken || triggerEvent == StageChange)
+            room->setTag("FirstRound", false);
+        throw triggerEvent;
+    }
+    room->getThread()->trigger(AfterDrawInitialCards, room, player, QVariant::fromValue(num));
+}
+
 void GameRule::rewardAndPunish(ServerPlayer *killer, ServerPlayer *victim) const{
-    if (killer->isDead() || killer->getRoom()->getMode() == "06_XMode")
+    if (killer->isDead() || killer->getRoom()->getMode() == "06_XMode"
+        || killer->getRoom()->getMode() == "04_boss")
         return;
 
     if (killer->getRoom()->getMode() == "06_3v3") {

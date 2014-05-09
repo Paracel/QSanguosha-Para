@@ -4,7 +4,7 @@ table.insert(sgs.ai_skills, gdlonghun_skill)
 gdlonghun_skill.getTurnUseCard = function(self)
 	local cards = sgs.QList2Table(self.player:getCards("he"))
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		table.insert(cards, sgs.Sanguosha:getCard(id))
+		table.insert(cards, 1, sgs.Sanguosha:getCard(id))
 	end
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do

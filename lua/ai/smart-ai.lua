@@ -223,7 +223,7 @@ function sgs.getDefense(player)
 	local defense = math.min(player:getHp() * 2 + handcard + player:getPile("wooden_ox"):length(), player:getHp() * 3)
 	local attacker = global_room:getCurrent()
 	local hasEightDiagram = false
-	if player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen") then
+	if player:hasArmorEffect("eight_diagram") then
 		hasEightDiagram = true
 	end
 
@@ -630,6 +630,17 @@ function SmartAI:adjustUsePriority(card, v)
 	v = v + (13 - card:getNumber()) / 1000
 	if self.player:getPhase() == sgs.Player_Play and self.player:hasSkill("botu") and card:getSuit() <= 3
 		and bit32.band(self.player:getMark("botu"), bit32.lshift(1, card:getSuit())) == 0 then v = v + 0.05 end
+	if not self.player:getPile("wooden_ox"):isEmpty() then
+		local id_table = {}
+		if not card:isVirtualCard() then id_table = { card:getEffectiveId() }
+		else id_table = sgs.QList2Table(card:getSubcards()) end
+		for _, id in ipairs(id_table) do
+			if self.player:getPile("wooden_ox"):contains(id) then
+				v = v + 0.05
+				break
+			end
+		end
+	end
 	return v
 end
 
@@ -927,7 +938,7 @@ function sgs.isRolePredictable(classical)
 	if not classical and sgs.GetConfig("RolePredictable", false) then return true end
 	local mode = string.lower(global_room:getMode())
 	local isMini = (mode:find("mini") or mode:find("custom_scenario"))
-	if (not mode:find("0") and not isMini) or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3")
+	if (not mode:find("0") and not isMini) or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3") or mode:find("04_boss")
 		or mode == "06_3v3" or mode == "06_xmode" or (not classical and isMini) then return true end
 	return false
 end
@@ -3403,7 +3414,7 @@ end
 function SmartAI:getTurnUse()
 	local cards = self.player:getHandcards()
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 
@@ -3955,7 +3966,7 @@ function SmartAI:getMaxCard(player, cards)
 		end
 	end
 	if player:objectName() == self.player:objectName() and not max_card then
-		for _, card in sgs.qlist(cards) do
+		for _, card in ipairs(cards) do
 			local point = card:getNumber()
 			if point > max_point then
 				max_point = point
@@ -3967,14 +3978,14 @@ function SmartAI:getMaxCard(player, cards)
 	if player:objectName() ~= self.player:objectName() then return max_card end
 
 	if (player:hasSkills("tianyi|dahe|xianzhen") or self.player:hasFlag("AI_XiechanUsing")) and max_point > 0 then
-		for _, card in sgs.qlist(cards) do
+		for _, card in ipairs(cards) do
 			if card:getNumber() == max_point and not isCard("Slash", card, player) then
 				return card
 			end
 		end
 	end
 	if player:hasSkill("qiaoshui") and max_point > 0 then
-		for _, card in sgs.qlist(cards) do
+		for _, card in ipairs(cards) do
 			if card:getNumber() == max_point and not card:isNDTrick() then
 				return card
 			end
@@ -4013,7 +4024,7 @@ function getKnownNum(player)
 	else
 		local cards = player:getHandcards()
 		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-			cards:append(sgs.Sanguosha:getCard(id))
+			cards:prepend(sgs.Sanguosha:getCard(id))
 		end
 		local known = 0
 		for _, card in sgs.qlist(cards) do
@@ -4033,7 +4044,7 @@ function getKnownCard(player, from, class_name, viewas, flags)
 	local cards = player:getCards(flags)
 	if flags:match("h") then
 		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-			cards:append(sgs.Sanguosha:getCard(id))
+			cards:prepend(sgs.Sanguosha:getCard(id))
 		end
 	end
 	local known = 0
@@ -4120,7 +4131,7 @@ function SmartAI:getCards(class_name, flag)
 		end
 	elseif flag:match("h") then
 		for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-			all_cards:append(sgs.Sanguosha:getCard(id))
+			all_cards:prepend(sgs.Sanguosha:getCard(id))
 		end
 	end
 
@@ -4161,7 +4172,7 @@ function getCardsNum(class_name, player, from)
 	if not player then global_room:writeToConsole(debug.traceback()) end
 	local cards = sgs.QList2Table(player:getHandcards())
 	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-		table.insert(cards, sgs.Sanguosha:getCard(id))
+		table.insert(cards, 1, sgs.Sanguosha:getCard(id))
 	end
 
 	local num = 0
@@ -5526,6 +5537,7 @@ dofile "lua/ai/standard_cards-ai.lua"
 dofile "lua/ai/maneuvering-ai.lua"
 dofile "lua/ai/standard-ai.lua"
 dofile "lua/ai/basara-ai.lua"
+dofile "lua/ai/boss-ai.lua"
 dofile "lua/ai/hulaoguan-ai.lua"
 dofile "lua/ai/conversion-ai.lua"
 

@@ -957,7 +957,7 @@ longhun_skill.getTurnUseCard = function(self)
 	if self.player:getHp() > 1 then return end
 	local cards = sgs.QList2Table(self.player:getCards("he"))
 	for _, id in sgs.qlist(player:getPile("wooden_ox")) do
-		table.insert(cards, sgs.Sanguosha:getCard(id))
+		table.insert(cards, 1, sgs.Sanguosha:getCard(id))
 	end
 	self:sortByUseValue(cards, true)
 	for _, card in ipairs(cards) do

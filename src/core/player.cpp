@@ -544,14 +544,16 @@ bool Player::hasArmorEffect(const QString &armor_name) const{
         if (alladj) return false;
     }
 
-    if (armor_name == "bazhen")
-        return armor == NULL && alive && hasSkill("bazhen");
-    else {
-        if (!armor) return false;
-        if (armor->objectName() == armor_name || armor->isKindOf(armor_name.toStdString().c_str())) return true;
-        const Card *real_armor = Sanguosha->getEngineCard(armor->getEffectiveId());
-        return real_armor->objectName() == armor_name || real_armor->isKindOf(armor_name.toStdString().c_str());
+    if (armor == NULL && alive) {
+        if (armor_name == "eight_diagram" && hasSkill("bazhen"))
+            return true;
+        if (armor_name == "vine" && hasSkill("bossmanjia"))
+            return true;
     }
+    if (!armor) return false;
+    if (armor->objectName() == armor_name || armor->isKindOf(armor_name.toStdString().c_str())) return true;
+    const Card *real_armor = Sanguosha->getEngineCard(armor->getEffectiveId());
+    return real_armor->objectName() == armor_name || real_armor->isKindOf(armor_name.toStdString().c_str());
 
     return false;
 }

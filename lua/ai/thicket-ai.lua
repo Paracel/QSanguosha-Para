@@ -734,7 +734,7 @@ table.insert(sgs.ai_skills, jiuchi_skill)
 jiuchi_skill.getTurnUseCard = function(self)
 	local cards = self.player:getCards("h")
 	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
-		cards:append(sgs.Sanguosha:getCard(id))
+		cards:prepend(sgs.Sanguosha:getCard(id))
 	end
 	cards = sgs.QList2Table(cards)
 

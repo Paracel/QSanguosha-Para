@@ -684,9 +684,7 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
     if (player->getPhase() != Player::NotActive)
         player->changePhase(player->getPhase(), Player::NotActive);
 
-    int turn = player->getMark("Global_TurnCount");
     room->revivePlayer(player);
-    room->setPlayerMark(player, "Global_TurnCount", turn);
     room->changeHero(player, new_general, true, true);
     if (player->getGeneral()->getKingdom() == "god") {
         QString new_kingdom = room->askForKingdom(player);
@@ -747,9 +745,7 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
     if (player->getPhase() != Player::NotActive)
         player->changePhase(player->getPhase(), Player::NotActive);
 
-    int turn = player->getMark("Global_TurnCount");
     room->revivePlayer(player);
-    room->setPlayerMark(player, "Global_TurnCount", turn);
     room->changeHero(player, general, true, true);
     if (player->getGeneral()->getKingdom() == "god") {
         QString new_kingdom = room->askForKingdom(player);
@@ -811,9 +807,7 @@ void GameRule::changeGeneralBossMode(ServerPlayer *player) const{
     if (player->getPhase() != Player::NotActive)
         player->changePhase(player->getPhase(), Player::NotActive);
 
-    int turn = player->getMark("Global_TurnCount");
     room->revivePlayer(player);
-    room->setPlayerMark(player, "Global_TurnCount", turn);
     room->changeHero(player, general, true, true);
     room->addPlayerHistory(player, ".");
 

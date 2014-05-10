@@ -253,10 +253,12 @@ ServerPlayer *Room::getCurrentDyingPlayer() const{
 }
 
 void Room::revivePlayer(ServerPlayer *player) {
+    int turn = player->getMark("Global_TurnCount");
     player->setAlive(true);
     player->throwAllMarks(false);
     broadcastProperty(player, "alive");
     setEmotion(player, "revive");
+    setPlayerMark(player, "Global_TurnCount", turn);
 
     m_alivePlayers.clear();
     foreach (ServerPlayer *player, m_players) {

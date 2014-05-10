@@ -2841,8 +2841,7 @@ void RoomScene::addRestartButton(QDialog *dialog) {
     if (ServerInfo.GameMode.contains("_mini_") && Self->property("win").toBool())
         goto_next = (_m_currentStage < Sanguosha->getMiniSceneCounts());
 
-    QPushButton *restart_button;
-    restart_button = new QPushButton(goto_next ? tr("Next Stage") : tr("Restart Game"));
+    QPushButton *restart_button = new QPushButton(goto_next ? tr("Next Stage") : tr("Restart Game"));
     QPushButton *return_button = new QPushButton(tr("Return to main menu"));
     QHBoxLayout *hlayout = new QHBoxLayout;
     hlayout->addStretch();
@@ -2850,7 +2849,8 @@ void RoomScene::addRestartButton(QDialog *dialog) {
 
     QPushButton *save_button = new QPushButton(tr("Save record"));
     hlayout->addWidget(save_button);
-    hlayout->addWidget(return_button);
+    // crash?
+    //hlayout->addWidget(return_button);
 
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(dialog->layout());
     if (layout) layout->addLayout(hlayout);

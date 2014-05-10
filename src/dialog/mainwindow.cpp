@@ -131,7 +131,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::gotoScene(QGraphicsScene *scene) {
     if (this->scene)
-        delete this->scene;
+        this->scene->deleteLater();
     this->scene = scene;
     view->setScene(scene);
     /* @todo: Need a better way to replace the magic number '4' */
@@ -330,7 +330,6 @@ void MainWindow::gotoStartScene() {
             Self = NULL;
         }
         delete ClientInstance;
-        ClientInstance = NULL;
     }
 
     QList<Server *> servers = findChildren<Server *>();
@@ -348,6 +347,12 @@ void MainWindow::gotoStartScene() {
             << ui->actionCard_Overview
             << ui->actionScenario_Overview
             << ui->actionAbout;
+
+    ui->actionStart_Game->setEnabled(true);
+    ui->actionStart_Server->setEnabled(true);
+    ui->actionReplay->setEnabled(true);
+    ui->actionRestart_Game->setEnabled(false);
+    ui->actionReturn_to_Main_Menu->setEnabled(false);
 
     foreach (QAction *action, actions)
         start_scene->addButton(action);

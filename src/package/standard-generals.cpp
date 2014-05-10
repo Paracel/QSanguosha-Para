@@ -2631,6 +2631,26 @@ public:
     }
 };
 
+class GdJuejingSkipDraw: public DrawCardsSkill {
+public:
+    GdJuejingSkipDraw(): DrawCardsSkill("#gdjuejing") {
+    }
+
+    virtual int getPriority(TriggerEvent) const{
+        return 1;
+    }
+
+    virtual int getDrawNum(ServerPlayer *gaodayihao, int n) const{
+        LogMessage log;
+        log.type = "#GdJuejing";
+        log.from = gaodayihao;
+        log.arg = "gdjuejing";
+        room->sendLog(log);
+
+        return 0;
+    }
+};
+
 class GdLonghun: public Longhun {
 public:
     GdLonghun(): Longhun() {
@@ -2679,8 +2699,10 @@ TestPackage::TestPackage()
 
     General *gaodayihao = new General(this, "gaodayihao", "god", 1, true, true);
     gaodayihao->addSkill(new GdJuejing);
+    gaodayihao->addSkill(new GdJuejingSkipDraw);
     gaodayihao->addSkill(new GdLonghun);
     gaodayihao->addSkill(new GdLonghunDuojian);
+    related_skills.insertMulti("gdjuejing", "#gdjuejing");
     related_skills.insertMulti("gdlonghun", "#gdlonghun-duojian");
 
     General *super_yuanshu = new General(this, "super_yuanshu", "qun", 4, true, true);

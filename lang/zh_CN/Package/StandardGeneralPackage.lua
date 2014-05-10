@@ -313,9 +313,9 @@ return {
 	["illustrator:gaodayihao"] = "巴萨小马",
 	["gdjuejing"] = "绝境",
 	[":gdjuejing"] = "锁定技。摸牌阶段，你不摸牌。每当你的手牌数变化后，若你的手牌数不为4，你须将手牌补至或弃置至四张。",
+	["#GdJuejing"] = "%from 的“%arg”被触发，摸牌阶段不摸牌",
 	["gdlonghun"] = "龙魂",
 	[":gdlonghun"] = "你可以将一张牌按以下规则使用或打出：红桃当【桃】；方块当火【杀】；黑桃当【无懈可击】；梅花当【闪】。准备阶段开始时，若其他角色的装备区内有【青釭剑】，你可以获得之。",
-	["#gdlonghun-duojian"] = "龙魂",
 
 	["nobenghuai_dongzhuo"] = "无崩董卓",
 	["&nobenghuai_dongzhuo"] = "董卓",

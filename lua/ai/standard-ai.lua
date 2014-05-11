@@ -1748,6 +1748,9 @@ qixi_skill.name = "qixi"
 table.insert(sgs.ai_skills, qixi_skill)
 qixi_skill.getTurnUseCard = function(self, inclusive)
 	local cards = self.player:getCards("he")
+	for _, id in sgs.qlist(self.player:getPile("wooden_ox")) do
+		cards:prepend(sgs.Sanguosha:getCard(id))
+	end
 	cards = sgs.QList2Table(cards)
 
 	local black_card

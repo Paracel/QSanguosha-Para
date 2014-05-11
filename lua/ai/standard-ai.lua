@@ -2200,6 +2200,7 @@ sgs.ai_skill_use["@@lianying"] = function(self, prompt)
 		if friend:objectName() == self.player:objectName() then
 			if sn_dis_eff then def = def + 5 else def = def - 2 end
 		end
+		return def
 	end
 	local cmp = function(a, b)
 		return getValue(a) < getValue(b)

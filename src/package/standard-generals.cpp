@@ -2645,7 +2645,7 @@ public:
         log.type = "#GdJuejing";
         log.from = gaodayihao;
         log.arg = "gdjuejing";
-        room->sendLog(log);
+        gaodayihao->getRoom()->sendLog(log);
 
         return 0;
     }

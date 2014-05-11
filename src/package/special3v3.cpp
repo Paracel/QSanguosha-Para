@@ -70,7 +70,7 @@ public:
 
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
-            if (room->getMode().startsWith("06_")) {
+            if (room->getMode().startsWith("06_") || room->getMode().startsWith("04_")) {
                 if (AI::GetRelation3v3(player, p) == AI::Friend)
                     targets << p;
             } else if (p->hasFlag("HongyuanTarget")) {
@@ -98,7 +98,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         JudgeStar judge = data.value<JudgeStar>();
         const Card *card = NULL;
-        if (room->getMode().startsWith("06_")) {
+        if (room->getMode().startsWith("06_") || room->getMode().startsWith("04_")) {
             if (AI::GetRelation3v3(player, judge->who) != AI::Friend) return false;
             QStringList prompt_list;
             prompt_list << "@huanshi-card" << judge->who->objectName()
@@ -216,7 +216,7 @@ public:
         QString mode = room->getMode();
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(xiahou)) {
-            if (!mode.startsWith("06_") || AI::GetRelation3v3(xiahou, p) == AI::Enemy)
+            if ((!mode.startsWith("06_") && !mode.startsWith("04_")) || AI::GetRelation3v3(xiahou, p) == AI::Enemy)
                 targets << p;
         }
 
@@ -292,7 +292,7 @@ public:
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
                     if (p->getPile("loyal").isEmpty()) continue;
                     bool on_effect = false;
-                    if (room->getMode().startsWith("06_"))
+                    if (room->getMode().startsWith("06_") || room->getMode().startsWith("04_"))
                         on_effect = (AI::GetRelation3v3(player, p) == AI::Friend);
                     else
                         on_effect = (room->askForSkillInvoke(p, "zhongyi", data));
@@ -382,7 +382,7 @@ public:
                 return false;
             foreach (ServerPlayer *lvbu, room->getAllPlayers()) {
                 if (!TriggerSkill::triggerable(lvbu)) continue;
-                if (room->getMode().startsWith("06_")) {
+                if (room->getMode().startsWith("06_") || room->getMode().startsWith("04_")) {
                     if (lvbu->getMark(objectName()) == 0 && lvbu->getMark("zhanshen_fight") == 0
                         && AI::GetRelation3v3(lvbu, player) == AI::Friend)
                         lvbu->addMark("zhanshen_fight");
@@ -428,13 +428,15 @@ public:
     }
 
     virtual int getCorrect(const Player *from, const Player *to) const{
-        if (ServerInfo.GameMode.startsWith("06_")) {
+        if (ServerInfo.GameMode.startsWith("06_") or ServerInfo.GameMode.startsWith("04_")) {
+            int dist = 0;
             if (from->getRole().at(0) != to->getRole().at(0)) {
                 foreach (const Player *p, to->getAliveSiblings()) {
                     if (p->hasSkill("zhenwei") && p->getRole().at(0) == to->getRole().at(0))
-                        return 1;
+                        dist++;
                 }
             }
+            return dist;
         } else if (to->getMark("@defense") > 0 && from->getMark("@defense") == 0
                    && from->objectName() != to->property("zhenwei_from").toString()) {
             return 1;

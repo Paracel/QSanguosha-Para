@@ -122,6 +122,7 @@ private:
     QComboBox *scenario_ComboBox;
     QComboBox *mini_scene_ComboBox;
     QPushButton *mini_scene_button;
+    QPushButton *boss_mode_button;
     QLineEdit *address_edit;
     QLineEdit *port_edit;
     QSpinBox *game_start_spinbox;
@@ -159,7 +160,31 @@ private slots:
     void updateButtonEnablility(QAbstractButton *button);
 
     void doCustomAssign();
+    void doBossModeCustomAssign();
     void setMiniCheckBox();
+};
+
+class BossModeCustomAssignDialog: public QDialog {
+    Q_OBJECT
+
+public:
+    BossModeCustomAssignDialog(QWidget *parent);
+    void config();
+
+private:
+    QCheckBox *diff_revive_checkBox;
+    QCheckBox *diff_recover_checkBox;
+    QCheckBox *diff_draw_checkBox;
+    QCheckBox *diff_reward_checkBox;
+    QCheckBox *diff_incMaxHp_checkBox;
+    QCheckBox *diff_decMaxHp_checkBox;
+
+    QCheckBox *experience_checkBox;
+    QCheckBox *optional_boss_checkBox;
+    QCheckBox *endless_checkBox;
+
+    QLabel *turn_limit_label;
+    QSpinBox *turn_limit_spinBox;
 };
 
 class Scenario;

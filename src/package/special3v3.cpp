@@ -479,7 +479,8 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return !target->getRoom()->getMode().startsWith("06_");
+        QString mode = target->getRoom()->getMode();
+        return !mode.startsWith("06_") && !mode.startsWith("04_");
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
@@ -499,6 +500,12 @@ public:
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to != Player::NotActive)
                 return false;
+            foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+                if (p->tag["zhenwei_from"].toString() == player->objectName()) {
+                    room->setPlayerProperty(p, "zhenwei_from", QVariant());
+                    room->setPlayerMark(p, "@defense", 0);
+                }
+            }
             room->askForUseCard(player, "@@zhenwei", "@zhenwei");
         }
         return false;

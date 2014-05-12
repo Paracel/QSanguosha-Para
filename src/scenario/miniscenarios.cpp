@@ -69,7 +69,7 @@ bool MiniSceneRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
             return true;
 
         if (objectName().startsWith("_mini_")) {
-            room->doLightbox(objectName(), 2000);
+            room->doLightbox(objectName(), 2000, 100);
 
             LogMessage log;
             log.type = "#WelcomeToMiniScenario";

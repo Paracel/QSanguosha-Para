@@ -711,6 +711,7 @@ QString Client::getPlayerName(const QString &str) {
     QString general_name;
     if (rx.exactMatch(str)) {
         ClientPlayer *player = getPlayer(str);
+        if (!player) return QString();
         general_name = player->getGeneralName();
         general_name = Sanguosha->translate(general_name);
         if (player->getGeneral2())

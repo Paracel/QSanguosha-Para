@@ -35,6 +35,7 @@ Settings::Settings()
 }
 
 void Settings::init() {
+    lua_State *lua = Sanguosha->getLuaState();
     if (!qApp->arguments().contains("-server")) {
         QString font_path = value("DefaultFontPath", "font/font.ttf").toString();
         int font_id = QFontDatabase::addApplicationFont(font_path);
@@ -46,9 +47,12 @@ void Settings::init() {
         } else
             QMessageBox::warning(NULL, tr("Warning"), tr("Font file %1 could not be loaded!").arg(font_path));
 
-        BigFont.setPixelSize(56);
-        SmallFont.setPixelSize(27);
-        TinyFont.setPixelSize(18);
+        int big_font = GetConfigFromLuaState(lua, "big_font").toInt();
+        int small_font = GetConfigFromLuaState(lua, "small_font").toInt();
+        int tiny_font = GetConfigFromLuaState(lua, "tiny_font").toInt();
+        BigFont.setPixelSize(big_font);
+        SmallFont.setPixelSize(small_font);
+        TinyFont.setPixelSize(tiny_font);
 
         SmallFont.setWeight(QFont::Bold);
 
@@ -130,7 +134,6 @@ void Settings::init() {
 
     BackgroundImage = value("BackgroundImage", "image/system/backdrop/default.jpg").toString();
 
-    lua_State *lua = Sanguosha->getLuaState();
     QStringList roles_ban, kof_ban, hulao_ban, xmode_ban, bossmode_ban, basara_ban, hegemony_ban, pairs_ban;
 
     roles_ban = GetConfigFromLuaState(lua, "roles_ban").toStringList();
@@ -200,4 +203,17 @@ void Settings::init() {
 
         setValue("ForbidPackages", forbid_packages);
     }
+
+    Config.BossGenerals = GetConfigFromLuaState(lua, "bossmode_default_boss").toStringList();
+    Config.BossLevel = Config.BossGenerals.length();
+    Config.BossEndlessSkills = GetConfigFromLuaState(lua, "bossmode_endless_skills").toStringList();
+
+    QStringList exp_skills = GetConfigFromLuaState(lua, "bossmode_exp_skills").toStringList();
+    QMap<QString, int> exp_skill_map;
+    foreach (QString skill, exp_skills) {
+        QString name = skill.split(":").first();
+        int cost = skill.split(":").last().toInt();
+        exp_skill_map.insert(name, cost);
+    }
+    Config.BossExpSkills = exp_skill_map;
 }

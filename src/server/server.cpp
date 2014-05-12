@@ -439,6 +439,10 @@ void ServerDialog::updateButtonEnablility(QAbstractButton *button) {
         second_general_checkbox->setEnabled(true);
         mini_scene_button->setEnabled(false);
     }
+    if (button->objectName() == "04_boss")
+        boss_mode_button->setEnabled(true);
+    else
+        boss_mode_button->setEnabled(false);
 }
 
 void BanlistDialog::switchTo(int item) {
@@ -785,12 +789,20 @@ QGroupBox *ServerDialog::createGameModeBox() {
             connect(button, SIGNAL(toggled(bool)), box, SLOT(setEnabled(bool)));
 
             item_list << button << box;
+        } else if (itor.key() == "04_boss") {
+            boss_mode_button = new QPushButton(tr("Custom Boss Mode"));
+            boss_mode_button->setChecked(false);
+            connect(boss_mode_button, SIGNAL(clicked()), this, SLOT(doBossModeCustomAssign()));
+            item_list << HLay(button, boss_mode_button);
         } else {
             item_list << button;
         }
 
-        if (itor.key() == Config.GameMode)
+        if (itor.key() == Config.GameMode) {
             button->setChecked(true);
+            if (Config.GameMode == "04_boss")
+                boss_mode_button->setChecked(true);
+        }
     }
 
     // add scenario modes
@@ -1000,6 +1012,11 @@ void ServerDialog::doCustomAssign() {
     dialog->exec();
 }
 
+void ServerDialog::doBossModeCustomAssign() {
+    BossModeCustomAssignDialog *dialog = new BossModeCustomAssignDialog(this);
+    dialog->config();
+}
+
 void ServerDialog::setMiniCheckBox() {
     mini_scene_ComboBox->setEnabled(false);
 }
@@ -1039,6 +1056,112 @@ void Select3v3GeneralDialog::save3v3Generals() {
 void ServerDialog::select3v3Generals() {
     QDialog *dialog = new Select3v3GeneralDialog(this);
     dialog->exec();
+}
+
+#include "gamerule.h"
+BossModeCustomAssignDialog::BossModeCustomAssignDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setWindowTitle(tr("Custom boss mode"));
+
+    // Difficulty group box
+    QGroupBox *box = new QGroupBox(tr("Difficulty options"));
+    box->setEnabled(true);
+    box->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    QVBoxLayout *boxvlayout = new QVBoxLayout;
+
+    int difficulty = Config.value("BossModeDifficulty", 0).toInt();
+
+    diff_revive_checkBox = new QCheckBox(tr("BMD Revive"));
+    diff_revive_checkBox->setToolTip(tr("Tootip of BMD Revive"));
+    diff_revive_checkBox->setChecked((difficulty & (1 << GameRule::BMDRevive)) > 0);
+
+    diff_recover_checkBox = new QCheckBox(tr("BMD Recover"));
+    diff_recover_checkBox->setToolTip(tr("Tootip of BMD Recover"));
+    diff_recover_checkBox->setChecked((difficulty & (1 << GameRule::BMDRecover)) > 0);
+
+    boxvlayout->addLayout(HLay(diff_revive_checkBox, diff_recover_checkBox));
+
+    diff_draw_checkBox = new QCheckBox(tr("BMD Draw"));
+    diff_draw_checkBox->setToolTip(tr("Tootip of BMD Draw"));
+    diff_draw_checkBox->setChecked((difficulty & (1 << GameRule::BMDDraw)) > 0);
+
+    diff_reward_checkBox = new QCheckBox(tr("BMD Reward"));
+    diff_reward_checkBox->setToolTip(tr("Tootip of BMD Reward"));
+    diff_reward_checkBox->setChecked((difficulty & (1 << GameRule::BMDReward)) > 0);
+
+    boxvlayout->addLayout(HLay(diff_draw_checkBox, diff_reward_checkBox));
+
+    diff_incMaxHp_checkBox = new QCheckBox(tr("BMD Inc Max HP"));
+    diff_incMaxHp_checkBox->setToolTip(tr("Tootip of BMD Inc Max HP"));
+    diff_incMaxHp_checkBox->setChecked((difficulty & (1 << GameRule::BMDIncMaxHp)) > 0);
+
+    diff_decMaxHp_checkBox = new QCheckBox(tr("BMD Dec Max HP"));
+    diff_decMaxHp_checkBox->setToolTip(tr("Tootip of BMD Dec Max HP"));
+    diff_decMaxHp_checkBox->setChecked((difficulty & (1 << GameRule::BMDDecMaxHp)) > 0);
+
+    boxvlayout->addLayout(HLay(diff_incMaxHp_checkBox, diff_decMaxHp_checkBox));
+
+    box->setLayout(boxvlayout);
+
+    // Other settings
+    experience_checkBox = new QCheckBox(tr("Boss Mode Experience Mode"));
+    experience_checkBox->setChecked(Config.value("BossModeExp", false).toBool());
+
+    optional_boss_checkBox = new QCheckBox(tr("Boss Mode Optional Boss"));
+    optional_boss_checkBox->setChecked(Config.value("OptionalBoss", false).toBool());
+
+    endless_checkBox = new QCheckBox(tr("Boss Mode Endless"));
+    endless_checkBox->setChecked(Config.value("BossModeEndless", false).toBool());
+
+    turn_limit_label = new QLabel(tr("Boss Mode Turn Limitation"));
+    turn_limit_spinBox = new QSpinBox(this);
+    turn_limit_spinBox->setRange(-1, 200);
+    turn_limit_spinBox->setValue(Config.value("BossModeTurnLimit", 70).toInt());
+
+    QVBoxLayout *vlayout = new QVBoxLayout;
+    vlayout->addWidget(box);
+    vlayout->addWidget(experience_checkBox);
+    vlayout->addWidget(optional_boss_checkBox);
+    vlayout->addWidget(endless_checkBox);
+    vlayout->addLayout(HLay(turn_limit_label, turn_limit_spinBox));
+
+    QPushButton *okButton = new QPushButton(tr("OK"));
+    QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    vlayout->addLayout(HLay(okButton, cancelButton));
+
+    setLayout(vlayout);
+}
+
+void BossModeCustomAssignDialog::config() {
+    exec();
+
+    if (result() != Accepted)
+        return;
+
+    int difficulty = 0;
+    if (diff_revive_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDRevive);
+    if (diff_recover_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDRecover);
+    if (diff_draw_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDDraw);
+    if (diff_reward_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDReward);
+    if (diff_incMaxHp_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDIncMaxHp);
+    if (diff_decMaxHp_checkBox->isChecked())
+        difficulty |= (1 << GameRule::BMDDecMaxHp);
+    Config.setValue("BossModeDifficulty", difficulty);
+
+    Config.setValue("BossModeExp", experience_checkBox->isChecked());
+    Config.setValue("BossModeEndless", endless_checkBox->isChecked());
+    Config.setValue("OptionalBoss", optional_boss_checkBox->isChecked());
+
+    Config.setValue("BossModeTurnLimit", turn_limit_spinBox->value());
 }
 
 int ServerDialog::config() {

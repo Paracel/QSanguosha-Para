@@ -1535,33 +1535,107 @@ void RoomScene::chooseOption(const QString &skillName, const QStringList &option
 
         guhuo_log = QString();
     }
-    layout->addWidget(new QLabel(tr("Please choose:")));
-
-    foreach (QString option, options) {
-        QCommandLinkButton *button = new QCommandLinkButton;
-        QString text = QString("%1:%2").arg(skillName).arg(option);
-        QString translated = Sanguosha->translate(text);
-        if (text == translated)
-            translated = Sanguosha->translate(option);
-
-        button->setObjectName(option);
-        button->setText(translated);
-
-        QString original_tooltip = QString(":%1").arg(text);
-        QString tooltip = Sanguosha->translate(original_tooltip);
-        if (tooltip == original_tooltip) {
-            original_tooltip = QString(":%1").arg(option);
-            tooltip = Sanguosha->translate(original_tooltip);
-        }
-        if (tooltip != original_tooltip) button->setToolTip(tooltip);
-
-        connect(button, SIGNAL(clicked()), dialog, SLOT(accept()));
-        connect(button, SIGNAL(clicked()), ClientInstance, SLOT(onPlayerMakeChoice()));
-
-        layout->addWidget(button);
+    if (skillName.startsWith("BossModeExpStore")) {
+        QString objectname = Self->property("bossmodeexp").toString();
+        ClientPlayer *clientplayer = ClientInstance->getPlayer(objectname);
+        QString labelname = ClientInstance->getPlayerName(objectname);
+        labelname = QString("%1 %2").arg(labelname).arg(clientplayer->getMark("@bossExp"));
+        layout->addWidget(new QLabel(labelname));
+    } else {
+        layout->addWidget(new QLabel(tr("Please choose:")));
     }
 
-    dialog->setObjectName(options.first());
+    if (skillName == "BossModeExpStore") {
+        QGroupBox *box = NULL;
+        QGridLayout *gridlayout = NULL;
+        int index = 0, row = 0, column = 0;
+        QCommandLinkButton *cancel_button = NULL;
+        QList<QCommandLinkButton *> buttons;
+        QStringList alloptions = Self->property("bossmodeexpallchoices").toString().split("+");
+        foreach (QString option, alloptions) {
+            QCommandLinkButton *button = new QCommandLinkButton;
+            QStringList optionlist = option.split("|");
+            if (optionlist.length() == 2) {
+                QString text = QString("%1:%2").arg(skillName).arg(optionlist.last());
+                QString translated = optionlist.first() + Sanguosha->translate(text);
+                button->setObjectName(option);
+                button->setText(translated);
+                if (!options.contains(option))
+                    button->setEnabled(false);
+                buttons << button;
+            } else if (optionlist.length() == 3) { // skill names
+                if (!box) {
+                    box = new QGroupBox(dialog);
+                    box->setTitle(Sanguosha->translate("skill"));
+                    gridlayout = new QGridLayout;
+                }
+                QString skill = optionlist.last();
+                QString translated = optionlist.first() + Sanguosha->translate(skill);
+                if (skill.startsWith("nos"))
+                    translated.append(Sanguosha->translate("nosskill"));
+                button->setObjectName(option);
+                button->setText(translated);
+                if (!options.contains(option))
+                    button->setEnabled(false);
+
+                QString tooltip = Sanguosha->translate(":" + skill);
+                button->setToolTip(tooltip);
+
+                Q_ASSERT(box && gridlayout);
+                row = index / 6;
+                column = index % 6;
+                index++;
+                gridlayout->addWidget(button, row, column);
+            } else if (option == "cancel") {
+                QString text = QString("%1:%2").arg(skillName).arg(option);
+                QString translated = Sanguosha->translate(text);
+
+                button->setObjectName(option);
+                button->setText(translated);
+                cancel_button = button;
+            }
+            connect(button, SIGNAL(clicked()), dialog, SLOT(accept()));
+            connect(button, SIGNAL(clicked()), ClientInstance, SLOT(onPlayerMakeChoice()));
+        }
+        if (buttons.length() > 0) {
+            QHBoxLayout *hlayout = new QHBoxLayout;
+            foreach (QCommandLinkButton *button, buttons)
+                hlayout->addWidget(button);
+            layout->addLayout(hlayout);
+        }
+        if (box) {
+            box->setLayout(gridlayout);
+            layout->addWidget(box);
+        }
+        if (cancel_button)
+            layout->addWidget(cancel_button);
+    } else {
+        foreach (QString option, options) {
+            QCommandLinkButton *button = new QCommandLinkButton;
+            QString text = QString("%1:%2").arg(skillName).arg(option);
+            QString translated = Sanguosha->translate(text);
+            if (text == translated)
+                translated = Sanguosha->translate(option);
+
+            button->setObjectName(option);
+            button->setText(translated);
+
+            QString original_tooltip = QString(":%1").arg(text);
+            QString tooltip = Sanguosha->translate(original_tooltip);
+            if (tooltip == original_tooltip) {
+                original_tooltip = QString(":%1").arg(option);
+                tooltip = Sanguosha->translate(original_tooltip);
+            }
+            if (tooltip != original_tooltip) button->setToolTip(tooltip);
+
+            connect(button, SIGNAL(clicked()), dialog, SLOT(accept()));
+            connect(button, SIGNAL(clicked()), ClientInstance, SLOT(onPlayerMakeChoice()));
+
+            layout->addWidget(button);
+        }
+    }
+
+    dialog->setObjectName("cancel");
     connect(dialog, SIGNAL(rejected()), ClientInstance, SLOT(onPlayerMakeChoice()));
 
     dialog->setLayout(layout);
@@ -3672,8 +3746,10 @@ void RoomScene::doAppearingAnimation(const QString &name, const QStringList &arg
 
 void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
     QString word = args.first();
-    bool reset_size = word.startsWith("_mini_");
     word = Sanguosha->translate(word);
+    QStringList disp_arg = args.value(1, "2000:0").split(":");
+    int duration = disp_arg.first().toInt();
+    int pixelSize = disp_arg.last().toInt();
 
     QRect rect = main_window->rect();
     QGraphicsRectItem *lightbox = addRect(rect);
@@ -3694,9 +3770,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
         appear->setKeyValueAt(0.7, 1.0);
         appear->setEndValue(0.0);
 
-        int duration = args.value(1, "2000").toInt();
         appear->setDuration(duration);
-
         appear->start(QAbstractAnimation::DeleteWhenStopped);
 
         connect(appear, SIGNAL(finished()), line, SLOT(deleteLater()));
@@ -3710,7 +3784,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
         }
     } else {
         QFont font = Config.BigFont;
-        if (reset_size) font.setPixelSize(100);
+        if (pixelSize > 0) font.setPixelSize(pixelSize);
         QGraphicsTextItem *line = addText(word, font);
         line->setDefaultTextColor(Qt::white);
 
@@ -3723,9 +3797,7 @@ void RoomScene::doLightboxAnimation(const QString &, const QStringList &args) {
         appear->setKeyValueAt(0.7, 1.0);
         appear->setEndValue(0.0);
 
-        int duration = args.value(1, "2000").toInt();
         appear->setDuration(duration);
-
         appear->start(QAbstractAnimation::DeleteWhenStopped);
 
         connect(appear, SIGNAL(finished()), this, SLOT(removeLightBox()));

@@ -1090,7 +1090,7 @@ public:
     void broadcastSkillInvoke(const char *skillName, const char *category);
     void broadcastSkillInvoke(const char *skillName, int type);
     void broadcastSkillInvoke(const char *skillName, bool isMale, int type);
-    void doLightbox(const char *lightboxName, int duration = 2000);
+    void doLightbox(const char *lightboxName, int duration = 2000, int pixelSize = 0);
     void doAnimate(int type, const char *arg1 = NULL, const char *arg2 = NULL, QList<ServerPlayer *> players = QList<ServerPlayer *>());
 
     bool notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> move, bool forceVisible, QList<ServerPlayer *> players = QList<ServerPlayer *>());
@@ -1206,6 +1206,8 @@ public:
     void updateStateItem();
     bool notifyProperty(ServerPlayer *playerToNotify, const ServerPlayer *propertyOwner, const char *propertyName, const char *value = NULL);
     bool broadcastProperty(ServerPlayer *player, const char *property_name, const char *value = NULL);
+
+    int getBossModeExpMult(int level) const;
 };
 
 %extend Room {

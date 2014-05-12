@@ -5,6 +5,9 @@ config = {
 	version = "20140501",
 	version_name = "V2",
 	mod_name = "Para",
+	big_font = 56,
+	small_font = 27,
+	tiny_font = 18,
 	kingdoms = { "wei", "shu", "wu", "qun", "god" },
 	kingdom_colors = {
 		wei = "#547998",
@@ -271,5 +274,66 @@ config = {
 	},
 
 	extra_default_lords = {
+	},
+
+	bossmode_default_boss = {
+		"boss_chi+boss_mei+boss_wang+boss_liang",
+		"boss_niutou+boss_mamian",
+		"boss_heiwuchang+boss_baiwuchang",
+		"boss_luocha+boss_yecha"
+	},
+
+	bossmode_endless_skills = {
+		"bossguimei", "bossdidong", "nosenyuan", "bossshanbeng+bossbeiming+huilei+bossmingbao",
+		"bossluolei", "bossguihuo", "bossbaolian", "mengjin", "bossmanjia+bazhen",
+		"bossxiaoshou", "bossguiji", "fankui", "bosslianyu", "nosjuece",
+		"bosstaiping+shenwei", "bosssuoming", "bossxixing", "bossqiangzheng",
+		"bosszuijiu", "bossmodao", "bossqushou", "yizhong", "kuanggu",
+		"bossmojian", "bossdanshu", "shenji", "wushuang", "wansha"
+	},
+
+	bossmode_exp_skills = {
+		"mashu:15",
+		"tannang:25",
+		"yicong:25",
+		"feiying:30",
+		"yingyang:30",
+		"zhenwei:40",
+		"nosqicai:40",
+		"nosyingzi:40",
+		"zongshi:40",
+		"qicai:45",
+		"wangzun:45",
+		"yingzi:50",
+		"kongcheng:50",
+		"nosqianxun:50",
+		"weimu:50",
+		"jie:50",
+		"huoshou:50",
+		"hongyuan:55",
+		"dangxian:55",
+		"xinzhan:55",
+		"juxiang:55",
+		"wushuang:60",
+		"xunxun:60",
+		"zishou:60",
+		"jingce:60",
+		"shengxi:60",
+		"zhichi:60",
+		"bazhen:60",
+		"yizhong:65",
+		"jieyuan:70",
+		"mingshi:70",
+		"tuxi:70",
+		"guanxing:70",
+		"juejing:75",
+		"jiangchi:75",
+		"bosszuijiu:80",
+		"shelie:80",
+		"gongxin:80",
+		"fenyong:85",
+		"kuanggu:85",
+		"yongsi:90",
+		"zhiheng:90",
 	}
 }

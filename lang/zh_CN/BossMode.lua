@@ -2,6 +2,7 @@
 
 return {
 	["BossMode"] = "闯关模式",
+	["#BossTurnCount"] = "%from 的第 %arg 回合开始",
 
 	["#boss_chi"] = "Boss Lv.1",
 	["boss_chi"] = "魑",
@@ -81,4 +82,18 @@ return {
 	[":bossmojian"] = "出牌阶段开始时，你可以视为使用一张【万箭齐发】。",
 	["bossdanshu"] = "丹术",
 	[":bossdanshu"] = "每当你于回合外失去牌后，你可以进行判定：若结果为红色，你回复1点体力。",
+
+	["BossModeExpStore"] = "闯关模式：经验值提升能力",
+	["BossModeExpStore:drawcard"] = "摸一张牌",
+	["BossModeExpStore:recover"] = "回复1点体力",
+	["BossModeExpStore:maxhp"] = "增加1点体力上限",
+	["BossModeExpStore:recovermaxhp"] = "回复体力增加上限",
+	["BossModeExpStore:acquireskill"] = "获得技能",
+	["BossModeExpStore:cancel"] = "完成，进入下一关",
+	["BossModeExpStoreSkillDetach"] = "失去技能",
+	["skill"] = "技能",
+	["nosskill"] = "-旧",
+	["#UseExpPoint"] = "%from 使用了 %arg 点经验 %arg2",
+	["BossLevelA"] = "第",
+	["BossLevelB"] = "关",
 }

@@ -647,10 +647,12 @@ bool RoomThread::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *ta
         }
         qStableSort(skills.begin(), skills.end(), CompareByPriority);
 
+        int current_priority = 1000;
         for (int i = 0; i < skills.size(); i++) {
             const TriggerSkill *skill = skills[i];
-            if (!triggered.contains(skill)) {
+            if (!triggered.contains(skill) && !(current_priority == 0 && skill->getPriority(triggerEvent) > 0)) {
                 triggered.append(skill);
+                current_priority = skill->getPriority(triggerEvent);
                 if (skill->triggerable(target)) {
                     while (room->isPaused()) {}
                     broken = skill->trigger(triggerEvent, room, target, data);

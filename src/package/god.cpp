@@ -1175,6 +1175,13 @@ public:
         if (player->isWounded()) {
             player->getRoom()->notifySkillInvoked(player, "juejing");
             player->getRoom()->broadcastSkillInvoke("juejing");
+
+            LogMessage log;
+            log.type = "#YongsiGood";
+            log.from = player;
+            log.arg = QString::number(player->getLostHp());
+            log.arg2 = "juejing";
+            room->sendLog(log);
         }
         return n + player->getLostHp();
     }

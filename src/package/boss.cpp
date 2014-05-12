@@ -465,7 +465,7 @@ public:
             room->broadcastSkillInvoke(objectName());
             foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
                 if (p->isAlive() && !p->isKongcheng()) {
-                    int card_id = room->askForCardChosen(target, p, "h", "tuxi");
+                    int card_id = room->askForCardChosen(target, p, "h", "bossqiangzheng");
 
                     CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, target->objectName());
                     room->obtainCard(target, Sanguosha->getCard(card_id), reason, false);

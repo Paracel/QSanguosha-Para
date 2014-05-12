@@ -742,25 +742,42 @@ sgs.ai_skill_use_func.ZhijianCard = function(card, use, self)
 	end
 
 	if #equips == 0 then return end
+	for _, equip in ipairs(equips) do
+		if equip:isKindOf("SilverLion") then
+			for _, enemy in ipairs(self.enemies) do
+				if not enemy:getArmor() and enemy:hasSkills("bazhen|yizhong|bossmanjia") then
+					use.card = sgs.Card_Parse("@ZhijianCard=" .. equip:getId())
+					if use.to then use.to:append(enemy) end
+					return
+				end
+			end
+		end
+	end
 
 	local select_equip, target
 	for _, friend in ipairs(self.friends_noself) do
 		for _, equip in ipairs(equips) do
-			if not self:getSameEquip(equip, friend) and friend:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill) then
+			if not self:getSameEquip(equip, friend) and friend:hasSkills(sgs.need_equip_skill .. "|" .. sgs.lose_equip_skill)
+				and not (equip:isKindOf("Armor") and self:evaluateArmor(equip, friend) > self:evaluateArmor(nil, friend)) then
 				target = friend
 				select_equip = equip
 				break
 			end
 		end
 		if target then break end
-		for _, equip in ipairs(equips) do
-			if not self:getSameEquip(equip, friend) then
-				target = friend
-				select_equip = equip
-				break
+	end
+	if not target then
+		for _, friend in ipairs(self.friends_noself) do
+			for _, equip in ipairs(equips) do
+				if not self:getSameEquip(equip, friend)
+					and not (equip:isKindOf("Armor") and self:evaluateArmor(equip, friend) > self:evaluateArmor(nil, friend)) then
+					target = friend
+					select_equip = equip
+					break
+				end
 			end
+			if target then break end
 		end
-		if target then break end
 	end
 
 	if not target then return end
@@ -771,7 +788,12 @@ sgs.ai_skill_use_func.ZhijianCard = function(card, use, self)
 	use.card = zhijian
 end
 
-sgs.ai_card_intention.ZhijianCard = -80
+sgs.ai_card_intention.ZhijianCard = function(self, card, from, tos)
+	local to = tos[1]
+	local equip = sgs.Sanguosha:getCard(card:getEffectiveId())
+	if equip:isKindOf("Armor") and to:hasSkills("bazhen|yizhong|bossmanjia") then
+	else sgs.updateIntention(from, to, -80) end
+end
 
 sgs.ai_cardneed.zhijian = sgs.ai_cardneed.equip
 

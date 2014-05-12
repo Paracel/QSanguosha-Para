@@ -725,7 +725,7 @@ sgs.ai_skill_use["@@zongxuan"] = function(self, prompt)
 		local card = sgs.Sanguosha:getCard(card_id)
 		if card:isKindOf("EquipCard") then
 			for _, friend in ipairs(self.friends) do
-				if not (card:isKindOf("Armor") and not friend:getArmor() and friend:hasSkills("bazhen|yizhong"))
+				if not (card:isKindOf("Armor") and not friend:getArmor() and friend:hasSkills("bazhen|yizhong|bossmanjia"))
 					and (not self:getSameEquip(card, friend) or card:isKindOf("DefensiveHorse") or card:isKindOf("OffensiveHorse")
 						or (card:isKindOf("Weapon") and self:evaluateWeapon(card) > self:evaluateWeapon(friend:getWeapon()) - 1)) then
 					self.top_draw_pile_id = card_id
@@ -750,11 +750,11 @@ sgs.ai_skill_playerchosen.zhiyan = function(self, targets)
 			self:sort(self.friends, "hp")
 			for _, friend in ipairs(self.friends) do
 				if (not self:getSameEquip(card, friend) or card:isKindOf("DefensiveHorse") or card:isKindOf("OffensiveHorse"))
-					and not (card:isKindOf("Armor") and (friend:hasSkills("bazhen|yizhong") or self:evaluateArmor(card, friend) < 0)) then
+					and not (card:isKindOf("Armor") and (friend:hasSkills("bazhen|yizhong|bossmanjia") or self:evaluateArmor(card, friend) < 0)) then
 					return friend
 				end
 			end
-			if not (card:isKindOf("Armor") and (self.player:hasSkills("bazhen|yizhong") or self:evaluateArmor(card) < 0))
+			if not (card:isKindOf("Armor") and (self.player:hasSkills("bazhen|yizhong|bossmanjia") or self:evaluateArmor(card) < 0))
 				and not (card:isKindOf("Weapon") and self.player:getWeapon() and self:evaluateWeapon(card) < self:evaluateWeapon(self.player:getWeapon()) - 1) then
 				return self.player
 			end

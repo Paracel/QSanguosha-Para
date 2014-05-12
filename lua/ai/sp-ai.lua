@@ -93,7 +93,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 				end
 			end
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:hasSkills("bazhen|yizhong") then
+				if enemy:hasSkills("bazhen|yizhong|bossmanjia") then
 					return enemy
 				end
 			end
@@ -108,7 +108,7 @@ local function yuanhu_validate(self, equip_type, is_handcard)
 			end
 			if not has_equip then
 				if equip_type == "Armor" then
-					if not self:needKongcheng(friend) and not friend:hasSkills("bazhen|yizhong") then return friend end
+					if not self:needKongcheng(friend) and not friend:hasSkills("bazhen|yizhong|bossmanjia") then return friend end
 				else
 					if friend:isWounded() and not (friend:hasSkill("longhun") and friend:getCardCount() >= 3) then return friend end
 				end
@@ -209,7 +209,7 @@ sgs.ai_skill_playerchosen.yuanhu = function(self, targets)
 end
 
 sgs.ai_card_intention.YuanhuCard = function(self, card, from, to)
-	if to[1]:hasSkill("bazhen") or to[1]:hasSkill("yizhong") or (to[1]:hasSkill("kongcheng") and to[1]:isKongcheng()) then
+	if to[1]:hasSkills("bazhen|yizhong|bossmanjia") or (to[1]:hasSkill("kongcheng") and to[1]:isKongcheng()) then
 		if sgs.Sanguosha:getCard(card:getEffectiveId()):isKindOf("SilverLion") then
 			sgs.updateIntention(from, to[1], 10)
 			return
@@ -1116,7 +1116,7 @@ local function getKangkaiCard(self, target, data)
 	end
 	if #armor > 0 then
 		for _, card in ipairs(armor) do
-			if ((not target:getArmor() and not target:hasSkills("bazhen|yizhong"))
+			if ((not target:getArmor() and not target:hasSkills("bazhen|yizhong|bossmanjia"))
 				or (target:getArmor() and self:evaluateArmor(card, target) >= self:evaluateArmor(target:getArmor(), target)))
 				and not (card:isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, target, use.from)) then
 				return card:getEffectiveId()
@@ -1124,7 +1124,7 @@ local function getKangkaiCard(self, target, data)
 		end
 	end
 	if self:needToThrowArmor()
-		and ((not target:getArmor() and not target:hasSkills("bazhen|yizhong"))
+		and ((not target:getArmor() and not target:hasSkills("bazhen|yizhong|bossmanjia"))
 			or (target:getArmor() and self:evaluateArmor(self.player:getArmor(), target) >= self:evaluateArmor(target:getArmor(), target)))
 		and not (self.player:getArmor():isKindOf("Vine") and use.card:isKindOf("FireSlash") and self:slashIsEffective(use.card, target, use.from)) then
 		return self.player:getArmor():getEffectiveId()
@@ -1213,7 +1213,7 @@ sgs.ai_skill_invoke.kangkai_use = function(self, data)
 		return false
 	end
 	if card:isKindOf("Armor")
-		and ((self.player:hasSkills("bazhen|yizhong") and not self.player:getArmor())
+		and ((self.player:hasSkills("bazhen|yizhong|bossmanjia") and not self.player:getArmor())
 			or (self.player:getArmor() and self:evaluateArmor(card) < self:evaluateArmor(self.player:getArmor()))) then return false end
 	if card:isKindOf("Weanpon") and (self.player:getWeapon() and self:evaluateArmor(card) < self:evaluateArmor(self.player:getWeapon())) then return false end
 	return true

@@ -662,7 +662,7 @@ function SmartAI:getValuableCardForGuanxing(cards)
 
 	if eightdiagram then
 		local lord = self.room:getLord()
-		if not self.player:hasSkills("yizhong|bazhen") and self.player:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") then
+		if not self.player:hasSkills("yizhong|bazhen|bossmanjia") and self.player:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") then
 			return eightdiagram
 		end
 		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkill("bazhen") and lord and lord:hasLordSkill("hujia") then

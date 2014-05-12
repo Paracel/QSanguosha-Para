@@ -266,7 +266,7 @@ end
 sgs.ai_skill_invoke.bazhen = sgs.ai_skill_invoke.eight_diagram
 
 function sgs.ai_armor_value.bazhen(card)
-	if not card then return 4 end
+	if not card then return 5 end
 end
 
 sgs.kanpo_suit_value = {

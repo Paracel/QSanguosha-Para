@@ -83,10 +83,12 @@ function sgs.ai_weapon_value.fan(self, enemy)
 	if enemy and (enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) then return 6 end
 end
 
-function sgs.ai_armor_value.vine(player, self)
+function sgs.ai_armor_value.vine(player, self, virtual)
 	if not self:damageIsEffective(nil, sgs.DamageStruct_Fire) then return 6 end
-	if player:hasSkill("jujian") and not player:getArmor() and #(self:getFriendsNoself(player)) > 0 and player:getPhase() == sgs.Player_Play then return 3 end
-	if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
+	if not virtual then
+		if player:hasSkill("jujian") and not player:getArmor() and #(self:getFriendsNoself(player)) > 0 and player:getPhase() == sgs.Player_Play then return 3 end
+		if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
+	end
 
 	local fslash = sgs.Sanguosha:cloneCard("fire_slash")
 	local tslash = sgs.Sanguosha:cloneCard("thunder_slash")
@@ -96,6 +98,7 @@ function sgs.ai_armor_value.vine(player, self)
 		if not self:isFriend(enemy, player) then
 			if (enemy:canSlash(player) and (enemy:hasWeapon("fan") or enemy:hasSkill("lihuo"))) or enemy:hasSkills("huoji|longhun") then return -2 end
 			if enemy:hasSkill("yeyan") and enemy:getMark("@flame") > 0 then return -2 end
+			if enemy:hasSkills("bossguihuo|bosslianyu") then return -2 end
 			if getKnownCard(enemy, self.player, "FireSlash|FireAttack|Fan") >= 1 then return -2 end
 		end
 	end

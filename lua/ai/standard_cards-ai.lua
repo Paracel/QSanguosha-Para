@@ -1436,7 +1436,7 @@ function sgs.ai_armor_value.eight_diagram(player, self)
 		return 6
 	end
 
-	if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong") and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") then
+	if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong|bossmanjia") and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") then
 		return 5
 	end
 
@@ -2913,13 +2913,13 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	if armor and not self.player:hasSkills("yizhong|bazhen") then
+	if armor and not self.player:hasSkills("yizhong|bazhen|bossmanjia") then
 		if eightdiagram then
 			local lord = self.room:getLord()
 			if self.player:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram)) then
 				return eightdiagram
 			end
-			if nextPlayerIsEnemy and nextAlive:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") and not nextAlive:hasSkills("bazhen|yizhong")
+			if nextPlayerIsEnemy and nextAlive:hasSkills("tiandu|leiji|nosleiji|noszhenlie|gushou|hongyan") and not nextAlive:hasSkills("bazhen|yizhong|bossmanjia")
 				and not self:getSameEquip(sgs.Sanguosha:getCard(eightdiagram), nextAlive) then
 				return eightdiagram
 			end

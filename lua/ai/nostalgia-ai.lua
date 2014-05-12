@@ -756,14 +756,14 @@ end
 sgs.ai_skill_invoke.noszhenggong = function(self, data)
 	local target = data:toPlayer()
 
-	if target:getCards("e"):length() == 1 and target:getArmor() and self.player:hasSkills("bazhen|yizhong") then return false end
+	if target:getCards("e"):length() == 1 and target:getArmor() and self.player:hasSkills("bazhen|yizhong|bossmanjia") then return false end
 	if target:hasSkills(sgs.lose_equip_skill) and not (self:isFriend(target) and not self:isWeak(target)) then return false end
 	local benefit = (target:getCards("e"):length() == 1 and target:getArmor() and self:needToThrowArmor(target))
 	if not self:isFriend(target) then benefit = not benefit end
 	if not benefit then return false end
 
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and target:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong")) then
+		if not self.player:getEquip(i) and target:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong|bossmanjia")) then
 			return true
 		end
 	end
@@ -783,7 +783,7 @@ end
 sgs.ai_skill_cardchosen.noszhenggong = function(self, who, flags)
 	if who:getTreasure() then return who:getTreasure():getEffectiveId() end
 	for i = 0, 3 do
-		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong")) then
+		if not self.player:getEquip(i) and who:getEquip(i) and not (i == 1 and self.player:hasSkills("bazhen|yizhong|bossmanjia")) then
 			return who:getEquip(i):getEffectiveId()
 		end
 	end

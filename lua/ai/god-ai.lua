@@ -854,7 +854,7 @@ local function getShenfenUseValueOfHECards(self, to)
 	value_e = equip_num * 1.1
 	if to:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
 	if to:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
-	if to:hasSkills("bazhen|yizhong") and to:getArmor() then value_e = value_e - 1 end
+	if to:hasSkills("bazhen|yizhong|bossmanjia") and to:getArmor() then value_e = value_e - 1 end
 	value = value + value_e
 
 	return value

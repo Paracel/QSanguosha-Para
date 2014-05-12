@@ -214,13 +214,13 @@ sgs.ai_skill_use["@@cangji"] = function(self, prompt)
 			end
 		end
 		for _, friend in ipairs(self.friends_noself) do
-			if not self:getSameEquip(equip, friend) and not (i == 1 and (self:evaluateArmor(equip, friend) <= 0 or friend:hasSkills("bazhen|yizhong"))) then
+			if not self:getSameEquip(equip, friend) and not (i == 1 and (self:evaluateArmor(equip, friend) <= 0 or friend:hasSkills("bazhen|yizhong|bossmanjia"))) then
 				return "@CangjiCard=" .. equip:getEffectiveId() .. "->" .. friend:objectName()
 			end
 		end
 		if equip:isKindOf("SilverLion") then
 			for _, enemy in ipairs(self.enemies) do
-				if not enemy:getArmor() and enemy:hasSkills("bazhen|yizhong") then
+				if not enemy:getArmor() and enemy:hasSkills("bazhen|yizhong|bossmanjia") then
 					return "@CangjiCard=" .. equip:getEffectiveId() .. "->" .. enemy:objectName()
 				end
 			end
@@ -232,7 +232,7 @@ end
 sgs.ai_card_intention.CangjiCard = function(self, card, from, tos)
 	local to = tos[1]
 	local equip = sgs.Sanguosha:getCard(card:getEffectiveId())
-	if equip:isKindOf("SilverLion") and to:hasSkills("bazhen|yizhong") then
+	if equip:isKindOf("SilverLion") and to:hasSkills("bazhen|yizhong|bossmanjia") then
 		sgs.updateIntention(from, to, 40)
 	else
 		sgs.updateIntention(from, to, -40)

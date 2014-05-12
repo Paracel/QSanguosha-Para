@@ -227,7 +227,7 @@ function sgs.getDefense(player)
 		hasEightDiagram = true
 	end
 
-	if not player:getArmor() and player:hasSkill("yizhong") then defense = defense + 2 end
+	if not player:getArmor() and player:hasSkill("yizhong|bossmanjia") then defense = defense + 2 end
 
 	if hasEightDiagram then
 		defense = defense + 1.3
@@ -431,7 +431,10 @@ function SmartAI:getKeepValue(card, kept, wrt)
 				else return -9.7
 				end
 			end
-			if self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then return -10 end
+			if card:isKindOf("Armor") then
+				if self.player:hasSkills("bazhen|yizhong")
+					or (self.player:hasSkill("bossmanjia") and sgs.ai_armor_value.vine(self.player, self, true) > 0) then return -10 end
+			end
 			if self:needKongcheng() then return 5.0 end
 			if card:isKindOf("Armor") then return self:isWeak() and 5.2 or 3.2
 			elseif card:isKindOf("DefensiveHorse") then return self:isWeak() and 4.3 or 3.19
@@ -526,8 +529,8 @@ function SmartAI:getUseValue(card)
 		if self.weaponUsed and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("qiangxi") and card:isKindOf("Weapon") then v = 2 end
 		if self.player:hasSkill("noskurou") and card:isKindOf("Crossbow") then return 9 end
-		if self.player:hasSkills("bazhen|yizhong") and card:isKindOf("Armor") then v = 2 end
-		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong")
+		if self.player:hasSkills("bazhen|yizhong|bossmanjia") and card:isKindOf("Armor") then v = 2 end
+		if self.role == "loyalist" and self.player:getKingdom() == "wei" and not self.player:hasSkills("bazhen|yizhong|bossmanjia")
 			and self.room:getLord() and self.room:getLord():hasLordSkill("hujia") and card:isKindOf("EightDiagram") then
 			v = 9
 		end
@@ -1571,7 +1574,7 @@ function getTrickIntention(trick_class, target)
 		if trick_class == "IronChain" then
 			if target and target:isChained() then return -60 else return 60 end
 		elseif trick_class == "Drowning" then
-			if target and target:getArmor() and target:hasSkills("yizhong|bazhen") then return 0 else return 60 end
+			if target and target:getArmor() and target:hasSkills("yizhong|bazhen|bossmanjia") then return 0 else return 60 end
 		end
 	end
 	if trick_class == "Collateral" then return 0 end
@@ -2992,7 +2995,7 @@ function SmartAI:getCardNeedPlayer(cards, friends_table, handcard)
 	for _, friend in ipairs(friends) do
 		if friend:getHp() <= 2 and friend:faceUp() then
 			for _, hcard in ipairs(cards) do
-				if (hcard:isKindOf("Armor") and not friend:getArmor() and not friend:hasSkills("yizhong|bazhen"))
+				if (hcard:isKindOf("Armor") and not friend:getArmor() and not friend:hasSkills("yizhong|bazhen|bossmanjia"))
 					or (hcard:isKindOf("DefensiveHorse") and not friend:getDefensiveHorse()) then
 					return hcard, friend
 				end
@@ -5030,17 +5033,17 @@ sgs.ai_armor_value = {}
 function SmartAI:evaluateArmor(card, player)
 	player = player or self.player
 	local ecard = card or player:getArmor()
-	if not ecard then return 0 end
 
 	local value = 0
-	if player:hasSkill("jijiu") and ecard:isRed() then value = value + 0.5 end
-	if player:hasSkills("qixi|guidao") and ecard:isBlack() then value = value + 0.5 end
 	for _, askill in sgs.qlist(player:getVisibleSkillList()) do
 		local callback = sgs.ai_armor_value[askill:objectName()]
 		if type(callback) == "function" then
 			return value + (callback(ecard, player, self) or 0)
 		end
 	end
+	if not ecard then return value end
+	if player:hasSkill("jijiu") and ecard:isRed() then value = value + 0.5 end
+	if player:hasSkills("qixi|guidao") and ecard:isBlack() then value = value + 0.5 end
 	local callback = sgs.ai_armor_value[ecard:objectName()]
 	if type(callback) == "function" then
 		return value + (callback(player, self) or 0)
@@ -5114,7 +5117,8 @@ function SmartAI:useEquipCard(card, use)
 		if self:needBear() and self.player:getLostHp() == 0 then return end
 		local lion = self:getCard("SilverLion")
 		if lion and self.player:isWounded() and not self.player:hasArmorEffect("silver_lion") and not card:isKindOf("SilverLion")
-			and not (self.player:hasSkills("bazhen|yizhong") and not self.player:getArmor()) then
+			and not (not self.player:getArmor() and (self.player:hasSkills("bazhen|yizhong")
+													or (self.player:hasSkill("bossmanjia") and sgs.ai_armor_value.vine(self.player, self, true) > -2))) then
 			use.card = lion
 			return
 		end
@@ -5225,6 +5229,7 @@ function SmartAI:needToThrowArmor(player)
 	if not player:getArmor() or not player:hasArmorEffect(player:getArmor():objectName()) then return false end
 	if self:evaluateArmor(player:getArmor(), player) <= 0 then return true end
 	if player:hasSkills("bazhen|yizhong") then return true end
+	if player:hasSkills("bossmanjia") and sgs.ai_armor_value.vine(self.player, self, true) > 0 then return true end
 	if player:hasArmorEffect("silver_lion") and player:isWounded() then
 		if self:isFriend(player) then
 			if player:objectName() == self.player:objectName() then

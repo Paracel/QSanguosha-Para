@@ -93,7 +93,7 @@ sgs.jujian_keep_value = {
 }
 
 function sgs.ai_armor_value.yizhong(card)
-	if not card then return 4 end
+	if not card then return 5 end
 end
 
 local xinzhan_skill = {}

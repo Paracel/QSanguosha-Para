@@ -2832,7 +2832,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	local exnihilo, jink, analeptic, nullification, snatch, dismantlement, indulgence
 	for _, card in ipairs(cards) do
 		if isCard("ExNihilo", card, self.player) then
-			if not nextPlayerCanUse or (not self:willSkipPlayPhase() and (self.player:hasSkills("nosjizhi|jizhi|zhiheng|nosrende|rende") or not nextp:hasSkills("nosjizhi|jizhi|zhiheng"))) then
+			if not nextPlayerCanUse or (not self:willSkipPlayPhase() and (self.player:hasSkills("nosjizhi|jizhi|zhiheng|nosrende|rende") or not nextAlive:hasSkills("nosjizhi|jizhi|zhiheng"))) then
 				exnihilo = card:getEffectiveId()
 			end
 		elseif isCard("Jink", card, self.player) then
@@ -2884,7 +2884,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	if nullification and (self:getCardsNum("Nullification") < 2 or not nextplayercanuse) then 
+	if nullification and (self:getCardsNum("Nullification") < 2 or not nextPlayerCanUse) then 
 		return nullification
 	end
 

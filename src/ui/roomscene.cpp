@@ -60,6 +60,8 @@ void RoomScene::resetPiles() {
 RoomScene::RoomScene(QMainWindow *main_window)
     : main_window(main_window), game_started(false)
 {
+    setParent(main_window);
+
     m_choiceDialog = NULL;
     RoomSceneInstance = this;
     _m_last_front_item = NULL;
@@ -113,10 +115,15 @@ RoomScene::RoomScene(QMainWindow *main_window)
     }
 
     response_skill = new ResponseSkill;
+    response_skill->setParent(this);
     showorpindian_skill = new ShowOrPindianSkill;
+    showorpindian_skill->setParent(this);
     discard_skill = new DiscardSkill;
+    discard_skill->setParent(this);
     yiji_skill = new NosYijiViewAsSkill;
+    yiji_skill->setParent(this);
     choose_skill = new ChoosePlayerSkill;
+    choose_skill->setParent(this);
 
     miscellaneous_menu = new QMenu(main_window);
 

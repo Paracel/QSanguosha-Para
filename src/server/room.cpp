@@ -1084,6 +1084,8 @@ bool Room::_askForNullification(const Card *trick, ServerPlayer *from, ServerPla
     effect.to = repliedPlayer;
     if (card->isCancelable(effect))
         result = !_askForNullification(card, repliedPlayer, to, !positive, aiHelper);
+    if (card->isVirtualCard())
+        delete card;
     return result;
 }
 
@@ -2942,6 +2944,8 @@ bool Room::useCard(const CardUseStruct &use, bool add_history) {
             CardUseStruct new_use = card_use;
             new_use.card = card;
             useCard(new_use);
+            if (card->isVirtualCard() && !card->isKindOf("Nullification")) // delete Nullification in askForNullification
+                delete card;
         }
     }
     catch (TriggerEvent triggerEvent) {

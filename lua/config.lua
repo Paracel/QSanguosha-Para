@@ -217,7 +217,8 @@ config = {
 		"sunce|heg_sunce+daqiao|bgm_daqiao",
 		"sunquan+bulianshi",
 		"liuxie|diy_liuxie+fuhuanghou",
-		"luxun|heg_luxun+sunru"
+		"luxun|heg_luxun+sunru",
+		"liubiao+caifuren",
 	},
 
 	convert_pairs = {

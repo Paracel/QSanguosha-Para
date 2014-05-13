@@ -998,7 +998,7 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
                 choices << "cancel";
                 ServerPlayer *choiceplayer = p;
                 if (!p->isOnline()) {
-                    foreach (ServerPlayer *cp, room->getAlivePlayers()) {
+                    foreach (ServerPlayer *cp, room->getPlayers()) {
                         if (!cp->isLord() && cp->isOnline()) {
                             choiceplayer = cp;
                             break;

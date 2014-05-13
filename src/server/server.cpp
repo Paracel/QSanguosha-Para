@@ -1415,4 +1415,7 @@ void Server::gameOver() {
         name2objname.remove(player->screenName(), player->objectName());
         players.remove(player->objectName());
     }
+
+    if (room == current) current = NULL;
+    room->deleteLater();
 }

@@ -1173,8 +1173,9 @@ public:
 
     virtual int getDrawNum(ServerPlayer *player, int n) const{
         if (player->isWounded()) {
-            player->getRoom()->notifySkillInvoked(player, "juejing");
-            player->getRoom()->broadcastSkillInvoke("juejing");
+            Room *room = player->getRoom();
+            room->notifySkillInvoked(player, "juejing");
+            room->broadcastSkillInvoke("juejing");
 
             LogMessage log;
             log.type = "#YongsiGood";

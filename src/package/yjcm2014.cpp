@@ -368,7 +368,7 @@ public:
 class Benxi: public TriggerSkill {
 public:
     Benxi(): TriggerSkill("benxi") {
-        events << EventPhaseChanging << CardFinished << PreCardUsed << EventAcquireSkill << EventLoseSkill;
+        events << EventPhaseChanging << CardFinished << EventAcquireSkill << EventLoseSkill;
         frequency = Compulsory;
     }
 
@@ -382,8 +382,6 @@ public:
             if (change.to == Player::NotActive) {
                 room->setPlayerMark(player, "@benxi", 0);
                 room->setPlayerMark(player, "benxi", 0);
-                if (player->hasFlag("benxi"))
-                    room->setPlayerFlag(player, "-benxi");
             }
         } else if (triggerEvent == CardFinished) {
             CardUseStruct use = data.value<CardUseStruct>();
@@ -392,26 +390,6 @@ public:
                 room->addPlayerMark(player, "benxi");
                 if (TriggerSkill::triggerable(player))
                     room->setPlayerMark(player, "@benxi", player->getMark("benxi"));
-            }
-        } else if (triggerEvent == PreCardUsed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (TriggerSkill::triggerable(player) && player->getPhase() == Player::Play
-                && use.card->isKindOf("Slash") && !player->hasFlag("benxi")) {
-                int rangefix = 0;
-                if (use.card->isVirtualCard() && player->getOffensiveHorse()
-                    && use.card->getSubcards().contains(player->getOffensiveHorse()->getEffectiveId()))
-                    rangefix = 1;
-                foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
-                    if (player->distanceTo(p, rangefix) != 1)
-                        return false;
-                }
-
-                room->setPlayerFlag(player, "benxi");
-                if (use.m_addHistory) {
-                    room->addPlayerHistory(player, use.card->getClassName(), -1);
-                    use.m_addHistory = false;
-                    data = QVariant::fromValue(use);
-                }
             }
         } else if (triggerEvent == EventAcquireSkill || triggerEvent == EventLoseSkill) {
             QString name = data.toString();
@@ -430,16 +408,11 @@ public:
     BenxiTargetMod(): TargetModSkill("#benxi-target") {
     }
 
-    virtual int getResidueNum(const Player *from, const Card *card) const{
-        if (!from->hasSkill("benxi") || from->hasFlag("benxi") || !isAllAdjacent(from, card))
-            return 0;
-        return 1000;
-    }
-
     virtual int getExtraTargetNum(const Player *from, const Card *card) const{
-        if (!from->hasSkill("benxi") || from->hasFlag("benxi") || !isAllAdjacent(from, card))
+        if (from->hasSkill("benxi") && isAllAdjacent(from, card))
+            return 1;
+        else
             return 0;
-        return 1;
     }
 
 private:

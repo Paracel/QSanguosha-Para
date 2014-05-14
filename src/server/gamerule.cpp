@@ -925,6 +925,10 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
                 p->tag["BossModeAcquiredSkills"] = QVariant::fromValue(acquired);
                 if (!acquired.isEmpty())
                     room->handleAcquireDetachSkills(p, acquired, true);
+                foreach (const Skill *skill, p->getSkillList()) {
+                    if (skill->getFrequency() == Skill::Limited && !skill->getLimitMark().isEmpty())
+                        room->setPlayerMark(p, skill->getLimitMark(), 1);
+                }
             }
         }
     }

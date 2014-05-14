@@ -108,6 +108,7 @@ CommonTranslationTable = {
 
 	["#Murder"] = "%to【%arg】阵亡，伤害来源为 %from",
 	["#Suicide"] = "%to【%arg】自杀",
+	["#Revive"] = "%from 复活",
 	["#InvokeSkill"] = "%from 发动了“%arg”",
 	["#InvokeOthersSkill"] = "%from 发动了 %to 的“%arg”",
 	["#ChoosePlayerWithSkill"] = "%from 发动了“%arg”，目标是 %to",

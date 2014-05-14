@@ -41,8 +41,10 @@ sgs.ai_armor_value.bossmanjia = function(card, player, self)
 end
 
 sgs.ai_skill_invoke.bosslianyu = function(self, data)
-	local value = 0
+	local value, avail = 0, 0
 	for _, enemy in ipairs(self.enemies) do
+		if not self:damageIsEffective(self.player, enemy, sgs.DamageStruct_Fire) then continue end
+		avail = avail + 1
 		if self:canAttack(enemy, self.player, sgs.DamageStruct_Fire) then
 			value = value + 1
 			if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
@@ -50,7 +52,7 @@ sgs.ai_skill_invoke.bosslianyu = function(self, data)
 			end
 		end
 	end
-	return value / #self.enemies >= 2 / 3
+	return value / avail >= 2 / 3
 end
 
 sgs.ai_skill_invoke.bosssuoming = function(self, data)

@@ -744,6 +744,8 @@ sgs.ai_skill_use["@@zongxuan"] = function(self, prompt)
 end
 
 sgs.ai_skill_playerchosen.zhiyan = function(self, targets)
+	local id = self.room:getDrawPile():first()
+	if self.top_draw_pile_id and self.top_draw_pile_id ~= id then self.top_draw_pile_id = nil end
 	if self.top_draw_pile_id then
 		local card = sgs.Sanguosha:getCard(self.top_draw_pile_id)
 		if card:isKindOf("EquipCard") then

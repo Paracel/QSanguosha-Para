@@ -107,7 +107,11 @@ BossModeExperience = sgs.CreateTriggerSkill {
 			room:addPlayerMark(player, "@bossExp", lose * x)
 		elseif triggerEvent == sgs.GameOverJudge then
 			local death = data:toDeath()
-			if death.who:isLord() then
+			if not death.who:isLord() then
+				if player:objectName() == death.who:objectName() then
+					room:removePlayerMark(player, "@bossExp", 100)
+				end
+			else
 				for _, p in sgs.qlist(room:getOtherPlayers(death.who)) do
 					room:addPlayerMark(p, "@bossExp", 10 * x)
 				end

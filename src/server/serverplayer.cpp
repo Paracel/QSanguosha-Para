@@ -105,16 +105,13 @@ void ServerPlayer::throwAllHandCardsAndEquips() {
 void ServerPlayer::throwAllMarks(bool visible_only) {
     // throw all marks
     foreach (QString mark_name, marks.keys()) {
-        if (!mark_name.startsWith("@"))
+        if (mark_name == "@bossExp" || (visible_only && !mark_name.startsWith("@")))
             continue;
 
         int n = marks.value(mark_name, 0);
         if (n != 0)
             room->setPlayerMark(this, mark_name, 0);
     }
-
-    if (!visible_only)
-        marks.clear();
 }
 
 void ServerPlayer::clearOnePrivatePile(QString pile_name) {

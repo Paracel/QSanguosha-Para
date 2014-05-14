@@ -43,7 +43,7 @@ end
 sgs.ai_skill_invoke.bosslianyu = function(self, data)
 	local value, avail = 0, 0
 	for _, enemy in ipairs(self.enemies) do
-		if not self:damageIsEffective(self.player, enemy, sgs.DamageStruct_Fire) then continue end
+		if not self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) then continue end
 		avail = avail + 1
 		if self:canAttack(enemy, self.player, sgs.DamageStruct_Fire) then
 			value = value + 1

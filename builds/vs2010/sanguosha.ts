@@ -3932,7 +3932,7 @@ P = 你自己, R = 你所在的房间</translation>
 <context>
     <name>ServerPlayer</name>
     <message>
-        <location filename="../../src/server/serverplayer.cpp" line="320"/>
+        <location filename="../../src/server/serverplayer.cpp" line="317"/>
         <source>Anonymous</source>
         <translation>匿名</translation>
     </message>

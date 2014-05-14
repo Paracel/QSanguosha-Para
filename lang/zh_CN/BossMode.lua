@@ -96,4 +96,5 @@ return {
 	["#UseExpPoint"] = "%from 使用了 %arg 点经验 %arg2",
 	["BossLevelA"] = "第",
 	["BossLevelB"] = "关",
+	["(acquired)"] = "(已获得)",
 }

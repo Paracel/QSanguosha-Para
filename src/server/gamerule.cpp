@@ -913,10 +913,16 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
                     p->turnOver();
                 if (p->isChained())
                     room->setPlayerProperty(p, "chained", false);
-                if (p->getHp() > 4) {
-                    p->setProperty("hp", 4);
-                    room->broadcastProperty(p, "hp");
+                p->setProperty("hp", qMin(p->getMaxHp(), 4));
+                room->broadcastProperty(p, "hp");
+                QStringList acquired = p->tag["BossModeAcquiredSkills"].toStringList();
+                foreach (QString skillname, acquired) {
+                    if (p->hasSkill(skillname, true))
+                        acquired.removeOne(skillname);
                 }
+                p->tag["BossModeAcquiredSkills"] = QVariant::fromValue(acquired);
+                if (!acquired.isEmpty())
+                    room->handleAcquireDetachSkills(p, acquired, true);
             }
         }
     }
@@ -1006,6 +1012,7 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
                     }
                 }
                 room->setPlayerProperty(choiceplayer, "bossmodeexp", p->objectName());
+                room->setPlayerProperty(choiceplayer, "bossmodeacquiredskills", acquired.join("+"));
                 room->setPlayerProperty(choiceplayer, "bossmodeexpallchoices", allchoices.join("+"));
                 QString choice = room->askForChoice(choiceplayer, "BossModeExpStore", choices.join("+"));
                 if (choice == "cancel") {

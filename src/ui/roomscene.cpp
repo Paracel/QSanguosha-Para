@@ -1559,6 +1559,7 @@ void RoomScene::chooseOption(const QString &skillName, const QStringList &option
         QCommandLinkButton *cancel_button = NULL;
         QList<QCommandLinkButton *> buttons;
         QStringList alloptions = Self->property("bossmodeexpallchoices").toString().split("+");
+        QStringList acquiredskills = Self->property("bossmodeacquiredskills").toString().split("+");
         foreach (QString option, alloptions) {
             QCommandLinkButton *button = new QCommandLinkButton;
             QStringList optionlist = option.split("|");
@@ -1580,6 +1581,8 @@ void RoomScene::chooseOption(const QString &skillName, const QStringList &option
                 QString translated = optionlist.first() + Sanguosha->translate(skill);
                 if (skill.startsWith("nos"))
                     translated.append(Sanguosha->translate("nosskill"));
+                if (acquiredskills.contains(skill))
+                    translated.append(Sanguosha->translate("(acquired)"));
                 button->setObjectName(option);
                 button->setText(translated);
                 if (!options.contains(option))
@@ -3305,10 +3308,12 @@ void RoomScene::revivePlayer(const QString &who) {
         dashboard->revivePlayer();
         item2player.insert(dashboard, Self);
         updateSkillButtons();
+        dashboard->updateAvatarTooltip();
     } else {
         Photo *photo = name2photo[who];
         photo->revivePlayer();
         item2player.insert(photo, photo->getPlayer());
+        photo->updateAvatarTooltip();
     }
 }
 

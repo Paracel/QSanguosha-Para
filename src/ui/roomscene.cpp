@@ -559,6 +559,10 @@ void RoomScene::handleGameEvent(const Json::Value &arg) {
                     bringToFront(pausing_text);
                 }
                 pausing_item->setVisible(paused);
+                if (ServerInfo.GameMode == "04_boss")
+                    pausing_text->setText(tr("Boss Mode Level %1").arg(ClientInstance->m_bossLevel + 1));
+                else
+                    pausing_text->setText(tr("Paused ..."));
                 pausing_text->setVisible(paused);
             }
             break;

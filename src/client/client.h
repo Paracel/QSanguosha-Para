@@ -128,6 +128,7 @@ public:
     void setAvailableCards(const Json::Value &pile);
     void setCardFlag(const Json::Value &pattern_str);
     void updateCard(const Json::Value &arg);
+    void updateBossLevel(const Json::Value &arg);
 
     void fillAG(const Json::Value &cards_str);
     void takeAG(const Json::Value &take_str);
@@ -202,7 +203,8 @@ public:
     int min_num;
     QString skill_name;
     QList<const Card *> discarded_list;
-    QStringList players_to_choose;    
+    QStringList players_to_choose;
+    int m_bossLevel;
 
 public slots:
     void signup();

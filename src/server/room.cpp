@@ -252,7 +252,7 @@ ServerPlayer *Room::getCurrentDyingPlayer() const{
     return who;
 }
 
-void Room::revivePlayer(ServerPlayer *player) {
+void Room::revivePlayer(ServerPlayer *player, bool sendlog) {
     int turn = player->getMark("Global_TurnCount");
     player->setAlive(true);
     player->throwAllMarks(false);
@@ -273,6 +273,13 @@ void Room::revivePlayer(ServerPlayer *player) {
 
     doBroadcastNotify(S_COMMAND_REVIVE_PLAYER, toJsonString(player->objectName()));
     updateStateItem();
+
+    if (sendlog) {
+        LogMessage log;
+        log.type = "#Revive";
+        log.from = player;
+        sendLog(log);
+    }
 }
 
 static bool CompareByRole(ServerPlayer *player1, ServerPlayer *player2) {

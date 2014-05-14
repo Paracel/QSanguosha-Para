@@ -27,7 +27,7 @@ Client *ClientInstance = NULL;
 
 Client::Client(QObject *parent, const QString &filename)
     : QObject(parent), m_isDiscardActionRefusable(true),
-      status(NotActive), alive_count(1), swap_pile(0),
+      status(NotActive), alive_count(1), swap_pile(0), m_bossLevel(0),
       _m_roomState(true)
 {
     ClientInstance = this;
@@ -71,6 +71,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_SET_KNOWN_CARDS] = &Client::setKnownCards;
     m_callbacks[S_COMMAND_VIEW_GENERALS] = &Client::viewGenerals;
 
+    m_callbacks[S_COMMAND_UPDATE_BOSS_LEVEL] = &Client::updateBossLevel;
     m_callbacks[S_COMMAND_UPDATE_STATE_ITEM] = &Client::updateStateItem;
     m_callbacks[S_COMMAND_AVAILABLE_CARDS] = &Client::setAvailableCards;
 
@@ -856,7 +857,7 @@ void Client::askForSurrender(const Json::Value &initiator) {
     QString text = tr("%1 initiated a vote for disadvataged side to claim "
                       "capitulation. Click \"OK\" to surrender or \"Cancel\" to resist.")
                       .arg(Sanguosha->translate(toQString(initiator)));
-    text.append(tr("<br/> <b>Noitce</b>: if all people on your side decides to surrender. "
+    text.append(tr("<br/> <b>Notice</b>: if all people on your side decides to surrender. "
                    "You'll lose this game."));
     skill_name = "surrender";
 
@@ -1066,6 +1067,9 @@ void Client::setCardFlag(const Json::Value &pattern_str) {
 void Client::updatePileNum() {
     QString pile_str = tr("Draw pile: <b>%1</b>, discard pile: <b>%2</b>, swap times: <b>%3</b>")
                        .arg(pile_num).arg(discarded_list.length()).arg(swap_pile);
+    if (ServerInfo.GameMode == "04_boss") {
+        pile_str.prepend(tr("Level: <b>%1</b>,").arg(m_bossLevel + 1));
+    }
     lines_doc->setHtml(QString("<font color='%1'><p align = \"center\">" + pile_str + "</p></font>").arg(Config.TextEditColor.name()));
 }
 
@@ -1212,6 +1216,7 @@ void Client::revivePlayer(const Json::Value &player_arg) {
     QString player_name = toQString(player_arg);
 
     alive_count++;
+    updatePileNum();
     emit player_revived(player_name);
 }
 
@@ -1795,6 +1800,11 @@ void Client::onPlayerChooseOrder() {
 void Client::updateStateItem(const Json::Value &state_str) {
     if (!state_str.isString()) return;
     emit role_state_changed(toQString(state_str));
+}
+
+void Client::updateBossLevel(const Json::Value &arg) {
+    if (!arg.isInt()) return;
+    m_bossLevel = arg.asInt();
 }
 
 void Client::setAvailableCards(const Json::Value &pile) {

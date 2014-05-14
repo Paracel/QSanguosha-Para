@@ -618,12 +618,13 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                 return false;
             } else if (room->getMode() == "04_boss" && player->isLord()) {
                 int level = room->getTag("BossModeLevel").toInt();
-                room->setTag("BossModeLevel", level + 1);
+                level++;
+                room->setTag("BossModeLevel", level);
                 doBossModeDifficultySettings(player);
                 changeGeneralBossMode(player);
                 if (death.damage != NULL)
                     player->setFlags("Global_DebutFlag");
-                room->doLightbox(QString("BossLevelA\\ %1 \\BossLevelB").arg(level + 2), 2000, 100);
+                room->doLightbox(QString("BossLevelA\\ %1 \\BossLevelB").arg(level + 1), 2000, 100);
                 return false;
             }
 
@@ -820,6 +821,7 @@ void GameRule::changeGeneralBossMode(ServerPlayer *player) const{
 
     Room *room = player->getRoom();
     int level = room->getTag("BossModeLevel").toInt();
+    room->doBroadcastNotify(QSanProtocol::S_COMMAND_UPDATE_BOSS_LEVEL, Json::Value(level));
     QString general;
     if (level <= Config.BossLevel - 1) {
         QStringList boss_generals = Config.BossGenerals.at(level).split("+");
@@ -907,7 +909,7 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
     if ((difficulty & (1 << BMDRevive)) > 0) {
         foreach (ServerPlayer *p, unions) {
             if (p->isDead() && p->getMaxHp() > 0) {
-                room->revivePlayer(p);
+                room->revivePlayer(p, true);
                 room->addPlayerHistory(p, ".");
                 if (!p->faceUp())
                     p->turnOver();

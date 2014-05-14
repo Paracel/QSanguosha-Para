@@ -2537,7 +2537,7 @@ function SmartAI:askForCardChosen(who, flags, reason, method)
 		if flags:match("e") and who:getTreasure() and who:getPile("wooden_ox"):length() > 1 and (not isDiscard or self.player:canDiscard(who, who:getTreasure():getId())) then
 			return who:getTreasure():getId()
 		end
-		if flags:match("e") and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who)
+		if flags:match("e") and who:getArmor() and who:hasArmorEffect("eight_diagram") and not self:needToThrowArmor(who)
 			and (not isDiscard or self.player:canDiscard(who, who:getArmor():getId())) then return who:getArmor():getId() end
 		if flags:match("e") and who:hasSkills("jijiu|beige|mingce|weimu|qingcheng") and not self:doNotDiscard(who, "e", false, 1, reason) then
 			if who:getDefensiveHorse() and (not isDiscard or self.player:canDiscard(who, who:getDefensiveHorse():getEffectiveId())) then return who:getDefensiveHorse():getEffectiveId() end

@@ -618,7 +618,7 @@ public:
                 room->recover(player, RecoverStruct(player));
         }
         return false;
-	}
+    }
 };
 
 BossModePackage::BossModePackage()

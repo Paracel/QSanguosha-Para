@@ -224,7 +224,7 @@ void RoomThreadXMode::assignRoles(const QString &scheme) {
 
     bool valid = true;
     QList<ServerPlayer *> players = room->m_players;
-	do {
+    do {
         qShuffle(players);
         valid = true;
         int total = players.length();

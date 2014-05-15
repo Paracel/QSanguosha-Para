@@ -592,7 +592,7 @@ bool ServerPlayer::pindian(ServerPlayer *target, const QString &reason, const Ca
                                                         .arg(this->objectName())
                                                         .arg(pindian_struct.from_card->getEffectiveId())
                                                         .arg(target->objectName())
-														.arg(pindian_struct.to_card->getEffectiveId()));
+                                                        .arg(pindian_struct.to_card->getEffectiveId()));
     thread->trigger(ChoiceMade, room, this, decisionData);
 
     return pindian_struct.success;

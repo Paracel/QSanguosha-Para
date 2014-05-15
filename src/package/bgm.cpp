@@ -1318,7 +1318,7 @@ public:
         room->sendLog(log);
         room->notifySkillInvoked(xiahou, objectName());
 
-		PlayerStar player = data.value<PlayerStar>();
+        PlayerStar player = data.value<PlayerStar>();
         QList<ServerPlayer *> targets;
         foreach (ServerPlayer *p, room->getOtherPlayers(xiahou))
             if (xiahou->canSlash(p, NULL, false))

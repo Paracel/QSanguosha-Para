@@ -279,12 +279,12 @@ public:
         return false;
     }
 
-	virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
+    virtual bool viewFilter(const QList<const Card *> &selected, const Card *to_select) const{
         QString skill_name = Self->tag["weidi"].toString();
         if (skill_name.isEmpty()) return false;
         const ViewAsSkill *vs_skill = Sanguosha->getViewAsSkill(skill_name);
         if (vs_skill) return vs_skill->viewFilter(selected, to_select);
-        return false;	
+        return false;
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{

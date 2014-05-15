@@ -728,9 +728,8 @@ public:
     virtual int getExtra(const Player *target) const{
         if (target->hasSkill(objectName())) {
             int max = 0;
-            foreach (const Player *p, target->getAliveSiblings()) {
-				if (p->getHp() > max) max = p->getHp();
-            }
+            foreach (const Player *p, target->getAliveSiblings())
+                if (p->getHp() > max) max = p->getHp();
             return max;
         } else
             return 0;

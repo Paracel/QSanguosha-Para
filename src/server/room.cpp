@@ -5172,7 +5172,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     CardsMoveStruct move2(QList<int>(),
                           judge->who,
                           exchange ? player : NULL,
-						  Player::PlaceUnknown,
+                          Player::PlaceUnknown,
                           exchange ? Player::PlaceHand : Player::DiscardPile,
                           reason);
 

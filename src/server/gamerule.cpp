@@ -1000,7 +1000,7 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
                 int len = qMin(4, acquired.length() + 1);
                 foreach (QString skillname, Config.BossExpSkills.keys()) {
                     int cost = Config.BossExpSkills[skillname] * len;
-					allchoices << QString("[%1]||%2").arg(cost).arg(skillname);
+                    allchoices << QString("[%1]||%2").arg(cost).arg(skillname);
                     if (p->hasSkill(skillname, true)) continue;
                     if (exp >= cost)
                         choices << QString("[%1]||%2").arg(cost).arg(skillname);

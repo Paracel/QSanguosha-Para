@@ -88,6 +88,7 @@ BossModeExperience = sgs.CreateTriggerSkill {
 			if player:isLord() then return false end
 			local move = data:toMoveOneTime()
 			if not move.to or player:objectName() ~= move.to:objectName()
+				or (move.from and move.from:objectName() == move.to:objectName())
 				or (move.to_place ~= sgs.Player_PlaceHand and move.to_place ~= sgs.Player_PlaceEquip)
 				or room:getTag("FirstRound"):toBool() then
 				return false

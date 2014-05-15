@@ -52,7 +52,7 @@ sgs.ai_skill_invoke.bosslianyu = function(self, data)
 			end
 		end
 	end
-	return value / avail >= 2 / 3
+	return avail > 0 and value / avail >= 2 / 3
 end
 
 sgs.ai_skill_invoke.bosssuoming = function(self, data)

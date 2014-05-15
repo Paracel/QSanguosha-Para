@@ -2916,7 +2916,7 @@
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="563"/>
         <source>Boss Mode Level %1</source>
-        <translation>第 %1 关</translation>
+        <translation>第 %1 关 ...</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="1393"/>

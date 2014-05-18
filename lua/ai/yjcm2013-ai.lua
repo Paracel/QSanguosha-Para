@@ -344,7 +344,7 @@ end
 sgs.ai_skill_use_func.XiansiSlashCard = function(card, use, self)
 	local liufeng = self.room:findPlayerBySkillName("xiansi")
 	if not liufeng or liufeng:getPile("counter"):length() <= 1 or not self.player:canSlash(liufeng) then return "." end
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 
 	if self:slashIsAvailable() and not self:slashIsEffective(slash, liufeng, self.player) and self:isFriend(liufeng) then
 		sgs.ai_use_priority.XiansiSlashCard = 0.1
@@ -382,7 +382,7 @@ sgs.ai_skill_use_func.XiansiSlashCard = function(card, use, self)
 end
 
 sgs.ai_card_intention.XiansiSlashCard = function(self, card, from, tos)
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	if not self:slashIsEffective(slash, tos[1], from) then
 		sgs.updateIntention(from, tos[1], -30)
 	else
@@ -580,7 +580,7 @@ sgs.ai_skill_choice.qiaoshui = function(self, choices, data)
 			end
 		end
 	elseif use.card:isKindOf("Snatch") or use.card:isKindOf("Dismantlement") then
-		local trick = sgs.Sanguosha:cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
+		local trick = sgs.cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
 		trick:setSkillName("qiaoshui")
 		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
 		for _, p in sgs.qlist(use.to) do
@@ -592,7 +592,7 @@ sgs.ai_skill_choice.qiaoshui = function(self, choices, data)
 			return "add"
 		end
 	elseif use.card:isKindOf("Slash") then
-		local slash = sgs.Sanguosha:cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
+		local slash = sgs.cloneCard(use.card:objectName(), use.card:getSuit(), use.card:getNumber())
 		slash:setSkillName("qiaoshui")
 		local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
 		for _, p in sgs.qlist(use.to) do

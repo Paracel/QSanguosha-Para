@@ -23,7 +23,7 @@ end
 
 sgs.ai_skill_playerchosen.qianxi = function(self, targets)
 	local enemies = {}
-	local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash")
+	local slash = self:getCard("Slash") or sgs.cloneCard("slash")
 	local isRed = (self.player:getTag("qianxi"):toString() == "red")
 
 	for _, target in sgs.qlist(targets) do
@@ -276,7 +276,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefenseSlash(enemy, self)
-		local slash = sgs.Sanguosha:cloneCard("slash")
+		local slash = sgs.cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -287,7 +287,7 @@ sgs.ai_skill_choice.jiangchi = function(self, choices)
 
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefense(enemy)
-		local slash = sgs.Sanguosha:cloneCard("slash")
+		local slash = sgs.cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if not self.player:canSlash(enemy, nil, false) then
@@ -744,7 +744,7 @@ function sgs.ai_cardsview_valuable.chunlao(self, class_name, player)
 	if class_name == "Peach" and player:getPile("wine"):length() > 0 then
 		local dying = player:getRoom():getCurrentDyingPlayer()
 		if dying then
-			local analeptic = sgs.Sanguosha:cloneCard("analeptic")
+			local analeptic = sgs.cloneCard("analeptic")
 			if dying:isLocked(analeptic) then return nil end
 			return "@ChunlaoWineCard=."
 		end
@@ -822,7 +822,7 @@ qice_skill.getTurnUseCard = function(self)
 	local aoe_available, ge_available, ex_available = true, true, true
 	for i = 1, #qicetricks do
 		local forbiden = qicetricks[i]
-		forbid = sgs.Sanguosha:cloneCard(forbiden, suit)
+		forbid = sgs.cloneCard(forbiden, suit)
 		if self.player:isCardLimited(forbid, sgs.Card_MethodUse, true) or not forbid:isAvailable(self.player) then
 			if forbid:isKindOf("AOE") then aoe_available = false end
 			if forbid:isKindOf("GlobalEffect") then ge_available = false end
@@ -851,12 +851,12 @@ qice_skill.getTurnUseCard = function(self)
 	end
 
 	if #allcard > 1 then sgs.ai_use_priority.QiceCard = 0 end
-	local godsalvation = sgs.Sanguosha:cloneCard("god_salvation", suit, 0)
+	local godsalvation = sgs.cloneCard("god_salvation", suit, 0)
 	if self.player:getHandcardNum() < 3 then
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice)
+				aoe = sgs.cloneCard(newqice)
 				if self:getAoeValue(aoe) > 0 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
@@ -877,7 +877,7 @@ qice_skill.getTurnUseCard = function(self)
 		if aoe_available then
 			for i = 1, #aoenames do
 				local newqice = aoenames[i]
-				aoe = sgs.Sanguosha:cloneCard(newqice)
+				aoe = sgs.cloneCard(newqice)
 				if self:getAoeValue(aoe) > 0 then
 					local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
 					return parsed_card
@@ -896,7 +896,7 @@ qice_skill.getTurnUseCard = function(self)
 	if aoe_available then
 		for i = 1, #aoenames do
 			local newqice = aoenames[i]
-			aoe = sgs.Sanguosha:cloneCard(newqice)
+			aoe = sgs.cloneCard(newqice)
 			if self:getAoeValue(aoe) > -5 and caocao and self:isFriend(caocao) and caocao:getHp() > 1 and not self:willSkipPlayPhase(caocao)
 				and not self.player:hasSkill("jueqing") and self:aoeIsEffective(aoe, caocao, self.player) then
 				local parsed_card = sgs.Card_Parse("@QiceCard=" .. table.concat(allcard, "+") .. ":" .. newqice)
@@ -920,7 +920,7 @@ end
 sgs.ai_skill_use_func.QiceCard = function(card, use, self)
 	local userstring = card:toString()
 	userstring = (userstring:split(":"))[3]
-	local qicecard = sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
+	local qicecard = sgs.cloneCard(userstring, card:getSuit(), card:getNumber())
 	qicecard:setSkillName("qice")
 	self:useTrickCard(qicecard, use)
 	if use.card then

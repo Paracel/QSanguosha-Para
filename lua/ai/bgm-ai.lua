@@ -119,7 +119,7 @@ sgs.ai_skill_use_func.LihunCard = function(card, use, self)
 		end
 
 		if not target and (self:hasCrossbowEffect() or self:getCardsNum("Crossbow") > 0) then
-			local slash = self:getCard("Slash") or sgs.Sanguosha:cloneCard("slash")
+			local slash = self:getCard("Slash") or sgs.cloneCard("slash")
 			for _, enemy in ipairs(self.enemies) do
 				if enemy:isMale() and self:slashIsEffective(slash, enemy) and self.player:distanceTo(enemy) == 1
 					and not enemy:hasSkills("fenyong|zhichi|fankui|nosfankui|ganglie|vsganglie|nosganglie|enyuan|nosenyuan|langgu|guixin|kongcheng")
@@ -440,7 +440,7 @@ local function need_mouduan(self)
 	local cardsCount = self.player:getHandcardNum()
 	if cardsCount <= 3 then return false end
 	local current = self.room:getCurrent()
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	if current:objectName() == self.player:objectName() then
 		if self:hasCrossbowEffect()
 			and self:getCardsNum("Slash") >= 3
@@ -896,7 +896,7 @@ sgs.ai_skill_invoke.fenyong = function(self, data)
 		self:sort(self.enemies, "defenseSlash")
 		for _, enemy in ipairs(self.enemies) do
 			local def = sgs.getDefenseSlash(enemy, self)
-			local slash = sgs.Sanguosha:cloneCard("slash")
+			local slash = sgs.cloneCard("slash")
 			local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
@@ -930,7 +930,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
 		local def = sgs.getDefenseSlash(enemy, self)
-		local slash = sgs.Sanguosha:cloneCard("slash")
+		local slash = sgs.cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 
 		if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and eff and def < 5 then
@@ -940,7 +940,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	end
 	if self:isEnemy(current) then
 		for _, enemy in ipairs(self.enemies) do
-			local slash = sgs.Sanguosha:cloneCard("slash")
+			local slash = sgs.cloneCard("slash")
 			local eff = self:slashIsEffective(slash, enemy)
 
 			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) and self:hasHeavySlashDamage(self.player, slash, enemy) then
@@ -954,7 +954,7 @@ sgs.ai_skill_choice.xuehen = function(self, choices)
 	if self:isFriend(current) then
 		if n == 1 and self:needToThrowArmor(current) then return "discard" end
 		for _, enemy in ipairs(self.enemies) do
-			local slash = sgs.Sanguosha:cloneCard("slash")
+			local slash = sgs.cloneCard("slash")
 			local eff = self:slashIsEffective(slash, enemy)
 
 			if self.player:canSlash(enemy, nil, false) and not self:slashProhibit(nil, enemy) then
@@ -981,7 +981,7 @@ sgs.ai_skill_use["@@zhaoxin"] = function(self, prompt)
 	local target
 	self:sort(self.enemies, "defenseSlash")
 	for _, enemy in ipairs(self.enemies) do
-		local slash = sgs.Sanguosha:cloneCard("slash")
+		local slash = sgs.cloneCard("slash")
 		local eff = self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self)
 		if eff and self.player:canSlash(enemy) and not self:slashProhibit(nil, enemy) then
 			return "@ZhaoxinCard=.->" .. enemy:objectName()

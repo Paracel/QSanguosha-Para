@@ -26,6 +26,16 @@ StartScene::StartScene()
     server_log = NULL;
 }
 
+StartScene::~StartScene() {
+    delete logo;
+    logo = NULL;
+
+    foreach (Button *b, buttons) {
+        delete b;
+        b = NULL;
+    }
+}
+
 void StartScene::addButton(QAction *action) {
     Button *button = new Button(action->text());
     button->setMute(false);
@@ -69,8 +79,7 @@ void StartScene::switchToServer(Server *server) {
     group->start(QAbstractAnimation::DeleteWhenStopped);
 
     foreach (Button *button, buttons)
-        delete button;
-    buttons.clear();
+        button->hide();
 
     server_log = new QTextEdit();
     server_log->setReadOnly(true);

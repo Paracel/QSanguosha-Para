@@ -90,8 +90,8 @@ function sgs.ai_armor_value.vine(player, self, virtual)
 		if player:hasSkill("diyyicong") and not player:getArmor() and player:getPhase() == sgs.Player_Play then return 3 end
 	end
 
-	local fslash = sgs.Sanguosha:cloneCard("fire_slash")
-	local tslash = sgs.Sanguosha:cloneCard("thunder_slash")
+	local fslash = sgs.cloneCard("fire_slash")
+	local tslash = sgs.cloneCard("thunder_slash")
 	if player:isChained() and (not self:isGoodChainTarget(player, self.player, nil, nil, fslash) or not self:isGoodChainTarget(player, self.player, nil, nil, tslash)) then return -2 end
 
 	for _, enemy in sgs.qlist(self.room:getOtherPlayers(player)) do

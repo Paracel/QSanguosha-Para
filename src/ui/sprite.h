@@ -74,6 +74,7 @@ class SentbackEffect: public QAnimatedEffect {
 
 public:
     SentbackEffect(bool stay = false, QObject *parent = 0);
+    ~SentbackEffect();
 
 protected:
     virtual void draw(QPainter *painter);

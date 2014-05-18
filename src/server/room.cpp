@@ -14,6 +14,7 @@
 #include "jsonutils.h"
 #include "structs.h"
 #include "miniscenarios.h"
+#include "lua.hpp"
 
 #include <QStringList>
 #include <QMessageBox>
@@ -51,6 +52,10 @@ Room::Room(QObject *parent, const QString &mode)
     L = CreateLuaState();
     if (!DoLuaScript(L, "lua/sanguosha.lua") || !DoLuaScript(L, "lua/ai/smart-ai.lua"))
         L = NULL;
+}
+
+Room::~Room() {
+    lua_close(L);
 }
 
 void Room::initCallbacks() {
@@ -5347,7 +5352,6 @@ void Room::sortByActionOrder(QList<ServerPlayer *> &players) {
         qSort(players.begin(), players.end(), ServerPlayer::CompareByActionOrder);
 }
 
-#include "lua.hpp"
 int Room::getBossModeExpMult(int level) const{
     lua_getglobal(L, "bossModeExpMult");
     lua_pushinteger(L, level);

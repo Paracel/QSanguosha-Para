@@ -246,7 +246,7 @@ zhongyi_skill.getTurnUseCard = function(self)
 		friends = self.friends
 	end
 	self:sort(self.enemies)
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	for _, friend in ipairs(friends) do
 		local local_value = 0
 		for _, enemy in ipairs(self.enemies) do

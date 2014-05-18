@@ -289,7 +289,7 @@ end
 
 sgs.ai_skill_choice.nosxuanfeng = function(self, choices)
 	self:sort(self.enemies, "defense")
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	for _, enemy in ipairs(self.enemies) do
 		if self.player:distanceTo(enemy) <= 1 then
 			return "damage"
@@ -562,7 +562,7 @@ end
 sgs.ai_playerchosen_intention.nosmieji = -50
 
 sgs.ai_skill_use["@@nosmieji"] = function(self, prompt) -- extra target for Collateral
-	local collateral = sgs.Sanguosha:cloneCard("collateral", sgs.Card_NoSuitBlack)
+	local collateral = sgs.cloneCard("collateral", sgs.Card_NoSuitBlack)
 	local dummy_use = { isDummy = true, to = sgs.SPlayerList(), current_targets = {} }
 	dummy_use.current_targets = self.player:property("extra_collateral_current_targets"):toString():split("+")
 	self:useCardCollateral(collateral, dummy_use)
@@ -1129,7 +1129,7 @@ sgs.ai_skill_invoke.nosluoyi = function(self, data)
 	self:sort(self.enemies, "hp")
 	for _, card in ipairs(cards) do
 		if isCard("Slash", card, self.player) then
-			local slash = card:isKindOf("Slash") and card or sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
+			local slash = card:isKindOf("Slash") and card or sgs.cloneCard("slash", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
 				if self.player:canSlash(enemy, slash, true) and self:slashIsEffective(slash, enemy) and self:objectiveLevel(enemy) > 3 and sgs.isGoodTarget(enemy, self.enemies, self) then
 					if getCardsNum("Jink", enemy, self.player) < 1 or (self.player:hasWeapon("axe") and self.player:getCards("he"):length() > 4) then
@@ -1139,7 +1139,7 @@ sgs.ai_skill_invoke.nosluoyi = function(self, data)
 			end
 		end
 		if card:isKindOf("Duel") then
-			local duel = sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber())
+			local duel = sgs.cloneCard("duel", card:getSuit(), card:getNumber())
 			for _, enemy in ipairs(self.enemies) do
 				if self:getCardsNum("Slash") >= getCardsNum("Slash", enemy, self.player) and self:hasTrickEffective(duel, enemy)
 					and self:objectiveLevel(enemy) > 3 and not self:cantbeHurt(enemy, self.player, 2) and self:damageIsEffective(enemy) then
@@ -1293,7 +1293,7 @@ sgs.ai_skill_use_func.NosRendeCard = function(card, use, self)
 					local t1 = dummy_use.to:first()
 					if dummy_use.to:length() > 1 then continue
 					elseif t1:getHp() == 1 or sgs.card_lack[t1:objectName()]["Jink"] == 1
-							or t1:isCardLimited(sgs.Sanguosha:cloneCard("jink"), sgs.Card_MethodResponse) then continue
+							or t1:isCardLimited(sgs.cloneCard("jink"), sgs.Card_MethodResponse) then continue
 					end
 				elseif (card:isKindOf("Snatch") or card:isKindOf("Dismantlement")) and self:getEnemyNumBySeat(self.player, friend) > 0 then
 					local hasDelayedTrick
@@ -1407,7 +1407,7 @@ noskurou_skill.getTurnUseCard = function(self, inclusive)
 		return false
 	end
 
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	if self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0 then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
@@ -1698,7 +1698,7 @@ sgs.ai_skill_choice.nosguhuo = function(self, choices)
 	local nosguhuoname = self.room:getTag("NosGuhuoType"):toString()
 	if nosguhuoname == "peach+analeptic" then nosguhuoname = "peach" end
 	if nosguhuoname == "normal_slash" then nosguhuoname = "slash" end
-	local nosguhuocard = sgs.Sanguosha:cloneCard(nosguhuoname)
+	local nosguhuocard = sgs.cloneCard(nosguhuoname)
 	local nosguhuotype = nosguhuocard:getClassName()
 	if nosguhuotype and self:getRestCardsNum(nosguhuotype, yuji) == 0 and self.player:getHp() > 0 then return "question" end
 	if nosguhuotype and nosguhuotype == "AmazingGrace" then return "noquestion" end
@@ -1745,7 +1745,7 @@ sgs.ai_choicemade_filter.skillChoice.nosguhuo = function(self, player, promptlis
 			return
 		end
 		if nosguhuoname == "normal_slash" then nosguhuoname = "slash" end
-		local nosguhuocard = sgs.Sanguosha:cloneCard(nosguhuoname)
+		local nosguhuocard = sgs.cloneCard(nosguhuoname)
 		if nosguhuocard then
 			local nosguhuotype = nosguhuocard:getClassName()
 			if nosguhuotype and self:getRestCardsNum(nosguhuotype, yuji) > 0 then
@@ -1826,7 +1826,7 @@ nosguhuo_skill.getTurnUseCard = function(self)
 		local nosguhuos = nosguhuo:split("|")
 		for i = 1, #nosguhuos do
 			local forbidden = nosguhuos[i]
-			local forbid = sgs.Sanguosha:cloneCard(forbidden)
+			local forbid = sgs.cloneCard(forbidden)
 			if self.player:isLocked(forbid) then
 				table.remove(nosguhuos, i)
 				i = i - 1
@@ -1840,7 +1840,7 @@ nosguhuo_skill.getTurnUseCard = function(self)
 		for i = 1, 10 do
 			local card = fakeCards[math.random(1, #fakeCards)]
 			local newnosguhuo = objectName or nosguhuos[math.random(1, #nosguhuos)]
-			local nosguhuocard = sgs.Sanguosha:cloneCard(newnosguhuo, card:getSuit(), card:getNumber())
+			local nosguhuocard = sgs.cloneCard(newnosguhuo, card:getSuit(), card:getNumber())
 			if self:getRestCardsNum(nosguhuocard:getClassName()) > 0 then
 				local dummyuse = { isDummy = true }
 				if newnosguhuo == "peach" then self:useBasicCard(nosguhuocard, dummyuse) else self:useTrickCard(nosguhuocard, dummyuse) end
@@ -1895,7 +1895,7 @@ nosguhuo_skill.getTurnUseCard = function(self)
 			local card_objectname
 			local objectNames = { "ex_nihilo", "snatch", "dismantlement", "amazing_grace", "archery_attack", "savage_assault", "god_salvation", "duel" }
 			for _, objectName in ipairs(objectNames) do
-				local acard = sgs.Sanguosha:cloneCard(objectName)
+				local acard = sgs.cloneCard(objectName)
 				if self:getRestCardsNum(acard:getClassName()) == 0 then
 					card_objectname = objectName
 					break
@@ -1911,7 +1911,7 @@ nosguhuo_skill.getTurnUseCard = function(self)
 		local peach_str = self:getGuhuoCard("Peach", true, -1)
 		if peach_str then
 			local card = sgs.Card_Parse(peach_str)
-			local peach = sgs.Sanguosha:cloneCard("peach", card:getSuit(), card:getNumber())
+			local peach = sgs.cloneCard("peach", card:getSuit(), card:getNumber())
 			local dummy_use = { isDummy = true }
 			self:useBasicCard(peach, dummy_use)
 			if dummy_use.card then return card end
@@ -1920,7 +1920,7 @@ nosguhuo_skill.getTurnUseCard = function(self)
 	local slash_str = self:getGuhuoCard("Slash", true, -1)
 	if slash_str and self:slashIsAvailable() then
 		local card = sgs.Card_Parse(slash_str)
-		local slash = sgs.Sanguosha:cloneCard("slash", card:getSuit(), card:getNumber())
+		local slash = sgs.cloneCard("slash", card:getSuit(), card:getNumber())
 		local dummy_use = { isDummy = true }
 		self:useBasicCard(slash, dummy_use)
 		if dummy_use.card then return card end
@@ -1930,7 +1930,7 @@ end
 sgs.ai_skill_use_func.NosGuhuoCard = function(card, use, self)
 	local userstring = card:toString()
 	userstring = (userstring:split(":"))[3]
-	local nosguhuocard = sgs.Sanguosha:cloneCard(userstring, card:getSuit(), card:getNumber())
+	local nosguhuocard = sgs.cloneCard(userstring, card:getSuit(), card:getNumber())
 	nosguhuocard:setSkillName("nosguhuo")
 	if nosguhuocard:getTypeId() == sgs.Card_TypeBasic then
 		self:useBasicCard(nosguhuocard, use)

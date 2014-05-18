@@ -63,7 +63,7 @@ sgs.ai_skill_invoke.jilei = function(self, data)
 end
 
 sgs.ai_skill_choice.jilei = function(self, choices)
-	local tmptrick = sgs.Sanguosha:cloneCard("ex_nihilo")
+	local tmptrick = sgs.cloneCard("ex_nihilo")
 	if (self:hasCrossbowEffect(self.jilei_source) and self.jilei_source:inMyAttackRange(self.player))
 		or self.jilei_source:isCardLimited(tmptrick, sgs.Card_MethodUse, true) then
 		return "BasicCard"
@@ -621,7 +621,7 @@ sgs.ai_skill_cardask["@yanyu-discard"] = function(self, data)
 		if getCardsNum("ArcheryAttack", current, self.player) >= 1 and not current:hasSkills("wuyan|noswuyan") then aoe_type = "archery_attack" end
 		if getCardsNum("SavageAssault", current, self.player) >= 1 and not current:hasSkills("wuyan|noswuyan") then aoe_type = "savage_assault" end
 		if aoe_type then
-			local aoe = sgs.Sanguosha:cloneCard(aoe_type)
+			local aoe = sgs.cloneCard(aoe_type)
 			if self:getAoeValue(aoe, current) > 0 then throw_trick = true end
 		end
 		if getCardsNum("ExNihilo", current, self.player) > 0 then throw_trick = true end
@@ -1067,7 +1067,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 		end
 	end
 	if has_indulgence then
-		local indulgence = sgs.Sanguosha:cloneCard("indulgence")
+		local indulgence = sgs.cloneCard("indulgence")
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:getPile("incantation"):length() > 0 then continue end
 			if self:hasTrickEffective(indulgence, enemy, friend) and self:playerGetRound(friend) < self:playerGetRound(enemy) and not self:willSkipPlayPhase(enemy) then
@@ -1082,7 +1082,7 @@ sgs.ai_skill_use_func.ZhoufuCard = function(card, use, self)
 			end
 		end
 	elseif has_supplyshortage then
-		local supplyshortage = sgs.Sanguosha:cloneCard("supply_shortage")
+		local supplyshortage = sgs.cloneCard("supply_shortage")
 		local distance = self:getDistanceLimit(supplyshortage, friend)
 		for _, enemy in ipairs(self.enemies) do
 			if enemy:getPile("incantation"):length() > 0 then continue end

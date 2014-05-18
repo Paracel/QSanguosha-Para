@@ -500,7 +500,7 @@ end
 function sgs.ai_cardneed.luoyi(to, card, self)
 	local slash_num = 0
 	local target
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 
 	local cards = to:getHandcards()
 	local need_slash = true
@@ -638,7 +638,7 @@ function SmartAI:willSkipPlayPhase(player, no_null)
 			if isCard("Snatch", hcard, self.player) then objectName = "snatch"
 			elseif isCard("Dismantlement", hcard, self.player) then objectName = "dismantlement" end
 			if objectName then
-				local trick = sgs.Sanguosha:cloneCard(objectName, hcard:getSuit(), hcard:getNumber())
+				local trick = sgs.cloneCard(objectName, hcard:getSuit(), hcard:getNumber())
 				local targets = self:exclude({ player }, trick)
 				if #targets > 0 then friend_snatch_dismantlement = friend_snatch_dismantlement + 1 end
 			end
@@ -665,7 +665,7 @@ function SmartAI:willSkipDrawPhase(player, no_null)
 			if isCard("Snatch", hcard, self.player) then objectName = "snatch"
 			elseif isCard("Dismantlement", hcard, self.player) then objectName = "dismantlement" end
 			if objectName then
-				local trick = sgs.Sanguosha:cloneCard(objectName, hcard:getSuit(), hcard:getNumber())
+				local trick = sgs.cloneCard(objectName, hcard:getSuit(), hcard:getNumber())
 				local targets = self:exclude({ player }, trick)
 				if #targets > 0 then friend_snatch_dismantlement = friend_snatch_dismantlement + 1 end
 			end
@@ -797,7 +797,7 @@ sgs.ai_skill_use_func.RendeCard = function(card, use, self)
 					local t1 = dummy_use.to:first()
 					if dummy_use.to:length() > 1 then continue
 					elseif t1:getHp() == 1 or sgs.card_lack[t1:objectName()]["Jink"] == 1
-							or t1:isCardLimited(sgs.Sanguosha:cloneCard("jink"), sgs.Card_MethodResponse) then continue
+							or t1:isCardLimited(sgs.cloneCard("jink"), sgs.Card_MethodResponse) then continue
 					end
 				elseif (card:isKindOf("Snatch") or card:isKindOf("Dismantlement")) and self:getEnemyNumBySeat(self.player, friend) > 0 then
 					local hasDelayedTrick
@@ -884,7 +884,7 @@ sgs.ai_skill_use["@@rende"] = function(self, prompt)
 					local t1 = dummy_use.to:first()
 					if dummy_use.to:length() > 1 then continue
 					elseif t1:getHp() == 1 or sgs.card_lack[t1:objectName()]["Jink"] == 1
-							or t1:isCardLimited(sgs.Sanguosha:cloneCard("jink"), sgs.Card_MethodResponse) then continue
+							or t1:isCardLimited(sgs.cloneCard("jink"), sgs.Card_MethodResponse) then continue
 					end
 				elseif (card:isKindOf("Snatch") or card:isKindOf("Dismantlement")) and self:getEnemyNumBySeat(self.player, friend) > 0 then
 					local hasDelayedTrick
@@ -994,7 +994,7 @@ sgs.ai_skill_use_func.JijiangCard = function(card, use, self)
 			end
 		end
 	end
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	self:useCardSlash(slash, dummy_use)
 	if dummy_use.card and dummy_use.to:length() > 0 then
 		use.card = card
@@ -1118,7 +1118,7 @@ wusheng_skill.getTurnUseCard = function(self, inclusive)
 	for _, card in ipairs(cards) do
 		if card:isRed() and not card:isKindOf("Slash")
 			and not isCard("Peach", card, self.player) and not isCard("ExNihilo", card, self.player)
-			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.Sanguosha:cloneCard("slash")) > 0) then
+			and (self:getUseValue(card) < sgs.ai_use_value.Slash or inclusive or sgs.Sanguosha:correctCardTarget(sgs.TargetModSkill_Residue, self.player, sgs.cloneCard("slash")) > 0) then
 			red_card = card
 			break
 		end
@@ -1957,7 +1957,7 @@ kurou_skill.getTurnUseCard = function(self, inclusive)
 		return false
 	end
 
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	if (self.player:hasWeapon("crossbow") or self:getCardsNum("Crossbow") > 0) or self:getCardsNum("Slash") > 1 then
 		for _, enemy in ipairs(self.enemies) do
 			if self.player:canSlash(enemy) and self:slashIsEffective(slash, enemy)
@@ -2293,7 +2293,7 @@ sgs.ai_skill_use_func.GuoseCard = function(card, use, self)
 		end
 	end
 
-	local indulgence = sgs.Sanguosha:cloneCard("indulgence")
+	local indulgence = sgs.cloneCard("indulgence")
 	indulgence:addSubcard(id)
 	if not self.player:isLocked(indulgence) then
 		sgs.ai_use_priority.GuoseCard = sgs.ai_use_priority.Indulgence
@@ -2781,7 +2781,7 @@ function SmartAI:hasLiyuEffect(target, slash)
 	end
 	if not unsafe then return false end
 
-	local duel = sgs.Sanguosha:cloneCard("Duel")
+	local duel = sgs.cloneCard("Duel")
 	if self.player:isLocked(duel) then return false end
 
 	local enemy_null = 0
@@ -2826,7 +2826,7 @@ sgs.ai_skill_playerchosen.liyu = function(self, targets)
 	local damage = self.room:getTag("CurrentDamageStruct"):toDamage()
 	local lvbu = damage.from
 	if not lvbu then return nil end
-	local duel = sgs.Sanguosha:cloneCard("duel")
+	local duel = sgs.cloneCard("duel")
 	if lvbu:isLocked(duel) then
 		if self:isFriend(lvbu) and self:needToThrowArmor() and #enemies > 0 then
 			return enemies[1]
@@ -2928,7 +2928,7 @@ end
 
 function SmartAI:findLijianTarget(card_name, use)
 	local lord = self.room:getLord()
-	local duel = sgs.Sanguosha:cloneCard("duel")
+	local duel = sgs.cloneCard("duel")
 
 	local findFriend_maxSlash = function(self, first)
 		local maxSlash = 0

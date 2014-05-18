@@ -111,7 +111,7 @@ function sgs.getDefenseSlash(player, self)
 	if sgs.card_lack[player:objectName()]["Jink"] == 1 and knownJink == 0 then defense = 0 end
 	defense = defense + knownJink * 1.2
 	
-	local jink = sgs.Sanguosha:cloneCard("jink")
+	local jink = sgs.cloneCard("jink")
 	if player:isCardLimited(jink, sgs.Card_MethodUse) then defense = 0 end
 
 	if (player:hasArmorEffect("eight_diagram") or player:hasArmorEffect("bazhen")) and not attacker:hasWeapon("qinggang_sword") then
@@ -274,7 +274,7 @@ sgs.ai_compare_funcs["defenseSlash"] = function(a, b)
 end
 
 function SmartAI:slashProhibit(card, enemy, from)
-	card = card or sgs.Sanguosha:cloneCard("slash")
+	card = card or sgs.cloneCard("slash")
 	from = from or self.player
 	if self.room:isProhibited(from, enemy, card) then return true end
 	local nature = sgs.DamageStruct_Normal
@@ -341,7 +341,7 @@ function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
 	local cloned
 	if not slash:isKindOf("Slash") then
 		cloned = true
-		slash = sgs.Sanguosha:cloneCard("slash")
+		slash = sgs.cloneCard("slash")
 	end
 	if to:getPile("dream"):length() > 0 and to:isLocked(slash) then return false end
 	if to:hasSkill("yizhong") and not to:getArmor() then
@@ -408,7 +408,7 @@ end
 function SmartAI:slashIsAvailable(player, slash)
 	player = player or self.player
 	slash = slash or self:getCard("Slash", player)
-	if not slash or not slash:isKindOf("Slash") then slash = sgs.Sanguosha:cloneCard("slash") end
+	if not slash or not slash:isKindOf("Slash") then slash = sgs.cloneCard("slash") end
 	assert(slash)
 	return slash:isAvailable(player)
 end
@@ -533,7 +533,7 @@ function SmartAI:useCardSlash(card, use)
 		local use_wuqian = false
 		if self.player:hasSkill("wuqian") and self.player:getMark("@wrath") >= 2
 			and (not self.player:hasSkill("wushuang") or target:getMark("Armor_Nullified") == 0)
-			and not target:isLocked(sgs.Sanguosha:cloneCard("jink")) and not target:isLocked(sgs.Sanguosha:cloneCard("jink"), true)
+			and not target:isLocked(sgs.cloneCard("jink")) and not target:isLocked(sgs.cloneCard("jink"), true)
 			and (self:hasHeavySlashDamage(self.player, card, target)
 				or (getCardsNum("Jink", target, self.player) < 2 and getCardsNum("Jink", target, self.player) >= 1 and target:getHp() <= 2)) then
 			use_wuqian = true
@@ -739,7 +739,7 @@ sgs.ai_skill_use.slash = function(self, prompt)
 end
 
 sgs.ai_skill_playerchosen.slash_extra_targets = function(self, targets)
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	targets = sgs.QList2Table(targets)
 	self:sort(targets, "defenseSlash")
 	for _, target in ipairs(targets) do
@@ -751,7 +751,7 @@ sgs.ai_skill_playerchosen.slash_extra_targets = function(self, targets)
 end
 
 sgs.ai_skill_playerchosen.zero_card_as_slash = function(self, targets)
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	local targetlist = sgs.QList2Table(targets)
 	local arrBestHp, canAvoidSlash, forbidden = {}, {}, {}
 	self:sort(targetlist, "defenseSlash")
@@ -829,7 +829,7 @@ sgs.ai_skill_cardask["slash-jink"] = function(self, data, pattern, target)
 		local effect = data:toSlashEffect()
 		slash = effect.slash
 	else
-		slash = sgs.Sanguosha:cloneCard("slash")
+		slash = sgs.cloneCard("slash")
 	end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	if (not target or self:isFriend(target)) and slash:hasFlag("nosjiefan-slash") then return "." end
@@ -1311,8 +1311,8 @@ function turnUse_spear(self, inclusive, skill_name)
 	local card_id2 = newcards[2]:getEffectiveId()
 
 	if newcards[1]:isBlack() and newcards[2]:isBlack() then
-		local black_slash = sgs.Sanguosha:cloneCard("slash", sgs.Card_NoSuitBlack)
-		local nosuit_slash = sgs.Sanguosha:cloneCard("slash")
+		local black_slash = sgs.cloneCard("slash", sgs.Card_NoSuitBlack)
+		local nosuit_slash = sgs.cloneCard("slash")
 
 		self:sort(self.enemies, "defenseSlash")
 		for _, enemy in ipairs(self.enemies) do
@@ -1488,7 +1488,7 @@ sgs.ai_skill_cardask.aoe = function(self, data, pattern, target, name)
 	if sgs.ai_skill_cardask.nullfilter(self, data, pattern, target) then return "." end
 
 	local aoe
-	if type(data) == "userdata" then aoe = data:toCardEffect().card else aoe = sgs.Sanguosha:cloneCard(name) end
+	if type(data) == "userdata" then aoe = data:toCardEffect().card else aoe = sgs.cloneCard(name) end
 	assert(aoe ~= nil)
 	local menghuo = self.room:findPlayerBySkillName("huoshou")
 	local attacker = target
@@ -1903,9 +1903,9 @@ function SmartAI:getValuableCard(who)
 
 	if defhorse and not self:doNotDiscard(who, "e") then
 		if self.player:getPhase() == sgs.Player_Play then
-			local slash = sgs.Sanguosha:cloneCard("slash")
+			local slash = sgs.cloneCard("slash")
 			if self.player:hasWeapon("kylin_bow") and self:slashIsAvailable(self.player, slash) and self.player:canSlash(who)
-				and self:slashIsEffective(sgs.Sanguosha:cloneCard("slash"), who, self.player)
+				and self:slashIsEffective(sgs.cloneCard("slash"), who, self.player)
 				and (getCardsNum("Jink", who, self.player) < 1 or sgs.card_lack[who:objectName()].Jink == 1) then
 			else
 				return defhorse:getEffectiveId()
@@ -3004,7 +3004,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 
 	if weapon and (self:getCardsNum("Slash") > 0 and self:slashIsAvailable() or not selfIsCurrent) then
 		local current_range = self.player:getAttackRange()
-		local nosuit_slash = sgs.Sanguosha:cloneCard("slash")
+		local nosuit_slash = sgs.cloneCard("slash")
 		local slash = selfIsCurrent and self:getCard("Slash") or nosuit_slash
 
 		self:sort(self.enemies, "defense")
@@ -3112,26 +3112,26 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	local hasTrick = false
 	for _, card in ipairs(cards) do
 		for _, enemy in ipairs(new_enemies) do
-			if not enemy:isNude() and isCard("Snatch", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and self.player:distanceTo(enemy) == 1 then
+			if not enemy:isNude() and isCard("Snatch", card, self.player) and self:hasTrickEffective(sgs.cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and self.player:distanceTo(enemy) == 1 then
 				ag_snatch = card:getEffectiveId()
 				hasTrick = true
-			elseif not enemy:isNude() and ((isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
+			elseif not enemy:isNude() and ((isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
 											or (card:isBlack() and self.player:hasSkill("yinling") and self.player:getPile("brocade"):length() < 4)) then
 				ag_dismantlement = card:getEffectiveId()
 				hasTrick = true
-			elseif isCard("Indulgence", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("indulgence", card:getSuit(), card:getNumber()), enemy)
+			elseif isCard("Indulgence", card, self.player) and self:hasTrickEffective(sgs.cloneCard("indulgence", card:getSuit(), card:getNumber()), enemy)
 				and not enemy:containsTrick("indulgence") and not self:willSkipPlayPhase(enemy) then
 				ag_indulgence = card:getEffectiveId()
 				hasTrick = true
-			elseif isCard("SupplyShortage", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("supply_shortage", card:getSuit(), card:getNumber()), enemy)
+			elseif isCard("SupplyShortage", card, self.player) and self:hasTrickEffective(sgs.cloneCard("supply_shortage", card:getSuit(), card:getNumber()), enemy)
 				and not enemy:containsTrick("supply_shortage") and not self:willSkipDrawPhase(enemy) then
 				ag_supplyshortage = card:getEffectiveId()
 				hasTrick = true
-			elseif isCard("Collateral", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("collateral", card:getSuit(), card:getNumber()), enemy) and enemy:getWeapon() then
+			elseif isCard("Collateral", card, self.player) and self:hasTrickEffective(sgs.cloneCard("collateral", card:getSuit(), card:getNumber()), enemy) and enemy:getWeapon() then
 				ag_collateral = card:getEffectiveId()
 				hasTrick = true
 			elseif isCard("Duel", card, self.player) and (self:getCardsNum("Slash") >= getCardsNum("Slash", enemy, self.player) or self.player:getHandcardNum() > 4)
-				and self:hasTrickEffective(sgs.Sanguosha:cloneCard("duel", card:getSuit(), card:getNumber()), enemy) then
+				and self:hasTrickEffective(sgs.cloneCard("duel", card:getSuit(), card:getNumber()), enemy) then
 				ag_duel = card:getEffectiveId()
 				hasTrick = true
 			elseif card:isKindOf("AOE") then
@@ -3141,7 +3141,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 					aoe = card:getEffectiveId()
 					hasTrick = true
 				end
-			elseif isCard("FireAttack", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("fire_attack", card:getSuit(), card:getNumber()), enemy)
+			elseif isCard("FireAttack", card, self.player) and self:hasTrickEffective(sgs.cloneCard("fire_attack", card:getSuit(), card:getNumber()), enemy)
 				and self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) then
 
 				local FFF
@@ -3165,7 +3165,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 						hasTrick = true
 					end
 				end
-			elseif isCard("GodSalvation", card, self.player) and self:willUseGodSalvation(sgs.Sanguosha:cloneCard("god_salvation", card:getSuit(), card:getNumber())) then
+			elseif isCard("GodSalvation", card, self.player) and self:willUseGodSalvation(sgs.cloneCard("god_salvation", card:getSuit(), card:getNumber())) then
 				ag_godsalvation = card:getEffectiveId()
 				hasTrick = true
 			elseif card:isKindOf("Lightning") and self:willUseLightning(card) then
@@ -3178,10 +3178,10 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 	for _, card in ipairs(cards) do
 		for _, friend in ipairs(self.friends_noself) do
 			if self:willSkipPlayPhase(friend, true) or self:willSkipDrawPhase(friend, true) or self:needToThrowArmor(friend) then
-				if self:hasTrickEffective(sgs.Sanguosha:cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and isCard("Snatch", card, self.player) and self.player:distanceTo(friend) == 1 then
+				if self:hasTrickEffective(sgs.cloneCard("snatch", card:getSuit(), card:getNumber()), enemy) and isCard("Snatch", card, self.player) and self.player:distanceTo(friend) == 1 then
 					ag_snatch = card:getEffectiveId()
 					hasTrick = true
-				elseif (isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.Sanguosha:cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
+				elseif (isCard("Dismantlement", card, self.player) and self:hasTrickEffective(sgs.cloneCard("dismantlement", card:getSuit(), card:getNumber()), enemy))
 						or (card:isBlack() and self.player:hasSkill("yinling") and self.player:getPile("brocade"):length() < 4) then
 					ag_dismantlement = card:getEffectiveId()
 					hasTrick = true

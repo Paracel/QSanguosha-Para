@@ -157,7 +157,7 @@ sgs.ai_playerchosen_intention.mizhao = 10
 
 sgs.ai_skill_playerchosen.mizhao = function(self, targets)
 	self:sort(self.enemies, "defense")
-	local slash = sgs.Sanguosha:cloneCard("slash")
+	local slash = sgs.cloneCard("slash")
 	local from
 	for _, player in sgs.qlist(self.room:getOtherPlayers(self.player)) do
 		if player:hasFlag("AI_MizhaoTarget") then

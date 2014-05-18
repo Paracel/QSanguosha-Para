@@ -8,7 +8,7 @@
 #include "choosegeneraldialog.h"
 #include "customassigndialog.h"
 #include "miniscenarios.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 #include <QMessageBox>
 #include <QFormLayout>

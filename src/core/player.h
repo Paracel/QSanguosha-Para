@@ -2,7 +2,7 @@
 #define _PLAYER_H
 
 #include "general.h"
-#include "WrappedCard.h"
+#include "wrapped-card.h"
 
 #include <QObject>
 #include <QTcpSocket>

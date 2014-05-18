@@ -1,7 +1,7 @@
 #ifndef _ENGINE_H
 #define _ENGINE_H
 
-#include "RoomState.h"
+#include "room-state.h"
 #include "card.h"
 #include "general.h"
 #include "skill.h"

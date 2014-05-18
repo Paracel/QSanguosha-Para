@@ -2,12 +2,12 @@
 #define _CARD_ITEM_H
 
 #include "card.h"
-#include "QSanSelectableItem.h"
+#include "qsan-selectable-item.h"
 #include "settings.h"
 #include <QAbstractAnimation>
 #include <QMutex>
 #include <QSize>
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 class FilterSkill;
 class General;

@@ -1,6 +1,6 @@
 #include "qsanbutton.h"
 #include "clientplayer.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 #include "engine.h"
 
 #include <QPixmap>

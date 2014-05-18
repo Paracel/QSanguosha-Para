@@ -1,5 +1,5 @@
 #include "pixmapanimation.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 #include <QPainter>
 #include <QPixmapCache>

@@ -4,7 +4,7 @@
 #include "client.h"
 #include "settings.h"
 #include "protocol.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 #include <QSignalMapper>
 #include <QLineEdit>

@@ -13,7 +13,7 @@
 #include "indicatoritem.h"
 #include "pixmapanimation.h"
 #include "audio.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 #include "wind.h"
 #include "record-analysis.h"
 #include "mountain.h"
@@ -45,7 +45,7 @@
 #include <QInputDialog>
 #include <QScrollBar>
 #include <qmath.h>
-#include "uiUtils.h"
+#include "ui-utils.h"
 
 using namespace QSanProtocol;
 

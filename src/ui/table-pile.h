@@ -1,11 +1,11 @@
 #ifndef _TABLE_PILE_H
 #define _TABLE_PILE_H
 
-#include "QSanSelectableItem.h"
+#include "qsan-selectable-item.h"
 #include "player.h"
 #include "carditem.h"
 #include "protocol.h"
-#include "GenericCardContainerUI.h"
+#include "generic-cardcontainer-ui.h"
 
 #include <QGraphicsObject>
 #include <QPixmap>

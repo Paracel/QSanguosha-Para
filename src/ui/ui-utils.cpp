@@ -1,4 +1,4 @@
-#include "uiUtils.h"
+#include "ui-utils.h"
 #include <qpixmap.h>
 #include <qimage.h>
 #include <qfile.h>

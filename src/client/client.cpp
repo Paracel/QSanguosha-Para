@@ -6,7 +6,7 @@
 #include "nativesocket.h"
 #include "recorder.h"
 #include "jsonutils.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 #include <QApplication>
 #include <QMessageBox>

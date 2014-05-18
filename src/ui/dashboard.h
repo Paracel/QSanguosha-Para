@@ -1,14 +1,14 @@
 #ifndef _DASHBOARD_H
 #define _DASHBOARD_H
 
-#include "QSanSelectableItem.h"
+#include "qsan-selectable-item.h"
 #include "qsanbutton.h"
 #include "carditem.h"
 #include "player.h"
 #include "skill.h"
 #include "protocol.h"
-#include "TimedProgressBar.h"
-#include "GenericCardContainerUI.h"
+#include "timed-progressbar.h"
+#include "generic-cardcontainer-ui.h"
 #include "pixmapanimation.h"
 #include "sprite.h"
 #include "util.h"

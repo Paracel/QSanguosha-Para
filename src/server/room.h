@@ -15,7 +15,7 @@ struct LogMessage;
 #include "serverplayer.h"
 #include "roomthread.h"
 #include "protocol.h"
-#include "RoomState.h"
+#include "room-state.h"
 #include <qmutex.h>
 #include <QStack>
 

@@ -1,4 +1,4 @@
-#include "GenericCardContainerUI.h"
+#include "generic-cardcontainer-ui.h"
 #include <QParallelAnimationGroup>
 #include <qpropertyanimation.h>
 #include <QGraphicsSceneMouseEvent>

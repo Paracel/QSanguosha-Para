@@ -3,7 +3,7 @@
 #include "settings.h"
 #include "engine.h"
 #include "detector.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 
 #include <QMessageBox>
 #include <QTimer>

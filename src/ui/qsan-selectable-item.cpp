@@ -1,5 +1,5 @@
-#include "QSanSelectableItem.h"
-#include "uiUtils.h"
+#include "qsan-selectable-item.h"
+#include "ui-utils.h"
 
 #include <QPainter>
 #include <QGraphicsColorizeEffect>

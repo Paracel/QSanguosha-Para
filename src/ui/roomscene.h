@@ -3,13 +3,13 @@
 
 #include "photo.h"
 #include "dashboard.h"
-#include "TablePile.h"
+#include "table-pile.h"
 #include "card.h"
 #include "client.h"
 #include "aux-skills.h"
 #include "clientlogbox.h"
 #include "chatwidget.h"
-#include "SkinBank.h"
+#include "skin-bank.h"
 #include "sprite.h"
 #include "qsanbutton.h"
 

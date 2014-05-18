@@ -11,7 +11,7 @@
 #include "jsonutils.h"
 #include "structs.h"
 #include "lua-wrapper.h"
-#include "RoomState.h"
+#include "room-state.h"
 
 #include "guandu-scenario.h"
 #include "couple-scenario.h"

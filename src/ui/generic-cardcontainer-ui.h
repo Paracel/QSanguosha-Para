@@ -3,9 +3,9 @@
 
 #include "carditem.h"
 #include "player.h"
-#include "QSanSelectableItem.h"
-#include "SkinBank.h"
-#include "TimedProgressBar.h"
+#include "qsan-selectable-item.h"
+#include "skin-bank.h"
+#include "timed-progressbar.h"
 #include "magatamasItem.h"
 #include "rolecombobox.h"
 

@@ -1,6 +1,6 @@
-#include "RoomState.h"
+#include "room-state.h"
 #include "engine.h"
-#include "WrappedCard.h"
+#include "wrapped-card.h"
 
 RoomState::~RoomState() {
     foreach (Card *card, m_cards.values())

@@ -1,5 +1,5 @@
-#include "TablePile.h"
-#include "SkinBank.h"
+#include "table-pile.h"
+#include "skin-bank.h"
 #include <QParallelAnimationGroup>
 #include "pixmapanimation.h"
 

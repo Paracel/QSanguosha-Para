@@ -463,8 +463,10 @@ function sgs.CreateViewAsSkill(spec)
 	if spec.response_pattern then assert(type(spec.response_pattern) == "string") end
 	local response_pattern = spec.response_pattern or ""
 	local response_or_use = spec.response_or_use or false
+	if spec.expand_pile then assert(type(spec.expand_pile) == "string") end
+	local expand_pile = spec.expand_pile or ""
 
-	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use)
+	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use, expand_pile)
 	local n = spec.n or 0
 
 	function skill:view_as(cards)

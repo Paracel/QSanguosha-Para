@@ -147,7 +147,7 @@ QDialog *Skill::getDialog() const{
 }
 
 ViewAsSkill::ViewAsSkill(const QString &name)
-    : Skill(name), response_pattern(QString()), response_or_use(false)
+    : Skill(name), response_pattern(QString()), response_or_use(false), expand_pile(QString())
 {
 }
 

@@ -66,10 +66,12 @@ public:
     static const ViewAsSkill *parseViewAsSkill(const Skill *skill);
 
     inline bool isResponseOrUse() const{ return response_or_use; }
+    inline QString getExpandPile() const{ return expand_pile; }
 
 protected:
     QString response_pattern;
     bool response_or_use;
+    QString expand_pile;
 };
 
 class ZeroCardViewAsSkill: public ViewAsSkill {

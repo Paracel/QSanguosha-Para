@@ -340,14 +340,12 @@ public:
 class Jixi: public OneCardViewAsSkill {
 public:
     Jixi(): OneCardViewAsSkill("jixi") {
+        filter_pattern = ".|.|.|field";
+        expand_pile = "field";
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->getPile("field").isEmpty();
-    }
-
-    virtual bool viewFilter(const Card *to_select) const{
-        return Self->getPile("field").contains(to_select->getEffectiveId());
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

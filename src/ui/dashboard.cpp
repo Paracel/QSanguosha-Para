@@ -869,8 +869,8 @@ void Dashboard::startPending(const ViewAsSkill *skill) {
         expandPileCards("wooden_ox");
     else {
         retractPileCards("wooden_ox");
-        if (skill && skill->objectName() == "jixi")
-            expandPileCards("field");
+        if (skill && !skill->getExpandPile().isEmpty())
+            expandPileCards(skill->getExpandPile());
     }
 
     for (int i = 0; i < S_EQUIP_AREA_LENGTH; i++) {
@@ -888,8 +888,8 @@ void Dashboard::stopPending() {
         if (view_as_skill->objectName().contains("guhuo")) {
             foreach (CardItem *item, m_handCards)
                 item->hideFootnote();
-        } else if (view_as_skill->objectName() == "jixi") {
-            retractPileCards("field");
+        } else if (!view_as_skill->getExpandPile().isEmpty()) {
+            retractPileCards(view_as_skill->getExpandPile());
         }
     }
     view_as_skill = NULL;

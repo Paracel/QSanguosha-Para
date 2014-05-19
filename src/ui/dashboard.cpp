@@ -676,8 +676,8 @@ int Dashboard::getMiddleWidth() {
 
 QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids) {
     QList<CardItem *> result;
-    CardItem *card_item;
-    CardItem *new_card;
+    CardItem *card_item = NULL;
+    CardItem *new_card = NULL;
 
     foreach (int card_id, card_ids) {
         card_item = CardItem::FindItem(m_handCards, card_id);
@@ -694,7 +694,7 @@ QList<CardItem *> Dashboard::cloneCardItems(QList<int> card_ids) {
 
 QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids) {
     QList<CardItem *> result;
-    CardItem *card_item;
+    CardItem *card_item = NULL;
     foreach (int card_id, card_ids) {
         card_item = CardItem::FindItem(m_handCards, card_id);
         if (card_item == selected) selected = NULL;

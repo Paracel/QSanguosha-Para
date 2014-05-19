@@ -29,11 +29,8 @@ Bin/
 /builds/vs2010/QSanguosha.suo
 /builds/vs2010/*.user
 /builds/vs2010/*.opensdf
-/QSanguosha.vcxproj
-/QSanguosha.vcxproj.filters
 /sanguosha.ts
 /QSanguosha.pro
-doc/
 /image/system/button/promptbox
 /image/system/button/back2.png
 /image/system/button/back.png

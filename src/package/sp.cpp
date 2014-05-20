@@ -1473,7 +1473,7 @@ public:
                             to->tag.remove("KangkaiSlash");
                             to->tag.remove("KangkaiGivenCard");
                             if (will_use)
-                                room->useCard(CardUseStruct(card, to, to));
+                                room->useCard(CardUseStruct(card, to, to), false);
                         }
                     }
                 }
@@ -1984,7 +1984,7 @@ void QingyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     if (targets.length() > 0) {
         Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("_qingyi");
-        room->useCard(CardUseStruct(slash, source, targets));
+        room->useCard(CardUseStruct(slash, source, targets), false);
     }
 }
 

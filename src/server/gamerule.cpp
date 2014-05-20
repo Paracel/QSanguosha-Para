@@ -79,7 +79,7 @@ void GameRule::onPhaseProceed(ServerPlayer *player) const{
                 CardUseStruct card_use;
                 room->activate(player, card_use);
                 if (card_use.card != NULL)
-                    room->useCard(card_use);
+                    room->useCard(card_use, true);
                 else
                     break;
             }
@@ -356,7 +356,7 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
 
                 if (peach == NULL)
                     break;
-                room->useCard(CardUseStruct(peach, player, dying.who), false);
+                room->useCard(CardUseStruct(peach, player, dying.who));
             }
             break;
         }

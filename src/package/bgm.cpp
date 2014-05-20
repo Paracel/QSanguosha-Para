@@ -1335,7 +1335,7 @@ public:
 
             Slash *slash = new Slash(Card::NoSuit, 0);
             slash->setSkillName(objectName());
-            room->useCard(CardUseStruct(slash, xiahou, victim), false);
+            room->useCard(CardUseStruct(slash, xiahou, victim));
         } else {
             room->broadcastSkillInvoke(objectName(), 1);
             room->setPlayerFlag(player, "xuehen_InTempMoving");

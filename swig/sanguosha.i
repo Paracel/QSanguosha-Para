@@ -1058,7 +1058,7 @@ public:
     void setCardFlag(int card_id, const char *flag, ServerPlayer *who = NULL);
     void clearCardFlag(const Card *card, ServerPlayer *who = NULL);
     void clearCardFlag(int card_id, ServerPlayer *who = NULL);
-    void useCard(const CardUseStruct &card_use, bool add_history = true);
+    void useCard(const CardUseStruct &card_use, bool add_history = false);
     void damage(const DamageStruct &data);
     void loseHp(ServerPlayer *victim, int lose = 1);
     void loseMaxHp(ServerPlayer *victim, int lose = 1);

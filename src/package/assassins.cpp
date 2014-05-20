@@ -160,7 +160,7 @@ public:
         return target != NULL;
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
         PindianStar pindian = data.value<PindianStar>();
         if (pindian->reason != objectName() || pindian->from_number == pindian->to_number)
             return false;
@@ -170,7 +170,7 @@ public:
         if (winner->canSlash(loser, NULL, false)) {
             Slash *slash = new Slash(Card::NoSuit, 0);
             slash->setSkillName("_mizhao");
-            room->useCard(CardUseStruct(slash, winner, loser), false);
+            room->useCard(CardUseStruct(slash, winner, loser));
         }
 
         return false;

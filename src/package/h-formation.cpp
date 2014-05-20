@@ -619,7 +619,7 @@ public:
             if (room->askForCard(hetaihou, ".", "@zhendu-discard", QVariant(), objectName())) {
                 Analeptic *analeptic = new Analeptic(Card::NoSuit, 0);
                 analeptic->setSkillName("_zhendu");
-                room->useCard(CardUseStruct(analeptic, player, QList<ServerPlayer *>(), true));
+                room->useCard(CardUseStruct(analeptic, player, QList<ServerPlayer *>()), true);
                 if (player->isAlive())
                     room->damage(DamageStruct(objectName(), hetaihou, player));
             }

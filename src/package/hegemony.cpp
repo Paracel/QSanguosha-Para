@@ -363,7 +363,7 @@ void ShuangrenCard::onEffect(const CardEffectStruct &effect) const{
 
         Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("_shuangren");
-        room->useCard(CardUseStruct(slash, effect.from, target), false);
+        room->useCard(CardUseStruct(slash, effect.from, target));
     } else {
         room->broadcastSkillInvoke("shuangren", 3);
         room->setPlayerFlag(effect.from, "ShuangrenSkipPlay");

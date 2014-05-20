@@ -268,7 +268,7 @@ public:
                     room->broadcastSkillInvoke(objectName(), 1);
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName(objectName());
-                    room->useCard(CardUseStruct(slash, lingtong, target), false);
+                    room->useCard(CardUseStruct(slash, lingtong, target));
                 } else if (choice == "damage") {
                     room->broadcastSkillInvoke(objectName(), 2);
 
@@ -497,7 +497,7 @@ public:
                          || target->getGeneralName().contains("sunjian"))
                         && target->isLord())
                         handang->setFlags("NosJiefanToLord");
-                    room->useCard(CardUseStruct(peach, handang, target));
+                    room->useCard(CardUseStruct(peach, handang, target), false);
                     handang->setFlags("-NosJiefanToLord");
                 }
                 return true;

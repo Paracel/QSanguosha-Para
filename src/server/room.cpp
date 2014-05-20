@@ -2952,7 +2952,7 @@ bool Room::useCard(const CardUseStruct &use, bool add_history) {
         } else if (card) {
             CardUseStruct new_use = card_use;
             new_use.card = card;
-            useCard(new_use);
+            useCard(new_use, add_history);
             if (card->isVirtualCard() && !card->isKindOf("Nullification")) // delete Nullification in askForNullification
                 delete card;
         }

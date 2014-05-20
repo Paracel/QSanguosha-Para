@@ -636,7 +636,7 @@ void MingceCard::onEffect(const CardEffectStruct &effect) const{
         if (effect.to->canSlash(target, NULL, false)) {
             Slash *slash = new Slash(Card::NoSuit, 0);
             slash->setSkillName("_mingce");
-            room->useCard(CardUseStruct(slash, effect.to, target), false);
+            room->useCard(CardUseStruct(slash, effect.to, target));
         }
     } else if (choice == "draw") {
         effect.to->drawCards(1, "mingce");

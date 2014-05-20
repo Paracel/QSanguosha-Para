@@ -330,7 +330,7 @@ public:
                     room->setTag("YonglveUser", QVariant::fromValue((PlayerStar)hs));
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName("_yonglve");
-                    room->useCard(CardUseStruct(slash, hs, target), false);
+                    room->useCard(CardUseStruct(slash, hs, target));
                 }
             }
         }

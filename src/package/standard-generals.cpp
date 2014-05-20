@@ -2336,7 +2336,7 @@ public:
             return false;
         }
         if (room->askForSkillInvoke(player, objectName()))
-            room->useCard(CardUseStruct(slash, player, opponent), false);
+            room->useCard(CardUseStruct(slash, player, opponent));
         return false;
     }
 };

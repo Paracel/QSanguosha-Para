@@ -195,7 +195,7 @@ public:
             return false;
         }
         if (room->askForSkillInvoke(player, objectName()))
-            room->useCard(CardUseStruct(drowning, player, opponent), false);
+            room->useCard(CardUseStruct(drowning, player, opponent));
         return false;
     }
 };

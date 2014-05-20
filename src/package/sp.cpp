@@ -461,8 +461,8 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$DanjiAnimate", 5000);
 
-            room->addPlayerMark(guanyu, "danji");
-            if (room->changeMaxHpForAwakenSkill(guanyu))
+            room->setPlayerMark(guanyu, "danji", 1);
+            if (room->changeMaxHpForAwakenSkill(guanyu) && guanyu->getMark("danji") == 1)
                 room->acquireSkill(guanyu, "mashu");
         }
 
@@ -716,11 +716,11 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$WujiAnimate", 4000);
 
-        room->addPlayerMark(player, "wuji");
-
+        room->setPlayerMark(player, "wuji", 1);
         if (room->changeMaxHpForAwakenSkill(player, 1)) {
             room->recover(player, RecoverStruct(player));
-            room->detachSkillFromPlayer(player, "huxiao");
+            if (player->getMark("wuji") == 1)
+                room->detachSkillFromPlayer(player, "huxiao");
         }
 
         return false;
@@ -1473,7 +1473,7 @@ public:
                             to->tag.remove("KangkaiSlash");
                             to->tag.remove("KangkaiGivenCard");
                             if (will_use)
-                                room->useCard(CardUseStruct(card, to, to), false);
+                                room->useCard(CardUseStruct(card, to, to));
                         }
                     }
                 }
@@ -1804,6 +1804,107 @@ public:
     }
 };
 
+class Gongao: public TriggerSkill {
+public:
+    Gongao(): TriggerSkill("gongao") {
+        events << Death;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.arg = objectName();
+        log.from = player;
+        room->sendLog(log);
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
+
+        LogMessage log2;
+        log2.type = "#GainMaxHp";
+        log2.from = player;
+        log2.arg = "1";
+        room->sendLog(log2);
+
+        room->setPlayerProperty(player, "maxhp", player->getMaxHp() + 1);
+
+        if (player->isWounded()) {
+            room->recover(player, RecoverStruct(player));
+        } else {
+            LogMessage log3;
+            log3.type = "#GetHp";
+            log3.from = player;
+            log3.arg = QString::number(player->getHp());
+            log3.arg2 = QString::number(player->getMaxHp());
+            room->sendLog(log3);
+        }
+        return false;
+    }
+};
+
+class Juyi: public PhaseChangeSkill {
+public:
+    Juyi(): PhaseChangeSkill("juyi") {
+        frequency = Wake;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL && PhaseChangeSkill::triggerable(target)
+               && target->getPhase() == Player::Start
+               && target->getMark("juyi") == 0
+               && target->isWounded()
+               && target->getMaxHp() > target->aliveCount();
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *zhugedan) const{
+        Room *room = zhugedan->getRoom();
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(zhugedan, objectName());
+        //room->doLightbox("$JuyiAnimate");
+
+        LogMessage log;
+        log.type = "#JuyiWake";
+        log.from = zhugedan;
+        log.arg = QString::number(zhugedan->getMaxHp());
+        log.arg2 = QString::number(zhugedan->aliveCount());
+        room->sendLog(log);
+
+        room->setPlayerMark(zhugedan, "juyi", 1);
+        room->addPlayerMark(zhugedan, "@waked");
+        int diff = zhugedan->getHandcardNum() - zhugedan->getMaxHp();
+        if (diff < 0)
+            room->drawCards(zhugedan, -diff, objectName());
+        if (zhugedan->getMark("juyi") == 1)
+            room->handleAcquireDetachSkills(zhugedan, "benghuai|weizhong");
+
+        return false;
+    }
+};
+
+class Weizhong: public TriggerSkill {
+public:
+    Weizhong(): TriggerSkill("weizhong") {
+        events << MaxHpChanged;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.arg = objectName();
+        log.from = player;
+        room->sendLog(log);
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
+
+        player->drawCards(1, objectName());
+        return false;
+    }
+};
+
 AocaiCard::AocaiCard() {
 }
 
@@ -1984,7 +2085,7 @@ void QingyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &ta
     if (targets.length() > 0) {
         Slash *slash = new Slash(Card::NoSuit, 0);
         slash->setSkillName("_qingyi");
-        room->useCard(CardUseStruct(slash, source, targets), false);
+        room->useCard(CardUseStruct(slash, source, targets));
     }
 }
 
@@ -2196,6 +2297,11 @@ SPPackage::SPPackage()
     sp_dingfeng->addSkill("duanbing");
     sp_dingfeng->addSkill("fenxun");
 
+    General *zhugedan = new General(this, "zhugedan", "wei", 4); // SP 032
+    zhugedan->addSkill(new Gongao);
+    zhugedan->addSkill(new Juyi);
+    zhugedan->addRelateSkill("weizhong");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();
@@ -2203,6 +2309,8 @@ SPPackage::SPPackage()
     addMetaObject<ZhoufuCard>();
     addMetaObject<QiangwuCard>();
     addMetaObject<YinbingCard>();
+
+    skills << new Weizhong;
 }
 
 ADD_PACKAGE(SP)

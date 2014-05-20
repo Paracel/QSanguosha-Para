@@ -58,7 +58,6 @@ return {
 	["ruoyu"] = "若愚",
 	[":ruoyu"] = "主公技。觉醒技。准备阶段开始时，若你的体力值为场上最少（或之一），你增加1点体力上限，回复1点体力，然后获得“激将”。",
 	["$RuoyuAnimate"] = "image=image/animate/ruoyu.png",
-	["#XiangleAvoid"] = "%to 的“%arg”效果被触发，%from 对其使用的【<font color=\"yellow\"><b>杀</b></font>】无效",
 	["#Fangquan"] = "%to 将进行一个额外的回合",
 	["#RuoyuWake"] = "%from 的体力值 %arg 为场上最少，触发“%arg2”觉醒",
 

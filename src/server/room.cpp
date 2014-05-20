@@ -3034,13 +3034,6 @@ void Room::loseMaxHp(ServerPlayer *victim, int lose) {
     arg[1] = -lose;
     doBroadcastNotify(S_COMMAND_CHANGE_MAXHP, arg);
 
-    LogMessage log2;
-    log2.type = "#GetHp";
-    log2.from = victim;
-    log2.arg = QString::number(victim->getHp());
-    log2.arg2 = QString::number(victim->getMaxHp());
-    sendLog(log2);
-
     if (victim->getMaxHp() == 0)
         killPlayer(victim);
     else
@@ -3058,14 +3051,14 @@ bool Room::changeMaxHpForAwakenSkill(ServerPlayer *player, int magnitude) {
         } else {
             loseMaxHp(player, -magnitude);
         }
-    } else {
-        setPlayerProperty(player, "maxhp", player->getMaxHp() + magnitude);
-
+    } else if (magnitude > 0) {
         LogMessage log;
         log.type = "#GainMaxHp";
         log.from = player;
         log.arg = QString::number(magnitude);
         sendLog(log);
+
+        setPlayerProperty(player, "maxhp", player->getMaxHp() + magnitude);
 
         LogMessage log2;
         log2.type = "#GetHp";

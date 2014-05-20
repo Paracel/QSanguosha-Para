@@ -2675,7 +2675,7 @@ sgs.ai_use_priority.ChuliCard = 4.6
 
 sgs.ai_card_intention.ChuliCard = function(self, card, from, tos)
 	for _, to in ipairs(tos) do
-		if self.chuli_id_choice[to:objectName()] then
+		if self.chuli_id_choice and self.chuli_id_choice[to:objectName()] then
 			local em_prompt = { "cardChosen", "chuli", tostring(self.chuli_id_choice[to:objectName()]), from:objectName(), to:objectName() }
 			sgs.ai_choicemade_filter.cardChosen.snatch(self, nil, em_prompt)
 		end

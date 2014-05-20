@@ -2792,8 +2792,9 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
     else
         dashboard->update();
 
-    QString hp =  QString::number(ClientInstance->getPlayer(who)->getHp() + delta);
-    QString maxhp = QString::number(ClientInstance->getPlayer(who)->getMaxHp());
+    ClientPlayer *player = ClientInstance->getPlayer(who);
+    QString hp =  QString::number(player->getHp() + delta);
+    QString maxhp = QString::number(player->getMaxHp());
     if (delta < 0) {
         if (losthp) {
             Sanguosha->playSystemAudioEffect("hplost");
@@ -2825,7 +2826,7 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
             doAnimation(S_ANIMATE_LIGHTNING, QStringList() << who);
     } else {
         QString type = "#Recover";
-        QString from_general = ClientInstance->getPlayer(who)->objectName();
+        QString from_general = player->objectName();
         QString n = QString::number(delta);
 
         log_box->appendLog(type, from_general, QStringList(), QString(), n);
@@ -2836,6 +2837,13 @@ void RoomScene::changeHp(const QString &who, int delta, DamageStruct::Nature nat
 void RoomScene::changeMaxHp(const QString &who, int delta) {
     if (delta < 0)
         Sanguosha->playSystemAudioEffect("maxhplost");
+
+    ClientPlayer *player = ClientInstance->getPlayer(who);
+    QString hp =  QString::number(player->getHp());
+    QString maxhp = QString::number(player->getMaxHp());
+
+    QString from_general = player->objectName();
+    log_box->appendLog("#GetHp", from_general, QStringList(), QString(), hp, maxhp);
 }
 
 void RoomScene::onStandoff() {

@@ -1272,7 +1272,7 @@ public:
         room->sendLog(log);
 
         room->setPlayerMark(player, "qianxin", 1);
-        if (room->changeMaxHpForAwakenSkill(player))
+        if (room->changeMaxHpForAwakenSkill(player) && player->getMark("qianxin") == 1)
             room->acquireSkill(player, "jianyan");
 
         return false;
@@ -1492,7 +1492,7 @@ public:
         room->sendLog(log);
 
         room->setPlayerMark(lvmeng, "qinxue", 1);
-        if (room->changeMaxHpForAwakenSkill(lvmeng))
+        if (room->changeMaxHpForAwakenSkill(lvmeng) && lvmeng->getMark("qinxue") == 1)
             room->acquireSkill(lvmeng, "gongxin");
 
         return false;

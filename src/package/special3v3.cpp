@@ -411,10 +411,12 @@ public:
             if (player->getMark("@fight") > 0)
                 room->setPlayerMark(player, "@fight", 0);
             player->setMark("zhanshen_fight", 0);
-            room->addPlayerMark(player, objectName());
+
+            room->setPlayerMark(player, "zhanshen", 1);
             if (room->changeMaxHpForAwakenSkill(player)) {
                 if (player->getWeapon())
                     room->throwCard(player->getWeapon(), player);
+                if (player->getMark("zhanshen") == 1)
                 room->handleAcquireDetachSkills(player, "mashu|shenji");
             }
         }

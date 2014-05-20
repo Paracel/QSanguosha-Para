@@ -4031,7 +4031,8 @@ end
 
 function getKnownNum(player)
 	if not player then
-		return self.player:getHandcardNum()
+		global_room:writeToConsole(debug.traceback())
+		return 0
 	else
 		local cards = player:getHandcards()
 		for _, id in sgs.qlist(player:getPile("wooden_ox")) do

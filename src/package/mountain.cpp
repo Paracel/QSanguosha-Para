@@ -329,8 +329,8 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$ZaoxianAnimate", 4000);
 
-        room->addPlayerMark(dengai, "zaoxian");
-        if (room->changeMaxHpForAwakenSkill(dengai))
+        room->setPlayerMark(dengai, "zaoxian", 1);
+        if (room->changeMaxHpForAwakenSkill(dengai) && dengai->getMark("zaoxian") == 1)
             room->acquireSkill(dengai, "jixi");
 
         return false;
@@ -407,8 +407,8 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$HunziAnimate", 5000);
 
-        room->addPlayerMark(sunce, "hunzi");
-        if (room->changeMaxHpForAwakenSkill(sunce))
+        room->setPlayerMark(sunce, "hunzi", 1);
+        if (room->changeMaxHpForAwakenSkill(sunce) && sunce->getMark("hunzi") == 1)
             room->handleAcquireDetachSkills(sunce, "yingzi|yinghun");
         return false;
     }
@@ -608,13 +608,14 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$ZhijiAnimate", 4000);
 
-        room->addPlayerMark(jiangwei, "zhiji");
+        room->setPlayerMark(jiangwei, "zhiji", 1);
         if (room->changeMaxHpForAwakenSkill(jiangwei)) {
             if (jiangwei->isWounded() && room->askForChoice(jiangwei, objectName(), "recover+draw") == "recover")
                 room->recover(jiangwei, RecoverStruct(jiangwei));
             else
                 room->drawCards(jiangwei, 2, objectName());
-            room->acquireSkill(jiangwei, "guanxing");
+            if (jiangwei->getMark("zhiji") == 1)
+                room->acquireSkill(jiangwei, "guanxing");
         }
 
         return false;
@@ -920,11 +921,10 @@ public:
             room->broadcastSkillInvoke(objectName());
             room->doLightbox("$RuoyuAnimate");
 
-            room->addPlayerMark(liushan, "ruoyu");
-
+            room->setPlayerMark(liushan, "ruoyu", 1);
             if (room->changeMaxHpForAwakenSkill(liushan, 1)) {
                 room->recover(liushan, RecoverStruct(liushan));
-                if (liushan->isLord())
+                if (liushan->getMark("ruoyu") == 1 && liushan->isLord())
                     room->acquireSkill(liushan, "jijiang");
             }
         }

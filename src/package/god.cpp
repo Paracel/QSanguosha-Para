@@ -965,7 +965,7 @@ public:
         room->sendLog(log);
         
         room->setPlayerMark(shensimayi, "baiyin", 1);
-        if (room->changeMaxHpForAwakenSkill(shensimayi))
+        if (room->changeMaxHpForAwakenSkill(shensimayi) && shensimayi->getMark("baiyin") == 1)
             room->acquireSkill(shensimayi, "jilve");
 
         return false;

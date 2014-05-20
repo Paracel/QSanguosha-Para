@@ -460,11 +460,11 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$BaolingAnimate");
 
-        room->addPlayerMark(player, "baoling");
-
+        room->setPlayerMark(player, "baoling", 1);
         if (room->changeMaxHpForAwakenSkill(player, 3)) {
             room->recover(player, RecoverStruct(player, NULL, 3));
-            room->acquireSkill(player, "benghuai");
+            if (player->getMark("baoling") == 1)
+                room->acquireSkill(player, "benghuai");
         }
 
         return false;

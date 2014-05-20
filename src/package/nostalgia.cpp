@@ -497,7 +497,7 @@ public:
                          || target->getGeneralName().contains("sunjian"))
                         && target->isLord())
                         handang->setFlags("NosJiefanToLord");
-                    room->useCard(CardUseStruct(peach, handang, target), false);
+                    room->useCard(CardUseStruct(peach, handang, target));
                     handang->setFlags("-NosJiefanToLord");
                 }
                 return true;
@@ -1096,11 +1096,12 @@ public:
         room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$NosBaijiangAnimate", 5000);
-        room->addPlayerMark(zhonghui, "nosbaijiang");
 
+        room->setPlayerMark(zhonghui, "nosbaijiang", 1);
         if (room->changeMaxHpForAwakenSkill(zhonghui, 1)) {
             room->recover(zhonghui, RecoverStruct(zhonghui));
-            room->handleAcquireDetachSkills(zhonghui, "-noszhenggong|-nosquanji|nosyexin");
+            if (zhonghui->getMark("nosbaijiang") == 1)
+                room->handleAcquireDetachSkills(zhonghui, "-noszhenggong|-nosquanji|nosyexin");
         }
 
         return false;
@@ -1246,8 +1247,8 @@ public:
         room->broadcastSkillInvoke(objectName());
         room->doLightbox("$NosZiliAnimate", 5000);
 
-        room->addPlayerMark(zhonghui, "noszili");
-        if (room->changeMaxHpForAwakenSkill(zhonghui))
+        room->setPlayerMark(zhonghui, "noszili", 1);
+        if (room->changeMaxHpForAwakenSkill(zhonghui) && zhonghui->getMark("noszili") == 1)
             room->acquireSkill(zhonghui, "nospaiyi");
 
         return false;

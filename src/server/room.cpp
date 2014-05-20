@@ -3831,7 +3831,7 @@ void Room::updateCardsOnGet(const CardsMoveStruct &move) {
     }
 }
 
-bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> cards_moves, bool forceVisible, QList<ServerPlayer *> players) {
+bool Room::notifyMoveCards(bool isLostPhase, QList<CardsMoveStruct> &cards_moves, bool forceVisible, QList<ServerPlayer *> players) {
     if (players.isEmpty()) players = m_players;
     // Notify clients
     int moveId;
@@ -3988,10 +3988,20 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
             if (card->isModified()) {
                 int cardId = card->getId();
                 resetCard(cardId);
-                if (getCardPlace(cardId) != Player::PlaceHand)
-                    broadcastResetCard(m_players, cardId);
-                else
+                Player::Place place = getCardPlace(cardId);
+                if (place != Player::PlaceHand) {
+                    QList<ServerPlayer *> players = m_players;
+                    if (place == Player::PlaceSpecial) {
+                        QString pilename = player->getPileName(cardId);
+                        foreach (ServerPlayer *p, m_players) {
+                            if (!player->pileOpen(pilename, p->objectName()))
+                                players.removeOne(p);
+                        }
+                    }
+                    broadcastResetCard(players, cardId);
+                } else {
                     notifyResetCard(player, cardId);
+                }
             }
         }
     }
@@ -4014,11 +4024,13 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
 
     for (int i = 0; i < cards.size(); i++) {
         const Card *card = cards[i];
+        int cardId = card->getId();
+        Player::Place place = getCardPlace(cardId);
         for (int fTime = 0; fTime < filterSkills.size(); fTime++) {
             bool converged = true;
             foreach (const FilterSkill *skill, filterSkills) {
                 Q_ASSERT(skill);
-                if (skill->viewFilter(cards[i])) {
+                if (place != Player::PlaceSpecial && skill->viewFilter(cards[i])) {
                     cards[i] = skill->viewAs(card);
                     Q_ASSERT(cards[i] != NULL);
                     converged = false;
@@ -4036,7 +4048,15 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
         if (place == Player::PlaceHand)
             notifyUpdateCard(player, cardId, cards[i]);
         else {
-            broadcastUpdateCard(getPlayers(), cardId, cards[i]);
+            QList<ServerPlayer *> players = m_players;
+            if (place == Player::PlaceSpecial) {
+                QString pilename = player->getPileName(cardId);
+                foreach (ServerPlayer *p, m_players) {
+                    if (!player->pileOpen(pilename, p->objectName()))
+                        players.removeOne(p);
+                }
+            }
+            broadcastUpdateCard(players, cardId, cards[i]);
             if (place == Player::PlaceJudge) {
                 LogMessage log;
                 log.type = "#FilterJudge";

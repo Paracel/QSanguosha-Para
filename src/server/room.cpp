@@ -1364,7 +1364,6 @@ const Card *Room::askForUseCard(ServerPlayer *player, const QString &pattern, co
                 card_use.from = player;
         }
     }
-    card_use.m_reason = CardUseStruct::CARD_USE_REASON_RESPONSE_USE;
     if (isCardUsed && card_use.isValid(pattern)) {
         QVariant decisionData = QVariant::fromValue(card_use);
         thread->trigger(ChoiceMade, this, player, decisionData);
@@ -2920,9 +2919,7 @@ bool Room::useCard(const CardUseStruct &use, bool add_history) {
     if (card == NULL)
         return false;
 
-    if (card_use.from->getPhase() == Player::Play
-        && Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_PLAY
-        && add_history) {
+    if (card_use.from->getPhase() == Player::Play && add_history) {
         if (!slash_not_record) {
             card_use.m_addHistory = true;
             addPlayerHistory(card_use.from, key);
@@ -4161,7 +4158,6 @@ void Room::activate(ServerPlayer *player, CardUseStruct &card_use) {
             return;
         }
     }
-    card_use.m_reason = CardUseStruct::CARD_USE_REASON_PLAY;
     if (!card_use.isValid(QString()))
         return;
     QVariant data = QVariant::fromValue(card_use);

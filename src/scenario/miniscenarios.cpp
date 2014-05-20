@@ -160,9 +160,9 @@ bool MiniSceneRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                      all.append(available);
                      all.removeOne(general);
                      qShuffle(all);
-                 }
-                 if (general == sp->getGeneralName()) general = this->players.at(i)["general3"];
-                 room->changeHero(sp, general, false, false, true, false);
+                }
+                if (general == sp->getGeneralName()) general = this->players.at(i)["general3"];
+                room->changeHero(sp, general, false, false, true, false);
             }
 
             room->setPlayerProperty(sp, "kingdom", sp->getGeneral()->getKingdom());
@@ -241,12 +241,6 @@ bool MiniSceneRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                 room->setPlayerProperty(sp, "kingdom", this->players.at(i)["nationality"]);
             }
 
-            str = this->players[i]["draw"];
-            if (str == QString()) str = "4";
-            room->setTag("FirstRound", true);
-            room->drawCards(sp, str.toInt());
-            room->setTag("FirstRound", false);
-
             if (this->players[i]["marks"] != QString()) {
                 QStringList marks = this->players[i]["marks"].split(",");
                 foreach (QString qs, marks) {
@@ -255,6 +249,12 @@ bool MiniSceneRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer 
                     room->setPlayerMark(sp, keys[0], str.toInt());
                 }
             }
+
+            str = this->players[i]["draw"];
+            if (str == QString()) str = "4";
+            room->setTag("FirstRound", true);
+            room->drawCards(sp, str.toInt());
+            room->setTag("FirstRound", false);
         }
 
         room->setTag("WaitForPlayer", QVariant(true));

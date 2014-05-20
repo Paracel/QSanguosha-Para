@@ -492,7 +492,7 @@ struct CardUseStruct {
         CARD_USE_REASON_PLAY = 0x01,
         CARD_USE_REASON_RESPONSE = 0x02,
         CARD_USE_REASON_RESPONSE_USE = 0x12
-    } m_reason;
+    };
 
     CardUseStruct();
     CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerPlayer *> to, bool isOwnerUse = true);

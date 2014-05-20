@@ -4048,15 +4048,7 @@ void Room::filterCards(ServerPlayer *player, QList<const Card *> cards, bool ref
         if (place == Player::PlaceHand)
             notifyUpdateCard(player, cardId, cards[i]);
         else {
-            QList<ServerPlayer *> players = m_players;
-            if (place == Player::PlaceSpecial) {
-                QString pilename = player->getPileName(cardId);
-                foreach (ServerPlayer *p, m_players) {
-                    if (!player->pileOpen(pilename, p->objectName()))
-                        players.removeOne(p);
-                }
-            }
-            broadcastUpdateCard(players, cardId, cards[i]);
+            broadcastUpdateCard(m_players, cardId, cards[i]);
             if (place == Player::PlaceJudge) {
                 LogMessage log;
                 log.type = "#FilterJudge";

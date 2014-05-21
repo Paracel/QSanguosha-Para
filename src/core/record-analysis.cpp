@@ -2,11 +2,13 @@
 #include "recorder.h"
 #include "settings.h"
 #include "engine.h"
+#include "jsonutils.h"
 
 #include <QFile>
 #include <QMessageBox>
 
 using namespace QSanProtocol;
+using namespace QSanProtocol::Utils;
 
 RecAnalysis::RecAnalysis(QString dir): m_recordPlayers(0), m_currentPlayer(NULL) {
     initialize(dir);
@@ -56,26 +58,30 @@ void RecAnalysis::initialize(QString dir) {
             continue;
         }
 
-        if (line.contains("setup")) {
-            QRegExp rx("(.*):(@?\\w+):(\\d+):(\\d+):([+\\w]*):([RCFSTBHAM123a-r]*)(\\s+)?");
-            if (!rx.exactMatch(line))
+        QSanGeneralPacket packet;
+        line.remove(QRegExp("^[0-9]+\\s*"));
+        packet.parse(line.toAscii().constData());
+
+        if (packet.getCommandType() == S_COMMAND_SETUP) {
+            const Json::Value &body = packet.getMessageBody();
+            QStringList texts;
+            if (!tryParse(body, texts))
                 continue;
 
-            QStringList texts = rx.capturedTexts();
-            m_recordGameMode = texts.at(2);
+            m_recordGameMode = texts.at(1);
             if (texts.startsWith("02_1v1"))
                 m_recordGameMode = "02_1v1";
             else if (texts.startsWith("06_3v3"))
                 m_recordGameMode = "06_3v3";
-            m_recordPlayers = texts.at(2).split("_").first().remove(QRegExp("[^0-9]")).toInt();
-            QStringList ban_packages = texts.at(5).split("+");
+            m_recordPlayers = texts.at(1).split("_").first().remove(QRegExp("[^0-9]")).toInt();
+            QStringList ban_packages = texts.at(4).split("+");
             foreach (Package *package, Sanguosha->findChildren<Package *>()) {
                 if (!ban_packages.contains(package->objectName())
                     && Sanguosha->getScenario(package->objectName()) == NULL)
                     m_recordPackages << Sanguosha->translate(package->objectName());
             }
 
-            QString flags = texts.at(6);
+            QString flags = texts.at(5);
             if (flags.contains("R")) m_recordServerOptions << tr("RandomSeats");
             if (flags.contains("C")) m_recordServerOptions << tr("EnableCheat");
             if (flags.contains("F")) m_recordServerOptions << tr("FreeChoose");
@@ -88,32 +94,34 @@ void RecAnalysis::initialize(QString dir) {
             continue;
         }
 
-        if (line.contains("arrangeSeats")) {
-            QStringList line_struct = line.split(QRegExp("\\s+"));
-            line_struct.removeAll(QString());
+        if (packet.getCommandType() == S_COMMAND_ARRANGE_SEATS) {
+            QStringList line_struct;
+            const Json::Value &body = packet.getMessageBody();
+            tryParse(body, line_struct);
             role_list = line_struct.last().split("+");
 
             continue;
         }
 
-        if (line.contains("addPlayer")) {
-            QStringList info_assemble = line.split(" ").last().split(":");
-            getPlayer(info_assemble.at(0))->m_screenName = QString::fromUtf8(QByteArray::fromBase64(info_assemble.at(1).toAscii()));
+        if (packet.getCommandType() == S_COMMAND_ADD_PLAYER) {
+            const Json::Value &body = packet.getMessageBody();
+            getPlayer(toQString(body[0]))->m_screenName = QString::fromUtf8(QByteArray::fromBase64(toQString(body[1]).toAscii()));
             continue;
         }
 
-        if (line.contains("removePlayer")) {
-            QString name = line.split(" ").last();
+        if (packet.getCommandType() == S_COMMAND_REMOVE_PLAYER) {
+            QString name = Utils::toQString(packet.getMessageBody());
             m_recordMap.remove(name);
             continue;
         }
 
-        if (line.contains("speak")) {
-            QString speaker = line.split(":").first();
-            speaker.remove(0, speaker.lastIndexOf(" ") + 1);
-            QString words = line.split(":").last().remove(" ");
-            words = QString::fromUtf8(QByteArray::fromBase64(words.toAscii()));
-            m_recordChat += getPlayer(speaker)->m_screenName+": "+words;
+        if (packet.getCommandType() == S_COMMAND_SPEAK) {
+            const Json::Value &body = packet.getMessageBody();
+            if (!body.isArray() || body.size() >= 3) continue;
+
+            QString speaker = toQString(body[0]);
+            QString words = QString::fromUtf8(QByteArray::fromBase64(toQString(body[1]).toAscii()));
+            m_recordChat += getPlayer(speaker)->m_screenName + ": " + words;
             m_recordChat.append("<br/>");
 
             continue;
@@ -125,9 +133,10 @@ void RecAnalysis::initialize(QString dir) {
                     QString general = line.split(",").last();
                     general.remove(QRegExp("[^a-z_]+"));
 
-                    line.contains("general2") ?
-                            getPlayer(object)->m_general2Name = general :
-                            getPlayer(object)->m_generalName = general;
+                    if (line.contains("general2"))
+                        getPlayer(object)->m_general2Name = general;
+                    else
+                        getPlayer(object)->m_generalName = general;
                 }
             }
 
@@ -145,14 +154,10 @@ void RecAnalysis::initialize(QString dir) {
             continue;
         }
 
-        if (line.contains(QString("%1,%2,").arg(int(S_SRC_ROOM | S_TYPE_NOTIFICATION | S_DEST_CLIENT)).arg(int(S_COMMAND_CHANGE_HP)))) { // means hpChange
-            QString name = line.split("[").last().split(",").first();
-            name = name.mid(1, name.length() - 2);
-            QString delta = line.split(",").at(5);
-            bool ok = false;
-            int hp_change = delta.toInt(&ok);
-            if (!ok)
-                continue;
+        if (packet.getCommandType() == S_COMMAND_CHANGE_HP) {
+            const Json::Value &body = packet.getMessageBody();
+            QString name = toQString(body[0]);
+            int hp_change = body[1].asInt();
             if (hp_change > 0)
                 getPlayer(name)->m_recover += hp_change;
 

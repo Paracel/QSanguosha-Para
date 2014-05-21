@@ -24,7 +24,6 @@ public:
 
     void setSocket(ClientSocket *socket);
     void invoke(const QSanProtocol::QSanPacket *packet);
-    void invoke(const char *method, const QString &arg = ".");
     QString reportHeader() const;
     void unicast(const QString &message);
     void drawCard(const Card *card);

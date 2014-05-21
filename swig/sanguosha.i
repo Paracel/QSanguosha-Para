@@ -262,7 +262,6 @@ public:
     ServerPlayer(Room *room);
 
     void setSocket(ClientSocket *socket);
-    void invoke(const char *method, const char *arg = ".");
     QString reportHeader() const;
     void drawCard(const Card *card);
     Room *getRoom() const;
@@ -889,7 +888,7 @@ public:
     QStringList getExtensions() const;
     QStringList getKingdoms() const;
     QColor getKingdomColor(const char *kingdom) const;
-    QString getSetupString() const;
+    QStringList getSetupString() const;
 
     QMap<QString, QString> getAvailableModes() const;
     QString getModeName(const char *mode) const;

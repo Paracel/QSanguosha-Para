@@ -232,7 +232,8 @@ void ServerPlayer::unicast(const QString &message) {
 
 void ServerPlayer::startNetworkDelayTest() {
     test_time = QDateTime::currentDateTime();
-    invoke("networkDelayTest");
+    QSanGeneralPacket packet(S_SRC_ROOM | S_TYPE_NOTIFICATION | S_DEST_CLIENT, S_COMMAND_NETWORK_DELAY_TEST);
+    invoke(&packet);
 }
 
 qint64 ServerPlayer::endNetworkDelayTest() {
@@ -306,10 +307,6 @@ void ServerPlayer::sendMessage(const QString &message) {
 
 void ServerPlayer::invoke(const QSanPacket *packet) {
     unicast(QString(packet->toString().c_str()));
-}
-
-void ServerPlayer::invoke(const char *method, const QString &arg) {
-    unicast(QString("%1 %2").arg(method).arg(arg));
 }
 
 QString ServerPlayer::reportHeader() const{
@@ -892,18 +889,21 @@ QString ServerPlayer::getIp() const{
 }
 
 void ServerPlayer::introduceTo(ServerPlayer *player) {
-    QString screen_name = screenName();
+    QString screen_name = screenName().toUtf8().toBase64();
     QString avatar = property("avatar").toString();
 
-    QString introduce_str = QString("%1:%2:%3")
-                                    .arg(objectName())
-                                    .arg(QString(screen_name.toUtf8().toBase64()))
-                                    .arg(avatar);
+    Json::Value introduce_str(Json::arrayValue);
+    introduce_str[0] = toJsonString(objectName());
+    introduce_str[1] = toJsonString(screen_name);
+    introduce_str[2] = toJsonString(avatar);
 
     if (player)
-        player->invoke("addPlayer", introduce_str);
-    else
-        room->broadcastInvoke("addPlayer", introduce_str, this);
+        room->doNotify(player, S_COMMAND_ADD_PLAYER, introduce_str);
+    else {
+        QList<ServerPlayer *> players = room->getPlayers();
+        players.removeOne(this);
+        room->doBroadcastNotify(players, S_COMMAND_ADD_PLAYER, introduce_str);
+    }
 }
 
 void ServerPlayer::marshal(ServerPlayer *player) const{

@@ -671,7 +671,7 @@ QStringList Engine::getChattingEasyTexts() const{
     return easy_texts;
 }
 
-QString Engine::getSetupString() const{
+QStringList Engine::getSetupString() const{
     int timeout = Config.OperationNoLimit ? 0 : Config.OperationTimeout;
     QString flags;
     if (Config.RandomSeat)
@@ -718,7 +718,7 @@ QString Engine::getSetupString() const{
                 << Sanguosha->getBanPackages().join("+")
                 << flags;
 
-    return setup_items.join(":");
+    return setup_items;
 }
 
 QMap<QString, QString> Engine::getAvailableModes() const{

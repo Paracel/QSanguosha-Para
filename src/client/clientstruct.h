@@ -8,7 +8,7 @@
 #include <QWidget>
 
 struct ServerInfoStruct {
-    bool parse(const QString &str);
+    bool parse(const QStringList &str);
     //Get the timeout allowance for a command. Server countdown is more lenient than the client.
     //@param command: type of command
     //@return countdown for command in milliseconds.

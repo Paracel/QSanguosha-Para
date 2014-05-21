@@ -33,15 +33,15 @@ Client::Client(QObject *parent, const QString &filename)
     ClientInstance = this;
     m_isGameOver = false;
 
-    callbacks["checkVersion"] = &Client::checkVersion;
-    callbacks["setup"] = &Client::setup;
-    callbacks["networkDelayTest"] = &Client::networkDelayTest;
-    callbacks["addPlayer"] = &Client::addPlayer;
-    callbacks["removePlayer"] = &Client::removePlayer;
-    callbacks["startInXs"] = &Client::startInXs;
-    callbacks["arrangeSeats"] = &Client::arrangeSeats;
-    callbacks["warn"] = &Client::warn;
-    callbacks["speak"] = &Client::speak;
+    m_callbacks[S_COMMAND_CHECK_VERSION] = &Client::checkVersion;
+    m_callbacks[S_COMMAND_SETUP] = &Client::setup;
+    m_callbacks[S_COMMAND_NETWORK_DELAY_TEST] = &Client::networkDelayTest;
+    m_callbacks[S_COMMAND_ADD_PLAYER] = &Client::addPlayer;
+    m_callbacks[S_COMMAND_REMOVE_PLAYER] = &Client::removePlayer;
+    m_callbacks[S_COMMAND_START_IN_X_SECONDS] = &Client::startInXs;
+    m_callbacks[S_COMMAND_ARRANGE_SEATS] = &Client::arrangeSeats;
+    m_callbacks[S_COMMAND_WARN] = &Client::warn;
+    m_callbacks[S_COMMAND_SPEAK] = &Client::speak;
 
     m_callbacks[S_COMMAND_GAME_START] = &Client::startGame;
     m_callbacks[S_COMMAND_GAME_OVER] = &Client::gameOver;
@@ -200,14 +200,16 @@ void Client::signup() {
         replayer->start();
     else {
         QString base64 = Config.UserName.toUtf8().toBase64();
-        QString command = Config.value("EnableReconnection", false).toBool() ? "signupr" : "signup";
-        QString signup_str = QString("%1 %2:%3").arg(command).arg(base64).arg(Config.UserAvatar);
-        request(signup_str);
+        Json::Value arg(Json::arrayValue);
+        arg[0] = Config.value("EnableReconnection", false).toBool();
+        arg[1] = toJsonString(base64);
+        arg[2] = toJsonString(Config.UserAvatar);
+        notifyServer(S_COMMAND_SIGN_UP, arg);
     }
 }
 
-void Client::networkDelayTest(const QString &) {
-    request("networkDelayTest .");
+void Client::networkDelayTest(const Json::Value &) {
+    notifyServer(S_COMMAND_NETWORK_DELAY_TEST);
 }
 
 void Client::replyToServer(CommandType command, const Json::Value &arg) {
@@ -231,34 +233,39 @@ void Client::requestToServer(CommandType command, const Json::Value &arg) {
     }
 }
 
-void Client::request(const QString &message) {
-    if (socket)
-        socket->send(message);
+void Client::notifyServer(CommandType command, const Json::Value &arg) {
+    if (socket) {
+        QSanGeneralPacket packet(S_SRC_CLIENT | S_TYPE_NOTIFICATION | S_DEST_ROOM, command);
+        packet.setMessageBody(arg);
+        socket->send(toQString(packet.toString()));
+    }
 }
 
-void Client::checkVersion(const QString &server_version) {
+void Client::checkVersion(const Json::Value &server_version) {
+    QString version = toQString(server_version);
     QString version_number, mod_name;
-    if (server_version.contains(QChar(':'))) {
-        QStringList texts = server_version.split(QChar(':'));
+    if (version.contains(QChar(':'))) {
+        QStringList texts = version.split(QChar(':'));
         version_number = texts.value(0);
         mod_name = texts.value(1);
     } else {
-        version_number = server_version;
+        version_number = version;
         mod_name = "official";
     }
 
     emit version_checked(version_number, mod_name);
 }
 
-void Client::setup(const QString &setup_str) {
+void Client::setup(const Json::Value &setup_str) {
     if (socket && !socket->isConnected())
         return;
-
-    if (ServerInfo.parse(setup_str)) {
+    QStringList setup_info;
+    if (!setup_str.isArray() || !tryParse(setup_str, setup_info)) return;
+    if (ServerInfo.parse(setup_info)) {
         emit server_connected();
-        request("toggleReady .");
+        notifyServer(S_COMMAND_TOGGLE_READY);
     } else {
-        QMessageBox::warning(NULL, tr("Warning"), tr("Setup string can not be parsed: %1").arg(setup_str));
+        QMessageBox::warning(NULL, tr("Warning"), tr("Setup string can not be parsed: %1").arg(setup_info.join(":")));
     }
 }
 
@@ -288,8 +295,7 @@ void Client::processServerPacket(const char *cmd) {
             if (!replayer)
                 processServerRequest(packet);
         }
-    } else
-        processObsoleteServerPacket(cmd);
+    }
 }
 
 bool Client::processServerRequest(const QSanGeneralPacket &packet) {
@@ -311,27 +317,16 @@ bool Client::processServerRequest(const QSanGeneralPacket &packet) {
     return true;
 }
 
-void Client::processObsoleteServerPacket(const QString &cmd) {
-    // invoke methods
-    QStringList args = cmd.trimmed().split(" ");
-    QString method = args[0];
+void Client::addPlayer(const Json::Value &player_info) {
+    if (!player_info.isArray() || player_info.size() != 3
+        || !player_info[0].isString() || !player_info[1].isString() || !player_info[2].isString())
+        return;
 
-    Callback callback = callbacks.value(method, NULL);
-    if (callback) {
-        QString arg_str = args[1];
-        (this->*callback)(arg_str);
-    } else
-        QMessageBox::information(NULL, tr("Warning"), tr("No such invokable method named \"%1\"").arg(method));
-
-}
-
-void Client::addPlayer(const QString &player_info) {
-    QStringList texts = player_info.split(":");
-    QString name = texts.at(0);
-    QString base64 = texts.at(1);
+    QString name = toQString(player_info[0]);
+    QString base64 = toQString(player_info[1]);
     QByteArray data = QByteArray::fromBase64(base64.toAscii());
     QString screen_name = QString::fromUtf8(data);
-    QString avatar = texts.at(2);
+    QString avatar = toQString(player_info[2]);
 
     ClientPlayer *player = new ClientPlayer(this);
     player->setObjectName(name);
@@ -351,12 +346,14 @@ void Client::updateProperty(const Json::Value &arg) {
     player->setProperty(arg[1].asCString(), toQString(arg[2]));
 }
 
-void Client::removePlayer(const QString &player_name) {
-    ClientPlayer *player = findChild<ClientPlayer *>(player_name);
+void Client::removePlayer(const Json::Value &player_name) {
+    if (!player_name.isString()) return;
+    QString name = toQString(player_name);
+    ClientPlayer *player = findChild<ClientPlayer *>(name);
     if (player) {
         player->setParent(NULL);
         alive_count--;
-        emit player_removed(player_name);
+        emit player_removed(name);
     }
 }
 
@@ -490,17 +487,11 @@ void Client::requestCheatChangeGeneral(const QString &name, bool isSecondaryHero
 }
 
 void Client::addRobot() {
-    request("addRobot .");
+    notifyServer(S_COMMAND_ADD_ROBOT);
 }
 
 void Client::fillRobots() {
-    request("fillRobots .");
-}
-
-void Client::arrange(const QStringList &order) {
-    Q_ASSERT(order.length() == 3);
-
-    request(QString("arrange %1").arg(order.join("+")));
+    notifyServer(S_COMMAND_FILL_ROBOTS);
 }
 
 void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> &targets) {
@@ -528,10 +519,11 @@ void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> 
     setStatus(NotActive);
 }
 
-void Client::startInXs(const QString &left_seconds) {
-    int seconds = left_seconds.toInt();
+void Client::startInXs(const Json::Value &left_seconds) {
+    if (!left_seconds.isInt()) return;
+    int seconds = left_seconds.asInt();
     if (seconds > 0)
-        lines_doc->setHtml(tr("<p align = \"center\">Game will start in <b>%1</b> seconds...</p>").arg(left_seconds));
+        lines_doc->setHtml(tr("<p align = \"center\">Game will start in <b>%1</b> seconds...</p>").arg(seconds));
     else
         lines_doc->setHtml(QString());
 
@@ -541,8 +533,11 @@ void Client::startInXs(const QString &left_seconds) {
     }
 }
 
-void Client::arrangeSeats(const QString &seats_str) {
-    QStringList player_names = seats_str.split("+");
+void Client::arrangeSeats(const Json::Value &seats_str) {
+    if (!seats_str.isArray()) return;
+    QStringList player_names;
+    tryParse(seats_str, player_names);
+    if (player_names.isEmpty()) return;
     players.clear();
     
     for (int i = 0; i < player_names.length(); i++) {
@@ -935,7 +930,7 @@ void Client::onPlayerChoosePlayer(const Player *player) {
 }
 
 void Client::trust() {
-    request("trust .");
+    notifyServer(S_COMMAND_TRUST);
 
     if (Self->getState() == "trust")
         Sanguosha->playSystemAudioEffect("untrust");
@@ -955,7 +950,7 @@ void Client::speakToServer(const QString &text) {
         return;
 
     QByteArray data = text.toUtf8().toBase64();
-    request(QString("speak %1").arg(QString(data)));
+    notifyServer(S_COMMAND_SPEAK, toJsonString(QString(data)));
 }
 
 void Client::addHistory(const Json::Value &history) {
@@ -1221,8 +1216,9 @@ void Client::revivePlayer(const Json::Value &player_arg) {
 }
 
 
-void Client::warn(const QString &reason) {
+void Client::warn(const Json::Value &reason_json) {
     QString msg;
+    QString reason = toQString(reason_json);
     if (reason == "GAME_OVER")
         msg = tr("Game is over now");
     else if (reason == "INVALID_FORMAT")
@@ -1645,10 +1641,12 @@ void Client::log(const Json::Value &log_str) {
     }
 }
 
-void Client::speak(const QString &speak_data) {
-    QStringList words = speak_data.split(":");
-    QString who = words.at(0);
-    QString base64 = words.at(1);
+void Client::speak(const Json::Value &speak_data) {
+    if (!speak_data.isArray() || speak_data.size() != 2
+        || !speak_data[0].isString() || !speak_data[1].isString())
+        return;
+    QString who = toQString(speak_data[0]);
+    QString base64 = toQString(speak_data[1]);
 
     QByteArray data = QByteArray::fromBase64(base64.toAscii());
     QString text = QString::fromUtf8(data);

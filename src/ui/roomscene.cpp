@@ -4436,8 +4436,7 @@ void RoomScene::pause() {
             return;
     }
     bool paused = pausing_text->isVisible();
-    QString message = QString("pause %1").arg((paused ? "false" : "true"));
-    ClientInstance->request(message);
+    ClientInstance->notifyServer(S_COMMAND_PAUSE, !paused);
 }
 
 void RoomScene::updateVolumeConfig() {

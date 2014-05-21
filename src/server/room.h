@@ -31,8 +31,7 @@ public:
     friend class RoomThreadXMode;
     friend class RoomThread1v1;
 
-    typedef void (Room::*Callback)(ServerPlayer *, const QString &);
-    typedef bool (Room::*CallBack)(ServerPlayer *, const QSanProtocol::QSanGeneralPacket *);
+    typedef bool (Room::*CallBack)(ServerPlayer *, const Json::Value &);
     typedef bool (Room::*ResponseVerifyFunction)(ServerPlayer *, const Json::Value &, void *);
 
     explicit Room(QObject *parent, const QString &mode);
@@ -344,16 +343,17 @@ public:
     const Card *askForSinglePeach(ServerPlayer *player, ServerPlayer *dying);
     void addPlayerHistory(ServerPlayer *player, const QString &key, int times = 1);
     
-    void toggleReadyCommand(ServerPlayer *player, const QString &);
-    void speakCommand(ServerPlayer *player, const QString &arg);
-    void trustCommand(ServerPlayer *player, const QString &arg);
-    void pauseCommand(ServerPlayer *player, const QString &arg);
+    bool toggleReadyCommand(ServerPlayer *player, const Json::Value &);
+    bool speakCommand(ServerPlayer *player, const QString &arg);
+    bool speakCommand(ServerPlayer *player, const Json::Value &arg);
+    bool trustCommand(ServerPlayer *player, const Json::Value &arg);
+    bool pauseCommand(ServerPlayer *player, const Json::Value &arg);
     void processResponse(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *arg);
-    void addRobotCommand(ServerPlayer *player, const QString &arg);
-    void fillRobotsCommand(ServerPlayer *player, const QString &arg);
+    bool addRobotCommand(ServerPlayer *player, const Json::Value &arg);
+    bool fillRobotsCommand(ServerPlayer *player, const Json::Value &arg);
     void broadcastInvoke(const QSanProtocol::QSanPacket *packet, ServerPlayer *except = NULL);
     void broadcastInvoke(const char *method, const QString &arg = ".", ServerPlayer *except = NULL);
-    void networkDelayTestCommand(ServerPlayer *player, const QString &);
+    bool networkDelayTestCommand(ServerPlayer *player, const Json::Value &);
     inline RoomState *getRoomState() { return &_m_roomState; }
     inline Card *getCard(int cardId) const{ return _m_roomState.getCard(cardId); }
     inline void resetCard(int cardId) { _m_roomState.resetCard(cardId); }
@@ -469,7 +469,6 @@ private:
     QSemaphore _m_semRoomMutex; // Provide per-room  (rather than per-player) level protection of any shared variables
 
     
-    QHash<QString, Callback> callbacks; // Legacy protocol callbacks
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks; // Stores the callbacks for client request. Do not use this
                                                             // this map for anything else but S_CLIENT_REQUEST!!!!!
     QHash<QSanProtocol::CommandType, QSanProtocol::CommandType> m_requestResponsePair; 
@@ -506,8 +505,8 @@ private:
     QString askForRole(ServerPlayer *player, const QStringList &roles, const QString &scheme);
 
     //process client requests
-    bool processRequestCheat(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *packet);
-    bool processRequestSurrender(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *packet);
+    bool processRequestCheat(ServerPlayer *player, const Json::Value &arg);
+    bool processRequestSurrender(ServerPlayer *player, const Json::Value &arg);
 
     bool makeSurrender(ServerPlayer *player);
     bool makeCheat(ServerPlayer *player);

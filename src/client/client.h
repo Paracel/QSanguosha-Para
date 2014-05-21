@@ -60,7 +60,7 @@ public:
     void disconnectFromHost();
     void replyToServer(QSanProtocol::CommandType command, const Json::Value &arg = Json::Value::null);
     void requestToServer(QSanProtocol::CommandType command, const Json::Value &arg = Json::Value::null);
-    void request(const QString &message);
+    void notifyServer(QSanProtocol::CommandType command, const Json::Value &arg = Json::Value::null);
     void onPlayerResponseCard(const Card *card, const QList<const Player *> &targets = QList<const Player *>());
     void setStatus(Status status);
     Status getStatus() const;
@@ -84,16 +84,15 @@ public:
     QTextDocument *getLinesDoc() const;
     QTextDocument *getPromptDoc() const;
 
-    typedef void (Client::*Callback) (const QString &);
     typedef void (Client::*CallBack) (const Json::Value &);
 
-    void checkVersion(const QString &server_version);
-    void setup(const QString &setup_str);
-    void networkDelayTest(const QString &);
-    void addPlayer(const QString &player_info);
-    void removePlayer(const QString &player_name);
-    void startInXs(const QString &);
-    void arrangeSeats(const QString &seats);
+    void checkVersion(const Json::Value &server_version);
+    void setup(const Json::Value &setup_str);
+    void networkDelayTest(const Json::Value &);
+    void addPlayer(const Json::Value &player_info);
+    void removePlayer(const Json::Value &player_name);
+    void startInXs(const Json::Value &);
+    void arrangeSeats(const Json::Value &seats);
     void activate(const Json::Value &playerId);
     void startGame(const Json::Value &);
     void hpChange(const Json::Value &change_str);
@@ -107,11 +106,11 @@ public:
     void updateProperty(const Json::Value &);
     void killPlayer(const Json::Value &player_arg);
     void revivePlayer(const Json::Value &player_arg);
-    void warn(const QString &);
+    void warn(const Json::Value &reason_json);
     void setMark(const Json::Value &mark_str);
     void showCard(const Json::Value &show_str);    
     void log(const Json::Value &log_str);
-    void speak(const QString &speak_data);
+    void speak(const Json::Value &speak_data);
     void addHistory(const Json::Value &history);
     void moveFocus(const Json::Value &focus);
     void setEmotion(const Json::Value &set_str);
@@ -216,7 +215,6 @@ public slots:
     void trust();
     void addRobot();
     void fillRobots();
-    void arrange(const QStringList &order);
     
     void onPlayerReplyGongxin(int card_id = -1);
 
@@ -233,7 +231,6 @@ protected:
 private:
     ClientSocket *socket;
     bool m_isGameOver;  
-    QHash<QString, Callback> callbacks;
     QHash<QSanProtocol::CommandType, CallBack> m_interactions;
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks;
     QList<const ClientPlayer *> players;
@@ -259,7 +256,6 @@ private slots:
     void processServerPacket(const QString &cmd);
     void processServerPacket(const char *cmd);
     bool processServerRequest(const QSanProtocol::QSanGeneralPacket &packet);
-    void processObsoleteServerPacket(const QString &cmd);
     void notifyRoleChange(const QString &new_role);
     void onPlayerChooseSuit();
     void onPlayerChooseKingdom();

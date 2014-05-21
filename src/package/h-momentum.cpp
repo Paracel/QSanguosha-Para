@@ -184,28 +184,15 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
             && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
+            CardStar yongjue_card = move.reason.m_extraData.value<CardStar>();
+            if (!yongjue_card || !yongjue_card->isKindOf("Slash") || !yongjue_card->hasFlag("yongjue"))
+                return false;
             PlayerStar yongjue_user = room->getTag("yongjue_user").value<PlayerStar>();
-            CardStar yongjue_card = room->getTag("yongjue_card").value<CardStar>();
             room->removeTag("yongjue_user");
-            room->removeTag("yongjue_card");
-            if (yongjue_user && yongjue_card && yongjue_card->hasFlag("yongjue")) {
-                QList<int> ids;
-                if (!yongjue_card->isVirtualCard())
-                    ids << yongjue_card->getEffectiveId();
-                else if (yongjue_card->subcardsLength() > 0)
-                    ids = yongjue_card->getSubcards();
-                if (!ids.isEmpty()) {
-                    foreach (int id, ids) {
-                        if (!move.card_ids.contains(id)) return false;
-                    }
-                } else {
-                    return false;
-                }
+            if (yongjue_user) {
                 if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue(yongjue_user))) {
-                    DummyCard *dummy = new DummyCard(ids);
-                    yongjue_user->obtainCard(dummy);
-                    delete dummy;
-                    move.card_ids.clear();
+                    yongjue_user->obtainCard(yongjue_card);
+                    move.removeCardIds(move.card_ids);
                     data = QVariant::fromValue(move);
                 }
             }
@@ -250,7 +237,6 @@ public:
                     if (!ids.isEmpty()) {
                         room->setCardFlag(card, "yongjue");
                         room->setTag("yongjue_user", QVariant::fromValue((PlayerStar)player));
-                        room->setTag("yongjue_card", QVariant::fromValue((CardStar)card));
                     }
                 }
             }

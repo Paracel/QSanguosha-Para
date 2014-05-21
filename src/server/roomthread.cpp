@@ -115,7 +115,8 @@ bool PindianStruct::isSuccess() const{
 
 JudgeStruct::JudgeStruct()
     : who(NULL), card(NULL), pattern("."), good(true), time_consuming(false),
-      negative(false), play_animation(true), _m_result(TRIAL_RESULT_UNKNOWN)
+      negative(false), play_animation(true), retrial_by_response(NULL),
+      _m_result(TRIAL_RESULT_UNKNOWN)
 {
 }
 

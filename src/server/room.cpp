@@ -1288,16 +1288,9 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
         QVariant decisionData = QVariant::fromValue(QString("cardResponded:%1:%2:_%3_").arg(pattern).arg(prompt).arg(card->toString()));
         thread->trigger(ChoiceMade, this, player, decisionData);
 
-        if (method == Card::MethodUse) {
-            CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(), QString(), card->getSkillName(), QString());
-            moveCardTo(card, player, NULL, Player::PlaceTable, reason, true);
-        } else if (method == Card::MethodDiscard) {
+        if (method == Card::MethodDiscard) {
             CardMoveReason reason(CardMoveReason::S_REASON_THROW, player->objectName());
             moveCardTo(card, player, NULL, Player::DiscardPile, reason, pattern != "." && pattern != "..");
-        } else if (method != Card::MethodNone && !isRetrial) {
-            CardMoveReason reason(CardMoveReason::S_REASON_RESPONSE, player->objectName());
-            reason.m_skillName = card->getSkillName();
-            moveCardTo(card, player, NULL, isProvision ? Player::PlaceTable : Player::DiscardPile, reason);
         }
 
         if ((method == Card::MethodUse || method == Card::MethodResponse) && !isRetrial) {
@@ -1307,11 +1300,26 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
             CardResponseStruct resp(card, to, method == Card::MethodUse);
             resp.m_isHandcard = isHandcard;
             QVariant data = QVariant::fromValue(resp);
+            thread->trigger(PreCardResponded, this, player, data);
+            resp = data.value<CardResponseStruct>();
+
+            if (method == Card::MethodUse) {
+                CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(), QString(), card->getSkillName(), QString());
+                reason.m_extraData = QVariant::fromValue((CardStar)card);
+                moveCardTo(card, player, NULL, Player::PlaceTable, reason, true);
+            } else {
+                CardMoveReason reason(CardMoveReason::S_REASON_RESPONSE, player->objectName());
+                reason.m_skillName = card->getSkillName();
+                reason.m_extraData = QVariant::fromValue((CardStar)card);
+                moveCardTo(card, player, NULL, isProvision ? Player::PlaceTable : Player::DiscardPile, reason);
+            }
+
             thread->trigger(CardResponded, this, player, data);
             if (method == Card::MethodUse) {
                 if (getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
                     CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(),
                                           QString(), card->getSkillName(), QString());
+                    reason.m_extraData = QVariant::fromValue((CardStar)card);
                     moveCardTo(card, player, NULL, Player::DiscardPile, reason, true);
                 }
                 CardUseStruct card_use;
@@ -4315,12 +4323,20 @@ QString Room::askForKingdom(ServerPlayer *player) {
 
     bool success = doRequest(player, S_COMMAND_CHOOSE_KINGDOM, Json::Value::null, true);
     Json::Value clientReply = player->getClientReply();
+    QString result = "wei";
     if (success && clientReply.isString()) {
-        QString kingdom = toQString(clientReply.asCString());
-        if (Sanguosha->getKingdoms().contains(kingdom))
-            return kingdom;
+        result = toQString(clientReply.asCString());
+        if (!Sanguosha->getKingdoms().contains(result))
+            result = "wei";
     }
-    return "wei";
+
+    LogMessage log;
+    log.type = "#ChooseKingdom";
+    log.from = player;
+    log.arg = result;
+    sendLog(log);
+
+    return result;
 }
 
 bool Room::askForDiscard(ServerPlayer *player, const QString &reason, int discard_num, int min_num,
@@ -5160,6 +5176,16 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
 
     const Card *oldJudge = judge->card;
     judge->card = Sanguosha->getCard(card->getEffectiveId());
+    ServerPlayer *rebyre = judge->retrial_by_response;
+    judge->retrial_by_response = player;
+
+    CardResponseStruct resp(card, judge->who);
+    resp.m_isHandcard = isHandcard;
+    resp.m_isRetrial = true;
+    QVariant data = QVariant::fromValue(resp);
+
+    if (triggerResponded)
+        thread->trigger(PreCardResponded, this, player, data);
 
     CardsMoveStruct move1(QList<int>(),
                           judge->who,
@@ -5173,8 +5199,9 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     int reasonType = exchange ? CardMoveReason::S_REASON_OVERRIDE : CardMoveReason::S_REASON_JUDGEDONE;
     CardMoveReason reason(reasonType,
                           player->objectName(),
-                          exchange ? skill_name : QString(),
-                          QString());
+                          exchange ? skill_name : QString(), QString());
+    if (rebyre)
+        reason.m_extraData = QVariant::fromValue((PlayerStar)rebyre);
     CardsMoveStruct move2(QList<int>(),
                           judge->who,
                           exchange ? player : NULL,
@@ -5198,12 +5225,8 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
     moveCardsAtomic(moves, true);
     judge->updateResult();
 
-    if (triggerResponded) {
-        CardResponseStruct resp(card, judge->who);
-        resp.m_isHandcard = isHandcard;
-        QVariant data = QVariant::fromValue(resp);
+    if (triggerResponded)
         thread->trigger(CardResponded, this, player, data);
-    }
 }
 
 bool Room::askForYiji(ServerPlayer *guojia, QList<int> &cards, const QString &skill_name,

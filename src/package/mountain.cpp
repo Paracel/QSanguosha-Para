@@ -1092,15 +1092,8 @@ public:
 
         QString kingdom = general->getKingdom();
         if (zuoci->getKingdom() != kingdom) {
-            if (kingdom == "god") {
+            if (kingdom == "god")
                 kingdom = room->askForKingdom(zuoci);
-
-                LogMessage log;
-                log.type = "#ChooseKingdom";
-                log.from = zuoci;
-                log.arg = kingdom;
-                room->sendLog(log);
-            }
             room->setPlayerProperty(zuoci, "kingdom", kingdom);
         }
 

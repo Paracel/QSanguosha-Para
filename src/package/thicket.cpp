@@ -300,45 +300,35 @@ public:
 class Juxiang: public TriggerSkill {
 public:
     Juxiang(): TriggerSkill("juxiang") {
-        events << CardUsed << BeforeCardsMove;
+        events << BeforeCardsMove;
         frequency = Compulsory;
     }
 
-    virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL;
-    }
-
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == CardUsed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.card->isKindOf("SavageAssault")) {
-                if (use.card->isVirtualCard() && use.card->subcardsLength() != 1)
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (move.card_ids.length() == 1 && move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
+            && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
+            CardStar card = move.reason.m_extraData.value<CardStar>();
+            if (!card || !card->isKindOf("SavageAssault"))
+                return false;
+            if (card->isVirtualCard()) {
+                if (card->getSkillName() != "guhuo" && card->getSkillName() != "nosguhuo")
                     return false;
-                if (Sanguosha->getEngineCard(use.card->getEffectiveId())
-                    && Sanguosha->getEngineCard(use.card->getEffectiveId())->isKindOf("SavageAssault"))
-                    room->setCardFlag(use.card->getEffectiveId(), "real_SA");
             }
-        } else if (TriggerSkill::triggerable(player)) {
-            CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
-            if (move.card_ids.length() == 1 && move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
-                && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
-                Card *card = Sanguosha->getCard(move.card_ids.first());
-                if (card->hasFlag("real_SA") && player != move.from) {
-                    room->notifySkillInvoked(player, objectName());
-                    room->broadcastSkillInvoke(objectName());
-                    LogMessage log;
-                    log.type = "#TriggerSkill";
-                    log.from = player;
-                    log.arg = objectName();
-                    room->sendLog(log);
+            if (player != move.from) {
+                room->notifySkillInvoked(player, objectName());
+                room->broadcastSkillInvoke(objectName());
+                LogMessage log;
+                log.type = "#TriggerSkill";
+                log.from = player;
+                log.arg = objectName();
+                room->sendLog(log);
 
-                    player->obtainCard(card);
-                    move.card_ids.clear();
-                    data = QVariant::fromValue(move);
-                }
+                player->obtainCard(card);
+                move.removeCardIds(move.card_ids);
+                data = QVariant::fromValue(move);
             }
         }
-
         return false;
     }
 };

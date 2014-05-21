@@ -372,6 +372,7 @@ public:
                         // judgement!!! It will not accurately reflect the real reason.
     QString m_skillName; // skill that triggers movement of the cards, such as "longdang", "dimeng"
     QString m_eventName; // additional arg such as "lebusishu" on top of "S_REASON_JUDGE"
+    QVariant m_extraData; // additional data and will not be parsed to clients
 
     CardMoveReason();
     CardMoveReason(int moveReason, char *playerId);
@@ -581,6 +582,7 @@ struct JudgeStruct {
     bool good;
     QString reason;
     bool time_consuming;
+    ServerPlayer *retrial_by_response; // record whether the current judge card is provided by a response retrial
 };
 
 typedef JudgeStruct *JudgeStar;
@@ -613,6 +615,7 @@ struct CardResponseStruct {
     const Card *m_card;
     ServerPlayer *m_who;
     bool m_isUse;
+    bool m_isRetrial;
     bool m_isHandcard;
 };
 
@@ -683,6 +686,7 @@ enum TriggerEvent {
     JinkEffect,
 
     CardAsked,
+    PreCardResponded,
     CardResponded,
     BeforeCardsMove, // sometimes we need to record cards before the move
     CardsMoveOneTime,

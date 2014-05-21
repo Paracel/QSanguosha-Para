@@ -135,7 +135,7 @@ bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QPoint &result) {
 }
 
 bool QSanProtocol::Utils::tryParse(const Json::Value &arg, QColor &color) {
-    if (!arg.isArray() && arg.size() < 3) return false;
+    if (!arg.isArray() || arg.size() < 3) return false;
     color.setRed(arg[0].asInt());
     color.setGreen(arg[1].asInt());
     color.setBlue(arg[2].asInt());

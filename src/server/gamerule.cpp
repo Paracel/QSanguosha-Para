@@ -124,16 +124,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             }
             foreach (ServerPlayer *player, room->getPlayers()) {
                 if (player->getGeneral()->getKingdom() == "god" && player->getGeneralName() != "anjiang"
-                    && !player->getGeneralName().startsWith("boss_")) {
-                    QString new_kingdom = room->askForKingdom(player);
-                    room->setPlayerProperty(player, "kingdom", new_kingdom);
-
-                    LogMessage log;
-                    log.type = "#ChooseKingdom";
-                    log.from = player;
-                    log.arg = new_kingdom;
-                    room->sendLog(log);
-                }
+                    && !player->getGeneralName().startsWith("boss_"))
+                    room->setPlayerProperty(player, "kingdom", room->askForKingdom(player));
                 foreach (const Skill *skill, player->getVisibleSkillList()) {
                     if (skill->getFrequency() == Skill::Limited && !skill->getLimitMark().isEmpty()
                         && (!skill->isLordSkill() || player->hasLordSkill(skill->objectName())))
@@ -672,7 +664,10 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
             JudgeStar judge = data.value<JudgeStar>();
 
             if (room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge) {
-                CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, judge->who->objectName(), QString(), judge->reason);
+                CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, judge->who->objectName(),
+                                      judge->reason, QString());
+                if (judge->retrial_by_response)
+                    reason.m_extraData = QVariant::fromValue((PlayerStar)judge->retrial_by_response);
                 room->moveCardTo(judge->card, judge->who, NULL, Player::DiscardPile, reason, true);
             }
 
@@ -718,16 +713,8 @@ void GameRule::changeGeneral1v1(ServerPlayer *player) const{
 
     room->revivePlayer(player);
     room->changeHero(player, new_general, true, true);
-    if (player->getGeneral()->getKingdom() == "god") {
-        QString new_kingdom = room->askForKingdom(player);
-        room->setPlayerProperty(player, "kingdom", new_kingdom);
-
-        LogMessage log;
-        log.type = "#ChooseKingdom";
-        log.from = player;
-        log.arg = new_kingdom;
-        room->sendLog(log);
-    }
+    if (player->getGeneral()->getKingdom() == "god")
+        room->setPlayerProperty(player, "kingdom", room->askForKingdom(player));
     room->addPlayerHistory(player, ".");
 
     if (player->getKingdom() != player->getGeneral()->getKingdom())
@@ -779,16 +766,8 @@ void GameRule::changeGeneralXMode(ServerPlayer *player) const{
 
     room->revivePlayer(player);
     room->changeHero(player, general, true, true);
-    if (player->getGeneral()->getKingdom() == "god") {
-        QString new_kingdom = room->askForKingdom(player);
-        room->setPlayerProperty(player, "kingdom", new_kingdom);
-
-        LogMessage log;
-        log.type = "#ChooseKingdom";
-        log.from = player;
-        log.arg = new_kingdom;
-        room->sendLog(log);
-    }
+    if (player->getGeneral()->getKingdom() == "god")
+        room->setPlayerProperty(player, "kingdom", room->askForKingdom(player));
     room->addPlayerHistory(player, ".");
 
     if (player->getKingdom() != player->getGeneral()->getKingdom())
@@ -1405,16 +1384,8 @@ void BasaraMode::generalShowed(ServerPlayer *player, QString general_name) const
         room->changeHero(player, general_name, false, false, false, false);
         room->setPlayerProperty(player, "kingdom", player->getGeneral()->getKingdom());
 
-        if (player->getGeneral()->getKingdom() == "god") {
-            QString new_kingdom = room->askForKingdom(player);
-            room->setPlayerProperty(player, "kingdom", new_kingdom);
-
-            LogMessage log;
-            log.type = "#ChooseKingdom";
-            log.from = player;
-            log.arg = new_kingdom;
-            room->sendLog(log);
-        }
+        if (player->getGeneral()->getKingdom() == "god")
+            room->setPlayerProperty(player, "kingdom", room->askForKingdom(player));
 
         if (Config.EnableHegemony)
             room->setPlayerProperty(player, "role", getMappedRole(player->getKingdom()));

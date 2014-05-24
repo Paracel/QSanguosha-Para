@@ -4338,17 +4338,18 @@ QString Room::askForKingdom(ServerPlayer *player) {
     while (isPaused()) {}
     notifyMoveFocus(player, S_COMMAND_CHOOSE_KINGDOM);
 
+    QString result = "wei";
     AI *ai = player->getAI();
     if (ai)
-        return ai->askForKingdom();
-
-    bool success = doRequest(player, S_COMMAND_CHOOSE_KINGDOM, Json::Value::null, true);
-    Json::Value clientReply = player->getClientReply();
-    QString result = "wei";
-    if (success && clientReply.isString()) {
-        result = toQString(clientReply.asCString());
-        if (!Sanguosha->getKingdoms().contains(result))
-            result = "wei";
+        result = ai->askForKingdom();
+    else {
+        bool success = doRequest(player, S_COMMAND_CHOOSE_KINGDOM, Json::Value::null, true);
+        Json::Value clientReply = player->getClientReply();
+        if (success && clientReply.isString()) {
+            result = toQString(clientReply.asCString());
+            if (!Sanguosha->getKingdoms().contains(result))
+                result = "wei";
+        }
     }
 
     LogMessage log;

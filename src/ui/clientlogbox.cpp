@@ -168,10 +168,8 @@ void ClientLogBox::appendLog(const QString &type, const QString &from_general, c
 
     log = QString("<font color='%2'>%1</font>").arg(log).arg(Config.TextEditColor.name());
     QString final_log = append(log);
-    if (type.contains("#Guhuo"))
+    if (type == "#Guhuo" || type == "#GuhuoQuery")
         RoomSceneInstance->setGuhuoLog(final_log);
-    else if (type == "#Chanyuan")
-        RoomSceneInstance->setGuhuoLog(QString());
 }
 
 QString ClientLogBox::bold(const QString &str, QColor color) const{

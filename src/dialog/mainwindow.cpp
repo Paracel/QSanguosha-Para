@@ -255,7 +255,7 @@ void BackLoader::preload() {
         int n = PixmapAnimation::GetFrameCount(emotion);
         for (int i = 0; i < n; i++) {
             QString filename = QString("image/system/emotion/%1/%2.png").arg(emotion).arg(QString::number(i));
-            G_ROOM_SKIN.getPixmapFromFileName(filename);
+            G_ROOM_SKIN.getPixmapFromFileName(filename, true);
         }
     }
 }

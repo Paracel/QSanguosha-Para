@@ -319,7 +319,7 @@ public:
                 ids << card1 << card2;
                 bool diff = (Sanguosha->getCard(card1)->getColor() != Sanguosha->getCard(card2)->getColor());
 
-                CardsMoveStruct move, move2;
+                CardsMoveStruct move;
                 move.card_ids = ids;
                 move.reason = CardMoveReason(CardMoveReason::S_REASON_TURNOVER, shuangying->objectName(), "fuhun", QString());
                 move.to_place = Player::PlaceTable;

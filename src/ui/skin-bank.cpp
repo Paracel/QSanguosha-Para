@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QGraphicsProxyWidget>
 #include <QFile>
+#include <QPixmapCache>
 
 using namespace std;
 using namespace QSanProtocol::Utils;
@@ -69,7 +70,6 @@ const char *QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_MASK = "generalCircleMask-%1
 const char *QSanRoomSkin::S_SKIN_KEY_ANIMATIONS = "preloads";
 
 QSanSkinFactory* QSanSkinFactory::_sm_singleton = NULL;
-QHash<QString, QPixmap> QSanPixmapCache::_m_pixmapBank;
 QHash<QString, int *> IQSanComponentSkin::QSanSimpleTextFont::_m_fontBank;
 
 IQSanComponentSkin::QSanSimpleTextFont::QSanSimpleTextFont() {
@@ -226,7 +226,7 @@ QPixmap QSanRoomSkin::getSkillButtonPixmap(QSanButton::ButtonState state,
             arg2 = "2";
         else if (width == QSanInvokeSkillButton::S_WIDTH_WIDE)
             arg2 = "1";
-        return getPixmapFromFileName(path.arg(arg2));        
+        return getPixmapFromFileName(path.arg(arg2));
     }
 }
 
@@ -250,33 +250,33 @@ QPixmap QSanRoomSkin::getProgressBarPixmap(int percentile) const{
         int thred = allMaps[i][0].asInt();
         if (thred >= percentile) {
             if (!allMaps[i][1].isString()) continue;
-            return getPixmapFromFileName(toQString(allMaps[i][1]));
+            return getPixmapFromFileName(toQString(allMaps[i][1]), true);
         }
     }
     return QPixmap();
 }
 
-QPixmap QSanRoomSkin::getCardMainPixmap(const QString &cardName) const{
-    if (cardName == "unknown") return getPixmap("handCardBack");
+QPixmap QSanRoomSkin::getCardMainPixmap(const QString &cardName, bool cache) const{
+    if (cardName == "unknown") return getPixmap("handCardBack", QString(), true);
     QString name = cardName;
     if (ServerInfo.GameMode == "06_3v3" && name.startsWith("vs_"))
         name = name.mid(3);
     else if (ServerInfo.GameMode == "02_1v1" && name.startsWith("kof_"))
         name = name.mid(4);
-    return getPixmap(S_SKIN_KEY_HAND_CARD_MAIN_PHOTO, name);
+    return getPixmap(S_SKIN_KEY_HAND_CARD_MAIN_PHOTO, name, cache);
 }
 
 QPixmap QSanRoomSkin::getCardSuitPixmap(Card::Suit suit) const{
-    return getPixmap(QSanRoomSkin::S_SKIN_KEY_HAND_CARD_SUIT, Card::Suit2String(suit));
+    return getPixmap(QSanRoomSkin::S_SKIN_KEY_HAND_CARD_SUIT, Card::Suit2String(suit), true);
 }
 
 QPixmap QSanRoomSkin::getCardNumberPixmap(int point, bool isBlack) const{
     QString pathKey = isBlack ? S_SKIN_KEY_HAND_CARD_NUMBER_BLACK : S_SKIN_KEY_HAND_CARD_NUMBER_RED;
-    return getPixmap(pathKey, QString::number(point));
+    return getPixmap(pathKey, QString::number(point), true);
 }
 
 QPixmap QSanRoomSkin::getCardJudgeIconPixmap(const QString &judgeName) const{
-    return getPixmap(S_SKIN_KEY_JUDGE_CARD_ICON, judgeName);
+    return getPixmap(S_SKIN_KEY_JUDGE_CARD_ICON, judgeName, true);
 }
 
 QPixmap QSanRoomSkin::getCardAvatarPixmap(const QString &generalName) const{
@@ -427,33 +427,6 @@ bool IQSanComponentSkin::AnchoredRect::tryParse(Json::Value value) {
     return false;
 }
 
-// Load pixmap from a file and map it to the given key.
-const QPixmap &QSanPixmapCache::getPixmap(const QString &key, const QString &fileName) {
-    if (!_m_pixmapBank.contains(key)) {
-        if (fileName == "deprecated") {
-            _m_pixmapBank[key] = QPixmap(1, 1);
-        } else {
-            bool success = !fileName.isEmpty() && _m_pixmapBank[key].load(fileName);
-            if (!success) {
-                /*qWarning("Unable to open resource file \"%s\" for key \"%s\"\n",
-                         fileName.toAscii().constData(),
-                         key.toAscii().constData());*/
-                _m_pixmapBank[key] = QPixmap(1, 1); // make Qt happy
-            }
-        }
-    }
-    return _m_pixmapBank[key];
-}
-
-// Load pixmap from a file.
-const QPixmap &QSanPixmapCache::getPixmap(const QString &fileName) {
-    return getPixmap(fileName, fileName);
-}
-
-bool QSanPixmapCache::contains(const QString &key) {
-    return _m_pixmapBank.contains(key);
-}
-
 bool IQSanComponentSkin::_loadImageConfig(const Json::Value &config) {
     if (!config.isObject())
         return false;
@@ -465,13 +438,10 @@ bool IQSanComponentSkin::_loadImageConfig(const Json::Value &config) {
             const char *key = keys[i].c_str();
             _m_imageConfig[key] = config[key];
             S_IMAGE_KEY2FILE.remove(key);
-            S_IMAGE_KEY2PIXMAP.remove(key);
             if (S_IMAGE_GROUP_KEYS.contains(key)) {
                 QList<QString> &mappedKeys = S_IMAGE_GROUP_KEYS[key];
-                foreach (QString mkey, mappedKeys) {
+                foreach (QString mkey, mappedKeys)
                     S_IMAGE_KEY2FILE.remove(mkey);
-                    S_IMAGE_KEY2PIXMAP.remove(mkey);
-                }
                 S_IMAGE_GROUP_KEYS.remove(key);
             }
         }
@@ -609,10 +579,8 @@ QString IQSanComponentSkin::_readImageConfig(const QString &key, QRect &rect,
 
 QHash<QString, QString> IQSanComponentSkin::S_IMAGE_KEY2FILE;
 QHash<QString, QList<QString> > IQSanComponentSkin::S_IMAGE_GROUP_KEYS;
-QHash<QString, QPixmap> IQSanComponentSkin::S_IMAGE_KEY2PIXMAP;
-QHash<QString, int> IQSanComponentSkin::S_HERO_SKIN_INDEX;
 
-QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) const{
+QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg, bool cache) const{
     // the order of attempts are:
     // 1. if no arg, then just use key to find fileName.
     // 2. try key.arg(arg), if exists, then return the pixmap
@@ -627,10 +595,8 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
 
     // case 1 and 2
     if (arg.isNull()) totalKey = key; else totalKey = key.arg(arg);
-    bool from_cache = false;
     if (S_IMAGE_KEY2FILE.contains(totalKey)) { // first, search cache
         fileName = S_IMAGE_KEY2FILE[totalKey];
-        from_cache = true;
     } else if (isImageKeyDefined(totalKey)) { // then, read from config file
         fileName = _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);
         S_IMAGE_KEY2FILE[totalKey].append(fileName);
@@ -649,55 +615,58 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg) co
     }
 
     // Hero skin?
-    bool update_cache = false;
     QString general_name = fileName.split("/").last().split(".").first();
     if (Sanguosha->getGeneral(general_name)) {
         int skin_index = Config.value(QString("HeroSkin/%1").arg(general_name), 0).toInt();
-        int saved_index = 0;
-        QString name = QString("%1 %2").arg(general_name).arg(totalKey);
-        if (S_HERO_SKIN_INDEX.contains(name))
-            saved_index = S_HERO_SKIN_INDEX[name];
-        if (saved_index != skin_index) {
-            S_HERO_SKIN_INDEX[name] = skin_index;
-            update_cache = true;
-            if (from_cache)
-                _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);
-        }
         if (skin_index > 0) {
             fileName.replace("image/", "image/heroskin/");
             fileName.replace(general_name, QString("%1_%2").arg(general_name).arg(skin_index));
         }
     }
 
-    if (!S_IMAGE_KEY2PIXMAP.contains(totalKey) || update_cache) {
-        QPixmap pixmap = QSanPixmapCache::getPixmap(fileName);
-        if (clipping) {
-            QRect actualClip = clipRegion;
-            if (actualClip.right() > pixmap.width())
-                actualClip.setRight(pixmap.width());
-            if (actualClip.bottom() > pixmap.height())
-                actualClip.setBottom(pixmap.height());
+    QPixmap pixmap = getPixmapFromFileName(fileName, cache);
+    if (clipping) {
+        QRect actualClip = clipRegion;
+        if (actualClip.right() > pixmap.width())
+            actualClip.setRight(pixmap.width());
+        if (actualClip.bottom() > pixmap.height())
+            actualClip.setBottom(pixmap.height());
 
-            QPixmap clipped = QPixmap(clipRegion.size());
-            clipped.fill(Qt::transparent);
-            QPainter painter(&clipped);
-            painter.drawPixmap(0, 0, pixmap.copy(actualClip));
+        QPixmap clipped = QPixmap(clipRegion.size());
+        clipped.fill(Qt::transparent);
+        QPainter painter(&clipped);
+        painter.drawPixmap(0, 0, pixmap.copy(actualClip));
 
-            if (scaled)
-                clipped = clipped.scaled(scaleRegion, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            pixmap = clipped;
-        }
-        S_IMAGE_KEY2PIXMAP[totalKey] = pixmap;
+        if (scaled)
+            clipped = clipped.scaled(scaleRegion, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        pixmap = clipped;
     }
-    return S_IMAGE_KEY2PIXMAP[totalKey];
+    return pixmap;
 }
 
 QPixmap IQSanComponentSkin::getPixmapFileName(const QString &key) const{
      return _readConfig(_m_imageConfig, key);
 }
 
-QPixmap IQSanComponentSkin::getPixmapFromFileName(const QString &fileName) const{
-    return QSanPixmapCache::getPixmap(fileName, fileName);
+QPixmap IQSanComponentSkin::getPixmapFromFileName(const QString &fileName, bool cache) const{
+    if (fileName == "deprecated" || fileName.isEmpty()) {
+        return QPixmap(1, 1);
+    } else {
+        QPixmap pixmap;
+        bool success = true;
+        if (!cache) {
+            success = pixmap.load(fileName);
+        } else {
+            if (!QPixmapCache::find(fileName, &pixmap)) {
+                if (pixmap.load(fileName))
+                    QPixmapCache::insert(fileName, pixmap);
+                else
+                    success = false;
+            }
+        }
+        if (!success) return QPixmap(1, 1); // make Qt happy
+        else return pixmap;
+    }
 }
 
 bool QSanRoomSkin::_loadAnimationConfig(const Json::Value &animationConfig) {

@@ -11,7 +11,6 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsSceneMouseEvent>
 #include <QMenu>
-#include <QPixmapCache>
 #include <QParallelAnimationGroup>
 
 using namespace QSanProtocol;

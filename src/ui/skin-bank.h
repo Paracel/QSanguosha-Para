@@ -17,18 +17,6 @@
 #include <QGraphicsPixmapItem>
 #include <QAbstractAnimation>
 
-class QSanPixmapCache {
-public:
-    // Load pixmap from a file and map it to the given key.
-    static const QPixmap &getPixmap(const QString &key, const QString &fileName);
-    // Load pixmap from a existing key.
-    static const QPixmap &getPixmap(const QString &key);
-    static bool contains(const QString &key); 
-
-private:
-    static QHash<QString, QPixmap> _m_pixmapBank;
-};
-
 class IQSanComponentSkin { // interface class
 public:
     class QSanSimpleTextFont {
@@ -81,9 +69,9 @@ public:
     static const char *S_SKIN_KEY_DEFAULT_SECOND;
     bool load(const QString &layoutConfigFileName, const QString &imageConfigFileName,
               const QString &audioConfigFileName, const QString &animationConfigFileName);
-    QPixmap getPixmap(const QString &key, const QString &arg = QString()) const;
+    QPixmap getPixmap(const QString &key, const QString &arg = QString(), bool cache = false) const;
     QPixmap getPixmapFileName(const QString &key) const;
-    QPixmap getPixmapFromFileName(const QString &fileName) const;
+    QPixmap getPixmapFromFileName(const QString &fileName, bool cache = false) const;
     QStringList getAudioFileNames(const QString &key) const;
     QString getRandomAudioFileName(const QString &key) const;
     bool isImageKeyDefined(const QString &key) const;
@@ -104,10 +92,8 @@ protected:
     Json::Value _m_animationConfig;
     // image key -> image file name
     static QHash<QString, QString> S_IMAGE_KEY2FILE;
-    static QHash<QString, QPixmap> S_IMAGE_KEY2PIXMAP;
     // image group key -> image keys
     static QHash<QString, QList<QString> > S_IMAGE_GROUP_KEYS;
-    static QHash<QString, int> S_HERO_SKIN_INDEX;
 };
 
 class QSanRoomSkin: public IQSanComponentSkin {
@@ -290,7 +276,7 @@ public:
     QPixmap getSkillButtonPixmap(QSanButton::ButtonState state,
                                  QSanInvokeSkillButton::SkillType type, 
                                  QSanInvokeSkillButton::SkillButtonWidth width) const;
-    QPixmap getCardMainPixmap(const QString &cardName) const;
+    QPixmap getCardMainPixmap(const QString &cardName, bool cache = false) const;
     QPixmap getCardSuitPixmap(Card::Suit suit) const;
     QPixmap getCardNumberPixmap(int point, bool isBlack) const;
     QPixmap getCardJudgeIconPixmap(const QString &judgeName) const;

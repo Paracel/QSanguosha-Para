@@ -2163,14 +2163,13 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 	for _, card in ipairs(cards) do
 		if exchange or not self.player:isJilei(card) then
 			place = self.room:getCardPlace(card:getEffectiveId())
-			if discardEquip and place == sgs.Player_PlaceEquip then
+			if self.player:hasSkills(sgs.lose_equip_skill) and place == sgs.Player_PlaceEquip then
 				table.insert(temp, card:getEffectiveId())
 			elseif self:getKeepValue(card) >= 4.1 then
 				table.insert(temp, card:getEffectiveId())
 			else
 				table.insert(to_discard, card:getEffectiveId())
 			end
-			if self.player:hasSkills(sgs.lose_equip_skill) and place == sgs.Player_PlaceEquip then discardEquip = true end
 			if #to_discard == discard_num then return to_discard end
 		end
 	end

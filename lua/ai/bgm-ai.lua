@@ -1118,9 +1118,8 @@ sgs.ai_card_intention.FuluanCard = function(self, card, from, tos)
 end
 
 local function need_huangen(self, who)
-	local card = sgs.Card_Parse(self.player:getTag("huangen"):toString())
-	if card == nil then return false end
-	local from = self.player:getTag("huangen"):toCardUse().from
+	local use = self.player:getTag("huangen"):toCardUse()
+	local card, from = use.card, use.from
 	if self:isEnemy(who) then
 		if card:isKindOf("GodSalvation") and who:isWounded() and who:getHp() < getBestHp(who) and self:hasTrickEffective(card, who, from) then
 			if hasManjuanEffect(who) then return true end

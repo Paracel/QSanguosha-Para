@@ -369,6 +369,7 @@ protected:
 class QSanSkinFactory {
 public:
     static QSanSkinFactory &getInstance();
+    static void destroyInstance();
     const QString &getCurrentSkinName() const;
     const QSanSkinScheme &getCurrentSkinScheme();
     bool switchSkin(QString skinName);

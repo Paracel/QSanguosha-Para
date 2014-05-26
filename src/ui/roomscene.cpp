@@ -379,6 +379,10 @@ RoomScene::RoomScene(QMainWindow *main_window)
     _m_bgEnabled = false;
 }
 
+RoomScene::~RoomScene() {
+    QSanSkinFactory::destroyInstance();
+}
+
 void RoomScene::handleGameEvent(const Json::Value &arg) {
     GameEventType eventType = (GameEventType)arg[0].asInt();
     switch (eventType) {
@@ -3176,8 +3180,8 @@ void RoomScene::fillTable(QTableWidget *table, const QList<const ClientPlayer *>
     table->setRowCount(players.length());
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    RecAnalysis *record = new RecAnalysis(ClientInstance->getReplayPath());
-    QMap<QString, PlayerRecordStruct *> record_map = record->getRecordMap();
+    RecAnalysis record(ClientInstance->getReplayPath());
+    QMap<QString, PlayerRecordStruct *> record_map = record.getRecordMap();
 
     static QStringList labels;
     if (labels.isEmpty()) {

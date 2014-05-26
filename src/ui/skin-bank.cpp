@@ -69,7 +69,7 @@ const char *QSanRoomSkin::S_SKIN_KEY_GENERAL_CIRCLE_MASK = "generalCircleMask-%1
 // Animations
 const char *QSanRoomSkin::S_SKIN_KEY_ANIMATIONS = "preloads";
 
-QSanSkinFactory* QSanSkinFactory::_sm_singleton = NULL;
+QSanSkinFactory *QSanSkinFactory::_sm_singleton = NULL;
 QHash<QString, int *> IQSanComponentSkin::QSanSimpleTextFont::_m_fontBank;
 
 IQSanComponentSkin::QSanSimpleTextFont::QSanSimpleTextFont() {
@@ -944,6 +944,13 @@ QSanSkinFactory &QSanSkinFactory::getInstance() {
     if (_sm_singleton == NULL)
         _sm_singleton = new QSanSkinFactory("skins/skinList.json");
     return *_sm_singleton;
+}
+
+void QSanSkinFactory::destroyInstance() {
+    if (_sm_singleton) {
+        delete _sm_singleton;
+        _sm_singleton = NULL;
+    }
 }
 
 const QSanSkinScheme &QSanSkinFactory::getCurrentSkinScheme() {

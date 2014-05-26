@@ -399,8 +399,9 @@ QSanSkillButton *Dashboard::addSkillButton(const QString &skillName) {
             // If there is already a button there, then we haven't removed the last skill before attaching
             // a new one. The server must have sent the requests out of order. So crash.
             Q_ASSERT(_m_equipSkillBtns[i] == NULL);
-            _m_equipSkillBtns[i] = new QSanInvokeSkillButton();
+            _m_equipSkillBtns[i] = new QSanInvokeSkillButton(this);
             _m_equipSkillBtns[i]->setSkill(skill);
+            _m_equipSkillBtns[i]->setVisible(false);
             connect(_m_equipSkillBtns[i], SIGNAL(clicked()), this, SLOT(_onEquipSelectChanged()));
             connect(_m_equipSkillBtns[i], SIGNAL(enable_changed()), this, SLOT(_onEquipSelectChanged()));
             QSanSkillButton *btn = _m_equipSkillBtns[i];
@@ -604,10 +605,12 @@ void Dashboard::_setEquipBorderAnimation(int index, bool turnOn) {
     anim->setEndValue(newPos);
     anim->setDuration(200);
     _m_equipAnim[index]->addAnimation(anim);
+    connect(anim, SIGNAL(finished()), anim, SLOT(deleteLater()));
     anim = new QPropertyAnimation(_m_equipRegions[index], "opacity");
     anim->setEndValue(255);
     anim->setDuration(200);
     _m_equipAnim[index]->addAnimation(anim);
+    connect(anim, SIGNAL(finished()), anim, SLOT(deleteLater()));
     _m_equipAnim[index]->start();
     
     Q_ASSERT(_m_equipBorders[index]);

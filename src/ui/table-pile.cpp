@@ -166,6 +166,7 @@ void TablePile::adjustCards() {
     QParallelAnimationGroup *animation = new QParallelAnimationGroup;
     foreach (CardItem *card_item, m_visibleCards)
         animation->addAnimation(card_item->getGoBackAnimation(true));
+    connect(animation, SIGNAL(finished()), this, SLOT(onAnimationFinished()));
     animation->start();
 }
 

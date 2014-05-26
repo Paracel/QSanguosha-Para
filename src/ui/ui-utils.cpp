@@ -328,7 +328,7 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQString(QPainter *painter, QString text
     if (ystart < 0) ystart = 0;
     QImage result(newImage, cols, rows, QImage::Format_ARGB32);
     painter->drawImage(topLeft.x() + xstart, topLeft.y() + ystart, result);
-    delete []newImage;
+    delete [] newImage;
     return true;
 }
 
@@ -492,6 +492,6 @@ bool QSanUiUtils::QSanFreeTypeFont::paintQStringMultiLine(QPainter *painter, QSt
     if (ystart < 0) ystart = 0;
     QImage result(newImage, cols, rows, QImage::Format_ARGB32);
     painter->drawImage(topLeft.x() + xstart, topLeft.y() + ystart, result);
-    delete []newImage;
+    delete [] newImage;
     return true;
 }

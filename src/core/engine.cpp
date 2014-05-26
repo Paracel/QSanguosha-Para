@@ -88,7 +88,7 @@ Engine::Engine()
 
     _loadMiniScenarios();
     _loadModScenarios();
-    m_customScene = new CustomScenario();
+    m_customScene = new CustomScenario;
 
     if (!DoLuaScript(lua, "lua/sanguosha.lua")) exit(1);
 
@@ -132,6 +132,7 @@ void Engine::addTranslationEntry(const char *key, const char *value) {
 
 Engine::~Engine() {
     lua_close(lua);
+    delete m_customScene;
 #ifdef AUDIO_SUPPORT
     Audio::quit();
 #endif

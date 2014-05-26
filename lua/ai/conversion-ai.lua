@@ -36,7 +36,6 @@ sgs.ai_skill_invoke.cv_nos_guanyu = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_xiahoudun = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_caocao = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_simayi = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_lvmeng = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_liubei = sgs.ai_skill_invoke.cv_huanggai
 sgs.ai_skill_invoke.cv_nos_zhangfei = sgs.ai_skill_invoke.cv_huanggai
@@ -140,5 +139,12 @@ sgs.ai_skill_invoke.cv_madai = function(self, data)
 	if math.random(0, 3) > 0 then return false
 	elseif math.random(0, 3) > 0 then sgs.ai_skill_choice.cv_madai = "heg_madai"
 	else sgs.ai_skill_choice.cv_madai = "ol_madai" end
+	return true
+end
+
+sgs.ai_skill_invoke.cv_nos_simayi = function(self, data)
+	if math.random(0, 6) > 0 then return false end
+	if math.random(0, 6) > 0 then sgs.ai_skill_choice.cv_nos_simayi = "tw_simayi"
+	else sgs.ai_skill_choice.cv_nos_simayi = "pr_nos_simayi" end
 	return true
 end

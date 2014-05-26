@@ -243,7 +243,7 @@ config = {
 		"nos_lvbu->heg_lvbu|tw_lvbu",
 		"nos_lvmeng->tw_lvmeng",
 		"nos_machao->sp_machao|tw_machao",
-		"nos_simayi->tw_simayi",
+		"nos_simayi->tw_simayi|pr_nos_simayi",
 		"nos_xiahoudun->tw_xiahoudun",
 		"nos_xuchu->tw_xuchu",
 		"nos_zhangfei->tw_zhangfei",

@@ -185,6 +185,10 @@ return {
 	["&pr_shencaocao"] = "神曹操", 
 	["illustrator:pr_shencaocao"] = "陈岳",
 
+	["pr_nos_simayi"] = "PR司马懿",
+	["&pr_nos_simayi"] = "司马懿", 
+	["illustrator:pr_nos_simayi"] = "YOCO",
+
 	["diy_zhugeke"] = "诸葛恪-贴纸",
 	["&diy_zhugeke"] = "诸葛恪",
 	["illustrator:diy_zhugeke"] = "大佬荣",

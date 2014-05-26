@@ -2486,7 +2486,7 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_zhenji->addSkill("luoshen");
 
     General *tw_liubei = new General(this, "tw_liubei$", "shu", 4, true, true);
-    tw_liubei->addSkill("nosrende");
+    tw_liubei->addSkill("rende");
     tw_liubei->addSkill("jijiang");
 
     General *tw_guanyu = new General(this, "tw_guanyu", "shu", 4, true, true);
@@ -2575,6 +2575,10 @@ MiscellaneousPackage::MiscellaneousPackage()
     General *pr_shencaocao = new General(this, "pr_shencaocao", "god", 3, true, true); // PR LE 005
     pr_shencaocao->addSkill("guixin");
     pr_shencaocao->addSkill("feiying");
+
+    General *pr_nos_simayi = new General(this, "pr_nos_simayi", "wei", 3, true, true); // PR WEI 002
+    pr_nos_simayi->addSkill("nosfankui");
+    pr_nos_simayi->addSkill("nosguicai");
 }
 
 ADD_PACKAGE(Miscellaneous)

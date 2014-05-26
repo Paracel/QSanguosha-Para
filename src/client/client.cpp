@@ -486,12 +486,8 @@ void Client::requestCheatChangeGeneral(const QString &name, bool isSecondaryHero
     requestToServer(S_COMMAND_CHEAT, cheatArg);
 }
 
-void Client::addRobot() {
-    notifyServer(S_COMMAND_ADD_ROBOT);
-}
-
-void Client::fillRobots() {
-    notifyServer(S_COMMAND_FILL_ROBOTS);
+void Client::addRobot(int num) {
+    notifyServer(S_COMMAND_ADD_ROBOT, num);
 }
 
 void Client::onPlayerResponseCard(const Card *card, const QList<const Player *> &targets) {

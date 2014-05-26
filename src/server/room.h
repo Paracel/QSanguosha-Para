@@ -350,7 +350,6 @@ public:
     bool pauseCommand(ServerPlayer *player, const Json::Value &arg);
     void processResponse(ServerPlayer *player, const QSanProtocol::QSanGeneralPacket *arg);
     bool addRobotCommand(ServerPlayer *player, const Json::Value &arg);
-    bool fillRobotsCommand(ServerPlayer *player, const Json::Value &arg);
     void broadcastInvoke(const QSanProtocol::QSanPacket *packet, ServerPlayer *except = NULL);
     void broadcastInvoke(const char *method, const QString &arg = ".", ServerPlayer *except = NULL);
     bool networkDelayTestCommand(ServerPlayer *player, const Json::Value &);

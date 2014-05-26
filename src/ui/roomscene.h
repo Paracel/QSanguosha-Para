@@ -176,6 +176,10 @@ public slots:
 
     void setChatBoxVisibleSlot();
     void pause();
+
+    void addRobot();
+    void doAddRobotAction();
+    void fillRobots();
     
 protected:    
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -201,7 +205,7 @@ private:
     double _m_last_front_ZValue;
     GenericCardContainer *_getGenericCardContainer(Player::Place place, Player *player);
     QMap<int, QList<QList<CardItem *> > > _m_cardsMoveStash;
-    Button *add_robot, *fill_robots, *return_to_main_menu;
+    Button *add_robot, *start_game, *return_to_main_menu;
     QList<Photo *> photos;
     QMap<QString, Photo *> name2photo;
     Dashboard *dashboard;
@@ -250,6 +254,8 @@ private:
     QPixmap m_rolesBoxBackground;
     QGraphicsPixmapItem *m_rolesBox;
     QGraphicsTextItem *m_pileCardNumInfoTextBox;
+
+    QMenu *m_add_robot_menu;
 
     // for 3v3 & 1v1 mode
     QSanSelectableItem *selector_box;

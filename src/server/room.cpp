@@ -76,7 +76,6 @@ void Room::initCallbacks() {
     // Client notifications
     m_callbacks[S_COMMAND_TOGGLE_READY] = &Room::toggleReadyCommand;
     m_callbacks[S_COMMAND_ADD_ROBOT] = &Room::addRobotCommand;
-    m_callbacks[S_COMMAND_FILL_ROBOTS] = &Room::fillRobotsCommand;
 
     m_callbacks[S_COMMAND_SPEAK] = &Room::speakCommand;
     m_callbacks[S_COMMAND_TRUST] = &Room::trustCommand;
@@ -2232,9 +2231,8 @@ void Room::processClientPacket(const QString &request) {
     }
 }
 
-bool Room::addRobotCommand(ServerPlayer *player, const Json::Value &) {
-    if (player && !player->isOwner()) return false;
-    if (isFull()) return false;
+bool Room::addRobotCommand(ServerPlayer *player, const Json::Value &arg) {
+    if (player && !player->isOwner() || !arg.isInt()) return false;
 
     int n = 0;
     foreach (ServerPlayer *player, m_players) {
@@ -2242,27 +2240,25 @@ bool Room::addRobotCommand(ServerPlayer *player, const Json::Value &) {
             n++;
     }
 
-    ServerPlayer *robot = new ServerPlayer(this);
-    robot->setState("robot");
+    int add_num = arg.asInt();
+    for (int i = 0; i < add_num; i++) {
+        if (isFull()) return false;
+        ServerPlayer *robot = new ServerPlayer(this);
+        robot->setState("robot");
 
-    m_players << robot;
+        m_players << robot;
 
-    const QString robot_name = tr("Computer %1").arg(QChar('A' + n));
-    const QString robot_avatar = Sanguosha->getRandomGeneralName();
-    signup(robot, robot_name, robot_avatar, true);
+        const QString robot_name = tr("Computer %1").arg(QChar('A' + n));
+        n++;
+        const QString robot_avatar = Sanguosha->getRandomGeneralName();
+        signup(robot, robot_name, robot_avatar, true);
 
-    QString greeting = tr("Hello, I'm a robot").toUtf8().toBase64();
-    speakCommand(robot, greeting);
+        QString greeting = tr("Hello, I'm a robot").toUtf8().toBase64();
+        speakCommand(robot, greeting);
 
-    broadcastProperty(robot, "state");
+        broadcastProperty(robot, "state");
+    }
 
-    return true;
-}
-
-bool Room::fillRobotsCommand(ServerPlayer *player, const Json::Value &) {
-    int left = player_count - m_players.length();
-    for (int i = 0; i < left; i++)
-        addRobotCommand(player, Json::Value::null);
     return true;
 }
 

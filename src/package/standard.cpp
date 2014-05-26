@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "client.h"
 #include "exppattern.h"
+#include "roomthread.h"
 
 QString BasicCard::getType() const{
     return "basic";

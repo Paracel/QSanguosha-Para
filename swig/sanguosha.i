@@ -995,7 +995,6 @@ class QThread: public QObject {
 
 struct LogMessage {
     LogMessage();
-    QString toString() const;
 
     QString type;
     ServerPlayer *from;

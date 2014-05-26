@@ -1903,7 +1903,7 @@
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="202"/>
         <source>Replay</source>
-        <translation>战局重放</translation>
+        <translation>战局录像</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="210"/>
@@ -1969,7 +1969,7 @@
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="301"/>
         <source>Replay file convert ...</source>
-        <translation>重放文件格式转换 ...</translation>
+        <translation>录像文件格式转换 ...</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="306"/>
@@ -1983,13 +1983,13 @@
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="316"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="820"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="825"/>
         <source>About fmod</source>
         <translation>关于 fmod</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="321"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="844"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="849"/>
         <source>About Lua</source>
         <translation>关于 Lua</translation>
     </message>
@@ -2006,7 +2006,7 @@
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.ui" line="336"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="863"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="868"/>
         <source>About GPLv3</source>
         <translation>关于 GPLv3</translation>
     </message>
@@ -2124,7 +2124,7 @@
         <location filename="../../src/dialog/mainwindow.cpp" line="649"/>
         <location filename="../../src/dialog/mainwindow.cpp" line="691"/>
         <source>Pure text replay file (*.txt);; Image replay file (*.png)</source>
-        <translation>纯文本重放文件 (*.txt);;图像重放文件 (*.png)</translation>
+        <translation>纯文本录像 (*.txt);;图像录像 (*.png)</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="248"/>
@@ -2145,9 +2145,9 @@
         <location filename="../../src/dialog/mainwindow.cpp" line="453"/>
         <location filename="../../src/dialog/mainwindow.cpp" line="573"/>
         <location filename="../../src/dialog/mainwindow.cpp" line="630"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="824"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="848"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="867"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="829"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="853"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="872"/>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -2165,7 +2165,7 @@
         <location filename="../../src/dialog/mainwindow.cpp" line="681"/>
         <location filename="../../src/dialog/mainwindow.cpp" line="683"/>
         <source>Replay file convert</source>
-        <translation>重放文件格式转换</translation>
+        <translation>录像文件格式转换</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="681"/>
@@ -2180,7 +2180,7 @@
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="689"/>
         <source>Load replay record</source>
-        <translation>载入录像记录</translation>
+        <translation>载入录像</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="696"/>
@@ -2268,39 +2268,39 @@
         <translation>武将包：</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="777"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="781"/>
         <source>GameMode:</source>
         <translation>游戏模式：</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="780"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="784"/>
         <source>ServerOptions:</source>
         <translation>服务器选项：</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="787"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="791"/>
         <source>Chat Information:</source>
         <translation>聊天信息：</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="810"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="815"/>
         <source>FMOD is a proprietary audio library made by Firelight Technologies</source>
         <translation>FMOD 是由 Firelight Technologies 出品的专有音频库。</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="814"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="839"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="861"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="819"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="844"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="866"/>
         <source>Official site: &lt;a href=&apos;%1&apos; style = &quot;color:#0072c1; &quot;&gt;%1&lt;/a&gt; &lt;br/&gt;</source>
         <translation>官方网站: &lt;a href=&apos;%1&apos; style = &quot;color:#0072c1; &quot;&gt;%1&lt;/a&gt; &lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="835"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="840"/>
         <source>Lua is a powerful, fast, lightweight, embeddable scripting language.</source>
         <translation>Lua 是一种强大的，快速的，轻量级，可嵌入的脚本语言。</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="857"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="862"/>
         <source>The GNU General Public License is the most widely used free software license, which guarantees end users the freedoms to use, study, share, and modify the software.</source>
         <translation>GNU 通用公共许可协议（简称GNU GPL或GPL），是一个广泛被使用的自由软件许可证条款，它确保了广大用户自由地使用、学习、共享或修改软件。</translation>
     </message>
@@ -2312,7 +2312,7 @@
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="647"/>
         <source>Please select a replay file</source>
-        <translation>请选择一个重放文件</translation>
+        <translation>请选择一个录像文件</translation>
     </message>
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="433"/>
@@ -2335,8 +2335,8 @@
         <translation>论坛: &lt;a href=&apos;%1&apos; style = &quot;color:#0072c1; &quot;&gt;%1&lt;/a&gt; &lt;br/&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/mainwindow.cpp" line="817"/>
-        <location filename="../../src/dialog/mainwindow.cpp" line="841"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="822"/>
+        <location filename="../../src/dialog/mainwindow.cpp" line="846"/>
         <source>Current versionn %1 &lt;br/&gt;</source>
         <translation>当前版本 %1&lt;br/&gt;</translation>
     </message>
@@ -2388,7 +2388,7 @@
     <message>
         <location filename="../../src/dialog/mainwindow.cpp" line="230"/>
         <source>Select a reply file</source>
-        <translation>请选择重放文件</translation>
+        <translation>请选择录像文件</translation>
     </message>
 </context>
 <context>
@@ -2523,197 +2523,197 @@
         <translation>文件不可读</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="85"/>
+        <location filename="../../src/core/record-analysis.cpp" line="95"/>
         <source>RandomSeats</source>
         <translation>随机座位</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="86"/>
+        <location filename="../../src/core/record-analysis.cpp" line="96"/>
         <source>EnableCheat</source>
         <translation>开启作弊</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="87"/>
+        <location filename="../../src/core/record-analysis.cpp" line="97"/>
         <source>FreeChoose</source>
         <translation>自由选将</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="88"/>
+        <location filename="../../src/core/record-analysis.cpp" line="98"/>
         <source>Enable2ndGeneral</source>
         <translation>开启双将</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="89"/>
+        <location filename="../../src/core/record-analysis.cpp" line="99"/>
         <source>EnableSame</source>
         <translation>同将模式</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="90"/>
+        <location filename="../../src/core/record-analysis.cpp" line="100"/>
         <source>EnableBasara</source>
         <translation>暗将模式</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="91"/>
+        <location filename="../../src/core/record-analysis.cpp" line="101"/>
         <source>EnableHegemony</source>
         <translation>国战模式</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="92"/>
+        <location filename="../../src/core/record-analysis.cpp" line="102"/>
         <source>EnableAI</source>
         <translation>开启AI</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="371"/>
+        <location filename="../../src/core/record-analysis.cpp" line="342"/>
         <source>Rapid Victory</source>
         <translation>旗开得胜</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="373"/>
+        <location filename="../../src/core/record-analysis.cpp" line="344"/>
         <source>Burning Soul</source>
         <translation>血战</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="374"/>
+        <location filename="../../src/core/record-analysis.cpp" line="345"/>
         <source>Regretful Lose</source>
         <translation>含恨而终</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="375"/>
+        <location filename="../../src/core/record-analysis.cpp" line="346"/>
         <source>Fall Short</source>
         <translation>功亏一篑</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="377"/>
+        <location filename="../../src/core/record-analysis.cpp" line="348"/>
         <source>Wicked Kill</source>
         <translation>直刺咽喉</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="381"/>
+        <location filename="../../src/core/record-analysis.cpp" line="352"/>
         <source>Useless alive</source>
         <translation>无存在感</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="384"/>
+        <location filename="../../src/core/record-analysis.cpp" line="355"/>
         <source>Wisely Loyalist</source>
         <translation>能臣巧吏</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="387"/>
+        <location filename="../../src/core/record-analysis.cpp" line="358"/>
         <source>Vanguard</source>
         <translation>破敌先锋</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="388"/>
+        <location filename="../../src/core/record-analysis.cpp" line="359"/>
         <source>Fierce Lord</source>
         <translation>一世枭雄</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="407"/>
+        <location filename="../../src/core/record-analysis.cpp" line="378"/>
         <source>Break Point</source>
         <translation>直捣黄龙</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="409"/>
+        <location filename="../../src/core/record-analysis.cpp" line="380"/>
         <source>Legatus</source>
         <translation>破军功臣</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="410"/>
+        <location filename="../../src/core/record-analysis.cpp" line="381"/>
         <source>Frightful Lord</source>
         <translation>势敌万军</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="389"/>
+        <location filename="../../src/core/record-analysis.cpp" line="360"/>
         <source>Blood Judgement</source>
         <translation>嗜血判官</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="391"/>
+        <location filename="../../src/core/record-analysis.cpp" line="362"/>
         <source>Unrealized Aspiration</source>
         <translation>大业未成</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="428"/>
+        <location filename="../../src/core/record-analysis.cpp" line="399"/>
         <source>Priority Honor</source>
         <translation>竭忠尽智</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="429"/>
+        <location filename="../../src/core/record-analysis.cpp" line="400"/>
         <source>Impasse Strike</source>
         <translation>华丽的逆袭</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="364"/>
+        <location filename="../../src/core/record-analysis.cpp" line="335"/>
         <source>Soy</source>
         <translation>打酱油的</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="412"/>
+        <location filename="../../src/core/record-analysis.cpp" line="383"/>
         <source>Warrior Soul</source>
         <translation>战魂</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="411"/>
+        <location filename="../../src/core/record-analysis.cpp" line="382"/>
         <source>Bloody Warrior</source>
         <translation>屠戮之士</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="378"/>
+        <location filename="../../src/core/record-analysis.cpp" line="349"/>
         <source>Peaceful Watcher</source>
         <translation>和平主义者</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="390"/>
+        <location filename="../../src/core/record-analysis.cpp" line="361"/>
         <source>Rampage</source>
         <translation>横扫千军</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="420"/>
+        <location filename="../../src/core/record-analysis.cpp" line="391"/>
         <source>Master Tank</source>
         <translation>我是肉盾</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="419"/>
+        <location filename="../../src/core/record-analysis.cpp" line="390"/>
         <source>Fire Target</source>
         <translation>集火目标</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="413"/>
+        <location filename="../../src/core/record-analysis.cpp" line="384"/>
         <source>Wrath Warlord</source>
         <translation>暴走战神</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="382"/>
+        <location filename="../../src/core/record-analysis.cpp" line="353"/>
         <source>Awe Prestige</source>
         <translation>天道威仪</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="416"/>
+        <location filename="../../src/core/record-analysis.cpp" line="387"/>
         <source>Recovery</source>
         <translation>妙手回春</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="415"/>
+        <location filename="../../src/core/record-analysis.cpp" line="386"/>
         <source>Peaceful</source>
         <translation>甘霖之润</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="418"/>
+        <location filename="../../src/core/record-analysis.cpp" line="389"/>
         <source>Fodder</source>
         <translation>炮灰</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="379"/>
+        <location filename="../../src/core/record-analysis.cpp" line="350"/>
         <source>MVP</source>
         <translation>MVP</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="421"/>
+        <location filename="../../src/core/record-analysis.cpp" line="392"/>
         <source>War Spirit</source>
         <translation>军魂</translation>
     </message>
     <message>
-        <location filename="../../src/core/record-analysis.cpp" line="385"/>
+        <location filename="../../src/core/record-analysis.cpp" line="356"/>
         <source>Conspiracy</source>
         <translation>老谋深算</translation>
     </message>
@@ -2785,59 +2785,59 @@
 <context>
     <name>Room</name>
     <message>
-        <location filename="../../src/server/room.cpp" line="2026"/>
+        <location filename="../../src/server/room.cpp" line="2022"/>
         <source>disconnected</source>
         <translation>断开</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2251"/>
+        <location filename="../../src/server/room.cpp" line="2247"/>
         <source>Computer %1</source>
         <translation>电脑 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2049"/>
+        <location filename="../../src/server/room.cpp" line="2045"/>
         <source>&lt;font color=#000000&gt;Player &lt;b&gt;%1&lt;/b&gt; left the game&lt;/font&gt;</source>
         <translation>&lt;font color=#000000&gt;玩家 %1 离开了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2256"/>
+        <location filename="../../src/server/room.cpp" line="2252"/>
         <source>Hello, I&apos;m a robot</source>
         <translation>大家好，我是一个机器人</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2299"/>
+        <location filename="../../src/server/room.cpp" line="2295"/>
         <source>&lt;font color=#EEB422&gt;Player &lt;b&gt;%1&lt;/b&gt; joined the game&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 加入了游戏&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2867"/>
+        <location filename="../../src/server/room.cpp" line="2863"/>
         <source>Unable to parse player</source>
         <translation>不可分析的玩家</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2869"/>
+        <location filename="../../src/server/room.cpp" line="2865"/>
         <source>Server is not waiting for reply from %1</source>
         <translation>服务器无法获取 %1 的响应</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2871"/>
+        <location filename="../../src/server/room.cpp" line="2867"/>
         <source>Reply command should be %1 instead of %2</source>
         <translation>应答指令应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="2874"/>
+        <location filename="../../src/server/room.cpp" line="2870"/>
         <source>Reply serial should be %1 instead of %2</source>
         <translation>玩家序号应为 %1 而不是 %2</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="4187"/>
+        <location filename="../../src/server/room.cpp" line="4183"/>
         <source>Card cannot be parsed:
  %1</source>
         <translation>卡牌字符串无法解析:
 %1</translation>
     </message>
     <message>
-        <location filename="../../src/server/room.cpp" line="5387"/>
+        <location filename="../../src/server/room.cpp" line="5383"/>
         <source>&lt;font color=#EEB422&gt;The network delay of player &lt;b&gt;%1&lt;/b&gt; is %2 milliseconds.&lt;/font&gt;</source>
         <translation>&lt;font color=#EEB422&gt;玩家 &lt;b&gt;%1&lt;/b&gt; 的网络延迟为 %2 毫秒&lt;/font&gt;</translation>
     </message>
@@ -2863,7 +2863,7 @@
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2977"/>
         <source>Pure text replay file (*.txt);; Image replay file (*.png)</source>
-        <translation>纯文本重放文件 (*.txt);;图像重放文件 (*.png)</translation>
+        <translation>纯文本录像文件 (*.txt);;图像录像文件 (*.png)</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2205"/>
@@ -3114,12 +3114,12 @@
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2957"/>
         <source>Save record</source>
-        <translation>保存记录</translation>
+        <translation>保存录像</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="2975"/>
         <source>Save replay record</source>
-        <translation>保存重放记录</translation>
+        <translation>保存录像</translation>
     </message>
     <message>
         <location filename="../../src/ui/roomscene.cpp" line="3100"/>

@@ -11,7 +11,7 @@ struct lua_State;
 typedef int LuaFunction;
 
 #include "card.h"
-#include "roomthread.h"
+#include "structs.h"
 
 #include <QString>
 #include <QObject>

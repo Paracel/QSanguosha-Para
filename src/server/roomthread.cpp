@@ -22,18 +22,6 @@ LogMessage::LogMessage()
 {
 }
 
-QString LogMessage::toString() const{
-    QStringList tos;
-    foreach (ServerPlayer *player, to)
-        if (player != NULL) tos << player->objectName();
-
-    return QString("%1:%2->%3:%4:%5:%6")
-                   .arg(type)
-                   .arg(from ? from->objectName() : "")
-                   .arg(tos.join("+"))
-                   .arg(card_str).arg(arg).arg(arg2);
-}
-
 Json::Value LogMessage::toJsonValue() const{
     QStringList tos;
     foreach (ServerPlayer *player, to)

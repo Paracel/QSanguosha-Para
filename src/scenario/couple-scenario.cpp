@@ -2,6 +2,7 @@
 #include "skill.h"
 #include "engine.h"
 #include "room.h"
+#include "roomthread.h"
 
 class CoupleScenarioRule: public ScenarioRule {
 public:

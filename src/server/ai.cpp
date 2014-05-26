@@ -7,6 +7,7 @@
 #include "scenario.h"
 #include "aux-skills.h"
 #include "settings.h"
+#include "roomthread.h"
 
 AI::AI(ServerPlayer *player)
     : self(player)

@@ -243,9 +243,8 @@ public:
     void acquireSkill(ServerPlayer *player, const QString &skill_name, bool open = true);
     void adjustSeats();
     void swapPile();
-    QList<int> getDiscardPile();
+    inline QList<int> getDiscardPile() { return *m_discardPile; }
     inline QList<int> &getDrawPile() { return *m_drawPile; }
-    inline const QList<int> &getDrawPile() const{ return *m_drawPile; }
     int getCardFromPile(const QString &card_name);
     ServerPlayer *findPlayer(const QString &general_name, bool include_dead = false) const;
     QList<ServerPlayer *> findPlayersBySkillName(const QString &skill_name) const;

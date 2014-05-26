@@ -1111,7 +1111,7 @@ public:
     void adjustSeats();
     void swapPile();
     QList<int> getDiscardPile();
-    QList<int> getDrawPile();
+    QList<int> &getDrawPile();
     int getCardFromPile(const char *card_name);
     ServerPlayer *findPlayer(const char *general_name, bool include_dead = false) const;
     ServerPlayer *findPlayerBySkillName(const char *skill_name) const;

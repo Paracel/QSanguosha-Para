@@ -1748,10 +1748,6 @@ void Room::swapPile() {
         setCardMapping(card_id, NULL, Player::DrawPile);
 }
 
-QList<int> Room::getDiscardPile() {
-    return *m_discardPile;
-}
-
 ServerPlayer *Room::findPlayer(const QString &general_name, bool include_dead) const{
     const QList<ServerPlayer *> &list = include_dead ? m_players : m_alivePlayers;
 

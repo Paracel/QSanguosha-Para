@@ -4449,19 +4449,23 @@ void RoomScene::pause() {
 }
 
 void RoomScene::addRobot() {
-    QMenu *menu = m_add_robot_menu;
-    menu->clear();
-    menu->setTitle(tr("Add robots"));
-
     int left = Sanguosha->getPlayerCount(ServerInfo.GameMode) - ClientInstance->getPlayers().length();
-    for (int i = 1; i <= left; i++) {
-        QAction *action = menu->addAction(tr("%1 robots").arg(i));
-        action->setData(i);
-        connect(action, SIGNAL(triggered()), this, SLOT(doAddRobotAction()));
-    }
+    if (left == 1) {
+        ClientInstance->addRobot(1);
+    } else {
+        QMenu *menu = m_add_robot_menu;
+        menu->clear();
+        menu->setTitle(tr("Add robots"));
 
-    QPointF posf = QCursor::pos();
-    menu->popup(QPoint(posf.x(), posf.y()));
+        for (int i = 1; i <= left; i++) {
+            QAction *action = menu->addAction(tr("%1 robots").arg(i));
+            action->setData(i);
+            connect(action, SIGNAL(triggered()), this, SLOT(doAddRobotAction()));
+        }
+
+        QPointF posf = QCursor::pos();
+        menu->popup(QPoint(posf.x(), posf.y()));
+    }
 }
 
 void RoomScene::doAddRobotAction() {

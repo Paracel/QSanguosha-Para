@@ -771,7 +771,11 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     table->resizeColumnsToContents();
 
     QLabel *label = new QLabel;
-    label->setText(tr("Packages:") + record->getRecordPackages().join(","));
+    label->setText(tr("Packages:"));
+
+    QTextEdit *package_label = new QTextEdit;
+    package_label->setReadOnly(true);
+    package_label->setText(record->getRecordPackages().join(", "));
 
     QLabel *label_game_mode = new QLabel;
     label_game_mode->setText(tr("GameMode:") + Sanguosha->getModeName(record->getRecordGameMode()));
@@ -780,7 +784,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
     label_options->setText(tr("ServerOptions:") + record->getRecordServerOptions().join(","));
 
     QTextEdit *chat_info = new QTextEdit;
-    chat_info->setReadOnly(chat_info);
+    chat_info->setReadOnly(true);
     chat_info->setText(record->getRecordChat());
 
     QLabel *table_chat_title = new QLabel;
@@ -788,6 +792,7 @@ void MainWindow::on_actionRecord_analysis_triggered() {
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(label);
+    layout->addWidget(package_label);
     layout->addWidget(label_game_mode);
     layout->addWidget(label_options);
     layout->addWidget(table);

@@ -95,11 +95,8 @@ void RecAnalysis::initialize(QString dir) {
         }
 
         if (packet.getCommandType() == S_COMMAND_ARRANGE_SEATS) {
-            QStringList line_struct;
             const Json::Value &body = packet.getMessageBody();
-            tryParse(body, line_struct);
-            role_list = line_struct.last().split("+");
-
+            tryParse(body, role_list);
             continue;
         }
 

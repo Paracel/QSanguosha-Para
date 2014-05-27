@@ -29,6 +29,7 @@ ServerPlayer::~ServerPlayer() {
     for (int i = 0; i < S_NUM_SEMAPHORES; i++)
         delete semas[i];
     delete [] semas;
+    delete trust_ai;
 }
 
 void ServerPlayer::drawCard(const Card *card) {

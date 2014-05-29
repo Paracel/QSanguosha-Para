@@ -2460,7 +2460,7 @@ ADD_PACKAGE(OL)
 TaiwanSPPackage::TaiwanSPPackage()
     : Package("Taiwan_sp")
 {
-    General *tw_caocao = new General(this, "tw_caocao$", "wei", 4, true, true);
+    General *tw_caocao = new General(this, "tw_caocao$", "wei", 4, true, true); // TW SP 019
     tw_caocao->addSkill("nosjianxiong");
     tw_caocao->addSkill("hujia");
 
@@ -2468,7 +2468,7 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_simayi->addSkill("nosfankui");
     tw_simayi->addSkill("nosguicai");
 
-    General *tw_xiahoudun = new General(this, "tw_xiahoudun", "wei", 4, true, true);
+    General *tw_xiahoudun = new General(this, "tw_xiahoudun", "wei", 4, true, true); // TW SP 025
     tw_xiahoudun->addSkill("nosganglie");
 
     General *tw_zhangliao = new General(this, "tw_zhangliao", "wei", 4, true, true); // TW SP 013
@@ -2485,11 +2485,11 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_zhenji->addSkill("qingguo");
     tw_zhenji->addSkill("luoshen");
 
-    General *tw_liubei = new General(this, "tw_liubei$", "shu", 4, true, true);
+    General *tw_liubei = new General(this, "tw_liubei$", "shu", 4, true, true); // TW SP 017
     tw_liubei->addSkill("rende");
     tw_liubei->addSkill("jijiang");
 
-    General *tw_guanyu = new General(this, "tw_guanyu", "shu", 4, true, true);
+    General *tw_guanyu = new General(this, "tw_guanyu", "shu", 4, true, true); // TW SP 018
     tw_guanyu->addSkill("wusheng");
 
     General *tw_zhangfei = new General(this, "tw_zhangfei", "shu", 4, true, true);
@@ -2510,9 +2510,9 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_huangyueying->addSkill("nosjizhi");
     tw_huangyueying->addSkill("nosqicai");
 
-    /*General *tw_sunquan = new General(this, "tw_sunquan$", "wu", 4, true, true);
+    General *tw_sunquan = new General(this, "tw_sunquan$", "wu", 4, true, true); // TW SP 021
     tw_sunquan->addSkill("zhiheng");
-    tw_sunquan->addSkill("jiuyuan");*/
+    tw_sunquan->addSkill("jiuyuan");
 
     General *tw_ganning = new General(this, "tw_ganning", "wu", 4, true, true); // TW SP 009
     tw_ganning->addSkill("qixi");
@@ -2535,9 +2535,9 @@ TaiwanSPPackage::TaiwanSPPackage()
     tw_luxun->addSkill("nosqianxun");
     tw_luxun->addSkill("noslianying");
 
-    /*General *tw_sunshangxiang = new General(this, "tw_sunshangxiang", 3, false, true);
+    General *tw_sunshangxiang = new General(this, "tw_sunshangxiang", "wu", 3, false, true); // TW SP 028
     tw_sunshangxiang->addSkill("jieyin");
-    tw_sunshangxiang->addSkill("xiaoji");*/
+    tw_sunshangxiang->addSkill("xiaoji");
 
     /*General *tw_huatuo = new General(this, "tw_huatuo", 3, true, true);
     tw_huatuo->addSkill("qingnang");

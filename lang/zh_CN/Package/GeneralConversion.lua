@@ -122,11 +122,11 @@ return {
 
 	["tw_guanyu"] = "TW关羽",
 	["&tw_guanyu"] = "关羽", 
-	["illustrator:tw_guanyu"] = "",
+	["illustrator:tw_guanyu"] = "心思路-YL",
 
 	["tw_xiahoudun"] = "TW夏侯惇",
 	["&tw_xiahoudun"] = "夏侯惇", 
-	["illustrator:tw_xiahoudun"] = "",
+	["illustrator:tw_xiahoudun"] = "jerry",
 
 	["tw_xuchu"] = "TW许褚",
 	["&tw_xuchu"] = "许褚", 
@@ -134,7 +134,7 @@ return {
 
 	["tw_caocao"] = "TW曹操",
 	["&tw_caocao"] = "曹操",
-	["illustrator:tw_caocao"] = "",
+	["illustrator:tw_caocao"] = "心思路-YL",
 
 	["tw_simayi"] = "TW司马懿",
 	["&tw_simayi"] = "司马懿",
@@ -147,7 +147,7 @@ return {
 
 	["tw_liubei"] = "TW刘备",
 	["&tw_liubei"] = "刘备",
-	["illustrator:tw_liubei"] = "",
+	["illustrator:tw_liubei"] = "心思路-YL",
 
 	["tw_zhangfei"] = "TW张飞",
 	["&tw_zhangfei"] = "张飞",
@@ -163,11 +163,11 @@ return {
 
 	["tw_sunquan"] = "TW孙权",
 	["&tw_sunquan"] = "孙权",
-	["illustrator:tw_sunquan"] = "",
+	["illustrator:tw_sunquan"] = "心思路-YL",
 
 	["tw_sunshangxiang"] = "TW孙尚香",
 	["&tw_sunshangxiang"] = "孙尚香",
-	["illustrator:tw_sunshangxiang"] = "",
+	["illustrator:tw_sunshangxiang"] = "jerry",
 
 	["tw_huatuo"] = "TW华佗",
 	["&tw_huatuo"] = "华佗",

@@ -29,16 +29,21 @@ sgs.ai_skill_invoke.cv_nos_huanggai = function(self, data)
 	return math.random(0, 6) == 0
 end
 
-sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_luxun = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_guojia = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_guanyu = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_xiahoudun = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_caocao = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_lvmeng = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_liubei = sgs.ai_skill_invoke.cv_huanggai
-sgs.ai_skill_invoke.cv_nos_zhangfei = sgs.ai_skill_invoke.cv_huanggai
+sgs.ai_skill_invoke.cv_nos_zhangliao = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_luxun = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_guojia = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_guanyu = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_xiahoudun = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_xuchu = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_caocao = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_lvmeng = sgs.ai_skill_invoke.cv_nos_huanggai
+sgs.ai_skill_invoke.cv_nos_zhangfei = sgs.ai_skill_invoke.cv_nos_huanggai
+
+sgs.ai_skill_invoke.cv_liubei = function(self, data)
+	return math.random(0, 8) == 0
+end
+
+sgs.ai_skill_invoke.cv_sunquan = sgs.ai_skill_invoke.cv_liubei
 
 sgs.ai_skill_invoke.cv_zhugeliang = function(self, data)
 	if math.random(0, 2) > 0 then return false end
@@ -57,9 +62,18 @@ end
 sgs.ai_skill_invoke.cv_sunshangxiang = function(self, data)
 	local lord = self.room:getLord()
 	if lord and not self.player:getGeneral2Name() == "sunshangxiang" and lord:hasLordSkill("shichou") then
-		return self:isFriend(lord)
+		if self:isFriend(lord) then
+			sgs.ai_skill_choice.cv_sunshangxiang = "sp_sunshangxiang"
+			return true
+		end
+	elseif lord:getKingdom() == "shu" then
+		sgs.ai_skill_choice.cv_sunshangxiang = "sp_sunshangxiang"
+		return true
 	end
-	return lord:getKingdom() == "shu"
+	if math.random(0, 6) == 0 then
+		sgs.ai_skill_choice.cv_sunshangxiang = "tw_sunshangxiang"
+		return true
+	end
 end
 
 sgs.ai_skill_invoke.cv_caiwenji = function(self, data)

@@ -383,7 +383,6 @@ RoomScene::RoomScene(QMainWindow *main_window)
 }
 
 RoomScene::~RoomScene() {
-    QSanSkinFactory::destroyInstance();
 }
 
 void RoomScene::handleGameEvent(const Json::Value &arg) {

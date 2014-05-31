@@ -133,8 +133,7 @@ MainWindow::~MainWindow() {
     view->deleteLater();
     if (scene)
         scene->deleteLater();
-    if (ClientInstance)
-        delete ClientInstance;
+    QSanSkinFactory::destroyInstance();
 }
 
 void MainWindow::gotoScene(QGraphicsScene *scene) {

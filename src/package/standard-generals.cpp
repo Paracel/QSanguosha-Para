@@ -501,6 +501,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *zhenji, QVariant &data) const{
         if (triggerEvent == EventPhaseStart && zhenji->getPhase() == Player::Start) {
+            bool canRetrial = zhenji->hasSkills("guicai|nosguicai|guidao|huanshi");
             while (zhenji->askForSkillInvoke("luoshen")) {
                 room->broadcastSkillInvoke(objectName());
 
@@ -512,29 +513,41 @@ public:
                 judge.who = zhenji;
                 judge.time_consuming = true;
 
-                room->judge(judge);
+                if (canRetrial)
+                    zhenji->setFlags("LuoshenRetrial");
+                try {
+                    room->judge(judge);
+                }
+                catch(TriggerEvent triggerEvent) {
+                    if ((triggerEvent == TurnBroken || triggerEvent == StageChange) && zhenji->hasFlag("LuoshenRetrial"))
+                        zhenji->setFlags("-LuoshenRetrial");
+                    throw triggerEvent;
+                }
+
                 if (judge.isBad())
                     break;
             }
         } else if (triggerEvent == FinishJudge) {
             JudgeStar judge = data.value<JudgeStar>();
             if (judge->reason == objectName()) {
-                bool isHegVer = zhenji->getGeneralName() != "zhenji"
-                                && (zhenji->getGeneralName() == "heg_zhenji" || zhenji->getGeneral2Name() == "heg_zhenji");
-                if (judge->card->isBlack() && room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge) {
-                    if (isHegVer && zhenji->hasSkills("guicai|guidao|huanshi")) {
-                        CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, zhenji->objectName(), QString(), judge->reason);
-                        room->moveCardTo(judge->card, zhenji, NULL, Player::PlaceTable, reason, true);
-                        QVariantList luoshen_list = zhenji->tag[objectName()].toList();
-                        luoshen_list << judge->card->getEffectiveId();
-                        zhenji->tag[objectName()] = luoshen_list;
-                    } else {
-                        zhenji->obtainCard(judge->card);
+                bool canRetrial = zhenji->hasFlag("LuoshenRetrial");
+                if (judge->card->isBlack()) {
+                    if (room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge) {
+                        if (canRetrial) {
+                            CardMoveReason reason(CardMoveReason::S_REASON_JUDGEDONE, zhenji->objectName(), QString(), judge->reason);
+                            room->moveCardTo(judge->card, zhenji, NULL, Player::PlaceTable, reason, true);
+                            QVariantList luoshen_list = zhenji->tag[objectName()].toList();
+                            luoshen_list << judge->card->getEffectiveId();
+                            zhenji->tag[objectName()] = luoshen_list;
+                        } else {
+                            zhenji->obtainCard(judge->card);
+                        }
                     }
                 } else {
-                    if (isHegVer && zhenji->hasSkills("guicai|guidao|huanshi")) {
+                    if (canRetrial) {
                         DummyCard *dummy = new DummyCard(VariantList2IntList(zhenji->tag[objectName()].toList()));
-                        zhenji->obtainCard(dummy);
+                        if (dummy->subcardsLength() > 0)
+                            zhenji->obtainCard(dummy);
                         zhenji->tag.remove(objectName());
                         delete dummy;
                     }

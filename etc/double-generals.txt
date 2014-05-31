@@ -5,6 +5,7 @@ caocao yanliangwenchou					60
 caocao nos_liubei						53
 caocao nos_zhangfei						58
 simayi guojia							67
+simayi zhenji							85
 simayi liubei							54
 simayi wolong							82
 simayi sunshangxiang					54
@@ -51,7 +52,10 @@ zhenji huangyueying						55
 zhenji wolong							57
 zhenji ganning							59
 zhenji xiaoqiao							16
+zhenji shensimayi						75
+zhenji zhugejin							85
 zhenji bgm_ganning						60
+zhenji nos_simayi						84
 zhenji nos_ganning						58
 xiahouyuan sunshangxiang				59
 xiahouyuan lingtong						58

@@ -11,12 +11,16 @@ static QRectF ButtonRect(0, 0, 189, 46);
 Button::Button(const QString &label, qreal scale)
     : label(label), size(ButtonRect.size() * scale), mute(true), font(Config.SmallFont)
 {
+    title = QPixmap(size.toSize());
+    outimg = QImage(size.toSize(), QImage::Format_ARGB32);
     init();
 }
 
 Button::Button(const QString &label, const QSizeF &size)
     : label(label), size(size), mute(true), font(Config.SmallFont)
 {
+    title = QPixmap(size.toSize());
+    outimg = QImage(size.toSize(), QImage::Format_ARGB32);
     init();
 }
 
@@ -26,16 +30,15 @@ void Button::init() {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);
 
-    title = new QPixmap(size.toSize());
-    title->fill(QColor(0, 0, 0, 0));
-    QPainter pt(title);
+    title.fill(QColor(0, 0, 0, 0));
+    QPainter pt(&title);
     pt.setFont(font);
     pt.setPen(Config.TextEditColor);
     pt.setRenderHint(QPainter::TextAntialiasing);
     pt.drawText(boundingRect(), Qt::AlignCenter, label);
 
     title_item = new QGraphicsPixmapItem(this);
-    title_item->setPixmap(*title);
+    title_item->setPixmap(title);
     title_item->show();
 
     de = new QGraphicsDropShadowEffect;
@@ -46,15 +49,14 @@ void Button::init() {
     title_item->setGraphicsEffect(de);
     
     QImage bgimg("image/system/button/button.png");
-    outimg = new QImage(size.toSize(), QImage::Format_ARGB32);
 
     qreal pad = 10;
 
     int w = bgimg.width();
     int h = bgimg.height();
 
-    int tw = outimg->width();
-    int th = outimg->height();
+    int tw = outimg.width();
+    int th = outimg.height();
 
     qreal xc = (w - 2 * pad) / (tw - 2 * pad);
     qreal yc = (h - 2 * pad) / (th - 2 * pad);
@@ -76,7 +78,7 @@ void Button::init() {
 
 
             QRgb rgb = bgimg.pixel(x, y);
-            outimg->setPixel(i, j, rgb);
+            outimg.setPixel(i, j, rgb);
         }
     }
 
@@ -91,14 +93,8 @@ void Button::init() {
 }
 
 Button::~Button() {
-    delete outimg;
-    outimg = NULL;
-    delete title;
-    title = NULL;
-    delete de;
-    de = NULL;
-    delete effect;
-    effect = NULL;
+    de->deleteLater();
+    effect->deleteLater();
 }
 
 void Button::setMute(bool mute) {
@@ -107,14 +103,14 @@ void Button::setMute(bool mute) {
 
 void Button::setFont(const QFont &font) {
     this->font = font;
-    title->fill(QColor(0, 0, 0, 0));
-    QPainter pt(title);
+    title.fill(QColor(0, 0, 0, 0));
+    QPainter pt(&title);
     pt.setFont(font);
     pt.setPen(Config.TextEditColor);
     pt.setRenderHint(QPainter::TextAntialiasing);
     pt.drawText(boundingRect(), Qt::AlignCenter, label);
 
-    title_item->setPixmap(*title);
+    title_item->setPixmap(title);
 }
 
 #include "engine.h"
@@ -141,7 +137,7 @@ QRectF Button::boundingRect() const{
 void Button::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
     QRectF rect = boundingRect();
 
-    painter->drawImage(rect,*outimg);
+    painter->drawImage(rect, outimg);
     painter->fillRect(rect, QColor(255, 255, 255, glow * 10));
 }
 

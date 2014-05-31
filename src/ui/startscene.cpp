@@ -79,7 +79,8 @@ void StartScene::switchToServer(Server *server) {
     group->start(QAbstractAnimation::DeleteWhenStopped);
 
     foreach (Button *button, buttons)
-        button->hide();
+        delete button;
+    buttons.clear();
 
     server_log = new QTextEdit();
     server_log->setReadOnly(true);

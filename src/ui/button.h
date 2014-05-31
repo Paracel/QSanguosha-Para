@@ -33,8 +33,8 @@ private:
     QSizeF size;
     bool mute;
     QFont font;
-    QImage *outimg;
-    QPixmap *title;
+    QImage outimg;
+    QPixmap title;
     QGraphicsPixmapItem *title_item;
     int glow;
     int timer_id;

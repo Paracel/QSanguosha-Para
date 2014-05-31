@@ -277,7 +277,11 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return !player->hasUsed("DuanxieCard");
+        if (player->hasUsed("DuanxieCard")) return false;
+        foreach (const Player *p, player->getAliveSiblings()) {
+            if (!p->isChained()) return true;
+        }
+        return false;
     }
 
     virtual const Card *viewAs() const{

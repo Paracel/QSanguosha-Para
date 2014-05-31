@@ -719,7 +719,7 @@ void RoomScene::adjustItems() {
             to_switch = factory.S_COMPACT_SKIN_NAME;
         else if (skinName != factory.S_DEFAULT_SKIN_NAME)
             to_switch = factory.S_DEFAULT_SKIN_NAME;
-    } else if (skinName == factory.S_COMPACT_SKIN_NAME) {
+    } else if (skinName.contains("compact")) {
         if (displayRegion.width() > maxSize.width() && displayRegion.height() > maxSize.height())
             to_switch = factory.S_DEFAULT_SKIN_NAME;
         else if (skinName != factory.S_COMPACT_SKIN_NAME)

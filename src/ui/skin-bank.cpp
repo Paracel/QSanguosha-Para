@@ -437,13 +437,6 @@ bool IQSanComponentSkin::_loadImageConfig(const Json::Value &config) {
         for (unsigned int i = 0; i < keys.size(); i++) {
             const char *key = keys[i].c_str();
             _m_imageConfig[key] = config[key];
-            S_IMAGE_KEY2FILE.remove(key);
-            if (S_IMAGE_GROUP_KEYS.contains(key)) {
-                QList<QString> &mappedKeys = S_IMAGE_GROUP_KEYS[key];
-                foreach (QString mkey, mappedKeys)
-                    S_IMAGE_KEY2FILE.remove(mkey);
-                S_IMAGE_GROUP_KEYS.remove(key);
-            }
         }
     }
     return true;
@@ -577,9 +570,6 @@ QString IQSanComponentSkin::_readImageConfig(const QString &key, QRect &rect,
     return result;
 }
 
-QHash<QString, QString> IQSanComponentSkin::S_IMAGE_KEY2FILE;
-QHash<QString, QList<QString> > IQSanComponentSkin::S_IMAGE_GROUP_KEYS;
-
 QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg, bool cache) const{
     // the order of attempts are:
     // 1. if no arg, then just use key to find fileName.
@@ -595,20 +585,15 @@ QPixmap IQSanComponentSkin::getPixmap(const QString &key, const QString &arg, bo
 
     // case 1 and 2
     if (arg.isNull()) totalKey = key; else totalKey = key.arg(arg);
-    if (S_IMAGE_KEY2FILE.contains(totalKey)) { // first, search cache
-        fileName = S_IMAGE_KEY2FILE[totalKey];
-    } else if (isImageKeyDefined(totalKey)) { // then, read from config file
+    if (isImageKeyDefined(totalKey)) { // read from config file
         fileName = _readImageConfig(totalKey, clipRegion, clipping, scaleRegion, scaled);
-        S_IMAGE_KEY2FILE[totalKey].append(fileName);
     } else { // case 3: use default
         Q_ASSERT(!arg.isNull());
         groupKey = key.arg(S_SKIN_KEY_DEFAULT);
-        S_IMAGE_GROUP_KEYS[groupKey].append(totalKey);
         QString fileNameToResolve = _readImageConfig(groupKey, clipRegion, clipping, scaleRegion, scaled);
         fileName = fileNameToResolve.arg(arg);
         if (!QFile::exists(fileName)) {
             groupKey = key.arg(S_SKIN_KEY_DEFAULT_SECOND);
-            S_IMAGE_GROUP_KEYS[groupKey].append(totalKey);
             QString fileNameToResolve = _readImageConfig(groupKey, clipRegion, clipping, scaleRegion, scaled);
             fileName = fileNameToResolve.arg(arg);
         }

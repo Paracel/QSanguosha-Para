@@ -90,10 +90,6 @@ protected:
     Json::Value _m_imageConfig;
     Json::Value _m_audioConfig;
     Json::Value _m_animationConfig;
-    // image key -> image file name
-    static QHash<QString, QString> S_IMAGE_KEY2FILE;
-    // image group key -> image keys
-    static QHash<QString, QList<QString> > S_IMAGE_GROUP_KEYS;
 };
 
 class QSanRoomSkin: public IQSanComponentSkin {

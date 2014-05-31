@@ -230,6 +230,7 @@ protected:
 private:
     ClientSocket *socket;
     bool m_isGameOver;  
+    bool m_isDisconnected;
     QHash<QSanProtocol::CommandType, CallBack> m_interactions;
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks;
     QList<const ClientPlayer *> players;

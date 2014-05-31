@@ -63,7 +63,7 @@ public:
 };
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow), server(NULL)
 {
     ui->setupUi(this);
     scene = NULL;
@@ -104,6 +104,9 @@ MainWindow::MainWindow(QWidget *parent)
     addAction(ui->actionShow_Hide_Menu);
     addAction(ui->actionFullscreen);
 
+    connect(ui->actionRestart_Game, SIGNAL(triggered()), this, SLOT(startConnection()));
+    connect(ui->actionReturn_to_Main_Menu, SIGNAL(triggered()), this, SLOT(gotoStartScene()));
+
     systray = NULL;
 }
 
@@ -127,8 +130,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 MainWindow::~MainWindow() {
     delete ui;
+    view->deleteLater();
     if (scene)
         scene->deleteLater();
+    if (ClientInstance)
+        delete ClientInstance;
 }
 
 void MainWindow::gotoScene(QGraphicsScene *scene) {
@@ -161,9 +167,8 @@ void MainWindow::on_actionStart_Server_triggered() {
     if (accept_type == 0)
         return;
 
-    Server *server = new Server(this);
+    server = new Server(this);
     if (!server->listen()) {
-        delete server;
         QMessageBox::warning(this, tr("Warning"), tr("Can not start server!"));
         return;
     }
@@ -295,8 +300,6 @@ void MainWindow::enterRoom() {
     connect(ui->actionSaveRecord, SIGNAL(triggered()), room_scene, SLOT(saveReplayRecord()));
     connect(ui->actionPause_Resume, SIGNAL(triggered()), room_scene, SLOT(pause()));
     connect(ui->actionHide_Show_chat_box, SIGNAL(triggered()), room_scene, SLOT(setChatBoxVisibleSlot()));
-    connect(ui->actionRestart_Game, SIGNAL(triggered()), this, SLOT(startConnection()));
-    connect(ui->actionReturn_to_Main_Menu, SIGNAL(triggered()), this, SLOT(gotoStartScene()));
 
     if (ServerInfo.EnableCheat) {
         ui->menuCheat->setEnabled(true);
@@ -325,13 +328,14 @@ void MainWindow::gotoStartScene() {
     ServerInfo.DuringGame = false;
     delete systray;
     systray = NULL;
-    if (ClientInstance) {
-        ClientInstance->disconnectFromHost();
-        if (Self) {
-            delete Self;
-            Self = NULL;
-        }
-        delete ClientInstance;
+
+    if (server) {
+        server->deleteLater();
+        server = NULL;
+    }
+    if (Self) {
+        delete Self;
+        Self = NULL;
     }
 
     QList<Server *> servers = findChildren<Server *>();
@@ -371,6 +375,11 @@ void MainWindow::gotoStartScene() {
 
     addAction(ui->actionShow_Hide_Menu);
     addAction(ui->actionFullscreen);
+
+    if (ClientInstance) {
+        ClientInstance->disconnectFromHost();
+        delete ClientInstance;
+    }
 }
 
 void MainWindow::enableDialogButtons() {

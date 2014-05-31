@@ -2956,14 +2956,14 @@ void RoomScene::addRestartButton(QDialog *dialog) {
 
     QPushButton *save_button = new QPushButton(tr("Save record"));
     hlayout->addWidget(save_button);
-    // crash?
-    //hlayout->addWidget(return_button);
+    hlayout->addWidget(return_button);
 
     QVBoxLayout *layout = qobject_cast<QVBoxLayout *>(dialog->layout());
     if (layout) layout->addLayout(hlayout);
 
     connect(restart_button, SIGNAL(clicked()), dialog, SLOT(accept()));
     connect(return_button, SIGNAL(clicked()), dialog, SLOT(accept()));
+
     connect(save_button, SIGNAL(clicked()), this, SLOT(saveReplayRecord()));
     connect(restart_button, SIGNAL(clicked()), this, SIGNAL(restart()));
     connect(return_button, SIGNAL(clicked()), this, SIGNAL(return_to_start()));

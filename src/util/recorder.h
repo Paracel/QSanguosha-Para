@@ -15,7 +15,7 @@ class Recorder: public QObject {
     Q_OBJECT
 
 public:
-    explicit Recorder(QObject *parent);
+    explicit Recorder(QObject *parent = NULL);
 
     static QImage TXT2PNG(QByteArray data);
     static QByteArray PNG2TXT(const QString filename);

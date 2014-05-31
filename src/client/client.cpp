@@ -32,6 +32,7 @@ Client::Client(QObject *parent, const QString &filename)
 {
     ClientInstance = this;
     m_isGameOver = false;
+    m_isDisconnected = true;
 
     m_callbacks[S_COMMAND_CHECK_VERSION] = &Client::checkVersion;
     m_callbacks[S_COMMAND_SETUP] = &Client::setup;
@@ -143,14 +144,13 @@ Client::Client(QObject *parent, const QString &filename)
         connect(replayer, SIGNAL(command_parsed(QString)), this, SLOT(processServerPacket(QString)));
     } else {
         socket = new NativeClientSocket;
-        socket->setParent(this);
-
         recorder = new Recorder(this);
 
         connect(socket, SIGNAL(message_got(const char *)), recorder, SLOT(record(const char *)));
         connect(socket, SIGNAL(message_got(const char *)), this, SLOT(processServerPacket(const char *)));
         connect(socket, SIGNAL(error_message(QString)), this, SIGNAL(error_message(QString)));
         socket->connectToHost();
+        m_isDisconnected = false;
 
         replayer = NULL;
     }
@@ -270,9 +270,10 @@ void Client::setup(const Json::Value &setup_str) {
 }
 
 void Client::disconnectFromHost() {
-    if (socket) {
+    if (!m_isDisconnected) {
         socket->disconnectFromHost();
-        socket = NULL;
+        socket->deleteLater();
+        m_isDisconnected = true;
     }
 }
 

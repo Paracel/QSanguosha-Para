@@ -61,6 +61,7 @@ private:
     ConnectionDialog *connection_dialog;
     ConfigDialog *config_dialog;
     QSystemTrayIcon *systray;
+    Server *server;
 
     void restoreFromConfig();
 

@@ -491,8 +491,10 @@ function sgs.CreateOneCardViewAsSkill(spec)
 	local response_pattern = spec.response_pattern or ""
 	local response_or_use = spec.response_or_use or false
 	if spec.filter_pattern then assert(type(spec.filter_pattern) == "string") end
+	if spec.expand_pile then assert(type(spec.expand_pile) == "string") end
+	local expand_pile = spec.expand_pile or ""
 
-	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use)
+	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use, expand_pile)
 
 	function skill:view_as(cards)
 		if #cards ~= 1 then return nil end
@@ -525,7 +527,7 @@ function sgs.CreateZeroCardViewAsSkill(spec)
 	local response_pattern = spec.response_pattern or ""
 	local response_or_use = spec.response_or_use or false
 
-	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use)
+	local skill = sgs.LuaViewAsSkill(spec.name, response_pattern, response_or_use, "")
 
 	function skill:view_as(cards)
 		if #cards > 0 then return nil end

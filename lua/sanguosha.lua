@@ -34,9 +34,21 @@ function load_extensions()
 			local name = script:sub(script:find("%w+"))
 			local module_name = "extensions." .. name
 			local loaded = require(module_name)
-			if not loaded.hidden then
-				table.insert(package_names, name)
-				sgs.Sanguosha:addPackage(loaded.extension)
+			if loaded and type(loaded) == "table" and loaded.hidden ~= true then -- need to consider the compatibility of 'module'
+				if #loaded > 0 then
+					for _, extension in ipairs(loaded) do
+						if type(extension) == "userdata" and extension:inherits("Package") then
+							table.insert(package_names, extension:objectName())
+							sgs.Sanguosha:addPackage(extension)
+						end
+					end
+				else
+					table.insert(package_names, loaded.extension:objectName())
+					sgs.Sanguosha:addPackage(loaded.extension)
+				end
+			elseif type(loaded) == "userdata" and loaded:inherits("Package") then
+				table.insert(package_names, loaded:objectName())
+				sgs.Sanguosha:addPackage(loaded)
 			end
 		end
 	end

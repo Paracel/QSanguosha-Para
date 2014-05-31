@@ -136,6 +136,12 @@ Client::Client(QObject *parent, const QString &filename)
 
     players << Self;
 
+    lines_doc = new QTextDocument(this);
+
+    prompt_doc = new QTextDocument(this);
+    prompt_doc->setTextWidth(350);
+    prompt_doc->setDefaultFont(QFont("SimHei"));
+
     if (!filename.isEmpty()) {
         socket = NULL;
         recorder = NULL;
@@ -145,21 +151,15 @@ Client::Client(QObject *parent, const QString &filename)
     } else {
         socket = new NativeClientSocket;
         recorder = new Recorder(this);
+        m_isDisconnected = false;
+
+        replayer = NULL;
 
         connect(socket, SIGNAL(message_got(const char *)), recorder, SLOT(record(const char *)));
         connect(socket, SIGNAL(message_got(const char *)), this, SLOT(processServerPacket(const char *)));
         connect(socket, SIGNAL(error_message(QString)), this, SIGNAL(error_message(QString)));
         socket->connectToHost();
-        m_isDisconnected = false;
-
-        replayer = NULL;
     }
-
-    lines_doc = new QTextDocument(this);
-
-    prompt_doc = new QTextDocument(this);
-    prompt_doc->setTextWidth(350);
-    prompt_doc->setDefaultFont(QFont("SimHei"));
 }
 
 Client::~Client() {

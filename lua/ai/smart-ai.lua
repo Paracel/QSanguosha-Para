@@ -2122,6 +2122,7 @@ end
 
 function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_equip, pattern)
 	min_num = min_num or discard_num
+	pattern = pattern or "."
 	local exchange = self.player:hasFlag("Global_AIDiscardExchanging")
 	local callback = sgs.ai_skill_discard[reason]
 	self:assignKeep(true)

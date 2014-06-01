@@ -1062,8 +1062,8 @@ public:
         QList<ServerPlayer *> players = room->getAllPlayers();
         foreach (ServerPlayer *player, players) {
             if (player->getMark("tieji") == 0) continue;
-            player->removeMark("tieji");
-            room->removePlayerMark(player, "@skill_invalidity");
+            room->removePlayerMark(player, "@skill_invalidity", player->getMark("tieji"));
+            player->setMark("tieji", 0);
 
             foreach (ServerPlayer *p, room->getAllPlayers())
                 room->filterCards(p, p->getCards("he"), false);

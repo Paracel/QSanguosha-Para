@@ -161,7 +161,7 @@ end
 function SmartAI:shouldUseAnaleptic(target, slash)
 	if sgs.turncount <= 1 and self.role == "renegade" and sgs.isLordHealthy() and self:getOverflow() < 2 then return false end
 	if target:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
-		return
+		return false
 	end
 	if target:hasSkill("zhenlie") then return false end
 	if target:hasSkill("xiangle") then
@@ -174,7 +174,11 @@ function SmartAI:shouldUseAnaleptic(target, slash)
 
 	if target:hasSkills(sgs.masochism_skill .. "|longhun|buqu|nosbuqu|" .. sgs.recover_skill)
 		and self.player:hasSkill("nosqianxi") and self.player:distanceTo(target) == 1 then
-		return
+		return false
+	end
+	if not self:isFriend(target) then
+		local yuji = self.room:findPlayerBySkillName("qianhuan")
+		if yuji and yuji:getPile("sorcery"):length() > 0 and self:isFriend(target, yuji) then return false end
 	end
 
 	if not sgs.isJinkAvailable(self.player, target, slash) then return true end

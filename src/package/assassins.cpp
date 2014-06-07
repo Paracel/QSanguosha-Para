@@ -112,7 +112,9 @@ bool MizhaoCard::targetFilter(const QList<const Player *> &targets, const Player
 }
 
 void MizhaoCard::onEffect(const CardEffectStruct &effect) const{
-    effect.to->obtainCard(effect.from->wholeHandCards(), false);
+    DummyCard *handcards = effect.from->wholeHandCards();
+    effect.to->obtainCard(handcards, false);
+    delete handcards;
     if (effect.to->isKongcheng()) return;
 
     Room *room = effect.from->getRoom();

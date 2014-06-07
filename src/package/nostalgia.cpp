@@ -640,9 +640,11 @@ void NosRenxinCard::use(Room *room, ServerPlayer *player, QList<ServerPlayer *> 
     if (!who) return;
 
     room->broadcastSkillInvoke("renxin");
+    DummyCard *handcards = player->wholeHandCards();
     player->turnOver();
     CardMoveReason reason(CardMoveReason::S_REASON_GIVE, player->objectName(), who->objectName(), "nosrenxin", QString());
-    room->obtainCard(who, player->wholeHandCards(), reason, false);
+    room->obtainCard(who, handcards, reason, false);
+    delete handcards;
     room->recover(who, RecoverStruct(player));
 }
 

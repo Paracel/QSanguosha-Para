@@ -590,9 +590,9 @@ void ShenfenCard::use(Room *room, ServerPlayer *shenlvbu, QList<ServerPlayer *> 
         }
 
         foreach (ServerPlayer *player, players) {
-            DummyCard *card = player->wholeHandCards();
+            bool delay = !player->isKongcheng();
             room->askForDiscard(player, "shenfen", 4, 4);
-            if (card != NULL)
+            if (delay)
                 room->getThread()->delay();
         }
 

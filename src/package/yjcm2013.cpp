@@ -1072,12 +1072,7 @@ public:
         QStringList data_str = data.toString().split(":");
         if (data_str.length() != 3 || data_str.first() != "cardDiscard" || data_str.at(1) != "fencheng")
             return false;
-        foreach (ServerPlayer *p, room->getAlivePlayers()) {
-            if (p->hasFlag("FenchengUsing")) {
-                p->setMark("fencheng", data_str.last().split("+").length());
-                return false;
-            }
-        }
+        room->setTag("FenchengDiscard", data_str.last().split("+").length());
         return false;
     }
 };
@@ -1091,7 +1086,7 @@ void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     room->removePlayerMark(source, "@burn");
     room->broadcastSkillInvoke("fencheng");
     room->doLightbox("$FenchengAnimate", 3000);
-    source->setMark("fencheng", 0);
+    room->setTag("FenchengDiscard", 0);
 
     QList<ServerPlayer *> players = room->getOtherPlayers(source);
     source->setFlags("FenchengUsing");
@@ -1113,10 +1108,10 @@ void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
 void FenchengCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.to->getRoom();
 
-    int length = effect.from->getMark("fencheng") + 1;
+    int length = room->getTag("FenchengDiscard").toInt() + 1;
     if (!effect.to->canDiscard(effect.to, "he") || effect.to->getCardCount(true) < length
         || !room->askForDiscard(effect.to, "fencheng", 1000, length, true, true, "@fencheng:::" + QString::number(length))) {
-        effect.from->setMark("fencheng", 0);
+        room->setTag("FenchengDiscard", 0);
         room->damage(DamageStruct("fencheng", effect.from, effect.to, 2, DamageStruct::Fire));
     }
 }

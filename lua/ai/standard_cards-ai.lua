@@ -3243,7 +3243,20 @@ sgs.ai_skill_use_func.WoodenOxCard = function(card, use, self)
 end
 
 sgs.ai_skill_playerchosen.wooden_ox = function(self, targets)
-	return self.wooden_ox_assist
+	if self.wooden_ox_assist then return self.wooden_ox_assist end
+	if self.player:hasSkill("yongsi") then
+		local kingdoms = {}
+		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+			local kingdom = p:getKingdom()
+			if not table.contains(kingdoms, kingdom) then table.insert(kingdoms, kingdom) end
+		end
+		if self.player:getCardCount(true) <= #kingdoms then
+			self:sort(self.friends_noself)
+			for _, friend in ipairs(self.friends_noself) do
+				if not friend:getTreasure() then return friend end
+			end
+		end
+	end
 end
 
 sgs.ai_playerchosen_intention.wooden_ox = -60

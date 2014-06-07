@@ -104,7 +104,7 @@ void HuangtianCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> 
 
         int index = qrand() % 2 + 1;
         if (zhangjiao->hasSkill("nosleiji") && !zhangjiao->hasSkill("leiji")) index += 2;
-        room->broadcastSkillInvoke(objectName(), index);
+        room->broadcastSkillInvoke("huangtian", index);
 
         room->notifySkillInvoked(zhangjiao, "huangtian");
         CardMoveReason reason(CardMoveReason::S_REASON_GIVE, source->objectName(), zhangjiao->objectName(), "huangtian", QString());

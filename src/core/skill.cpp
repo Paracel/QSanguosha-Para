@@ -125,8 +125,6 @@ void Skill::playAudioEffect(int index, bool superpose) const{
             filename = sources.first();
 
         Sanguosha->playAudioEffect(filename, superpose);
-        if (ClientInstance)
-            ClientInstance->setLines(filename);
     }
 }
 

@@ -52,7 +52,7 @@ return {
 	["#hanhaoshihuan"] = "中军之主",
 	["hanhaoshihuan"] = "韩浩＆史涣",
 	["&hanhaoshihuan"] = "韩浩史涣",
-	["illustrator:hanhaoshihuan"] = "lylylyang",
+	["illustrator:hanhaoshihuan"] = "L",
 	["designer:hanhaoshihuan"] = "浪人兵法家",
 	["shenduan"] = "慎断",
 	[":shenduan"] = "每当你的黑色基本牌因弃置而置入弃牌堆时，你可以将之当【兵粮寸断】使用（无距离限制）。",

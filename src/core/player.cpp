@@ -4,9 +4,6 @@
 #include "client.h"
 #include "standard.h"
 #include "settings.h"
-#include <map>
-
-std::map<QString,int> GPS_Setting;//g_Player_Skill_Setting
 
 Player::Player(QObject *parent)
     : QObject(parent), owner(false), general(NULL), general2(NULL),
@@ -16,14 +13,6 @@ Player::Player(QObject *parent)
       face_up(true), chained(false),
       role_shown(false), pile_open(QMap<QString, QStringList>())
 {
-}
-
-void Player::GPSset(const QString & key, int value) {
-	GPS_Setting[key] = value;
-}
-
-int Player::GPSget(const QString & key) {
-	return GPS_Setting[key];
 }
 
 void Player::setScreenName(const QString &screen_name) {

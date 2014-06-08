@@ -75,8 +75,6 @@ public:
     QString screenName() const;
 
     // property setters/getters
-    void GPSset(const char * key, int value);
-    int GPSget(const char * key);
     int getHp() const;
     void setHp(int hp);
     int getMaxHp() const;

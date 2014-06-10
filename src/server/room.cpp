@@ -4484,7 +4484,7 @@ const Card *Room::askForExchange(ServerPlayer *player, const QString &reason, in
 
     if (player->isNude()) return NULL;
 
-    if (player->getCardCount(include_equip) <= min_num) {
+    if (!optional && player->getCardCount(include_equip) <= min_num) {
         DummyCard *card = new DummyCard;
         QString flag = include_equip ? "he" : "h";
         card->addSubcards(player->getCards(flag));

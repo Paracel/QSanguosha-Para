@@ -3,7 +3,8 @@
 
 #include <QObject>
 #include <QMap>
-#include <QIcon>
+#include <QVariantMap>
+#include <QStringList>
 #include "json/json.h"
 
 class Room;
@@ -140,6 +141,8 @@ public:
     static const Card *Parse(const QString &str);
     virtual QString toString(bool hidden = false) const;
     
+    mutable QVariantMap tag;
+
 protected:
     QList<int> subcards;
     bool target_fixed;

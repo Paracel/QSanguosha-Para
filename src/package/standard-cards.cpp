@@ -10,7 +10,6 @@ Slash::Slash(Suit suit, int number): BasicCard(suit, number)
 {
     setObjectName("slash");
     nature = DamageStruct::Normal;
-    drank = 0;
     specific_assignee = QStringList();
 }
 
@@ -252,9 +251,7 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
 
     if (use.from->getMark("drank") > 0) {
         room->setCardFlag(use.card, "drank");
-        const Slash *slash = qobject_cast<const Slash *>(use.card);
-        if (slash)
-            slash->drank = use.from->getMark("drank");
+        use.card->tag["drank"] = use.from->getMark("drank");
         room->setPlayerMark(use.from, "drank", 0);
     }
 
@@ -268,7 +265,7 @@ void Slash::onEffect(const CardEffectStruct &card_effect) const{
     effect.slash = this;
 
     effect.to = card_effect.to;
-    effect.drank = this->drank;
+    effect.drank = this->tag["drank"].toInt();
     effect.nullified = card_effect.nullified;
 
     QVariantList jink_list = effect.from->tag["Jink_" + toString()].toList();

@@ -241,6 +241,8 @@ public:
 
     QList<const Player *> getSiblings() const;
     QList<const Player *> getAliveSiblings() const;
+
+    static bool isNostalGeneral(const Player *p, const char *general_name);
 };
 
 %extend Player {

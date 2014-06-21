@@ -306,7 +306,7 @@ bool Jushou::onPhaseChange(ServerPlayer *target) const{
     if (target->getPhase() == Player::Finish) {
         Room *room = target->getRoom();
         if (room->askForSkillInvoke(target, objectName())) {          
-            room->broadcastSkillInvoke("jushou");
+            room->broadcastSkillInvoke(objectName());
             target->drawCards(getJushouDrawNum(target), objectName());
             target->turnOver();
         }
@@ -323,6 +323,7 @@ public:
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         if (!room->askForSkillInvoke(player, objectName())) return false;
+        room->broadcastSkillInvoke(objectName());
         player->drawCards(1, objectName());
 
         const Card *card = room->askForUseCard(player, "TrickCard+^Nullification,EquipCard|.|.|hand", "@jiewei");

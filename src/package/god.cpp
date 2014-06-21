@@ -241,6 +241,13 @@ public:
     virtual bool isEnabledAtPlay(const Player *player) const{
         return !player->hasUsed("GongxinCard");
     }
+
+    virtual int getEffectIndex(const ServerPlayer *player, const Card *) const{
+        int index = qrand() % 2 + 1;
+        if (!player->hasInnateSkill(objectName()) && player->getMark("qinxue") > 0)
+            index += 2;
+        return index;
+    }
 };
 
 void YeyanCard::damage(ServerPlayer *shenzhouyu, ServerPlayer *target, int point) const{

@@ -1862,7 +1862,7 @@ public:
 
         room->broadcastSkillInvoke(objectName());
         room->notifySkillInvoked(zhugedan, objectName());
-        //room->doLightbox("$JuyiAnimate");
+        room->doLightbox("$JuyiAnimate");
 
         LogMessage log;
         log.type = "#JuyiWake";

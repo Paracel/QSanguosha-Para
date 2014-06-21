@@ -1273,10 +1273,10 @@ public:
                && target->isWounded();
     }
 
-    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         room->broadcastSkillInvoke(objectName());
         room->notifySkillInvoked(player, objectName());
-        //room->doLightbox("$QianxinAnimate");
+        room->doLightbox("$QianxinAnimate");
 
         LogMessage log;
         log.type = "#QianxinWake";

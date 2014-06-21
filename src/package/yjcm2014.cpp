@@ -949,7 +949,7 @@ bool XianzhouCard::targetFilter(const QList<const Player *> &targets, const Play
 void XianzhouCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
     room->removePlayerMark(effect.from, "@handover");
-    //room->doLightbox("$XianzhouAnimate");
+    room->doLightbox("$XianzhouAnimate");
 
     int len = 0;
     DummyCard *dummy = new DummyCard;

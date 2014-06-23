@@ -18,8 +18,10 @@ void RoomState::resetCard(int cardId) {
     Card *newCard = Card::Clone(Sanguosha->getEngineCard(cardId));
     if (newCard == NULL) return;
     newCard->setFlags(m_cards[cardId]->getFlags());
+    newCard->tag = m_cards[cardId]->tag;
     m_cards[cardId]->copyEverythingFrom(newCard);
     newCard->clearFlags();
+    newCard->tag.clear();
     m_cards[cardId]->setModified(false);
 }
 

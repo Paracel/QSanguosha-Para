@@ -84,6 +84,9 @@ public:
     bool hasFlag(const QString &flag) const;
     virtual void clearFlags() const;
 
+    virtual void setTag(const QString &key, const QVariant &data) const;
+    virtual void removeTag(const QString &key) const;
+
     virtual QString getPackage() const;
     inline virtual QString getClassName() const{ return metaObject()->className(); }
     virtual bool isVirtualCard() const;

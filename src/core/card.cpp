@@ -752,6 +752,14 @@ void Card::clearFlags() const{
     flags.clear();
 }
 
+void Card::setTag(const QString &key, const QVariant &data) const{
+    tag[key] = data;
+}
+
+void Card::removeTag(const QString &key) const{
+    tag.remove(key);
+}
+
 // ---------   Skill card     ------------------
 
 SkillCard::SkillCard(): Card(NoSuit, 0) {

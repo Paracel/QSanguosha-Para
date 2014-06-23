@@ -52,3 +52,16 @@ void WrappedCard::setFlags(const QString &flag) const{
     m_isModified = true;
 }
 
+void WrappedCard::setTag(const QString &key, const QVariant &data) const{
+    Q_ASSERT(m_card != NULL);
+    Card::setTag(key, data);
+    m_card->setTag(key, data);
+    m_isModified = true;
+}
+
+void WrappedCard::removeTag(const QString &key) const{
+    Q_ASSERT(m_card != NULL);
+    Card::removeTag(key);
+    m_card->removeTag(key);
+    m_isModified = true;
+}

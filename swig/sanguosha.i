@@ -791,6 +791,9 @@ public:
     bool hasFlag(const char *flag) const;
     void clearFlags() const;
 
+    void setTag(const char *key, const QVariant &data) const;
+    void removeTag(const char *key) const;
+
     virtual void onUse(Room *room, const CardUseStruct &card_use) const;
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
     virtual void onEffect(const CardEffectStruct &effect) const;
@@ -836,16 +839,8 @@ public:
         return $self->Card::isAvailable(player);
     }
 
-    void setTag(const char *key, QVariant &value) const{ // set it to 'const' for 'tag' is mutable
-        $self->tag[key] = value;
-    }
-
     QVariant getTag(const char *key) const{
         return $self->tag[key];
-    }
-
-    void removeTag(const char *tag_name) const{
-        $self->tag.remove(tag_name);
     }
 };
 

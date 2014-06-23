@@ -124,6 +124,9 @@ public:
     // inline virtual QString subcardString() const;
     // inline virtual int subcardsLength() const;
 
+    virtual void setTag(const QString &key, const QVariant &data) const;
+    virtual void removeTag(const QString &key) const;
+
     inline virtual QString getType() const{ return m_card->getType(); }
     inline virtual QString getSubtype() const{ return m_card->getSubtype(); }
     inline virtual CardType getTypeId() const{ return m_card->getTypeId(); }

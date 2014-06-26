@@ -63,6 +63,10 @@ return {
 	["&sp_dingfeng"] = "丁奉",
 	["illustrator:sp_dingfeng"] = "G.G.G.",
 
+	["sp_hetaihou"] = "SP何太后",
+	["&sp_hetaihou"] = "何太后",
+	["illustrator:sp_hetaihou"] = "琛·美弟奇",
+
 	["tw_diaochan"] = "TW貂蝉",
 	["&tw_diaochan"] = "貂蝉",
 	["illustrator:tw_diaochan"] = "陳俊佐",

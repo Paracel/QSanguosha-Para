@@ -2400,6 +2400,10 @@ SPPackage::SPPackage()
     zhugedan->addSkill(new Juyi);
     zhugedan->addRelateSkill("weizhong");
 
+    General *sp_hetaihou = new General(this, "sp_hetaihou", "qun", 3, false, true); // SP 033
+    sp_hetaihou->addSkill("zhendu");
+    sp_hetaihou->addSkill("qiluan");
+
     General *maliang = new General(this, "maliang", "shu", 3); // SP 035
     maliang->addSkill(new Xiemu);
     maliang->addSkill(new Naman);

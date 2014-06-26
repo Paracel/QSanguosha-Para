@@ -631,7 +631,7 @@ public:
 class Qiluan: public TriggerSkill {
 public:
     Qiluan(): TriggerSkill("qiluan") {
-        events << Death << EventPhaseStart;
+        events << Death << EventPhaseChanging;
         frequency = Frequent;
     }
 
@@ -651,17 +651,24 @@ public:
                 && current->getPhase() != Player::NotActive)
                 killer->addMark(objectName());
         } else {
-            if (player->getPhase() == Player::NotActive) {
+            PhaseChangeStruct change = data.value<PhaseChangeStruct>();
+            if (change.to == Player::NotActive) {
                 QList<ServerPlayer *> hetaihous;
+                QList<int> mark_count;
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
-                    if (p->getMark(objectName()) > 0 && TriggerSkill::triggerable(p))
+                    if (p->getMark(objectName()) > 0 && TriggerSkill::triggerable(p)) {
                         hetaihous << p;
+                        mark_count << p->getMark(objectName());
+                    }
                     p->setMark(objectName(), 0);
                 }
 
-                foreach (ServerPlayer *p, hetaihous) {
-                    if (p->isAlive() && room->askForSkillInvoke(p, objectName()))
+                for (int i = 0; i < hetaihous.length(); i++) {
+                    ServerPlayer *p = hetaihous.at(i);
+                    for (int j = 0; j < mark_count.at(i); j++) {
+                        if (p->isDead() || !room->askForSkillInvoke(p, objectName())) break;
                         p->drawCards(3, objectName());
+                    }
                 }
             }
         }

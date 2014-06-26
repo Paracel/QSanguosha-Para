@@ -386,7 +386,7 @@ public:
             return false;
         }
         if (room->askForSkillInvoke(player, objectName()))
-            room->useCard(CardUseStruct(savage_assault, player, NULL));
+            room->useCard(CardUseStruct(savage_assault, player, QList<ServerPlayer *>()));
         return false;
     }
 };

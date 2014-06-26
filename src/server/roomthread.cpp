@@ -155,6 +155,7 @@ CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, QList<ServerP
 CardUseStruct::CardUseStruct(const Card *card, ServerPlayer *from, ServerPlayer *target, bool isOwnerUse) {
     this->card = card;
     this->from = from;
+    Q_ASSERT(target != NULL);
     this->to << target;
     this->m_isOwnerUse = isOwnerUse;
     this->m_addHistory = true;

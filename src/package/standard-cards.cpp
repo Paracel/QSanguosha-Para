@@ -1351,6 +1351,7 @@ WoodenOx::WoodenOx(Suit suit, int number)
 
 void WoodenOx::onUninstall(ServerPlayer *player) const{
     player->getRoom()->addPlayerHistory(player, "WoodenOxCard", 0);
+    Treasure::onUnistall(player);
 }
 
 StandardCardPackage::StandardCardPackage()

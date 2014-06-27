@@ -119,30 +119,6 @@ Replayer::Replayer(QObject *parent, const QString &filename)
     delete device;
 }
 
-QString &Replayer::commandProceed(QString &cmd) {
-    static QStringList split_flags;
-    if (split_flags.isEmpty())
-        split_flags << ":" << "+" << "_" << "->";
-
-    foreach (QString flag, split_flags) {
-        QStringList messages = cmd.split(flag);
-        if (messages.length() > 1) {
-            QStringList message_analyse;
-            foreach (QString message, messages)
-                message_analyse << commandProceed(message);
-            cmd = "[" + message_analyse.join(",") + "]";
-        } else {
-            bool ok = false;
-            cmd.toInt(&ok);
-
-            if (!cmd.startsWith("\"") && !cmd.startsWith("[") && !ok)
-                cmd = "\"" + cmd +"\"";
-        }
-    }
-
-    return cmd;
-}
-
 int Replayer::getDuration() const{
     return pairs.last().elapsed / 1000.0;
 }

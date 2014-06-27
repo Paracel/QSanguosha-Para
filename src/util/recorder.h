@@ -38,7 +38,6 @@ class Replayer: public QThread {
 public:
     explicit Replayer(QObject *parent, const QString &filename);
 
-    QString &commandProceed(QString &cmd);
     int getDuration() const;
     qreal getSpeed();
 

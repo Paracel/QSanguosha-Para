@@ -199,19 +199,20 @@ void Replayer::toggle() {
 void Replayer::run() {
     int last = 0;
 
-    QStringList nondelays;
-    nondelays << "addPlayer" << "removePlayer" << "speak";
+    QList<CommandType> nondelays;
+    nondelays << S_COMMAND_ADD_PLAYER
+              << S_COMMAND_REMOVE_PLAYER
+              << S_COMMAND_SPEAK;
 
     foreach (Pair pair, pairs) {
         int delay = qMin(pair.elapsed - last, 2500);
         last = pair.elapsed;
 
         bool delayed = true;
-        foreach (QString nondelay, nondelays) {
-            if (pair.cmd.startsWith(nondelay)) {
+        QSanGeneralPacket packet;
+        if (packet.parse(pair.cmd.toAscii().constData())) {
+            if (nondelays.contains(packet.getCommandType()))
                 delayed = false;
-                break;
-            }
         }
 
         if (delayed) {

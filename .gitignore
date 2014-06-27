@@ -12,10 +12,8 @@ users.db
 doc/*.html
 swig/*.bat
 .DS_Store
-liblua5.1.dylib
 QSanguosha.pro.user*
 etc/customScenes/custom_scenario.txt
-*.dylib
 QSanguosha.exe
 /tools/
 builds/vs2010/Win32/
@@ -45,3 +43,4 @@ ai.html
 /lib/libfmodex.a
 /lib/libfreetype.dll.a
 /lib/libplibjs.a
+/imageformats/qjpeg4.dll

@@ -205,7 +205,8 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
                     if (p->getMark("drank") > 0) {
                         LogMessage log;
                         log.type = "#UnsetDrankEndOfTurn";
-                        log.from = p;
+                        log.from = player;
+                        log.to << p;
                         room->sendLog(log);
 
                         room->setPlayerMark(p, "drank", 0);

@@ -753,6 +753,7 @@ public:
                             log.type = "#BecomeUser";
                             log.from = target;
                             log.card_str = use.card->toString();
+                            room->sendLog(log);
 
                             target->setFlags("ZenhuiUser_" + use.card->toString()); // For AI
                             use.from = target;

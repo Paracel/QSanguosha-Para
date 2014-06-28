@@ -96,7 +96,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        JudgeStar judge = data.value<JudgeStar>();
+        JudgeStruct *judge = data.value<JudgeStruct *>();
         const Card *card = NULL;
         if (room->getMode().startsWith("06_") || room->getMode().startsWith("04_")) {
             if (AI::GetRelation3v3(player, judge->who) != AI::Friend) return false;
@@ -189,7 +189,7 @@ public:
                 }
             }
         } else {
-            CardStar card = NULL;
+            const Card *card = NULL;
             if (triggerEvent == CardUsed) {
                 CardUseStruct use = data.value<CardUseStruct>();
                 card = use.card;

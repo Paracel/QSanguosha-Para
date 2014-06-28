@@ -23,7 +23,7 @@ public:
             ServerPlayer *current = room->getCurrent();
             if (!current || current->isDead() || current->getPhase() == Player::NotActive)
                 break;
-            if (room->askForSkillInvoke(target, objectName(), QVariant::fromValue((PlayerStar)current))) {
+            if (room->askForSkillInvoke(target, objectName(), QVariant::fromValue(current))) {
                 room->broadcastSkillInvoke(objectName());
                 room->addPlayerMark(current, "@hengjiang");
             }
@@ -184,10 +184,10 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
             && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
-            CardStar yongjue_card = move.reason.m_extraData.value<CardStar>();
+            const Card *yongjue_card = move.reason.m_extraData.value<const Card *>();
             if (!yongjue_card || !yongjue_card->isKindOf("Slash") || !yongjue_card->hasFlag("yongjue"))
                 return false;
-            PlayerStar yongjue_user = room->getTag("yongjue_user").value<PlayerStar>();
+            ServerPlayer *yongjue_user = room->getTag("yongjue_user").value<ServerPlayer *>();
             room->removeTag("yongjue_user");
             if (yongjue_user) {
                 if (room->askForSkillInvoke(player, objectName(), QVariant::fromValue(yongjue_user))) {
@@ -217,7 +217,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if ((triggerEvent == PreCardUsed || triggerEvent == CardResponded) && player->getPhase() == Player::Play) {
-            CardStar card = NULL;
+            const Card *card = NULL;
             if (triggerEvent == PreCardUsed)
                 card = data.value<CardUseStruct>().card;
             else {
@@ -236,7 +236,7 @@ public:
                         ids = card->getSubcards();
                     if (!ids.isEmpty()) {
                         room->setCardFlag(card, "yongjue");
-                        room->setTag("yongjue_user", QVariant::fromValue((PlayerStar)player));
+                        room->setTag("yongjue_user", QVariant::fromValue(player));
                     }
                 }
             }
@@ -327,7 +327,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        PindianStar pindian = data.value<PindianStar>();
+        PindianStruct *pindian = data.value<PindianStruct *>();
         if (TriggerSkill::triggerable(pindian->from)) {
             QString choice = room->askForChoice(pindian->from, objectName(), "up+down+cancel", data);
             if (choice == "up") {
@@ -515,7 +515,7 @@ public:
                 if (to->isAlive() && to->isAdjacentTo(player) && to->isAdjacentTo(use.from)
                     && !to->getEquips().isEmpty()) {
                     to->setFlags("FengshiTarget"); // For AI
-                    bool invoke = room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to));
+                    bool invoke = room->askForSkillInvoke(player, objectName(), QVariant::fromValue(to));
                     to->setFlags("-FengshiTarget");
                     if (!invoke) continue;
                     room->broadcastSkillInvoke(objectName());

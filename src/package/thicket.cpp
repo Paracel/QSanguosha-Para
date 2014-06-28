@@ -70,8 +70,8 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        JudgeStar judge = data.value<JudgeStar>();
-        CardStar card = judge->card;
+        JudgeStruct *judge = data.value<JudgeStruct *>();
+        const Card *card = judge->card;
 
         if (card->isBlack()) {
             QList<ServerPlayer *> caopis;
@@ -308,7 +308,7 @@ public:
         CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
         if (move.card_ids.length() == 1 && move.from_places.contains(Player::PlaceTable) && move.to_place == Player::DiscardPile
             && move.reason.m_reason == CardMoveReason::S_REASON_USE) {
-            CardStar card = move.reason.m_extraData.value<CardStar>();
+            const Card *card = move.reason.m_extraData.value<const Card *>();
             if (!card || !card->isKindOf("SavageAssault"))
                 return false;
             if (card->isVirtualCard()) {

@@ -167,7 +167,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->tag["FenxunTarget"].value<PlayerStar>() != NULL;
+        return target != NULL && target->tag["FenxunTarget"].value<ServerPlayer *>() != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *dingfeng, QVariant &data) const{
@@ -180,7 +180,7 @@ public:
             if (death.who != dingfeng)
                 return false;
         }
-        ServerPlayer *target = dingfeng->tag["FenxunTarget"].value<PlayerStar>();
+        ServerPlayer *target = dingfeng->tag["FenxunTarget"].value<ServerPlayer *>();
 
         if (target) {
             room->setFixedDistance(dingfeng, target, -1);
@@ -480,7 +480,7 @@ public:
             }
             if (equiplist.isEmpty() || !panfeng->askForSkillInvoke(objectName(), data))
                 return false;
-            int equip_index = room->askForChoice(panfeng, "kuangfu_equip", equiplist.join("+"), QVariant::fromValue((PlayerStar)target)).toInt();
+            int equip_index = room->askForChoice(panfeng, "kuangfu_equip", equiplist.join("+"), QVariant::fromValue(target)).toInt();
             const Card *card = target->getEquip(equip_index);
             int card_id = card->getEffectiveId();
 
@@ -593,7 +593,7 @@ void QingchengCard::onUse(Room *room, const CardUseStruct &use) const{
     }
     QString skill_qc;
     if (!skill_list.isEmpty()) {
-        QVariant data_for_ai = QVariant::fromValue((PlayerStar)to);
+        QVariant data_for_ai = QVariant::fromValue(to);
         skill_qc = room->askForChoice(player, "qingcheng", skill_list.join("+"), data_for_ai);
     }
 

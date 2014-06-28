@@ -16,7 +16,7 @@ public:
         if (player->getPhase() != Player::NotActive)
             return false;
 
-        CardStar card = NULL;
+        const Card *card = NULL;
         if (triggerEvent == CardUsed) {
             CardUseStruct card_use = data.value<CardUseStruct>();
             card = card_use.card;
@@ -803,7 +803,7 @@ bool BifaCard::targetFilter(const QList<const Player *> &targets, const Player *
 
 void BifaCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *target = targets.first();
-    target->tag["BifaSource" + QString::number(getEffectiveId())] = QVariant::fromValue((PlayerStar)source);
+    target->tag["BifaSource" + QString::number(getEffectiveId())] = QVariant::fromValue(source);
     room->broadcastSkillInvoke("bifa", 1);
     target->addToPile("bifa", this, false);
 }
@@ -838,7 +838,7 @@ public:
             room->askForUseCard(player, "@@bifa", "@bifa-remove", -1, Card::MethodNone);
         } else if (player->getPhase() == Player::RoundStart && player->getPile("bifa").length() > 0) {
             int card_id = player->getPile("bifa").first();
-            ServerPlayer *chenlin = player->tag["BifaSource" + QString::number(card_id)].value<PlayerStar>();
+            ServerPlayer *chenlin = player->tag["BifaSource" + QString::number(card_id)].value<ServerPlayer *>();
             QList<int> ids;
             ids << card_id;
 
@@ -1051,7 +1051,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if (triggerEvent == PreCardUsed || triggerEvent == CardResponded) {
-            CardStar card = NULL;
+            const Card *card = NULL;
             if (triggerEvent == PreCardUsed)
                 card = data.value<CardUseStruct>().card;
             else {
@@ -1345,7 +1345,7 @@ bool ZhoufuCard::targetFilter(const QList<const Player *> &targets, const Player
 
 void ZhoufuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
     ServerPlayer *target = targets.first();
-    target->tag["ZhoufuSource" + QString::number(getEffectiveId())] = QVariant::fromValue((PlayerStar)source);
+    target->tag["ZhoufuSource" + QString::number(getEffectiveId())] = QVariant::fromValue(source);
     room->broadcastSkillInvoke("zhoufu");
     target->addToPile("incantation", this);
 }
@@ -1382,7 +1382,7 @@ public:
         if (triggerEvent == StartJudge) {
             int card_id = player->getPile("incantation").first();
 
-            JudgeStar judge = data.value<JudgeStar>();
+            JudgeStruct *judge = data.value<JudgeStruct *>();
             judge->card = Sanguosha->getCard(card_id);
 
             LogMessage log;
@@ -1402,7 +1402,7 @@ public:
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive) {
                 int id = player->getPile("incantation").first();
-                PlayerStar zhangbao = player->tag["ZhoufuSource" + QString::number(id)].value<PlayerStar>();
+                ServerPlayer *zhangbao = player->tag["ZhoufuSource" + QString::number(id)].value<ServerPlayer *>();
                 if (zhangbao && zhangbao->isAlive())
                     zhangbao->obtainCard(Sanguosha->getCard(id));
             }
@@ -1427,9 +1427,9 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        JudgeStar judge = data.value<JudgeStar>();
+        JudgeStruct *judge = data.value<JudgeStruct *>();
         int id = judge->card->getEffectiveId();
-        PlayerStar zhangbao = player->tag["ZhoufuSource" + QString::number(id)].value<PlayerStar>();
+        ServerPlayer *zhangbao = player->tag["ZhoufuSource" + QString::number(id)].value<ServerPlayer *>();
         if (zhangbao && TriggerSkill::triggerable(zhangbao)
             && zhangbao->askForSkillInvoke(objectName(), data)) {
             room->broadcastSkillInvoke(objectName());
@@ -1452,7 +1452,7 @@ public:
                 if (!player->isAlive()) break;
                 if (player->distanceTo(to) <= 1 && TriggerSkill::triggerable(player)) {
                     player->tag["KangkaiSlash"] = data;
-                    bool will_use = room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to));
+                    bool will_use = room->askForSkillInvoke(player, objectName(), QVariant::fromValue(to));
                     player->tag.remove("KangkaiSlash");
                     if (!will_use) continue;
 
@@ -1471,7 +1471,7 @@ public:
                         if (card->getTypeId() == Card::TypeEquip && room->getCardOwner(card->getEffectiveId()) == to
                             && !to->isLocked(card)) {
                             to->tag["KangkaiSlash"] = data;
-                            to->tag["KangkaiGivenCard"] = QVariant::fromValue((CardStar)card);
+                            to->tag["KangkaiGivenCard"] = QVariant::fromValue(card);
                             bool will_use = room->askForSkillInvoke(to, "kangkai_use", "use");
                             to->tag.remove("KangkaiSlash");
                             to->tag.remove("KangkaiGivenCard");
@@ -1562,7 +1562,7 @@ public:
             if (change.to == Player::NotActive)
                 room->setPlayerMark(player, "qiangwu", 0);
         } else if (triggerEvent == FinishJudge) {
-            JudgeStar judge = data.value<JudgeStar>();
+            JudgeStruct *judge = data.value<JudgeStruct *>();
             if (judge->reason == "qiangwu")
                 judge->pattern = QString::number(judge->card->getNumber());
         } else if (triggerEvent == PreCardUsed) {
@@ -1986,7 +1986,7 @@ public:
         if ((move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_RESPONSE) {
             if (move.from && player->objectName() == move.from->objectName())
                 return false;
-            to_obtain = move.reason.m_extraData.value<CardStar>();
+            to_obtain = move.reason.m_extraData.value<const Card *>();
             if (!to_obtain || !to_obtain->isKindOf("Slash"))
                 return false;
         } else {

@@ -68,7 +68,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *, QVariant &data) const{
-        PindianStar pindian = data.value<PindianStar>();
+        PindianStruct *pindian = data.value<PindianStruct *>();
         if (pindian->reason != objectName())
             return false;
         if (pindian->from_card->getNumber() == pindian->to_card->getNumber())

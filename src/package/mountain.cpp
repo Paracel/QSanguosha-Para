@@ -49,7 +49,7 @@ void QiaobianCard::use(Room *room, ServerPlayer *zhanghe, QList<ServerPlayer *> 
         if (targets.isEmpty())
             return;
 
-        PlayerStar from = targets.first();
+        ServerPlayer *from = targets.first();
         if (!from->hasEquip() && from->getJudgingArea().isEmpty())
             return;
 
@@ -205,7 +205,7 @@ public:
                 }
             }
         } else {
-            JudgeStar judge = data.value<JudgeStar>();
+            JudgeStruct *judge = data.value<JudgeStruct *>();
             if (judge->reason != objectName()) return false;
             judge->pattern = QString::number(int(judge->card->getSuit()));
         }
@@ -280,7 +280,7 @@ public:
                 room->judge(judge);
             }
         } else if (triggerEvent == FinishJudge) {
-            JudgeStar judge = data.value<JudgeStar>();
+            JudgeStruct *judge = data.value<JudgeStruct *>();
             if (judge->reason == "tuntian" && judge->isGood() && room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge)
                 player->addToPile("field", judge->card->getEffectiveId());
         }
@@ -514,7 +514,7 @@ public:
                     room->detachSkillFromPlayer(p, "zhiba_pindian", true);
             }
         } else if (triggerEvent == Pindian) {
-            PindianStar pindian = data.value<PindianStar>();
+            PindianStruct *pindian = data.value<PindianStruct *>();
             if (pindian->reason != "zhiba_pindian" || !pindian->to->hasLordSkill(objectName()))
                 return false;
             if (!pindian->isSuccess()) {
@@ -810,7 +810,7 @@ void FangquanCard::onEffect(const CardEffectStruct &effect) const{
     log.to << player;
     room->sendLog(log);
 
-    room->setTag("FangquanTarget", QVariant::fromValue((PlayerStar)player));
+    room->setTag("FangquanTarget", QVariant::fromValue(player));
 }
 
 class FangquanViewAsSkill: public OneCardViewAsSkill {
@@ -874,7 +874,7 @@ public:
         } else if (triggerEvent == EventPhaseStart && liushan->getPhase() == Player::NotActive) {
             Room *room = liushan->getRoom();
             if (!room->getTag("FangquanTarget").isNull()) {
-                PlayerStar target = room->getTag("FangquanTarget").value<PlayerStar>();
+                ServerPlayer *target = room->getTag("FangquanTarget").value<ServerPlayer *>();
                 room->removeTag("FangquanTarget");
                 if (target->isAlive())
                     target->gainAnExtraTurn();

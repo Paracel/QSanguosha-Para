@@ -745,7 +745,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *, ServerPlayer *player, QVariant &data) const{
         if (player->getPhase() == Player::Play && (triggerEvent == PreCardUsed || triggerEvent == CardResponded)) {
-            CardStar c = NULL;
+            const Card *c = NULL;
             if (triggerEvent == PreCardUsed)
                 c = data.value<CardUseStruct>().card;
             else

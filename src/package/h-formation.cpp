@@ -153,7 +153,7 @@ void HeyiCard::onUse(Room *room, const CardUseStruct &card_use) const{
 }
 
 void HeyiCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const{
-    room->setTag("HeyiSource", QVariant::fromValue((PlayerStar)source));
+    room->setTag("HeyiSource", QVariant::fromValue(source));
     QList<ServerPlayer *> players = room->getAllPlayers();
     int index1 = players.indexOf(targets.first()), index2 = players.indexOf(targets.last());
     int index_self = players.indexOf(source);
@@ -225,7 +225,7 @@ public:
             if (change.to != Player::NotActive)
                 return false;
         }
-        if (room->getTag("HeyiSource").value<PlayerStar>() == player) {
+        if (room->getTag("HeyiSource").value<ServerPlayer *>() == player) {
             room->removeTag("HeyiSource");
             QStringList list = player->tag[objectName()].toStringList();
             player->tag.remove(objectName());
@@ -259,7 +259,7 @@ public:
             QList<ServerPlayer *> jiangweis = room->findPlayersBySkillName(objectName());
             foreach (ServerPlayer *jiangwei, jiangweis) {
                 if (jiangwei->isAlive() && (player == jiangwei || player->isAdjacentTo(jiangwei))
-                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)jiangwei))) {
+                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(jiangwei))) {
                     if (player != jiangwei) {
                         room->notifySkillInvoked(jiangwei, objectName());
                         LogMessage log;
@@ -379,7 +379,7 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
         choicelist.append("role");
     }
     if (choicelist.isEmpty()) return;
-    QString choice = room->askForChoice(effect.from, "shangyi", choicelist.join("+"), QVariant::fromValue((PlayerStar)player));
+    QString choice = room->askForChoice(effect.from, "shangyi", choicelist.join("+"), QVariant::fromValue(player));
 
     LogMessage log;
     log.type = "$ShangyiView";
@@ -474,7 +474,7 @@ public:
             for (int i = 0; i < use.to.length(); i++) {
                 ServerPlayer *to = use.to.at(i);
                 if (to->isAlive() && to->isAdjacentTo(player) && to->isAdjacentTo(use.from)
-                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue((PlayerStar)to))) {
+                    && room->askForSkillInvoke(player, objectName(), QVariant::fromValue(to))) {
                     room->broadcastSkillInvoke(objectName());
                     if (jink_list.at(i).toInt() == 1)
                         jink_list.replace(i, QVariant(2));

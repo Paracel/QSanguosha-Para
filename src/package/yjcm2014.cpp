@@ -80,7 +80,7 @@ public:
         } else {
             if (!player->isAlive() || player->getPhase() == Player::NotActive) return false;
             if (triggerEvent == PreCardUsed || triggerEvent == CardResponded) {
-                CardStar card = NULL;
+                const Card *card = NULL;
                 if (triggerEvent == PreCardUsed) {
                     card = data.value<CardUseStruct>().card;
                 } else {
@@ -129,7 +129,7 @@ public:
         foreach (ServerPlayer *p, room->getAllPlayers()) {
             if (!player->isAlive()) return false;
             if (TriggerSkill::triggerable(p)
-                && room->askForSkillInvoke(p, objectName(), QVariant::fromValue((PlayerStar)player))) {
+                && room->askForSkillInvoke(p, objectName(), QVariant::fromValue(player))) {
                 room->broadcastSkillInvoke(objectName());
                 player->drawCards(1, objectName());
             }
@@ -327,7 +327,7 @@ public:
                 int id = room->askForCardChosen(hs, target, "j", objectName(), false, Card::MethodDiscard);
                 room->throwCard(id, NULL, hs);
                 if (hs->isAlive() && target->isAlive() && hs->canSlash(target, false)) {
-                    room->setTag("YonglveUser", QVariant::fromValue((PlayerStar)hs));
+                    room->setTag("YonglveUser", QVariant::fromValue(hs));
                     Slash *slash = new Slash(Card::NoSuit, 0);
                     slash->setSkillName("_yonglve");
                     room->useCard(CardUseStruct(slash, hs, target));
@@ -356,7 +356,7 @@ public:
         } else if (!player->hasFlag("Global_ProcessBroken")) {
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash") && use.card->getSkillName() == "yonglve" && !use.card->hasFlag("YonglveDamage")) {
-                PlayerStar hs = room->getTag("YonglveUser").value<PlayerStar>();
+                ServerPlayer *hs = room->getTag("YonglveUser").value<ServerPlayer *>();
                 if (hs)
                     hs->drawCards(1, "yonglve");
             }
@@ -470,7 +470,7 @@ public:
                 }
             }
         } else if (player->getMark(objectName()) > 0) {
-            CardStar card = NULL;
+            const Card *card = NULL;
             if (triggerEvent == CardUsed) {
                 card = data.value<CardUseStruct>().card;
             } else {
@@ -732,7 +732,7 @@ public:
                     }
                     Q_ASSERT(!victims.isEmpty());
                     collateral_victim = room->askForPlayerChosen(player, victims, "zenhui_collateral", "@zenhui-collateral:" + target->objectName());
-                    target->tag["collateralVictim"] = QVariant::fromValue((PlayerStar)(collateral_victim));
+                    target->tag["collateralVictim"] = QVariant::fromValue((collateral_victim));
 
                     LogMessage log;
                     log.type = "#CollateralSlash";
@@ -857,7 +857,7 @@ public:
                     choices << QString::number(i);
             }
             choices << "draw" << "cancel";
-            QString choice = room->askForChoice(caifuren, objectName(), choices.join("+"), QVariant::fromValue((PlayerStar)player));
+            QString choice = room->askForChoice(caifuren, objectName(), choices.join("+"), QVariant::fromValue(player));
             if (choice == "cancel") {
                 continue;
             } else {
@@ -1014,7 +1014,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         if ((triggerEvent == CardUsed || triggerEvent == CardResponded) && player->getPhase() == Player::Play) {
-            CardStar card = NULL;
+            const Card *card = NULL;
             if (triggerEvent == CardUsed)
                 card = data.value<CardUseStruct>().card;
             else if (triggerEvent == CardResponded) {

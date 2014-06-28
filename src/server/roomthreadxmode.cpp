@@ -70,10 +70,10 @@ void RoomThreadXMode::run() {
     QStringList warm_backup, cool_backup;
     foreach (ServerPlayer *player, room->m_players) {
         if (player->getRole().startsWith("r")) {
-            player->tag["XModeLeader"] = QVariant::fromValue((PlayerStar)cool_leader);
+            player->tag["XModeLeader"] = QVariant::fromValue(cool_leader);
             cool_backup.append(player->tag["XModeBackup"].toStringList());
         } else {
-            player->tag["XModeLeader"] = QVariant::fromValue((PlayerStar)warm_leader);
+            player->tag["XModeLeader"] = QVariant::fromValue(warm_leader);
             warm_backup.append(player->tag["XModeBackup"].toStringList());
         }
         player->tag.remove("XModeBackup");

@@ -396,7 +396,7 @@ void Room::killPlayer(ServerPlayer *victim, DamageStruct *reason) {
 void Room::judge(JudgeStruct &judge_struct) {
     Q_ASSERT(judge_struct.who != NULL);
 
-    JudgeStar judge_star = &judge_struct;
+    JudgeStruct *judge_star = &judge_struct;
     QVariant data = QVariant::fromValue(judge_star);
     thread->trigger(StartJudge, this, judge_star->who, data);
 
@@ -410,7 +410,7 @@ void Room::judge(JudgeStruct &judge_struct) {
     thread->trigger(FinishJudge, this, judge_star->who, data);
 }
 
-void Room::sendJudgeResult(const JudgeStar judge) {
+void Room::sendJudgeResult(const JudgeStruct *judge) {
     Json::Value arg(Json::arrayValue);
     arg[0] = (int)QSanProtocol::S_GAME_EVENT_JUDGE_RESULT;
     arg[1] = judge->card->getEffectiveId();
@@ -897,7 +897,7 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
         if (data.type() == QVariant::String)
             skillCommand = toJsonArray(skill_name, data.toString());
         else {
-            PlayerStar p = data.value<PlayerStar>();
+            ServerPlayer *p = data.value<ServerPlayer *>();
             QString data_str;
             if (p != NULL)
                 data_str = "playerdata:" + p->objectName();
@@ -920,7 +920,7 @@ bool Room::askForSkillInvoke(ServerPlayer *player, const QString &skill_name, co
     }
 
     QString decisionString = QString("skillInvoke:" + skill_name);
-    PlayerStar p = data.value<PlayerStar>();
+    ServerPlayer *p = data.value<ServerPlayer *>();
     if (p != NULL)
         decisionString = decisionString + ":" + p->objectName();
     decisionString = decisionString + ":" + (invoked ? "yes" : "no");
@@ -1306,12 +1306,12 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
 
             if (method == Card::MethodUse) {
                 CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(), QString(), card->getSkillName(), QString());
-                reason.m_extraData = QVariant::fromValue((CardStar)card);
+                reason.m_extraData = QVariant::fromValue(card);
                 moveCardTo(card, player, NULL, Player::PlaceTable, reason, true);
             } else {
                 CardMoveReason reason(CardMoveReason::S_REASON_RESPONSE, player->objectName());
                 reason.m_skillName = card->getSkillName();
-                reason.m_extraData = QVariant::fromValue((CardStar)card);
+                reason.m_extraData = QVariant::fromValue(card);
                 moveCardTo(card, player, NULL, isProvision ? Player::PlaceTable : Player::DiscardPile, reason);
             }
 
@@ -1320,7 +1320,7 @@ const Card *Room::askForCard(ServerPlayer *player, const QString &pattern, const
                 if (getCardPlace(card->getEffectiveId()) == Player::PlaceTable) {
                     CardMoveReason reason(CardMoveReason::S_REASON_LETUSE, player->objectName(),
                                           QString(), card->getSkillName(), QString());
-                    reason.m_extraData = QVariant::fromValue((CardStar)card);
+                    reason.m_extraData = QVariant::fromValue(card);
                     moveCardTo(card, player, NULL, Player::DiscardPile, reason, true);
                 }
                 CardUseStruct card_use;
@@ -1881,7 +1881,7 @@ void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPla
         if (success && clientReply.isString())
             isClockwise = (clientReply.asString() == "cw");
     } else {
-        QVariant data = QVariant::fromValue((CardStar)card);
+        QVariant data = QVariant::fromValue(card);
         isClockwise = (askForChoice(player, "3v3_direction", "cw+ccw", data) == "cw");
     }
 
@@ -3156,7 +3156,7 @@ bool Room::isJinkEffected(ServerPlayer *user, const Card *jink) {
     if (jink == NULL || user == NULL)
         return false;
     Q_ASSERT(jink->isKindOf("Jink"));
-    QVariant jink_data = QVariant::fromValue((CardStar)jink);
+    QVariant jink_data = QVariant::fromValue(jink);
     return !thread->trigger(JinkEffect, this, user, jink_data);
 }
 
@@ -4662,7 +4662,7 @@ int Room::doGongxin(ServerPlayer *shenlvmeng, ServerPlayer *target, QList<int> e
     QVariant decisionData = QVariant::fromValue("viewCards:" + shenlvmeng->objectName() + ":" + target->objectName());
     thread->trigger(ChoiceMade, this, shenlvmeng, decisionData);
 
-    shenlvmeng->tag[skill_name] = QVariant::fromValue((PlayerStar)target);
+    shenlvmeng->tag[skill_name] = QVariant::fromValue(target);
     int card_id;
     AI *ai = shenlvmeng->getAI();
     if (ai) {
@@ -5184,7 +5184,7 @@ void Room::showAllCards(ServerPlayer *player, ServerPlayer *to) {
     }
 }
 
-void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, const QString &skill_name, bool exchange) {
+void Room::retrial(const Card *card, ServerPlayer *player, JudgeStruct *judge, const QString &skill_name, bool exchange) {
     if (card == NULL) return;
 
     bool triggerResponded = getCardOwner(card->getEffectiveId()) == player;
@@ -5217,7 +5217,7 @@ void Room::retrial(const Card *card, ServerPlayer *player, JudgeStar judge, cons
                           player->objectName(),
                           exchange ? skill_name : QString(), QString());
     if (rebyre)
-        reason.m_extraData = QVariant::fromValue((PlayerStar)rebyre);
+        reason.m_extraData = QVariant::fromValue(rebyre);
     CardsMoveStruct move2(QList<int>(),
                           judge->who,
                           exchange ? player : NULL,

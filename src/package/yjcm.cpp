@@ -499,7 +499,7 @@ bool XianzhenCard::targetFilter(const QList<const Player *> &targets, const Play
 void XianzhenCard::onEffect(const CardEffectStruct &effect) const{
     Room *room = effect.from->getRoom();
     if (effect.from->pindian(effect.to, "xianzhen", NULL)) {
-        PlayerStar target = effect.to;
+        ServerPlayer *target = effect.to;
         effect.from->tag["XianzhenTarget"] = QVariant::fromValue(target);
         room->setPlayerFlag(effect.from, "XianzhenSuccess");
 
@@ -536,7 +536,7 @@ public:
     }
 
     virtual bool triggerable(const ServerPlayer *target) const{
-        return target != NULL && target->tag["XianzhenTarget"].value<PlayerStar>() != NULL;
+        return target != NULL && target->tag["XianzhenTarget"].value<ServerPlayer *>() != NULL;
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *gaoshun, QVariant &data) const{
@@ -545,7 +545,7 @@ public:
             if (change.to != Player::NotActive)
                 return false;
         }
-        ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<PlayerStar>();
+        ServerPlayer *target = gaoshun->tag["XianzhenTarget"].value<ServerPlayer *>();
         if (triggerEvent == Death) {
             DeathStruct death = data.value<DeathStruct>();
             if (death.who != gaoshun) {

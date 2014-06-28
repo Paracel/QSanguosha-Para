@@ -219,7 +219,7 @@ void CoupleScenario::remarry(ServerPlayer *enkemann, ServerPlayer *widow) const{
 }
 
 ServerPlayer *CoupleScenario::getSpouse(const ServerPlayer *player) const{
-    return player->tag["spouse"].value<PlayerStar>();
+    return player->tag["spouse"].value<ServerPlayer *>();
 }
 
 bool CoupleScenario::isWidow(ServerPlayer *player) const{

@@ -865,7 +865,8 @@ public:
                 to_give = room->askForCard(player, pattern, "@bifa-give", data_for_ai, Card::MethodNone, chenlin);
             if (chenlin && to_give) {
                 room->broadcastSkillInvoke(objectName(), 2);
-                chenlin->obtainCard(to_give, false);
+                CardMoveReason reasonG(CardMoveReason::S_REASON_GIVE, player->objectName(), chenlin->objectName(), "bifa", QString());
+                room->obtainCard(chenlin, to_give, reasonG, false);
                 CardMoveReason reason(CardMoveReason::S_REASON_EXCHANGE_FROM_PILE, player->objectName(), "bifa", QString());
                 room->obtainCard(player, cd, reason, false);
             } else {

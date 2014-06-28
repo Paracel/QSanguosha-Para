@@ -122,11 +122,11 @@ public:
         // equips
         QRect m_equipAreas[S_EQUIP_AREA_LENGTH];
         QRect m_equipImageArea;
-        QRect m_equipTextArea;
         QRect m_equipSuitArea;
-        QRect m_equipDistanceArea;
         QRect m_equipPointArea;
-        QSanShadowTextFont m_equipFont;
+        QRect m_horseImageArea;
+        QRect m_horseSuitArea;
+        QRect m_horsePointArea;
         QSanShadowTextFont m_equipPointFontBlack;
         QSanShadowTextFont m_equipPointFontRed;
 

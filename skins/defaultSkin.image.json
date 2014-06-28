@@ -182,6 +182,13 @@
 
 // equips
 "photoEquip-default": "image/small-equips/%1.png",
+"photoEquip-chitu": "image/small-equips/offensivehorse.png",
+"photoEquip-dayuan": "image/small-equips/offensivehorse.png",
+"photoEquip-zixing": "image/small-equips/offensivehorse.png",
+"photoEquip-dilu": "image/small-equips/defensivehorse.png",
+"photoEquip-jueying": "image/small-equips/defensivehorse.png",
+"photoEquip-hualiu": "image/small-equips/defensivehorse.png",
+"photoEquip-zhuahuangfeidian": "image/small-equips/defensivehorse.png",
 "dashboardEquip-default": "image/equips/%1.png",
 
 // kingdoms

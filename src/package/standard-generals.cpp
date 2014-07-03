@@ -1622,6 +1622,12 @@ public:
         frequency = Compulsory;
     }
 
+    virtual int getPriority(TriggerEvent triggerEvent) const{
+        if (triggerEvent == EventPhaseChanging)
+            return 8;
+        return TriggerSkill::getPriority(triggerEvent);
+    }
+
     virtual bool triggerable(const ServerPlayer *target) const{
         return target != NULL;
     }
@@ -1640,11 +1646,12 @@ public:
 
             for (int i = 0; i < lose; i++) {
                 player->drawCards(3, objectName());
-                room->addPlayerMark(player, objectName());
+                if (player->getPhase() != Player::NotActive)
+                    room->addPlayerMark(player, objectName());
             }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
-            if (change.to == Player::NotActive)
+            if (change.to == Player::NotActive || change.to == Player::RoundStart)
                 room->setPlayerMark(player, objectName(), 0);
         }
         return false;

@@ -137,46 +137,25 @@ public:
 class Danlao: public TriggerSkill {
 public:
     Danlao(): TriggerSkill("danlao") {
-        events << TargetConfirmed << CardEffected;
+        events << TargetConfirmed;
     }
 
-    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
-        if (triggerEvent == TargetConfirmed) {
-            CardUseStruct use = data.value<CardUseStruct>();
-            if (use.to.length() <= 1 || !use.to.contains(player)
-                || !use.card->isKindOf("TrickCard")
-                || !room->askForSkillInvoke(player, objectName(), data))
-                return false;
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardUseStruct use = data.value<CardUseStruct>();
+        if (use.to.length() <= 1 || !use.to.contains(player)
+            || !use.card->isKindOf("TrickCard")
+            || !room->askForSkillInvoke(player, objectName(), data))
+            return false;
 
-            room->broadcastSkillInvoke(objectName());
+        room->broadcastSkillInvoke(objectName());
+        player->setFlags("-DanlaoTarget");
+        player->setFlags("DanlaoTarget");
+        player->drawCards(1, objectName());
+        if (player->isAlive() && player->hasFlag("DanlaoTarget")) {
             player->setFlags("-DanlaoTarget");
-            player->setFlags("DanlaoTarget");
-            player->drawCards(1, objectName());
-            if (player->isAlive() && player->hasFlag("DanlaoTarget")) {
-                player->setFlags("-DanlaoTarget");
-                use.nullified_list << player->objectName();
-                data = QVariant::fromValue(use);
-            }
-        } else {
-            if (!player->isAlive() || !player->hasSkill(objectName()))
-                return false;
-
-            CardEffectStruct effect = data.value<CardEffectStruct>();
-            if (player->tag["Danlao"].isNull() || player->tag["Danlao"].toString() != effect.card->toString())
-                return false;
-
-            player->tag["Danlao"] = QVariant(QString());
-
-            LogMessage log;
-            log.type = "#DanlaoAvoid";
-            log.from = player;
-            log.arg = effect.card->objectName();
-            log.arg2 = objectName();
-            room->sendLog(log);
-
-            return true;
+            use.nullified_list << player->objectName();
+            data = QVariant::fromValue(use);
         }
-
         return false;
     }
 };

@@ -518,6 +518,7 @@ public:
                             const Card *to_give = room->askForExchange(p, objectName(), num, num, true,
                                                                        QString("@xiantu-give::%1:%2").arg(player->objectName()).arg(num));
                             player->obtainCard(to_give, false);
+                            delete to_give;
                         }
                     }
                 }

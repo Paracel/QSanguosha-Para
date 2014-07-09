@@ -321,7 +321,7 @@ public:
         Room *room = target->getRoom();
         foreach (ServerPlayer *hs, room->getOtherPlayers(target)) {
             if (target->isDead() || target->getJudgingArea().isEmpty()) break;
-            if (!TriggerSkill::triggerable(hs)) continue;
+            if (!TriggerSkill::triggerable(hs) || !hs->inMyAttackRange(target)) continue;
             if (room->askForSkillInvoke(hs, objectName())) {
                 room->broadcastSkillInvoke(objectName());
                 int id = room->askForCardChosen(hs, target, "j", objectName(), false, Card::MethodDiscard);

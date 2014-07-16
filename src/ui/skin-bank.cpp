@@ -5,7 +5,7 @@
 #include "engine.h"
 #include "settings.h"
 #include "clientstruct.h"
-#include <fstream>
+#include <QFile>
 #include <QGraphicsPixmapItem>
 #include <QTextItem>
 #include <QStyleOptionGraphicsItem>
@@ -16,7 +16,6 @@
 #include <QFile>
 #include <QPixmapCache>
 
-using namespace std;
 using namespace QSanProtocol::Utils;
 
 const char *IQSanComponentSkin::S_SKIN_KEY_DEFAULT = "default";
@@ -449,9 +448,10 @@ bool IQSanComponentSkin::load(const QString &layoutConfigName, const QString &im
 
     if (!layoutConfigName.isNull()) {
         Json::Reader reader;
-        ifstream layoutFile(layoutConfigName.toAscii());
+        QFile layoutFile(layoutConfigName.toAscii());
+        layoutFile.open(QFile::ReadOnly);
         Json::Value layoutConfig;
-        if (layoutFile.bad() || !reader.parse(layoutFile, layoutConfig) || !layoutConfig.isObject()) {
+        if (!reader.parse(layoutFile.readAll().constData(), layoutConfig) || !layoutConfig.isObject()) {
             errorMsg = QString("Error when reading layout config file \"%1\": \n%2")
                                .arg(layoutConfigName).arg(reader.getFormattedErrorMessages().c_str());
             QMessageBox::warning(NULL, "Config Error", errorMsg);
@@ -463,11 +463,10 @@ bool IQSanComponentSkin::load(const QString &layoutConfigName, const QString &im
 
     if (!imageConfigName.isNull()) {
         Json::Reader reader;
-        ifstream imageFile(imageConfigName.toAscii());
+        QFile imageFile(imageConfigName.toAscii());
+        imageFile.open(QFile::ReadOnly);
         Json::Value imageConfig;
-        if (imageFile.bad()
-            || !reader.parse(imageFile, imageConfig)
-            || !imageConfig.isObject()) {
+        if (!reader.parse(imageFile.readAll().constData(), imageConfig) || !imageConfig.isObject()) {
             errorMsg = QString("Error when reading image config file \"%1\": \n%2")
                                .arg(imageConfigName).arg(reader.getFormattedErrorMessages().c_str());
             QMessageBox::warning(NULL, "Config Error", errorMsg);
@@ -479,10 +478,9 @@ bool IQSanComponentSkin::load(const QString &layoutConfigName, const QString &im
 
     if (!audioConfigName.isNull()) {
         Json::Reader reader;
-        ifstream audioFile(audioConfigName.toAscii());
-        if (audioFile.bad()
-            || !reader.parse(audioFile, _m_audioConfig)
-            || !_m_audioConfig.isObject()) {
+        QFile audioFile(audioConfigName.toAscii());
+        audioFile.open(QFile::ReadOnly);
+        if (!reader.parse(audioFile.readAll().constData(), _m_audioConfig) || !_m_audioConfig.isObject()) {
             errorMsg = QString("Error when reading audio config file \"%1\": \n%2")
                                .arg(audioConfigName).arg(reader.getFormattedErrorMessages().c_str());
             QMessageBox::warning(NULL, "Config Error", errorMsg);
@@ -493,10 +491,9 @@ bool IQSanComponentSkin::load(const QString &layoutConfigName, const QString &im
 
     if (!animationConfigName.isNull()) {
         Json::Reader reader;
-        ifstream animFile(animationConfigName.toAscii());
-        if (animFile.bad()
-            || !reader.parse(animFile, _m_animationConfig)
-            || !_m_animationConfig.isObject()) {
+        QFile animFile(animationConfigName.toAscii());
+        animFile.open(QFile::ReadOnly);
+        if (!reader.parse(animFile.readAll().constData(), _m_animationConfig) || !_m_animationConfig.isObject()) {
             errorMsg = QString("Error when reading animation config file \"%1\": \n%2")
                                .arg(animationConfigName).arg(reader.getFormattedErrorMessages().c_str());
             QMessageBox::warning(NULL, "Config Error", errorMsg);
@@ -963,8 +960,9 @@ QSanSkinFactory::QSanSkinFactory(const char *fileName) {
     S_COMPACT_SKIN_NAME = suf + "compact";
 
     Json::Reader reader;
-    ifstream file(fileName);
-    reader.parse(file, this->_m_skinList, false);
+    QFile file(fileName);
+    file.open(QFile::ReadOnly);
+    reader.parse(file.readAll().constData(), this->_m_skinList, false);
     _m_skinName = "";
     switchSkin(S_DEFAULT_SKIN_NAME);
     file.close();

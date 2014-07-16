@@ -1092,9 +1092,10 @@ void FenchengCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &
     source->setFlags("FenchengUsing");
     try {
         foreach (ServerPlayer *player, players) {
-            if (player->isAlive())
+            if (player->isAlive()) {
                 room->cardEffect(this, source, player);
                 room->getThread()->delay();
+            }
         }
         source->setFlags("-FenchengUsing");
     }

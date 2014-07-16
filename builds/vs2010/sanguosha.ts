@@ -2439,52 +2439,52 @@
 <context>
     <name>PlayerCardDialog</name>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="63"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="69"/>
         <source>Handcard area</source>
         <translation>手牌区域</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="100"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="106"/>
         <source>Handcard</source>
         <translation>手牌</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="104"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="110"/>
         <source>This guy has no any hand cards</source>
         <translation>该角色无手牌</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="107"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="113"/>
         <source>This guy has %1 hand card(s)</source>
         <translation>该角色有 %1 张手牌</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="117"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="123"/>
         <source>Equip area</source>
         <translation>装备区</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="144"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="150"/>
         <source>(+1 horse)</source>
         <translation>(+1坐骑)</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="155"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="161"/>
         <source>(-1 horse)</source>
         <translation>(-1坐骑)</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="177"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="183"/>
         <source>No equip</source>
         <translation>无装备</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="188"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="194"/>
         <source>Judging Area</source>
         <translation>判定区</translation>
     </message>
     <message>
-        <location filename="../../src/dialog/playercarddialog.cpp" line="204"/>
+        <location filename="../../src/dialog/playercarddialog.cpp" line="210"/>
         <source>No judging cards</source>
         <translation>无延时类锦囊牌</translation>
     </message>

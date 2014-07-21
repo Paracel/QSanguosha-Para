@@ -914,8 +914,12 @@ void DanshouCard::onEffect(const CardEffectStruct &effect) const{
             break;
     case 2:
             if (!effect.to->isNude()) {
-                int id = room->askForCardChosen(effect.from, effect.to, "he", "danshou");
-                room->obtainCard(effect.from, id, false);
+                const Card *card = room->askForExchange(effect.to, "danshou", 1, 1, true, "@danshou-give::" + effect.from->objectName());
+                if (card) {
+                    CardMoveReason reason(CardMoveReason::S_REASON_GIVE, effect.to->objectName(), effect.from->objectName(), "danshou", QString());
+                    room->obtainCard(effect.from, card, reason, false);
+                    delete card;
+                }
             }
             break;
     case 3:

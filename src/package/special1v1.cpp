@@ -908,6 +908,7 @@ public:
     NiluanViewAsSkill(): OneCardViewAsSkill("niluan") {
         filter_pattern = ".|black";
         response_pattern = "@@niluan";
+        response_or_use = true;
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

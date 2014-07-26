@@ -5008,7 +5008,7 @@ void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who, const QList<int
 }
 
 void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards, QList<ServerPlayer *> to_notify) {
-    if (to_notify.isEmpty()) to_notify = getAllPlayers();
+    if (to_notify.isEmpty()) to_notify = getAllPlayers(true);
 
     Json::Value arg(Json::arrayValue);
     arg[0] = player ? toJsonString(player->objectName()) : Json::Value::null;

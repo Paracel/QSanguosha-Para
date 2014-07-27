@@ -24,6 +24,7 @@ sgs.ai_skill_invoke.cv_yuanshu = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_nos_zhaoyun = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_nos_ganning = sgs.ai_skill_invoke.cv_zhugeke
 sgs.ai_skill_invoke.cv_shenlvbu = sgs.ai_skill_invoke.cv_zhugeke
+sgs.ai_skill_invoke.cv_hetaihou = sgs.ai_skill_invoke.cv_zhugeke
 
 sgs.ai_skill_invoke.cv_nos_huanggai = function(self, data)
 	return math.random(0, 6) == 0

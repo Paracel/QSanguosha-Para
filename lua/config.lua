@@ -228,6 +228,7 @@ config = {
 		"dingfeng->sp_dingfeng",
 		"fazheng->ol_fazheng",
 		"guanxingzhangbao->ol_guanxingzhangbao",
+		"hetaihou->sp_hetaihou",
 		"jiaxu->sp_jiaxu",
 		"liubei->tw_liubei",
 		"madai->heg_madai|ol_madai",

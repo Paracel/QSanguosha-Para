@@ -327,6 +327,8 @@ sgs.ai_skill_askforyiji.qingjian = function(self, card_ids)
 end
 
 function SmartAI:getTuxiTargets(reason, isDummy)
+	if self.player:getPile("yiji"):length() > 1 then return {} end
+
 	reason = reason or "tuxi"
 	self:sort(self.enemies, "handcard")
 	local upperlimit = (reason == "tuxi") and self.player:getMark("tuxi") or (reason == "koftuxi" and 1 or 2)
@@ -488,6 +490,7 @@ sgs.ai_card_intention.TuxiCard = function(self, card, from, tos)
 end
 
 sgs.ai_skill_invoke.luoyi = function(self)
+	if self.player:getPile("yiji"):length() > 1 then return false end
 	local diaochan = self.room:findPlayerBySkillName("lijian") or self.room:findPlayerBySkillName("noslijian")
 	if diaochan and self:isEnemy(diaochan) then
 		for _, friend in ipairs(self.friends_noself) do

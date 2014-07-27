@@ -190,8 +190,8 @@ sgs.ai_skill_discard.qiaobian = function(self, discard_num, min_num, optional, i
 			local targets = self:getTuxiTargets("nostuxi", true)
 			if #targets == 2 then
 				local t1, t2 = findPlayerByObjectName(self.room, targets[1]), findPlayerByObjectName(self.room, targets[2])
-				table.insert(self.qiaobian_draw_targets, t1)
-				table.insert(self.qiaobian_draw_targets, t2)
+				table.insert(self.qiaobian_draw_targets, t1:objectName())
+				table.insert(self.qiaobian_draw_targets, t2:objectName())
 				return to_discard
 			end
 		end

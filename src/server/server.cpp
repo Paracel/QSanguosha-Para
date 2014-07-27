@@ -877,7 +877,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
     for (int i = 0; i < item_list.length(); i++) {
         QObject *item = item_list.at(i);
 
-        QVBoxLayout *side = i <= item_list.length() / 2 - 3 ? left : right;
+        QVBoxLayout *side = i <= 9 ? left : right; // WARNING: Magic Number
 
         if (item->isWidgetType()) {
             QWidget *widget = qobject_cast<QWidget *>(item);

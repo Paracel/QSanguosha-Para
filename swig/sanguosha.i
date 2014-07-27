@@ -913,7 +913,7 @@ public:
     const Scenario *getScenario(const char *name) const;
 
     const General *getGeneral(const char *name) const;
-    int getGeneralCount(bool include_banned = false) const;
+    int getGeneralCount(bool include_banned = false, const char *kingdom = "") const;
     const Skill *getSkill(const char *skill_name) const;
     const TriggerSkill *getTriggerSkill(const char *skill_name) const;
     const ViewAsSkill *getViewAsSkill(const char *skill_name) const;
@@ -931,10 +931,10 @@ public:
 
     QStringList getLords(bool contain_banned = false) const;
     QStringList getRandomLords() const;
-    QStringList getRandomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>()) const;
+    QStringList getRandomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>(), const char *kingdom = "") const;
     QList<int> getRandomCards() const;
     QString getRandomGeneralName() const;
-    QStringList getLimitedGeneralNames() const;
+    QStringList getLimitedGeneralNames(const char *kingdom = "") const;
 
     void playSystemAudioEffect(const char *name, bool superpose = true) const;
     void playAudioEffect(const char *filename, bool superpose = true) const;

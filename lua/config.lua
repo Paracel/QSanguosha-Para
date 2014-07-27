@@ -338,5 +338,15 @@ config = {
 		"kuanggu:85",
 		"yongsi:90",
 		"zhiheng:90",
+	},
+
+	jiange_defense_machine = {
+		wei = "caocao+caopi",
+		shu = "bgm_liubei+liushan",
+	},
+
+	jiange_defense_soul = {
+		wei = "zhanghe+xiahouyuan+simayi+caozhen",
+		shu = "zhugeliang+huangyueying+liubei+pangtong",
 	}
 }

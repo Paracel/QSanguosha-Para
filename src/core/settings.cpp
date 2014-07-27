@@ -208,6 +208,14 @@ void Settings::init() {
     Config.BossLevel = Config.BossGenerals.length();
     Config.BossEndlessSkills = GetConfigFromLuaState(lua, "bossmode_endless_skills").toStringList();
 
+    QVariantMap jiange_defense_machine = GetConfigFromLuaState(lua, "jiange_defense_machine").toMap();
+    foreach (QString key, jiange_defense_machine.keys())
+        Config.JianGeDefenseMachine[key] = jiange_defense_machine[key].toString().split("+");
+    QVariantMap jiange_defense_soul = GetConfigFromLuaState(lua, "jiange_defense_soul").toMap();
+    foreach (QString key, jiange_defense_soul.keys())
+        Config.JianGeDefenseSoul[key] = jiange_defense_soul[key].toString().split("+");
+
+
     QStringList exp_skills = GetConfigFromLuaState(lua, "bossmode_exp_skills").toStringList();
     QMap<QString, int> exp_skill_map;
     foreach (QString skill, exp_skills) {

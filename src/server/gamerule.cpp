@@ -1111,6 +1111,12 @@ QString GameRule::getWinner(ServerPlayer *victim) const{
             else
                 winner = "renegade+rebel";
         }
+    } else if (room->getMode() == "08_defense") {
+        QStringList alive_roles = room->aliveRoles(victim);
+        if (!alive_roles.contains("loyalist"))
+            winner = "rebel";
+        else if (!alive_roles.contains("rebel"))
+            winner = "loyalist";
     } else if (Config.EnableHegemony) {
         bool has_anjiang = false, has_diff_kingdoms = false;
         QString init_kingdom;

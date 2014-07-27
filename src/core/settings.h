@@ -60,6 +60,9 @@ public:
     QStringList BossEndlessSkills;
     QMap<QString, int> BossExpSkills;
 
+    QMap<QString, QStringList> JianGeDefenseMachine;
+    QMap<QString, QStringList> JianGeDefenseSoul;
+
     // client side
     QString HostAddress;
     QString UserName;

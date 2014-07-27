@@ -1737,6 +1737,8 @@ void Room::swapPile() {
     int limit = Config.value("PileSwappingLimitation", 5).toInt() + 1;
     if (mode == "04_1v3")
         limit = qMin(limit, Config.BanPackages.contains("maneuvering") ? 3 : 2);
+    else if (mode == "08_defense")
+        limit = qMin(limit, Config.BanPackages.contains("maneuvering") ? 9 : 6);
     if (limit > 0 && times == limit)
         gameOver(".");
 
@@ -1973,7 +1975,7 @@ void Room::prepareForStart() {
                     if (role == "lord" && !ServerInfo.EnableHegemony)
                         broadcastProperty(player, "role", "lord");
                     else {
-                        if (mode == "04_1v3" || mode == "04_boss")
+                        if (mode == "04_1v3" || mode == "04_boss" || mode == "08_defense")
                             broadcastProperty(player, "role", role);
                         else
                             notifyProperty(player, player, "role");
@@ -2373,6 +2375,64 @@ void Room::assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign) {
     }
 }
 
+void Room::assignGeneralsForPlayersOfJianGeDefenseMode(const QList<ServerPlayer *> &to_assign) {
+    QMap<QString, QSet<QString> > existed;
+    foreach (ServerPlayer *player, m_players) {
+        if (player->property("jiange_defense_type").toString() != "general")
+            continue;
+        if (player->getGeneral())
+            existed[player->getGeneral()->getKingdom()] << player->getGeneralName();
+        if (player->getGeneral2())
+            existed[player->getGeneral2()->getKingdom()] << player->getGeneral2Name();
+    }
+    if (Config.Enable2ndGeneral) {
+        foreach (QString name, BanPair::getAllBanSet()) {
+            const General *gen = Sanguosha->getGeneral(name);
+            if (gen)
+                existed[gen->getKingdom()] << name;
+        }
+        if (to_assign.first()->getGeneral()) {
+            foreach (QString name, BanPair::getSecondBanSet()) {
+                const General *gen = Sanguosha->getGeneral(name);
+                if (gen)
+                    existed[gen->getKingdom()] << name;
+            }
+        }
+    }
+
+    const int max_choice = Config.value("MaxChoice", 5).toInt();
+    QStringList choices;
+    int choice_count = 0;
+
+    foreach (ServerPlayer *player, to_assign) {
+        QString kingdom = player->getRole() == "loyalist" ? "shu" : "wei";
+        QString jiange_defense_type = player->property("jiange_defense_type").toString();
+        if (jiange_defense_type == "general") {
+            int total = Sanguosha->getGeneralCount(false, kingdom);
+            int max_available = (total - existed[kingdom].size()) / 2;
+            choice_count = qMin(max_choice, max_available);
+            choices = Sanguosha->getRandomGenerals(total - existed[kingdom].size(), existed[kingdom], kingdom);
+        } else if (jiange_defense_type == "machine") {
+            choices = Config.JianGeDefenseMachine[kingdom];
+            choice_count = choices.length();
+        } else if (jiange_defense_type == "soul") {
+            choices = Config.JianGeDefenseSoul[kingdom];
+            choice_count = choices.length();
+        } else {
+            Q_ASSERT(false);
+        }
+
+        player->clearSelected();
+
+        for (int i = 0; i < choice_count; i++) {
+            QString choice = player->findReasonable(choices, true);
+            if (choice.isEmpty()) break;
+            player->addToSelected(choice);
+            choices.removeOne(choice);
+        }
+    }
+}
+
 void Room::chooseGenerals(QList<ServerPlayer *> players) {
     if (players.isEmpty()) players = m_players;
     // for lord.
@@ -2410,7 +2470,7 @@ void Room::chooseGenerals(QList<ServerPlayer *> players) {
         }
     }
     QList<ServerPlayer *> to_assign = players;
-    if (!Config.EnableHegemony) to_assign.removeOne(the_lord);
+    if (the_lord && !Config.EnableHegemony) to_assign.removeOne(the_lord);
 
     assignGeneralsForPlayers(to_assign);
     foreach (ServerPlayer *player, to_assign)
@@ -2458,6 +2518,43 @@ void Room::chooseGenerals(QList<ServerPlayer *> players) {
             }
             player->setProperty("basara_generals", names.join("+"));
             notifyProperty(player, player, "basara_generals");
+        }
+    }
+}
+
+void Room::chooseGeneralsOfJianGeDefenseMode() {
+    QList<ServerPlayer *> to_assign = m_players;
+
+    assignGeneralsForPlayersOfJianGeDefenseMode(to_assign);
+    foreach (ServerPlayer *player, to_assign)
+        _setupChooseGeneralRequestArgs(player);
+
+    doBroadcastRequest(to_assign, S_COMMAND_CHOOSE_GENERAL);
+    foreach (ServerPlayer *player, to_assign) {
+        if (player->getGeneral() != NULL) continue;
+        Json::Value generalName = player->getClientReply();
+        if (!player->m_isClientResponseReady || !generalName.isString()
+            || !_setPlayerGeneral(player, toQString(generalName), true))
+            _setPlayerGeneral(player, _chooseDefaultGeneral(player), true);
+    }
+
+    if (Config.Enable2ndGeneral) {
+        QList<ServerPlayer *> to_assign;
+        foreach (ServerPlayer *p, m_players) {
+            if (p->property("jiange_defense_type").toString() == "general")
+                to_assign << p;
+        }
+        assignGeneralsForPlayersOfJianGeDefenseMode(to_assign);
+        foreach (ServerPlayer *player, to_assign)
+            _setupChooseGeneralRequestArgs(player);
+
+        doBroadcastRequest(to_assign, S_COMMAND_CHOOSE_GENERAL);
+        foreach (ServerPlayer *player, to_assign) {
+            if (player->getGeneral2() != NULL) continue;
+            Json::Value generalName = player->getClientReply();
+            if (!player->m_isClientResponseReady || !generalName.isString()
+                || !_setPlayerGeneral(player, toQString(generalName), false))
+                _setPlayerGeneral(player, _chooseDefaultGeneral(player), false);
         }
     }
 }
@@ -2563,6 +2660,14 @@ void Room::run() {
         players.removeOne(lord);
         chooseGenerals(players);
         startGame();
+    } else if (mode == "08_defense") {
+        QStringList type_list;
+        type_list << "machine" << "general" << "soul" << "general"
+                  << "general" << "soul" << "general" << "machine";
+        for (int i = 0; i < 8; i++)
+            setPlayerProperty(m_players.at(i), "jiange_defense_type", type_list.at(i));
+        chooseGeneralsOfJianGeDefenseMode();
+        startGame();
     } else {
         chooseGenerals();
         startGame();
@@ -2573,15 +2678,17 @@ void Room::assignRoles() {
     int n = m_players.count();
 
     QStringList roles = Sanguosha->getRoleList(mode);
-    qShuffle(roles);
+    if (mode != "08_defense")
+        qShuffle(roles);
 
     for (int i = 0; i < n; i++) {
         ServerPlayer *player = m_players[i];
         QString role = roles.at(i);
 
         player->setRole(role);
-        if (role == "lord" && !ServerInfo.EnableHegemony)
-            broadcastProperty(player, "role", "lord");
+        if ((role == "lord" && !ServerInfo.EnableHegemony)
+            || mode == "04_1v3" || mode == "04_boss" || mode == "08_defense")
+            broadcastProperty(player, "role", player->getRole());
         else
             notifyProperty(player, player, "role");
     }
@@ -3257,19 +3364,12 @@ bool Room::hasWelfare(const ServerPlayer *player) const{
 }
 
 ServerPlayer *Room::getFront(ServerPlayer *a, ServerPlayer *b) const{
-    ServerPlayer *starter = current;
-    if (starter == NULL)
-        starter = m_players.first();
-    bool loop = false;
-    for (ServerPlayer *p = starter; p != starter || !loop; p = p->getNext()) {
-        loop = true;
-        if (p == a)
-            return a;
-        else if (p == b)
-            return b;
-    }
-
-    return a;
+    QList<ServerPlayer *> players = getAllPlayers(true);
+    int index_a = players.indexOf(a), index_b = players.indexOf(b);
+    if (index_a < index_b)
+        return a;
+    else
+        return b;
 }
 
 void Room::reconnect(ServerPlayer *player, ClientSocket *socket) {
@@ -3324,9 +3424,17 @@ void Room::marshal(ServerPlayer *player) {
 
 void Room::startGame() {
     m_alivePlayers = m_players;
-    for (int i = 0; i < player_count - 1; i++)
-        m_players.at(i)->setNext(m_players.at(i + 1));
-    m_players.last()->setNext(m_players.first());
+    if (mode != "08_defense") {
+        for (int i = 0; i < player_count - 1; i++)
+            m_players.at(i)->setNext(m_players.at(i + 1));
+        m_players.last()->setNext(m_players.first());
+    } else {
+        QList<int> next_list;
+        next_list << 0 << 7 << 1 << 6 << 2 << 5 << 3 << 4;
+        for (int i = 0; i < player_count - 1; i++)
+            m_players.at(next_list.at(i))->setNext(m_players.at(next_list.at(i + 1)));
+        m_players.at(4)->setNext(m_players.first());
+    }
 
     foreach (ServerPlayer *player, m_players) {
         Q_ASSERT(player->getGeneral());
@@ -4866,10 +4974,12 @@ ServerPlayer *Room::askForPlayerChosen(ServerPlayer *player, const QList<ServerP
 
 void Room::_setupChooseGeneralRequestArgs(ServerPlayer *player) {
     Json::Value options = toJsonArray(player->getSelected());
-    if (!Config.EnableBasara)
-        options.append(toJsonString(QString("%1(lord)").arg(getLord()->getGeneralName())));
-    else
+    if (!Config.EnableBasara) {
+        if (getLord())
+            options.append(toJsonString(QString("%1(lord)").arg(getLord()->getGeneralName())));
+    } else {
         options.append("anjiang(lord)");
+    }
     player->m_commandArgs = options;
 }
 

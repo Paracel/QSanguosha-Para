@@ -34,18 +34,20 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
     foreach (QString candidate, candidates) {
         qreal value = 5.0;
         const General *general = Sanguosha->getGeneral(candidate);
-        if (role == "loyalist" && (general->getKingdom() == lord->getKingdom() || general->getKingdom() == "god"))
+        if (role == "loyalist" && lord && (general->getKingdom() == lord->getKingdom() || general->getKingdom() == "god"))
             value *= 1.04;
-        if (role == "rebel" && lord->getGeneral() && lord->getGeneral()->hasSkill("xueyi")
+        if (role == "rebel" && lord && lord->getGeneral() && lord->getGeneral()->hasSkill("xueyi")
             && general->getKingdom() == "qun")
             value *= 0.8;
-        if (role != "loyalist" && lord->getGeneral() && lord->getGeneral()->hasSkill("shichou")
+        if (role != "loyalist" && lord && lord->getGeneral() && lord->getGeneral()->hasSkill("shichou")
             && general->getKingdom() == "shu")
             value *= 0.1;
         QString key = QString("_:%1:%2").arg(candidate).arg(role);
         value *= qPow(1.1, first_general_table.value(key, 0.0));
-        QString key2 = QString("%1:%2:%3").arg(lord->getGeneralName()).arg(candidate).arg(role);
-        value *= qPow(1.1, first_general_table.value(key2, 0.0));
+        if (lord) {
+            QString key2 = QString("%1:%2:%3").arg(lord->getGeneralName()).arg(candidate).arg(role);
+            value *= qPow(1.1, first_general_table.value(key2, 0.0));
+		}
         values.insert(candidate, value);
     }
 

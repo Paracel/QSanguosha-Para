@@ -950,7 +950,7 @@ function sgs.isRolePredictable(classical)
 	local mode = string.lower(global_room:getMode())
 	local isMini = (mode:find("mini") or mode:find("custom_scenario"))
 	if (not mode:find("0") and not isMini) or mode:find("02p") or mode:find("02_1v1") or mode:find("04_1v3") or mode:find("04_boss")
-		or mode == "06_3v3" or mode == "06_xmode" or (not classical and isMini) then return true end
+		or mode == "06_3v3" or mode == "06_xmode" or mode == "08_defense" or (not classical and isMini) then return true end
 	return false
 end
 

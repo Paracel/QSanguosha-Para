@@ -76,7 +76,7 @@ public:
     void addPackage(const QString &name);
 
     const General *getGeneral(const QString &name) const;
-    int getGeneralCount(bool include_banned = false) const;
+    int getGeneralCount(bool include_banned = false, const QString &kingdom = QString()) const;
     const Skill *getSkill(const QString &skill_name) const;
     const Skill *getSkill(const EquipCard *card) const;
     QStringList getSkillNames() const;
@@ -97,10 +97,10 @@ public:
 
     QStringList getLords(bool contain_banned = false) const;
     QStringList getRandomLords() const;
-    QStringList getRandomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>()) const;
+    QStringList getRandomGenerals(int count, const QSet<QString> &ban_set = QSet<QString>(), const QString &kingdom = QString()) const;
     QList<int> getRandomCards() const;
     QString getRandomGeneralName() const;
-    QStringList getLimitedGeneralNames() const;
+    QStringList getLimitedGeneralNames(const QString &kingdom = QString()) const;
 
     void playSystemAudioEffect(const QString &name, bool superpose = true) const;
     void playAudioEffect(const QString &filename, bool superpose = true) const;

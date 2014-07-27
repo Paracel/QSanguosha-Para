@@ -109,6 +109,7 @@ Engine::Engine()
     modes["08p"] = tr("8 players");
     modes["08pd"] = tr("8 players (2 renegades)");
     modes["08pz"] = tr("8 players (0 renegade)");
+    modes["08_defense"] = tr("8 players (JianGe Defense)");
     modes["09p"] = tr("9 players");
     modes["10pd"] = tr("10 players");
     modes["10p"] = tr("10 players (1 renegade)");
@@ -367,30 +368,32 @@ const General *Engine::getGeneral(const QString &name) const{
     return generals.value(name, NULL);
 }
 
-int Engine::getGeneralCount(bool include_banned) const{
-    if (include_banned)
-        return generals.size();
-
-    int total = generals.size();
+int Engine::getGeneralCount(bool include_banned, const QString &kingdom) const{
+    int total = 0;
     QHashIterator<QString, const General *> itor(generals);
     while (itor.hasNext()) {
+        bool isBanned = false;
         itor.next();
         const General *general = itor.value();
+        if (!kingdom.isEmpty() && general->getKingdom() != kingdom)
+            continue;
         if (getBanPackages().contains(general->getPackage()))
-            total--;
+            isBanned = true;
         else if ((isNormalGameMode(ServerInfo.GameMode)
                   || ServerInfo.GameMode.contains("_mini_")
                   || ServerInfo.GameMode == "custom_scenario")
                  && Config.value("Banlist/Roles").toStringList().contains(general->objectName()))
-            total--;
+            isBanned = true;
         else if (ServerInfo.Enable2ndGeneral && BanPair::isBanned(general->objectName()))
-            total--;
+            isBanned = true;
         else if (ServerInfo.EnableBasara
                  && Config.value("Banlist/Basara").toStringList().contains(general->objectName()))
-            total--;
+            isBanned = true;
         else if (ServerInfo.EnableHegemony
                  && Config.value("Banlist/Hegemony").toStringList().contains(general->objectName()))
-            total--;
+            isBanned = true;
+        if (include_banned || !isBanned)
+            total++;
     }
 
     return total;
@@ -756,6 +759,8 @@ QString Engine::getRoles(const QString &mode) const{
         return "ZN";
     } else if (mode == "04_1v3" || mode == "04_boss") {
         return "ZFFF";
+    } else if (mode == "08_defense") {
+        return "FFFFCCCC";
     }
 
     if (modes.contains(mode) || isNormalGameMode(mode)) { // hidden pz settings?
@@ -910,25 +915,32 @@ QStringList Engine::getRandomLords() const{
     return lords;
 }
 
-QStringList Engine::getLimitedGeneralNames() const{
+QStringList Engine::getLimitedGeneralNames(const QString &kingdom) const{
     QStringList general_names;
     QHashIterator<QString, const General *> itor(generals);
     while (itor.hasNext()) {
         itor.next();
-        if (!isGeneralHidden(itor.value()->objectName()) && !getBanPackages().contains(itor.value()->getPackage()))
+        const General *gen = itor.value();
+        if ((kingdom.isEmpty() || gen->getKingdom() == kingdom)
+            && !isGeneralHidden(gen->objectName()) && !getBanPackages().contains(gen->getPackage()))
             general_names << itor.key();
     }
 
     // special case for neo standard package
     if (getBanPackages().contains("standard") && !getBanPackages().contains("nostal_standard")) {
-        general_names << "zhenji" << "zhugeliang" << "sunquan" << "sunshangxiang";
+        if (kingdom.isEmpty() || kingdom == "wei")
+            general_names << "zhenji";
+        if (kingdom.isEmpty() || kingdom == "shu")
+            general_names << "zhugeliang";
+        if (kingdom.isEmpty() || kingdom == "wu")
+            general_names << "sunquan" << "sunshangxiang";
     }
 
     return general_names;
 }
 
-QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set) const{
-    QStringList all_generals = getLimitedGeneralNames();
+QStringList Engine::getRandomGenerals(int count, const QSet<QString> &ban_set, const QString &kingdom) const{
+    QStringList all_generals = getLimitedGeneralNames(kingdom);
     QSet<QString> general_set = all_generals.toSet();
 
     Q_ASSERT(all_generals.count() >= count);

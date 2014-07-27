@@ -361,7 +361,8 @@ void ShangyiCard::onEffect(const CardEffectStruct &effect) const{
     QStringList choicelist;
     if (!effect.to->isKongcheng())
         choicelist.append("handcards");
-    if (room->getMode() == "04_1v3" || room->getMode() == "04_boss" || room->getMode() == "06_3v3") {
+    if (room->getMode() == "04_1v3" || room->getMode() == "04_boss"
+        || room->getMode() == "06_3v3" || room->getMode() == "08_defense") {
         ;
     } else if (room->getMode() == "06_XMode") {
         QStringList backup = player->tag["XModeBackup"].toStringList();

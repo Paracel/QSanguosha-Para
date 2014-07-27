@@ -375,13 +375,7 @@ void SPConvertSkill::onGameStart(ServerPlayer *player) const{
             to_cv = choicelist.length() == 1 ? choicelist.first() : room->askForGeneral(player, choicelist.join("+"));
         bool isSecondaryHero = (player->getGeneralName() != from && player->getGeneral2Name() == from);
 
-        LogMessage log;
-        log.type = player->getGeneral2() ? "#TransfigureDual" : "#Transfigure";
-        log.from = player;
-        log.arg = to_cv;
-        log.arg2 = player->getGeneral2() ? (isSecondaryHero ? "GeneralB" : "GeneralA") : QString();
-        room->sendLog(log);
-        room->setPlayerProperty(player, isSecondaryHero ? "general2" : "general", to_cv);
+        room->changeHero(player, to_cv, true, false, isSecondaryHero);
 
         const General *general = Sanguosha->getGeneral(to_cv);
         const QString kingdom = general->getKingdom();

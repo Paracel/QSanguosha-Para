@@ -201,6 +201,55 @@ public:
 
 // Defensive Machines
 
+class JGMojian: public PhaseChangeSkill {
+public:
+    JGMojian(): PhaseChangeSkill("jgmojian") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Play) return false;
+        Room *room = target->getRoom();
+
+        ArcheryAttack *aa = new ArcheryAttack(Card::NoSuit, 0);
+        aa->setSkillName("_" + objectName());
+        bool can_invoke = false;
+        if (!target->isCardLimited(aa, Card::MethodUse)) {
+            foreach (ServerPlayer *p, room->getOtherPlayers(target)) {
+                if (!room->isProhibited(target, p, aa)) {
+                    can_invoke = true;
+                    break;
+                }
+            }
+        }
+        if (!can_invoke) {
+            delete aa;
+            return false;
+        }
+
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = target;
+        log.arg = objectName();
+        room->sendLog(log);
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(target, objectName());
+        room->useCard(CardUseStruct(aa, target, QList<ServerPlayer *>()));
+        return false;
+    }
+};
+
+class JGMojianProhibit: public ProhibitSkill {
+public:
+    JGMojianProhibit(): ProhibitSkill("#jgmojian-prohibit") {
+    }
+
+    virtual bool isProhibited(const Player *from, const Player *to, const Card *card, const QList<const Player *> &) const{
+        return isJianGeFriend(from, to) && card->isKindOf("ArcheryAttack") && card->getSkillName() == "jgmojian";
+    }
+};
+
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
@@ -219,6 +268,12 @@ JianGeDefensePackage::JianGeDefensePackage()
     Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
     jg_soul_liubei->addSkill(new JGJizhen);
     jg_soul_liubei->addSkill(new JGLingfeng);
+
+    Machine *jg_machine_yunpingqinglong = new Machine(this, "jg_machine_yunpingqinglong", "shu", 5, true, true);
+    jg_machine_yunpingqinglong->addSkill("jgjiguan");
+    jg_machine_yunpingqinglong->addSkill(new JGMojian);
+    jg_machine_yunpingqinglong->addSkill(new JGMojianProhibit);
+    related_skills.insertMulti("jgmojian", "#jgmojian-prohibit");
 
 #undef Soul
 #undef Machine

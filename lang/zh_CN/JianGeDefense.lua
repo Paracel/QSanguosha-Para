@@ -30,4 +30,10 @@ return {
 	["jglingfeng"] = "灵锋",
 	[":jglingfeng"] = "摸牌阶段开始时，你可以放弃摸牌，亮出牌堆顶的两张牌并获得之：若亮出的牌不为同一颜色，你令一名对方角色失去1点体力。",
 	["@jglingfeng"] = "请选择一名对方角色令其失去1点体力",
+
+	["#jg_machine_yunpingqinglong"] = "守城器械",
+	["jg_machine_yunpingqinglong"] = "云屏青龙",
+	["illustrator:jg_machine_yunpingqinglong"] = "",
+	["jgmojian"] = "魔箭",
+	[":jgmojian"] = "锁定技。出牌阶段开始时，视为你使用一张【万箭齐发】。己方角色不被选择为此【万箭齐发】的目标。",
 }

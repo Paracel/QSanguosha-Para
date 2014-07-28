@@ -160,7 +160,9 @@ end
 
 function SmartAI:shouldUseAnaleptic(target, slash)
 	if sgs.turncount <= 1 and self.role == "renegade" and sgs.isLordHealthy() and self:getOverflow() < 2 then return false end
-	if self:hasSilverLionEffect(target) and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
+	if self:hasSilverLionEffect(target)
+		and not ((self.player:hasWeapon("qinggang_sword") and target:hasArmorEffect("silver_lion")) 
+				or self.player:hasSkill("jueqing")) then
 		return false
 	end
 	if target:hasSkill("zhenlie") then return false end

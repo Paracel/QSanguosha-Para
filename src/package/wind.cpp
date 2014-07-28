@@ -949,14 +949,16 @@ const Card *GuhuoCard::validate(CardUseStruct &card_use) const{
         foreach (ServerPlayer *to, tos) {
             const ProhibitSkill *skill = room->isProhibited(card_use.from, to, use_card);
             if (skill) {
-                LogMessage log;
-                log.type = "#SkillAvoid";
-                log.from = to;
-                log.arg = skill->objectName();
-                log.arg2 = use_card->objectName();
-                room->sendLog(log);
+                if (skill->isVisible()) {
+                    LogMessage log;
+                    log.type = "#SkillAvoid";
+                    log.from = to;
+                    log.arg = skill->objectName();
+                    log.arg2 = use_card->objectName();
+                    room->sendLog(log);
 
-                room->broadcastSkillInvoke(skill->objectName());
+                    room->broadcastSkillInvoke(skill->objectName());
+                }
                 card_use.to.removeOne(to);
             }
         }

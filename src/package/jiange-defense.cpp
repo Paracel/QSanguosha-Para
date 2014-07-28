@@ -253,8 +253,8 @@ public:
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
-#define Machine General
-#define Soul General
+    typedef General Soul;
+    typedef General Machine;
 
     Soul *jg_soul_caozhen = new Soul(this, "jg_soul_caozhen", "wei", 5, true, true);
     jg_soul_caozhen->addSkill(new JGChiying);
@@ -274,9 +274,6 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_yunpingqinglong->addSkill(new JGMojian);
     jg_machine_yunpingqinglong->addSkill(new JGMojianProhibit);
     related_skills.insertMulti("jgmojian", "#jgmojian-prohibit");
-
-#undef Soul
-#undef Machine
 }
 
 ADD_PACKAGE(JianGeDefense)

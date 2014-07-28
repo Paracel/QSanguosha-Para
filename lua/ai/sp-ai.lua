@@ -522,7 +522,7 @@ sgs.ai_skill_playerchosen.xingwu = function(self, targets)
 	local getCmpValue = function(enemy)
 		local value = 0
 		if self:damageIsEffective(enemy) then
-			local dmg = enemy:hasArmorEffect("silver_lion") and 1 or 2
+			local dmg = self:hasSilverLionEffect(enemy) and 1 or 2
 			if enemy:getHp() <= dmg then value = 5 else value = value + enemy:getHp() / (enemy:getHp() - dmg) end
 			if not sgs.isGoodTarget(enemy, self.enemies, self) then value = value - 2 end
 			if self:cantbeHurt(enemy, self.player, dmg) then value = value - 5 end

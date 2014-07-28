@@ -4,7 +4,7 @@ function SmartAI:canAttack(enemy, attacker, nature)
 	nature = nature or sgs.DamageStruct_Normal
 	if not self:damageIsEffective(enemy, nature, attacker) then return false end
 	local damage = 1
-	if nature == sgs.DamageStruct_Fire and not enemy:hasArmorEffect("silver_lion") then
+	if nature == sgs.DamageStruct_Fire and not self:hasSilverLionEffect(enemy) then
 		if enemy:hasArmorEffect("vine") then damage = damage + 1 end
 		if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 	end
@@ -220,7 +220,8 @@ function sgs.getDefenseSlash(player, self)
 		if player:getHp() <= 1 then defense = defense - 2.5 end
 		if player:getHp() == 2 then defense = defense - 1.5 end
 		if not hasEightDiagram then defense = defense - 2 end
-		if attacker:hasWeapon("guding_blade") and attacker:objectName() ~= player:objectName() and not player:hasArmorEffect("silver_lion") and not attacker:hasWeapon("qinggang_sword") then
+		if attacker:hasWeapon("guding_blade") and attacker:objectName() ~= player:objectName()
+			and not player:hasArmorEffect("silver_lion") and not attacker:hasWeapon("qinggang_sword") then
 			defense = defense - 2
 		end
 	end
@@ -1123,13 +1124,13 @@ sgs.ai_skill_invoke.ice_sword = function(self, data)
 end
 
 function sgs.ai_slash_weaponfilter.guding_blade(self, to)
-	return to:isKongcheng() and not to:hasArmorEffect("silver_lion")
+	return to:isKongcheng() and not self:hasSilverLionEffect(to)
 end
 
 function sgs.ai_weapon_value.guding_blade(self, enemy)
 	if not enemy then return end
 	local value = 2
-	if enemy:getHandcardNum() < 1 and not enemy:hasArmorEffect("silver_lion") then value = 4 end
+	if enemy:getHandcardNum() < 1 and not self:hasSilverLionEffect(enemy) then value = 4 end
 	return value
 end
 

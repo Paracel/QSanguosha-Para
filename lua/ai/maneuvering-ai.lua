@@ -160,7 +160,7 @@ end
 
 function SmartAI:shouldUseAnaleptic(target, slash)
 	if sgs.turncount <= 1 and self.role == "renegade" and sgs.isLordHealthy() and self:getOverflow() < 2 then return false end
-	if target:hasArmorEffect("silver_lion") and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
+	if self:hasSilverLionEffect(target) and not (self.player:hasWeapon("qinggang_sword") or self.player:hasSkill("jueqing")) then
 		return false
 	end
 	if target:hasSkill("zhenlie") then return false end
@@ -336,7 +336,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
 		if who:hasArmorEffect("vine") then damagecount = damagecount + 1 end
 		if who:getMark("@gale") > 0 then damagecount = damagecount + 1 end
 	end
-	if who:hasArmorEffect("silver_lion") then damagecount = 1 end
+	if self:hasSilverLionEffect(who) then damagecount = 1 end
 	local kills, killlord, the_enemy = 0
 	local good, bad, F_count, E_count = 0, 0, 0, 0
 	local peach_num = self.player:objectName() == source:objectName() and self:getCardsNum("Peach") or getCardsNum("Peach", source, self.player)
@@ -371,7 +371,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
 				if can then newvalue = newvalue - 2 end
 			end
 		end
-		if target:hasArmorEffect("silver_lion") then return newvalue - 1 end
+		if self:hasSilverLionEffect(target) then return newvalue - 1 end
 		return newvalue - damagecount - (dmg or 0)
 	end
 
@@ -634,7 +634,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 		end
 		if enemy:hasSkill("qianxun") then return false end
 		local damage = 1
-		if not self.player:hasSkill("jueqing") and not enemy:hasArmorEffect("silver_lion") then
+		if not self.player:hasSkill("jueqing") and not self:hasSilverLionEffect(enemy) then
 			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
 			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 		end
@@ -708,7 +708,7 @@ function SmartAI:useCardFireAttack(fire_attack, use)
 
 	for _, enemy in ipairs(enemies) do
 		local damage = 1
-		if not enemy:hasArmorEffect("silver_lion") then
+		if not self:hasSilverLionEffect(enemy) then
 			if enemy:hasArmorEffect("vine") then damage = damage + 1 end
 			if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 		end

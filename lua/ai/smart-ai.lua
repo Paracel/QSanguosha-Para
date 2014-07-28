@@ -2795,7 +2795,7 @@ function SmartAI:hasHeavySlashDamage(from, slash, to, return_value)
 	from = from or self.room:getCurrent()
 	to = to or self.player
 	local is_friend = self:isFriend(from, to)
-	if not from:hasSkill("jueqing") and to:hasArmorEffect("silver_lion") then
+	if not from:hasSkill("jueqing") and self:hasSilverLionEffect(to) then
 		if return_value then return 1 else return false end
 	end
 	local dmg = 1
@@ -3607,7 +3607,7 @@ function SmartAI:needRetrial(judge)
 		if who:hasSkills("wuyan|hongyan") then return false end
 
 		if lord and (who:isLord() or (who:isChained() and lord:isChained())) and self:objectiveLevel(lord) <= 3 then
-			if lord:hasArmorEffect("silver_lion") and lord:getHp() >= 2 and self:isGoodChainTarget(lord, self.player, sgs.DamageStruct_Thunder) then return false end
+			if self:hasSilverLionEffect(lord) and lord:getHp() >= 2 and self:isGoodChainTarget(lord, self.player, sgs.DamageStruct_Thunder) then return false end
 			return self:damageIsEffective(lord, sgs.DamageStruct_Thunder) and not good
 		end
 
@@ -4972,6 +4972,13 @@ function SmartAI:hasCrossbowEffect(player)
 	return player:hasWeapon("Crossbow") or player:hasSkill("paoxiao")
 end
 
+function SmartAI:hasSilverLionEffect(player)
+	player = player or self.player
+	if player:hasArmorEffect("silver_lion") then return true end
+	local zidan = self.room:findPlayerBySkillName("jgchiying")
+	if zidan and zidan:getRole() == player:getRole() then return true end
+end
+
 sgs.ai_weapon_value = {}
 
 function SmartAI:evaluateWeapon(card, player, enemy)
@@ -5205,13 +5212,13 @@ function SmartAI:damageMinusHp(self, enemy, type)
 					slash_damagenum = slash_damagenum + 1
 				end
 				if self:getCardsNum("Analeptic") > 0 and analepticpowerup == 0
-					and not (enemy:hasArmorEffect("silver_lion") or self:hasEightDiagramEffect(enemy)) then
+					and not (self:hasSilverLionEffect(enemy) or self:hasEightDiagramEffect(enemy)) then
 						slash_damagenum = slash_damagenum + 1
 						analepticpowerup = analepticpowerup + 1
 				end
 				if self.player:hasWeapon("guding_blade")
 					and (enemy:isKongcheng() or (self.player:hasSkill("lihun") and enemy:isMale() and not enemy:hasSkill("kongcheng")))
-					and not enemy:hasArmorEffect("silver_lion") then
+					and not self:hasSilverLionEffect(enemy) then
 					slash_damagenum = slash_damagenum + 1
 				end
 			end

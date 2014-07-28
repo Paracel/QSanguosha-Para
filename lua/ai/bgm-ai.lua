@@ -492,7 +492,7 @@ local function will_discard_zhaolie(self, nobasic)
 		if self.player:hasSkill("mingshi") and spliubei:getEquips():length() <= math.min(2, self.player:getEquips():length()) and damage_num > 0 then
 			damage_num = damage_num - 1
 		end
-		if self.player:hasArmorEffect("silver_lion") and damage_num > 1 then damage_num = 1 end
+		if self:hasSilverLionEffect() and damage_num > 1 then damage_num = 1 end
 	end
 	if not spliubei:hasSkill("jueqing") and self.player:hasSkill("wuhun") and self.role == "rebel" then
 		local mark = 0

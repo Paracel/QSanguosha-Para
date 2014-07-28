@@ -69,6 +69,7 @@ config = {
 		"NostalYJCM2012",
 		"NostalYJCM2013",
 		"NostalGeneral",
+		"JianGeDefense",
 		"BossMode",
 		"Test"
 	},
@@ -347,7 +348,7 @@ config = {
 	},
 
 	jiange_defense_soul = {
-		wei = "zhanghe+xiahouyuan+simayi+caozhen",
+		wei = "jg_soul_caozhen",
 		shu = "zhugeliang+huangyueying+liubei+pangtong",
 	}
 }

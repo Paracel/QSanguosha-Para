@@ -218,7 +218,7 @@ sgs.ai_skill_cardask["@jieyuan-increase"] = function(self, data)
 	local damage = data:toDamage()
 	local target = damage.to
 	if self:isFriend(target) then return "." end
-	if target:hasArmorEffect("silver_lion") then return "." end
+	if self:hasSilverLionEffect(target) then return "." end
 	local cards = sgs.QList2Table(self.player:getHandcards())
 	self:sortByKeepValue(cards)
 	for _, card in ipairs(cards) do

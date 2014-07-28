@@ -456,7 +456,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	local first
 	self:sort(self.enemies, "hp")
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasArmorEffect("silver_lion") and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
+		if not self:hasSilverLionEffect(enemy) and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and enemy:isChained() and self:isGoodChainTarget(enemy, nil, nil, 3) then
 			if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
 				use.card = greatyeyan
@@ -481,7 +481,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 
 	local second
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:hasArmorEffect("silver_lion") and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
+		if not self:hasSilverLionEffect(enemy) and self:objectiveLevel(enemy) > 3 and self:damageIsEffective(enemy, sgs.DamageStruct_Fire)
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and not enemy:isChained() then
 			if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
 				use.card = greatyeyan

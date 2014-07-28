@@ -11,6 +11,8 @@ bool isJianGeFriend(const Player *a, const Player *b) {
     return a->getRole() == b->getRole();
 }
 
+// WEI Souls
+
 class JGChiying: public TriggerSkill {
 public:
     JGChiying(): TriggerSkill("jgchiying") {
@@ -46,7 +48,6 @@ public:
 class JGJingfan: public DistanceSkill {
 public:
     JGJingfan(): DistanceSkill("jgjingfan") {
-        frequency = Compulsory;
     }
 
     virtual int getCorrect(const Player *from, const Player *to) const{
@@ -62,12 +63,92 @@ public:
     }
 };
 
+// Offensive Machines
+
+class JGJiguan: public ProhibitSkill {
+public:
+    JGJiguan(): ProhibitSkill("jgjiguan") {
+    }
+
+    virtual bool isProhibited(const Player *, const Player *to, const Card *card, const QList<const Player *> &) const{
+        return to->hasSkill(objectName()) && card->isKindOf("Indulgence");
+    }
+};
+
+class JGTanshi: public DrawCardsSkill {
+public:
+    JGTanshi(): DrawCardsSkill("jgtanshi") {
+        frequency = Compulsory;
+    }
+
+    virtual int getDrawNum(ServerPlayer *player, int n) const{
+        Room *room = player->getRoom();
+
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = player;
+        log.arg = objectName();
+        room->sendLog(log);
+
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(player, objectName());
+
+        return n - 1;
+    }
+};
+
+class JGTunshi: public PhaseChangeSkill {
+public:
+    JGTunshi(): PhaseChangeSkill("jgtunshi") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Start) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> to_damage;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (p->getHandcardNum() > target->getHandcardNum() && !isJianGeFriend(p, target))
+                to_damage << p;
+        }
+
+        if (!to_damage.isEmpty()) {
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = target;
+            log.arg = objectName();
+            room->sendLog(log);
+
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(target, objectName());
+
+            foreach (ServerPlayer *p, to_damage)
+                room->damage(DamageStruct(objectName(), target, p));
+        }
+        return false;
+    }
+};
+
+// SHU Souls
+
+// Defensive Machines
+
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
+#define Machine General
+
     General *jg_soul_caozhen = new General(this, "jg_soul_caozhen", "wei", 5, true, true);
     jg_soul_caozhen->addSkill(new JGChiying);
     jg_soul_caozhen->addSkill(new JGJingfan);
+
+    Machine *jg_machine_tuntianqiongqi = new Machine(this, "jg_machine_tuntianqiongqi", "wei", 5, true, true);
+    jg_machine_tuntianqiongqi->addSkill(new JGJiguan);
+    jg_machine_tuntianqiongqi->addSkill(new JGTanshi);
+    jg_machine_tuntianqiongqi->addSkill(new JGTunshi);
+
+#undef Machine
 }
 
 ADD_PACKAGE(JianGeDefense)

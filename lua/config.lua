@@ -348,7 +348,7 @@ config = {
 	},
 
 	jiange_defense_machine = {
-		wei = "caocao+caopi",
+		wei = "jg_machine_tuntianqiongqi",
 		shu = "bgm_liubei+liushan",
 	},
 

@@ -5560,6 +5560,7 @@ dofile "lua/ai/standard-ai.lua"
 dofile "lua/ai/basara-ai.lua"
 dofile "lua/ai/boss-ai.lua"
 dofile "lua/ai/hulaoguan-ai.lua"
+dofile "lua/ai/jiange_defense-ai.lua"
 dofile "lua/ai/conversion-ai.lua"
 
 local loaded = "standard|standard_cards|maneuvering"

@@ -3,7 +3,7 @@
 return {
 	["JianGeDefense"] = "守卫剑阁",
 
-	["#jg_soul_caozhen"] = "魏国英魂",
+	["#jg_soul_caozhen"] = "曹魏英魂",
 	["jg_soul_caozhen"] = "佳人子丹",
 	["illustrator:jg_soul_caozhen"] = "",
 	["jgchiying"] = "持盈",
@@ -21,4 +21,13 @@ return {
 	[":jgtanshi"] = "锁定技。摸牌阶段，你少摸一张牌。",
 	["jgtunshi"] = "吞噬",
 	[":jgtunshi"] = "锁定技。准备阶段开始时，所有手牌多于你的对方角色各受到1点伤害。",
+
+	["#jg_soul_liubei"] = "季汉英魂",
+	["jg_soul_liubei"] = "烈帝玄德",
+	["illustrator:jg_soul_liubei"] = "",
+	["jgjizhen"] = "激阵",
+	[":jgjizhen"] = "结束阶段开始时，你可以令所有已受伤的己方角色各摸一张牌。",
+	["jglingfeng"] = "灵锋",
+	[":jglingfeng"] = "摸牌阶段开始时，你可以放弃摸牌，亮出牌堆顶的两张牌并获得之：若亮出的牌不为同一颜色，你令一名对方角色失去1点体力。",
+	["@jglingfeng"] = "请选择一名对方角色令其失去1点体力",
 }

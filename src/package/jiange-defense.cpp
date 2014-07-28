@@ -132,14 +132,82 @@ public:
 
 // SHU Souls
 
+class JGJizhen: public PhaseChangeSkill {
+public:
+    JGJizhen(): PhaseChangeSkill("jgjizhen") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> to_draw;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (p->isWounded() && isJianGeFriend(p, target))
+                to_draw << p;
+        }
+
+        if (!to_draw.isEmpty() && room->askForSkillInvoke(target, objectName())) {
+            room->broadcastSkillInvoke(objectName());
+            room->drawCards(to_draw, 1, objectName());
+        }
+        return false;
+    }
+};
+
+class JGLingfeng: public PhaseChangeSkill {
+public:
+    JGLingfeng(): PhaseChangeSkill("jglingfeng") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Draw) return false;
+        Room *room = target->getRoom();
+        if (target->askForSkillInvoke(objectName())) {
+            room->broadcastSkillInvoke(objectName());
+
+            int card1 = room->drawCard();
+            int card2 = room->drawCard();
+            QList<int> ids;
+            ids << card1 << card2;
+            bool diff = (Sanguosha->getCard(card1)->getColor() != Sanguosha->getCard(card2)->getColor());
+
+            CardsMoveStruct move;
+            move.card_ids = ids;
+            move.reason = CardMoveReason(CardMoveReason::S_REASON_TURNOVER, target->objectName(), objectName(), QString());
+            move.to_place = Player::PlaceTable;
+            room->moveCardsAtomic(move, true);
+            room->getThread()->delay();
+
+            DummyCard *dummy = new DummyCard(move.card_ids);
+            room->obtainCard(target, dummy);
+            delete dummy;
+
+            if (diff) {
+                QList<ServerPlayer *> enemies;
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (!isJianGeFriend(p, target))
+                        enemies << p;
+                }
+                Q_ASSERT(!enemies.isEmpty());
+                ServerPlayer *enemy = room->askForPlayerChosen(target, enemies, objectName(), "@jglingfeng");
+                if (enemy)
+                    room->loseHp(enemy);
+            }
+        }
+        return true;
+    }
+};
+
 // Defensive Machines
 
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
 #define Machine General
+#define Soul General
 
-    General *jg_soul_caozhen = new General(this, "jg_soul_caozhen", "wei", 5, true, true);
+    Soul *jg_soul_caozhen = new Soul(this, "jg_soul_caozhen", "wei", 5, true, true);
     jg_soul_caozhen->addSkill(new JGChiying);
     jg_soul_caozhen->addSkill(new JGJingfan);
 
@@ -148,6 +216,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_tuntianqiongqi->addSkill(new JGTanshi);
     jg_machine_tuntianqiongqi->addSkill(new JGTunshi);
 
+    Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
+    jg_soul_liubei->addSkill(new JGJizhen);
+    jg_soul_liubei->addSkill(new JGLingfeng);
+
+#undef Soul
 #undef Machine
 }
 

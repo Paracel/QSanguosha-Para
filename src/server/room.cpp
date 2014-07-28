@@ -2401,17 +2401,23 @@ void Room::assignGeneralsForPlayersOfJianGeDefenseMode(const QList<ServerPlayer 
     }
 
     const int max_choice = Config.value("MaxChoice", 5).toInt();
-    QStringList choices;
-    int choice_count = 0;
+    QMap<QString, QStringList> general_choices;
+    foreach (QString key, Config.JianGeDefenseKingdoms.keys()) {
+        QString kingdom = Config.JianGeDefenseKingdoms[key];
+        int total = Sanguosha->getGeneralCount(false, kingdom);
+        general_choices[kingdom] = Sanguosha->getRandomGenerals(total - existed[kingdom].size(), existed[kingdom], kingdom);
+    }
 
     foreach (ServerPlayer *player, to_assign) {
-        QString kingdom = player->getRole() == "loyalist" ? "shu" : "wei";
+        QStringList choices;
+        int choice_count = 0;
+        QString kingdom = Config.JianGeDefenseKingdoms[player->getRole()];
         QString jiange_defense_type = player->property("jiange_defense_type").toString();
         if (jiange_defense_type == "general") {
             int total = Sanguosha->getGeneralCount(false, kingdom);
             int max_available = (total - existed[kingdom].size()) / 2;
             choice_count = qMin(max_choice, max_available);
-            choices = Sanguosha->getRandomGenerals(total - existed[kingdom].size(), existed[kingdom], kingdom);
+            choices = general_choices[kingdom];
         } else if (jiange_defense_type == "machine") {
             choices = Config.JianGeDefenseMachine[kingdom];
             choice_count = choices.length();
@@ -2429,6 +2435,8 @@ void Room::assignGeneralsForPlayersOfJianGeDefenseMode(const QList<ServerPlayer 
             if (choice.isEmpty()) break;
             player->addToSelected(choice);
             choices.removeOne(choice);
+            if (jiange_defense_type == "general")
+                general_choices[kingdom].removeOne(choice);
         }
     }
 }

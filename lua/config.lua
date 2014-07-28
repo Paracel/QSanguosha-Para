@@ -342,6 +342,11 @@ config = {
 		"zhiheng:90",
 	},
 
+	jiange_defense_kingdoms = {
+		loyalist = "shu",
+		rebel = "wei",
+	},
+
 	jiange_defense_machine = {
 		wei = "caocao+caopi",
 		shu = "bgm_liubei+liushan",

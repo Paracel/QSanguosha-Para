@@ -60,6 +60,7 @@ public:
     QStringList BossEndlessSkills;
     QMap<QString, int> BossExpSkills;
 
+    QMap<QString, QString> JianGeDefenseKingdoms;
     QMap<QString, QStringList> JianGeDefenseMachine;
     QMap<QString, QStringList> JianGeDefenseSoul;
 

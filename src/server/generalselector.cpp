@@ -47,7 +47,7 @@ QString GeneralSelector::selectFirst(ServerPlayer *player, const QStringList &ca
         if (lord) {
             QString key2 = QString("%1:%2:%3").arg(lord->getGeneralName()).arg(candidate).arg(role);
             value *= qPow(1.1, first_general_table.value(key2, 0.0));
-		}
+        }
         values.insert(candidate, value);
     }
 

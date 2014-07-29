@@ -9,7 +9,7 @@ function SmartAI:canAttack(enemy, attacker, nature)
 		if enemy:getMark("@gale") > 0 then damage = damage + 1 end
 	end
 	if self:getDamagedEffects(enemy, attacker) or (self:needToLoseHp(enemy, attacker, false, true) and #self:getEnemies(attacker) > 1) or not sgs.isGoodTarget(enemy, self.enemies, self) then return false end
-	if self:objectiveLevel(enemy) <= 2 or self:cantbeHurt(enemy, self.player, damage) or not self:damageIsEffective(enemy, nature, attacker) then return false end
+	if self:objectiveLevel(enemy) <= 2 or self:cantbeHurt(enemy, self.player, damage) then return false end
 	if nature ~= sgs.DamageStruct_Normal and enemy:isChained() and not self:isGoodChainTarget(enemy, self.player, nature) then return false end
 	return true
 end

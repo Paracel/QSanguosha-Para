@@ -63,6 +63,88 @@ public:
     }
 };
 
+class JGKonghun: public PhaseChangeSkill {
+public:
+    JGKonghun(): PhaseChangeSkill("jgkonghun") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Play || !target->isWounded()) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!isJianGeFriend(p, target))
+                enemies << p;
+        }
+
+        int enemy_num = enemies.length();
+        if (target->getLostHp() >= enemy_num && room->askForSkillInvoke(player, objectName())) {
+            room->broadcastSkillInvoke(objectName());
+            foreach (ServerPlayer *p, enemies)
+                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
+            if (target->isWounded())
+                room->recover(target, RecoverStruct(target));
+        }
+        return false;
+    }
+};
+
+class JGFanshi: public PhaseChangeSkill {
+public:
+    JGFanshi(): PhaseChangeSkill("jgfanshi") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        LogMessage log;
+        log.type = "#TriggerSkill";
+        log.from = target;
+        log.arg = objectName();
+        room->sendLog(log);
+        room->broadcastSkillInvoke(objectName());
+        room->notifySkillInvoked(target, objectName());
+
+        room->loseHp(target, 1);
+        return false;
+    }
+};
+
+class JGXuanlei: public PhaseChangeSkill {
+public:
+    JGXuanlei(): PhaseChangeSkill("jgxuanlei") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Start) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!p->getJudgingArea().isEmpty() && !isJianGeFriend(p, target))
+                enemies << p;
+        }
+
+        if (!enemies.isEmpty()) {
+            LogMessage log;
+            log.type = "#TriggerSkill";
+            log.from = target;
+            log.arg = objectName();
+            room->sendLog(log);
+            room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(target, objectName());
+
+            foreach (ServerPlayer *p, enemies)
+                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
+            return false;
+        }
+    }
+};
+
 // Offensive Machines
 
 class JGJiguan: public ProhibitSkill {
@@ -259,6 +341,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     Soul *jg_soul_caozhen = new Soul(this, "jg_soul_caozhen", "wei", 5, true, true);
     jg_soul_caozhen->addSkill(new JGChiying);
     jg_soul_caozhen->addSkill(new JGJingfan);
+
+    Soul *jg_soul_simayi = new Soul(this, "jg_soul_simayi", "wei", 5, true, true);
+    jg_soul_simayi->addSkill(new JGKonghun);
+    jg_soul_simayi->addSkill(new JGFanshi);
+    jg_soul_simayi->addSkill(new JGXuanlei);
 
     Machine *jg_machine_tuntianqiongqi = new Machine(this, "jg_machine_tuntianqiongqi", "wei", 5, true, true);
     jg_machine_tuntianqiongqi->addSkill(new JGJiguan);

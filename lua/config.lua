@@ -353,7 +353,7 @@ config = {
 	},
 
 	jiange_defense_soul = {
-		wei = "jg_soul_caozhen",
+		wei = "jg_soul_caozhen+jg_soul_simayi",
 		shu = "jg_soul_liubei",
 	}
 }

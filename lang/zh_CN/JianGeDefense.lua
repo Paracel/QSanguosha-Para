@@ -12,6 +12,16 @@ return {
 	[":jgjingfan"] = "锁定技。其他己方角色与对方角色的距离-1。",
 	["#JGChiying"] = "%from 的“%arg2”被触发，防止了 %to 受到的 %arg 点伤害，减至 <font color=\"yellow\"><b>1</b></font> 点",
 
+	["#jg_soul_simayi"] = "曹魏英魂",
+	["jg_soul_simayi"] = "断狱仲达",
+	["illustrator:jg_soul_simayi"] = "",
+	["jgkonghun"] = "控魂",
+	[":jgkonghun"] = "出牌阶段开始时，若你已损失的体力值不小于X，你可以对所有对方角色各造成1点雷电伤害，然后你回复X点体力。（X为对方角色数）",
+	["jgfanshi"] = "反噬",
+	[":jgfanshi"] = "锁定技。结束阶段开始时，你失去1点体力。",
+	["jgxuanlei"] = "玄雷",
+	[":jgxuanlei"] = "锁定技。准备阶段开始时，判定区有牌的对方角色受到1点雷电伤害。",
+
 	["#jg_machine_tuntianqiongqi"] = "攻城器械",
 	["jg_machine_tuntianqiongqi"] = "吞天穷奇",
 	["illustrator:jg_machine_tuntianqiongqi"] = "",

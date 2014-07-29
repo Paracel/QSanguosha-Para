@@ -20,3 +20,4 @@ sgs.ai_skill_invoke.jgkonghun = function(self)
 end
 
 sgs.ai_skill_invoke.jglianyu = sgs.ai_skill_invoke.bosslianyu
+sgs.ai_skill_playerchosen.jgdidong = sgs.ai_skill_playerchosen.bossdidong

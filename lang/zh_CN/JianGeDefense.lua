@@ -38,6 +38,13 @@ return {
 	["jglianyu"] = "炼狱",
 	[":jglianyu"] = "结束阶段开始时，你可以对所有对方角色各造成1点火焰伤害。",
 
+	["#jg_machine_fudibian"] = "攻城器械",
+	["jg_machine_fudibian"] = "缚地狴犴",
+	["illustrator:jg_machine_fudibian"] = "",
+	["jgdidong"] = "地动",
+	[":jgdidong"] = "结束阶段开始时，你可以令一名对方角色将武将牌翻面。",
+	["jgdidong-invoke"] = "你可以发动“地动”<br/> <b>操作提示</b>: 选择一名对方角色→点击确定<br/>",
+
 	["#jg_soul_liubei"] = "季汉英魂",
 	["jg_soul_liubei"] = "烈帝玄德",
 	["illustrator:jg_soul_liubei"] = "",

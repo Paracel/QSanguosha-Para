@@ -215,6 +215,29 @@ public:
     }
 };
 
+class JGDidong: public PhaseChangeSkill {
+public:
+    JGDidong(): PhaseChangeSkill("jgdidong") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!isJianGeFriend(p, target))
+                enemies << p;
+        }
+        ServerPlayer *player = room->askForPlayerChosen(target, enemies, objectName(), "jgdidong-invoke", true, true);
+        if (player) {
+            room->broadcastSkillInvoke(objectName());
+            player->turnOver();
+        }
+        return false;
+    }
+};
+
 // SHU Souls
 
 class JGJizhen: public PhaseChangeSkill {
@@ -429,6 +452,10 @@ JianGeDefensePackage::JianGeDefensePackage()
     Machine *jg_machine_shihuosuanni = new Machine(this, "jg_machine_shihuosuanni", "wei", 3, true, true);
     jg_machine_shihuosuanni->addSkill("jgjiguan");
     jg_machine_shihuosuanni->addSkill(new JGLianyu);
+
+    Machine *jg_machine_fudibian = new Machine(this, "jg_machine_fudibian", "wei", 4, true, true);
+    jg_machine_fudibian->addSkill("jgjiguan");
+    jg_machine_fudibian->addSkill(new JGDidong);
 
     Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
     jg_soul_liubei->addSkill(new JGJizhen);

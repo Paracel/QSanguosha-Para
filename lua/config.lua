@@ -348,7 +348,7 @@ config = {
 	},
 
 	jiange_defense_machine = {
-		wei = "jg_machine_tuntianchiwen+jg_machine_shihuosuanni",
+		wei = "jg_machine_tuntianchiwen+jg_machine_shihuosuanni+jg_machine_fudibian",
 		shu = "jg_machine_yunpingqinglong+jg_machine_jileibaihu",
 	},
 

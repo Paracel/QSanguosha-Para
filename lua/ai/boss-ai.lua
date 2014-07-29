@@ -1,6 +1,8 @@
 sgs.ai_skill_playerchosen.bossdidong = function(self, targets)
 	self:sort(self.enemies)
-	return self.enemies[1]
+	for _, enemy in ipairs(self.enemies) do
+		if enemy:faceUp() then return enemy end
+	end
 end
 
 sgs.ai_skill_playerchosen.bossluolei = function(self, targets)

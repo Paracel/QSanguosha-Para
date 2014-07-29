@@ -359,7 +359,7 @@ void ServerPlayer::removeCard(const Card *card, Place place) {
     case PlaceSpecial: {
             int card_id = card->getEffectiveId();
             QString pile_name = getPileName(card_id);
-            
+
             //@todo: sanity check required
             if (!pile_name.isEmpty())
                 piles[pile_name].removeOne(card_id);
@@ -683,7 +683,7 @@ void ServerPlayer::play(QList<Player::Phase> set_phases) {
 
         setPhase(phases[i]);
         room->broadcastProperty(this, "phase");
-        
+
         if (phases[i] != NotActive && (skip || _m_phases_state[i].skipped != 0)) {
             QVariant isCost = QVariant::fromValue(_m_phases_state[i].skipped < 0);
             bool cancel_skip = thread->trigger(EventPhaseSkipping, room, this, isCost);

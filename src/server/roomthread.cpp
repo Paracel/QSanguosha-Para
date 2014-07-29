@@ -185,7 +185,7 @@ bool CardUseStruct::isValid(const QString &pattern) const{
                 else {
                     validSkill = true;
                     break;
-                }                
+                }
             } else if (skill->getFrequency() == Skill::Wake) {
                 bool valid = (from->getMark(skill->objectName()) > 0);
                 if (!valid)
@@ -228,8 +228,8 @@ void CardUseStruct::parse(const QString &str, Room *room) {
     QString card_str = words.at(0);
     QString target_str = ".";
 
-    if (words.length() == 2 && !words.at(1).isEmpty()) 
-        target_str = words.at(1);    
+    if (words.length() == 2 && !words.at(1).isEmpty())
+        target_str = words.at(1);
 
     card = Card::Parse(card_str);
 

@@ -72,7 +72,7 @@ public:
     QString getSkillName(bool removePrefix = true) const;
     virtual void setSkillName(const QString &skill_name);
     QString getDescription() const;
-    
+
     virtual bool isMute() const;
     virtual bool willThrow() const;
     virtual bool canRecast() const;
@@ -116,7 +116,7 @@ public:
     virtual bool targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self,
                               int &maxVotes) const;
     virtual bool isAvailable(const Player *player) const;
-    
+
     inline virtual const Card *getRealCard() const{ return this; }
     virtual const Card *validate(CardUseStruct &cardUse) const;
     virtual const Card *validateInResponse(ServerPlayer *user) const;
@@ -143,7 +143,7 @@ public:
 
     static const Card *Parse(const QString &str);
     virtual QString toString(bool hidden = false) const;
-    
+
     mutable QVariantMap tag;
 
 protected:

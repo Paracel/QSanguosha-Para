@@ -968,7 +968,7 @@ end
 
 sgs.ai_skill_playerchosen.xuehen = function(self, targets)
 	local to = self.xuehentarget
-	if to then 
+	if to then
 		self.xuehentarget = nil
 		return to
 	end

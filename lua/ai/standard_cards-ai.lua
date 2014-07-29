@@ -557,7 +557,7 @@ function SmartAI:useCardSlash(card, use)
 				end
 				if not isGood then continue end
 			end
- 
+
 			-- fill the card use struct
 			local usecard = card
 			if not use.to or use.to:isEmpty() then
@@ -1767,7 +1767,7 @@ function SmartAI:useCardDuel(duel, use)
 				elseif n1 >= enemySlash and not targets[i]:hasSkill("danlao") and not (lx and self:isEnemy(lx) and lx:getHp() > targets_num / 2) then
 					use.to:append(targets[i])
 				end
-				if not setFlag and self.player:getPhase() == sgs.Player_Play and self:isEnemy(targets[i]) then 
+				if not setFlag and self.player:getPhase() == sgs.Player_Play and self:isEnemy(targets[i]) then
 					self.player:setFlags("AI_DuelTo_" .. targets[i]:objectName())
 					setFlag = true
 				end
@@ -2885,7 +2885,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		end
 	end
 
-	if nullification and (self:getCardsNum("Nullification") < 2 or not nextPlayerCanUse) then 
+	if nullification and (self:getCardsNum("Nullification") < 2 or not nextPlayerCanUse) then
 		return nullification
 	end
 
@@ -2990,7 +2990,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 				if self:slashIsEffective(slash, enemy) and self.player:canSlash(enemy, slash) and self:slashIsAvailable() then
 					hit_num = hit_num + 1
 					if getCardsNum("Jink", enemy, self.player) < 1
-						or enemy:isKongcheng() 
+						or enemy:isKongcheng()
 						or self.player:hasSkills("tieji|nostieji|liegong|kofliegong|wushuang|dahe|qianxi")
 						or self.player:hasSkill("roulin") and enemy:isFemale()
 						or (self.player:hasWeapon("axe") or self:getCardsNum("Axe") > 0) and self.player:getCards("he"):length() > 4 then
@@ -3011,7 +3011,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 		self:sort(self.enemies, "defense")
 
 		if crossbow then
-			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("noskurou|keji") 
+			if self:getCardsNum("Slash") > 1 or self.player:hasSkills("noskurou|keji")
 				or (self.player:hasSkills("luoshen|yongsi|luoying|guzheng") and not selfIsCurrent and self.room:alivePlayerCount() >= 4) then
 				return crossbow
 			end
@@ -3060,7 +3060,7 @@ sgs.ai_skill_askforag.amazing_grace = function(self, card_ids)
 			local range_fix = current_range - 3
 			local FFFslash = self:getCard("FireSlash")
 			for _, enemy in ipairs(self.enemies) do
-				if enemy:hasArmorEffect("vine") and FFFslash and self:slashIsEffective(FFFslash, enemy) and 
+				if enemy:hasArmorEffect("vine") and FFFslash and self:slashIsEffective(FFFslash, enemy) and
 					self.player:getCardCount() >= 3 and self.player:canSlash(enemy, FFFslash, true, range_fix) then
 					return axe
 				elseif self:getCardsNum("Analeptic") > 0 and self.player:getCardCount() >= 4 and

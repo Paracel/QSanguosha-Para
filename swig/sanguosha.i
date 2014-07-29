@@ -1207,7 +1207,7 @@ public:
     void addPlayerHistory(ServerPlayer *player, const char *key, int times = 1);
 
     void broadcastInvoke(const char *method, const char *arg = ".", ServerPlayer *except = NULL);
-    bool doNotify(ServerPlayer *player, int command, const char *arg); 
+    bool doNotify(ServerPlayer *player, int command, const char *arg);
     bool doBroadcastNotify(int command, const char *arg);
     bool doBroadcastNotify(const QList<ServerPlayer *> &players, int command, const char *arg);
 

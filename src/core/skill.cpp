@@ -150,7 +150,7 @@ ViewAsSkill::ViewAsSkill(const QString &name)
 }
 
 bool ViewAsSkill::isAvailable(const Player *invoker,
-                              CardUseStruct::CardUseReason reason, 
+                              CardUseStruct::CardUseReason reason,
                               const QString &pattern) const{
     if (!invoker->hasSkill(objectName()) && !invoker->hasLordSkill(objectName())
         && !invoker->hasFlag(objectName())) // For Shuangxiong

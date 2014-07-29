@@ -34,7 +34,7 @@ return {
 	["@weidi-jijiang"] = "请发动“激将”",
 	["#YongsiGood"] = "%from 的“%arg2”被触发，额外摸了 %arg 张牌",
 	["#YongsiBad"] = "%from 的“%arg2”被触发，须弃置 %arg 张牌",
-	["#YongsiJilei"] = "%from 的“%arg2”被触发，由于“<font color=\"yellow\"><b>鸡肋</b></font>”的效果，仅弃置了 %arg 张牌", 
+	["#YongsiJilei"] = "%from 的“%arg2”被触发，由于“<font color=\"yellow\"><b>鸡肋</b></font>”的效果，仅弃置了 %arg 张牌",
 	["#YongsiWorst"] = "%from 的“%arg2”被触发，弃置了所有牌（共 %arg 张）",
 
 	["#sp_guanyu"] = "汉寿亭侯",

@@ -131,7 +131,7 @@ public:
 
     static bool IsAvailable(const Player *player, const Card *slash = NULL, bool considerSpecificAssignee = true);
     static bool IsSpecificAssignee(const Player *player, const Player *from, const Card *slash);
-    
+
 protected:
     DamageStruct::Nature nature;
     QStringList specific_assignee;

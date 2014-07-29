@@ -144,7 +144,7 @@ sgs.ai_skill_use_func.GongxinCard = function(card, use, self)
 	self.enemies = sgs.reverse(self.enemies)
 
 	for _, enemy in ipairs(self.enemies) do
-		if not enemy:isKongcheng() and self:objectiveLevel(enemy) > 0 
+		if not enemy:isKongcheng() and self:objectiveLevel(enemy) > 0
 			and (self:hasSuit("heart", false, enemy) or getKnownNum(enemy) ~= enemy:getHandcardNum()) then
 			use.card = card
 			if use.to then
@@ -413,13 +413,13 @@ yeyan_skill.getTurnUseCard = function(self)
 	local target_num = 0
 	local chained = 0
 	for _, enemy in ipairs(self.enemies) do
-		if ((enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) or enemy:getHp() <= 1) 
+		if ((enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0) or enemy:getHp() <= 1)
 			and not (self.role == "renegade" and enemy:isLord()) then
 			target_num = target_num + 1
 		end
 	end
 	for _, enemy in ipairs(self.enemies) do
-		if enemy:isChained() and self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire) then 
+		if enemy:isChained() and self:isGoodChainTarget(enemy, self.player, sgs.DamageStruct_Fire) then
 			if chained == 0 then target_num = target_num +1 end
 			chained = chained + 1
 		end
@@ -471,7 +471,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	end
 	if first then
 		use.card = greatyeyan
-		if use.to then 
+		if use.to then
 			use.to:append(first)
 			use.to:append(first)
 			use.to:append(first)
@@ -485,7 +485,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 			and not (enemy:hasSkill("tianxiang") and enemy:getHandcardNum() > 0) and not enemy:isChained() then
 			if enemy:hasArmorEffect("vine") or enemy:getMark("@gale") > 0 then
 				use.card = greatyeyan
-				if use.to then 
+				if use.to then
 					use.to:append(enemy)
 					use.to:append(enemy)
 					use.to:append(enemy)
@@ -496,7 +496,7 @@ sgs.ai_skill_use_func.GreatYeyanCard = function(card, use, self)
 	end
 	if second then
 		use.card = greatyeyan
-		if use.to then 
+		if use.to then
 			use.to:append(second)
 			use.to:append(second)
 			use.to:append(second)

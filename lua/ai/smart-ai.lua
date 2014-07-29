@@ -998,7 +998,7 @@ sgs.ai_card_intention.general = function(from, to, level)
 	if sgs.evaluatePlayerRole(to) == "rebel" then
 		if ((sgs.role_evaluation[from:objectName()]["loyalist"] < -50 and level > 0) or (sgs.role_evaluation[from:objectName()]["loyalist"] > 0 and level < 0))
 			and sgs.current_mode_players["renegade"] > 0 then
-			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level) 
+			sgs.role_evaluation[from:objectName()]["renegade"] = sgs.role_evaluation[from:objectName()]["renegade"] + math.abs(level)
 		end
 		sgs.role_evaluation[from:objectName()]["loyalist"] = sgs.role_evaluation[from:objectName()]["loyalist"] + level
 	end
@@ -4731,10 +4731,10 @@ function SmartAI:getAoeValue(card, player)
 
 		local goodnull, badnull = 0, 0
 		for _, p in sgs.qlist(self.room:getAlivePlayers()) do
-			if self:isFriend(lord, p) then 
-				goodnull = goodnull + getCardsNum("Nullification", p, from) 
+			if self:isFriend(lord, p) then
+				goodnull = goodnull + getCardsNum("Nullification", p, from)
 			else
-				badnull = badnull + getCardsNum("Nullification", p, from) 
+				badnull = badnull + getCardsNum("Nullification", p, from)
 			end
 		end
 		return goodnull - null_num - badnull >= 2

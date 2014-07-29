@@ -68,7 +68,7 @@ void CardOverview::loadFromList(const QList<const Card *> &list) {
     int n = list.length();
     ui->tableWidget->setRowCount(n);
     for (int i = 0; i < n; i++)
-        addCard(i, list.at(i));    
+        addCard(i, list.at(i));
 
     if (n > 0) {
         ui->tableWidget->setCurrentItem(ui->tableWidget->item(0, 0));

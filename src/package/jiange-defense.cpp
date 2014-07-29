@@ -79,7 +79,7 @@ public:
         }
 
         int enemy_num = enemies.length();
-        if (target->getLostHp() >= enemy_num && room->askForSkillInvoke(player, objectName())) {
+        if (target->getLostHp() >= enemy_num && room->askForSkillInvoke(target, objectName())) {
             room->broadcastSkillInvoke(objectName());
             foreach (ServerPlayer *p, enemies)
                 room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
@@ -130,8 +130,8 @@ public:
 
             foreach (ServerPlayer *p, enemies)
                 room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
-            return false;
         }
+        return false;
     }
 };
 

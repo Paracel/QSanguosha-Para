@@ -1,6 +1,6 @@
 -- translations for Basara mode
 
-return 
+return
 {
 	["Basara"] = "暗将",
 	["#BasaraReveal"] = "%from 展示了武将 %arg",

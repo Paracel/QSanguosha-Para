@@ -840,7 +840,7 @@ QGroupBox *ServerDialog::createGameModeBox() {
     mini_scene_ComboBox = new QComboBox;
     int index = -1;
     int stage = qMin(Sanguosha->getMiniSceneCounts(), Config.value("MiniSceneStage", 1).toInt());
-        
+
     for (int i = 1; i <= stage; i++) {
         QString name = QString(MiniScene::S_KEY_MINISCENE).arg(QString::number(i));
         QString scenario_name = Sanguosha->translate(name);

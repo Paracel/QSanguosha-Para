@@ -237,7 +237,7 @@ sgs.ai_skill_cardask["@guidao-card"] = function(self, data)
 		if self.player:hasSkill("nosleiji") then keptspade = 2 end
 		if self.player:hasSkill("leiji") then keptblack = 2 end
 	end
- 
+
 	local cards = {}
 	for _, card in sgs.qlist(all_cards) do
 		if card:isBlack() and not card:hasFlag("using") then
@@ -447,7 +447,7 @@ sgs.ai_skill_use_func.HuangtianCard = function(card, use, self)
 					local maxCard = self:getMaxCard(self.player)
 					local max_number, card_number = maxCard:getNumber(), card:getNumber()
 					if self.player:hasSkill("yingyang") then max_number = math.max(max_number + 3, 13) end
-					self:sort(targets, "handcard") 
+					self:sort(targets, "handcard")
 					for _, enemy in ipairs(targets) do
 						local c_number = enemy:hasSkill("yingyang") and math.max(card_number + 3, 13) or card_number
 						if max_number > c_number

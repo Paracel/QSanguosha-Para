@@ -37,7 +37,7 @@ public:
     explicit Room(QObject *parent, const QString &mode);
     ~Room();
     ServerPlayer *addSocket(ClientSocket *socket);
-    inline int getId() const{ return _m_Id; } 
+    inline int getId() const{ return _m_Id; }
     bool isFull() const;
     bool isFinished() const;
     bool canPause(ServerPlayer *p) const;
@@ -110,8 +110,8 @@ public:
     void showAllCards(ServerPlayer *player, ServerPlayer *to = NULL);
     void retrial(const Card *card, ServerPlayer *player, JudgeStruct *judge,
                  const QString &skill_name, bool exchange = false);
-   
-    // Ask a player to send a server request and returns the client response. Call is blocking until client 
+
+    // Ask a player to send a server request and returns the client response. Call is blocking until client
     // replies or server times out, whichever is earlier.
     // @param player
     //        The server player to carry out the command.
@@ -120,12 +120,12 @@ public:
     // @param arg
     //        Command args.
     // @param timeOut
-    //        Maximum milliseconds that server should wait for client response before returning.        
+    //        Maximum milliseconds that server should wait for client response before returning.
     // @param wait
     //        If true, return immediately after sending the request without waiting for client reply.
-    // @return True if the a valid response is returned from client.  
+    // @return True if the a valid response is returned from client.
     // Usage note: when you need a round trip request-response vector with a SINGLE client, use this command
-    // with wait = true and read the reponse from player->getClientReply(). If you want to initiate a poll 
+    // with wait = true and read the reponse from player->getClientReply(). If you want to initiate a poll
     // where more than one clients can respond simultaneously, you have to do it in two steps:
     // 1. Use this command with wait = false once for each client involved in the poll (or you can call this
     //    command only once in all with broadcast = true if the poll is to everypody).
@@ -136,15 +136,15 @@ public:
 
     // Broadcast a request to a list of players and get the client responses. Call is blocking until all client
     // replies or server times out, whichever is earlier. Check each player's m_isClientResponseReady to see if a valid
-    // result has been received. The client response can be accessed by calling each player's getClientReply() function. 
+    // result has been received. The client response can be accessed by calling each player's getClientReply() function.
     // @param players
     //        The list of server players to carry out the command.
     // @param command
     //        Command to be executed on client side. Command arguments should be stored in players->m_commandArgs.
     // @param timeOut
-    //        Maximum total milliseconds that server will wait for all clients to respond before returning. Any client 
+    //        Maximum total milliseconds that server will wait for all clients to respond before returning. Any client
     //        response after the timeOut will be rejected.
-    // @return True if the a valid response is returned from client.  
+    // @return True if the a valid response is returned from client.
     bool doBroadcastRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command, time_t timeOut);
     bool doBroadcastRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command);
 
@@ -158,18 +158,18 @@ public:
     // @return The player that first send a legal request to the server. NULL if no such request is received.
     ServerPlayer *doBroadcastRaceRequest(QList<ServerPlayer *> &players, QSanProtocol::CommandType command,
                                          time_t timeOut, ResponseVerifyFunction validateFunc = NULL, void *funcArg = NULL);
-    
+
     // Notify a player of a event by sending S_SERVER_NOTIFICATION packets. No reply should be expected from
     // the client for S_SERVER_NOTIFICATION as it's a one way notice. Any message from the client in reply to this call
     // will be rejected.
-    bool doNotify(ServerPlayer *player, QSanProtocol::CommandType command, const Json::Value &arg); 
+    bool doNotify(ServerPlayer *player, QSanProtocol::CommandType command, const Json::Value &arg);
 
     // Broadcast a event to a list of players by sending S_SERVER_NOTIFICATION packets. No replies should be expected from
     // the clients for S_SERVER_NOTIFICATION as it's a one way notice. Any message from the client in reply to this call
-    // will be rejected.    
+    // will be rejected.
     bool doBroadcastNotify(QSanProtocol::CommandType command, const Json::Value &arg);
     bool doBroadcastNotify(const QList<ServerPlayer *> &players, QSanProtocol::CommandType command, const Json::Value &arg);
-    
+
     bool doNotify(ServerPlayer *player, int command, const QString &arg);
     bool doBroadcastNotify(int command, const QString &arg);
     bool doBroadcastNotify(const QList<ServerPlayer *> &players, int command, const QString &arg);
@@ -181,9 +181,9 @@ public:
     // @param timeOut
     //        Maximum milliseconds that server should wait for client response before returning.
     // @return True if the a valid response is returned from client.
-    
+
     // Usage note: this function is only supposed to be either internally used by doRequest (wait = true) or externally
-    // used in pair with doRequest (wait = false). Any other usage could result in unexpected synchronization errors. 
+    // used in pair with doRequest (wait = false). Any other usage could result in unexpected synchronization errors.
     // When getResult returns true, it's guaranteed that the expected client response has been stored and can be accessed by
     // calling player->getClientReply(). If getResult returns false, the value stored in player->getClientReply() could be
     // corrupted or in response to an unrelevant server request. Therefore, if the return value is false, do not poke into
@@ -203,9 +203,9 @@ public:
 
     // Notify client side to move cards from one place to another place. A movement should always be completed by
     // calling notifyMoveCards in pairs, one with isLostPhase equaling true followed by one with isLostPhase
-    // equaling false. The two phase design is needed because the target player doesn't necessarily gets the 
+    // equaling false. The two phase design is needed because the target player doesn't necessarily gets the
     // cards that the source player lost. Any trigger during the movement can cause either the target player to
-    // be dead or some of the cards to be moved to another place before the target player actually gets it. 
+    // be dead or some of the cards to be moved to another place before the target player actually gets it.
     // @param isLostPhase
     //        Specify whether this is a S_COMMAND_LOSE_CARD notification.
     // @param move
@@ -338,11 +338,11 @@ public:
     QList<const Card *> askForPindianRace(ServerPlayer *from, ServerPlayer *to, const QString &reason);
     ServerPlayer *askForPlayerChosen(ServerPlayer *player, const QList<ServerPlayer *> &targets, const QString &reason,
                                      const QString &prompt = QString(), bool optional = false, bool notify_skill = false);
-    QString askForGeneral(ServerPlayer *player, const QStringList &generals, QString default_choice = QString());    
+    QString askForGeneral(ServerPlayer *player, const QStringList &generals, QString default_choice = QString());
     QString askForGeneral(ServerPlayer *player, const QString &generals, QString default_choice = QString());
     const Card *askForSinglePeach(ServerPlayer *player, ServerPlayer *dying);
     void addPlayerHistory(ServerPlayer *player, const QString &key, int times = 1);
-    
+
     bool toggleReadyCommand(ServerPlayer *player, const Json::Value &);
     bool speakCommand(ServerPlayer *player, const QString &arg);
     bool speakCommand(ServerPlayer *player, const Json::Value &arg);
@@ -368,7 +368,7 @@ protected:
 private:
     struct _MoveSourceClassifier {
         inline _MoveSourceClassifier(const CardsMoveStruct &move) {
-            m_from = move.from; m_from_place = move.from_place; 
+            m_from = move.from; m_from_place = move.from_place;
             m_from_pile_name = move.from_pile_name; m_from_player_name = move.from_player_name;
         }
         inline void copyTo(CardsMoveStruct &move) {
@@ -386,7 +386,7 @@ private:
         Player *m_from;
         Player::Place m_from_place;
         QString m_from_pile_name;
-        QString m_from_player_name; 
+        QString m_from_player_name;
     };
 
     struct _MoveMergeClassifier {
@@ -467,17 +467,17 @@ private:
     QSemaphore _m_semRaceRequest; // When race starts, server waits on his semaphore for the first replier
     QSemaphore _m_semRoomMutex; // Provide per-room  (rather than per-player) level protection of any shared variables
 
-    
+
     QHash<QSanProtocol::CommandType, CallBack> m_callbacks; // Stores the callbacks for client request. Do not use this
                                                             // this map for anything else but S_CLIENT_REQUEST!!!!!
-    QHash<QSanProtocol::CommandType, QSanProtocol::CommandType> m_requestResponsePair; 
+    QHash<QSanProtocol::CommandType, QSanProtocol::CommandType> m_requestResponsePair;
     // Stores the expected client response for each server request, any unmatched client response will be discarded.
 
     QTime _m_timeSinceLastSurrenderRequest; // Timer used to ensure that surrender polls are not initiated too frequently
     bool _m_isFirstSurrenderRequest; // We allow the first surrender poll to go through regardless of the timer.
-    
+
     //helper variables for race request function
-    bool _m_raceStarted; 
+    bool _m_raceStarted;
     ServerPlayer *_m_raceWinner;
 
     QMap<int, Player::Place> place_map;
@@ -523,7 +523,7 @@ private:
         ServerPlayer *m_to;
     };
     bool _askForNullification(const Card *trick, ServerPlayer *from, ServerPlayer *to, bool positive, _NullificationAiHelper helper);
-    void _setupChooseGeneralRequestArgs(ServerPlayer *player);    
+    void _setupChooseGeneralRequestArgs(ServerPlayer *player);
 
 private slots:
     void reportDisconnection();

@@ -284,7 +284,7 @@ sgs.ai_skill_choice.chuanxin_lose = function(self, choices, data)
 		if self.player:hasSkill(skill) then return skill end
 	end
  end
- 
+
  sgs.ai_skill_invoke.fengshi = function(self, data)
 	local target = data:toPlayer()
 	if not target then return false end

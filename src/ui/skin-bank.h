@@ -86,7 +86,7 @@ protected:
     QString _readImageConfig(const QString &key, QRect &clipRegion, bool &clipping,
                              QSize &newScale, bool scaled,
                              const QString &defaultValue = QString()) const;
-    
+
     Json::Value _m_imageConfig;
     Json::Value _m_audioConfig;
     Json::Value _m_animationConfig;
@@ -118,7 +118,7 @@ public:
         QRect m_boundingRect;
         QRect m_focusFrameArea;
         QRect m_handCardArea;
-        
+
         // equips
         QRect m_equipAreas[S_EQUIP_AREA_LENGTH];
         QRect m_equipImageArea;
@@ -133,7 +133,7 @@ public:
         // delayed trick area
         QRect m_delayedTrickFirstRegion;
         QPoint m_delayedTrickStep;
-        
+
         AnchoredRect m_markTextArea;
         QPoint m_roleComboBoxPos;
 
@@ -154,7 +154,7 @@ public:
         QSanShadowTextFont m_handCardFont;
         QRect m_screenNameArea;
         QSanShadowTextFont m_screenNameFont;
-        
+
         // progress bar and other controls
         bool m_isProgressBarHorizontal;
         AnchoredRect m_progressBarArea;
@@ -165,8 +165,8 @@ public:
         QPoint m_magatamasAnchor;
         Qt::Alignment m_magatamasAlign;
 
-        AnchoredRect m_phaseArea;        
-        
+        AnchoredRect m_phaseArea;
+
         // private pile (e.g. 7 stars, buqu)
         QPoint m_privatePileStartPos;
         QPoint m_privatePileStep;
@@ -190,12 +190,12 @@ public:
     struct PhotoLayout: public PlayerCardContainerLayout {
         int m_normalWidth;
         QRect m_mainFrameArea;
-        QRect m_cardMoveRegion;        
+        QRect m_cardMoveRegion;
         QRect m_onlineStatusArea;
         QSanShadowTextFont m_onlineStatusFont;
         QColor m_onlineStatusBgColor;
         QRect m_skillNameArea;
-        QSanShadowTextFont m_skillNameFont;        
+        QSanShadowTextFont m_skillNameFont;
     };
 
     struct DashboardLayout: public PlayerCardContainerLayout {
@@ -219,7 +219,7 @@ public:
 
         QSanShadowTextFont getSkillTextFont(QSanButton::ButtonState state,
                                             QSanInvokeSkillButton::SkillType type,
-                                            QSanInvokeSkillButton::SkillButtonWidth width) const;        
+                                            QSanInvokeSkillButton::SkillButtonWidth width) const;
     };
 
     struct CommonLayout {
@@ -236,7 +236,7 @@ public:
         QSanShadowTextFont m_hpFont[6];
         int m_hpExtraSpaceHolder;
 
-        // dialogs        
+        // dialogs
         // when # of generals <= switchIconSizeThreadshold
         QSize m_chooseGeneralBoxSparseIconSize;
         // when # of generals > switchIconSizeThreadshold
@@ -270,7 +270,7 @@ public:
     QString getButtonPixmapPath(const QString &groupName, const QString &buttonName, QSanButton::ButtonState state) const;
     QPixmap getButtonPixmap(const QString &groupName, const QString &buttonName, QSanButton::ButtonState state) const;
     QPixmap getSkillButtonPixmap(QSanButton::ButtonState state,
-                                 QSanInvokeSkillButton::SkillType type, 
+                                 QSanInvokeSkillButton::SkillType type,
                                  QSanInvokeSkillButton::SkillButtonWidth width) const;
     QPixmap getCardMainPixmap(const QString &cardName, bool cache = false) const;
     QPixmap getCardSuitPixmap(Card::Suit suit) const;
@@ -292,7 +292,7 @@ public:
     static const char *S_SKIN_KEY_DASHBOARD;
     static const char *S_SKIN_KEY_PHOTO;
     static const char *S_SKIN_KEY_COMMON;
-    static const char *S_SKIN_KEY_ROOM; 
+    static const char *S_SKIN_KEY_ROOM;
 
     // button
     static const char *S_SKIN_KEY_BUTTON;

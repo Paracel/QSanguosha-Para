@@ -305,7 +305,7 @@ int Jushou::getJushouDrawNum(ServerPlayer *) const{
 bool Jushou::onPhaseChange(ServerPlayer *target) const{
     if (target->getPhase() == Player::Finish) {
         Room *room = target->getRoom();
-        if (room->askForSkillInvoke(target, objectName())) {          
+        if (room->askForSkillInvoke(target, objectName())) {
             room->broadcastSkillInvoke(objectName());
             target->drawCards(getJushouDrawNum(target), objectName());
             target->turnOver();

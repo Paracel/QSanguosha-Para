@@ -47,7 +47,7 @@ void Button::init() {
     de->setColor(QColor(255, 165, 0));
 
     title_item->setGraphicsEffect(de);
-    
+
     QImage bgimg("image/system/button/button.png");
 
     qreal pad = 10;
@@ -87,7 +87,7 @@ void Button::init() {
     effect->setOffset(this->boundingRect().height() / 7.0);
     effect->setColor(QColor(0, 0, 0, 200));
     this->setGraphicsEffect(effect);
-    
+
     glow = 0;
     timer_id = 0;
 }

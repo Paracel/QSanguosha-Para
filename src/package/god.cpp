@@ -272,7 +272,7 @@ bool GreatYeyanCard::targetsFeasible(const QList<const Player *> &targets, const
         if (allsuits.contains(card->getSuit())) return false;
         allsuits.append(card->getSuit());
     }
-    
+
     //We can only assign 2 damage to one player
     //If we select only one target only once, we assign 3 damage to the target
     if (targets.toSet().size() == 1)
@@ -374,7 +374,7 @@ public:
     }
 
     virtual const Card *viewAs(const QList<const Card *> &cards) const{
-        if (cards.length()  == 0) 
+        if (cards.length()  == 0)
             return new SmallYeyanCard;
         if (cards.length() != 4)
             return NULL;
@@ -611,7 +611,7 @@ WuqianCard::WuqianCard() {
 }
 
 bool WuqianCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
-    return targets.isEmpty() && to_select != Self; 
+    return targets.isEmpty() && to_select != Self;
 }
 
 void WuqianCard::onEffect(const CardEffectStruct &effect) const{
@@ -958,7 +958,7 @@ public:
         log.from = shensimayi;
         log.arg = QString::number(shensimayi->getMark("@bear"));
         room->sendLog(log);
-        
+
         room->setPlayerMark(shensimayi, "baiyin", 1);
         if (room->changeMaxHpForAwakenSkill(shensimayi) && shensimayi->getMark("baiyin") == 1)
             room->acquireSkill(shensimayi, "jilve");

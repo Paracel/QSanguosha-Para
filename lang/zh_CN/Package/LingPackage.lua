@@ -17,6 +17,6 @@ return {
 	[":tannang"] = "锁定技。你与其他角色的距离-X。（X为你已损失的体力值）",
 
 	["neo_zhaoyun"] = "赵云-新",
-	["&neo_zhaoyun"] = "赵云", 
+	["&neo_zhaoyun"] = "赵云",
 	["designer:neo_zhaoyun"] = "官方，凌天翼",
 }

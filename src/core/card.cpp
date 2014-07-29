@@ -531,7 +531,7 @@ const Card *Card::Parse(const QString &str) {
 Card *Card::Clone(const Card *card) {
     Card::Suit suit = card->getSuit();
     int number = card->getNumber();
-    
+
     QObject *card_obj = NULL;
     if (card->isKindOf("LuaBasicCard")) {
         const LuaBasicCard *lcard = qobject_cast<const LuaBasicCard *>(card);
@@ -581,7 +581,7 @@ bool Card::targetFilter(const QList<const Player *> &targets, const Player *to_s
 bool Card::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self,
                         int &maxVotes) const{
     bool canSelect = targetFilter(targets, to_select, Self);
-    maxVotes = canSelect ? 1 : 0; 
+    maxVotes = canSelect ? 1 : 0;
     return canSelect;
 }
 
@@ -630,7 +630,7 @@ void Card::onUse(Room *room, const CardUseStruct &use) const{
         used_cards.append(card_use.card->getSubcards());
     else
         used_cards << card_use.card->getEffectiveId();
- 
+
     if (card_use.card->getTypeId() != TypeSkill) {
         CardMoveReason reason(CardMoveReason::S_REASON_USE, card_use.from->objectName(), QString(), card_use.card->getSkillName(), QString());
         if (card_use.to.size() == 1)

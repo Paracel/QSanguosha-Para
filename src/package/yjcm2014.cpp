@@ -1052,7 +1052,7 @@ public:
     }
 
     virtual void onDamaged(ServerPlayer *player, const DamageStruct &) const{
-        Room *room = player->getRoom();  
+        Room *room = player->getRoom();
         if (player->getMark("shibei") > 0) {
             room->broadcastSkillInvoke(objectName());
             room->sendCompulsoryTriggerLog(player, objectName());

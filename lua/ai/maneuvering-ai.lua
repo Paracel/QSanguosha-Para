@@ -161,7 +161,7 @@ end
 function SmartAI:shouldUseAnaleptic(target, slash)
 	if sgs.turncount <= 1 and self.role == "renegade" and sgs.isLordHealthy() and self:getOverflow() < 2 then return false end
 	if self:hasSilverLionEffect(target)
-		and not ((self.player:hasWeapon("qinggang_sword") and target:hasArmorEffect("silver_lion")) 
+		and not ((self.player:hasWeapon("qinggang_sword") and target:hasArmorEffect("silver_lion"))
 				or self.player:hasSkill("jueqing")) then
 		return false
 	end
@@ -393,7 +393,7 @@ function SmartAI:isGoodChainTarget(who, source, nature, damagecount, card)
 			and not (card and card:isKindOf("TrickCard") and not self:hasTrickEffective(card, player, self.player)) then
 			local getvalue = getChainedPlayerValue(player, 0)
 			if kills == #self.enemies and not killlord and sgs.getDefenseSlash(player, self) < 2 then
-				if card then card:setFlags("AIGlobal_KillOff") end 
+				if card then card:setFlags("AIGlobal_KillOff") end
 				return true
 			end
 			if self:isFriend(player) then

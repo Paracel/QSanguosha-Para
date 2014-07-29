@@ -3011,7 +3011,7 @@ function SmartAI:findLijianTarget(card_name, use)
 
 	if lord and lord:objectName() ~= self.player:objectName() and self:isFriend(lord)
 		and lord:hasSkill("hunzi") and lord:getHp() == 2 and lord:getMark("hunzi") == 0 then
-		local enemycount = self:getEnemyNumBySeat(self.player, lord) 
+		local enemycount = self:getEnemyNumBySeat(self.player, lord)
 		local peaches = self:getAllPeachNum()
 		if peaches >= enemycount then
 			local f_target, e_target

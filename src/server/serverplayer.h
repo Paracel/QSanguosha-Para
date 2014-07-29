@@ -59,7 +59,7 @@ public:
     void skip(Player::Phase phase, bool isCost = false);
     void insertPhase(Player::Phase phase);
     bool isSkipped(Player::Phase phase);
-    
+
     void gainMark(const QString &mark, int n = 1);
     void loseMark(const QString &mark, int n = 1);
     void loseAllMarks(const QString &mark_name);
@@ -118,13 +118,13 @@ public:
 
     //Synchronization helpers
     enum SemaphoreType {
-        SEMA_MUTEX, // used to protect mutex access to member variables        
-        SEMA_COMMAND_INTERACTIVE // used to wait for response from client        
+        SEMA_MUTEX, // used to protect mutex access to member variables
+        SEMA_COMMAND_INTERACTIVE // used to wait for response from client
     };
     inline QSemaphore *getSemaphore(SemaphoreType type) { return semas[type]; }
     inline void acquireLock(SemaphoreType type) { semas[type]->acquire(); }
     inline bool tryAcquireLock(SemaphoreType type, int timeout = 0) {
-        return semas[type]->tryAcquire(1, timeout); 
+        return semas[type]->tryAcquire(1, timeout);
     }
     inline void releaseLock(SemaphoreType type) { semas[type]->release(); }
     inline void drainLock(SemaphoreType type) { while (semas[type]->tryAcquire()) {} }
@@ -147,10 +147,10 @@ public:
     // static function
     static bool CompareByActionOrder(ServerPlayer *a, ServerPlayer *b);
 
-protected:    
+protected:
     //Synchronization helpers
     QSemaphore **semas;
-    static const int S_NUM_SEMAPHORES;    
+    static const int S_NUM_SEMAPHORES;
 
 private:
     ClientSocket *socket;
@@ -167,7 +167,7 @@ private:
     QStringList selected; // 3v3 mode use only
     QDateTime test_time;
     QString m_clientResponseString;
-    Json::Value _m_clientResponse;    
+    Json::Value _m_clientResponse;
 
 private slots:
     void getMessage(const char *message);

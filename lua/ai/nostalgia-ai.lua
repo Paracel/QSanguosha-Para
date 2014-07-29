@@ -652,7 +652,7 @@ sgs.ai_skill_discard.nosfencheng = function(self, discard_num, min_num, optional
 		elseif self.player:getHp() == 1 and isCard("Analeptic", c, self.player) then return {}
 		end
 	end
- 
+
 	if not nosjuece_effect then return to_discard
 	else
 		if self.player:isKongcheng() then return to_discard end
@@ -1966,7 +1966,7 @@ local function findPlayerForModifyKingdom(self, players)
 		for _, player in sgs.qlist(players) do
 			if not player:isLord() then
 				if sgs.evaluatePlayerRole(player) == "loyalist" and not player:hasSkill("huashen") then
-					local sameKingdom =lord and player:getKingdom() == lord:getKingdom() 
+					local sameKingdom =lord and player:getKingdom() == lord:getKingdom()
 					if isGood ~= sameKingdom then
 						return player
 					end

@@ -47,6 +47,12 @@ return {
 	[":jglingfeng"] = "摸牌阶段开始时，你可以放弃摸牌，亮出牌堆顶的两张牌并获得之：若亮出的牌不为同一颜色，你令一名对方角色失去1点体力。",
 	["@jglingfeng"] = "请选择一名对方角色令其失去1点体力",
 
+	["#jg_soul_zhugeliang"] = "季汉英魂",
+	["jg_soul_zhugeliang"] = "天候孔明",
+	["illustrator:jg_soul_zhugeliang"] = "",
+	["jgbiantian"] = "变天",
+	[":jgbiantian"] = "锁定技。准备阶段开始时，你进行判定：若结果为黑色，直到你的回合开始时，己方角色处于“大雾”状态；若结果为红色，指导你的回合开始时，对方角色处于“狂风”状态。",
+
 	["#jg_machine_yunpingqinglong"] = "守城器械",
 	["jg_machine_yunpingqinglong"] = "云屏青龙",
 	["illustrator:jg_machine_yunpingqinglong"] = "",

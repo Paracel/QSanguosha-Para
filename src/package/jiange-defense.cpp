@@ -135,31 +135,6 @@ public:
     }
 };
 
-class JGLianyu: public PhaseChangeSkill {
-public:
-    JGLianyu(): PhaseChangeSkill("jglianyu") {
-    }
-
-    virtual bool onPhaseChange(ServerPlayer *target) const{
-        if (target->getPhase() != Player::Finish)
-            return false;
-
-        Room *room = target->getRoom();
-        if (room->askForSkillInvoke(target, objectName())) {
-            room->broadcastSkillInvoke(objectName());
-
-            QList<ServerPlayer *> enemies;
-            foreach (ServerPlayer *p, room->getAllPlayers()) {
-                if (!isJianGeFriend(p, target))
-                    enemies << p;
-            }
-            foreach (ServerPlayer *p, enemies)
-                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Fire));
-        }
-        return false;
-    }
-};
-
 // Offensive Machines
 
 class JGJiguan: public ProhibitSkill {
@@ -210,6 +185,31 @@ public:
 
             foreach (ServerPlayer *p, to_damage)
                 room->damage(DamageStruct(objectName(), target, p));
+        }
+        return false;
+    }
+};
+
+class JGLianyu: public PhaseChangeSkill {
+public:
+    JGLianyu(): PhaseChangeSkill("jglianyu") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish)
+            return false;
+
+        Room *room = target->getRoom();
+        if (room->askForSkillInvoke(target, objectName())) {
+            room->broadcastSkillInvoke(objectName());
+
+            QList<ServerPlayer *> enemies;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (!isJianGeFriend(p, target))
+                    enemies << p;
+            }
+            foreach (ServerPlayer *p, enemies)
+                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Fire));
         }
         return false;
     }
@@ -286,6 +286,58 @@ public:
     }
 };
 
+class JGBiantian: public TriggerSkill {
+public:
+    JGBiantian(): TriggerSkill("jgbiantian") {
+        events << EventPhaseStart << FinishJudge;
+        frequency = Compulsory;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == EventPhaseStart && TriggerSkill::triggerable(player)
+            && player->getPhase() == Player::Start) {
+            room->broadcastSkillInvoke(objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
+
+            JudgeStruct judge;
+            judge.good = true;
+            judge.play_animation = false;
+            judge.who = player;
+            judge.reason = objectName();
+
+            room->judge(judge);
+
+            if (!player->isAlive()) return false;
+            player->tag["Qixing_user"] = true;
+            Card::Color color = (Card::Color)(judge.pattern.toInt());
+            if (color == Card::Red) {
+                const TriggerSkill *kuangfeng = Sanguosha->getTriggerSkill("kuangfeng");
+                room->getThread()->addTriggerSkill(kuangfeng);
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (!isJianGeFriend(p, player))
+                        p->gainMark("@gale");
+                }
+            } else if (color == Card::Black) {
+                const TriggerSkill *dawu = Sanguosha->getTriggerSkill("dawu");
+                room->getThread()->addTriggerSkill(dawu);
+                foreach (ServerPlayer *p, room->getAllPlayers()) {
+                    if (isJianGeFriend(p, player))
+                        p->gainMark("@fog");
+                }
+            }
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStruct *judge = data.value<JudgeStruct *>();
+            if (judge->reason != objectName()) return false;
+            judge->pattern = QString::number(int(judge->card->getColor()));
+        }
+        return false;
+    }
+};
+
 // Defensive Machines
 
 class JGMojian: public PhaseChangeSkill {
@@ -358,6 +410,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
     jg_soul_liubei->addSkill(new JGJizhen);
     jg_soul_liubei->addSkill(new JGLingfeng);
+
+    Soul *jg_soul_zhugeliang = new Soul(this, "jg_soul_zhugeliang", "shu", 4, true, true);
+    jg_soul_zhugeliang->addSkill(new JGBiantian);
+    jg_soul_zhugeliang->addSkill("bazhen");
+    related_skills.insertMulti("jgbiantian", "#qixing-clear");
 
     Machine *jg_machine_yunpingqinglong = new Machine(this, "jg_machine_yunpingqinglong", "shu", 5, true, true);
     jg_machine_yunpingqinglong->addSkill("jgjiguan");

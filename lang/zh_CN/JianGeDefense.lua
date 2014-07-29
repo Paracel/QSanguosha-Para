@@ -22,9 +22,9 @@ return {
 	["jgxuanlei"] = "玄雷",
 	[":jgxuanlei"] = "锁定技。准备阶段开始时，判定区有牌的对方角色受到1点雷电伤害。",
 
-	["#jg_machine_tuntianqiongqi"] = "攻城器械",
-	["jg_machine_tuntianqiongqi"] = "吞天穷奇",
-	["illustrator:jg_machine_tuntianqiongqi"] = "",
+	["#jg_machine_tuntianchiwen"] = "攻城器械",
+	["jg_machine_tuntianchiwen"] = "吞天螭吻",
+	["illustrator:jg_machine_tuntianchiwen"] = "",
 	["jgjiguan"] = "机关",
 	[":jgjiguan"] = "锁定技。你不能被选择为【乐不思蜀】的目标。",
 	["jgtanshi"] = "贪食",

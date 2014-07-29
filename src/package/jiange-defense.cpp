@@ -321,10 +321,10 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_soul_simayi->addSkill(new JGFanshi);
     jg_soul_simayi->addSkill(new JGXuanlei);
 
-    Machine *jg_machine_tuntianqiongqi = new Machine(this, "jg_machine_tuntianqiongqi", "wei", 5, true, true);
-    jg_machine_tuntianqiongqi->addSkill(new JGJiguan);
-    jg_machine_tuntianqiongqi->addSkill(new JGTanshi);
-    jg_machine_tuntianqiongqi->addSkill(new JGTunshi);
+    Machine *jg_machine_tuntianchiwen = new Machine(this, "jg_machine_tuntianchiwen", "wei", 5, true, true);
+    jg_machine_tuntianchiwen->addSkill(new JGJiguan);
+    jg_machine_tuntianchiwen->addSkill(new JGTanshi);
+    jg_machine_tuntianchiwen->addSkill(new JGTunshi);
 
     Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
     jg_soul_liubei->addSkill(new JGJizhen);

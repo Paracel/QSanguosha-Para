@@ -32,6 +32,12 @@ return {
 	["jgtunshi"] = "吞噬",
 	[":jgtunshi"] = "锁定技。准备阶段开始时，所有手牌多于你的对方角色各受到1点伤害。",
 
+	["#jg_machine_shihuosuanni"] = "攻城器械",
+	["jg_machine_shihuosuanni"] = "食火狻猊",
+	["illustrator:jg_machine_shihuosuanni"] = "",
+	["jglianyu"] = "炼狱",
+	[":jglianyu"] = "结束阶段开始时，你可以对所有对方角色各造成1点火焰伤害。",
+
 	["#jg_soul_liubei"] = "季汉英魂",
 	["jg_soul_liubei"] = "烈帝玄德",
 	["illustrator:jg_soul_liubei"] = "",

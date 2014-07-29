@@ -135,6 +135,31 @@ public:
     }
 };
 
+class JGLianyu: public PhaseChangeSkill {
+public:
+    JGLianyu(): PhaseChangeSkill("jglianyu") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish)
+            return false;
+
+        Room *room = target->getRoom();
+        if (room->askForSkillInvoke(target, objectName())) {
+            room->broadcastSkillInvoke(objectName());
+
+            QList<ServerPlayer *> enemies;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (!isJianGeFriend(p, target))
+                    enemies << p;
+            }
+            foreach (ServerPlayer *p, enemies)
+                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Fire));
+        }
+        return false;
+    }
+};
+
 // Offensive Machines
 
 class JGJiguan: public ProhibitSkill {
@@ -325,6 +350,10 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_tuntianchiwen->addSkill(new JGJiguan);
     jg_machine_tuntianchiwen->addSkill(new JGTanshi);
     jg_machine_tuntianchiwen->addSkill(new JGTunshi);
+
+    Machine *jg_machine_shihuosuanni = new Machine(this, "jg_machine_shihuosuanni", "wei", 5, true, true);
+    jg_machine_shihuosuanni->addSkill("jgjiguan");
+    jg_machine_shihuosuanni->addSkill(new JGLianyu);
 
     Soul *jg_soul_liubei = new Soul(this, "jg_soul_liubei", "shu", 5, true, true);
     jg_soul_liubei->addSkill(new JGJizhen);

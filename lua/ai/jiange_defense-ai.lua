@@ -18,3 +18,5 @@ sgs.ai_skill_invoke.jgkonghun = function(self)
 	end
 	return true
 end
+
+sgs.ai_skill_invoke.jglianyu = sgs.ai_skill_invoke.bosslianyu

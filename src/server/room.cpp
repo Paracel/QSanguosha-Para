@@ -2542,8 +2542,14 @@ void Room::chooseGeneralsOfJianGeDefenseMode() {
         if (player->getGeneral() != NULL) continue;
         Json::Value generalName = player->getClientReply();
         if (!player->m_isClientResponseReady || !generalName.isString()
-            || !_setPlayerGeneral(player, toQString(generalName), true))
-            _setPlayerGeneral(player, _chooseDefaultGeneral(player), true);
+            || !_setPlayerGeneral(player, toQString(generalName), true)) {
+            QString result = _chooseDefaultGeneral(player);
+            if (player->property("jiange_defense_type").toString() != "general" && player->getAI()) { // randomly chosen
+                QStringList selected = player->getSelected();
+                result = selected.at(qrand() % selected.length());
+            }
+            _setPlayerGeneral(player, result, true);
+        }
     }
 
     if (Config.Enable2ndGeneral) {
@@ -2561,8 +2567,9 @@ void Room::chooseGeneralsOfJianGeDefenseMode() {
             if (player->getGeneral2() != NULL) continue;
             Json::Value generalName = player->getClientReply();
             if (!player->m_isClientResponseReady || !generalName.isString()
-                || !_setPlayerGeneral(player, toQString(generalName), false))
+                || !_setPlayerGeneral(player, toQString(generalName), false)) {
                 _setPlayerGeneral(player, _chooseDefaultGeneral(player), false);
+            }
         }
     }
 }

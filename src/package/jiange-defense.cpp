@@ -426,7 +426,7 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_tuntianchiwen->addSkill(new JGTanshi);
     jg_machine_tuntianchiwen->addSkill(new JGTunshi);
 
-    Machine *jg_machine_shihuosuanni = new Machine(this, "jg_machine_shihuosuanni", "wei", 5, true, true);
+    Machine *jg_machine_shihuosuanni = new Machine(this, "jg_machine_shihuosuanni", "wei", 3, true, true);
     jg_machine_shihuosuanni->addSkill("jgjiguan");
     jg_machine_shihuosuanni->addSkill(new JGLianyu);
 
@@ -439,13 +439,13 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_soul_zhugeliang->addSkill("bazhen");
     related_skills.insertMulti("jgbiantian", "#qixing-clear");
 
-    Machine *jg_machine_yunpingqinglong = new Machine(this, "jg_machine_yunpingqinglong", "shu", 5, true, true);
+    Machine *jg_machine_yunpingqinglong = new Machine(this, "jg_machine_yunpingqinglong", "shu", 4, true, true);
     jg_machine_yunpingqinglong->addSkill("jgjiguan");
     jg_machine_yunpingqinglong->addSkill(new JGMojian);
     jg_machine_yunpingqinglong->addSkill(new JGMojianProhibit);
     related_skills.insertMulti("jgmojian", "#jgmojian-prohibit");
 
-    Machine *jg_machine_jileibaihu = new Machine(this, "jg_machine_jileibaihu", "shu", 5, true, true);
+    Machine *jg_machine_jileibaihu = new Machine(this, "jg_machine_jileibaihu", "shu", 4, true, true);
     jg_machine_jileibaihu->addSkill("jgjiguan");
     jg_machine_jileibaihu->addSkill("zhenwei");
     jg_machine_jileibaihu->addSkill(new JGBenlei);

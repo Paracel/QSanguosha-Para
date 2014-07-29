@@ -195,6 +195,7 @@ public:
 class JGJizhen: public PhaseChangeSkill {
 public:
     JGJizhen(): PhaseChangeSkill("jgjizhen") {
+        frequency = Compulsory;
     }
 
     virtual bool onPhaseChange(ServerPlayer *target) const{
@@ -207,8 +208,9 @@ public:
                 to_draw << p;
         }
 
-        if (!to_draw.isEmpty() && room->askForSkillInvoke(target, objectName())) {
+        if (!to_draw.isEmpty()) {
             room->broadcastSkillInvoke(objectName());
+            room->sendCompulsoryTriggerLog(target, objectName());
             room->drawCards(to_draw, 1, objectName());
         }
         return false;

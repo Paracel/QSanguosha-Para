@@ -483,7 +483,7 @@ public:
 
     virtual bool triggerable(const ServerPlayer *target) const{
         QString mode = target->getRoom()->getMode();
-        return !mode.startsWith("06_") && !mode.startsWith("04_");
+        return !mode.startsWith("06_") && !mode.startsWith("04_") && mode != "08_defense";
     }
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{

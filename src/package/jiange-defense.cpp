@@ -383,6 +383,29 @@ public:
     }
 };
 
+class JGBenlei: public PhaseChangeSkill {
+public:
+    JGBenlei(): PhaseChangeSkill("jgbenlei") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Start) return false;
+        Room *room = target->getRoom();
+
+        room->broadcastSkillInvoke(objectName());
+        room->sendCompulsoryTriggerLog(target, objectName());
+
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!isJianGeFriend(p, target) && p->property("jiange_defense_type").toString() == "machine") {
+                room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
+                break;
+            }
+        }
+        return false;
+    }
+};
+
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
@@ -421,6 +444,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_yunpingqinglong->addSkill(new JGMojian);
     jg_machine_yunpingqinglong->addSkill(new JGMojianProhibit);
     related_skills.insertMulti("jgmojian", "#jgmojian-prohibit");
+
+    Machine *jg_machine_jileibaihu = new Machine(this, "jg_machine_jileibaihu", "shu", 5, true, true);
+    jg_machine_jileibaihu->addSkill("jgjiguan");
+    jg_machine_jileibaihu->addSkill("zhenwei");
+    jg_machine_jileibaihu->addSkill(new JGBenlei);
 }
 
 ADD_PACKAGE(JianGeDefense)

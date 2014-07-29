@@ -51,11 +51,17 @@ return {
 	["jg_soul_zhugeliang"] = "天候孔明",
 	["illustrator:jg_soul_zhugeliang"] = "",
 	["jgbiantian"] = "变天",
-	[":jgbiantian"] = "锁定技。准备阶段开始时，你进行判定：若结果为黑色，直到你的回合开始时，己方角色处于“大雾”状态；若结果为红色，指导你的回合开始时，对方角色处于“狂风”状态。",
+	[":jgbiantian"] = "锁定技。准备阶段开始时，你进行判定：若结果为黑色，直到你的回合开始时，所有己方角色处于“大雾”状态；若结果为红色，指导你的回合开始时，所有对方角色处于“狂风”状态。",
 
 	["#jg_machine_yunpingqinglong"] = "守城器械",
 	["jg_machine_yunpingqinglong"] = "云屏青龙",
 	["illustrator:jg_machine_yunpingqinglong"] = "",
 	["jgmojian"] = "魔箭",
 	[":jgmojian"] = "锁定技。出牌阶段开始时，视为你使用一张【万箭齐发】。己方角色不被选择为此【万箭齐发】的目标。",
+
+	["#jg_machine_jileibaihu"] = "守城器械",
+	["jg_machine_jileibaihu"] = "机雷白虎",
+	["illustrator:jg_machine_jileibaihu"] = "",
+	["jgbenlei"] = "奔雷",
+	[":jgbenlei"] = "锁定技。准备阶段开始时，攻城器械受到1点雷电伤害。",
 }

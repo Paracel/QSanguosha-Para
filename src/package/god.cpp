@@ -535,13 +535,7 @@ public:
         CardUseStruct use = data.value<CardUseStruct>();
         if (use.card->isNDTrick()) {
             room->broadcastSkillInvoke(objectName());
-
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(player, objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
 
             int num = player->getMark("@wrath");
             if (num >= 1 && room->askForChoice(player, objectName(), "discard+losehp") == "discard") {
@@ -729,13 +723,7 @@ public:
 
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *shenzhuge, QVariant &data) const{
         if (triggerEvent == DrawInitialCards) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = shenzhuge;
-            log.arg = "qixing";
-            room->sendLog(log);
-            room->notifySkillInvoked(shenzhuge, "qixing");
-
+            room->sendCompulsoryTriggerLog(shenzhuge, "qixing");
             data = data.toInt() + 7;
         } else if (triggerEvent == AfterDrawInitialCards) {
             room->broadcastSkillInvoke("qixing");

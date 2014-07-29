@@ -517,11 +517,8 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
         ServerPlayer *opponent = room->getOtherPlayers(player).first();
         if (opponent->getPhase() != Player::NotActive) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
+            room->broadcastSkillInvoke(objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
 
             LogMessage log2;
             log2.type = "#TurnBroken";
@@ -856,25 +853,15 @@ public:
                 n += (2 - origin);
             }
 
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = "cuorui";
-            room->sendLog(log);
             room->broadcastSkillInvoke("cuorui");
-            room->notifySkillInvoked(player, "cuorui");
+            room->sendCompulsoryTriggerLog(player, "cuorui");
 
             data = data.toInt() + n;
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::Judge && player->getMark("CuoruiSkipJudge") == 0) {
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = "cuorui";
-                room->sendLog(log);
                 room->broadcastSkillInvoke("cuorui");
-                room->notifySkillInvoked(player, "cuorui");
+                room->sendCompulsoryTriggerLog(player, "cuorui");
 
                 player->skip(Player::Judge);
                 player->addMark("CuoruiSkipJudge");

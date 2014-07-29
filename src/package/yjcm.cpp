@@ -1062,13 +1062,8 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *zhangchunhua, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.from == zhangchunhua) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = zhangchunhua;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(zhangchunhua, objectName());
             room->broadcastSkillInvoke(objectName());
+            room->sendCompulsoryTriggerLog(zhangchunhua, objectName());
             room->loseHp(damage.to, damage.damage);
 
             return true;

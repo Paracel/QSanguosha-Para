@@ -426,13 +426,7 @@ public:
         player->tag["InvokeKuanggu"] = false;
         if (invoke && player->isWounded()) {
             room->broadcastSkillInvoke(objectName());
-
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(player, objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
 
             room->recover(player, RecoverStruct(player, NULL, damage.damage));
         }
@@ -472,12 +466,7 @@ public:
 
         if (zhoutai->getHp() > 0) return false;
         room->broadcastSkillInvoke(objectName());
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = zhoutai;
-        log.arg = objectName();
-        room->sendLog(log);
-        room->notifySkillInvoked(zhoutai, objectName());
+        room->sendCompulsoryTriggerLog(zhoutai, objectName());
 
         int id = room->drawCard();
         int num = Sanguosha->getCard(id)->getNumber();

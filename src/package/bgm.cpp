@@ -710,13 +710,7 @@ public:
             if (move.from == player && player->isAlive() && player->hasSkill(objectName(), true)
                 && player->getMark("@wu") > 0 && player->getHandcardNum() <= 2) {
                 room->broadcastSkillInvoke(objectName());
-
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = "mouduan";
-                room->sendLog(log);
-                room->notifySkillInvoked(player, objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 player->loseMark("@wu");
                 player->gainMark("@wen");
@@ -1311,12 +1305,7 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *xiahou, QVariant &data) const{
-        LogMessage log;
-        log.from = xiahou;
-        log.arg = objectName();
-        log.type = "#TriggerSkill";
-        room->sendLog(log);
-        room->notifySkillInvoked(xiahou, objectName());
+        room->sendCompulsoryTriggerLog(xiahou, objectName());
 
         ServerPlayer *player = data.value<ServerPlayer *>();
         QList<ServerPlayer *> targets;
@@ -2013,12 +2002,7 @@ public:
     virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *gongsunzan, QVariant &data) const{
         if (triggerEvent == EventPhaseStart) {
             if (gongsunzan->getPhase() == Player::Start && gongsunzan->getPile("retinue").length() > 0) {
-                LogMessage log;
-                log.from = gongsunzan;
-                log.arg = objectName();
-                log.type = "#TriggerSkill";
-                room->sendLog(log);
-                room->notifySkillInvoked(gongsunzan, objectName());
+                room->sendCompulsoryTriggerLog(gongsunzan, objectName());
 
                 int n = gongsunzan->getPile("retinue").length();
                 room->setPlayerMark(gongsunzan, "tuqi_dist", n);

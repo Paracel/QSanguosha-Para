@@ -100,13 +100,8 @@ public:
         if (target->getPhase() != Player::Finish) return false;
         Room *room = target->getRoom();
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = target;
-        log.arg = objectName();
-        room->sendLog(log);
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(target, objectName());
+        room->sendCompulsoryTriggerLog(target, objectName());
 
         room->loseHp(target, 1);
         return false;
@@ -130,13 +125,8 @@ public:
         }
 
         if (!enemies.isEmpty()) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = target;
-            log.arg = objectName();
-            room->sendLog(log);
             room->broadcastSkillInvoke(objectName());
-            room->notifySkillInvoked(target, objectName());
+            room->sendCompulsoryTriggerLog(target, objectName());
 
             foreach (ServerPlayer *p, enemies)
                 room->damage(DamageStruct(objectName(), target, p, 1, DamageStruct::Thunder));
@@ -166,14 +156,8 @@ public:
     virtual int getDrawNum(ServerPlayer *player, int n) const{
         Room *room = player->getRoom();
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = player;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         return n - 1;
     }
@@ -196,14 +180,8 @@ public:
         }
 
         if (!to_damage.isEmpty()) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = target;
-            log.arg = objectName();
-            room->sendLog(log);
-
             room->broadcastSkillInvoke(objectName());
-            room->notifySkillInvoked(target, objectName());
+            room->sendCompulsoryTriggerLog(target, objectName());
 
             foreach (ServerPlayer *p, to_damage)
                 room->damage(DamageStruct(objectName(), target, p));
@@ -309,14 +287,8 @@ public:
             return false;
         }
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = target;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(target, objectName());
+        room->sendCompulsoryTriggerLog(target, objectName());
         room->useCard(CardUseStruct(aa, target, QList<ServerPlayer *>()));
         return false;
     }

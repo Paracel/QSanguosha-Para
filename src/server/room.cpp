@@ -5220,6 +5220,16 @@ void Room::sendLog(const LogMessage &log, ServerPlayer *player) {
     doNotify(player, QSanProtocol::S_COMMAND_LOG_SKILL, log.toJsonValue());
 }
 
+void Room::sendCompulsoryTriggerLog(ServerPlayer *player, const QString &skill_name, bool notify_skill) {
+    LogMessage log;
+    log.type = "#TriggerSkill";
+    log.arg = skill_name;
+    log.from = player;
+    sendLog(log);
+    if (notify_skill)
+        notifySkillInvoked(player, skill_name);
+}
+
 void Room::showCard(ServerPlayer *player, int card_id, ServerPlayer *only_viewer) {
     if (getCardOwner(card_id) != player) return;
 

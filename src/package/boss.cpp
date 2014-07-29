@@ -55,14 +55,8 @@ public:
             if (p->getEquips().isEmpty()) continue;
             if (!sendLog) {
                 sendLog = true;
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = objectName();
-                room->sendLog(log);
-
                 room->broadcastSkillInvoke(objectName());
-                room->notifySkillInvoked(player, objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
             }
             p->throwAllEquips();
         }
@@ -155,14 +149,8 @@ public:
         DeathStruct death = data.value<DeathStruct>();
         if (player != death.who) return false;
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = player;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         foreach (ServerPlayer *p, room->getOtherPlayers(player))
             room->damage(DamageStruct(objectName(), NULL, p, 1, DamageStruct::Fire));
@@ -184,14 +172,8 @@ public:
         if (target->getPhase() != Player::Finish) return false;
         Room *room = target->getRoom();
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = target;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(target, objectName());
+        room->sendCompulsoryTriggerLog(target, objectName());
 
         target->drawCards(2, objectName());
         return false;
@@ -213,14 +195,8 @@ public:
         if (triggerEvent == SlashEffected) {
             SlashEffectStruct effect = data.value<SlashEffectStruct>();
             if (effect.nature == DamageStruct::Normal) {
-                LogMessage logx;
-                logx.type = "#TriggerSkill";
-                logx.from = player;
-                logx.arg = objectName();
-                room->sendLog(logx);
-
                 room->broadcastSkillInvoke(objectName());
-                room->notifySkillInvoked(player, objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 room->setEmotion(player, "armor/vine");
                 LogMessage log;
@@ -236,14 +212,8 @@ public:
         } else if (triggerEvent == CardEffected) {
             CardEffectStruct effect = data.value<CardEffectStruct>();
             if (effect.card->isKindOf("AOE")) {
-                LogMessage logx;
-                logx.type = "#TriggerSkill";
-                logx.from = player;
-                logx.arg = objectName();
-                room->sendLog(logx);
-
                 room->broadcastSkillInvoke(objectName());
-                room->notifySkillInvoked(player, objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 room->setEmotion(player, "armor/vine");
                 LogMessage log;
@@ -259,14 +229,8 @@ public:
         } else if (triggerEvent == DamageInflicted) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.nature == DamageStruct::Fire) {
-                LogMessage logx;
-                logx.type = "#TriggerSkill";
-                logx.from = player;
-                logx.arg = objectName();
-                room->sendLog(logx);
-
                 room->broadcastSkillInvoke(objectName());
-                room->notifySkillInvoked(player, objectName());
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 room->setEmotion(player, "armor/vineburn");
                 LogMessage log;
@@ -319,14 +283,8 @@ public:
         if (player->getPhase() != Player::Start || player->getJudgingArea().isEmpty())
             return false;
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = player;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         QList<const Card *> dtricks = player->getJudgingArea();
         int index = qrand() % dtricks.length();
@@ -363,14 +321,8 @@ public:
     virtual int getDrawNum(ServerPlayer *player, int n) const{
         Room *room = player->getRoom();
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = player;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         return n + 2;
     }
@@ -513,14 +465,8 @@ public:
         if (target->getPhase() != Player::Start) return false;
         Room *room = target->getRoom();
 
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = target;
-        log.arg = objectName();
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(target, objectName());
+        room->sendCompulsoryTriggerLog(target, objectName());
 
         target->drawCards(2, objectName());
         return false;

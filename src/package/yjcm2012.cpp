@@ -365,12 +365,7 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *liaohua, QVariant &) const{
         if (liaohua->getPhase() == Player::RoundStart) {
             room->broadcastSkillInvoke(objectName());
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = liaohua;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(liaohua, objectName());
+            room->sendCompulsoryTriggerLog(liaohua, objectName());
 
             liaohua->setPhase(Player::Play);
             room->broadcastProperty(liaohua, "phase");
@@ -479,13 +474,7 @@ public:
             else if (damage.card->hasFlag("drank"))
                 index = 2;
             room->broadcastSkillInvoke(objectName(), index);
-
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(player, objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
 
             room->loseMaxHp(player);
         }
@@ -790,13 +779,8 @@ public:
             }
             if (!can_invoke) return false;
 
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
-
             room->broadcastSkillInvoke("lihuo", 2);
+            room->sendCompulsoryTriggerLog(player, objectName());
             room->loseHp(player, 1);
         }
         return false;

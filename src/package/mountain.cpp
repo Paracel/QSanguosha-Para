@@ -773,13 +773,7 @@ public:
             CardUseStruct use = data.value<CardUseStruct>();
             if (use.card->isKindOf("Slash")) {
                 room->broadcastSkillInvoke(objectName());
-                room->notifySkillInvoked(liushan, objectName());
-
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = liushan;
-                log.arg = objectName();
-                room->sendLog(log);
+                room->sendCompulsoryTriggerLog(liushan, objectName());
 
                 QVariant dataforai = QVariant::fromValue(liushan);
                 if (!room->askForCard(use.from, ".Basic", "@xiangle-discard", dataforai)) {

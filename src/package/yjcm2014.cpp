@@ -1054,13 +1054,8 @@ public:
     virtual void onDamaged(ServerPlayer *player, const DamageStruct &) const{
         Room *room = player->getRoom();  
         if (player->getMark("shibei") > 0) {
-            LogMessage log;
-            log.type = "#TriggerSkill";
-            log.from = player;
-            log.arg = objectName();
-            room->sendLog(log);
-            room->notifySkillInvoked(player, objectName());
             room->broadcastSkillInvoke(objectName());
+            room->sendCompulsoryTriggerLog(player, objectName());
 
             if (player->getMark("shibei") == 1)
                 room->recover(player, RecoverStruct(player));

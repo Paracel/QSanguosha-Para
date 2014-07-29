@@ -180,14 +180,8 @@ public:
             if (use.card->isKindOf("SavageAssault")) {
                 ServerPlayer *menghuo = room->findPlayerBySkillName(objectName());
                 if (menghuo && menghuo != use.from) {
-                    LogMessage log;
-                    log.type = "#TriggerSkill";
-                    log.from = menghuo;
-                    log.arg = objectName();
-                    room->sendLog(log);
-
-                    room->notifySkillInvoked(player, objectName());
                     room->broadcastSkillInvoke(objectName());
+                    room->sendCompulsoryTriggerLog(player, objectName());
 
                     use.card->setFlags("HuoshouDamage_" + menghuo->objectName());
                 }
@@ -316,13 +310,8 @@ public:
                     return false;
             }
             if (player != move.from) {
-                room->notifySkillInvoked(player, objectName());
                 room->broadcastSkillInvoke(objectName());
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = objectName();
-                room->sendLog(log);
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 player->obtainCard(card);
                 move.removeCardIds(move.card_ids);
@@ -735,14 +724,8 @@ public:
                 }
                 use.from->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
                 if (play_effect) {
-                    LogMessage log;
-                    log.from = use.from;
-                    log.arg = objectName();
-                    log.type = "#TriggerSkill";
-                    room->sendLog(log);
-                    room->notifySkillInvoked(use.from, objectName());
-
                     room->broadcastSkillInvoke(objectName(), 1);
+                    room->sendCompulsoryTriggerLog(use.from, objectName());
                 }
             } else if (triggerEvent == TargetConfirmed && use.from->isFemale()) {
                 foreach (ServerPlayer *p, use.to) {
@@ -754,14 +737,8 @@ public:
                 }
                 use.from->tag["Jink_" + use.card->toString()] = QVariant::fromValue(jink_list);
 
-                LogMessage log;
-                log.from = player;
-                log.arg = objectName();
-                log.type = "#TriggerSkill";
-                room->sendLog(log);
-                room->notifySkillInvoked(player, objectName());
-
                 room->broadcastSkillInvoke(objectName(), 2);
+                room->sendCompulsoryTriggerLog(player, objectName());
             }
         }
 
@@ -790,12 +767,7 @@ public:
         }
 
         if (trigger_this) {
-            LogMessage log;
-            log.from = dongzhuo;
-            log.arg = objectName();
-            log.type = "#TriggerSkill";
-            room->sendLog(log);
-            room->notifySkillInvoked(dongzhuo, objectName());
+            room->sendCompulsoryTriggerLog(dongzhuo, objectName());
 
             QString result = room->askForChoice(dongzhuo, "benghuai", "hp+maxhp");
             int index = (result == "hp") ? 1 : 2;

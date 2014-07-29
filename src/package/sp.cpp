@@ -985,13 +985,9 @@ public:
 
     virtual int getDrawNum(ServerPlayer *player, int n) const{
         Room *room = player->getRoom();
+
         room->broadcastSkillInvoke("shenwei");
-        room->notifySkillInvoked(player, "shenwei");
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.from = player;
-        log.arg = "shenwei";
-        room->sendLog(log);
+        room->sendCompulsoryTriggerLog(player, "shenwei");
 
         return n + 2;
     }
@@ -1730,12 +1726,7 @@ public:
         } else if (triggerEvent == Damaged && !player->getPile("yinbing").isEmpty()) {
             DamageStruct damage = data.value<DamageStruct>();
             if (damage.card && (damage.card->isKindOf("Slash") || damage.card->isKindOf("Duel"))) {
-                room->notifySkillInvoked(player, objectName());
-                LogMessage log;
-                log.type = "#TriggerSkill";
-                log.from = player;
-                log.arg = objectName();
-                room->sendLog(log);
+                room->sendCompulsoryTriggerLog(player, objectName());
 
                 QList<int> ids = player->getPile("yinbing");
                 room->fillAG(ids, player);
@@ -1795,14 +1786,8 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.arg = objectName();
-        log.from = player;
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         LogMessage log2;
         log2.type = "#GainMaxHp";
@@ -1874,14 +1859,8 @@ public:
     }
 
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &) const{
-        LogMessage log;
-        log.type = "#TriggerSkill";
-        log.arg = objectName();
-        log.from = player;
-        room->sendLog(log);
-
         room->broadcastSkillInvoke(objectName());
-        room->notifySkillInvoked(player, objectName());
+        room->sendCompulsoryTriggerLog(player, objectName());
 
         player->drawCards(1, objectName());
         return false;

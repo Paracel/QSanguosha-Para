@@ -38,3 +38,23 @@ sgs.ai_skill_invoke.jgdixian = function(self)
 	end
 	return value > 0
 end
+
+sgs.ai_skill_playerchosen.jgchuanyun = sgs.ai_skill_playerchosen.bossxiaoshou
+
+sgs.ai_skill_playerchosen.jgleili = function(self, targets)
+	local ts = sgs.QList2Table(targets)
+	self:sort(ts)
+	for _, enemy in ipairs(ts) do
+		if self:canAttack(enemy, self.player, sgs.DamageStruct_Thunder) then return enemy end
+	end
+end
+
+sgs.ai_skill_playerchosen.jgfengxing = function(self, targets)
+	local ts = sgs.QList2Table(targets)
+	self:sort(ts)
+	for _, enemy in ipairs(ts) do
+		if not self:slashProhibit(nil, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
+			return enemy
+		end
+	end
+end

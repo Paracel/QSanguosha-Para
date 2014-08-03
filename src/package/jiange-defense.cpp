@@ -135,6 +135,82 @@ public:
     }
 };
 
+class JGChuanyun: public PhaseChangeSkill {
+public:
+    JGChuanyun(): PhaseChangeSkill("jgchuanyun") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> players;
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (p->getHp() > target->getHp())
+                players << p;
+        }
+        if (players.isEmpty()) return false;
+        ServerPlayer *player = room->askForPlayerChosen(target, players, objectName(), "jgchuanyun-invoke", true, true);
+        if (player) {
+            room->broadcastSkillInvoke(objectName());
+            room->damage(DamageStruct(objectName(), target, player, 1));
+        }
+        return false;
+    }
+};
+
+class JGLeili: public TriggerSkill {
+public:
+    JGLeili(): TriggerSkill("jgleili") {
+        events << Damage;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.card && damage.card->isKindOf("Slash")) {
+            QList<ServerPlayer *> enemies;
+            foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                if (!isJianGeFriend(p, player) && p != damage.to)
+                    enemies << p;
+            }
+            ServerPlayer *target = room->askForPlayerChosen(player, enemies, objectName(), "jgleili-invoke", true, true);
+            if (target) {
+                room->broadcastSkillInvoke(objectName());
+                room->damage(DamageStruct(objectName(), player, target, 1, DamageStruct::Thunder));
+            }
+        }
+        return false;
+    }
+};
+
+class JGFengxing: public PhaseChangeSkill {
+public:
+    JGFengxing(): PhaseChangeSkill("jgfengxing") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Start) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (!isJianGeFriend(p, player) && target->canSlash(p, false))
+                enemies << p;
+        }
+        if (enemies.isEmpty()) return false;
+
+        ServerPlayer *player = room->askForPlayerChosen(target, enemies, objectName(), "jgfengxing-invoke", true);
+        if (player) {
+            room->broadcastSkillInvoke(objectName());
+
+            Slash *slash = new Slash(Card::NoSuit, 0);
+            slash->setSkillName(objectName());
+            room->useCard(CardUseStruct(slash, target, player));
+        }
+        return false;
+    }
+};
+
 // Offensive Machines
 
 class JGJiguan: public ProhibitSkill {
@@ -469,6 +545,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_soul_simayi->addSkill(new JGKonghun);
     jg_soul_simayi->addSkill(new JGFanshi);
     jg_soul_simayi->addSkill(new JGXuanlei);
+
+    Soul *jg_soul_xiahouyuan = new Soul(this, "jg_soul_xiahouyuan", 4, true, true);
+    jg_soul_xiahouyuan->addSkill(new JGChuanyun);
+    jg_soul_xiahouyuan->addSkill(new JGLeili);
+    jg_soul_xiahouyuan->addSkill(new JGFengxing);
 
     Machine *jg_machine_tuntianchiwen = new Machine(this, "jg_machine_tuntianchiwen", "wei", 5, true, true);
     jg_machine_tuntianchiwen->addSkill(new JGJiguan);

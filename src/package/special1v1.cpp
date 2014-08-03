@@ -849,7 +849,7 @@ public:
                 n = player->tag["1v1Arrange"].toStringList().length();
                 if (Config.value("1v1/Rule", "2013").toString() != "2013")
                     n += 3;
-                int origin = (Config.value("1v1/Rule", "2013").toString() != "Classical") ? 4 : player->getMaxHp();
+                int origin = (Config.value("1v1/Rule", "2013").toString() == "Classical") ? 4 : player->getMaxHp();
                 n += (2 - origin);
             }
 

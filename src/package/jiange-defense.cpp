@@ -194,7 +194,7 @@ public:
 
         QList<ServerPlayer *> enemies;
         foreach (ServerPlayer *p, room->getAlivePlayers()) {
-            if (!isJianGeFriend(p, player) && target->canSlash(p, false))
+            if (!isJianGeFriend(p, target) && target->canSlash(p, false))
                 enemies << p;
         }
         if (enemies.isEmpty()) return false;
@@ -208,6 +208,59 @@ public:
             room->useCard(CardUseStruct(slash, target, player));
         }
         return false;
+    }
+};
+
+class JGHuodi: public PhaseChangeSkill {
+public:
+    JGHuodi(): PhaseChangeSkill("jghuodi") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        bool turnedFriend = false;
+        foreach (ServerPlayer *p, room->getAlivePlayers()) {
+            if (isJianGeFriend(p, target)) {
+                if (!p->faceUp() && !turnedFriend) turnedFriend = true;
+            } else {
+                enemies << p;
+            }
+        }
+        if (turnedFriend) {
+            ServerPlayer *player = room->askForPlayerChosen(target, enemies, objectName(), "jghuodi-invoke", true);
+            if (player) {
+                room->broadcastSkillInvoke(objectName());
+                player->turnOver();
+            }
+        }
+        return false;
+    }
+};
+
+class JGJueji: public DrawCardsSkill {
+public:
+    JGJueji(): DrawCardsSkill("jgjueji") {
+        frequency = Frequent;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual int getDrawNum(ServerPlayer *player, int n) const{
+        Room *room = player->getRoom();
+
+        if (!player->isWounded()) return n;
+        int reduce = 0;
+        foreach (ServerPlayer *p, room->getOtherPlayers(player)) {
+            if (!isJianGeFriend(p, player) && TriggerSkill::triggerable(p)
+                && room->askForSkillInvoke(p, objectName()))
+                reduce++;
+        }
+        return n - reduce;
     }
 };
 
@@ -546,10 +599,14 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_soul_simayi->addSkill(new JGFanshi);
     jg_soul_simayi->addSkill(new JGXuanlei);
 
-    Soul *jg_soul_xiahouyuan = new Soul(this, "jg_soul_xiahouyuan", 4, true, true);
+    Soul *jg_soul_xiahouyuan = new Soul(this, "jg_soul_xiahouyuan", "wei", 4, true, true);
     jg_soul_xiahouyuan->addSkill(new JGChuanyun);
     jg_soul_xiahouyuan->addSkill(new JGLeili);
     jg_soul_xiahouyuan->addSkill(new JGFengxing);
+
+    Soul *jg_soul_zhanghe = new Soul(this, "jg_soul_zhanghe", "wei", 4, true, true);
+    jg_soul_zhanghe->addSkill(new JGHuodi);
+    jg_soul_zhanghe->addSkill(new JGJueji);
 
     Machine *jg_machine_tuntianchiwen = new Machine(this, "jg_machine_tuntianchiwen", "wei", 5, true, true);
     jg_machine_tuntianchiwen->addSkill(new JGJiguan);

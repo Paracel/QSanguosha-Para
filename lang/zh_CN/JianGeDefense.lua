@@ -35,6 +35,15 @@ return {
 	[":jgfengxing"] = "准备阶段开始时，你可以视为对一名对方角色使用一张无距离限制的【杀】。",
 	["jgfengxing-invoke"] = "你可以发动“风行”<br/> <b>操作提示</b>: 选择【杀】的目标角色→点击确定<br/>",
 
+	["#jg_soul_zhanghe"] = "曹魏英魂",
+	["jg_soul_zhanghe"] = "巧魁儁乂",
+	["illustrator:jg_soul_zhanghe"] = "",
+	["jghuodi"] = "惑敌",
+	[":jghuodi"] = "结束阶段开始时，若有武将牌背面朝上的己方角色，你可以令一名对方角色将武将牌翻面。",
+	["jghuodi-invoke"] = "你可以发动“惑敌”<br/> <b>操作提示</b>: 选择一名对方角色→点击确定<br/>",
+	["jgjueji"] = "绝汲",
+	[":jgjueji"] = "对方角色的摸牌阶段，若其已受伤，你可以令其少摸一张牌。",
+
 	["#jg_machine_tuntianchiwen"] = "攻城器械",
 	["jg_machine_tuntianchiwen"] = "吞天螭吻",
 	["illustrator:jg_machine_tuntianchiwen"] = "",

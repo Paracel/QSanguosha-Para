@@ -58,3 +58,5 @@ sgs.ai_skill_playerchosen.jgfengxing = function(self, targets)
 		end
 	end
 end
+
+sgs.ai_skill_playerchosen.jghuodi = sgs.ai_skill_playerchosen.bossdidong

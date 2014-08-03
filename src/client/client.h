@@ -296,7 +296,7 @@ signals:
     void skill_invoked(const QString &who, const QString &skill_name);
     void skill_acquired(const ClientPlayer *player, const QString &skill_name);
     void animated(int name, const QStringList &args);
-    void text_spoken(const QString &text);
+    void player_speak(const QString &who, const QString &text);
     void line_spoken(const QString &line);
     void card_used();
 

@@ -16,6 +16,7 @@
     "chooseGeneralBoxNoIconThreshold": 21, 
     "chooseGeneralBoxSparseIconSize": [171, 240],
     "chooseGeneralBoxDenseIconSize": [130, 130],
+    "bubbleChatBoxShowAreaSize": [138, 64],
     "tinyAvatarSize": [40, 40],
     // When hp exceeds 5, we use text (e.g. 5/8) instead of drawing more than 5 magatamas. The color
     // and font are specified below.

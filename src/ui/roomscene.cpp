@@ -18,6 +18,7 @@
 #include "record-analysis.h"
 #include "mountain.h"
 #include "jsonutils.h"
+#include "bubblechatbox.h"
 
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
@@ -237,7 +238,9 @@ RoomScene::RoomScene(QMainWindow *main_window)
     chat_box_widget->setObjectName("chat_box_widget");
     chat_box->setReadOnly(true);
     chat_box->setTextColor(Config.TextEditColor);
-    connect(ClientInstance, SIGNAL(line_spoken(QString)), this, SLOT(appendChatBox(QString)));
+    connect(ClientInstance, SIGNAL(line_spoken(QString)),chat_box, SLOT(append(QString)));
+    connect(ClientInstance, SIGNAL(player_speak(const QString &, const QString &)),
+            this, SLOT(showBubbleChatBox(const QString &, const QString &)));
 
     QScrollBar *bar = chat_box->verticalScrollBar();
     QFile file("qss/scroll.qss");
@@ -1049,6 +1052,13 @@ void RoomScene::arrangeSeats(const QList<const ClientPlayer *> &seats) {
     }
     if (all_robot)
         setChatBoxVisible(false);
+
+    //update the positions of bubbles after setting seats
+    QList<QString> names = name2photo.keys();
+    foreach (const QString &who, names) {
+        if (bubbleChatBoxes.contains(who))
+            bubbleChatBoxes[who]->setArea(getBubbleChatBoxShowArea(who));
+    }
 }
 
 // @todo: The following 3 fuctions are for drag & use feature. Currently they are very buggy and
@@ -3489,7 +3499,7 @@ void RoomScene::speak() {
             }
             QString line = tr("<font color='%1'>[%2] said: %3 </font>")
                            .arg(Config.TextEditColor.name()).arg(title).arg(text);
-            appendChatBox(QString("<p style=\"margin:3px 2px;\">%1</p>").arg(line));
+            chat_box->append(QString("<p style=\"margin:3px 2px;\">%1</p>").arg(line));
         }
     }
     chat_edit->clear();
@@ -4404,15 +4414,31 @@ void RoomScene::updateRolesBox() {
 }
 
 void RoomScene::appendChatEdit(QString txt) {
-    chat_edit->setText(chat_edit->text() +  " " + txt);
+    chat_edit->setText(chat_edit->text() + txt);
     chat_edit->setFocus();
 }
 
-void RoomScene::appendChatBox(QString txt) {
-    QString prefix = "<img src='image/system/chatface/";
-    QString suffix = ".png'></img>";
-    txt = txt.replace("<#", prefix).replace("#>", suffix);
-    chat_box->append(txt);
+void RoomScene::showBubbleChatBox(const QString &who, const QString &line) {
+    if (Config.BubbleChatBoxKeepTime == 0) return;
+    if (!bubbleChatBoxes.keys().contains(who)) {
+        BubbleChatBox *bubbleChatBox = new BubbleChatBox(getBubbleChatBoxShowArea(who));
+        addItem(bubbleChatBox);
+        bubbleChatBox->setZValue(INT_MAX);
+        bubbleChatBoxes.insert(who, bubbleChatBox);
+    }
+    bubbleChatBoxes[who]->setText(line);
+}
+
+QRect RoomScene::getBubbleChatBoxShowArea(const QString &who) const{
+    Photo *photo = name2photo.value(who, NULL);
+    if (photo) {
+        QRectF rect = photo->sceneBoundingRect();
+        QPoint center = rect.center().toPoint();
+        return QRect(QPoint(center.x(), center.y() - 90), G_COMMON_LAYOUT.m_bubbleChatBoxShowAreaSize);
+    } else {
+        QRectF rect = dashboard->getAvatarAreaSceneBoundingRect();
+        return QRect(QPoint(rect.left() + 45, rect.top() - 20), G_COMMON_LAYOUT.m_bubbleChatBoxShowAreaSize);
+    }
 }
 
 void RoomScene::setChatBoxVisible(bool show) {

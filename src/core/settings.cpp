@@ -134,6 +134,8 @@ void Settings::init() {
 
     BackgroundImage = value("BackgroundImage", "image/system/backdrop/default.jpg").toString();
 
+    BubbleChatBoxKeepTime = value("BubbleChatboxKeepTime", 2000).toInt();
+
     QStringList roles_ban, kof_ban, hulao_ban, xmode_ban, bossmode_ban, basara_ban, hegemony_ban, pairs_ban;
 
     roles_ban = GetConfigFromLuaState(lua, "roles_ban").toStringList();

@@ -19,6 +19,7 @@ class CardContainer;
 class GuanxingBox;
 class QSanButton;
 class QGroupBox;
+class BubbleChatBox;
 struct RoomLayout;
 
 #include <QGraphicsScene>
@@ -257,6 +258,8 @@ private:
 
     QMenu *m_add_robot_menu;
 
+    QMap<QString, BubbleChatBox *> bubbleChatBoxes;
+
     // for 3v3 & 1v1 mode
     QSanSelectableItem *selector_box;
     QList<CardItem *> general_items, up_generals, down_generals;
@@ -303,6 +306,7 @@ private:
 
     void showPindianBox(const QString &from_name, int from_id, const QString &to_name, int to_id, const QString &reason);
     void setChatBoxVisible(bool show);
+    QRect getBubbleChatBoxShowArea(const QString &who) const;
 
     // animation related functions
     typedef void (RoomScene::*AnimationFunc)(const QString &, const QStringList &);
@@ -365,7 +369,7 @@ private slots:
     void onStandoff();
 
     void appendChatEdit(QString txt);
-    void appendChatBox(QString txt);
+    void showBubbleChatBox(const QString &who, const QString &words);
 
     //animations
     void onEnabledChange();

@@ -246,6 +246,8 @@ public:
         int m_chooseGeneralBoxSwitchIconEachRowForTooManyGenerals;
         int m_chooseGeneralBoxNoIconThreshold;
 
+        QSize m_bubbleChatBoxShowAreaSize;
+
         // avatar size
         QSize m_tinyAvatarSize;
     };

@@ -736,6 +736,12 @@
     <ClCompile Include="Release\moc_button.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="Debug\moc_bubblechatbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_bubblechatbox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
     <ClCompile Include="Debug\moc_cardcontainer.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -912,6 +918,15 @@
     </ClCompile>
     <ClCompile Include="Debug\moc_jiange-defense.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\ui\bubblechatbox.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug\moc_bubblechatbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Release\moc_bubblechatbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1184,6 +1199,9 @@
     </CustomBuild>
     <CustomBuild Include="..\..\src\package\jiange-defense.h">
       <Filter>package</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\src\ui\bubblechatbox.h">
+      <Filter>ui</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

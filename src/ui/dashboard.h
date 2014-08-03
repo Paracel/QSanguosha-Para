@@ -100,6 +100,10 @@ public:
             _m_skillDock->update();
     }
 
+    inline QRectF getAvatarAreaSceneBoundingRect() const{
+        return _m_rightFrame->sceneBoundingRect();
+    }
+
 public slots:
     void sortCards();
     void beginSorting();

@@ -735,6 +735,8 @@ bool QSanRoomSkin::_loadLayoutConfig(const Json::Value &layoutConfig) {
     tryParse(config["chooseGeneralBoxSparseIconSize"],
              _m_commonLayout.m_chooseGeneralBoxSparseIconSize);
     tryParse(config["tinyAvatarSize"], _m_commonLayout.m_tinyAvatarSize);
+    tryParse(config["bubbleChatBoxShowAreaSize"],
+             _m_commonLayout.m_bubbleChatBoxShowAreaSize);
     _m_commonLayout.m_cardFootnoteFont.tryParse(config["cardFootnoteFont"]);
     for (int i = 0; i < 6; i++)
         _m_commonLayout.m_hpFont[i].tryParse(config["magatamaFont"][i]);

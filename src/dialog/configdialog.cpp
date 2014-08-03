@@ -42,6 +42,8 @@ ConfigDialog::ConfigDialog(QWidget *parent)
     ui->autoTargetCheckBox->setChecked(Config.EnableAutoTarget);
     ui->intellectualSelectionCheckBox->setChecked(Config.EnableIntellectualSelection);
     ui->doubleClickCheckBox->setChecked(Config.EnableDoubleClick);
+    ui->bubbleChatBoxKeepSpinBox->setSuffix(tr(" millisecond"));
+    ui->bubbleChatBoxKeepSpinBox->setValue(Config.BubbleChatBoxKeepTime);
 
     connect(this, SIGNAL(accepted()), this, SLOT(saveConfig()));
 
@@ -132,6 +134,9 @@ void ConfigDialog::saveConfig() {
 
     Config.EnableDoubleClick = ui->doubleClickCheckBox->isChecked();
     Config.setValue("EnableDoubleClick", Config.EnableDoubleClick);
+
+    Config.BubbleChatBoxKeepTime = ui->bubbleChatBoxKeepSpinBox->value();
+    Config.setValue("BubbleChatBoxKeepTime", Config.BubbleChatBoxKeepTime);
 
     if (RoomSceneInstance)
         RoomSceneInstance->updateVolumeConfig();

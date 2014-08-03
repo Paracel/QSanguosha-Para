@@ -45,6 +45,12 @@ return {
 	[":jgdidong"] = "结束阶段开始时，你可以令一名对方角色将武将牌翻面。",
 	["jgdidong-invoke"] = "你可以发动“地动”<br/> <b>操作提示</b>: 选择一名对方角色→点击确定<br/>",
 
+	["#jg_machine_lieshiyazi"] = "攻城器械",
+	["jg_machine_lieshiyazi"] = "裂石睚眦",
+	["illustrator:jg_machine_lieshiyazi"] = "",
+	["jgdixian"] = "地陷",
+	[":jgdixian"] = "结束阶段开始时，你可以将武将牌翻面：若如此做，所有对方角色弃置其装备区的所有牌。",
+
 	["#jg_soul_liubei"] = "季汉英魂",
 	["jg_soul_liubei"] = "烈帝玄德",
 	["illustrator:jg_soul_liubei"] = "",

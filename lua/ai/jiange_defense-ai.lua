@@ -28,12 +28,12 @@ sgs.ai_skill_invoke.jgdixian = function(self)
 
 	for _, enemy in ipairs(self.enemies) do
 		local value_e = 0
-		local equip_num = to:getEquips():length()
-		if to:hasArmorEffect("silver_lion") and to:isWounded() then equip_num = equip_num - 1.1 end
+		local equip_num = enemy:getEquips():length()
+		if enemy:hasArmorEffect("silver_lion") and enemy:isWounded() then equip_num = equip_num - 1.1 end
 		value_e = equip_num * 1.1
-		if to:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
-		if to:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
-		if to:hasSkills("bazhen|yizhong|bossmanjia") and to:getArmor() then value_e = value_e - 1 end
+		if enemy:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
+		if enemy:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
+		if enemy:hasSkills("bazhen|yizhong|bossmanjia") and enemy:getArmor() then value_e = value_e - 1 end
 		value = value + value_e
 	end
 	return value > 0
@@ -70,4 +70,37 @@ sgs.ai_skill_invoke.jglingyu = function(self)
 		if wounded_friend == 2 then return true end
 	end
 	return false
+end
+
+sgs.ai_skill_playerchosen.jgtianyun = function(self, targets)
+	local getValue = function(enemy)
+		local v = 0
+		if self:damageIsEffective(enemy, sgs.DamageStruct_Fire, self.player) then
+			if not self:canAttack(enemy, self.player, sgs.DamageStruct_Fire) then
+				v = -5
+			else
+				local def = sgs.getDefense(enemy)
+				if def < 1 then def = 1 end
+				v = 5 / def
+			end
+		end
+
+		local value_e = 0
+		local equip_num = enemy:getEquips():length()
+		if enemy:hasArmorEffect("silver_lion") and enemy:isWounded() then equip_num = equip_num - 1.1 end
+		value_e = equip_num * 1.1
+		if enemy:hasSkills("kofxiaoji|xiaoji") then value_e = value_e * 0.7 end
+		if enemy:hasSkill("nosxuanfeng") then value_e = value_e * 0.85 end
+		if enemy:hasSkills("bazhen|yizhong|bossmanjia") and enemy:getArmor() then value_e = value_e - 1 end
+		return v + value_e
+	end
+
+	local cmp = function(a, b)
+		return getValue(a) > getValue(b)
+	end
+
+	table.sort(enemies, cmp)
+	local target = enemies[1]
+	local value = getValue(target)
+	if value >= 6 or (not self:isWeak() and value >= 3) then return target end
 end

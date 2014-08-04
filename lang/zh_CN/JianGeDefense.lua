@@ -88,6 +88,10 @@ return {
 	["jgbiantian"] = "变天",
 	[":jgbiantian"] = "锁定技。准备阶段开始时，你进行判定：若结果为黑色，直到你的回合开始时，所有己方角色处于“大雾”状态；若结果为红色，指导你的回合开始时，所有对方角色处于“狂风”状态。",
 
+	["jgyuhuo"] = "浴火",
+	[":jgyuhuo"] = "锁定技。每当你受到火焰伤害时，防止此伤害。",
+	["#JGYuhuoProtect"] = "%from 的“<font color=\"yellow\"><b>浴火</b></font>”被触发，防止了 %arg 点伤害[%arg2]",
+
 	["#jg_machine_yunpingqinglong"] = "守城器械",
 	["jg_machine_yunpingqinglong"] = "云屏青龙",
 	["illustrator:jg_machine_yunpingqinglong"] = "",
@@ -105,4 +109,10 @@ return {
 	["illustrator:jg_machine_lingjiaxuanwu"] = "",
 	["jglingyu"] = "灵愈",
 	[":jglingyu"] = "结束阶段开始时，你可以将武将牌翻面：若如此做，所有已受伤的己方角色回复1点体力。",
+
+	["#jg_machine_chiyuzhuque"] = "守城器械",
+	["jg_machine_chiyuzhuque"] = "炽羽朱雀",
+	["illustrator:jg_machine_chiyuzhuque"] = "",
+	["jgtianyun"] = "天陨",
+	[":jgtianyun"] = "结束阶段开始时，你可以选择一名对方角色并失去1点体力：若如此做，该角色受到2点火焰伤害，然后弃置其装备区的所有牌。",
 }

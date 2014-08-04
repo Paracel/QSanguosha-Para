@@ -3800,7 +3800,7 @@ function SmartAI:damageIsEffective(player, nature, source)
 
 	if player:getMark("@fenyong") > 0 then return false end
 	if player:getMark("@fog") > 0 and nature ~= sgs.DamageStruct_Thunder then return false end
-	if player:hasSkill("shixin") and nature == sgs.DamageStruct_Fire then return false end
+	if player:hasSkills("shixin|jgyuhuo") and nature == sgs.DamageStruct_Fire then return false end
 	local equipsToDec = source:objectName() == self.player:objectName() and self.equipsToDec or 0
 	if player:hasSkill("mingshi") and source:getEquips():length() - equipsToDec <= math.min(2, player:getEquips():length()) then return false end
 	if player:hasSkill("yuce") and not player:isKongcheng() and player:getHp() > 1 then

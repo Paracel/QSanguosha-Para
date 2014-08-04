@@ -516,6 +516,31 @@ public:
     }
 };
 
+class JGYuhuo: public TriggerSkill {
+public:
+    JGYuhuo(): TriggerSkill("jgyuhuo") {
+        events << DamageInflicted;
+        frequency = Compulsory;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+        if (damage.nature == DamageStruct::Fire) {
+            room->notifySkillInvoked(player, objectName());
+            room->broadcastSkillInvoke(objectName());
+
+            LogMessage log;
+            log.type = "#JGYuhuoProtect";
+            log.from = player;
+            log.arg = QString::number(damage.damage);
+            log.arg2 = "fire_nature";
+            room->sendLog(log);
+            return true;
+        }
+        return false;
+    }
+};
+
 // Defensive Machines
 
 class JGMojian: public PhaseChangeSkill {
@@ -606,6 +631,32 @@ public:
     }
 };
 
+class JGTianyun: public PhaseChangeSkill {
+public:
+    JGTianyun(): PhaseChangeSkill("jgtianyun") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        QList<ServerPlayer *> enemies;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!isJianGeFriend(p, target))
+                enemies << p;
+        }
+        ServerPlayer *player = room->askForPlayerChosen(target, enemies, objectName(), "jgtianyun-invoke", true, true);
+        if (player) {
+            room->broadcastSkillInvoke(objectName());
+            room->loseHp(target);
+
+            room->damage(DamageStruct(objectName(), target, player, 2, DamageStruct::Fire));
+            player->throwAllEquips();
+        }
+        return false;
+    }
+};
+
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
@@ -671,6 +722,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_lingjiaxuanwu->addSkill("jgjiguan");
     jg_machine_lingjiaxuanwu->addSkill("yizhong");
     jg_machine_lingjiaxuanwu->addSkill(new JGLingyu);
+
+    Machine *jg_machine_chiyuzhuque = new Machine(this, "jg_machine_chiyuzhuque", "shu", 5, true, true);
+    jg_machine_chiyuzhuque->addSkill("jgjiguan");
+    jg_machine_chiyuzhuque->addSkill(new JGYuhuo);
+    jg_machine_chiyuzhuque->addSkill(new JGTianyun);
 }
 
 ADD_PACKAGE(JianGeDefense)

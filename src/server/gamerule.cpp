@@ -1075,7 +1075,8 @@ void GameRule::doBossModeDifficultySettings(ServerPlayer *lord) const{
 
 void GameRule::rewardAndPunish(ServerPlayer *killer, ServerPlayer *victim) const{
     if (killer->isDead() || killer->getRoom()->getMode() == "06_XMode"
-        || killer->getRoom()->getMode() == "04_boss")
+        || killer->getRoom()->getMode() == "04_boss"
+        || killer->getRoom()->getMode() == "08_defense")
         return;
 
     if (killer->getRoom()->getMode() == "06_3v3") {

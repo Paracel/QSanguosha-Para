@@ -60,3 +60,14 @@ sgs.ai_skill_playerchosen.jgfengxing = function(self, targets)
 end
 
 sgs.ai_skill_playerchosen.jghuodi = sgs.ai_skill_playerchosen.bossdidong
+
+sgs.ai_skill_invoke.jglingyu = function(self)
+	if not self.player:faceUp() then return true end
+	local wounded_friend = 0
+	for _, friend in ipairs(self.friends_noself) do
+		if self:isWeak(friend) then return true end
+		if friend:isWounded() then wounded_friend = wounded_friend + 1 end
+		if wounded_friend == 2 then return true end
+	end
+	return false
+end

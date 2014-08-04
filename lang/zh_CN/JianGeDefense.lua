@@ -99,4 +99,10 @@ return {
 	["illustrator:jg_machine_jileibaihu"] = "",
 	["jgbenlei"] = "奔雷",
 	[":jgbenlei"] = "锁定技。准备阶段开始时，攻城器械受到1点雷电伤害。",
+
+	["#jg_machine_lingjiaxuanwu"] = "守城器械",
+	["jg_machine_lingjiaxuanwu"] = "灵甲玄武",
+	["illustrator:jg_machine_lingjiaxuanwu"] = "",
+	["jglingyu"] = "灵愈",
+	[":jglingyu"] = "结束阶段开始时，你可以将武将牌翻面：若如此做，所有已受伤的己方角色回复1点体力。",
 }

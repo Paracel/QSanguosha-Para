@@ -584,6 +584,28 @@ public:
     }
 };
 
+class JGLingyu: public PhaseChangeSkill {
+public:
+    JGLingyu(): PhaseChangeSkill("jglingyu") {
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        if (room->askForSkillInvoke(target, objectName())) {
+            room->broadcastSkillInvoke(objectName());
+
+            target->turnOver();
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (p->isWounded() && isJianGeFriend(p, target) && p != target)
+                    room->recover(p, RecoverStruct(target));
+            }
+        }
+        return false;
+    }
+};
+
 JianGeDefensePackage::JianGeDefensePackage()
     : Package("JianGeDefense")
 {
@@ -644,6 +666,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_machine_jileibaihu->addSkill("jgjiguan");
     jg_machine_jileibaihu->addSkill("zhenwei");
     jg_machine_jileibaihu->addSkill(new JGBenlei);
+
+    Machine *jg_machine_lingjiaxuanwu = new Machine(this, "jg_machine_lingjiaxuanwu", "shu", 5, true, true);
+    jg_machine_lingjiaxuanwu->addSkill("jgjiguan");
+    jg_machine_lingjiaxuanwu->addSkill("yizhong");
+    jg_machine_lingjiaxuanwu->addSkill(new JGLingyu);
 }
 
 ADD_PACKAGE(JianGeDefense)

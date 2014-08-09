@@ -406,10 +406,7 @@ public:
     }
 
     virtual bool isEnabledAtNullification(const ServerPlayer *player) const{
-        foreach (const Card *card, player->getHandcards()) {
-            if (card->isBlack()) return true;
-        }
-        return false;
+        return !player->isKongcheng() && !player->getPile("wooden_ox").isEmpty();
     }
 };
 

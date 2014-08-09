@@ -354,6 +354,6 @@ config = {
 
 	jiange_defense_soul = {
 		wei = "jg_soul_caozhen+jg_soul_simayi+jg_soul_xiahouyuan+jg_soul_zhanghe",
-		shu = "jg_soul_liubei+jg_soul_zhugeliang+jg_soul_huangyueying",
+		shu = "jg_soul_liubei+jg_soul_zhugeliang+jg_soul_huangyueying+jg_soul_pangtong",
 	}
 }

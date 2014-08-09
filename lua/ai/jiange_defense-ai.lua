@@ -133,3 +133,8 @@ sgs.ai_skill_playerchosen.jgzhinang = function(self)
 	end
 	return self.player
 end
+
+sgs.ai_skill_playerchosen.jgqiwu = function(self)
+	local wounded_friends = self:getWoundedFriend(false, true)
+	if #wounded_friends > 0 then return wounded_friends[1] end
+end

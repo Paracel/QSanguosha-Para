@@ -634,8 +634,8 @@ public:
                 if (!player->isAlive())
                     return false;
                 if (TriggerSkill::triggerable(p) && !isJianGeFriend(p, player)) {
-                    room->sendCompulsoryTriggerLog(p, objectName());
                     room->broadcastSkillInvoke(objectName());
+                    room->sendCompulsoryTriggerLog(p, objectName());
                     room->loseHp(player);
                 }
             }
@@ -654,8 +654,8 @@ public:
     virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
         DamageStruct damage = data.value<DamageStruct>();
         if (damage.nature == DamageStruct::Fire) {
-            room->notifySkillInvoked(player, objectName());
             room->broadcastSkillInvoke(objectName());
+            room->notifySkillInvoked(player, objectName());
 
             LogMessage log;
             log.type = "#JGYuhuoProtect";
@@ -664,6 +664,67 @@ public:
             log.arg2 = "fire_nature";
             room->sendLog(log);
             return true;
+        }
+        return false;
+    }
+};
+
+class JGQiwu: public TriggerSkill {
+public:
+    JGQiwu(): TriggerSkill("jgqiwu") {
+        events << CardsMoveOneTime;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        CardsMoveOneTimeStruct move = data.value<CardsMoveOneTimeStruct>();
+        if (player == move.from
+            && (move.reason.m_reason & CardMoveReason::S_MASK_BASIC_REASON) == CardMoveReason::S_REASON_DISCARD) {
+            int count = 0;
+            foreach (int id, move.card_ids) {
+                if (Sanguosha->getCard(id)->getSuit() == Card::Club)
+                    count++;
+            }
+            if (count > 0) {
+                for (int i = 0; i < count; i++) {
+                    QList<ServerPlayer *> friends;
+                    foreach (ServerPlayer *p, room->getAlivePlayers()) {
+                        if (isJianGeFriend(p, player) && p->isWounded())
+                            friends << p;
+                    }
+                    if (friends.isEmpty()) return false;
+                    ServerPlayer *rec_friend = room->askForPlayerChosen(player, friends, objectName(), "jgqiwu-invoke", true, true);
+                    if (!rec_friend) return false;
+                    room->recover(rec_friend, RecoverStruct(player));
+                }
+            }
+        }
+        return false;
+    }
+};
+
+class JGTianyu: public PhaseChangeSkill {
+public:
+    JGTianyu(): PhaseChangeSkill("jgtianyu") {
+        frequency = Compulsory;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        if (target->getPhase() != Player::Finish) return false;
+        Room *room = target->getRoom();
+
+        bool sendLog = false;
+        foreach (ServerPlayer *p, room->getAllPlayers()) {
+            if (!p->isChained() && !isJianGeFriend(p, target)) {
+                if (!sendLog) {
+                    room->broadcastSkillInvoke(objectName());
+                    room->sendCompulsoryTriggerLog(target, objectName());
+                    sendLog = true;
+                }
+                p->setChained(true);
+                room->broadcastProperty(p, "chained");
+                room->setEmotion(p, "chain");
+                room->getThread()->trigger(ChainStateChanged, room, p);
+            }
         }
         return false;
     }
@@ -840,6 +901,11 @@ JianGeDefensePackage::JianGeDefensePackage()
     jg_soul_huangyueying->addSkill(new JGZhinang);
     jg_soul_huangyueying->addSkill(new JGJingmiao);
 
+    Soul *jg_soul_pangtong = new Soul(this, "jg_soul_pangtong", "shu", 4, true, true);
+    jg_soul_pangtong->addSkill(new JGYuhuo);
+    jg_soul_pangtong->addSkill(new JGQiwu);
+    jg_soul_pangtong->addSkill(new JGTianyu);
+
     Machine *jg_machine_yunpingqinglong = new Machine(this, "jg_machine_yunpingqinglong", "shu", 4, true, true);
     jg_machine_yunpingqinglong->addSkill("jgjiguan");
     jg_machine_yunpingqinglong->addSkill(new JGMojian);
@@ -858,7 +924,7 @@ JianGeDefensePackage::JianGeDefensePackage()
 
     Machine *jg_machine_chiyuzhuque = new Machine(this, "jg_machine_chiyuzhuque", "shu", 5, true, true);
     jg_machine_chiyuzhuque->addSkill("jgjiguan");
-    jg_machine_chiyuzhuque->addSkill(new JGYuhuo);
+    jg_machine_chiyuzhuque->addSkill("jgyuhuo");
     jg_machine_chiyuzhuque->addSkill(new JGTianyun);
 }
 

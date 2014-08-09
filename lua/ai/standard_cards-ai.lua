@@ -323,7 +323,8 @@ function SmartAI:canLiuli(other, another)
 end
 
 function SmartAI:slashIsEffective(slash, to, from, ignore_armor)
-	if not slash or not to then self.room:writeToConsole(debug.traceback()) return false end
+	if not to then self.room:writeToConsole(debug.traceback()) return false end
+	slash = slash or sgs.Sanguosha:cloneCard("slash")
 	from = from or self.player
 	if not ignore_armor and from:objectName() == self.player:objectName() then
 		if self.moukui_effect then

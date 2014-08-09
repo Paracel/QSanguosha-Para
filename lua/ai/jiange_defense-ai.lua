@@ -53,7 +53,7 @@ sgs.ai_skill_playerchosen.jgfengxing = function(self, targets)
 	local ts = sgs.QList2Table(targets)
 	self:sort(ts)
 	for _, enemy in ipairs(ts) do
-		if not self:slashProhibit(nil, enemy) and self:slashIsEffective(slash, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
+		if not self:slashProhibit(nil, enemy) and self:slashIsEffective(nil, enemy) and sgs.isGoodTarget(enemy, self.enemies, self) then
 			return enemy
 		end
 	end
@@ -99,8 +99,37 @@ sgs.ai_skill_playerchosen.jgtianyun = function(self, targets)
 		return getValue(a) > getValue(b)
 	end
 
-	table.sort(enemies, cmp)
-	local target = enemies[1]
+	table.sort(self.enemies, cmp)
+	local target = self.enemies[1]
 	local value = getValue(target)
 	if value >= 6 or (not self:isWeak() and value >= 3) then return target end
+end
+
+sgs.ai_skill_choice.jggongshen = function(self, choices)
+	local off_mac, def_mac = nil, nil
+	for _, p in sgs.qlist(self.room:getAlivePlayers()) do
+		if p:property("jiange_defense_type"):toString() == "machine" then
+			if self:isFriend(p) then def_mac = p
+			else off_mac = p end
+		end
+	end
+	if def_mac and def_mac:isWounded() and self:isWeak(def_mac) then return "recover" end
+	if off_mac and self:canAttack(off_mac, self.player, sgs.DamageStruct_Fire) then return "damage" end
+	if dec_mac and def_mac:isWounded() then return "recover" end
+	return "cancel"
+end
+
+sgs.ai_skill_playerchosen.jgzhinang = function(self)
+	local ids = self.room:getTag("JGZhinangCards"):toIntList()
+	local cards = {}
+	for _, id in sgs.qlist(ids) do
+		table.insert(cards, sgs.Sanguosha:getCard(id))
+	end
+	local friend = self:getCardNeedPlayer(cards, self.friends, false)
+	if friend then return friend end
+	self:sort(self.friends)
+	for _, friend in ipairs(self.friends) do
+		if not hasManjuanEffect(friend) and not self:needKongcheng(friend, true) then return friend end
+	end
+	return self.player
 end

@@ -88,6 +88,16 @@ return {
 	["jgbiantian"] = "变天",
 	[":jgbiantian"] = "锁定技。准备阶段开始时，你进行判定：若结果为黑色，直到你的回合开始时，所有己方角色处于“大雾”状态；若结果为红色，指导你的回合开始时，所有对方角色处于“狂风”状态。",
 
+	["#jg_soul_huangyueying"] = "季汉英魂",
+	["jg_soul_huangyueying"] = "工神月英",
+	["illustrator:jg_soul_huangyueying"] = "",
+	["jggongshen"] = "工神",
+	[":jggongshen"] = "结束阶段开始时，你可以选择一项：令守城器械回复1点体力，或对攻城器械造成1点火焰伤害。",
+	["jgzhinang"] = "智囊",
+	[":jgzhinang"] = "准备阶段开始时，你可以亮出牌堆顶的三张牌，然后令一名己方角色获得其中的非基本牌并将其余的牌置入弃牌堆。",
+	["jgjingmiao"] = "精妙",
+	[":jgjingmiao"] = "锁定技。对方角色使用【无懈可击】结算完毕后，该角色失去1点体力。",
+
 	["jgyuhuo"] = "浴火",
 	[":jgyuhuo"] = "锁定技。每当你受到火焰伤害时，防止此伤害。",
 	["#JGYuhuoProtect"] = "%from 的“<font color=\"yellow\"><b>浴火</b></font>”被触发，防止了 %arg 点伤害[%arg2]",

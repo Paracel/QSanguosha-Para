@@ -93,6 +93,8 @@ return {
 	["illustrator:jg_soul_huangyueying"] = "",
 	["jggongshen"] = "工神",
 	[":jggongshen"] = "结束阶段开始时，你可以选择一项：令守城器械回复1点体力，或对攻城器械造成1点火焰伤害。",
+	["jggongshen:recover"] = "令守城器械回复1点体力",
+	["jggongshen:damage"] = "对攻城器械造成1点火焰伤害",
 	["jgzhinang"] = "智囊",
 	[":jgzhinang"] = "准备阶段开始时，你可以亮出牌堆顶的三张牌，然后令一名己方角色获得其中的非基本牌并将其余的牌置入弃牌堆。",
 	["@jgzhinang"] = "请选择一名己方角色令其获得非基本牌",

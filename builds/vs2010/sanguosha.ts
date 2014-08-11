@@ -1249,22 +1249,22 @@
         <translation>托管中 ...</translation>
     </message>
     <message>
-        <location filename="../../src/ui/dashboard.cpp" line="771"/>
+        <location filename="../../src/ui/dashboard.cpp" line="772"/>
         <source>Sort handcards</source>
         <translation>整理手牌</translation>
     </message>
     <message>
-        <location filename="../../src/ui/dashboard.cpp" line="773"/>
+        <location filename="../../src/ui/dashboard.cpp" line="774"/>
         <source>Sort by type</source>
         <translation>按类型排序</translation>
     </message>
     <message>
-        <location filename="../../src/ui/dashboard.cpp" line="776"/>
+        <location filename="../../src/ui/dashboard.cpp" line="777"/>
         <source>Sort by suit</source>
         <translation>按花色排序</translation>
     </message>
     <message>
-        <location filename="../../src/ui/dashboard.cpp" line="779"/>
+        <location filename="../../src/ui/dashboard.cpp" line="780"/>
         <source>Sort by number</source>
         <translation>按点数排序</translation>
     </message>

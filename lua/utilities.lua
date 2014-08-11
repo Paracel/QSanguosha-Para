@@ -230,3 +230,5 @@ for _, command in ipairs(sgs.CommandType) do
 	sgs.CommandType[command] = i
 	i = i + 1
 end
+
+json = require("json")

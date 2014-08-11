@@ -493,6 +493,9 @@ private:
     bool _virtual;
     RoomState _m_roomState;
 
+    Json::Value m_fillAGarg;
+    Json::Value m_takeAGargs;
+
     static QString generatePlayerName();
     void prepareForStart();
     void assignGeneralsForPlayers(const QList<ServerPlayer *> &to_assign);

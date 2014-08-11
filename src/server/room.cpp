@@ -52,6 +52,9 @@ Room::Room(QObject *parent, const QString &mode)
     L = CreateLuaState();
     if (!DoLuaScript(L, "lua/sanguosha.lua") || !DoLuaScript(L, "lua/ai/smart-ai.lua"))
         L = NULL;
+
+    m_fillAGarg = Json::Value::null;
+    m_takeAGargs = Json::Value(Json::arrayValue);
 }
 
 Room::~Room() {
@@ -3425,19 +3428,30 @@ void Room::marshal(ServerPlayer *player) {
         notifyProperty(player, p, "state");
     }
 
-    doNotify(player, S_COMMAND_GAME_START, Json::Value::null);
+    if (game_started) {
+        doNotify(player, S_COMMAND_GAME_START, Json::Value::null);
 
-    QList<int> drawPile = Sanguosha->getRandomCards();
-    doNotify(player, S_COMMAND_AVAILABLE_CARDS, toJsonArray(drawPile));
+        QList<int> drawPile = Sanguosha->getRandomCards();
+        doNotify(player, S_COMMAND_AVAILABLE_CARDS, toJsonArray(drawPile));
+    }
 
     foreach (ServerPlayer *p, m_players)
         p->marshal(player);
 
     notifyProperty(player, player, "flags", "-marshalling");
-    doNotify(player, S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
 
-    Json::Value discard = toJsonArray(*m_discardPile);
-    doNotify(player, S_COMMAND_SYNCHRONIZE_DISCARD_PILE, discard);
+    if (game_started) {
+        doNotify(player, S_COMMAND_UPDATE_PILE, Json::Value(m_drawPile->length()));
+
+        if (!m_fillAGarg.empty()) {
+            doNotify(player, S_COMMAND_FILL_AMAZING_GRACE, m_fillAGarg);
+            foreach (const Json::Value &takeAGarg, m_takeAGargs)
+                doNotify(player, S_COMMAND_TAKE_AMAZING_GRACE, takeAGarg);
+        }
+
+        Json::Value discard = toJsonArray(*m_discardPile);
+        doNotify(player, S_COMMAND_SYNCHRONIZE_DISCARD_PILE, discard);
+    }
 }
 
 void Room::startGame() {
@@ -5129,6 +5143,8 @@ void Room::fillAG(const QList<int> &card_ids, ServerPlayer *who, const QList<int
     arg[0] = toJsonArray(card_ids);
     arg[1] = toJsonArray(disabled_ids);
 
+    m_fillAGarg = arg;
+
     if (who)
         doNotify(who, S_COMMAND_FILL_AMAZING_GRACE, arg);
     else
@@ -5188,9 +5204,12 @@ void Room::takeAG(ServerPlayer *player, int card_id, bool move_cards, QList<Serv
         m_discardPile->prepend(card_id);
         setCardMapping(card_id, NULL, Player::DiscardPile);
     }
+    m_takeAGargs.append(arg);
 }
 
 void Room::clearAG(ServerPlayer *player) {
+    m_fillAGarg = Json::Value::null;
+    m_takeAGargs.clear();
     if (player)
         doNotify(player, S_COMMAND_CLEAR_AMAZING_GRACE, Json::Value::null);
     else

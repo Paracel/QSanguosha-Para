@@ -703,6 +703,7 @@ QList<CardItem *> Dashboard::removeHandCards(const QList<int> &card_ids) {
         if (card_item == selected) selected = NULL;
         Q_ASSERT(card_item);
         if (card_item) {
+            animations->effectOut(card_item);
             m_handCards.removeOne(card_item);
             card_item->disconnect(this);
             result.append(card_item);

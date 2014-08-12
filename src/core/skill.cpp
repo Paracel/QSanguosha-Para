@@ -263,6 +263,10 @@ int TriggerSkill::getPriority(TriggerEvent) const{
     return (frequency == Wake) ? 3 : 2;
 }
 
+bool TriggerSkill::triggerable(const ServerPlayer *target, Room *) const{
+    return triggerable(target);
+}
+
 bool TriggerSkill::triggerable(const ServerPlayer *target) const{
     return target != NULL && (global || (target->isAlive() && target->hasSkill(objectName())));
 }

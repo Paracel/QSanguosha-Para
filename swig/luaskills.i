@@ -6,7 +6,7 @@ public:
     void setGlobal(bool global);
     void insertPriorityTable(TriggerEvent triggerEvent, int priority);
 
-    virtual bool triggerable(const ServerPlayer *target) const;
+    virtual bool triggerable(const ServerPlayer *target, Room *room) const;
     virtual bool trigger(TriggerEvent event, Room *room, ServerPlayer *player, QVariant &data) const;
 
     LuaFunction on_trigger;
@@ -310,19 +310,19 @@ public:
 #include "lua-wrapper.h"
 #include "clientplayer.h"
 
-bool LuaTriggerSkill::triggerable(const ServerPlayer *target) const{
+bool LuaTriggerSkill::triggerable(const ServerPlayer *target, Room *room) const{
     if (can_trigger == 0)
-        return TriggerSkill::triggerable(target);
+        return TriggerSkill::triggerable(target, room);
 
-    Room *room = target->getRoom();
     lua_State *L = room->getLuaState();
 
     // the callback function
     lua_rawgeti(L, LUA_REGISTRYINDEX, can_trigger);
     SWIG_NewPointerObj(L, this, SWIGTYPE_p_LuaTriggerSkill, 0);
     SWIG_NewPointerObj(L, target, SWIGTYPE_p_ServerPlayer, 0);
+    SWIG_NewPointerObj(L, room, SWIGTYPE_p_Room, 0);
 
-    int error = lua_pcall(L, 2, 1, 0);
+    int error = lua_pcall(L, 3, 1, 0);
     if (error) {
         const char *error_msg = lua_tostring(L, -1);
         lua_pop(L, 1);
@@ -358,7 +358,10 @@ bool LuaTriggerSkill::trigger(TriggerEvent event, Room *room, ServerPlayer *play
     // the last event: data
     SWIG_NewPointerObj(L, &data, SWIGTYPE_p_QVariant, 0);
 
-    int error = lua_pcall(L, 4, 1, 0);
+    // append Room as an argument
+    SWIG_NewPointerObj(L, room, SWIGTYPE_p_Room, 0);
+
+    int error = lua_pcall(L, 5, 1, 0);
     if (error) {
         const char *error_msg = lua_tostring(L, -1);
         lua_pop(L, 1);

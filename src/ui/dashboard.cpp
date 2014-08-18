@@ -233,7 +233,8 @@ void Dashboard::_addHandCard(CardItem *card_item, bool prepend, const QString &f
     card_item->setHomeOpacity(1.0);
     card_item->setRotation(0.0);
     card_item->setFlag(ItemIsFocusable);
-    card_item->setFlag(ItemIsMovable);
+    if (Config.EnableSuperDrag)
+        card_item->setFlag(ItemIsMovable);
     card_item->setZValue(0.1);
     if (!footnote.isEmpty()) {
         card_item->setFootnote(footnote);
@@ -1038,6 +1039,13 @@ void Dashboard::updatePending() {
         pending_card = new_pending_card;
         emit card_selected(pending_card);
     }
+}
+
+void Dashboard::clearPendings() {
+    selected = NULL;
+    foreach (CardItem *item, m_handCards)
+        selectCard(item, false);
+    pendings.clear();
 }
 
 void Dashboard::onCardItemDoubleClicked() {

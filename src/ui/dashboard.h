@@ -76,6 +76,12 @@ public:
     void startPending(const ViewAsSkill *skill);
     void stopPending();
     void updatePending();
+    void clearPendings();
+
+    inline void addPending(CardItem *item) { pendings << item; }
+    inline QList<CardItem *> getPendings() const{ return pendings; }
+    inline bool hasHandCard(CardItem *item) const{ return m_handCards.contains(item); }
+
     const ViewAsSkill *currentSkill() const;
     const Card *pendingCard() const;
 

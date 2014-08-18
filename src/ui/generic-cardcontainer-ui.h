@@ -83,6 +83,8 @@ public:
 
     QPixmap paintByMask(QPixmap& source);
 
+    bool canBeSelected();
+
 public slots:
     void updateAvatar();
     void updateSmallAvatar();

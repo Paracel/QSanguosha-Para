@@ -86,7 +86,7 @@ public:
     bool canBeSelected();
 
 public slots:
-    void updateAvatar();
+    virtual void updateAvatar();
     void updateSmallAvatar();
     void updatePhase();
     void updateHp();

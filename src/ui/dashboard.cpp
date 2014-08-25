@@ -753,6 +753,11 @@ QList<CardItem *> Dashboard::removeCardItems(const QList<int> &card_ids, Player:
     return result;
 }
 
+void Dashboard::updateAvatar() {
+    PlayerCardContainer::updateAvatar();
+    _m_skillDock->update();
+}
+
 static bool CompareByNumber(const CardItem *a, const CardItem *b)  {
     return Card::CompareByNumber(a->getCard(), b->getCard());
 }

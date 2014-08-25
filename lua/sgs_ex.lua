@@ -478,6 +478,7 @@ function sgs.CreateViewAsSkill(spec)
 		return spec.view_filter(self, selected, to_select)
 	end
 
+	skill.should_be_visible = spec.should_be_visible
 	skill.enabled_at_play = spec.enabled_at_play
 	skill.enabled_at_response = spec.enabled_at_response
 	skill.enabled_at_nullification = spec.enabled_at_nullification

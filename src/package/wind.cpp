@@ -133,7 +133,11 @@ public:
     }
 
     virtual bool isEnabledAtPlay(const Player *player) const{
-        return player->getKingdom() == "qun" && !player->hasFlag("ForbidHuangtian");
+        return shouldBeVisible(player) && !player->hasFlag("ForbidHuangtian");
+    }
+
+    virtual bool shouldBeVisible(const Player *Self) const{
+        return Self && Self->getKingdom() == "qun";
     }
 
     virtual const Card *viewAs(const Card *originalCard) const{

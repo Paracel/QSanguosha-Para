@@ -496,15 +496,19 @@ public:
                 const TriggerSkill *kuangfeng = Sanguosha->getTriggerSkill("kuangfeng");
                 room->getThread()->addTriggerSkill(kuangfeng);
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
-                    if (!isJianGeFriend(p, player))
+                    if (!isJianGeFriend(p, player)) {
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), p->objectName());
                         p->gainMark("@gale");
+                    }
                 }
             } else if (color == Card::Black) {
                 const TriggerSkill *dawu = Sanguosha->getTriggerSkill("dawu");
                 room->getThread()->addTriggerSkill(dawu);
                 foreach (ServerPlayer *p, room->getAllPlayers()) {
-                    if (isJianGeFriend(p, player))
+                    if (isJianGeFriend(p, player)) {
+                        room->doAnimate(QSanProtocol::S_ANIMATE_INDICATE, player->objectName(), p->objectName());
                         p->gainMark("@fog");
+                    }
                 }
             }
         } else if (triggerEvent == FinishJudge) {

@@ -2182,9 +2182,6 @@ function SmartAI:askForDiscard(reason, discard_num, min_num, optional, include_e
 end
 
 function SmartAI:askForNullification(trick, from, to, positive)
-	local cards = self.player:getCards("he")
-	cards = sgs.QList2Table(cards)
-	self:sortByUseValue(cards, true)
 	local null_card
 	null_card = self:getCardId("Nullification")
 	local null_num = self:getCardsNum("Nullification")

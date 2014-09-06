@@ -1156,9 +1156,14 @@ int Room::askForCardChosen(ServerPlayer *player, ServerPlayer *who, const QStrin
             if (!success || !clientReply.isInt()) {
                 // randomly choose a card
                 QList<const Card *> cards = who->getCards(flags);
-                do {
-                    card_id = cards.at(qrand() % cards.length())->getId();
-                } while (method == Card::MethodDiscard && !player->canDiscard(who, card_id));
+                if (method == Card::MethodDiscard) {
+                    foreach (const Card *card, cards) {
+                        if (!player->canDiscard(who, card->getEffectiveId()) || disabled_ids.contains(card->getEffectiveId()))
+                            cards.removeOne(card);
+                    }
+                }
+                Q_ASSERT(!cards.isEmpty());
+                card_id = cards.at(qrand() % cards.length())->getId();
             } else
                 card_id = clientReply.asInt();
 

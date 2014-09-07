@@ -443,7 +443,7 @@ int LuaDistanceSkill::getCorrect(const Player *from, const Player *to) const{
 
 int LuaMaxCardsSkill::getExtra(const Player *target) const{
     if (extra_func == 0)
-        return 0;
+        return MaxCardsSkill::getExtra(target);
 
     lua_State *L = Sanguosha->getLuaState();
 
@@ -466,7 +466,7 @@ int LuaMaxCardsSkill::getExtra(const Player *target) const{
 
 int LuaMaxCardsSkill::getFixed(const Player *target) const{
     if (fixed_func == 0)
-        return 0;
+        return MaxCardsSkill::getFixed(target);
 
     lua_State *L = Sanguosha->getLuaState();
 

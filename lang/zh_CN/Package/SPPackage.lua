@@ -155,6 +155,16 @@ return {
 	["$JuyiAnimate"] = "image=image/animate/juyi.png",
 	["#JuyiWake"] = "%from 的体力上限(%arg)大于角色数(%arg2)，触发“<font color=\"yellow\"><b>举义</b></font>”觉醒",
 
+	["#sunluyu"] = "舍身饲虎",
+	["sunluyu"] = "孙鲁育",
+	["illustrator:sunluyu"] = "depp",
+	["meibu"] = "魅步",
+	[":meibu"] = "一名其他角色的出牌阶段开始时，若你不在其攻击范围内，你可以令该角色的锦囊牌均视为【杀】,直到回合结束：若如此做，本回合你在其攻击范围内。",
+	["mumu"] = "穆穆",
+	[":mumu"] = "结束阶段开始时，若你未于本回合出牌阶段内造成伤害，你可以选择一项：弃置一名角色装备区的武器牌，然后摸一张牌；或将一名其他角色装备区的防具牌移动至你的装备区（替换原装备）。",
+	["@mumu-weapon"] = "你可以弃置一名角色装备区的武器牌",
+	["@mumu-armor"] = "你可以将一名其他角色装备区的防具牌移动至你的装备区",
+
 	["#maliang"] = "白眉智士",
 	["maliang"] = "马良",
 	["illustrator:maliang"] = "LiuHeng",

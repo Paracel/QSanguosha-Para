@@ -118,6 +118,9 @@ public:
 
     virtual int aliveCount() const = 0;
     void setFixedDistance(const Player *player, int distance);
+    void removeFixedDistance(const Player *player, int distance);
+    void insertAttackRangePair(const Player *player);
+    void removeAttackRangePair(const Player *player);
     int distanceTo(const Player *other, int distance_fix = 0) const;
     const General *getAvatarGeneral() const;
     const General *getGeneral() const;
@@ -257,7 +260,8 @@ private:
     bool face_up;
     bool chained;
     QList<int> judging_area;
-    QHash<const Player *, int> fixed_distance;
+    QMultiHash<const Player *, int> fixed_distance;
+    QList<const Player *> attack_range_pair;
 
     QMap<Card::HandlingMethod, QStringList> card_limitation;
 

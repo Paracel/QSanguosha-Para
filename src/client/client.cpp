@@ -65,6 +65,7 @@ Client::Client(QObject *parent, const QString &filename)
     m_callbacks[S_COMMAND_ADD_HISTORY] = &Client::addHistory;
     m_callbacks[S_COMMAND_ANIMATE] = &Client::animate;
     m_callbacks[S_COMMAND_FIXED_DISTANCE] = &Client::setFixedDistance;
+    m_callbacks[S_COMMAND_ATTACK_RANGE] = &Client::setAttackRangePair;
     m_callbacks[S_COMMAND_CARD_LIMITATION] = &Client::cardLimitation;
     m_callbacks[S_COMMAND_NULLIFICATION_ASKED] = &Client::setNullification;
     m_callbacks[S_COMMAND_ENABLE_SURRENDER] = &Client::enableSurrender;
@@ -1701,15 +1702,36 @@ void Client::animate(const Json::Value &animate_str) {
 }
 
 void Client::setFixedDistance(const Json::Value &set_str) {
-    if (!set_str.isArray() || set_str.size() != 3) return;
-    if (!set_str[0].isString() || !set_str[1].isString() || !set_str[2].isInt()) return;
+    if (!set_str.isArray() || set_str.size() != 4) return;
+    if (!set_str[0].isString() || !set_str[1].isString() || !set_str[2].isInt() || !set_str[3].isBool()) return;
 
     ClientPlayer *from = getPlayer(toQString(set_str[0]));
     ClientPlayer *to = getPlayer(toQString(set_str[1]));
     int distance = set_str[2].asInt();
+    bool isSet = set_str[3].asBool();
 
-    if (from && to)
-        from->setFixedDistance(to, distance);
+    if (from && to) {
+        if (isSet)
+            from->setFixedDistance(to, distance);
+        else
+            from->removeFixedDistance(to, distance);
+    }
+}
+
+void Client::setAttackRangePair(const Json::Value &set_arg) {
+    if (!set_arg.isArray() || set_arg.size() != 3) return;
+    if (!set_arg[0].isString() || !set_arg[1].isString() || !set_arg[2].isBool()) return;
+
+    ClientPlayer *from = getPlayer(toQString(set_arg[0]));
+    ClientPlayer *to = getPlayer(toQString(set_arg[1]));
+    bool isSet = set_arg[2].asBool();
+
+    if (from && to) {
+        if (isSet)
+            from->insertAttackRangePair(to);
+        else
+            from->removeAttackRangePair(to);
+    }
 }
 
 void Client::fillGenerals(const Json::Value &generals) {

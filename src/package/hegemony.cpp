@@ -183,7 +183,7 @@ public:
         ServerPlayer *target = dingfeng->tag["FenxunTarget"].value<ServerPlayer *>();
 
         if (target) {
-            room->setFixedDistance(dingfeng, target, -1);
+            room->removeFixedDistance(dingfeng, target, 1);
             dingfeng->tag.remove("FenxunTarget");
         }
         return false;

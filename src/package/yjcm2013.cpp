@@ -1173,7 +1173,7 @@ public:
         if (zhuikonglist.isEmpty()) return false;
         foreach (QVariant p, zhuikonglist) {
             ServerPlayer *fuhuanghou = p.value<ServerPlayer *>();
-            room->setFixedDistance(player, fuhuanghou, -1);
+            room->removeFixedDistance(player, fuhuanghou, 1);
         }
         player->tag.remove("zhuikong");
         return false;

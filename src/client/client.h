@@ -122,6 +122,7 @@ public:
     void setKnownCards(const Json::Value &set_str);
     void viewGenerals(const Json::Value &str);
     void setFixedDistance(const Json::Value &set_str);
+    void setAttackRangePair(const Json::Value &set_arg);
     void updateStateItem(const Json::Value &state_str);
     void setAvailableCards(const Json::Value &pile);
     void setCardFlag(const Json::Value &pattern_str);

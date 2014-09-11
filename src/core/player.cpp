@@ -168,22 +168,43 @@ int Player::getAttackRange(bool include_weapon) const{
 }
 
 bool Player::inMyAttackRange(const Player *other, int distance_fix) const{
+    if (attack_range_pair.contains(other)) return true;
     return this != other && distanceTo(other, distance_fix) <= getAttackRange();
 }
 
 void Player::setFixedDistance(const Player *player, int distance) {
-    if (distance == -1)
-        fixed_distance.remove(player);
+    if (distance < 0)
+        fixed_distance.remove(player, -distance);
     else
         fixed_distance.insert(player, distance);
+}
+
+void Player::removeFixedDistance(const Player *player, int distance) {
+    fixed_distance.remove(player, distance);
+}
+
+void Player::insertAttackRangePair(const Player *player) {
+    attack_range_pair.append(player);
+}
+
+void Player::removeAttackRangePair(const Player *player) {
+    attack_range_pair.removeOne(player);
 }
 
 int Player::distanceTo(const Player *other, int distance_fix) const{
     if (this == other)
         return 0;
 
-    if (fixed_distance.contains(other))
-        return fixed_distance.value(other);
+    if (fixed_distance.contains(other)) {
+        QList<int> distance_list = fixed_distance.values(other);
+        int min = 10000;
+        foreach (int d, distance_list) {
+            if (min > d)
+                min = d;
+        }
+
+        return min;
+    }
 
     int right = qAbs(seat - other->seat);
     int left = aliveCount() - right;
@@ -727,7 +748,7 @@ bool Player::canSlash(const Player *other, const Card *slash, bool distance_limi
         return false;
 
     if (distance_limit)
-        return distanceTo(other, rangefix) <= getAttackRange() + Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, this, THIS_SLASH);
+        return inMyAttackRange(other, rangefix - Sanguosha->correctCardTarget(TargetModSkill::DistanceLimit, this, THIS_SLASH));
     else
         return true;
 #undef THIS_SLASH
@@ -1015,7 +1036,7 @@ void Player::copyFrom(Player *p) {
     b->face_up          = a->face_up;
     b->chained          = a->chained;
     b->judging_area     = QList<int>(a->judging_area);
-    b->fixed_distance   = QHash<const Player *, int>(a->fixed_distance);
+    b->fixed_distance   = QMultiHash<const Player *, int>(a->fixed_distance);
     b->card_limitation  = QMap<Card::HandlingMethod, QStringList>(a->card_limitation);
 
     b->tag              = QVariantMap(a->tag);

@@ -1882,7 +1882,39 @@ void Room::setFixedDistance(Player *from, const Player *to, int distance) {
     arg[0] = toJsonString(from->objectName());
     arg[1] = toJsonString(to->objectName());
     arg[2] = distance;
+    arg[3] = true;
     doBroadcastNotify(S_COMMAND_FIXED_DISTANCE, arg);
+}
+
+void Room::removeFixedDistance(Player *from, const Player *to, int distance) {
+    from->removeFixedDistance(to, distance);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(from->objectName());
+    arg[1] = toJsonString(to->objectName());
+    arg[2] = distance;
+    arg[3] = false;
+    doBroadcastNotify(S_COMMAND_FIXED_DISTANCE, arg);
+}
+
+void Room::insertAttackRangePair(Player *from, const Player *to) {
+    from->insertAttackRangePair(to);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(from->objectName());
+    arg[1] = toJsonString(to->objectName());
+    arg[2] = true;
+    doBroadcastNotify(S_COMMAND_ATTACK_RANGE, arg);
+}
+
+void Room::removeAttackRangePair(Player *from, const Player *to) {
+    from->removeAttackRangePair(to);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = toJsonString(from->objectName());
+    arg[1] = toJsonString(to->objectName());
+    arg[2] = false;
+    doBroadcastNotify(S_COMMAND_ATTACK_RANGE, arg);
 }
 
 void Room::reverseFor3v3(const Card *card, ServerPlayer *player, QList<ServerPlayer *> &list) {
@@ -4255,10 +4287,10 @@ void Room::acquireSkill(ServerPlayer *player, const Skill *skill, bool open) {
             if (!related_skill->isVisible())
                 acquireSkill(player, related_skill);
         }
-
-        QVariant data = skill_name;
-        thread->trigger(EventAcquireSkill, this, player, data);
     }
+
+    QVariant data = skill_name;
+    thread->trigger(EventAcquireSkill, this, player, data);
 }
 
 void Room::acquireSkill(ServerPlayer *player, const QString &skill_name, bool open) {

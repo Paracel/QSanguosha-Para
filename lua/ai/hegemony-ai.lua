@@ -103,7 +103,17 @@ end
 
 sgs.ai_skill_playerchosen.shushen = function(self, targets)
 	if #self.friends_noself == 0 then return nil end
-	return self:findPlayerToDraw(false, 1)
+	self:sort(self.friends_noself)
+	for _, friend in ipairs(self.friends_noself) do
+		if friend:isWounded() and not self:needToLoseHp(friend) then return friend end
+	end
+	return self:findPlayerToDraw(false, 2)
+end
+
+sgs.ai_skill_choice.shushen = function(self, choices, data)
+	local friend = data:toPlayer()
+	if (friend:isWounded() and not self:needToLoseHp(friend)) or self:needKongcheng(friend, true) then return "recover" end
+	return "draw"
 end
 
 sgs.ai_playerchosen_intention.shushen = -80

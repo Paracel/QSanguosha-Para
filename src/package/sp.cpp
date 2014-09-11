@@ -2554,6 +2554,10 @@ SPPackage::SPPackage()
     maliang->addSkill(new Xiemu);
     maliang->addSkill(new Naman);
 
+    General *sp_ganfuren = new General(this, "sp_ganfuren", "shu", 3, false, true); // SP 037
+    sp_ganfuren->addSkill("shushen");
+    sp_ganfuren->addSkill("shenzhi");
+
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();
     addMetaObject<BifaCard>();

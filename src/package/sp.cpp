@@ -2328,6 +2328,71 @@ public:
     }
 };
 
+SanyaoCard::SanyaoCard() {
+}
+
+bool SanyaoCard::targetFilter(const QList<const Player *> &targets, const Player *to_select, const Player *Self) const{
+    if (!targets.isEmpty()) return false;
+    QList<const Player *> players = Self->getAliveSiblings();
+    players << Self;
+    int max = -1000;
+    foreach (const Player *p, players) {
+        if (max < p->getHp()) max = p->getHp();
+    }
+    return to_select->getHp() == max;
+}
+
+void SanyaoCard::onEffect(const CardEffectStruct &effect) const{
+    effect.from->getRoom()->damage(DamageStruct("sanyao", effect.from, effect.to));
+}
+
+class Sanyao: public OneCardViewAsSkill {
+public:
+    Sanyao(): OneCardViewAsSkill("sanyao") {
+        filter_pattern = ".!";
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return player->canDiscard(player, "he") && !player->hasUsed("SanyaoCard");
+    }
+
+    virtual const Card *viewAs(const Card *originalcard) const{
+        SanyaoCard *first = new SanyaoCard;
+        first->addSubcard(originalcard->getId());
+        first->setSkillName(objectName());
+        return first;
+    }
+};
+
+class Zhiman: public TriggerSkill {
+public:
+    Zhiman(): TriggerSkill("zhiman") {
+        events << DamageCaused;
+    }
+
+    virtual bool trigger(TriggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        DamageStruct damage = data.value<DamageStruct>();
+
+        if (player->askForSkillInvoke(objectName(), data)) {
+            room->broadcastSkillInvoke(objectName());
+            LogMessage log;
+            log.type = "#Yishi";
+            log.from = player;
+            log.arg = objectName();
+            log.to << damage.to;
+            room->sendLog(log);
+
+            if (damage.to->getEquips().isEmpty() && damage.to->getJudgingArea().isEmpty())
+                return false;
+            int card_id = room->askForCardChosen(player, damage.to, "ej", objectName());
+            CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, player->objectName());
+            room->obtainCard(player, Sanguosha->getCard(card_id), reason);
+            return true;
+        }
+        return false;
+    }
+};
+
 SPCardPackage::SPCardPackage()
     : Package("sp_cards")
 {
@@ -2523,6 +2588,10 @@ OLPackage::OLPackage()
     ol_fazheng->addSkill("enyuan");
     ol_fazheng->addSkill("xuanhuo");
 
+    General *ol_masu = new General(this, "ol_masu", "shu", 3);
+    ol_masu->addSkill(new Sanyao);
+    ol_masu->addSkill(new Zhiman);
+
     General *ol_xushu = new General(this, "ol_xushu", "shu", 3, true, true);
     ol_xushu->addSkill("wuyan");
     ol_xushu->addSkill("jujian");
@@ -2541,6 +2610,7 @@ OLPackage::OLPackage()
     addMetaObject<AocaiCard>();
     addMetaObject<DuwuCard>();
     addMetaObject<QingyiCard>();
+    addMetaObject<SanyaoCard>();
 }
 
 ADD_PACKAGE(OL)

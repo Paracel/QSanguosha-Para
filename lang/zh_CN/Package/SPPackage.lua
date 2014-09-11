@@ -201,6 +201,14 @@ return {
 	[":shixin"] = "锁定技。每当你受到火焰伤害时，防止此伤害。",
 	["#ShixinProtect"] = "%from 的“<font color=\"yellow\"><b>释衅</b></font>”被触发，防止了 %arg 点伤害[%arg2]",
 
+	["ol_masu"] = "OL马谡",
+	["&ol_masu"] = "马谡",
+	["illustrator:ol_masu"] = "张帅",
+	["sanyao"] = "散谣",
+	[":sanyao"] = "阶段技。你可以弃置一张牌并选择一名体力值为场上最多（或之一）的角色：若如此做，该角色受到1点伤害。",
+	["zhiman"] = "制蛮",
+	[":zhiman"] = "每当你对一名角色造成伤害时，你可以防止此伤害，然后获得其装备区或判定区的一张牌。",
+
 	-- HuLao Pass
 	["Hulaopass"] = "虎牢关模式",
 	["HulaoPass"] = "虎牢关",

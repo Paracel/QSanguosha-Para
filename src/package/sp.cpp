@@ -2387,7 +2387,7 @@ public:
             room->sendLog(log);
 
             if (damage.to->getEquips().isEmpty() && damage.to->getJudgingArea().isEmpty())
-                return false;
+                return true;
             int card_id = room->askForCardChosen(player, damage.to, "ej", objectName());
             CardMoveReason reason(CardMoveReason::S_REASON_EXTRACTION, player->objectName());
             room->obtainCard(player, Sanguosha->getCard(card_id), reason);

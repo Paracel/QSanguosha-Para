@@ -1593,8 +1593,10 @@ public:
                 if (!player->inMyAttackRange(sunluyu) && TriggerSkill::triggerable(sunluyu)
                     && room->askForSkillInvoke(sunluyu, objectName())) {
                     room->broadcastSkillInvoke(objectName());
-                    if (!player->hasSkill("#meibu-filter", true))
+                    if (!player->hasSkill("#meibu-filter", true)) {
                         room->acquireSkill(player, "#meibu-filter", false);
+                        room->filterCards(player, player->getCards("he"), false);
+                    }
                     QVariantList sunluyus = player->tag[objectName()].toList();
                     sunluyus << QVariant::fromValue(sunluyu);
                     player->tag[objectName()] = QVariant::fromValue(sunluyus);
@@ -1610,6 +1612,8 @@ public:
                 ServerPlayer *s = sunluyu.value<ServerPlayer *>();
                 room->removeAttackRangePair(player, s);
             }
+            room->detachSkillFromPlayer(player, "#meibu-filter");
+            room->filterCards(player, player->getCards("he"), true);
         }
         return false;
     }

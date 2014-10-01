@@ -2322,6 +2322,81 @@ public:
     }
 };
 
+class Fulu: public OneCardViewAsSkill {
+public:
+    Fulu(): OneCardViewAsSkill("fulu") {
+        filter_pattern = "%slash";
+        response_or_use = true;
+    }
+
+    virtual bool isEnabledAtPlay(const Player *player) const{
+        return Slash::IsAvailable(player);
+    }
+
+    virtual bool isEnabledAtResponse(const Player *, const QString &pattern) const{
+        return Sanguosha->currentRoomState()->getCurrentCardUseReason() == CardUseStruct::CARD_USE_REASON_RESPONSE_USE
+               && pattern == "slash";
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        Card *acard = new ThunderSlash(originalCard->getSuit(), originalCard->getNumber());
+        acard->addSubcard(originalCard->getId());
+        acard->setSkillName(objectName());
+        return acard;
+    }
+};
+
+class Zhuji: public TriggerSkill {
+public:
+    Zhuji(): TriggerSkill("zhuji") {
+        events << DamageCaused << FinishJudge;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == DamageCaused) {
+            DamageStruct damage = data.value<DamageStruct>();
+            if (damage.nature != DamageStruct::Thunder || !damage.from)
+                return false;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (TriggerSkill::triggerable(p) && room->askForSkillInvoke(p, objectName(), data)) {
+                    room->broadcastSkillInvoke(objectName());
+                    JudgeStruct judge;
+                    judge.good = true;
+                    judge.play_animation = false;
+                    judge.reason = objectName();
+                    judge.pattern = ".";
+                    judge.who = damage.from;
+
+                    room->judge(judge);
+                    if (judge.pattern == "black") {
+                        LogMessage log;
+                        log.type = "#ZhujiBuff";
+                        log.from = p;
+                        log.to << damage.to;
+                        log.arg = QString::number(damage.damage);
+                        log.arg2 = QString::number(++damage.damage);
+                        room->sendLog(log);
+
+                        data = QVariant::fromValue(damage);
+                    }
+                }
+            }
+        } else if (triggerEvent == FinishJudge) {
+            JudgeStruct *judge = data.value<JudgeStruct *>();
+            if (judge->reason == objectName()) {
+                judge->pattern = (judge->card->isRed() ? "red" : "black");
+                if (room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge && judge->card->isRed())
+                    player->obtainCard(judge->card);
+            }
+        }
+        return false;
+    }
+};
+
 AocaiCard::AocaiCard() {
 }
 
@@ -2805,6 +2880,10 @@ SPPackage::SPPackage()
     General *sp_ganfuren = new General(this, "sp_ganfuren", "shu", 3, false, true); // SP 037
     sp_ganfuren->addSkill("shushen");
     sp_ganfuren->addSkill("shenzhi");
+
+    General *huangjinleishi = new General(this, "huangjinleishi", "qun", 3, false); // SP 038
+    huangjinleishi->addSkill(new Fulu);
+    huangjinleishi->addSkill(new Zhuji);
 
     addMetaObject<YuanhuCard>();
     addMetaObject<XuejiCard>();

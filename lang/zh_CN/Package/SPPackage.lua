@@ -189,6 +189,15 @@ return {
 	["$ShefuRecord"] = "%from 为 %card 记录牌名【%arg】",
 	["#ShefuEffect"] = "%from 发动了“%arg2”，%to 使用的【%arg】无效",
 
+	["#huangjinleishi"] = "雷祭之姝",
+	["huangjinleishi"] = "黄巾雷使",
+	["illustrator:huangjinleishi"] = "depp",
+	["fulu"] = "符箓",
+	[":fulu"] = "你可以将一张普通【杀】当雷【杀】使用。",
+	["zhuji"] = "助祭",
+	[":zhuji"] = "每当一名角色造成雷电伤害时，你可以令其进行判定：若结果为黑色，此伤害+1；红色，其获得判定牌。",
+	["#ZhujiBuff"] = "%from 的“<font color=\"yellow\"><b>助祭</b></font>”效果被触发，伤害从 %arg 点增加至 %arg2 点",
+
 	["OL"] = "OL专属",
 
 	["#zhugeke"] = "兴家赤族",

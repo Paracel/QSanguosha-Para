@@ -129,6 +129,15 @@
 "playerGeneralIcon-erqiao-7": "image/generals/big/erqiao.png",
 "playerGeneralIcon-erqiao-8": "image/generals/kof/erqiao.png",
 
+"playerGeneralIcon-huangjinleishi-0": ["image/generals/big/huangjinleishi.png", [0, 0, 134, 134], [40, 40]],
+"playerGeneralIcon-huangjinleishi-1": "image/generals/small/huangjinleishi.png",
+"playerGeneralIcon-huangjinleishi-2": "image/generals/big/huangjinleishi.png",
+"playerGeneralIcon-huangjinleishi-4": ["image/generals/big/huangjinleishi.png", [0, 0, 134, 134], [51, 51]],
+"playerGeneralIcon-huangjinleishi-5": ["image/generals/big/huangjinleishi.png", [0, 0, 134, 134], [70, 70]],
+"playerGeneralIcon-huangjinleishi-6": "image/generals/small/huangjinleishi.png",
+"playerGeneralIcon-huangjinleishi-7": "image/generals/big/huangjinleishi.png",
+"playerGeneralIcon-huangjinleishi-8": "image/generals/kof/huangjinleishi.png",
+
 "playerGeneralIcon-jiangwanfeiyi-0": ["image/generals/big/jiangwanfeiyi.png", [0, 0, 134, 134], [40, 40]],
 "playerGeneralIcon-jiangwanfeiyi-1": "image/generals/small/jiangwanfeiyi.png",
 "playerGeneralIcon-jiangwanfeiyi-2": "image/generals/big/jiangwanfeiyi.png",

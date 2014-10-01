@@ -235,18 +235,22 @@ public:
                     judge.good = true;
                     judge.play_animation = false;
                     judge.reason = objectName();
+                    judge.pattern = ".";
                     judge.who = shuangxiong;
 
                     room->judge(judge);
-                    room->setPlayerMark(shuangxiong, "shuangxiong", judge.card->isRed() ? 1 : 2);
+                    room->setPlayerMark(shuangxiong, "shuangxiong", judge.pattern == "red" ? 1 : 2);
 
                     return true;
                 }
             }
         } else if (triggerEvent == FinishJudge) {
             JudgeStruct *judge = data.value<JudgeStruct *>();
-            if (judge->reason == "shuangxiong" && room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge)
-                shuangxiong->obtainCard(judge->card);
+            if (judge->reason == "shuangxiong") {
+                judge->pattern = (judge->card->isRed() ? "red" : "black");
+                if (room->getCardPlace(judge->card->getEffectiveId()) == Player::PlaceJudge)
+                    shuangxiong->obtainCard(judge->card);
+            }
         } else if (triggerEvent == EventPhaseChanging) {
             PhaseChangeStruct change = data.value<PhaseChangeStruct>();
             if (change.to == Player::NotActive && shuangxiong->hasFlag("shuangxiong"))

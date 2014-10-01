@@ -117,6 +117,23 @@ void Slash::onUse(Room *room, const CardUseStruct &card_use) const{
                 else
                     delete fire_slash;
             }
+            if (use.card->objectName() == "slash" && player->hasSkill("fulu")) {
+                ThunderSlash *thunder_slash = new ThunderSlash(getSuit(), getNumber());
+                if (!isVirtualCard() || subcardsLength() > 0)
+                    thunder_slash->addSubcard(this);
+                thunder_slash->setSkillName("fulu");
+                bool can_use = true;
+                foreach (ServerPlayer *p, use.to) {
+                    if (!player->canSlash(p, thunder_slash, false)) {
+                        can_use = false;
+                        break;
+                    }
+                }
+                if (can_use && room->askForSkillInvoke(player, "fulu", data))
+                    use.card = thunder_slash;
+                else
+                    delete thunder_slash;
+            }
             if (use.card->objectName() == "slash" && player->hasWeapon("fan")) {
                 FireSlash *fire_slash = new FireSlash(getSuit(), getNumber());
                 if (!isVirtualCard() || subcardsLength() > 0)

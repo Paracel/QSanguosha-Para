@@ -42,6 +42,9 @@
 "playerGeneralIcon-erqiao-4": ["image/fullskin/generals/fulldual/erqiao.png", [0, 0, 124, 291], [64, 150]],
 "playerGeneralIcon-erqiao-6": ["image/fullskin/generals/fulldual/erqiao.png", [0, 0, 250, 291], [129, 150]],
 
+"playerGeneralIcon-huangjinleishi-4": ["image/fullskin/generals/fulldual/huangjinleishi.png", [0, 0, 124, 291], [64, 150]],
+"playerGeneralIcon-huangjinleishi-6": ["image/fullskin/generals/fulldual/huangjinleishi.png", [0, 0, 250, 291], [129, 150]],
+
 "playerGeneralIcon-jiangwanfeiyi-4": ["image/fullskin/generals/fulldual/jiangwanfeiyi.png", [0, 0, 124, 291], [64, 150]],
 "playerGeneralIcon-jiangwanfeiyi-6": ["image/fullskin/generals/fulldual/jiangwanfeiyi.png", [0, 0, 250, 291], [129, 150]],
 

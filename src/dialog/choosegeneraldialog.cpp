@@ -334,7 +334,7 @@ QWidget *FreeChooseDialog::createTab(const QList<const General *> &generals) {
     layout->setOriginCorner(Qt::TopLeftCorner);
     QIcon lord_icon("image/system/roles/lord.png");
 
-    const int columns = 4;
+    const int columns = 5;
 
     for (int i = 0; i < generals.length(); i++) {
         const General *general = generals.at(i);

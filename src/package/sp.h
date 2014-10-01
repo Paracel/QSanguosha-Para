@@ -139,6 +139,34 @@ public:
     virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
 };
 
+class ShefuCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE ShefuCard();
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
+#include "wind.h"
+class ShefuDialog: public GuhuoDialog {
+    Q_OBJECT
+
+public:
+    static ShefuDialog *getInstance(const QString &object);
+
+protected:
+    explicit ShefuDialog(const QString &object);
+    virtual bool isButtonEnabled(const QString &button_name) const;
+};
+
+class BenyuCard: public SkillCard {
+    Q_OBJECT
+
+public:
+    Q_INVOKABLE BenyuCard();
+    virtual void use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &targets) const;
+};
+
 class AocaiCard: public SkillCard {
     Q_OBJECT
 

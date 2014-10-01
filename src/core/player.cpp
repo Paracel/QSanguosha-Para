@@ -736,6 +736,10 @@ int Player::getMark(const QString &mark) const{
     return marks.value(mark, 0);
 }
 
+QStringList Player::getMarkNames() const{
+    return marks.keys();
+}
+
 bool Player::canSlash(const Player *other, const Card *slash, bool distance_limit,
                       int rangefix, const QList<const Player *> &others) const{
     if (other == this || !other->isAlive())

@@ -482,16 +482,16 @@ bool GameRule::trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *play
     case CardEffected: {
             if (data.canConvert<CardEffectStruct>()) {
                 CardEffectStruct effect = data.value<CardEffectStruct>();
-                if (effect.card->getTypeId() == Card::TypeTrick) {
-                    if (effect.nullified) {
-                        LogMessage log;
-                        log.type = "#CardNullified";
-                        log.from = effect.to;
-                        log.arg = effect.card->objectName();
-                        room->sendLog(log);
+                if (!effect.card->isKindOf("Slash") && effect.nullified) {
+                    LogMessage log;
+                    log.type = "#CardNullified";
+                    log.from = effect.to;
+                    log.arg = effect.card->objectName();
+                    room->sendLog(log);
 
-                        return true;
-                    } else if (room->isCanceled(effect)) {
+                    return true;
+                } else if (effect.card->getTypeId() == Card::TypeTrick) {
+                    if (room->isCanceled(effect)) {
                         effect.to->setFlags("Global_NonSkillNullify");
                         return true;
                     } else {

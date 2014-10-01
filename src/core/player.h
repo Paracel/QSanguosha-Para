@@ -177,6 +177,7 @@ public:
     void removeMark(const QString &mark, int remove_num = 1);
     virtual void setMark(const QString &mark, int value);
     int getMark(const QString &mark) const;
+    QStringList getMarkNames() const;
 
     void setChained(bool chained);
     bool isChained() const;

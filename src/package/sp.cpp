@@ -2084,6 +2084,244 @@ public:
     }
 };
 
+ShefuCard::ShefuCard() {
+    will_throw = false;
+    target_fixed = true;
+}
+
+void ShefuCard::use(Room *room, ServerPlayer *source, QList<ServerPlayer *> &) const{
+    QString mark = "Shefu_" + user_string;
+    source->setMark(mark, this->getEffectiveId() + 1);
+
+    Json::Value arg(Json::arrayValue);
+    arg[0] = QSanProtocol::Utils::toJsonString(source->objectName());
+    arg[1] = QSanProtocol::Utils::toJsonString(mark);
+    arg[2] = this->getEffectiveId() + 1;
+    room->doNotify(source, QSanProtocol::S_COMMAND_SET_MARK, arg);
+
+    source->addToPile("ambush", this, false);
+
+    LogMessage log;
+    log.type = "$ShefuRecord";
+    log.from = source;
+    log.card_str = QString::number(this->getEffectiveId());
+    log.arg = user_string;
+    room->sendLog(log, source);
+}
+
+ShefuDialog *ShefuDialog::getInstance(const QString &object) {
+    static ShefuDialog *instance;
+    if (instance == NULL || instance->objectName() != object)
+        instance = new ShefuDialog(object);
+
+    return instance;
+}
+
+ShefuDialog::ShefuDialog(const QString &object)
+    : GuhuoDialog(object, true, true, false, true, true)
+{
+}
+
+bool ShefuDialog::isButtonEnabled(const QString &button_name) const{
+    return Self->getMark("Shefu_" + button_name) == 0;
+}
+
+class ShefuViewAsSkill: public OneCardViewAsSkill {
+public:
+    ShefuViewAsSkill(): OneCardViewAsSkill("shefu") {
+        filter_pattern = ".|.|.|hand";
+        response_pattern = "@@shefu";
+    }
+
+    virtual const Card *viewAs(const Card *originalCard) const{
+        const Card *c = Self->tag.value("shefu").value<const Card *>();
+        if (c) {
+            ShefuCard *card = new ShefuCard;
+            card->setUserString(c->objectName());
+            card->addSubcard(originalCard);
+            return card;
+        } else
+            return NULL;
+    }
+};
+
+class Shefu: public PhaseChangeSkill {
+public:
+    Shefu(): PhaseChangeSkill("shefu") {
+        view_as_skill = new ShefuViewAsSkill;
+    }
+
+    virtual bool onPhaseChange(ServerPlayer *target) const{
+        Room *room = target->getRoom();
+        if (target->getPhase() != Player::Finish || target->isKongcheng())
+            return false;
+        room->askForUseCard(target, "@@shefu", "@shefu-prompt", -1, Card::MethodNone);
+        return false;
+    }
+
+    virtual QDialog *getDialog() const{
+        return ShefuDialog::getInstance("shefu");
+    }
+};
+
+class ShefuCancel: public TriggerSkill {
+public:
+    ShefuCancel(): TriggerSkill("#shefu-cancel") {
+        events << CardUsed << JinkEffect << NullificationEffect;
+    }
+
+    virtual bool triggerable(const ServerPlayer *target) const{
+        return target != NULL;
+    }
+
+    virtual bool trigger(TriggerEvent triggerEvent, Room *room, ServerPlayer *player, QVariant &data) const{
+        if (triggerEvent == JinkEffect) {
+            bool invoked = false;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (ShefuTriggerable(p, player)) {
+                    room->setTag("ShefuData", data);
+                    if (!room->askForSkillInvoke(p, "shefu_cancel", "data:::jink") || p->getMark("Shefu_jink") == 0)
+                        continue;
+
+                    invoked = true;
+
+                    LogMessage log;
+                    log.type = "#ShefuEffect";
+                    log.from = p;
+                    log.to << player;
+                    log.arg = "jink";
+                    log.arg2 = "shefu";
+                    room->sendLog(log);
+
+                    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "shefu", QString());
+                    int id = p->getMark("Shefu_jink") - 1;
+                    room->setPlayerMark(p, "Shefu_jink", 0);
+                    room->throwCard(Sanguosha->getCard(id), reason, NULL);
+                }
+            }
+            return invoked;
+        } else if (triggerEvent == NullificationEffect) {
+            bool invoked = false;
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (ShefuTriggerable(p, player)) {
+                    room->setTag("ShefuData", data);
+                    if (!room->askForSkillInvoke(p, "shefu_cancel", "data:::nullification") || p->getMark("Shefu_nullification") == 0)
+                        continue;
+
+                    invoked = true;
+
+                    LogMessage log;
+                    log.type = "#ShefuEffect";
+                    log.from = p;
+                    log.to << player;
+                    log.arg = "nullification";
+                    log.arg2 = "shefu";
+                    room->sendLog(log);
+
+                    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "shefu", QString());
+                    int id = p->getMark("Shefu_nullification") - 1;
+                    room->setPlayerMark(p, "Shefu_nullification", 0);
+                    room->throwCard(Sanguosha->getCard(id), reason, NULL);
+                }
+            }
+            return invoked;
+        } else if (triggerEvent == CardUsed) {
+            CardUseStruct use = data.value<CardUseStruct>();
+            if (use.card->getTypeId() != Card::TypeBasic && use.card->getTypeId() != Card::TypeTrick)
+                return false;
+            if (use.card->isKindOf("Nullification"))
+                return false;
+            QString card_name = use.card->objectName();
+            if (card_name.contains("slash")) card_name = "slash";
+            foreach (ServerPlayer *p, room->getAllPlayers()) {
+                if (ShefuTriggerable(p, player)) {
+                    room->setTag("ShefuData", data);
+                    if (!room->askForSkillInvoke(p, "shefu_cancel", "data:::" + card_name) || p->getMark("Shefu_" + card_name) == 0)
+                        continue;
+
+                    LogMessage log;
+                    log.type = "#ShefuEffect";
+                    log.from = p;
+                    log.to << player;
+                    log.arg = card_name;
+                    log.arg2 = "shefu";
+                    room->sendLog(log);
+
+                    CardMoveReason reason(CardMoveReason::S_REASON_REMOVE_FROM_PILE, QString(), "shefu", QString());
+                    int id = p->getMark("Shefu_" + card_name) - 1;
+                    room->setPlayerMark(p, "Shefu_" + card_name, 0);
+                    room->throwCard(Sanguosha->getCard(id), reason, NULL);
+
+                    use.nullified_list << "_ALL_TARGETS";
+                }
+            }
+            data = QVariant::fromValue(use);
+        }
+        return false;
+    }
+
+private:
+    bool ShefuTriggerable(ServerPlayer *chengyu, ServerPlayer *user) const{
+        return chengyu->getPhase() == Player::NotActive && chengyu != user
+               && chengyu->hasSkill("shefu") && !chengyu->getPile("ambush").isEmpty();
+    }
+};
+
+BenyuCard::BenyuCard() {
+    mute = true;
+}
+
+void BenyuCard::use(Room *room, ServerPlayer *, QList<ServerPlayer *> &) const{
+    room->broadcastSkillInvoke("benyu", 2);
+}
+
+class BenyuViewAsSkill: public ViewAsSkill {
+public:
+    BenyuViewAsSkill(): ViewAsSkill("benyu") {
+        response_pattern = "@@benyu";
+    }
+
+    virtual bool viewFilter(const QList<const Card *> &, const Card *to_select) const{
+        return !to_select->isEquipped();
+    }
+
+    virtual const Card *viewAs(const QList<const Card *> &cards) const{
+        if (cards.length() < Self->getMark("benyu"))
+            return NULL;
+        BenyuCard *card = new BenyuCard;
+        card->addSubcards(cards);
+        return card;
+    }
+};
+
+class Benyu: public MasochismSkill {
+public:
+    Benyu(): MasochismSkill("benyu") {
+        view_as_skill = new BenyuViewAsSkill;
+    }
+
+    virtual void onDamaged(ServerPlayer *target, const DamageStruct &damage) const{
+        if (!damage.from || damage.from->isDead())
+            return;
+        Room *room = target->getRoom();
+        int from_handcard_num = damage.from->getHandcardNum(), handcard_num = target->getHandcardNum();
+        QVariant data = QVariant::fromValue(damage);
+        if (handcard_num == from_handcard_num) {
+            return;
+        } else if (handcard_num < from_handcard_num && handcard_num < 5 && room->askForSkillInvoke(target, objectName(), data)) {
+            room->broadcastSkillInvoke(objectName(), 1);
+            room->drawCards(target, qMin(5, from_handcard_num) - handcard_num, objectName());
+        } else if (handcard_num > from_handcard_num) {
+            room->setPlayerMark(target, objectName(), from_handcard_num + 1);
+            if (room->askForUseCard(target, "@@benyu",
+                                    QString("@benyu-discard::%1:%2").arg(damage.from->objectName()).arg(from_handcard_num + 1),
+                                    -1, Card::MethodDiscard))
+                room->damage(DamageStruct(objectName(), target, damage.from));
+        }
+        return;
+    }
+};
+
 AocaiCard::AocaiCard() {
 }
 
@@ -2558,6 +2796,12 @@ SPPackage::SPPackage()
     maliang->addSkill(new Xiemu);
     maliang->addSkill(new Naman);
 
+    General *chengyu = new General(this, "chengyu", "wei", 3);
+    chengyu->addSkill(new Shefu);
+    chengyu->addSkill(new ShefuCancel);
+    chengyu->addSkill(new Benyu);
+    related_skills.insertMulti("shefu", "#shefu-cancel");
+
     General *sp_ganfuren = new General(this, "sp_ganfuren", "shu", 3, false, true); // SP 037
     sp_ganfuren->addSkill("shushen");
     sp_ganfuren->addSkill("shenzhi");
@@ -2570,6 +2814,8 @@ SPPackage::SPPackage()
     addMetaObject<QiangwuCard>();
     addMetaObject<YinbingCard>();
     addMetaObject<XiemuCard>();
+    addMetaObject<ShefuCard>();
+    addMetaObject<BenyuCard>();
 
     skills << new Weizhong << new MeibuFilter;
 }

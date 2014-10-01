@@ -721,6 +721,10 @@ QString Client::getSkillNameToInvoke() const{
     return skill_to_invoke;
 }
 
+QString Client::getSkillNameToInvokeData() const{
+    return skill_to_invoke_data;
+}
+
 void Client::onPlayerInvokeSkill(bool invoke) {
     if (skill_name == "surrender")
         replyToServer(S_COMMAND_SURRENDER, invoke);
@@ -817,6 +821,7 @@ void Client::askForSkillInvoke(const Json::Value &arg) {
     QString data = toQString(arg[1]);
 
     skill_to_invoke = skill_name;
+    skill_to_invoke_data = data;
 
     QString text;
     if (data.isEmpty()) {
@@ -860,6 +865,7 @@ void Client::askForSurrender(const Json::Value &initiator) {
 
 void Client::askForLuckCard(const Json::Value &) {
     skill_to_invoke = "luck_card";
+    skill_to_invoke_data = QString();
     prompt_doc->setHtml(tr("Do you want to use the luck card?"));
     setStatus(AskForSkillInvoke);
 }

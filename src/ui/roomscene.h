@@ -118,6 +118,8 @@ class RoomScene: public QGraphicsScene {
     Q_OBJECT
 
 public:
+    enum ShefuAskState { ShefuAskAll, ShefuAskNecessary, ShefuAskNone };
+
     RoomScene(QMainWindow *main_window);
     ~RoomScene();
     void changeTextEditBackground();
@@ -133,6 +135,7 @@ public:
     inline void setGuhuoLog(const QString &log) { guhuo_log = log; }
 
     bool m_skillButtonSank;
+    ShefuAskState m_ShefuAskState;
 
 public slots:
     void addPlayer(ClientPlayer *player);

@@ -193,6 +193,7 @@ public:
     void removeMark(const char *mark, int remove_num = 1);
     virtual void setMark(const char *mark, int value);
     int getMark(const char *mark) const;
+    QStringList getMarkNames() const;
 
     void setChained(bool chained);
     bool isChained() const;
